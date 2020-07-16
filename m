@@ -2,199 +2,168 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4460CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5644C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1409520775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gb1zTsF1"
+	by mail.kernel.org (Postfix) with ESMTP id 85B8920775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGPJxt (ORCPT
+        id S1727096AbgGPJyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 05:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgGPJxs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 05:53:48 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A18FC061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 02:53:48 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id l17so5348308iok.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 02:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+x0RURjDsb6r2gazasWw0snGZpzKhvm0nC6pQGgI0Is=;
-        b=Gb1zTsF12JWdG85+D5/yO7b7v1H0ENSfY/qywxTruBppe7aQcsXMRKHYb4N+aBeMui
-         yJBoiSi+LAuTUJpA0LVkMW44oLxuRm6frqvAURwtRY/FsEoij0vDo/pX1Js5lCbbuXIT
-         yf5DdFGbUxmYRBs4jNLU+IwoWjRLFH8MPBkJ2UIlSRv+0RxjL+lva3GJoUZKRLNamhhU
-         j5hBzLXUZqQH1HAZEiUFUZDgtcl+SE/wBOWvclTPFsp7nUIevbigsoKct8m5v0FuFAKL
-         B9CCDuIdPd/TKmCaVHQRMX+f1eMP7zrOgoGP5Qx6/CMx74aySIqWfARTcqww2yTgO67M
-         +nJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+x0RURjDsb6r2gazasWw0snGZpzKhvm0nC6pQGgI0Is=;
-        b=mxhecEDfgHXFSFdh7D+zlAasl4v6uIsydgxkbSx4HJHfMLz/QQUfBu8X/1kKKWBa8M
-         fGFOForKORi7DJtFOlPRVSBRAL2P8KCGoTZRHi4DHh/aaIJE0CnjxYlIHBa+GVwElOWT
-         kTKyrknus92K08nhGKeQ7Ln2v/Vk9RwCKfcrB8Md5hykz1NvqMIVSefpKryfVwAUIHH7
-         Im3BzB3mSkT1f+jixXUYw8lrPDrAVAB0FuXcv7iexhX3fEuxtK6b2J08uY9ky9MARoHS
-         KjYwmw7+l6Hc62kiXcQqQyJWTsslN0qU50E3jk9J4d3+mLmi3oFPd2KHRMghPaEAhad5
-         VFXA==
-X-Gm-Message-State: AOAM533ImM88Ukbxj6S4+MsxiYUYZBwHD7QopWCvQ6h8t3Ow2LixTtan
-        CP8vtKdb4PKxwIdkoOqKaqBi7Px47bCAGGWAJFM=
-X-Google-Smtp-Source: ABdhPJxgaqlVL9z0xbOCPaV1IajyUWWKOmB+QsBAeF5HXryQlDNC6lZkU9CaVx+4BEf1/DlbTF2Vk7Nc07pLpnWeCYg=
-X-Received: by 2002:a02:30ca:: with SMTP id q193mr4259586jaq.125.1594893227833;
- Thu, 16 Jul 2020 02:53:47 -0700 (PDT)
+        Thu, 16 Jul 2020 05:54:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56774 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbgGPJyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 05:54:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B3F3AAE4B;
+        Thu, 16 Jul 2020 09:54:25 +0000 (UTC)
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        liuyongqiang13@huawei.com
+References: <20200716090313.13216-1-miaoqinglang@huawei.com>
+From:   Coly Li <colyli@suse.de>
+Autocrypt: addr=colyli@suse.de; keydata=
+ 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
+Subject: Re: [PATCH -next] bcache: Convert to DEFINE_SHOW_ATTRIBUTE
+Message-ID: <a0f9b92b-d8f2-7c03-8c48-9e71e506361b@suse.de>
+Date:   Thu, 16 Jul 2020 17:54:17 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1594117856-14343-1-git-send-email-gene.chen.richtek@gmail.com>
- <1594117856-14343-4-git-send-email-gene.chen.richtek@gmail.com> <3205bb9b-c7b4-c99a-2673-f3a56cc0addf@gmail.com>
-In-Reply-To: <3205bb9b-c7b4-c99a-2673-f3a56cc0addf@gmail.com>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Thu, 16 Jul 2020 17:53:36 +0800
-Message-ID: <CAE+NS36LOqnG+toSQcxVAeQHUqyvs9Z39tU7-ijkAntRUH6uqg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] mfd: mt6360: Fix flow which is used to check ic exist
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, shufan_lee@richtek.com,
-        cy_huang@richtek.com, benjamin.chao@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200716090313.13216-1-miaoqinglang@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthias Brugger <matthias.bgg@gmail.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=88=
-10=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8810:25=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
->
->
-> On 07/07/2020 12:30, Gene Chen wrote:
-> > From: Gene Chen <gene_chen@richtek.com>
-> >
-> > Fix flow which is used to check ic exist
-> >
-> > Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> > ---
-> >   drivers/mfd/mt6360-core.c  | 28 +++++++++++++++++++---------
-> >   include/linux/mfd/mt6360.h |  8 ++++----
-> >   2 files changed, 23 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
-> > index 2dd5918..4bb2949 100644
-> > --- a/drivers/mfd/mt6360-core.c
-> > +++ b/drivers/mfd/mt6360-core.c
-> > @@ -293,6 +293,23 @@ static const struct mfd_cell mt6360_devs[] =3D {
-> >                   NULL, 0, 0, "mediatek,mt6360-tcpc"),
-> >   };
-> >
-> > +static int mt6360_check_vendor_info(struct mt6360_data *data)
-> > +{
-> > +     u32 info;
-> > +     int ret;
-> > +
-> > +     ret =3D regmap_read(data->regmap, MT6360_REG_PMU_DEVINFO, &info);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     if ((info & MT6360_CHIPVEN_MASK) !=3D MT6360_CHIPVEN_VAL)
-> > +             return -ENODEV;
-> > +
-> > +     data->chip_rev =3D info & MT6360_CHIPREV_MASK;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >   static const unsigned short mt6360_slave_addr[MT6360_SLAVE_MAX] =3D {
-> >       MT6360_PMU_SLAVEID,
-> >       MT6360_PMIC_SLAVEID,
-> > @@ -303,7 +320,6 @@ static const unsigned short mt6360_slave_addr[MT636=
-0_SLAVE_MAX] =3D {
-> >   static int mt6360_probe(struct i2c_client *client)
-> >   {
-> >       struct mt6360_data *data;
-> > -     unsigned int reg_data;
-> >       int i, ret;
-> >
-> >       data =3D devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-> > @@ -319,16 +335,10 @@ static int mt6360_probe(struct i2c_client *client=
-)
-> >               return PTR_ERR(data->regmap);
-> >       }
-> >
-> > -     ret =3D regmap_read(data->regmap, MT6360_PMU_DEV_INFO, &reg_data)=
-;
-> > +     ret =3D mt6360_check_vendor_info(data);
-> >       if (ret) {
-> > -             dev_err(&client->dev, "Device not found\n");
-> > -             return ret;
-> > -     }
-> > -
-> > -     data->chip_rev =3D reg_data & CHIP_REV_MASK;
-> > -     if (data->chip_rev !=3D CHIP_VEN_MT6360) {
->
-> Why not only applying the MASK here instead of put this all in a new func=
-tion?
->
+On 2020/7/16 17:03, Qinglang Miao wrote:
+> From: Yongqiang Liu <liuyongqiang13@huawei.com>
+> 
 
-I think merge the ic check flow into function is well-organized.
-if not, i can restore the same as before.
+Hi Qianlang and Yongqiang,
 
-> >               dev_err(&client->dev, "Device not supported\n");
-> > -             return -ENODEV;
-> > +             return ret;
-> >       }
-> >
-> >       ret =3D devm_regmap_add_irq_chip(&client->dev, data->regmap, clie=
-nt->irq,
-> > diff --git a/include/linux/mfd/mt6360.h b/include/linux/mfd/mt6360.h
-> > index 9fc6718..5ec0f5d 100644
-> > --- a/include/linux/mfd/mt6360.h
-> > +++ b/include/linux/mfd/mt6360.h
-> > @@ -30,7 +30,7 @@ struct mt6360_data {
-> >   };
-> >
-> >   /* PMU register defininition */
-> > -#define MT6360_PMU_DEV_INFO                  (0x00)
-> > +#define MT6360_REG_PMU_DEVINFO                       (0x00)
-> >   #define MT6360_PMU_CORE_CTRL1                       (0x01)
-> >   #define MT6360_PMU_RST1                             (0x02)
-> >   #define MT6360_PMU_CRCEN                    (0x03)
-> > @@ -233,8 +233,8 @@ struct mt6360_data {
-> >   #define MT6360_IRQ_REGNUM   16
-> >   #define MT6360_IRQ_RETRIG   BIT(2)
-> >
-> > -#define CHIP_VEN_MASK                                (0xF0)
-> > -#define CHIP_VEN_MT6360                              (0x50)
-> > -#define CHIP_REV_MASK                                (0x0F)
-> > +#define MT6360_CHIPVEN_MASK                  (0xF0)
-> > +#define MT6360_CHIPVEN_VAL                   (0x50)
-> > +#define MT6360_CHIPREV_MASK                  (0x0F)
->
-> Same here as in the other patches. Don't just rename defines if there is =
-no good
-> reason.
->
+> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+> 
+> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
+> ---
+>  drivers/md/bcache/closure.c | 16 +++-------------
+>  1 file changed, 3 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/md/bcache/closure.c b/drivers/md/bcache/closure.c
+> index 99222aa5d..37b9c5d49 100644
+> --- a/drivers/md/bcache/closure.c
+> +++ b/drivers/md/bcache/closure.c
+> @@ -159,7 +159,7 @@ void closure_debug_destroy(struct closure *cl)
+>  
+>  static struct dentry *closure_debug;
+>  
+> -static int debug_seq_show(struct seq_file *f, void *data)
+> +static int debug_show(struct seq_file *f, void *data)
+>  {
+>  	struct closure *cl;
+>  
+> @@ -188,17 +188,7 @@ static int debug_seq_show(struct seq_file *f, void *data)
+>  	return 0;
+>  }
+>  
+> -static int debug_seq_open(struct inode *inode, struct file *file)
+> -{
+> -	return single_open(file, debug_seq_show, NULL);
+> -}
+> -
 
-Is easy to read a good reason to rename it?
-if not, i can restore the same as before.
+Here NULL is sent to single_open(), in DEFINE_SHOW_ATTRIBUTE()
+inode->i_private is sent into single_open(). I don't see the commit log
+mentions or estimates such change.
 
-> Regards,
-> Matthias
->
-> >
-> >   #endif /* __MT6360_H__ */
-> >
+
+> -static const struct file_operations debug_ops = {
+> -	.owner		= THIS_MODULE,
+> -	.open		= debug_seq_open,
+> -	.read_iter		= seq_read_iter,
+
+I doubt this patch applies to Linux v5.8-rc, this is how debug_ops is
+defined in Linux v5.8-rc5,
+
+196 static const struct file_operations debug_ops = {
+197         .owner          = THIS_MODULE,
+198         .open           = debug_seq_open,
+199         .read           = seq_read,
+200         .release        = single_release
+201 };
+
+> -	.release	= single_release
+> -};
+> +DEFINE_SHOW_ATTRIBUTE(debug);
+>  
+>  void  __init closure_debug_init(void)
+>  {
+> @@ -209,7 +199,7 @@ void  __init closure_debug_init(void)
+>  		 * about this.
+>  		 */
+>  		closure_debug = debugfs_create_file(
+> -			"closures", 0400, bcache_debug, NULL, &debug_ops);
+> +				"closures", 0400, bcache_debug, NULL, &debug_fops);
+>  }
+>  #endif
+
+Do you test your change with upstream kernel ? Or at least you should
+try to apply and compile the patch with latest upstream kernel.
+
+Thanks.
+
+Coly Li
+
