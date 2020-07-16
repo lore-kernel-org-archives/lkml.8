@@ -2,265 +2,261 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA20C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C01C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10E45206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE0E20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:06:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjKUUYba"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTdnQ7CS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgGPGFN (ORCPT
+        id S1727953AbgGPGGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 02:05:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54364 "EHLO
+        Thu, 16 Jul 2020 02:06:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgGPGFK (ORCPT
+        with ESMTP id S1725844AbgGPGGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 02:05:10 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B428C061755;
-        Wed, 15 Jul 2020 23:05:10 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id e13so4512677qkg.5;
-        Wed, 15 Jul 2020 23:05:10 -0700 (PDT)
+        Thu, 16 Jul 2020 02:06:16 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79287C061755;
+        Wed, 15 Jul 2020 23:06:16 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t6so4321680pgq.1;
+        Wed, 15 Jul 2020 23:06:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C/Sx3DD1xiFaSouN+hVZkXpnDAPJUJUqVEbjzUVKBjY=;
-        b=hjKUUYbaz0sPmdc6UkL8TZ4OoDP5uCGuba45k0YMT6bu+EKvgOa1BPJ6yRhs9m7cq6
-         CTjX45iH8nxWh9STseaR2UkX8wBd/vgoJ188UbrshIEKILPkp1IL+XCnhQ9G4gKYWGb1
-         gZHn6ivhyTnaOSMhs7Ow6/q/kXFmIjybLHzwW6PuVBNsroG/OgP8aPZFryIV14rKwTpO
-         ITK1GBBw06ZPq+uPik67Q6qUvxzmYe1akszXBinO20+G1+8H3ZzSmrgGfQ4QzMzAkQ4d
-         ATxa7jrwbD6Wp5bo7p1Sdg6M1aw36MfNtGMW/HufqTeqg/8JgpMvzt+CP2khPp9rLwhf
-         NSfA==
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=qPCrNp37K6q3aKkXlYE/4fEYBOhUCPkKHsv9G1ygSB0=;
+        b=fTdnQ7CSNu7F9Fv/42LKBdPIwZbwn1ToKoItunqqTWJ9XsmvqqcfRvPC0cVwFqSXVQ
+         jTPYwowEcTz+Cv25XzHXc6yX7KoPveL0k1koV2mHhbam6fiHU05iIAtmBsEcIYliEGkQ
+         Mlpe2K7rwTikYh65uvk+PPaxifcx0UvDU91KhFJ4g7SsWuvppYY4Y+QgR+31GFVBcG77
+         RS7tJPaTqQRhnora1OuzfypJLFow9C0bEZ21gFhtWMYHkcad/mZfZB50RNv1dfBw/AZk
+         d+mr7t7McCPcEoKmF3G8EJ9jeCj3l0F73zRzicvJKFZXAqEwXDNekFR1N2YDwdQPhoGG
+         QoaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C/Sx3DD1xiFaSouN+hVZkXpnDAPJUJUqVEbjzUVKBjY=;
-        b=cU3m+nMXEWRBtZr7NirE9oYUnIcZjOQaXVGMLB2oImhynyS9MfOIJoU7e3Bg/gGXFX
-         pB68t5Hp4E0pkqGdvaOQrEFaYRE4JHiqdkJsKaVvMSp2xNNziXWIdUulMZ7SjaHJ3sTw
-         P4d4xtgvooSughihjwBGU4LtdSTkZ/xmh6AHq1RyuKhOdKqq1TK5ndiGPeS7BwGU6eJb
-         Qabl+0OGiaRIyagnkMZ2PBAIzc1jojNHiriy4D+Xte0rq396JZelV81/XtZSrHKcpF44
-         VTzu3NO0j+iPt74VkBgOD5AsnC6NwcexEzv98SX+dTmec7kwEeR+FfhQZ/UD00zzUV/G
-         jlRQ==
-X-Gm-Message-State: AOAM530oW8+mCnjkUCVcEAZzs8bs4SlcHTD4RAfamkHqlIyITKyiVAMp
-        8D4VvQzbVX0hmnWL9IIMUZr+SESuw0fAFFOgw8M=
-X-Google-Smtp-Source: ABdhPJxsUjKeetvu0GriGmGx8SewSAdbVUPi3lkk8oiAMpiNXMbWGBd3Uk1PlySj3VC0hVbyi/jEMpgm4s/WCadMCXI=
-X-Received: by 2002:ae9:f002:: with SMTP id l2mr2532019qkg.437.1594879509565;
- Wed, 15 Jul 2020 23:05:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=qPCrNp37K6q3aKkXlYE/4fEYBOhUCPkKHsv9G1ygSB0=;
+        b=c4oNL56CqDExmiVczBCWJ8n+NFrTJo3u/7OO243j8ej9nZmoYTZ0nyeu7s64Dv92c1
+         pwjF+LqElcWMntoiQw0epfv2aeQqowBh8zeAFBbQgYZ6wvwE2C/p6MoDmKVlXSJmK7YE
+         GEx7s0sGs5RFgNYTKkGPyKma7CVhe1AWbxBMflGGOUf+BmRaLLAYJu9XNcAl8UPmH4No
+         OGayG8FKJd180FvOkH8Eqg4Y4CnZen6JMfteY9sk3YAFfs3ZMoP+pChduVxM5RbgXIUY
+         KWgjBenQqtTskDFiUBwi8VayOZ9mrZ9J6AKpv0+XLlddFnsuQdqZ4zEfqcJJKnhUlYKl
+         17Ew==
+X-Gm-Message-State: AOAM532+KS9Ml4BwjbkSyyAZpYZ7IIPqpToz++YzG9EO5ot4IBsI/9mp
+        HkaoNdTgF/VEhjkU9U+beO0=
+X-Google-Smtp-Source: ABdhPJxv5uogTZdodbJ5dWo5RNSOy42pZBLBiqLpnhhxyiNFoDo6zs63uszyH0rq2zc0n4i841tTMA==
+X-Received: by 2002:a63:201f:: with SMTP id g31mr2865429pgg.186.1594879575974;
+        Wed, 15 Jul 2020 23:06:15 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id b128sm3670149pfg.114.2020.07.15.23.06.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 23:06:15 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 16:06:10 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
+References: <1594868476.6k5kvx8684.astroid@bobo.none>
+        <EFAD6E2F-EC08-4EB3-9ECC-2A963C023FC5@amacapital.net>
+In-Reply-To: <EFAD6E2F-EC08-4EB3-9ECC-2A963C023FC5@amacapital.net>
 MIME-Version: 1.0
-References: <20200715052601.2404533-1-songliubraving@fb.com> <20200715052601.2404533-3-songliubraving@fb.com>
-In-Reply-To: <20200715052601.2404533-3-songliubraving@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 15 Jul 2020 23:04:58 -0700
-Message-ID: <CAEf4BzZdvBKp6WO+zUTF0F9iL2WaukvTWNGZggUPx-nwESpQ7w@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 2/2] selftests/bpf: add callchain_stackid
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Peter Ziljstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <1594878414.pdm2jvp999.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:09 PM Song Liu <songliubraving@fb.com> wrote:
->
-> This tests new helper function bpf_get_stackid_pe and bpf_get_stack_pe.
-> These two helpers have different implementation for perf_event with PEB
-> entries.
->
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> ---
->  .../bpf/prog_tests/perf_event_stackmap.c      | 120 ++++++++++++++++++
->  .../selftests/bpf/progs/perf_event_stackmap.c |  64 ++++++++++
->  2 files changed, 184 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_event_stackmap.c
->  create mode 100644 tools/testing/selftests/bpf/progs/perf_event_stackmap.c
->
+Excerpts from Andy Lutomirski's message of July 16, 2020 3:18 pm:
+>=20
+>=20
+>> On Jul 15, 2020, at 9:15 PM, Nicholas Piggin <npiggin@gmail.com> wrote:
+>>=20
+>> =EF=BB=BFExcerpts from Mathieu Desnoyers's message of July 14, 2020 12:1=
+3 am:
+>>> ----- On Jul 13, 2020, at 9:47 AM, Nicholas Piggin npiggin@gmail.com wr=
+ote:
+>>>=20
+>>>> Excerpts from Nicholas Piggin's message of July 13, 2020 2:45 pm:
+>>>>> Excerpts from Andy Lutomirski's message of July 11, 2020 3:04 am:
+>>>>>> Also, as it stands, I can easily see in_irq() ceasing to promise to
+>>>>>> serialize.  There are older kernels for which it does not promise to
+>>>>>> serialize.  And I have plans to make it stop serializing in the
+>>>>>> nearish future.
+>>>>>=20
+>>>>> You mean x86's return from interrupt? Sounds fun... you'll konw where=
+ to
+>>>>> update the membarrier sync code, at least :)
+>>>>=20
+>>>> Oh, I should actually say Mathieu recently clarified a return from
+>>>> interrupt doesn't fundamentally need to serialize in order to support
+>>>> membarrier sync core.
+>>>=20
+>>> Clarification to your statement:
+>>>=20
+>>> Return from interrupt to kernel code does not need to be context serial=
+izing
+>>> as long as kernel serializes before returning to user-space.
+>>>=20
+>>> However, return from interrupt to user-space needs to be context serial=
+izing.
+>>=20
+>> Hmm, I'm not sure it's enough even with the sync in the exit_lazy_tlb
+>> in the right places.
+>>=20
+>> A kernel thread does a use_mm, then it blocks and the user process with
+>> the same mm runs on that CPU, and then it calls into the kernel, blocks,
+>> the kernel thread runs again, another CPU issues a membarrier which does
+>> not IPI this one because it's running a kthread, and then the kthread
+>> switches back to the user process (still without having unused the mm),
+>> and then the user process returns from syscall without having done a=20
+>> core synchronising instruction.
+>>=20
+>> The cause of the problem is you want to avoid IPI'ing kthreads. Why?
+>> I'm guessing it really only matters as an optimisation in case of idle
+>> threads. Idle thread is easy (well, easier) because it won't use_mm, so=20
+>> you could check for rq->curr =3D=3D rq->idle in your loop (in a suitable=
+=20
+>> sched accessor function).
+>>=20
+>> But... I'm not really liking this subtlety in the scheduler for all this=
+=20
+>> (the scheduler still needs the barriers when switching out of idle).
+>>=20
+>> Can it be improved somehow? Let me forget x86 core sync problem for now
+>> (that _may_ be a bit harder), and step back and look at what we're doing=
+.
+>> The memory barrier case would actually suffer from the same problem as
+>> core sync, because in the same situation it has no implicit mmdrop in
+>> the scheduler switch code either.
+>>=20
+>> So what are we doing with membarrier? We want any activity caused by the=
+=20
+>> set of CPUs/threads specified that can be observed by this thread before=
+=20
+>> calling membarrier is appropriately fenced from activity that can be=20
+>> observed to happen after the call returns.
+>>=20
+>> CPU0                     CPU1
+>>                         1. user stuff
+>> a. membarrier()          2. enter kernel
+>> b. read rq->curr         3. rq->curr switched to kthread
+>> c. is kthread, skip IPI  4. switch_to kthread
+>> d. return to user        5. rq->curr switched to user thread
+>>                 6. switch_to user thread
+>>                 7. exit kernel
+>>                         8. more user stuff
+>>=20
+>> As far as I can see, the problem is CPU1 might reorder step 5 and step
+>> 8, so you have mmdrop of lazy mm be a mb after step 6.
+>>=20
+>> But why? The membarrier call only cares that there is a full barrier
+>> between 1 and 8, right? Which it will get from the previous context
+>> switch to the kthread.
+>>=20
+>> I must say the memory barrier comments in membarrier could be improved
+>> a bit (unless I'm missing where the main comment is). It's fine to know
+>> what barriers pair with one another, but we need to know which exact
+>> memory accesses it is ordering
+>>=20
+>>       /*
+>>         * Matches memory barriers around rq->curr modification in
+>>         * scheduler.
+>>         */
+>>=20
+>> Sure, but it doesn't say what else is being ordered. I think it's just
+>> the user memory accesses, but would be nice to make that a bit more
+>> explicit. If we had such comments then we might know this case is safe.
+>>=20
+>> I think the funny powerpc barrier is a similar case of this. If we
+>> ever see remote_rq->curr->flags & PF_KTHREAD, then we _know_ that
+>> CPU has or will have issued a memory barrier between running user
+>> code.
+>>=20
+>> So AFAIKS all this membarrier stuff in kernel/sched/core.c could
+>> just go away. Except x86 because thread switch doesn't imply core
+>> sync, so CPU1 between 1 and 8 may never issue a core sync instruction
+>> the same way a context switch must be a full mb.
+>>=20
+>> Before getting to x86 -- Am I right, or way off track here?
+>=20
+> I find it hard to believe that this is x86 only. Why would thread switch =
+imply core sync on any architecture?  Is x86 unique in having a stupid expe=
+nsive core sync that is heavier than smp_mb()?
 
-Just few simplification suggestions, but overall looks good, so please add:
+It's not the thread switch but the return from kernel to user -- at=20
+least of architectures that implement membarrier SYNC_CORE, x86 can do=20
+that without serializing.
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+The thread switch is muddying the waters a bit, it's not the actual=20
+thread switch we care about, that just happens to be used as a point
+where we try to catch the membarrier IPIs that were skipped due to the
+PF_KTHREAD optimisation.
 
-[...]
+I think that doing said check in the lazy tlb exit code is both
+unnecessary for the memory ordering and insufficient for pipeline=20
+serialization.
 
-> +
-> +void test_perf_event_stackmap(void)
-> +{
-> +       struct perf_event_attr attr = {
-> +               /* .type = PERF_TYPE_SOFTWARE, */
-> +               .type = PERF_TYPE_HARDWARE,
-> +               .config = PERF_COUNT_HW_CPU_CYCLES,
-> +               .precise_ip = 2,
-> +               .sample_type = PERF_SAMPLE_IP | PERF_SAMPLE_BRANCH_STACK |
-> +                       PERF_SAMPLE_CALLCHAIN,
-> +               .branch_sample_type = PERF_SAMPLE_BRANCH_USER |
-> +                       PERF_SAMPLE_BRANCH_NO_FLAGS |
-> +                       PERF_SAMPLE_BRANCH_NO_CYCLES |
-> +                       PERF_SAMPLE_BRANCH_CALL_STACK,
-> +               .sample_period = 5000,
-> +               .size = sizeof(struct perf_event_attr),
-> +       };
-> +       struct perf_event_stackmap *skel;
-> +       __u32 duration = 0;
-> +       cpu_set_t cpu_set;
-> +       int pmu_fd, err;
-> +
-> +       skel = perf_event_stackmap__open();
-> +
-> +       if (CHECK(!skel, "skel_open", "skeleton open failed\n"))
-> +               return;
-> +
-> +       /* override program type */
-> +       bpf_program__set_perf_event(skel->progs.oncpu);
+> But I=E2=80=99m wondering if all this deferred sync stuff is wrong. In th=
+e brave new world of io_uring and such, perhaps kernel access matter too.  =
+Heck, even:
+>=20
+> int a[2];
+>=20
+> Thread A:
+> a[0] =3D 1;
+> a[1] =3D 2:
+>=20
+> Thread B:
+>=20
+> write(fd, a, sizeof(a));
+>=20
+> Doesn=E2=80=99t do what thread A is expecting.  Admittedly this particula=
+r example is nonsense, but maybe there are sensible cases that matter to so=
+meone.
 
-this should be unnecessary, didn't libbpf detect the type correctly
-from SEC? If not, let's fix that.
+I think kernel accesses probably do matter (or at least they should by=20
+principle of least surprise). And so I was doubly misleading by labeling
+it as "user stuff". I should have distinguished between previous user or
+kernel accesses, as opposed to the kernel accesses specifically for the
+implementation of the membarrier call.
 
-> +
-> +       err = perf_event_stackmap__load(skel);
-> +       if (CHECK(err, "skel_load", "skeleton load failed: %d\n", err))
-> +               goto cleanup;
-> +
-> +       CPU_ZERO(&cpu_set);
-> +       CPU_SET(0, &cpu_set);
-> +       err = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set), &cpu_set);
-> +       if (CHECK(err, "set_affinity", "err %d, errno %d\n", err, errno))
-> +               goto cleanup;
-> +
-> +       pmu_fd = syscall(__NR_perf_event_open, &attr, -1 /* pid */,
-> +                        0 /* cpu 0 */, -1 /* group id */,
-> +                        0 /* flags */);
-> +       if (pmu_fd < 0) {
-> +               printf("%s:SKIP:cpu doesn't support the event\n", __func__);
-> +               test__skip();
-> +               goto cleanup;
-> +       }
-> +
-> +       skel->links.oncpu = bpf_program__attach_perf_event(skel->progs.oncpu,
-> +                                                          pmu_fd);
-> +       if (CHECK(IS_ERR(skel->links.oncpu), "attach_perf_event",
-> +                 "err %ld\n", PTR_ERR(skel->links.oncpu))) {
-> +               close(pmu_fd);
-> +               goto cleanup;
-> +       }
-> +
-> +       /* create kernel and user stack traces for testing */
-> +       func_6();
-> +
-> +       CHECK(skel->data->stackid_kernel != 2, "get_stackid_kernel", "failed\n");
-> +       CHECK(skel->data->stackid_user != 2, "get_stackid_user", "failed\n");
-> +       CHECK(skel->data->stack_kernel != 2, "get_stack_kernel", "failed\n");
-> +       CHECK(skel->data->stack_user != 2, "get_stack_user", "failed\n");
-> +       close(pmu_fd);
+So I think the membarrier code gets *that* part right (modulo what we=20
+have seen already) if the kernel access is being done from process
+context.
 
-I think pmu_fd will be closed by perf_event_stackmap__destory (through
-closing the link)
+But yes if the access is coming from io_uring that has done
+kthread_use_mm or some other random code running in a kernel thread
+working on get_user_pages memory or any similar shared vm_insert_pfn
+memory, then it goes completely to hell.
 
-> +
-> +cleanup:
-> +       perf_event_stackmap__destroy(skel);
-> +}
-> diff --git a/tools/testing/selftests/bpf/progs/perf_event_stackmap.c b/tools/testing/selftests/bpf/progs/perf_event_stackmap.c
-> new file mode 100644
-> index 0000000000000..1b0457efeedec
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/perf_event_stackmap.c
-> @@ -0,0 +1,64 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2020 Facebook
-> +#include "vmlinux.h"
-> +#include <bpf/bpf_helpers.h>
-> +
-> +#ifndef PERF_MAX_STACK_DEPTH
-> +#define PERF_MAX_STACK_DEPTH         127
-> +#endif
-> +
-> +#ifndef BPF_F_USER_STACK
-> +#define BPF_F_USER_STACK               (1ULL << 8)
-> +#endif
+So good catch, PF_KTHREAD check is problematic there even if no actual
+users exist today. rq->curr =3D=3D rq->idle test might be better, but can
+we have interrupts writing completions into user memory? For performance
+I would hope so, so that makes even that test problematic.
 
-BPF_F_USER_STACK should be in vmlinux.h already, similarly to BPF_F_CURRENT_CPU
+Maybe membarrier should close that gap entirely, and work around performanc=
+e
+issue by adding _USER_ONLY flags which explicitly only order user mode
+accesess vs other user accesses.
 
-> +
-> +typedef __u64 stack_trace_t[PERF_MAX_STACK_DEPTH];
-> +struct {
-> +       __uint(type, BPF_MAP_TYPE_STACK_TRACE);
-> +       __uint(max_entries, 16384);
-> +       __uint(key_size, sizeof(__u32));
-> +       __uint(value_size, sizeof(stack_trace_t));
-> +} stackmap SEC(".maps");
-> +
-> +struct {
-> +       __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-> +       __uint(max_entries, 1);
-> +       __type(key, __u32);
-> +       __type(value, stack_trace_t);
-> +} stackdata_map SEC(".maps");
-> +
-> +long stackid_kernel = 1;
-> +long stackid_user = 1;
-> +long stack_kernel = 1;
-> +long stack_user = 1;
-> +
+Thanks,
+Nick
 
-nit: kind of unusual to go from 1 -> 2, why no zero to one as a flag?
-those variables will be available through skel->bss, btw
-
-> +SEC("perf_event")
-> +int oncpu(void *ctx)
-> +{
-> +       int max_len = PERF_MAX_STACK_DEPTH * sizeof(__u64);
-> +       stack_trace_t *trace;
-> +       __u32 key = 0;
-> +       long val;
-> +
-> +       val = bpf_get_stackid(ctx, &stackmap, 0);
-> +       if (val > 0)
-> +               stackid_kernel = 2;
-> +       val = bpf_get_stackid(ctx, &stackmap, BPF_F_USER_STACK);
-> +       if (val > 0)
-> +               stackid_user = 2;
-> +
-> +       trace = bpf_map_lookup_elem(&stackdata_map, &key);
-> +       if (!trace)
-> +               return 0;
-> +
-> +       val = bpf_get_stack(ctx, trace, max_len, 0);
-
-given you don't care about contents of trace, you could have used
-`stack_trace_t trace = {}` global variable instead of PERCPU_ARRAY.
-
-> +       if (val > 0)
-> +               stack_kernel = 2;
-> +
-> +       val = bpf_get_stack(ctx, trace, max_len, BPF_F_USER_STACK);
-
-nit: max_len == sizeof(stack_trace_t) ?
-
-> +       if (val > 0)
-> +               stack_user = 2;
-> +
-> +       return 0;
-> +}
-> +
-> +char LICENSE[] SEC("license") = "GPL";
-> --
-> 2.24.1
->
