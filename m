@@ -2,133 +2,206 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F39C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC22C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50CAB207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A6E20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gczDwv0u"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="tmCiBOcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgGPO7k (ORCPT
+        id S1728706AbgGPPA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:59:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbgGPO7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:59:39 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88CAAC061755;
-        Thu, 16 Jul 2020 07:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=0utnqY8s+MOoo2WbklOSO0CnKqfkeDdOlM8s5Xa1IOA=; b=gczDwv0uJQk5yeRN4+5UTWmgXy
-        cHAn5JjOIUtVDoOt8iBk3JQkDtD3g+HBjnj9u0l822Zzxm+3FqOOqiW2+vNWA+lEh2HozyB6E8lLp
-        hNIOwq6cuEmZYdf2jf4PynnHzp/RpCX6U6I/nAT/kBBKILiO8lYQW4/GQ8xGad5IB72pRMAFDNuD/
-        DQl+aPQkFuBNTCjKLE6WpzWx1lv3CbMCYZDxALR9c+rOObkaeGD659dqAj2iNEEwuPkOXnPbtlWb3
-        Vs6dkY6OnnLl3hrsjzl1wWl1kPo/FCG59e8UGEV3bdkSVDlWpLwlOFivRVX0o/qC8Jhg8NfKYldBN
-        CimgmZrQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jw5MC-0003Ta-Vm; Thu, 16 Jul 2020 14:59:33 +0000
-Subject: Re: [PATCH v6 7/7] ima: add policy support for the new file open
- MAY_OPENEXEC flag
-To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200714181638.45751-1-mic@digikod.net>
- <20200714181638.45751-8-mic@digikod.net> <202007151339.283D7CD@keescook>
- <8df69733-0088-3e3c-9c3d-2610414cea2b@digikod.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <61c05cb0-a956-3cc7-5dab-e11ebf0e95bf@infradead.org>
-Date:   Thu, 16 Jul 2020 07:59:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <8df69733-0088-3e3c-9c3d-2610414cea2b@digikod.net>
-Content-Type: text/plain; charset=iso-8859-15
+        Thu, 16 Jul 2020 11:00:28 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24214 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726963AbgGPPA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:00:26 -0400
+IronPort-SDR: 7+YlOFUHovRcEQZ6F3S4tmGQe2M9hlwnZiGL172hWU53XTRDnw9o1HD1TsiJgcTRdJEqEVX20E
+ KTKppiE2yAWw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="214127935"
+X-IronPort-AV: E=Sophos;i="5.75,359,1589266800"; 
+   d="scan'208";a="214127935"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 08:00:25 -0700
+IronPort-SDR: 8yqHLtrdHFFDFwu1fxLZ/JFutZw7NeRTDrABxJxLM5nE4xKFab+3j/AcUlyqCgXAJZFci91cVN
+ FQCx7thY1UIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,359,1589266800"; 
+   d="scan'208";a="460497708"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga005.jf.intel.com with ESMTP; 16 Jul 2020 08:00:25 -0700
+Received: from fmsmsx125.amr.corp.intel.com (10.18.125.40) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Jul 2020 08:00:25 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ FMSMSX125.amr.corp.intel.com (10.18.125.40) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Jul 2020 08:00:25 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.171)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 16 Jul 2020 08:00:24 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lQRm5pB04PmnpiY1DK2cZuhIVXnGpnMhaUFJoTBzztMYsQHpqkIlbWPleuJwv3X5JgtDqrQUZ2WKmVbVWp1ecNJpfiy6K0udtA2BHKPdspvlNV1XNQtCvlja5laQAqpAFmgbElV2vXEgdEhMjZahcLZkC47aKo5T3rfkWMlBuCVEf5/d4B4vlXOs85fYyZcBbIK/E5H/tKvEqyZqIWx1bnuKnn7chIdI0CEuFNXhfL1/I6NAzfR1uf+IMrOaTAn+ej6ySl9H9+caOtuvNaefUC4RtFwvwfe7DFKpBOwxcqsOwtq+4nIvfoQLfi2m6PWvKeHrmY3GYPZKxCGnRysDjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DDjOAqfS2sWJ/GX7qzMUVfxnc0H1mZuIb1V4cv8bRFs=;
+ b=LbffdB/TTaY6YOXt0zO1sOkR5nFxdZU2uy5K4UVjEdaAsiAMqH9Ry1bOqJkZtR9P2EUmPis34EVxy/IMpKQiE/0qUs8z9ZLslum2dHYOANdbLoPtPRfGeV+EMYVMoprry5jT3EQSUTtZL7tbdqP8nANOk0UKlwSoQnjmdQPcMZwcpOSIVRDFPm1keuX4DOgCLb4IIJ+5KLVoEGeNVMOjeYxc2SJrljLCuLOWUsQcMMzdlnpdBDIqsceGjfe2YuFqXLoKvSZJzxmp9LVqTIOsAhDI3Jthl/DD3U4gIYQ3h4P+afPKKRLEyHFzpOlAm3WTi/xeRk+otGAukXGDwIp33A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DDjOAqfS2sWJ/GX7qzMUVfxnc0H1mZuIb1V4cv8bRFs=;
+ b=tmCiBOcSO+w/6grbliZL6TvFeHscKcneocI661N7hPshXWxUzCk0Iip8zs8p6+mGuxKSJsrbca6gjAKd4wE1TWOoFceyIUjJGlaVaT7ZxS7/JgPTg5XGczW+oMTBVT2BQD6y8j2wc2Z6UKWPIvBNs/Le2slzLesQ5HjNXa6lSwY=
+Received: from BY5PR11MB4307.namprd11.prod.outlook.com (2603:10b6:a03:1bd::27)
+ by BYAPR11MB3191.namprd11.prod.outlook.com (2603:10b6:a03:79::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.23; Thu, 16 Jul
+ 2020 15:00:23 +0000
+Received: from BY5PR11MB4307.namprd11.prod.outlook.com
+ ([fe80::81b2:faf6:4cc3:261a]) by BY5PR11MB4307.namprd11.prod.outlook.com
+ ([fe80::81b2:faf6:4cc3:261a%4]) with mapi id 15.20.3174.025; Thu, 16 Jul 2020
+ 15:00:23 +0000
+From:   "N, Harshapriya" <harshapriya.n@intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "Lukasz Majczak" <lma@semihalf.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "Liam Girdwood" <liam.r.girdwood@linux.intel.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "Radoslaw Biernacki" <rad@semihalf.com>,
+        Ross Zwisler <zwisler@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M R, Sathya Prakash" <sathya.prakash.m.r@intel.com>,
+        Bob Brandt <brndt@google.com>, Marcin Wojtas <mw@semihalf.com>,
+        Alex Levin <levinale@chromium.org>,
+        "Gopal, Vamshi Krishna" <vamshi.krishna.gopal@intel.com>
+Subject: RE: [PATCH v5] ASoC: Intel: kbl_rt5663_rt5514_max98927: Fix
+ kabylake_ssp_fixup function
+Thread-Topic: [PATCH v5] ASoC: Intel: kbl_rt5663_rt5514_max98927: Fix
+ kabylake_ssp_fixup function
+Thread-Index: AQHWVDmVeV8vwBfdakmCVbwCMxmn6Kj8Q1eAgA4W94A=
+Date:   Thu, 16 Jul 2020 15:00:22 +0000
+Message-ID: <BY5PR11MB4307B232AF066572F8037934FD7F0@BY5PR11MB4307.namprd11.prod.outlook.com>
+References: <20200703121650.547944-1-lma@semihalf.com>
+ <20200707083404.3846-1-lma@semihalf.com>
+ <4cb5ea5a-60b3-7f74-0f68-e66d2f2872bf@linux.intel.com>
+In-Reply-To: <4cb5ea5a-60b3-7f74-0f68-e66d2f2872bf@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [24.23.139.164]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9331af63-ade7-4f14-1bc9-08d82998f719
+x-ms-traffictypediagnostic: BYAPR11MB3191:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB3191BAFE60121BDCBA788D64FD7F0@BYAPR11MB3191.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1227;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TfziwmRO8zC3E5uQaZTUT/aaQfOsRv6I8RPEVJuChk1az0IhjBJm3D4xuLXcLMHpxTKdmcTA45A7Kt9S+YQTLh2krOiWkr45K8p4dwjurU+Lfj16AZybJpMBs8TVvdzs5mdtxhQDxcs3MKD5LzltuD7tCP1+GWy9cRMI9UvcGqwmlSDDgx/doO/D+tSqlyJTNngrPwYrk64eWA7h6NpwnJAPAIAKUycE6Uf3vzMb+xmWLW5I3/sE+8delM9xmMLq7UpUp54IZryw/DHswz1p8pC47zjpTAsAKEugG67dDy066lVX9t+MI3asg00BAtae3glrTGnSkAEAlTn0c0DRAw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4307.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(396003)(346002)(136003)(478600001)(316002)(55016002)(7696005)(110136005)(86362001)(2906002)(7416002)(8936002)(33656002)(4326008)(54906003)(9686003)(66476007)(53546011)(83380400001)(5660300002)(52536014)(66446008)(76116006)(26005)(66556008)(64756008)(6506007)(66946007)(186003)(8676002)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: U6MtQX/sLXV0/6vWwIKPJuRJ2JlRODInQmuFhfiH+bipLUMkPsz+S9jOagP/r8i2v0auRhL/+x2xN134n53bTneZ/ZJ8NwjPuX4cd/suPC/HNA+OvAKTcm4l2Oe5l7L3x2OHpuwlr/vQAjbAeI4q4s2JX6Jzk86wNKvoCGZITG7qsyQDgdH5mANjOJqC2Q4C5hbpMdl7Pj+2mXwRpJH24Ei4Gx9WcmsgNH0gKJHVUZyYeNsLPA6D5lQAGGe9S3viA6JpzIqBDIMJBWZFBl4Rsg8jQCfgC1Cgi+4Swls+7tOku2wCKLIao2vVKMfkfwo17czW5dimRRbQp+S86PyzuEltoeoxaADJpi2umEvoMMk9EJCrT4VS0PK48FO6eCgvwhaRREr/PWyBpwW1NGjGXiGLrc9F/KR/Pze8QMO1ArH4kervdrwZ01UvQXsHvBzximXXEDytQ5MGS44aRxhXw90y6w1unQTUzV2nKzj8asL8QUd/8vH/pz8SWSv9q+/n
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4307.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9331af63-ade7-4f14-1bc9-08d82998f719
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 15:00:22.7842
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 78G1PZ+5uL9Q7F7/js0wmVLAVyAk+ntx4fOiVJv692RuZ33IPVAJ5cWTKdphf/nVSo6iEd/P2oEG1fswpbbbGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3191
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/20 7:40 AM, Mickaël Salaün wrote:
-> 
-> On 15/07/2020 22:40, Kees Cook wrote:
->> On Tue, Jul 14, 2020 at 08:16:38PM +0200, Mickaël Salaün wrote:
->>> From: Mimi Zohar <zohar@linux.ibm.com>
->>>
->>> The kernel has no way of differentiating between a file containing data
->>> or code being opened by an interpreter.  The proposed O_MAYEXEC
->>> openat2(2) flag bridges this gap by defining and enabling the
->>> MAY_OPENEXEC flag.
->>>
->>> This patch adds IMA policy support for the new MAY_OPENEXEC flag.
->>>
->>> Example:
->>> measure func=FILE_CHECK mask=^MAY_OPENEXEC
->>> appraise func=FILE_CHECK appraise_type=imasig mask=^MAY_OPENEXEC
->>>
->>> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
->>> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
->>> Acked-by: Mickaël Salaün <mic@digikod.net>
->>
->> (Process nit: if you're sending this on behalf of another author, then
->> this should be Signed-off-by rather than Acked-by.)
-> 
-> I'm not a co-author of this patch.
-> 
-
-from Documentation/process/submitting-patches.rst:
-
-The Signed-off-by: tag indicates that the signer was involved in the
-development of the patch, or that he/she was in the patch's delivery path.
-                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
--- 
-~Randy
-
+DQo+IA0KPiANCj4gT24gNy83LzIwIDM6MzQgQU0sIEx1a2FzeiBNYWpjemFrIHdyb3RlOg0KPiA+
+IEZpeCBrYWJ5bGFrZV9zc3BfZml4dXAgZnVuY3Rpb24gdG8gZGlzdGluZ3Vpc2ggY29kZWNzIERB
+SXMgYnkgbmFtZXMsDQo+ID4gYXMgY3VycmVudCBhcHByb2FjaCwgbGVhZHMgdG8gY3Jhc2ggd2hp
+bGUgdHJ5aW5nIHRvIGdldCBzbmRfc29jX2RwY20NCj4gPiB3aXRoDQo+ID4gY29udGFpbmVyX29m
+KCkgbWFjcm8gaW4ga2FieWxha2Vfc3NwX2ZpeHVwKCkuDQo+ID4gVGhlIGNyYXNoIGNhbGwgcGF0
+aCBsb29rcyBhcyBiZWxvdzoNCj4gPiBzb2NfcGNtX2h3X3BhcmFtcygpDQo+ID4gc25kX3NvY19k
+YWlfaHdfcGFyYW1zKGNvZGVjX2RhaSwgc3Vic3RyZWFtLCAmY29kZWNfcGFyYW1zKTsNCj4gPiBy
+dGQtPmRhaV9saW5rLT5iZV9od19wYXJhbXNfZml4dXAocnRkLCBwYXJhbXMpDQo+ID4ga2FieWxh
+a2Vfc3NwX2ZpeHVwKCkNCj4gPiBJbiB0aGlzIGNhc2UsIGNvZGVjX3BhcmFtcyBpcyBqdXN0IGEg
+Y29weSBvZiBhbiBpbnRlcm5hbCBzdHJ1Y3R1cmUgYW5kDQo+ID4gaXMgbm90IGVtYmVkZGVkIGlu
+dG8gc3RydWN0IHNuZF9zb2NfZHBjbSB0aHVzIHdlIGNhbm5vdCB1c2UNCj4gPiBjb250YWluZXJf
+b2YoKSBvbiBpdC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEx1a2FzeiBNYWpjemFrIDxsbWFA
+c2VtaWhhbGYuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhhcnNoYSBQcml5YSA8aGFyc2hhcHJp
+eWEubkBpbnRlbC5jb20+DQo+IA0KPiBBY2tlZC1ieTogUGllcnJlLUxvdWlzIEJvc3NhcnQgPHBp
+ZXJyZS1sb3Vpcy5ib3NzYXJ0QGxpbnV4LmludGVsLmNvbT4NClRoaXMgZml4IGlzIG5vdCBjb21w
+bGV0ZSBhcyB0aGUgYXNvY19ydGRfdG9fY29kZWMocnRkLDApIHJldHVybnMgdGhlIGNvZGVjIGlu
+c3RhbmNlDQphdCAwdGggbG9jYXRpb24uICBJbnN0ZWFkIHdlIG5lZWQgdG8gdXNlIHRoZSBkcGNt
+IGluIHRoZSBzbmRfcGNtX3J1bnRpbWUgc3RydWN0dXJlLg0KSSB3aWxsIG5lZWQgYW5vdGhlciB2
+ZXJzaW9uIG9mIHRoaXMgcGF0Y2guIA0KDQo+IA0KPiA+IC0tLQ0KPiA+IHYxIC0+IHYyOg0KPiA+
+IC0gRXh0cmFjdCBkbWljIGZyb20gU1NQMCBhcyBldmVyeSBCRSBzaG91bGQgaGF2ZSBvd24gZml4
+dXAgZnVuY3Rpb24uDQo+ID4gdjIgLT4gdjM6DQo+ID4gLSBSZXN0b3JlIG5hbWluZyBpbiB0aGUg
+ZGFwbSByb3V0ZSB0YWJsZSB0byBub3QgY29uZnVzZSB3aXRoIG90aGVyDQo+ID4gZHJpdmVycw0K
+PiA+IC0gRml4ZWQgaW5kZW50YXRpb25zDQo+ID4gdjMgLT4gdjQ6DQo+ID4gLSBVcGRhdGVkIGNv
+ZGUgYW5kIGNvbW1pdCBkZXNjcmlwdGlvbiBhY2NvcmRpbmcgdG8gc29sdXRpb24gcHJvcG9zZWQN
+Cj4gPiBieSBIYXJzaGENCj4gPiAtLS0NCj4gPiAgIC4uLi9pbnRlbC9ib2FyZHMva2JsX3J0NTY2
+M19ydDU1MTRfbWF4OTg5MjcuYyB8IDI4ICsrKysrKysrLS0tLS0tLS0tLS0NCj4gPiAgIDEgZmls
+ZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRp
+ZmYgLS1naXQgYS9zb3VuZC9zb2MvaW50ZWwvYm9hcmRzL2tibF9ydDU2NjNfcnQ1NTE0X21heDk4
+OTI3LmMNCj4gPiBiL3NvdW5kL3NvYy9pbnRlbC9ib2FyZHMva2JsX3J0NTY2M19ydDU1MTRfbWF4
+OTg5MjcuYw0KPiA+IGluZGV4IGIzNGNmNmNmMTEzOTUuLmRmNDU0ZGU0MDczOWEgMTAwNjQ0DQo+
+ID4gLS0tIGEvc291bmQvc29jL2ludGVsL2JvYXJkcy9rYmxfcnQ1NjYzX3J0NTUxNF9tYXg5ODky
+Ny5jDQo+ID4gKysrIGIvc291bmQvc29jL2ludGVsL2JvYXJkcy9rYmxfcnQ1NjYzX3J0NTUxNF9t
+YXg5ODkyNy5jDQo+ID4gQEAgLTMzMywzNiArMzMzLDMyIEBAIHN0YXRpYyBpbnQga2FieWxha2Vf
+c3NwX2ZpeHVwKHN0cnVjdA0KPiBzbmRfc29jX3BjbV9ydW50aW1lICpydGQsDQo+ID4gICB7DQo+
+ID4gICAJc3RydWN0IHNuZF9pbnRlcnZhbCAqcmF0ZSA9IGh3X3BhcmFtX2ludGVydmFsKHBhcmFt
+cywNCj4gPiAgIAkJCVNORFJWX1BDTV9IV19QQVJBTV9SQVRFKTsNCj4gPiAtCXN0cnVjdCBzbmRf
+aW50ZXJ2YWwgKmNoYW4gPSBod19wYXJhbV9pbnRlcnZhbChwYXJhbXMsDQo+ID4gKwlzdHJ1Y3Qg
+c25kX2ludGVydmFsICpjaGFubmVscyA9IGh3X3BhcmFtX2ludGVydmFsKHBhcmFtcywNCj4gPiAg
+IAkJCVNORFJWX1BDTV9IV19QQVJBTV9DSEFOTkVMUyk7DQo+ID4gICAJc3RydWN0IHNuZF9tYXNr
+ICpmbXQgPSBod19wYXJhbV9tYXNrKHBhcmFtcywNCj4gU05EUlZfUENNX0hXX1BBUkFNX0ZPUk1B
+VCk7DQo+ID4gLQlzdHJ1Y3Qgc25kX3NvY19kcGNtICpkcGNtID0gY29udGFpbmVyX29mKA0KPiA+
+IC0JCQlwYXJhbXMsIHN0cnVjdCBzbmRfc29jX2RwY20sIGh3X3BhcmFtcyk7DQo+ID4gLQlzdHJ1
+Y3Qgc25kX3NvY19kYWlfbGluayAqZmVfZGFpX2xpbmsgPSBkcGNtLT5mZS0+ZGFpX2xpbms7DQo+
+ID4gLQlzdHJ1Y3Qgc25kX3NvY19kYWlfbGluayAqYmVfZGFpX2xpbmsgPSBkcGNtLT5iZS0+ZGFp
+X2xpbms7DQo+ID4gKwlzdHJ1Y3Qgc25kX3NvY19kYWkgKmNvZGVjX2RhaSA9IGFzb2NfcnRkX3Rv
+X2NvZGVjKHJ0ZCwgMCk7DQo+ID4NCj4gPiAgIAkvKg0KPiA+ICAgCSAqIFRoZSBBRFNQIHdpbGwg
+Y29udmVydCB0aGUgRkUgcmF0ZSB0byA0OGssIHN0ZXJlbywgMjQgYml0DQo+ID4gICAJICovDQo+
+ID4gLQlpZiAoIXN0cmNtcChmZV9kYWlfbGluay0+bmFtZSwgIktibCBBdWRpbyBQb3J0IikgfHwN
+Cj4gPiAtCSAgICAhc3RyY21wKGZlX2RhaV9saW5rLT5uYW1lLCAiS2JsIEF1ZGlvIEhlYWRzZXQg
+UGxheWJhY2siKSB8fA0KPiA+IC0JICAgICFzdHJjbXAoZmVfZGFpX2xpbmstPm5hbWUsICJLYmwg
+QXVkaW8gQ2FwdHVyZSBQb3J0IikpIHsNCj4gPiArDQo+ID4gKwlpZiAoIXN0cmNtcChjb2RlY19k
+YWktPm5hbWUsIEtCTF9SRUFMVEVLX0RNSUNfQ09ERUNfREFJKSkgew0KPiA+ICsJCWlmIChwYXJh
+bXNfY2hhbm5lbHMocGFyYW1zKSA9PSAyIHx8DQo+ID4gKwkJCURNSUNfQ0goZG1pY19jb25zdHJh
+aW50cykgPT0gMikNCj4gPiArCQkJY2hhbm5lbHMtPm1pbiA9IGNoYW5uZWxzLT5tYXggPSAyOw0K
+PiA+ICsJCWVsc2UNCj4gPiArCQkJY2hhbm5lbHMtPm1pbiA9IGNoYW5uZWxzLT5tYXggPSA0Ow0K
+PiA+ICsJfSBlbHNlIHsNCj4gPiAgIAkJcmF0ZS0+bWluID0gcmF0ZS0+bWF4ID0gNDgwMDA7DQo+
+ID4gLQkJY2hhbi0+bWluID0gY2hhbi0+bWF4ID0gMjsNCj4gPiArCQljaGFubmVscy0+bWluID0g
+Y2hhbm5lbHMtPm1heCA9IDI7DQo+ID4gICAJCXNuZF9tYXNrX25vbmUoZm10KTsNCj4gPiAgIAkJ
+c25kX21hc2tfc2V0X2Zvcm1hdChmbXQsIFNORFJWX1BDTV9GT1JNQVRfUzI0X0xFKTsNCj4gPiAt
+CX0gZWxzZSBpZiAoIXN0cmNtcChmZV9kYWlfbGluay0+bmFtZSwgIktibCBBdWRpbyBETUlDIGNh
+cCIpKSB7DQo+ID4gLQkJaWYgKHBhcmFtc19jaGFubmVscyhwYXJhbXMpID09IDIgfHwNCj4gPiAt
+CQkJCURNSUNfQ0goZG1pY19jb25zdHJhaW50cykgPT0gMikNCj4gPiAtCQkJY2hhbi0+bWluID0g
+Y2hhbi0+bWF4ID0gMjsNCj4gPiAtCQllbHNlDQo+ID4gLQkJCWNoYW4tPm1pbiA9IGNoYW4tPm1h
+eCA9IDQ7DQo+ID4gICAJfQ0KPiA+ICAgCS8qDQo+ID4gICAJICogVGhlIHNwZWFrZXIgb24gdGhl
+IFNTUDAgc3VwcG9ydHMgUzE2X0xFIGFuZCBub3QgUzI0X0xFLg0KPiA+ICAgCSAqIHRodXMgY2hh
+bmdpbmcgdGhlIG1hc2sgaGVyZQ0KPiA+ICAgCSAqLw0KPiA+IC0JaWYgKCFzdHJjbXAoYmVfZGFp
+X2xpbmstPm5hbWUsICJTU1AwLUNvZGVjIikpDQo+ID4gKwlpZiAoIXN0cmNtcChjb2RlY19kYWkt
+Pm5hbWUsIEtCTF9NQVhJTV9DT0RFQ19EQUkpKQ0KPiA+ICAgCQlzbmRfbWFza19zZXRfZm9ybWF0
+KGZtdCwgU05EUlZfUENNX0ZPUk1BVF9TMTZfTEUpOw0KPiA+DQo+ID4gICAJcmV0dXJuIDA7DQo+
+ID4NCg==
