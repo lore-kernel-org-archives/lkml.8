@@ -2,223 +2,233 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCD5C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A26CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FCBF2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA91207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:50:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="W0DQIWLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgGQBtd (ORCPT
+        id S1726784AbgGQBuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 21:49:33 -0400
-Received: from lucky1.263xmail.com ([211.157.147.130]:38796 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgGQBtU (ORCPT
+        Thu, 16 Jul 2020 21:50:22 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:27452 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgGQBuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 21:49:20 -0400
-Received: from localhost (unknown [192.168.167.13])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 97FFACA856;
-        Fri, 17 Jul 2020 09:49:12 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P17843T139819799787264S1594950550837667_;
-        Fri, 17 Jul 2020 09:49:12 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <f4a8f6afb7330e815421503c4fffe68f>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     heiko@sntech.de, linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kever.yang@rock-chips.com,
-        david.wu@rock-chips.com, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 01/13] pinctrl: rockchip: add nr_pins to rockchip_pin_ctrl
-Date:   Fri, 17 Jul 2020 09:48:56 +0800
-Message-Id: <20200717014908.13914-2-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200717014908.13914-1-jay.xu@rock-chips.com>
-References: <20200717014908.13914-1-jay.xu@rock-chips.com>
+        Thu, 16 Jul 2020 21:50:21 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200717015017epoutp01ed7f948d749bb0b6cfcfc5e7ee20bec2~iZyL0m8NS0832908329epoutp01j
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:50:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200717015017epoutp01ed7f948d749bb0b6cfcfc5e7ee20bec2~iZyL0m8NS0832908329epoutp01j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594950617;
+        bh=qdjULQp3ZZR65z/qcwBuzTZHFQcxGD6qLQ1iEDE5gmk=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=W0DQIWLKJ7KTOFEU2icuI/bRORIeU5/JF8B/PmkCdAjPwmAf/MAWwl+tCOF+soDXy
+         2Dg+jzmMtYE36+DDbWa1xfaYuIMIDGKn7rgL/B/NCJ9/YeHxm2ePjaMcXdT9jNKSAs
+         EsTqEIqQYyUfpXhMjvfRfCcvV0P2LD21ut03Aeu4=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20200717015017epcas5p417f7194ad5145ba2eb26402f3ba7b5b6~iZyLCJ5Id1286012860epcas5p4i;
+        Fri, 17 Jul 2020 01:50:17 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        58.BA.09467.8D3011F5; Fri, 17 Jul 2020 10:50:16 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200716164524epcas5p310db2c23bbc82adf365112ae673a5209~iSWbc2z9K0203802038epcas5p31;
+        Thu, 16 Jul 2020 16:45:24 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200716164524epsmtrp1d758bdc50442e6a5c771eab7205ca0c2~iSWbXQRd71958019580epsmtrp1a;
+        Thu, 16 Jul 2020 16:45:24 +0000 (GMT)
+X-AuditID: b6c32a49-a29ff700000024fb-4b-5f1103d84f22
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        12.62.08303.324801F5; Fri, 17 Jul 2020 01:45:23 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200716164519epsmtip2489569e9c4cb5042564c431e03c45d00~iSWXLwRzG1317113171epsmtip2b;
+        Thu, 16 Jul 2020 16:45:19 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Avi Shchislowski'" <Avi.Shchislowski@wdc.com>,
+        "'Bart Van Assche'" <bvanassche@acm.org>,
+        <daejun7.park@samsung.com>, "'Avri Altman'" <Avri.Altman@wdc.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <asutoshd@codeaurora.org>, <beanhuo@micron.com>,
+        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
+        <tomas.winkler@intel.com>
+Cc:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Sang-yoon Oh'" <sangyoon.oh@samsung.com>,
+        "'Sung-Jun Park'" <sungjun07.park@samsung.com>,
+        "'yongmyung lee'" <ymhungry.lee@samsung.com>,
+        "'Jinyoung CHOI'" <j-young.choi@samsung.com>,
+        "'Adel Choi'" <adel.choi@samsung.com>,
+        "'BoRam Shin'" <boram.shin@samsung.com>
+In-Reply-To: <SN6PR04MB3872FBE1EAE3578BFD2601189A7F0@SN6PR04MB3872.namprd04.prod.outlook.com>
+Subject: RE: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
+Date:   Thu, 16 Jul 2020 22:15:17 +0530
+Message-ID: <001301d65b90$8012c3e0$80384ba0$@samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQNTAwbo7R95v2Jv+B+oDyvdEhuZkAJ3qsxbAEskZzgCs8hfhQGhYIDUpdhZ7/A=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMKsWRmVeSWpSXmKPExsWy7bCmuu4NZsF4g2lnLSw23n3FarG37QS7
+        xdddC5gtXv68ymZx8GEni8Xh2+/YLaZ9+Mls8Wn9MlaLVQ/CLXr7t7JZLLqxjcni8q45bBbd
+        13ewWSw//o/JYsLLJSwWS7feZLTonL6GxeJDT53FooW7WRyEPS5f8fa43NfL5LF4z0smjwmL
+        DjB6tJzcz+LxfX0Hm8fHp7dYPPq2rGL0+LxJzqP9QDdTAFcUl01Kak5mWWqRvl0CV8bjhuCC
+        B/IVbZ//MzYwNkh1MXJySAiYSPw9Npmli5GLQ0hgN6PEyePvmCGcT4wSs6d+Y4NwPjNKdD++
+        xgrT8ukMTGIXo0Tb3vtQ/W8YJY4tW8wMUsUmoCuxY3EbWJWIwG0miY9ze9hBHGaBC0wS977f
+        BpvFKRArsWb9JyYQW1jAW+L32xlsIDaLgKrE5pvHwOK8ApYS7x9dZIGwBSVOznwCZjMLaEss
+        W/iaGeImBYmfT5eBzRQR8JO4tvoaI0SNuMTRnz1gH0kI9HNKTN+xAKrBRWL7nE9sELawxKvj
+        W9ghbCmJl/1tQDYHkJ0t0bPLGCJcI7F03jEWCNte4sCVOSwgJcwCmhLrd+lDhGUlpp5axwSx
+        lk+i9/cTJog4r8SOeTC2qkTzu6tQY6QlJnZ3s05gVJqF5LNZSD6bheSDWQjbFjCyrGKUTC0o
+        zk1PLTYtMMxLLdcrTswtLs1L10vOz93ECE6XWp47GO8++KB3iJGJg/EQowQHs5II7/yXAvFC
+        vCmJlVWpRfnxRaU5qcWHGKU5WJTEeZV+nIkTEkhPLEnNTk0tSC2CyTJxcEo1MGWJnSlU0l2+
+        W3ORfHKfoSf/krfzn0S4SK7l+vv1l7bRCj65ffalFsvb3x885nlpfqCavaBHeM+T/FWZc3Om
+        7nm9bqHo+a2i8TX5Br9SmExfFf8KEHx67IHYESW5pKD+j1lbFp+vmdfSo8ClHl6SLHu9bQpX
+        o7FKkuFDB4OlIldXlYRmX+SuK57k1mWqqfDDJ+jETA3l1DrfBRbK7Pq9zN9Tex4Ly9RMmNxi
+        wcJQKX4jbOujtPAyoy+fDBetKrT7F3ayL1jffeakcIYEbe/5MlfL/E7GqFs//Ht1r9qy11qv
+        lAvy2JOaJj2yjVuz9F4Qz9cIPV/1U9oP71768/3gyW8fZvzlPfRghvJDdb06JZbijERDLeai
+        4kQASRTo4wYEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRmVeSWpSXmKPExsWy7bCSvK5Ki0C8QZumxca7r1gt9radYLf4
+        umsBs8XLn1fZLA4+7GSxOHz7HbvFtA8/mS0+rV/GarHqQbhFb/9WNotFN7YxWVzeNYfNovv6
+        DjaL5cf/MVlMeLmExWLp1puMFp3T17BYfOips1i0cDeLg7DH5SveHpf7epk8Fu95yeQxYdEB
+        Ro+Wk/tZPL6v72Dz+Pj0FotH35ZVjB6fN8l5tB/oZgrgiuKySUnNySxLLdK3S+DKmN9mUbBI
+        vmLB57usDYzrJLsYOTkkBEwkPp35xgZiCwnsYJSY8jECIi4tcX3jBHYIW1hi5b/nQDYXUM0r
+        Rom/+5ezgCTYBHQldixuYwNJiAg8Z5I4sewLE4jDLHCNSeLPx89sEC1XmST+LfzECNLCKRAr
+        sWb9JyYQW1jAW+L32xlgu1kEVCU23zwGFucVsJR4/+giC4QtKHFy5hMwm1lAW6L3YSsjjL1s
+        4WtmiPsUJH4+XcYKYosI+ElcW30NqkZc4ujPHuYJjMKzkIyahWTULCSjZiFpWcDIsopRMrWg
+        ODc9t9iwwCgvtVyvODG3uDQvXS85P3cTIzjmtbR2MO5Z9UHvECMTB+MhRgkOZiURXh4u3ngh
+        3pTEyqrUovz4otKc1OJDjNIcLErivF9nLYwTEkhPLEnNTk0tSC2CyTJxcEo1MNXKpPzIFp9q
+        fvukSOfMmGyt7k3XbzpynX7JOevw9Hdb1+/+qc6mJvv03h+V8Elrfl86U5Uxo2nmNv5ZigV9
+        mkIbu7/eCXzzR+q61JmaR1MLvDS+ZcpMsC17U76Zv3BqC7OftePKxNhziQeefpVlV17x2dj5
+        NPN2SfdjtzNEJ3awhv5p2vugc3E4z+/ca7dMKq+brBS89T/+wmr/e1vlW7uvTfsTzlilNe+x
+        vBJzl/f/NxrrjMLuXb+s+z085QLfypSeXRFHll6ZM3/3NeO3E77I5u759JK30OWs2Qkbu39T
+        Jk1duimm1Mx5R06iS11G6vvDTjpRjZEOm6Yt1vJMYn5jHJQ4vU9YOPX8947rjlOUWIozEg21
+        mIuKEwFA8W5maAMAAA==
+X-CMS-MailID: 20200716164524epcas5p310db2c23bbc82adf365112ae673a5209
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8
+References: <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p8>
+        <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
+        <SN6PR04MB38720C3D8FC176C3C7FB51B89A7E0@SN6PR04MB3872.namprd04.prod.outlook.com>
+        <4174fcf4-73ec-8e3f-90a5-1e7584e3e2d0@acm.org>
+        <SN6PR04MB3872FBE1EAE3578BFD2601189A7F0@SN6PR04MB3872.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add nr_pins to rockchip_pin_ctrl by hand, instead of calculating during
-driver probe. This patch is prepare work for making rockchip_pin_ctrl to
-be const type.
+Hi Avi,
 
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- drivers/pinctrl/pinctrl-rockchip.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+> -----Original Message-----
+> From: Avi Shchislowski <Avi.Shchislowski=40wdc.com>
+> Sent: 16 July 2020 15:31
+> To: Bart Van Assche <bvanassche=40acm.org>; daejun7.park=40samsung.com; A=
+vri
+> Altman <Avri.Altman=40wdc.com>; jejb=40linux.ibm.com;
+> martin.petersen=40oracle.com; asutoshd=40codeaurora.org;
+> beanhuo=40micron.com; stanley.chu=40mediatek.com; cang=40codeaurora.org;
+> tomas.winkler=40intel.com; ALIM AKHTAR <alim.akhtar=40samsung.com>
+> Cc: linux-scsi=40vger.kernel.org; linux-kernel=40vger.kernel.org; Sang-yo=
+on Oh
+> <sangyoon.oh=40samsung.com>; Sung-Jun Park
+> <sungjun07.park=40samsung.com>; yongmyung lee
+> <ymhungry.lee=40samsung.com>; Jinyoung CHOI <j-young.choi=40samsung.com>;
+> Adel Choi <adel.choi=40samsung.com>; BoRam Shin
+> <boram.shin=40samsung.com>
+> Subject: RE: =5BPATCH v6 0/5=5D scsi: ufs: Add Host Performance Booster S=
+upport
+>=20
+>=20
+>=20
+> > -----Original Message-----
+> > From: Bart Van Assche <bvanassche=40acm.org>
+> > Sent: Thursday, July 16, 2020 4:42 AM
+> > To: Avi Shchislowski <Avi.Shchislowski=40wdc.com>;
+> > daejun7.park=40samsung.com; Avri Altman <Avri.Altman=40wdc.com>;
+> > jejb=40linux.ibm.com; martin.petersen=40oracle.com;
+> > asutoshd=40codeaurora.org; beanhuo=40micron.com;
+> stanley.chu=40mediatek.com;
+> > cang=40codeaurora.org; tomas.winkler=40intel.com; ALIM AKHTAR
+> > <alim.akhtar=40samsung.com>
+> > Cc: linux-scsi=40vger.kernel.org; linux-kernel=40vger.kernel.org;
+> > Sang-yoon Oh <sangyoon.oh=40samsung.com>; Sung-Jun Park
+> > <sungjun07.park=40samsung.com>; yongmyung lee
+> > <ymhungry.lee=40samsung.com>; Jinyoung CHOI <j-
+> young.choi=40samsung.com>;
+> > Adel Choi <adel.choi=40samsung.com>; BoRam Shin
+> <boram.shin=40samsung.com>
+> > Subject: Re: =5BPATCH v6 0/5=5D scsi: ufs: Add Host Performance Booster
+> > Support
+> >
+> > CAUTION: This email originated from outside of Western Digital. Do not
+> > click on links or open attachments unless you recognize the sender and
+> > know that the content is safe.
+> >
+> >
+> > On 2020-07-15 11:34, Avi Shchislowski wrote:
+> > > My name is Avi Shchislowski, I am managing the WDC's Linux Host R&D
+> > > team
+> > in which Avri is a member of.
+> > > As the review process of HPB is progressing very constructively, we
+> > > are getting
+> > more and more requests from OEMs, Inquiring about HPB in general, and
+> > host control mode in particular.
+> > >
+> > > Their main concern is that HPB will make it to 5.9 merge window, but
+> > > the host
+> > control mode patches will not.
+> > > Thus, because of recent Google's GKI, the next Android LTS might not
+> > > include
+> > HPB with host control mode.
+> > >
+> > > Aside of those requests, initial host control mode testing are
+> > > showing
+> > promising prospective with respect of performance gain.
+> > >
+> > > What would be, in your opinion, the best policy that host control
+> > > mode is
+> > included in next Android LTS?
+> >
+> > Hi Avi,
+> >
+> > Are you perhaps referring to the HPB patch series that has already been
+> posted?
+> > Although I'm not sure of this, I think that the SCSI maintainer
+> > expects more
+> > Reviewed-by: and Tested-by: tags. Has anyone from WDC already taken
+> > the time to review and/or test this patch series?
+> >
+> > Thanks,
+> >
+> > Bart.
+>=20
+> Yes, I am referring to the current proposal which I am replying to:
+> =5BPATCH v6 0/5=5D scsi: ufs: Add Host Performance Booster Support This p=
+roposal
+> does not contains host mode, hence our customers concern.
+> What would be, in your opinion, the best policy that host control mode is
+> included in next Android LTS  assuming it will be based on kernel v5.9 ?
+>=20
+This series has nothing to do with Host mode control, this series is target=
+ed for device mode control. General consensus here is to land this series a=
+s it is (unless someone has more review comments) and lets add/enhance what=
+ever need to be done for adding Host mode controls as well as other HPB2.0 =
+related changes.
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index c07324d1f265..bc465da68f26 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -3573,6 +3573,7 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
- 	struct rockchip_pin_ctrl *ctrl;
- 	struct rockchip_pin_bank *bank;
- 	int grf_offs, pmu_offs, drv_grf_offs, drv_pmu_offs, i, j;
-+	u32 nr_pins;
- 
- 	match = of_match_node(rockchip_pinctrl_dt_match, node);
- 	ctrl = (struct rockchip_pin_ctrl *)match->data;
-@@ -3599,13 +3600,14 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
- 	drv_pmu_offs = ctrl->pmu_drv_offset;
- 	drv_grf_offs = ctrl->grf_drv_offset;
- 	bank = ctrl->pin_banks;
-+	nr_pins = 0;
- 	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
- 		int bank_pins = 0;
- 
- 		raw_spin_lock_init(&bank->slock);
- 		bank->drvdata = d;
--		bank->pin_base = ctrl->nr_pins;
--		ctrl->nr_pins += bank->nr_pins;
-+		bank->pin_base = nr_pins;
-+		nr_pins += bank->nr_pins;
- 
- 		/* calculate iomux and drv offsets */
- 		for (j = 0; j < 4; j++) {
-@@ -3692,6 +3694,8 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
- 		}
- 	}
- 
-+	WARN_ON(nr_pins != ctrl->nr_pins);
-+
- 	return ctrl;
- }
- 
-@@ -3852,6 +3856,7 @@ static struct rockchip_pin_bank px30_pin_banks[] = {
- static struct rockchip_pin_ctrl px30_pin_ctrl = {
- 		.pin_banks		= px30_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(px30_pin_banks),
-+		.nr_pins		= 128,
- 		.label			= "PX30-GPIO",
- 		.type			= PX30,
- 		.grf_mux_offset		= 0x0,
-@@ -3876,6 +3881,7 @@ static struct rockchip_pin_bank rv1108_pin_banks[] = {
- static struct rockchip_pin_ctrl rv1108_pin_ctrl = {
- 	.pin_banks		= rv1108_pin_banks,
- 	.nr_banks		= ARRAY_SIZE(rv1108_pin_banks),
-+	.nr_pins		= 128,
- 	.label			= "RV1108-GPIO",
- 	.type			= RV1108,
- 	.grf_mux_offset		= 0x10,
-@@ -3897,6 +3903,7 @@ static struct rockchip_pin_bank rk2928_pin_banks[] = {
- static struct rockchip_pin_ctrl rk2928_pin_ctrl = {
- 		.pin_banks		= rk2928_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk2928_pin_banks),
-+		.nr_pins		= 128,
- 		.label			= "RK2928-GPIO",
- 		.type			= RK2928,
- 		.grf_mux_offset		= 0xa8,
-@@ -3912,6 +3919,7 @@ static struct rockchip_pin_bank rk3036_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3036_pin_ctrl = {
- 		.pin_banks		= rk3036_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk3036_pin_banks),
-+		.nr_pins		= 96,
- 		.label			= "RK3036-GPIO",
- 		.type			= RK2928,
- 		.grf_mux_offset		= 0xa8,
-@@ -3930,6 +3938,7 @@ static struct rockchip_pin_bank rk3066a_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3066a_pin_ctrl = {
- 		.pin_banks		= rk3066a_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk3066a_pin_banks),
-+		.nr_pins		= 176,
- 		.label			= "RK3066a-GPIO",
- 		.type			= RK2928,
- 		.grf_mux_offset		= 0xa8,
-@@ -3946,6 +3955,7 @@ static struct rockchip_pin_bank rk3066b_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3066b_pin_ctrl = {
- 		.pin_banks	= rk3066b_pin_banks,
- 		.nr_banks	= ARRAY_SIZE(rk3066b_pin_banks),
-+		.nr_pins	= 128,
- 		.label		= "RK3066b-GPIO",
- 		.type		= RK3066B,
- 		.grf_mux_offset	= 0x60,
-@@ -3961,6 +3971,7 @@ static struct rockchip_pin_bank rk3128_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3128_pin_ctrl = {
- 		.pin_banks		= rk3128_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk3128_pin_banks),
-+		.nr_pins		= 128,
- 		.label			= "RK3128-GPIO",
- 		.type			= RK3128,
- 		.grf_mux_offset		= 0xa8,
-@@ -3981,6 +3992,7 @@ static struct rockchip_pin_bank rk3188_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3188_pin_ctrl = {
- 		.pin_banks		= rk3188_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk3188_pin_banks),
-+		.nr_pins		= 128,
- 		.label			= "RK3188-GPIO",
- 		.type			= RK3188,
- 		.grf_mux_offset		= 0x60,
-@@ -3999,6 +4011,7 @@ static struct rockchip_pin_bank rk3228_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3228_pin_ctrl = {
- 		.pin_banks		= rk3228_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk3228_pin_banks),
-+		.nr_pins		= 128,
- 		.label			= "RK3228-GPIO",
- 		.type			= RK3288,
- 		.grf_mux_offset		= 0x0,
-@@ -4043,6 +4056,7 @@ static struct rockchip_pin_bank rk3288_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3288_pin_ctrl = {
- 		.pin_banks		= rk3288_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk3288_pin_banks),
-+		.nr_pins		= 264,
- 		.label			= "RK3288-GPIO",
- 		.type			= RK3288,
- 		.grf_mux_offset		= 0x0,
-@@ -4079,6 +4093,7 @@ static struct rockchip_pin_bank rk3308_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3308_pin_ctrl = {
- 		.pin_banks		= rk3308_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk3308_pin_banks),
-+		.nr_pins		= 160,
- 		.label			= "RK3308-GPIO",
- 		.type			= RK3308,
- 		.grf_mux_offset		= 0x0,
-@@ -4108,6 +4123,7 @@ static struct rockchip_pin_bank rk3328_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3328_pin_ctrl = {
- 		.pin_banks		= rk3328_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk3328_pin_banks),
-+		.nr_pins		= 128,
- 		.label			= "RK3328-GPIO",
- 		.type			= RK3288,
- 		.grf_mux_offset		= 0x0,
-@@ -4134,6 +4150,7 @@ static struct rockchip_pin_bank rk3368_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3368_pin_ctrl = {
- 		.pin_banks		= rk3368_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk3368_pin_banks),
-+		.nr_pins		= 128,
- 		.label			= "RK3368-GPIO",
- 		.type			= RK3368,
- 		.grf_mux_offset		= 0x0,
-@@ -4198,6 +4215,7 @@ static struct rockchip_pin_bank rk3399_pin_banks[] = {
- static struct rockchip_pin_ctrl rk3399_pin_ctrl = {
- 		.pin_banks		= rk3399_pin_banks,
- 		.nr_banks		= ARRAY_SIZE(rk3399_pin_banks),
-+		.nr_pins		= 160,
- 		.label			= "RK3399-GPIO",
- 		.type			= RK3399,
- 		.grf_mux_offset		= 0xe000,
--- 
-2.17.1
-
-
+> Thanks,
+> Avi
 
