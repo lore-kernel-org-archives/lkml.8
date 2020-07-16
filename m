@@ -2,419 +2,141 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B25C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB882C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4698520787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50BD20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AGBvyE3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgGPCn2 (ORCPT
+        id S1727119AbgGPCpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:43:28 -0400
-Received: from mx.socionext.com ([202.248.49.38]:52330 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728066AbgGPCn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:43:26 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 16 Jul 2020 11:43:24 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 640B4180BC2;
-        Thu, 16 Jul 2020 11:43:24 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 16 Jul 2020 11:43:24 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 2879C1A0509;
-        Thu, 16 Jul 2020 11:43:24 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v3 2/2] phy: socionext: Add UniPhier AHCI PHY driver support
-Date:   Thu, 16 Jul 2020 11:43:02 +0900
-Message-Id: <1594867382-27509-3-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594867382-27509-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1594867382-27509-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Wed, 15 Jul 2020 22:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgGPCpg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 22:45:36 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1B75C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 19:45:35 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id r17so5414616ybj.22
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 19:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=xWu7gPZztNAK+TxJrFnoSXXwBfp6shDBhGamt8B80c8=;
+        b=AGBvyE3KJbosodgTS9w19CA1M+qXplTx2t0WHQsXS12u2LmGODvao6q4grprQiMr+Z
+         E++7i3g9dwDbM8KkF4cfYRMP5vEfinEzTWGR/BsVG/Ptw8Von+PtKX7kIMbQ+SRIqwBN
+         f/baF9a8zwUVDIGaa7sQErP7Z20PkIAieTYAll6VA3JQY/WMOm8Vq6+rDUhSLGj6FgS7
+         4XTo6hrI/g5XlTAJ0ShVcNtfBgjQyr3rzy4JZe5wLS5QvGzZodg/pdiyONk2D1TehBto
+         /NXRBhV11U4yRk/QzrEe5o7zq+WutrxqZzF5HcV+eWyBgQrrn7FFHh+7ZdTs6zOAKMiu
+         GguA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=xWu7gPZztNAK+TxJrFnoSXXwBfp6shDBhGamt8B80c8=;
+        b=Qp7Y7oM5uF/sWUU6DpGjldQIt4dtvqsZn3ypPdnih1FwcfS68t5Hm5HuqC5kfLUEAs
+         Tk+TWchdYks79O+J3HuHRfInY/pz1yQ/OOjVSfoS7zaDVnbS8/EDANthchlpUV4U5xKq
+         BvPdzCoju3fTUtGn1lgGJSShZGy7yoPogtVo4x+hush1RZo1/y4HpOiOOqOAahnMe4to
+         XdqHlsLFdNANjHKBrZsFwuve8G8l9M82OZJXLBlADHggYZF5PK5TH6rvGDPi6gFRP/PE
+         WAjC8qDAcZDKQcJ2GOO2enNfk3+Bcv5uolsN0CZjcSJed6VydMcyjlou2zgWNmwVA8Ti
+         yswQ==
+X-Gm-Message-State: AOAM531eibzUykop7ZhflDOXIa+9SaymYKt6QWxEdedBo74hV8cN/QMW
+        m0O92wqSc49HlwmD0nABCfzHFHjS7Jk=
+X-Google-Smtp-Source: ABdhPJwIAGAziDbNA7/jYqZZpWADP6cnWXnwe2nm5sHqpT+EewgRttLsf0e6DqpfxRS3toIODLp/aELaaK4=
+X-Received: by 2002:a25:7689:: with SMTP id r131mr3513121ybc.125.1594867534900;
+ Wed, 15 Jul 2020 19:45:34 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 19:45:27 -0700
+Message-Id: <20200716024527.4009170-1-surenb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+Subject: [PATCH 1/1] staging: android: ashmem: Fix lockdep warning for write operation
+From:   Suren Baghdasaryan <surenb@google.com>
+To:     surenb@google.com
+Cc:     gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com,
+        maco@android.com, joel@joelfernandes.org, christian@brauner.io,
+        hridya@google.com, mhocko@kernel.org, hdanton@sina.com,
+        ebiggers@kernel.org, devel@driverdev.osuosl.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a driver for PHY interface built into ahci controller implemented
-in UniPhier SoCs. This supports PXs2 and PXs3 SoCs.
+syzbot report [1] describes a deadlock when write operation against an
+ashmem fd executed at the time when ashmem is shrinking its cache results
+in the following lock sequence:
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(fs_reclaim);
+                                lock(&sb->s_type->i_mutex_key#13);
+                                lock(fs_reclaim);
+   lock(&sb->s_type->i_mutex_key#13);
+
+kswapd takes fs_reclaim and then inode_lock while generic_perform_write
+takes inode_lock and then fs_reclaim. However ashmem does not support
+writing into backing shmem with a write syscall. The only way to change
+its content is to mmap it and operate on mapped memory. Therefore the race
+that lockdep is warning about is not valid. Resolve this by introducing a
+separate lockdep class for the backing shmem inodes.
+
+[1]: https://lkml.kernel.org/lkml/0000000000000b5f9d059aa2037f@google.com/
+
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 ---
- drivers/phy/socionext/Kconfig             |  10 +
- drivers/phy/socionext/Makefile            |   1 +
- drivers/phy/socionext/phy-uniphier-ahci.c | 323 ++++++++++++++++++++++++++++++
- 3 files changed, 334 insertions(+)
- create mode 100644 drivers/phy/socionext/phy-uniphier-ahci.c
+ drivers/staging/android/ashmem.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/phy/socionext/Kconfig b/drivers/phy/socionext/Kconfig
-index 8c9d7c3..a3970e0 100644
---- a/drivers/phy/socionext/Kconfig
-+++ b/drivers/phy/socionext/Kconfig
-@@ -34,3 +34,13 @@ config PHY_UNIPHIER_PCIE
- 	help
- 	  Enable this to support PHY implemented in PCIe controller
- 	  on UniPhier SoCs. This driver supports LD20 and PXs3 SoCs.
-+
-+config PHY_UNIPHIER_AHCI
-+	tristate "UniPhier AHCI PHY driver"
-+	depends on ARCH_UNIPHIER || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	default SATA_AHCI_PLATFORM
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support PHY implemented in AHCI controller
-+	  on UniPhier SoCs. This driver supports PXs2 and PXs3 SoCs.
-diff --git a/drivers/phy/socionext/Makefile b/drivers/phy/socionext/Makefile
-index 7dc9095..e67c2da 100644
---- a/drivers/phy/socionext/Makefile
-+++ b/drivers/phy/socionext/Makefile
-@@ -6,3 +6,4 @@
- obj-$(CONFIG_PHY_UNIPHIER_USB2)	+= phy-uniphier-usb2.o
- obj-$(CONFIG_PHY_UNIPHIER_USB3)	+= phy-uniphier-usb3hs.o phy-uniphier-usb3ss.o
- obj-$(CONFIG_PHY_UNIPHIER_PCIE)	+= phy-uniphier-pcie.o
-+obj-$(CONFIG_PHY_UNIPHIER_AHCI)	+= phy-uniphier-ahci.o
-diff --git a/drivers/phy/socionext/phy-uniphier-ahci.c b/drivers/phy/socionext/phy-uniphier-ahci.c
-new file mode 100644
-index 0000000..d1a79f5
---- /dev/null
-+++ b/drivers/phy/socionext/phy-uniphier-ahci.c
-@@ -0,0 +1,323 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
+index c05a214191da..10b4be1f3e78 100644
+--- a/drivers/staging/android/ashmem.c
++++ b/drivers/staging/android/ashmem.c
+@@ -95,6 +95,15 @@ static DEFINE_MUTEX(ashmem_mutex);
+ static struct kmem_cache *ashmem_area_cachep __read_mostly;
+ static struct kmem_cache *ashmem_range_cachep __read_mostly;
+ 
 +/*
-+ * phy-uniphier-ahci.c - PHY driver for UniPhier AHCI controller
-+ * Copyright 2016-2020, Socionext Inc.
-+ * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
++ * A separate lockdep class for the backing shmem inodes to resolve the lockdep
++ * warning about the race between kswapd taking fs_reclaim before inode_lock
++ * and write syscall taking inode_lock and then fs_reclaim.
++ * Note that such race is impossible because ashmem does not support write
++ * syscalls operating on the backing shmem.
 + */
++static struct lock_class_key backing_shmem_inode_class;
 +
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+struct uniphier_ahciphy_priv {
-+	struct device *dev;
-+	void __iomem  *base;
-+	struct clk *clk, *clk_parent;
-+	struct reset_control *rst, *rst_parent;
-+	const struct uniphier_ahciphy_soc_data *data;
-+};
-+
-+struct uniphier_ahciphy_soc_data {
-+	int (*init)(struct uniphier_ahciphy_priv *priv);
-+	int (*power_on)(struct uniphier_ahciphy_priv *priv);
-+	int (*power_off)(struct uniphier_ahciphy_priv *priv);
-+	bool is_ready_high;
-+	bool is_phy_clk;
-+};
-+
-+/* for PXs2/PXs3 */
-+#define CKCTRL				0x0
-+#define CKCTRL_P0_READY			BIT(15)
-+#define CKCTRL_P0_RESET			BIT(10)
-+#define CKCTRL_REF_SSP_EN		BIT(9)
-+#define TXCTRL0				0x4
-+#define TXCTRL0_AMP_G3_MASK		GENMASK(22, 16)
-+#define TXCTRL0_AMP_G2_MASK		GENMASK(14, 8)
-+#define TXCTRL0_AMP_G1_MASK		GENMASK(6, 0)
-+#define TXCTRL1				0x8
-+#define TXCTRL1_DEEMPH_G3_MASK		GENMASK(21, 16)
-+#define TXCTRL1_DEEMPH_G2_MASK		GENMASK(13, 8)
-+#define TXCTRL1_DEEMPH_G1_MASK		GENMASK(5, 0)
-+#define RXCTRL				0xc
-+#define RXCTRL_LOS_LVL_MASK		GENMASK(20, 16)
-+#define RXCTRL_LOS_BIAS_MASK		GENMASK(10, 8)
-+#define RXCTRL_RX_EQ_MASK		GENMASK(2, 0)
-+
-+static void uniphier_ahciphy_pxs2_enable(struct uniphier_ahciphy_priv *priv,
-+					 bool enable)
-+{
-+	u32 val;
-+
-+	val = readl(priv->base + CKCTRL);
-+
-+	if (enable) {
-+		val |= CKCTRL_REF_SSP_EN;
-+		writel(val, priv->base + CKCTRL);
-+		val &= ~CKCTRL_P0_RESET;
-+		writel(val, priv->base + CKCTRL);
-+	} else {
-+		val |= CKCTRL_P0_RESET;
-+		writel(val, priv->base + CKCTRL);
-+		val &= ~CKCTRL_REF_SSP_EN;
-+		writel(val, priv->base + CKCTRL);
-+	}
-+}
-+
-+static int uniphier_ahciphy_pxs2_power_on(struct uniphier_ahciphy_priv *priv)
-+{
-+	int ret;
-+	u32 val;
-+
-+	uniphier_ahciphy_pxs2_enable(priv, true);
-+
-+	/* wait until PLL is ready */
-+	if (priv->data->is_ready_high)
-+		ret = readl_poll_timeout(priv->base + CKCTRL, val,
-+					 (val & CKCTRL_P0_READY), 200, 400);
-+	else
-+		ret = readl_poll_timeout(priv->base + CKCTRL, val,
-+					 !(val & CKCTRL_P0_READY), 200, 400);
-+	if (ret) {
-+		dev_err(priv->dev, "Failed to check whether PHY PLL is ready\n");
-+		uniphier_ahciphy_pxs2_enable(priv, false);
-+	}
-+
-+	return ret;
-+}
-+
-+static int uniphier_ahciphy_pxs2_power_off(struct uniphier_ahciphy_priv *priv)
-+{
-+	uniphier_ahciphy_pxs2_enable(priv, false);
-+
-+	return 0;
-+}
-+
-+static int uniphier_ahciphy_pxs3_init(struct uniphier_ahciphy_priv *priv)
-+{
-+	int i;
-+	u32 val;
-+
-+	/* setup port parameter */
-+	val = readl(priv->base + TXCTRL0);
-+	val &= ~TXCTRL0_AMP_G3_MASK;
-+	val |= FIELD_PREP(TXCTRL0_AMP_G3_MASK, 0x73);
-+	val &= ~TXCTRL0_AMP_G2_MASK;
-+	val |= FIELD_PREP(TXCTRL0_AMP_G2_MASK, 0x46);
-+	val &= ~TXCTRL0_AMP_G1_MASK;
-+	val |= FIELD_PREP(TXCTRL0_AMP_G1_MASK, 0x42);
-+	writel(val, priv->base + TXCTRL0);
-+
-+	val = readl(priv->base + TXCTRL1);
-+	val &= ~TXCTRL1_DEEMPH_G3_MASK;
-+	val |= FIELD_PREP(TXCTRL1_DEEMPH_G3_MASK, 0x23);
-+	val &= ~TXCTRL1_DEEMPH_G2_MASK;
-+	val |= FIELD_PREP(TXCTRL1_DEEMPH_G2_MASK, 0x05);
-+	val &= ~TXCTRL1_DEEMPH_G1_MASK;
-+	val |= FIELD_PREP(TXCTRL1_DEEMPH_G1_MASK, 0x05);
-+
-+	val = readl(priv->base + RXCTRL);
-+	val &= ~RXCTRL_LOS_LVL_MASK;
-+	val |= FIELD_PREP(RXCTRL_LOS_LVL_MASK, 0x9);
-+	val &= ~RXCTRL_LOS_BIAS_MASK;
-+	val |= FIELD_PREP(RXCTRL_LOS_BIAS_MASK, 0x2);
-+	val &= ~RXCTRL_RX_EQ_MASK;
-+	val |= FIELD_PREP(RXCTRL_RX_EQ_MASK, 0x1);
-+
-+	/* dummy read 25 times to make a wait time for the phy to stablize */
-+	for (i = 0; i < 25; i++)
-+		readl(priv->base + CKCTRL);
-+
-+	return 0;
-+}
-+
-+static int uniphier_ahciphy_init(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->clk_parent);
-+	if (ret)
-+		return ret;
-+
-+	ret = reset_control_deassert(priv->rst_parent);
-+	if (ret)
-+		goto out_clk_disable;
-+
-+	if (priv->data->init) {
-+		ret = priv->data->init(priv);
-+		if (ret)
-+			goto out_rst_assert;
-+	}
-+
-+	return 0;
-+
-+out_rst_assert:
-+	reset_control_assert(priv->rst_parent);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->clk_parent);
-+
-+	return ret;
-+}
-+
-+static int uniphier_ahciphy_exit(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+
-+	reset_control_assert(priv->rst_parent);
-+	clk_disable_unprepare(priv->clk_parent);
-+
-+	return 0;
-+}
-+
-+static int uniphier_ahciphy_power_on(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+	int ret = 0;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = reset_control_deassert(priv->rst);
-+	if (ret)
-+		goto out_clk_disable;
-+
-+	if (priv->data->power_on) {
-+		ret = priv->data->power_on(priv);
-+		if (ret)
-+			goto out_reset_assert;
-+	}
-+
-+	return 0;
-+
-+out_reset_assert:
-+	reset_control_assert(priv->rst);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->clk);
-+
-+	return ret;
-+}
-+
-+static int uniphier_ahciphy_power_off(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+	int ret = 0;
-+
-+	if (priv->data->power_off)
-+		ret = priv->data->power_off(priv);
-+
-+	reset_control_assert(priv->rst);
-+	clk_disable_unprepare(priv->clk);
-+
-+	return ret;
-+}
-+
-+
-+static const struct phy_ops uniphier_ahciphy_ops = {
-+	.init  = uniphier_ahciphy_init,
-+	.exit  = uniphier_ahciphy_exit,
-+	.power_on  = uniphier_ahciphy_power_on,
-+	.power_off = uniphier_ahciphy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int uniphier_ahciphy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct uniphier_ahciphy_priv *priv;
-+	struct phy *phy;
-+	struct phy_provider *phy_provider;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	priv->data = of_device_get_match_data(dev);
-+	if (WARN_ON(!priv->data))
-+		return -EINVAL;
-+
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->clk_parent = devm_clk_get(dev, "link");
-+	if (IS_ERR(priv->clk_parent))
-+		return PTR_ERR(priv->clk_parent);
-+
-+	if (priv->data->is_phy_clk) {
-+		priv->clk = devm_clk_get(dev, "phy");
-+		if (IS_ERR(priv->clk))
-+			return PTR_ERR(priv->clk);
-+	}
-+
-+	priv->rst_parent = devm_reset_control_get_shared(dev, "link");
-+	if (IS_ERR(priv->rst_parent))
-+		return PTR_ERR(priv->rst_parent);
-+
-+	priv->rst = devm_reset_control_get_shared(dev, "phy");
-+	if (IS_ERR(priv->rst))
-+		return PTR_ERR(priv->rst);
-+
-+	phy = devm_phy_create(dev, dev->of_node, &uniphier_ahciphy_ops);
-+	if (IS_ERR(phy)) {
-+		dev_err(dev, "failed to create phy\n");
-+		return PTR_ERR(phy);
-+	}
-+
-+	phy_set_drvdata(phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev,
-+						     of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
-+
-+	return 0;
-+}
-+
-+static const struct uniphier_ahciphy_soc_data uniphier_pxs2_data = {
-+	.power_on  = uniphier_ahciphy_pxs2_power_on,
-+	.power_off = uniphier_ahciphy_pxs2_power_off,
-+	.is_ready_high = false,
-+	.is_phy_clk = false,
-+};
-+
-+static const struct uniphier_ahciphy_soc_data uniphier_pxs3_data = {
-+	.init      = uniphier_ahciphy_pxs3_init,
-+	.power_on  = uniphier_ahciphy_pxs2_power_on,
-+	.power_off = uniphier_ahciphy_pxs2_power_off,
-+	.is_ready_high = true,
-+	.is_phy_clk = true,
-+};
-+
-+static const struct of_device_id uniphier_ahciphy_match[] = {
-+	{
-+		.compatible = "socionext,uniphier-pxs2-ahci-phy",
-+		.data = &uniphier_pxs2_data,
-+	},
-+	{
-+		.compatible = "socionext,uniphier-pxs3-ahci-phy",
-+		.data = &uniphier_pxs3_data,
-+	},
-+	{ /* Sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, uniphier_ahciphy_match);
-+
-+static struct platform_driver uniphier_ahciphy_driver = {
-+	.probe = uniphier_ahciphy_probe,
-+	.driver = {
-+		.name = "uniphier-ahci-phy",
-+		.of_match_table = uniphier_ahciphy_match,
-+	},
-+};
-+module_platform_driver(uniphier_ahciphy_driver);
-+
-+MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
-+MODULE_DESCRIPTION("UniPhier PHY driver for AHCI controller");
-+MODULE_LICENSE("GPL v2");
+ static inline unsigned long range_size(struct ashmem_range *range)
+ {
+ 	return range->pgend - range->pgstart + 1;
+@@ -396,6 +405,7 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+ 	if (!asma->file) {
+ 		char *name = ASHMEM_NAME_DEF;
+ 		struct file *vmfile;
++		struct inode *inode;
+ 
+ 		if (asma->name[ASHMEM_NAME_PREFIX_LEN] != '\0')
+ 			name = asma->name;
+@@ -407,6 +417,8 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+ 			goto out;
+ 		}
+ 		vmfile->f_mode |= FMODE_LSEEK;
++		inode = file_inode(vmfile);
++		lockdep_set_class(&inode->i_rwsem, &backing_shmem_inode_class);
+ 		asma->file = vmfile;
+ 		/*
+ 		 * override mmap operation of the vmfile so that it can't be
 -- 
-2.7.4
+2.28.0.rc0.105.gf9edc3c819-goog
 
