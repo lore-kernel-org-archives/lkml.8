@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8DCC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7908C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61BC0207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D4220809
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:22:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xCMiFAxN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OQ1wX4c5"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SOtl6w1u";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fJ9UbVAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbgGPUWR (ORCPT
+        id S1726394AbgGPUW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:22:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45828 "EHLO
+        Thu, 16 Jul 2020 16:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgGPUWO (ORCPT
+        with ESMTP id S1725844AbgGPUWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:22:14 -0400
+        Thu, 16 Jul 2020 16:22:13 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 601F2C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:22:14 -0700 (PDT)
-Message-Id: <20200716202044.734067877@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20949C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:22:13 -0700 (PDT)
+Message-Id: <20200716202044.625081169@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594930933;
+        s=2020; t=1594930931;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=rxlF2U74TqQoYQ5EOFGtAMYCE09nlq1RO3/GYBz2Boc=;
-        b=xCMiFAxNuIulICj7DCsiVPB4uzKiHNtSOgbX/HC44TXld747/Y6PcHEKwpGpyQYtqZon+P
-        jwhZDduRy1u+cf4oZ1j8dd3l8iigiiwDZWyDGvoarjww8xJnZdKMTr6Cj31IeUoABEXk5s
-        h1qg2TcvZi4CwImtiJArDfcFm93fvIAS2MozK7s7C4N3SKTGswXkOJnFx/wethTW3UL52G
-        2N7yZj8iERPtJHKw3nW4CeP8OUUv1RxmF91T/HuK9riStNRUOkA//NDMjLK7c2n4hg8Hci
-        fDNwx8x/1FI5CZuFLrkna6obcx94tPvr+xKYguQ7eTnXtZQO8LTRXsN+q4QO5w==
+        bh=NAU4ADTPI7vnkbKFUaJB3IWe3HW6RGl/KgL/tK4wrYI=;
+        b=SOtl6w1uIaT2yl7e4uS1orZaEPGmggsr9lC9kOV9VNC4fZ+LSIP2MJ8awcqu6C34AkgxjO
+        pf3AQMuqXUCrDkvt2kypnZreb4qdewmPrDgld65dhpwlxrCUJDjZjoblHUBI0uOg/9NjIF
+        xKHJdqLOgsJyvBZwnQ83gzSIuV9zw1XA5jGJkK2754GsWiQpKMGi9ax0xHAig3W0w537/Z
+        LgFOfHUauOUdZtgxXKLUkJVsDIzMOKFLKw5A26GRfaFHq4uWZy7pkcMTiEASdf9bea6BJ+
+        ODTTU2f4m/9qZYVLFd6YQb4i2IhmIigcdmEqoAFJ1Yvn5WKgWJuiuUy8Zmyv7Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594930933;
+        s=2020e; t=1594930931;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=rxlF2U74TqQoYQ5EOFGtAMYCE09nlq1RO3/GYBz2Boc=;
-        b=OQ1wX4c5THPjcpDIDbZAUThX4eHzSWmO+5dBnnEkCasLnrSTJ9tvFX1+Wd6wnnUfTMrOw4
-        Lje1zgOvlDSXDUAA==
-Date:   Thu, 16 Jul 2020 22:19:26 +0200
+        bh=NAU4ADTPI7vnkbKFUaJB3IWe3HW6RGl/KgL/tK4wrYI=;
+        b=fJ9UbVAmUqHcYGOOLE9dCK+g8nJd821+oQipMQ8gJVtdGd/cCb6EPTSMfYEiPQd7N42hIH
+        GuZogQD6Y+NVXUBA==
+Date:   Thu, 16 Jul 2020 22:19:25 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Oleg Nesterov <oleg@redhat.com>,
@@ -55,8 +55,7 @@ Cc:     x86@kernel.org, Oleg Nesterov <oleg@redhat.com>,
         Frederic Weisbecker <frederic@kernel.org>,
         John Stultz <john.stultz@linaro.org>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [patch V2 3/5] posix-cpu-timers: Provide mechanisms to defer timer
- handling to task_work
+Subject: [patch V2 2/5] posix-cpu-timers: Convert the flags to a bitmap
 References: <20200716201923.228696399@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,164 +65,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running posix cpu timers in hard interrupt context has a few downsides:
-
- - For PREEMPT_RT it cannot work as the expiry code needs to take
-   sighand lock, which is a 'sleeping spinlock' in RT. The original RT
-   approach of offloading the posix CPU timer handling into a high
-   priority thread was clumsy and provided no real benefit in general.
-
- - For fine grained accounting it's just wrong to run this in context of
-   the timer interrupt because that way a process specific cpu time is
-   accounted to the timer interrupt.
-
- - Long running timer interrupts caused by a large amount of expiring
-   timers which can be created and armed by unpriviledged user space.
-
-There is no hard requirement to expire them in interrupt context.
-
-Provide infrastructure to schedule task work which allows splitting the
-posix CPU timer code into a quick check in interrupt context and a thread
-context expiry and signal delivery function. This has to be enabled by
-architectures as it requires that the architecture specific KVM
-implementation handles pending task work before exiting to guest mode.
+For splitting the posix cpu timer code into an interrupt context check and
+the actual expiry and signal handling it's required to be able to set and
+test for the flags atomically.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/posix-timers.h   |   17 ++++++++++++++++
- kernel/time/Kconfig            |    5 ++++
- kernel/time/posix-cpu-timers.c |   42 ++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 63 insertions(+), 1 deletion(-)
+ include/linux/posix-timers.h   |   16 +++++++--------
+ include/linux/sched/cputime.h  |    2 -
+ kernel/time/posix-cpu-timers.c |   43 ++++++++++++++++++-----------------------
+ 3 files changed, 28 insertions(+), 33 deletions(-)
 
 --- a/include/linux/posix-timers.h
 +++ b/include/linux/posix-timers.h
-@@ -112,25 +112,42 @@ struct posix_cputimer_base {
- enum {
- 	CPUTIMERS_ACTIVE,
- 	CPUTIMERS_EXPIRING,
-+	CPUTIMERS_WORK_SCHEDULED,
+@@ -109,20 +109,20 @@ struct posix_cputimer_base {
+ 	struct timerqueue_head	tqhead;
  };
  
++enum {
++	CPUTIMERS_ACTIVE,
++	CPUTIMERS_EXPIRING,
++};
++
  /**
   * posix_cputimers - Container for posix CPU timer related data
-  * @bases:	Base container for posix CPU clocks
-  * @flags:	Flags for various CPUTIMERS_* states
-+ * @task_work:	Task work to defer timer expiry into task context
+- * @bases:		Base container for posix CPU clocks
+- * @timers_active:	Timers are queued.
+- * @expiry_active:	Timer expiry is active. Used for
+- *			process wide timers to avoid multiple
+- *			task trying to handle expiry concurrently
+- *
++ * @bases:	Base container for posix CPU clocks
++ * @flags:	Flags for various CPUTIMERS_* states
   * Used in task_struct and signal_struct
   */
  struct posix_cputimers {
  	struct posix_cputimer_base	bases[CPUCLOCK_MAX];
- 	unsigned long			flags;
-+#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
-+	struct callback_head		task_work;
-+#endif
+-	unsigned int			timers_active;
+-	unsigned int			expiry_active;
++	unsigned long			flags;
  };
  
-+#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
-+void posix_cpu_timers_work(struct callback_head *work);
-+
-+static inline void posix_cputimer_init_work(struct posix_cputimers *pct)
-+{
-+	pct->task_work.func = posix_cpu_timers_work;
-+}
-+#else
-+static inline void posix_cputimer_init_work(struct posix_cputimers *pct) { }
-+#endif
-+
  static inline void posix_cputimers_init(struct posix_cputimers *pct)
- {
- 	memset(pct, 0, sizeof(*pct));
- 	pct->bases[0].nextevt = U64_MAX;
- 	pct->bases[1].nextevt = U64_MAX;
- 	pct->bases[2].nextevt = U64_MAX;
-+	posix_cputimer_init_work(pct);
- }
- 
- void posix_cputimers_group_init(struct posix_cputimers *pct, u64 cpu_limit);
---- a/kernel/time/Kconfig
-+++ b/kernel/time/Kconfig
-@@ -52,6 +52,11 @@ config GENERIC_CLOCKEVENTS_MIN_ADJUST
- config GENERIC_CMOS_UPDATE
- 	bool
- 
-+# Select to handle posix CPU timers from task_work
-+# and not from the timer interrupt context
-+config POSIX_CPU_TIMERS_TASK_WORK
-+	bool
-+
- if GENERIC_CLOCKEVENTS
- menu "Timers subsystem"
- 
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -14,6 +14,7 @@
- #include <linux/tick.h>
- #include <linux/workqueue.h>
- #include <linux/compat.h>
-+#include <linux/task_work.h>
- #include <linux/sched/deadline.h>
- 
- #include "posix-timers.h"
-@@ -1075,7 +1076,9 @@ static inline bool fastpath_timer_check(
- 	return false;
- }
- 
--static void __run_posix_cpu_timers(struct task_struct *tsk)
-+static inline void posix_cpu_timers_enable_work(struct task_struct *tsk);
-+
-+static void handle_posix_cpu_timers(struct task_struct *tsk)
- {
- 	struct k_itimer *timer, *next;
- 	unsigned long flags;
-@@ -1096,6 +1099,12 @@ static void __run_posix_cpu_timers(struc
- 	check_process_timers(tsk, &firing);
+--- a/include/linux/sched/cputime.h
++++ b/include/linux/sched/cputime.h
+@@ -84,7 +84,7 @@ struct thread_group_cputimer *get_runnin
+ 	 * Check whether posix CPU timers are active. If not the thread
+ 	 * group accounting is not active either. Lockless check.
+ 	 */
+-	if (!READ_ONCE(tsk->signal->posix_cputimers.timers_active))
++	if (!test_bit(CPUTIMERS_ACTIVE, &tsk->signal->posix_cputimers.flags))
+ 		return NULL;
  
  	/*
-+	 * Allow new work to be scheduled. The expiry cache
-+	 * is up to date.
-+	 */
-+	posix_cpu_timers_enable_work(tsk);
-+
-+	/*
- 	 * We must release these locks before taking any timer's lock.
- 	 * There is a potential race with timer deletion here, as the
- 	 * siglock now protects our private firing list.  We have set
-@@ -1130,6 +1139,37 @@ static void __run_posix_cpu_timers(struc
- 	lockdep_posixtimer_exit();
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -25,7 +25,7 @@ void posix_cputimers_group_init(struct p
+ 	posix_cputimers_init(pct);
+ 	if (cpu_limit != RLIM_INFINITY) {
+ 		pct->bases[CPUCLOCK_PROF].nextevt = cpu_limit * NSEC_PER_SEC;
+-		pct->timers_active = true;
++		set_bit(CPUTIMERS_ACTIVE, &pct->flags);
+ 	}
  }
  
-+#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
-+
-+void posix_cpu_timers_work(struct callback_head *work)
-+{
-+	handle_posix_cpu_timers(current);
-+}
-+
-+static void __run_posix_cpu_timers(struct task_struct *tsk)
-+{
-+	struct posix_cputimers *pct = &tsk->posix_cputimers;
-+
-+	if (!test_and_set_bit(CPUTIMERS_WORK_SCHEDULED, &pct->flags))
-+		task_work_add(tsk, &pct->task_work, true);
-+}
-+
-+static inline void posix_cpu_timers_enable_work(struct task_struct *tsk)
-+{
-+	clear_bit(CPUTIMERS_WORK_SCHEDULED, &tsk->posix_cputimers.flags);
-+}
-+
-+#else
-+
-+static void __run_posix_cpu_timers(struct task_struct *tsk)
-+{
-+	handle_posix_cpu_timers(tsk);
-+}
-+
-+static inline void posix_cpu_timers_enable_work(struct task_struct *tsk) { }
-+
-+#endif
-+
+@@ -269,7 +269,7 @@ void thread_group_sample_cputime(struct
+ 	struct thread_group_cputimer *cputimer = &tsk->signal->cputimer;
+ 	struct posix_cputimers *pct = &tsk->signal->posix_cputimers;
+ 
+-	WARN_ON_ONCE(!pct->timers_active);
++	WARN_ON_ONCE(!test_bit(CPUTIMERS_ACTIVE, &pct->flags));
+ 
+ 	proc_sample_cputime_atomic(&cputimer->cputime_atomic, samples);
+ }
+@@ -292,7 +292,7 @@ static void thread_group_start_cputime(s
+ 	struct posix_cputimers *pct = &tsk->signal->posix_cputimers;
+ 
+ 	/* Check if cputimer isn't running. This is accessed without locking. */
+-	if (!READ_ONCE(pct->timers_active)) {
++	if (!test_bit(CPUTIMERS_ACTIVE, &pct->flags)) {
+ 		struct task_cputime sum;
+ 
+ 		/*
+@@ -304,13 +304,12 @@ static void thread_group_start_cputime(s
+ 		update_gt_cputime(&cputimer->cputime_atomic, &sum);
+ 
+ 		/*
+-		 * We're setting timers_active without a lock. Ensure this
+-		 * only gets written to in one operation. We set it after
+-		 * update_gt_cputime() as a small optimization, but
++		 * We're setting CPUTIMERS_ACTIVE without a lock. We set it
++		 * after update_gt_cputime() as a small optimization, but
+ 		 * barriers are not required because update_gt_cputime()
+ 		 * can handle concurrent updates.
+ 		 */
+-		WRITE_ONCE(pct->timers_active, true);
++		set_bit(CPUTIMERS_ACTIVE, &pct->flags);
+ 	}
+ 	proc_sample_cputime_atomic(&cputimer->cputime_atomic, samples);
+ }
+@@ -335,7 +334,7 @@ static u64 cpu_clock_sample_group(const
+ 	struct posix_cputimers *pct = &p->signal->posix_cputimers;
+ 	u64 samples[CPUCLOCK_MAX];
+ 
+-	if (!READ_ONCE(pct->timers_active)) {
++	if (!test_bit(CPUTIMERS_ACTIVE, &pct->flags)) {
+ 		if (start)
+ 			thread_group_start_cputime(p, samples);
+ 		else
+@@ -862,7 +861,7 @@ static inline void stop_process_timers(s
+ 	struct posix_cputimers *pct = &sig->posix_cputimers;
+ 
+ 	/* Turn off the active flag. This is done without locking. */
+-	WRITE_ONCE(pct->timers_active, false);
++	clear_bit(CPUTIMERS_ACTIVE, &pct->flags);
+ 	tick_dep_clear_signal(sig, TICK_DEP_BIT_POSIX_TIMER);
+ }
+ 
+@@ -906,16 +905,11 @@ static void check_process_timers(struct
+ 	 * RLIMIT_CPU) nothing to check. Also skip the process wide timer
+ 	 * processing when there is already another task handling them.
+ 	 */
+-	if (!READ_ONCE(pct->timers_active) || pct->expiry_active)
++	if (!test_bit(CPUTIMERS_ACTIVE, &pct->flags) ||
++	    test_and_set_bit(CPUTIMERS_EXPIRING, &pct->flags))
+ 		return;
+ 
+ 	/*
+-	 * Signify that a thread is checking for process timers.
+-	 * Write access to this field is protected by the sighand lock.
+-	 */
+-	pct->expiry_active = true;
+-
+-	/*
+ 	 * Collect the current process totals. Group accounting is active
+ 	 * so the sample can be taken directly.
+ 	 */
+@@ -959,7 +953,7 @@ static void check_process_timers(struct
+ 	if (expiry_cache_is_inactive(pct))
+ 		stop_process_timers(sig);
+ 
+-	pct->expiry_active = false;
++	clear_bit(CPUTIMERS_EXPIRING, &pct->flags);
+ }
+ 
  /*
-  * This is called from the timer interrupt handler.  The irq handler has
-  * already updated our counts.  We need to check if any timers fire now.
+@@ -1057,14 +1051,15 @@ static inline bool fastpath_timer_check(
+ 	 * a fastpath heuristic to determine whether we should try to
+ 	 * acquire the sighand lock to handle timer expiry.
+ 	 *
+-	 * In the worst case scenario, if concurrently timers_active is set
+-	 * or expiry_active is cleared, but the current thread doesn't see
+-	 * the change yet, the timer checks are delayed until the next
+-	 * thread in the group gets a scheduler interrupt to handle the
+-	 * timer. This isn't an issue in practice because these types of
+-	 * delays with signals actually getting sent are expected.
++	 * In the worst case scenario, if concurrently CPUTIMERS_ACTIVE is
++	 * set or CPUTIMERS_EXPIRING is cleared, but the current thread
++	 * doesn't see the change yet, the timer checks are delayed until
++	 * the next thread in the group gets a scheduler interrupt to
++	 * handle the timer. This isn't an issue in practice because these
++	 * types of delays with signals actually getting sent are expected.
+ 	 */
+-	if (READ_ONCE(pct->timers_active) && !READ_ONCE(pct->expiry_active)) {
++	if (test_bit(CPUTIMERS_ACTIVE, &pct->flags) &&
++	    !test_bit(CPUTIMERS_EXPIRING, &pct->flags)) {
+ 		u64 samples[CPUCLOCK_MAX];
+ 
+ 		proc_sample_cputime_atomic(&sig->cputimer.cputime_atomic,
 
