@@ -2,135 +2,426 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4610EC47278
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA36DC38152
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18CE420787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDAE2065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gFZyKus1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxmEFZ8/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgGPRVW (ORCPT
+        id S1729357AbgGPRVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:21:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45760 "EHLO
+        Thu, 16 Jul 2020 13:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729443AbgGPRTH (ORCPT
+        with ESMTP id S1728126AbgGPRV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:19:07 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D8DC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:19:07 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p3so5179542pgh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:19:07 -0700 (PDT)
+        Thu, 16 Jul 2020 13:21:26 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FE0CC061755;
+        Thu, 16 Jul 2020 10:21:25 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id z63so6246016qkb.8;
+        Thu, 16 Jul 2020 10:21:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PJplWTbP//JWBP6LiwpcydCLM3kpmqRCafKXQ2sO8HM=;
-        b=gFZyKus1CsQMXkTyfQNTl5O+0k7AWFHlIkYaZ/5TREymgAeyqVUDm/gqS0BV7rcrsu
-         82GmpCSlv26mJYkIfMbStCv9Qy8zBrSoJXare02pYn4LqPE5JgZo1T7UNIT+y5MJDzkg
-         61blOixw6uZPHNnqnZo0H1+brKdZsu0on9SNMnH42bxqRCxrCX/yAR8sXJJaheYfKIBL
-         mPKSk7Ve24sR4PhSPnJEgbd1z4rD0N4+dAMVEGsd25bCGZwVb5wm2SCKJH8MPXuO4LcS
-         7Y8N+rkP9A5ldAquSCD8DeT+G+eh7bmxGOX6VuRMyNnK+XEyu6RgnPXjjyNj+0f8Pmjo
-         ahSA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X1IOae1aD2EzC1V4d5/BQl94lUEpKruOf068RTzd3WU=;
+        b=WxmEFZ8/Bc4KHWNW1QQVZG4VRjUUEHpaB44ESpCjDPrEfJljytc4pw6FR2oBTRrl1n
+         Uo/Xb2KXfNW5N/uefZg2xQlmmLby5zY4A16TuDGRdmIEvAsmcIjz7keRDxKSXNjC2yVG
+         RhUYR3Tur5CdBFWYa3FULpsaJ8Q+RJW7VkRXvlY+Pxkkebi1TAchj3xfhD66TxHSjfs+
+         truELG//RpMp79tZgzF6eumuzBwmh/s5l8n+CgILu7rpS1xTCWSlHkGrcd8CWe7ofsHy
+         pKkHk09B6hUoLptYCbGY6ZRVlPKId9mvEbuWsK1izef5sAKQ++d82QtyCTf2DoHnmQKt
+         qE3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PJplWTbP//JWBP6LiwpcydCLM3kpmqRCafKXQ2sO8HM=;
-        b=KKPK16wGHLzmPjWl0slFreNY+A3kdow6vHeYuJ4YvRhqd2hSIBxY7AMYhu7T4+etNa
-         PiM3nocGCJ7HS3nCWNMK0CnMx+XF6b2bltwCFsfUC7ve8D7CxwJ9T1clufctXyjkEcb8
-         4Zw/+kxCvts4Lk3PU6oYSMQXOji2S7ux9/YtsvnWp8Duzo8lZejyhJTk5YXi9Ud/nkbV
-         8d5xfocmNeJAE7b4tKICJyV2640xpcN4zlpy8Ieo6EGqLn7ij9W4CY958+P3lraYvyWx
-         6ijfkJpsnbRlU3Ei/+NPuNbCELLA+x9Z4PCRC0LhLjHqBSpHz9+2ABKG4EMwi/t77v41
-         fyGg==
-X-Gm-Message-State: AOAM531wYA4GqD+YKfdIBbCxoIQVDlCxsVUey/uDwCADsrrXA35aWsZH
-        lEivfVomt+XjHCCO/8mclRPzPA==
-X-Google-Smtp-Source: ABdhPJwJiFSQcdB6omeWjkDHMF9mbOoLcdHIviL7+KHQY8vyEQkjrY3SKAm2f71bm739lOZkfFQVGw==
-X-Received: by 2002:a63:1a44:: with SMTP id a4mr5211817pgm.281.1594919946664;
-        Thu, 16 Jul 2020 10:19:06 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id h7sm5551458pfq.15.2020.07.16.10.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 10:19:05 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 11:19:03 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stefanos@xilinx.com, BLEVINSK@xilinx.com
-Subject: Re: [PATCH v2 1/4] dt-bindings: remoteproc: Add bindings for R5F
- subsystem on TI K3 SoCs
-Message-ID: <20200716171903.GA3286345@xps15>
-References: <20200630024922.32491-1-s-anna@ti.com>
- <20200630024922.32491-2-s-anna@ti.com>
- <20200714171553.GA2522956@bogus>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X1IOae1aD2EzC1V4d5/BQl94lUEpKruOf068RTzd3WU=;
+        b=aGEnVRAN43ZjmS30/7Pw3xJOsx5HUp0lqDn4zJwMulytvo0a6zsNLdcEPobi5XzXiE
+         q3upmDnwJWKpO0Lm9+pZ/VPG8/ZC+ECwZC4tNQ634ul5mXAro1doXhh/F6MVFEauqFXd
+         3Q7LzE1K5L104BufQPXugoqMptN2SrkTUkAt1ZZ4EvCCj2+K45sUUJpGPsjbTWDkBkSH
+         z6AeeCJlg6yRzYI81uKkbZDFWWOAcmsFdoZH240Hr3HAxWDqUHxWgYlt6fvbz9aW8BpC
+         o6NBYr6zvWETcPKctPhkzUeD4wg04xNVwmACdtd2xJsa3O3PQX48AeI5oERa5lvgAVmU
+         dUPg==
+X-Gm-Message-State: AOAM532M1y0zn0mH+aPZ22jDHisaLWOVrcmFJR5frWSinJRXIwRDgi2n
+        +3X3nCACh8PfP8Uf44HOJmEGCpdDsl9H4O3RGDn3U2yW
+X-Google-Smtp-Source: ABdhPJxlxLhB3SJmRrhYJ88GcqB9K+kOSUyj5QMxmr488ygvkDEWNqFcX8MV/vrSjW9RH6l2ssanX26dSlGiI3rYvT8=
+X-Received: by 2002:a05:620a:218e:: with SMTP id g14mr5107396qka.430.1594920084580;
+ Thu, 16 Jul 2020 10:21:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714171553.GA2522956@bogus>
+References: <20200709233545.67954-1-junxiao.bi@oracle.com> <ceb558cd-0675-38c3-d20c-1143aed3a73c@oracle.com>
+In-Reply-To: <ceb558cd-0675-38c3-d20c-1143aed3a73c@oracle.com>
+From:   Vitaly Mayatskih <v.mayatskih@gmail.com>
+Date:   Thu, 16 Jul 2020 13:21:13 -0400
+Message-ID: <CAGF4SLhDth9RuvOe4DdcpVR-3wFiSes+gNXrKhEogm-64Xno7g@mail.gmail.com>
+Subject: Re: [PATCH] md: fix deadlock causing by sysfs_notify
+To:     Junxiao Bi <junxiao.bi@oracle.com>
+Cc:     linux-raid@vger.kernel.org, Song Liu <song@kernel.org>,
+        linux-kernel@vger.kernel.org, songliubraving@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+We saw it as well (and fixed a bit differently, because of kpatch).
 
-On Tue, Jul 14, 2020 at 11:15:53AM -0600, Rob Herring wrote:
-> On Mon, Jun 29, 2020 at 09:49:19PM -0500, Suman Anna wrote:
-> > The Texas Instruments K3 family of SoCs have one or more dual-core
-> > Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
-> > can be split between multiple voltage domains as well. Add the device
-> > tree bindings document for these R5F subsystem devices. These R5F
-> > processors do not have an MMU, and so require fixed memory carveout
-> > regions matching the firmware image addresses. The nodes require more
-> > than one memory region, with the first memory region used for DMA
-> > allocations at runtime. The remaining memory regions are reserved
-> > and are used for the loading and running of the R5F remote processors.
-> > The R5F processors can also optionally use any internal on-chip SRAM
-> > memories either for executing code or using it as fast-access data.
-> > 
-> > The added example illustrates the DT nodes for the single R5FSS device
-> > present on K3 AM65x family of SoCs.
-> > 
-> > Signed-off-by: Suman Anna <s-anna@ti.com>
+Here's the reproducer, triggers the bug within few seconds
+
+for i in {0..3}; do
+    dd if=/dev/zero of=/dev/shm/$i bs=512M count=1
+    losetup /dev/loop$((4+i)) /dev/shm/$i
+done
+
+sleep 1
+
+yes | mdadm -C /dev/md0 -l10 -n4 --assume-clean /dev/loop[4-7]
+mkswap /dev/md0
+swapon /dev/md0
+
+c=/sys/fs/cgroup/memory/foo
+mkdir $c
+echo 4M > $c/memory.limit_in_bytes
+
+while true; do
+    echo check > /sys/block/md0/md/sync_action
+    find /sys | xargs cgexec -g memory:foo stat
+done
+
+On Mon, Jul 13, 2020 at 2:52 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
+>
+> Anybody help take a look at this deadlock?
+>
+> Issue happened when raid_check was running, at that time, system memory
+> was not enough, one process which was doing path lookup from sysfs
+> triggered the direct memory reclaim, it was holding filesystem mutex
+> 'kernelfs_mutex' and hung by io. The io would be flushed from
+> raid1d()->flush_pending_writes() by process 'md127_raid1', but it was
+> hung by 'kernelfs_mutex' in md_check_recovery()->md_update_sb() before
+> flush_pending_writes().
+>
+> Thanks,
+>
+> Junxiao.
+>
+> On 7/9/20 4:35 PM, Junxiao Bi wrote:
+> > The following deadlock was captured. The first process is holding 'kernfs_mutex'
+> > and hung by io. The io was staging in 'r1conf.pending_bio_list' of raid1 device,
+> > this pending bio list would be flushed by second process 'md127_raid1', but
+> > it was hung by 'kernfs_mutex'. Using sysfs_notify_dirent_safe() to replace
+> > sysfs_notify() can fix it. There were other sysfs_notify() invoked from io
+> > path, removed all of them.
+> >
+> >   PID: 40430  TASK: ffff8ee9c8c65c40  CPU: 29  COMMAND: "probe_file"
+> >    #0 [ffffb87c4df37260] __schedule at ffffffff9a8678ec
+> >    #1 [ffffb87c4df372f8] schedule at ffffffff9a867f06
+> >    #2 [ffffb87c4df37310] io_schedule at ffffffff9a0c73e6
+> >    #3 [ffffb87c4df37328] __dta___xfs_iunpin_wait_3443 at ffffffffc03a4057 [xfs]
+> >    #4 [ffffb87c4df373a0] xfs_iunpin_wait at ffffffffc03a6c79 [xfs]
+> >    #5 [ffffb87c4df373b0] __dta_xfs_reclaim_inode_3357 at ffffffffc039a46c [xfs]
+> >    #6 [ffffb87c4df37400] xfs_reclaim_inodes_ag at ffffffffc039a8b6 [xfs]
+> >    #7 [ffffb87c4df37590] xfs_reclaim_inodes_nr at ffffffffc039bb33 [xfs]
+> >    #8 [ffffb87c4df375b0] xfs_fs_free_cached_objects at ffffffffc03af0e9 [xfs]
+> >    #9 [ffffb87c4df375c0] super_cache_scan at ffffffff9a287ec7
+> >   #10 [ffffb87c4df37618] shrink_slab at ffffffff9a1efd93
+> >   #11 [ffffb87c4df37700] shrink_node at ffffffff9a1f5968
+> >   #12 [ffffb87c4df37788] do_try_to_free_pages at ffffffff9a1f5ea2
+> >   #13 [ffffb87c4df377f0] try_to_free_mem_cgroup_pages at ffffffff9a1f6445
+> >   #14 [ffffb87c4df37880] try_charge at ffffffff9a26cc5f
+> >   #15 [ffffb87c4df37920] memcg_kmem_charge_memcg at ffffffff9a270f6a
+> >   #16 [ffffb87c4df37958] new_slab at ffffffff9a251430
+> >   #17 [ffffb87c4df379c0] ___slab_alloc at ffffffff9a251c85
+> >   #18 [ffffb87c4df37a80] __slab_alloc at ffffffff9a25635d
+> >   #19 [ffffb87c4df37ac0] kmem_cache_alloc at ffffffff9a251f89
+> >   #20 [ffffb87c4df37b00] alloc_inode at ffffffff9a2a2b10
+> >   #21 [ffffb87c4df37b20] iget_locked at ffffffff9a2a4854
+> >   #22 [ffffb87c4df37b60] kernfs_get_inode at ffffffff9a311377
+> >   #23 [ffffb87c4df37b80] kernfs_iop_lookup at ffffffff9a311e2b
+> >   #24 [ffffb87c4df37ba8] lookup_slow at ffffffff9a290118
+> >   #25 [ffffb87c4df37c10] walk_component at ffffffff9a291e83
+> >   #26 [ffffb87c4df37c78] path_lookupat at ffffffff9a293619
+> >   #27 [ffffb87c4df37cd8] filename_lookup at ffffffff9a2953af
+> >   #28 [ffffb87c4df37de8] user_path_at_empty at ffffffff9a295566
+> >   #29 [ffffb87c4df37e10] vfs_statx at ffffffff9a289787
+> >   #30 [ffffb87c4df37e70] SYSC_newlstat at ffffffff9a289d5d
+> >   #31 [ffffb87c4df37f18] sys_newlstat at ffffffff9a28a60e
+> >   #32 [ffffb87c4df37f28] do_syscall_64 at ffffffff9a003949
+> >   #33 [ffffb87c4df37f50] entry_SYSCALL_64_after_hwframe at ffffffff9aa001ad
+> >       RIP: 00007f617a5f2905  RSP: 00007f607334f838  RFLAGS: 00000246
+> >       RAX: ffffffffffffffda  RBX: 00007f6064044b20  RCX: 00007f617a5f2905
+> >       RDX: 00007f6064044b20  RSI: 00007f6064044b20  RDI: 00007f6064005890
+> >       RBP: 00007f6064044aa0   R8: 0000000000000030   R9: 000000000000011c
+> >       R10: 0000000000000013  R11: 0000000000000246  R12: 00007f606417e6d0
+> >       R13: 00007f6064044aa0  R14: 00007f6064044b10  R15: 00000000ffffffff
+> >       ORIG_RAX: 0000000000000006  CS: 0033  SS: 002b
+> >
+> >   PID: 927    TASK: ffff8f15ac5dbd80  CPU: 42  COMMAND: "md127_raid1"
+> >    #0 [ffffb87c4df07b28] __schedule at ffffffff9a8678ec
+> >    #1 [ffffb87c4df07bc0] schedule at ffffffff9a867f06
+> >    #2 [ffffb87c4df07bd8] schedule_preempt_disabled at ffffffff9a86825e
+> >    #3 [ffffb87c4df07be8] __mutex_lock at ffffffff9a869bcc
+> >    #4 [ffffb87c4df07ca0] __mutex_lock_slowpath at ffffffff9a86a013
+> >    #5 [ffffb87c4df07cb0] mutex_lock at ffffffff9a86a04f
+> >    #6 [ffffb87c4df07cc8] kernfs_find_and_get_ns at ffffffff9a311d83
+> >    #7 [ffffb87c4df07cf0] sysfs_notify at ffffffff9a314b3a
+> >    #8 [ffffb87c4df07d18] md_update_sb at ffffffff9a688696
+> >    #9 [ffffb87c4df07d98] md_update_sb at ffffffff9a6886d5
+> >   #10 [ffffb87c4df07da8] md_check_recovery at ffffffff9a68ad9c
+> >   #11 [ffffb87c4df07dd0] raid1d at ffffffffc01f0375 [raid1]
+> >   #12 [ffffb87c4df07ea0] md_thread at ffffffff9a680348
+> >   #13 [ffffb87c4df07f08] kthread at ffffffff9a0b8005
+> >   #14 [ffffb87c4df07f50] ret_from_fork at ffffffff9aa00344
+> >
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
 > > ---
-> > v2:
-> >  - Renamed "lockstep-mode" property to "ti,cluster-mode"
-> 
-> I don't think that's a move in the right direction given this is at 
-> least partially a standard feature.
-> 
-> As I said before, I'm very hesistant to accept anything here given I 
-> know the desires and activity to define 'system Devicetrees' of which 
-> TI is participating. While maybe an rproc node is sufficient for a 
-> DSP, it seems multiple vendors have R cores and want to define them in 
-> system DT.
-> 
-> Though the system DT effort has not yet given any thought to what is the 
-> view of one processor or instance to another instance (which is what 
-> this binding is). We'll still need something defined for that, but I'd 
-> expect that to be dependent on what is defined for system DT.
+> >   drivers/md/md-bitmap.c |  2 +-
+> >   drivers/md/md.c        | 39 ++++++++++++++++++++++++++-------------
+> >   drivers/md/md.h        |  7 ++++++-
+> >   drivers/md/raid10.c    |  2 +-
+> >   drivers/md/raid5.c     |  6 +++---
+> >   5 files changed, 37 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+> > index 95a5f3757fa3..d61b524ae440 100644
+> > --- a/drivers/md/md-bitmap.c
+> > +++ b/drivers/md/md-bitmap.c
+> > @@ -1631,7 +1631,7 @@ void md_bitmap_cond_end_sync(struct bitmap *bitmap, sector_t sector, bool force)
+> >               s += blocks;
+> >       }
+> >       bitmap->last_end_sync = jiffies;
+> > -     sysfs_notify(&bitmap->mddev->kobj, NULL, "sync_completed");
+> > +     sysfs_notify_dirent_safe(bitmap->mddev->sysfs_completed);
+> >   }
+> >   EXPORT_SYMBOL(md_bitmap_cond_end_sync);
+> >
+> > diff --git a/drivers/md/md.c b/drivers/md/md.c
+> > index f567f536b529..42a0b5ceaaec 100644
+> > --- a/drivers/md/md.c
+> > +++ b/drivers/md/md.c
+> > @@ -2444,6 +2444,10 @@ static int bind_rdev_to_array(struct md_rdev *rdev, struct mddev *mddev)
+> >       if (sysfs_create_link(&rdev->kobj, ko, "block"))
+> >               /* failure here is OK */;
+> >       rdev->sysfs_state = sysfs_get_dirent_safe(rdev->kobj.sd, "state");
+> > +     rdev->sysfs_unack_badblocks =
+> > +             sysfs_get_dirent_safe(rdev->kobj.sd, "unacknowledged_bad_blocks");
+> > +     rdev->sysfs_badblocks =
+> > +             sysfs_get_dirent_safe(rdev->kobj.sd, "bad_blocks");
+> >
+> >       list_add_rcu(&rdev->same_set, &mddev->disks);
+> >       bd_link_disk_holder(rdev->bdev, mddev->gendisk);
+> > @@ -2477,7 +2481,11 @@ static void unbind_rdev_from_array(struct md_rdev *rdev)
+> >       rdev->mddev = NULL;
+> >       sysfs_remove_link(&rdev->kobj, "block");
+> >       sysfs_put(rdev->sysfs_state);
+> > +     sysfs_put(rdev->sysfs_unack_badblocks);
+> > +     sysfs_put(rdev->sysfs_badblocks);
+> >       rdev->sysfs_state = NULL;
+> > +     rdev->sysfs_unack_badblocks = NULL;
+> > +     rdev->sysfs_badblocks = NULL;
+> >       rdev->badblocks.count = 0;
+> >       /* We need to delay this, otherwise we can deadlock when
+> >        * writing to 'remove' to "dev/state".  We also need
+> > @@ -2822,7 +2830,7 @@ void md_update_sb(struct mddev *mddev, int force_change)
+> >               goto repeat;
+> >       wake_up(&mddev->sb_wait);
+> >       if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
+> > -             sysfs_notify(&mddev->kobj, NULL, "sync_completed");
+> > +             sysfs_notify_dirent_safe(mddev->sysfs_completed);
+> >
+> >       rdev_for_each(rdev, mddev) {
+> >               if (test_and_clear_bit(FaultRecorded, &rdev->flags))
+> > @@ -4828,7 +4836,7 @@ action_store(struct mddev *mddev, const char *page, size_t len)
+> >               }
+> >               if (err)
+> >                       return err;
+> > -             sysfs_notify(&mddev->kobj, NULL, "degraded");
+> > +             sysfs_notify_dirent_safe(mddev->sysfs_degraded);
+> >       } else {
+> >               if (cmd_match(page, "check"))
+> >                       set_bit(MD_RECOVERY_CHECK, &mddev->recovery);
+> > @@ -5534,6 +5542,11 @@ static void md_free(struct kobject *ko)
+> >
+> >       if (mddev->sysfs_state)
+> >               sysfs_put(mddev->sysfs_state);
+> > +     if (mddev->sysfs_completed)
+> > +             sysfs_put(mddev->sysfs_completed);
+> > +     if (mddev->sysfs_degraded)
+> > +             sysfs_put(mddev->sysfs_degraded);
+> > +
+> >
+> >       if (mddev->gendisk)
+> >               del_gendisk(mddev->gendisk);
+> > @@ -5695,6 +5708,8 @@ static int md_alloc(dev_t dev, char *name)
+> >       if (!error && mddev->kobj.sd) {
+> >               kobject_uevent(&mddev->kobj, KOBJ_ADD);
+> >               mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, "array_state");
+> > +             mddev->sysfs_completed = sysfs_get_dirent_safe(mddev->kobj.sd, "sync_completed");
+> > +             mddev->sysfs_degraded = sysfs_get_dirent_safe(mddev->kobj.sd, "degraded");
+> >       }
+> >       mddev_put(mddev);
+> >       return error;
+> > @@ -6049,7 +6064,7 @@ static int do_md_run(struct mddev *mddev)
+> >       kobject_uevent(&disk_to_dev(mddev->gendisk)->kobj, KOBJ_CHANGE);
+> >       sysfs_notify_dirent_safe(mddev->sysfs_state);
+> >       sysfs_notify_dirent_safe(mddev->sysfs_action);
+> > -     sysfs_notify(&mddev->kobj, NULL, "degraded");
+> > +     sysfs_notify_dirent_safe(mddev->sysfs_degraded);
+> >   out:
+> >       clear_bit(MD_NOT_READY, &mddev->flags);
+> >       return err;
+> > @@ -8767,7 +8782,7 @@ void md_do_sync(struct md_thread *thread)
+> >       } else
+> >               mddev->curr_resync = 3; /* no longer delayed */
+> >       mddev->curr_resync_completed = j;
+> > -     sysfs_notify(&mddev->kobj, NULL, "sync_completed");
+> > +     sysfs_notify_dirent_safe(mddev->sysfs_completed);
+> >       md_new_event(mddev);
+> >       update_time = jiffies;
+> >
+> > @@ -8795,7 +8810,7 @@ void md_do_sync(struct md_thread *thread)
+> >                               mddev->recovery_cp = j;
+> >                       update_time = jiffies;
+> >                       set_bit(MD_SB_CHANGE_CLEAN, &mddev->sb_flags);
+> > -                     sysfs_notify(&mddev->kobj, NULL, "sync_completed");
+> > +                     sysfs_notify_dirent_safe(mddev->sysfs_completed);
+> >               }
+> >
+> >               while (j >= mddev->resync_max &&
+> > @@ -8902,7 +8917,7 @@ void md_do_sync(struct md_thread *thread)
+> >           !test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
+> >           mddev->curr_resync > 3) {
+> >               mddev->curr_resync_completed = mddev->curr_resync;
+> > -             sysfs_notify(&mddev->kobj, NULL, "sync_completed");
+> > +             sysfs_notify_dirent_safe(mddev->sysfs_completed);
+> >       }
+> >       mddev->pers->sync_request(mddev, max_sectors, &skipped);
+> >
+> > @@ -9032,7 +9047,7 @@ static int remove_and_add_spares(struct mddev *mddev,
+> >       }
+> >
+> >       if (removed && mddev->kobj.sd)
+> > -             sysfs_notify(&mddev->kobj, NULL, "degraded");
+> > +             sysfs_notify_dirent_safe(mddev->sysfs_degraded);
+> >
+> >       if (this && removed)
+> >               goto no_add;
+> > @@ -9315,8 +9330,7 @@ void md_reap_sync_thread(struct mddev *mddev)
+> >               /* success...*/
+> >               /* activate any spares */
+> >               if (mddev->pers->spare_active(mddev)) {
+> > -                     sysfs_notify(&mddev->kobj, NULL,
+> > -                                  "degraded");
+> > +                     sysfs_notify_dirent_safe(mddev->sysfs_degraded);
+> >                       set_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags);
+> >               }
+> >       }
+> > @@ -9406,8 +9420,7 @@ int rdev_set_badblocks(struct md_rdev *rdev, sector_t s, int sectors,
+> >       if (rv == 0) {
+> >               /* Make sure they get written out promptly */
+> >               if (test_bit(ExternalBbl, &rdev->flags))
+> > -                     sysfs_notify(&rdev->kobj, NULL,
+> > -                                  "unacknowledged_bad_blocks");
+> > +                     sysfs_notify_dirent_safe(rdev->sysfs_unack_badblocks);
+> >               sysfs_notify_dirent_safe(rdev->sysfs_state);
+> >               set_mask_bits(&mddev->sb_flags, 0,
+> >                             BIT(MD_SB_CHANGE_CLEAN) | BIT(MD_SB_CHANGE_PENDING));
+> > @@ -9428,7 +9441,7 @@ int rdev_clear_badblocks(struct md_rdev *rdev, sector_t s, int sectors,
+> >               s += rdev->data_offset;
+> >       rv = badblocks_clear(&rdev->badblocks, s, sectors);
+> >       if ((rv == 0) && test_bit(ExternalBbl, &rdev->flags))
+> > -             sysfs_notify(&rdev->kobj, NULL, "bad_blocks");
+> > +             sysfs_notify_dirent_safe(rdev->sysfs_badblocks);
+> >       return rv;
+> >   }
+> >   EXPORT_SYMBOL_GPL(rdev_clear_badblocks);
+> > @@ -9658,7 +9671,7 @@ static int read_rdev(struct mddev *mddev, struct md_rdev *rdev)
+> >       if (rdev->recovery_offset == MaxSector &&
+> >           !test_bit(In_sync, &rdev->flags) &&
+> >           mddev->pers->spare_active(mddev))
+> > -             sysfs_notify(&mddev->kobj, NULL, "degraded");
+> > +             sysfs_notify_dirent_safe(mddev->sysfs_degraded);
+> >
+> >       put_page(swapout);
+> >       return 0;
+> > diff --git a/drivers/md/md.h b/drivers/md/md.h
+> > index 612814d07d35..7385fac39e15 100644
+> > --- a/drivers/md/md.h
+> > +++ b/drivers/md/md.h
+> > @@ -126,7 +126,10 @@ struct md_rdev {
+> >
+> >       struct kernfs_node *sysfs_state; /* handle for 'state'
+> >                                          * sysfs entry */
+> > -
+> > +     /* handle for 'unacknowledged_bad_blocks' sysfs dentry */
+> > +     struct kernfs_node *sysfs_unack_badblocks;
+> > +     /* handle for 'bad_blocks' sysfs dentry */
+> > +     struct kernfs_node *sysfs_badblocks;
+> >       struct badblocks badblocks;
+> >
+> >       struct {
+> > @@ -420,6 +423,8 @@ struct mddev {
+> >                                                        * file in sysfs.
+> >                                                        */
+> >       struct kernfs_node              *sysfs_action;  /* handle for 'sync_action' */
+> > +     struct kernfs_node              *sysfs_completed;       /*handle for 'sync_completed' */
+> > +     struct kernfs_node              *sysfs_degraded;        /*handle for 'degraded' */
+> >
+> >       struct work_struct del_work;    /* used for delayed sysfs removal */
+> >
+> > diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> > index ec136e44aef7..b2de47eac238 100644
+> > --- a/drivers/md/raid10.c
+> > +++ b/drivers/md/raid10.c
+> > @@ -4454,7 +4454,7 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr,
+> >                       sector_nr = conf->reshape_progress;
+> >               if (sector_nr) {
+> >                       mddev->curr_resync_completed = sector_nr;
+> > -                     sysfs_notify(&mddev->kobj, NULL, "sync_completed");
+> > +                     sysfs_notify_dirent_safe(mddev->sysfs_completed);
+> >                       *skipped = 1;
+> >                       return sector_nr;
+> >               }
+> > diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> > index ab8067f9ce8c..09f59611dd9b 100644
+> > --- a/drivers/md/raid5.c
+> > +++ b/drivers/md/raid5.c
+> > @@ -5799,7 +5799,7 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr, int *sk
+> >               sector_div(sector_nr, new_data_disks);
+> >               if (sector_nr) {
+> >                       mddev->curr_resync_completed = sector_nr;
+> > -                     sysfs_notify(&mddev->kobj, NULL, "sync_completed");
+> > +                     sysfs_notify_dirent_safe(mddev->sysfs_completed);
+> >                       *skipped = 1;
+> >                       retn = sector_nr;
+> >                       goto finish;
+> > @@ -5913,7 +5913,7 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr, int *sk
+> >               conf->reshape_safe = mddev->reshape_position;
+> >               spin_unlock_irq(&conf->device_lock);
+> >               wake_up(&conf->wait_for_overlap);
+> > -             sysfs_notify(&mddev->kobj, NULL, "sync_completed");
+> > +             sysfs_notify_dirent_safe(mddev->sysfs_completed);
+> >       }
+> >
+> >       INIT_LIST_HEAD(&stripes);
+> > @@ -6020,7 +6020,7 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr, int *sk
+> >               conf->reshape_safe = mddev->reshape_position;
+> >               spin_unlock_irq(&conf->device_lock);
+> >               wake_up(&conf->wait_for_overlap);
+> > -             sysfs_notify(&mddev->kobj, NULL, "sync_completed");
+> > +             sysfs_notify_dirent_safe(mddev->sysfs_completed);
+> >       }
+> >   ret:
+> >       return retn;
 
-Efforts related to the definition of the system DT are under way, something I
-expect to keep going on for some time to come.  I agree with the need to use the
-system DT to define remote processors and I look forward to the time we can do
-so.
 
-That being said we need to find a concensus on how to move forward with patches
-that are ready to be merged.  What is your opinion on that?
 
-Thanks,
-Mathieu 
-
-> 
-> Rob
+-- 
+wbr, Vitaly
