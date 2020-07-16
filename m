@@ -2,132 +2,90 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FC3C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8D4207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED722082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594937195;
-	bh=5HCKWjFC8y6BxQfhehJHW/n1R4IoPDaMe/czVqxsK1o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=NI7WozZHNfnmhANAGQnvsevfMgFTmI7GL58Q5AKhvZG03bKBJ4WaU0ioL1kwBY0Ih
-	 ZBM34+KpJvmtMIHlurFR+igSWxdQCih51jH1u/PuKqMa3MYtlHYzNdUMWpqkFiRYYD
-	 5B90zuUgyLiaZWelbOrHejLJGZeRb5hhqCrgLAus=
+	s=default; t=1594937363;
+	bh=ozWnyPq7Ypaqxjd2YOpSvdhU336Z196r9xpYYwHOCKI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0Yv6H8UHw6qrJBqpMaRhAApJPcajdpL9IPjSukFApMUUXvfndjEnNq2mIUm5X7kcp
+	 muDWlZ1Rm5iSRb5h0pAWx+EZU6Gnya0foHuGySnBXnpvqA4fb0LmjWWzOApUjovHT4
+	 HQHZ3HvsInDpki4IIWw9rRMTZ7UO/bt5MyjgHOM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgGPWGe (ORCPT
+        id S1726528AbgGPWJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 18:06:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53386 "EHLO mail.kernel.org"
+        Thu, 16 Jul 2020 18:09:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbgGPWGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 18:06:32 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S1726007AbgGPWJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 18:09:21 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A33CF207CB;
-        Thu, 16 Jul 2020 22:06:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34279207CB;
+        Thu, 16 Jul 2020 22:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594937192;
-        bh=5HCKWjFC8y6BxQfhehJHW/n1R4IoPDaMe/czVqxsK1o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=J8b6uiEa5Bnkr48S5nTo6/WA4aeskRqrZoig7lMkTV8a6qHT3hb1DuO6f+zv87XsT
-         5a00U0ZVi5SoGx5fa/mKZWlJRr4kXz/fMTj0r0fDyBbMWwRTS8N5yahHq2B1MeRswZ
-         MHYnHSUrWAuSU3LaMzYIouJFjSud8+nComAEHi1A=
-Date:   Thu, 16 Jul 2020 17:06:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] PCI: imx6: Use fallthrough pseudo-keyword
-Message-ID: <20200716220629.GA663054@bjorn-Precision-5520>
+        s=default; t=1594937361;
+        bh=ozWnyPq7Ypaqxjd2YOpSvdhU336Z196r9xpYYwHOCKI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IAA8Oq8jOnQqf+WZ34v/KyOhgc95aznMfcAsz2ya5um49qLNjolsHIxOlH4OFRtwa
+         iT55Eukho1Ak/lAKDObxR17ZV2I6E/n+uCEDywxHaPDieR+nEJsPrq6LOvpG787Umr
+         xZx7q6lnJ1Kl1Qxhl9qV9Pww4w1CSFbBX/G7sIes=
+Date:   Thu, 16 Jul 2020 15:09:18 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Matthew Hagan <mnhagan88@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Jonathan McDowell <noodles@earth.li>
+Subject: Re: [PATCH 1/2] net: dsa: qca8k: Add additional PORT0_PAD_CTRL
+ options
+Message-ID: <20200716150918.6c287f7a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716211052.GA16893@embeddedor>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 04:10:52PM -0500, Gustavo A. R. Silva wrote:
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> fall-through markings when it is the case.
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+On Mon, 13 Jul 2020 21:50:25 +0100 Matthew Hagan wrote:
+> +	u32 val = qca8k_read(priv, QCA8K_REG_PORT0_PAD_CTRL);
 
-Hi Gustavo,
+> +		val |= QCA8K_PORT0_PAD_CTRL_MAC06_EXCHG;
 
-I'm certainly fine with these patches, and thanks for doing them!
+> +		val |= QCA8K_PORT0_PAD_SGMII_RXCLK_FALLING_EDGE;
 
-And thanks for providing a link to the rationale.  But the URL
-contains "latest", so I think it may break if deprecated.rst or the
-section is ever renamed.
+> +		val |= QCA8K_PORT0_PAD_SGMII_TXCLK_FALLING_EDGE;
 
-I think I would prefer if we could reference the current text, e.g.,
-via
+> +	qca8k_write(priv, QCA8K_REG_PORT0_PAD_CTRL, val);
 
-  https://www.kernel.org/doc/html/v5.7-rc7/process/deprecated.html#implicit-switch-case-fall-through
+> +	val = qca8k_read(priv, reg);
 
-(The v5.7 doc would be better but doesn't seem to be generated yet; I
-pinged the helpdesk about that.)
+> +		val |= QCA8K_PORT_PAD_RGMII_EN;
+> +		qca8k_write(priv, reg, val);
 
-Or we could refer to b9918bdcac1f ("Documentation/process: Add
-fallthrough pseudo-keyword"), although it's not nearly as pretty as
-the HTML.
+> +		val |= QCA8K_PORT_PAD_RGMII_EN |
+> +		       QCA8K_PORT_PAD_RGMII_TX_DELAY(QCA8K_MAX_DELAY) |
+> +		       QCA8K_PORT_PAD_RGMII_RX_DELAY(QCA8K_MAX_DELAY);
+> +		qca8k_write(priv, reg, val);
 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 4e5c379ae418..1119ded593d0 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -439,7 +439,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN, 0);
->  		break;
-> -	case IMX6QP:		/* FALLTHROUGH */
-> +	case IMX6QP:
->  	case IMX6Q:
->  		/* power up core phy and enable ref clock */
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-> @@ -642,7 +642,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  				   IMX6SX_GPR12_PCIE_RX_EQ_MASK,
->  				   IMX6SX_GPR12_PCIE_RX_EQ_2);
-> -		/* FALLTHROUGH */
-> +		fallthrough;
->  	default:
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  				   IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
-> @@ -1107,7 +1107,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  			dev_err(dev, "pcie_aux clock source missing or invalid\n");
->  			return PTR_ERR(imx6_pcie->pcie_aux);
->  		}
-> -		/* fall through */
-> +		fallthrough;
->  	case IMX7D:
->  		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
->  			imx6_pcie->controller_id = 1;
-> -- 
-> 2.27.0
-> 
+
+> +		val |= QCA8K_PORT_PAD_SGMII_EN;
+> +		qca8k_write(priv, reg, val);
+
+Since throughout the patch you're only setting bits perhaps
+qca8k_reg_set() would be a better choice than manually reading 
+and then writing?
