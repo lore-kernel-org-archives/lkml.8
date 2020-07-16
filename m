@@ -2,137 +2,168 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0317FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2B2820787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79BF2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SN1EWsen"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLjn3Zui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbgGPEto (ORCPT
+        id S1725976AbgGPEsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 00:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42768 "EHLO
+        Thu, 16 Jul 2020 00:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgGPEto (ORCPT
+        with ESMTP id S1725268AbgGPEsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 00:49:44 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B693C061755;
-        Wed, 15 Jul 2020 21:49:44 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id e13so4403368qkg.5;
-        Wed, 15 Jul 2020 21:49:44 -0700 (PDT)
+        Thu, 16 Jul 2020 00:48:17 -0400
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA336C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 21:48:16 -0700 (PDT)
+Received: by mail-qt1-x832.google.com with SMTP id a32so3963079qtb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 21:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n811LGQ+Fs+fBe93hqpRgAF7EkTTe3DB3wlxhpthHDw=;
-        b=SN1EWsentgIHscCjmZscmE4hUCVQR/1YxFOEaA2X4eJyYCgfDw76RB4yTMxi1W8jHk
-         tVP1TH55qedN4ibmS3LTkcIguB97sohxrNr7aJ8i5Skd8MGRMvtbsA4qvfH9yjsoxMY2
-         BslrqZzF7cvqBNWz+ym7AASewM3JMVymzxgwMiZiwfLTaEop5kzr3kRal3cbWIwxUFQz
-         ED7ZgyiI9scdVeqLvZWEZe/dpojv8rszJv6NRUlGBP7ZaPqLpelGMlvNV+YBESb1h1jk
-         qxbatPUQkxME556vz4b9YinXKvUniS8GTOcZLo0Z+/dy3wr7nMOkf6eE4asa3vcI38x0
-         Tu9A==
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=Z+UbXyBi8oxtMS31bKgfGmZ5hKHJm4ka7q7+ka7SGf4=;
+        b=DLjn3ZuiCiB2NouAl0nYCNELdZ6ky0HvJEGOxTyho1vZOT6WnpxCi3xo1KIodB9bJh
+         d+OYKbqLLdza93/9S0HmEzsL4sgYN+2UbPCSmo+UMRW70hE/tXeamvSy035NumbkALp+
+         Cj0cYJ1UiDJGAusGd7wH5QyIELteY2tGvajUfHdgKXYPsqPxT7O9q1HnlfxbTvdpXmHx
+         XxNg0VWzmj841u47oHNoQ1LsYJT/OhRcF0S32oeoMkXhlXD7EssCOm47BXUyfTv0rSkE
+         EhDfjej9nUAiD5EzuqgnqkezEsE62Ke4gPfe+TeGKuuQiQ7+rjFPdthx9zIphSWZ35A7
+         k50g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n811LGQ+Fs+fBe93hqpRgAF7EkTTe3DB3wlxhpthHDw=;
-        b=Kut/rofbK8eSKLkVApYjgcIffayywrri3hb2+baK3rq01g7QjCNZJ5J4Uizj99nvkx
-         blvk94eg1FVLv2EiRoSpKvrO8WqmqxMlsNqGWKFpf/DGkVS9Xdr8KMJL+UGisNTuBT6V
-         5a+wzu+7yofP+ik3VFqQsm4l2bGIdm4fySLOg0QIJX04VUmggGx9SbjqAApVqU+Tbish
-         qX6JAEm2w5qJ4ACfQkPSYQ3hm3rHhiKsrQSDlD3MuVH9tWKA2F/118tBvxjXPY8jQd5i
-         Lici08hHmzQJgrUq0/abn8aWJ+Ni6qXYR8//gGo7fXkVTQBHEGXJH8BQ1a5d6drSzvWP
-         wTtw==
-X-Gm-Message-State: AOAM531JHzBS4e7IfYEKz8G5quFowDArR535AMZq2djZ56fbGI2/otAJ
-        Tbhk4NJIcrY3DrTmqQT3r35Kkdu17Zk=
-X-Google-Smtp-Source: ABdhPJxBhHumFvG6aGwTPxpSidimNXkf7fv044wp4/GTzx2Yec4tK844YQU6nCh0L0QPTxx2qBsEow==
-X-Received: by 2002:a05:620a:91b:: with SMTP id v27mr2143475qkv.499.1594874983094;
-        Wed, 15 Jul 2020 21:49:43 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id 16sm5606381qkn.106.2020.07.15.21.49.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 21:49:42 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] igc: Do not use link uninitialized in igc_check_for_copper_link
-Date:   Wed, 15 Jul 2020 21:49:34 -0700
-Message-Id: <20200716044934.152364-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.28.0.rc0
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=Z+UbXyBi8oxtMS31bKgfGmZ5hKHJm4ka7q7+ka7SGf4=;
+        b=SalmE4GZy1PhQeXNJHszZp3Lwzrg/+eDB7YvnWeaQ7VFsuk2inx3BE9a+tQrinjUaP
+         iK+O40fJW2zZEekQXJc4dLNv+lPJTNBKdko7PIv7I+NnXFbygyVHzCDE9OsvBE0KFxDm
+         cYTrM0C5GIe2WWUjq0Y5tYvvodi7JAf6RoIuKXnqH1xqAVYMdE37Dg2bDOIo9qtGcFcp
+         /AtnYNDK7CI8rYNb2uWoNtP7LtqxjpAf4G5xDaAEUNykNyzvnQgBxHGKb1RvU1ifDIGn
+         gHyP0bQA9wnlKgHOB7KLg0JxDApXEtGgZ6TSEGUnfs3SNGWF/JZC8pxnc4/3HXmyyr+x
+         TcxA==
+X-Gm-Message-State: AOAM531T2R+9uFsXq3uAQuEgzMDY+f5J0vvkcpZJiwE/df9jA2RlZTCV
+        kl8IYGjw41kBCr4Qcq805jPjvyXwnWY=
+X-Google-Smtp-Source: ABdhPJxUMM9RObqxnbEzgrnyqpmgv+KE2xdRBucJPdpQyyZeEvPdCh0VGKd3Epz/rAi1zYCfaJFrnw==
+X-Received: by 2002:ac8:4e03:: with SMTP id c3mr3388804qtw.82.1594874895788;
+        Wed, 15 Jul 2020 21:48:15 -0700 (PDT)
+Received: from DESKTOP2I1VNC3 ([209.94.140.104])
+        by smtp.gmail.com with ESMTPSA id y40sm6414556qtc.29.2020.07.15.21.48.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Jul 2020 21:48:15 -0700 (PDT)
+From:   <charley.ashbringer@gmail.com>
+To:     "'Andrew Morton'" <akpm@linux-foundation.org>
+Cc:     <willy@infradead.org>, <rdunlap@infradead.org>,
+        <keescook@chromium.org>, <mcgrof@kernel.org>, <yzaikin@google.com>,
+        <linux-kernel@vger.kernel.org>
+References: <0d4601d65709a0e2d80e2a8880gmail.com>       <20200711051728.1499-1-charley.ashbringer@gmail.com> <20200713185739.03d576cca0dc9f618ea76d67@linux-foundation.org>
+In-Reply-To: <20200713185739.03d576cca0dc9f618ea76d67@linux-foundation.org>
+Subject: RE: [PATCH v2] panic: prevent panic_timeout * 1000 from overflow
+Date:   Thu, 16 Jul 2020 00:48:14 -0400
+Message-ID: <000901d65b2c$515211f0$f3f635d0$@gmail.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQGmsmd3p9TK+JTkCQ2rB/CG8P/fbgG/W7agAmus1EWpR5rc4A==
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+> > Since panic_timeout is an integer passed-in through sysctl,
+> > the loop boundary panic_timeout * 1000 could overflow and
+> > result in a zero-delay panic when panic_timeout is greater
+> > than INT_MAX/1000.
+> >
+> > Fix this by moving 1000 to the left, also in case i/1000
+> > might never be greater than panic_timeout, change i to
+> > long long so that it strictly has more bits.
+> >
+> > ...
+> >
+> > --- a/kernel/panic.c
+> > +++ b/kernel/panic.c
+> > @@ -178,7 +178,8 @@ void panic(const char *fmt, ...)
+> >  {
+> >  	static char buf[1024];
+> >  	va_list args;
+> > -	long i, i_next = 0, len;
+> > +	long long i;
+> > +	long i_next = 0, len;
+> >  	int state = 0;
+> >  	int old_cpu, this_cpu;
+> >  	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
+> > @@ -315,7 +316,7 @@ void panic(const char *fmt, ...)
+> >  		 */
+> >  		pr_emerg("Rebooting in %d seconds..\n", panic_timeout);
+> >
+> > -		for (i = 0; i < panic_timeout * 1000; i += PANIC_TIMER_STEP)
+{
+> > +		for (i = 0; i / 1000 < panic_timeout; i += PANIC_TIMER_STEP)
+{
+> 
+> Problem is, 32-bit machines generally cannot perform 64-bit divides.
+> So a call is emitted to the library function __divsi64() (I forget the
+exact
+> name) which Linux doesn't implement (because it's so slow, and we don't
+> want to be calling it by accident).
+> 
 
-drivers/net/ethernet/intel/igc/igc_mac.c:374:6: warning: variable 'link'
-is used uninitialized whenever 'if' condition is true
-[-Wsometimes-uninitialized]
-        if (!mac->get_link_status) {
-            ^~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/intel/igc/igc_mac.c:424:33: note: uninitialized use
-occurs here
-        ret_val = igc_set_ltr_i225(hw, link);
-                                       ^~~~
-drivers/net/ethernet/intel/igc/igc_mac.c:374:2: note: remove the 'if' if
-its condition is always false
-        if (!mac->get_link_status) {
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/intel/igc/igc_mac.c:367:11: note: initialize the
-variable 'link' to silence this warning
-        bool link;
-                 ^
-                  = 0
-1 warning generated.
+It's good to know, thanks for letting me know why 64-bit division 
+is slow, and 64-multiplication is fast, surely doing so many
+64-bit division will drag a lot, and should be prevented.
 
-It is not wrong, link is only uninitialized after this through
-igc_phy_has_link. Presumably, if we skip the majority of this function
-when get_link_status is false, we should skip calling igc_set_ltr_i225
-as well. Just directly return 0 in this case, rather than bothering with
-adding another label or initializing link in the if statement.
+> So a fix would be to call do_div() or something from
+> include/linux/div64.h but it's all a great mess.
+> 
+> However we can do native 64-bit multiplication on 32-bit!  So how about
+> something like
+> 
+> --- a/kernel/panic.c~a
+> +++ a/kernel/panic.c
+> @@ -313,13 +313,16 @@ void panic(const char *fmt, ...)
+>  		 * Delay timeout seconds before rebooting the machine.
+>  		 * We can't use the "normal" timers since we just panicked.
+>  		 */
+> +		u64 timeout = panic_timeout * 1000;	/* avoid overflow */
+> +		u64 timer;
+>		pr_emerg("Rebooting in %d seconds..\n", panic_timeout);
+> -		for (i = 0; i < panic_timeout * 1000; i += PANIC_TIMER_STEP)
+{
+> +		for (timer = 0; timer < timeout; timer += PANIC_TIMER_STEP)
+{
 
-Fixes: 707abf069548 ("igc: Add initial LTR support")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1095
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/ethernet/intel/igc/igc_mac.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+If using u64 as the loop boundary, would it be a problem if
+panic_timeout is negative? Since in the current code, if
+panic_timeout is negative, the loop will not be executed;
+as in the patched code, the loop boundary will be a huge 
+unsigned value. I guess s64 should do？
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_mac.c b/drivers/net/ethernet/intel/igc/igc_mac.c
-index b47e7b0a6398..26e3c56a4a8b 100644
---- a/drivers/net/ethernet/intel/igc/igc_mac.c
-+++ b/drivers/net/ethernet/intel/igc/igc_mac.c
-@@ -371,10 +371,8 @@ s32 igc_check_for_copper_link(struct igc_hw *hw)
- 	 * get_link_status flag is set upon receiving a Link Status
- 	 * Change or Rx Sequence Error interrupt.
- 	 */
--	if (!mac->get_link_status) {
--		ret_val = 0;
--		goto out;
--	}
-+	if (!mac->get_link_status)
-+		return 0;
- 
- 	/* First we want to see if the MII Status Register reports
- 	 * link.  If so, then we want to get the current speed/duplex
+If it's not a problem, I'll submit another patch enforcing
+the change, including the changes suggested by Matthew here:
 
-base-commit: ca0e494af5edb59002665bf12871e94b4163a257
--- 
-2.28.0.rc0
+> > +		u64 timeout = panic_timeout * 1000;	/* avoid overflow */
+> 1000ULL to not truncate before the assignment.
+
+> > +		u64 timer;
+> ... as you implied lateru64 timer, timer_next;
+
+
+Thank you guys so much for your valuable feedback, I learned a lot!
+
+Best,
+Changming
 
