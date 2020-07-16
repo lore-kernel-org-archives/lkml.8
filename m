@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B319C433ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDD1C433EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 804F120791
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE35D20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgGPDRL (ORCPT
+        id S1728240AbgGPDRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:17:11 -0400
+        Wed, 15 Jul 2020 23:17:06 -0400
 Received: from mga06.intel.com ([134.134.136.31]:8148 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbgGPDRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 23:17:04 -0400
-IronPort-SDR: ChyNNk7yQntGanN2rjJTM8gzJbbPNyz9WCCh8pBdtkdHGYCzRK5OSbLB7KQEg9z/Zpto8/qJNG
- 5huMYpV4Cc+Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="210844851"
+        id S1728202AbgGPDRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 23:17:00 -0400
+IronPort-SDR: WZdZG2LjeAexcXXOUVciHy2vTPfUvi0KyXmviCcXP+jgBem06kSh69i29uLYIvWswaSqYKtv6k
+ VCoQPRHnqhug==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="210844839"
 X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="210844851"
+   d="scan'208";a="210844839"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 20:17:03 -0700
-IronPort-SDR: AtgFEO+Y19gOCmjaM1cJXjz5Bw/OabRMHZWeZ3Hlub8IMKfHzBUipcl1NZG6Uk1sQtjVk0DPsl
- 9QXbm0nqmpfA==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 20:16:59 -0700
+IronPort-SDR: a7aNfgQLxQCdNKvyXw9yDgMY2ItXXqXasHSRR7WvgO7UhFkl1qMV8tS970+FmOE9Ym0WORcgeK
+ XvrenmOUg8Ug==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="360910445"
+   d="scan'208";a="360910423"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by orsmga001.jf.intel.com with ESMTP; 15 Jul 2020 20:17:01 -0700
+  by orsmga001.jf.intel.com with ESMTP; 15 Jul 2020 20:16:57 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, sean.j.christopherson@intel.com,
         jmattson@google.com
 Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [RESEND v13 04/11] KVM: VMX: Configure CET settings upon guest CR0/4 changing
-Date:   Thu, 16 Jul 2020 11:16:20 +0800
-Message-Id: <20200716031627.11492-5-weijiang.yang@intel.com>
+Subject: [RESEND v13 02/11] KVM: VMX: Introduce CET VMCS fields and flags
+Date:   Thu, 16 Jul 2020 11:16:18 +0800
+Message-Id: <20200716031627.11492-3-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200716031627.11492-1-weijiang.yang@intel.com>
 References: <20200716031627.11492-1-weijiang.yang@intel.com>
@@ -52,128 +52,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CR4.CET is master control bit for CET function. There're mutual constrains
-between CR0.WP and CR4.CET, so need to check the dependent bit while changing
-the control registers.
+CET(Control-flow Enforcement Technology) is a CPU feature used to prevent
+Return/Jump-Oriented Programming(ROP/JOP) attacks. It provides the following
+sub-features to defend against ROP/JOP style control-flow subversion attacks:
 
-The processor does not allow CR4.CET to be set if CR0.WP = 0,similarly, it does
-not allow CR0.WP to be cleared while CR4.CET = 1. In either case, KVM would
-inject #GP to guest.
+Shadow Stack (SHSTK):
+  A second stack for program which is used exclusively for control transfer
+  operations.
 
-CET state load bit is set/cleared along with CR4.CET bit set/clear.
+Indirect Branch Tracking (IBT):
+  Code branching protection to defend against jump/call oriented programming.
 
-Note:
-SHSTK and IBT features share one control MSR: MSR_IA32_{U,S}_CET, which means
-it's difficult to hide one feature from another in the case of SHSTK != IBT,
-after discussed in community, it's agreed to allow guest control two features
-independently as it won't introduce security hole.
+Several new CET MSRs are defined in kernel to support CET:
+  MSR_IA32_{U,S}_CET: Controls the CET settings for user mode and kernel mode
+  respectively.
 
+  MSR_IA32_PL{0,1,2,3}_SSP: Stores shadow stack pointers for CPL-0,1,2,3
+  protection respectively.
+
+  MSR_IA32_INT_SSP_TAB: Stores base address of shadow stack pointer table.
+
+Two XSAVES state bits are introduced for CET:
+  IA32_XSS:[bit 11]: Control saving/restoring user mode CET states
+  IA32_XSS:[bit 12]: Control saving/restoring kernel mode CET states.
+
+Six VMCS fields are introduced for CET:
+  {HOST,GUEST}_S_CET: Stores CET settings for kernel mode.
+  {HOST,GUEST}_SSP: Stores shadow stack pointer of current task/thread.
+  {HOST,GUEST}_INTR_SSP_TABLE: Stores base address of shadow stack pointer
+  table.
+
+If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host CET states are restored from below
+VMCS fields at VM-Exit:
+  HOST_S_CET
+  HOST_SSP
+  HOST_INTR_SSP_TABLE
+
+If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest CET states are loaded from below
+VMCS fields at VM-Entry:
+  GUEST_S_CET
+  GUEST_SSP
+  GUEST_INTR_SSP_TABLE
+
+Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/vmx/capabilities.h |  5 +++++
- arch/x86/kvm/vmx/vmx.c          | 30 ++++++++++++++++++++++++++++--
- arch/x86/kvm/x86.c              |  3 +++
- 3 files changed, 36 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/vmx.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index 4bbd8b448d22..dbc87c5997cc 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -103,6 +103,11 @@ static inline bool cpu_has_load_perf_global_ctrl(void)
- 	       (vmcs_config.vmexit_ctrl & VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL);
- }
+diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+index cd7de4b401fe..879c57ff2dc5 100644
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@ -94,6 +94,7 @@
+ #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
+ #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
+ #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
++#define VM_EXIT_LOAD_CET_STATE                  0x10000000
  
-+static inline bool cpu_has_load_cet_ctrl(void)
-+{
-+	return (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_CET_STATE) &&
-+		(vmcs_config.vmexit_ctrl & VM_EXIT_LOAD_CET_STATE);
-+}
- static inline bool cpu_has_vmx_mpx(void)
- {
- 	return (vmcs_config.vmexit_ctrl & VM_EXIT_CLEAR_BNDCFGS) &&
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a9f135c52cbc..0089943fbb31 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2510,7 +2510,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 	      VM_EXIT_LOAD_IA32_EFER |
- 	      VM_EXIT_CLEAR_BNDCFGS |
- 	      VM_EXIT_PT_CONCEAL_PIP |
--	      VM_EXIT_CLEAR_IA32_RTIT_CTL;
-+	      VM_EXIT_CLEAR_IA32_RTIT_CTL |
-+	      VM_EXIT_LOAD_CET_STATE;
- 	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_EXIT_CTLS,
- 				&_vmexit_control) < 0)
- 		return -EIO;
-@@ -2534,7 +2535,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 	      VM_ENTRY_LOAD_IA32_EFER |
- 	      VM_ENTRY_LOAD_BNDCFGS |
- 	      VM_ENTRY_PT_CONCEAL_PIP |
--	      VM_ENTRY_LOAD_IA32_RTIT_CTL;
-+	      VM_ENTRY_LOAD_IA32_RTIT_CTL |
-+	      VM_ENTRY_LOAD_CET_STATE;
- 	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_ENTRY_CTLS,
- 				&_vmentry_control) < 0)
- 		return -EIO;
-@@ -3133,6 +3135,12 @@ static bool is_cet_state_supported(struct kvm_vcpu *vcpu, u32 xss_states)
- 		guest_cpuid_has(vcpu, X86_FEATURE_IBT)));
- }
+ #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
  
-+static bool is_cet_supported(struct kvm_vcpu *vcpu)
-+{
-+	return is_cet_state_supported(vcpu, XFEATURE_MASK_CET_USER |
-+				      XFEATURE_MASK_CET_KERNEL);
-+}
-+
- int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -3173,6 +3181,10 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- 			return 1;
- 	}
+@@ -107,6 +108,7 @@
+ #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
+ #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
+ #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
++#define VM_ENTRY_LOAD_CET_STATE                 0x00100000
  
-+	if ((cr4 & X86_CR4_CET) && (!is_cet_supported(vcpu) ||
-+	    !(kvm_read_cr0(vcpu) & X86_CR0_WP)))
-+		return 1;
-+
- 	if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
- 		return 1;
+ #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
  
-@@ -3204,6 +3216,20 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- 			hw_cr4 &= ~(X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE);
- 	}
+@@ -328,6 +330,9 @@ enum vmcs_field {
+ 	GUEST_PENDING_DBG_EXCEPTIONS    = 0x00006822,
+ 	GUEST_SYSENTER_ESP              = 0x00006824,
+ 	GUEST_SYSENTER_EIP              = 0x00006826,
++	GUEST_S_CET                     = 0x00006828,
++	GUEST_SSP                       = 0x0000682a,
++	GUEST_INTR_SSP_TABLE            = 0x0000682c,
+ 	HOST_CR0                        = 0x00006c00,
+ 	HOST_CR3                        = 0x00006c02,
+ 	HOST_CR4                        = 0x00006c04,
+@@ -340,6 +345,9 @@ enum vmcs_field {
+ 	HOST_IA32_SYSENTER_EIP          = 0x00006c12,
+ 	HOST_RSP                        = 0x00006c14,
+ 	HOST_RIP                        = 0x00006c16,
++	HOST_S_CET                      = 0x00006c18,
++	HOST_SSP                        = 0x00006c1a,
++	HOST_INTR_SSP_TABLE             = 0x00006c1c
+ };
  
-+	if (cpu_has_load_cet_ctrl()) {
-+		if ((hw_cr4 & X86_CR4_CET) && is_cet_supported(vcpu)) {
-+			vm_entry_controls_setbit(to_vmx(vcpu),
-+						 VM_ENTRY_LOAD_CET_STATE);
-+			vm_exit_controls_setbit(to_vmx(vcpu),
-+						VM_EXIT_LOAD_CET_STATE);
-+		} else {
-+			vm_entry_controls_clearbit(to_vmx(vcpu),
-+						   VM_ENTRY_LOAD_CET_STATE);
-+			vm_exit_controls_clearbit(to_vmx(vcpu),
-+						  VM_EXIT_LOAD_CET_STATE);
-+		}
-+	}
-+
- 	vmcs_writel(CR4_READ_SHADOW, cr4);
- 	vmcs_writel(GUEST_CR4, hw_cr4);
- 	return 0;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ea8a9dc9fbad..906e07039d59 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -815,6 +815,9 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
- 	if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
- 		return 1;
- 
-+	if (!(cr0 & X86_CR0_WP) && kvm_read_cr4_bits(vcpu, X86_CR4_CET))
-+		return 1;
-+
- 	kvm_x86_ops.set_cr0(vcpu, cr0);
- 
- 	if ((cr0 ^ old_cr0) & X86_CR0_PG) {
+ /*
 -- 
 2.17.2
 
