@@ -2,116 +2,97 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC12C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3972C433EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96522207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0EF7207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:48:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="q5Zcz/RP"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XMgIJC7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbgGPSrs (ORCPT
+        id S1729424AbgGPSsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbgGPSrr (ORCPT
+        Thu, 16 Jul 2020 14:48:15 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:34568 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728374AbgGPSsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:47:47 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC185C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 11:47:47 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id q74so7158867iod.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 11:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JE7Pen46inwZxO9tkaTJDy3WUDLZxNVQfxoIMcr/BoM=;
-        b=q5Zcz/RPeQzCQ7zvA09TOSlqV6ksWSUtVb781iASamVNpGleTcjxA/JExhU+rexFaK
-         hApORWXALbZ9CxyXvvHFTeNcOjxzkfe7d2tGfr0j4shRPSbk+ommynMq1fsA+9gtRuuD
-         SghO4Ch7ivHSta+51v4KvYEJsVg37tVVpTT1s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JE7Pen46inwZxO9tkaTJDy3WUDLZxNVQfxoIMcr/BoM=;
-        b=mq1WCSkIGRzo1kltM+S5rqBuHl3h0xSHkcA2WNODD2tEjt5Um3pizgahMmdV1812So
-         IhR2eQQG89ZkyKYOd34+96kqvqhz+gz53ZmvYUDnQ2ijDlsVw7M0MSEresOmxMD6n27a
-         lSbz1aqxnUPYAxvEDJ2MG5KIlKCDF6ZM5MY8rzkqVYI82bAoYV4EC579LC15AFxVqC1H
-         jQKrO8AFmuC4UQlSMu5N5mPEdG1ED3CTcOQCX2VMeJP4hYI7ETc9jxty15olmaR+fJbl
-         3stFnfpWQHrGTzrXob5FTb5V6mORoo41wuBmhGUYsli3rIBJRkEdbup5FsazdWHizEwq
-         LQFg==
-X-Gm-Message-State: AOAM531xPBTUZJVSRLCBd4LQLxePfKqrXN7Zv+KSHONvlyYnIozZqjje
-        4nVpfaqmBohT3hfPMsH2cOodtcQV5dOaf5QVqzf/Qg==
-X-Google-Smtp-Source: ABdhPJwajtXehTH2xCamwP/Z0zea0M1DJ8xsJRZ40e52TLDCiQieV6T9sHH/g0K/InHRuIK3CfDMNY9XQQMriZOOz6o=
-X-Received: by 2002:a05:6638:1450:: with SMTP id l16mr6872872jad.74.1594925267035;
- Thu, 16 Jul 2020 11:47:47 -0700 (PDT)
+        Thu, 16 Jul 2020 14:48:14 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4CDF520B490A;
+        Thu, 16 Jul 2020 11:48:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4CDF520B490A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594925293;
+        bh=hSCKLmYwUb9OLxJLhvxvNGSLQTyCxuEbUVTQgeO7+8g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XMgIJC7SVchgQ7K49aPLfrJI+ke9XlGIUP5pmBxYAQRtNRb/9dZzz46NyDI/Dd5Qd
+         Yzk0j3i59775q8dqA4WY1Llftl/NSytmlrwp24WEfOC4z0A48OtMTpbsOyLk94wnsj
+         SZ3Gu9oiTwKa7Fk4525U7ULHNaF4Ib6Fv0V4YyWc=
+Received: by mail-qt1-f171.google.com with SMTP id e12so5713772qtr.9;
+        Thu, 16 Jul 2020 11:48:13 -0700 (PDT)
+X-Gm-Message-State: AOAM5314qLCaSEfmC9OXNWolB0EAS2cbA0Av/vAAEo1h97YXU6bobohp
+        1J3jLwYnMegMexr4bJedII52OSt/8hmEdXY8FHU=
+X-Google-Smtp-Source: ABdhPJxq7RwG+/dBZSJZZ/zxJ6F7VxqgzZM5rCwzYUFKFvDRyySYx3XYuVT9FxsDs8MtjKh8Arn616rqVLihWFg2J04=
+X-Received: by 2002:ac8:5486:: with SMTP id h6mr6614141qtq.255.1594925292362;
+ Thu, 16 Jul 2020 11:48:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200715135011.42743-1-kirill.shutemov@linux.intel.com>
- <CAHk-=wh4pB-jRngOjcGxpc8=NPds3jWqJwDMUWC3-OEo4dRiKg@mail.gmail.com>
- <20200715205428.GA201569@google.com> <CAHk-=wg-_Oof43pKUHMk4ySdLwpYi7+shFg+aeV18UP2Akiv8g@mail.gmail.com>
- <CAHk-=wg+iVwK7MDXB+BPbhTmP-1eBa-y4vxRNr_G8ETnzv5pZg@mail.gmail.com>
- <20200715222228.jf2pv5u2wyhtc5o5@box> <CAHk-=wgp-ZJ+J250DMaJFBDU2hnhUUqXcUnVnZZ1iFQEK6O-jg@mail.gmail.com>
- <CAHk-=wh3jD4dwXWWFors9OnYp-YCzYN2bCGs9HDxrtZ=TiFyDQ@mail.gmail.com>
- <CAHk-=wjw2yuQjP1rqB=ocr9W3=ak+6h4XygoFTAgM5meiM1Q0A@mail.gmail.com>
- <20200716131612.b7ottczdgnxwdvrp@box> <CAHk-=wi1PKGsk-Nr_Jd1vHGqg5AjTUtJkeh9R-a9SN-H=i2-1A@mail.gmail.com>
-In-Reply-To: <CAHk-=wi1PKGsk-Nr_Jd1vHGqg5AjTUtJkeh9R-a9SN-H=i2-1A@mail.gmail.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Thu, 16 Jul 2020 14:47:35 -0400
-Message-ID: <CAEXW_YRWDwUVrvedLtoMssFcrwAnWHAQ0CWNbR4UF=GS18B3wA@mail.gmail.com>
-Subject: Re: [PATCHv2] mm: Fix warning in move_normal_pmd()
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        William Kucharski <william.kucharski@oracle.com>
+References: <20200713130511.6942-1-mcroce@linux.microsoft.com> <20200714173154.i2wxhm4n4ob7sfpd@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20200714173154.i2wxhm4n4ob7sfpd@ast-mbp.dhcp.thefacebook.com>
+From:   Matteo Croce <mcroce@linux.microsoft.com>
+Date:   Thu, 16 Jul 2020 20:47:36 +0200
+X-Gmail-Original-Message-ID: <CAFnufp2_vwyCR95Z=Dkd9XXRO8CTQ5NZtNPdJL+1oPRurv-feQ@mail.gmail.com>
+Message-ID: <CAFnufp2_vwyCR95Z=Dkd9XXRO8CTQ5NZtNPdJL+1oPRurv-feQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: allow loading instructions from a fd
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 1:55 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Tue, Jul 14, 2020 at 7:31 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 >
-> On Thu, Jul 16, 2020 at 6:16 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> On Mon, Jul 13, 2020 at 03:05:11PM +0200, Matteo Croce wrote:
+> > From: Matteo Croce <mcroce@microsoft.com>
 > >
-> > It can also lead to performance regression: for small mremap() if only one
-> > side of the range got aligned and there's no PMD_SIZE range to move,
-> > kernel will still iterate over PTEs, but it would need to handle more
-> > pte_none()s than without the patch.
+> > Allow to load the BPF instructons from a file descriptor,
+> > other than a pointer.
+> >
+> > This is required by the Integrity Subsystem to validate the source of
+> > the instructions.
+> >
+> > In bpf_attr replace 'insns', which is an u64, to a union containing also
+> > the file descriptor as int.
+> > A new BPF_F_LOAD_BY_FD flag tells bpf_prog_load() to load
+> > the instructions from file descriptor and ignore the pointer.
+> >
+> > As BPF files usually are regular ELF files, start reading from the
+> > current file position, so the userspace can skip the ELF header and jump
+> > to the right section.
 >
-> Ack, I've dropped the patch from my queue of experiments, because it
-> doesn't work for the case I wanted to do, and the other cases could
-> regress, as you say.
->
-> Plus considering how many problems that patch had, I decided it wasn't
-> as simple as I initially thought it would be anyway ;)
->
-> Joel - while it's gone from my mind, if you're still interested in
-> this, maybe you can do something _similar_ that patch, except perhaps
-> also start out checking that the initial size is large enough for this
-> to make sense even when one of the sides doesn't align, for example.
->
-> (It might be as simple as checking that the initial 'len' is at least
-> PMD_SIZE - then you're guaranteed that whichever side gets aligned,
-> it's not doing extra work because the other side didn't).
+> That is not the case at all.
+> Have you looked at amount of work libbpf is doing with elf file before
+> raw instructions become suitable to be loaded by the kernel?
 
-Hi Linus,
-Yes I'm quite interested in doing a similar patch and also adding some
-test cases to make sure it always works properly. Probably I can add
-some kselftest cases doing mremap on various ranges.
+I see now what bpf_object__relocate() and all the *reloc* functions
+do, so it can't be done this way, I see.
 
-I think it will be a great optimization to trigger the PMD move more
-often. I'll work on it and get back hopefully soon on this, Thanks!
+A malicious BPF file can be as bad as a malicious binary. Let's say I
+want to assert code integrity for BPF files, what could be a viable
+option?
+Perhaps a signature in the object file as we do with modules?
 
- - Joel
+Regards,
+-- 
+per aspera ad upstream
