@@ -2,185 +2,100 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEACC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F737207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EED8207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:56:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bB0GqtkF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cz4k9Ffx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgGPSyS (ORCPT
+        id S1729266AbgGPS4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:54:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60400 "EHLO
+        Thu, 16 Jul 2020 14:56:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgGPSyR (ORCPT
+        with ESMTP id S1728163AbgGPS4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:54:17 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93AC8C061755;
-        Thu, 16 Jul 2020 11:54:17 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 72so5056875otc.3;
-        Thu, 16 Jul 2020 11:54:17 -0700 (PDT)
+        Thu, 16 Jul 2020 14:56:54 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF1FAC061755;
+        Thu, 16 Jul 2020 11:56:53 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id m16so4261160pls.5;
+        Thu, 16 Jul 2020 11:56:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hh1P2ej3PSRq1WOldPof/pYHoI8ZC8oiK5qvMk9TyR0=;
-        b=bB0GqtkF+m763mQ8H/zjdUE2tmoKXyBj5xknTJ2FjFNHnb9/9Idj5DCQUd2v4bl5lC
-         e2kgL7T8sqTuXor8tyPCn6TNokY/9aPFtNuk2lPm6w7VpwJsa8Yjmk60VE73+9rin7jU
-         POzPrc+m+Bv/pVWWrnKgXQQ7E+6KJ+6xhL453GVN4fiUl2ImlTtcJLG7XkcwZAJVe3mL
-         Gpo+TBbB3DT5XNsVytw94iXWQ2H2pRk+CbxNpWQqh02pxoZ3cbSyNP2z6v8aWezPnOoJ
-         VYViwIuNXNpzfnPOFyOhssvn/9urkUmCMMf/yBgnpeG918Y+JDevULC5dAL4kTrx3h6I
-         KGGg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=558SEf3wkjUc5GW0/aqWtWS31X2v2nvkhCml04nU/kc=;
+        b=Cz4k9FfxeOO4NHD3yEMpbkx3rAmHS+0F/Du7ZUEYZJ+y9dvKfHSxpmrVu70LSynGEB
+         ADFMeqdtKmna0GU7uITLNxfXfGhyhDwOibdX/9MCfW60jTAPxoqXc0KYpldDYp2Y7COt
+         k5fpyxKZbw4su+8S+uOdVCOz5uKqwjBt5FFKPAqIMkHbKvd1BnxLGdGcDCNGbPvuzdrV
+         1XRPC+ugzUgXxAEB6NKNSSATCwff+Vz2nn2JRvaDyGCq9zgvMGZD4bUlRcruJVuWsqxo
+         8wIh4YDG2t2A2ZF96Lx6bsw1TCcFM3CJMJSvuTAx8shAEHK0RxYNSAh9I8PfXGiPMTE2
+         0EAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hh1P2ej3PSRq1WOldPof/pYHoI8ZC8oiK5qvMk9TyR0=;
-        b=WMBW4F66SkOdz7OalaybCD59Zq+pAFUHfXkHIpvIvV1B+QTARR4Xb/LXSGbQCyQtJy
-         trJWJ9ccY3fAyJFeCF6gOMqEt1eUa9y3XZK+AthBvx16o66yb9njnWKU68Uk2MHvbGvP
-         BYgf+T4h2z7OTd+3WcRlHbNguk50rdThl9azZiKC/yAfRt42T6x6gFN/cli4/RcOBxBd
-         YvAqnwffDpqbsQsZ/Z8gP4Tx9/7v6QJw0F3d41z8Rb1IHjbcQYjQSwQzk2DZTfBc2sdg
-         gljzJAo5JrelganH9qrZS5Cn5T2inXAjg4aZ0J+amKBcK2AmV/omPbZRayaOXEt9NYOw
-         RexQ==
-X-Gm-Message-State: AOAM533FEBR0CWJgFDihIcVPSdY/XVkB1T47Fo0yfRNuo9dXOSoIcLTI
-        GwEWmLgUkzRn+66KJF7qt5bla8FPp5GzF6x3mhrgiWfk
-X-Google-Smtp-Source: ABdhPJz5CQk76FM+g6cXhnGWeCEydEOpfKBMJz3HmArpJ07d0bYKBDJdEk7sAkAQSMT2H2LdRmvDZteqI+fIukAa3hI=
-X-Received: by 2002:a9d:6e14:: with SMTP id e20mr5552606otr.89.1594925656968;
- Thu, 16 Jul 2020 11:54:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=558SEf3wkjUc5GW0/aqWtWS31X2v2nvkhCml04nU/kc=;
+        b=UUDitJf65OPefozAdn5w7+KqIapMoZJ0MQPHfMo9ecskUz9AW5EbwzG0T/Bz+sNSx1
+         bEkAtqn53lXfjboMZQ4EkaGuIGMhwgNItKspqUzHcBZkvV+fQKO5wa1DGhM/Lf/cyn+L
+         DQ3nxN6BQuRtqwQX9IhqoaDXhK7XJC1GuNanScv4rHHla9npZ12cz7i921m3BD53xcOY
+         XaAhxWbcLUzG4MWLvcepOheQk8ok122u2aHO6AwGh9B//N0ERUsPtqUcdbI8WhI2YYH7
+         Ea7iqEhsb2gGKILVByUO/Ax8IoTCpqg3DW+s/in/YNbs3xd6wT85cmApxihgeJhaxByL
+         o1aw==
+X-Gm-Message-State: AOAM532eS4mrQCIFUWttNqHDDga2LFoSTGY3SDWp+QPVBOA1v2XjcKEL
+        513176kLsMa8B+UWFRx3TD0=
+X-Google-Smtp-Source: ABdhPJyVJOE+N6XkYsKVvc9gHyOhLTznfmMXtKOKyg7LkJ9riRyKWMq0ixSICTozCljLpigEO5OgpQ==
+X-Received: by 2002:a17:902:76c4:: with SMTP id j4mr4621390plt.131.1594925813249;
+        Thu, 16 Jul 2020 11:56:53 -0700 (PDT)
+Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id u66sm5506910pfb.191.2020.07.16.11.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 11:56:52 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 11:56:50 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Sergey Organov <sorganov@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH net] net: dp83640: fix SIOCSHWTSTAMP to update the struct
+ with actual configuration
+Message-ID: <20200716185650.GA1074@hoboy>
+References: <20200715161000.14158-1-sorganov@gmail.com>
 MIME-Version: 1.0
-References: <20200716174351.20128-1-nramas@linux.microsoft.com> <20200716174351.20128-5-nramas@linux.microsoft.com>
-In-Reply-To: <20200716174351.20128-5-nramas@linux.microsoft.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 16 Jul 2020 14:54:06 -0400
-Message-ID: <CAEjxPJ43eXK0xgrE=gDxZVg2SDTz4bkd7N4otjk-cvxf3fKL-g@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] LSM: Define SELinux function to measure security state
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715161000.14158-1-sorganov@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 1:44 PM Lakshmi Ramasubramanian
-<nramas@linux.microsoft.com> wrote:
->
-> SELinux configuration and policy are some of the critical data for this
-> security module that needs to be measured. To enable this measurement
-> SELinux needs to implement the interface function,
-> security_measure_data(), that the LSM can call.
->
-> Define the security_state() function in SELinux to measure SELinux
-> configuration and policy. Call this function to measure SELinux data
-> when there is a change in the security module's state.
->
-> Sample measurement of SELinux state and hash of the policy:
->
-> 10 e32e...5ac3 ima-buf sha256:86e8...4594 selinux-state 656e61626c65643d3=
-13b656e666f7263696e673d303b636865636b72657170726f743d313b6e6574706565723d31=
-3b6f70656e7065726d3d313b657874736f636b636c6173733d313b616c776179736e6574776=
-f726b3d303b6367726f75707365636c6162656c3d313b6e6e706e6f737569647472616e7369=
-74696f6e3d313b67656e66737365636c6162656c73796d6c696e6b3d303b
-> 10 f4a7...9408 ima-buf sha256:4941...68fc selinux-policy-hash 8d1d...1834
->
-> The data for selinux-state in the above measurement is:
-> enabled=3D1;enforcing=3D0;checkreqprot=3D1;network_peer_controls=3D1;open=
-_perms=3D1;extended_socket_class=3D1;always_check_network=3D0;cgroup_seclab=
-el=3D1;nnp_nosuid_transition=3D1;genfs_seclabel_symlinks=3D0;
->
-> The data for selinux-policy-hash in the above measurement is
-> the SHA256 hash of the SELinux policy.
+On Wed, Jul 15, 2020 at 07:10:00PM +0300, Sergey Organov wrote:
+> From Documentation/networking/timestamping.txt:
+> 
+>   A driver which supports hardware time stamping shall update the
+>   struct with the actual, possibly more permissive configuration.
+> 
+> Do update the struct passed when we upscale the requested time
+> stamping mode.
+> 
+> Fixes: cb646e2b02b2 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
+> Signed-off-by: Sergey Organov <sorganov@gmail.com>
 
-Can you show an example of how to verify that the above measurement
-matches a given state and policy, e.g. the sha256sum commands and
-inputs to reproduce the same from an expected state and policy?
-
->
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> ---
-
-> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
-> new file mode 100644
-> index 000000000000..27cbb309e926
-> --- /dev/null
-> +++ b/security/selinux/measure.c
-> @@ -0,0 +1,158 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Measure SELinux state using IMA subsystem.
-> + */
-> +#include <linux/ima.h>
-> +#include "security.h"
-> +
-> +/* Pre-allocated buffer used for measuring state */
-> +static char *selinux_state_string;
-> +static size_t selinux_state_string_len;
-> +static char *selinux_state_string_fmt =3D
-> +       "%s=3D%d;%s=3D%d;%s=3D%d;%s=3D%d;%s=3D%d;%s=3D%d;%s=3D%d;%s=3D%d;=
-%s=3D%d;%s=3D%d;";
-> +
-> +void __init selinux_init_measurement(void)
-> +{
-> +       selinux_state_string_len =3D
-> +       snprintf(NULL, 0, selinux_state_string_fmt,
-> +       "enabled", 0,
-> +       "enforcing", 0,
-> +       "checkreqprot", 0,
-> +       selinux_policycap_names[POLICYDB_CAPABILITY_NETPEER], 0,
-> +       selinux_policycap_names[POLICYDB_CAPABILITY_OPENPERM], 0,
-> +       selinux_policycap_names[POLICYDB_CAPABILITY_EXTSOCKCLASS], 0,
-> +       selinux_policycap_names[POLICYDB_CAPABILITY_ALWAYSNETWORK], 0,
-> +       selinux_policycap_names[POLICYDB_CAPABILITY_CGROUPSECLABEL], 0,
-> +       selinux_policycap_names[POLICYDB_CAPABILITY_NNP_NOSUID_TRANSITION=
-], 0,
-> +       selinux_policycap_names[POLICYDB_CAPABILITY_GENFS_SECLABEL_SYMLIN=
-KS],
-> +       0);
-
-I was thinking you'd dynamically construct the format string with a
-for loop from 0 to POLICYDB_CAPABILITY_MAX
-and likewise for the values so that we wouldn't have to patch this
-code every time we add a new one.
-
-> +
-> +       if (selinux_state_string_len < 0)
-> +               return;
-
-How can this happen legitimately (i.e. as a result of something other
-than a kernel bug)?
-
-> +
-> +       ++selinux_state_string_len;
-> +
-> +       selinux_state_string =3D kzalloc(selinux_state_string_len, GFP_KE=
-RNEL);
-> +       if (!selinux_state_string)
-> +               selinux_state_string_len =3D 0;
-> +}
-
-Not sure about this error handling approach (silent, proceeding as if
-the length was zero and then later failing with ENOMEM on every
-attempt?). I'd be more inclined to panic/BUG here but I know Linus
-doesn't like that.
-
-> +       if (ret)
-> +               pr_err("%s: error %d\n", __func__, ret);
-
-This doesn't seem terribly useful as an error message; I'd be inclined
-to drop it.
+Acked-by: Richard Cochran <richardcochran@gmail.com>
