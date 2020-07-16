@@ -2,188 +2,161 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DBCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFF232070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3252065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sl3ESia3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgGPF6X (ORCPT
+        id S1727828AbgGPF4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:58:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6048 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725913AbgGPF6W (ORCPT
+        Thu, 16 Jul 2020 01:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgGPF4c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:58:22 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06G5WHrT001936;
-        Thu, 16 Jul 2020 01:58:15 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32792wvxy7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 01:58:15 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06G5WL6S002191;
-        Thu, 16 Jul 2020 01:58:15 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32792wvxxt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 01:58:15 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06G5tdPD001596;
-        Thu, 16 Jul 2020 05:58:13 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma04dal.us.ibm.com with ESMTP id 327529r05p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 05:58:13 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06G5wCS117105226
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 05:58:12 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC6C5C605B;
-        Thu, 16 Jul 2020 05:58:11 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8083C6057;
-        Thu, 16 Jul 2020 05:58:08 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.73.114])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Jul 2020 05:58:08 +0000 (GMT)
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466088775.24747.1248185448154277951.stgit@hbathini.in.ibm.com> <87365t8pse.fsf@morokweng.localdomain>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Young <dyoung@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v3 04/12] ppc64/kexec_file: avoid stomping memory used by special regions
-In-reply-to: <87365t8pse.fsf@morokweng.localdomain>
-Date:   Thu, 16 Jul 2020 02:58:04 -0300
-Message-ID: <87pn8w80ib.fsf@morokweng.localdomain>
+        Thu, 16 Jul 2020 01:56:32 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47529C061755;
+        Wed, 15 Jul 2020 22:56:32 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id p15so4022439ilh.13;
+        Wed, 15 Jul 2020 22:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NKqwxZGmcFZhkY5PqY2mOI3LFTBG3HphbeVkF+HUG8I=;
+        b=Sl3ESia33DmCibkAjRcraHWL27fvPEF8j8dd17Jru4nbSwqYbWexILtWJHHa4lujF6
+         ZJa16QmCDxCr+AkYmjBPZP6Pi4r1RJ2OOjfj/x0YFt/dJqS8rFb71m2Iu7si3/xzSwJm
+         eDW407oO1We8b1NxGhofAq2djtIjynweShZBDUticICj6+9qGcgtTq7HVaBVaNKhJWFz
+         a2aP9wd3PME8RwWkLgX9KnJNRCZ9ILmgVVOIsYpT926KGWqU179QaI8l2yeHQ3OTxX39
+         clLipZ/jtiF5MjCcVAhHxK2NPAea//5SdiGIJVWIS7eBGLIiDKKoaaOveCVTpIyeHNUD
+         /zkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NKqwxZGmcFZhkY5PqY2mOI3LFTBG3HphbeVkF+HUG8I=;
+        b=cvJjJIIBAzvgWbbzNSV8p1UQLUNJSZu7LIeOu5k9rYHaOBiuZt6jIoYbCkUlWLFei/
+         1kpje3f7BPGAxIniynKYfbBx6cFAFIFBFd9fPGxfenPqUarp1RyZPI5PG6q7Zk38uA5C
+         yC6ohHicSkvmHvV0ZGeMRr8/RLGTOS4d9G5Q67qxosy7n3eH9nlvmJgyeLemZuSvHyLQ
+         3nLt+jO8szDz33IUNyIoBwwnU0Osq8rsQjXXpmtx3c+Mn/vqUd/i9mJT5T9AMStmeOFj
+         CRMEfmHw6W2c2+THRVjWK+t2rkpsPlsATV6d00/yGsqk0O0/JSZT2vhuyBGXTdcBv5Sv
+         AuWA==
+X-Gm-Message-State: AOAM531HH6rJfWeJZCIb8FImfwevj+7/Tx58ju4+CJ0j+oDJYqwfEFaR
+        AqXqZxm2GKsVqM6ex/jURxuYBSZY57A90be5BJE=
+X-Google-Smtp-Source: ABdhPJzplWKsBmnfCnlFFgUFbdLvvNrvpFk8y8sFgwWqO2bTqu25XaP4zfDj9HlbP17tw0BkEeEcAQuF3r2ybvsACjI=
+X-Received: by 2002:a05:6e02:1070:: with SMTP id q16mr2836705ilj.221.1594878991645;
+ Wed, 15 Jul 2020 22:56:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-15_12:2020-07-15,2020-07-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 clxscore=1015
- adultscore=0 impostorscore=0 spamscore=0 malwarescore=0 bulkscore=0
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160038
+References: <20200713074243.530-1-linux.amoon@gmail.com> <20200716055050.GE55478@vkoul-mobl>
+In-Reply-To: <20200716055050.GE55478@vkoul-mobl>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Thu, 16 Jul 2020 11:26:20 +0530
+Message-ID: <CANAwSgRcgOxwT1+avVJp3GaX1dKzFuzoDuggUXk7-MFQ7cOG8A@mail.gmail.com>
+Subject: Re: [PATCH v4] phy: samsung: Use readl_poll_timeout function
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Vinod,
 
-Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+On Thu, 16 Jul 2020 at 11:20, Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 13-07-20, 07:42, Anand Moon wrote:
+> > Instead of a busy waiting while loop using udelay
+> > use readl_poll_timeout function to check the condition
+> > is met or timeout occurs in crport_handshake function.
+> > readl_poll_timeout is called in non atomic context so
+> > it safe to sleep until the condition is met.
+> >
+> > Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > ---
+> > Changes v4:
+> > Rebased on to of patch [0] https://patchwork.kernel.org/patch/11651673/
+> > --Fix the commit message.
+> > --Fix the error timeout condition for -ETIMEDOUT
+> > ---
+> > Changes v3:
+> > --Fix the commit message.
+> > --Drop the variable, used the value directly.
+> > Changes v2:
+> > --used the default timeout values.
+> > --Added missing Fixed tags.
+> > ---
+> >  drivers/phy/samsung/phy-exynos5-usbdrd.c | 39 ++++++++----------------
+> >  1 file changed, 12 insertions(+), 27 deletions(-)
+> >
+> > diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> > index 7f6279fb4f8f..ad81aa65cdff 100644
+> > --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> > +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/of.h>
+> >  #include <linux/of_address.h>
+> >  #include <linux/of_device.h>
+> > +#include <linux/iopoll.h>
+> >  #include <linux/phy/phy.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/mutex.h>
+> > @@ -556,41 +557,25 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
+> >  static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
+> >                           u32 val, u32 cmd)
+> >  {
+> > -     u32 usec = 100;
+> >       unsigned int result;
+> > +     int err;
+> >
+> >       writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+> >
+> > -     do {
+> > -             result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
+> > -             if (result & PHYREG1_CR_ACK)
+> > -                     break;
+> > -
+> > -             udelay(1);
+> > -     } while (usec-- > 0);
+> > -
+> > -     if (!usec) {
+> > -             dev_err(phy_drd->dev,
+> > -                     "CRPORT handshake timeout1 (0x%08x)\n", val);
+> > -             return -ETIME;
+> > +     err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
+> > +                     result, (result & PHYREG1_CR_ACK), 1, 100);
+>
+> pls align this line to opening brace of preceding line:
+>
+>         err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
+>                                  result, (result & PHYREG1_CR_ACK), 1, 100);
+>
+> This is recommended way of splitting lines, see
+> Documentation/process/coding-style.rst and run checkpatch.pl with
+> --strict option
 
-> Hari Bathini <hbathini@linux.ibm.com> writes:
+Ok, I will do this, just waiting for some more feedback on these changes.
 >
->> diff --git a/arch/powerpc/include/asm/crashdump-ppc64.h b/arch/powerpc/include/asm/crashdump-ppc64.h
->> new file mode 100644
->> index 0000000..90deb46
->> --- /dev/null
->> +++ b/arch/powerpc/include/asm/crashdump-ppc64.h
->> @@ -0,0 +1,10 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +#ifndef _ASM_POWERPC_CRASHDUMP_PPC64_H
->> +#define _ASM_POWERPC_CRASHDUMP_PPC64_H
->> +
->> +/* min & max addresses for kdump load segments */
->> +#define KDUMP_BUF_MIN		(crashk_res.start)
->> +#define KDUMP_BUF_MAX		((crashk_res.end < ppc64_rma_size) ? \
->> +				 crashk_res.end : (ppc64_rma_size - 1))
->> +
->> +#endif /* __ASM_POWERPC_CRASHDUMP_PPC64_H */
->> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
->> index 7008ea1..bf47a01 100644
->> --- a/arch/powerpc/include/asm/kexec.h
->> +++ b/arch/powerpc/include/asm/kexec.h
->> @@ -100,14 +100,16 @@ void relocate_new_kernel(unsigned long indirection_page, unsigned long reboot_co
->>  #ifdef CONFIG_KEXEC_FILE
->>  extern const struct kexec_file_ops kexec_elf64_ops;
->>
->> -#ifdef CONFIG_IMA_KEXEC
->>  #define ARCH_HAS_KIMAGE_ARCH
->>
->>  struct kimage_arch {
->> +	struct crash_mem *exclude_ranges;
->> +
->> +#ifdef CONFIG_IMA_KEXEC
->>  	phys_addr_t ima_buffer_addr;
->>  	size_t ima_buffer_size;
->> -};
->>  #endif
->> +};
->>
->>  int setup_purgatory(struct kimage *image, const void *slave_code,
->>  		    const void *fdt, unsigned long kernel_load_addr,
->> @@ -125,6 +127,7 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
->>  			unsigned long initrd_load_addr,
->>  			unsigned long initrd_len, const char *cmdline);
->>  #endif /* CONFIG_PPC64 */
->> +
->>  #endif /* CONFIG_KEXEC_FILE */
->>
->>  #else /* !CONFIG_KEXEC_CORE */
->> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
->> index 23ad04c..c695f94 100644
->> --- a/arch/powerpc/kexec/elf_64.c
->> +++ b/arch/powerpc/kexec/elf_64.c
->> @@ -22,6 +22,7 @@
->>  #include <linux/of_fdt.h>
->>  #include <linux/slab.h>
->>  #include <linux/types.h>
->> +#include <asm/crashdump-ppc64.h>
->>
->>  static void *elf64_load(struct kimage *image, char *kernel_buf,
->>  			unsigned long kernel_len, char *initrd,
->> @@ -46,6 +47,12 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
->>  	if (ret)
->>  		goto out;
->>
->> +	if (image->type == KEXEC_TYPE_CRASH) {
->> +		/* min & max buffer values for kdump case */
->> +		kbuf.buf_min = pbuf.buf_min = KDUMP_BUF_MIN;
->> +		kbuf.buf_max = pbuf.buf_max = KDUMP_BUF_MAX;
->
-> This is only my personal opinion and an actual maintainer may disagree,
-> but just looking at the lines above, I would assume that KDUMP_BUF_MIN
-> and KDUMP_BUF_MAX were constants, when in fact they aren't.
->
-> I suggest using static inline macros in <asm/crashdump-ppc64.h>, for
-> example:
->
-> static inline resource_size_t get_kdump_buf_min(void)
-> {
-> 	return crashk_res.start;
-> }
->
-> static inline resource_size_t get_kdump_buf_max(void)
-> {
-> 	return (crashk_res.end < ppc64_rma_size) ? \
-> 		 crashk_res.end : (ppc64_rma_size - 1)
-> }
+> thanks
+> --
+> ~Vinod
 
-I later noticed that KDUMP_BUF_MIN and KDUMP_BUF_MAX are only used here.
-In this case, I think the best option is to avoid the macros and inline
-functions and just use the actual expressions in the code.
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+-Anand
