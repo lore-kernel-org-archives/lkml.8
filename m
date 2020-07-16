@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF194C433ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000ADC433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A620C20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE2420739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbgGPMic (ORCPT
+        id S1728810AbgGPMih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:38:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35836 "EHLO mx2.suse.de"
+        Thu, 16 Jul 2020 08:38:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35892 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728397AbgGPMia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:38:30 -0400
+        id S1728601AbgGPMib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:38:31 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D85F9B972;
-        Thu, 16 Jul 2020 12:38:32 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id A8FF6B93D;
+        Thu, 16 Jul 2020 12:38:33 +0000 (UTC)
 From:   Oscar Salvador <osalvador@suse.de>
 To:     akpm@linux-foundation.org
 Cc:     mhocko@suse.com, linux-mm@kvack.org, mike.kravetz@oracle.com,
@@ -31,9 +31,9 @@ Cc:     mhocko@suse.com, linux-mm@kvack.org, mike.kravetz@oracle.com,
         naoya.horiguchi@nec.com, linux-kernel@vger.kernel.org,
         Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
         Oscar Salvador <osalvador@suse.com>
-Subject: [PATCH v4 01/15] mm,hwpoison: cleanup unused PageHuge() check
-Date:   Thu, 16 Jul 2020 14:37:55 +0200
-Message-Id: <20200716123810.25292-2-osalvador@suse.de>
+Subject: [PATCH v4 03/15] mm,madvise: call soft_offline_page() without MF_COUNT_INCREASED
+Date:   Thu, 16 Jul 2020 14:37:57 +0200
+Message-Id: <20200716123810.25292-4-osalvador@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20200716123810.25292-1-osalvador@suse.de>
 References: <20200716123810.25292-1-osalvador@suse.de>
@@ -44,32 +44,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 
-Drop the PageHuge check since memory_failure forks into memory_failure_hugetlb()
-for hugetlb pages.
+The call to get_user_pages_fast is only to get the pointer to a struct
+page of a given address, pinning it is memory-poisoning handler's job,
+so drop the refcount grabbed by get_user_pages_fast
 
 Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 Signed-off-by: Oscar Salvador <osalvador@suse.com>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
 ---
- mm/memory-failure.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ mm/madvise.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 47b8ccb1fb9b..e5d0c14c2332 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1382,10 +1382,7 @@ int memory_failure(unsigned long pfn, int flags)
- 	 * page_remove_rmap() in try_to_unmap_one(). So to determine page status
- 	 * correctly, we save a copy of the page flags at this time.
- 	 */
--	if (PageHuge(p))
--		page_flags = hpage->flags;
--	else
--		page_flags = p->flags;
-+	page_flags = p->flags;
+diff --git a/mm/madvise.c b/mm/madvise.c
+index a16dba21cdf6..1fe89a5b8d33 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -910,16 +910,24 @@ static int madvise_inject_error(int behavior,
+ 		 */
+ 		size = page_size(compound_head(page));
  
- 	/*
- 	 * unpoison always clear PG_hwpoison inside page lock
+-		if (PageHWPoison(page)) {
+-			put_page(page);
++		/*
++		 * The get_user_pages_fast() is just to get the pfn of the
++		 * given address, and the refcount has nothing to do with
++		 * what we try to test, so it should be released immediately.
++		 * This is racy but it's intended because the real hardware
++		 * errors could happen at any moment and memory error handlers
++		 * must properly handle the race.
++		 */
++		put_page(page);
++
++		if (PageHWPoison(page))
+ 			continue;
+-		}
+ 
+ 		if (behavior == MADV_SOFT_OFFLINE) {
+ 			pr_info("Soft offlining pfn %#lx at process virtual address %#lx\n",
+ 					pfn, start);
+ 
+-			ret = soft_offline_page(pfn, MF_COUNT_INCREASED);
++			ret = soft_offline_page(pfn, 0);
+ 			if (ret)
+ 				return ret;
+ 			continue;
+@@ -927,14 +935,6 @@ static int madvise_inject_error(int behavior,
+ 
+ 		pr_info("Injecting memory failure for pfn %#lx at process virtual address %#lx\n",
+ 				pfn, start);
+-
+-		/*
+-		 * Drop the page reference taken by get_user_pages_fast(). In
+-		 * the absence of MF_COUNT_INCREASED the memory_failure()
+-		 * routine is responsible for pinning the page to prevent it
+-		 * from being released back to the page allocator.
+-		 */
+-		put_page(page);
+ 		ret = memory_failure(pfn, 0);
+ 		if (ret)
+ 			return ret;
 -- 
 2.26.2
 
