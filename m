@@ -2,118 +2,544 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AEFC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B085FC43469
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDD02074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B87F2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QNa2DciX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JU4H56qN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbgGPSWT (ORCPT
+        id S1729687AbgGPSVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:22:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33796 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728400AbgGPSWT (ORCPT
+        Thu, 16 Jul 2020 14:21:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40308 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729376AbgGPSUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:22:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594923737;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lk5Sb10KBxnEsRTf9jptX+cMK7ZwOiOAGrmMzWURkEc=;
-        b=QNa2DciXfbgXHYxSK+Xri+k7LXOqdiwdWHK2VUe4O2zGMucnokWzdGPYc7dESA6N55vdMR
-        ZS1C3W6+2d51KUd6TMIn4tc9aGm2X2CgIfUz6NcdfUMquEn/a8c0KlRK7H3CV5PfO+xVHH
-        SaBTiwLkXWYUHM1UH3KyYLwZaDUocvk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-484-XLCVQrAoMiKGmp0ZyNPtTw-1; Thu, 16 Jul 2020 14:22:15 -0400
-X-MC-Unique: XLCVQrAoMiKGmp0ZyNPtTw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3FB6015C25;
-        Thu, 16 Jul 2020 18:22:14 +0000 (UTC)
-Received: from starship (unknown [10.35.206.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 787075C5B7;
-        Thu, 16 Jul 2020 18:22:12 +0000 (UTC)
-Message-ID: <64a1ba836139b028936e24705eab06a032d598cf.camel@redhat.com>
-Subject: Re: kernel oops in 'typec_ucsi' due to commit 'drivers property:
- When no children in primary, try secondary'
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
-        sakari.ailus@linux.intel.com, heikki.krogerus@linux.intel.com,
-        gregkh@linuxfoundation.org
-Date:   Thu, 16 Jul 2020 21:22:11 +0300
-In-Reply-To: <20200716182120.GS3703480@smile.fi.intel.com>
-References: <7affdd923186c5ce8c7dcf7cbe7b826eaa3ac8b2.camel@redhat.com>
-         <20200716154721.GO3703480@smile.fi.intel.com>
-         <43148a2ebe546fde67028d99fd7365acce1311b2.camel@redhat.com>
-         <20200716182120.GS3703480@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Thu, 16 Jul 2020 14:20:41 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06GIKPSb062340;
+        Thu, 16 Jul 2020 13:20:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594923625;
+        bh=juBiQZHxMAoRN/W87kLa4mglUiBZbwNotHQKJ8N1fLk=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=JU4H56qNUzsnm1CrVwau8bsRgabnsZAKn4y15bvDVHE3lZC3Obu0oODaM6ayff5s0
+         B0vhjBJhfqufuyco+H8O736rCNugxsXgT/pOet57MhplC/clmKEwMpIcxDjvp+t4HW
+         VfnxzTQ/ZdmsrutAFDBFhGvSZzCC5ngzi3nYQbsI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06GIKPP9042814
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jul 2020 13:20:25 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 16
+ Jul 2020 13:20:24 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 16 Jul 2020 13:20:24 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06GIKO2g024794;
+        Thu, 16 Jul 2020 13:20:24 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
+        <marek.behun@nic.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v31 04/12] dt-bindings: leds: Convert leds-lp55xx to yaml
+Date:   Thu, 16 Jul 2020 13:19:59 -0500
+Message-ID: <20200716182007.18389-5-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200716182007.18389-1-dmurphy@ti.com>
+References: <20200716182007.18389-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-16 at 21:21 +0300, Andy Shevchenko wrote:
-> On Thu, Jul 16, 2020 at 09:00:00PM +0300, Maxim Levitsky wrote:
-> > On Thu, 2020-07-16 at 18:47 +0300, Andy Shevchenko wrote:
-> > > On Thu, Jul 16, 2020 at 11:17:03AM +0300, Maxim Levitsky wrote:
-> > > > Hi!
-> > > > 
-> > > > Few days ago I bisected a regression on 5.8 kernel:
-> > > > 
-> > > > I have nvidia rtx 2070s and its USB type C port driver (which is open source)
-> > > > started to crash on load:
-> > > 
-> > > ...
-> > > 
-> > > > Reverting the commit helped fix this oops.
-> > > > 
-> > > > My .config attached.
-> > > > If any more info is needed I'll be happy to provide it,
-> > > > and of course test patches.
-> > > 
-> > > Can you test below?
-> > > 
-> > > diff --git a/drivers/base/property.c b/drivers/base/property.c
-> > > index 1e6d75e65938..d58aa98fe964 100644
-> > > --- a/drivers/base/property.c
-> > > +++ b/drivers/base/property.c
-> > > @@ -721,7 +721,7 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
-> > >  		return next;
-> > >  
-> > >  	/* When no more children in primary, continue with secondary */
-> > > -	if (!IS_ERR_OR_NULL(fwnode->secondary))
-> > > +	if (fwnode && !IS_ERR_OR_NULL(fwnode->secondary))
-> > >  		next = fwnode_get_next_child_node(fwnode->secondary, child);
-> > >  
-> > >  	return next;
-> > 
-> > It works (no more oops)
-> 
-> Thanks for testing. I'm about to send formal patch, can you give your Tested-by tag there then?
+Convert the leds-lp55xx.txt to yaml binding.
 
-Of course.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 228 ------------------
+ .../devicetree/bindings/leds/leds-lp55xx.yaml | 220 +++++++++++++++++
+ 2 files changed, 220 insertions(+), 228 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
 
-Tested-by: Maxim Levitsky <mlevitsk@redhat.com>
-
-Best regards,
-	Maxim Levitsky
-> 
-
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+deleted file mode 100644
+index 1b66a413fb9d..000000000000
+--- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
++++ /dev/null
+@@ -1,228 +0,0 @@
+-Binding for TI/National Semiconductor LP55xx Led Drivers
+-
+-Required properties:
+-- compatible: one of
+-	national,lp5521
+-	national,lp5523
+-	ti,lp55231
+-	ti,lp5562
+-	ti,lp8501
+-
+-- reg: I2C slave address
+-- clock-mode: Input clock mode, (0: automode, 1: internal, 2: external)
+-
+-Each child has own specific current settings
+-- led-cur: Current setting at each led channel (mA x10, 0 if led is not connected)
+-- max-cur: Maximun current at each led channel.
+-
+-Optional properties:
+-- enable-gpio: GPIO attached to the chip's enable pin
+-- label: Used for naming LEDs
+-- pwr-sel: LP8501 specific property. Power selection for output channels.
+-         0: D1~9 are connected to VDD
+-         1: D1~6 with VDD, D7~9 with VOUT
+-         2: D1~6 with VOUT, D7~9 with VDD
+-         3: D1~9 are connected to VOUT
+-
+-Alternatively, each child can have a specific channel name and trigger:
+-- chan-name (optional): name of channel
+-- linux,default-trigger (optional): see
+-  Documentation/devicetree/bindings/leds/common.txt
+-
+-example 1) LP5521
+-3 LED channels, external clock used. Channel names are 'lp5521_pri:channel0',
+-'lp5521_pri:channel1' and 'lp5521_pri:channel2', with a heartbeat trigger
+-on channel 0.
+-
+-lp5521@32 {
+-	compatible = "national,lp5521";
+-	reg = <0x32>;
+-	label = "lp5521_pri";
+-	clock-mode = /bits/ 8 <2>;
+-
+-	chan0 {
+-		led-cur = /bits/ 8 <0x2f>;
+-		max-cur = /bits/ 8 <0x5f>;
+-		linux,default-trigger = "heartbeat";
+-	};
+-
+-	chan1 {
+-		led-cur = /bits/ 8 <0x2f>;
+-		max-cur = /bits/ 8 <0x5f>;
+-	};
+-
+-	chan2 {
+-		led-cur = /bits/ 8 <0x2f>;
+-		max-cur = /bits/ 8 <0x5f>;
+-	};
+-};
+-
+-example 2) LP5523
+-9 LED channels with specific name. Internal clock used.
+-The I2C slave address is configurable with ASEL1 and ASEL0 pins.
+-Available addresses are 32/33/34/35h.
+-
+-ASEL1    ASEL0    Address
+--------------------------
+- GND      GND       32h
+- GND      VEN       33h
+- VEN      GND       34h
+- VEN      VEN       35h
+-
+-lp5523@32 {
+-	compatible = "national,lp5523";
+-	reg = <0x32>;
+-	clock-mode = /bits/ 8 <1>;
+-
+-	chan0 {
+-		chan-name = "d1";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan1 {
+-		chan-name = "d2";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan2 {
+-		chan-name = "d3";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan3 {
+-		chan-name = "d4";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan4 {
+-		chan-name = "d5";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan5 {
+-		chan-name = "d6";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan6 {
+-		chan-name = "d7";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan7 {
+-		chan-name = "d8";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan8 {
+-		chan-name = "d9";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-};
+-
+-example 3) LP5562
+-4 channels are defined.
+-
+-lp5562@30 {
+-	compatible = "ti,lp5562";
+-	reg = <0x30>;
+-	clock-mode = /bits/8 <2>;
+-
+-	chan0 {
+-		chan-name = "R";
+-		led-cur = /bits/ 8 <0x20>;
+-		max-cur = /bits/ 8 <0x60>;
+-	};
+-
+-	chan1 {
+-		chan-name = "G";
+-		led-cur = /bits/ 8 <0x20>;
+-		max-cur = /bits/ 8 <0x60>;
+-	};
+-
+-	chan2 {
+-		chan-name = "B";
+-		led-cur = /bits/ 8 <0x20>;
+-		max-cur = /bits/ 8 <0x60>;
+-	};
+-
+-	chan3 {
+-		chan-name = "W";
+-		led-cur = /bits/ 8 <0x20>;
+-		max-cur = /bits/ 8 <0x60>;
+-	};
+-};
+-
+-example 4) LP8501
+-9 channels are defined. The 'pwr-sel' is LP8501 specific property.
+-Others are same as LP5523.
+-
+-lp8501@32 {
+-	compatible = "ti,lp8501";
+-	reg = <0x32>;
+-	clock-mode = /bits/ 8 <2>;
+-	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
+-
+-	chan0 {
+-		chan-name = "d1";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan1 {
+-		chan-name = "d2";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan2 {
+-		chan-name = "d3";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan3 {
+-		chan-name = "d4";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan4 {
+-		chan-name = "d5";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan5 {
+-		chan-name = "d6";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan6 {
+-		chan-name = "d7";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan7 {
+-		chan-name = "d8";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-
+-	chan8 {
+-		chan-name = "d9";
+-		led-cur = /bits/ 8 <0x14>;
+-		max-cur = /bits/ 8 <0x20>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+new file mode 100644
+index 000000000000..b1bb3feb0f4d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+@@ -0,0 +1,220 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/leds-lp55xx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI/National Semiconductor LP55xx and LP8501 LED Drivers
++
++maintainers:
++  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
++  - Pavel Machek <pavel@ucw.cz>
++
++description: |
++  Bindings for the TI/National Semiconductor LP55xx and LP8501 multi channel
++  LED Drivers.
++
++  For more product information please see the link below:
++    https://www.ti.com/lit/gpn/lp5521
++    https://www.ti.com/lit/gpn/lp5523
++    https://www.ti.com/lit/gpn/lp55231
++    https://www.ti.com/lit/gpn/lp5562
++    https://www.ti.com/lit/gpn/lp8501
++
++properties:
++  compatible:
++    enum:
++      - national,lp5521
++      - national,lp5523
++      - ti,lp55231
++      - ti,lp5562
++      - ti,lp8501
++
++  reg:
++    maxItems: 1
++    description: I2C slave address
++
++  clock-mode:
++    $ref: /schemas/types.yaml#definitions/uint8
++    description: |
++      Input clock mode
++    enum:
++      - 0 # automode
++      - 1 # internal
++      - 2 # external
++
++  enable-gpio:
++    maxItems: 1
++    description: |
++      GPIO attached to the chip's enable pin
++
++  pwr-sel:
++    $ref: /schemas/types.yaml#definitions/uint8
++    description: |
++      LP8501 specific property. Power selection for output channels.
++    enum:
++      - 0 # D1~9 are connected to VDD
++      - 1 # D1~6 with VDD, D7~9 with VOUT
++      - 2 # D1~6 with VOUT, D7~9 with VDD
++      - 3 # D1~9 are connected to VOUT
++
++patternProperties:
++  "(^led@[0-9a-f]$|led)":
++    type: object
++    $ref: common.yaml#
++    properties:
++      led-cur:
++        $ref: /schemas/types.yaml#definitions/uint8
++        description: |
++          Current setting at each LED channel (mA x10, 0 if LED is not connected)
++        minimum: 0
++        maximum: 255
++
++      max-cur:
++        $ref: /schemas/types.yaml#definitions/uint8
++        description: Maximun current at each LED channel.
++
++      reg:
++        description: |
++          Output channel for the LED.  This is zero based channel identifier and
++          the data sheet is a one based channel identifier.
++          reg value to output to LED output number
++        enum:
++          - 0 # LED output D1
++          - 1 # LED output D2
++          - 2 # LED output D3
++          - 3 # LED output D4
++          - 4 # LED output D5
++          - 5 # LED output D6
++          - 6 # LED output D7
++          - 7 # LED output D8
++          - 8 # LED output D9
++
++      chan-name:
++        $ref: /schemas/types.yaml#definitions/string
++        description: name of channel
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++   #include <dt-bindings/leds/common.h>
++
++   i2c {
++       #address-cells = <1>;
++       #size-cells = <0>;
++
++       led-controller@32 {
++           #address-cells = <1>;
++           #size-cells = <0>;
++           compatible = "ti,lp8501";
++           reg = <0x32>;
++           clock-mode = /bits/ 8 <2>;
++           pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
++
++           led@0 {
++               reg = <0>;
++               chan-name = "d1";
++               led-cur = /bits/ 8 <0x14>;
++               max-cur = /bits/ 8 <0x20>;
++           };
++
++           led@1 {
++               reg = <1>;
++               chan-name = "d2";
++               led-cur = /bits/ 8 <0x14>;
++               max-cur = /bits/ 8 <0x20>;
++           };
++
++           led@2 {
++               reg = <2>;
++               chan-name = "d3";
++               led-cur = /bits/ 8 <0x14>;
++               max-cur = /bits/ 8 <0x20>;
++           };
++
++           led@3 {
++               reg = <3>;
++               chan-name = "d4";
++               led-cur = /bits/ 8 <0x14>;
++               max-cur = /bits/ 8 <0x20>;
++           };
++
++           led@4 {
++               reg = <4>;
++               chan-name = "d5";
++               led-cur = /bits/ 8 <0x14>;
++               max-cur = /bits/ 8 <0x20>;
++           };
++
++           led@5 {
++               reg = <5>;
++               chan-name = "d6";
++               led-cur = /bits/ 8 <0x14>;
++               max-cur = /bits/ 8 <0x20>;
++           };
++
++           led@6 {
++               reg = <6>;
++               chan-name = "d7";
++               led-cur = /bits/ 8 <0x14>;
++               max-cur = /bits/ 8 <0x20>;
++           };
++
++           led@7 {
++               reg = <7>;
++               chan-name = "d8";
++               led-cur = /bits/ 8 <0x14>;
++               max-cur = /bits/ 8 <0x20>;
++           };
++
++           led@8 {
++               reg = <8>;
++               chan-name = "d9";
++               led-cur = /bits/ 8 <0x14>;
++               max-cur = /bits/ 8 <0x20>;
++           };
++        };
++
++       led-controller@33 {
++           #address-cells = <1>;
++           #size-cells = <0>;
++           compatible = "national,lp5523";
++           reg = <0x33>;
++           clock-mode = /bits/ 8 <0>;
++
++           multi-led@2 {
++               #address-cells = <1>;
++               #size-cells = <0>;
++               reg = <0x2>;
++               color = <LED_COLOR_ID_MULTI>;
++               function = LED_FUNCTION_STANDBY;
++               linux,default-trigger = "heartbeat";
++
++               led@0 {
++                   led-cur = /bits/ 8 <50>;
++                   max-cur = /bits/ 8 <100>;
++                   reg = <0x0>;
++                   color = <LED_COLOR_ID_GREEN>;
++               };
++
++               led@1 {
++                   led-cur = /bits/ 8 <50>;
++                   max-cur = /bits/ 8 <100>;
++                   reg = <0x1>;
++                   color = <LED_COLOR_ID_BLUE>;
++               };
++
++               led@6 {
++                   led-cur = /bits/ 8 <50>;
++                   max-cur = /bits/ 8 <100>;
++                   reg = <0x6>;
++                   color = <LED_COLOR_ID_RED>;
++               };
++            };
++        };
++    };
++
++...
+-- 
+2.27.0
 
