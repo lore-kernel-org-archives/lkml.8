@@ -2,82 +2,65 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F27C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291E2C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16E6206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A0B207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgGPOjJ (ORCPT
+        id S1728894AbgGPOjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:39:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58226 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgGPOjJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:39:09 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jw52G-0006r1-D3; Thu, 16 Jul 2020 14:38:56 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] refperf: avoid null pointer dereference when buf fails to allocate
-Date:   Thu, 16 Jul 2020 15:38:56 +0100
-Message-Id: <20200716143856.1708123-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 16 Jul 2020 10:39:35 -0400
+Received: from verein.lst.de ([213.95.11.211]:34966 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726963AbgGPOjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 10:39:35 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 90D1B68BEB; Thu, 16 Jul 2020 16:39:31 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 16:39:31 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Dan Williams <dan.j.williams@intel.com>, shyjumon.n@intel.com,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>
+Subject: Re: [PATCH V5] drivers/nvme: Add support for ACPI StorageD3Enable
+ property
+Message-ID: <20200716143931.GA23501@lst.de>
+References: <20200702225011.10932-1-david.e.box@linux.intel.com> <20200709184333.6241-1-david.e.box@linux.intel.com> <CAJZ5v0iJeyf+eMsDd37GdBdQq4e_JkJwcCm9VdQNgaxcf_RrEg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0iJeyf+eMsDd37GdBdQq4e_JkJwcCm9VdQNgaxcf_RrEg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, Jul 13, 2020 at 01:12:26PM +0200, Rafael J. Wysocki wrote:
+> I would write this as
+> 
+> if (fwnode_property_read_u8(acpi_fwnode_handle(adev),
+>                             "StorageD3Enable", &val))
+>         return false;
+> 
+> return val == 1;
+> 
+> to eliminate the redundant fwnode variable and untangle the last
+> checks somewhat.
+> 
+> With that changed please feel free to add
+> 
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Currently in the unlikely event that buf fails to be allocated it
-is dereferenced a few times.  Use the errexit flag to determine if
-buf should be written to to avoid the null pointer dereferences.
-
-Addresses-Coverity: ("Dereference after null check")
-Fixes: f518f154ecef ("refperf: Dynamically allocate experiment-summary output buffer")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- kernel/rcu/refscale.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/rcu/refscale.c b/kernel/rcu/refscale.c
-index d9291f883b54..952595c678b3 100644
---- a/kernel/rcu/refscale.c
-+++ b/kernel/rcu/refscale.c
-@@ -546,9 +546,11 @@ static int main_func(void *arg)
- 	// Print the average of all experiments
- 	SCALEOUT("END OF TEST. Calculating average duration per loop (nanoseconds)...\n");
- 
--	buf[0] = 0;
--	strcat(buf, "\n");
--	strcat(buf, "Runs\tTime(ns)\n");
-+	if (!errexit) {
-+		buf[0] = 0;
-+		strcat(buf, "\n");
-+		strcat(buf, "Runs\tTime(ns)\n");
-+	}
- 
- 	for (exp = 0; exp < nruns; exp++) {
- 		u64 avg;
--- 
-2.27.0
-
+Applied to nvme-5.9 with the above fixup.
