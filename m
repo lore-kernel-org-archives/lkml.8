@@ -2,131 +2,148 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB6BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC1C20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44713206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:20:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LADWMtJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgGPESZ (ORCPT
+        id S1726059AbgGPEU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 00:18:25 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:47821 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgGPESZ (ORCPT
+        Thu, 16 Jul 2020 00:20:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgGPEU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 00:18:25 -0400
-Received: by mail-io1-f72.google.com with SMTP id d22so2786406iom.14
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 21:18:24 -0700 (PDT)
+        Thu, 16 Jul 2020 00:20:57 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BD2C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 21:20:57 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id a205so2934686qkc.16
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 21:20:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=E5IYfaz3Q/wt93scHSn9NYWEZmA+rvPF7ero22jc2/I=;
+        b=LADWMtJLbNPlv8QbEFjqfU/8Pzs25O8AVXPZS6xQnoQjwt16vTFIIjCMdwOtESnVvB
+         RQLK7NzEX6ezXY9SEQI974nD2vNsJb4mUssswme49exFvxaW64vQX48MeljBKiugb54y
+         loQOb+KMso2lmgTTW5SpoJ4x+eZYLID07nZPtIi8uIIgv/afKbISW8s5A8OYJKE0JdDD
+         1m45gzCU2uzuNvextRyBNi5OMbOuQY/aWXUQXvAZXVpVnPjX2667RHrVJ95KNRrM6QLN
+         Croh5U4D1/U6BjIxEFkdUTlM7g9ms2f1+dbRNbu6I+S4pYokrqZfZnogwK1q5HeKKjqe
+         TDNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=BbQzChrVeBZgzn4hjDJtb4vWH12f22fdbm4mXnkKsBE=;
-        b=uHZXYbZsyWufDjKqXbCNu/n7a3Jhqxb28u5k/Wx9GMq79SRH4HwQxQVmBHwn3yw0BJ
-         wNbm7pV0vXADb0XS7ecIizgn7yOrM5RAlfXm9t4Aj13OCV1Zz8hE9GSNqkw7AwWLX2/8
-         z5yeTaXaVjZ85fbSq8OluOoO45IHYlBKyG3dCZ60/JD/Xz76TiKP7A1nQZmZcmQN3CkO
-         KSMcjZbX9KtuRUGTV+ZvEjvFo8/xx30YiOSo2FUzatDpgQtUZVBysDMwD00boh9LP1GK
-         pOqkuHbyBA1frFBCuSrnwG6qzpscd/z1Glg6LVpAC1RJrV9IwLT7SUn/58tGgPyTUPRM
-         nJyg==
-X-Gm-Message-State: AOAM533aWbvLxG+rfYiWC7Q0mptNJLoGvn9PvbmWLjGw3KoKgknl9KMA
-        1X9S55XtSF6FSdYUfofEbJ5VDqI28YDsF1sefkyg3Fx5G3M8
-X-Google-Smtp-Source: ABdhPJxn0t3XXp4BZ55iG/cnCjrWk9nsOKB0kw7qFhf+ESr8a4I1vwuxvpddNeTvzOHXlhGlXC8yAHV5kwh1yIR2Lweq5O1Nq86G
-MIME-Version: 1.0
-X-Received: by 2002:a6b:d31a:: with SMTP id s26mr2732835iob.48.1594873103983;
- Wed, 15 Jul 2020 21:18:23 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 21:18:23 -0700
-In-Reply-To: <000000000000ba65ba05a2fd48d9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d3284805aa87548a@google.com>
-Subject: Re: kernel BUG at net/core/dev.c:LINE! (3)
-From:   syzbot <syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com>
-To:     andy@greyhouse.net, davem@davemloft.net, j.vosburgh@gmail.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        vfalico@gmail.com
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=E5IYfaz3Q/wt93scHSn9NYWEZmA+rvPF7ero22jc2/I=;
+        b=i4cbo54ViCkaNFrERNmu7v0WlCOEe3or2jfn5k072tPqKdU6l3M9QWXkp/JZ6RLfEl
+         LvuV8BB+sQXxtdqDghjtrOtOP4NbiZr3JZZk9eoECpfQKhOltQtowdyN9HcZXUeiqK00
+         XdY2Cf7ob84QB/woKQ/AHRAtAEyQwAjWrNxowmu8y/sVdjX4ID71/fuM2/38YJn2YGci
+         o6Z8ruSELMU6K47Y7Y927e0fSV2W4u01WwXQwAWLiLOZYSCOZ1E1kd8YGVKxDqHbhHgY
+         mCq7nN7/U6Qa+9LDVmbiD/DD2FxaECUy+lkY/VyngCoCPpE/RZjGAxEkB2MRcEDlpx9n
+         VZkg==
+X-Gm-Message-State: AOAM530jSbetsqEjP/Ly6pQunsm+aVv6bDlLi3qn+iJGUlWQb22pGpkh
+        gB2TRdV+WDj3qZWxpT+9qm2pXNFxOgM7ZnA=
+X-Google-Smtp-Source: ABdhPJyWLkBS3ule+mtfJOFmH6JEPfmTEveLacZvT2o8vs3Nk6U8cOarvp8+1Djo9qbCvuMlLOkeGWgHeNmpEQU=
+X-Received: by 2002:a0c:aa15:: with SMTP id d21mr2364715qvb.155.1594873256266;
+ Wed, 15 Jul 2020 21:20:56 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 21:20:49 -0700
+Message-Id: <20200716042053.1927676-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+Subject: [PATCH v3 0/4] regulator_sync_state() support
+From:   Saravana Kannan <saravanak@google.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+Consider the following example:
+- regulator-X is provided by device-X.
+- regulator-X is a supplier to device-A, device-B and device-C.
+- device-A is off/inactive from boot.
+- device-B and device-C are left on/active by the bootloader
+- regulator-X is left on boot by the bootloader at 2000 mV to supply
+  device-B and device-C.
 
-HEAD commit:    4ff91fa0 Merge branch 'udp_tunnel-NIC-RX-port-offload-infr..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1777b9bf100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8a8f9de6c9d911de
-dashboard link: https://syzkaller.appspot.com/bug?extid=af23e7f3e0a7e10c8b67
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13a7c4f7100000
+Example boot sequence 1:
+1. device-X is probed successfully.
+2. device-A is probed by driver-A
+   a. driver-A gets regulator-X
+   b. driver-A votes on regulator-X
+   c. driver-A initializes device-A
+   d. driver-A votes off regulator-X
+   e. regulator-X is turned off.
+3. System crashes or device-B and device-C become unreliable because
+   regulator-X was turned off without following the proper quiescing
+   steps for device-B and device-C.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
+Example boot sequence 2:
+1. device-X is probed successfully.
+2. device-B is probed by driver-B
+   a. driver-B gets regulator-X
+   b. driver-B votes on regulator-X
+   c. driver-B lowers device-B performance point.
+   d. driver-B lowers voltage vote to 1000 mV.
+   e. regulator-X voltage is lowered to 1000 mV.
+3. System crashes or device-C becomes unreliable because regulator-X
+   voltage was lowered to 1000 mV when device-C still needed it at 2000 mV
 
-bond1 (unregistering): (slave wireguard2): Releasing backup interface
-bond1 (unregistering): (slave wireguard1): Releasing backup interface
-bond1 (unregistering): (slave wireguard0): Releasing backup interface
-device wireguard0 left promiscuous mode
-bond1 (unregistering): Destroying bond
-------------[ cut here ]------------
-kernel BUG at net/core/dev.c:8948!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 129 Comm: kworker/u4:3 Not tainted 5.8.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-RIP: 0010:rollback_registered_many+0x2be/0xf60 net/core/dev.c:8948
-Code: 4c 89 e8 48 c1 e8 03 42 80 3c 20 00 0f 85 91 0c 00 00 48 b8 22 01 00 00 00 00 ad de 48 89 43 70 e9 b9 fe ff ff e8 82 19 3d fb <0f> 0b 4c 8d 7b 68 4c 8d 6b 70 eb a5 e8 71 19 3d fb 48 8b 74 24 10
-RSP: 0018:ffffc90000e976b0 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff8880a2bb0000 RCX: ffffffff86369018
-RDX: ffff8880a8dcc2c0 RSI: ffffffff8636916e RDI: 0000000000000001
-RBP: ffffc90000e97770 R08: 0000000000000000 R09: ffffffff8a7b9707
-R10: 0000000000000001 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8880a2bb0068 R14: ffffc90000e97718 R15: 0000000000000002
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000e07978 CR3: 0000000093d17000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- rollback_registered net/core/dev.c:9022 [inline]
- unregister_netdevice_queue+0x2dd/0x570 net/core/dev.c:10103
- unregister_netdevice include/linux/netdevice.h:2762 [inline]
- bond_release_and_destroy drivers/net/bonding/bond_main.c:2212 [inline]
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3285 [inline]
- bond_netdev_event.cold+0xc1/0x10e drivers/net/bonding/bond_main.c:3398
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- rollback_registered_many+0x665/0xf60 net/core/dev.c:8977
- unregister_netdevice_many.part.0+0x1a/0x2f0 net/core/dev.c:10122
- unregister_netdevice_many net/core/dev.c:10121 [inline]
- default_device_exit_batch+0x30c/0x3d0 net/core/dev.c:10605
- ops_exit_list+0x10d/0x160 net/core/net_namespace.c:189
- cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-Modules linked in:
----[ end trace c01e039c1ee3796a ]---
-RIP: 0010:rollback_registered_many+0x2be/0xf60 net/core/dev.c:8948
-Code: 4c 89 e8 48 c1 e8 03 42 80 3c 20 00 0f 85 91 0c 00 00 48 b8 22 01 00 00 00 00 ad de 48 89 43 70 e9 b9 fe ff ff e8 82 19 3d fb <0f> 0b 4c 8d 7b 68 4c 8d 6b 70 eb a5 e8 71 19 3d fb 48 8b 74 24 10
-RSP: 0018:ffffc90000e976b0 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff8880a2bb0000 RCX: ffffffff86369018
-RDX: ffff8880a8dcc2c0 RSI: ffffffff8636916e RDI: 0000000000000001
-RBP: ffffc90000e97770 R08: 0000000000000000 R09: ffffffff8a7b9707
-R10: 0000000000000001 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8880a2bb0068 R14: ffffc90000e97718 R15: 0000000000000002
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f091b46f018 CR3: 0000000097f54000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+This patch series makes sure these examples are handled correctly and
+system crash or device instability is avoided and the system remains
+usable.
+
+More details provided in the commit texts.
+
+v2->v3:
+Patch 2/4 - No functional change. Simple refactor.
+Patch 3/4
+- Was Patch 2/2 in v2.
+- Rewrote commit text to hopefully address all previous points.
+- Renamed variable/functions. Hope it's clearer.
+- Added more comments.
+- Added logging
+- Fixed timeout functionality.
+- Handle exclusive consumers properly
+- Handle coupled regulators properly
+Patch 4/4 - Prevents voltage from going too low during boot.
+
+v1->v2:
+Patch 1/2
+- New patch
+Patch 2/2
+- This was the only patch in v1
+- Made the late_initcall_sync timeout a commandline param
+- If timeout is set, we also give up waiting for all consumers after
+  the timeout expires.
+- Made every regulator driver add sync_state() support
+
+Saravana Kannan (4):
+  driver core: Add dev_set_drv_sync_state()
+  regulator: core: Add destroy_regulator()
+  regulator: core: Add basic enable/disable support for sync_state()
+    callbacks
+  regulator: core: Add voltage support for sync_state() callbacks
+
+ drivers/regulator/core.c         | 200 ++++++++++++++++++++++++++++---
+ include/linux/device.h           |  12 ++
+ include/linux/regulator/driver.h |   2 +
+ 3 files changed, 198 insertions(+), 16 deletions(-)
+
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
 
