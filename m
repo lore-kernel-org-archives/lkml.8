@@ -2,175 +2,151 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77331C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB3AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 573B720775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E62B20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgGPCFZ (ORCPT
+        id S1727975AbgGPCE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:05:25 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:55018 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727983AbgGPCFY (ORCPT
+        Wed, 15 Jul 2020 22:04:58 -0400
+Received: from regular1.263xmail.com ([211.150.70.203]:51342 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbgGPCE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:05:24 -0400
-Received: by mail-io1-f70.google.com with SMTP id q207so2603397iod.21
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 19:05:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=kocNL2tI92Ci67I9sh+JNKOUn8oH36OO0v+UU+gikR4=;
-        b=U17duuXf3qQ5B3DPAMLBCuHFPPWvpqywjH4y9QBSeymQBRfN2vwIEPxEXOJhyAU67z
-         LkceWvsjGLqZpoDa6IwNPVeMt3d4gNUt0XD5QZGHybAoh1Aqa17521y1xUrHyPienNOd
-         rrK4bazsElxal1krwLGz1IQcBvdll1JvYGT+14O6AuLZiAhTX7qkE9fdu0ZpARokabn3
-         Dj6sEXLC9p0Kv3ILl7Z53VtzIs0wZaD1nmPDqNSDhVEA0z/6sDOvyXmNWiiSTun4Av51
-         gQ9TSUcLmUoV7w5WCdFiRHjXqli+9Don9pLdQ4Zkiz4BhUuypBQnx9UVZ7rh4bEqnokX
-         eP+w==
-X-Gm-Message-State: AOAM533/oDiayT6ccJaHdQXWJqc/9t+RD39kuQPAdbfsqD1ojkK/gQoh
-        d86LVbBk5aqjwa+4lcAP60ChQAItoO9zNh74TihFwoLmBUmR
-X-Google-Smtp-Source: ABdhPJy0v5cW4c6AggG7tkfj/M4qEHXItUsexlxMOPVZHy2DjJhXAnbFWglRGUB9vzHOhGKygE2nek+aSWpbjERblW99g2g/dr6+
-MIME-Version: 1.0
-X-Received: by 2002:a5d:9347:: with SMTP id i7mr2266916ioo.40.1594865123486;
- Wed, 15 Jul 2020 19:05:23 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 19:05:23 -0700
-In-Reply-To: <000000000000059b7205aa7f906f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000026751605aa857914@google.com>
-Subject: Re: KASAN: use-after-free Read in __xfrm6_tunnel_spi_lookup
-From:   syzbot <syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au, kuba@kernel.org,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, steffen.klassert@secunet.com,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 15 Jul 2020 22:04:57 -0400
+Received: from localhost (unknown [192.168.167.225])
+        by regular1.263xmail.com (Postfix) with ESMTP id E5649817;
+        Thu, 16 Jul 2020 10:04:45 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from hp1216 (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P7251T139772307691264S1594865084409843_;
+        Thu, 16 Jul 2020 10:04:45 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <e89130cb787b0a5d976783346e0ad0fe>
+X-RL-SENDER: zyf@rock-chips.com
+X-SENDER: zyf@rock-chips.com
+X-LOGIN-NAME: zyf@rock-chips.com
+X-FST-TO: robh@kernel.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+Date:   Thu, 16 Jul 2020 10:04:45 +0800
+Organization: =?UTF-8?B?55Ge6Iqv5b6u55S15a2Q?=
+From:   =?UTF-8?B?6LW15Luq5bOw?= <yifeng.zhao@rock-chips.com>
+To:     "Rob Herring" <robh@kernel.org>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        vigneshr <vigneshr@ti.com>,
+        =?UTF-8?B?SGVpa29TdMO8Ym5lcg==?= <heiko@sntech.de>,
+        robh+dt <robh+dt@kernel.org>, richard <richard@nod.at>,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-rockchip <linux-rockchip@lists.infradead.org>
+Subject: =?UTF-8?B?UmU6IFJlOiBbUEFUQ0ggdjcgMS84XSBkdC1iaW5kaW5nczogbXRkOiBEZXNjcmliZSBSb2NrY2hpcCBSSzN4eHggTkFORA0KIGZsYXNoIGNvbnRyb2xsZXLjgJDor7fms6jmhI/vvIzpgq7ku7bnlLFyb2JoZXJyaW5nMkBnbWFpbC5jb23ku6Plj5HjgJE=?=
+References: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>, 
+        <20200715090342.28339-2-yifeng.zhao@rock-chips.com>, 
+        <20200715175356.GA502928@bogus>
+X-Priority: 3
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.17.58[cn]
+Mime-Version: 1.0
+Message-ID: <2020071610022540759717@rock-chips.com>
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+SGkgUm9iLAoKPk9uIFdlZCwgMTUgSnVsIDIwMjAgMTc6MDM6MzkgKzA4MDAsIFlpZmVuZyBaaGFv
+IHdyb3RlOgo+PiBEb2N1bWVudGF0aW9uIHN1cHBvcnQgZm9yIFJvY2tjaGlwIFJLM3h4eCBOQU5E
+IGZsYXNoIGNvbnRyb2xsZXJzCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFlpZmVuZyBaaGFvIDx5aWZl
+bmcuemhhb0Byb2NrLWNoaXBzLmNvbT4KPj4gLS0tCj4+Cj4+IENoYW5nZXMgaW4gdjc6Cj4+IC0g
+Rml4IHNvbWUgd3JvbmcgZGVmaW5lCj4+Cj4+IENoYW5nZXMgaW4gdjY6Cj4+IC0gRml4IHNvbWUg
+d3JvbmcgZGVmaW5lCj4+IC0gTW9kaWZpZWQgdGhlIGRlZmluaXRpb24gb2YgY29tcGF0aWJsZQo+
+Pgo+PiBDaGFuZ2VzIGluIHY1Ogo+PiAtIEZpeCBzb21lIHdyb25nIGRlZmluZS4KPj4gLSBBZGQg
+Ym9vdC1tZWRpdW0gZGVmaW5lLgo+PiAtIFJlbW92ZSBzb21lIGNvbXBhdGlibGUgZGVmaW5lLgo+
+Pgo+PiBDaGFuZ2VzIGluIHY0Ogo+PiAtIFRoZSBjb21wYXRpYmxlIGRlZmluZSB3aXRoIHJreHhf
+bmZjLgo+PiAtIEFkZCBhc3NpZ25lZC1jbG9ja3MuCj4+IC0gRml4IHNvbWUgd3JvbmcgZGVmaW5l
+Q2hhbmdlcyBpbi4KPj4KPj4gQ2hhbmdlcyBpbiB2MzoKPj4gLSBDaGFuZ2UgdGhlIHRpdGxlIGZv
+ciB0aGUgZHQtYmluZGluZ3MuCj4+Cj4+IENoYW5nZXMgaW4gdjI6IE5vbmUKPj4KPj7CoCAuLi4v
+bXRkL3JvY2tjaGlwLG5hbmQtY29udHJvbGxlci55YW1swqDCoMKgwqDCoMKgwqDCoCB8IDE2MiAr
+KysrKysrKysrKysrKysrKysKPj7CoCAxIGZpbGUgY2hhbmdlZCwgMTYyIGluc2VydGlvbnMoKykK
+Pj7CoCBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L210ZC9yb2NrY2hpcCxuYW5kLWNvbnRyb2xsZXIueWFtbAo+Pgo+Cj4KPk15IGJvdCBmb3VuZCBl
+cnJvcnMgcnVubmluZyAnbWFrZSBkdF9iaW5kaW5nX2NoZWNrJyBvbiB5b3VyIHBhdGNoOgo+Cj4v
+YnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tdGQvcm9ja2NoaXAsbmFuZC1jb250cm9sbGVyLmV4YW1wbGUuZHQueWFtbDog
+ZXhhbXBsZS0wOiBuYW5kLWNvbnRyb2xsZXJAZmY0YjAwMDA6cmVnOjA6IFswLCA0MjgzMTA1Mjgw
+LCAwLCAxNjM4NF0gaXMgdG9vIGxvbmcKPgo+Cj5TZWUgaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJz
+Lm9yZy9wYXRjaC8xMzI5MzI1Cj4KPklmIHlvdSBhbHJlYWR5IHJhbiAnbWFrZSBkdF9iaW5kaW5n
+X2NoZWNrJyBhbmQgZGlkbid0IHNlZSB0aGUgYWJvdmUKPmVycm9yKHMpLCB0aGVuIG1ha2Ugc3Vy
+ZSBkdC1zY2hlbWEgaXMgdXAgdG8gZGF0ZToKPgo+cGlwMyBpbnN0YWxsIGdpdCtodHRwczovL2dp
+dGh1Yi5jb20vZGV2aWNldHJlZS1vcmcvZHQtc2NoZW1hLmdpdEBtYXN0ZXIgLS11cGdyYWRlCj4K
+PlBsZWFzZSBjaGVjayBhbmQgcmUtc3VibWl0LgoKbWFrZSBBUkNIPWFybTY0IGR0X2JpbmRpbmdf
+Y2hlY2sgRFRfU0NIRU1BX0ZJTEVTPURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+dGQvcm9ja2NoaXAsbmFuZC1jb250cm9sbGVyLnlhbWzCoArCoCBIT1NUQ0MgwqBzY3JpcHRzL2Jh
+c2ljL2ZpeGRlcArCoCBIT1NUQ0MgwqBzY3JpcHRzL2R0Yy9kdGMubwrCoCBIT1NUQ0MgwqBzY3Jp
+cHRzL2R0Yy9mbGF0dHJlZS5vCsKgIEhPU1RDQyDCoHNjcmlwdHMvZHRjL2ZzdHJlZS5vCsKgIEhP
+U1RDQyDCoHNjcmlwdHMvZHRjL2RhdGEubwrCoCBIT1NUQ0MgwqBzY3JpcHRzL2R0Yy9saXZldHJl
+ZS5vCsKgIEhPU1RDQyDCoHNjcmlwdHMvZHRjL3RyZWVzb3VyY2UubwrCoCBIT1NUQ0MgwqBzY3Jp
+cHRzL2R0Yy9zcmNwb3MubwrCoCBIT1NUQ0MgwqBzY3JpcHRzL2R0Yy9jaGVja3MubwrCoCBIT1NU
+Q0MgwqBzY3JpcHRzL2R0Yy91dGlsLm8KwqAgTEVYIMKgIMKgIHNjcmlwdHMvZHRjL2R0Yy1sZXhl
+ci5sZXguYwrCoCBZQUNDIMKgIMKgc2NyaXB0cy9kdGMvZHRjLXBhcnNlci50YWIuW2NoXQrCoCBI
+T1NUQ0MgwqBzY3JpcHRzL2R0Yy9kdGMtbGV4ZXIubGV4Lm8KwqAgSE9TVENDIMKgc2NyaXB0cy9k
+dGMvZHRjLXBhcnNlci50YWIubwrCoCBIT1NUQ0MgwqBzY3JpcHRzL2R0Yy95YW1sdHJlZS5vCsKg
+IEhPU1RMRCDCoHNjcmlwdHMvZHRjL2R0YwrCoCBDSEtEVCDCoCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbXRkL3JvY2tjaGlwLG5hbmQtY29udHJvbGxlci55YW1sCsKgIFNDSEVN
+QSDCoERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wcm9jZXNzZWQtc2NoZW1hLWV4
+YW1wbGVzLnlhbWwKwqAgRFRDIMKgIMKgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tdGQvcm9ja2NoaXAsbmFuZC1jb250cm9sbGVyLmV4YW1wbGUuZHQueWFtbArCoCBDSEVDSyDC
+oCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3JvY2tjaGlwLG5hbmQtY29u
+dHJvbGxlci5leGFtcGxlLmR0LnlhbWwKL2hvbWUveWlmZW5nL3dvcmsvbGludXgvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9yb2NrY2hpcCxuYW5kLWNvbnRyb2xsZXIuZXhh
+bXBsZS5kdC55YW1sOiBleGFtcGxlLTA6IG5hbmQtY29udHJvbGxlckBmZjRiMDAwMDpyZWc6MDog
+WzAsIDQyODMxMDUyODAsIDAsIDE2Mzg0XSBpcyB0b28gbG9uZwoKSSBhbHJlYWR5IHJhbiB0aGUg
+Im1ha2UgZHRfYmluZGluZ19jaGVjayIgYmVmb3JlIHN1Ym1pdCB0aGlzIHBhdGNoIGFuZCBmb3Vu
+ZCB0aGlzIGlzc3VlLgpUaGUgZHRzIGV4YW1wbGVzIGlzIGZvciBSSzMzMDgsIEFSQ0g9YXJtNjQs
+IGFuZCB0aGUgcmVnIGRlZmluZSBpcyBjb3JyZWN0LgpJIHRob3VnaHQgdGhlcmUgd2FzIHNvbWV0
+aGluZyB3cm9uZyB3aXRoIHRoZSBjaGVja++8jCBvciBzb21ldGhpbmcgY29uZmlndXJhdGlvbiBJ
+IG1pc3NlZC4KUGxlYXNlIGdpdmUgbWUgc29tZSBzdWdnZXN0aW9ucy4KCgpkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9yb2NrY2hpcCxuYW5kLWNvbnRy
+b2xsZXIueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcm9ja2No
+aXAsbmFuZC1jb250cm9sbGVyLnlhbWwKaW5kZXggNDkzNzA1YTU1NjM4Li5iOWQ3YThjNzk0MDIg
+MTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcm9ja2No
+aXAsbmFuZC1jb250cm9sbGVyLnlhbWwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL210ZC9yb2NrY2hpcCxuYW5kLWNvbnRyb2xsZXIueWFtbApAQCAtMTMyLDcgKzEzMiw3
+IEBAIGV4YW1wbGVzOgrCoCDCoCDCoG5mYzogbmFuZC1jb250cm9sbGVyQGZmNGIwMDAwIHsKwqAg
+wqAgwqAgwqBjb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzMwOC1uZmMiLArCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCAicm9ja2NoaXAscnYxMTA4LW5mYyI7Ci0gwqAgwqAgwqByZWcgPSA8
+MHgwIDB4ZmY0YjAwMDAgMHgwIDB4NDAwMD47CisgwqAgwqAgwqByZWcgPSA8MHhmZjRiMDAwMCAw
+eDQwMDA+OwrCoCDCoCDCoCDCoGludGVycnVwdHMgPSA8R0lDX1NQSSA4MSBJUlFfVFlQRV9MRVZF
+TF9ISUdIPjsKwqAgwqAgwqAgwqBjbG9ja3MgPSA8JmNydSBIQ0xLX05BTkRDPiwgPCZjcnUgU0NM
+S19OQU5EQz47CsKgIMKgIMKgIMKgY2xvY2stbmFtZXMgPSAiYWhiIiwgIm5mYyI7CgptYWtlIEFS
+Q0g9YXJtNjQgZHRfYmluZGluZ19jaGVjayBEVF9TQ0hFTUFfRklMRVM9RG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9yb2NrY2hpcCxuYW5kLWNvbnRyb2xsZXIueWFtbMKgCsKg
+IFNDSEVNQSDCoERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wcm9jZXNzZWQtc2No
+ZW1hLWV4YW1wbGVzLnlhbWwKwqAgQ0hLRFQgwqAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL210ZC9yb2NrY2hpcCxuYW5kLWNvbnRyb2xsZXIueWFtbArCoCBEVEMgwqAgwqAgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9yb2NrY2hpcCxuYW5kLWNvbnRyb2xs
+ZXIuZXhhbXBsZS5kdC55YW1sCsKgIENIRUNLIMKgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tdGQvcm9ja2NoaXAsbmFuZC1jb250cm9sbGVyLmV4YW1wbGUuZHQueWFtbAoKeWlm
+ZW5nLnpoYW8KCg==
 
-HEAD commit:    ca0e494a Add linux-next specific files for 20200715
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=175099bf100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
-dashboard link: https://syzkaller.appspot.com/bug?extid=72ff2fa98097767b5a27
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=112e8dbf100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=109429bf100000
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.com
-
-netdevsim netdevsim0 netdevsim1: set [1, 0] type 2 family 0 port 6081 - 0
-netdevsim netdevsim0 netdevsim2: set [1, 0] type 2 family 0 port 6081 - 0
-netdevsim netdevsim0 netdevsim3: set [1, 0] type 2 family 0 port 6081 - 0
-==================================================================
-BUG: KASAN: use-after-free in __xfrm6_tunnel_spi_lookup+0x3a9/0x3b0 net/ipv6/xfrm6_tunnel.c:79
-Read of size 8 at addr ffff8880934578a8 by task syz-executor437/6811
-CPU: 0 PID: 6811 Comm: syz-executor437 Not tainted 5.8.0-rc5-next-20200715-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- __xfrm6_tunnel_spi_lookup+0x3a9/0x3b0 net/ipv6/xfrm6_tunnel.c:79
- xfrm6_tunnel_spi_lookup+0x8a/0x1d0 net/ipv6/xfrm6_tunnel.c:95
- xfrmi6_rcv_tunnel+0xb9/0x100 net/xfrm/xfrm_interface.c:824
- tunnel6_rcv+0xef/0x2b0 net/ipv6/tunnel6.c:148
- ip6_protocol_deliver_rcu+0x2e8/0x1670 net/ipv6/ip6_input.c:433
- ip6_input_finish+0x7f/0x160 net/ipv6/ip6_input.c:474
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ip6_input+0x9c/0xd0 net/ipv6/ip6_input.c:483
- dst_input include/net/dst.h:449 [inline]
- ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ipv6_rcv+0x28e/0x3c0 net/ipv6/ip6_input.c:307
- __netif_receive_skb_one_core+0x114/0x180 net/core/dev.c:5287
- __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5401
- netif_receive_skb_internal net/core/dev.c:5503 [inline]
- netif_receive_skb+0x159/0x990 net/core/dev.c:5562
- tun_rx_batched.isra.0+0x460/0x720 drivers/net/tun.c:1518
- tun_get_user+0x23b2/0x35b0 drivers/net/tun.c:1972
- tun_chr_write_iter+0xba/0x151 drivers/net/tun.c:2001
- call_write_iter include/linux/fs.h:1879 [inline]
- new_sync_write+0x422/0x650 fs/read_write.c:515
- vfs_write+0x59d/0x6b0 fs/read_write.c:595
- ksys_write+0x12d/0x250 fs/read_write.c:648
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x403d50
-Code: Bad RIP value.
-RSP: 002b:00007ffe8fe93368 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000403d50
-RDX: 000000000000005e RSI: 00000000200007c0 RDI: 00000000000000f0
-RBP: 00007ffe8fe93390 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe8fe93380
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-Allocated by task 6811:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- __do_kmalloc mm/slab.c:3655 [inline]
- __kmalloc+0x1a8/0x320 mm/slab.c:3664
- kmalloc include/linux/slab.h:559 [inline]
- kzalloc include/linux/slab.h:666 [inline]
- tomoyo_init_log+0x1335/0x1e50 security/tomoyo/audit.c:275
- tomoyo_supervisor+0x32f/0xeb0 security/tomoyo/common.c:2097
- tomoyo_audit_path_number_log security/tomoyo/file.c:235 [inline]
- tomoyo_path_number_perm+0x3ed/0x4d0 security/tomoyo/file.c:734
- security_file_ioctl+0x50/0xb0 security/security.c:1489
- ksys_ioctl+0x50/0x180 fs/ioctl.c:747
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-Freed by task 6811:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
- kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3756
- tomoyo_supervisor+0x350/0xeb0 security/tomoyo/common.c:2149
- tomoyo_audit_path_number_log security/tomoyo/file.c:235 [inline]
- tomoyo_path_number_perm+0x3ed/0x4d0 security/tomoyo/file.c:734
- security_file_ioctl+0x50/0xb0 security/security.c:1489
- ksys_ioctl+0x50/0x180 fs/ioctl.c:747
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-The buggy address belongs to the object at ffff888093457800
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 168 bytes inside of
- 512-byte region [ffff888093457800, ffff888093457a00)
-The buggy address belongs to the page:
-page:000000005c2b5911 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x93457
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00028d4308 ffffea0002834c88 ffff8880aa000600
-raw: 0000000000000000 ffff888093457000 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
-Memory state around the buggy address:
- ffff888093457780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888093457800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888093457880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                  ^
- ffff888093457900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888093457980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
 
