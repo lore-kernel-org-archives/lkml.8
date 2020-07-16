@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B3FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 400A320775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3593207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:30:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pcJlN2SY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TB3l81M/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgGPBan (ORCPT
+        id S1728142AbgGPBay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 21:30:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40394 "EHLO
+        Wed, 15 Jul 2020 21:30:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgGPBam (ORCPT
+        with ESMTP id S1726785AbgGPBay (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 21:30:42 -0400
+        Wed, 15 Jul 2020 21:30:54 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A01C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 18:30:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C30D6C061755;
+        Wed, 15 Jul 2020 18:30:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
         MIME-Version:Date:Message-ID:To:Subject:From:Sender:Reply-To:Cc:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=QGJFiMSbfeA+z6ofvehr13Gl7DJfpvXowrjpat4Kb3s=; b=pcJlN2SY1k2Sf5mQxIAXZgAT+u
-        aa9kO5Bb0BxrSNhWueN6XcUV6bAOu8Q4/bnExCNcbfZ8Jk9MYsFgxziigYp0UVCTN2ggfdg2bAa3m
-        xghouur2y1C0OMNeuuhaqEdbhjgdxzJ6DhvCu01U0P7I/6QzlGTKA2JtHX+QolsY1vpDSEoqWWhr9
-        ZCuoQ2VZ+T7Kkw70nRMmsZSUFCyU8fcG+7bDqSIABc8V1SUsmrmGCmB7eWiPc8Gj3kojERE/e2VN1
-        VQdrTtWZ5eZjqL7yPIaaX5ujmdYpTluX+Z2onerPNSQIz3vVl+MAjV9lZ6Qs6/fg1LVjZVCN/iSXg
-        F9P7uHOg==;
+        bh=Zz5Aq+96SN77uF1lNeO43nOEFQNGv4DNbkTuZ3vBpMc=; b=TB3l81M/m2PsofjiC3KOLWZuzm
+        DWa91LmsABx6wnuAj8WU4nO2sl68Tm/9FTtw4sjtsTWbAAkzyZScC8G0HyRqyXYVnR+FOBMP8C9FN
+        00wSQLRwKsgKxRBYjedmNXHzRqmtXMRFkijt4G3mWcXvN68DOJt9NC4EAhXFhR7eqNMVuVKal5wnl
+        Se72Mt9fCNqBBszlTwK8ReXNlfwQpXvvHSBCPqSX2+OPXI3LQCvefn9Ji6QZ33ZB/PrBzrLQ/xPRI
+        1sq3A0wRhbGKpsjmh7dq15vlDXZWUOsOIjBLQVj6HIX4VYQFgH3n4NRnQ8AtSKAezcME5aZdeDilo
+        PLROg+fg==;
 Received: from [2601:1c0:6280:3f0::19c2]
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvsjL-0000XC-O1; Thu, 16 Jul 2020 01:30:36 +0000
+        id 1jvsjb-0000ZB-KU; Thu, 16 Jul 2020 01:30:52 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] linux/sched/mm.h: drop duplicated words in comments
+Subject: [PATCH] spi: fix duplicated word in <linux/spi/spi.h>
 To:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>
-Message-ID: <927ea8d8-3f6c-9b65-4c2b-63ab4bd59ef1@infradead.org>
-Date:   Wed, 15 Jul 2020 18:30:31 -0700
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Message-ID: <40354d64-be71-3952-a980-63a76a278145@infradead.org>
+Date:   Wed, 15 Jul 2020 18:30:48 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
@@ -61,44 +59,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Drop doubled words "to" and "that".
+Change doubled word "as" to "as a".
+
+Change "Return: Return:" in kernel-doc notation to have only one
+"Return:".
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org
 ---
- include/linux/sched/mm.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/spi/spi.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- linux-next-20200714.orig/include/linux/sched/mm.h
-+++ linux-next-20200714/include/linux/sched/mm.h
-@@ -23,7 +23,7 @@ extern struct mm_struct *mm_alloc(void);
-  * will still exist later on and mmget_not_zero() has to be used before
-  * accessing it.
+--- linux-next-20200714.orig/include/linux/spi/spi.h
++++ linux-next-20200714/include/linux/spi/spi.h
+@@ -971,7 +971,7 @@ struct spi_transfer {
+  * each represented by a struct spi_transfer.  The sequence is "atomic"
+  * in the sense that no other spi_message may use that SPI bus until that
+  * sequence completes.  On some systems, many such sequences can execute as
+- * as single programmed DMA transfer.  On all systems, these messages are
++ * a single programmed DMA transfer.  On all systems, these messages are
+  * queued, and might complete after transactions to other devices.  Messages
+  * sent to a given spi_device are always executed in FIFO order.
   *
-- * This is a preferred way to to pin @mm for a longer/unbounded amount
-+ * This is a preferred way to pin @mm for a longer/unbounded amount
-  * of time.
+@@ -1234,7 +1234,7 @@ extern int spi_bus_unlock(struct spi_con
   *
-  * Use mmdrop() to release the reference acquired by mmgrab().
-@@ -234,7 +234,7 @@ static inline unsigned int memalloc_noio
-  * @flags: Flags to restore.
+  * For more specific semantics see spi_sync().
   *
-  * Ends the implicit GFP_NOIO scope started by memalloc_noio_save function.
-- * Always make sure that that the given flags is the return value from the
-+ * Always make sure that the given flags is the return value from the
-  * pairing memalloc_noio_save call.
+- * Return: Return: zero on success, else a negative error code.
++ * Return: zero on success, else a negative error code.
   */
- static inline void memalloc_noio_restore(unsigned int flags)
-@@ -265,7 +265,7 @@ static inline unsigned int memalloc_nofs
-  * @flags: Flags to restore.
-  *
-  * Ends the implicit GFP_NOFS scope started by memalloc_nofs_save function.
-- * Always make sure that that the given flags is the return value from the
-+ * Always make sure that the given flags is the return value from the
-  * pairing memalloc_nofs_save call.
-  */
- static inline void memalloc_nofs_restore(unsigned int flags)
+ static inline int
+ spi_sync_transfer(struct spi_device *spi, struct spi_transfer *xfers,
+
 
