@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDD1C433EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F71C433F2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE35D20791
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC54820775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgGPDRG (ORCPT
+        id S1728274AbgGPDRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:17:06 -0400
+        Wed, 15 Jul 2020 23:17:15 -0400
 Received: from mga06.intel.com ([134.134.136.31]:8148 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbgGPDRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 23:17:00 -0400
-IronPort-SDR: WZdZG2LjeAexcXXOUVciHy2vTPfUvi0KyXmviCcXP+jgBem06kSh69i29uLYIvWswaSqYKtv6k
- VCoQPRHnqhug==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="210844839"
+        id S1728238AbgGPDRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 23:17:06 -0400
+IronPort-SDR: /W1/v4ee3af8ZAyWtPZhVMDXUfrp/fhA+QO/kOUKNKYcDns8EhuVeBPkrMFrJ+UYiZBNVLDQK3
+ WPpb/sa95rgw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="210844855"
 X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="210844839"
+   d="scan'208";a="210844855"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 20:16:59 -0700
-IronPort-SDR: a7aNfgQLxQCdNKvyXw9yDgMY2ItXXqXasHSRR7WvgO7UhFkl1qMV8tS970+FmOE9Ym0WORcgeK
- XvrenmOUg8Ug==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 20:17:05 -0700
+IronPort-SDR: sBbk95E8CgFg+2aBOH0e5p1KT6FjtbJKGU0/G1lD+eGSi0PsqlpeS7SUykkiauNfRnMhMQubjz
+ 6+wTJfj1M2Tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="360910423"
+   d="scan'208";a="360910452"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by orsmga001.jf.intel.com with ESMTP; 15 Jul 2020 20:16:57 -0700
+  by orsmga001.jf.intel.com with ESMTP; 15 Jul 2020 20:17:03 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, sean.j.christopherson@intel.com,
         jmattson@google.com
 Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [RESEND v13 02/11] KVM: VMX: Introduce CET VMCS fields and flags
-Date:   Thu, 16 Jul 2020 11:16:18 +0800
-Message-Id: <20200716031627.11492-3-weijiang.yang@intel.com>
+Subject: [RESEND v13 05/11] KVM: x86: Refresh CPUID once guest changes XSS bits
+Date:   Thu, 16 Jul 2020 11:16:21 +0800
+Message-Id: <20200716031627.11492-6-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200716031627.11492-1-weijiang.yang@intel.com>
 References: <20200716031627.11492-1-weijiang.yang@intel.com>
@@ -52,95 +52,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CET(Control-flow Enforcement Technology) is a CPU feature used to prevent
-Return/Jump-Oriented Programming(ROP/JOP) attacks. It provides the following
-sub-features to defend against ROP/JOP style control-flow subversion attacks:
+CPUID(0xd, 1) reports the current required storage size of XCR0 | XSS,
+when guest updates the XSS, it's necessary to update the CPUID leaf, otherwise
+guest will fetch old state size, and results to some WARN traces during guest
+running.
 
-Shadow Stack (SHSTK):
-  A second stack for program which is used exclusively for control transfer
-  operations.
-
-Indirect Branch Tracking (IBT):
-  Code branching protection to defend against jump/call oriented programming.
-
-Several new CET MSRs are defined in kernel to support CET:
-  MSR_IA32_{U,S}_CET: Controls the CET settings for user mode and kernel mode
-  respectively.
-
-  MSR_IA32_PL{0,1,2,3}_SSP: Stores shadow stack pointers for CPL-0,1,2,3
-  protection respectively.
-
-  MSR_IA32_INT_SSP_TAB: Stores base address of shadow stack pointer table.
-
-Two XSAVES state bits are introduced for CET:
-  IA32_XSS:[bit 11]: Control saving/restoring user mode CET states
-  IA32_XSS:[bit 12]: Control saving/restoring kernel mode CET states.
-
-Six VMCS fields are introduced for CET:
-  {HOST,GUEST}_S_CET: Stores CET settings for kernel mode.
-  {HOST,GUEST}_SSP: Stores shadow stack pointer of current task/thread.
-  {HOST,GUEST}_INTR_SSP_TABLE: Stores base address of shadow stack pointer
-  table.
-
-If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host CET states are restored from below
-VMCS fields at VM-Exit:
-  HOST_S_CET
-  HOST_SSP
-  HOST_INTR_SSP_TABLE
-
-If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest CET states are loaded from below
-VMCS fields at VM-Entry:
-  GUEST_S_CET
-  GUEST_SSP
-  GUEST_INTR_SSP_TABLE
+supported_xss is initialized to host_xss & KVM_SUPPORTED_XSS to indicate current
+MSR_IA32_XSS bits supported in KVM, but actual XSS bits seen in guest depends
+on the setting of CPUID(0xd,1).{ECX, EDX} for guest.
 
 Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
 Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/include/asm/vmx.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/cpuid.c            | 23 +++++++++++++++++++----
+ arch/x86/kvm/x86.c              | 12 ++++++++----
+ 3 files changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index cd7de4b401fe..879c57ff2dc5 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -94,6 +94,7 @@
- #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
- #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
- #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
-+#define VM_EXIT_LOAD_CET_STATE                  0x10000000
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index be5363b21540..e8c749596ba2 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -654,6 +654,7 @@ struct kvm_vcpu_arch {
  
- #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
+ 	u64 xcr0;
+ 	u64 guest_supported_xcr0;
++	u64 guest_supported_xss;
  
-@@ -107,6 +108,7 @@
- #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
- #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
- #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
-+#define VM_ENTRY_LOAD_CET_STATE                 0x00100000
+ 	struct kvm_pio_request pio;
+ 	void *pio_data;
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 8a294f9747aa..d97b2a6e8a8c 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -88,14 +88,29 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+ 		vcpu->arch.guest_supported_xcr0 = 0;
+ 	} else {
+ 		vcpu->arch.guest_supported_xcr0 =
+-			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
++			(((u64)best->edx << 32) | best->eax) & supported_xcr0;
+ 		best->ebx = xstate_required_size(vcpu->arch.xcr0, false);
+ 	}
  
- #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
+ 	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+-	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
+-		     cpuid_entry_has(best, X86_FEATURE_XSAVEC)))
+-		best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
++	if (best) {
++		if (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
++		    cpuid_entry_has(best, X86_FEATURE_XSAVEC))  {
++			u64 xstate = vcpu->arch.xcr0 | vcpu->arch.ia32_xss;
++
++			best->ebx = xstate_required_size(xstate, true);
++		}
++
++		if (!cpuid_entry_has(best, X86_FEATURE_XSAVES)) {
++			best->ecx = 0;
++			best->edx = 0;
++		}
++		vcpu->arch.guest_supported_xss =
++			(((u64)best->edx << 32) | best->ecx) & supported_xss;
++
++	} else {
++		vcpu->arch.guest_supported_xss = 0;
++	}
  
-@@ -328,6 +330,9 @@ enum vmcs_field {
- 	GUEST_PENDING_DBG_EXCEPTIONS    = 0x00006822,
- 	GUEST_SYSENTER_ESP              = 0x00006824,
- 	GUEST_SYSENTER_EIP              = 0x00006826,
-+	GUEST_S_CET                     = 0x00006828,
-+	GUEST_SSP                       = 0x0000682a,
-+	GUEST_INTR_SSP_TABLE            = 0x0000682c,
- 	HOST_CR0                        = 0x00006c00,
- 	HOST_CR3                        = 0x00006c02,
- 	HOST_CR4                        = 0x00006c04,
-@@ -340,6 +345,9 @@ enum vmcs_field {
- 	HOST_IA32_SYSENTER_EIP          = 0x00006c12,
- 	HOST_RSP                        = 0x00006c14,
- 	HOST_RIP                        = 0x00006c16,
-+	HOST_S_CET                      = 0x00006c18,
-+	HOST_SSP                        = 0x00006c1a,
-+	HOST_INTR_SSP_TABLE             = 0x00006c1c
- };
+ 	/*
+ 	 * The existing code assumes virtual address is 48-bit or 57-bit in the
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 906e07039d59..8aed32ff9c0c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2912,9 +2912,12 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		 * IA32_XSS[bit 8]. Guests have to use RDMSR/WRMSR rather than
+ 		 * XSAVES/XRSTORS to save/restore PT MSRs.
+ 		 */
+-		if (data & ~supported_xss)
++		if (data & ~vcpu->arch.guest_supported_xss)
+ 			return 1;
+-		vcpu->arch.ia32_xss = data;
++		if (vcpu->arch.ia32_xss != data) {
++			vcpu->arch.ia32_xss = data;
++			kvm_update_cpuid(vcpu);
++		}
+ 		break;
+ 	case MSR_SMI_COUNT:
+ 		if (!msr_info->host_initiated)
+@@ -9779,8 +9782,9 @@ int kvm_arch_hardware_setup(void *opaque)
  
- /*
+ 	memcpy(&kvm_x86_ops, ops->runtime_ops, sizeof(kvm_x86_ops));
+ 
+-	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
+-		supported_xss = 0;
++	supported_xss = 0;
++	if (kvm_cpu_cap_has(X86_FEATURE_XSAVES))
++		supported_xss = host_xss & KVM_SUPPORTED_XSS;
+ 
+ #define __kvm_cpu_cap_has(UNUSED_, f) kvm_cpu_cap_has(f)
+ 	cr4_reserved_bits = __cr4_reserved_bits(__kvm_cpu_cap_has, UNUSED_);
 -- 
 2.17.2
 
