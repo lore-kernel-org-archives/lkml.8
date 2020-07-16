@@ -2,175 +2,92 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96593C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95934C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73FE320760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB2F20775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgGPImn (ORCPT
+        id S1728317AbgGPIoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:42:43 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7757 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725950AbgGPIml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:42:41 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3042D61FE7B99EBF6193;
-        Thu, 16 Jul 2020 16:42:39 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Jul 2020 16:42:33 +0800
-From:   Qinglang Miao <miaoqinglang@huawei.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nilesh Javali <njavali@marvell.com>,
-        <GR-QLogic-Storage-Upstream@marvell.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] scsi: qla2xxx: Convert to DEFINE_SHOW_ATTRIBUTE
-Date:   Thu, 16 Jul 2020 16:46:03 +0800
-Message-ID: <20200716084603.7491-1-miaoqinglang@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 16 Jul 2020 04:44:14 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39199 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbgGPIoL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:44:11 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w17so4491984oie.6;
+        Thu, 16 Jul 2020 01:44:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c43oANq6OzYmzlJxSTpUKdWNvyI03SAvrrJGrRoQ9Lw=;
+        b=cEZMz1uqOpGjEqB/3ive611VHMZHjBmNO7M5uDdyUxnbqeDimNZ4da0WvKPPMWdZka
+         Zgq0dqoSr9gsN3z6G2vWAM1G3VBGisoqThYGEnXSnnJlv1WHYl7nkd1Kzrh+nXHTU3Kh
+         ea+ilp9nbLKCb1sKArTF6et/pZugGFF0wXbkEwuuSbjk2WT2KkLRAIfsoSufeRiB7Sk4
+         TwcXGXeI0+PAlg1SfAjKNBv5e5JXz2WNAlnrcVL3HLo67f139nVdqC3ZB9KYtCJM+xb5
+         D1yaIlMj/GzWm9O3/bfqgAy8fYTido+5C3eBPQdJaAqwKMM2gCH82zppbScrjmcMKINW
+         Nnyg==
+X-Gm-Message-State: AOAM532MUQ+1RZvn7XjiBdYatzwiz72a3DINWy3Y2KgnnkmNFA7LczJV
+        xyPFqcgHWPm6MRVVhqvEZdw7ZlDoZw+dYYnfhSo=
+X-Google-Smtp-Source: ABdhPJwNp44runSJD/wbft9WqzyuECnuZJT6DojqUYIfIs76R3X3bBHIwYj/c7l6O1oNa1zeCCJ71Siwmynt7kFgD8A=
+X-Received: by 2002:a05:6808:64a:: with SMTP id z10mr3066870oih.54.1594889050195;
+ Thu, 16 Jul 2020 01:44:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+References: <20200715140622.1295370-1-aford173@gmail.com>
+In-Reply-To: <20200715140622.1295370-1-aford173@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 Jul 2020 10:43:58 +0200
+Message-ID: <CAMuHMdXfTCDmKS88vSztdgvgTUK8-5+DMLfXbqstPGmO3QpJUw@mail.gmail.com>
+Subject: Re: [PATCH V3] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongqiang Liu <liuyongqiang13@huawei.com>
+On Wed, Jul 15, 2020 at 4:06 PM Adam Ford <aford173@gmail.com> wrote:
+> Beacon EmebeddedWorks, formerly Logic PD is introducing a new
+> SOM and development kit based on the RZ/G2M SoC from Renesas.
+>
+> The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
+> cellular radio.
+>
+> The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
+> along with a variety of push buttons and LED's, and support for
+> a parallel RGB and an LVDS display.
+>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> ---
+> V3:  Updated makefile so the beacon dtb reference is alphabetically in
+>      order, made 'vsync-active' in lvds node a valid number, added
+>      power-supply for the RGB node, and changed the versaclock on the
+>      baseboard to state 'clock-controller@6a' The SOM cannot be named
+>      this yet due to how the driver extracts its name.
 
-Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
----
- drivers/scsi/qla2xxx/qla_dfs.c | 69 +++++-----------------------------
- 1 file changed, 9 insertions(+), 60 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/scsi/qla2xxx/qla_dfs.c b/drivers/scsi/qla2xxx/qla_dfs.c
-index 581ed7597..954a4d9f7 100644
---- a/drivers/scsi/qla2xxx/qla_dfs.c
-+++ b/drivers/scsi/qla2xxx/qla_dfs.c
-@@ -37,20 +37,7 @@ qla2x00_dfs_tgt_sess_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- 
--static int
--qla2x00_dfs_tgt_sess_open(struct inode *inode, struct file *file)
--{
--	scsi_qla_host_t *vha = inode->i_private;
--
--	return single_open(file, qla2x00_dfs_tgt_sess_show, vha);
--}
--
--static const struct file_operations dfs_tgt_sess_ops = {
--	.open		= qla2x00_dfs_tgt_sess_open,
--	.read_iter		= seq_read_iter,
--	.llseek		= seq_lseek,
--	.release	= single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(qla2x00_dfs_tgt_sess);
- 
- static int
- qla2x00_dfs_tgt_port_database_show(struct seq_file *s, void *unused)
-@@ -106,20 +93,7 @@ qla2x00_dfs_tgt_port_database_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- 
--static int
--qla2x00_dfs_tgt_port_database_open(struct inode *inode, struct file *file)
--{
--	scsi_qla_host_t *vha = inode->i_private;
--
--	return single_open(file, qla2x00_dfs_tgt_port_database_show, vha);
--}
--
--static const struct file_operations dfs_tgt_port_database_ops = {
--	.open		= qla2x00_dfs_tgt_port_database_open,
--	.read_iter		= seq_read_iter,
--	.llseek		= seq_lseek,
--	.release	= single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(qla2x00_dfs_tgt_port_database);
- 
- static int
- qla_dfs_fw_resource_cnt_show(struct seq_file *s, void *unused)
-@@ -154,20 +128,7 @@ qla_dfs_fw_resource_cnt_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- 
--static int
--qla_dfs_fw_resource_cnt_open(struct inode *inode, struct file *file)
--{
--	struct scsi_qla_host *vha = inode->i_private;
--
--	return single_open(file, qla_dfs_fw_resource_cnt_show, vha);
--}
--
--static const struct file_operations dfs_fw_resource_cnt_ops = {
--	.open           = qla_dfs_fw_resource_cnt_open,
--	.read_iter           = seq_read_iter,
--	.llseek         = seq_lseek,
--	.release        = single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(qla_dfs_fw_resource_cnt);
- 
- static int
- qla_dfs_tgt_counters_show(struct seq_file *s, void *unused)
-@@ -244,20 +205,7 @@ qla_dfs_tgt_counters_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- 
--static int
--qla_dfs_tgt_counters_open(struct inode *inode, struct file *file)
--{
--	struct scsi_qla_host *vha = inode->i_private;
--
--	return single_open(file, qla_dfs_tgt_counters_show, vha);
--}
--
--static const struct file_operations dfs_tgt_counters_ops = {
--	.open           = qla_dfs_tgt_counters_open,
--	.read_iter           = seq_read_iter,
--	.llseek         = seq_lseek,
--	.release        = single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(qla_dfs_tgt_counters);
- 
- static int
- qla2x00_dfs_fce_show(struct seq_file *s, void *unused)
-@@ -459,19 +407,20 @@ qla2x00_dfs_setup(scsi_qla_host_t *vha)
- 
- create_nodes:
- 	ha->dfs_fw_resource_cnt = debugfs_create_file("fw_resource_count",
--	    S_IRUSR, ha->dfs_dir, vha, &dfs_fw_resource_cnt_ops);
-+	    S_IRUSR, ha->dfs_dir, vha, &qla_dfs_fw_resource_cnt_fops);
- 
- 	ha->dfs_tgt_counters = debugfs_create_file("tgt_counters", S_IRUSR,
--	    ha->dfs_dir, vha, &dfs_tgt_counters_ops);
-+	    ha->dfs_dir, vha, &qla_dfs_tgt_counters_fops);
- 
- 	ha->tgt.dfs_tgt_port_database = debugfs_create_file("tgt_port_database",
--	    S_IRUSR,  ha->dfs_dir, vha, &dfs_tgt_port_database_ops);
-+	    S_IRUSR,  ha->dfs_dir, vha, &qla2x00_dfs_tgt_port_database_fops);
- 
- 	ha->dfs_fce = debugfs_create_file("fce", S_IRUSR, ha->dfs_dir, vha,
- 	    &dfs_fce_ops);
- 
- 	ha->tgt.dfs_tgt_sess = debugfs_create_file("tgt_sess",
--		S_IRUSR, ha->dfs_dir, vha, &dfs_tgt_sess_ops);
-+		S_IRUSR, ha->dfs_dir, vha, &qla2x00_dfs_tgt_sess_fops);
-+
- 
- 	if (IS_QLA27XX(ha) || IS_QLA83XX(ha) || IS_QLA28XX(ha))
- 		ha->tgt.dfs_naqp = debugfs_create_file("naqp",
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
