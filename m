@@ -4,127 +4,151 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC4CC43446
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8875DC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3E8E2064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581A72064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lATawDG4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SspwcdTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgGPXKc (ORCPT
+        id S1728263AbgGPXKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727939AbgGPXJT (ORCPT
+        Thu, 16 Jul 2020 19:10:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53959 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727025AbgGPXKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:09:19 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E950C08C5E0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 15:38:08 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id g4so2282808uaq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 15:38:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=APhlPP59dTHfjeAK3JyZRtdowaZApacEHqoZMv3vuLo=;
-        b=lATawDG4pouGQZJSAvvkfunyTMl2IZ73PwYyG84GujpcBQnK6fr5WmNKFfOvC2b00Y
-         y0FdmXe4rqtNjweViO0egIcCxyXAX5I3pO8ZsDeUzdVtx3QXDWPix9RMjhNYMwSON64A
-         pG4aPJQ70gr5paOUAsbuqgtz69ax08jsU86UQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=APhlPP59dTHfjeAK3JyZRtdowaZApacEHqoZMv3vuLo=;
-        b=Z23p01piB3hdmwihwPuuT+HZn21RAhGr334yrNOf7aTwG0f0V5qZDT2Sz+Dp4sbzCz
-         KJB3wd7qHNjMq1GqGx85RgAQoZzDb7Yl90Zuk2oMlENUo509yWacgi0mXmzceq86A+CE
-         ENtcgEU9USdmDr7oMsd8K84/F6PgCbblJMJR9h1RjfAbbnFk7PJppn5jlKqjv7wy3yDL
-         ALPmTQqtA0DAQOEbl5oQiWmEI+0PefeyziQ9zeiH5dPB6NimAbEcfUeeKHAni7nfOBET
-         LdZ0uNepn6m8WTw6p3w2F2/s/jIpnLoQWyzV5O94LdTFToN5LPtcWaCjo3aLubgdJBtN
-         HuuQ==
-X-Gm-Message-State: AOAM532gtliLzQOcFviuwiUHWwcsd6Z+APmt3DboFxijS0yvTzowNyZB
-        3+dF1El5rqxkhR/N0CTrihBVY1IHAt4=
-X-Google-Smtp-Source: ABdhPJwQdYc7b7/u6lddtQ6Qyc/RhjoVxu6z30CbLa9HAVFLZMRXDwJ8gVTM/yWEgf58IxLIpCG2Ww==
-X-Received: by 2002:a9f:3184:: with SMTP id v4mr5429864uad.68.1594939087342;
-        Thu, 16 Jul 2020 15:38:07 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id d4sm944299vkf.29.2020.07.16.15.38.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 15:38:06 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id l12so2289129uak.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 15:38:05 -0700 (PDT)
-X-Received: by 2002:a9f:3dc6:: with SMTP id e6mr5569576uaj.104.1594939085525;
- Thu, 16 Jul 2020 15:38:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200716191746.23196-1-sibis@codeaurora.org>
-In-Reply-To: <20200716191746.23196-1-sibis@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 16 Jul 2020 15:37:54 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XgTvC2Xjw-pVcmS0vooYeGt_BthsWmhBZ4_8u-oJwkbg@mail.gmail.com>
-Message-ID: <CAD=FV=XgTvC2Xjw-pVcmS0vooYeGt_BthsWmhBZ4_8u-oJwkbg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Move the fixed-perm property to
- SoC dtsi
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Rakesh Pillai <pillair@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Jul 2020 19:10:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594941031;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=6Ur2fnt29zWLqlAHZnFwZ+08vVEEOwSdE8VzmyFXb6E=;
+        b=SspwcdToGDYFNWYHjQspGeowsVobLLSB4SigjKQ45g8t9Ib82VQYq0UavDiXxi9DdKpSo7
+        r5SB0hvYBTBBu/2NpN1A6A0ZgfAb3Ei1iV7VbWFoePX/7LMOED4tJrJDrxVnm6REgdylut
+        MQwDB3rFRZ5cZhnM0ZeR6O+ts3l10Gc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-213--Pjs1E5hP0anHHHr-5CWwQ-1; Thu, 16 Jul 2020 18:55:20 -0400
+X-MC-Unique: -Pjs1E5hP0anHHHr-5CWwQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59915107BEFF;
+        Thu, 16 Jul 2020 22:55:19 +0000 (UTC)
+Received: from lszubowi.redhat.com (ovpn-65-66.rdu2.redhat.com [10.10.65.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E7581001B07;
+        Thu, 16 Jul 2020 22:55:18 +0000 (UTC)
+From:   Lenny Szubowicz <lszubowi@redhat.com>
+To:     linux-kernel@vger.kernel.org, jlbec@evilplan.org, hch@lst.de
+Cc:     rjw@rjwysocki.net
+Subject: [PATCH] configfs: Use flush file op to commit writes to a binary file
+Date:   Thu, 16 Jul 2020 18:55:17 -0400
+Message-Id: <20200716225517.29522-1-lszubowi@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Use the flush file operation instead of the release operation to commit
+the prior writes to a configfs binary file. This allows any error
+status from the commit to be returned as the status of the close.
 
-On Thu, Jul 16, 2020 at 12:18 PM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> All the platforms using SC7180 SoC are expected to have the wlan firmware
-> memory statically mapped by the Trusted Firmware. Hence move back the
-> qcom,msa-fixed-perm property to the SoC dtsi.
->
-> Fixes: 7d484566087c0 ("arm64: dts: qcom: sc7180: Add missing properties for Wifi node")
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 1 -
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 1 +
->  2 files changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 860fc4658b8b1..26cc4913d3ddc 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -392,7 +392,6 @@ video-firmware {
->
->  &wifi {
->         status = "okay";
-> -       qcom,msa-fixed-perm;
->         vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
->         vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
->         vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 126e2fce26c1a..a91d3f074625e 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -3233,6 +3233,7 @@ wifi: wifi@18800000 {
->                                 <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
->                                 <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
->                         memory-region = <&wlan_mem>;
-> +                       qcom,msa-fixed-perm;
+Both flush and release are invoked during a close, but the status from
+release is ignored by the file system layer because the release operation
+is not supposed to fail.
 
-Seems good to me.  If someone ever comes up with a firmware where it's
-sane to not have this property, we can either delete the property from
-those boards or migrate the property to the the existing board dts
-files.
+For example, prior to this change no error is returned to user space
+when acpi_configfs correctly fails a write that attempts to commit an
+ACPI aml configfs binary file when kernel lockdown is in effect.
+This patch allows an error status to get returned to user space instead
+of a misleading success status.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Note that during a close, release is only called on the last reference to
+the specified file struct whereas flush is called on every close.
+Therefore, to preserve the prior behavior, configfs_flush_bin_file()
+doesn't commit the prior writes if there are still multiple references.
+Additionally, since configfs does not support the fsync file operation,
+a configfs flush only occurs in the context of a close. This makes it
+safe to move the commit from release to flush.
+
+Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
+---
+ fs/configfs/file.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
+
+diff --git a/fs/configfs/file.c b/fs/configfs/file.c
+index fb65b706cc0d..df0a76f7e62b 100644
+--- a/fs/configfs/file.c
++++ b/fs/configfs/file.c
+@@ -466,9 +466,28 @@ static int configfs_open_bin_file(struct inode *inode, struct file *filp)
+ 	return __configfs_open_file(inode, filp, CONFIGFS_ITEM_BIN_ATTR);
+ }
+ 
+-static int configfs_release_bin_file(struct inode *inode, struct file *file)
++/**
++ *	configfs_flush_bin_file - flush a binary attribute.
++ *	@file:	file pointer
++ *	@id:	pointer to files_struct
++ *
++ *	Flush is called during close and commits the buffered binary
++ *	writes when there are no more shared references to this file
++ *	struct.
++ *
++ *	Any error returned from the flush will be reflected in the
++ *	return value from the close.
++ */
++
++static int configfs_flush_bin_file(struct file *file, fl_owner_t id)
+ {
+ 	struct configfs_buffer *buffer = file->private_data;
++	ssize_t len;
++	int ret = 0;
++
++	/* Only commit the data if no more shared refs to file */
++	if (file_count(file) > 1)
++		return 0;
+ 
+ 	buffer->read_in_progress = false;
+ 
+@@ -478,10 +497,11 @@ static int configfs_release_bin_file(struct inode *inode, struct file *file)
+ 
+ 		down_read(&frag->frag_sem);
+ 		if (!frag->frag_dead) {
+-			/* result of ->release() is ignored */
+-			buffer->bin_attr->write(buffer->item,
++			len = buffer->bin_attr->write(buffer->item,
+ 					buffer->bin_buffer,
+ 					buffer->bin_buffer_size);
++			if (len < 0)
++				ret = len;
+ 		}
+ 		up_read(&frag->frag_sem);
+ 		/* vfree on NULL is safe */
+@@ -491,8 +511,7 @@ static int configfs_release_bin_file(struct inode *inode, struct file *file)
+ 		buffer->needs_read_fill = 1;
+ 	}
+ 
+-	configfs_release(inode, file);
+-	return 0;
++	return ret;
+ }
+ 
+ 
+@@ -509,7 +528,8 @@ const struct file_operations configfs_bin_file_operations = {
+ 	.write		= configfs_write_bin_file,
+ 	.llseek		= NULL,		/* bin file is not seekable */
+ 	.open		= configfs_open_bin_file,
+-	.release	= configfs_release_bin_file,
++	.flush		= configfs_flush_bin_file,
++	.release	= configfs_release,
+ };
+ 
+ /**
+-- 
+2.27.0
+
