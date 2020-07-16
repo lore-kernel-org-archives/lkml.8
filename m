@@ -2,118 +2,138 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF167C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 053B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0772074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7EC820739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eu3ev43G"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F6gJSOTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgGPMyv (ORCPT
+        id S1728345AbgGPMz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:54:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbgGPMyt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:54:49 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70B82C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 05:54:49 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so6952651ljg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 05:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mQI1oerBg67N/QEQ4aYPTUgh5UH04z0Y8Afk15C7qQo=;
-        b=Eu3ev43Gj+jFZ2Micy2fEmYcl8drBi0P/k/9dv3SJQ4hIaFztEB8MVkTm9Vf8Jfplc
-         qbLNBdkRs2Rk1t+yOtcwehSChqOf0ny/lQ8WDZIDEE1hcG5Y14IuhmaFdU7YqPLLr0e+
-         BUFc/1uHgHz4ualc+bbUUcCjcirrrqOVDccm4Xmj1/PKO9sJeTBfoaA3WetpeWkKlGTh
-         BmZQF40QA1eaBxTLgTWGabGh/zNYdBZtXokRESDLph9PxguKWlWEkmPE/BOrQLj0xWTF
-         Df80+y3wSEDjPmXHrMnxo2L6/NzK0qjjzs5GY5IcLb975Rpo4uPmsKIFW/d3KsYjiZxe
-         kqTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mQI1oerBg67N/QEQ4aYPTUgh5UH04z0Y8Afk15C7qQo=;
-        b=McqVdw/yVhpvVq0ipEbTHWiIFzTb8Ysu25PWslGrAkEQQfOUzuL6rP6MeJ4q5zRo4p
-         81zW0psyYscLGCRmer21sBK+qo/KWVU5jW+21jc3JW1un4IVUhhIDA7tXTQX01QW8U/D
-         SopD0bAzJtfyksRru6p8jD683YysbgbJ9K9GWwEoXuO05NigrdOYbTZNllq/+XEnKjtS
-         sWrM+/cJYO0A5VBig8rd/SctF66pEiGXxFmspj7TWxhvMXrIbXHYpKjZzXPdfxprxzaI
-         i7c8NCXcIpsamoJGVwPNg3CNTlFDnBG0WMaJnWFZGpHVsgH7wR6lT+xWo4I1QAwAwqqv
-         hGFQ==
-X-Gm-Message-State: AOAM531Ea50mIFdKBor3xp3YliiJhYyHrTc551nO8mPjb/lAmDoJpwnW
-        KlaRl7evq9GGwge04mvEset9xdwntSyZ7/KcUD52Ag==
-X-Google-Smtp-Source: ABdhPJzQ+xr8K7uDdKRcwbGwycJoaG1dk8RlTTlU7MSPc38Pa89AEeS/T5p7WQEQhf+wQvhNQTS/GOwfO/JIzrmKYOA=
-X-Received: by 2002:a2e:8597:: with SMTP id b23mr1812907lji.338.1594904087965;
- Thu, 16 Jul 2020 05:54:47 -0700 (PDT)
+        Thu, 16 Jul 2020 08:55:26 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43505 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726537AbgGPMz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:55:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B6vP75ygvz9sSt;
+        Thu, 16 Jul 2020 22:55:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594904124;
+        bh=b4ftUGwZVdgJ2MbMLvNenWR0160N3hTbmfvckH0eQgA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=F6gJSOTvFnkWah6igwCrd+Q3MdNdmbervNyLrl8h3wFahu7jmbQTjhnZIe6Sc809N
+         XAQ1kzSqBC3qFqZPDN4mIORMTZAUdfEYe0a38gNXjI+YGKcZg/va0PdDhzYgqn4ss2
+         9962gC4mj3XCfmuaLbU2/mrhVXodomxL5pEZSeJxMMMn+V9pwN8w6kBUbjWNlch3Mm
+         yhaFSITn5y/AIAPpQprVCadCw6pdlB8vh6dkXzkdtiCEynEo6wSPjqel3bi1V2S63n
+         T99unNnhIn24BxNM+/1Bl8xbnlZtsC1L7rmQVrzRX648EOHgmsSRjpWHo525m4ZOJH
+         Ll5Q5n/Cz/L8w==
+Date:   Thu, 16 Jul 2020 22:55:22 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: failing to fetch the dmi tree
+Message-ID: <20200716225522.208049f0@canb.auug.org.au>
+In-Reply-To: <20200716132134.56cb4bc1@endymion>
+References: <20200713091102.28d186ca@canb.auug.org.au>
+        <20200715113743.6d54eefa@endymion>
+        <20200716132134.56cb4bc1@endymion>
 MIME-Version: 1.0
-References: <20200711035544.2832154-1-palmer@dabbelt.com> <20200711035544.2832154-3-palmer@dabbelt.com>
-In-Reply-To: <20200711035544.2832154-3-palmer@dabbelt.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jul 2020 14:54:37 +0200
-Message-ID: <CACRpkdY6TxH0rAY5Kn8MsM8RhN1hR-_RYkoUuCpqf9W0D8+0OA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm: Use the new generic copy_oldmem_page()
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     mick@ics.forth.gr, Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>, masahiroy@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ben Dooks <ben-linux@fluff.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Brown <broonie@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>, willy@infradead.org,
-        Krzysztof Kozlowski <krzk@kernel.org>, paulmck@kernel.org,
-        Petr Mladek <pmladek@suse.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Potapenko <glider@google.com>, elver@google.com,
-        David Gow <davidgow@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Takahiro Akashi <takahiro.akashi@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/1YaoQc2H6Kp_nkUdHXhR/LL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 5:59 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+--Sig_/1YaoQc2H6Kp_nkUdHXhR/LL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> From: Palmer Dabbelt <palmerdabbelt@google.com>
+Hi Jean,
+
+On Thu, 16 Jul 2020 13:21:34 +0200 Jean Delvare <jdelvare@suse.de> wrote:
 >
-> This is exactly the same as the arm64 code, which I just into lib/ to
-> avoid copying it into the RISC-V port.  This builds with defconfig and with
-> CRASH_DUMP=y.
->
-> Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> On Wed, 15 Jul 2020 11:37:43 +0200, Jean Delvare wrote:
+> > On Mon, 13 Jul 2020 09:11:02 +1000, Stephen Rothwell wrote: =20
+> > > Jean, I don't suppose you would like to produce a git tree for me to
+> > > fetch instead, as yours is the last quilt series I fetch (apart from
+> > > Andrew's which is special).   =20
+> >=20
+> > Actually, feel free to suppose. While a quilt tree fits my current
+> > workflow better, I don't want to be the guy who makes your life more
+> > difficult. Let me give it a try. =20
+>=20
+> OK, so my old for-next branch in quilt format is still at:
+>=20
+> http://jdelvare.nerim.net/devel/linux/jdelvare-dmi/
+>=20
+> and what should be a git equivalent of it is at:
+>=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/jdelvare/staging.git dmi-fo=
+r-next
+>=20
+> If the latter works for you then I shall be ready to switch to it
+> officially. If there's anything wrong, please let me know.
 
-Looks good to me.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+It all looks good to me.  I will use that from tomorrow if that is OK
+with you.  I will not remove the parts of my process to cope with quilt
+trees for a while just in case it becomes a burden for you.
 
-Yours,
-Linus Walleij
+> Will you curse me if I ever rebase this branch?
+
+Not publicly :-)  Actually it only irritates me when it happens to
+often for for no apparent reason, so feel free (many others do :-)).
+
+Here is my normal spiel:
+
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
+
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
+
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
+
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/1YaoQc2H6Kp_nkUdHXhR/LL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8QTjoACgkQAVBC80lX
+0Gwl+gf/SM3LLVYck7i5Sr5cMSeHGdHg+Wh9ARO9dvMTdpr3YsjW4dP8stXFgbkD
+nmwSd9wT6vsXz3rE+91hG+xmtgDP6bs5zAXkp+mDO4fyVuagcvS8g+4nmghFrgqb
+Qil6jtcTi9yJUKFZmSEpAQ42HQSdqi691aPAj1oPkkH9oRWcLvWDGbSqYqxbEOOH
+Ur83IE+oN5pCSFt+jeDtZQjCjHKgYL5Ilpc7u5kTiKgzqc8XAdSSTSqmy9D93BZN
+0xBFCqfPXCSvbtx6QVyxQuLzrfuHWy7Xz1VikL4xa7mkZBr5JcfwjG6waQ4Dxc+Y
+CBUtSAK3RUhA6wB9kZE9n706RMdX0Q==
+=J5Qz
+-----END PGP SIGNATURE-----
+
+--Sig_/1YaoQc2H6Kp_nkUdHXhR/LL--
