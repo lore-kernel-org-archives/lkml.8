@@ -2,116 +2,112 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C4AC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A18C433FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F26B520739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:57:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Ftr2O4Kf"
+	by mail.kernel.org (Postfix) with ESMTP id 907E120739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgGPM5G (ORCPT
+        id S1728253AbgGPM5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:57:06 -0400
-Received: from crapouillou.net ([89.234.176.41]:59394 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbgGPM5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:57:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1594904216; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UXVJEzr99w/7orElqKOLhLQwbYcOBGYdsx3Qi8Km2b8=;
-        b=Ftr2O4KfjMmYkxroaUSB6tD55JtcuDXjyNzz2kF/PyEnFKiERZafbni/CQ7VWtdhbqEvxr
-        U5KYRzNF7AOLDhQXrc/8uuc6Sgfn5hCpwiCGmAnyl3xQK2HDnyQxFzP867mPZHByHl84BS
-        rFoYjWKbVkuJTx6qKkVKIOw6VY3BzI0=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 2/2] drm/panel-simple: Add 50 Hz mode to the Frida FRD350H54004 panel
-Date:   Thu, 16 Jul 2020 14:56:47 +0200
-Message-Id: <20200716125647.10964-2-paul@crapouillou.net>
-In-Reply-To: <20200716125647.10964-1-paul@crapouillou.net>
-References: <20200716125647.10964-1-paul@crapouillou.net>
+        Thu, 16 Jul 2020 08:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728893AbgGPM5p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:57:45 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2540C061755;
+        Thu, 16 Jul 2020 05:57:45 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: wlozano)
+        with ESMTPSA id B67CB2A570D
+Subject: Re: [PATCH] opp: Increase parsed_static_opps on _of_add_opp_table_v1
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-pm@vger.kernel.org, kernel@collabora.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, linux-kernel@vger.kernel.org
+References: <20200716025452.25761-1-walter.lozano@collabora.com>
+ <20200716032259.l5ybqetpg74ybogh@vireshk-i7>
+From:   Walter Lozano <walter.lozano@collabora.com>
+Message-ID: <34634b9e-2f6f-d8d8-ccf3-39841301cd65@collabora.com>
+Date:   Thu, 16 Jul 2020 09:57:37 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200716032259.l5ybqetpg74ybogh@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By changing the pixel clock and the length of the back porch, it is
-possible to obtain a perfect 50 Hz refresh rate.
+Hi Viresh,
 
-v2: Rebase on drm-misc-next
+On 16/7/20 00:22, Viresh Kumar wrote:
+> On 15-07-20, 23:54, Walter Lozano wrote:
+>> Currently, when using _of_add_opp_table_v2 parsed_static_opps is
+>> increased and this value is used on _opp_remove_all_static to
+>> check if there are static opps entries that need to be freed.
+>> Unfortunately this does not happens when using _of_add_opp_table_v1,
+>> which leads to warnings.
+>>
+>> This patch increases parsed_static_opps on _of_add_opp_table_v1 in a
+>> similar way as in _of_add_opp_table_v2.
+>>
+>> Signed-off-by: Walter Lozano <walter.lozano@collabora.com>
+>> ---
+>>
+>>   drivers/opp/of.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+>> index 9a5873591a40..b2bc82bf8b42 100644
+>> --- a/drivers/opp/of.c
+>> +++ b/drivers/opp/of.c
+>> @@ -917,6 +917,8 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
+>>   		nr -= 2;
+>>   	}
+>>   
+>> +	opp_table->parsed_static_opps++;
+>> +
+>>   	return ret;
+>>   }
+> Merged with this and added relevant Fixes and stable tags.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/gpu/drm/panel/panel-simple.c | 40 +++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 8b0bab9dd075..88493538a147 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1753,22 +1753,36 @@ static const struct panel_desc foxlink_fl500wvr00_a0t = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
- };
- 
--static const struct drm_display_mode frida_frd350h54004_mode = {
--	.clock = 6000,
--	.hdisplay = 320,
--	.hsync_start = 320 + 44,
--	.hsync_end = 320 + 44 + 16,
--	.htotal = 320 + 44 + 16 + 20,
--	.vdisplay = 240,
--	.vsync_start = 240 + 2,
--	.vsync_end = 240 + 2 + 6,
--	.vtotal = 240 + 2 + 6 + 2,
--	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+static const struct drm_display_mode frida_frd350h54004_modes[] = {
-+	{ /* 60 Hz */
-+		.clock = 6000,
-+		.hdisplay = 320,
-+		.hsync_start = 320 + 44,
-+		.hsync_end = 320 + 44 + 16,
-+		.htotal = 320 + 44 + 16 + 20,
-+		.vdisplay = 240,
-+		.vsync_start = 240 + 2,
-+		.vsync_end = 240 + 2 + 6,
-+		.vtotal = 240 + 2 + 6 + 2,
-+		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+	},
-+	{ /* 50 Hz */
-+		.clock = 5400,
-+		.hdisplay = 320,
-+		.hsync_start = 320 + 56,
-+		.hsync_end = 320 + 56 + 16,
-+		.htotal = 320 + 56 + 16 + 40,
-+		.vdisplay = 240,
-+		.vsync_start = 240 + 2,
-+		.vsync_end = 240 + 2 + 6,
-+		.vtotal = 240 + 2 + 6 + 2,
-+		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+	},
- };
- 
- static const struct panel_desc frida_frd350h54004 = {
--	.modes = &frida_frd350h54004_mode,
--	.num_modes = 1,
-+	.modes = frida_frd350h54004_modes,
-+	.num_modes = ARRAY_SIZE(frida_frd350h54004_modes),
- 	.bpc = 8,
- 	.size = {
- 		.width = 77,
--- 
-2.27.0
+Thanks for apply the proper fix.
 
+
+>
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index b2bc82bf8b42..314f306140a1 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -902,6 +902,10 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
+>                  return -EINVAL;
+>          }
+>   
+> +       mutex_lock(&opp_table->lock);
+> +       opp_table->parsed_static_opps = 1;
+> +       mutex_unlock(&opp_table->lock);
+> +
+>          val = prop->value;
+>          while (nr) {
+>                  unsigned long freq = be32_to_cpup(val++) * 1000;
+> @@ -917,8 +921,6 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
+>                  nr -= 2;
+>          }
+>   
+> -       opp_table->parsed_static_opps++;
+> -
+>          return ret;
+>   }
+>   
