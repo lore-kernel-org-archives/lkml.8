@@ -2,132 +2,144 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C00A2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC2620787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594901267;
+	bh=XUk4uPpwTSITCEjYChNTScClwFq4uq08tlJDRMfMUmU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=k3vqRgHCL7rlsoQiOjVONomreCcaeU7ivPa8k2oresiqU+p44YqmjrOp3PmP2du6Z
+	 BI86BtNv9xg73AxalSS4e16pD1Tywqce9aJx2EBdhyhCGUXhjjr/XNbMXOFIbPPu51
+	 K4mvXC9CVcMPZAsNRruxwdSnWMelc5CRRQgfr0gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgGPMHU (ORCPT
+        id S1728515AbgGPMHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:07:20 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:36847 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727990AbgGPMHT (ORCPT
+        Thu, 16 Jul 2020 08:07:46 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45954 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727990AbgGPMHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:07:19 -0400
-Received: by mail-io1-f70.google.com with SMTP id g17so3464182iob.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 05:07:18 -0700 (PDT)
+        Thu, 16 Jul 2020 08:07:45 -0400
+Received: by mail-ot1-f66.google.com with SMTP id h1so3971271otq.12;
+        Thu, 16 Jul 2020 05:07:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=t9ueKYwuAsIH4rYDj3ZAOiWwulEOYI3pILFlxCZZO1M=;
-        b=SnqYIiTgLWI/33ihbytwdgblV5+2/ADxbxqq0eSHKNwpFkiqhdw4i8JzXAryLUTpng
-         eINilmIIcI5aEJn9OiaEyxkh+a6ZLioRCwi4/R88taTRksaXfIcO2vlIOAkmtOLQiTtc
-         VrCohjNrMnRcgIRyKjeoB/hmtA6pzy1vlISHPXj4pkXPSG3N23Gsd1QefcFCZXC0L+mL
-         XHWDD8aQI6lxsE6E4W9pBX+FP8Z+dAil7+jWTDNuRodIrxwfSMKiIUCeRjpWjHMzOkWt
-         7TX23ZUhboKUJZow3ulhmsDDX71X5Sx9B+o8KmugIbUENUwdUNNjV2PZ1bDOielF5bEg
-         1Fsw==
-X-Gm-Message-State: AOAM532NRmDD2+4W8beX3rsC+KEb/NKnBxYmkvXd0DRhIcv9UT4eTwe+
-        7OAC2eSQVvre1THNAvAjZQ/peY6LLWC5NP15Q/RpLHf3nWpr
-X-Google-Smtp-Source: ABdhPJyBXJd+D/Vcvpx21xayAwbWoK3JT2IJ6ASU6HmVW17IPdSHEdHUNHbKm3neXWfLOm8OZfhHLefuefkNcAB54+0WWaCuGRm+
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XUk4uPpwTSITCEjYChNTScClwFq4uq08tlJDRMfMUmU=;
+        b=SL2I7pg1TZc9/YHL6wz1AWyvXdZGr5Z2twIjUEOBv3Zoptt1PEQwDUJsVrTk5sfZhH
+         m47/EbxUlYY8eNiMfbccthTU20b4zpVDoCc+EetQbPW2SJt3Bagq+8Lb7/F0QKyABeRY
+         C0I/1auhrVcUfpizva/2/tUjiss1cfyN/IZEFmRFEARqynNjRY9ncqu66XTv3p+a/RWY
+         KMEN5wXcb/pbKhzm8WWZRp6SxtVhbbPNmYhOxDKNFm0GYu7Ye/OcesYrV7x6+VoHdJvZ
+         NBP7LEXrAgrKCbxcyfmVZG4ZzoZyesO3rgXsact3tsokx5Z7NDU3tVXGV5Cgs3hbRSgR
+         RIUQ==
+X-Gm-Message-State: AOAM531eZawOwvc3VBdmw4PBaN8vOEsgYzmMW1G6932IBZg75KBL16qo
+        H0CTOmqWlUcs6TE73O18lPy+qzqZmP4X9Hgy+wQ=
+X-Google-Smtp-Source: ABdhPJzEJ56GsxoaS/HFvPdr7vkxYUCTd5QUGIeBz9A3WjnvyouFsd0dwP1GnLMjUnT6StsuZqX5NPiMkM4RbdpJks8=
+X-Received: by 2002:a9d:1c82:: with SMTP id l2mr3934854ota.167.1594901264631;
+ Thu, 16 Jul 2020 05:07:44 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:3ac6:: with SMTP id h189mr4102202ioa.78.1594901238306;
- Thu, 16 Jul 2020 05:07:18 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 05:07:18 -0700
-In-Reply-To: <000000000000ba65ba05a2fd48d9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c2de7705aa8de1eb@google.com>
-Subject: Re: kernel BUG at net/core/dev.c:LINE! (3)
-From:   syzbot <syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com>
-To:     andy@greyhouse.net, davem@davemloft.net, j.vosburgh@gmail.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        vfalico@gmail.com
+References: <3955470.QvD6XneCf3@kreacher> <000f01d65ae8$0c607990$25216cb0$@net>
+In-Reply-To: <000f01d65ae8$0c607990$25216cb0$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 16 Jul 2020 14:07:30 +0200
+Message-ID: <CAJZ5v0jGbfqfqqoPLjneFD5HLb20Yv9p25juNTzaumL70iFogg@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Francisco Jerez <francisco.jerez.plata@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+On Wed, Jul 15, 2020 at 10:39 PM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2020.07.14 11:16 Rafael J. Wysocki wrote:
+> >
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ...
+> > Since the passive mode hasn't worked with HWP at all, and it is not going to
+> > the default for HWP systems anyway, I don't see any drawbacks related to making
+> > this change, so I would consider this as 5.9 material unless there are any
+> > serious objections.
+>
+> Good point.
+> Some of the tests I do involve labour intensive post processing of data.
+> I want to automate some of that work, and it will take time.
+> We might be into the 5.9-rc series before I have detailed feedback.
+>
+> However, so far:
+>
+> Inverse impulse response test [1]:
+>
+> High level test, i5-9600K, HWP-passive (this patch), ondemand:
+> 3101 tests. 0 failures. (GOOD)
+>
+> From [1], re-stated:
+> > . High level: i5-9600K: 2453 tests, 60 failures, 2.45% fail rate. (HWP-active - powersave)
+> > . Verify acpi-cpufreq/ondemand works fine: i5-9600K: 8975 tests. 0 failures.
+>
+> My version of that cool Alexander named pipe test [2] serialized workflow:
+>
+> HWP-passive (this patch), performance: PASS.
+>
+> From [2], re-stated, and also re-tested.
+> HWP-disabled passive - performance: FAIL.
 
-HEAD commit:    ca0e494a Add linux-next specific files for 20200715
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11daec20900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
-dashboard link: https://syzkaller.appspot.com/bug?extid=af23e7f3e0a7e10c8b67
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12dd73bf100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17a466b3100000
+But I'm not quite sure how this is related to this patch?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
+This test would still fail without the patch if the kernel was started
+with intel_pstate=passive in the kernel command line, wouldn't it.
 
-bond0 (unregistering): (slave wireguard2): Releasing backup interface
-bond0 (unregistering): (slave wireguard1): Releasing backup interface
-bond0 (unregistering): (slave wireguard0): Releasing backup interface
-device wireguard0 left promiscuous mode
-bond0 (unregistering): Destroying bond
-------------[ cut here ]------------
-kernel BUG at net/core/dev.c:8948!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 21 Comm: kworker/u4:1 Not tainted 5.8.0-rc5-next-20200715-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-RIP: 0010:rollback_registered_many+0x2be/0xf60 net/core/dev.c:8948
-Code: 4c 89 e8 48 c1 e8 03 42 80 3c 20 00 0f 85 91 0c 00 00 48 b8 22 01 00 00 00 00 ad de 48 89 43 70 e9 b9 fe ff ff e8 f2 77 39 fb <0f> 0b 4c 8d 7b 68 4c 8d 6b 70 eb a5 e8 e1 77 39 fb 48 8b 74 24 10
-RSP: 0018:ffffc90000dd76b0 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff888097a94000 RCX: ffffffff863ab928
-RDX: ffff8880a97a8580 RSI: ffffffff863aba7e RDI: 0000000000000001
-RBP: ffffc90000dd7770 R08: 0000000000000000 R09: ffffffff8a854947
-R10: 0000000000000001 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff888097a94068 R14: ffffc90000dd7718 R15: 0000000000000002
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa85f1dee78 CR3: 000000009e4d2000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- rollback_registered net/core/dev.c:9022 [inline]
- unregister_netdevice_queue+0x2dd/0x570 net/core/dev.c:10103
- unregister_netdevice include/linux/netdevice.h:2764 [inline]
- bond_release_and_destroy drivers/net/bonding/bond_main.c:2212 [inline]
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3285 [inline]
- bond_netdev_event.cold+0xc1/0x10e drivers/net/bonding/bond_main.c:3398
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- rollback_registered_many+0x665/0xf60 net/core/dev.c:8977
- unregister_netdevice_many.part.0+0x1a/0x2f0 net/core/dev.c:10122
- unregister_netdevice_many net/core/dev.c:10121 [inline]
- default_device_exit_batch+0x30c/0x3d0 net/core/dev.c:10605
- ops_exit_list+0x10d/0x160 net/core/net_namespace.c:189
- cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Modules linked in:
----[ end trace d02cbf494c57b1f4 ]---
-RIP: 0010:rollback_registered_many+0x2be/0xf60 net/core/dev.c:8948
-Code: 4c 89 e8 48 c1 e8 03 42 80 3c 20 00 0f 85 91 0c 00 00 48 b8 22 01 00 00 00 00 ad de 48 89 43 70 e9 b9 fe ff ff e8 f2 77 39 fb <0f> 0b 4c 8d 7b 68 4c 8d 6b 70 eb a5 e8 e1 77 39 fb 48 8b 74 24 10
-RSP: 0018:ffffc90000dd76b0 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff888097a94000 RCX: ffffffff863ab928
-RDX: ffff8880a97a8580 RSI: ffffffff863aba7e RDI: 0000000000000001
-RBP: ffffc90000dd7770 R08: 0000000000000000 R09: ffffffff8a854947
-R10: 0000000000000001 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff888097a94068 R14: ffffc90000dd7718 R15: 0000000000000002
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f5f78695000 CR3: 000000008e0d9000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Although, I believe the issue to be EPB management, [3].
 
+Well, that's kind of unexpected.
+
+If this really is the case, then it looks like the effect of the EPB
+setting on the processor is different depending on whether or not HWP
+is enabled.
+
+> And yes, I did see the reply to [3] that came earlier,
+> And have now re-done the test, with the referenced patch added.
+> It still is FAIL. I reply to the [3] thread, eventually.
+>
+> [1] https://marc.info/?l=linux-pm&m=159354421400342&w=2
+> [2] https://marc.info/?l=linux-pm&m=159155067328641&w=2
+> [3] https://marc.info/?l=linux-pm&m=159438804230744&w=2
+>
+> Kernel:
+>
+> b08284a541ad (HEAD -> k58rc5-doug) cpufreq: intel_pstate: Avoid enabling HWP if EPP is not supported
+> 063fd7ccabfe cpufreq: intel_pstate: Implement passive mode with HWP enabled
+> 730ccf5054e9 cpufreq: intel_pstate: Allow raw energy performance preference value
+> bee36df01c68 cpufreq: intel_pstate: Allow enable/disable energy efficiency
+> 199629d8200e cpufreq: intel_pstate: Fix active mode setting from command line
+> 11ba468877bb (tag: v5.8-rc5, origin/master, origin/HEAD, master) Linux 5.8-rc5
+>
+> Rules for this work:
+>
+> . never use x86_energy_perf_policy.
+> . For HWP disabled: never change from active to passive or via versa, but rather do it via boot.
+> . after boot always check and reset the various power limit log bits that are set.
+> . never compile the kernel (well, until after any tests), which will set those bits again.
+> . never run prime95 high heat torture test, which will set those bits again.
+> . try to never do anything else that will set those bits again.
+>
+> To be clear, I do allow changing governors within the context of the above rules.
+
+Thanks for the feedback!
