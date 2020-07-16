@@ -2,116 +2,105 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F64C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D0BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5822065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5042076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wn7hhFIJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lgRyosIr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgGPTO5 (ORCPT
+        id S1729493AbgGPTSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbgGPTO5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:14:57 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DD1C061755;
-        Thu, 16 Jul 2020 12:14:56 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f5so9540728ljj.10;
-        Thu, 16 Jul 2020 12:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FH1i/9Q7biv+5kd2aHJzTASe8AFgNZkqx6zcZ0CRgAM=;
-        b=Wn7hhFIJBgNHurMYXpcMzkVEpgS+G0L7MmD8J8qk3tCEqcYin8UHdaPxMT5CXRg+S9
-         g83fFCUogHDCB6WOJ4rpJ+8uh1wxnGl0J7FmcabE8rce6HWdqsbzaw0R4/Dowv1tdpJh
-         DIAlQT38AV71ra9Ka/8j1WaHlIv5TEvlzqq9oZTib3fjS8IydzBFRyvELNRZQU9vVPeV
-         /x0xTA6jYir1Q9hW5bTld/jgCm4zngsfN39XIiRD+XNuixgVtIOcfW4aW3DVcKpD+Vcf
-         KmzvDEK+J86k5402o4XaGz7PhPUV1EWfNEK72hUm7msuQgdm0zxDD9bGTq+4PjpsD6rv
-         5M8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FH1i/9Q7biv+5kd2aHJzTASe8AFgNZkqx6zcZ0CRgAM=;
-        b=uKLA6yRgm8fzkGOEwfROln2VXNcnT9krxSdFUu4aMpusmPwlKCq3j2B0NMj3LqkyR1
-         Y64/7klSMjrcbXJDM3w8uKkl86NPAWiI52Ml1fkLRaV9xnXyiq8rsx+8GyCAgvz3KPmr
-         YIhMY6V6JaXc7c9DJKO1tvN2+sWhLlPxzQjXe4ABxow9c8Ul1YWcg1z6PSoQ/31+56Gk
-         OvDAv/JEXvIWhx/E0drfkStjwL9sX8s78baP3MEvYqmVF8ATuneygDM0TZYBWYxNqNZl
-         FuADX8nTzy6ORUnF1lti8vOEnYrtsUtlLT1sRqURbMLNKIm+PaV9o+u4KVmOzMPSx1BZ
-         N6zw==
-X-Gm-Message-State: AOAM531l6Y1lE0iPp+psx40QRea7ByUGwCXcb6ae/VrbnAxKHO9Sshud
-        /5oM+WqtnihKz9+dGF2SOtKgopaS
-X-Google-Smtp-Source: ABdhPJwcYWd14dWMRbo7MCBi1xwO+8IGc1NwY6E8MeiMH3Khln7PDLzj6vFwtTk/KoIlzzJ7hJsiig==
-X-Received: by 2002:a2e:5746:: with SMTP id r6mr2910169ljd.205.1594926894806;
-        Thu, 16 Jul 2020 12:14:54 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
-        by smtp.googlemail.com with ESMTPSA id s4sm1357437lfc.71.2020.07.16.12.14.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 12:14:54 -0700 (PDT)
-Subject: Re: [PATCH v4 0/6] Improvements for MAX77620 GPIO driver
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200709171203.12950-1-digetx@gmail.com>
- <CACRpkdZNLDgsrPRenyvPZD6A+Wvj-P3AJBf5Ke-uY9=R9DyjxQ@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c33c7f0d-cc0d-a9ba-dbd2-587c8cf9e2e8@gmail.com>
-Date:   Thu, 16 Jul 2020 22:14:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 15:18:08 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:52302 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729387AbgGPTSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 15:18:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594927086; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=821OGAVDUhSCY8vDD5l+pZi3vMo7wwG14w+yqfyRJrY=; b=lgRyosIrBQSk/W4DZbAOwzfuVUv49YP6dvibAatYK9z32tNFVP+sK6FLJsdkiy4YjVhPoOUu
+ E8T5AeobcqzNzk6Lqqd11FOBTkPBueoOyw+EywtoFx6qr6dlkGyWMT4KZ+5exnlnVObR2wh4
+ uGVNJpAvWWyKJqSgw22K7T/CCZ0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5f10a7ee03c8596cdb317d3e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 19:18:06
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 55ED4C43395; Thu, 16 Jul 2020 19:18:05 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 044DFC433C9;
+        Thu, 16 Jul 2020 19:18:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 044DFC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        evgreen@chromium.org, dianders@chromium.org,
+        pillair@codeaurora.org, robh+dt@kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sc7180: Move the fixed-perm property to SoC dtsi
+Date:   Fri, 17 Jul 2020 00:47:46 +0530
+Message-Id: <20200716191746.23196-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdZNLDgsrPRenyvPZD6A+Wvj-P3AJBf5Ke-uY9=R9DyjxQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.07.2020 11:52, Linus Walleij пишет:
-> On Thu, Jul 9, 2020 at 7:12 PM Dmitry Osipenko <digetx@gmail.com> wrote:
-> 
->> This series addresses a problem that I discovered on Nexus 7 device where
->> GPIO interrupts may be left enabled after bootloader and the driver isn't
->> prepared to this. It also makes a small improvements to the code, fixes the
->> non-released interrupt bug and converts driver to use irqchip template.
->>
->> Changelog:
->>
->> v4: - Added stable-tag to the patch "Fix missing release of interrupt".
-> 
-> This v4 series applied, thanks a *LOT* for your patient work on this!
+All the platforms using SC7180 SoC are expected to have the wlan firmware
+memory statically mapped by the Trusted Firmware. Hence move back the
+qcom,msa-fixed-perm property to the SoC dtsi.
 
-Hello, Linus! Thank you for applying the patches!
+Fixes: 7d484566087c0 ("arm64: dts: qcom: sc7180: Add missing properties for Wifi node")
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 1 -
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-> I need to fix the USB port on my Nexus 7 so I can test how the
-> mainline support is working these days!
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 860fc4658b8b1..26cc4913d3ddc 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -392,7 +392,6 @@ video-firmware {
+ 
+ &wifi {
+ 	status = "okay";
+-	qcom,msa-fixed-perm;
+ 	vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
+ 	vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
+ 	vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 126e2fce26c1a..a91d3f074625e 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -3233,6 +3233,7 @@ wifi: wifi@18800000 {
+ 				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
+ 				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
+ 			memory-region = <&wlan_mem>;
++			qcom,msa-fixed-perm;
+ 			status = "disabled";
+ 		};
+ 	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-Please notice that this should be a Nexus 7 2012, which is NVIDIA
-Tegra30-based Nexus 7.
-
-The mainline support just starting to emerge for the 2012 model,
-although not much is missed in the upstream. There are couple patches
-currently under review which are necessary for Nexus 7 2012 in order to
-make it ready for everyday use, like a tiny patch for the touchscreen
-support and DRM bridges/panel orientation improvements for the Tegra DRM
-driver. We're pretty close! :)
