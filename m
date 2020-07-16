@@ -2,118 +2,73 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DC0C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A87A2076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594913366;
-	bh=FzucnMldDqmK+Cy2gUOBiRptVK7gB8amQqI3OD5XAPY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ydtC+wFwwE9DmMSn5TdPvTUXT3qHopl51fY8pMENd55LkFnj3A60PcbZazE4GfTyJ
-	 +Y4CDXtmU+b8zqtT4vwiLLXW7xEZg2Zf3ZqDW6ysbrSleLCnbCtxOO08G6yh8zFihm
-	 fksobkEIjwaW5xxs8CicfFIfjve76XxinTAOkzPk=
+	by mail.kernel.org (Postfix) with ESMTP id 20EDE2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbgGPP3Z (ORCPT
+        id S1729091AbgGPP3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:29:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgGPP3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:29:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 551AE2065F;
-        Thu, 16 Jul 2020 15:29:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594913364;
-        bh=FzucnMldDqmK+Cy2gUOBiRptVK7gB8amQqI3OD5XAPY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Ne3w8Bmm3s7y+REZ9uQP1EUd88b8tVS50zb2XpAk1MkNm/nhJ0PexdK+nNuYeMgf1
-         au3JsLCZ1R9GvlGJMiWz6FsCzs3NGsS23NVxZRd+NeMYkjVFcAEiX6WnqGiwCTV2XF
-         x1IkjLGTH0O4wWLKWchuk2Xmb3Pfvrhmq0pMAz3w=
-Date:   Thu, 16 Jul 2020 17:29:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jiri Slaby <jslaby@suse.cz>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [GIT PULL] TTY/Serial driver fixes for 5.8-rc6
-Message-ID: <20200716152917.GA2378726@kroah.com>
+        Thu, 16 Jul 2020 11:29:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59968 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728415AbgGPP3K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:29:10 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jw5oj-0003p5-5r; Thu, 16 Jul 2020 15:29:01 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: xts: use memmove to avoid overlapped memory copy
+Date:   Thu, 16 Jul 2020 16:29:00 +0100
+Message-Id: <20200716152900.1709694-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
+From: Colin Ian King <colin.king@canonical.com>
 
-  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
+There is a memcpy that performs a potential overlapped memory copy
+from source b to destination b + 1.  Fix this by using the safer
+memmove instead.
 
-are available in the Git repository at:
+Addresses-Coverity: ("Overlapping buffer in memory copy")
+Fixes: 8083b1bf8163 ("crypto: xts - add support for ciphertext stealing")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ crypto/xts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.8-rc6
+diff --git a/crypto/xts.c b/crypto/xts.c
+index 3565f3b863a6..fa3e6e7b7043 100644
+--- a/crypto/xts.c
++++ b/crypto/xts.c
+@@ -169,7 +169,7 @@ static int cts_final(struct skcipher_request *req,
+ 				      offset - XTS_BLOCK_SIZE);
+ 
+ 	scatterwalk_map_and_copy(b, rctx->tail, 0, XTS_BLOCK_SIZE, 0);
+-	memcpy(b + 1, b, tail);
++	memmove(b + 1, b, tail);
+ 	scatterwalk_map_and_copy(b, req->src, offset, tail, 0);
+ 
+ 	le128_xor(b, &rctx->t, b);
+-- 
+2.27.0
 
-for you to fetch changes up to f743061a85f5e9989df22ccbf07c80c98fc90e08:
-
-  serial: core: Initialise spin lock before use in uart_configure_port() (2020-07-10 14:44:46 +0200)
-
-----------------------------------------------------------------
-TTY/Serial driver fixes for 5.8-rc6
-
-Here are some small tty and serial driver fixes for 5.8-rc6.
-
-The largest set of patches in here is a revert of the sysrq changes that
-went into 5.8-rc1 but turned out to cause a noticable overhead and cpu
-usage.
-
-Other than that, there's a few small serial driver fixes to resolve
-reported issues, and finally resolving the spinlock init problem on many
-serial driver consoles.
-
-All of these have been in linux-next for a while with no reported
-issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      serial: core: Initialise spin lock before use in uart_configure_port()
-
-Christophe Leroy (1):
-      tty: serial: cpm_uart: Fix behaviour for non existing GPIOs
-
-Chuhong Yuan (1):
-      serial: mxs-auart: add missed iounmap() in probe failure and remove
-
-Jan Kiszka (1):
-      Revert "tty: xilinx_uartps: Fix missing id assignment to the console"
-
-Johan Hovold (3):
-      Revert "serial: core: Refactor uart_unlock_and_check_sysrq()"
-      serial: core: fix sysrq overhead regression
-      serial: core: drop redundant sysrq checks
-
-Lad Prabhakar (1):
-      serial: sh-sci: Initialize spinlock for uart console
-
-Randy Dunlap (1):
-      tty/serial: fix serial_core.c kernel-doc warnings
-
- drivers/tty/serial/cpm_uart/cpm_uart_core.c |   9 ++-
- drivers/tty/serial/mxs-auart.c              |  12 ++-
- drivers/tty/serial/serial_core.c            | 115 ++++------------------------
- drivers/tty/serial/sh-sci.c                 |   3 +
- drivers/tty/serial/xilinx_uartps.c          |   1 -
- include/linux/serial_core.h                 | 102 +++++++++++++++++++++++-
- 6 files changed, 134 insertions(+), 108 deletions(-)
