@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFC9C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F03C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68055207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DFE207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:38:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbgGPMij (ORCPT
+        id S1728851AbgGPMiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:38:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35944 "EHLO mx2.suse.de"
+        Thu, 16 Jul 2020 08:38:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36176 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbgGPMic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:38:32 -0400
+        id S1728813AbgGPMii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:38:38 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id DB88EB976;
-        Thu, 16 Jul 2020 12:38:34 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 51871B945;
+        Thu, 16 Jul 2020 12:38:40 +0000 (UTC)
 From:   Oscar Salvador <osalvador@suse.de>
 To:     akpm@linux-foundation.org
 Cc:     mhocko@suse.com, linux-mm@kvack.org, mike.kravetz@oracle.com,
         david@redhat.com, aneesh.kumar@linux.vnet.ibm.com,
         naoya.horiguchi@nec.com, linux-kernel@vger.kernel.org,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Oscar Salvador <osalvador@suse.de>,
         Oscar Salvador <osalvador@suse.com>
-Subject: [PATCH v4 05/15] mm,hwpoison-inject: don't pin for hwpoison_filter
-Date:   Thu, 16 Jul 2020 14:37:59 +0200
-Message-Id: <20200716123810.25292-6-osalvador@suse.de>
+Subject: [PATCH v4 14/15] mm,hwpoison: Return 0 if the page is already poisoned in soft-offline
+Date:   Thu, 16 Jul 2020 14:38:08 +0200
+Message-Id: <20200716123810.25292-15-osalvador@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20200716123810.25292-1-osalvador@suse.de>
 References: <20200716123810.25292-1-osalvador@suse.de>
@@ -42,64 +42,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Currently, there is an inconsistency when calling soft-offline from
+different paths on a page that is already poisoned.
 
-Another memory error injection interface debugfs:hwpoison/corrupt-pfn
-also takes bogus refcount for hwpoison_filter(). It's justified
-because this does a coarse filter, expecting that memory_failure()
-redoes the check for sure.
+1) madvise:
 
-Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+        madvise_inject_error skips any poisoned page and continues
+        the loop.
+        If that was the only page to madvise, it returns 0.
+
+2) /sys/devices/system/memory/:
+
+        When calling soft_offline_page_store()->soft_offline_page(),
+        we return -EBUSY in case the page is already poisoned.
+        This is inconsistent with a) the above example and b)
+        memory_failure, where we return 0 if the page was poisoned.
+
+Fix this by dropping the PageHWPoison() check in madvise_inject_error,
+and let soft_offline_page return 0 if it finds the page already poisoned.
+
+Please, note that this represents a user-api change, since now the
+return error when calling soft_offline_page_store()->soft_offline_page()
+will be different.
+
 Signed-off-by: Oscar Salvador <osalvador@suse.com>
+Acked-by: Naoya Horiguchi <naoya.horiguchi@nec.com>
 ---
- mm/hwpoison-inject.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
+ mm/madvise.c        | 3 ---
+ mm/memory-failure.c | 4 ++--
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/mm/hwpoison-inject.c b/mm/hwpoison-inject.c
-index e488876b168a..1ae1ebc2b9b1 100644
---- a/mm/hwpoison-inject.c
-+++ b/mm/hwpoison-inject.c
-@@ -26,11 +26,6 @@ static int hwpoison_inject(void *data, u64 val)
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 226f0fcf0828..7b5ca96108cd 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -920,9 +920,6 @@ static int madvise_inject_error(int behavior,
+ 		 */
+ 		put_page(page);
  
- 	p = pfn_to_page(pfn);
- 	hpage = compound_head(p);
--	/*
--	 * This implies unable to support free buddy pages.
--	 */
--	if (!get_hwpoison_page(p))
--		return 0;
- 
- 	if (!hwpoison_filter_enable)
- 		goto inject;
-@@ -40,23 +35,20 @@ static int hwpoison_inject(void *data, u64 val)
- 	 * This implies unable to support non-LRU pages.
- 	 */
- 	if (!PageLRU(hpage) && !PageHuge(p))
--		goto put_out;
+-		if (PageHWPoison(page))
+-			continue;
+-
+ 		if (behavior == MADV_SOFT_OFFLINE) {
+ 			pr_info("Soft offlining pfn %#lx at process virtual address %#lx\n",
+ 				 pfn, start);
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index c6c83337708a..2b2aa5a76b9b 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1781,7 +1781,7 @@ static int __soft_offline_page(struct page *page)
+ 		unlock_page(page);
+ 		put_page(page);
+ 		pr_info("soft offline: %#lx page already poisoned\n", pfn);
+-		return -EBUSY;
 +		return 0;
+ 	}
  
- 	/*
--	 * do a racy check with elevated page count, to make sure PG_hwpoison
--	 * will only be set for the targeted owner (or on a free page).
-+	 * do a racy check to make sure PG_hwpoison will only be set for
-+	 * the targeted owner (or on a free page).
- 	 * memory_failure() will redo the check reliably inside page lock.
- 	 */
- 	err = hwpoison_filter(hpage);
- 	if (err)
--		goto put_out;
+ 	if (!PageHuge(page))
+@@ -1881,7 +1881,7 @@ int soft_offline_page(unsigned long pfn)
+ 
+ 	if (PageHWPoison(page)) {
+ 		pr_info("soft offline: %#lx page already poisoned\n", pfn);
+-		return -EBUSY;
 +		return 0;
+ 	}
  
- inject:
- 	pr_info("Injecting memory failure at pfn %#lx\n", pfn);
--	return memory_failure(pfn, MF_COUNT_INCREASED);
--put_out:
--	put_hwpoison_page(p);
--	return 0;
-+	return memory_failure(pfn, 0);
- }
- 
- static int hwpoison_unpoison(void *data, u64 val)
+ 	get_online_mems();
 -- 
 2.26.2
 
