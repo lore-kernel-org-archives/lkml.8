@@ -2,150 +2,188 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AD2C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E902E2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91E22065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZCAVB8ns"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UT6gOuw6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgGPPbj (ORCPT
+        id S1728792AbgGPPeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:31:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
+        Thu, 16 Jul 2020 11:34:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728415AbgGPPbe (ORCPT
+        with ESMTP id S1728435AbgGPPef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:31:34 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9522CC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:31:34 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m16so4021829pls.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:31:34 -0700 (PDT)
+        Thu, 16 Jul 2020 11:34:35 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21DA0C061755;
+        Thu, 16 Jul 2020 08:34:35 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id y18so3634586lfh.11;
+        Thu, 16 Jul 2020 08:34:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=jGC0Cma9sD+M6C66CXjEVdr4Gdb8mMF8OboSIxxwdH4=;
-        b=ZCAVB8nsh1reVbsCtXsNpc9/GpvQQzf253bRke2fSht/9fsA2S0zNy7s7Q7zaYprZf
-         XIp3CYeZYUJRxqJWxlw4GYR6Rxfcw9Cy7l7xTQwKslcSPJZlLm/qGcYymwn8C7VPsU+k
-         dDBF3EEYw3UhdPnQHkORD5qj1r8KpyjprM3rc=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wa186aYiFLYKssSecQBUE+3MH15z3xTby6qCg2AUg3E=;
+        b=UT6gOuw65rx5hu9zS9LXU+Tpi1khKAosbBXpSNmANhffltq/DLTxNtCmDpLEVuTWDS
+         tq3Myqv2AMC6ywTouzyNflJakW6wktJdvosfbx4zFb9jR2B6iwUv0CW0vNuK0zfX+rTZ
+         lKFueF5dTJHmNkCfTZowDfqBOdQw0870tACaDdv1hHEG6wWpDbrW9h5CiQm8vow7/m/D
+         Du06gQk6djTprEG0A/BiRsYTCuAs0vtcBdblb8czKQJt271Lfjgf5OhKeYRYQVzQey8L
+         bDo8GBS26sBGvOhqzjYAz53tGOHHkLNbZLQf16d9STj6zOoq9VFoxUnhX6CEvosBff1S
+         NhkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=jGC0Cma9sD+M6C66CXjEVdr4Gdb8mMF8OboSIxxwdH4=;
-        b=Sk9+YSlO1uVwVmAVFc9XlYcEF53QWjLVHOaK7+8+mJqYKSAVD3ic701bHZM1VAWnSF
-         Wiv1+fXKo08K0ZKYK0TQbHznHV8crZBvBaBrIkrMqTYtHewqtNrwyIv5Hmqxzd2Xvo60
-         ya/4nlvXQZYatbhIncwLov35QJmI/XQMPkmh0432eyL/V2s6h7eVmIGjT4Dn73oPMv5/
-         740QFaOCZ/EExFqXn6IALIBUx7tWMAnh78QY2K3tH8bmbAR9A7HLa9djrZ0LrVtlhsZT
-         nFvb23F4QvVc7G8cHNyTs6zq9k57JW5XsfFNw/xV8wNb4qcVoVxJmBkAdgNKFEnixabd
-         dPPg==
-X-Gm-Message-State: AOAM531UAnV07r1/uHyjBeVyqaTt5Y902z1ALWWnzbSDpvqIg4Yrn5v4
-        sk7wHYzh7ecDZ9xCOLm5SUjelA==
-X-Google-Smtp-Source: ABdhPJweDZrRnoUX7jCQB/uM+EQPmvMQFRn5PcnR6HDszEBspoWj0c+Kso5Fx/ceySNNzLeNRQX5LA==
-X-Received: by 2002:a17:90b:390e:: with SMTP id ob14mr4976168pjb.221.1594913494019;
-        Thu, 16 Jul 2020 08:31:34 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e195sm5218464pfh.218.2020.07.16.08.31.32
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wa186aYiFLYKssSecQBUE+3MH15z3xTby6qCg2AUg3E=;
+        b=d8E/2ZlviJS6CrTPhGIwCB2OnqMDTNFJ7cwJH3/q1QbPXQS8rSeRysMQZuBLZl6gdJ
+         hAxxvLP/BO1PDbV3NwBFQHbaR5nrBfV4IOnRETzO9uCQ45VGa5NrAyxCpkSKm2KheZqU
+         zcfhJ14OpPHbtq1AmOBJPKrRM0YVT+Gky5FK3h80KNbKCxZby5qSMkX+Zae2o35Eyocc
+         pO9VNGxuqvORRouiYD+nYl02n9ucRgjjuoqwbckMOrQA4cnJoh+x7Eu6WMqcQrysbyJ1
+         t13LRkFOfXgYD/y/S2Ok2IBau0AA9BWnVNAov6EHs7/PZ6YShZmDoUAld++SOrlRB6Ks
+         qFSA==
+X-Gm-Message-State: AOAM533X8xbB8Kt3yE8ueR3zElYcL+aRKXzHOYQV6Zgan/3kYpSEqQ5r
+        zYGzk96U4aQxNYPKzOXlwJw=
+X-Google-Smtp-Source: ABdhPJxQKVzXdd/2TuQ3vqMa1B4aHBHoA3r1YE1G0WnYJLh+FGabiRX28tdvsXd23NnXvJ4XJlpVsA==
+X-Received: by 2002:ac2:47e7:: with SMTP id b7mr2385417lfp.68.1594913673496;
+        Thu, 16 Jul 2020 08:34:33 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id q3sm1111749ljm.22.2020.07.16.08.34.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 08:31:33 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 08:31:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     Jan Kara <jack@suse.cz>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Thu, 16 Jul 2020 08:34:32 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Thu, 16 Jul 2020 17:34:30 +0200
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
         Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6 4/7] fs: Introduce O_MAYEXEC flag for openat2(2)
-Message-ID: <202007160822.CCDB5478@keescook>
-References: <20200714181638.45751-1-mic@digikod.net>
- <20200714181638.45751-5-mic@digikod.net>
- <202007151304.9F48071@keescook>
- <b209ea10-5b7f-c40e-5b6a-3da9028403d5@digikod.net>
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
+ allocator
+Message-ID: <20200716153430.GA31261@pc636>
+References: <20200715183537.4010-1-urezki@gmail.com>
+ <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
+ <CAEXW_YRoTvQfqqcM9fi+MkMxCPEaoJh4zHRM3qNYkv=-nAVuBQ@mail.gmail.com>
+ <20200716091913.GA28595@pc636>
+ <20200716142537.ecp4icsq7kg6qhdx@linutronix.de>
+ <20200716144728.GA31046@pc636>
+ <20200716150414.iqpyby6nrww4zbyk@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b209ea10-5b7f-c40e-5b6a-3da9028403d5@digikod.net>
+In-Reply-To: <20200716150414.iqpyby6nrww4zbyk@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 04:18:27PM +0200, Mickaël Salaün wrote:
-> On 15/07/2020 22:06, Kees Cook wrote:
-> > On Tue, Jul 14, 2020 at 08:16:35PM +0200, Mickaël Salaün wrote:
-> >> The implementation of O_MAYEXEC almost duplicates what execve(2) and
-> >> uselib(2) are already doing: setting MAY_OPENEXEC in acc_mode (which can
-> >> then be checked as MAY_EXEC, if enforced), and propagating FMODE_EXEC to
-> >> _fmode via __FMODE_EXEC flag (which can then trigger a
-> >> fanotify/FAN_OPEN_EXEC event).
-> >> [...]
+On Thu, Jul 16, 2020 at 05:04:14PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-07-16 16:47:28 [+0200], Uladzislau Rezki wrote:
+> > On Thu, Jul 16, 2020 at 04:25:37PM +0200, Sebastian Andrzej Siewior wrote:
+> > > On 2020-07-16 11:19:13 [+0200], Uladzislau Rezki wrote:
+> > > > Sebastian, could you please confirm that if that patch that is in
+> > > > question fixes it?
+> > > > 
+> > > > It would be appreciated!
+> > > 
+> > > So that preempt disable should in terms any warnings. However I don't
+> > > think that it is strictly needed and from scheduling point of view you
+> > > forbid a CPU migration which might be good otherwise.
+> > >
+> > Please elaborate your point regarding "i do not think it is strictly needed".
 > > 
-> > Adding __FMODE_EXEC here will immediately change the behaviors of NFS
-> > and fsnotify. If that's going to happen, I think it needs to be under
-> > the control of the later patches doing the behavioral controls.
-> > (specifically, NFS looks like it completely changes its access control
-> > test when this is set and ignores the read/write checks entirely, which
-> > is not what's wanted).
+> > Actually i can rework the patch to remove even such preempt_enable/disable
+> > to stay on the same CPU, but i do not see the point of doing it.
+> > 
+> > Do you see the point?
 > 
-> __FMODE_EXEC was suggested by Jan Kara and Matthew Bobrowski because of
-> fsnotify. However, the NFS handling of SUID binaries [1] indeed leads to
-> an unintended behavior. This also means that uselib(2) shouldn't work
-> properly with NFS. I can remove the __FMODE_EXEC flag for now.
+> You disable preemption for what reason? It is not documented, it is not
+> obvious - why is it required?
+> 
+I can document it. Will it work for you? Actually i can get rid of it
+but there can be other side effects which also can be addressed but
+i do not see any issues of doing just "preemtion off". Please have
+a look at sources across the kernel how many times a memory is
+requested in atomic context:
 
-I kind of wonder if we need to more completely fix __FMODE_EXEC?
+<snip>
+preempt_disable() os any spinlock or raw_locks, etc..
+__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+or
+kmalloc(GFP_ATOMIC);
+<snip>
 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=f8d9a897d4384b77f13781ea813156568f68b83e
+all those flags say to page allocator or SLAB that sleeping is not
+allowed.
 
-Hmpf, this implies that "fmode" should contain MAY_EXEC? It really looks
-like __FMODE_EXEC is a hack for places where only "flags" were passed
-around, and this only seems to be an issue for NFS at this point? And it
-should be fixable for fsnotify too?
+> > As for scheduling point of view. Well, there are many places when there
+> > is a demand in memory or pages from atomic context. Also, getting a page
+> > is not considered as a hot path in the kfree_rcu(). 
+> 
+> If you disable preemption than you assume that you wouldn't be atomic
+> otherwise. You say that at this point it is not a hot path so if this is
+> not *that* important why not allow preemption and allow the schedule to
+>
+If i disable preemption, it means that atomic section begins. Let me
+explain why i disable preemption.
 
-Hmm. (And nothing should use uselib anyway...)
+If i invoke a page allocator in full preemptable context, it can be
+that we get a page but end up on another CPU. That another CPU does
+not need it, because it has some free spots in its internal array
+for pointer collecting. If we stay on the same CPU we eliminate it.
 
--- 
-Kees Cook
+The question is what to do with that page. I see two solutions.
+
+1) Queue it to the CPU2 page cache for further reuse or freeing.
+2) Just proceed with newly allocated page thinking that previous
+   "bulk arry" is partly populated, i.e. it can be that previous
+   one has plenty of free spots.
+
+Actually that is why i want to stay on the same CPU.
+
+>
+> place you somewhere else if the scheduler decides that it is a good idea.
+> 
+It is not a hot path, really. I do not consider it as critical, since the
+page allocator will not do much work(we use restricted flags), on a high
+level it is limited to just ask a page and return it. If no page, check
+watermark, if low, wakeup kswapd and return NULL, that is it.
+
+> > > Also if interrupts and everything is enabled then someone else might
+> > > invoke kfree_rcu() from BH context for instance.
+> > > 
+> > And what? What is a problem here, please elaborate if you see any
+> > issues.
+> 
+> That the kfree_rcu() caller from BH context will end up here as well,
+> asking for a page.
+> 
+Please think about that CPU0 is somewhere in __get_free_page(), when it
+is still there, there comes an interrupt that also calls kfree_rcu()
+and end up somewhere in __get_free_page(). To prevent such internal
+critical sections usually the code disables irqs and do some critical
+things to prevent of breaking something. 
+
+So, basically __get_free_page() can be interrupted and being invoked
+one more time on the same CPU. It uses spin_lockirqsave() for such
+scenarios.
+
+Our internal lock is dropped.
+
+--
+Vlad Rezki
