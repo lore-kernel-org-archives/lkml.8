@@ -3,145 +3,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6774AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 484812074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F04D2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGPINl (ORCPT
+        id S1726944AbgGPINx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:13:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60846 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725831AbgGPINk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:13:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E1DE5B781;
-        Thu, 16 Jul 2020 08:13:42 +0000 (UTC)
-Date:   Thu, 16 Jul 2020 10:13:38 +0200
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Nayna Jain <nayna@linux.ibm.com>
-Cc:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Daniel Axtens <dja@axtens.net>
-Subject: Re: [PATCH v3] powerpc/pseries: detect secure and trusted boot state
- of the system.
-Message-ID: <20200716081337.GB32107@kitsune.suse.cz>
-References: <1594813921-12425-1-git-send-email-nayna@linux.ibm.com>
+        Thu, 16 Jul 2020 04:13:53 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51374 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725831AbgGPINw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:13:52 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 53DAB79A73CA35C5FB37;
+        Thu, 16 Jul 2020 16:13:48 +0800 (CST)
+Received: from [10.174.179.105] (10.174.179.105) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 16 Jul
+ 2020 16:13:46 +0800
+Subject: Re: [PATCH v2] scsi: fcoe: add missed kfree() in an error path
+To:     "Ewan D. Milne" <emilne@redhat.com>, <hare@suse.de>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <robert.w.love@intel.com>, <Neerav.Parikh@intel.com>,
+        <Markus.Elfring@web.de>
+References: <20200709120546.38453-1-jingxiangfeng@huawei.com>
+ <d1fa9e60b559b6bf3a37ef5a6aef2bd7bd6e1681.camel@redhat.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
+Message-ID: <5F100C39.5070503@huawei.com>
+Date:   Thu, 16 Jul 2020 16:13:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594813921-12425-1-git-send-email-nayna@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d1fa9e60b559b6bf3a37ef5a6aef2bd7bd6e1681.camel@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.105]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 07:52:01AM -0400, Nayna Jain wrote:
-> The device-tree property to check secure and trusted boot state is
-> different for guests(pseries) compared to baremetal(powernv).
-> 
-> This patch updates the existing is_ppc_secureboot_enabled() and
-> is_ppc_trustedboot_enabled() functions to add support for pseries.
-> 
-> The secureboot and trustedboot state are exposed via device-tree property:
-> /proc/device-tree/ibm,secure-boot and /proc/device-tree/ibm,trusted-boot
-> 
-> The values of ibm,secure-boot under pseries are interpreted as:
-                                      ^^^
-> 
-> 0 - Disabled
-> 1 - Enabled in Log-only mode. This patch interprets this value as
-> disabled, since audit mode is currently not supported for Linux.
-> 2 - Enabled and enforced.
-> 3-9 - Enabled and enforcing; requirements are at the discretion of the
-> operating system.
-> 
-> The values of ibm,trusted-boot under pseries are interpreted as:
-                                       ^^^
-These two should be different I suppose?
+
+
+On 2020/7/14 1:53, Ewan D. Milne wrote:
+> See below.
+>
+> On Thu, 2020-07-09 at 20:05 +0800, Jing Xiangfeng wrote:
+>> fcoe_fdmi_info() misses to call kfree() in an error path.
+>> Add a label 'free_fdmi' and jump to it.
+>>
+>> Fixes: f07d46bbc9ba ("fcoe: Fix smatch warning in fcoe_fdmi_info
+>> function")
+>> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+>> ---
+>>   drivers/scsi/fcoe/fcoe.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
+>> index 25dae9f0b205..a63057a03772 100644
+>> --- a/drivers/scsi/fcoe/fcoe.c
+>> +++ b/drivers/scsi/fcoe/fcoe.c
+>> @@ -830,7 +830,7 @@ static void fcoe_fdmi_info(struct fc_lport
+>> *lport, struct net_device *netdev)
+>>   		if (rc) {
+>>   			printk(KERN_INFO "fcoe: Failed to retrieve FDMI
+>> "
+>>   					"information from netdev.\n");
+>> -			return;
+>> +			goto free_fdmi;
+>>   		}
+>>
+>>   		snprintf(fc_host_serial_number(lport->host),
+>> @@ -868,6 +868,7 @@ static void fcoe_fdmi_info(struct fc_lport
+>> *lport, struct net_device *netdev)
+>>
+>>   		/* Enable FDMI lport states */
+>>   		lport->fdmi_enabled = 1;
+>> +free_fdmi:
+>>   		kfree(fdmi);
+>>   	} else {
+>>   		lport->fdmi_enabled = 0;
+>
+> Normally I would like to see goto labels for error paths outside
+> conditionals and at the end of the function.
+
+I agree.
+
+  In this case it would
+> seem to be cleaner to put an else { } clause in the if (rc) above
+> around the snprintf() calls.
+
+It is ok with me. v1 is also a simpler way.
+
++Hannes, Which is preferable?
 
 Thanks
 
-Michal
-> 0 - Disabled
-> 1 - Enabled
-> 
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> Reviewed-by: Daniel Axtens <dja@axtens.net>
-> ---
-> v3:
-> * fixed double check. Thanks Daniel for noticing it.
-> * updated patch description.
-> 
-> v2:
-> * included Michael Ellerman's feedback.
-> * added Daniel Axtens's Reviewed-by.
-> 
->  arch/powerpc/kernel/secure_boot.c | 19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
-> index 4b982324d368..118bcb5f79c4 100644
-> --- a/arch/powerpc/kernel/secure_boot.c
-> +++ b/arch/powerpc/kernel/secure_boot.c
-> @@ -6,6 +6,7 @@
->  #include <linux/types.h>
->  #include <linux/of.h>
->  #include <asm/secure_boot.h>
-> +#include <asm/machdep.h>
->  
->  static struct device_node *get_ppc_fw_sb_node(void)
->  {
-> @@ -23,12 +24,19 @@ bool is_ppc_secureboot_enabled(void)
->  {
->  	struct device_node *node;
->  	bool enabled = false;
-> +	u32 secureboot;
->  
->  	node = get_ppc_fw_sb_node();
->  	enabled = of_property_read_bool(node, "os-secureboot-enforcing");
-> -
->  	of_node_put(node);
->  
-> +	if (enabled)
-> +		goto out;
-> +
-> +	if (!of_property_read_u32(of_root, "ibm,secure-boot", &secureboot))
-> +		enabled = (secureboot > 1);
-> +
-> +out:
->  	pr_info("Secure boot mode %s\n", enabled ? "enabled" : "disabled");
->  
->  	return enabled;
-> @@ -38,12 +46,19 @@ bool is_ppc_trustedboot_enabled(void)
->  {
->  	struct device_node *node;
->  	bool enabled = false;
-> +	u32 trustedboot;
->  
->  	node = get_ppc_fw_sb_node();
->  	enabled = of_property_read_bool(node, "trusted-enabled");
-> -
->  	of_node_put(node);
->  
-> +	if (enabled)
-> +		goto out;
-> +
-> +	if (!of_property_read_u32(of_root, "ibm,trusted-boot", &trustedboot))
-> +		enabled = (trustedboot > 0);
-> +
-> +out:
->  	pr_info("Trusted boot mode %s\n", enabled ? "enabled" : "disabled");
->  
->  	return enabled;
-> -- 
-> 2.26.2
-> 
+>
+> -Ewan
+>
+> .
+>
