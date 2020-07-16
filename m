@@ -2,125 +2,75 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5454AC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BA0C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C07320787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5081B20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgGPNzt (ORCPT
+        id S1729008AbgGPN4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:55:49 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3709 "EHLO mga02.intel.com"
+        Thu, 16 Jul 2020 09:56:25 -0400
+Received: from elvis.franken.de ([193.175.24.41]:38517 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728418AbgGPNzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:55:49 -0400
-IronPort-SDR: aIUu1wy8ZCtLFcPtNv7B0ojtJxap6OcF+fNivX3D51V+0Ae2kaSLGSrFbKP9XFxqu9SWpc10JY
- C6PwqwSv9dgA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="137503104"
-X-IronPort-AV: E=Sophos;i="5.75,359,1589266800"; 
-   d="scan'208";a="137503104"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 06:55:42 -0700
-IronPort-SDR: B4HalyJrsEM8N/ae32r6qbEtX7zWufdSx74IGi0JnQJHSpsFR6gjSFx7/O/WNot/3dOPe6M1uO
- 4ShV7/gXMiKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,359,1589266800"; 
-   d="scan'208";a="325150392"
-Received: from lettner-mobl.ger.corp.intel.com (HELO localhost) ([10.252.32.212])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Jul 2020 06:55:21 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     x86@kernel.org, linux-sgx@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
-        cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: [PATCH v36 10/24] mm: Add vm_ops->mprotect()
-Date:   Thu, 16 Jul 2020 16:52:49 +0300
-Message-Id: <20200716135303.276442-11-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+        id S1728087AbgGPN4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 09:56:24 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jw4N4-0001gW-00; Thu, 16 Jul 2020 15:56:22 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id B06E7C0815; Thu, 16 Jul 2020 15:56:05 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 15:56:05 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        "paulburton@kernel.org" <paulburton@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MIPS: Replace HTTP links with HTTPS ones
+Message-ID: <20200716135605.GA15355@alpha.franken.de>
+References: <20200713085243.32566-1-grandmaster@al2klimov.de>
+ <59938583-2ce4-c7bf-c454-89a1559be846@flygoat.com>
+ <CAHiYmc7ax=A=Tb59wh4+yHx=2MEKc3G==tun5nsefbKvsceBHg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHiYmc7ax=A=Tb59wh4+yHx=2MEKc3G==tun5nsefbKvsceBHg@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Wed, Jul 15, 2020 at 12:07:55PM +0200, Aleksandar Markovic wrote:
+> On Tuesday, July 14, 2020, Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+> > 在 2020/7/13 16:52, Alexander A. Klimov 写道:
+> >>           virtual processors which supports SMP. This is equivalent to the
+> >>           Intel Hyperthreading feature. For further information go to
+> >> -         <http://www.imgtec.com/mips/mips-multithreading.asp>.
+> >> +         <https://www.imgtec.com/mips/mips-multithreading.asp>.
+> >>
+> >
+> > All MIPS content have been removed from IMGTEC's site, we'd better remove
+> > this link?
+> >
+> >
+> Perhaps it is better to replace it with:
+> 
+> https://www.mips.com/products/architectures/ase/multi-threading/
+> 
+> ?
 
-Add vm_ops()->mprotect() for additional constraints for a VMA.
+yes, looks better.
 
-Intel Software Guard eXtensions (SGX) will use this callback to add two
-constraints:
+Thomas.
 
-1. Verify that the address range does not have holes: each page address
-   must be filled with an enclave page.
-2. Verify that VMA permissions won't surpass the permissions of any enclave
-   page within the address range. Enclave cryptographically sealed
-   permissions for each page address that set the upper limit for possible
-   VMA permissions. Not respecting this can cause #GP's to be emitted.
-
-Cc: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Acked-by: Jethro Beekman <jethro@fortanix.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- include/linux/mm.h | 3 +++
- mm/mprotect.c      | 5 ++++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index dc7b87310c10..458e8cb99aaf 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -542,6 +542,9 @@ struct vm_operations_struct {
- 	void (*close)(struct vm_area_struct * area);
- 	int (*split)(struct vm_area_struct * area, unsigned long addr);
- 	int (*mremap)(struct vm_area_struct * area);
-+	int (*mprotect)(struct vm_area_struct *vma,
-+			struct vm_area_struct **pprev, unsigned long start,
-+			unsigned long end, unsigned long newflags);
- 	vm_fault_t (*fault)(struct vm_fault *vmf);
- 	vm_fault_t (*huge_fault)(struct vm_fault *vmf,
- 			enum page_entry_size pe_size);
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index ce8b8a5eacbb..f170f3da8a4f 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -610,7 +610,10 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
- 		tmp = vma->vm_end;
- 		if (tmp > end)
- 			tmp = end;
--		error = mprotect_fixup(vma, &prev, nstart, tmp, newflags);
-+		if (vma->vm_ops && vma->vm_ops->mprotect)
-+			error = vma->vm_ops->mprotect(vma, &prev, nstart, tmp, newflags);
-+		else
-+			error = mprotect_fixup(vma, &prev, nstart, tmp, newflags);
- 		if (error)
- 			goto out;
- 		nstart = tmp;
 -- 
-2.25.1
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
