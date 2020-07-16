@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA27EC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7972CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA3920775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6070F2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgGPInp (ORCPT
+        id S1728274AbgGPIoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:43:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51044 "EHLO huawei.com"
+        Thu, 16 Jul 2020 04:44:10 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51484 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725921AbgGPIno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:43:44 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 18DE657D27D285A20981;
-        Thu, 16 Jul 2020 16:43:43 +0800 (CST)
+        id S1725921AbgGPIoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:44:09 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 069ED22CDA09305709ED;
+        Thu, 16 Jul 2020 16:44:08 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Jul 2020 16:43:41 +0800
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 16 Jul 2020 16:44:07 +0800
 From:   Qinglang Miao <miaoqinglang@huawei.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] hsr: Convert to DEFINE_SHOW_ATTRIBUTE
-Date:   Thu, 16 Jul 2020 16:47:28 +0800
-Message-ID: <20200716084728.7944-1-miaoqinglang@huawei.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] debugobjects: Convert to DEFINE_SHOW_ATTRIBUTE
+Date:   Thu, 16 Jul 2020 16:47:47 +0800
+Message-ID: <20200716084747.8034-1-miaoqinglang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -49,54 +49,32 @@ Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 
 Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 ---
- net/hsr/hsr_debugfs.c | 20 ++------------------
- 1 file changed, 2 insertions(+), 18 deletions(-)
+ lib/debugobjects.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/net/hsr/hsr_debugfs.c b/net/hsr/hsr_debugfs.c
-index d994c83b0..ed7f53475 100644
---- a/net/hsr/hsr_debugfs.c
-+++ b/net/hsr/hsr_debugfs.c
-@@ -54,16 +54,7 @@ hsr_node_table_show(struct seq_file *sfp, void *data)
+diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+index 5d2bbfc55..916a5c492 100644
+--- a/lib/debugobjects.c
++++ b/lib/debugobjects.c
+@@ -1023,17 +1023,7 @@ static int debug_stats_show(struct seq_file *m, void *v)
  	return 0;
  }
  
--/* hsr_node_table_open - Open the node_table file
-- *
-- * Description:
-- * This routine opens a debugfs file node_table of specific hsr device
-- */
--static int
--hsr_node_table_open(struct inode *inode, struct file *filp)
+-static int debug_stats_open(struct inode *inode, struct file *filp)
 -{
--	return single_open(filp, hsr_node_table_show, inode->i_private);
+-	return single_open(filp, debug_stats_show, NULL);
 -}
-+DEFINE_SHOW_ATTRIBUTE(hsr_node_table);
- 
- void hsr_debugfs_rename(struct net_device *dev)
- {
-@@ -78,13 +69,6 @@ void hsr_debugfs_rename(struct net_device *dev)
- 		priv->node_tbl_root = d;
- }
- 
--static const struct file_operations hsr_fops = {
--	.open	= hsr_node_table_open,
--	.read_iter	= seq_read_iter,
--	.llseek = seq_lseek,
--	.release = single_release,
--};
 -
- /* hsr_debugfs_init - create hsr node_table file for dumping
-  * the node table
-  *
-@@ -106,7 +90,7 @@ void hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev)
+-static const struct file_operations debug_stats_fops = {
+-	.open		= debug_stats_open,
+-	.read_iter		= seq_read_iter,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-};
++DEFINE_SHOW_ATTRIBUTE(debug_stats);
  
- 	de = debugfs_create_file("node_table", S_IFREG | 0444,
- 				 priv->node_tbl_root, priv,
--				 &hsr_fops);
-+				 &hsr_node_table_fops);
- 	if (IS_ERR(de)) {
- 		pr_err("Cannot create hsr node_table file\n");
- 		debugfs_remove(priv->node_tbl_root);
+ static int __init debug_objects_init_debugfs(void)
+ {
 -- 
 2.17.1
 
