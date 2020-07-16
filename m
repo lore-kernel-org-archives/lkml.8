@@ -2,61 +2,125 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5726EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354E2C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABCFA2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:27:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="NXoL1QNe"
+	by mail.kernel.org (Postfix) with ESMTP id 0D1182065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgGPP10 (ORCPT
+        id S1729146AbgGPPWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:27:26 -0400
-Received: from mx3.wp.pl ([212.77.101.9]:43640 "EHLO mx3.wp.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728435AbgGPP1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:27:25 -0400
-Received: (wp-smtpd smtp.wp.pl 19161 invoked from network); 16 Jul 2020 17:20:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1594912843; bh=9fW0B4oNSv7yIfxXl+ZhVAEj7F5U6ofqhppdKS8yicI=;
-          h=From:To:Cc:Subject;
-          b=NXoL1QNeh7f5kKHa8b64OONYUMK8ef8n4vBRndg256WRGXWlJ4nzqK/NSauttb518
-           6FiteDjqG4DvNrD+hn5KEZ5row1gIRJaAS8VFI6skKTqMPxyMDwtLfF+oLzIovNTrn
-           bJQLNHSEDuhUc0/O0Dl1JsQaWZfuDpLTdd+Cl9t4=
-Received: from unknown (HELO kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com) (kubakici@wp.pl@[163.114.132.6])
-          (envelope-sender <kubakici@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <miaoqinglang@huawei.com>; 16 Jul 2020 17:20:43 +0200
-Date:   Thu, 16 Jul 2020 08:20:36 -0700
-From:   Jakub Kicinski <kubakici@wp.pl>
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-wireless@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] mt7601u: Convert to DEFINE_SHOW_ATTRIBUTE
-Message-ID: <20200716082036.76f47d2f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200716085749.11105-1-miaoqinglang@huawei.com>
-References: <20200716085749.11105-1-miaoqinglang@huawei.com>
+        Thu, 16 Jul 2020 11:22:38 -0400
+Received: from smtp-1908.mail.infomaniak.ch ([185.125.25.8]:48189 "EHLO
+        smtp-1908.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728949AbgGPPWh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:22:37 -0400
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4B6yfy65zfzlhfRc;
+        Thu, 16 Jul 2020 17:22:34 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4B6yfq65Djzlh8TX;
+        Thu, 16 Jul 2020 17:22:27 +0200 (CEST)
+Subject: Re: [PATCH v6 7/7] ima: add policy support for the new file open
+ MAY_OPENEXEC flag
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200714181638.45751-1-mic@digikod.net>
+ <20200714181638.45751-8-mic@digikod.net> <202007151339.283D7CD@keescook>
+ <8df69733-0088-3e3c-9c3d-2610414cea2b@digikod.net>
+ <61c05cb0-a956-3cc7-5dab-e11ebf0e95bf@infradead.org>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <639b1727-2d61-5c29-623f-87eaf5a66a03@digikod.net>
+Date:   Thu, 16 Jul 2020 17:22:26 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-WP-MailID: b8cff0b399aaf7118fc46ef4354c9176
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000001 [UbKj]                               
+In-Reply-To: <61c05cb0-a956-3cc7-5dab-e11ebf0e95bf@infradead.org>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 16:57:49 +0800 Qinglang Miao wrote:
-> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
-> 
-> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
+On 16/07/2020 16:59, Randy Dunlap wrote:
+> On 7/16/20 7:40 AM, Mickaël Salaün wrote:
+>>
+>> On 15/07/2020 22:40, Kees Cook wrote:
+>>> On Tue, Jul 14, 2020 at 08:16:38PM +0200, Mickaël Salaün wrote:
+>>>> From: Mimi Zohar <zohar@linux.ibm.com>
+>>>>
+>>>> The kernel has no way of differentiating between a file containing data
+>>>> or code being opened by an interpreter.  The proposed O_MAYEXEC
+>>>> openat2(2) flag bridges this gap by defining and enabling the
+>>>> MAY_OPENEXEC flag.
+>>>>
+>>>> This patch adds IMA policy support for the new MAY_OPENEXEC flag.
+>>>>
+>>>> Example:
+>>>> measure func=FILE_CHECK mask=^MAY_OPENEXEC
+>>>> appraise func=FILE_CHECK appraise_type=imasig mask=^MAY_OPENEXEC
+>>>>
+>>>> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+>>>> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+>>>> Acked-by: Mickaël Salaün <mic@digikod.net>
+>>>
+>>> (Process nit: if you're sending this on behalf of another author, then
+>>> this should be Signed-off-by rather than Acked-by.)
+>>
+>> I'm not a co-author of this patch.
+>>
+> 
+> from Documentation/process/submitting-patches.rst:
+> 
+> The Signed-off-by: tag indicates that the signer was involved in the
+> development of the patch, or that he/she was in the patch's delivery path.
+>                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+OK, I though such tag had to go along with the From/Author, the
+Committer or a Co-developed-by tag, but there is also this specific
+case. I'll fix that in the next series.
