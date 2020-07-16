@@ -2,144 +2,102 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A94C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51A5C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A56EB2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00E9207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:03:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="alO1yY32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbgGPWDZ (ORCPT
+        id S1726691AbgGPWDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 18:03:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40676 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726002AbgGPWDY (ORCPT
+        Thu, 16 Jul 2020 18:03:34 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:37492 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgGPWDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 18:03:24 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GM2Wtq059669;
-        Thu, 16 Jul 2020 18:03:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32a45by6mx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 18:03:17 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GM3H0N062253;
-        Thu, 16 Jul 2020 18:03:17 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32a45by6mh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 18:03:17 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GLjTAM023747;
-        Thu, 16 Jul 2020 22:03:15 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma01wdc.us.ibm.com with ESMTP id 3275294272-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 22:03:15 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GM3CuA31851182
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 22:03:12 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79F82C6062;
-        Thu, 16 Jul 2020 22:03:14 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4DAC1C606C;
-        Thu, 16 Jul 2020 22:03:11 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.8.110])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Jul 2020 22:03:10 +0000 (GMT)
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466091925.24747.6840028682768745598.stgit@hbathini.in.ibm.com> <87365s9ysj.fsf@morokweng.localdomain> <baa29ea9-7698-a7e8-e5a4-c9f842e1fcc8@linux.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Young <dyoung@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v3 06/12] ppc64/kexec_file: restrict memory usage of kdump kernel
-In-reply-to: <baa29ea9-7698-a7e8-e5a4-c9f842e1fcc8@linux.ibm.com>
-Date:   Thu, 16 Jul 2020 19:03:08 -0300
-Message-ID: <875zance3n.fsf@morokweng.localdomain>
+        Thu, 16 Jul 2020 18:03:34 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 41FA820B4909;
+        Thu, 16 Jul 2020 15:03:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 41FA820B4909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594937013;
+        bh=BO4avn92Gom5gc+t7EdSdrx5xcXiDN2axravan300r8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=alO1yY324W0XtvJF3jJ20uUtbfZIxvf5wdeVrVykT/x6h7DAdLUYXLhQmKKM1FSLm
+         QrQ8rV0+7PDptRV66+ZZQExLfZNMxwrenrawEk4eIjI5uVEm2JZhZ7t/gi9fzXKtBb
+         4QLIkDA5LTA6svI/oegPWWMZ2q4ojUcWUeUrjHFg=
+Subject: Re: [PATCH v2 4/5] LSM: Define SELinux function to measure security
+ state
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200716174351.20128-1-nramas@linux.microsoft.com>
+ <20200716174351.20128-5-nramas@linux.microsoft.com>
+ <CAEjxPJ43eXK0xgrE=gDxZVg2SDTz4bkd7N4otjk-cvxf3fKL-g@mail.gmail.com>
+ <9478ddca-8298-5170-836d-8cbc7a070df2@linux.microsoft.com>
+ <CAEjxPJ5p_T+C1NDz3iF7fvQzQAURpAcipvQfQXLZTfLP4Wiqbg@mail.gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <37d3d380-f4e2-1bdc-88c8-7bb8ffbee612@linux.microsoft.com>
+Date:   Thu, 16 Jul 2020 15:03:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 phishscore=0
- spamscore=100 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- impostorscore=0 mlxscore=100 bulkscore=0 adultscore=0 malwarescore=0
- mlxlogscore=-1000 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007160142
+In-Reply-To: <CAEjxPJ5p_T+C1NDz3iF7fvQzQAURpAcipvQfQXLZTfLP4Wiqbg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/16/20 12:45 PM, Stephen Smalley wrote:
+> On Thu, Jul 16, 2020 at 3:13 PM Lakshmi Ramasubramanian
+> <nramas@linux.microsoft.com> wrote:
+>>
+>> On 7/16/20 11:54 AM, Stephen Smalley wrote:
+>>> Not sure about this error handling approach (silent, proceeding as if
+>>> the length was zero and then later failing with ENOMEM on every
+>>> attempt?). I'd be more inclined to panic/BUG here but I know Linus
+>>> doesn't like that.
+>> I am not sure if failing (kernel panic/BUG) to "measure" LSM data under
+>> memory pressure conditions is the right thing. But I am open to treating
+>> this error as a fatal error. Please let me know.
+> 
+> Let's at least log an error message since it otherwise silently
+> disables all measuring of security state.
+Agree - will log error messages as appropriate.
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
+> Also not sure why we bother returning errors from
+> selinux_measure_data() since nothing appears to check or use the
+> result.
+Maybe SELinux can log audit messages on failures, but I guess it may be 
+better to do that closer to where the error occurs.
 
-> On 16/07/20 4:22 am, Thiago Jung Bauermann wrote:
->> 
->> Hari Bathini <hbathini@linux.ibm.com> writes:
->> 
->
-> <snip>
->
->>> +/**
->>> + * get_node_path - Get the full path of the given node.
->>> + * @dn:            Node.
->>> + * @path:          Updated with the full path of the node.
->>> + *
->>> + * Returns nothing.
->>> + */
->>> +static void get_node_path(struct device_node *dn, char *path)
->>> +{
->>> +	if (!dn)
->>> +		return;
->>> +
->>> +	get_node_path(dn->parent, path);
->> 
->> Is it ok to do recursion in the kernel? In this case I believe it's not
->> problematic since the maximum call depth will be the maximum depth of a
->> device tree node which shouldn't be too much. Also, there are no local
->> variables in this function. But I thought it was worth mentioning.
->
-> You are right. We are better off avoiding the recursion here. Will
-> change it to an iterative version instead.
+Will change selinux_measure_data() to void function.
 
-Ok.
+> Don't know if integrity/IMA has any equivalent to the audit
+> subsystem's concept of audit_failure settings to control whether
+> errors that prevent auditing (measuring) are handled silently, with a
+> log message, or via a panic.  If not, I guess that can be explored
+> separately.
+> 
 
->>> +	 * each representing a memory range.
->>> +	 */
->>> +	ranges = (len >> 2) / (n_mem_addr_cells + n_mem_size_cells);
->>> +
->>> +	for (i = 0; i < ranges; i++) {
->>> +		base = of_read_number(prop, n_mem_addr_cells);
->>> +		prop += n_mem_addr_cells;
->>> +		end = base + of_read_number(prop, n_mem_size_cells) - 1;
->
-> prop is not used after the above.
->
->> You need to `prop += n_mem_size_cells` here.
->
-> But yeah, adding it would make it look complete in some sense..
+Yes - integrity subsystem logs audit messages for errors\failures.
 
-Isn't it used in the next iteration of the loop?
+  -lakshmi
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+
