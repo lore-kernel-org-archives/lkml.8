@@ -2,127 +2,78 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78458C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BDCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9912067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:23:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="eEpd37B6"
+	by mail.kernel.org (Postfix) with ESMTP id 0ECA12067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:23:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgGPHXX (ORCPT
+        id S1728276AbgGPHX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:23:23 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:39157 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726069AbgGPHXW (ORCPT
+        Thu, 16 Jul 2020 03:23:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47491 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbgGPHX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:23:22 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id vyEcjTVy0yPEdvyEgj3GW2; Thu, 16 Jul 2020 09:23:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1594884199; bh=VSXAybE9aorsGhHWcD4kPLlmmss3u6qmIv6iB6zxOuw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=eEpd37B6zIN93WW+VPbMQ65FzbCxnCS9oCwJgQxdURnEMvHrQftmKUkyZXUrFBMqJ
-         KVkaycysoknaY86Aj+krfkW3fCUTtXTKWib7coOH/4rmYwdEvA4DFlTTeY5J0sjpdw
-         +hbxl+xEGH0zFo3W2uieDNuGLBFTr87p7vp6u4Z/1XZHCLBr3Bhv5xy+ERCNa6EY8j
-         vynrBfoEvinr8n2wm+737OeD00uiyTz3QtQvd4OBJkrjZiVZaAPHlXoo3ycko/RHQn
-         79x/9CKLTk5i7OIzFyqjrd2sP/LEgMp9slM4xPlUzIH2wyEdCE/2da8PEEc2CBkdL6
-         /Q8oN3AkuLx5g==
-Subject: Re: [PATCH 02/10] media: uapi: h264: Further clarify scaling lists
- order
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-References: <20200715202233.185680-1-ezequiel@collabora.com>
- <20200715202233.185680-3-ezequiel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <bfb5d0df-779f-78d2-fc48-3c6056f5fdd3@xs4all.nl>
-Date:   Thu, 16 Jul 2020 09:23:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 03:23:26 -0400
+Received: from mail-vs1-f72.google.com ([209.85.217.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <paolo.pisati@canonical.com>)
+        id 1jvyEm-00048z-FZ
+        for linux-kernel@vger.kernel.org; Thu, 16 Jul 2020 07:23:24 +0000
+Received: by mail-vs1-f72.google.com with SMTP id h1so843533vsk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:23:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4VmvjZDsnQSCsnAdrtuni5GNCSEbuCmNLcMY3wa2Le0=;
+        b=q+TbdSrYoZZ6HHvEyO2sOWiqToh8zwJkwlXnKoGuAkesuOrgWI55Q1Enz/NhL6Aj0x
+         ChK2omhVxOM+A4ZWfEmM7aC491X3XxwqVPAqtTHYs7fzUPOprAjOJrDuI28zY7XPj1Td
+         q6h8UyBXTkZDkvt+CMh+g2QDA6AmYBMmeUtJnWdDEo3L+jXDn/D/pL2Opt5MHQ1vO8+y
+         0knpLT8GwFF8taMSBXNvgZHifBn+s/GHY7Y3p1iuzPsqOhNGHo1T5Z2mDW/8FigllfHY
+         byyMf5e+RCGbqUU+iAP5FU7LY/hscNfT9e8obDDAxR2nztd/HeYbQMiQbLVa2naVeJ6t
+         DwWw==
+X-Gm-Message-State: AOAM530oi3yjdUzlYK2ZEtVQXirCiuQrEDwQXb4xe1cmwUGsjFQa0/J7
+        nS/abdxbbOY2DEVcNGhZP2So1ATheOxKg6W2NfViFQUWqZATGwDLFBt4bDkIWwfuOBD1o3T2Wtx
+        KTmvqdc4PJhILwrdY18jFNe0t3ie4R6rKxnTUNe3K1MghA7+0vi6P9Vobjg==
+X-Received: by 2002:a67:ea92:: with SMTP id f18mr2022730vso.223.1594884203580;
+        Thu, 16 Jul 2020 00:23:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyS+5S514mTPFzXqUXVOTEZkeMuUy2FYfT9xaHwmafmZRwQscM2lA1wpLggKg5Y3dTj0KuOtDWJMMfXoNs0idk=
+X-Received: by 2002:a67:ea92:: with SMTP id f18mr2022712vso.223.1594884203322;
+ Thu, 16 Jul 2020 00:23:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200715202233.185680-3-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfImMhQ7c+BIsZ9AqMnePPQ/AN5ldCv/cinMIdByxFnEhoK5ohC0mMuhrKNMvYEhs5lHor2olkGMhT8MkOEh0z1wsu+aCLpqcr8y+5EToYgRDDRvMRCrF
- bux0cEc1KTIcXF9D5bSeUrVsT5yKrZzh4kN1+yp+Dl7/NZ9mwqMKTZr+UkMIkcPnGNucILOeBVws+6rOrUEIg/tx9nzs4XbZPDFnTe9KOKZLRg2kSD6g/BZr
- oIqlPOZgJDF72FqixedYcW1D/A0RaI8FwDoS0zcxVs0ZwxRpn2WCkaS0hxv0KeXsN3oeS1Ey6d4IfGxiX8/6adVf9O3fOiV69kuZA1/PKFOSRgTR5wjPBw2F
- PRvcjSMQBq9N2gNGL0meVLe2wwt1go92kSiKan19DNioRXxZPAOcE86cwxiLN98NWfPcfZJsIAbVulu8R5YJuwsgYZWt0PVkt6C2ih+sqhwLmne0wf/2iGnY
- 5G4g9ooZQWLYqMwg9HsmNcZ5GT87ohIzpMvx8ITZlnJhFoO/+vEZnV6gaqfyaGsiL0hfEuweU8GZD0PGR4USTclb+OAg7enbl+Wa3A==
+References: <20200714124032.49133-1-paolo.pisati@canonical.com> <20200715180144.02b83ed5@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200715180144.02b83ed5@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Paolo Pisati <paolo.pisati@canonical.com>
+Date:   Thu, 16 Jul 2020 09:23:12 +0200
+Message-ID: <CAMsH0TQLKba_6G5CDpY4pDpr_PWVu0yE_c+LKoa+2fm2f4bjBQ@mail.gmail.com>
+Subject: Re: [PATCH] selftests: net: ip_defrag: modprobe missing
+ nf_defrag_ipv6 support
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/2020 22:22, Ezequiel Garcia wrote:
-> Commit 0b0393d59eb4a ("media: uapi: h264: clarify
-> expected scaling_list_4x4/8x8 order") improved the
-> documentation on H264 scaling lists order.
-> 
-> This commit improves the documentation by clarifying
-> that the lists themselves are expected in matrix order.
+On Thu, Jul 16, 2020 at 3:01 AM Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> Any reason you add this command before set -e ?
+>
+> It seems we want the script to fail if module can't be loaded.
 
-"matrix order" is not a well defined term. Especially since different
-programming languages lay out matrices differently (e.g. fortran uses
-column-major order). Perhaps something like this is more unambiguous:
+Cause if CONFIG_NF_DEFRAG_IPV6=y, the script would unnecessarily fail.
 
-"The values on each scaling list are in row-major order."
-
-BTW, why not be explicit and use:
-
-__u8 scaling_list_4x4[6][4][4];
-__u8 scaling_list_8x8[6][8][8];
-
-That makes it explicit and the order is just that of what the C language
-uses.
-
-Regards,
-
-	Hans
-
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index c2e17c02f77e..16bfc98ab2f6 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -1725,12 +1725,14 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->        - ``scaling_list_4x4[6][16]``
->        - Scaling matrix after applying the inverse scanning process.
->          Expected list order is Intra Y, Intra Cb, Intra Cr, Inter Y,
-> -        Inter Cb, Inter Cr.
-> +        Inter Cb, Inter Cr. The values on each scaling list are
-> +        expected in matrix order.
->      * - __u8
->        - ``scaling_list_8x8[6][64]``
->        - Scaling matrix after applying the inverse scanning process.
->          Expected list order is Intra Y, Inter Y, Intra Cb, Inter Cb,
-> -        Intra Cr, Inter Cr.
-> +        Intra Cr, Inter Cr. The values on each scaling list are
-> +        expected in matrix order.
->  
->  ``V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS (struct)``
->      Specifies the slice parameters (as extracted from the bitstream)
-> 
-
+-- 
+bye,
+p.
