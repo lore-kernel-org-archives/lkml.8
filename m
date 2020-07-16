@@ -2,164 +2,91 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3967FC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C70C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 167822076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594912964;
-	bh=DwVHfGGJTGv6nAmHEhHPiFSRol8+UO9qWC7oNMEKASg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jGyet58AgAA4E2tgSMyCEVLyTXNUyg8jzF9ta9VqKV3zshRkBYtdrRdgNch45H4tD
-	 GzPehB+u9lLWw8lYKmRYHVCiIzrQqE2sJZ0a2HghP7xtrGsNusSlcPE8DfzaxPOskR
-	 xnx+khwfdfxTJ78e2oJm8Exhc03fJPSbx/EBTz1Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1F36D2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgGPPWm (ORCPT
+        id S1729188AbgGPPXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbgGPPWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:22:40 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2A1A2063A;
-        Thu, 16 Jul 2020 15:22:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594912959;
-        bh=DwVHfGGJTGv6nAmHEhHPiFSRol8+UO9qWC7oNMEKASg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W0VJ/hAd4vqcwztpNEBI3+gu2X6XCIMlXEJqmrcrsPfef0Gk2HJlpLz49T9DjFoxT
-         afouBzBFOrke2t2bJceDxRxXTSlVVpRIYkoU+JTRDF3J5SLykzFiDnOfOvr/TwiePL
-         lQoK62C/7yEmeDabLGtumJMMR8+2ypo8oQbpJ+ds=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 369E4403C7; Thu, 16 Jul 2020 12:22:37 -0300 (-03)
-Date:   Thu, 16 Jul 2020 12:22:37 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
-        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
-        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
-        anju@linux.vnet.ibm.com, kan.liang@linux.intel.com,
-        nasastry@in.ibm.com
-Subject: Re: [PATCH v3 0/5] powerpc/perf: Add json file support for hv_24x7
- core level events
-Message-ID: <20200716152237.GC373728@kernel.org>
-References: <20200716094216.1418659-1-kjain@linux.ibm.com>
+        Thu, 16 Jul 2020 11:23:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59833 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729038AbgGPPXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:23:11 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <seth.forshee@canonical.com>)
+        id 1jw5j3-0003HS-0a
+        for linux-kernel@vger.kernel.org; Thu, 16 Jul 2020 15:23:09 +0000
+Received: by mail-io1-f69.google.com with SMTP id r19so3788497iod.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:23:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=1/qolDFvhpKVU/laUVqhlu2vl5yv7xqj8R5RCMHuoAE=;
+        b=AXczgPL7HMGhYuhaPsje1KwgXIflhG93B7hz+wjmheyZ9KSxP52bxDQeHxryoIkLqk
+         nvMaAQEhU9/R1qW40IFVntDKGeKA8Q31IKKh2qttFJ087glZNWaejMODeoummvgSb8BB
+         MyFbOaMa3Ih3SaeRP8ajaUmWgZi2DmCsQvgqXHE/8KTsYo25Y6oFrMh76A9BTSHoNFbt
+         GAgZ4PYqn0BUVoLPNUvp/6nVBZxfolRZsWFLGNbB0zqRKisAf3ALbjeTib5WUiZGBsTs
+         Zp8ELvLep1iYV8sBSClu9dXLxqLzshOwBhfrpWzBw9hpu6CPFI15LfELIBeXYA+Riv3A
+         z5xw==
+X-Gm-Message-State: AOAM533+vyn0ICOTLvfaggijyrEZc1yzsO44oicC5CQKt+cg5QuIlFOZ
+        VIZIfzuR8VnKjprBxKSrKiyc2yw2d/CnOrsMMrjLDhDXIrJZ6ayJqmdkv10bO9iolfyTeL7vT+j
+        WrX7qRJOAYNgcAA4vPpngKOv24hn/x+UcEIoqIXoztw==
+X-Received: by 2002:a92:9144:: with SMTP id t65mr4972489ild.157.1594912987980;
+        Thu, 16 Jul 2020 08:23:07 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzrcNPFqPdPzXrKIfmDcBgzmn7KYvCBmjSXDPrxbfaGjS57nLBMFDU5BF5DLJu0FIUjZaBEMA==
+X-Received: by 2002:a92:9144:: with SMTP id t65mr4972471ild.157.1594912987705;
+        Thu, 16 Jul 2020 08:23:07 -0700 (PDT)
+Received: from localhost ([2605:a601:ac0f:820:90fa:132a:bf3e:99a1])
+        by smtp.gmail.com with ESMTPSA id o67sm2764824ila.25.2020.07.16.08.23.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 08:23:07 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 10:23:06 -0500
+From:   seth.forshee@canonical.com
+To:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: test_bpf regressions on s390 since 5.4
+Message-ID: <20200716152306.GH3644@ubuntu-x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716094216.1418659-1-kjain@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jul 16, 2020 at 03:12:11PM +0530, Kajol Jain escreveu:
-> Patchset enhance current runtime parameter support. It introduces new
-> fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
-> used to specify perpkg events. 
-> 
-> The "PerCore" and "PerChip" specifies whether its core or chip events.
-> Based on which we can decide which runtime parameter user want to
-> access. Now character  '?' can refers different parameter based on user
-> requirement.
-> 
-> Initially, every time we want to add new terms like chip, core, thread
-> etc, we need to create corrsponding fields in pmu_events and event
-> struct.
-> This patchset adds an enum called 'aggr_mode_class' which store all these
-> aggregation like perpkg/percore. It also adds new field 'AggregationMode'
-> to capture these terms.
-> Now, if user wants to add any new term, they just need to add it in
-> the enum defined. I try to test it with  my current setup.
-> 
-> I also need to replace PerPkg field to AggregationMode in all the
-> x86 uncore json files. It will great if Andi and team can test it
-> and let me know if they have any concerns.
-> 
-> Changelog:
-> v2 -> v3:
-> - Did some nits changes suggested by Jiri include correction of
->   indentation, and making PerCore/PerChip values forward after
->   PerPkg as 1 in the enum.
-> - Rebase the patchset on Arnaldo's tmp.perf/core branch.
-> - Change RFC tag
+The tests in lib/test_bpf.c were all passing in 5.4 when using the JIT,
+but some are failing in 5.7/5.8. Some of the failures are due to the
+removal of BPF_SIZE_MAX causing some expected failures to pass, which I
+have already send a patch for [1]. The remaining failures appear to be
+regressions. I haven't tried 5.5 or 5.6, so I'm not sure exactly when
+they first appeared.
 
-Hey, have anybody provided Acked-by/Reviewed-by for previous revisions
-of this patchset? If so you could have collected them for patches
-without changes, was that the case?
+These are the tests which currently fail:
 
-- Arnaldo
- 
-> v1 -> v2:
-> - Rather then adding new field as PerCore/PerChip, created a new enum
->   to get these fields. And new field as "AggregationMode" which can
->   be used to capture these fields from json file.
->   - Suggested By Ian Rogers
-> 
-> 
-> Kajol Jain (5):
->   perf/pmu-events/jevents: Add enum to store aggregation like PerPkg
->   pmu-events/x86/uncore: Replace PerPkg field to AggregationMode in x86
->     json files
->   perf jevents: Add support for parsing perchip/percore events
->   perf/tools: Pass pmu_event structure as a parameter for
->     arch_get_runtimeparam
->   perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
-> 
->  tools/perf/arch/powerpc/util/header.c         |   7 +-
->  .../arch/powerpc/power9/nest_metrics.json     |  27 +-
->  .../arch/x86/broadwellde/uncore-cache.json    |  62 ++--
->  .../arch/x86/broadwellde/uncore-memory.json   |  18 +-
->  .../arch/x86/broadwellde/uncore-power.json    |  18 +-
->  .../arch/x86/broadwellx/uncore-cache.json     |  62 ++--
->  .../x86/broadwellx/uncore-interconnect.json   |   6 +-
->  .../arch/x86/broadwellx/uncore-memory.json    |  18 +-
->  .../arch/x86/broadwellx/uncore-power.json     |  18 +-
->  .../arch/x86/cascadelakex/uncore-memory.json  |  64 ++--
->  .../arch/x86/cascadelakex/uncore-other.json   | 332 +++++++++---------
->  .../arch/x86/haswellx/uncore-cache.json       |  62 ++--
->  .../x86/haswellx/uncore-interconnect.json     |   6 +-
->  .../arch/x86/haswellx/uncore-memory.json      |  18 +-
->  .../arch/x86/haswellx/uncore-power.json       |  18 +-
->  .../arch/x86/ivytown/uncore-cache.json        |  62 ++--
->  .../arch/x86/ivytown/uncore-interconnect.json |  10 +-
->  .../arch/x86/ivytown/uncore-memory.json       |  16 +-
->  .../arch/x86/ivytown/uncore-power.json        |  52 +--
->  .../arch/x86/jaketown/uncore-cache.json       |  40 +--
->  .../x86/jaketown/uncore-interconnect.json     |  10 +-
->  .../arch/x86/jaketown/uncore-memory.json      |  18 +-
->  .../arch/x86/jaketown/uncore-power.json       |  52 +--
->  .../x86/knightslanding/uncore-memory.json     |   8 +-
->  .../arch/x86/skylakex/uncore-memory.json      |  36 +-
->  .../arch/x86/skylakex/uncore-other.json       | 220 ++++++------
->  .../arch/x86/tremontx/uncore-memory.json      |  14 +-
->  .../arch/x86/tremontx/uncore-other.json       |  70 ++--
->  .../arch/x86/tremontx/uncore-power.json       |   2 +-
->  tools/perf/pmu-events/jevents.c               |  45 ++-
->  tools/perf/pmu-events/jevents.h               |   2 +-
->  tools/perf/pmu-events/pmu-events.h            |   8 +-
->  tools/perf/tests/pmu-events.c                 |   8 +-
->  tools/perf/util/metricgroup.c                 |   5 +-
->  tools/perf/util/metricgroup.h                 |   3 +-
->  tools/perf/util/pmu.c                         |   6 +-
->  36 files changed, 729 insertions(+), 694 deletions(-)
-> 
-> -- 
-> 2.26.2
-> 
+ test_bpf: #37 INT: MUL_X jited:1 ret -1 != 1 FAIL (1 times)
+ test_bpf: #42 INT: SUB jited:1 ret -55 != 11 FAIL (1 times)
+ test_bpf: #44 INT: MUL jited:1 ret 439084800 != 903446258 FAIL (1 times)
+ test_bpf: #49 INT: shifts by register jited:1 ret -617 != -1 FAIL (1 times)
+ test_bpf: #371 JNE signed compare, test 1 jited:1 ret 2 != 1 FAIL (1 times)
+ test_bpf: #372 JNE signed compare, test 2 jited:1 ret 2 != 1 FAIL (1 times)
+ test_bpf: #374 JNE signed compare, test 4 jited:1 ret 1 != 2 FAIL (1 times)
+ test_bpf: #375 JNE signed compare, test 5 jited:1 ret 2 != 1 FAIL (1 times)
 
--- 
+Thanks,
+Seth
 
-- Arnaldo
+[1] https://lore.kernel.org/lkml/20200716143931.330122-1-seth.forshee@canonical.com/
