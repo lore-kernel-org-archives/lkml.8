@@ -2,137 +2,113 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D2CC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78267C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1532076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505C42063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nFMORG0K"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="SEWq1E9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgGPXcu (ORCPT
+        id S1726130AbgGPXh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:32:50 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8511 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgGPXcn (ORCPT
+        Thu, 16 Jul 2020 19:37:56 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:4968 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725933AbgGPXh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:32:43 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f10d8990000>; Thu, 16 Jul 2020 15:45:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 16 Jul 2020 15:46:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 16 Jul 2020 15:46:44 -0700
-Received: from [10.2.163.115] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Jul
- 2020 22:46:43 +0000
-Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
- tegra_mipi_calibrate and tegra_mipi_wait
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
- <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
- <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
- <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <ce0c5ffb-f859-0eab-1ea5-044623dff221@nvidia.com>
-Date:   Thu, 16 Jul 2020 15:49:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 19:37:56 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GMoKkV008939
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:01:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=LL2rGApnWJch90rgZTalBSdlaarxIQ3540QQIkq13K0=;
+ b=SEWq1E9UlTTJFt8WWCCY16XLbk/XwxiN0s3fI4RRBgSclvbQ27nKvvN3MODXhy5z/trt
+ yGpm+BBWl+nu01MIvnjPyVBtNyetJmqz98LYOOfjcZKc2bAQdviOBrrYnSVY+kJeuiwz
+ e0hP2dEvW4WQ3E5pbJ0gncxbQOvRoVgbdMI= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32avg5h41h-12
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:01:49 -0700
+Received: from intmgw004.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 16 Jul 2020 16:01:39 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id B453F62E523E; Thu, 16 Jul 2020 15:59:36 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
+        <brouer@redhat.com>, <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v3 bpf-next 0/2] bpf: fix stackmap on perf_events with PEBS
+Date:   Thu, 16 Jul 2020 15:59:31 -0700
+Message-ID: <20200716225933.196342-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594939545; bh=DBU7rkpSwcdm/T9Ofc9hoI63/nUNEGD1koFVXFhF+U4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=nFMORG0KBm13wQActfeNEGrE1zTfVIyfLJ//f9isZ71e/0m8pSHRFZfxn4Vch+PrK
-         m467l/dCABGM7cypucxeKSO7ihOtmWx2RYRe7ASI+CVwCl89tYZv523OzYt7r+a/Gj
-         QEQJ9pQrzdrWWDsMo1MpeBY8uEOrwGKZcACUvLn7z02tudMGWgEtwLcbDFGcxOxron
-         CFiXdEhydMgbm3yuCd+qzK66L+0iuMRtQ6UtJWoqiN62PuoBS+T3mnls2EKz39D1Qk
-         pXAhGvVOx+t5lirI3vJWIgYvdkLb16b8GqcnX8Mu2SazjFJC+gFicbqDU7WC+jQG0r
-         SGZbpO91WJQdA==
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 clxscore=1015 impostorscore=0 phishscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160148
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Calling get_perf_callchain() on perf_events from PEBS entries may cause
+unwinder errors. To fix this issue, perf subsystem fetches callchain earl=
+y,
+and marks perf_events are marked with __PERF_SAMPLE_CALLCHAIN_EARLY.
+Similar issue exists when BPF program calls get_perf_callchain() via
+helper functions. For more information about this issue, please refer to
+discussions in [1].
 
-On 7/16/20 2:18 PM, Dmitry Osipenko wrote:
-> 17.07.2020 00:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 7/16/20 1:38 PM, Dmitry Osipenko wrote:
->>> 15.07.2020 07:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> SW can trigger MIPI pads calibration any time after power on
->>>> but calibration results will be latched and applied to the pads
->>>> by MIPI CAL unit only when the link is in LP-11 state and then
->>>> status register will be updated.
->>>>
->>>> For CSI, trigger of pads calibration happen during CSI stream
->>>> enable where CSI receiver is kept ready prior to sensor or CSI
->>>> transmitter stream start.
->>>>
->>>> So, pads may not be in LP-11 at this time and waiting for the
->>>> calibration to be done immediate after calibration start will
->>>> result in timeout.
->>>>
->>>> This patch splits tegra_mipi_calibrate() and tegra_mipi_wait()
->>>> so triggering for calibration and waiting for it to complete can
->>>> happen at different stages.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>> ...
->>>>  =C2=A0 int tegra_mipi_calibrate(struct tegra_mipi_device *device)
->>>>  =C2=A0 {
->>>> @@ -370,12 +381,10 @@ int tegra_mipi_calibrate(struct
->>>> tegra_mipi_device *device)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value |=3D MIPI_CAL_CTRL_START;
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_mipi_writel(device->mipi, value,=
- MIPI_CAL_CTRL);
->>>>  =C2=A0 -=C2=A0=C2=A0=C2=A0 err =3D tegra_mipi_wait(device->mipi);
->>> Doesn't MIPI clock need to be enabled during of the calibration process=
-?
->> MIPI clock is already enabled in tegra_mipi_calibrate
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(&device->mipi->lock);
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable(device->mipi->clk);
-> What keeps MIPI clock enabled after completion of the
-> tegra_mipi_calibrate() invocation?
+This set fixes this issue with helper proto bpf_get_stackid_pe and
+bpf_get_stack_pe.
 
-MIPI clock is disabled at end of tegra_mipi_calibrate and is re-enabled=20
-during tegra_mipi_wait.
+[1] https://lore.kernel.org/lkml/ED7B9430-6489-4260-B3C5-9CFA2E3AA87A@fb.=
+com/
 
-I think I should fix this to keep the clock enabled till calibration=20
-results are latched.
+Changes v2 =3D> v3:
+1. Fix handling of stackmap skip field. (Andrii)
+2. Simplify the code in a few places. (Andrii)
 
-All consumers of tegra_mipi_calibrate() will call tegra_mipi_wait().
+Changes v1 =3D> v2:
+1. Simplify the design and avoid introducing new helper function. (Andrii=
+)
 
-So will remove clk_disable mipi clk at end of tegra_mipi_calibrate() and=20
-clk_enable mipi_clk at beginning of tegra_mipi_wait()
+Song Liu (2):
+  bpf: separate bpf_get_[stack|stackid] for perf events BPF
+  selftests/bpf: add callchain_stackid
 
->
->>>>  =C2=A0 -=C2=A0=C2=A0=C2=A0 return err;
->>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>  =C2=A0 }
->>>>  =C2=A0 EXPORT_SYMBOL(tegra_mipi_calibrate);
+ include/linux/bpf.h                           |   2 +
+ kernel/bpf/stackmap.c                         | 202 ++++++++++++++++--
+ kernel/trace/bpf_trace.c                      |   4 +-
+ .../bpf/prog_tests/perf_event_stackmap.c      | 116 ++++++++++
+ .../selftests/bpf/progs/perf_event_stackmap.c |  59 +++++
+ 5 files changed, 363 insertions(+), 20 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_event_sta=
+ckmap.c
+ create mode 100644 tools/testing/selftests/bpf/progs/perf_event_stackmap=
+.c
+
+--
+2.24.1
