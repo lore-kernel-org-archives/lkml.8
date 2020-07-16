@@ -2,98 +2,128 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98161C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA1DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70E8B2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594937372;
-	bh=n04WlQh2KrQ2rgHTRtdKBZH8KEwlrcLQlq3ED7K3LMk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=neAfzqc+bZLHiMfY0xdmYkLVCctC2DS06SPOWwnIXK7/MBKtJMA31tmJs2yeD5eTV
-	 nUfY9bu1e4jsYasqPmI3VuAs5s4u4xH9xcuqYPUK3uKpKU9DrOa8lspF3MGpmuntyt
-	 bJ8K3tfnMgRAVbcVUGBC4qVCW5XcUMKQmYxtidJE=
+	by mail.kernel.org (Postfix) with ESMTP id 89A97207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgGPWJb (ORCPT
+        id S1726599AbgGPWMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 18:09:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbgGPWJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 18:09:29 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DA8420853;
-        Thu, 16 Jul 2020 22:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594937368;
-        bh=n04WlQh2KrQ2rgHTRtdKBZH8KEwlrcLQlq3ED7K3LMk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wPdJ8JHXePyNrzqg2JLYyWBVT3UqOn7zAiWgefK9thDfzA0he1IzLu7565joxYL5X
-         CQkYXp8iwsn3enreTjX72DVTiSZ2Feen5pNKHTfDzBbw00ZLvWUOp6PGikD0+h2YBs
-         LNvGB2sIQdLn1cWYJS9Mo8tigD0rtM+toCNyj98E=
-Date:   Thu, 16 Jul 2020 15:09:25 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Matthew Hagan <mnhagan88@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-Message-ID: <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
-        <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+        Thu, 16 Jul 2020 18:12:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11950 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726007AbgGPWMX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 18:12:23 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GM0lYH105928;
+        Thu, 16 Jul 2020 18:12:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32as6du8bg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 18:12:13 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GM14ab107297;
+        Thu, 16 Jul 2020 18:12:13 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32as6du8b5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 18:12:13 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GM5LZh016382;
+        Thu, 16 Jul 2020 22:12:12 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01wdc.us.ibm.com with ESMTP id 32752943wk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 22:12:12 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GMCB011049228
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 22:12:11 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B8F77809F;
+        Thu, 16 Jul 2020 22:12:11 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C156B7809C;
+        Thu, 16 Jul 2020 22:12:07 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.8.110])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 16 Jul 2020 22:12:07 +0000 (GMT)
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466093748.24747.4655547403463921814.stgit@hbathini.in.ibm.com> <871rlc9upc.fsf@morokweng.localdomain> <6f64a18a-352e-fdec-c902-45aefc31cc0a@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 07/12] ppc64/kexec_file: add support to relocate purgatory
+In-reply-to: <6f64a18a-352e-fdec-c902-45aefc31cc0a@linux.ibm.com>
+Date:   Thu, 16 Jul 2020 19:12:04 -0300
+Message-ID: <87365rcdor.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 lowpriorityscore=0
+ adultscore=0 clxscore=1015 suspectscore=0 mlxscore=100 bulkscore=0
+ malwarescore=0 priorityscore=1501 impostorscore=0 phishscore=0
+ spamscore=100 mlxlogscore=-1000 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007160142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
-> Add names and decriptions of additional PORT0_PAD_CTRL properties.
-> 
-> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
-> ---
->  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> index ccbc6d89325d..3d34c4f2e891 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> @@ -13,6 +13,14 @@ Optional properties:
->  
->  - reset-gpios: GPIO to be used to reset the whole device
->  
-> +Optional MAC configuration properties:
-> +
-> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
 
-Perhaps we can say a little more here?
+Hari Bathini <hbathini@linux.ibm.com> writes:
 
-> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
-> +				falling edge.
-> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
-> +				falling edge.
+> On 16/07/20 5:50 am, Thiago Jung Bauermann wrote:
+>> 
+>> Hari Bathini <hbathini@linux.ibm.com> writes:
+>> 
+>>> So, add support to relocate purgatory in kexec_file_load system call
+>>> by setting up TOC pointer and applying RELA relocations as needed.
+>> 
+>> If we do want to use a C purgatory, Michael Ellerman had suggested
+>> building it as a Position Independent Executable, which greatly reduces
+>> the number and types of relocations that are needed. See patches 4 and 9
+>> here:
+>> 
+>> https://lore.kernel.org/linuxppc-dev/1478748449-3894-1-git-send-email-bauerman@linux.vnet.ibm.com/
+>> 
+>> In the series above I hadn't converted x86 to PIE. If I had done that,
+>> possibly Dave Young's opinion would have been different. :-)
+>> 
+>> If that's still not desirable, he suggested in that discussion lifting
+>> some code from x86 to generic code, which I implemented and would
+>> simplify this patch as well:
+>> 
+>> https://lore.kernel.org/linuxppc-dev/5009580.5GxAkTrMYA@morokweng/
+>> 
+>
+> Agreed. But I prefer to work on PIE and/or moving common relocation_add code
+> for x86 & s390 to generic code later when I try to build on these purgatory
+> changes. So, a separate series later to rework purgatory with the things you
+> mentioned above sounds ok?
 
-These are not something that other vendors may implement and therefore
-something we may want to make generic? Andrew?
+Sounds ok to me. Let's see what the maintainers think, then.
 
->  Subnodes:
->  
->  The integrated switch subnode should be specified according to the binding
-
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
