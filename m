@@ -2,325 +2,194 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC0A8206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E277F2076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:18:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPyJXh21"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbgGPUOX (ORCPT
+        id S1729538AbgGPUSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:14:23 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:50386 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728788AbgGPUOX (ORCPT
+        Thu, 16 Jul 2020 16:18:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728788AbgGPUSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:14:23 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id B220420024;
-        Thu, 16 Jul 2020 22:14:17 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 22:14:16 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     jsarha@ti.com, tomi.valkeinen@ti.com, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        Thu, 16 Jul 2020 16:18:32 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A653C061755;
+        Thu, 16 Jul 2020 13:18:32 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o8so11479216wmh.4;
+        Thu, 16 Jul 2020 13:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hT1ysO8UtcshQI1jXyBj8JCzEF++nOcaQlKMyGdyebI=;
+        b=gPyJXh21xqwg6wi5lQgsCnsHNHIw9zktYFEeZM4/dwWJwAfEuNc0aXHghzkPptrEiu
+         cAh9PlzMYLW0zPNTVC+VV8PCDQUjKDgyhyjllp/rVI5iLFzOi7t7aWFaFO8xCxODZEkU
+         u8/Y+QJ5lc/6Ty/GTE/GXgFOZ/loWYpedar5hfUCbuagq5kvlrFQxbjpLbLzd4Zeyhw4
+         R81cod5MZcfun9atECCis6ywDNt9vo6LS0fiJx8oiusJNMeNe7us4GOjM5yrg9NPkNpl
+         k/KDljEdwh3CfUFlMWz+dMFc4sdS7diIT8HcyIyDelxqrIAODpPXuPuzOI7w8a1Q9Xdz
+         YJPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=hT1ysO8UtcshQI1jXyBj8JCzEF++nOcaQlKMyGdyebI=;
+        b=pTajQw3UbO56Wk5by9fQIIigUYtbc6TWmOO0s6DLBfh+QzyctO/78qsEZC/8DdUA7M
+         KmnOvzngfMNZM2gX2V/A3sBUY1L3MPyyLI1MzvyQN/1q/HqvTG41ULV1pA2vFsnyiFRq
+         9Y3wVnntOowTIjO2Fn+DMf/0ND5A7zvTCSsihmEIZs261KrnUscIhX3BY/86u7cPy8tB
+         bkLdduwodFoKe2ychd9jIeoEXIOkm9m5cxbUvVaa1/wm5KxHnzElOoUBfL/9DZ4c4+JX
+         rmTFl6kDRP4zT0qyE9t0CDfbj/d7z15NLmVpv72xEYoblBdlSgo9kqtY5D+yBd0+ueEX
+         vO6g==
+X-Gm-Message-State: AOAM530FmgkopV3Byn1dbNBz/uM8QpvMUkBQ51WJ8BbNbS7Z4ZljMYMH
+        hdIb74TaqesI3SRl2SZ//grlDqSn6w8=
+X-Google-Smtp-Source: ABdhPJw8nV+8IAqaXqIGkoX8kBdfOHm2J50mIVqOpgcP41uZ6JJSTEB1svlXncB9MoytaJ+z1MBJWw==
+X-Received: by 2002:a7b:cc92:: with SMTP id p18mr6057089wma.4.1594930710261;
+        Thu, 16 Jul 2020 13:18:30 -0700 (PDT)
+Received: from [192.168.43.238] ([5.100.193.69])
+        by smtp.gmail.com with ESMTPSA id k18sm10805024wrx.34.2020.07.16.13.18.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 13:18:29 -0700 (PDT)
+Subject: Re: [PATCH RFC v2 1/3] io_uring: use an enumeration for
+ io_uring_register(2) opcodes
+To:     Stefano Garzarella <sgarzare@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/tidss: Replace HTTP links with HTTPS ones
-Message-ID: <20200716201416.GD2254583@ravnborg.org>
-References: <20200713123913.34205-1-grandmaster@al2klimov.de>
+References: <20200716124833.93667-1-sgarzare@redhat.com>
+ <20200716124833.93667-2-sgarzare@redhat.com>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <ca242a15-576d-4099-a5f8-85c08985e3ff@gmail.com>
+Date:   Thu, 16 Jul 2020 23:16:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713123913.34205-1-grandmaster@al2klimov.de>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=D19gQVrFAAAA:8 a=sozttTNsAAAA:8 a=e5mUnYsNAAAA:8
-        a=2b5M6aC5G-VBR2GjRbIA:9 a=CjuIK1q_8ugA:10 a=W4TVW4IDbPiebHqcZpNg:22
-        a=aeg5Gbbo78KNqacMgKqU:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200716124833.93667-2-sgarzare@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 02:39:13PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On 16/07/2020 15:48, Stefano Garzarella wrote:
+> The enumeration allows us to keep track of the last
+> io_uring_register(2) opcode available.
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+> Behaviour and opcodes names don't change.
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-
-Applied to drm-misc-next.
-
-	Sam
-
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 > ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
+>  include/uapi/linux/io_uring.h | 27 ++++++++++++++++-----------
+>  1 file changed, 16 insertions(+), 11 deletions(-)
 > 
->  If there are any URLs to be removed completely or at least not just HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
+> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+> index 7843742b8b74..efc50bd0af34 100644
+> --- a/include/uapi/linux/io_uring.h
+> +++ b/include/uapi/linux/io_uring.h
+> @@ -253,17 +253,22 @@ struct io_uring_params {
+>  /*
+>   * io_uring_register(2) opcodes and arguments
+>   */
+> -#define IORING_REGISTER_BUFFERS		0
+> -#define IORING_UNREGISTER_BUFFERS	1
+> -#define IORING_REGISTER_FILES		2
+> -#define IORING_UNREGISTER_FILES		3
+> -#define IORING_REGISTER_EVENTFD		4
+> -#define IORING_UNREGISTER_EVENTFD	5
+> -#define IORING_REGISTER_FILES_UPDATE	6
+> -#define IORING_REGISTER_EVENTFD_ASYNC	7
+> -#define IORING_REGISTER_PROBE		8
+> -#define IORING_REGISTER_PERSONALITY	9
+> -#define IORING_UNREGISTER_PERSONALITY	10
+> +enum {
+> +	IORING_REGISTER_BUFFERS,
+> +	IORING_UNREGISTER_BUFFERS,
+> +	IORING_REGISTER_FILES,
+> +	IORING_UNREGISTER_FILES,
+> +	IORING_REGISTER_EVENTFD,
+> +	IORING_UNREGISTER_EVENTFD,
+> +	IORING_REGISTER_FILES_UPDATE,
+> +	IORING_REGISTER_EVENTFD_ASYNC,
+> +	IORING_REGISTER_PROBE,
+> +	IORING_REGISTER_PERSONALITY,
+> +	IORING_UNREGISTER_PERSONALITY,
+> +
+> +	/* this goes last */
+> +	IORING_REGISTER_LAST
+> +};
+
+It breaks userspace API. E.g.
+
+#ifdef IORING_REGISTER_BUFFERS
+
+>  
+>  struct io_uring_files_update {
+>  	__u32 offset;
 > 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  drivers/gpu/drm/tidss/tidss_crtc.c        | 2 +-
->  drivers/gpu/drm/tidss/tidss_crtc.h        | 2 +-
->  drivers/gpu/drm/tidss/tidss_dispc.c       | 2 +-
->  drivers/gpu/drm/tidss/tidss_dispc.h       | 2 +-
->  drivers/gpu/drm/tidss/tidss_dispc_regs.h  | 2 +-
->  drivers/gpu/drm/tidss/tidss_drv.c         | 2 +-
->  drivers/gpu/drm/tidss/tidss_drv.h         | 2 +-
->  drivers/gpu/drm/tidss/tidss_encoder.c     | 2 +-
->  drivers/gpu/drm/tidss/tidss_encoder.h     | 2 +-
->  drivers/gpu/drm/tidss/tidss_irq.c         | 2 +-
->  drivers/gpu/drm/tidss/tidss_irq.h         | 2 +-
->  drivers/gpu/drm/tidss/tidss_kms.c         | 2 +-
->  drivers/gpu/drm/tidss/tidss_kms.h         | 2 +-
->  drivers/gpu/drm/tidss/tidss_plane.c       | 2 +-
->  drivers/gpu/drm/tidss/tidss_plane.h       | 2 +-
->  drivers/gpu/drm/tidss/tidss_scale_coefs.c | 2 +-
->  drivers/gpu/drm/tidss/tidss_scale_coefs.h | 2 +-
->  17 files changed, 17 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
-> index 89a226912de8..a591c70b8386 100644
-> --- a/drivers/gpu/drm/tidss/tidss_crtc.c
-> +++ b/drivers/gpu/drm/tidss/tidss_crtc.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_crtc.h b/drivers/gpu/drm/tidss/tidss_crtc.h
-> index 09e773666228..040d1205496b 100644
-> --- a/drivers/gpu/drm/tidss/tidss_crtc.h
-> +++ b/drivers/gpu/drm/tidss/tidss_crtc.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
-> index 629dd06393f6..e7d28ec8f7f3 100644
-> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
-> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Jyri Sarha <jsarha@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
-> index 902e612ff7ac..5984e0de2cd9 100644
-> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
-> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_dispc_regs.h b/drivers/gpu/drm/tidss/tidss_dispc_regs.h
-> index 88a83a41b6e3..13feedfe5d6d 100644
-> --- a/drivers/gpu/drm/tidss/tidss_dispc_regs.h
-> +++ b/drivers/gpu/drm/tidss/tidss_dispc_regs.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  /*
-> - * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Jyri Sarha <jsarha@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_drv.c b/drivers/gpu/drm/tidss/tidss_drv.c
-> index 99edc66ebdef..f00fadbead3e 100644
-> --- a/drivers/gpu/drm/tidss/tidss_drv.c
-> +++ b/drivers/gpu/drm/tidss/tidss_drv.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/tidss/tidss_drv.h
-> index 3b0a3d87b7c4..7de4bba52e6f 100644
-> --- a/drivers/gpu/drm/tidss/tidss_drv.h
-> +++ b/drivers/gpu/drm/tidss/tidss_drv.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_encoder.c b/drivers/gpu/drm/tidss/tidss_encoder.c
-> index 30bf2a65949c..e278a9c89476 100644
-> --- a/drivers/gpu/drm/tidss/tidss_encoder.c
-> +++ b/drivers/gpu/drm/tidss/tidss_encoder.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_encoder.h b/drivers/gpu/drm/tidss/tidss_encoder.h
-> index 06854d66e7e6..ace877c0e0fd 100644
-> --- a/drivers/gpu/drm/tidss/tidss_encoder.h
-> +++ b/drivers/gpu/drm/tidss/tidss_encoder.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_irq.c b/drivers/gpu/drm/tidss/tidss_irq.c
-> index 1b80f2d62e0a..a5ec7931ef6b 100644
-> --- a/drivers/gpu/drm/tidss/tidss_irq.c
-> +++ b/drivers/gpu/drm/tidss/tidss_irq.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_irq.h b/drivers/gpu/drm/tidss/tidss_irq.h
-> index aa92db403cca..4aaad5dfd7c2 100644
-> --- a/drivers/gpu/drm/tidss/tidss_irq.h
-> +++ b/drivers/gpu/drm/tidss/tidss_irq.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_kms.c b/drivers/gpu/drm/tidss/tidss_kms.c
-> index 4b99e9fa84a5..71dbd331640f 100644
-> --- a/drivers/gpu/drm/tidss/tidss_kms.c
-> +++ b/drivers/gpu/drm/tidss/tidss_kms.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_kms.h b/drivers/gpu/drm/tidss/tidss_kms.h
-> index 99aaff099f22..632d79f5983f 100644
-> --- a/drivers/gpu/drm/tidss/tidss_kms.h
-> +++ b/drivers/gpu/drm/tidss/tidss_kms.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/tidss_plane.c
-> index 0a563eabcbb9..43e72d0b2d84 100644
-> --- a/drivers/gpu/drm/tidss/tidss_plane.c
-> +++ b/drivers/gpu/drm/tidss/tidss_plane.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_plane.h b/drivers/gpu/drm/tidss/tidss_plane.h
-> index 80ff1c5a2535..e933e158b617 100644
-> --- a/drivers/gpu/drm/tidss/tidss_plane.h
-> +++ b/drivers/gpu/drm/tidss/tidss_plane.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_scale_coefs.c b/drivers/gpu/drm/tidss/tidss_scale_coefs.c
-> index 5ec68389cc68..c2b84fea89a5 100644
-> --- a/drivers/gpu/drm/tidss/tidss_scale_coefs.c
-> +++ b/drivers/gpu/drm/tidss/tidss_scale_coefs.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Jyri Sarha <jsarha@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/tidss/tidss_scale_coefs.h b/drivers/gpu/drm/tidss/tidss_scale_coefs.h
-> index 64b5af5b5361..9c560d0fdac0 100644
-> --- a/drivers/gpu/drm/tidss/tidss_scale_coefs.h
-> +++ b/drivers/gpu/drm/tidss/tidss_scale_coefs.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  /*
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
->   * Author: Jyri Sarha <jsarha@ti.com>
->   */
->  
-> -- 
-> 2.27.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Pavel Begunkov
