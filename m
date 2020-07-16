@@ -3,87 +3,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05217C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0622076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594926579;
-	bh=qiPstqcKtABN1fD5mhKsw6dVOHZ5WIZtfqThLcqU8jQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OmzGVbypMrZ/zhud48n/DGLr8N5WDiZukvnZO4mlGkYi4u4/EKE8bVy4BMIbWsZ7a
-	 1TZw99fJCjoal2VFl/lO7ETyDjTRresu1B0peqV50MrKvhLhlX4m1EcLt9ikCvbcUT
-	 Xkhd/fWCnUS35KCYBzEM3ye4UYdWHblFxPtiSzCg=
+	by mail.kernel.org (Postfix) with ESMTP id D0CD72076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:12:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lhX4KRZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbgGPTJi (ORCPT
+        id S1729375AbgGPTMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:09:38 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:47021 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgGPTJh (ORCPT
+        Thu, 16 Jul 2020 15:12:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728374AbgGPTMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:09:37 -0400
-Received: by mail-io1-f65.google.com with SMTP id a12so7171663ion.13;
-        Thu, 16 Jul 2020 12:09:37 -0700 (PDT)
+        Thu, 16 Jul 2020 15:12:50 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4684C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 12:12:50 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id m16so4279396pls.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 12:12:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=reZvnOQ8bijPp6S5yQzmCOTTsMLuDmnyX5N/3GfwHXo=;
+        b=lhX4KRZzVkUSda9R6NyorS54yyDn6hPMA24J3zBk96aHpX1ic/PoqYAe/VIB7Xy9B/
+         HlVJ28tVKHEHHcNCuv/KrJOZBUcoLwz6roC1HJNW31P8tAYmIPcACI0nrMG4j1+ivpMt
+         1Xfyw0pkzrtmnsj0jd8RERq8Fj7NvEgD8QxLc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WmN0I5jfW0bngGda6eqXsjReLWui8Z/KXRe8dH1gHbE=;
-        b=NtfI65fjrYZsp7P9PHJeVhmj8r5K40inEZuyuSLng/sKCa/y1Xybxe+ehi7tkDwpjl
-         FIFMWE2hGZqnYKQXaJcn4f3ul/HhU3g6Va3yzg2wj5bvUvJHY06JjB2LqYdrOSxZla+i
-         ARK+/cbw2fV0HpXclzXJWinAe0gbZTX8tZ/R071CzJ0273iMMKTVX6idFaJtNE8pwYFU
-         tE4immoRqq1pzFGWS2eD4JzerR+3iYkpcmd++tzMDD5W4WibPcCQG2q4eOKlfUA/sLJe
-         WsDky73fdGuwZq50QsJcFKdUBjAElRbKQgJfiqsFzSkZjCyI+OHNVV5iGyfi1WOjTwr3
-         vBZw==
-X-Gm-Message-State: AOAM5333BGxIljnVq1oOeeLcbBeZ1W+vrZ3QYOGLMGbpVD9itap10eK/
-        HWxwjl3zV2ux8Cuv5CscGQ==
-X-Google-Smtp-Source: ABdhPJz170yVZyP5HHq8yZ4vT1JgTt7Qg8B1Oju34HwKnwbZ5cGMadOJBmV9Tpy+Dj0KutJq5I1K3A==
-X-Received: by 2002:a6b:8b11:: with SMTP id n17mr5857639iod.155.1594926576428;
-        Thu, 16 Jul 2020 12:09:36 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id o64sm3126510ilb.12.2020.07.16.12.09.34
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=reZvnOQ8bijPp6S5yQzmCOTTsMLuDmnyX5N/3GfwHXo=;
+        b=cPrGHasoItzUNrcYz1FKDnvhKcWaJNtXwibImXH/uW6Ef664Us+LAHP2BeSiiqDhrB
+         OkE49tRON+c5AIAkIH5+uApGx4psoUugHoxqjOhFE5oKhjvAqHOgmX56VgSIWgo68wSb
+         g5NAjRcRQRngUS0tfNmSMQ619tHpG1LFrsex+Z3tZYb8vxxs2SprPHUHgtLY+BWKuTWF
+         LA8XpJWXsuLoCxXucSeULHnQCLp5EOGQ6VeL5mmdrYs7F7VObAQHmVk5ze/kW/iun4mz
+         I2wA818hhMOPs6VB8oRFCinzIKbtaHA2zaJZwe3J/UioaQbVIhbw34aXi4YMRQplV674
+         2hRw==
+X-Gm-Message-State: AOAM530T0a76lOcSt7haL8e56avTiQEqcLKjM0u3/Uzp/bWw8uI+fVs7
+        9JGO79foCHJljLawk5bnpBcqGA==
+X-Google-Smtp-Source: ABdhPJzSOAMegB1OmeJ/PboDzHabSRQP9lhAlD8QVD09gpvRf9fpyvnr8fMJH6cpEeTI0kWvhxJF2g==
+X-Received: by 2002:a17:902:7441:: with SMTP id e1mr4615121plt.23.1594926769952;
+        Thu, 16 Jul 2020 12:12:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g22sm5602957pgb.82.2020.07.16.12.12.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 12:09:35 -0700 (PDT)
-Received: (nullmailer pid 2680082 invoked by uid 1000);
-        Thu, 16 Jul 2020 19:09:34 -0000
-Date:   Thu, 16 Jul 2020 13:09:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     digetx@gmail.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        gregkh@linuxfoundation.org, sboyd@kernel.org, sakari.ailus@iki.fi,
-        devicetree@vger.kernel.org, helen.koike@collabora.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
-        robh+dt@kernel.org
-Subject: Re: [RFC PATCH v3 11/18] dt-bindings: tegra: Update VI and CSI
- bindings with port info
-Message-ID: <20200716190934.GA2680032@bogus>
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-12-git-send-email-skomatineni@nvidia.com>
+        Thu, 16 Jul 2020 12:12:48 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 12:12:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v6 7/7] ima: add policy support for the new file open
+ MAY_OPENEXEC flag
+Message-ID: <202007160957.CABE4CC@keescook>
+References: <20200714181638.45751-1-mic@digikod.net>
+ <20200714181638.45751-8-mic@digikod.net>
+ <202007151339.283D7CD@keescook>
+ <8df69733-0088-3e3c-9c3d-2610414cea2b@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1594786855-26506-12-git-send-email-skomatineni@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8df69733-0088-3e3c-9c3d-2610414cea2b@digikod.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 21:20:48 -0700, Sowjanya Komatineni wrote:
-> Update VI and CSI bindings to add port and endpoint nodes as per
-> media video-interfaces DT binding document.
+On Thu, Jul 16, 2020 at 04:40:15PM +0200, Mickaël Salaün wrote:
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  .../display/tegra/nvidia,tegra20-host1x.txt        | 92 +++++++++++++++++++++-
->  1 file changed, 90 insertions(+), 2 deletions(-)
+> On 15/07/2020 22:40, Kees Cook wrote:
+> > On Tue, Jul 14, 2020 at 08:16:38PM +0200, Mickaël Salaün wrote:
+> >> From: Mimi Zohar <zohar@linux.ibm.com>
+> >>
+> >> The kernel has no way of differentiating between a file containing data
+> >> or code being opened by an interpreter.  The proposed O_MAYEXEC
+> >> openat2(2) flag bridges this gap by defining and enabling the
+> >> MAY_OPENEXEC flag.
+> >>
+> >> This patch adds IMA policy support for the new MAY_OPENEXEC flag.
+> >>
+> >> Example:
+> >> measure func=FILE_CHECK mask=^MAY_OPENEXEC
+> >> appraise func=FILE_CHECK appraise_type=imasig mask=^MAY_OPENEXEC
+> >>
+> >> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> >> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> >> Acked-by: Mickaël Salaün <mic@digikod.net>
+> > 
+> > (Process nit: if you're sending this on behalf of another author, then
+> > this should be Signed-off-by rather than Acked-by.)
 > 
+> I'm not a co-author of this patch.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Correct, but you are part of the delivery path to its entry to the
+tree. If you were co-author, you would include "Co-developed-by" with
+a Signed-off-by. (So my nit stands)
+
+For excruciating details:
+
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+
+"The Signed-off-by: tag indicates that the signer was ... in the patch’s
+delivery path."
+
+"Co-developed-by: ... is a used to give attribution to co-authors ..."
+
+-- 
+Kees Cook
