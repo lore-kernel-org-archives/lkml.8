@@ -2,73 +2,132 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C45AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3008EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61E8720771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D89207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7uwKCVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732814AbgGVO7P (ORCPT
+        id S1732817AbgGVO7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:59:15 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:52271 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1730465AbgGVO7O (ORCPT
+        Wed, 22 Jul 2020 10:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730870AbgGVO7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:59:14 -0400
-Received: (qmail 1314062 invoked by uid 1000); 22 Jul 2020 10:59:13 -0400
-Date:   Wed, 22 Jul 2020 10:59:13 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     WeitaoWangoc <WeitaoWang-oc@zhaoxin.com>,
-        mathias.nyman@linux.intel.com, ulf.hansson@linaro.org,
-        vkoul@kernel.org, hslester96@gmail.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Carsten_Schmid@mentor.com,
-        efremov@linux.com, tonywwang@zhaoxin.com, weitaowang@zhaoxin.com,
-        CobeChen@zhaoxin.com, TimGuo@zhaoxin.com, wwt8723@163.com
-Subject: Re: [PATCH] USB:Fix kernel NULL pointer when unbind UHCI form
- vfio-pci
-Message-ID: <20200722145913.GB1310843@rowland.harvard.edu>
-References: <1595419068-4812-1-git-send-email-WeitaoWang-oc@zhaoxin.com>
- <20200722124414.GA3153105@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722124414.GA3153105@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 22 Jul 2020 10:59:44 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD99C0619DC;
+        Wed, 22 Jul 2020 07:59:44 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id a21so2526029ejj.10;
+        Wed, 22 Jul 2020 07:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:in-reply-to:references:mime-version
+         :date:content-transfer-encoding;
+        bh=URRzOHpgQhWz8k04t/0LNtBaTy9pE9Bui1vrbzjXhfI=;
+        b=e7uwKCVt6D3jSem4PO+P9pzhJVScJ7gidvn9qlcv2TgMZh4TtkZ2Nlxv2iZbVr0QT1
+         I5ur5Gxim9UapTLNIomFJ53fYjqFeqf7cVoEkGCCz2PUynwz/5jhzyz3QA7xIRbSVXyl
+         ZugspPMGasrEZvItvBiZbvc7XTZT4L4d2cfXcjb4Wu8KMTfHa7tN7Q9ht4xyj42HkOXO
+         gjoMQr4yNH3A0fQo3VOqyOw+EYiS38uvxBMKG0ttAiURk/pOZda47DLf3uTs8mfK6Mw6
+         fTo6nt5bF0U/obvwSAH8K2NRoRdtXnnOalZIevQDaiKHtbFeyBiA4yenH1ELOoAPA07i
+         XdIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:in-reply-to
+         :references:mime-version:date:content-transfer-encoding;
+        bh=URRzOHpgQhWz8k04t/0LNtBaTy9pE9Bui1vrbzjXhfI=;
+        b=NbSLniTT6GqokBzY66UQ9cF1YWZsQR6TmhGD+MrRdVlzXfoMTEdLRsOK3gVyMDjJku
+         caYBCJXtxUDsUl541g77DYjqsbFnGbia+qxkHKSYFpTbNIc7XjGJHC9KAnUAQNzeFBgC
+         XlxXvzbQc47ZHzkexShveqkeqiYlVwmbvxGOY3tOPtUVpK3HWZt3iabF5RVIjynAJi5a
+         Mfbq0XBy1b4Gpu/6cx2DgVEP7csiC9ewXhqvZnTRMWYhEQEfYm9Mz5yUEICMp6foJVal
+         ldoQEq+PT21LIS3EKO0bTfUgu3HqNDDr+Ji7NlLQ+OVgZl1Y+dr+OpScRHOtQFuWrUi8
+         vXpA==
+X-Gm-Message-State: AOAM532dITZ14N9J8d8gt1/nnaQYT1r7XGasm6V8sP6+ABp8f4UDoXNe
+        ba702ivP1m5T7JP2x4Ma820=
+X-Google-Smtp-Source: ABdhPJy7OGFfe2ZmIbIPJgSKdIxz7vpB5TeN9Z25EU/fegE+4BuZZsw1np3Tb5T0TkZ8dgiUZTy26A==
+X-Received: by 2002:a17:906:6558:: with SMTP id u24mr26724151ejn.364.1595429982763;
+        Wed, 22 Jul 2020 07:59:42 -0700 (PDT)
+Received: from ubuntu-laptop (ip5f5bee3d.dynamic.kabel-deutschland.de. [95.91.238.61])
+        by smtp.googlemail.com with ESMTPSA id d12sm65543edx.80.2020.07.22.07.59.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Jul 2020 07:59:42 -0700 (PDT)
+Message-ID: <c2450609677d4b3df172545a9aaad5373402e23c.camel@gmail.com>
+Subject: Re: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
+From:   Bean Huo <huobean@gmail.com>
+To:     Avi Shchislowski <Avi.Shchislowski@wdc.com>,
+        "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
+        Avri Altman <Avri.Altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+In-Reply-To: <SN6PR04MB38720C3D8FC176C3C7FB51B89A7E0@SN6PR04MB3872.namprd04.prod.outlook.com>
+References: <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p8>
+         <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
+         <SN6PR04MB38720C3D8FC176C3C7FB51B89A7E0@SN6PR04MB3872.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Date:   Thu, 16 Jul 2020 10:13:33 +0200
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 02:44:14PM +0200, Greg KH wrote:
-> On Wed, Jul 22, 2020 at 07:57:48PM +0800, WeitaoWangoc wrote:
-> > This bug is found in Zhaoxin platform, but it's a commom code bug.
-> > Fail sequence:
-> > step1: Unbind UHCI controller from native driver;
-> > step2: Bind UHCI controller to vfio-pci, which will put UHCI controller in one vfio
-> >        group's device list and set UHCI's dev->driver_data to struct vfio-pci(for UHCI)
+On Wed, 2020-07-15 at 18:34 +0000, Avi Shchislowski wrote:
+> Hello All,
+> My name is Avi Shchislowski, I am managing the WDC's Linux Host R&D
+> team in which Avri is a member of.
+> As the review process of HPB is progressing very constructively, we
+> are getting more and more requests from OEMs, Inquiring about HPB in
+> general, and host control mode in particular.
 > 
-> Hah, that works?  How do you do that properly?  What code does that?
+> Their main concern is that HPB will make it to 5.9 merge window, but
+> the host control mode patches will not.
+> Thus, because of recent Google's GKI, the next Android LTS might not
+> include HPB with host control mode.
+> 
+> Aside of those requests, initial host control mode testing are
+> showing promising prospective with respect of performance gain.
+> 
+> What would be, in your opinion, the best policy that host control
+> mode is included in next Android LTS?
+> 
+> Thanks,
+> Avi
+> 
 
-Yeah, that can't possibly work.  The USB core expects that any host 
-controller device (or at least, any PCI host controller device) has its 
-driver_data set to point to a struct usb_hcd.  It doesn't expect a host 
-controller to be bound to anything other than a host controller driver.
+Hi Avi
+IMO, no matter how did the driver implement, if you truly want the HPB
+host mode driver you mentioned to be mainlined in the upstream Linux,
+the best policy is that you should first post the driver in the SCSI
+maillist community, let us firstly review here. I didn't see your
+driver, I don't know how to provide the correct answer.
 
-Things could easily go very wrong here.  For example, suppose at this 
-point the ehci-hcd driver just happens to bind to the EHCI controller.  
-When this happens, the EHCI controller hardware takes over all the USB 
-connections that were routed to the UHCI controller.  How will vfio-pci 
-deal with that?  Pretty ungracefully, I imagine.
+Thanks,
+Bean
 
-The only way to make this work at all is to unbind both uhci-hcd and 
-ehci-hcd first.  Then after both are finished you can safely bind 
-vfio-pci to the EHCI controller and the UHCI controllers (in that 
-order).
 
-Alan Stern
+
