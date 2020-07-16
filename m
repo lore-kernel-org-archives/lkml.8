@@ -2,96 +2,119 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A9CC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F1CC433F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4273B2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB62B2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:03:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cT1CLHEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgGPJCf (ORCPT
+        id S1728430AbgGPJC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 05:02:35 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7867 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726333AbgGPJCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 05:02:35 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 05C7D9C5811B2F9A705F;
-        Thu, 16 Jul 2020 17:02:31 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Jul 2020 17:02:27 +0800
-From:   Qinglang Miao <miaoqinglang@huawei.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Justin Sanders <justin@coraid.com>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] aoe: Convert to DEFINE_SHOW_ATTRIBUTE
-Date:   Thu, 16 Jul 2020 17:06:21 +0800
-Message-ID: <20200716090621.14063-1-miaoqinglang@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 16 Jul 2020 05:02:59 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:13172 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728349AbgGPJC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 05:02:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594890176; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=7CyfaApRY22qfhxW5ZVfuZTLhmfeSWKVhmQOnb67Jk8=; b=cT1CLHEIYxWqBW5CQokAI3y45gN1HhanICCAs/m/Oo45smBG/t2aRZZU32wOxTpgmQl4Wgoi
+ QNhsarjsWqa2fLVkhE7WjwVAj/9detJpCy9LJPFTFVoSB3JxCUufB/sy3LZ6uLYmX+ZbK12c
+ MYnCbYQE6ptTYxMyN90ChpLkt30=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5f1017c0ee6926bb4f75dcfe (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 09:02:56
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9F5FDC433C9; Thu, 16 Jul 2020 09:02:55 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E1E1C433CB;
+        Thu, 16 Jul 2020 09:02:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5E1E1C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Viktor =?utf-8?B?SsOkZ2Vyc2vDvHBwZXI=?= 
+        <viktor_jaegerskuepper@freenet.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gabriel C <nix.or.die@googlemail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable <stable@vger.kernel.org>, lwn@lwn.net,
+        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
+        ath9k-devel <ath9k-devel@qca.qualcomm.com>,
+        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        Roman Mamedov <rm@romanrm.net>
+Subject: Re: ath9k broken [was: Linux 5.7.3]
+References: <1592410366125160@kroah.com>
+        <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
+        <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org>
+        <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
+        <CAEJqkgj4LS7M3zYK51Vagt4rWC9A7uunA+7CvX0Qv=57Or3Ngg@mail.gmail.com>
+        <CAEJqkghJWGsLCj2Wvt-yhzMewjXwrXhSEDpar6rbDpbSA6R8kQ@mail.gmail.com>
+        <20200626133959.GA4024297@kroah.com>
+        <CAEJqkgiACMar-iWsWQgJPAViBBURaNpcOD4FKtp6M8Aw_D4FOw@mail.gmail.com>
+        <CAEJqkgg4Ka8oNL7ELoJrR0-Abz3=caLns48KyDC=DQcym6SRvA@mail.gmail.com>
+        <20200707141100.GE4064836@kroah.com>
+        <07c8d8fa-8bbc-0b4e-191c-b2635214e8b9@freenet.de>
+        <87ft9sbym3.fsf@tynnyri.adurom.net>
+        <20eec98e-960c-cece-21e4-01e26b44233e@freenet.de>
+Date:   Thu, 16 Jul 2020 12:02:49 +0300
+In-Reply-To: <20eec98e-960c-cece-21e4-01e26b44233e@freenet.de> ("Viktor
+        \=\?utf-8\?Q\?J\=C3\=A4gersk\=C3\=BCpper\=22's\?\= message of "Thu, 16 Jul 2020
+ 10:15:30 +0200")
+Message-ID: <87365r96iu.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Shixin <liushixin2@huawei.com>
+Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freenet.de> writes:
 
-Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+>>> This bug was also reported on the thread where it had been posted origi=
+nally:
+>>> https://lore.kernel.org/linux-wireless/20200621020428.6417d6fb@natsu/
+>>>
+>>> I am waiting for Kalle Valo to accept my patch (v2) which reverts the a=
+bove
+>>> mentioned commit and which looks correct according to him. He wrote tha=
+t he
+>>> would take a closer look at this as soon as he could.
+>>=20
+>> Mark posted a patch which I'm hoping to fix the issue:
+>>=20
+>> [1/1] ath9k: Fix regression with Atheros 9271
+>>=20
+>> https://patchwork.kernel.org/patch/11657669/
+>>=20
+>> Can someone confirm this, please? I would rather take Mark's fix than
+>> the revert.
+>>=20
+>
+> This fixes the issue for me.
 
-Signed-off-by: Liu Shixin <liushixin2@huawei.com>
----
- drivers/block/aoe/aoeblk.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+Great, thanks for testing. I'll wait at least another day for more
+comments and then queue it for v5.8.
 
-diff --git a/drivers/block/aoe/aoeblk.c b/drivers/block/aoe/aoeblk.c
-index 57905a495..3502a8325 100644
---- a/drivers/block/aoe/aoeblk.c
-+++ b/drivers/block/aoe/aoeblk.c
-@@ -110,7 +110,7 @@ static ssize_t aoedisk_show_payload(struct device *dev,
- 	return snprintf(page, PAGE_SIZE, "%lu\n", d->maxbcnt);
- }
- 
--static int aoedisk_debugfs_show(struct seq_file *s, void *ignored)
-+static int aoe_debugfs_show(struct seq_file *s, void *ignored)
- {
- 	struct aoedev *d;
- 	struct aoetgt **t, **te;
-@@ -154,10 +154,7 @@ static int aoedisk_debugfs_show(struct seq_file *s, void *ignored)
- 	return 0;
- }
- 
--static int aoe_debugfs_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, aoedisk_debugfs_show, inode->i_private);
--}
-+DEFINE_SHOW_ATTRIBUTE(aoe_debugfs);
- 
- static DEVICE_ATTR(state, 0444, aoedisk_show_state, NULL);
- static DEVICE_ATTR(mac, 0444, aoedisk_show_mac, NULL);
-@@ -186,13 +183,6 @@ static const struct attribute_group *aoe_attr_groups[] = {
- 	NULL,
- };
- 
--static const struct file_operations aoe_debugfs_fops = {
--	.open = aoe_debugfs_open,
--	.read_iter = seq_read_iter,
--	.llseek = seq_lseek,
--	.release = single_release,
--};
--
- static void
- aoedisk_add_debugfs(struct aoedev *d)
- {
--- 
-2.17.1
-
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
