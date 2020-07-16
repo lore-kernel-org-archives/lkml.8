@@ -2,104 +2,135 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AB1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB86920760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63252071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:00:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TlbRof+r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sn57Qzsy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgGPH7d (ORCPT
+        id S1726830AbgGPIAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:59:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43692 "EHLO
+        Thu, 16 Jul 2020 04:00:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgGPH7c (ORCPT
+        with ESMTP id S1726386AbgGPIAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:59:32 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F01C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:59:32 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f139so10399853wmf.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:59:32 -0700 (PDT)
+        Thu, 16 Jul 2020 04:00:17 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E30C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 01:00:16 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o2so10438760wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 01:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=uG4bBgdzPJcKA1q7g4FtFtpm2iBs2j/GM+Sb6kg25uc=;
-        b=TlbRof+rYJlkBPf8XiptFqKuw2HrpXZ1VY4dgL8lhgvotH8WSLyZ6WM5ruscewMAa/
-         xc8y9a9PChZfMkR5G0/NVytcBx4Y9PVe3GR7dLCSUBzo7OBL+RpyOd1TCZfT2kenRSsg
-         0mbN78mKxk+0+yPRqC3otegshWkTJX8r1/kG3NQ7V7HFd2D0LmYH+ySmqG3N2ePvboKZ
-         R3bwfzAraRNU6h2ioXevSw5Q93gTIOF3UqNyryoZYAnnxWv9zPvWDsRpEOEtp5i+LSr6
-         P3OrcHrF6qrr3+O8Mnp1vLE7RlOmhgFRni+aJZ0IjGln2bX3swC8L9sB6lVb+cH6j0bN
-         TXLg==
+        bh=eK+NQpi1H7gGHgVmnjEP/NQYX3h/AgB6eSXs4+PSJIg=;
+        b=sn57QzsyyH/w3IwaZ0qzjp/xeuPrzZt7j6tXzWGKXK90sZwzf6oTn8EiYU5aUnn+dS
+         CnwtApOXbFaxNR4tEdeFMYlkT422aoRx64dXZ+S5kV20KGZMMjPz8kDOovJxpBafODc6
+         R0I6rxpc/y07qIPqgOOQDx+OutoRh8fw7nskpUFw84/uaPKyprC9crt0MCJHakzLJUKs
+         Nl6wogMf3oJdZYN9WYdmi/A8PhsBCuy9U4AFX+xuk/oAyl4H1Cp9GeaIVyYNnomNHLNn
+         RWOEvIuduHK2lsAlt3FSVtwIcl8d7fo3vuSuiBQmh93VdD88d6h8O8m+mL+foTnDy2Yp
+         NMvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=uG4bBgdzPJcKA1q7g4FtFtpm2iBs2j/GM+Sb6kg25uc=;
-        b=gXJ8PUaRFcZQj4W4us2mNq0o8TQEc3ZBss7HVt8H66vmT2YFhD68Eqsn5xOfZsA9ZC
-         jpValEAMRt88TS88+JB4m7a9fb3arGHsfoT9dm9ryQKccPmurAo7pQPXNUYC3kVNrnUc
-         emMdhAGjoLSUNbgWa3wLuiUNb/UKf7Z38yt9D2e+7+TINPnDuvxI0GwrC154kYQaCN6o
-         7289+afrz8bd71C/QbN1Tf2ieZpCxm5z+w0RpB/X1FL+zlV3gkcH4Ds95mTHf7QXHd0w
-         /fq3FfsgMWe1ZN+/2f9x/QBrjcCQLL3YOafG2BoObte/crQwSBvk9mS7qN6c46i5/58B
-         Bq8w==
-X-Gm-Message-State: AOAM532To7gOMdfnwr0H7AJQUQkHzjA3NNAqzhWLWHE5p08V71gCA3QB
-        +DB7CjTbonhhdzU5ABzxe2rAtg==
-X-Google-Smtp-Source: ABdhPJwOWKHeO5JFPkGEDdmH3ebAmbF9RF3hYNjhebMarBxozbvU+CI7OjLE5KoTSHn8veV3NC5PYA==
-X-Received: by 2002:a7b:cc85:: with SMTP id p5mr3106237wma.18.1594886371110;
-        Thu, 16 Jul 2020 00:59:31 -0700 (PDT)
+        bh=eK+NQpi1H7gGHgVmnjEP/NQYX3h/AgB6eSXs4+PSJIg=;
+        b=Et/fwKM1BPHS4MzzEmluyoVLoidUMQIMRRtXNyjRYwGxBsnxTlzRGozdhfHpaDcZ37
+         v8/WafCgVHGQWvGcHEM7aCXfM59kre5lzWVP17XhIRdCaJiCA9EbV09Gxi3mD5zl+lHt
+         zl8Tm50XszogUQGAOOU4x+6oYLZJdNPfKo4p+Z5c0+AGjiPS1MlFylnI0X5ntxPEtMum
+         zsRGw+V9R0JEuYNkEuCuzAacjMuRVzoZjGJW9JUIDcP77djkFm0huIWGQRhRIFW5ZmJP
+         FqYle/v4REmDNj1jYfIjdcpado1w4us5U4mg+A5waczGOwLqTyLyVwwrMxQ4CFrGS5rC
+         EfCQ==
+X-Gm-Message-State: AOAM5336Na+JmQ8Q8CukdHCr1JP+sW73RRNWIScOBxIOpoPKYpOdROBp
+        4sl9fdzFl5HzESDoWRpfuUC81w==
+X-Google-Smtp-Source: ABdhPJzyiWXnbPWAnIVh5m8XQyYNIG3Wghkom35f6C3up/cDmURrL5N/1/DpnQ2fW4UcyeX7OG2/IQ==
+X-Received: by 2002:a1c:81c8:: with SMTP id c191mr3123266wmd.23.1594886415588;
+        Thu, 16 Jul 2020 01:00:15 -0700 (PDT)
 Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id m4sm6951240wmi.48.2020.07.16.00.59.30
+        by smtp.gmail.com with ESMTPSA id k11sm8160742wrd.23.2020.07.16.01.00.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 00:59:30 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 08:59:28 +0100
+        Thu, 16 Jul 2020 01:00:15 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 09:00:13 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     jejb@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, support@areca.com.tw
-Subject: Re: [PATCH 16/30] scsi: arcmsr: arcmsr_hba: Make room for the
- trailing NULL, even if it is over-written
-Message-ID: <20200716075928.GN3165313@dell>
-References: <20200708120221.3386672-1-lee.jones@linaro.org>
- <20200708120221.3386672-17-lee.jones@linaro.org>
- <yq1h7u8o7ck.fsf@ca-mkp.ca.oracle.com>
+Cc:     jejb@linux.ibm.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/24] Set 3: Fix another set of SCSI related W=1
+ warnings
+Message-ID: <20200716080013.GO3165313@dell>
+References: <20200713080001.128044-1-lee.jones@linaro.org>
+ <159484884355.21107.3732344826044180939.b4-ty@oracle.com>
+ <20200716071629.GL3165313@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <yq1h7u8o7ck.fsf@ca-mkp.ca.oracle.com>
+In-Reply-To: <20200716071629.GL3165313@dell>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020, Martin K. Petersen wrote:
+On Thu, 16 Jul 2020, Lee Jones wrote:
 
+> On Wed, 15 Jul 2020, Martin K. Petersen wrote:
 > 
-> Lee,
+> > On Mon, 13 Jul 2020 08:59:37 +0100, Lee Jones wrote:
+> > 
+> > > This set is part of a larger effort attempting to clean-up W=1
+> > > kernel builds, which are currently overwhelmingly riddled with
+> > > niggly little warnings.
+> > > 
+> > > Slowly working through the SCSI related ones.  There are many.
+> > > 
+> > > This brings the total of W=1 SCSI wanings from 1690 in v5.8-rc1 to 1109.
+> > > 
+> > > [...]
+> > 
+> > [01/24] scsi: aacraid: Repair two kerneldoc headers
+> >         https://git.kernel.org/mkp/scsi/c/b115958d91f5
+> > [02/24] scsi: aacraid: Fix a few kerneldoc issues
+> >         https://git.kernel.org/mkp/scsi/c/cf93fffac261
+> > [03/24] scsi: aacraid: Fix logical bug when !DBG
+> >         https://git.kernel.org/mkp/scsi/c/2fee77e5b820
+> > [04/24] scsi: aacraid: Remove unused variable 'status'
+> >         https://git.kernel.org/mkp/scsi/c/0123c7c62d6c
+> > [05/24] scsi: aacraid: Demote partially documented function header
+> >         https://git.kernel.org/mkp/scsi/c/71aa4d3e0e78
+> > [06/24] scsi: aic94xx: Document 'lseq' and repair asd_update_port_links() header
+> >         https://git.kernel.org/mkp/scsi/c/966fdadf6fea
+> > [07/24] scsi: aacraid: Fix a bunch of function header issues
+> >         https://git.kernel.org/mkp/scsi/c/f1134f0eb184
+> > [08/24] scsi: aic94xx: Fix a couple of formatting and bitrot issues
+> >         https://git.kernel.org/mkp/scsi/c/d2e510505006
+> > [09/24] scsi: aacraid: Fill in the very parameter descriptions for rx_sync_cmd()
+> >         https://git.kernel.org/mkp/scsi/c/ae272a95133a
+> > [10/24] scsi: pm8001: Provide descriptions for the many undocumented 'attr's
+> >         https://git.kernel.org/mkp/scsi/c/e1c3e0f8a2ae
+> > [11/24] scsi: ipr: Fix a mountain of kerneldoc misdemeanours
+> >         https://git.kernel.org/mkp/scsi/c/a96099e2c164
+> > [12/24] scsi: virtio_scsi: Demote seemingly unintentional kerneldoc header
+> >         https://git.kernel.org/mkp/scsi/c/e31f2661ff41
+> > [13/24] scsi: ipr: Remove a bunch of set but checked variables
+> >         https://git.kernel.org/mkp/scsi/c/4dc833999e37
+> > [14/24] scsi: ipr: Fix struct packed-not-aligned issues
+> >         https://git.kernel.org/mkp/scsi/c/f3bdc59f9b11
+> > [15/24] scsi: myrs: Demote obvious misuse of kerneldoc to standard comment blocks
+> >         https://git.kernel.org/mkp/scsi/c/8a692fdb1d04
 > 
-> > Ensure we do not copy the final one (which is not overwitten).
-> >
-> > -		strncpy(&inqdata[8], "Areca   ", 8);
-> > +		strncpy(&inqdata[8], "Areca   ", 9);
-> >  		/* Vendor Identification */
-> > -		strncpy(&inqdata[16], "RAID controller ", 16);
-> > +		strncpy(&inqdata[16], "RAID controller ", 17);
-> >  		/* Product Identification */
-> > -		strncpy(&inqdata[32], "R001", 4); /* Product Revision */
-> > +		strncpy(&inqdata[32], "R001", 5); /* Product Revision */
-> 
-> SCSI INQUIRY strings are fixed length and not NULL-terminated. Please
-> address this warning using either memcpy() or strlcpy().
+> Something wrong with [16/24]?
 
-Will do.  Thanks.
+I see that you reviewed v1.  No need to respond, thanks.
 
 -- 
 Lee Jones [李琼斯]
