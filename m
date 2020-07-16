@@ -2,120 +2,196 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BD1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0692CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27C832074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6972074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:32:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="NX0d7I67"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgGPSb1 (ORCPT
+        id S1729230AbgGPScg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:31:27 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48421 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbgGPSb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:31:27 -0400
-IronPort-SDR: X2qH1R9trpAYXz79ljqZHuyAmQ6G09RJh6CMikZ+t71g3UWqLd1FKLbWIo3HbfaZjFwbuCuTBs
- 1c3+bxhTF+sw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="214199627"
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="214199627"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 11:31:26 -0700
-IronPort-SDR: 2t0dmylMk3iWIbS6vD/SuFnigW7SF7YBbtcIIx3Mhigunsx4L5VmqjzHrquvxZ6wZWUsILMegO
- TNWxlA3BD68Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="308731140"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Jul 2020 11:31:25 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id B3A945804BB;
-        Thu, 16 Jul 2020 11:31:25 -0700 (PDT)
-Message-ID: <e051971b327d870476dad209ddf27055d001b9b4.camel@linux.intel.com>
-Subject: Re: [PATCH V3 1/3] PCI: Add defines for Designated Vendor-Specific
- Capability
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>, lee.jones@linaro.org,
-        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Date:   Thu, 16 Jul 2020 11:31:25 -0700
-In-Reply-To: <dc459a96-1434-16bf-80d2-06b0680f9fda@linux.intel.com>
-References: <20200508021844.6911-1-david.e.box@linux.intel.com>
-         <20200714062323.19990-2-david.e.box@linux.intel.com>
-         <3f490460-62f8-8b49-0735-ad29653bfbc0@infradead.org>
-         <dc459a96-1434-16bf-80d2-06b0680f9fda@linux.intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Jul 2020 14:32:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgGPScg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 14:32:36 -0400
+Received: from mx0a-00190b01.pphosted.com (mx0a-00190b01.pphosted.com [IPv6:2620:100:9001:583::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EBDC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 11:32:35 -0700 (PDT)
+Received: from pps.filterd (m0050093.ppops.net [127.0.0.1])
+        by m0050093.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 06GIE2m5016660;
+        Thu, 16 Jul 2020 19:32:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id; s=jan2016.eng;
+ bh=mJWk1msa5bXNtY79l547bsHSpzevc8f1+D0rPmjrpFU=;
+ b=NX0d7I67x54frelgbNJrmkYvBk6LdK1gQKDDevNezZ4wY9jIsNVO4K42Lt8vL/9o7kfx
+ gLMs2LeLuKTVRve4Ba8wA79mxkaFu/YU9i9RdoN+eQ+qObDXQQcEBHj9Zia2rjAVJzzB
+ KuihUZ+q2e4vGMvK2Wj5uU0m73SZUsuXuZ516J1cL21Ihx6FLzti17eQHEPVBwPFtahg
+ /Bd8Ab9ec7A0eNutu97wSMPoo9UGOHnOUBxVjY/SJRxjZ84cRThINoiHSThQfRUeegVu
+ ztxVF9I5QEQRQvZ9d9IYcmmjozwSZRpT5Z6hjBFNt8GqhecCPl98wv8qsveqPF/jwqXS Bw== 
+Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
+        by m0050093.ppops.net-00190b01. with ESMTP id 328kcd3hsd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 19:32:29 +0100
+Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
+        by prod-mail-ppoint2.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 06GIFx01015869;
+        Thu, 16 Jul 2020 14:32:28 -0400
+Received: from prod-mail-relay11.akamai.com ([172.27.118.250])
+        by prod-mail-ppoint2.akamai.com with ESMTP id 3278rxf0ya-1;
+        Thu, 16 Jul 2020 14:32:28 -0400
+Received: from bos-lpjec.145bw.corp.akamai.com (bos-lpjec.145bw.corp.akamai.com [172.28.3.71])
+        by prod-mail-relay11.akamai.com (Postfix) with ESMTP id 3575922C29;
+        Thu, 16 Jul 2020 18:32:28 +0000 (GMT)
+From:   Jason Baron <jbaron@akamai.com>
+To:     bp@suse.de
+Cc:     linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-edac <linux-edac@vger.kernel.org>
+Subject: [PATCH] EDAC/ie31200: fallback if host bridge device is already initialized
+Date:   Thu, 16 Jul 2020 14:25:11 -0400
+Message-Id: <1594923911-10885-1-git-send-email-jbaron@akamai.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_07:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 suspectscore=1 bulkscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160128
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_08:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 mlxlogscore=999 adultscore=0 spamscore=0
+ suspectscore=1 impostorscore=0 malwarescore=0 clxscore=1011 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007160130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-16 at 10:18 -0700, Alexander Duyck wrote:
-> 
-> On 7/15/2020 7:55 PM, Randy Dunlap wrote:
-> > On 7/13/20 11:23 PM, David E. Box wrote:
-> > > Add PCIe DVSEC extended capability ID and defines for the header
-> > > offsets.
-> > > Defined in PCIe r5.0, sec 7.9.6.
-> > > 
-> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > ---
-> > >   include/uapi/linux/pci_regs.h | 5 +++++
-> > >   1 file changed, 5 insertions(+)
-> > > 
-> > > diff --git a/include/uapi/linux/pci_regs.h
-> > > b/include/uapi/linux/pci_regs.h
-> > > index f9701410d3b5..09daa9f07b6b 100644
-> > > --- a/include/uapi/linux/pci_regs.h
-> > > +++ b/include/uapi/linux/pci_regs.h
-> > > @@ -720,6 +720,7 @@
-> > > +#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-
-> > > Specific */
-> > > @@ -1062,6 +1063,10 @@
-> > > +/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
-> > > +#define PCI_DVSEC_HEADER1		0x4 /* Vendor-Specific
-> > > Header1 */
-> > > +#define PCI_DVSEC_HEADER2		0x8 /* Vendor-Specific
-> > > Header2 */
+The Intel uncore driver may claim some of the pci ids from ie31200 which
+means that the ie31200 edac driver will not initialize them as part of
+pci_register_driver().
 
-These comments I'll fix to say "Designated Vendor-Specific"
+Let's add a fallback for this case to 'pci_get_device()' to get a
+reference on the device such that it can still be configured. This is
+similar in approach to other edac drivers.
 
-> > 
-> > Just a little comment: It would make more sense to me to
-> > s/DVSEC/DVSPEC/g.
-> > 
-> > But then I don't have the PCIe documentation.
-> 
-> Arguably some of the confusion might be from the patch title. DVSEC
-> is 
-> acronym for Designated Vendor-Specific Extended Capability if I
-> recall 
-> correctly. It would probably be best to call that out since the
-> extended 
-> implies it lives in the config space accessible via the memory
-> mapped 
-> config.
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+---
+ drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 47 insertions(+), 3 deletions(-)
 
-I'll change the patch title as well, but agree DVSEC is better as it's
-consistent with the spec.
-
-Thanks
-
-David
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index d68346a..ebe5099 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -170,6 +170,8 @@
+ 	(n << (28 + (2 * skl) - PAGE_SHIFT))
+ 
+ static int nr_channels;
++static struct pci_dev *mci_pdev;
++static int ie31200_registered = 1;
+ 
+ struct ie31200_priv {
+ 	void __iomem *window;
+@@ -538,12 +540,16 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ static int ie31200_init_one(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
+-	edac_dbg(0, "MC:\n");
++	int rc;
+ 
++	edac_dbg(0, "MC:\n");
+ 	if (pci_enable_device(pdev) < 0)
+ 		return -EIO;
++	rc = ie31200_probe1(pdev, ent->driver_data);
++	if (rc == 0 && !mci_pdev)
++		mci_pdev = pci_dev_get(pdev);
+ 
+-	return ie31200_probe1(pdev, ent->driver_data);
++	return rc;
+ }
+ 
+ static void ie31200_remove_one(struct pci_dev *pdev)
+@@ -552,6 +558,8 @@ static void ie31200_remove_one(struct pci_dev *pdev)
+ 	struct ie31200_priv *priv;
+ 
+ 	edac_dbg(0, "\n");
++	pci_dev_put(mci_pdev);
++	mci_pdev = NULL;
+ 	mci = edac_mc_del_mc(&pdev->dev);
+ 	if (!mci)
+ 		return;
+@@ -593,17 +601,53 @@ static struct pci_driver ie31200_driver = {
+ 
+ static int __init ie31200_init(void)
+ {
++	int pci_rc, i;
++
+ 	edac_dbg(3, "MC:\n");
+ 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
+ 	opstate_init();
+ 
+-	return pci_register_driver(&ie31200_driver);
++	pci_rc = pci_register_driver(&ie31200_driver);
++	if (pci_rc < 0)
++		goto fail0;
++
++	if (!mci_pdev) {
++		ie31200_registered = 0;
++		for (i = 0; ie31200_pci_tbl[i].vendor != 0; i++) {
++			mci_pdev = pci_get_device(ie31200_pci_tbl[i].vendor,
++						  ie31200_pci_tbl[i].device,
++						  NULL);
++			if (mci_pdev)
++				break;
++		}
++		if (!mci_pdev) {
++			edac_dbg(0, "ie31200 pci_get_device fail\n");
++			pci_rc = -ENODEV;
++			goto fail1;
++		}
++		pci_rc = ie31200_init_one(mci_pdev, &ie31200_pci_tbl[i]);
++		if (pci_rc < 0) {
++			edac_dbg(0, "ie31200 init fail\n");
++			pci_rc = -ENODEV;
++			goto fail1;
++		}
++	}
++	return 0;
++
++fail1:
++	pci_unregister_driver(&ie31200_driver);
++fail0:
++	pci_dev_put(mci_pdev);
++
++	return pci_rc;
+ }
+ 
+ static void __exit ie31200_exit(void)
+ {
+ 	edac_dbg(3, "MC:\n");
+ 	pci_unregister_driver(&ie31200_driver);
++	if (!ie31200_registered)
++		ie31200_remove_one(mci_pdev);
+ }
+ 
+ module_init(ie31200_init);
+-- 
+2.7.4
 
