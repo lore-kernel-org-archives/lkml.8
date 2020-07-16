@@ -2,122 +2,97 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3751C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82DEA206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B21206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:49:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s0u/HAsC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWP4gYUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgGPOrd (ORCPT
+        id S1728619AbgGPOtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:47:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50554 "EHLO
+        Thu, 16 Jul 2020 10:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbgGPOrc (ORCPT
+        with ESMTP id S1725867AbgGPOtF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:47:32 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6023AC061755;
-        Thu, 16 Jul 2020 07:47:32 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q7so7506110ljm.1;
-        Thu, 16 Jul 2020 07:47:32 -0700 (PDT)
+        Thu, 16 Jul 2020 10:49:05 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3E6C061755;
+        Thu, 16 Jul 2020 07:49:05 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e8so4968370pgc.5;
+        Thu, 16 Jul 2020 07:49:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZK+12jCm5MTg9xTYbE2yZv4zQUftKp93X+3l7pCSao4=;
-        b=s0u/HAsCNUtZR50BTvHEvUbFZTcNF5MMv/OtOPlBrTusN+bAJzQ6jwX8yWN292TZUJ
-         hvy6W37KFJgsC0GfRQuFT+npoqDJajMcD1xyOnAb66OCFeioKWl7V9UoQSiue+Zg0rl9
-         uF9Cj0VICMZot1rrggzjhl+haD44TvEQ364maW3y3yK9kpfEv4AapC2UKYXj7Cu2ZB9R
-         MY7c0SuMOqSXHw+SptBOs+TlgSI2rOMcYO0qctkPJMkNhG66ZbqA+qIto+uZ07Yf2c/E
-         dYtqXhY2dr5Gv0FOvfyu4qGnv5Y6x/PdR2f4efTbkUlQcmGhgSFPioOom1xtNNEghyXB
-         SPwg==
+        h=from:to:cc:subject:date:message-id;
+        bh=W2OZvJG4DPRannY7wuwhfNk5s3YNrxgm/m4qGt8i4rE=;
+        b=jWP4gYUdkJ025RQx0M4uQajcNEnMl/nPvN9dVTi9eoy74Rmb6eP76LIM1wMGpfPPnK
+         OvJGg5IjEzBHh3MT6h5Z2CNjs3TO7oP9wfgNgebBmFJPLhSlDqIpeAd7VcfuURuZBT2z
+         qC0KDnrTAhkfI86cWWTq+/ZajfMRt0at6PrhR6Si07S/6xkiKjCzm84enuBmPyEuNObK
+         wpQwZYviaX6WYIYv+QO3HVDPXOmz7mt29H4gtMwaPEdxecsDX3Pz6PSFrzbiK1FumiIp
+         ldL67iaHOzfWRtdxK/T5o4zkyvwbrm9e04TT6IuZHTGN/A9qi+fbS9enIQuvAG0hCwqD
+         CXaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZK+12jCm5MTg9xTYbE2yZv4zQUftKp93X+3l7pCSao4=;
-        b=fkfKWCBObHrEoclvDvUvlRx+hVZizavhj3+vVljVDiEg17AB3y1a0MYdUy2Eh83PJX
-         dSTRm6PV4SmAl80owRkGJtxc2WrgdKb5n5giDhttFJQ6y6zLsPL/5+GuVxiKw9+RW7Av
-         zQrk8GrwE9L1w2CElEg1i3lDNOuV1HQYFhbwez82LlhNVQ5QweMkJbt4gSACiAgxFbfp
-         j2nqoPrLfqNs8yGlgKbM1M2v9nwJchzS29IWuFBATwOZApTNMT7Tn5aX8qRO0+ightng
-         WVLhV1V/wS2++CeX00Qoh1mHBki0b1YoP0J8LxqvY1lozBdabNXQFOKMEFnq1U47r3w6
-         giRw==
-X-Gm-Message-State: AOAM530udnB8lLkDYAL1LpDuql6qDc0ftT53Fdx36wsfe96R3HGeCGle
-        6oBx1/vZ02HoeQVht1NNgHs=
-X-Google-Smtp-Source: ABdhPJw7FKB1H+uh2YcUwLfPEd3YRdVWzZdnBADWD+s29180OuS+ew/Uqhk6AcX0ISyzUJDeBtHMGA==
-X-Received: by 2002:a2e:961a:: with SMTP id v26mr2323209ljh.467.1594910850791;
-        Thu, 16 Jul 2020 07:47:30 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id m1sm1224034lfa.22.2020.07.16.07.47.29
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=W2OZvJG4DPRannY7wuwhfNk5s3YNrxgm/m4qGt8i4rE=;
+        b=n74WpMNU3g8UgASdZphQQCZQlMecXwyuGCJ9lEMlvFn51NZNyTiSF7UpNfN72sEPPk
+         NRGymcqjwUlEyW6i35tgc9As7SqMpfitdztwy1E+PzAh2LiyjNmcmdAfKSA2ZtDgbnmC
+         vQ2uwB3NLgPq05QVA90SBfBbrjPQYY+u4VwmtI1eELrBt1V7ne5zczH0Qh0LV8lnXY6J
+         POYOBJ1oTOD4tNNQFq1UsZuiaKCckD/uMVlm+2ReMI3bW4qZvvFRdVY3r1DK9R1rU8GY
+         wJ3iQGUi5Qpus6SD79ESuEDi90fZyCs7pMMv0PmSnGW8A+63zcZj3RKx+7ruwP9fGhzo
+         w6HA==
+X-Gm-Message-State: AOAM532RAB7+hLumekRFUa2fQyju+BeL/VsUtNMj++mRnJE39bNK5BbZ
+        ZaBhWfDylngxsNBZt5hSGtk=
+X-Google-Smtp-Source: ABdhPJzq4ajzmPpxhlpGrWRgsSPlBde/g7zwaOm5aM8RqGHr9eXRsQaVRro7Rj1L7Ntn2lsG/CPGQA==
+X-Received: by 2002:a62:ae0d:: with SMTP id q13mr4051021pff.89.1594910945098;
+        Thu, 16 Jul 2020 07:49:05 -0700 (PDT)
+Received: from localhost.localdomain ([139.167.122.148])
+        by smtp.gmail.com with ESMTPSA id s68sm347383pjb.38.2020.07.16.07.49.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 07:47:30 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Thu, 16 Jul 2020 16:47:28 +0200
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
- allocator
-Message-ID: <20200716144728.GA31046@pc636>
-References: <20200715183537.4010-1-urezki@gmail.com>
- <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
- <CAEXW_YRoTvQfqqcM9fi+MkMxCPEaoJh4zHRM3qNYkv=-nAVuBQ@mail.gmail.com>
- <20200716091913.GA28595@pc636>
- <20200716142537.ecp4icsq7kg6qhdx@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716142537.ecp4icsq7kg6qhdx@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 16 Jul 2020 07:49:04 -0700 (PDT)
+From:   Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+To:     masahiroy@kernel.org, michal.lkml@markovi.net
+Cc:     Dhiraj Sharma <dhiraj.sharma0024@gmail.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] Makefile: Add "-eudyptula" string in EXTRAVERSION
+Date:   Thu, 16 Jul 2020 20:18:43 +0530
+Message-Id: <20200716144843.7965-1-dhiraj.sharma0024@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 04:25:37PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-07-16 11:19:13 [+0200], Uladzislau Rezki wrote:
-> > Sebastian, could you please confirm that if that patch that is in
-> > question fixes it?
-> > 
-> > It would be appreciated!
-> 
-> So that preempt disable should in terms any warnings. However I don't
-> think that it is strictly needed and from scheduling point of view you
-> forbid a CPU migration which might be good otherwise.
->
-Please elaborate your point regarding "i do not think it is strictly needed".
+I am doing eudyptula assigned tasks to get selected as a mentee. I am using LDF103 course knowledge and loving it.
+I used git log for Makefile and ran checkpatch.pl on my patch as to follow the same commit process guidelines. I hope you will like it.
 
-Actually i can rework the patch to remove even such preempt_enable/disable
-to stay on the same CPU, but i do not see the point of doing it.
+Signed-off-by: Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+Suggested-by: Little Penguin <little@eudyptula-challenge.org>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Do you see the point?
+diff --git a/Makefile b/Makefile
+index 0b5f8538bde5..d7897ce5ab23 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,7 +2,7 @@
+ VERSION = 5
+ PATCHLEVEL = 8
+ SUBLEVEL = 0
+-EXTRAVERSION = -rc5
++EXTRAVERSION = -rc5-eudyptula
+ NAME = Kleptomaniac Octopus
 
-As for scheduling point of view. Well, there are many places when there
-is a demand in memory or pages from atomic context. Also, getting a page
-is not considered as a hot path in the kfree_rcu(). 
-
->
-> Also if interrupts and everything is enabled then someone else might
-> invoke kfree_rcu() from BH context for instance.
-> 
-And what? What is a problem here, please elaborate if you see any
-issues.
-
+ # *DOCUMENTATION*
 --
-Vlad Rezki
+2.17.1
+
