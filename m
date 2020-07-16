@@ -4,96 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B914C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4568DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3162B206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F34720787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgGPTwi (ORCPT
+        id S1729571AbgGPTxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:52:38 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:52232 "EHLO smtp.al2klimov.de"
+        Thu, 16 Jul 2020 15:53:08 -0400
+Received: from mga14.intel.com ([192.55.52.115]:57147 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729554AbgGPTwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:52:37 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id AA634BC078;
-        Thu, 16 Jul 2020 19:52:33 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     zohar@linux.ibm.com, dhowells@redhat.com,
-        jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] encrypted-keys: Replace HTTP links with HTTPS ones
-Date:   Thu, 16 Jul 2020 21:52:27 +0200
-Message-Id: <20200716195227.65839-1-grandmaster@al2klimov.de>
+        id S1729048AbgGPTxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 15:53:08 -0400
+IronPort-SDR: keQhUiUwTMkw51NsmGPnCPJNCvj6gygX4ia4uMJyXf/L3Rc0O1cc8XXPRbvW+o4OKbArEdMzDF
+ cMwZo6SCz3mQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="148643267"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="148643267"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 12:53:08 -0700
+IronPort-SDR: OS3wmLkgzc4vKwOP0I8IINnOk9wof0sgRXDguNHzBbKjfeZvPZpllpTdlODDWsMNyGtIKNfycK
+ 9zdOlchtNY0Q==
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="430609713"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 12:53:07 -0700
+Date:   Thu, 16 Jul 2020 12:53:06 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        x86 <x86@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/split_lock: Enumerate split lock feature on Sapphire
+ Rapids
+Message-ID: <20200716195306.GA8660@agluck-desk2.amr.corp.intel.com>
+References: <1593208534-33721-1-git-send-email-fenghua.yu@intel.com>
+ <20200716193659.GA66451@romley-ivt3.sc.intel.com>
+ <20200716195010.GV10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716195010.GV10769@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Thu, Jul 16, 2020 at 09:50:10PM +0200, Peter Zijlstra wrote:
+> On Thu, Jul 16, 2020 at 12:37:00PM -0700, Fenghua Yu wrote:
+> > Hi, Thomas, Boris, Ingo,
+> > 
+> > On Fri, Jun 26, 2020 at 02:55:34PM -0700, Fenghua Yu wrote:
+> > > Add Sapphire Rapids processor to CPU list to enumerate split lock
+> > > feature.
+> > > 
+> > > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > > Reviewed-by: Tony Luck <tony.luck@intel.com>
+> > > ---
+> > >  arch/x86/kernel/cpu/intel.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> > > index c25a67a34bd3..dca069ad6671 100644
+> > > --- a/arch/x86/kernel/cpu/intel.c
+> > > +++ b/arch/x86/kernel/cpu/intel.c
+> > > @@ -1148,6 +1148,7 @@ static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
+> > >  	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	1),
+> > >  	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		1),
+> > >  	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		1),
+> > > +	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	1),
+> > >  	{}
+> > >  };
+> > 
+> > Any comment on this patch?
+> 
+> The only comment I have is that us needing it is ludicrous :/ What's the
+> bloody point of having it 'enumerated' if you then still have to use FMS
+> lists.
+> 
+> There's nowhere near enough cursing in the comment that goes with that
+> list.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Code of conduct suggests that we avoid such language :-)
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- include/keys/encrypted-type.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/keys/encrypted-type.h b/include/keys/encrypted-type.h
-index 38afb341c3f2..abfcbe02001a 100644
---- a/include/keys/encrypted-type.h
-+++ b/include/keys/encrypted-type.h
-@@ -2,7 +2,7 @@
- /*
-  * Copyright (C) 2010 IBM Corporation
-  * Copyright (C) 2010 Politecnico di Torino, Italy
-- *                    TORSEC group -- http://security.polito.it
-+ *                    TORSEC group -- https://security.polito.it
-  *
-  * Authors:
-  * Mimi Zohar <zohar@us.ibm.com>
--- 
-2.27.0
-
+-Tony
