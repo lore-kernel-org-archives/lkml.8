@@ -2,197 +2,215 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C19C43459
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77FF9207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EF2207F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:35:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNLf3n0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgGPCeg (ORCPT
+        id S1728075AbgGPCfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:34:36 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:57580 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGPCeA (ORCPT
+        Wed, 15 Jul 2020 22:35:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgGPCfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:34:00 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06G2Xei36017581, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06G2Xei36017581
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 16 Jul 2020 10:33:40 +0800
-Received: from RTIITEXHVM1.realtek.com.tw (172.21.6.62) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 16 Jul 2020 10:33:39 +0800
-Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
- RTIITEXHVM1.realtek.com.tw (172.21.6.62) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 16 Jul 2020 10:33:39 +0800
-Received: from localhost.localdomain (172.21.252.101) by
- RTEXMB01.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server id
- 15.1.1779.2 via Frontend Transport; Thu, 16 Jul 2020 10:33:39 +0800
-From:   TY Chang <tychang@realtek.com>
-To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
-CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 5/8] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1295
-Date:   Thu, 16 Jul 2020 10:33:35 +0800
-Message-ID: <20200716023338.14922-6-tychang@realtek.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200716023338.14922-1-tychang@realtek.com>
-References: <20200716023338.14922-1-tychang@realtek.com>
+        Wed, 15 Jul 2020 22:35:20 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30675C061755;
+        Wed, 15 Jul 2020 19:35:20 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id o11so5231781wrv.9;
+        Wed, 15 Jul 2020 19:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=zXeIy2ePTaW1WcCtqXXzYiM+52x43mwukDkyOFdBArE=;
+        b=uNLf3n0D7Qu4h1hbLPUuunRiVCBX2Lyi8LRRfrkUyw/6bxvl47ZrFT7AC0G7UdacXX
+         c6+QrsjNTwoOq37N5uFU3QbbBZ5cRutFyI9ZXl2FVTjma5MpfbtwJA9JB75KD3mnpInx
+         HcZiDM+TqoKevx4n6G0jFXwA3RYHSIbITjePdij1I8rqNjv3lGDhPeQb/4sr19zZ1D43
+         xEuD1M/m9160XiL7U4s0w5QSSil+NxJItFWA0LUt+cI91b3UmLubjqFi5eRUOzZBUeW4
+         2ReYm7yv5QnD3OD5iJ+QI454gI1nvkIo/ThBY1fJjyr0XfrD+eFc/s0fgm1bT2X+ofsi
+         btdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=zXeIy2ePTaW1WcCtqXXzYiM+52x43mwukDkyOFdBArE=;
+        b=oQFy8MywTeTNIbNoooD6yV0SUzKOrkMjVi6XUO2U8GugG97xC2N9tAd4KF9tcTCngv
+         8i31ZIdlFAZSpsfSpaaCylafdFEjKmBZefk/6FfzYCv2EptqPutW7Q4j0WAcZZzB0WHc
+         Yo8BuGU/tykA1L+txFutcd40QPSVLH810iDnqEuYTmTG7bSJjk1JULZvOV/GI4hL4oWi
+         kUpvMdqWGnTtMyCLWF7AU8ZAg6mOxmDyILfZe0Xr6OZ1GzfjDbgWDZUL0slIw4jTuCT2
+         BEUTmLOj5xquzx7gh79BSIfH+sU+o1syNrZ2YStIKyP23WKJW+RW38o+Y/jm10e668vc
+         pgkg==
+X-Gm-Message-State: AOAM533Cp4182F/4S8vW0EM6uq1rBU4V+aj8cfNQRl+h6HIgHOax5tl6
+        2iAuQEGqoniavT+c/N8HcPk=
+X-Google-Smtp-Source: ABdhPJyExXtlVi+Zc+5Zqws9ZmSeFfANLu2ZDScXx6Mtc2Gkhtt4LsfwhHFZsu0tuLx0owk7AOkMTg==
+X-Received: by 2002:adf:e80d:: with SMTP id o13mr2571048wrm.112.1594866918928;
+        Wed, 15 Jul 2020 19:35:18 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id g13sm6584482wro.84.2020.07.15.19.35.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 19:35:18 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 12:35:12 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH 7/7] lazy tlb: shoot lazies, a non-refcounting lazy
+ tlb option
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>
+References: <1594708054.04iuyxuyb5.astroid@bobo.none>
+        <6D3D1346-DB1E-43EB-812A-184918CCC16A@amacapital.net>
+In-Reply-To: <6D3D1346-DB1E-43EB-812A-184918CCC16A@amacapital.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Message-Id: <1594866490.ultl891sgk.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree binding Documentation for rtd1295
-pinctrl driver.
+Excerpts from Andy Lutomirski's message of July 14, 2020 10:46 pm:
+>=20
+>=20
+>> On Jul 13, 2020, at 11:31 PM, Nicholas Piggin <npiggin@gmail.com> wrote:
+>>=20
+>> =EF=BB=BFExcerpts from Nicholas Piggin's message of July 14, 2020 3:04 p=
+m:
+>>> Excerpts from Andy Lutomirski's message of July 14, 2020 4:18 am:
+>>>>=20
+>>>>> On Jul 13, 2020, at 9:48 AM, Nicholas Piggin <npiggin@gmail.com> wrot=
+e:
+>>>>>=20
+>>>>> =EF=BB=BFExcerpts from Andy Lutomirski's message of July 14, 2020 1:5=
+9 am:
+>>>>>>> On Thu, Jul 9, 2020 at 6:57 PM Nicholas Piggin <npiggin@gmail.com> =
+wrote:
+>>>>>>>=20
+>>>>>>> On big systems, the mm refcount can become highly contented when do=
+ing
+>>>>>>> a lot of context switching with threaded applications (particularly
+>>>>>>> switching between the idle thread and an application thread).
+>>>>>>>=20
+>>>>>>> Abandoning lazy tlb slows switching down quite a bit in the importa=
+nt
+>>>>>>> user->idle->user cases, so so instead implement a non-refcounted sc=
+heme
+>>>>>>> that causes __mmdrop() to IPI all CPUs in the mm_cpumask and shoot =
+down
+>>>>>>> any remaining lazy ones.
+>>>>>>>=20
+>>>>>>> On a 16-socket 192-core POWER8 system, a context switching benchmar=
+k
+>>>>>>> with as many software threads as CPUs (so each switch will go in an=
+d
+>>>>>>> out of idle), upstream can achieve a rate of about 1 million contex=
+t
+>>>>>>> switches per second. After this patch it goes up to 118 million.
+>>>>>>>=20
+>>>>>>=20
+>>>>>> I read the patch a couple of times, and I have a suggestion that cou=
+ld
+>>>>>> be nonsense.  You are, effectively, using mm_cpumask() as a sort of
+>>>>>> refcount.  You're saying "hey, this mm has no more references, but i=
+t
+>>>>>> still has nonempty mm_cpumask(), so let's send an IPI and shoot down
+>>>>>> those references too."  I'm wondering whether you actually need the
+>>>>>> IPI.  What if, instead, you actually treated mm_cpumask as a refcoun=
+t
+>>>>>> for real?  Roughly, in __mmdrop(), you would only free the page tabl=
+es
+>>>>>> if mm_cpumask() is empty.  And, in the code that removes a CPU from
+>>>>>> mm_cpumask(), you would check if mm_users =3D=3D 0 and, if so, check=
+ if
+>>>>>> you just removed the last bit from mm_cpumask and potentially free t=
+he
+>>>>>> mm.
+>>>>>>=20
+>>>>>> Getting the locking right here could be a bit tricky -- you need to
+>>>>>> avoid two CPUs simultaneously exiting lazy TLB and thinking they
+>>>>>> should free the mm, and you also need to avoid an mm with mm_users
+>>>>>> hitting zero concurrently with the last remote CPU using it lazily
+>>>>>> exiting lazy TLB.  Perhaps this could be resolved by having mm_count
+>>>>>> =3D=3D 1 mean "mm_cpumask() is might contain bits and, if so, it own=
+s the
+>>>>>> mm" and mm_count =3D=3D 0 meaning "now it's dead" and using some car=
+eful
+>>>>>> cmpxchg or dec_return to make sure that only one CPU frees it.
+>>>>>>=20
+>>>>>> Or maybe you'd need a lock or RCU for this, but the idea would be to
+>>>>>> only ever take the lock after mm_users goes to zero.
+>>>>>=20
+>>>>> I don't think it's nonsense, it could be a good way to avoid IPIs.
+>>>>>=20
+>>>>> I haven't seen much problem here that made me too concerned about IPI=
+s=20
+>>>>> yet, so I think the simple patch may be good enough to start with
+>>>>> for powerpc. I'm looking at avoiding/reducing the IPIs by combining t=
+he
+>>>>> unlazying with the exit TLB flush without doing anything fancy with
+>>>>> ref counting, but we'll see.
+>>>>=20
+>>>> I would be cautious with benchmarking here. I would expect that the
+>>>> nasty cases may affect power consumption more than performance =E2=80=
+=94 the=20
+>>>> specific issue is IPIs hitting idle cores, and the main effects are to=
+=20
+>>>> slow down exit() a bit but also to kick the idle core out of idle.=20
+>>>> Although, if the idle core is in a deep sleep, that IPI could be=20
+>>>> *very* slow.
+>>>=20
+>>> It will tend to be self-limiting to some degree (deeper idle cores
+>>> would tend to have less chance of IPI) but we have bigger issues on
+>>> powerpc with that, like broadcast IPIs to the mm cpumask for THP
+>>> management. Power hasn't really shown up as an issue but powerpc
+>>> CPUs may have their own requirements and issues there, shall we say.
+>>>=20
+>>>> So I think it=E2=80=99s worth at least giving this a try.
+>>>=20
+>>> To be clear it's not a complete solution itself. The problem is of=20
+>>> course that mm cpumask gives you false negatives, so the bits
+>>> won't always clean up after themselves as CPUs switch away from their
+>>> lazy tlb mms.
+>>=20
+>> ^^
+>>=20
+>> False positives: CPU is in the mm_cpumask, but is not using the mm
+>> as a lazy tlb. So there can be bits left and never freed.
+>>=20
+>> If you closed the false positives, you're back to a shared mm cache
+>> line on lazy mm context switches.
+>=20
+> x86 has this exact problem. At least no more than 64*8 CPUs share the cac=
+he line :)
+>=20
+> Can your share your benchmark?
 
-Signed-off-by: TY Chang <tychang@realtek.com>
----
- .../pinctrl/realtek,rtd1295-pinctrl.yaml      | 121 ++++++++++++++++++
- 1 file changed, 121 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
+Just testing the IPI rates (on a smaller 176 CPU system), on a
+kernel compile, it causes about 300 shootdown interrupts (not
+300 broadcasts but total interrupts).
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
-new file mode 100644
-index 000000000000..8cd6cfa2282e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
-@@ -0,0 +1,121 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/realtek,rtd1295-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Realtek DHC RTD1295 pin control
-+
-+maintainers:
-+  - Andreas Farber <afaerber@suse.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - realtek,rtd1295-iso-pinctrl
-+      - realtek,rtd1295-sb2-pinctrl
-+      - realtek,rtd1295-disp-pinctrl
-+      - realtek,rtd1295-cr-pinctrl
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+#PIN CONFIGURATION NODES
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+    allOf:
-+      - $ref: "/schemas/pinctrl/pincfg-node.yaml"
-+
-+    properties:
-+      groups:
-+        items:
-+          enum: [ iso_gpio_0, iso_gpio_1, iso_gpio_2, iso_gpio_3, iso_gpio_4,
-+          iso_gpio_5, hdmi_hpd, iso_gpio_7, ir_rx, ir_tx, ur0_rx,
-+          ur0_tx, ur1_rx, ur1_tx, ur1_cts_n, ur1_rts_n, i2c_scl_0,
-+          i2c_sda_0, i2c_scl_1, i2c_sda_1, i2c_scl_6, iso_gpio_21,
-+          iso_gpio_22, iso_gpio_23, iso_gpio_24, iso_gpio_25,
-+          i2c_sda_6, etn_led_link, etn_led_rxtx, nat_led_0,
-+          nat_led_1, nat_led_2, nat_led_3, iso_gpio_33,
-+          iso_gpio_34, pwm_23_loc0, pwm_01_loc0, pwm_23_loc1,
-+          pwm_01_loc1, ejtag_avcpu_loc, ur2_loc, i2c0, i2c1,
-+          i2c6, uart0, uart1, uart2_0, uart2_1, gpio_0, gpio_1,
-+          gpio_2, gpio_3, gpio_4, gpio_5, gpio_6, gpio_7, gpio_8,
-+          gpio_9, tp1_sync, i2c_scl_4, i2c_sda_4, i2c_scl_5,
-+          i2c_sda_5, usb_id, sensor_cko_0, sensor_cko_1, sensor_rst,
-+          sensor_stb_0, sensor_stb_1, tp0_data, tp0_clk, tp0_valid,
-+          tp0_sync, tp1_data, tp1_clk, tp1_valid, rgmii0_txc,
-+          rgmii0_tx_ctl,rgmii0_txd_0, rgmii0_txd_1, rgmii0_txd_2,
-+          rgmii0_txd_3, rgmii0_rxc, rgmii0_rx_ctl, rgmii0_rxd_0,
-+          rgmii0_rxd_1, rgmii0_rxd_2, rgmii0_rxd_3, rgmii0_mdio,
-+          rgmii0_mdc, rgmii1_txc, rgmii1_tx_ctl, rgmii1_txd_0,
-+          rgmii1_txd_1, rgmii1_txd_2, rgmii1_txd_3, rgmii1_rxc,
-+          rgmii1_rx_ctl, rgmii1_rxd_0, rgmii1_rxd_1, rgmii1_rxd_2,
-+          rgmii1_rxd_3, hif_loc, ejtag_scpu_loc, sf_en, tp0_loc,
-+          tp1_loc, spdif, dmic_clk, dmic_data, ao_lrck, ao_bck,
-+          aock, ao_sd_0, ao_sd_1, ao_sd_2, ao_sd_3, nf_cle,
-+          nf_ale, nf_rd_n, nf_wr_n, nf_rdy, nf_dd_7, nf_dd_6,
-+          nf_dd_5, nf_dd_4, nf_dd_3, nf_dd_2, nf_dd_1, nf_dd_0,
-+          nf_dqs, nf_ce_n_0, nf_ce_n_1, emmc_dd_sb, mmc_cmd,
-+          mmc_clk, mmc_wp, mmc_cd, mmc_data_0, mmc_data_1,
-+          mmc_data_2, mmc_data_3, sdio_cmd, sdio_clk, sdio_data_0,
-+          sdio_data_1, sdio_data_2, sdio_data_3, pcie_clkreq_0,
-+          pcie_clkreq_1, prob_0, prob_1, prob_2, prob_3, sdio_loc ]
-+        minItems: 1
-+
-+      function:
-+        enum: [ gpio, acpu_ejtag_loc_iso, edp_hpd, etn_led, i2c0, i2c1, i2c6,
-+        ir_rx, ir_tx, nat_led, pwm_0, pwm_1, rtc, sc, standby_dbg,
-+        uart0, uart1, uart2_0, uart2_1, pwm_01_loc0_normal,
-+        pwm_23_loc0_normal, pwm_01_loc0_open_drain, pwm_23_loc0_open_drain,
-+        pwm_01_loc1_normal, pwm_23_loc1_normal, pwm_01_loc1_open_drain,
-+        pwm_23_loc1_open_drain, acpu_ejtag_loc_nf, ai, dc_fan_sensor,
-+        eth_gpy, gspi, i2c2, i2c3, i2c4, i2c5, nand, rgmii, scpu_ejtag_loc_gpio,
-+        sensor_cko_output, spi, test_loop_dis, tp0_loc_rgmii0_tx, tp0_loc_tp0,
-+        tp0_loc_tp1, tp1_loc_rgmii0_rx, tp1_loc_tp0, tp1_loc_tp1,
-+        usb_clock_output, hif_loc_misc, hif_loc_nf, scpu_ejtag_loc_cr, ao,
-+        dmic, spdif_out, avcpu_ej, emmc, hif, nand, p2s, pcie, pll_test,
-+        scpu_ejtag_loc_cr, sd_card, sdio_0, sdio_1 ]
-+
-+      drive-strength:
-+        enum: [2, 4, 8]
-+
-+      bias-pull-down: true
-+
-+      bias-pull-up: true
-+
-+      bias-disable: true
-+
-+      input-schmitt-disable: true
-+
-+      input-schmitt-enable: true
-+
-+    required:
-+      - groups
-+      - function
-+
-+    additionalProperties: false
-+
-+examples:
-+  - |
-+    iso_pinctrl: pinctrl@300 {
-+        compatible = "realtek,rtd1295-iso-pinctrl";
-+        reg = <0x300 0x24>;
-+
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&etn_led_pins>;
-+
-+        etn_led_pins: etn-led-pins {
-+            function = "etn_led";
-+            groups = "etn_led_link", "etn_led_rxtx";
-+            bias-pull-up;
-+            drive-strength = <4>;
-+        };
-+    };
-+
--- 
-2.27.0
+And very short lived fork;exec;exit things like typical scripting
+commands doesn't typically generate any.
 
+So yeah the really high exit rate things self-limit pretty well.
+
+I documented the concern and added a few of the possible ways to
+further reduce IPIs in the comments though.
+
+Thanks,
+Nick
