@@ -2,106 +2,114 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E1BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC07C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 235D8207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1AA1207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:26:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LjQmSvLJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fygTz1Ak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgGPUZr (ORCPT
+        id S1726337AbgGPU0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:25:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgGPUZq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:25:46 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49FA2C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:25:46 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 207so4228616pfu.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hA+Aqo4SV3ko2kO8EuK2W/Tvr+vtNwBN3+1D4FXT5iI=;
-        b=LjQmSvLJxhYwI0Uux7CkRfdDlLxJHThvP2ZmnUcX0HKl0LYtyj4F5cXRL7xqnFAJRv
-         ELf6wnYFK3WPSx0yRsuvoVqq6x+YbYPCrfsKm9+nPf2JALM0X8q3PtOjmASBTTGpLXLG
-         OgKrZ4p1AN7EzbMN8TB4ug/wl3tl/t2nhtzOg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hA+Aqo4SV3ko2kO8EuK2W/Tvr+vtNwBN3+1D4FXT5iI=;
-        b=MP4npI+JTjJUgEeoStVtvG9exAeMjKahpsM8I8XHWteMo29G0D1fW3qusfx7eOKdTb
-         hDoGqLrzz8eWDcdaNpXn+rWilJTJdVFIPwnZbd+TV/b8XmHqejUX8YteDTNZN10Vutp2
-         shG7i9hF5aOK7RVuxGpJ0L8e0FU8hAcAvnzqz5JhYWTQUqNVf1Hb1f0vfKNCZW4vU+Se
-         ckhqYMDrJ8lk5qkxqQTi081SfRZPgxhMJC+C5H9noswDavTyIUHrjBx93FEx/cmCTIbC
-         lCfP0jnJuTIKo79NrPCwtx4oga9UcEGeSaqMZzgz6QfFVUkggnT/KORqkfADUawhstZ5
-         TiXA==
-X-Gm-Message-State: AOAM531UZtinH7c0gHhO52vHaKpQdWgDlQXRVKtXqspB3vXDDtvKHfHk
-        y0IUZ1/2iQLXRGPdJqQOvJV87A==
-X-Google-Smtp-Source: ABdhPJzluoB8Hr1x2E3MstyVdN1H30YSZ/nI6IrWid+cCKeHVafzMiYGYyTlGMFOxVnCzxBRlnzUmA==
-X-Received: by 2002:aa7:9ec5:: with SMTP id r5mr4848033pfq.86.1594931145764;
-        Thu, 16 Jul 2020 13:25:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t126sm5576396pfd.214.2020.07.16.13.25.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 13:25:44 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 13:25:43 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        gofmanp@gmail.com, linux-api@vger.kernel.org, x86@kernel.org,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org, jannh@google.com
-Subject: Re: [PATCH v4 0/2] Syscall User Redirection
-Message-ID: <202007161324.E75E01B@keescook>
-References: <20200716193141.4068476-1-krisman@collabora.com>
- <202007161300.7452A2C5@keescook>
- <20200716202234.wryj7pj7zmwcrxxx@wittgenstein>
+        Thu, 16 Jul 2020 16:26:06 -0400
+Received: from crapouillou.net ([89.234.176.41]:41410 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbgGPU0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 16:26:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1594931164; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SX7hdu69Ya5NdmyT12h41uasgZBzqU3phiTCNybRetM=;
+        b=fygTz1AkK3F+KkSqLcdpUfyr3zmBZjEUKSa/Vt00eTSF72jQDKtklUryyIrQc3Oa8rtmYM
+        YWSRB4PVWihapc0vvKQgXHwti43BXsbCFSDEk4IVlkAUUAib8gf6krgrd5yvZjzNZB1DvT
+        EDDLKtIE3EVZe0Sk+6bYeKsdbWK+UkI=
+Date:   Thu, 16 Jul 2020 22:25:54 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 01/12] drm/ingenic: Fix incorrect assumption about
+ plane->index
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Message-Id: <6RWKDQ.JP0OMXFFTGWS1@crapouillou.net>
+In-Reply-To: <20200716174335.GC2235355@ravnborg.org>
+References: <20200716163846.174790-1-paul@crapouillou.net>
+        <20200716174335.GC2235355@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716202234.wryj7pj7zmwcrxxx@wittgenstein>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 10:22:34PM +0200, Christian Brauner wrote:
-> On Thu, Jul 16, 2020 at 01:04:38PM -0700, Kees Cook wrote:
-> > On Thu, Jul 16, 2020 at 03:31:39PM -0400, Gabriel Krisman Bertazi wrote:
-> > > This is v4 of Syscall User Redirection.  The implementation itself is
-> > > not modified from v3, it only applies the latest round of reviews to the
-> > > selftests.
-> > > 
-> > > __NR_syscalls is not really exported in header files other than
-> > > asm-generic for every architecture, so it felt safer to optionally
-> > > expose it with a fallback to a high value.
-> > > 
-> > > Also, I didn't expose tests for PR_GET as that is not currently
-> > > implemented.  If possible, I'd have it supported by a future patchset,
-> > > since it is not immediately necessary to support this feature.
-> > 
-> > Thanks! That all looks good to me.
-> 
-> Don't have any problem with this but did this ever get exposure on
-> linux-api? This is the first time I see this pop up.
+Hi Sam,
 
-I thought I'd added it to CC in the past, but that might have been other
-recent unrelated threads. Does this need a full repost there too, you
-think?
+Le jeu. 16 juil. 2020 =E0 19:43, Sam Ravnborg <sam@ravnborg.org> a=20
+=E9crit :
+> Hi Paul.
+>=20
+> On Thu, Jul 16, 2020 at 06:38:35PM +0200, Paul Cercueil wrote:
+>>  plane->index is NOT the index of the color plane in a YUV frame.
+>>  Actually, a YUV frame is represented by a single drm_plane, even=20
+>> though
+>>  it contains three Y, U, V planes.
+>>=20
+>>  v2-v3: No change
+>>=20
+>>  Cc: stable@vger.kernel.org # v5.3
+>>  Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx=20
+>> SoCs")
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  Acked-by: Sam Ravnborg <sam@ravnborg.org>
+>=20
+> A cover letter would have been useful. Please consider that in the
+> future.
+> All patches in this set are:
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+>=20
+> A few requires some trivial issues fixed. They can be fixed while
+> applying.
+>=20
+> I consider the patch-set ready to go in and I expect you to commit=20
+> them.
 
--- 
-Kees Cook
+Great! Thanks!
+
+-Paul
+
+> 	Sam
+>=20
+>>  ---
+>>   drivers/gpu/drm/ingenic/ingenic-drm.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>>  diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
+>> b/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  index deb37b4a8e91..606d8acb0954 100644
+>>  --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  @@ -386,7 +386,7 @@ static void=20
+>> ingenic_drm_plane_atomic_update(struct drm_plane *plane,
+>>   		addr =3D drm_fb_cma_get_gem_addr(state->fb, state, 0);
+>>   		width =3D state->src_w >> 16;
+>>   		height =3D state->src_h >> 16;
+>>  -		cpp =3D state->fb->format->cpp[plane->index];
+>>  +		cpp =3D state->fb->format->cpp[0];
+>>=20
+>>   		priv->dma_hwdesc->addr =3D addr;
+>>   		priv->dma_hwdesc->cmd =3D width * height * cpp / 4;
+>>  --
+>>  2.27.0
+
+
