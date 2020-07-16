@@ -2,164 +2,126 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154B6C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0293206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF42206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="bdKZJZ56"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lfHFuLsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbgGPHt2 (ORCPT
+        id S1726780AbgGPHtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbgGPHt2 (ORCPT
+        Thu, 16 Jul 2020 03:49:31 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60850 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbgGPHt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:49:28 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E06FEC061755;
-        Thu, 16 Jul 2020 00:49:27 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8D48622ED8;
-        Thu, 16 Jul 2020 09:49:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1594885765;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pWBr+/btBiE5Q9vVGPEpJuj78sM+TfheCGwdYlLfv10=;
-        b=bdKZJZ56SYA/gpVU/tzL8+QSrck8/I5DVSK86+eoQLrGVqQjGeoYMB2KIjTGrCKk4wPayU
-        yf2mzJzDdUXZQ2UdlaoRm1gO6I/XqK7yPcePojI1UXyBQb37x4JI0gjbJQ1TSrZfj8Ys5F
-        Cj9hS4wG9wvxe4svOPk41MVBiYGTLPw=
+        Thu, 16 Jul 2020 03:49:29 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06G7nRlE027619;
+        Thu, 16 Jul 2020 02:49:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594885767;
+        bh=jSyR9YwoxdBX9QS43xi8Ib08a9fQAkZ5xGyzFevMyNQ=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=lfHFuLsLvlwISZN4jO0EoaVyt/sQjHpsi5ZW1z9pm23MVlFT/Sabag3e5Mo7lse1Y
+         8Ns2KUnOCIoex9mM41z4O4AAOJV5P8JxmLjVvD1KrIGXROhrnX9R+cRz04cfTL+OA8
+         lO24vRQlLeo8wvh/ZKrCIpgYPfpN2sw0sByiE1bQ=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06G7nRak013835
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jul 2020 02:49:27 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 16
+ Jul 2020 02:49:26 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 16 Jul 2020 02:49:26 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06G7nO5v113210;
+        Thu, 16 Jul 2020 02:49:25 -0500
+Subject: Re: [PATCH v3 1/3] dt-binding: phy: convert ti,omap-usb2 to YAML
+From:   Roger Quadros <rogerq@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>,
+        <robh+dt@kernel.org>, <kishon@ti.com>, <nsekhar@ti.com>,
+        <devicetree@vger.kernel.org>
+References: <20200630092729.15346-1-rogerq@ti.com>
+ <20200630092729.15346-2-rogerq@ti.com> <20200702204758.GA1665250@bogus>
+ <7899660d-936e-6d88-877a-f75d76f34c40@ti.com>
+Message-ID: <0ae2e424-f5d4-83d0-90ea-56acde3d4c9b@ti.com>
+Date:   Thu, 16 Jul 2020 10:49:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 16 Jul 2020 09:49:24 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH net-next v6 1/4] net: phy: add USXGMII link partner
- ability constants
-In-Reply-To: <20200715224449.hrqblfteshuknxon@skbuf>
-References: <20200709213526.21972-1-michael@walle.cc>
- <20200709213526.21972-2-michael@walle.cc>
- <20200713182314.GW1551@shell.armlinux.org.uk>
- <546718f3f76862d285aeb82cb02767c4@walle.cc>
- <b6c24b8f698245549056c975042d9b51@walle.cc>
- <20200715224449.hrqblfteshuknxon@skbuf>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <beb263ca1453c1505e8ddebdd92a1ba4@walle.cc>
-X-Sender: michael@walle.cc
+In-Reply-To: <7899660d-936e-6d88-877a-f75d76f34c40@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-07-16 00:44, schrieb Vladimir Oltean:
-> On Wed, Jul 15, 2020 at 10:33:23PM +0200, Michael Walle wrote:
->> Am 2020-07-13 20:37, schrieb Michael Walle:
->> > Am 2020-07-13 20:23, schrieb Russell King - ARM Linux admin:
->> > > On Thu, Jul 09, 2020 at 11:35:23PM +0200, Michael Walle wrote:
->> > > > The constants are taken from the USXGMII Singleport Copper Interface
->> > > > specification. The naming are based on the SGMII ones, but with
->> > > > an MDIO_
->> > > > prefix.
->> > > >
->> > > > Signed-off-by: Michael Walle <michael@walle.cc>
->> > > > ---
->> > > >  include/uapi/linux/mdio.h | 26 ++++++++++++++++++++++++++
->> > > >  1 file changed, 26 insertions(+)
->> > > >
->> > > > diff --git a/include/uapi/linux/mdio.h b/include/uapi/linux/mdio.h
->> > > > index 4bcb41c71b8c..784723072578 100644
->> > > > --- a/include/uapi/linux/mdio.h
->> > > > +++ b/include/uapi/linux/mdio.h
->> > > > @@ -324,4 +324,30 @@ static inline __u16 mdio_phy_id_c45(int
->> > > > prtad, int devad)
->> > > >  	return MDIO_PHY_ID_C45 | (prtad << 5) | devad;
->> > > >  }
->> > > >
->> > > > +/* UsxgmiiChannelInfo[15:0] for USXGMII in-band auto-negotiation.*/
->> > > > +#define MDIO_LPA_USXGMII_EEE_CLK_STP	0x0080	/* EEE clock stop
->> > > > supported */
->> > > > +#define MDIO_LPA_USXGMII_EEE		0x0100	/* EEE supported */
->> > > > +#define MDIO_LPA_USXGMII_SPD_MASK	0x0e00	/* USXGMII speed mask */
->> > > > +#define MDIO_LPA_USXGMII_FULL_DUPLEX	0x1000	/* USXGMII full
->> > > > duplex */
->> > > > +#define MDIO_LPA_USXGMII_DPX_SPD_MASK	0x1e00	/* USXGMII duplex
->> > > > and speed bits */
->> > > > +#define MDIO_LPA_USXGMII_10		0x0000	/* 10Mbps */
->> > > > +#define MDIO_LPA_USXGMII_10HALF		0x0000	/* 10Mbps half-duplex */
->> > > > +#define MDIO_LPA_USXGMII_10FULL		0x1000	/* 10Mbps full-duplex */
->> > > > +#define MDIO_LPA_USXGMII_100		0x0200	/* 100Mbps */
->> > > > +#define MDIO_LPA_USXGMII_100HALF	0x0200	/* 100Mbps half-duplex */
->> > > > +#define MDIO_LPA_USXGMII_100FULL	0x1200	/* 100Mbps full-duplex */
->> > > > +#define MDIO_LPA_USXGMII_1000		0x0400	/* 1000Mbps */
->> > > > +#define MDIO_LPA_USXGMII_1000HALF	0x0400	/* 1000Mbps half-duplex */
->> > > > +#define MDIO_LPA_USXGMII_1000FULL	0x1400	/* 1000Mbps full-duplex */
->> > > > +#define MDIO_LPA_USXGMII_10G		0x0600	/* 10Gbps */
->> > > > +#define MDIO_LPA_USXGMII_10GHALF	0x0600	/* 10Gbps half-duplex */
->> > > > +#define MDIO_LPA_USXGMII_10GFULL	0x1600	/* 10Gbps full-duplex */
->> > > > +#define MDIO_LPA_USXGMII_2500		0x0800	/* 2500Mbps */
->> > > > +#define MDIO_LPA_USXGMII_2500HALF	0x0800	/* 2500Mbps half-duplex */
->> > > > +#define MDIO_LPA_USXGMII_2500FULL	0x1800	/* 2500Mbps full-duplex */
->> > > > +#define MDIO_LPA_USXGMII_5000		0x0a00	/* 5000Mbps */
->> > > > +#define MDIO_LPA_USXGMII_5000HALF	0x0a00	/* 5000Mbps half-duplex */
->> > > > +#define MDIO_LPA_USXGMII_5000FULL	0x1a00	/* 5000Mbps full-duplex */
->> > > > +#define MDIO_LPA_USXGMII_LINK		0x8000	/* PHY link with
->> > > > copper-side partner */
->> > >
->> > > btw, the only thing which is missing from this is bit 0.
->> >
->> > TBH, I didn't know how to name it. Any suggestions?
->> 
->> NXP calls it ABIL0, in xilinx docs its called USXGMII [1]. In the 
->> USXGMII
->> spec, its "set to 1 (0 is SGMII)" which I don't understand because its
->> also 1 for SGMII, right? At least as described in the 
->> tx_configReg[15:0] in
->> the SGMII spec.
->> 
->> #define MDIO_USXGMII_USXGMII 0x0001 ?
->> 
->> -michael
->> 
->> [1] 
->> https://www.xilinx.com/support/documentation/ip_documentation/usxgmii/v1_0/pg251-usxgmii.pdf
+
+
+On 03/07/2020 11:58, Roger Quadros wrote:
+> Hi Rob,
 > 
-> The explanation in the spec is quite cryptic, I've taken that to mean
-> "corresponds to bit 0 in SGMII". Hence the reason why, in the code I've
-> introduced in Felix, this is simply used as ADVERTISE_SGMII. I have no
-> problem in creating an alias to ADVERTISE_SGMII named
-> MDIO_LPA_USXGMII_SGMII. That being said, I don't see, right now, a
-> practical situation where you might want to parse bit 0 from LPA, it's
-> just like in Forrest Gump: "life is like a box of chocolates, you never
-> know what you're gonna get". Adding it now to the UAPI might very well
-> be a non-issue.
+> On 02/07/2020 23:47, Rob Herring wrote:
+>> On Tue, 30 Jun 2020 12:27:27 +0300, Roger Quadros wrote:
+>>> Move ti,omap-usb2 to its own YAML schema.
+>>>
+>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>>   .../devicetree/bindings/phy/ti,omap-usb2.yaml | 69 +++++++++++++++++++
+>>>   .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
+>>>   2 files changed, 69 insertions(+), 37 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+>>>
+>>
+>>
+>> My bot found errors running 'make dt_binding_check' on your patch:
+>>
+>> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/ti,omap-usb2.example.dt.yaml: example-0: phy@4100000:reg:0: [0, 68157440, 0, 84] is too long
+>>
+> 
+> In my local build in the dt example I see
+> 
+>      phy@4100000:
+>        compatible: ["ti,am654-usb2", "ti,omap-usb2"]
+>        reg: [[0x0, 0x4100000, 0x0, 0x54]]
+> 
+> And I don't see any errors. I've updated my dt-schema as well.
 
-what about
-   #define MDIO_USXGMII_ADVERTISE 0x0001 /* must always be set */
+I'm able to see the issue now. Will fix it and send v4.
 
-Russell, do you agree? Then I'd send a new version with your 
-"Reviewed-by:".
+> 
+>>
+>> See https://patchwork.ozlabs.org/patch/1319665
+>>
+>> If you already ran 'make dt_binding_check' and didn't see the above
+>> error(s), then make sure dt-schema is up to date:
+>>
+>> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+>>
+>> Please check and re-submit.
+>>
+> 
 
--michael
+cheers,
+-roger
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
