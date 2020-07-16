@@ -2,103 +2,402 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16793C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE63C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F390E20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5F820656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGPJhF (ORCPT
+        id S1727042AbgGPJhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 05:37:05 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20570 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbgGPJhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 05:37:04 -0400
-IronPort-SDR: A/AiTkVuvs6YsXX/1hLKkO4zQPA8hAXvd+TPKDWyur9nJ+CVmGOwLGGcLO7d+pSb/zkTYqT80B
- OpgD77FbK60Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="129419530"
-X-IronPort-AV: E=Sophos;i="5.75,358,1589266800"; 
-   d="scan'208";a="129419530"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 02:37:03 -0700
-IronPort-SDR: B5vGQE5OQJ5THKVC+4M9W1HTo6oM0A7mrWthYGsouOZCwmwH9d6xcM5SmcDPZi65HGzhdt83/w
- namOFydSw4Gg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,358,1589266800"; 
-   d="scan'208";a="326469187"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 16 Jul 2020 02:37:02 -0700
-Received: from [10.255.183.245] (ekotax-MOBL.gar.corp.intel.com [10.255.183.245])
-        by linux.intel.com (Postfix) with ESMTP id F05CD58001A;
-        Thu, 16 Jul 2020 02:36:58 -0700 (PDT)
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, robh@kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
- <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
- <20200429121310.GH4201@sirena.org.uk>
- <28f6511e-fe85-a834-1652-fd70def9ca88@linux.intel.com>
- <20200505112339.GC5377@sirena.org.uk>
- <fce0b146-9ffc-839f-d34a-cb37206a0699@linux.intel.com>
-Message-ID: <bb2cab96-af05-83bc-ec8a-3cc03426c5e7@linux.intel.com>
-Date:   Thu, 16 Jul 2020 17:36:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thu, 16 Jul 2020 05:37:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43394 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbgGPJho (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 05:37:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 045122A5513
+Subject: Re: mainline/master bisection: baseline.dmesg.crit on
+ qemu_arm-vexpress-a15
+To:     =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, kernelci-results@groups.io,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <5efec450.1c69fb81.7626b.b08a@mx.google.com>
+ <85f43f7f-f423-fe84-81e4-ddefe16c1a53@arm.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <1f8dbd49-7774-f761-73f4-d96e81acff7e@collabora.com>
+Date:   Thu, 16 Jul 2020 10:37:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <fce0b146-9ffc-839f-d34a-cb37206a0699@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <85f43f7f-f423-fe84-81e4-ddefe16c1a53@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/2020 3:40 PM, Dilip Kota wrote:
->
-> On 5/5/2020 7:23 PM, Mark Brown wrote:
->> On Mon, May 04, 2020 at 06:15:47PM +0800, Dilip Kota wrote:
->>> On 4/29/2020 8:13 PM, Mark Brown wrote:
+Hi AndrÃ©,
+
+Sorry for the delay, I missed the thread on this issue.
+
+On 03/07/2020 11:49, AndrÃ© Przywara wrote:
+> On 03/07/2020 06:38, kernelci.org bot wrote:
+> 
+> Hi Guillaume,
+> 
+> is this report legit? The situation didn't change from Monday, I just
+> repeated the test with mainline compared to my patch reverted.
+> 
+> What is the actual failure here? You pointed to:
+> <2>GIC CPU mask not found - kernel will fail to boot.
+> but I don't see any explicit line stating that as the culprit anywhere
+> in the logs. Actually the last line says:
+> 00:24:07.022224  Job finished correctly
+
+The failure is a "crit" kernel error message.  The test job still
+completes, but it has detected this new error and the bisection
+reliably lands on the same commit mentioned below as the root
+cause.  As you found out, the commit is not to blame so this is a
+false positive.  However, it's a bit more complicated...
+
+> And I see the GIC messages with and without this patch. As mentioned on
+> Monday, "-smp 2" should be added to the QEMU command line to fix that.
+
+All the test jobs involved in this bisection can be found here:
+
+  https://lava.ciplatform.org/scheduler/alljobs?length=25&search=lava-bisection-2224#table
+
+The bisection first ran the "good" and "bad" revisions and didn't
+detect the kernel error message with the "good" one.  However,
+taking a closer look at the logs, the error was actually there:
+
+  https://lava.ciplatform.org/scheduler/job/27647#L454
+
+and then there were some kernel warnings:
+
+  https://lava.ciplatform.org/scheduler/job/27647#L561
+
+which didn't occur with the "bad" revision:
+
+  https://lava.ciplatform.org/scheduler/job/27648
+
+
+For some reason probably related to the kernel warnings, when
+testing the "good" revision the GIC kernel errors got silenced
+and dmesg didn't print them.  This mislead the test into a false
+positive.
+
+Bisections are only run when a regression occurs, and it looks
+like these GIC errors have been around for a long time.  What I
+believe happened is that the errors got hidden at some
+point (allegedly due to the kernel warnings) and then came back
+later.  This was then wrongly detected as a regression.
+
+
+So we have 2 problems to solve, the first one is to actually
+remove these kernel errors and you've explained how to do that
+with the QEMU command line.  I've resubmitted the test job with
+it and it worked indeed:
+
+  https://lava.collabora.co.uk/scheduler/job/2493885
+
+and sent a fix for it:
+
+  https://github.com/kernelci/kernelci-core/pull/442
+
+
+The other problem is about avoiding such cases from occurring
+again in the future on kernelci.org, by making kernel error
+detection more robust.  But that's not a kernel problem.
+
+Please bear with us, hopefully this false positive should not
+come back.  Thanks for your help with investigating the GIC
+errors in the first place.
+
+Guillaume
+
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>> * This automated bisection report was sent to you on the basis  *
+>> * that you may be involved with the breaking commit it has      *
+>> * found.  No manual investigation has been done to verify it,   *
+>> * and the root cause of the problem may be somewhere else.      *
+>> *                                                               *
+>> * If you do send a fix, please include this trailer:            *
+>> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+>> *                                                               *
+>> * Hope this helps!                                              *
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 >>
->>> I just tried to get the history of removing workqueue in SPI driver, on
->>> GRX500 (earlier chipset of LGM) the SPI transfers got timedout with
->>> workqueues during regression testing. Once changed to threaded IRQs
->>> transfers are working successfully.
->> That doesn't really explain why though, it just explains what.
-> I didnt find more information about it. I will work to reproduce the 
-> issue and share the detailed information sooner i get the 
-> accessibility of the SoC (because of covid19 doing wfh)
+>> mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
+>>
+>> Summary:
+>>   Start:      7cc2a8ea1048 Merge tag 'block-5.8-2020-07-01' of git://git.kernel.dk/linux-block
+>>   Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc3-37-g7cc2a8ea1048/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-tc1.txt
+>>   HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc3-37-g7cc2a8ea1048/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-tc1.html
+>>   Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into motherboard node
+>>
+>> Checks:
+>>   revert:     PASS
+>>   verify:     PASS
+> 
+> What does that mean? That reverting the patch made the test pass?
+> I did exactly that, and reverting made it worse, because poweroff
+> doesn't work (among other things).
+> So could this be a testing artifact? Because of the failing poweroff the
+> test timed out or something?
+> 
+> Many thanks,
+> Andre
+> 
+>>
+>> Parameters:
+>>   Tree:       mainline
+>>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>>   Branch:     master
+>>   Target:     qemu_arm-vexpress-a15
+>>   CPU arch:   arm
+>>   Lab:        lab-cip
+>>   Compiler:   gcc-8
+>>   Config:     vexpress_defconfig
+>>   Test case:  baseline.dmesg.crit
+>>
+>> Breaking commit found:
+>>
+>> -------------------------------------------------------------------------------
+>> commit 38ac46002d1df5707566a73486452851341028d2
+>> Author: Andre Przywara <andre.przywara@arm.com>
+>> Date:   Wed Jun 3 17:22:37 2020 +0100
+>>
+>>     arm: dts: vexpress: Move mcc node back into motherboard node
+>>     
+>>     Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
+>>     out of bus node") moved the "mcc" DT node into the root node, because
+>>     it does not have any children using "reg" properties, so does violate
+>>     some dtc checks about "simple-bus" nodes.
+>>     
+>>     However this broke the vexpress config-bus code, which walks up the
+>>     device tree to find the first node with an "arm,vexpress,site" property.
+>>     This gave the wrong result (matching the root node instead of the
+>>     motherboard node), so broke the clocks and some other devices for
+>>     VExpress boards.
+>>     
+>>     Move the whole node back into its original position. This re-introduces
+>>     the dtc warning, but is conceptually the right thing to do. The dtc
+>>     warning seems to be overzealous here, there are discussions on fixing or
+>>     relaxing this check instead.
+>>     
+>>     Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@arm.com
+>>     Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of bus node")
+>>     Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+>>     Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+>>     Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>>
+>> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>> index e6308fb76183..a88ee5294d35 100644
+>> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>> @@ -100,79 +100,6 @@
+>>  		};
+>>  	};
+>>  
+>> -	mcc {
+>> -		compatible = "arm,vexpress,config-bus";
+>> -		arm,vexpress,config-bridge = <&v2m_sysreg>;
+>> -
+>> -		oscclk0 {
+>> -			/* MCC static memory clock */
+>> -			compatible = "arm,vexpress-osc";
+>> -			arm,vexpress-sysreg,func = <1 0>;
+>> -			freq-range = <25000000 60000000>;
+>> -			#clock-cells = <0>;
+>> -			clock-output-names = "v2m:oscclk0";
+>> -		};
+>> -
+>> -		v2m_oscclk1: oscclk1 {
+>> -			/* CLCD clock */
+>> -			compatible = "arm,vexpress-osc";
+>> -			arm,vexpress-sysreg,func = <1 1>;
+>> -			freq-range = <23750000 65000000>;
+>> -			#clock-cells = <0>;
+>> -			clock-output-names = "v2m:oscclk1";
+>> -		};
+>> -
+>> -		v2m_oscclk2: oscclk2 {
+>> -			/* IO FPGA peripheral clock */
+>> -			compatible = "arm,vexpress-osc";
+>> -			arm,vexpress-sysreg,func = <1 2>;
+>> -			freq-range = <24000000 24000000>;
+>> -			#clock-cells = <0>;
+>> -			clock-output-names = "v2m:oscclk2";
+>> -		};
+>> -
+>> -		volt-vio {
+>> -			/* Logic level voltage */
+>> -			compatible = "arm,vexpress-volt";
+>> -			arm,vexpress-sysreg,func = <2 0>;
+>> -			regulator-name = "VIO";
+>> -			regulator-always-on;
+>> -			label = "VIO";
+>> -		};
+>> -
+>> -		temp-mcc {
+>> -			/* MCC internal operating temperature */
+>> -			compatible = "arm,vexpress-temp";
+>> -			arm,vexpress-sysreg,func = <4 0>;
+>> -			label = "MCC";
+>> -		};
+>> -
+>> -		reset {
+>> -			compatible = "arm,vexpress-reset";
+>> -			arm,vexpress-sysreg,func = <5 0>;
+>> -		};
+>> -
+>> -		muxfpga {
+>> -			compatible = "arm,vexpress-muxfpga";
+>> -			arm,vexpress-sysreg,func = <7 0>;
+>> -		};
+>> -
+>> -		shutdown {
+>> -			compatible = "arm,vexpress-shutdown";
+>> -			arm,vexpress-sysreg,func = <8 0>;
+>> -		};
+>> -
+>> -		reboot {
+>> -			compatible = "arm,vexpress-reboot";
+>> -			arm,vexpress-sysreg,func = <9 0>;
+>> -		};
+>> -
+>> -		dvimode {
+>> -			compatible = "arm,vexpress-dvimode";
+>> -			arm,vexpress-sysreg,func = <11 0>;
+>> -		};
+>> -	};
+>> -
+>>  	bus@8000000 {
+>>  		motherboard-bus {
+>>  			model = "V2M-P1";
+>> @@ -435,6 +362,79 @@
+>>  						};
+>>  					};
+>>  				};
+>> +
+>> +				mcc {
+>> +					compatible = "arm,vexpress,config-bus";
+>> +					arm,vexpress,config-bridge = <&v2m_sysreg>;
+>> +
+>> +					oscclk0 {
+>> +						/* MCC static memory clock */
+>> +						compatible = "arm,vexpress-osc";
+>> +						arm,vexpress-sysreg,func = <1 0>;
+>> +						freq-range = <25000000 60000000>;
+>> +						#clock-cells = <0>;
+>> +						clock-output-names = "v2m:oscclk0";
+>> +					};
+>> +
+>> +					v2m_oscclk1: oscclk1 {
+>> +						/* CLCD clock */
+>> +						compatible = "arm,vexpress-osc";
+>> +						arm,vexpress-sysreg,func = <1 1>;
+>> +						freq-range = <23750000 65000000>;
+>> +						#clock-cells = <0>;
+>> +						clock-output-names = "v2m:oscclk1";
+>> +					};
+>> +
+>> +					v2m_oscclk2: oscclk2 {
+>> +						/* IO FPGA peripheral clock */
+>> +						compatible = "arm,vexpress-osc";
+>> +						arm,vexpress-sysreg,func = <1 2>;
+>> +						freq-range = <24000000 24000000>;
+>> +						#clock-cells = <0>;
+>> +						clock-output-names = "v2m:oscclk2";
+>> +					};
+>> +
+>> +					volt-vio {
+>> +						/* Logic level voltage */
+>> +						compatible = "arm,vexpress-volt";
+>> +						arm,vexpress-sysreg,func = <2 0>;
+>> +						regulator-name = "VIO";
+>> +						regulator-always-on;
+>> +						label = "VIO";
+>> +					};
+>> +
+>> +					temp-mcc {
+>> +						/* MCC internal operating temperature */
+>> +						compatible = "arm,vexpress-temp";
+>> +						arm,vexpress-sysreg,func = <4 0>;
+>> +						label = "MCC";
+>> +					};
+>> +
+>> +					reset {
+>> +						compatible = "arm,vexpress-reset";
+>> +						arm,vexpress-sysreg,func = <5 0>;
+>> +					};
+>> +
+>> +					muxfpga {
+>> +						compatible = "arm,vexpress-muxfpga";
+>> +						arm,vexpress-sysreg,func = <7 0>;
+>> +					};
+>> +
+>> +					shutdown {
+>> +						compatible = "arm,vexpress-shutdown";
+>> +						arm,vexpress-sysreg,func = <8 0>;
+>> +					};
+>> +
+>> +					reboot {
+>> +						compatible = "arm,vexpress-reboot";
+>> +						arm,vexpress-sysreg,func = <9 0>;
+>> +					};
+>> +
+>> +					dvimode {
+>> +						compatible = "arm,vexpress-dvimode";
+>> +						arm,vexpress-sysreg,func = <11 0>;
+>> +					};
+>> +				};
+>>  			};
+>>  		};
+>>  	};
+>> -------------------------------------------------------------------------------
+>>
+>>
+>> Git bisection log:
+>>
+>> -------------------------------------------------------------------------------
+>> git bisect start
+>> # good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell names
+>> git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
+>> # bad: [7cc2a8ea104820dd9e702202621e8fd4d9f6c8cf] Merge tag 'block-5.8-2020-07-01' of git://git.kernel.dk/linux-block
+>> git bisect bad 7cc2a8ea104820dd9e702202621e8fd4d9f6c8cf
+>> # bad: [e44b59cd758acdd413512d4597a1fabdadfe3abf] Merge tag 'arm-fixes-5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+>> git bisect bad e44b59cd758acdd413512d4597a1fabdadfe3abf
+>> # good: [91a9a90d040e8b9ff63d48ea71468e0f4db764ff] Merge tag 'sched_urgent_for_5.8_rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>> git bisect good 91a9a90d040e8b9ff63d48ea71468e0f4db764ff
+>> # bad: [42d3f7e8da1bc55e3109f612c519c945f6587194] Merge tag 'imx-fixes-5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/fixes
+>> git bisect bad 42d3f7e8da1bc55e3109f612c519c945f6587194
+>> # bad: [6d89c73ca5813768a2cc66f7420ac0cbddf4f37d] Merge tag 'arm-soc/for-5.8/soc-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
+>> git bisect bad 6d89c73ca5813768a2cc66f7420ac0cbddf4f37d
+>> # bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Implement dummy L2 cache's write_sec"
+>> git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
+>> # bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into arm/fixes
+>> git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
+>> # bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move mcc node back into motherboard node
+>> git bisect bad 38ac46002d1df5707566a73486452851341028d2
+>> # first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move mcc node back into motherboard node
+>> -------------------------------------------------------------------------------
+>>
+> 
 
-I got the GRX500 setup and reproduced the timeout issue.
-[   88.721883] spi-loopback-test spi1.2: SPI transfer timed out
-[   88.726488] spi-loopback-test spi1.2: spi-message timed out - 
-reruning...
-[   88.961786] spi-loopback-test spi1.2: SPI transfer timed out
-[   88.966027] spi-loopback-test spi1.2: Failed to execute spi_message: 
--145
-
-Timeout is happening because of not acknowledging or not clearing the 
-interrupt status registers. Workqueue is not causing any issue,
-I am working on the changes, will submit the patches for review.
-
-Regards,
-Dilip
-
->
-> Regards,
-> Dilip
