@@ -2,221 +2,200 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B67D220791
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:10:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594861850;
-	bh=jhp4R/A2lcwm+I3OFWudh5021wz4vzO9Zu9C7cuvOPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zFJaoZ7vsJdFaqo3bFg7wm1DzRH0pHOBB6y3NH8tIQaqSBZhJX+cm5U9xlU9oQlpk
-	 3xbpX63nMqE073vrU5yqHHukkKpniLarTtTYUTVHmgSyrgmwh/hydViNsokO3JT+vm
-	 OYvqfR08HJTOQDtk99A+QHcUlEQ4b/eNvoer51EM=
+	by mail.kernel.org (Postfix) with ESMTP id E0D7E20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:12:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgGPBKt (ORCPT
+        id S1727858AbgGPBMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 21:10:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41748 "EHLO mail.kernel.org"
+        Wed, 15 Jul 2020 21:12:30 -0400
+Received: from mga01.intel.com ([192.55.52.88]:3875 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgGPBKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 21:10:49 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 405AE20787;
-        Thu, 16 Jul 2020 01:10:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594861848;
-        bh=jhp4R/A2lcwm+I3OFWudh5021wz4vzO9Zu9C7cuvOPo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UNr+Ff2gwQvax/mfiG7jfCUniJPE2wjqGTfKmwuR6VV06hGXHRn1EMJlkdStw1et/
-         ERw18FaTpU+sp3mGzmhpj+cU4fOa1CB7JJoOqdPGbyncfcqUzVWxW+Sas+J1Ek66OX
-         l43ogkTltrActHubBkHIc5wbpYml8ktsRYv+ikBE=
-Date:   Wed, 15 Jul 2020 18:10:47 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Subject: Re: [f2fs-dev] [PATCH] f2fs: don't skip writeback of quota data
-Message-ID: <20200716011047.GA2540332@google.com>
-References: <20200709190545.GA3001066@google.com>
- <ae1a3e8a-6209-8d4b-7235-5c8897076501@huawei.com>
- <20200710032616.GC545837@google.com>
- <01d0db54-eee1-f6cd-76c3-ebe59a7abae4@huawei.com>
- <20200710035053.GH545837@google.com>
- <77041117-f615-e6e6-591c-b02bf99e58c2@huawei.com>
- <20200713175926.GB2910046@google.com>
- <d8645371-f1d6-f5a2-01a9-19708fe3861b@huawei.com>
- <20200715191037.GB2232118@google.com>
- <4edac8af-0ae8-65e1-e3a0-a633cf81d761@huawei.com>
+        id S1726479AbgGPBM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 21:12:29 -0400
+IronPort-SDR: NZTbzLX4dxDJ7QbAV0V43r6gZixLl8fIrvN0D1CIDqwoYU7szHvgsVord+0G5uBQB2bvPJMEnI
+ 4KklAoXkO12g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="167430860"
+X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
+   d="scan'208";a="167430860"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 18:12:26 -0700
+IronPort-SDR: GhBuvpJerEQSGZCcQwjV6esXaMp0MVHcttK2IMF8/qwgeeLs4waGLsGO+L6VICx8W1I+0Eonmq
+ 4vlc+KAEaZbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
+   d="scan'208";a="460289202"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by orsmga005.jf.intel.com with ESMTP; 15 Jul 2020 18:12:23 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 2/4] iommu: Add iommu_aux_at(de)tach_group()
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+ <20200714055703.5510-3-baolu.lu@linux.intel.com>
+ <20200714093909.1ab93c9e@jacob-builder>
+ <b5b22e01-4a51-8dfe-9ba4-aeca783740f1@linux.intel.com>
+ <20200715090114.50a459d4@jacob-builder>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <435a2014-c2e8-06b9-3c9a-4afbf6607ffe@linux.intel.com>
+Date:   Thu, 16 Jul 2020 09:07:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4edac8af-0ae8-65e1-e3a0-a633cf81d761@huawei.com>
+In-Reply-To: <20200715090114.50a459d4@jacob-builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/16, Chao Yu wrote:
-> On 2020/7/16 3:10, Jaegeuk Kim wrote:
-> > On 07/14, Chao Yu wrote:
-> >> On 2020/7/14 1:59, Jaegeuk Kim wrote:
-> >>> On 07/10, Chao Yu wrote:
-> >>>> On 2020/7/10 11:50, Jaegeuk Kim wrote:
-> >>>>> On 07/10, Chao Yu wrote:
-> >>>>>> On 2020/7/10 11:26, Jaegeuk Kim wrote:
-> >>>>>>> On 07/10, Chao Yu wrote:
-> >>>>>>>> On 2020/7/10 3:05, Jaegeuk Kim wrote:
-> >>>>>>>>> On 07/09, Chao Yu wrote:
-> >>>>>>>>>> On 2020/7/9 13:30, Jaegeuk Kim wrote:
-> >>>>>>>>>>> It doesn't need to bypass flushing quota data in background.
-> >>>>>>>>>>
-> >>>>>>>>>> The condition is used to flush quota data in batch to avoid random
-> >>>>>>>>>> small-sized udpate, did you hit any problem here?
-> >>>>>>>>>
-> >>>>>>>>> I suspect this causes fault injection test being stuck by waiting for inode
-> >>>>>>>>> writeback completion. With this patch, it has been running w/o any issue so far.
-> >>>>>>>>> I keep an eye on this.
-> >>>>>>>>
-> >>>>>>>> Hmmm.. so that this patch may not fix the root cause, and it may hiding the
-> >>>>>>>> issue deeper.
-> >>>>>>>>
-> >>>>>>>> How about just keeping this patch in our private branch to let fault injection
-> >>>>>>>> test not be stuck? until we find the root cause in upstream codes.
-> >>>>>>>
-> >>>>>>> Well, I don't think this hides something. When the issue happens, I saw inodes
-> >>>>>>> being stuck due to writeback while only quota has some dirty data. At that time,
-> >>>>>>> there was no dirty data page from other inodes.
-> >>>>>>
-> >>>>>> Okay,
-> >>>>>>
-> >>>>>>>
-> >>>>>>> More specifically, I suspect __writeback_inodes_sb_nr() gives WB_SYNC_NONE and
-> >>>>>>> waits for wb_wait_for_completion().
-> >>>>>>
-> >>>>>> Did you record any callstack after the issue happened?
-> >>>>>
-> >>>>> I found this.
-> >>>>>
-> >>>>> [213389.297642]  __schedule+0x2dd/0x780^M
-> >>>>> [213389.299224]  schedule+0x55/0xc0^M
-> >>>>> [213389.300745]  wb_wait_for_completion+0x56/0x90^M
-> >>>>> [213389.302469]  ? wait_woken+0x80/0x80^M
-> >>>>> [213389.303997]  __writeback_inodes_sb_nr+0xa8/0xd0^M
-> >>>>> [213389.305760]  writeback_inodes_sb+0x4b/0x60^M
-> >>>>> [213389.307439]  sync_filesystem+0x2e/0xa0^M
-> >>>>> [213389.308999]  generic_shutdown_super+0x27/0x110^M
-> >>>>> [213389.310738]  kill_block_super+0x27/0x50^M
-> >>>>> [213389.312327]  kill_f2fs_super+0x76/0xe0 [f2fs]^M
-> >>>>> [213389.314014]  deactivate_locked_super+0x3b/0x80^M
-> >>>>> [213389.315692]  deactivate_super+0x3e/0x50^M
-> >>>>> [213389.317226]  cleanup_mnt+0x109/0x160^M
-> >>>>> [213389.318718]  __cleanup_mnt+0x12/0x20^M
-> >>>>> [213389.320177]  task_work_run+0x70/0xb0^M
-> >>>>> [213389.321609]  exit_to_usermode_loop+0x131/0x160^M
-> >>>>> [213389.323306]  do_syscall_64+0x170/0x1b0^M
-> >>>>> [213389.324762]  entry_SYSCALL_64_after_hwframe+0x44/0xa9^M
-> >>>>> [213389.326477] RIP: 0033:0x7fc4b5e6a35b^M
-> >>>>
-> >>>> Does this only happen during umount? If so, will below change help?
-> >>>>
-> >>>> 	if ((S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) &&
-> >>>> +			!is_sbi_flag_set(sbi, SBI_IS_CLOSE) &&
-> >>>> 			wbc->sync_mode == WB_SYNC_NONE &&
-> >>>> 			get_dirty_pages(inode) < nr_pages_to_skip(sbi, DATA) &&
-> >>>> 			f2fs_available_free_memory(sbi, DIRTY_DENTS))
-> >>>> 		goto skip_write;
-> >>>
-> >>> Hmm, this doesn't work. The writeback was called before put_super?
-> >>
-> >> Oops, still be confused about this issue. :(
-> > 
-> > Huam, I hit the problem with the patch.
-> > I need to return back and think in other way. :(
-> 
-> Still quota data was left? what about dentry?
+Hi Jacob,
 
-Huh, at this time, only node and meta pages were left as dirty.
+On 7/16/20 12:01 AM, Jacob Pan wrote:
+> On Wed, 15 Jul 2020 08:47:36 +0800
+> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> 
+>> Hi Jacob,
+>>
+>> On 7/15/20 12:39 AM, Jacob Pan wrote:
+>>> On Tue, 14 Jul 2020 13:57:01 +0800
+>>> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+>>>    
+>>>> This adds two new aux-domain APIs for a use case like vfio/mdev
+>>>> where sub-devices derived from an aux-domain capable device are
+>>>> created and put in an iommu_group.
+>>>>
+>>>> /**
+>>>>    * iommu_aux_attach_group - attach an aux-domain to an iommu_group
+>>>> which
+>>>>    *                          contains sub-devices (for example
+>>>> mdevs) derived
+>>>>    *                          from @dev.
+>>>>    * @domain: an aux-domain;
+>>>>    * @group:  an iommu_group which contains sub-devices derived from
+>>>> @dev;
+>>>>    * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+>>>>    *
+>>>>    * Returns 0 on success, or an error value.
+>>>>    */
+>>>> int iommu_aux_attach_group(struct iommu_domain *domain,
+>>>>                              struct iommu_group *group,
+>>>>                              struct device *dev)
+>>>>
+>>>> /**
+>>>>    * iommu_aux_detach_group - detach an aux-domain from an
+>>>> iommu_group *
+>>>>    * @domain: an aux-domain;
+>>>>    * @group:  an iommu_group which contains sub-devices derived from
+>>>> @dev;
+>>>>    * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+>>>>    *
+>>>>    * @domain must have been attached to @group via
+>>>> iommu_aux_attach_group(). */
+>>>> void iommu_aux_detach_group(struct iommu_domain *domain,
+>>>>                               struct iommu_group *group,
+>>>>                               struct device *dev)
+>>>>
+>>>> It also adds a flag in the iommu_group data structure to identify
+>>>> an iommu_group with aux-domain attached from those normal ones.
+>>>>
+>>>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+>>>> ---
+>>>>    drivers/iommu/iommu.c | 58
+>>>> +++++++++++++++++++++++++++++++++++++++++++ include/linux/iommu.h |
+>>>> 17 +++++++++++++ 2 files changed, 75 insertions(+)
+>>>>
+>>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>>>> index e1fdd3531d65..cad5a19ebf22 100644
+>>>> --- a/drivers/iommu/iommu.c
+>>>> +++ b/drivers/iommu/iommu.c
+>>>> @@ -45,6 +45,7 @@ struct iommu_group {
+>>>>    	struct iommu_domain *default_domain;
+>>>>    	struct iommu_domain *domain;
+>>>>    	struct list_head entry;
+>>>> +	unsigned int aux_domain_attached:1;
+>>>>    };
+>>>>    
+>>>>    struct group_device {
+>>>> @@ -2759,6 +2760,63 @@ int iommu_aux_get_pasid(struct iommu_domain
+>>>> *domain, struct device *dev) }
+>>>>    EXPORT_SYMBOL_GPL(iommu_aux_get_pasid);
+>>>>    
+>>>> +/**
+>>>> + * iommu_aux_attach_group - attach an aux-domain to an iommu_group
+>>>> which
+>>>> + *                          contains sub-devices (for example
+>>>> mdevs) derived
+>>>> + *                          from @dev.
+>>>> + * @domain: an aux-domain;
+>>>> + * @group:  an iommu_group which contains sub-devices derived from
+>>>> @dev;
+>>>> + * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+>>>> + *
+>>>> + * Returns 0 on success, or an error value.
+>>>> + */
+>>>> +int iommu_aux_attach_group(struct iommu_domain *domain,
+>>>> +			   struct iommu_group *group, struct
+>>>> device *dev) +{
+>>>> +	int ret = -EBUSY;
+>>>> +
+>>>> +	mutex_lock(&group->mutex);
+>>>> +	if (group->domain)
+>>>> +		goto out_unlock;
+>>>> +
+>>> Perhaps I missed something but are we assuming only one mdev per
+>>> mdev group? That seems to change the logic where vfio does:
+>>> iommu_group_for_each_dev()
+>>> 	iommu_aux_attach_device()
+>>>    
+>>
+>> It has been changed in PATCH 4/4:
+>>
+>> static int vfio_iommu_attach_group(struct vfio_domain *domain,
+>>                                      struct vfio_group *group)
+>> {
+>>           if (group->mdev_group)
+>>                   return iommu_aux_attach_group(domain->domain,
+>>                                                 group->iommu_group,
+>>                                                 group->iommu_device);
+>>           else
+>>                   return iommu_attach_group(domain->domain,
+>> group->iommu_group);
+>> }
+>>
+>> So, for both normal domain and aux-domain, we use the same concept:
+>> attach a domain to a group.
+>>
+> I get that, but don't you have to attach all the devices within the
 
-> 
-> Thanks,
-> 
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>> I'll try the original patch one more time.
-> >>>
-> >>>>
-> >>>>>
-> >>>>>>
-> >>>>>> Still I'm confused that why directory's data written could be skipped, but
-> >>>>>> quota's data couldn't, what's the difference?
-> >>>>>
-> >>>>> I suspect different blocking timing from cp_error between quota and dentry.
-> >>>>> e.g., we block dir operations right after cp_error, while quota can make
-> >>>>
-> >>>> No guarantee that there is no dirty dentry being created after
-> >>>> cp_error, right?
-> >>>>
-> >>>> e.g.
-> >>>>
-> >>>> Thread A				Thread B
-> >>>> - f2fs_create
-> >>>> - bypass f2fs_cp_error
-> >>>> 					- set cp_error
-> >>>> - create dirty dentry
-> >>>>
-> >>>> BTW, do you know what __writeback_inodes_sb_nr is waiting for?
-> >>>>
-> >>>>> dirty pages in more fine granularity.
-> >>>>>
-> >>>>>>
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>> Thanks,
-> >>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>> Thanks,
-> >>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> Thanks,
-> >>>>>>>>>>
-> >>>>>>>>>>>
-> >>>>>>>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> >>>>>>>>>>> ---
-> >>>>>>>>>>>  fs/f2fs/data.c | 2 +-
-> >>>>>>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>>>>>>>>
-> >>>>>>>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> >>>>>>>>>>> index 44645f4f914b6..72e8b50e588c1 100644
-> >>>>>>>>>>> --- a/fs/f2fs/data.c
-> >>>>>>>>>>> +++ b/fs/f2fs/data.c
-> >>>>>>>>>>> @@ -3148,7 +3148,7 @@ static int __f2fs_write_data_pages(struct address_space *mapping,
-> >>>>>>>>>>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-> >>>>>>>>>>>  		goto skip_write;
-> >>>>>>>>>>>  
-> >>>>>>>>>>> -	if ((S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) &&
-> >>>>>>>>>>> +	if (S_ISDIR(inode->i_mode) &&
-> >>>>>>>>>>>  			wbc->sync_mode == WB_SYNC_NONE &&
-> >>>>>>>>>>>  			get_dirty_pages(inode) < nr_pages_to_skip(sbi, DATA) &&
-> >>>>>>>>>>>  			f2fs_available_free_memory(sbi, DIRTY_DENTS))
-> >>>>>>>>>>>
-> >>>>>>>>> .
-> >>>>>>>>>
-> >>>>>>> .
-> >>>>>>>
-> >>>>> .
-> >>>>>
-> >>> .
-> >>>
-> > .
-> > 
+This iommu_group includes only mediated devices derived from an
+IOMMU_DEV_FEAT_AUX-capable device. Different from iommu_attach_group(),
+iommu_aux_attach_group() doesn't need to attach the domain to each
+device in group, instead it only needs to attach the domain to the
+physical device where the mdev's were created from.
+
+> group? Here you see the group already has a domain and exit.
+
+If the (group->domain) has been set, that means a domain has already
+attached to the group, so it returns -EBUSY.
+
+Best regards,
+baolu
