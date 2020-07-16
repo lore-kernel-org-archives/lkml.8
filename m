@@ -2,409 +2,159 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B111DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE6620787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A4C20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eswTnedT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tayLBiK/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgGPUgB (ORCPT
+        id S1726240AbgGPUiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:36:01 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21660 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726812AbgGPUfe (ORCPT
+        Thu, 16 Jul 2020 16:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgGPUiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:35:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594931732;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sGlqsraquDgu8I0zmAVqtzYIeEOB5GrV+LoXf470Egs=;
-        b=eswTnedT5yGzxRzw2iogldV1HUnGwhpYK6wH2uA0tEyCVhmyVlEzgKpNP7irThH72ib8E2
-        hFi8ECzj+X/Nx63rXlAYwj1zn5RMgU4NLjRIvfAAvuY2DKrnz0O5bNCom6gzk36yQWMeiV
-        FnPf8w//IXmh8Qe4ekOTDa2AQrZFFDA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-358-8K5DXL6lPOuYLyuH5dvvsw-1; Thu, 16 Jul 2020 16:35:31 -0400
-X-MC-Unique: 8K5DXL6lPOuYLyuH5dvvsw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D246D108D;
-        Thu, 16 Jul 2020 20:35:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B90C060C84;
-        Thu, 16 Jul 2020 20:35:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 4/5] keys: Split the search perms between KEY_NEED_USE and
- KEY_NEED_SEARCH
-From:   David Howells <dhowells@redhat.com>
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Cc:     dhowells@redhat.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Eric Biederman <ebiederm@xmission.com>, jlayton@redhat.com,
-        christian@brauner.io, selinux@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, containers@lists.linux-foundation.org
-Date:   Thu, 16 Jul 2020 21:35:24 +0100
-Message-ID: <159493172491.3249370.12796192457457028352.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159493167778.3249370.8145886688150701997.stgit@warthog.procyon.org.uk>
-References: <159493167778.3249370.8145886688150701997.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Thu, 16 Jul 2020 16:38:17 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C77C061755;
+        Thu, 16 Jul 2020 13:38:17 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id d17so9859514ljl.3;
+        Thu, 16 Jul 2020 13:38:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=2O7bQWDLwUQDhW0OWAcbDHupVIWe6xHnIDUrKXN+BPE=;
+        b=tayLBiK/WNaM9ea4BqBDSKhbMdqpMJ8yMhQ2ZgaKzKGSoUcoHHS4cfokqB9mxIVpxi
+         sp+xoUxTXku7dRJg5p2wfpRHztxxiWjPfV+mEFuD258pgivHSOyEqR5QCGQWmkIJsi9H
+         C8W6LhHnoSu4O9RU9paS/EB1PkLocmxKif1LymCGQCmBPhQQHKyFBIRls/D2rvu1P/uv
+         gMq+6FNPlF4K2zBL0T43L9WSsLD+rcWlY/9gnn9klm29IzYFmpWTxREb1PTTNI2ss/nm
+         8n6+Fh1GbggE+3yiVKbaZibdtHz7xAtbrHVI1uu1NJJ8+ItK6JtDzeTi2Qkig6AnwWex
+         +6vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=2O7bQWDLwUQDhW0OWAcbDHupVIWe6xHnIDUrKXN+BPE=;
+        b=Y13yuLDbf5psSAq1oD93Fhk22Rkd9c2RHm6BfKeiQdWDtFG/7XL0sXQqUxCwvwgdky
+         rsDXdNrX/YqLqZ8a6bH/GAayoZ302KhZdZD7ue95vw0rIpkvzACAf3O+SIdIH8FijiFm
+         yuPLHMIiJ6DcMiW5KenPC2r5tt8DoXOfKfLNjcwLGMjA2FHVYDTv5kfqmAj10ah9FJNV
+         LGStiRo8vBptDrpfc6dWsjfveleE+ya0GAAB3u2H/KUp1zwpHbkoP5dFf23lRDe4/bUq
+         Wb/lS8wQzydV2dazzfCYi7AsdtsQlvmKmA8DK6bXgvbrPSdtvebAjdKHN6y8XAJN+A4Y
+         AbrA==
+X-Gm-Message-State: AOAM532bpqdP8HRp3rekd2qBtth3MLBrjBr8hkVx4L55h/a3oYB5Zil8
+        sB3LO/ps9Z3Y140GlHt3GrI=
+X-Google-Smtp-Source: ABdhPJxOSwAJQ63NMiBWyfyxbqKJ3ey6voIYtjuqT0rVfl/afoSGNY0ZkTRz5Zs43FNSIK3hlG6xRA==
+X-Received: by 2002:a2e:85ce:: with SMTP id h14mr2692804ljj.356.1594931895810;
+        Thu, 16 Jul 2020 13:38:15 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id n3sm1244807ljc.114.2020.07.16.13.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 13:38:15 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v3 net] net: fec: fix hardware time stamping by external
+ devices
+References: <20200706142616.25192-1-sorganov@gmail.com>
+        <20200714162802.11926-1-sorganov@gmail.com>
+        <20200716112432.127b9d99@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Date:   Thu, 16 Jul 2020 23:38:13 +0300
+In-Reply-To: <20200716112432.127b9d99@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        (Jakub Kicinski's message of "Thu, 16 Jul 2020 11:24:32 -0700")
+Message-ID: <87a6zz9owa.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow the permission needed for a keyring search to be specified and split
-the permissions between KEY_NEED_USE (the kernel wants to do something with
-the key) and KEY_NEED_SEARCH (userspace wants to do something with the
-key).
+Jakub Kicinski <kuba@kernel.org> writes:
 
-This primarily affects how request_key() works, differentiating implicit
-calls (e.g. from filesystems) from userspace calling the request_key()
-system call.
+> On Tue, 14 Jul 2020 19:28:02 +0300 Sergey Organov wrote:
+>> Fix support for external PTP-aware devices such as DSA or PTP PHY:
+>>
+>> Make sure we never time stamp tx packets when hardware time stamping
+>> is disabled.
+>>
+>> Check for PTP PHY being in use and then pass ioctls related to time
+>> stamping of Ethernet packets to the PTP PHY rather than handle them
+>> ourselves. In addition, disable our own hardware time stamping in this
+>> case.
+>>
+>> Fixes: 6605b730c061 ("FEC: Add time stamping code and a PTP hardware
+>> clock")
+>> Signed-off-by: Sergey Organov <sorganov@gmail.com>
+>> Acked-by: Richard Cochran <richardcochran@gmail.com>
+>> Acked-by: Vladimir Oltean <olteanv@gmail.com>
+>> ---
+>>
+>> v3:
+>>   - Fixed SHA1 length of Fixes: tag
+>>   - Added Acked-by: tags
+>>
+>> v2:
+>>   - Extracted from larger patch series
+>>   - Description/comments updated according to discussions
+>>   - Added Fixes: tag
+>
+> FWIW in the networking subsystem we like the changelog to be part of the
+> commit.
 
-This will allow the kernel to find keys in a hidden container keyring, but
-not the denizens of the container.
+Thanks, Jakub, I took a notice for myself!
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+>
+> Applied, and added to the stable queue, thanks!
 
- certs/blacklist.c                        |    2 +-
- crypto/asymmetric_keys/asymmetric_type.c |    2 +-
- include/linux/key.h                      |    2 ++
- net/rxrpc/security.c                     |    2 +-
- security/keys/internal.h                 |    4 ++++
- security/keys/keyctl.c                   |    6 ++++--
- security/keys/keyring.c                  |   13 ++++++++-----
- security/keys/permission.c               |   31 ++++++++++++++++++++++++++++++
- security/keys/proc.c                     |    1 +
- security/keys/process_keys.c             |    8 ++++++--
- security/keys/request_key.c              |    5 +++++
- security/keys/request_key_auth.c         |    1 +
- 12 files changed, 65 insertions(+), 12 deletions(-)
+Thanks, and I've also got a no-brainer patch that lets this bug fix
+compile as-is with older kernels, where there were no phy_has_hwtstamp()
+function. Dunno how to properly handle this. Here is the patch (on
+top of v4.9.146), just in case:
 
-diff --git a/certs/blacklist.c b/certs/blacklist.c
-index aff83e3a9f49..29c3cb6254d9 100644
---- a/certs/blacklist.c
-+++ b/certs/blacklist.c
-@@ -123,7 +123,7 @@ int is_hash_blacklisted(const u8 *hash, size_t hash_len, const char *type)
- 	*p = 0;
- 
- 	kref = keyring_search(make_key_ref(blacklist_keyring, true),
--			      &key_type_blacklist, buffer, false);
-+			      &key_type_blacklist, buffer, KEY_NEED_USE, false);
- 	if (!IS_ERR(kref)) {
- 		key_ref_put(kref);
- 		ret = -EKEYREJECTED;
-diff --git a/crypto/asymmetric_keys/asymmetric_type.c b/crypto/asymmetric_keys/asymmetric_type.c
-index 6e5fc8e31f01..4559ac2f0bb7 100644
---- a/crypto/asymmetric_keys/asymmetric_type.c
-+++ b/crypto/asymmetric_keys/asymmetric_type.c
-@@ -83,7 +83,7 @@ struct key *find_asymmetric_key(struct key *keyring,
- 	pr_debug("Look up: \"%s\"\n", req);
- 
- 	ref = keyring_search(make_key_ref(keyring, 1),
--			     &key_type_asymmetric, req, true);
-+			     &key_type_asymmetric, req, KEY_NEED_USE, true);
- 	if (IS_ERR(ref))
- 		pr_debug("Request for key '%s' err %ld\n", req, PTR_ERR(ref));
- 	kfree(req);
-diff --git a/include/linux/key.h b/include/linux/key.h
-index 94a6d51464b5..0db5539366e7 100644
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@ -296,6 +296,7 @@ extern struct key *key_alloc(struct key_type *type,
- #define KEY_ALLOC_BUILT_IN		0x0004	/* Key is built into kernel */
- #define KEY_ALLOC_BYPASS_RESTRICTION	0x0008	/* Override the check on restricted keyrings */
- #define KEY_ALLOC_UID_KEYRING		0x0010	/* allocating a user or user session keyring */
-+#define KEY_ALLOC_USERSPACE_REQUEST	0x0020	/* Userspace requested the key */
- 
- extern void key_revoke(struct key *key);
- extern void key_invalidate(struct key *key);
-@@ -432,6 +433,7 @@ extern int keyring_clear(struct key *keyring);
- extern key_ref_t keyring_search(key_ref_t keyring,
- 				struct key_type *type,
- 				const char *description,
-+				enum key_need_perm need_perm,
- 				bool recurse);
- 
- extern int keyring_add_key(struct key *keyring,
-diff --git a/net/rxrpc/security.c b/net/rxrpc/security.c
-index 9b1fb9ed0717..23077cfe3d44 100644
---- a/net/rxrpc/security.c
-+++ b/net/rxrpc/security.c
-@@ -141,7 +141,7 @@ bool rxrpc_look_up_server_security(struct rxrpc_local *local, struct rxrpc_sock
- 
- 	/* look through the service's keyring */
- 	kref = keyring_search(make_key_ref(rx->securities, 1UL),
--			      &key_type_rxrpc_s, kdesc, true);
-+			      &key_type_rxrpc_s, kdesc, KEY_NEED_USE, true);
- 	if (IS_ERR(kref)) {
- 		trace_rxrpc_abort(0, "SVK",
- 				  sp->hdr.cid, sp->hdr.callNumber, sp->hdr.seq,
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index af2c9531c435..d0d1bce95674 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -131,6 +131,7 @@ struct keyring_search_context {
- 	struct keyring_index_key index_key;
- 	const struct cred	*cred;
- 	struct key_match_data	match_data;
-+	enum key_need_perm	need_perm;	/* Permission required for search */
- 	unsigned		flags;
- #define KEYRING_SEARCH_NO_STATE_CHECK	0x0001	/* Skip state checks */
- #define KEYRING_SEARCH_DO_STATE_CHECK	0x0002	/* Override NO_STATE_CHECK */
-@@ -196,6 +197,9 @@ extern void key_gc_keytype(struct key_type *ktype);
- extern int key_task_permission(const key_ref_t key_ref,
- 			       const struct cred *cred,
- 			       enum key_need_perm need_perm);
-+extern int key_search_permission(const key_ref_t key_ref,
-+				 struct keyring_search_context *ctx,
-+				 enum key_need_perm need_perm);
- extern unsigned int key_acl_to_perm(const struct key_acl *acl);
- extern long key_set_acl(struct key *key, struct key_acl *acl);
- extern void key_put_acl(struct key_acl *acl);
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index fae2df676e30..54a2bfff9af2 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -225,7 +225,8 @@ SYSCALL_DEFINE4(request_key, const char __user *, _type,
- 	key = request_key_and_link(ktype, description, NULL, callout_info,
- 				   callout_len, NULL, NULL,
- 				   key_ref_to_ptr(dest_ref),
--				   KEY_ALLOC_IN_QUOTA);
-+				   KEY_ALLOC_IN_QUOTA |
-+				   KEY_ALLOC_USERSPACE_REQUEST);
- 	if (IS_ERR(key)) {
- 		ret = PTR_ERR(key);
- 		goto error5;
-@@ -685,7 +686,8 @@ long keyctl_keyring_search(key_serial_t ringid,
- 	}
- 
- 	/* do the search */
--	key_ref = keyring_search(keyring_ref, ktype, description, true);
-+	key_ref = keyring_search(keyring_ref, ktype, description,
-+				 KEY_NEED_SEARCH, true);
- 	if (IS_ERR(key_ref)) {
- 		ret = PTR_ERR(key_ref);
- 
-diff --git a/security/keys/keyring.c b/security/keys/keyring.c
-index f14aabf27a51..1779c95b428c 100644
---- a/security/keys/keyring.c
-+++ b/security/keys/keyring.c
-@@ -621,8 +621,8 @@ static int keyring_search_iterator(const void *object, void *iterator_data)
- 
- 	/* key must have search permissions */
- 	if (!(ctx->flags & KEYRING_SEARCH_NO_CHECK_PERM) &&
--	    key_task_permission(make_key_ref(key, ctx->possessed),
--				ctx->cred, KEY_NEED_SEARCH) < 0) {
-+	    key_search_permission(make_key_ref(key, ctx->possessed),
-+				  ctx, ctx->need_perm) < 0) {
- 		ctx->result = ERR_PTR(-EACCES);
- 		kleave(" = %d [!perm]", ctx->skipped_ret);
- 		goto skipped;
-@@ -798,8 +798,8 @@ static bool search_nested_keyrings(struct key *keyring,
- 
- 		/* Search a nested keyring */
- 		if (!(ctx->flags & KEYRING_SEARCH_NO_CHECK_PERM) &&
--		    key_task_permission(make_key_ref(key, ctx->possessed),
--					ctx->cred, KEY_NEED_SEARCH) < 0)
-+		    key_search_permission(make_key_ref(key, ctx->possessed),
-+					  ctx, KEY_NEED_SEARCH) < 0)
- 			continue;
- 
- 		/* stack the current position */
-@@ -921,7 +921,7 @@ key_ref_t keyring_search_rcu(key_ref_t keyring_ref,
- 		return ERR_PTR(-ENOTDIR);
- 
- 	if (!(ctx->flags & KEYRING_SEARCH_NO_CHECK_PERM)) {
--		err = key_task_permission(keyring_ref, ctx->cred, KEY_NEED_SEARCH);
-+		err = key_search_permission(keyring_ref, ctx, ctx->need_perm);
- 		if (err < 0)
- 			return ERR_PTR(err);
- 	}
-@@ -937,6 +937,7 @@ key_ref_t keyring_search_rcu(key_ref_t keyring_ref,
-  * @keyring: The root of the keyring tree to be searched.
-  * @type: The type of keyring we want to find.
-  * @description: The name of the keyring we want to find.
-+ * @need_perm: The permission required of the target key.
-  * @recurse: True to search the children of @keyring also
-  *
-  * As keyring_search_rcu() above, but using the current task's credentials and
-@@ -945,6 +946,7 @@ key_ref_t keyring_search_rcu(key_ref_t keyring_ref,
- key_ref_t keyring_search(key_ref_t keyring,
- 			 struct key_type *type,
- 			 const char *description,
-+			 enum key_need_perm need_perm,
- 			 bool recurse)
- {
- 	struct keyring_search_context ctx = {
-@@ -955,6 +957,7 @@ key_ref_t keyring_search(key_ref_t keyring,
- 		.match_data.cmp		= key_default_cmp,
- 		.match_data.raw_data	= description,
- 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
-+		.need_perm		= need_perm,
- 		.flags			= KEYRING_SEARCH_DO_STATE_CHECK,
- 	};
- 	key_ref_t key;
-diff --git a/security/keys/permission.c b/security/keys/permission.c
-index 0bb7f6b695f4..3ae4d9aedc3a 100644
---- a/security/keys/permission.c
-+++ b/security/keys/permission.c
-@@ -253,6 +253,37 @@ int key_task_permission(const key_ref_t key_ref, const struct cred *cred,
- 	return security_key_permission(key_ref, cred, need_perm, notes);
- }
+--- >8 ---
+
+commit eee1f92bbc83ad59c83935a21f635e088cf7aa02
+Author: Sergey Organov <sorganov@gmail.com>
+Date:   Tue Jun 30 17:12:16 2020 +0300
+
+    phy: add phy_has_hwtstamp() for compatibility with newer kernels
+
+    Signed-off-by: Sergey Organov <sorganov@gmail.com>
+
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 867110c9d707..aa01ed4e8e1f 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -595,6 +595,15 @@ struct phy_driver {
+ #define PHY_ANY_ID "MATCH ANY PHY"
+ #define PHY_ANY_UID 0xffffffff
  
 +/**
-+ * key_search_permission - Check a key can be searched for
-+ * @key_ref: The key to check.
-+ * @cred: The credentials to use.
-+ * @need_perm: The permission required.
-+ *
-+ * Check to see whether permission is granted to use a key in the desired way,
-+ * but permit the security modules to override.
-+ *
-+ * The caller must hold the RCU readlock.
-+ *
-+ * Returns 0 if successful, -EACCES if access is denied based on the
-+ * permissions bits or the LSM check.
++ * phy_has_hwtstamp - Tests whether a PHY supports time stamp configuration.
++ * @phydev: the phy_device struct
 + */
-+int key_search_permission(const key_ref_t key_ref,
-+			  struct keyring_search_context *ctx,
-+			  enum key_need_perm need_perm)
++static inline bool phy_has_hwtstamp(struct phy_device *phydev)
 +{
-+	unsigned int allow, notes = 0;
-+	int ret;
-+
-+	allow = key_resolve_acl(key_ref, ctx->cred);
-+
-+	ret = check_key_permission(key_ref, ctx->cred, allow, need_perm, &notes);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Let the LSMs be the final arbiter */
-+	return security_key_permission(key_ref, ctx->cred, need_perm, notes);
++       return phydev && phydev->drv && phydev->drv->hwtstamp;
 +}
 +
- /**
-  * key_validate - Validate a key.
-  * @key: The key to be validated.
-diff --git a/security/keys/proc.c b/security/keys/proc.c
-index c68ec5f98659..a6b349ee1759 100644
---- a/security/keys/proc.c
-+++ b/security/keys/proc.c
-@@ -174,6 +174,7 @@ static int proc_keys_show(struct seq_file *m, void *v)
- 		.match_data.cmp		= lookup_user_key_possessed,
- 		.match_data.raw_data	= key,
- 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
-+		.need_perm		= KEY_NEED_SEARCH,
- 		.flags			= (KEYRING_SEARCH_NO_STATE_CHECK |
- 					   KEYRING_SEARCH_RECURSE),
- 	};
-diff --git a/security/keys/process_keys.c b/security/keys/process_keys.c
-index 11227101bea0..3721f96dd6fb 100644
---- a/security/keys/process_keys.c
-+++ b/security/keys/process_keys.c
-@@ -135,7 +135,8 @@ int look_up_user_keyrings(struct key **_user_keyring,
- 	 */
- 	snprintf(buf, sizeof(buf), "_uid.%u", uid);
- 	uid_keyring_r = keyring_search(make_key_ref(reg_keyring, true),
--				       &key_type_keyring, buf, false);
-+				       &key_type_keyring, buf, KEY_NEED_SEARCH,
-+				       false);
- 	kdebug("_uid %p", uid_keyring_r);
- 	if (uid_keyring_r == ERR_PTR(-EAGAIN)) {
- 		uid_keyring = keyring_alloc(buf, cred->user->uid, INVALID_GID,
-@@ -157,7 +158,8 @@ int look_up_user_keyrings(struct key **_user_keyring,
- 	/* Get a default session keyring (which might also exist already) */
- 	snprintf(buf, sizeof(buf), "_uid_ses.%u", uid);
- 	session_keyring_r = keyring_search(make_key_ref(reg_keyring, true),
--					   &key_type_keyring, buf, false);
-+					   &key_type_keyring, buf, KEY_NEED_SEARCH,
-+					   false);
- 	kdebug("_uid_ses %p", session_keyring_r);
- 	if (session_keyring_r == ERR_PTR(-EAGAIN)) {
- 		session_keyring = keyring_alloc(buf, cred->user->uid, INVALID_GID,
-@@ -230,6 +232,7 @@ struct key *get_user_session_keyring_rcu(const struct cred *cred)
- 		.match_data.cmp		= key_default_cmp,
- 		.match_data.raw_data	= buf,
- 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
-+		.need_perm		= KEY_NEED_SEARCH,
- 		.flags			= KEYRING_SEARCH_DO_STATE_CHECK,
- 	};
- 
-@@ -648,6 +651,7 @@ key_ref_t lookup_user_key(key_serial_t id, unsigned long lflags,
- 	struct keyring_search_context ctx = {
- 		.match_data.cmp		= lookup_user_key_possessed,
- 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
-+		.need_perm		= KEY_NEED_SEARCH,
- 		.flags			= (KEYRING_SEARCH_NO_STATE_CHECK |
- 					   KEYRING_SEARCH_RECURSE),
- 	};
-diff --git a/security/keys/request_key.c b/security/keys/request_key.c
-index 2b84efb420cb..479ae0573d1e 100644
---- a/security/keys/request_key.c
-+++ b/security/keys/request_key.c
-@@ -567,6 +567,7 @@ struct key *request_key_and_link(struct key_type *type,
- 		.match_data.cmp		= key_default_cmp,
- 		.match_data.raw_data	= description,
- 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
-+		.need_perm		= KEY_NEED_USE,
- 		.flags			= (KEYRING_SEARCH_DO_STATE_CHECK |
- 					   KEYRING_SEARCH_SKIP_EXPIRED |
- 					   KEYRING_SEARCH_RECURSE),
-@@ -579,6 +580,9 @@ struct key *request_key_and_link(struct key_type *type,
- 	       ctx.index_key.type->name, ctx.index_key.description,
- 	       callout_info, callout_len, aux, dest_keyring, flags);
- 
-+	if (flags & KEY_ALLOC_USERSPACE_REQUEST)
-+		ctx.need_perm = KEY_NEED_SEARCH;
-+
- 	if (type->match_preparse) {
- 		ret = type->match_preparse(&ctx.match_data);
- 		if (ret < 0) {
-@@ -774,6 +778,7 @@ struct key *request_key_rcu(struct key_type *type,
- 		.match_data.cmp		= key_default_cmp,
- 		.match_data.raw_data	= description,
- 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
-+		.need_perm		= KEY_NEED_USE,
- 		.flags			= (KEYRING_SEARCH_DO_STATE_CHECK |
- 					   KEYRING_SEARCH_SKIP_EXPIRED),
- 	};
-diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
-index ee8c5fe6ed61..f8f77af152de 100644
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -264,6 +264,7 @@ struct key *key_get_instantiation_authkey(key_serial_t target_id)
- 		.match_data.cmp		= key_default_cmp,
- 		.match_data.raw_data	= description,
- 		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
-+		.need_perm		= KEY_NEED_USE,
- 		.flags			= (KEYRING_SEARCH_DO_STATE_CHECK |
- 					   KEYRING_SEARCH_RECURSE),
- 	};
+ /* A Structure for boards to register fixups with the PHY Lib */
+ struct phy_fixup {
+        struct list_head list;
 
 
+-- Sergey
