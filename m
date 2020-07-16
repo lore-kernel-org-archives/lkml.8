@@ -2,144 +2,129 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC2620787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:07:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594901267;
-	bh=XUk4uPpwTSITCEjYChNTScClwFq4uq08tlJDRMfMUmU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k3vqRgHCL7rlsoQiOjVONomreCcaeU7ivPa8k2oresiqU+p44YqmjrOp3PmP2du6Z
-	 BI86BtNv9xg73AxalSS4e16pD1Tywqce9aJx2EBdhyhCGUXhjjr/XNbMXOFIbPPu51
-	 K4mvXC9CVcMPZAsNRruxwdSnWMelc5CRRQgfr0gg=
+	by mail.kernel.org (Postfix) with ESMTP id 37C0120787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:08:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="U9BJu7Cp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgGPMHq (ORCPT
+        id S1728528AbgGPMH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:07:46 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45954 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727990AbgGPMHp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:07:45 -0400
-Received: by mail-ot1-f66.google.com with SMTP id h1so3971271otq.12;
-        Thu, 16 Jul 2020 05:07:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XUk4uPpwTSITCEjYChNTScClwFq4uq08tlJDRMfMUmU=;
-        b=SL2I7pg1TZc9/YHL6wz1AWyvXdZGr5Z2twIjUEOBv3Zoptt1PEQwDUJsVrTk5sfZhH
-         m47/EbxUlYY8eNiMfbccthTU20b4zpVDoCc+EetQbPW2SJt3Bagq+8Lb7/F0QKyABeRY
-         C0I/1auhrVcUfpizva/2/tUjiss1cfyN/IZEFmRFEARqynNjRY9ncqu66XTv3p+a/RWY
-         KMEN5wXcb/pbKhzm8WWZRp6SxtVhbbPNmYhOxDKNFm0GYu7Ye/OcesYrV7x6+VoHdJvZ
-         NBP7LEXrAgrKCbxcyfmVZG4ZzoZyesO3rgXsact3tsokx5Z7NDU3tVXGV5Cgs3hbRSgR
-         RIUQ==
-X-Gm-Message-State: AOAM531eZawOwvc3VBdmw4PBaN8vOEsgYzmMW1G6932IBZg75KBL16qo
-        H0CTOmqWlUcs6TE73O18lPy+qzqZmP4X9Hgy+wQ=
-X-Google-Smtp-Source: ABdhPJzEJ56GsxoaS/HFvPdr7vkxYUCTd5QUGIeBz9A3WjnvyouFsd0dwP1GnLMjUnT6StsuZqX5NPiMkM4RbdpJks8=
-X-Received: by 2002:a9d:1c82:: with SMTP id l2mr3934854ota.167.1594901264631;
- Thu, 16 Jul 2020 05:07:44 -0700 (PDT)
+        Thu, 16 Jul 2020 08:07:58 -0400
+Received: from mail-eopbgr40062.outbound.protection.outlook.com ([40.107.4.62]:32627
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726239AbgGPMH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:07:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NP+sYgJ6YEN5KuxP2ELm9XKr2AX9A5BGUlfTlAUa6sOrEY2CnLq1dZoKahKR62Vt8m+n0n/HXYuvLDNEgX7hoTNy9e6NRmrVhzKhvgWT043wKQ75ossbmirL3wiGF1KU4tdOLtZaBy6LSQSnGIyCW1sqkwvtpSHCCiDyPdEHsD3b0hgLN3/WZRsAk+TlJFDorccCT9G3crMWu423uXGvc6kM6MAF8YGq+7GvH7mta5iZB9bslYgQZYmaZ4qel4cGZ1LBqmxVuiIqaX4trmr7mMOCrbsJhqBTQbTuf0XF3VA6ENcdA2KfVj3u1tAjK9I4JTduH9bZBVTOPyuz8k7rfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fBIeiuJcYxhf12zhZUOC+S9g4SSFMdv9VOFvE1OsZts=;
+ b=l04mB4IEFCFM/KH69UUibIhSpNhK58YiuMFXE3Avh5D1E0XNPuTkkyv91RxQ3kQZQ6rJN0Jxtj0wHH+uVGYAe/K69CSj8Qw4WBjyUETcANOdrrB7VbLnP6b9EJ4dGLzfi5eN1UXKz7YCVX5ktazKFLr4CY6Yik4mFnlC1f55GayglePsOJFtS7P+iv6D8JP/ySh/VVy5qxMbQ+gSJdRCyd3tCqVTTwitk+hHB5oN2HQqxW3LApHzGaN5y9NPCjQj6lDT8KuGj4A5r6Eb1rjN+nURaSqp1ibLulAH2ZbSqVx2bv6ns7NtnlYektTAT10n6SRcVDmfVFM75Sctetljwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fBIeiuJcYxhf12zhZUOC+S9g4SSFMdv9VOFvE1OsZts=;
+ b=U9BJu7CpXuSA/8mz6KtdCaKqV6eXRn5WuxP2K0JeeBNjI5pmChhpqppJdjpEoaAEduDl2ixNRclKYN6kKefWeKGlUpmmfmV4NV460mrrFdSETdjGBF32gltohjeosHlKq5R80p+1cyF++ICpNE+q76ijKuNvwlklWopocuA/O50=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
+ by VI1PR04MB5709.eurprd04.prod.outlook.com (2603:10a6:803:e3::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18; Thu, 16 Jul
+ 2020 12:07:53 +0000
+Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
+ ([fe80::8459:4be8:7034:7a81]) by VI1PR04MB4046.eurprd04.prod.outlook.com
+ ([fe80::8459:4be8:7034:7a81%6]) with mapi id 15.20.3195.018; Thu, 16 Jul 2020
+ 12:07:53 +0000
+Subject: Re: [PATCH 2/2] crypto: caam - support tagged keys for skcipher
+ algorithms
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+References: <1594591536-531-1-git-send-email-iuliana.prodan@nxp.com>
+ <1594591536-531-3-git-send-email-iuliana.prodan@nxp.com>
+ <20200716073610.GA28215@gondor.apana.org.au>
+ <0c818beb-05e5-a6c6-717d-782b32afff26@nxp.com>
+ <20200716115253.GA25035@gondor.apana.org.au>
+From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
+Message-ID: <59436173-9891-b857-f36b-e97c0a3264c8@nxp.com>
+Date:   Thu, 16 Jul 2020 15:07:50 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200716115253.GA25035@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM0PR06CA0115.eurprd06.prod.outlook.com
+ (2603:10a6:208:ab::20) To VI1PR04MB4046.eurprd04.prod.outlook.com
+ (2603:10a6:803:4d::29)
 MIME-Version: 1.0
-References: <3955470.QvD6XneCf3@kreacher> <000f01d65ae8$0c607990$25216cb0$@net>
-In-Reply-To: <000f01d65ae8$0c607990$25216cb0$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 16 Jul 2020 14:07:30 +0200
-Message-ID: <CAJZ5v0jGbfqfqqoPLjneFD5HLb20Yv9p25juNTzaumL70iFogg@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Francisco Jerez <francisco.jerez.plata@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.129] (84.117.251.185) by AM0PR06CA0115.eurprd06.prod.outlook.com (2603:10a6:208:ab::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Thu, 16 Jul 2020 12:07:52 +0000
+X-Originating-IP: [84.117.251.185]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b140c2e2-8a50-4440-50f9-08d82980de45
+X-MS-TrafficTypeDiagnostic: VI1PR04MB5709:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB5709F92C42B16B2963E45603987F0@VI1PR04MB5709.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: umRdae2Baqz0IOjeFcSTPUrP4z4mq4CZlWcjtCYz2SlQm8HvDwNOOeKjSV0fNnIz/rgxRD4aXO7wog+LEM1GP8UxWWjXOkDGQIkRneCOw2SB0FG6ZwxMjcWxE2OZJ1ZkVzAshrczSXCJQbVpjcaSFrEM/q3mCDPXNPylEN4FPesugMYp1AhV4WLqDOkoIQooZZ+nvk8PrcVtT9uHitTGjQA9glgOvjECgOzYYn/cvKLYelOuVD2biJlS9QdEBZKOFqfVIMYBAupiEh/ub5vWLM2x2qZJIZhQlJzTunayhMnfK//pISHtjkZSsFkKiq5mcB2J9IPGA1rkCKq++wjH4h68uWMIF9hOS4jTUvWNH+i9jxu8pTOgLcdA+Pjigl/7
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(396003)(376002)(39860400002)(136003)(8676002)(4744005)(956004)(53546011)(8936002)(66556008)(66476007)(52116002)(31686004)(4326008)(36756003)(2616005)(86362001)(16526019)(6486002)(186003)(5660300002)(66946007)(6916009)(31696002)(2906002)(54906003)(16576012)(478600001)(26005)(316002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Gc1elD/5sryqvhpPrtXuuXBZrYj78oI4eSv/EhLXTwZ9KIpPUdf+OuFhqF1/ZQGPUEwmwTNAWFX4iu3ye91kan8HqYOrx9cq3HWcJ+D64+QSmtFo+DxMMKK+pOD/MdoNgsAT/duF85ZonmXZE6hc5N0d+pGo9AyEbo1khQD2nZ2hC2BI4uIEVrHHXkMyMe3C0H4s+h2yMQq60auqFCX2ZnD4aaOEnUvt5fFX8/L5IuqLOeMeAI2ssN4iJqirtX4IZmi+1K2VbShjKphDOWw6kRA343W7iw6Ynd6H6POeDSAtpVSx3W8Omf4X/TLnlZlh9dm6aIQzEOdvVm+Zfo61i674biwAkjcMW1VaTWeWP26ncG9LMUj4PtFl2cDrH1ZctG7c7r/MUGmlgfhkULWcYSYU2CJnBIB/2vOdVIpYBw8qY2qevS1Ab9n1Ujrn1OGpJURim1IcU2p34uf2QQ0qG8HMwUlMCS8ebNgyfuPxKkggEJk7iI0yh8hev0L/V9qh
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b140c2e2-8a50-4440-50f9-08d82980de45
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2020 12:07:53.7131
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AsvQIGy+U5gdMR1aEcuKv82a1EShb5hfJ1rEVUz9RGG7v1rS8V+b+s5nHZ/ZtKBC6+sf/+WdC+wBx62YUUBnew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5709
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:39 PM Doug Smythies <dsmythies@telus.net> wrote:
->
-> On 2020.07.14 11:16 Rafael J. Wysocki wrote:
-> >
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ...
-> > Since the passive mode hasn't worked with HWP at all, and it is not going to
-> > the default for HWP systems anyway, I don't see any drawbacks related to making
-> > this change, so I would consider this as 5.9 material unless there are any
-> > serious objections.
->
-> Good point.
-> Some of the tests I do involve labour intensive post processing of data.
-> I want to automate some of that work, and it will take time.
-> We might be into the 5.9-rc series before I have detailed feedback.
->
-> However, so far:
->
-> Inverse impulse response test [1]:
->
-> High level test, i5-9600K, HWP-passive (this patch), ondemand:
-> 3101 tests. 0 failures. (GOOD)
->
-> From [1], re-stated:
-> > . High level: i5-9600K: 2453 tests, 60 failures, 2.45% fail rate. (HWP-active - powersave)
-> > . Verify acpi-cpufreq/ondemand works fine: i5-9600K: 8975 tests. 0 failures.
->
-> My version of that cool Alexander named pipe test [2] serialized workflow:
->
-> HWP-passive (this patch), performance: PASS.
->
-> From [2], re-stated, and also re-tested.
-> HWP-disabled passive - performance: FAIL.
+On 7/16/2020 2:53 PM, Herbert Xu wrote:
+> On Thu, Jul 16, 2020 at 01:35:51PM +0300, Horia Geantă wrote:
+>>
+>> This patch set adds support only for some AES-based algorithms.
+>> However, going further the plan is to add all keyed algorithms
+>> supported by caam.
+>>
+>> Thus I wouldn't tie the name to AES.
+> 
+> Yes but it's still exactly the same underlying feature as paes.
+> So I don't want to have two ways of doing the same thing in the
+> Crypto API.
+> 
+So instead of tk(cbc(aes)) use paes(cbc(aes) or cbc(paes)?
 
-But I'm not quite sure how this is related to this patch?
+How would this work for hmac(sha512),
+paes(hmac(sha512)) or hmac(psha512), or even phmac(sha512)?
 
-This test would still fail without the patch if the kernel was started
-with intel_pstate=passive in the kernel command line, wouldn't it.
-
-> Although, I believe the issue to be EPB management, [3].
-
-Well, that's kind of unexpected.
-
-If this really is the case, then it looks like the effect of the EPB
-setting on the processor is different depending on whether or not HWP
-is enabled.
-
-> And yes, I did see the reply to [3] that came earlier,
-> And have now re-done the test, with the referenced patch added.
-> It still is FAIL. I reply to the [3] thread, eventually.
->
-> [1] https://marc.info/?l=linux-pm&m=159354421400342&w=2
-> [2] https://marc.info/?l=linux-pm&m=159155067328641&w=2
-> [3] https://marc.info/?l=linux-pm&m=159438804230744&w=2
->
-> Kernel:
->
-> b08284a541ad (HEAD -> k58rc5-doug) cpufreq: intel_pstate: Avoid enabling HWP if EPP is not supported
-> 063fd7ccabfe cpufreq: intel_pstate: Implement passive mode with HWP enabled
-> 730ccf5054e9 cpufreq: intel_pstate: Allow raw energy performance preference value
-> bee36df01c68 cpufreq: intel_pstate: Allow enable/disable energy efficiency
-> 199629d8200e cpufreq: intel_pstate: Fix active mode setting from command line
-> 11ba468877bb (tag: v5.8-rc5, origin/master, origin/HEAD, master) Linux 5.8-rc5
->
-> Rules for this work:
->
-> . never use x86_energy_perf_policy.
-> . For HWP disabled: never change from active to passive or via versa, but rather do it via boot.
-> . after boot always check and reset the various power limit log bits that are set.
-> . never compile the kernel (well, until after any tests), which will set those bits again.
-> . never run prime95 high heat torture test, which will set those bits again.
-> . try to never do anything else that will set those bits again.
->
-> To be clear, I do allow changing governors within the context of the above rules.
-
-Thanks for the feedback!
+Thanks,
+Horia
