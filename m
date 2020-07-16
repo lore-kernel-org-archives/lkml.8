@@ -2,126 +2,141 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16773C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF189C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E50842078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8FA2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgGPBlr (ORCPT
+        id S1727119AbgGPBkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 21:41:47 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44143 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgGPBlr (ORCPT
+        Wed, 15 Jul 2020 21:40:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11228 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726785AbgGPBkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 21:41:47 -0400
-Received: by mail-pg1-f195.google.com with SMTP id j19so3997747pgm.11;
-        Wed, 15 Jul 2020 18:41:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ZE6+Fvkj3P3JQEeypXr9zENjz3WklDtbROXfROTocSQ=;
-        b=TLB2kYFhB7oPedDA0JfrqtztKBJkCTv6C4LQjUgOOuX44RbwZx4Cun9dqIHoB4Eh7v
-         UHHGkMU8oXLNFhHFzBxSfGGLEZYMEm2qrcnMLPbVga/09UbNi1E65Upg8d+n4wBZpdLG
-         F665BRo3SG9i2aTOqaC2LgFGWv2U64E0rneyou2pjNXN8ChXGCG8URor12L2fuBMivdn
-         IBCtgAL8ARUmZv7njjNQRJhM6Z2YKsUBBzdJYtNb8aL2V43fRZ1Xf/FH45zpvZNeFQW7
-         FApmvEd4tmzdNuPUNf9x+rAtNI16oAqCyPqxCGP5ozBLDUNM3eFxNskFa43FRN1bi2Q2
-         j8cA==
-X-Gm-Message-State: AOAM533XuXAxHOwahjZ+947sJxLhfQn8Bd1WA081hL3KbbpTgiAPKoQ/
-        qXCRQgUv0YaMtbzeWtdwUNg=
-X-Google-Smtp-Source: ABdhPJxIiXW+Xwjpb3WiyKB41aDR7ZOKMMvkWlAmTvRmG4LEgwx94NmKugwphZjbOM7CU/awEW6LNg==
-X-Received: by 2002:a62:6484:: with SMTP id y126mr1833113pfb.166.1594863706684;
-        Wed, 15 Jul 2020 18:41:46 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id e195sm3088123pfh.218.2020.07.15.18.41.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 18:41:45 -0700 (PDT)
-Subject: Re: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
-To:     Avi Shchislowski <Avi.Shchislowski@wdc.com>,
-        "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
-        Avri Altman <Avri.Altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-References: <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p8>
- <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
- <SN6PR04MB38720C3D8FC176C3C7FB51B89A7E0@SN6PR04MB3872.namprd04.prod.outlook.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <4174fcf4-73ec-8e3f-90a5-1e7584e3e2d0@acm.org>
-Date:   Wed, 15 Jul 2020 18:41:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 15 Jul 2020 21:40:39 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06G1VSFp114462;
+        Wed, 15 Jul 2020 21:40:24 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1k67fj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 21:40:24 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06G1VgdQ114895;
+        Wed, 15 Jul 2020 21:40:24 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1k67fc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 21:40:23 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06G1Zxat001424;
+        Thu, 16 Jul 2020 01:40:23 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma03dal.us.ibm.com with ESMTP id 327529ef74-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 01:40:23 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06G1eMnm53608770
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 01:40:22 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80A69AE05F;
+        Thu, 16 Jul 2020 01:40:22 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 70051AE05C;
+        Thu, 16 Jul 2020 01:40:18 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.73.114])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 16 Jul 2020 01:40:18 +0000 (GMT)
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466095278.24747.9161591016931052627.stgit@hbathini.in.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v3 08/12] ppc64/kexec_file: setup the stack for purgatory
+In-reply-to: <159466095278.24747.9161591016931052627.stgit@hbathini.in.ibm.com>
+Date:   Wed, 15 Jul 2020 22:40:13 -0300
+Message-ID: <87wo348cg2.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <SN6PR04MB38720C3D8FC176C3C7FB51B89A7E0@SN6PR04MB3872.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-15_12:2020-07-15,2020-07-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ spamscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999
+ suspectscore=0 phishscore=0 bulkscore=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-15 11:34, Avi Shchislowski wrote:
-> My name is Avi Shchislowski, I am managing the WDC's Linux Host R&D team in which Avri is a member of.
-> As the review process of HPB is progressing very constructively, we are getting more and more requests from OEMs, Inquiring about HPB in general, and host control mode in particular.
-> 
-> Their main concern is that HPB will make it to 5.9 merge window, but the host control mode patches will not.
-> Thus, because of recent Google's GKI, the next Android LTS might not include HPB with host control mode.
-> 
-> Aside of those requests, initial host control mode testing are showing promising prospective with respect of performance gain.
-> 
-> What would be, in your opinion, the best policy that host control mode is included in next Android LTS?
 
-Hi Avi,
+Sorry, forgot to send one comment for this patch:
 
-Are you perhaps referring to the HPB patch series that has already been
-posted? Although I'm not sure of this, I think that the SCSI maintainer
-expects more Reviewed-by: and Tested-by: tags. Has anyone from WDC
-already taken the time to review and/or test this patch series?
+Hari Bathini <hbathini@linux.ibm.com> writes:
 
-Thanks,
+> @@ -898,10 +900,37 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+>  			goto out;
+>  	}
+>
+> +	/* Setup the stack top */
+> +	stack_buf = kexec_purgatory_get_symbol_addr(image, "stack_buf");
+> +	if (!stack_buf)
+> +		goto out;
+> +
+> +	val = (u64)stack_buf + KEXEC_PURGATORY_STACK_SIZE;
+> +	ret = kexec_purgatory_get_set_symbol(image, "stack", &val, sizeof(val),
+> +					     false);
+> +	if (ret)
+> +		goto out;
+> +
+>  	/* Setup the TOC pointer */
+>  	val = get_toc_ptr(&(image->purgatory_info));
+>  	ret = kexec_purgatory_get_set_symbol(image, "my_toc", &val, sizeof(val),
+>  					     false);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* Setup OPAL base & entry values */
+> +	dn = of_find_node_by_path("/ibm,opal");
+> +	if (dn) {
+> +		of_property_read_u64(dn, "opal-base-address", &val);
+> +		ret = kexec_purgatory_get_set_symbol(image, "opal_base", &val,
+> +						     sizeof(val), false);
+> +		if (ret)
+> +			goto out;
+> +
+> +		of_property_read_u64(dn, "opal-entry-address", &val);
+> +		ret = kexec_purgatory_get_set_symbol(image, "opal_entry", &val,
+> +						     sizeof(val), false);
 
-Bart.
+You need to call of_node_put(dn) here and in the if (ret) case above.
+
+> +	}
+>  out:
+>  	if (ret)
+>  		pr_err("Failed to setup purgatory symbols");
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
