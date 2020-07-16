@@ -2,219 +2,109 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED35AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA75C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8C4B20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EC52076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:32:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="CHvFu9x4"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HCXnERf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgGPX2g (ORCPT
+        id S1727094AbgGPXcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:28:36 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:52831 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgGPX2g (ORCPT
+        Thu, 16 Jul 2020 19:32:43 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8508 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbgGPXcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:28:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594942115; x=1626478115;
-  h=date:from:to:cc:message-id:references:mime-version:
-   content-transfer-encoding:in-reply-to:subject;
-  bh=jYMN3GJrGjA7ojiGUc+ciVEe93zlOhFmaxfZs4H/WZY=;
-  b=CHvFu9x4aRdUKkXtuJr/sCaaPOIvvBw5lbeI5XKuYT77IU/yOhPn0zYg
-   Ryg8to0wLRWW6aANijYpezhU6jAr8c45jWkLLa09JiUIXOMm37WnPm2ZW
-   4vtzqPHAA4qLcDGbGPBPU+L5JoE+sYGC2w1U2mOvh2SSGsaF9lLu81B9i
-   E=;
-IronPort-SDR: l3hkHaieLfP9aicaua6dk5DKRxOesNbvVEFYq8ruQ20zrMR0yFNnemTS5j3jWHYSO5I6275xJA
- fwBryLxen1ag==
-X-IronPort-AV: E=Sophos;i="5.75,360,1589241600"; 
-   d="scan'208";a="59225594"
-Subject: Re: [PATCH v2 00/11] Fix PM hibernation in Xen guests
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 16 Jul 2020 23:28:33 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id 0DA0EA2021;
-        Thu, 16 Jul 2020 23:28:31 +0000 (UTC)
-Received: from EX13D08UEE002.ant.amazon.com (10.43.62.92) by
- EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 16 Jul 2020 23:28:13 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
- EX13D08UEE002.ant.amazon.com (10.43.62.92) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 16 Jul 2020 23:28:12 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Thu, 16 Jul 2020 23:28:13 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id CEA575697F; Thu, 16 Jul 2020 23:28:12 +0000 (UTC)
-Date:   Thu, 16 Jul 2020 23:28:12 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Message-ID: <20200716232812.GA26338@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <cover.1593665947.git.anchalag@amazon.com>
- <324020A7-996F-4CF8-A2F4-46957CEA5F0C@amazon.com>
- <c6688a0c-7fec-97d2-3dcc-e160e97206e6@oracle.com>
- <20200715194933.GA17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <6145a0d9-fd4e-a739-407e-97f7261eecd8@oracle.com>
+        Thu, 16 Jul 2020 19:32:42 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f10e35f0000>; Thu, 16 Jul 2020 16:31:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 16 Jul 2020 16:32:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 16 Jul 2020 16:32:42 -0700
+Received: from [10.2.163.115] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Jul
+ 2020 23:32:41 +0000
+Subject: Re: [PATCH v1 2/3] dt-bindings: media: imx274: Add optional xclk and
+ supplies
+To:     Luca Ceresoli <luca@lucaceresoli.net>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <leonl@leopardimaging.com>, <robh+dt@kernel.org>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1594787096-26685-1-git-send-email-skomatineni@nvidia.com>
+ <1594787096-26685-2-git-send-email-skomatineni@nvidia.com>
+ <1df13fad-b5ce-3889-c240-3411e97598d2@lucaceresoli.net>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <ca9b3549-b39f-3110-671a-e856f4a7b2fa@nvidia.com>
+Date:   Thu, 16 Jul 2020 16:35:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6145a0d9-fd4e-a739-407e-97f7261eecd8@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1df13fad-b5ce-3889-c240-3411e97598d2@lucaceresoli.net>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594942303; bh=8rkN9PIKLB59SMi7kKXMUgG6uZDZbV3+Fs2u5hpdvn4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=HCXnERf9E+rDQYx/GiVGq9zMh381sbqMKWS5iM+cFrNg7zeS1krCw2EhlvoirAQD6
+         CVp/w+fJvTxiRNgRJ6biK8hm9orIdYPHNNsDbBOdUZJjmwgYTi85Uk+8FtsAx3R74V
+         dSUPQ7S6p0CytUNGztEDXQg/UJb8dOlaOEqdEbjenhs4queB1x088eN3XttWRiSFHE
+         pI7wGBhaCXMlN0Z1tV6GtIBko1NkVVtT0TUgS+xdHJXo9oBPsUL2gpqsocPJs6ruwa
+         d9MoLoExreEsoK3Qew9A6VemEeYDPbQh1+3hHushCHMm0xcVZ8A7Bsg3GtIMN5m+qf
+         k3J23Udywwkjw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 04:49:57PM -0400, Boris Ostrovsky wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> 
-> 
-> 
-> On 7/15/20 3:49 PM, Anchal Agarwal wrote:
-> > On Mon, Jul 13, 2020 at 03:43:33PM -0400, Boris Ostrovsky wrote:
-> >> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> >>
-> >>
-> >>
-> >> On 7/10/20 2:17 PM, Agarwal, Anchal wrote:
-> >>> Gentle ping on this series.
-> >>
-> >> Have you tested save/restore?
-> >>
-> > No, not with the last few series. But a good point, I will test that and get
-> > back to you. Do you see anything specific in the series that suggests otherwise?
-> 
-> 
-> root@ovs104> xl save pvh saved
-> Saving to saved new xl format (info 0x3/0x0/1699)
-> xc: info: Saving domain 3, type x86 HVM
-> xc: Frames: 1044480/1044480  100%
-> xc: End of stream: 0/0    0%
-> root@ovs104> xl restore saved
-> Loading new save file saved (new xl fmt info 0x3/0x0/1699)
->  Savefile contains xl domain config in JSON format
-> Parsing config from <saved>
-> xc: info: Found x86 HVM domain from Xen 4.13
-> xc: info: Restoring domain
-> xc: info: Restore successful
-> xc: info: XenStore: mfn 0xfeffc, dom 0, evt 1
-> xc: info: Console: mfn 0xfefff, dom 0, evt 2
-> root@ovs104> xl console pvh
-> [  139.943872] ------------[ cut here ]------------
-> [  139.943872] kernel BUG at arch/x86/xen/enlighten.c:205!
-> [  139.943872] invalid opcode: 0000 [#1] SMP PTI
-> [  139.943872] CPU: 0 PID: 11 Comm: migration/0 Not tainted 5.8.0-rc5 #26
-> [  139.943872] RIP: 0010:xen_vcpu_setup+0x16d/0x180
-> [  139.943872] Code: 4a 8b 14 f5 40 c9 1b 82 48 89 d8 48 89 2c 02 8b 05
-> a4 d4 40 01 85 c0 0f 85 15 ff ff ff 4a 8b 04 f5 40 c9 1b 82 e9 f4 fe ff
-> ff <0f> 0b b8 ed ff ff ff e9 14 ff ff ff e8 12 4f 86 00 66 90 66 66 66
-> [  139.943872] RSP: 0018:ffffc9000006bdb0 EFLAGS: 00010046
-> [  139.943872] RAX: 0000000000000000 RBX: ffffc9000014fe00 RCX:
-> 0000000000000000
-> [  139.943872] RDX: ffff88803fc00000 RSI: 0000000000016128 RDI:
-> 0000000000000000
-> [  139.943872] RBP: 0000000000000000 R08: 0000000000000000 R09:
-> 0000000000000000
-> [  139.943872] R10: ffffffff826174a0 R11: ffffc9000006bcb4 R12:
-> 0000000000016120
-> [  139.943872] R13: 0000000000016120 R14: 0000000000016128 R15:
-> 0000000000000000
-> [  139.943872] FS:  0000000000000000(0000) GS:ffff88803fc00000(0000)
-> knlGS:0000000000000000
-> [  139.943872] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  139.943872] CR2: 00007f704be8b000 CR3: 000000003901a004 CR4:
-> 00000000000606f0
-> [  139.943872] Call Trace:
-> [  139.943872]  ? __kmalloc+0x167/0x260
-> [  139.943872]  ? xen_manage_runstate_time+0x14a/0x170
-> [  139.943872]  xen_vcpu_restore+0x134/0x170
-> [  139.943872]  xen_hvm_post_suspend+0x1d/0x30
-> [  139.943872]  xen_arch_post_suspend+0x13/0x30
-> [  139.943872]  xen_suspend+0x87/0x190
-> [  139.943872]  multi_cpu_stop+0x6d/0x110
-> [  139.943872]  ? stop_machine_yield+0x10/0x10
-> [  139.943872]  cpu_stopper_thread+0x47/0x100
-> [  139.943872]  smpboot_thread_fn+0xc5/0x160
-> [  139.943872]  ? sort_range+0x20/0x20
-> [  139.943872]  kthread+0xfe/0x140
-> [  139.943872]  ? kthread_park+0x90/0x90
-> [  139.943872]  ret_from_fork+0x22/0x30
-> [  139.943872] Modules linked in:
-> [  139.943872] ---[ end trace 74716859a6b4f0a8 ]---
-> [  139.943872] RIP: 0010:xen_vcpu_setup+0x16d/0x180
-> [  139.943872] Code: 4a 8b 14 f5 40 c9 1b 82 48 89 d8 48 89 2c 02 8b 05
-> a4 d4 40 01 85 c0 0f 85 15 ff ff ff 4a 8b 04 f5 40 c9 1b 82 e9 f4 fe ff
-> ff <0f> 0b b8 ed ff ff ff e9 14 ff ff ff e8 12 4f 86 00 66 90 66 66 66
-> [  139.943872] RSP: 0018:ffffc9000006bdb0 EFLAGS: 00010046
-> [  139.943872] RAX: 0000000000000000 RBX: ffffc9000014fe00 RCX:
-> 0000000000000000
-> [  139.943872] RDX: ffff88803fc00000 RSI: 0000000000016128 RDI:
-> 0000000000000000
-> [  139.943872] RBP: 0000000000000000 R08: 0000000000000000 R09:
-> 0000000000000000
-> [  139.943872] R10: ffffffff826174a0 R11: ffffc9000006bcb4 R12:
-> 0000000000016120
-> [  139.943872] R13: 0000000000016120 R14: 0000000000016128 R15:
-> 0000000000000000
-> [  139.943872] FS:  0000000000000000(0000) GS:ffff88803fc00000(0000)
-> knlGS:0000000000000000
-> [  139.943872] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  139.943872] CR2: 00007f704be8b000 CR3: 000000003901a004 CR4:
-> 00000000000606f0
-> [  139.943872] Kernel panic - not syncing: Fatal exception
-> [  139.943872] Shutting down cpus with NMI
-> [  143.927559] Kernel Offset: disabled
-> root@ovs104>
->
-I think I may have found a bug. There were no issues with V1 version  that I
-send however, there were issues with V2. I tested both series and found xl
-save/restore to be working in V1 but not in V2. I should have tested it.
-Anyways, looks the issue is coming from executing syscore ops registered for
-hibernation use case during call to xen_suspend. 
-I remember your comment from earlier where you did ask why we need to
-check xen_suspend mode xen_syscore_suspend [patch-004] and I removed that based
-on my theoretical understanding of your suggestion that since lock_system_sleep() lock
-is taken, we cannot initialize hibernation. I skipped to check the part in the
-code where during xen_suspend(), all registered syscore_ops suspend callbacks are
-called. Hence the ones registered for PM hibernation will also be called.
-With no check there on suspend mode, it fails to return from the function and
-they never should be executed in case of xen suspend.
-I will revert a part of that check in Patch-004 from V1 and send an updated patch with
-the fix.
 
-Thanks,
-Anchal
+On 7/15/20 11:50 PM, Luca Ceresoli wrote:
+> Hi Sowjanya,
+>
+> On 15/07/20 06:24, Sowjanya Komatineni wrote:
+>> This patch adds IMX274 optional external clock input and voltage
+>> supplies to device tree bindings.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   Documentation/devicetree/bindings/media/i2c/imx274.txt | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+>> index 80f2e89..ee427f5 100644
+>> --- a/Documentation/devicetree/bindings/media/i2c/imx274.txt
+>> +++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+>> @@ -13,6 +13,11 @@ Required Properties:
+>>   
+>>   Optional Properties:
+>>   - reset-gpios: Sensor reset GPIO
+>> +- clocks: Reference to the xclk clock.
+>> +- clock-names: Should be "xclk".
+> Not sure where the "xclk" name comes from, the datasheet I have calls
+> the pin "CKIN". Maybe using the same name as the datasheet is better?
+>
+> Other than that looks good.
+
+Thanks Luca. Using xclk as its external clock to IMX274.
+
+Datasheet uses it as INCK. Will update in v2 to use "INCK" as referred 
+in its datasheet.
+
