@@ -2,171 +2,285 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EEAC433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14F7020739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E2C20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HY8rGe6E"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Y6cZJrbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgGPLyP (ORCPT
+        id S1728358AbgGPLyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:54:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbgGPLyP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:54:15 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06CCAC061755;
-        Thu, 16 Jul 2020 04:54:14 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id f5so2723581ybq.2;
-        Thu, 16 Jul 2020 04:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NaJ0JMrTJYBmtKLAQldY6IvzjG2m4qpjYZEkAKQSgqM=;
-        b=HY8rGe6E/1bvzRaeOAhIQFlnYDdoki/hEKRbJXCmnrCTUA88xVwaUpEHEROkmqQKa1
-         81B5KORwMDCEWKpqppcfOlgKgxoHDOKND7nsS3p09iy3d01hkA81/TYlPqd6iFLA8Xks
-         fwXasf6a2WUuqmsUYhdQwcb+3MBFDu7Sj97TQbsn3APMlTkNKhChBkaNP1itx7QufR07
-         YEFNVz9aJtlzPNDxnnsajGnBzL9xhvSNoKnWiRMNAHYu615fcIRxmgrK9rivSr4zcMFe
-         +tbAsf94e/cEjm0b8eu+oCD7UdwVGDqh4txY59emU6ZZLlt1V325qVQnJBFbFZKt70GK
-         YGkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NaJ0JMrTJYBmtKLAQldY6IvzjG2m4qpjYZEkAKQSgqM=;
-        b=TaEkwUBw1QHgwtnjHM6p770g7MVJn1jPJZZYjJJetru+X212pFey578rERmJ3aQAqx
-         yd7/BRDLHKYSxY+mVEuowtMHkq1xRV8BP0M4iXfLClifBb9S5tRvBqoTvuZPEq0L2C2P
-         wkhgW/jEtlM5iucMmiJSEeIvDjYQiJbxEcl9f3mVbRRNTbiBk7AaEkWtGjLaO1BCYbpb
-         iDS6Tcwrsqt2mGGHnkmAdygozbNLxrZf2p1ZOnH2c8AzjfksOMtfSiJ1ai1Y78LKQZUq
-         BMqzH1vtjAnUKa1hjAg4ay2KDAu593chPpplWKZT2fOPyLB9QYCf1um6yxYOgrvNDv1n
-         EnOA==
-X-Gm-Message-State: AOAM532BqESPoHc+yKj53cmIeVlMmJDnR+Z95/YWzuLmhDRrQzl5eNMZ
-        ylfN6QWN0CBFGvXXxdPoPDKTULjsRuzpiZ8EG9CAxmvizqXNHA==
-X-Google-Smtp-Source: ABdhPJxPLyNS9fybE1aGkB//ZprwoWXRMw2Vz2zlOMnoscqvTRR6LdUXVLw5wQcx8l5jsrf4TiWG2oRkzFT2PWF6pyU=
-X-Received: by 2002:a25:2d6f:: with SMTP id s47mr5449999ybe.1.1594900452811;
- Thu, 16 Jul 2020 04:54:12 -0700 (PDT)
+        Thu, 16 Jul 2020 07:54:37 -0400
+Received: from mail-am6eur05on2058.outbound.protection.outlook.com ([40.107.22.58]:9377
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727081AbgGPLyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 07:54:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NkMNz30aOaNlYp7GJq8CQdY2LMnLv5xrwAS8tcOCw5f2JcYSb4W2Gg9X7Be7DJAcoiz0yO5RzylpRMv5K4IfFAaEDkAigfJaGMaFvPokRyx+b3Nuj9dW8jD743oYo64hvsirgnaBOJoYXJJrYlc7hbZ6KsavW4qdulzDl1UObLRO9pYDAMowOEPOHOlZcFxHOQPKQ1tRGbMtL5GQG0GZ8OIKTwntSfqaM65lOXmKODxB+HYJU7xzOHz2HVtw0yeOpqbZ984QYFONuGilyCHgg2bstoaqliuCZGyU5CHKrI20wpNHi9rMECcjqJ3xn/Unz9K8GSiJ/Ao/QMtvxEpIFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HA5UmcahAmLQhCBBSaCse7gtQb+Lboog6Yi0kZPL+p0=;
+ b=OzYNyqROTIAsdUmsEJhgNkY3VxPwwy7mJr557A61kRxVm63kxZ5aBf8jnf/2d1dnzdrYi6JbLlLV4borpMax+eJoB2qE3RlhMw1kYSHuDvWikcw37iIq13ur36aUFBF9eUqLJeUk87gFWClk1Yn4QQZ2TY1Nl+CALBUJlurxVMAdXE7wz6bxr5NlzbjEre1ZasmT1adir6lhnsIGlDQnFiIQ2NM6rWqDJLGphuCzTsIYKaIi4BbA+zkuizTa3AiKIMjrmM7p/g6cFXgj0JkUNKbly8MI9NIAE8oqcLYpN3w4MEmjQeNIHh3ABkMnLZ4b9Zsxcd9XVt/8bY/70gf9yw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HA5UmcahAmLQhCBBSaCse7gtQb+Lboog6Yi0kZPL+p0=;
+ b=Y6cZJrbFf4zPOwD6kvVs+P7F/C58H+06Bh/mf99IN+/EpbOHZllKOcFT649bslPumishJWt2f4R5rLZGU71VSRv1RI3rrw/LQ7/mfUhgj5YL/ZCxv1d+lQcJuLuDwfYeqTelSLjCa2g3lo8OKZm1+qKXNaCXnVqfWUjjrs1sBhc=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=mellanox.com;
+Received: from AM0PR05MB4786.eurprd05.prod.outlook.com (2603:10a6:208:b3::15)
+ by AM4PR0501MB2226.eurprd05.prod.outlook.com (2603:10a6:200:52::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Thu, 16 Jul
+ 2020 11:54:33 +0000
+Received: from AM0PR05MB4786.eurprd05.prod.outlook.com
+ ([fe80::e00a:324b:e95c:750f]) by AM0PR05MB4786.eurprd05.prod.outlook.com
+ ([fe80::e00a:324b:e95c:750f%7]) with mapi id 15.20.3174.025; Thu, 16 Jul 2020
+ 11:54:32 +0000
+Date:   Thu, 16 Jul 2020 14:54:28 +0300
+From:   Eli Cohen <eli@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, shahafs@mellanox.com,
+        saeedm@mellanox.com, Parav Pandit <parav@mellanox.com>
+Subject: Re: [PATCH vhost next 10/10] vdpa/mlx5: Add VDPA driver for
+ supported mlx5 devices
+Message-ID: <20200716115428.GC186790@mtl-vdi-166.wap.labs.mlnx>
+References: <20200716072327.5359-1-eli@mellanox.com>
+ <20200716072327.5359-11-eli@mellanox.com>
+ <454850cc-269b-72aa-4511-2bf793a215cc@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <454850cc-269b-72aa-4511-2bf793a215cc@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-ClientProxiedBy: AM0PR10CA0077.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:15::30) To AM0PR05MB4786.eurprd05.prod.outlook.com
+ (2603:10a6:208:b3::15)
 MIME-Version: 1.0
-References: <20200716112816.7356-1-will@kernel.org>
-In-Reply-To: <20200716112816.7356-1-will@kernel.org>
-From:   Emil Renner Berthing <emil.renner.berthing@gmail.com>
-Date:   Thu, 16 Jul 2020 13:54:01 +0200
-Message-ID: <CANBLGcxme3=+G3tsd_4ckMFPfaECZ1HzsnKy=LybEhyje_9Wdw@mail.gmail.com>
-Subject: Re: [PATCH] asm-generic/mmiowb: Allow mmiowb_set_pending() when preemptible()
-To:     Will Deacon <will@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, kernel-team@android.com,
-        Guo Ren <guoren@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mtl-vdi-166.wap.labs.mlnx (94.188.199.18) by AM0PR10CA0077.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.19 via Frontend Transport; Thu, 16 Jul 2020 11:54:31 +0000
+X-Originating-IP: [94.188.199.18]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6006a8cb-624d-4f8e-f8b4-08d8297f00ee
+X-MS-TrafficTypeDiagnostic: AM4PR0501MB2226:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM4PR0501MB22263A95FD263E3AA7462521C57F0@AM4PR0501MB2226.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:510;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3Wz+9wRLk1/mVuAJFnXR41Qg747lxrAxbUTc6P8lQw3AwrN/ow+2AW3o6AOAXlpsDJmiKAvwyMMI3+7CgIPXhlcVtK9ASX6wqnraMCPfqlvdw/fKRsT0BHynDOppTdd9QB0TA2u4ZkzhVsiGPzUvTv5PFA01KbYxYIcZZK8ts30qkxdyJjy9kN6NMbmF3WGD8EoMLzNq+kadRT3w4zP1H3EC86Fd1P+oLpWQ811lveJdX46v/PHSTcfvhQZNRof94E5M412GJl+rHSv7VHW8kMCwZjVhx8PN1flMCVRZT6m0a6utEijxBZxcoSl1+Rw1FN5aYvleUh00YFQFXgvkJQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4786.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(396003)(376002)(366004)(136003)(4326008)(9686003)(107886003)(316002)(55016002)(6666004)(26005)(16526019)(33656002)(66476007)(956004)(66556008)(8936002)(8676002)(86362001)(66946007)(5660300002)(186003)(2906002)(83380400001)(478600001)(1076003)(7696005)(52116002)(6506007)(6916009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: VqzNq3bSXnq5Mq/qDwAYxTSHstntgFuoWJLYRmN9lisZoKRacSnZ3qkHYWXWs38Mk+EgzkQkB/3zXmI2sbanowpOJgr+/CTqxYrwLbrfdvgAorFHf0GZ2Kqbq7GQd7uCsX55O+sWXa5ctC7PVX4tekUKScJO4SNDHxtKYdazPOiNcEFJi9Rr5Fdv+vOWN50LBvvKsuNqXsiAE2ZyrkloAb3nUlOPSYKBhl9qo+8+IhF0bN63omOL8rYw9mLS4cwJ+6BQmCRYy5RZci4s7HoFhSoKjbJwtjlSgXuQRcx7TpOClhHcL94J/YCDaPKtlnEoAAYzAq8To0VtEIrT7LGGP9hX/DCIfBeYkCR+g0xX1pBllmDuM2qv8p7FxjwaiDz/OkIfOXEQgC1y83jCeE7rF92QL6FMUkR921zJgRYRb519g7lxKeSdsdj7o0Vu+OlQ3uBLk9wOvuUevbiDDwYC+LZ/Au99sKYefpXKOPtPF5Y=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6006a8cb-624d-4f8e-f8b4-08d8297f00ee
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4786.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2020 11:54:32.8770
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 28Ls2ABtxN7TjWSoYMOI6t2RcZdzSCSEvhbKJomfx7MeIsSoLQdXw1L7RdIP12sXxa+C3KB1IQX92pAmHUYOJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0501MB2226
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 at 13:28, Will Deacon <will@kernel.org> wrote:
->
-> Although mmiowb() is concerned only with serialising MMIO writes occuring
-> in contexts where a spinlock is held, the call to mmiowb_set_pending()
-> from the MMIO write accessors can occur in preemptible contexts, such
-> as during driver probe() functions where ordering between CPUs is not
-> usually a concern, assuming that the task migration path provides the
-> necessary ordering guarantees.
->
-> Unfortunately, the default implementation of mmiowb_set_pending() is not
-> preempt-safe, as it makes use of a a per-cpu variable to track its
-> internal state. This has been reported to generate the following splat
-> on riscv:
->
->  | BUG: using smp_processor_id() in preemptible [00000000] code: swapper/0/1
->  | caller is regmap_mmio_write32le+0x1c/0x46
->  | CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-hfu+ #1
->  | Call Trace:
->  |  walk_stackframe+0x0/0x7a
->  |  dump_stack+0x6e/0x88
->  |  regmap_mmio_write32le+0x18/0x46
->  |  check_preemption_disabled+0xa4/0xaa
->  |  regmap_mmio_write32le+0x18/0x46
->  |  regmap_mmio_write+0x26/0x44
->  |  regmap_write+0x28/0x48
->  |  sifive_gpio_probe+0xc0/0x1da
->
-> Although it's possible to fix the driver in this case, other splats have
-> been seen from other drivers, including the infamous 8250 UART, and so
-> it's better to address this problem in the mmiowb core itself.
->
-> Fix mmiowb_set_pending() by using the raw_cpu_ptr() to get at the mmiowb
-> state and then only updating the 'mmiowb_pending' field if we are not
-> preemptible (i.e. we have a non-zero nesting count).
->
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Reported-by: Palmer Dabbelt <palmer@dabbelt.com>
+On Thu, Jul 16, 2020 at 05:14:32PM +0800, Jason Wang wrote:
+> 
+> >+static void suspend_vqs(struct mlx5_vdpa_net *ndev)
+> >+{
+> >+	int i;
+> >+
+> >+	for (i = 0; i < MLX5_MAX_SUPPORTED_VQS; i++)
+> >+		suspend_vq(ndev, &ndev->vqs[i]);
+> 
+> 
+> In teardown_virtqueues() it has a check of mvq->num_ent, any reason
+> not doing it here?
+> 
 
-Nice. This fixes the problems I saw both in Qemu and on the HiFive Unleashed.
+Looks like checking intialized is enough. Will fix this.
+ 
+> >+
+> >+static void mlx5_vdpa_set_vq_ready(struct vdpa_device *vdev, u16 idx, bool ready)
+> >+{
+> >+	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
+> >+	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
+> >+	struct mlx5_vdpa_virtqueue *mvq = &ndev->vqs[idx];
+> >+	int err;
+> >+
+> >+	if (!mvq->ready && ready && mvq->fw_state != MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY) {
+> >+		err = modify_virtqueue(ndev, mvq, MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY);
+> >+		if (err) {
+> >+			mlx5_vdpa_warn(mvdev, "failed to modify virtqueue(%d)\n", err);
+> >+			return;
+> >+		}
+> >+	}
+> 
+> 
+> I wonder what's the reason of changing vq state on the hardware
+> here. I think we can defer it to set_status().
+> 
 
-Btw. I was the one who originally stumbled upon this problem and send
-the mail to linux-riscv that Palmer CC'ed you on, so I think this
-ought to be
-Reported-by: Emil Renner Berthing <kernel@esmil.dk>
+I can defer this to set status.
 
-In any case you can add
-Tested-by: Emil Renner Berthing <kernel@esmil.dk>
+I just wonder if it is possible that the core vdpa driver may call this
+function with ready equals false and after some time call it with ready
+equals true.
 
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->
-> I can queue this in the arm64 tree as a fix, as I already have some other
-> fixes targetting -rc6.
->
->  include/asm-generic/mmiowb.h | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/include/asm-generic/mmiowb.h b/include/asm-generic/mmiowb.h
-> index 9439ff037b2d..5698fca3bf56 100644
-> --- a/include/asm-generic/mmiowb.h
-> +++ b/include/asm-generic/mmiowb.h
-> @@ -27,7 +27,7 @@
->  #include <asm/smp.h>
->
->  DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
-> -#define __mmiowb_state()       this_cpu_ptr(&__mmiowb_state)
-> +#define __mmiowb_state()       raw_cpu_ptr(&__mmiowb_state)
->  #else
->  #define __mmiowb_state()       arch_mmiowb_state()
->  #endif /* arch_mmiowb_state */
-> @@ -35,7 +35,9 @@ DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
->  static inline void mmiowb_set_pending(void)
->  {
->         struct mmiowb_state *ms = __mmiowb_state();
-> -       ms->mmiowb_pending = ms->nesting_count;
-> +
-> +       if (likely(ms->nesting_count))
-> +               ms->mmiowb_pending = ms->nesting_count;
->  }
->
->  static inline void mmiowb_spin_lock(void)
-> --
-> 2.27.0.389.gc38d7665816-goog
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+> (Anyhow we don't sync vq address in set_vq_address()).
+> 
+> 
+> >+static u64 mlx5_vdpa_get_features(struct vdpa_device *vdev)
+> >+{
+> >+	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
+> >+	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
+> >+	u16 dev_features;
+> >+
+> >+	dev_features = MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, device_features_bits_mask);
+> >+	ndev->mvdev.mlx_features = mlx_to_vritio_features(dev_features);
+> >+	if (MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, virtio_version_1_0))
+> >+		ndev->mvdev.mlx_features |= BIT(VIRTIO_F_VERSION_1);
+> 
+> 
+> This is interesting. This suggests !VIRTIO_F_VERSION_1 &&
+> VIRTIO_F_IOMMU_PLATFORM is valid. But virito spec doesn't allow such
+> configuration.
+
+Will fix
+> 
+> So I think you need either:
+> 
+> 1) Fail vDPA device probe when VERSION_1 is not supported
+> 2) clear IOMMU_PLATFORM if VERSION_1 is not negotiated
+> 
+> For 2) I guess it can't work, according to the spec, without
+> IOMMU_PLATFORM, device need to use PA to access the memory
+> 
+> 
+> >+	ndev->mvdev.mlx_features |= BIT(VIRTIO_F_ANY_LAYOUT);
+I think this should be removed too
+
+> >+	ndev->mvdev.mlx_features |= BIT(VIRTIO_F_IOMMU_PLATFORM);
+> >+	if (mlx5_vdpa_max_qps(ndev->mvdev.max_vqs) > 1)
+> >+		ndev->mvdev.mlx_features |= BIT(VIRTIO_NET_F_MQ);
+Also this, since multqueue requires configuration vq which is not
+supported in this version.
+
+> >+
+> >+	print_features(mvdev, ndev->mvdev.mlx_features, false);
+> >+	return ndev->mvdev.mlx_features;
+> >+}
+> >+
+> >+static int verify_min_features(struct mlx5_vdpa_dev *mvdev, u64 features)
+> >+{
+> >+	/* FIXME: qemu currently does not set all the feaures due to a bug.
+> >+	 * Add checks when this is fixed.
+> >+	 */
+> 
+> 
+> I think we should add the check now then qemu can get notified. (E.g
+> IOMMU_PLATFORM)
+
+Will do.
+> 
+> 
+> >+}
+> >+
+> >+#define MLX5_VDPA_MAX_VQ_ENTRIES 256
+> 
+> 
+> Is this a hardware limitation, qemu can support up to 1K which the
+> requirement of some NFV cases.
+> 
+
+Theoretically the device is limit is much higher. In the near future we
+will have a device capability for this. I wanted to stay on the safe side
+with this but I can change this if you think it's necessary.
+> 
+> >+
+> >+static void mlx5_vdpa_get_config(struct vdpa_device *vdev, unsigned int offset, void *buf,
+> >+				 unsigned int len)
+> >+{
+> >+	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
+> >+	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
+> >+
+> >+	if (offset + len < sizeof(struct virtio_net_config))
+> >+		memcpy(buf, &ndev->config + offset, len);
+> 
+> 
+> Note that guest expect LE, what's the endian for ndev->config?
+This is struct virtio_net_config from include/uapi/linux/virtio_net.h.
+Looking there I see it has mixed endianess. I currently don't touch it
+but if I do, I should follow endianess guidance per the struct
+definition. So I don't think I should care about endianess when copying.
+
+> 
+> 
+> >+}
+> >+
+> >+static void mlx5_vdpa_set_config(struct vdpa_device *vdev, unsigned int offset, const void *buf,
+> >+				 unsigned int len)
+> >+{
+> >+	/* not supported */
+> >+}
+> >+
+> >+static u32 mlx5_vdpa_get_generation(struct vdpa_device *vdev)
+> >+{
+> >+	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
+> >+
+> >+	return mvdev->generation;
+> >+}
+> >+
+> >+static int mlx5_vdpa_set_map(struct vdpa_device *vdev, struct vhost_iotlb *iotlb)
+> >+{
+> >+	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
+> >+	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
+> >+	bool change_map;
+> >+	int err;
+> >+
+> >+	err = mlx5_vdpa_handle_set_map(mvdev, iotlb, &change_map);
+> >+	if (err) {
+> >+		mlx5_vdpa_warn(mvdev, "set map failed(%d)\n", err);
+> >+		return err;
+> >+	}
+> >+
+> >+	if (change_map)
+> >+		return mlx5_vdpa_change_map(ndev, iotlb);
+> 
+> 
+> Any reason for not doing this inside mlx5_handle_set_map()?
+> 
+
+All memory registration related operations are done inside mr.c in the
+common code directory. But change map involves operations on other
+objects managed in this file.
+
+> >+
+> >+void mlx5_vdpa_remove_dev(struct mlx5_vdpa_dev *mvdev)
+> >+{
+> >+	struct mlx5_vdpa_net *ndev;
+> >+
+> >+	mvdev->status = 0;
+> 
+> 
+> This is probably unnecessary.
+> 
+
+Right, will remove.
