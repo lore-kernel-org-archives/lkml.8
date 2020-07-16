@@ -2,86 +2,84 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC86FC433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB8BC433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A664A20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:25:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l3ZLmTNV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dBf+uBus"
+	by mail.kernel.org (Postfix) with ESMTP id E628C206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594909548;
+	bh=PKHHa2U0Q/fS+204ojzXqyjFZw5lyyFrrzNLEaQzU9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NdV2+yNKZ9j2ULX0zxfa0ujbPKwV34S7xzwcgHbEF4aAAgYpAd8Zz/7DPKqJrrAYd
+	 G0cGP2T8Ew5obm5EnvZcIJom2Sp6bxoVTeiKCLtbz44jxELzdkROYi5Dck/CKTHElb
+	 ILsJGzWXkuVJOXQnaWRUEooRBJXxgrpj4NsBxbGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgGPOZn (ORCPT
+        id S1729103AbgGPOZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729066AbgGPOZl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:25:41 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BEE9C08C5C0;
-        Thu, 16 Jul 2020 07:25:40 -0700 (PDT)
+        Thu, 16 Jul 2020 10:25:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729066AbgGPOZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 10:25:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66BEF207CB;
+        Thu, 16 Jul 2020 14:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594909543;
+        bh=PKHHa2U0Q/fS+204ojzXqyjFZw5lyyFrrzNLEaQzU9U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jiHRefMypriSTxbcAZBCIT2gM7OotHWPd2OzKoj4aJLrgXi28At0mE73ZBwwIt09f
+         Aj3Tsu2oNHp3Jh4im+q02Nm3bVeLte7b3IAHBo9IRXQoY2DhkNiyTixShVIfe3RHZh
+         bOeZOnbXDULXOBVtAR37UqwB1cdHdpWaO3cFR2vQ=
 Date:   Thu, 16 Jul 2020 16:25:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594909539;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R8pGaheYTYoGZYv5r4THVryy54oNNrDJrmVoeuGswsI=;
-        b=l3ZLmTNV4qh6x04NTEwynyxGe7l8THGdxCYUWxLqXXP3wcyXtQ0ai34niwircMYYF8zjym
-        n26JbEiSjL3/8CT7Px7Tonm9BjWdTLBn70gx4SBN6cgOcEznP23+k8JJIdqC6xIkaRh1Bt
-        2/ieXp4QNjWFHe/u+SyV4++EA3CuYpsGLHE6DbSYExAKs55OA0AiZrCywdXLNlcFLfjes+
-        r/xohezp/WpjDi0iW/B9oeMSljCXI2g0tpR41EXvkI4vKKKadOjmyjiFJWRWJTbbI3ITAV
-        KaoDAygyzwwTYwYRdqWyU5fuHmLBS0WmvaD2BZYbT8MEAALFrE4a6h8lL7AgBg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594909539;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R8pGaheYTYoGZYv5r4THVryy54oNNrDJrmVoeuGswsI=;
-        b=dBf+uBusIFT/L0neyYIR02FQW3BLM6sIHJtxziWYRogPfi6O6X69EPZn6QtTBtz2wgubmE
-        GZkc3klFzBky5fCA==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
- allocator
-Message-ID: <20200716142537.ecp4icsq7kg6qhdx@linutronix.de>
-References: <20200715183537.4010-1-urezki@gmail.com>
- <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
- <CAEXW_YRoTvQfqqcM9fi+MkMxCPEaoJh4zHRM3qNYkv=-nAVuBQ@mail.gmail.com>
- <20200716091913.GA28595@pc636>
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     B K Karthik <bkkarthik@pesu.pes.edu>
+Cc:     Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Michel Lespinasse <walken@google.com>,
+        Divyansh Kamboj <kambojdivyansh2000@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] staging: comedi: comedi_fops.c: added casts to get
+ rid of sparse warnings
+Message-ID: <20200716142537.GA2176745@kroah.com>
+References: <20200716141747.wewrnejrygosqhd5@pesu-pes-edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716091913.GA28595@pc636>
+In-Reply-To: <20200716141747.wewrnejrygosqhd5@pesu-pes-edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-16 11:19:13 [+0200], Uladzislau Rezki wrote:
-> Sebastian, could you please confirm that if that patch that is in
-> question fixes it?
+On Thu, Jul 16, 2020 at 10:17:47AM -0400, B K Karthik wrote:
+> fixed sparse warnings by adding a cast in assignment from
+> void [noderef] __user * to unsigned int __force *
+> and a reverse cast in argument from
+> unsigned int * to  unsigned int __user * .
 > 
-> It would be appreciated!
+> Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+> ---
+>  drivers/staging/comedi/comedi_fops.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-So that preempt disable should in terms any warnings. However I don't
-think that it is strictly needed and from scheduling point of view you
-forbid a CPU migration which might be good otherwise.
-Also if interrupts and everything is enabled then someone else might
-invoke kfree_rcu() from BH context for instance.
+What changed from previous versions?
 
-Sebastian
+That always goes below the --- line.
+
+Please fix that up and resend a v4.
+
+thanks,
+
+greg k-h
