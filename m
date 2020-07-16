@@ -2,50 +2,52 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A573EC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E54AB20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C96820870
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:50:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gp0vrB0K";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jaxV93x6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UdBrVwUo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EeaD+9MY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgGPTuo (ORCPT
+        id S1729720AbgGPTuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:50:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40956 "EHLO
+        Thu, 16 Jul 2020 15:50:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728907AbgGPTuo (ORCPT
+        with ESMTP id S1729687AbgGPTuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:50:44 -0400
+        Thu, 16 Jul 2020 15:50:51 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B59C061755;
-        Thu, 16 Jul 2020 12:50:43 -0700 (PDT)
-Message-Id: <20200716182208.180916541@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C779C08C5CE;
+        Thu, 16 Jul 2020 12:50:51 -0700 (PDT)
+Message-Id: <20200716185424.550204929@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594929042;
+        s=2020; t=1594929049;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-transfer-encoding:content-transfer-encoding;
-        bh=Bjj7oiuRW+Sn6djHD3J8UrXi90X+AdJC+ynLaAISnUE=;
-        b=Gp0vrB0KO5JHo1WpPfLS4VlBjitnSx1+8FCvtPTxhCeJISgPK2egD963B4xmSCKJN6O5DY
-        ZoLrDfFzyU/kvIxQZ+UUBWQSuCGhxLA1vWOjRDNDBJtyC3Pz4W3S7XLe5cgF5zg1fISWoh
-        ISz6rBYpw+ZD2TYtS5Ulla0ykiGjli1tCwJXVEn9hHji7SitwrZwsU3ywBSkBcNL8C+0Ox
-        g+V1IMYmNYqbtHtR2iqCR3/Tp2quLDij5FxOZ+yQe97Neh46bCZhs3xLrU5j+XDDSo3iBr
-        w59+dRh0JsAeyUkJyLXfVszU5a7VOtAMouS3qgQKjpR1bEeKZsXrQ+OenRZM5A==
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=R0XDSub0sjDn9oKzbJHaS75DRaYr66PZXPLf9m24vlI=;
+        b=UdBrVwUozAf57aqhhNCimV3YzsOYWYuQFR9y1MTyQdGKhWi3BoxcDlMRAPTv7IO0HQ1dFw
+        +P+obQhj+0R1470vv9DZIkToghi/8L4mBVftW4FQoLR7GW6nDklAlOUtrdw0m1S//fITlK
+        Jrg8EBmkYnwGKSWJNw+OvZCzHw/KvM2aQCDUYmEIJK4lPsjywzvyhhtsOJIOvO2gFAlVJM
+        i8fiRlEZBvqqw1FxWe7j+0ziV9IVj+9kytwjCnsqDzKr8YYhP3UQP1NwE3Td0DbRfWKZhn
+        jwXjm2KqEHjzaDxf6J33n8QkqF81q2XLr9dSzoqj7BjOcrQZ4ou7H7CD8oqHNQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594929042;
+        s=2020e; t=1594929049;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-transfer-encoding:content-transfer-encoding;
-        bh=Bjj7oiuRW+Sn6djHD3J8UrXi90X+AdJC+ynLaAISnUE=;
-        b=jaxV93x6mgTMuZbylYxYwP8YAvSed8CXqXGojSoBxO64T7KbIky1sorctWMQAZEwZ3DgNy
-        PYVdNiCSRZhrqoAA==
-Date:   Thu, 16 Jul 2020 20:22:08 +0200
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=R0XDSub0sjDn9oKzbJHaS75DRaYr66PZXPLf9m24vlI=;
+        b=EeaD+9MYC/pncMOo9sBKwYFNIyKFUw1J8pD2yNAbq9elbXGluXVeWQ3REefL9MsRTawu0P
+        3aasMqUApY66zgDA==
+Date:   Thu, 16 Jul 2020 20:22:14 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
@@ -54,95 +56,192 @@ Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
         Keno Fischer <keno@juliacomputing.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [patch V3 00/13] entry, x86, kvm: Generic entry/exit functionality
- for host and guest
+Subject: [patch V3 06/13] x86/entry: Consolidate 32/64 bit syscall entry
+References: <20200716182208.180916541@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the 3rd version of preparing KVM to handle TIF_NOTIFY_RESUME before
-exiting to guest mode.
+64bit and 32bit entry code have the same open coded syscall entry handling
+after the bitwidth specific bits.
 
-The first attempt is available here:
+Move it to a helper function and share the code.
 
-    https://lore.kernel.org/r/20190801143250.370326052@linutronix.de
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/entry/common.c |   93 +++++++++++++++++++++---------------------------
+ 1 file changed, 41 insertions(+), 52 deletions(-)
 
-The second version which tried to provide generic infrastructure for KVM
-can be found here:
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -366,8 +366,7 @@ static void __syscall_return_slowpath(st
+ 	exit_to_user_mode();
+ }
+ 
+-#ifdef CONFIG_X86_64
+-__visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
++static noinstr long syscall_enter(struct pt_regs *regs, unsigned long nr)
+ {
+ 	struct thread_info *ti;
+ 
+@@ -379,6 +378,16 @@ static void __syscall_return_slowpath(st
+ 	if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY)
+ 		nr = syscall_trace_enter(regs);
+ 
++	instrumentation_end();
++	return nr;
++}
++
++#ifdef CONFIG_X86_64
++__visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
++{
++	nr = syscall_enter(regs, nr);
++
++	instrumentation_begin();
+ 	if (likely(nr < NR_syscalls)) {
+ 		nr = array_index_nospec(nr, NR_syscalls);
+ 		regs->ax = sys_call_table[nr](regs);
+@@ -390,64 +399,53 @@ static void __syscall_return_slowpath(st
+ 		regs->ax = x32_sys_call_table[nr](regs);
+ #endif
+ 	}
+-	__syscall_return_slowpath(regs);
+-
+ 	instrumentation_end();
+-	exit_to_user_mode();
++	syscall_return_slowpath(regs);
+ }
+ #endif
+ 
+ #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
++static __always_inline unsigned int syscall_32_enter(struct pt_regs *regs)
++{
++	if (IS_ENABLED(CONFIG_IA32_EMULATION))
++		current_thread_info()->status |= TS_COMPAT;
++	/*
++	 * Subtlety here: if ptrace pokes something larger than 2^32-1 into
++	 * orig_ax, the unsigned int return value truncates it.  This may
++	 * or may not be necessary, but it matches the old asm behavior.
++	 */
++	return syscall_enter(regs, (unsigned int)regs->orig_ax);
++}
++
+ /*
+- * Does a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.  Does
+- * all entry and exit work and returns with IRQs off.  This function is
+- * extremely hot in workloads that use it, and it's usually called from
+- * do_fast_syscall_32, so forcibly inline it to improve performance.
++ * Invoke a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.
+  */
+-static void do_syscall_32_irqs_on(struct pt_regs *regs)
++static __always_inline void do_syscall_32_irqs_on(struct pt_regs *regs,
++						  unsigned int nr)
+ {
+-	struct thread_info *ti = current_thread_info();
+-	unsigned int nr = (unsigned int)regs->orig_ax;
+-
+-#ifdef CONFIG_IA32_EMULATION
+-	ti->status |= TS_COMPAT;
+-#endif
+-
+-	if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY) {
+-		/*
+-		 * Subtlety here: if ptrace pokes something larger than
+-		 * 2^32-1 into orig_ax, this truncates it.  This may or
+-		 * may not be necessary, but it matches the old asm
+-		 * behavior.
+-		 */
+-		nr = syscall_trace_enter(regs);
+-	}
+-
+ 	if (likely(nr < IA32_NR_syscalls)) {
++		instrumentation_begin();
+ 		nr = array_index_nospec(nr, IA32_NR_syscalls);
+ 		regs->ax = ia32_sys_call_table[nr](regs);
++		instrumentation_end();
+ 	}
+-
+-	__syscall_return_slowpath(regs);
+ }
+ 
+ /* Handles int $0x80 */
+ __visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
+ {
+-	enter_from_user_mode(regs);
+-	instrumentation_begin();
+-
+-	local_irq_enable();
+-	do_syscall_32_irqs_on(regs);
++	unsigned int nr = syscall_32_enter(regs);
+ 
+-	instrumentation_end();
+-	exit_to_user_mode();
++	do_syscall_32_irqs_on(regs, nr);
++	syscall_return_slowpath(regs);
+ }
+ 
+-static bool __do_fast_syscall_32(struct pt_regs *regs)
++static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
+ {
++	unsigned int nr	= syscall_32_enter(regs);
+ 	int res;
+ 
++	instrumentation_begin();
+ 	/* Fetch EBP from where the vDSO stashed it. */
+ 	if (IS_ENABLED(CONFIG_X86_64)) {
+ 		/*
+@@ -460,17 +458,18 @@ static bool __do_fast_syscall_32(struct
+ 		res = get_user(*(u32 *)&regs->bp,
+ 		       (u32 __user __force *)(unsigned long)(u32)regs->sp);
+ 	}
++	instrumentation_end();
+ 
+ 	if (res) {
+ 		/* User code screwed up. */
+ 		regs->ax = -EFAULT;
+-		local_irq_disable();
+-		__prepare_exit_to_usermode(regs);
++		syscall_return_slowpath(regs);
+ 		return false;
+ 	}
+ 
+ 	/* Now this is just like a normal syscall. */
+-	do_syscall_32_irqs_on(regs);
++	do_syscall_32_irqs_on(regs, nr);
++	syscall_return_slowpath(regs);
+ 	return true;
+ }
+ 
+@@ -483,7 +482,6 @@ static bool __do_fast_syscall_32(struct
+ 	 */
+ 	unsigned long landing_pad = (unsigned long)current->mm->context.vdso +
+ 					vdso_image_32.sym_int80_landing_pad;
+-	bool success;
+ 
+ 	/*
+ 	 * SYSENTER loses EIP, and even SYSCALL32 needs us to skip forward
+@@ -492,17 +490,8 @@ static bool __do_fast_syscall_32(struct
+ 	 */
+ 	regs->ip = landing_pad;
+ 
+-	enter_from_user_mode(regs);
+-	instrumentation_begin();
+-
+-	local_irq_enable();
+-	success = __do_fast_syscall_32(regs);
+-
+-	instrumentation_end();
+-	exit_to_user_mode();
+-
+-	/* If it failed, keep it simple: use IRET. */
+-	if (!success)
++	/* Invoke the syscall. If it failed, keep it simple: use IRET. */
++	if (!__do_fast_syscall_32(regs))
+ 		return 0;
+ 
+ #ifdef CONFIG_X86_64
 
-    https://lore.kernel.org/r/20191023122705.198339581@linutronix.de
-
-This started the whole discussion about entry code correctness which led to
-the complete overhaul of the x86 entry code, non-instrumentable sections
-and the other goodies which are in 5.8.
-
-The remaining bits are rather straight forward:
-
-  1) Move the entry/exit handling from x86 into generic code so other
-     architectures can reuse the already proven to be correct code instead
-     of duplicating the whole maze and creating slightly different beasts
-     again.
-
-     This utilizes the noinstr sections. The correctness of the confinement
-     of non-instrumentable code can be verified with objtool on
-     architectures which support it. The code code itself is clean.
-
-  2) Provide generic work handling functionality for KVM
-  
-  3) Convert x86 over to use the generic entry/exit code
-
-  4) Convert x86/KVM to use the generic work handling functionality.
-
-#4 finally paves the way to move POSIX CPU timer heavy lifting out of
-interrupt context into task work. Several hundred patches after the initial
-attempt which was small and simple :)
-
-The patches depend on:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
-
-The lot is also available from git:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git x86/entry
-
-The posix timer patches will be posted seperately as they are mostly
-independent (except for the KVM task work detail).
-
-The stub functions for the architecture specific parts which need to be
-provided by architectures utilizing this are completely documented in the
-corresponding header file which explains the diffstat.
-
-Thanks,
-
-	tglx
-
-----
- arch/Kconfig                        |    3 
- arch/x86/Kconfig                    |    1 
- arch/x86/entry/common.c             |  632 ++----------------------------------
- arch/x86/entry/entry_32.S           |    2 
- arch/x86/entry/entry_64.S           |    2 
- arch/x86/include/asm/entry-common.h |  135 +++++++
- arch/x86/include/asm/idtentry.h     |   39 --
- arch/x86/include/asm/ptrace.h       |   15 
- arch/x86/include/asm/signal.h       |    1 
- arch/x86/include/asm/thread_info.h  |    5 
- arch/x86/kernel/cpu/mce/core.c      |    4 
- arch/x86/kernel/kvm.c               |    6 
- arch/x86/kernel/signal.c            |    2 
- arch/x86/kernel/traps.c             |   24 -
- arch/x86/kvm/Kconfig                |    1 
- arch/x86/kvm/vmx/vmx.c              |   11 
- arch/x86/kvm/x86.c                  |   15 
- arch/x86/mm/fault.c                 |    6 
- include/linux/entry-common.h        |  398 ++++++++++++++++++++++
- include/linux/entry-kvm.h           |   80 ++++
- include/linux/kvm_host.h            |    8 
- kernel/Makefile                     |    1 
- kernel/entry/Makefile               |    4 
- kernel/entry/common.c               |  364 ++++++++++++++++++++
- kernel/entry/kvm.c                  |   51 ++
- virt/kvm/Kconfig                    |    3 
- 26 files changed, 1150 insertions(+), 663 deletions(-)
