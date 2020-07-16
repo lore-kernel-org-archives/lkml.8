@@ -2,90 +2,128 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48EAC433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64528C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64E11207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594927353;
-	bh=q+GYKCLQtF+82+AnDMc8WzSjR3ruAzAkmx6WFYN11Ig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g2RciZuDXboTLagFwixNQEX1+pRbMMlxtJmeozxoXqVwdbJRshprRlB459tQAPj8U
-	 0MFFNJtlat4uqbIaqTzFpWG3iVmoj7S9Uye4ocxJMXQBJgTSWgc6MV39Ow7lRjPrXI
-	 BEzAQENV9HQDsAedmCla434LLHtWYG1nMPe/G4l8=
+	by mail.kernel.org (Postfix) with ESMTP id 41647207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:22:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgGPTWb (ORCPT
+        id S1729563AbgGPTWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:22:31 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33511 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgGPTWb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:22:31 -0400
-Received: by mail-io1-f68.google.com with SMTP id d18so7256959ion.0;
-        Thu, 16 Jul 2020 12:22:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cqz5mY+nuj0F7UbkiJ7lZ+wxAgeIQfIj+O61Hsq2EXI=;
-        b=eISVR0nesAiOjPSRGmvmsPYs9PIEYO7/bP6UuaOcUzvNJj1Sul9ibXibFRG1NcYOsK
-         HMsnwCfHiFas/pTZaSk5jr0zD3OXTwzdQ+J5zKAAj6PKFfDLRae1LlPM25Sfm3t+OL+h
-         v4RFPm2PrcISeMDso0z/PtLt2Ni+FjgBjGbIXbhMmVraHH2awQ8BEh77ncqVp3RRwDON
-         KvWWH+SdINkZT03kHfmRchmHSoIPvG3r1Q32EGgs6M7ky8mKvW5DxAOw+xV2HNvuzis7
-         vQRlTKBXabYBGuPSzdFdAaGp1XffuyOUNyILpOAcB1Hp7XhWTZpvcwp5kU4A+Z0DUQon
-         URbQ==
-X-Gm-Message-State: AOAM530ntTbgZYsjf6Ox1gBsQJxLAr6MvxIdQji0mznNOUM5dX0FBqAI
-        krTRo6GiBixaj5igTa0n5w==
-X-Google-Smtp-Source: ABdhPJzdzz9GqOzCp0S73abYRGHy0O/xklH2y/q2Q4ZJIKOklp2/IUF/5/MnEh4+RKnRy3rptViJxQ==
-X-Received: by 2002:a02:c604:: with SMTP id i4mr6684334jan.19.1594927350008;
-        Thu, 16 Jul 2020 12:22:30 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l18sm3129341ill.56.2020.07.16.12.22.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 12:22:29 -0700 (PDT)
-Received: (nullmailer pid 2697481 invoked by uid 1000);
-        Thu, 16 Jul 2020 19:22:28 -0000
-Date:   Thu, 16 Jul 2020 13:22:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org,
-        Odelu Kukatla <okukatla@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH v2 3/7] dt-bindings: interconnect: Add Qualcomm SM8250 DT
- bindings
-Message-ID: <20200716192228.GA2697434@bogus>
-References: <20200713154121.22094-1-jonathan@marek.ca>
- <20200713154121.22094-4-jonathan@marek.ca>
+        Thu, 16 Jul 2020 15:22:37 -0400
+Received: from mga06.intel.com ([134.134.136.31]:45361 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728257AbgGPTWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 15:22:33 -0400
+IronPort-SDR: vuLOwG2c9CV4RTvmahLiRteriNnTrLzj9qimqKWB06PaJJHs653bWr8iiV8fDqdnLp0OyOPKEO
+ R02d11+Ta05A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="211019346"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="211019346"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 12:22:32 -0700
+IronPort-SDR: sgWxlqjo1o6M17PeT2mAk1npmR0Kl1zMweC45j6CMnKH9JT+PJF2Rv8sb2dKMXOqY+CIftrs+L
+ 90QbTPTpNyHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="269337770"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Jul 2020 12:22:31 -0700
+Received: from orsmsx121.amr.corp.intel.com ([169.254.10.122]) by
+ ORSMSX103.amr.corp.intel.com ([169.254.5.226]) with mapi id 14.03.0439.000;
+ Thu, 16 Jul 2020 12:22:30 -0700
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Kaneda, Erik" <erik.kaneda@intel.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>
+CC:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "myron.stowe@redhat.com" <myron.stowe@redhat.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] ACPICA: Preserve memory opregion mappings
+Thread-Topic: [PATCH v4 2/2] ACPICA: Preserve memory opregion mappings
+Thread-Index: AQHWTjNF6NPdlNtf4Ea9cCuLXaianakLJdUA
+Date:   Thu, 16 Jul 2020 19:22:30 +0000
+Message-ID: <1738949fd49e9804722bf82d790e3022fc714677.camel@intel.com>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <2788992.3K7huLjdjL@kreacher> <1666722.UopIai5n7p@kreacher>
+         <1794490.F2OrUDcHQn@kreacher>
+In-Reply-To: <1794490.F2OrUDcHQn@kreacher>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+x-originating-ip: [10.18.116.7]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1158D79CC86D694ABE0899C328498051@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713154121.22094-4-jonathan@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 11:41:12 -0400, Jonathan Marek wrote:
-> The Qualcomm SM8250 platform has several bus fabrics that could be
-> controlled and tuned dynamically according to the bandwidth demand.
-> 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  .../bindings/interconnect/qcom,rpmh.yaml      |  11 ++
->  .../dt-bindings/interconnect/qcom,sm8250.h    | 173 ++++++++++++++++++
->  2 files changed, 184 insertions(+)
->  create mode 100644 include/dt-bindings/interconnect/qcom,sm8250.h
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gTW9uLCAyMDIwLTA2LTI5IGF0IDE4OjMzICswMjAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
+ZToNCj4gRnJvbTogIlJhZmFlbCBKLiBXeXNvY2tpIiA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5j
+b20+DQo+IA0KPiBUaGUgQUNQSUNBJ3Mgc3RyYXRlZ3kgd2l0aCByZXNwZWN0IHRvIHRoZSBoYW5k
+bGluZyBvZiBtZW1vcnkgbWFwcGluZ3MNCj4gYXNzb2NpYXRlZCB3aXRoIG1lbW9yeSBvcGVyYXRp
+b24gcmVnaW9ucyBpcyB0byBhdm9pZCBtYXBwaW5nIHRoZQ0KPiBlbnRpcmUgcmVnaW9uIGF0IG9u
+Y2Ugd2hpY2ggbWF5IGJlIHByb2JsZW1hdGljIGF0IGxlYXN0IGluIHByaW5jaXBsZQ0KPiAoZm9y
+IGV4YW1wbGUsIGl0IG1heSBsZWFkIHRvIGNvbmZsaWN0cyB3aXRoIG92ZXJsYXBwaW5nIG1hcHBp
+bmdzDQo+IGhhdmluZyBkaWZmZXJlbnQgYXR0cmlidXRlcyBjcmVhdGVkIGJ5IGRyaXZlcnMpLiAg
+SXQgbWF5IGFsc28gYmUNCj4gd2FzdGVmdWwsIGJlY2F1c2UgbWVtb3J5IG9wcmVnaW9ucyBvbiBz
+b21lIHN5c3RlbXMgdGFrZSB1cCB2YXN0DQo+IGNodW5rcyBvZiBhZGRyZXNzIHNwYWNlIHdoaWxl
+IHRoZSBmaWVsZHMgaW4gdGhvc2UgcmVnaW9ucyBhY3R1YWxseQ0KPiBhY2Nlc3NlZCBieSBBTUwg
+YXJlIHNwYXJzZWx5IGRpc3RyaWJ1dGVkLg0KPiANCj4gRm9yIHRoaXMgcmVhc29uLCBhIG9uZS1w
+YWdlICJ3aW5kb3ciIGlzIG1hcHBlZCBmb3IgYSBnaXZlbiBvcHJlZ2lvbg0KPiBvbiB0aGUgZmly
+c3QgbWVtb3J5IGFjY2VzcyB0aHJvdWdoIGl0IGFuZCBpZiB0aGF0ICJ3aW5kb3ciIGRvZXMgbm90
+DQo+IGNvdmVyIGFuIGFkZHJlc3MgcmFuZ2UgYWNjZXNzZWQgdGhyb3VnaCB0aGF0IG9wcmVnaW9u
+IHN1YnNlcXVlbnRseSwNCj4gaXQgaXMgdW5tYXBwZWQgYW5kIGEgbmV3ICJ3aW5kb3ciIGlzIG1h
+cHBlZCB0byByZXBsYWNlIGl0LiAgTmV4dCwNCj4gaWYgdGhlIG5ldyAid2luZG93IiBpcyBub3Qg
+c3VmZmljaWVudCB0byBhY2VzcyBtZW1vcnkgdGhyb3VnaCB0aGUNCj4gb3ByZWdpb24gaW4gcXVl
+c3Rpb24gaW4gdGhlIGZ1dHVyZSwgaXQgd2lsbCBiZSByZXBsYWNlZCB3aXRoIHlldA0KPiBhbm90
+aGVyICJ3aW5kb3ciIGFuZCBzbyBvbi4gIFRoYXQgbWF5IGxlYWQgdG8gYSBzdWJvcHRpbWFsIHNl
+cXVlbmNlDQo+IG9mIG1lbW9yeSBtYXBwaW5nIGFuZCB1bm1hcHBpbmcgb3BlcmF0aW9ucywgZm9y
+IGV4YW1wbGUgaWYgdHdvIGZpZWxkcw0KPiBpbiBvbmUgb3ByZWdpb24gc2VwYXJhdGVkIGZyb20g
+ZWFjaCBvdGhlciBieSBhIHN1ZmZpY2llbnRseSB3aWRlDQo+IGNodW5rIG9mIHVudXNlZCBhZGRy
+ZXNzIHNwYWNlIGFyZSBhY2Nlc3NlZCBpbiBhbiBhbHRlcm5hdGluZyBwYXR0ZXJuLg0KPiANCj4g
+VGhlIHNpdHVhdGlvbiBtYXkgc3RpbGwgYmUgc3Vib3B0aW1hbCBpZiB0aGUgZGVmZXJyZWQgdW5t
+YXBwaW5nDQo+IGludHJvZHVjZWQgcHJldmlvdXNseSBpcyBzdXBwb3J0ZWQgYnkgdGhlIE9TIGxh
+eWVyLiAgRm9yIGluc3RhbmNlLA0KPiB0aGUgYWx0ZXJuYXRpbmcgbWVtb3J5IGFjY2VzcyBwYXR0
+ZXJuIG1lbnRpb25lZCBhYm92ZSBtYXkgcHJvZHVjZQ0KPiBhIHJlbGF0aXZlbHkgbG9uZyBsaXN0
+IG9mIG1hcHBpbmdzIHRvIHJlbGVhc2Ugd2l0aCBzdWJzdGFudGlhbA0KPiBkdXBsaWNhdGlvbiBh
+bW9uZyB0aGUgZW50cmllcyBpbiBpdCwgd2hpY2ggY291bGQgYmUgYXZvaWRlZCBpZg0KPiBhY3Bp
+X2V4X3N5c3RlbV9tZW1vcnlfc3BhY2VfaGFuZGxlcigpIGRpZCBub3QgcmVsZWFzZSB0aGUgbWFw
+cGluZw0KPiB1c2VkIGJ5IGl0IHByZXZpb3VzbHkgYXMgc29vbiBhcyB0aGUgY3VycmVudCBhY2Nl
+c3Mgd2FzIG5vdCBjb3ZlcmVkDQo+IGJ5IGl0Lg0KPiANCj4gSW4gb3JkZXIgdG8gaW1wcm92ZSB0
+aGF0LCBtb2RpZnkgYWNwaV9leF9zeXN0ZW1fbWVtb3J5X3NwYWNlX2hhbmRsZXIoKQ0KPiB0byBw
+cmVzZXJ2ZSBhbGwgb2YgdGhlIG1lbW9yeSBtYXBwaW5ncyBjcmVhdGVkIGJ5IGl0IHVudGlsIHRo
+ZSBtZW1vcnkNCj4gcmVnaW9ucyBhc3NvY2lhdGVkIHdpdGggdGhlbSBnbyBhd2F5Lg0KPiANCj4g
+QWNjb3JkaW5nbHksIHVwZGF0ZSBhY3BpX2V2X3N5c3RlbV9tZW1vcnlfcmVnaW9uX3NldHVwKCkg
+dG8gdW5tYXAgYWxsDQo+IG1lbW9yeSBhc3NvY2lhdGVkIHdpdGggbWVtb3J5IG9wcmVnaW9ucyB0
+aGF0IGdvIGF3YXkuDQo+IA0KPiBSZXBvcnRlZC1ieTogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxs
+aWFtc0BpbnRlbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZh
+ZWwuai53eXNvY2tpQGludGVsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2FjcGkvYWNwaWNhL2V2
+cmduaW5pLmMgfCAxNCArKysrLS0tLQ0KPiAgZHJpdmVycy9hY3BpL2FjcGljYS9leHJlZ2lvbi5j
+IHwgNjUgKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLQ0KPiAgaW5jbHVkZS9hY3Bp
+L2FjdHlwZXMuaCAgICAgICAgIHwgMTIgKysrKystLQ0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA2NCBp
+bnNlcnRpb25zKCspLCAyNyBkZWxldGlvbnMoLSkNCj4gDQoNCkhpIFJhZmFlbCwNCg0KUGlja2lu
+ZyB1cCBmcm9tIERhbiB3aGlsZSBoZSdzIG91dCAtIEkgaGFkIHRoZXNlIHBhdGNoZXMgdGVzdGVk
+IGJ5IHRoZQ0Kb3JpZ2luYWwgcmVwb3J0ZXIsIGFuZCB0aGV5IHdvcmsgZmluZS4gSSBzZWUgeW91
+IGhhZCB0aGVtIHN0YWdlZCBpbiB0aGUNCmFjcGljYS1vc2wgYnJhbmNoLiBJcyB0aGF0IHNsYXRl
+ZCB0byBnbyBpbiBkdXJpbmcgdGhlIDUuOSBtZXJnZSB3aW5kb3c/DQoNCllvdSBjYW4gYWRkOg0K
+VGVzdGVkLWJ5OiBYaWFuZyBMaSA8eGlhbmcuei5saUBpbnRlbC5jb20+DQo=
