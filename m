@@ -2,184 +2,298 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D3BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43001207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D2A6207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:16:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CfjpSFsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgGPOOp (ORCPT
+        id S1728799AbgGPOQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:14:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:55090 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726537AbgGPOOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:14:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA8F331B;
-        Thu, 16 Jul 2020 07:14:43 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00B4B3F66E;
-        Thu, 16 Jul 2020 07:14:38 -0700 (PDT)
-Subject: Re: [PATCH V5 1/4] mm/debug_vm_pgtable: Add tests validating arch
- helpers for core MM features
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, agordeev@linux.ibm.com,
-        Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        christophe.leroy@csgroup.eu, Mike Rapoport <rppt@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, ziy@nvidia.com,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-snps-arc@lists.infradead.org,
-        Vasily Gorbik <gor@linux.ibm.com>, cai@lca.pw,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        gerald.schaefer@de.ibm.com, christophe.leroy@c-s.fr,
-        Vineet Gupta <vgupta@synopsys.com>,
-        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
-        aneesh.kumar@linux.ibm.com, Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, rppt@kernel.org
-References: <1594610587-4172-1-git-send-email-anshuman.khandual@arm.com>
- <1594610587-4172-2-git-send-email-anshuman.khandual@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <2ff756c5-28e2-b64a-3788-260ba30c6409@arm.com>
-Date:   Thu, 16 Jul 2020 15:14:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 10:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728257AbgGPOQN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 10:16:13 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1D3FC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:16:12 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id r19so7264217ljn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:16:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mXH7vVi3KBPuSpGgzBWwHA8EoTmgJyz0ffp69H08dxI=;
+        b=CfjpSFsHuv9lIfuFR3u9YVTn3D2/DVD0NybAdw9y/3tyKxpu/BwdPjXQp6sU7A642P
+         KkDVTZ4i+npcyyiqXOFgryTudvpB8dz+Kk0is0viOQkv3oqSMIdFfeJqAt1+cBQuRGsr
+         Rl8xKml+Wakc8wSfCWakO8h09LR2AAUwyVNZMfZuXXVWP+cDLG1jGRi8UgBXfbcg/DMW
+         luSc+6sy30Enj5lxct8bjqh2TxmI++ZnrtYrN427CK5Bpl1Tw+991mHGf1z+DpFkzTzx
+         XGtol4/58I0ScHG2T9qPvTxZ+vJ4luQ+OBv/bfDQ0BaqcMsnwW+vuMx3kZss1wUPTgGI
+         RXYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mXH7vVi3KBPuSpGgzBWwHA8EoTmgJyz0ffp69H08dxI=;
+        b=SVKu8Rem7htnYwM+DoxHo/BTUbYDsd/BkdD6vI1Yf8XiIF7l5ao1GvtkukJUPQ0Nuo
+         RuhLMY3c60rRiNAvCU8UUKRaP7DfFOrN6u2xAQleKBkoTgSSaPurfQ7sNgMSzzWdqUx1
+         EMBKnzZzThI9EvjMXrotvVqryHrQMmFv3aqlaFePXRa9Gph5jz9TND026ghwla5lo9th
+         AD4TPKq1vspaL3DNqRYOnGHi57XNnHB8egPaLTDlJ62df3DwW2LEI1CuqLpm1wffCbvC
+         yfe5HTCSmnxu96K19ANMnbyOsnAUnJKFs4t3MHx1gwr3Lh30JYNHcE+YA/N9rQGiFKTa
+         lQbw==
+X-Gm-Message-State: AOAM531OzuDxaOkbrSvA08v29USDHU+Gq+Eo6jf3ZUnr2I778s8VYqYO
+        jcrJZPo93jp9Dnh61yjUXQGNRg==
+X-Google-Smtp-Source: ABdhPJw1htbppJl/Sb7eYbBder0jkiV1NnzJIDU6QIcD10aBY30vhSNCUz+quukA9UefrB3Zywn2lA==
+X-Received: by 2002:a2e:8559:: with SMTP id u25mr2078562ljj.52.1594908971254;
+        Thu, 16 Jul 2020 07:16:11 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-181-7.NA.cust.bahnhof.se. [98.128.181.7])
+        by smtp.gmail.com with ESMTPSA id x5sm1069418ljm.132.2020.07.16.07.16.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 07:16:09 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     linux-mmc@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rui Feng <rui_feng@realsil.com.cn>
+Cc:     linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] mmc: core: Initial support for SD express card/host
+Date:   Thu, 16 Jul 2020 16:15:34 +0200
+Message-Id: <20200716141534.30241-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1594610587-4172-2-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/07/2020 04:23, Anshuman Khandual wrote:
-> This adds new tests validating arch page table helpers for these following
-> core memory features. These tests create and test specific mapping types at
-> various page table levels.
-> 
-> 1. SPECIAL mapping
-> 2. PROTNONE mapping
-> 3. DEVMAP mapping
-> 4. SOFTDIRTY mapping
-> 5. SWAP mapping
-> 6. MIGRATION mapping
-> 7. HUGETLB mapping
-> 8. THP mapping
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: x86@kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Tested-by: Vineet Gupta <vgupta@synopsys.com>	#arc
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->   mm/debug_vm_pgtable.c | 302 +++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 301 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
-> index 61ab16fb2e36..2fac47db3eb7 100644
-> --- a/mm/debug_vm_pgtable.c
-> +++ b/mm/debug_vm_pgtable.c
-[...]
-> +
-> +static void __init pte_swap_tests(unsigned long pfn, pgprot_t prot)
-> +{
-> +	swp_entry_t swp;
-> +	pte_t pte;
-> +
-> +	pte = pfn_pte(pfn, prot);
-> +	swp = __pte_to_swp_entry(pte);
+In the SD specification v7.10 the SD express card has been added. This new
+type of removable SD card, can be managed via a PCIe/NVMe based interface,
+while also allowing backwards compatibility towards the legacy SD
+interface.
 
-Minor issue: this doesn't look necessarily valid - there's no reason a 
-normal PTE can be turned into a swp_entry. In practise this is likely to 
-work on all architectures because there's no reason not to use (at 
-least) all the PFN bits for the swap entry, but it doesn't exactly seem 
-correct.
+To keep the backwards compatibility, it's required to start the
+initialization through the legacy SD interface. If it turns out that the
+mmc host and the SD card, both supports the PCIe/NVMe interface, then a
+switch should be allowed.
 
-Can we start with a swp_entry_t (from __swp_entry()) and check the round 
-trip of that?
+Therefore, let's introduce some basic support for this type of SD cards to
+the mmc core. The mmc host, should set MMC_CAP2_SD_EXP if it supports this
+interface and MMC_CAP2_SD_EXP_1_2V, if also 1.2V is supported, as to inform
+the core about it.
 
-It would also seem sensible to have a check that 
-is_swap_pte(__swp_entry_to_pte(__swp_entry(x,y))) is true.
+To deal with the switch to the PCIe/NVMe interface, the mmc host is
+required to implement a new host ops, ->init_sd_express(). Based on the
+initial communication between the host and the card, host->ios.timing is
+set to either MMC_TIMING_SD_EXP or MMC_TIMING_SD_EXP_1_2V, depending on if
+1.2V is supported or not. In this way, the mmc host can check these values
+in its ->init_sd_express() ops, to know how to proceed with the handover.
 
-> +	pte = __swp_entry_to_pte(swp);
-> +	WARN_ON(pfn != pte_pfn(pte));
-> +}
-> +
-> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-> +static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot)
-> +{
-> +	swp_entry_t swp;
-> +	pmd_t pmd;
-> +
-> +	pmd = pfn_pmd(pfn, prot);
-> +	swp = __pmd_to_swp_entry(pmd);
-> +	pmd = __swp_entry_to_pmd(swp);
-> +	WARN_ON(pfn != pmd_pfn(pmd));
-> +}
-> +#else  /* !CONFIG_ARCH_ENABLE_THP_MIGRATION */
-> +static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot) { }
-> +#endif /* CONFIG_ARCH_ENABLE_THP_MIGRATION */
-> +
-> +static void __init swap_migration_tests(void)
-> +{
-> +	struct page *page;
-> +	swp_entry_t swp;
-> +
-> +	if (!IS_ENABLED(CONFIG_MIGRATION))
-> +		return;
-> +	/*
-> +	 * swap_migration_tests() requires a dedicated page as it needs to
-> +	 * be locked before creating a migration entry from it. Locking the
-> +	 * page that actually maps kernel text ('start_kernel') can be real
-> +	 * problematic. Lets allocate a dedicated page explicitly for this
+Note that, to manage card insert/removal, the mmc core sticks with using
+the ->get_cd() callback, which means it's the host's responsibility to make
+sure it provides valid data, even if the card may be managed by PCIe/NVMe
+at the moment. As long as the card seems to be present, the mmc core keeps
+the card powered on.
 
-NIT: s/Lets/Let's
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Rui Feng <rui_feng@realsil.com.cn>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ drivers/mmc/core/core.c   | 15 ++++++++++--
+ drivers/mmc/core/host.h   |  6 +++++
+ drivers/mmc/core/sd_ops.c | 49 +++++++++++++++++++++++++++++++++++++--
+ drivers/mmc/core/sd_ops.h |  1 +
+ include/linux/mmc/host.h  |  7 ++++++
+ 5 files changed, 74 insertions(+), 4 deletions(-)
 
-Otherwise looks good to me.
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index 8ccae6452b9c..6673c0f33cc7 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -2137,8 +2137,12 @@ static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
+ 
+ 	mmc_go_idle(host);
+ 
+-	if (!(host->caps2 & MMC_CAP2_NO_SD))
+-		mmc_send_if_cond(host, host->ocr_avail);
++	if (!(host->caps2 & MMC_CAP2_NO_SD)) {
++		if (mmc_send_if_cond_pcie(host, host->ocr_avail))
++			goto out;
++		if (mmc_card_sd_express(host))
++			return 0;
++	}
+ 
+ 	/* Order's important: probe SDIO, then SD, then MMC */
+ 	if (!(host->caps2 & MMC_CAP2_NO_SDIO))
+@@ -2153,6 +2157,7 @@ static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
+ 		if (!mmc_attach_mmc(host))
+ 			return 0;
+ 
++out:
+ 	mmc_power_off(host);
+ 	return -EIO;
+ }
+@@ -2280,6 +2285,12 @@ void mmc_rescan(struct work_struct *work)
+ 		goto out;
+ 	}
+ 
++	/* If an SD express card is present, then leave it as is. */
++	if (mmc_card_sd_express(host)) {
++		mmc_release_host(host);
++		goto out;
++	}
++
+ 	for (i = 0; i < ARRAY_SIZE(freqs); i++) {
+ 		unsigned int freq = freqs[i];
+ 		if (freq > host->f_max) {
+diff --git a/drivers/mmc/core/host.h b/drivers/mmc/core/host.h
+index 5e3b9534ffb2..ba407617ed23 100644
+--- a/drivers/mmc/core/host.h
++++ b/drivers/mmc/core/host.h
+@@ -77,5 +77,11 @@ static inline bool mmc_card_hs400es(struct mmc_card *card)
+ 	return card->host->ios.enhanced_strobe;
+ }
+ 
++static inline bool mmc_card_sd_express(struct mmc_host *host)
++{
++	return host->ios.timing == MMC_TIMING_SD_EXP ||
++		host->ios.timing == MMC_TIMING_SD_EXP_1_2V;
++}
++
+ #endif
+ 
+diff --git a/drivers/mmc/core/sd_ops.c b/drivers/mmc/core/sd_ops.c
+index 22bf528294b9..d61ff811218c 100644
+--- a/drivers/mmc/core/sd_ops.c
++++ b/drivers/mmc/core/sd_ops.c
+@@ -158,7 +158,8 @@ int mmc_send_app_op_cond(struct mmc_host *host, u32 ocr, u32 *rocr)
+ 	return err;
+ }
+ 
+-int mmc_send_if_cond(struct mmc_host *host, u32 ocr)
++static int __mmc_send_if_cond(struct mmc_host *host, u32 ocr, u8 pcie_bits,
++			      u32 *resp)
+ {
+ 	struct mmc_command cmd = {};
+ 	int err;
+@@ -171,7 +172,7 @@ int mmc_send_if_cond(struct mmc_host *host, u32 ocr)
+ 	 * SD 1.0 cards.
+ 	 */
+ 	cmd.opcode = SD_SEND_IF_COND;
+-	cmd.arg = ((ocr & 0xFF8000) != 0) << 8 | test_pattern;
++	cmd.arg = ((ocr & 0xFF8000) != 0) << 8 | pcie_bits << 8 | test_pattern;
+ 	cmd.flags = MMC_RSP_SPI_R7 | MMC_RSP_R7 | MMC_CMD_BCR;
+ 
+ 	err = mmc_wait_for_cmd(host, &cmd, 0);
+@@ -186,6 +187,50 @@ int mmc_send_if_cond(struct mmc_host *host, u32 ocr)
+ 	if (result_pattern != test_pattern)
+ 		return -EIO;
+ 
++	if (resp)
++		*resp = cmd.resp[0];
++
++	return 0;
++}
++
++int mmc_send_if_cond(struct mmc_host *host, u32 ocr)
++{
++	return __mmc_send_if_cond(host, ocr, 0, NULL);
++}
++
++int mmc_send_if_cond_pcie(struct mmc_host *host, u32 ocr)
++{
++	u32 resp = 0;
++	u8 pcie_bits = 0;
++	int ret;
++
++	if (host->caps2 & MMC_CAP2_SD_EXP) {
++		/* Probe card for SD express support via PCIe. */
++		pcie_bits = 0x10;
++		if (host->caps2 & MMC_CAP2_SD_EXP_1_2V)
++			/* Probe also for 1.2V support. */
++			pcie_bits = 0x30;
++	}
++
++	ret = __mmc_send_if_cond(host, ocr, pcie_bits, &resp);
++	if (ret)
++		return 0;
++
++	/* Continue with the SD express init, if the card supports it. */
++	resp &= 0x3000;
++	if (pcie_bits && resp) {
++		if (resp == 0x3000)
++			host->ios.timing = MMC_TIMING_SD_EXP_1_2V;
++		else
++			host->ios.timing = MMC_TIMING_SD_EXP;
++
++		/*
++		 * According to the spec the clock shall also be gated, but
++		 * let's leave this to the host driver for more flexibility.
++		 */
++		return host->ops->init_sd_express(host, &host->ios);
++	}
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/mmc/core/sd_ops.h b/drivers/mmc/core/sd_ops.h
+index 2194cabfcfc5..3ba7b3cf4652 100644
+--- a/drivers/mmc/core/sd_ops.h
++++ b/drivers/mmc/core/sd_ops.h
+@@ -16,6 +16,7 @@ struct mmc_host;
+ int mmc_app_set_bus_width(struct mmc_card *card, int width);
+ int mmc_send_app_op_cond(struct mmc_host *host, u32 ocr, u32 *rocr);
+ int mmc_send_if_cond(struct mmc_host *host, u32 ocr);
++int mmc_send_if_cond_pcie(struct mmc_host *host, u32 ocr);
+ int mmc_send_relative_addr(struct mmc_host *host, unsigned int *rca);
+ int mmc_app_send_scr(struct mmc_card *card);
+ int mmc_sd_switch(struct mmc_card *card, int mode, int group,
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index c5b6e97cb21a..905cddc5e6f3 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -60,6 +60,8 @@ struct mmc_ios {
+ #define MMC_TIMING_MMC_DDR52	8
+ #define MMC_TIMING_MMC_HS200	9
+ #define MMC_TIMING_MMC_HS400	10
++#define MMC_TIMING_SD_EXP	11
++#define MMC_TIMING_SD_EXP_1_2V	12
+ 
+ 	unsigned char	signal_voltage;		/* signalling voltage (1.8V or 3.3V) */
+ 
+@@ -172,6 +174,9 @@ struct mmc_host_ops {
+ 	 */
+ 	int	(*multi_io_quirk)(struct mmc_card *card,
+ 				  unsigned int direction, int blk_size);
++
++	/* Initialize an SD express card, mandatory for MMC_CAP2_SD_EXP. */
++	int	(*init_sd_express)(struct mmc_host *host, struct mmc_ios *ios);
+ };
+ 
+ struct mmc_cqe_ops {
+@@ -357,6 +362,8 @@ struct mmc_host {
+ #define MMC_CAP2_HS200_1_2V_SDR	(1 << 6)        /* can support */
+ #define MMC_CAP2_HS200		(MMC_CAP2_HS200_1_8V_SDR | \
+ 				 MMC_CAP2_HS200_1_2V_SDR)
++#define MMC_CAP2_SD_EXP		(1 << 7)	/* SD express via PCIe */
++#define MMC_CAP2_SD_EXP_1_2V	(1 << 8)	/* SD express 1.2V */
+ #define MMC_CAP2_CD_ACTIVE_HIGH	(1 << 10)	/* Card-detect signal active high */
+ #define MMC_CAP2_RO_ACTIVE_HIGH	(1 << 11)	/* Write-protect signal active high */
+ #define MMC_CAP2_NO_PRESCAN_POWERUP (1 << 14)	/* Don't power up before scan */
+-- 
+2.20.1
 
-Steve
