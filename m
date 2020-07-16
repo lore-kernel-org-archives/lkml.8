@@ -2,148 +2,83 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8025FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3DA4207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:11:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSUV7Ne4"
+	by mail.kernel.org (Postfix) with ESMTP id 5D0B0207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbgGPOLZ (ORCPT
+        id S1728967AbgGPOMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:11:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgGPOLY (ORCPT
+        Thu, 16 Jul 2020 10:12:15 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38108 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728589AbgGPOMO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:11:24 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B64BC061755;
-        Thu, 16 Jul 2020 07:11:24 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id l1so6133419ioh.5;
-        Thu, 16 Jul 2020 07:11:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZwX/mhlAD3zr833qIWvUPD76zWFR7r5RHDAo4CaqDJs=;
-        b=mSUV7Ne41+i4WmO2Vm8ptf3P9RJODM2Y9Mg+O0LU/7IyBGkaVo1SQrKWvgj1Aqnoy8
-         g08NJT8igdEaGYT6EwoRxBGeK4NsqhiRzrMZ+xgito13FEBBjxlN5v15bCpgv6DKnkkG
-         I10aEZB/G9JJ5HXxoPIO1KVUCT5+ZC5u7WRj6wXuOBwVXYuO3XCXM0XI3GnwJ6bhUPqc
-         TvUNrXNCEPqbBByGmnniW7ylJGm2aUQEArKr9pbDkCj/RCbqTXdx5deU0iC+/OFcvqIx
-         MD+8n1h3b7ddIhzb3mMpul58aqCsG4fODqusChCjuq8/vBxZnkDCtxt4sbpsciw72B66
-         EH+w==
+        Thu, 16 Jul 2020 10:12:14 -0400
+Received: by mail-ot1-f65.google.com with SMTP id t18so4294264otq.5;
+        Thu, 16 Jul 2020 07:12:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZwX/mhlAD3zr833qIWvUPD76zWFR7r5RHDAo4CaqDJs=;
-        b=e7teLsu68qnjXcXz3KiA25apIvAlgyX+qXE9lCsmsrW3mToBvA3VXegXM2jJUGXncD
-         O6JTtDpvHt1lrIxvOG0XUBGPdx38K43Tkt+UWH3UHypc8dVcw4uPgmIKwQRnjmllDETR
-         +SI+adpJ8srsyn/6fDjfCALc32Kp0aBiD+tZ7SNY3jK6LCKc2J2VZqHcUGLT3Cql5xl4
-         iN8L25MhaZ60XHcBYB9LJQO8svLzEyxzsvdIlVoZ1tLOTcpfmireCz9uEtf5oFwEHk6J
-         YQy4jrURWQ7GAit3hQ//zPNPEqtPz6aE330vjwXn1VlAamX44NdGste8Sk1xwr/wccd/
-         e14g==
-X-Gm-Message-State: AOAM5319DAVmgq9uTfSEPb86fWCK+rwAJCiI0ordTSe3ML50HWQGXDZm
-        Z54MIISuKpH3SFJSeoihlWS8fTF4VcP9v+9rcdA=
-X-Google-Smtp-Source: ABdhPJy91dfh0GT+dqKF3C2rWnAEox2zlavfLO3RPZaRa7Nk/LRvW3ITiol1O0WjbC5f8lyH21Ai23FETBwlxZ8cts0=
-X-Received: by 2002:a02:c888:: with SMTP id m8mr5117977jao.114.1594908683752;
- Thu, 16 Jul 2020 07:11:23 -0700 (PDT)
+        bh=eMNpnTIeC/iF+Y3olmBi/4bZyuqHtNOjligpTstZIfc=;
+        b=Pjm8F4eAg63xn97ukkyxU0cjoFqsseDjSwDVVikbwfs+WGRV+QkJf9CBTtIduRyQE8
+         UmyfcVsbFZ5O6K8aAkn1Tr3eIqxJAoFPdyucizvTgBELQpbtfkTJ3DLsINDYrKcgxGMz
+         QleakIOg0G/LW/mAwqdOdzGoGkA8PI+NFr2rDaTxQtaxfGfv2UF4M9TfOrKYfzA6NaDZ
+         HFEJ+knLxlnzg/sTTBBgcI3A+BiIg4wvgRmolId8QdZzFibgJAtZ4tXIQhvovb2HKvDC
+         uRRW5rHcdQ4mPFNrY2oyavkWevqfT2VW4l61HXOkRfra5snueOdIExGmMLAzQ+Bg1dnm
+         e7sQ==
+X-Gm-Message-State: AOAM532zZvTRzySDHziuECHB7SOIqESTnyCGVWEwsv/XKRvpPXwRefak
+        GOmrPRyGfKR+A5TtWqv3TKH5d808aERpRzzFN/o=
+X-Google-Smtp-Source: ABdhPJz8JShPr1B7m8+xQ6qDCyyXempqtdVlG59chzJx01cDNuzLpVEsfXL9aedezZ0bI1sxnSPnZgoSUWwkLs0WANk=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr4355766otb.107.1594908733133;
+ Thu, 16 Jul 2020 07:12:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
-In-Reply-To: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 16 Jul 2020 07:11:12 -0700
-Message-ID: <CAKgT0UcKVyTXQ=tGv_uMV+fSvoH_-cuG9zA_zhE+S8Ou11gt=w@mail.gmail.com>
-Subject: Re: [PATCH v16 00/22] per memcg lru_lock
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-21-lee.jones@linaro.org> <CAMuHMdWMUN8sU09J1eSsSJ9sXMhf10GUHeP47UDf6+yp8vnAnw@mail.gmail.com>
+ <CACRpkdYep_r1KsTnU2gVr-DeOf50hRiyTRq=jgeas=fD-qPHVg@mail.gmail.com>
+In-Reply-To: <CACRpkdYep_r1KsTnU2gVr-DeOf50hRiyTRq=jgeas=fD-qPHVg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 Jul 2020 16:12:01 +0200
+Message-ID: <CAMuHMdUVp3Zt1jr4mrmpm23W3f7S8ha9T9UGPiwkkENgXuE-Dw@mail.gmail.com>
+Subject: Re: [PATCH 20/25] pinctrl: pinctrl-rza1: Demote some kerneldoc
+ headers and fix others
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 5:59 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
-> The new version which bases on v5.8-rc4. Add 2 more patchs:
-> 'mm/thp: remove code path which never got into'
-> 'mm/thp: add tail pages into lru anyway in split_huge_page()'
-> and modified 'mm/mlock: reorder isolation sequence during munlock'
->
-> Current lru_lock is one for each of node, pgdat->lru_lock, that guard for
-> lru lists, but now we had moved the lru lists into memcg for long time. Still
-> using per node lru_lock is clearly unscalable, pages on each of memcgs have
-> to compete each others for a whole lru_lock. This patchset try to use per
-> lruvec/memcg lru_lock to repleace per node lru lock to guard lru lists, make
-> it scalable for memcgs and get performance gain.
->
-> Currently lru_lock still guards both lru list and page's lru bit, that's ok.
-> but if we want to use specific lruvec lock on the page, we need to pin down
-> the page's lruvec/memcg during locking. Just taking lruvec lock first may be
-> undermined by the page's memcg charge/migration. To fix this problem, we could
-> take out the page's lru bit clear and use it as pin down action to block the
-> memcg changes. That's the reason for new atomic func TestClearPageLRU.
-> So now isolating a page need both actions: TestClearPageLRU and hold the
-> lru_lock.
->
-> The typical usage of this is isolate_migratepages_block() in compaction.c
-> we have to take lru bit before lru lock, that serialized the page isolation
-> in memcg page charge/migration which will change page's lruvec and new
-> lru_lock in it.
->
-> The above solution suggested by Johannes Weiner, and based on his new memcg
-> charge path, then have this patchset. (Hugh Dickins tested and contributed much
-> code from compaction fix to general code polish, thanks a lot!).
->
-> The patchset includes 3 parts:
-> 1, some code cleanup and minimum optimization as a preparation.
-> 2, use TestCleanPageLRU as page isolation's precondition
-> 3, replace per node lru_lock with per memcg per node lru_lock
->
-> Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
-> containers on a 2s * 26cores * HT box with a modefied case:
-> https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
-> With this patchset, the readtwice performance increased about 80%
-> in concurrent containers.
->
-> Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought this
-> idea 8 years ago, and others who give comments as well: Daniel Jordan,
-> Mel Gorman, Shakeel Butt, Matthew Wilcox etc.
->
-> Thanks for Testing support from Intel 0day and Rong Chen, Fengguang Wu,
-> and Yun Wang. Hugh Dickins also shared his kbuild-swap case. Thanks!
+Hi Linus,
 
-Hi Alex,
+On Thu, Jul 16, 2020 at 3:57 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Jul 15, 2020 at 9:30 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > i.e. will queue in sh-pfc-for-v5.9.
+>
+> OK since Geert is queueing this I'll drop this patch from my tree.
 
-I think I am seeing a regression with this patch set when I run the
-will-it-scale/page_fault3 test. Specifically the processes result is
-dropping from 56371083 to 43127382 when I apply these patches.
+Oops, sorry, I didn't know you were planning to apply this one.
 
-I haven't had a chance to bisect and figure out what is causing it,
-and wanted to let you know in case you are aware of anything specific
-that may be causing this.
+Gr{oetje,eeting}s,
 
-Thanks.
+                        Geert
 
-- Alex
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
