@@ -2,160 +2,104 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C2BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6095920787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594AA20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RrmG/J3j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xvm/hFJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgGPUmM (ORCPT
+        id S1726559AbgGPUnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:42:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48904 "EHLO
+        Thu, 16 Jul 2020 16:43:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgGPUmL (ORCPT
+        with ESMTP id S1725928AbgGPUnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:42:11 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC0EC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:42:11 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q3so6255697ilt.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:42:11 -0700 (PDT)
+        Thu, 16 Jul 2020 16:43:33 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFB5C061755;
+        Thu, 16 Jul 2020 13:43:32 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id q7so9888920ljm.1;
+        Thu, 16 Jul 2020 13:43:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fUE86W1UJN2bRiah1oXJUMER4mh/QPwIXSnuZ1uSW0s=;
-        b=RrmG/J3jpWBsDDFF3A7QzDzaGOTgfYaEMM3x8YgAQpVrskHu3wjzPimoTM0kdHrFb0
-         iNFr+wjScrrmoD7I50J4Zi3yLECilItoTsCVV0Em3VomnC/WFjs7rEp5q9JxO5JQvKTE
-         U4MhySnQ32ELsNDjgkQAWozxYFACiG7bEbJ1pqOCuNj9ufEjtPEl0+isdbLbQxWE4jVc
-         c9gWIhAoDv0MRdpB4OcjECdfW71Z27say8hMQmEYKwvEUFh+cdVeOsNTF8Mh+S5gQ+OK
-         1H4uj01Y0OlKGFrRWvVGpeCud+BF9xejRZdB3AotngwZTVY4Wycr3unxNHxYMZ7e/Ggf
-         Y2qg==
+        bh=X1aLmpr1/PmjZwi4WN91F908Ha9QHwqDqsurFVd7fDg=;
+        b=Xvm/hFJKgWLTWEUR91X07JCRt32Iwxb1tIAF6Z03k6coGfMaJ2KQ8/0cd7CBabxMLn
+         x7MDDhs9Fyhcs69mK3+750VqPQvoRTI6Ox9G6qOgth2LNIAy8Qz5VmRWj9F0zY0wzy7W
+         Kw1ZLJXXpKL7s3XgdAIXgZVENHgyZg1Fbvn9Rz/z+/3VmkQAdARFj+ZBqEd3Pyu1u0tj
+         GSr9EVAVIu8bx7iuPZofPPAq0K2APuop3kBODBnEAwSEVOA17Lzi6pgf4Yk9UIS40zcv
+         thYt/Z2045eOz1wUeeU4IKVXrCZ5EnySxQTTdx1CeSZfErSllH6EOlVotZRqLn+6o4bh
+         /svQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=fUE86W1UJN2bRiah1oXJUMER4mh/QPwIXSnuZ1uSW0s=;
-        b=gMObuMVJa/OBKYdKH4fvq+jZV5FtPaX/RFtZY2DycP/2V3vbh6SIkzmrfKB5svjjhF
-         Ajj1274zRJSN6kxtbVZHETDZstD94ruFZHtdgcEThQ0TzKuRHBZiVNCfQ016EEfAUEyp
-         kZd8tPuNmApWgYR3UUpSGDTiWLwJ9InOtYPPs/DqluLXqoeCePWIFqBa4fSmRcU5Ek78
-         MIYgWSSWtehOY+gaESQtBo7dm+vzEPbcghTI6UB383SXfXWX9FaYtdMI4T2poGfGXlU9
-         LT220M4mShzwZbTDflr/nHZZ8L1d85X3HFu6nSfnO0ZUT8+ISLYcnddsDK0rP4pMXEqq
-         9RoA==
-X-Gm-Message-State: AOAM531D2o+KfVmxxTrQW4qmwO5Fqwzmkx/Svvsqb5qnJ4dHPJCDXjqn
-        rH7sciFAsNeNLkzAn2NK0vt9IVHu/JxD3Q==
-X-Google-Smtp-Source: ABdhPJxe5TOhSxedrrbH1LVWGedg+qBDzWZbftnSxmv/RaY3P0vwR96U4ppS3jdcGEaLKRSKLaqsMQ==
-X-Received: by 2002:a92:9108:: with SMTP id t8mr6735616ild.170.1594932130242;
-        Thu, 16 Jul 2020 13:42:10 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id e21sm3368142ioe.11.2020.07.16.13.42.08
+        bh=X1aLmpr1/PmjZwi4WN91F908Ha9QHwqDqsurFVd7fDg=;
+        b=KWswmDU20vKv6/9ANCZz3fryarGjXLzyJZf5Z6OM8N6mGjLfGDnmd1qdePpyoTp4mf
+         MQlKQw9hlFECf8JsiBt6T3EVYsUYpTEpeOik5l4cn+Pop3sm1xpeHYI12r/8xkdqQ0b9
+         eQeBZBE4MnZ0lV7NhYH8npCnxx0BMAj80leCyQPGbnswJokdELsxs0jvdDA1noztN0z7
+         y9m6HvZlOzodZGZhyd7TfVEfpBwWIcDiiNUqw7o27Y47A4QRYOBjq51/HP4Vn3Yy0ziG
+         OVSOYCLj3QdRNiYD61XoLMvXWj6nnQ9P8ELjWxdrYpo+haRqsG0TXlxPjB2UhXL15IDS
+         1BnQ==
+X-Gm-Message-State: AOAM532gEHKLpnw6JbEPwRhRXuC+njQ4E17LT8zwZPB5Ncr7qzGrVs7s
+        02i97sJZkWBJJTJc2NUwjLGE1tZ5
+X-Google-Smtp-Source: ABdhPJyxd1j7WX5boeV16OTfXRfSEGjp4mRExIkmloRQjDdsWh3v9mf1JUtOioAtRTx0anqyq7RQ0A==
+X-Received: by 2002:a05:651c:1a6:: with SMTP id c6mr2784612ljn.358.1594932210932;
+        Thu, 16 Jul 2020 13:43:30 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
+        by smtp.googlemail.com with ESMTPSA id m20sm1254770ljg.107.2020.07.16.13.43.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 13:42:09 -0700 (PDT)
-Subject: Re: [PATCH RFC v2 1/3] io_uring: use an enumeration for
- io_uring_register(2) opcodes
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kees Cook <keescook@chromium.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Thu, 16 Jul 2020 13:43:30 -0700 (PDT)
+Subject: Re: [PATCH v10 0/6] Support NVIDIA Tegra-based Acer A500 and Nexus 7
+ devices
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        =?UTF-8?Q?Pedro_=c3=82ngelo?= <pangelo@void.io>,
+        Matt Merhar <mattmerhar@protonmail.com>,
+        Zack Pearsall <zpearsall@yahoo.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200716124833.93667-1-sgarzare@redhat.com>
- <20200716124833.93667-2-sgarzare@redhat.com>
- <ca242a15-576d-4099-a5f8-85c08985e3ff@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a2f109b2-adbf-147d-9423-7a1a4bf99967@kernel.dk>
-Date:   Thu, 16 Jul 2020 14:42:08 -0600
+References: <20200629025456.28124-1-digetx@gmail.com>
+ <20200716123814.GB535268@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5aeaedc0-80a6-de59-d69d-196dbd058690@gmail.com>
+Date:   Thu, 16 Jul 2020 23:43:29 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <ca242a15-576d-4099-a5f8-85c08985e3ff@gmail.com>
+In-Reply-To: <20200716123814.GB535268@ulmo>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/20 2:16 PM, Pavel Begunkov wrote:
-> On 16/07/2020 15:48, Stefano Garzarella wrote:
->> The enumeration allows us to keep track of the last
->> io_uring_register(2) opcode available.
+16.07.2020 15:38, Thierry Reding пишет:
+> On Mon, Jun 29, 2020 at 05:54:50AM +0300, Dmitry Osipenko wrote:
+>> Hello,
 >>
->> Behaviour and opcodes names don't change.
->>
->> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
->> ---
->>  include/uapi/linux/io_uring.h | 27 ++++++++++++++++-----------
->>  1 file changed, 16 insertions(+), 11 deletions(-)
->>
->> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
->> index 7843742b8b74..efc50bd0af34 100644
->> --- a/include/uapi/linux/io_uring.h
->> +++ b/include/uapi/linux/io_uring.h
->> @@ -253,17 +253,22 @@ struct io_uring_params {
->>  /*
->>   * io_uring_register(2) opcodes and arguments
->>   */
->> -#define IORING_REGISTER_BUFFERS		0
->> -#define IORING_UNREGISTER_BUFFERS	1
->> -#define IORING_REGISTER_FILES		2
->> -#define IORING_UNREGISTER_FILES		3
->> -#define IORING_REGISTER_EVENTFD		4
->> -#define IORING_UNREGISTER_EVENTFD	5
->> -#define IORING_REGISTER_FILES_UPDATE	6
->> -#define IORING_REGISTER_EVENTFD_ASYNC	7
->> -#define IORING_REGISTER_PROBE		8
->> -#define IORING_REGISTER_PERSONALITY	9
->> -#define IORING_UNREGISTER_PERSONALITY	10
->> +enum {
->> +	IORING_REGISTER_BUFFERS,
->> +	IORING_UNREGISTER_BUFFERS,
->> +	IORING_REGISTER_FILES,
->> +	IORING_UNREGISTER_FILES,
->> +	IORING_REGISTER_EVENTFD,
->> +	IORING_UNREGISTER_EVENTFD,
->> +	IORING_REGISTER_FILES_UPDATE,
->> +	IORING_REGISTER_EVENTFD_ASYNC,
->> +	IORING_REGISTER_PROBE,
->> +	IORING_REGISTER_PERSONALITY,
->> +	IORING_UNREGISTER_PERSONALITY,
->> +
->> +	/* this goes last */
->> +	IORING_REGISTER_LAST
->> +};
-> 
-> It breaks userspace API. E.g.
-> 
-> #ifdef IORING_REGISTER_BUFFERS
+>> This series introduces upstream kernel support for Acer Iconia Tab A500
+>> and ASUS Google Nexus 7 tablet devices. Please review and apply, thanks
+>> in advance.
 
-It can, yes, but we have done that in the past. In this one, for
-example:
+> Applied, thanks.
 
-commit 9e3aa61ae3e01ce1ce6361a41ef725e1f4d1d2bf (tag: io_uring-5.5-20191212)
-Author: Jens Axboe <axboe@kernel.dk>
-Date:   Wed Dec 11 15:55:43 2019 -0700
-
-    io_uring: ensure we return -EINVAL on unknown opcod
-
-But it would be safer/saner to do this like we have the done the IOSQE_
-flags.
-
--- 
-Jens Axboe
-
+Hello, Thierry! Thank you! :)
