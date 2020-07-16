@@ -2,119 +2,112 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0263C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53318C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7AE2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594942819;
-	bh=riITmyDuf/GN7tn3G7Z7oGKq7CHs6wg0gna9EwStjOA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0jR0fRbQWfiG2tK+XiaGnM9sdQBIkdgl8hvdwPwpcbCD+vZiqVJD6ofxM9GpJPSTf
-	 DkP+XNJOzkuMqSDvg9/K5NZVa6+NlUHg0NYExUBmUL9Xqxwy8HdLiVpcByz3oSJYOo
-	 PEyDsRR3sBXfIV++GrKdCJD4e8BKikrQs/rYYhZg=
+	by mail.kernel.org (Postfix) with ESMTP id 273BF2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="r7QsZjKU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgGPXkS (ORCPT
+        id S1726831AbgGPXl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:40:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgGPXkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:40:17 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C9C207DD;
-        Thu, 16 Jul 2020 22:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594938278;
-        bh=riITmyDuf/GN7tn3G7Z7oGKq7CHs6wg0gna9EwStjOA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rFcTojhGlgn7aOQAoBlbvZRbKqOM4JutY2KHUv9y/9rqJNTYzIZhvbLK04ZbumoGg
-         wB6NekP1ii1I29EuOivzF8L8ZBLe6E4v9xkdD4tngqvYb8MxyNF1kIeDqM5ZoHEtDm
-         Wlk4yIQUueHEmg9xpIZIGP6ZlrVvegsWUyjMsYN8=
-Date:   Thu, 16 Jul 2020 15:24:38 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: mmap: Merge vma after call_mmap() if possible
-Message-Id: <20200716152438.9317f4f95b92de75f88ea99f@linux-foundation.org>
-In-Reply-To: <1594696064-1409-1-git-send-email-linmiaohe@huawei.com>
-References: <1594696064-1409-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Jul 2020 19:41:26 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:7103 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgGPXlT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 19:41:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1594942879; x=1626478879;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=M/aLmMoaf+R1cfTR4Mi4doOLt0MJCtDnvFjCl4cVqNk=;
+  b=r7QsZjKUNI8QBZPcaOjHSIKMEHvLinv2XV4nHJkUXJk2Tm2iXelGAkla
+   0+F+YC/049oVrUxoJG9BSXjPmo9bdLfYKP6NsFrBU6qRho2uN2jYQj0i+
+   XfqxC1fDLXn0/2i3HQiMb97+EKOJ0yShmKN9LI2kfsDzTq1diK0A9ttu5
+   SftdcPvLuzxKIIE62pJYkkDd+jYwjm1nYJFaw4WFojbF6VSFBUo6tvQFn
+   bODExy9EPK+G/5e1KE9ua8enR3uz7oWKsRu1hodZBl31q5il7bwP7NoeJ
+   E8Lrl74asRxEjzbWaAPXsUTEVdtatBdsd8nGjafn55TpwERTsAMV0Bz8b
+   Q==;
+IronPort-SDR: n8nat28bz9GS2+SNJeLMO8IEaPsRtxa51GIT0oCqAX58gA/KisvgIMM6punm8AtkaV3Yse6wV/
+ CdgomydHn1QmyvOmiHgad3vKqYyW6APW1lac8KqyJcR3su3tQGZIJAejPqn2DJZSWrm6v1dmaP
+ /WQAZ8ONhdTOZ8CYvfnhtgtfghH/1wr4NLSucCy+pIH9UOCu/UliMyybTtwX5ty8U9nG4Y+pwC
+ 5lVBO8PQhAKGWLANW5WKWA8SLiQ0jFOm2QHud6z143Uag2Qz6rPynJLvgBQusJ42rX+YwASYoK
+ Prg=
+X-IronPort-AV: E=Sophos;i="5.75,360,1589212800"; 
+   d="scan'208";a="251923216"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 17 Jul 2020 07:41:18 +0800
+IronPort-SDR: x6VY320J3nEx0ve/kFyEbupTLabn0dxMSub/FE/rLw6q7i6jlN/v5lWLPQ6VjKy9f3g1SdOzzB
+ T7ru4dDghY23y4D6t6tHxjrIa5JturZ+Q=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 16:29:42 -0700
+IronPort-SDR: mvb6V7T1kzM/mdVXBhPssCnk0svEdQRax5iRV/H9DXHuJJ+ah2FZShI5xbLjomx4rNIMC/I1z+
+ jV7WUySWQxmQ==
+WDCIronportException: Internal
+Received: from phd004806.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.54])
+  by uls-op-cesaip02.wdc.com with ESMTP; 16 Jul 2020 16:41:17 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Anup Patel <anup.patel@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Kees Cook <keescook@chromium.org>, linux-efi@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Will Deacon <will@kernel.org>, Zong Li <zong.li@sifive.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [RFT PATCH v3 4/9] include: pe.h: Add RISC-V related PE definition
+Date:   Thu, 16 Jul 2020 16:40:59 -0700
+Message-Id: <20200716234104.29049-5-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200716234104.29049-1-atish.patra@wdc.com>
+References: <20200716234104.29049-1-atish.patra@wdc.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 11:07:44 +0800 linmiaohe <linmiaohe@huawei.com> wrote:
+Define RISC-V related machine types.
 
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> The vm_flags may be changed after call_mmap() because drivers may set some
-> flags for their own purpose. As a result, we failed to merge the adjacent
-> vma due to the different vm_flags as userspace can't pass in the same one.
-> Try to merge vma after call_mmap() to fix this issue.
-> 
-> Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  mm/mmap.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 59a4682ebf3f..9568117471f8 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1689,7 +1689,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
->  		struct list_head *uf)
->  {
->  	struct mm_struct *mm = current->mm;
-> -	struct vm_area_struct *vma, *prev;
-> +	struct vm_area_struct *vma, *prev, *merge;
->  	int error;
->  	struct rb_node **rb_link, *rb_parent;
->  	unsigned long charged = 0;
-> @@ -1773,6 +1773,20 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
->  		if (error)
->  			goto unmap_and_free_vma;
->  
-> +		/* If vm_flags changed after call_mmap(), we should try merge vma again
-> +		 * as we may succeed this time.
-> +		 */
-> +		if (unlikely(vm_flags != vma->vm_flags && prev)) {
-> +			merge = vma_merge(mm, prev, vma->vm_start, vma->vm_end, vma->vm_flags,
-> +				NULL, vma->vm_file, vma->vm_pgoff, NULL, NULL_VM_UFFD_CTX);
-> +			if (merge) {
-> +				fput(file);
-> +				vm_area_free(vma);
-> +				vma = merge;
-> +				goto unmap_writable;
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Link: https://lore.kernel.org/r/20200415195422.19866-3-atish.patra@wdc.com
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ include/linux/pe.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Shouldn't we update local variable `vm_flags' here, to pick up the
-change?  And possibly `addr'?
-
-> +			}
-> +		}
-> +
->  		/* Can addr have changed??
->  		 *
->  		 * Answer: Yes, several device drivers can do it in their
-> @@ -1795,6 +1809,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
->  	vma_link(mm, vma, prev, rb_link, rb_parent);
->  	/* Once vma denies write, undo our temporary denial count */
->  	if (file) {
-> +unmap_writable:
->  		if (vm_flags & VM_SHARED)
->  			mapping_unmap_writable(file->f_mapping);
->  		if (vm_flags & VM_DENYWRITE)
+diff --git a/include/linux/pe.h b/include/linux/pe.h
+index 8ad71d763a77..daf09ffffe38 100644
+--- a/include/linux/pe.h
++++ b/include/linux/pe.h
+@@ -55,6 +55,9 @@
+ #define	IMAGE_FILE_MACHINE_POWERPC	0x01f0
+ #define	IMAGE_FILE_MACHINE_POWERPCFP	0x01f1
+ #define	IMAGE_FILE_MACHINE_R4000	0x0166
++#define	IMAGE_FILE_MACHINE_RISCV32	0x5032
++#define	IMAGE_FILE_MACHINE_RISCV64	0x5064
++#define	IMAGE_FILE_MACHINE_RISCV128	0x5128
+ #define	IMAGE_FILE_MACHINE_SH3		0x01a2
+ #define	IMAGE_FILE_MACHINE_SH3DSP	0x01a3
+ #define	IMAGE_FILE_MACHINE_SH3E		0x01a4
+-- 
+2.24.0
 
