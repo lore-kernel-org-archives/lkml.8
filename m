@@ -2,192 +2,209 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 265AF20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A39920775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:17:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQAGzKs4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAxHUWpU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbgGPEPK (ORCPT
+        id S1726027AbgGPERD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 00:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37382 "EHLO
+        Thu, 16 Jul 2020 00:17:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgGPEPK (ORCPT
+        with ESMTP id S1725268AbgGPERD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 00:15:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903B1C061755;
-        Wed, 15 Jul 2020 21:15:09 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a6so5497927wrm.4;
-        Wed, 15 Jul 2020 21:15:09 -0700 (PDT)
+        Thu, 16 Jul 2020 00:17:03 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141DCC061755;
+        Wed, 15 Jul 2020 21:17:03 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d4so4194463pgk.4;
+        Wed, 15 Jul 2020 21:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=/3B9A674EQfjQa8s5j2tFu+PNv0/P6AJozav9RBzKBs=;
-        b=jQAGzKs40+u5PfuX4oC97UuJZrMs4G6Aq6m+2YC+TGqpgpTzShrfzi12bv1RXsMI7J
-         1Om7DcMpi2okDxe33FH2+wQgNuwie8n39E9qq+kR7bvyZg3ku9eFeBBrPCLSgBL2ZVLA
-         JoMWOpT9lZ5O/zAQu/FRvhcP28sSLrGaUv9ajEX1ZH+NakX7on24mq99R+WaMQ3ChQ4G
-         l8y7DIs8EdMUX7lh8khpaiy6TgzpvK0LWbpeOLeBWwVtCjAdo4iuRQiLIop6owvFwcI4
-         b0mLYecXgTQBcstsrz/QN80nX3y54h9coJr39Dg0XtiHOThblyJZnohqYClM4HVwjntl
-         +YQQ==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NFWKAnqwIMZO+jCeZOqem/0WTb649YZirzCP4sMo3vU=;
+        b=NAxHUWpU88h2Es2qByrl1j7WIsDFhBB3rt9YvdCFI9yjg5nAMJ+wptf3dgOo4o1H61
+         sEjdQ4wOuFsHESze83Xib87RCB0pwOC3276duLKpex0gzUP70LtIu63TSeImhr7zKnAQ
+         MCOMVWcTJnRbZgzKdPdGfn9z37J0JSJJLL7GcBLnsRsQnZsubsGmeWxBumFYBZgOx8Wj
+         U7x1bLxlfLtFYGX3dW5IGc5QG91qhKiISTijylKiZZARTI8khdAddKvytNKRLNcyXY9C
+         PHZkrN0ifGz4o37iezrXBnwcMidTrHvtdOHzhpDrOBxpbCcdVktgIIR6M1OvagNiB23S
+         jk3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=/3B9A674EQfjQa8s5j2tFu+PNv0/P6AJozav9RBzKBs=;
-        b=MdsuqJ9LvYvZxvTfZdq351keDrADfm3dOXtzrhnIAWpimzgDmJ/bf+tuOIdIyyX8wn
-         wzio5cxOYbsFNn0vcLTGtMQMY54qpdTsdo9R76k+bzrGhAWO8MWlNgucaw32ypJS7c2T
-         pszBC5zWqoJJG5DQkTxZdIeV/Q71rh+bhV8oiuneQbyFvEzE5zaKTn1YrP691xMxxdDH
-         y6L/eg7RKWEND5YmdpeXDMXWjmeoGIdzcHsD6Ohjvgd0D1/WU8xTdiOvoUQZQgoVPohr
-         RLBIubN3FNf/eRh+p8fEQ7d5MQe+Gv9z4oWTCOekZof5x3dJc+CNwNb2xm3gTKNJ6XUo
-         zv3g==
-X-Gm-Message-State: AOAM530rBaXvKoKNiPMbzDkdq8QMeK88OAWRlP7IFIuYpJWKmVEV7jz6
-        wXazPvSO21VhzR8W2r+VtiM=
-X-Google-Smtp-Source: ABdhPJxZLZohu0lb79Fzv4Qv7qvyRt8Xt9bGz8aNabW4ubonLDft59n3+6lq6IRt8CxL9c1y7gJAdw==
-X-Received: by 2002:adf:c142:: with SMTP id w2mr2802839wre.337.1594872908107;
-        Wed, 15 Jul 2020 21:15:08 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id x18sm6694844wrq.13.2020.07.15.21.15.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 21:15:07 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 14:15:00 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
-References: <20200710015646.2020871-1-npiggin@gmail.com>
-        <20200710015646.2020871-5-npiggin@gmail.com>
-        <CALCETrVqHDLo09HcaoeOoAVK8w+cNWkSNTLkDDU=evUhaXkyhQ@mail.gmail.com>
-        <1594613902.1wzayj0p15.astroid@bobo.none>
-        <1594647408.wmrazhwjzb.astroid@bobo.none>
-        <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com>
-In-Reply-To: <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=NFWKAnqwIMZO+jCeZOqem/0WTb649YZirzCP4sMo3vU=;
+        b=MhmgsPzAxW3EnoBWljnawOSKd/rNrnjdmKYHu0xK49Yy17quyEjez8va4lztyPGPHF
+         5tTJbDnUQLOYs4AtpoOAIbkO3whnNJjJU1P7BblxrsmfdrgdfQ4jS4sOYiLzStVn4wKl
+         o7ymOaD6+vh1fUfT1zhMK0fbKFOOjVOFV/AeiFvCjnGPivxoaMo1oMqqhVYa3e79ZJec
+         zes+xXKJoWKdIxvizdUB2TAd2hrdZlQ3AYQ/h3Lzx4Xw8uHmUEhoVXfGiAmiuqWwBgjC
+         8eF8hpO/VLYRmcewnmRiIuL5nnQLKe/TRMtSdVeynDc2fL7zEIJ8QJLjvIWaQ3cydwwN
+         5v+w==
+X-Gm-Message-State: AOAM532K1Nv+02YHuR2Y3RlBumJqmOKmZ+/AyUxGWkmdmC4d5Dl2R7ul
+        G3DUn1tGxkQWIUuuQ8iJdIjkqFhU
+X-Google-Smtp-Source: ABdhPJy8CxHLVhY59zwXk75I8HIChF7zIF/EhGAiVtpMsr0XlKva4fUXA/Im8lKUH0vClRC/fxARmg==
+X-Received: by 2002:a63:7c4d:: with SMTP id l13mr2696707pgn.12.1594873022410;
+        Wed, 15 Jul 2020 21:17:02 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i125sm3428916pgd.21.2020.07.15.21.17.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 21:17:01 -0700 (PDT)
+Subject: Re: [PATCH 3/3 v3] usb: typec: tcpm: Stay in BIST mode till hardreset
+ or unattached
+To:     Badhri Jagan Sridharan <badhri@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        reg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200716034128.1251728-1-badhri@google.com>
+ <20200716034128.1251728-3-badhri@google.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <0bfb2170-df93-0be2-1eeb-cdcac77bda0c@roeck-us.net>
+Date:   Wed, 15 Jul 2020 21:16:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-Id: <1594868476.6k5kvx8684.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200716034128.1251728-3-badhri@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Mathieu Desnoyers's message of July 14, 2020 12:13 am:
-> ----- On Jul 13, 2020, at 9:47 AM, Nicholas Piggin npiggin@gmail.com wrot=
-e:
->=20
->> Excerpts from Nicholas Piggin's message of July 13, 2020 2:45 pm:
->>> Excerpts from Andy Lutomirski's message of July 11, 2020 3:04 am:
->>>> Also, as it stands, I can easily see in_irq() ceasing to promise to
->>>> serialize.  There are older kernels for which it does not promise to
->>>> serialize.  And I have plans to make it stop serializing in the
->>>> nearish future.
->>>=20
->>> You mean x86's return from interrupt? Sounds fun... you'll konw where t=
-o
->>> update the membarrier sync code, at least :)
->>=20
->> Oh, I should actually say Mathieu recently clarified a return from
->> interrupt doesn't fundamentally need to serialize in order to support
->> membarrier sync core.
->=20
-> Clarification to your statement:
->=20
-> Return from interrupt to kernel code does not need to be context serializ=
-ing
-> as long as kernel serializes before returning to user-space.
->=20
-> However, return from interrupt to user-space needs to be context serializ=
-ing.
+On 7/15/20 8:41 PM, Badhri Jagan Sridharan wrote:
+> Port starts to toggle when transitioning to unattached state.
+> This is incorrect while in BIST mode.
+> 
+> 6.4.3.1 BIST Carrier Mode
+> Upon receipt of a BIST Message, with a BIST Carrier Mode BIST Data Object,
+> the UUT Shall send out a continuous string of BMC encoded alternating "1"s
+> and “0”s. The UUT Shall exit the Continuous BIST Mode within
+> tBISTContMode of this Continuous BIST Mode being enabled(see
+> Section 6.6.7.2).
+> 
+> 6.4.3.2 BIST Test Data
+> Upon receipt of a BIST Message, with a BIST Test Data BIST Data Object,
+> the UUT Shall return a GoodCRC Message and Shall enter a test mode in which
+> it sends no further Messages except for GoodCRC Messages in response to
+> received Messages. See Section 5.9.2 for the definition of the Test Data
+> Frame. The test Shall be ended by sending Hard Reset Signaling to reset the
+> UUT.
+> 
+> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 
-Hmm, I'm not sure it's enough even with the sync in the exit_lazy_tlb
-in the right places.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-A kernel thread does a use_mm, then it blocks and the user process with
-the same mm runs on that CPU, and then it calls into the kernel, blocks,
-the kernel thread runs again, another CPU issues a membarrier which does
-not IPI this one because it's running a kthread, and then the kthread
-switches back to the user process (still without having unused the mm),
-and then the user process returns from syscall without having done a=20
-core synchronising instruction.
+> ---
+> Version history:
+> Changes since V1:
+> - None
+> 
+> Changes since V2:(Guenter's suggestions)
+> - Fixed formatting error
+> - Reduced timeout to 50ms
+> 
+> ---
+>  drivers/usb/typec/tcpm/tcpm.c | 7 +++++--
+>  include/linux/usb/pd.h        | 1 +
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+> index 379fcab9dbd973..38b958a9650104 100644
+> --- a/drivers/usb/typec/tcpm/tcpm.c
+> +++ b/drivers/usb/typec/tcpm/tcpm.c
+> @@ -3559,6 +3559,8 @@ static void run_state_machine(struct tcpm_port *port)
+>  		switch (BDO_MODE_MASK(port->bist_request)) {
+>  		case BDO_MODE_CARRIER2:
+>  			tcpm_pd_transmit(port, TCPC_TX_BIST_MODE_2, NULL);
+> +			tcpm_set_state(port, unattached_state(port),
+> +				       PD_T_BIST_CONT_MODE);
+>  			break;
+>  		case BDO_MODE_TESTDATA:
+>  			if (port->tcpc->set_bist_data) {
+> @@ -3569,8 +3571,6 @@ static void run_state_machine(struct tcpm_port *port)
+>  		default:
+>  			break;
+>  		}
+> -		/* Always switch to unattached state */
+> -		tcpm_set_state(port, unattached_state(port), 0);
+>  		break;
+>  	case GET_STATUS_SEND:
+>  		tcpm_pd_send_control(port, PD_CTRL_GET_STATUS);
+> @@ -3960,6 +3960,9 @@ static void _tcpm_pd_vbus_off(struct tcpm_port *port)
+>  static void _tcpm_pd_hard_reset(struct tcpm_port *port)
+>  {
+>  	tcpm_log_force(port, "Received hard reset");
+> +	if (port->bist_request == BDO_MODE_TESTDATA && port->tcpc->set_bist_data)
+> +		port->tcpc->set_bist_data(port->tcpc, false);
+> +
+>  	/*
+>  	 * If we keep receiving hard reset requests, executing the hard reset
+>  	 * must have failed. Revert to error recovery if that happens.
+> diff --git a/include/linux/usb/pd.h b/include/linux/usb/pd.h
+> index a665d7f211424d..b6c233e79bd457 100644
+> --- a/include/linux/usb/pd.h
+> +++ b/include/linux/usb/pd.h
+> @@ -483,4 +483,5 @@ static inline unsigned int rdo_max_power(u32 rdo)
+>  #define PD_N_CAPS_COUNT		(PD_T_NO_RESPONSE / PD_T_SEND_SOURCE_CAP)
+>  #define PD_N_HARD_RESET_COUNT	2
+>  
+> +#define PD_T_BIST_CONT_MODE	50 /* 30 - 60 ms */
+>  #endif /* __LINUX_USB_PD_H */
+> 
 
-The cause of the problem is you want to avoid IPI'ing kthreads. Why?
-I'm guessing it really only matters as an optimisation in case of idle
-threads. Idle thread is easy (well, easier) because it won't use_mm, so=20
-you could check for rq->curr =3D=3D rq->idle in your loop (in a suitable=20
-sched accessor function).
-
-But... I'm not really liking this subtlety in the scheduler for all this=20
-(the scheduler still needs the barriers when switching out of idle).
-
-Can it be improved somehow? Let me forget x86 core sync problem for now
-(that _may_ be a bit harder), and step back and look at what we're doing.
-The memory barrier case would actually suffer from the same problem as
-core sync, because in the same situation it has no implicit mmdrop in
-the scheduler switch code either.
-
-So what are we doing with membarrier? We want any activity caused by the=20
-set of CPUs/threads specified that can be observed by this thread before=20
-calling membarrier is appropriately fenced from activity that can be=20
-observed to happen after the call returns.
-
-CPU0                     CPU1
-                         1. user stuff
-a. membarrier()          2. enter kernel
-b. read rq->curr         3. rq->curr switched to kthread
-c. is kthread, skip IPI  4. switch_to kthread
-d. return to user        5. rq->curr switched to user thread
-		         6. switch_to user thread
-		         7. exit kernel
-                         8. more user stuff
-
-As far as I can see, the problem is CPU1 might reorder step 5 and step
-8, so you have mmdrop of lazy mm be a mb after step 6.
-
-But why? The membarrier call only cares that there is a full barrier
-between 1 and 8, right? Which it will get from the previous context
-switch to the kthread.
-
-I must say the memory barrier comments in membarrier could be improved
-a bit (unless I'm missing where the main comment is). It's fine to know
-what barriers pair with one another, but we need to know which exact
-memory accesses it is ordering
-
-       /*
-         * Matches memory barriers around rq->curr modification in
-         * scheduler.
-         */
-
-Sure, but it doesn't say what else is being ordered. I think it's just
-the user memory accesses, but would be nice to make that a bit more
-explicit. If we had such comments then we might know this case is safe.
-
-I think the funny powerpc barrier is a similar case of this. If we
-ever see remote_rq->curr->flags & PF_KTHREAD, then we _know_ that
-CPU has or will have issued a memory barrier between running user
-code.
-
-So AFAIKS all this membarrier stuff in kernel/sched/core.c could
-just go away. Except x86 because thread switch doesn't imply core
-sync, so CPU1 between 1 and 8 may never issue a core sync instruction
-the same way a context switch must be a full mb.
-
-Before getting to x86 -- Am I right, or way off track here?=20
-
-Thanks,
-Nick
