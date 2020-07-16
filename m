@@ -2,393 +2,254 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1440BC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D5BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA022067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D172067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oamjSBt4"
+	dkim=pass (1024-bit key) header.d=moxa.com header.i=@moxa.com header.b="JcBtGdqx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgGPHR6 (ORCPT
+        id S1728209AbgGPHTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728265AbgGPHR5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:17:57 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF31C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:17:56 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b185so4655440qkg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZS4oJIQ2eGXNXG4ckn/BOCjLtcC7Sfi7mznbmBvYbzg=;
-        b=oamjSBt4+8VIplrXC+jFe4VZV+OdEcmqKl6Iwf4ecu4XygY1Y1vJ5OdUV7KhttV4Zk
-         FAIGMNNPJuxBcXK9J02xLqlWDqbfRQVPMNVM+dNT0qMtmTyMZCYwzkvjL3anEzx3jHON
-         EgCFBvupyO9rncdasTCwB1FI3g7KpHJ+zx6dF6t9alP2cZRre319oogkNZvpBQLL5eC6
-         kM9GNZe5MZhzIO+zrC+cXKJuSQtQF2iqFaowU+TazTsmqXo1dtEosHR/BigI2y8MtOck
-         /mWNKqotNM/2+5fgwYkz0IKEKaOg1uXTTtvq0pAQhEjKaljs5Q6KdB/zJ21JxsyrGyw5
-         mBqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZS4oJIQ2eGXNXG4ckn/BOCjLtcC7Sfi7mznbmBvYbzg=;
-        b=QK+qA49iItmJ2Ph50TnJKsu3vqtvPI7Ot2mZiFa8dpZyC1MlDnb8aQvpMJzG+kDzMr
-         98PeeoFHX7/BoZarbp5vKI5jtPv7BNWH7Pkkg0wxahgFRdTfE6tjupzzmc3UUvDsIrbS
-         gsn9w6GIIFsMuMUZZudafKZ7+raQb9s3I/kAFYTFBguLPfTRIJX8o24ssZWPY1szQJxi
-         PTpZN0sAlbtccrgsKeN84qcLM8/Ty00CYSFlHtPy5X1oiqXtsGmd41+bUQiYz0o7Y1jK
-         H57NDH7PT8HSrE0VKd4dgUfZsxniTVaTk9gUemS7B/h0/bzs6rrhTKz6iF7ewF5O/Xwt
-         KB4A==
-X-Gm-Message-State: AOAM5337vGZEhvrtHLmsosdi7DwxYRFHQB8LY52kHnB8D18u6F+tEcQt
-        Yg1J9bPUufeRZIcxCisSDZM=
-X-Google-Smtp-Source: ABdhPJyURFS5X63jWted3i4754ovE+xqZMCPQm3I9rkPOy+KOPpLA2hsUxg1Mcbm+o+VmlSKIT7ZAA==
-X-Received: by 2002:a37:995:: with SMTP id 143mr2705579qkj.266.1594883876048;
-        Thu, 16 Jul 2020 00:17:56 -0700 (PDT)
-Received: from LeoBras.ibmuc.com (200-236-239-31.dynamic.desktop.com.br. [200.236.239.31])
-        by smtp.gmail.com with ESMTPSA id a5sm6637989qtd.84.2020.07.16.00.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 00:17:55 -0700 (PDT)
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Joel Stanley <joel@jms.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Leonardo Bras <leobras.c@gmail.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 7/7] powerpc/pseries/iommu: Rename "direct window" to "dma window"
-Date:   Thu, 16 Jul 2020 04:16:59 -0300
-Message-Id: <20200716071658.467820-8-leobras.c@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200716071658.467820-1-leobras.c@gmail.com>
-References: <20200716071658.467820-1-leobras.c@gmail.com>
+        Thu, 16 Jul 2020 03:19:11 -0400
+Received: from mail-eopbgr1320057.outbound.protection.outlook.com ([40.107.132.57]:9824
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726069AbgGPHTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 03:19:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bnZXHeJavY/X604+sVm1u/3Had2ieNRSiTBSAEGe/LI9J5XRrEabk4YBNXMPVXXgvMSftIf3nKoy3dba3cF/ADvrVb+jQlKH78eOg3atP9bg8RYJDT4xuDWrMf47/4tjG/Sm6+6vkXEhtfTmtO617rXJzER5NpooAqRPicjE9SgUBuH+uzaqtRUQE8QPFBqLnolIulqrC0BLlvFaDBBUdbZ2/y8sCmEOVvwygiXrrwKZ3YZcp/Fr1CLQHtHWmLbJk7k7VlNatX5GRXynRUwnGKsT1Grn+RzkRQM1+EZU0WVWAF4pJFOkg9kLEG8s3cMbg0NmtmVCUVpt5og3KQo0Zg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EWPGObP8gmlkL0yXV1oCIK7GSZlyfiyWIOW6BqFUNfQ=;
+ b=j6C78J9euTnuvG0dvDzpyjvep93lzZl0TVDHj5g7SDx0JO6iCMeHbw/leq/y2qceuxH0/LipNTqZMV7xqk73cSt83pjuJ+eR3QbXj9TXcG70ha/s+krMLWVQYVWqFp0R8OPcXfrc/x6i3dlC0dYFYVxWlprBoAL4kNI+ONGRFzr9qPdLs6hDUU6jmVvcMQcXwkTEm/DUduf23m7xr79mCOoSdnubBsKdYcKI6ao+ksy/oav+2bznMwO8ue4Etme8DS0VhqGkYuyU72It8xQ1LdnzTSi6aMUjT4HGw8YbwUFv4gq/5GOnPL67W488rc79v6an2bV9982vPhQR4qzh2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=moxa.com; dmarc=pass action=none header.from=moxa.com;
+ dkim=pass header.d=moxa.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=moxa.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EWPGObP8gmlkL0yXV1oCIK7GSZlyfiyWIOW6BqFUNfQ=;
+ b=JcBtGdqxcHE6gtApXmYuCNpzwxWW6iuhcCaCmh+vrBcap1xlAsMDz7lsxX6YmRrqjvl8Elwga59X3KEu+wfYfFc2grk+YxoIfpOM2Qv5MmnaI816Z+RwD5K/13lWLcmKZHfl0NqkMn4LAo1eiVL0rE5EdMYoCUva/W7DJZ5bo8o=
+Received: from HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ (2603:1096:202:22::12) by HK0PR01MB2244.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:7f::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18; Thu, 16 Jul
+ 2020 07:19:03 +0000
+Received: from HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ ([fe80::dce:9650:6c58:8b77]) by HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ ([fe80::dce:9650:6c58:8b77%4]) with mapi id 15.20.3174.027; Thu, 16 Jul 2020
+ 07:19:03 +0000
+From:   =?utf-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
+        <JohnsonCH.Chen@moxa.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Jiri Slaby <jirislaby@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Subject: RE: [PATCH] tty: Add MOXA NPort Real TTY Driver
+Thread-Topic: [PATCH] tty: Add MOXA NPort Real TTY Driver
+Thread-Index: AQHWWaW+EbrUHbhx60a/vOExcWbf46kGr5aAgAMXG4A=
+Date:   Thu, 16 Jul 2020 07:19:02 +0000
+Message-ID: <HK2PR01MB32815CE2F455B909EA32F406FA7F0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+References: <HK2PR01MB328134FB2EF5F9D1E381BDA3FA610@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+ <20200714073609.GA688099@kroah.com>
+In-Reply-To: <20200714073609.GA688099@kroah.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=moxa.com;
+x-originating-ip: [123.51.145.16]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4f5f1144-cf20-4c18-65da-08d82958849d
+x-ms-traffictypediagnostic: HK0PR01MB2244:
+x-microsoft-antispam-prvs: <HK0PR01MB224403AF91BBBEBD18CB3DBFFA7F0@HK0PR01MB2244.apcprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mnkum6qA48gnV6bxCWKXRfGziYhHfbxcT3+ayKvXnmwtj8jsPWH0H7NkdLJWvckbUFr7UjI7kr5RMi7mDDJdssoRdwg/a7zkb0wKR49qsFVx6qJ70FtR8U847mHTTNeE4dG4k7OWBhd1UyiVXl/CmUpDPJilHgu42WFCx6F+2S76fQzLXEvTyiRJ9wwY0YZfSWxeq9wsfm25/FNhKIf1rODvxEvnfze4jaDu8uqOZ17EXaFoJ+z/jzC1E3fuonxxrsr/gVoSfJSGbc/NV935yMOix98jjG3i3P2CCMjsKY8o62fifS5TdJZoiPqjHh16GZupptnSuVPSn2Q8O96iRg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK2PR01MB3281.apcprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39850400004)(136003)(376002)(346002)(366004)(2906002)(54906003)(4326008)(66556008)(66946007)(66446008)(64756008)(76116006)(7696005)(66476007)(33656002)(53546011)(6506007)(86362001)(26005)(8936002)(478600001)(85182001)(55016002)(186003)(9686003)(6916009)(8676002)(316002)(5660300002)(52536014)(71200400001)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: JaU+Q3uubYPOpnJBQkt7Ny6Lv+rHzBVXC/+K9CN1zNdMx4ZlunHFoU0cvMrC6VAfY1euxpacN9QxUgEFQdR9TEor61Do5RofLuocSzn/FB4mF1YB6EiluplRvanGVIMLS7Yt7Q+8jeWR3EkU0zt+y209J1r/fiT33j0V03FPtlFIl0pd+T+U0RI0kJgmbcj1BjKTSTSs9dxzaig9iMiimonaiwSzYnHEwpu4ukvP4/NuNVTwgCRmCJgaddtUIdKgioxBs5dvQngfkIId1nNjLScNaYi+Oem5vNjbv5gtS/uCesizzRT7pE9P0SNxQFWTejYxh0TaosjYQWcmbDV+awiS/eocXRfTAEyXzo3sp33co8FJvUDBuxLnWouvq1ZvERemNQ8cvQssXSITRy0NVos8ElUHai3LTfbjEFtMspE8U3lsmJv8cxzQBGJeKfE0+DVVRZEvEpJ6kIvs9hpOg2AgkndkfzbxUsbZrF7zex4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: moxa.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f5f1144-cf20-4c18-65da-08d82958849d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 07:19:02.9674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5571c7d4-286b-47f6-9dd5-0aa688773c8e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wc98KsE1l6G+y5kyVLvj2bIjuhyr+ptrKTsWx9tqnnUXibQS50bXVBJVxhhD9ev1pmlgxcfmrlVEevQuNsYOQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR01MB2244
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A previous change introduced the usage of DDW as a bigger indirect DMA
-mapping when the DDW available size does not map the whole partition.
-
-As most of the code that manipulates direct mappings was reused for
-indirect mappings, it's necessary to rename all names and debug/info
-messages to reflect that it can be used for both kinds of mapping.
-
-Also, defines DEFAULT_DMA_WIN as "ibm,dma-window" to document that
-it's the name of the default DMA window.
-
-Those changes are not supposed to change how the code works in any
-way, just adjust naming.
-
-Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
----
- arch/powerpc/platforms/pseries/iommu.c | 100 +++++++++++++------------
- 1 file changed, 52 insertions(+), 48 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-index 6e1c9d1599d1..5ca952d966a4 100644
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -339,7 +339,7 @@ struct dynamic_dma_window_prop {
- 	__be32	window_shift;	/* ilog2(tce_window_size) */
- };
- 
--struct direct_window {
-+struct dma_win {
- 	struct device_node *device;
- 	const struct dynamic_dma_window_prop *prop;
- 	struct list_head list;
-@@ -359,12 +359,13 @@ struct ddw_create_response {
- 	u32 addr_lo;
- };
- 
--static LIST_HEAD(direct_window_list);
-+static LIST_HEAD(dma_win_list);
- /* prevents races between memory on/offline and window creation */
--static DEFINE_SPINLOCK(direct_window_list_lock);
-+static DEFINE_SPINLOCK(dma_win_list_lock);
- /* protects initializing window twice for same device */
--static DEFINE_MUTEX(direct_window_init_mutex);
-+static DEFINE_MUTEX(dma_win_init_mutex);
- #define DMA64_PROPNAME "linux,dma64-ddr-window-info"
-+#define DEFAULT_DMA_WIN "ibm,dma-window"
- 
- static int tce_clearrange_multi_pSeriesLP(unsigned long start_pfn,
- 					unsigned long num_pfn, const void *arg)
-@@ -697,15 +698,18 @@ static void pci_dma_bus_setup_pSeriesLP(struct pci_bus *bus)
- 	pr_debug("pci_dma_bus_setup_pSeriesLP: setting up bus %pOF\n",
- 		 dn);
- 
--	/* Find nearest ibm,dma-window, walking up the device tree */
-+	/*
-+	 * Find nearest ibm,dma-window (default DMA window), walking up the
-+	 * device tree
-+	 */
- 	for (pdn = dn; pdn != NULL; pdn = pdn->parent) {
--		dma_window = of_get_property(pdn, "ibm,dma-window", NULL);
-+		dma_window = of_get_property(pdn, DEFAULT_DMA_WIN, NULL);
- 		if (dma_window != NULL)
- 			break;
- 	}
- 
- 	if (dma_window == NULL) {
--		pr_debug("  no ibm,dma-window property !\n");
-+		pr_debug("  no %s property !\n", DEFAULT_DMA_WIN);
- 		return;
- 	}
- 
-@@ -803,11 +807,11 @@ static void remove_dma_window(struct device_node *np, u32 *ddw_avail,
- 
- 	ret = rtas_call(ddw_avail[DDW_REMOVE_PE_DMA_WIN], 1, 1, NULL, liobn);
- 	if (ret)
--		pr_warn("%pOF: failed to remove direct window: rtas returned "
-+		pr_warn("%pOF: failed to remove dma window: rtas returned "
- 			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
- 			np, ret, ddw_avail[DDW_REMOVE_PE_DMA_WIN], liobn);
- 	else
--		pr_debug("%pOF: successfully removed direct window: rtas returned "
-+		pr_debug("%pOF: successfully removed dma window: rtas returned "
- 			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
- 			np, ret, ddw_avail[DDW_REMOVE_PE_DMA_WIN], liobn);
- }
-@@ -835,26 +839,26 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
- 
- 	ret = of_remove_property(np, win);
- 	if (ret)
--		pr_warn("%pOF: failed to remove direct window property: %d\n",
-+		pr_warn("%pOF: failed to remove dma window property: %d\n",
- 			np, ret);
- }
- 
- static u64 find_existing_ddw(struct device_node *pdn)
- {
--	struct direct_window *window;
--	const struct dynamic_dma_window_prop *direct64;
-+	struct dma_win *window;
-+	const struct dynamic_dma_window_prop *dma64;
- 	u64 dma_addr = 0;
- 
--	spin_lock(&direct_window_list_lock);
-+	spin_lock(&dma_win_list_lock);
- 	/* check if we already created a window and dupe that config if so */
--	list_for_each_entry(window, &direct_window_list, list) {
-+	list_for_each_entry(window, &dma_win_list, list) {
- 		if (window->device == pdn) {
--			direct64 = window->prop;
--			dma_addr = be64_to_cpu(direct64->dma_base);
-+			dma64 = window->prop;
-+			dma_addr = be64_to_cpu(dma64->dma_base);
- 			break;
- 		}
- 	}
--	spin_unlock(&direct_window_list_lock);
-+	spin_unlock(&dma_win_list_lock);
- 
- 	return dma_addr;
- }
-@@ -863,15 +867,15 @@ static int find_existing_ddw_windows(void)
- {
- 	int len;
- 	struct device_node *pdn;
--	struct direct_window *window;
--	const struct dynamic_dma_window_prop *direct64;
-+	struct dma_win *window;
-+	const struct dynamic_dma_window_prop *dma64;
- 
- 	if (!firmware_has_feature(FW_FEATURE_LPAR))
- 		return 0;
- 
- 	for_each_node_with_property(pdn, DMA64_PROPNAME) {
--		direct64 = of_get_property(pdn, DMA64_PROPNAME, &len);
--		if (!direct64)
-+		dma64 = of_get_property(pdn, DMA64_PROPNAME, &len);
-+		if (!dma64)
- 			continue;
- 
- 		window = kzalloc(sizeof(*window), GFP_KERNEL);
-@@ -882,10 +886,10 @@ static int find_existing_ddw_windows(void)
- 		}
- 
- 		window->device = pdn;
--		window->prop = direct64;
--		spin_lock(&direct_window_list_lock);
--		list_add(&window->list, &direct_window_list);
--		spin_unlock(&direct_window_list_lock);
-+		window->prop = dma64;
-+		spin_lock(&dma_win_list_lock);
-+		list_add(&window->list, &dma_win_list);
-+		spin_unlock(&dma_win_list_lock);
- 	}
- 
- 	return 0;
-@@ -1118,13 +1122,13 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	u64 dma_addr, max_addr;
- 	struct device_node *dn;
- 	u32 ddw_avail[DDW_APPLICABLE_SIZE];
--	struct direct_window *window;
-+	struct dma_win *window;
- 	struct property *win64;
- 	struct dynamic_dma_window_prop *ddwprop;
- 	struct failed_ddw_pdn *fpdn;
- 	bool default_win_removed = false;
- 
--	mutex_lock(&direct_window_init_mutex);
-+	mutex_lock(&dma_win_init_mutex);
- 
- 	dma_addr = find_existing_ddw(pdn);
- 	if (dma_addr != 0)
-@@ -1177,7 +1181,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 		struct property *default_win;
- 		int reset_win_ext;
- 
--		default_win = of_find_property(pdn, "ibm,dma-window", NULL);
-+		default_win = of_find_property(pdn, DEFAULT_DMA_WIN, NULL);
- 		if (!default_win)
- 			goto out_failed;
- 
-@@ -1206,8 +1210,8 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	} else if (query.page_size & 1) {
- 		page_shift = 12; /* 4kB */
- 	} else {
--		dev_dbg(&dev->dev, "no supported direct page size in mask %x",
--			  query.page_size);
-+		dev_dbg(&dev->dev, "no supported page size in mask %x",
-+			query.page_size);
- 		goto out_failed;
- 	}
- 
-@@ -1258,7 +1262,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	ret = walk_system_ram_range(0, memblock_end_of_DRAM() >> PAGE_SHIFT,
- 			win64->value, tce_setrange_multi_pSeriesLP_walk);
- 	if (ret) {
--		dev_info(&dev->dev, "failed to map direct window for %pOF: %d\n",
-+		dev_info(&dev->dev, "failed to map DMA window for %pOF: %d\n",
- 			 dn, ret);
- 		goto out_free_window;
- 	}
-@@ -1272,9 +1276,9 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 
- 	window->device = pdn;
- 	window->prop = ddwprop;
--	spin_lock(&direct_window_list_lock);
--	list_add(&window->list, &direct_window_list);
--	spin_unlock(&direct_window_list_lock);
-+	spin_lock(&dma_win_list_lock);
-+	list_add(&window->list, &dma_win_list);
-+	spin_unlock(&dma_win_list_lock);
- 
- 	/* Only returns the dma_addr if DDW maps the whole partition */
- 	if (len == order_base_2(max_addr))
-@@ -1303,7 +1307,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	list_add(&fpdn->list, &failed_ddw_pdn_list);
- 
- out_unlock:
--	mutex_unlock(&direct_window_init_mutex);
-+	mutex_unlock(&dma_win_init_mutex);
- 	return dma_addr;
- }
- 
-@@ -1343,7 +1347,7 @@ static void pci_dma_dev_setup_pSeriesLP(struct pci_dev *dev)
- 
- 	for (pdn = dn; pdn && PCI_DN(pdn) && !PCI_DN(pdn)->table_group;
- 	     pdn = pdn->parent) {
--		dma_window = of_get_property(pdn, "ibm,dma-window", NULL);
-+		dma_window = of_get_property(pdn, DEFAULT_DMA_WIN, NULL);
- 		if (dma_window)
- 			break;
- 	}
-@@ -1394,7 +1398,7 @@ static bool iommu_bypass_supported_pSeriesLP(struct pci_dev *pdev, u64 dma_mask)
- 	 */
- 	for (pdn = dn; pdn && PCI_DN(pdn) && !PCI_DN(pdn)->table_group;
- 			pdn = pdn->parent) {
--		dma_window = of_get_property(pdn, "ibm,dma-window", NULL);
-+		dma_window = of_get_property(pdn, DEFAULT_DMA_WIN, NULL);
- 		if (dma_window)
- 			break;
- 	}
-@@ -1412,29 +1416,29 @@ static bool iommu_bypass_supported_pSeriesLP(struct pci_dev *pdev, u64 dma_mask)
- static int iommu_mem_notifier(struct notifier_block *nb, unsigned long action,
- 		void *data)
- {
--	struct direct_window *window;
-+	struct dma_win *window;
- 	struct memory_notify *arg = data;
- 	int ret = 0;
- 
- 	switch (action) {
- 	case MEM_GOING_ONLINE:
--		spin_lock(&direct_window_list_lock);
--		list_for_each_entry(window, &direct_window_list, list) {
-+		spin_lock(&dma_win_list_lock);
-+		list_for_each_entry(window, &dma_win_list, list) {
- 			ret |= tce_setrange_multi_pSeriesLP(arg->start_pfn,
- 					arg->nr_pages, window->prop);
- 			/* XXX log error */
- 		}
--		spin_unlock(&direct_window_list_lock);
-+		spin_unlock(&dma_win_list_lock);
- 		break;
- 	case MEM_CANCEL_ONLINE:
- 	case MEM_OFFLINE:
--		spin_lock(&direct_window_list_lock);
--		list_for_each_entry(window, &direct_window_list, list) {
-+		spin_lock(&dma_win_list_lock);
-+		list_for_each_entry(window, &dma_win_list, list) {
- 			ret |= tce_clearrange_multi_pSeriesLP(arg->start_pfn,
- 					arg->nr_pages, window->prop);
- 			/* XXX log error */
- 		}
--		spin_unlock(&direct_window_list_lock);
-+		spin_unlock(&dma_win_list_lock);
- 		break;
- 	default:
- 		break;
-@@ -1455,7 +1459,7 @@ static int iommu_reconfig_notifier(struct notifier_block *nb, unsigned long acti
- 	struct of_reconfig_data *rd = data;
- 	struct device_node *np = rd->dn;
- 	struct pci_dn *pci = PCI_DN(np);
--	struct direct_window *window;
-+	struct dma_win *window;
- 
- 	switch (action) {
- 	case OF_RECONFIG_DETACH_NODE:
-@@ -1471,15 +1475,15 @@ static int iommu_reconfig_notifier(struct notifier_block *nb, unsigned long acti
- 			iommu_pseries_free_group(pci->table_group,
- 					np->full_name);
- 
--		spin_lock(&direct_window_list_lock);
--		list_for_each_entry(window, &direct_window_list, list) {
-+		spin_lock(&dma_win_list_lock);
-+		list_for_each_entry(window, &dma_win_list, list) {
- 			if (window->device == np) {
- 				list_del(&window->list);
- 				kfree(window);
- 				break;
- 			}
- 		}
--		spin_unlock(&direct_window_list_lock);
-+		spin_unlock(&dma_win_list_lock);
- 		break;
- 	default:
- 		err = NOTIFY_DONE;
--- 
-2.25.4
-
+SGkgR3JlZywNCg0KVGhhbmtzIGZvciBkZXRhaWxlZCBhbmQgZ29vZCBzdWdnZXN0aW9ucyENCg0K
+PiBGcm9tOiBsaW51eC1zZXJpYWwtb3duZXJAdmdlci5rZXJuZWwub3JnDQo+IDxsaW51eC1zZXJp
+YWwtb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgR3JlZyBLcm9haC1IYXJ0bWFu
+DQo+IFNlbnQ6IFR1ZXNkYXksIEp1bHkgMTQsIDIwMjAgMzozNiBQTQ0KPiBUbzogSm9obnNvbiBD
+SCBDaGVuICjpmbPmmK3li7MpIDxKb2huc29uQ0guQ2hlbkBtb3hhLmNvbT4NCj4gQ2M6IEppcmkg
+U2xhYnkgPGppcmlzbGFieUBnbWFpbC5jb20+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+Ow0KPiBsaW51eC1zZXJpYWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hd
+IHR0eTogQWRkIE1PWEEgTlBvcnQgUmVhbCBUVFkgRHJpdmVyDQo+IA0KPiBPbiBUdWUsIEp1bCAx
+NCwgMjAyMCBhdCAwNjoyNDo0MkFNICswMDAwLCBKb2huc29uIENIIENoZW4gKOmZs+aYreWLsykg
+d3JvdGU6DQo+ID4gVGhpcyBkcml2ZXIgc3VwcG9ydHMgdHR5IGZ1bmN0aW9ucyBmb3IgYWxsIG9m
+IE1PWEEncyBOUG9ydCBzZXJpZXMgd2l0aA0KPiA+IHY1LjAuIFVzaW5nIHRoaXMgZHJpdmVyLCBo
+b3N0IHBhcnQgY2FuIHVzZSB0dHkgdG8gY29ubmVjdCBOUG9ydCBkZXZpY2UNCj4gPiBzZXJ2ZXIg
+YnkgZXRoZXJuZXQuDQo+ID4NCj4gPiBUaGUgZm9sbG93aW5nIE1veGEgcHJvZHVjdHMgYXJlIHN1
+cHBvcnRlZDoNCj4gPiAqIENOMjYwMCBTZXJpZXMNCj4gPiAqIENOMjUwMCBTZXJpZXMNCj4gPiAq
+IE5Qb3J0IERFIFNlcmllcw0KPiA+ICogTlBvcnQgNTAwMEEtTTEyIFNlcmllcw0KPiA+ICogTlBv
+cnQgNTEwMCBTZXJpZXMNCj4gPiAqIE5Qb3J0IDUyMDAgU2VyaWVzDQo+ID4gKiBOUG9ydCA1NDAw
+IFNlcmllcw0KPiA+ICogTlBvcnQgNTYwMCBEZXNrdG9wIFNlcmllcw0KPiA+ICogTlBvcnQgNTYw
+MCBSYWNrbW91bnQgU2VyaWVzDQo+ID4gKiBOUG9ydCBXaXJlbGVzcyBTZXJpZXMNCj4gPiAqIE5Q
+b3J0IElBNTAwMCBTZXJpZXMNCj4gPiAqIE5Qb3J0IDYwMDAgU2VyaWVzDQo+ID4gKiBOUG9ydCBT
+ODAwMCBTZXJpZXMNCj4gPiAqIE5Qb3J0IFM4NDU1SSBTZXJpZXMNCj4gPiAqIE5Qb3J0IFM5MDAw
+IFNlcmllcw0KPiA+ICogTkUtNDEwMCBTZXJpZXMNCj4gPiAqIE1paU5lUG9ydCBTZXJpZXMNCj4g
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvaG5zb24gQ2hlbiA8am9obnNvbmNoLmNoZW5AbW94YS5j
+b20+DQo+ID4gU2lnbmVkLW9mZi1ieTogSmFzb24gQ2hlbiA8amFzb24uY2hlbkBtb3hhLmNvbT4N
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBEYW5ueSBMaW4gPGRhbm55LmxpbkBtb3hhLmNvbT4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBWaWN0b3IgWXUgPHZpY3Rvci55dUBtb3hhLmNvbT4NCj4gPiAtLS0NCj4g
+PiAgZHJpdmVycy90dHkvS2NvbmZpZyAgIHwgICAxMSArDQo+ID4gIGRyaXZlcnMvdHR5L01ha2Vm
+aWxlICB8ICAgIDEgKw0KPiA+ICBkcml2ZXJzL3R0eS9ucHJlYWwyLmMgfCAzMDQyDQo+ID4gKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgZHJpdmVycy90dHkv
+bnByZWFsMi5oIHwgIDE0MCArKw0KPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDMxOTQgaW5zZXJ0aW9u
+cygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy90dHkvbnByZWFsMi5jICBjcmVh
+dGUgbW9kZSAxMDA2NDQNCj4gPiBkcml2ZXJzL3R0eS9ucHJlYWwyLmgNCj4gPg0KPiA+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL3R0eS9LY29uZmlnIGIvZHJpdmVycy90dHkvS2NvbmZpZyBpbmRleA0K
+PiA+IDkzZmQ5ODRlYjJmNS4uNzliNTQ1MjY5YjcxIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMv
+dHR5L0tjb25maWcNCj4gPiArKysgYi9kcml2ZXJzL3R0eS9LY29uZmlnDQo+ID4gQEAgLTI1OSw2
+ICsyNTksMTcgQEAgY29uZmlnIE1PWEFfU01BUlRJTw0KPiA+ICAJICBUaGlzIGRyaXZlciBjYW4g
+YWxzbyBiZSBidWlsdCBhcyBhIG1vZHVsZS4gVGhlIG1vZHVsZSB3aWxsIGJlIGNhbGxlZA0KPiA+
+ICAJICBteHNlci4gSWYgeW91IHdhbnQgdG8gZG8gdGhhdCwgc2F5IE0gaGVyZS4NCj4gPg0KPiA+
+ICtjb25maWcgTU9YQV9OUE9SVF9SRUFMX1RUWQ0KPiA+ICsJdHJpc3RhdGUgIk1veGEgTlBvcnQg
+UmVhbCBUVFkgc3VwcG9ydCB2NS4wIg0KPiA+ICsJaGVscA0KPiA+ICsJICBTYXkgWSBoZXJlIGlm
+IHlvdSBoYXZlIGEgTW94YSBOUG9ydCBzZXJpYWwgZGV2aWNlIHNlcnZlci4NCj4gPiArDQo+ID4g
+KwkgIFRoZSBwdXJwb3NlIG9mIHRoaXMgZHJpdmVyIGlzIHRvIG1hcCBOUG9ydCBzZXJpYWwgcG9y
+dCB0byBob3N0IHR0eQ0KPiA+ICsJICBwb3J0LiBVc2luZyB0aGlzIGRyaXZlciwgeW91IGNhbiB1
+c2UgTlBvcnQgc2VyaWFsIHBvcnQgYXMgbG9jYWwgdHR5IHBvcnQuDQo+ID4gKw0KPiA+ICsJICBU
+aGlzIGRyaXZlciBjYW4gYWxzbyBiZSBidWlsdCBhcyBhIG1vZHVsZS4gVGhlIG1vZHVsZSB3aWxs
+IGJlIGNhbGxlZA0KPiA+ICsJICBucHJlYWwyIGJ5IHNldHRpbmcgTS4NCj4gPiArDQo+ID4gIGNv
+bmZpZyBTWU5DTElOSw0KPiA+ICAJdHJpc3RhdGUgIk1pY3JvZ2F0ZSBTeW5jTGluayBjYXJkIHN1
+cHBvcnQiDQo+ID4gIAlkZXBlbmRzIG9uIFNFUklBTF9OT05TVEFOREFSRCAmJiBQQ0kgJiYgSVNB
+X0RNQV9BUEkgZGlmZiAtLWdpdA0KPiA+IGEvZHJpdmVycy90dHkvTWFrZWZpbGUgYi9kcml2ZXJz
+L3R0eS9NYWtlZmlsZSBpbmRleA0KPiA+IDAyMGIxY2Q5Mjk0Zi4uNmQwNzk4NWQ2OTYyIDEwMDY0
+NA0KPiA+IC0tLSBhL2RyaXZlcnMvdHR5L01ha2VmaWxlDQo+ID4gKysrIGIvZHJpdmVycy90dHkv
+TWFrZWZpbGUNCj4gPiBAQCAtMjQsNiArMjQsNyBAQCBvYmotJChDT05GSUdfQ1lDTEFERVMpCQkr
+PSBjeWNsYWRlcy5vDQo+ID4gIG9iai0kKENPTkZJR19JU0kpCQkrPSBpc2ljb20ubw0KPiA+ICBv
+YmotJChDT05GSUdfTU9YQV9JTlRFTExJTykJKz0gbW94YS5vDQo+ID4gIG9iai0kKENPTkZJR19N
+T1hBX1NNQVJUSU8pCSs9IG14c2VyLm8NCj4gPiArb2JqLSQoQ09ORklHX01PWEFfTlBPUlRfUkVB
+TF9UVFkpICs9IG5wcmVhbDIubw0KPiA+ICBvYmotJChDT05GSUdfTk9aT01JKQkJKz0gbm96b21p
+Lm8NCj4gPiAgb2JqLSQoQ09ORklHX05VTExfVFRZKQkgICAgICAgICs9IHR0eW51bGwubw0KPiA+
+ICBvYmotJChDT05GSUdfUk9DS0VUUE9SVCkJKz0gcm9ja2V0Lm8NCj4gPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy90dHkvbnByZWFsMi5jIGIvZHJpdmVycy90dHkvbnByZWFsMi5jIG5ldyBmaWxlDQo+
+ID4gbW9kZSAxMDA2NDQgaW5kZXggMDAwMDAwMDAwMDAwLi42NWM3NzM0MjA3NTUNCj4gPiAtLS0g
+L2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy90dHkvbnByZWFsMi5jDQo+ID4gQEAgLTAsMCAr
+MSwzMDQyIEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKw0KPiA+
+ICsvKg0KPiA+ICsgKiBucHJlYWwyLmMgIC0tIE1PWEEgTlBvcnQgU2VydmVyIGZhbWlseSBSZWFs
+IFRUWSBkcml2ZXIuDQo+ID4gKyAqDQo+ID4gKyAqIENvcHlyaWdodCAoYykgMTk5OS0yMDIwICBN
+b3hhIFRlY2hub2xvZ2llcyAoc3VwcG9ydEBtb3hhLmNvbSkNCj4gPiArICoNCj4gPiArICogU3Vw
+cG9ydHMgdGhlIGZvbGxvd2luZyBNb3hhIFByb2R1Y3Q6DQo+ID4gKyAqIENOMjYwMCBTZXJpZXMN
+Cj4gPiArICogQ04yNTAwIFNlcmllcw0KPiA+ICsgKiBOUG9ydCBERSBTZXJpZXMNCj4gPiArICog
+TlBvcnQgNTAwMEEtTTEyIFNlcmllcw0KPiA+ICsgKiBOUG9ydCA1MTAwIFNlcmllcw0KPiA+ICsg
+KiBOUG9ydCA1MjAwIFNlcmllcw0KPiA+ICsgKiBOUG9ydCA1NDAwIFNlcmllcw0KPiA+ICsgKiBO
+UG9ydCA1NjAwIERlc2t0b3AgU2VyaWVzDQo+ID4gKyAqIE5Qb3J0IDU2MDAgUmFja21vdW50IFNl
+cmllcw0KPiA+ICsgKiBOUG9ydCBXaXJlbGVzcyBTZXJpZXMNCj4gPiArICogTlBvcnQgSUE1MDAw
+IFNlcmllcw0KPiA+ICsgKiBOUG9ydCA2MDAwIFNlcmllcw0KPiA+ICsgKiBOUG9ydCBTODAwMCBT
+ZXJpZXMNCj4gPiArICogTlBvcnQgUzg0NTVJIFNlcmllcw0KPiA+ICsgKiBOUG9ydCBTOTAwMCBT
+ZXJpZXMNCj4gPiArICogTkUtNDEwMCBTZXJpZXMNCj4gPiArICogTWlpTmVQb3J0IFNlcmllcw0K
+PiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPg0KPiA+ICsjaW5j
+bHVkZSA8bGludXgvZXJybm8uaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2ZjbnRsLmg+DQo+ID4g
+KyNpbmNsdWRlIDxsaW51eC92ZXJzaW9uLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pbml0Lmg+
+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pb3BvcnQuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2lu
+dGVycnVwdC5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbWFqb3IuaD4NCj4gPiArI2luY2x1ZGUg
+PGxpbnV4L21tLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiArI2luY2x1
+ZGUgPGxpbnV4L3B0cmFjZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcG9sbC5oPg0KPiA+ICsj
+aW5jbHVkZSA8bGludXgvcHJvY19mcy5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvdWFjY2Vzcy5o
+Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvc2VyaWFsLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9z
+ZXJpYWxfcmVnLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ID4gKyNpbmNsdWRl
+IDxsaW51eC9zdHJpbmcuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3NpZ25hbC5oPg0KPiA+ICsj
+aW5jbHVkZSA8bGludXgvc2NoZWQuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3R0eS5oPg0KPiA+
+ICsjaW5jbHVkZSA8bGludXgvdHR5X2ZsaXAuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3RpbWVy
+Lmg+DQo+ID4gKyNpbmNsdWRlICJucHJlYWwyLmgiDQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHR0
+eW1ham9yID0gTlBSRUFMTUFKT1I7DQo+ID4gK3N0YXRpYyBpbnQgdmVyYm9zZSA9IDE7DQo+ID4g
+Kw0KPiA+ICtNT0RVTEVfQVVUSE9SKCI8c3VwcG9ydEBtb3hhLmNvbT4iKTsNCj4gPiArTU9EVUxF
+X0RFU0NSSVBUSU9OKCJNT1hBIEFzeW5jL05Qb3J0IFNlcnZlciBGYW1pbHkgUmVhbCBUVFkNCj4g
+RHJpdmVyIik7DQo+ID4gK21vZHVsZV9wYXJhbSh0dHltYWpvciwgaW50LCAwKTsgbW9kdWxlX3Bh
+cmFtKHZlcmJvc2UsIGludCwgMDY0NCk7DQo+ID4gK01PRFVMRV9WRVJTSU9OKE5QUkVBTF9WRVJT
+SU9OKTsgTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOw0KPiA+ICsNCj4gPiArc3RydWN0IHNlcnZlcl9z
+ZXR0aW5nX3N0cnVjdCB7DQo+ID4gKwlpbnQzMl90IHNlcnZlcl90eXBlOw0KPiA+ICsJaW50MzJf
+dCBkaXNhYmxlX2ZpZm87DQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgbnByZWFsX3N0cnVj
+dCB7DQo+ID4gKwlzdHJ1Y3QgdHR5X3BvcnQgdHR5UG9ydDsNCj4gPiArCXN0cnVjdCB3b3JrX3N0
+cnVjdCB0cXVldWU7DQo+ID4gKwlzdHJ1Y3Qgd29ya19zdHJ1Y3QgcHJvY2Vzc19mbGlwX3RxdWV1
+ZTsNCj4gPiArCXN0cnVjdCBrdGVybWlvcyBub3JtYWxfdGVybWlvczsNCj4gPiArCXN0cnVjdCBr
+dGVybWlvcyBjYWxsb3V0X3Rlcm1pb3M7DQo+ID4gKwkvKiBrZXJuZWwgY291bnRlcnMgZm9yIHRo
+ZSA0IGlucHV0IGludGVycnVwdHMgKi8NCj4gPiArCXN0cnVjdCBhc3luY19pY291bnQgaWNvdW50
+Ow0KPiA+ICsJc3RydWN0IHNlbWFwaG9yZSByeF9zZW1hcGhvcmU7DQo+ID4gKwlzdHJ1Y3QgbmRf
+c3RydWN0ICpuZXRfbm9kZTsNCj4gPiArCXN0cnVjdCB0dHlfc3RydWN0ICp0dHk7DQo+ID4gKwlz
+dHJ1Y3QgcGlkICpzZXNzaW9uOw0KPiA+ICsJc3RydWN0IHBpZCAqcGdycDsNCj4gPiArCXdhaXRf
+cXVldWVfaGVhZF90IG9wZW5fd2FpdDsNCj4gPiArCXdhaXRfcXVldWVfaGVhZF90IGNsb3NlX3dh
+aXQ7DQo+ID4gKwl3YWl0X3F1ZXVlX2hlYWRfdCBkZWx0YV9tc3Jfd2FpdDsNCj4gPiArCXVuc2ln
+bmVkIGxvbmcgYmF1ZF9iYXNlOw0KPiA+ICsJdW5zaWduZWQgbG9uZyBldmVudDsNCj4gPiArCXVu
+c2lnbmVkIHNob3J0IGNsb3Npbmdfd2FpdDsNCj4gPiArCWludCBwb3J0Ow0KPiA+ICsJaW50IGZs
+YWdzOw0KPiA+ICsJaW50IHR5cGU7ICAvKiBVQVJUIHR5cGUgKi8NCj4gPiArCWludCB4bWl0X2Zp
+Zm9fc2l6ZTsNCj4gPiArCWludCBjdXN0b21fZGl2aXNvcjsNCj4gPiArCWludCB4X2NoYXI7IC8q
+IHhvbi94b2ZmIGNoYXJhY3RlciAqLw0KPiA+ICsJaW50IGNsb3NlX2RlbGF5Ow0KPiA+ICsJaW50
+IG1vZGVtX2NvbnRyb2w7IC8qIE1vZGVtIGNvbnRyb2wgcmVnaXN0ZXIgKi8NCj4gPiArCWludCBt
+b2RlbV9zdGF0dXM7ICAvKiBMaW5lIHN0YXR1cyAqLw0KPiA+ICsJaW50IGNvdW50OyAvKiAjIG9m
+IGZkIG9uIGRldmljZSAqLw0KPiA+ICsJaW50IHhtaXRfaGVhZDsNCj4gPiArCWludCB4bWl0X3Rh
+aWw7DQo+ID4gKwlpbnQgeG1pdF9jbnQ7DQo+ID4gKwl1bnNpZ25lZCBjaGFyICp4bWl0X2J1ZjsN
+Cj4gPiArDQo+ID4gKwkvKg0KPiA+ICsJICogV2UgdXNlIHNwaW5fbG9ja19pcnFzYXZlIGluc3Rl
+YWQgb2Ygc2VtYXBob25yZSBoZXJlLg0KPiA+ICsJICogUmVhc29uOiBXaGVuIHdlIHVzZSBwcHBk
+IHRvIGRpYWxvdXQgdmlhIFJlYWwgVFRZIGRyaXZlciwNCj4gPiArCSAqIHNvbWUgZHJpdmVyIGZ1
+bmN0aW9ucywgc3VjaCBhcyBucHJlYWxfd3JpdGUoKSwgd291bGQgYmUNCj4gPiArCSAqIGludm9r
+ZWQgdW5kZXIgaW50ZXJycHV0ZSBtb2RlIHdoaWNoIGNhdXNlcyB3YXJuaW5nIGluDQo+ID4gKwkg
+KiBkb3duL3VwIHR4X3NlbWFwaG9yZS4NCj4gPiArCSAqLw0KPiA+ICsJc3BpbmxvY2tfdCB0eF9s
+b2NrOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RydWN0IG5kX3N0cnVjdCB7DQo+ID4gKwlzdHJ1
+Y3Qgc2VtYXBob3JlIGNtZF9zZW1hcGhvcmU7DQo+ID4gKwlzdHJ1Y3QgcHJvY19kaXJfZW50cnkg
+Km5vZGVfZW50cnk7DQo+ID4gKwlzdHJ1Y3QgbnByZWFsX3N0cnVjdCAqdHR5X25vZGU7DQo+ID4g
+KwlzdHJ1Y3Qgc2VtYXBob3JlIHNlbWFwaG9yZTsNCj4gPiArCXdhaXRfcXVldWVfaGVhZF90IGlu
+aXRpYWxpemVfd2FpdDsNCj4gPiArCXdhaXRfcXVldWVfaGVhZF90IHNlbGVjdF9pbl93YWl0Ow0K
+PiA+ICsJd2FpdF9xdWV1ZV9oZWFkX3Qgc2VsZWN0X291dF93YWl0Ow0KPiA+ICsJd2FpdF9xdWV1
+ZV9oZWFkX3Qgc2VsZWN0X2V4X3dhaXQ7DQo+ID4gKwl3YWl0X3F1ZXVlX2hlYWRfdCBjbWRfcnNw
+X3dhaXQ7DQo+ID4gKwlpbnQzMl90IHNlcnZlcl90eXBlOw0KPiA+ICsJaW50IGRvX3Nlc3Npb25f
+cmVjb3ZlcnlfbGVuOw0KPiA+ICsJaW50IGNtZF9yc3BfZmxhZzsNCj4gPiArCWludCB0eF9yZWFk
+eTsNCj4gPiArCWludCByeF9yZWFkeTsNCj4gPiArCWludCBjbWRfcmVhZHk7DQo+ID4gKwlpbnQg
+d2FpdF9vcXVldWVfcmVzcG9uc2VkOw0KPiA+ICsJaW50IG9xdWV1ZTsNCj4gPiArCWludCByc3Bf
+bGVuZ3RoOw0KPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFnOw0KPiA+ICsJdW5zaWduZWQgY2hhciBj
+bWRfYnVmZmVyWzg0XTsNCj4gPiArCXVuc2lnbmVkIGNoYXIgcnNwX2J1ZmZlcls4NF07DQo+IA0K
+PiBZb3Ugc2VlbSB0byBoYXZlIHR3byAic3RhdGljIiBidWZmZXJzIGhlcmUsIGZvciB5b3VyIGRl
+dmljZSwgdGhhdCB5b3UNCj4gc2VtaS1yYW5kb21seSB3cml0ZSB0byBhbGwgb3ZlciB0aGUgcGxh
+Y2UsIGJ1dCBJIGNhbid0IGZpbmQgYW55IGxvY2tpbmcgb3INCj4gY29vcmRpbmF0aW9uIGJldHdl
+ZW4gdGhpbmdzIHRoYXQgcHJldmVudHMgbXVsdGlwbGUgY29tbWFuZHMgZnJvbSBub3QganVzdA0K
+PiBvdmVyd3JpdHRpbmcgZWFjaCBvdGhlci4NCj4gDQpGb3IgY21kX2J1ZmZlcltdLCB3ZSB1c2Ug
+bnByZWFsX3dhaXRfYW5kX3NldF9jb21tYW5kKCkgdG8gbWFrZSBzdXJlIGNtZF9idWZmZXJbXSBp
+cyBzYWZlIHRvIGJlIHdyaXR0ZW4gYnkgY2hlY2tpbmcgImNtZF9idWZmZXJbMF0gPT0gMCIuDQoN
+CkZvciByc3BfYnVmZmVyW10sIHdlIHVzZSBucHJlYWxfd2FpdF9jb21tYW5kX2NvbXBsZXRlZCgp
+IHRvIG1ha2Ugc3VyZSByc3BfYnVmZmVyW10gaXMgZGVzaXJlZCBieSBjaGVja2luZyByc3BfYnVm
+ZmVyWzBdIGFuZCByc3BfYnVmZmVyWzFdLiBDb21tYW5kX3NldCBhbmQgY29tbWFuZCBzaG91bGQg
+YmUgY2hlY2tlZC4gQmVzaWRlcywgcnNwX2J1ZmZlcltdIGlzIGdvdCBmcm9tIHVzZXIgc3BhY2Ug
+YnkgIk5QUkVBTF9ORVRfQ01EX1JFU1BPTlNFIiBpbiBucHJlYWxfbmV0X2lvY3RsKCkuDQoNCj4g
+QWxzbywgaG93IGRvZXMgdGhlIGRhdGEgZ2V0IHNlbnQgdG8gdGhlIGhhcmR3YXJlIGF0IGFsbD8g
+IEkgc2VlIGNtZF9idWZmZXJbXQ0KPiBiZWluZyB3cml0dGVuIHRvLCBidXQgd2hhdCByZWFkcyBm
+cm9tIGl0IGFuZCBob3cgZG9lcyB0aGUgaGFyZHdhcmUgZ2V0IHRoZQ0KPiBkYXRhPw0KDQpBY3R1
+YWxseSB3ZSBuZWVkIHRvIGJvdGggTlBvcnQgZHJpdmVyICh0aGlzIGRyaXZlcikgYW5kIE5wcmVh
+bCBkYWVtb24gKHVzZXJzcGFjZSkgdG8gbGV0IEhXIHdvcmsuIE5wcmVhbCBkYWVtb24gY2FuIGNv
+bW11bmljYXRlIHdpdGggSFcgYnkgc29ja2V0LCBhbmQgTnByZWFsIGRlYW1vbiBjb21tdW5pY2F0
+ZXMgd2l0aCBOcG9ydCBkcml2ZXIgYnkgIm5wcmVhbF9uZXRfZm9wcyIuIFdoZW4gY29tbWFuZHMg
+YXJlIHJlYWR5IGZvciBkcml2ZXIgcGFydCwgaXQgd2lsbCB3YWtlIHVwIHBvbGwgZXZlbnQgdG8g
+bGV0IE5wb3J0IGRhZW1vbiBrbm93Lg0KDQpCZXN0IHJlZ2FyZHMsDQpKb2huc29uDQo+IA0KPiBX
+aGF0IGFtIEkgbWlzc2luZyBoZXJlPw0KPiANCj4gdGhhbmtzLA0KPiANCj4gZ3JlZyBrLWgNCg0K
