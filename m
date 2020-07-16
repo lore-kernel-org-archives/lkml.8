@@ -6,55 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14001C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3511AC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF83B20739
+	by mail.kernel.org (Postfix) with ESMTP id 1A2A520739
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgGPM4F (ORCPT
+        id S1726963AbgGPM4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:56:05 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46607 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbgGPM4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:56:02 -0400
+        Thu, 16 Jul 2020 08:56:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbgGPM4B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:56:01 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B978C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 05:56:01 -0700 (PDT)
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4B6vPn2Rw8z9sTX; Thu, 16 Jul 2020 22:55:56 +1000 (AEST)
+        id 4B6vPh0ndYz9sV1; Thu, 16 Jul 2020 22:55:52 +1000 (AEST)
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     linux-kernel@vger.kernel.org, ajd@linux.ibm.com, arnd@arndb.de,
-        fbarrat@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        gregkh@linuxfoundation.org
-In-Reply-To: <20200713175506.36676-1-grandmaster@al2klimov.de>
-References: <20200713175506.36676-1-grandmaster@al2klimov.de>
-Subject: Re: [PATCH] ocxl: Replace HTTP links with HTTPS ones
-Message-Id: <159490401723.3805857.13113660971237867416.b4-ty@ellerman.id.au>
-Date:   Thu, 16 Jul 2020 22:55:56 +1000 (AEST)
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <810bd8840ef990a200f58c9dea9abe767ca02a3a.1594146723.git.christophe.leroy@csgroup.eu>
+References: <810bd8840ef990a200f58c9dea9abe767ca02a3a.1594146723.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH] powerpc/signal64: Don't opencode page prefaulting
+Message-Id: <159490400694.3805857.15212813327289950599.b4-ty@ellerman.id.au>
+Date:   Thu, 16 Jul 2020 22:55:52 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 19:55:06 +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+On Tue, 7 Jul 2020 18:32:25 +0000 (UTC), Christophe Leroy wrote:
+> Instead of doing a __get_user() from the first and last location
+> into a tmp var which won't be used, use fault_in_pages_readable()
 
 Applied to powerpc/next.
 
-[1/1] ocxl: Replace HTTP links with HTTPS ones
-      https://git.kernel.org/powerpc/c/07497137a5efa9b2628c18083e8b07b33160153d
+[1/1] powerpc/signal64: Don't opencode page prefaulting
+      https://git.kernel.org/powerpc/c/96032f983ca32ad1d43c73da922dbc7022754c3c
 
 cheers
