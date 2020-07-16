@@ -2,106 +2,168 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CF5C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 416E5C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C84207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18DCC20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:21:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tLibSqDi"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="n8TtjlSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgGPVS7 (ORCPT
+        id S1726337AbgGPVU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54578 "EHLO
+        Thu, 16 Jul 2020 17:20:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgGPVS6 (ORCPT
+        with ESMTP id S1726104AbgGPVU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:18:58 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B96C061755;
-        Thu, 16 Jul 2020 14:18:58 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id k17so4722370lfg.3;
-        Thu, 16 Jul 2020 14:18:58 -0700 (PDT)
+        Thu, 16 Jul 2020 17:20:57 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33699C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:20:57 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id l1so7645627ioh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:20:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=FJ3bW/4MDplVqCGVWSq/Y4HTWcLjazCOxA2VaAymdio=;
-        b=tLibSqDixVLggiT3a5OEyl/yqOUjhTW3gev2IISxArAok+qzQagmcK40ICetTX/JsF
-         pWKvcs/Boas7uA0vEFBQWFR98U6cMFrQkcr7rEV+D+OSeG812R96mLerKlXtpuDVBPbT
-         fQCI9QIuFT1/ctJdTqT7S8yTb0pBRMgpEKc94HhUlpZOmtAJRbcmMO1yC6kUWuu5/7mQ
-         cMQaN0eIY+4bHK68yRKFCx7g+dDq1KGMzJ6DC+U6c2ahU7cviE967FgMABZIiVOy+WJ+
-         majaZjoEa3i21JrpzGoXOMy6nR5IlsHmOWCBlor3T/xH7BfwaeU9JC4kXQQnq6NWLz0d
-         ZWLQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LEv+cQHA0XVbPMchrlnqMxvR2K1AYW3g6zK4UFsmFr4=;
+        b=n8TtjlSgQK6zU0sdra5ATCoBC6aOE8/1mnUXbCo8BmXqg8Y12GIOpFWzYBy40wj23U
+         JmoMk0rduLiaC+UVOW7D/nGGfwTrey+2CrevmYppsxQULo8eDxbunzsZNk0LLJ6HtOGq
+         ZsscAzjF0679jB4Qb+S39HskAxrgsRKj9NoYzU+iFB/OVxvFtbwgib1KEwtVPGcaB6SG
+         qp3z1ZJ7zcxrN121ZMsjZNknSEJCYp95O85MD4wG3pGulD20kBSlPl0xXhVLAQJgbXC6
+         goO5rKY/VaWec0XlG3xAf+9pbAmCycTC5aJ9vYExN1xKg352hKcLAEpkifJF+Fryj3mZ
+         coZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=FJ3bW/4MDplVqCGVWSq/Y4HTWcLjazCOxA2VaAymdio=;
-        b=RH1b6KoXEMctZxdYEiq+D18ETwF7IEHzPxithqEpezAcez2p3yjIOfUTILrKKd+0ph
-         jdyKQuuhadQ+9xh3kBzdGdEbt1YjaGFS8oiGuce6bcnRPT4CX9YWTGVuRZf/kR0Hp+Bv
-         ltacbbTb1zQyl1Rux7Nij+kCj8Ib/AnfyYjBxf5ACk4BEM6VV/gXy08QazteyGKL40Ui
-         Ts8G0YY5dL+JdNbiHwjGxyVuj5JtKg8ZeY0UlVGxMWOFyASCatJx5tIIJzIlmosOUgAE
-         RHtAPkBz9PBFruQAkGB+Q1zARsMksJadkXEGUE7qediybMLT2KAijvVFcZvlHC3WhRmr
-         RY6w==
-X-Gm-Message-State: AOAM532IA+yrkXfPA81sckTpKTwdzf2sV9Frgp3Am5k9IEkIcbdqQA0I
-        U3uaoLE2/E11qjUGDVQL35U=
-X-Google-Smtp-Source: ABdhPJw9l3DlJWTKFiEKS7TvlzylVC4K8ePaVh2ivhyQrRffemw7utu2lIUAIrEiZLLKRnZ2sza0rA==
-X-Received: by 2002:ac2:4557:: with SMTP id j23mr3179716lfm.124.1594934336863;
-        Thu, 16 Jul 2020 14:18:56 -0700 (PDT)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id w15sm1421647lff.25.2020.07.16.14.18.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 14:18:56 -0700 (PDT)
-From:   Sergey Organov <sorganov@gmail.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v3 net] net: fec: fix hardware time stamping by external
- devices
-References: <20200706142616.25192-1-sorganov@gmail.com>
-        <20200714162802.11926-1-sorganov@gmail.com>
-        <20200716112432.127b9d99@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <87a6zz9owa.fsf@osv.gnss.ru>
-        <20200716140602.2a23530b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Date:   Fri, 17 Jul 2020 00:18:55 +0300
-In-Reply-To: <20200716140602.2a23530b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        (Jakub Kicinski's message of "Thu, 16 Jul 2020 14:06:02 -0700")
-Message-ID: <87blkf88g0.fsf@osv.gnss.ru>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LEv+cQHA0XVbPMchrlnqMxvR2K1AYW3g6zK4UFsmFr4=;
+        b=oDVHZQcCGx8EMtXjhqePk1Am0ugWF3TkO/nzRrdNMtnzXmrRIPPGeOXH3MEFvUB9FV
+         vqcov2AI1GLf4BmOlINyRF1BHVJRHR6iStnYDv02Z7sHBu5I1v+eaLXNINnh5a9JsNhp
+         vNimlqxtBiS3FoU0vrtnysNuNkW3FOxF9oRDLxN/g22wpRltMkvJKOXWPOxu51mv35Yn
+         1KjaSJymkj900B5RzCsMm+OrFUKjpCL7pWgqcR+/zMCq3Q7/J2+sX6Dv1HFP1qGwoEyh
+         rVjWe1XXbDcSSXUnoiJw1nY9cZxsWTVRvUXtPyIAsUEwKoUVawpoJCukL5h+5FlZ0rI2
+         VjvQ==
+X-Gm-Message-State: AOAM533wD1iZ3CS6LUe8YLCzYX8AtxodRyw5Ggjwx5joLEeayRGril3+
+        ODLdWR39mSGNCI2aTJ8igMJJj6Q9plWi1Q==
+X-Google-Smtp-Source: ABdhPJxkpXHzsahyntnkdfZ9wBuSP7clR/vwRWqejN6tIPNw6BoYR132PIZwKZWkDVV6KrHlU2MY5A==
+X-Received: by 2002:a92:4913:: with SMTP id w19mr6104024ila.185.1594934455696;
+        Thu, 16 Jul 2020 14:20:55 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id v15sm2238190ili.28.2020.07.16.14.20.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 14:20:54 -0700 (PDT)
+Subject: Re: [PATCH RFC v2 1/3] io_uring: use an enumeration for
+ io_uring_register(2) opcodes
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        linux-kernel@vger.kernel.org
+References: <20200716124833.93667-1-sgarzare@redhat.com>
+ <20200716124833.93667-2-sgarzare@redhat.com>
+ <ca242a15-576d-4099-a5f8-85c08985e3ff@gmail.com>
+ <a2f109b2-adbf-147d-9423-7a1a4bf99967@kernel.dk>
+ <20326d79-fb5a-2480-e52a-e154e056171f@gmail.com>
+ <76879432-745d-a5ca-b171-b1391b926ea2@kernel.dk>
+Message-ID: <0357e544-d534-06d2-dc61-1169fc172d20@kernel.dk>
+Date:   Thu, 16 Jul 2020 15:20:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <76879432-745d-a5ca-b171-b1391b926ea2@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jakub Kicinski <kuba@kernel.org> writes:
+On 7/16/20 2:51 PM, Jens Axboe wrote:
+> On 7/16/20 2:47 PM, Pavel Begunkov wrote:
+>> On 16/07/2020 23:42, Jens Axboe wrote:
+>>> On 7/16/20 2:16 PM, Pavel Begunkov wrote:
+>>>> On 16/07/2020 15:48, Stefano Garzarella wrote:
+>>>>> The enumeration allows us to keep track of the last
+>>>>> io_uring_register(2) opcode available.
+>>>>>
+>>>>> Behaviour and opcodes names don't change.
+>>>>>
+>>>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>>>>> ---
+>>>>>  include/uapi/linux/io_uring.h | 27 ++++++++++++++++-----------
+>>>>>  1 file changed, 16 insertions(+), 11 deletions(-)
+>>>>>
+>>>>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+>>>>> index 7843742b8b74..efc50bd0af34 100644
+>>>>> --- a/include/uapi/linux/io_uring.h
+>>>>> +++ b/include/uapi/linux/io_uring.h
+>>>>> @@ -253,17 +253,22 @@ struct io_uring_params {
+>>>>>  /*
+>>>>>   * io_uring_register(2) opcodes and arguments
+>>>>>   */
+>>>>> -#define IORING_REGISTER_BUFFERS		0
+>>>>> -#define IORING_UNREGISTER_BUFFERS	1
+>>>>> -#define IORING_REGISTER_FILES		2
+>>>>> -#define IORING_UNREGISTER_FILES		3
+>>>>> -#define IORING_REGISTER_EVENTFD		4
+>>>>> -#define IORING_UNREGISTER_EVENTFD	5
+>>>>> -#define IORING_REGISTER_FILES_UPDATE	6
+>>>>> -#define IORING_REGISTER_EVENTFD_ASYNC	7
+>>>>> -#define IORING_REGISTER_PROBE		8
+>>>>> -#define IORING_REGISTER_PERSONALITY	9
+>>>>> -#define IORING_UNREGISTER_PERSONALITY	10
+>>>>> +enum {
+>>>>> +	IORING_REGISTER_BUFFERS,
+>>>>> +	IORING_UNREGISTER_BUFFERS,
+>>>>> +	IORING_REGISTER_FILES,
+>>>>> +	IORING_UNREGISTER_FILES,
+>>>>> +	IORING_REGISTER_EVENTFD,
+>>>>> +	IORING_UNREGISTER_EVENTFD,
+>>>>> +	IORING_REGISTER_FILES_UPDATE,
+>>>>> +	IORING_REGISTER_EVENTFD_ASYNC,
+>>>>> +	IORING_REGISTER_PROBE,
+>>>>> +	IORING_REGISTER_PERSONALITY,
+>>>>> +	IORING_UNREGISTER_PERSONALITY,
+>>>>> +
+>>>>> +	/* this goes last */
+>>>>> +	IORING_REGISTER_LAST
+>>>>> +};
+>>>>
+>>>> It breaks userspace API. E.g.
+>>>>
+>>>> #ifdef IORING_REGISTER_BUFFERS
+>>>
+>>> It can, yes, but we have done that in the past. In this one, for
+>>
+>> Ok, if nobody on the userspace side cares, then better to do that
+>> sooner than later.
 
-> On Thu, 16 Jul 2020 23:38:13 +0300 Sergey Organov wrote:
->> > Applied, and added to the stable queue, thanks!  
->> 
->> Thanks, and I've also got a no-brainer patch that lets this bug fix
->> compile as-is with older kernels, where there were no phy_has_hwtstamp()
->> function. Dunno how to properly handle this. Here is the patch (on
->> top of v4.9.146), just in case:
->
-> I see, I'll only add it to 5.7. By default we backport net fixes to
-> the two most recent releases, anyway. Could you send a patch that will 
-> work on 4.4 or 4.9 - 5.4 to Greg yourself once this hits Linus's tree
-> in a week or two?
+I actually don't think it's a huge issue. Normally if applications
+do this, it's because they are using it and need it. Ala:
 
-Sure. Hopefully I get it right that I'll need to send it to Greg as a
-backport of this one to older kernel trees.
+#ifndef IORING_REGISTER_SOMETHING
+#define IORING_REGISTER_SOMETHING	fooval
+#endif
 
-Thanks,
--- Sergey
+and that'll still work just fine, even if an identical enum is there.
+
+-- 
+Jens Axboe
+
