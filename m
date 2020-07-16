@@ -2,147 +2,80 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8FEC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 711FF204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:47:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKfOr/DZ"
+	by mail.kernel.org (Postfix) with ESMTP id BF3272065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594943366;
+	bh=uaPx3NHnlak2s8/Bw+uGgnUTIdfrCFx1I8qftHQtHq4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=glp9J3jfZxKbKzfRrPPSSXrgM7+uj3tQ0xOLUK43KZr8M5t9PgaNrvc5AE372icIB
+	 48GA+b1adQQRhxXOL1W4mgVkSLB2VKYxdXUiSTS9ydLatwIC/L1OrIweQoz5ZLa2SC
+	 rBh1sm+ND0dGWkvSqyG9e8jfG9w2vza8ae+6kakc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgGPXr5 (ORCPT
+        id S1726231AbgGPXtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgGPXr4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:47:56 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F53C061755;
-        Thu, 16 Jul 2020 16:47:56 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id i80so4948852lfi.13;
-        Thu, 16 Jul 2020 16:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A1jn6c7kFJPkQon2SVOTVHBfqbqTtwTIfeuqRURf4Ug=;
-        b=PKfOr/DZLkDBdJpo4cehHWUJ3UzAwunBUGjeH54n1BEgrMmkKvXW6t8Uaa75NEkVIi
-         eXt5QJa5YKtqbb6dWts5NZNafBl7/DaaVAh+R+VSwXNmIRuWPjLylhxWYhIdOvvb4SEZ
-         Vi0B9Fa9UlO82BDQzgrqib3v/iyn333Y0Ha7SlwiWSXQdkV2DwzreZ7quH+FmXx8ZqWV
-         ViyT4luwEyp2XUiupKhNsEtKIWcg2TciioRQJGGdGUJZFl+VPCRVsO1i4Q4RIfwEbUmw
-         DeO9ZATWn8TwGHaFwSINclBe5qEKPLOMZwBepEw8Y7nVZIbjRpDvItrMaq/kCWnYkhos
-         /rwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A1jn6c7kFJPkQon2SVOTVHBfqbqTtwTIfeuqRURf4Ug=;
-        b=o9tH3c86hHSIrK4H/dke0gcszXqWAEnHIiA5pVA7Upfev7aSGhAx90qAeDyvsGtOoV
-         WNFuuYj/N3W5ue/ZLedNJWKnYy1bgBLwNi3RFQvWtZVADaBSEICu61eV5IzJmqZpyRXd
-         0K2zZFl/e+BqGEVyQM0loQ3GSx3JTPfMIvaeNERDHQEi8moTTX3NOQoP48WlaIfqekRy
-         SwxJCRjHAQTwFT9vR0Q3oAW9xgTGCZHibxmAPrTe59fbheF96boViIy+Ubs/6zkzvPWt
-         7mJOiZ+VaK6J1sYTQy46FwCieZXQDvMEteyh/dwCmirAqtZgk46WgmPeGElWfvt12m28
-         /2KQ==
-X-Gm-Message-State: AOAM533XHaflqYVCR8tlS/9oS+bPrKSjnevWVu/eFzqcowlt2J1k1OIg
-        AkJrZhOAJYo1xhgpNUfSJMU4rmra
-X-Google-Smtp-Source: ABdhPJxPXRlZnIakzEq9kDotxPaAbFxj5XNB36qCPTk2TdYQ/jB+VGMj7ZWGuPNBjUj/HtViFD5hAg==
-X-Received: by 2002:a19:c797:: with SMTP id x145mr3283492lff.143.1594943274284;
-        Thu, 16 Jul 2020 16:47:54 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
-        by smtp.googlemail.com with ESMTPSA id k6sm1482260lfm.89.2020.07.16.16.47.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 16:47:53 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
- tegra_mipi_calibrate and tegra_mipi_wait
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
- <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
- <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
- <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
- <ce0c5ffb-f859-0eab-1ea5-044623dff221@nvidia.com>
- <a2b8169c-c4a3-4862-cd27-8c1a51ddc558@gmail.com>
- <4690e682-8495-2327-87c7-c2f06a7a479d@nvidia.com>
- <66812127-38cf-2af3-51c0-50edbe446e73@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9b4fbf9d-d651-aa35-c0a6-b8f16aeb0900@gmail.com>
-Date:   Fri, 17 Jul 2020 02:47:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <66812127-38cf-2af3-51c0-50edbe446e73@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Jul 2020 19:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbgGPXtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 19:49:25 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71DFC204EC;
+        Thu, 16 Jul 2020 23:49:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594943364;
+        bh=uaPx3NHnlak2s8/Bw+uGgnUTIdfrCFx1I8qftHQtHq4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fgauLvK2grUIhQBTb8Kt72Cvi9foLQMtrzTNppPRjRLgEqf5/zk4D8Hd4ov/rUrea
+         SJKe2ZtuyRZuq0sAAz10PvHkNRjbm0BeGGA2GXk1/Gl0G9JkOK5n3PHZ4Je2jlrvHs
+         sft8edVKvC9SHbZQbOORP7He9vfhSNpTqREj5yfM=
+Date:   Thu, 16 Jul 2020 16:49:24 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: clean up address limit helpers v2
+Message-Id: <20200716164924.15e373f4dbb3071e9d4ee37c@linux-foundation.org>
+In-Reply-To: <20200714105505.935079-1-hch@lst.de>
+References: <20200714105505.935079-1-hch@lst.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.07.2020 02:09, Sowjanya Komatineni пишет:
-> 
-> On 7/16/20 4:06 PM, Sowjanya Komatineni wrote:
->>
->> On 7/16/20 4:01 PM, Dmitry Osipenko wrote:
->>> 17.07.2020 01:49, Sowjanya Komatineni пишет:
->>>>> What keeps MIPI clock enabled after completion of the
->>>>> tegra_mipi_calibrate() invocation?
->>>> MIPI clock is disabled at end of tegra_mipi_calibrate and is re-enabled
->>>> during tegra_mipi_wait.
->>>>
->>>> I think I should fix this to keep the clock enabled till calibration
->>>> results are latched.
->>>>
->>>> All consumers of tegra_mipi_calibrate() will call tegra_mipi_wait().
->>>>
->>>> So will remove clk_disable mipi clk at end of tegra_mipi_calibrate()
->>>> and
->>>> clk_enable mipi_clk at beginning of tegra_mipi_wait()
->>> Isn't it possible to perform the calibration after enabling CSI and
->>> before of starting the sensor streaming?
->> Currently this is what I am doing. Triggering calibration start during
->> CSI receiver being ready and then sensor streaming will happen where
->> internal MIPI CAL detects for LP -> HS transition and applies results
->> to pads. So checking for calibration results after sensor stream is
->> enabled
-> 
-> 1. Calling tegra_mipi_calibrate() during CSI streaming where CSI pads
-> are enabled and receiver is kept ready
-> 
-> 2. Start Sensor stream
-> 
-> 3. Calling tegra_mipi_wait() to check for MIPI Cal status.
-> 
-> So as mipi cal clk need to be kept enabled till 3rd step, we can enable
-> clock during tegra_mipi_calibrate() and leave it enabled and disable it
-> in tegra_mipi_wait after status check.
+On Tue, 14 Jul 2020 12:54:59 +0200 Christoph Hellwig <hch@lst.de> wrote:
 
-From TRM:
+> Hi all,
+> 
+> in preparation for eventually phasing out direct use of set_fs(), this
+> series removes the segment_eq() arch helper that is only used to
+> implement or duplicate the uaccess_kernel() API, and then adds
+> descriptive helpers to force the kernel address limit.
+> 
+> 
+> Changes since v1:
+>  - drop to incorrect hunks
+>  - fix a commit log typo
 
-The following sequence is recommended for capturing a single frame:
+I think this *is* v1.  I can't find any differences in the patches and I
+was unable to eyeball any changelog alterations?
 
-1. Set up CSI registers for use case such as number of lanes, virtual
-channel, etc.
-2. Initialize and power up CSI interface
-3. Wait for initialization time or done signal from calibration logic
-4. Power up camera through the I2C interface
-5. All CSI data and clock lanes are in stop state, LP11
-6. Initiate frame capture through the I2C
-7. Frame done, CSI goes back to stop state, LP11
-
-Hence, is it really necessary to perform the manual calibration?
