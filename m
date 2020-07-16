@@ -2,107 +2,128 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A07BC433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323E0C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 742F920899
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A85207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:40:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="v2ePmRco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgGPOkX (ORCPT
+        id S1729120AbgGPOkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:40:23 -0400
-Received: from smtp-42a8.mail.infomaniak.ch ([84.16.66.168]:59397 "EHLO
-        smtp-42a8.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728589AbgGPOkX (ORCPT
+        Thu, 16 Jul 2020 10:40:14 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:27233 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728589AbgGPOkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:40:23 -0400
-Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4B6xkF2jzzzlhmrL;
-        Thu, 16 Jul 2020 16:40:21 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4B6xk81XMmzlh8TQ;
-        Thu, 16 Jul 2020 16:40:16 +0200 (CEST)
-Subject: Re: [PATCH v6 7/7] ima: add policy support for the new file open
- MAY_OPENEXEC flag
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Thu, 16 Jul 2020 10:40:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594910413; x=1626446413;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=Md3PPwvrPy33GuyoA1RPm1ZIiZ3YtZxHfXnteTdKvuE=;
+  b=v2ePmRcoWHLS7xRb3hVDdb8eVScHY7lzaW7XBnYJR0LwPMETFe5ogh2w
+   FBahMJmfbaay8NQYihJrFwlJhzSNH79GykJgbDyoM0xYM98D02ckzzdQM
+   9Q98Va8xuvqYfhoAbX6gZA2SMNReGkk36W+GcYbDuWNeUurEvjuqe/xfG
+   A=;
+IronPort-SDR: m5eMdnNy1//P3W0bkENgE1YpjOWhiR1O5DBzuYR3/6BQfyBxtf20eQ+Sg7BmVJ/TtuDAUul34w
+ 3kP/Wpo7ZYrw==
+X-IronPort-AV: E=Sophos;i="5.75,359,1589241600"; 
+   d="scan'208";a="42274627"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 16 Jul 2020 14:40:12 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id 5C7322250DE;
+        Thu, 16 Jul 2020 14:40:09 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 16 Jul 2020 14:40:08 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.73) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 16 Jul 2020 14:40:03 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200714181638.45751-1-mic@digikod.net>
- <20200714181638.45751-8-mic@digikod.net> <202007151339.283D7CD@keescook>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <8df69733-0088-3e3c-9c3d-2610414cea2b@digikod.net>
-Date:   Thu, 16 Jul 2020 16:40:15 +0200
-User-Agent: 
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [PATCH] mm: drop duplicated words in <linux/pgtable.h>
+Date:   Thu, 16 Jul 2020 16:39:43 +0200
+Message-ID: <20200716143943.30304-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <2bb6e13e-44df-4920-52d9-4d3539945f73@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <202007151339.283D7CD@keescook>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.73]
+X-ClientProxiedBy: EX13D48UWB003.ant.amazon.com (10.43.163.82) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-07-15T18:29:51-07:00 Randy Dunlap <rdunlap@infradead.org> wrote:
 
-On 15/07/2020 22:40, Kees Cook wrote:
-> On Tue, Jul 14, 2020 at 08:16:38PM +0200, Mickaël Salaün wrote:
->> From: Mimi Zohar <zohar@linux.ibm.com>
->>
->> The kernel has no way of differentiating between a file containing data
->> or code being opened by an interpreter.  The proposed O_MAYEXEC
->> openat2(2) flag bridges this gap by defining and enabling the
->> MAY_OPENEXEC flag.
->>
->> This patch adds IMA policy support for the new MAY_OPENEXEC flag.
->>
->> Example:
->> measure func=FILE_CHECK mask=^MAY_OPENEXEC
->> appraise func=FILE_CHECK appraise_type=imasig mask=^MAY_OPENEXEC
->>
->> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
->> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
->> Acked-by: Mickaël Salaün <mic@digikod.net>
+> From: Randy Dunlap <rdunlap@infradead.org>
 > 
-> (Process nit: if you're sending this on behalf of another author, then
-> this should be Signed-off-by rather than Acked-by.)
+> Drop the doubled words "used" and "by".
+> 
+> Drop the repeated acronym "TLB" and make several other fixes around it.
+> (capital letters, spellos)
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 
-I'm not a co-author of this patch.
+Reviewed-by: SeongJae Park <sjpark@amazon.de>
+
+
+Thanks,
+SeongJae Park
+
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-mm@kvack.org
+> ---
+>  include/linux/pgtable.h |   12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> --- linux-next-20200714.orig/include/linux/pgtable.h
+> +++ linux-next-20200714/include/linux/pgtable.h
+> @@ -866,7 +866,7 @@ static inline void ptep_modify_prot_comm
+>  
+>  /*
+>   * No-op macros that just return the current protection value. Defined here
+> - * because these macros can be used used even if CONFIG_MMU is not defined.
+> + * because these macros can be used even if CONFIG_MMU is not defined.
+>   */
+>  #ifndef pgprot_encrypted
+>  #define pgprot_encrypted(prot)	(prot)
+> @@ -1259,7 +1259,7 @@ static inline int pmd_trans_unstable(pmd
+>   * Technically a PTE can be PROTNONE even when not doing NUMA balancing but
+>   * the only case the kernel cares is for NUMA balancing and is only ever set
+>   * when the VMA is accessible. For PROT_NONE VMAs, the PTEs are not marked
+> - * _PAGE_PROTNONE so by by default, implement the helper as "always no". It
+> + * _PAGE_PROTNONE so by default, implement the helper as "always no". It
+>   * is the responsibility of the caller to distinguish between PROT_NONE
+>   * protections and NUMA hinting fault protections.
+>   */
+> @@ -1343,10 +1343,10 @@ static inline int pmd_free_pte_page(pmd_
+>  /*
+>   * ARCHes with special requirements for evicting THP backing TLB entries can
+>   * implement this. Otherwise also, it can help optimize normal TLB flush in
+> - * THP regime. stock flush_tlb_range() typically has optimization to nuke the
+> - * entire TLB TLB if flush span is greater than a threshold, which will
+> - * likely be true for a single huge page. Thus a single thp flush will
+> - * invalidate the entire TLB which is not desitable.
+> + * THP regime. Stock flush_tlb_range() typically has optimization to nuke the
+> + * entire TLB if flush span is greater than a threshold, which will
+> + * likely be true for a single huge page. Thus a single THP flush will
+> + * invalidate the entire TLB which is not desirable.
+>   * e.g. see arch/arc: flush_pmd_tlb_range
+>   */
+>  #define flush_pmd_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
+> 
