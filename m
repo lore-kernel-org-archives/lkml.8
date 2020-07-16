@@ -2,270 +2,447 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42794C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DA1C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02EED2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:31:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mwZGVAV4"
+	by mail.kernel.org (Postfix) with ESMTP id EFB6F2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbgGPRbt (ORCPT
+        id S1729031AbgGPReE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:31:49 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51374 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728237AbgGPRbr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:31:47 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GHN4xR193981;
-        Thu, 16 Jul 2020 17:31:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=hdbqw5KJtL/8FiSm6BteZ+byamhVX4rllUDAAyl7GXY=;
- b=mwZGVAV43myYzRaa93s4sqs3X624SbR5zXj2cAPgd55SX4wDznVwRkxaztOpoQE3Xvhq
- kk3zW2vI+y4bU8waOT8R5aT99JSAfYnb+B1Zs4Q8c0H3818munADNTbTOrYx3/Q3rFVT
- 1j02u2RpHj4aKsRoKxH1bQ1YS2Jl1Dlbykr1gPb4fpBH1iOskboXGxXAVBkKlHMjIxpM
- eqWVf91O9fe3R7CU1bjl2rPQ26xaSH2It71ipnCtV0gEiPv8MG2uSar1OTh8b2dvOWgK
- QLe60xAB7xSa8oX0vr4JY9F6kugZsi8CWiU7Nh0MWk2THUJi5mHS9LiNWKg3gJ/g9Rsy JA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 3275cmjtf7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jul 2020 17:31:40 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GHHiTJ005707;
-        Thu, 16 Jul 2020 17:29:40 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 327q0tvk41-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 17:29:40 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06GHTd3t019092;
-        Thu, 16 Jul 2020 17:29:39 GMT
-Received: from paddy.uk.oracle.com (/10.175.173.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jul 2020 10:29:39 -0700
-From:   Joao Martins <joao.m.martins@oracle.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v1 2/4] device-dax: Add an 'align' attribute
-Date:   Thu, 16 Jul 2020 18:29:11 +0100
-Message-Id: <20200716172913.19658-3-joao.m.martins@oracle.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200716172913.19658-1-joao.m.martins@oracle.com>
-References: <20200716172913.19658-1-joao.m.martins@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007160126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007160126
+        Thu, 16 Jul 2020 13:34:04 -0400
+Received: from mga17.intel.com ([192.55.52.151]:8310 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728182AbgGPReE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:34:04 -0400
+IronPort-SDR: prXYuzaGFeHTcVC1whhMDAqFCnFNwvZLy0x4YzUr+ST3behykREDK28TQXsznCTWIH2g5+ELCY
+ bZQEr64c3f6w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129530697"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="129530697"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 10:33:02 -0700
+IronPort-SDR: /A1swBRl2D9D4iQMPYPf3LMDW/IgGaM1OQNxeDzcYuWsWQCRDvldwa9AjpJeb3FhAJXATv0eVl
+ WuIeCyDhhPQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="325206927"
+Received: from unknown (HELO localhost) ([10.249.34.156])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Jul 2020 10:32:45 -0700
+Date:   Thu, 16 Jul 2020 20:32:44 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, x86@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jessica Yu <jeyu@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Babu Moger <Babu.Moger@amd.com>,
+        Omar Sandoval <osandov@fb.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Marco Elver <elver@google.com>,
+        Brian Gerst <brgerst@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v3 1/3] kprobes: Add text_alloc() and text_free()
+Message-ID: <20200716173244.GD14135@linux.intel.com>
+References: <20200714223239.1543716-1-jarkko.sakkinen@linux.intel.com>
+ <20200714223239.1543716-2-jarkko.sakkinen@linux.intel.com>
+ <20200715172732.35110a4e53e84fcec9aeac83@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715172732.35110a4e53e84fcec9aeac83@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a device align attribute. While doing so,
-rename the region align attribute to be more explicitly
-named as so, but keep it named as @align to retain the API
-for tools like daxctl.
+On Wed, Jul 15, 2020 at 05:27:32PM +0900, Masami Hiramatsu wrote:
+> Hi Jarkko,
+> 
+> On Wed, 15 Jul 2020 01:32:27 +0300
+> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> 
+> > Introduce new API for allocating space for code generaed at run-time
+> > leveraging from module_alloc() and module_memfree() code. Use this to
+> > perform memory allocations in the kprobes code in order to loose the
+> > bound between kprobes and modules subsystem.
+> > 
+> > Initially, use this API only with arch/x86 and define a new config
+> > flag CONFIG_ARCH_HAS_TEXT_ALLOC to promote the availability of the
+> > new API.
+> 
+> This might need to be extended for the text_alloc() flags as we discuss
+> in previous thread. (e.g. bpf on arm64)
+> 
+> > Cc: Andi Kleen <ak@linux.intel.com>
+> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  arch/Kconfig             |  2 +-
+> >  arch/x86/Kconfig         |  3 ++
+> >  arch/x86/kernel/Makefile |  1 +
+> >  arch/x86/kernel/module.c | 49 ---------------------------
+> >  arch/x86/kernel/text.c   | 71 ++++++++++++++++++++++++++++++++++++++++
+> 
+> I think this would better be arch/x86/mm/text_alloc.c (text.c is too
+> generic, and this only provides memory allocation.)
 
-Changes on align may not always be valid, when say certain
-mappings were created with 2M and then we switch to 1G. So, we
-validate all ranges against the new value being attempted,
-post resizing.
+Agreed.
 
-Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
----
- drivers/dax/bus.c | 101 +++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 92 insertions(+), 9 deletions(-)
+> 
+> >  include/linux/text.h     | 17 ++++++++++
+> 
+> "text_alloc.h" would be better, or puting the prototype in vmalloc.h
+> will be easier to use.
+> 
+> >  kernel/kprobes.c         | 11 +++++++
+> >  kernel/module.c          | 10 ++++++
+> >  8 files changed, 114 insertions(+), 50 deletions(-)
+> >  create mode 100644 arch/x86/kernel/text.c
+> >  create mode 100644 include/linux/text.h
+> > 
+> > diff --git a/arch/Kconfig b/arch/Kconfig
+> > index 8cc35dc556c7..e3d6b6868ccb 100644
+> > --- a/arch/Kconfig
+> > +++ b/arch/Kconfig
+> > @@ -61,7 +61,7 @@ config OPROFILE_NMI_TIMER
+> >  
+> >  config KPROBES
+> >  	bool "Kprobes"
+> > -	depends on MODULES
+> > +	depends on MODULES || ARCH_HAS_TEXT_ALLOC
+> >  	depends on HAVE_KPROBES
+> >  	select KALLSYMS
+> >  	help
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 0dea7fdd7a00..a4ee5d1300f6 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -2035,6 +2035,9 @@ config KEXEC_FILE
+> >  config ARCH_HAS_KEXEC_PURGATORY
+> >  	def_bool KEXEC_FILE
+> >  
+> > +config ARCH_HAS_TEXT_ALLOC
+> > +	def_bool y
+> > +
+> >  config KEXEC_SIG
+> >  	bool "Verify kernel signature during kexec_file_load() syscall"
+> >  	depends on KEXEC_FILE
+> > diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> > index e77261db2391..2878e4b753a0 100644
+> > --- a/arch/x86/kernel/Makefile
+> > +++ b/arch/x86/kernel/Makefile
+> > @@ -68,6 +68,7 @@ obj-y			+= tsc.o tsc_msr.o io_delay.o rtc.o
+> >  obj-y			+= pci-iommu_table.o
+> >  obj-y			+= resource.o
+> >  obj-y			+= irqflags.o
+> > +obj-y			+= text.o
+> >  
+> >  obj-y				+= process.o
+> >  obj-y				+= fpu/
+> > diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
+> > index 34b153cbd4ac..261df078f127 100644
+> > --- a/arch/x86/kernel/module.c
+> > +++ b/arch/x86/kernel/module.c
+> > @@ -36,55 +36,6 @@ do {							\
+> >  } while (0)
+> >  #endif
+> >  
+> > -#ifdef CONFIG_RANDOMIZE_BASE
+> > -static unsigned long module_load_offset;
+> > -
+> > -/* Mutex protects the module_load_offset. */
+> > -static DEFINE_MUTEX(module_kaslr_mutex);
+> > -
+> > -static unsigned long int get_module_load_offset(void)
+> > -{
+> > -	if (kaslr_enabled()) {
+> > -		mutex_lock(&module_kaslr_mutex);
+> > -		/*
+> > -		 * Calculate the module_load_offset the first time this
+> > -		 * code is called. Once calculated it stays the same until
+> > -		 * reboot.
+> > -		 */
+> > -		if (module_load_offset == 0)
+> > -			module_load_offset =
+> > -				(get_random_int() % 1024 + 1) * PAGE_SIZE;
+> > -		mutex_unlock(&module_kaslr_mutex);
+> > -	}
+> > -	return module_load_offset;
+> > -}
+> > -#else
+> > -static unsigned long int get_module_load_offset(void)
+> > -{
+> > -	return 0;
+> > -}
+> > -#endif
+> > -
+> > -void *module_alloc(unsigned long size)
+> > -{
+> > -	void *p;
+> > -
+> > -	if (PAGE_ALIGN(size) > MODULES_LEN)
+> > -		return NULL;
+> > -
+> > -	p = __vmalloc_node_range(size, MODULE_ALIGN,
+> > -				    MODULES_VADDR + get_module_load_offset(),
+> > -				    MODULES_END, GFP_KERNEL,
+> > -				    PAGE_KERNEL, 0, NUMA_NO_NODE,
+> > -				    __builtin_return_address(0));
+> > -	if (p && (kasan_module_alloc(p, size) < 0)) {
+> > -		vfree(p);
+> > -		return NULL;
+> > -	}
+> > -
+> > -	return p;
+> > -}
+> 
+> Please don't touch this module_alloc() at all. Then we can
+> just call __vmalloc_node_range() in the text_alloc().
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 2578651c596e..eb384dd6a376 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -230,14 +230,15 @@ static ssize_t region_size_show(struct device *dev,
- static struct device_attribute dev_attr_region_size = __ATTR(size, 0444,
- 		region_size_show, NULL);
- 
--static ssize_t align_show(struct device *dev,
-+static ssize_t region_align_show(struct device *dev,
- 		struct device_attribute *attr, char *buf)
- {
- 	struct dax_region *dax_region = dev_get_drvdata(dev);
- 
- 	return sprintf(buf, "%u\n", dax_region->align);
- }
--static DEVICE_ATTR_RO(align);
-+static struct device_attribute dev_attr_region_align =
-+		__ATTR(align, 0400, region_align_show, NULL);
- 
- #define for_each_dax_region_resource(dax_region, res) \
- 	for (res = (dax_region)->res.child; res; res = res->sibling)
-@@ -488,7 +489,7 @@ static umode_t dax_region_visible(struct kobject *kobj, struct attribute *a,
- static struct attribute *dax_region_attributes[] = {
- 	&dev_attr_available_size.attr,
- 	&dev_attr_region_size.attr,
--	&dev_attr_align.attr,
-+	&dev_attr_region_align.attr,
- 	&dev_attr_create.attr,
- 	&dev_attr_seed.attr,
- 	&dev_attr_delete.attr,
-@@ -855,14 +856,13 @@ static ssize_t size_show(struct device *dev,
- 	return sprintf(buf, "%llu\n", size);
- }
- 
--static bool alloc_is_aligned(struct dax_region *dax_region,
--		resource_size_t size)
-+static bool alloc_is_aligned(resource_size_t size, unsigned long align)
- {
- 	/*
- 	 * The minimum mapping granularity for a device instance is a
- 	 * single subsection, unless the arch says otherwise.
- 	 */
--	return IS_ALIGNED(size, max_t(unsigned long, dax_region->align,
-+	return IS_ALIGNED(size, max_t(unsigned long, align,
- 				memremap_compat_align()));
- }
- 
-@@ -958,7 +958,7 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
- 		return dev_dax_shrink(dev_dax, size);
- 
- 	to_alloc = size - dev_size;
--	if (dev_WARN_ONCE(dev, !alloc_is_aligned(dax_region, to_alloc),
-+	if (dev_WARN_ONCE(dev, !alloc_is_aligned(to_alloc, dev_dax->align),
- 			"resize of %pa misaligned\n", &to_alloc))
- 		return -ENXIO;
- 
-@@ -1022,7 +1022,7 @@ static ssize_t size_store(struct device *dev, struct device_attribute *attr,
- 	if (rc)
- 		return rc;
- 
--	if (!alloc_is_aligned(dax_region, val)) {
-+	if (!alloc_is_aligned(val, dev_dax->align)) {
- 		dev_dbg(dev, "%s: size: %lld misaligned\n", __func__, val);
- 		return -EINVAL;
- 	}
-@@ -1041,6 +1041,87 @@ static ssize_t size_store(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RW(size);
- 
-+static ssize_t align_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct dev_dax *dev_dax = to_dev_dax(dev);
-+
-+	return sprintf(buf, "%d\n", dev_dax->align);
-+}
-+
-+static ssize_t dev_dax_set_align(struct dev_dax *dev_dax,
-+				 unsigned long long align)
-+{
-+	resource_size_t dev_size = dev_dax_size(dev_dax);
-+	struct device *dev = &dev_dax->dev;
-+	ssize_t rc, i;
-+
-+	if (dev->driver)
-+		return -EBUSY;
-+
-+	rc = -EINVAL;
-+	if (dev_size > 0 && !alloc_is_aligned(dev_size, align)) {
-+		dev_dbg(dev, "%s: align %llx invalid for size %llu\n",
-+			__func__, align, dev_size);
-+		return rc;
-+	}
-+
-+	for (i = 0; i < dev_dax->nr_range; i++) {
-+		size_t len = range_len(&dev_dax->ranges[i].range);
-+
-+		if (!alloc_is_aligned(len, align)) {
-+			dev_dbg(dev, "%s: align %llx invalid for range %ld\n",
-+				__func__, align, i);
-+			return rc;
-+		}
-+	}
-+
-+	switch (align) {
-+	case PUD_SIZE:
-+		if (!IS_ENABLED(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD))
-+			break;
-+		fallthrough;
-+	case PMD_SIZE:
-+		if (!has_transparent_hugepage())
-+			break;
-+		fallthrough;
-+	case PAGE_SIZE:
-+		rc = 0;
-+		break;
-+	}
-+
-+	if (!rc)
-+		dev_dax->align = align;
-+
-+	return rc;
-+}
-+
-+static ssize_t align_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t len)
-+{
-+	struct dev_dax *dev_dax = to_dev_dax(dev);
-+	struct dax_region *dax_region = dev_dax->region;
-+	unsigned long long val;
-+	ssize_t rc;
-+
-+	rc = kstrtoull(buf, 0, &val);
-+	if (rc)
-+		return -ENXIO;
-+
-+	device_lock(dax_region->dev);
-+	if (!dax_region->dev->driver) {
-+		device_unlock(dax_region->dev);
-+		return -ENXIO;
-+	}
-+
-+	device_lock(dev);
-+	rc = dev_dax_set_align(dev_dax, val);
-+	device_unlock(dev);
-+	device_unlock(dax_region->dev);
-+	return rc == 0 ? len : rc;
-+}
-+static DEVICE_ATTR_RW(align);
-+
- static int dev_dax_target_node(struct dev_dax *dev_dax)
- {
- 	struct dax_region *dax_region = dev_dax->region;
-@@ -1101,7 +1182,8 @@ static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
- 		return 0;
- 	if (a == &dev_attr_numa_node.attr && !IS_ENABLED(CONFIG_NUMA))
- 		return 0;
--	if (a == &dev_attr_size.attr && is_static(dax_region))
-+	if ((a == &dev_attr_align.attr ||
-+	     a == &dev_attr_size.attr) && is_static(dax_region))
- 		return 0444;
- 	return a->mode;
- }
-@@ -1110,6 +1192,7 @@ static struct attribute *dev_dax_attributes[] = {
- 	&dev_attr_modalias.attr,
- 	&dev_attr_size.attr,
- 	&dev_attr_target_node.attr,
-+	&dev_attr_align.attr,
- 	&dev_attr_resource.attr,
- 	&dev_attr_numa_node.attr,
- 	NULL,
--- 
-2.17.1
+This is my mistake, not intentional. Had a fixup that by mistake did not
+end up to the final patch set. Sorry about that.
 
+> 
+> > -
+> >  #ifdef CONFIG_X86_32
+> >  int apply_relocate(Elf32_Shdr *sechdrs,
+> >  		   const char *strtab,
+> > diff --git a/arch/x86/kernel/text.c b/arch/x86/kernel/text.c
+> > new file mode 100644
+> > index 000000000000..986b92ff1434
+> > --- /dev/null
+> > +++ b/arch/x86/kernel/text.c
+> > @@ -0,0 +1,71 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + *  Kernel module help for x86.
+> > + *  Copyright (C) 2001 Rusty Russell.
+> > + */
+> > +
+> > +#include <linux/kasan.h>
+> > +#include <linux/mm.h>
+> > +#include <linux/moduleloader.h>
+> > +#include <linux/vmalloc.h>
+> > +#include <asm/setup.h>
+> > +
+> > +#ifdef CONFIG_RANDOMIZE_BASE
+> > +static unsigned long module_load_offset;
+> > +
+> > +/* Mutex protects the module_load_offset. */
+> > +static DEFINE_MUTEX(module_kaslr_mutex);
+> > +
+> > +static unsigned long get_module_load_offset(void)
+> > +{
+> > +	if (kaslr_enabled()) {
+> > +		mutex_lock(&module_kaslr_mutex);
+> > +		/*
+> > +		 * Calculate the module_load_offset the first time this
+> > +		 * code is called. Once calculated it stays the same until
+> > +		 * reboot.
+> > +		 */
+> > +		if (module_load_offset == 0)
+> > +			module_load_offset =
+> > +				(get_random_int() % 1024 + 1) * PAGE_SIZE;
+> > +		mutex_unlock(&module_kaslr_mutex);
+> > +	}
+> > +	return module_load_offset;
+> > +}
+> > +#else
+> > +static unsigned long get_module_load_offset(void)
+> > +{
+> > +	return 0;
+> > +}
+> > +#endif
+> 
+> So as I pointed, we can ignore this for kprobes (and other
+> dynamic allocated trampoline code).
+> 
+> > +
+> > +void *text_alloc(unsigned long size)
+> > +{
+> > +	void *p;
+> > +
+> > +	if (PAGE_ALIGN(size) > MODULES_LEN)
+> > +		return NULL;
+> > +
+> > +	p = __vmalloc_node_range(size, MODULE_ALIGN,
+> > +				    MODULES_VADDR + get_module_load_offset(),
+> > +				    MODULES_END, GFP_KERNEL,
+> > +				    PAGE_KERNEL, 0, NUMA_NO_NODE,
+> > +				    __builtin_return_address(0));
+> > +	if (p && (kasan_module_alloc(p, size) < 0)) {
+> > +		vfree(p);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	return p;
+> > +}
+> > +
+> > +void text_free(void *region)
+> > +{
+> > +	/*
+> > +	 * This memory may be RO, and freeing RO memory in an interrupt is not
+> > +	 * supported by vmalloc.
+> > +	 */
+> > +	WARN_ON(in_interrupt());
+> > +
+> > +	vfree(region);
+> > +}
+> > diff --git a/include/linux/text.h b/include/linux/text.h
+> > new file mode 100644
+> > index 000000000000..a27d4a42ecda
+> > --- /dev/null
+> > +++ b/include/linux/text.h
+> > @@ -0,0 +1,17 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +
+> > +#ifndef _LINUX_TEXT_H
+> > +#define _LINUX_TEXT_H
+> > +
+> > +/*
+> > + * An allocator used for allocating modules, core sections and init sections.
+> > + * Returns NULL on failure.
+> > + */
+> > +void *text_alloc(unsigned long size);
+> > +
+> > +/*
+> > + * Free memory returned from text_alloc().
+> > + */
+> > +void text_free(void *region);
+> 
+> Hmm, if this is this short, in this version we might better move
+> these to vmalloc.h.
+> 
+> > +
+> > +#endif /* _LINUX_TEXT_H */
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index 2e97febeef77..fa7687eb0c0e 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -35,6 +35,7 @@
+> >  #include <linux/ftrace.h>
+> >  #include <linux/cpu.h>
+> >  #include <linux/jump_label.h>
+> > +#include <linux/text.h>
+> >  
+> >  #include <asm/sections.h>
+> >  #include <asm/cacheflush.h>
+> > @@ -111,12 +112,20 @@ enum kprobe_slot_state {
+> >  
+> >  void __weak *alloc_insn_page(void)
+> >  {
+> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
+> > +	return text_alloc(PAGE_SIZE);
+> > +#else
+> >  	return module_alloc(PAGE_SIZE);
+> > +#endif
+> >  }
+> >  
+> >  void __weak free_insn_page(void *page)
+> >  {
+> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
+> > +	text_free(page);
+> > +#else
+> >  	module_memfree(page);
+> > +#endif
+> >  }
+> >  
+> >  struct kprobe_insn_cache kprobe_insn_slots = {
+> > @@ -1608,6 +1617,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
+> >  			goto out;
+> >  		}
+> >  
+> > +#ifdef CONFIG_MODULES
+> >  		/*
+> >  		 * If the module freed .init.text, we couldn't insert
+> >  		 * kprobes in there.
+> > @@ -1618,6 +1628,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
+> >  			*probed_mod = NULL;
+> >  			ret = -ENOENT;
+> >  		}
+> > +#endif
+> 
+> This change is not related to text_alloc(). Please move this to 3/3.
+> 
+> >  	}
+> >  out:
+> >  	preempt_enable();
+> > diff --git a/kernel/module.c b/kernel/module.c
+> > index aa183c9ac0a2..8adeb126b02c 100644
+> > --- a/kernel/module.c
+> > +++ b/kernel/module.c
+> > @@ -56,6 +56,7 @@
+> >  #include <linux/bsearch.h>
+> >  #include <linux/dynamic_debug.h>
+> >  #include <linux/audit.h>
+> > +#include <linux/text.h>
+> >  #include <uapi/linux/module.h>
+> >  #include "module-internal.h"
+> >  
+> > @@ -2151,7 +2152,12 @@ void __weak module_memfree(void *module_region)
+> >  	 * supported by vmalloc.
+> >  	 */
+> >  	WARN_ON(in_interrupt());
+> > +
+> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
+> > +	text_free(module_region);
+> > +#else
+> >  	vfree(module_region);
+> > +#endif
+> >  }
+> >  
+> >  void __weak module_arch_cleanup(struct module *mod)
+> > @@ -2786,9 +2792,13 @@ static void dynamic_debug_remove(struct module *mod, struct _ddebug *debug)
+> >  
+> >  void * __weak module_alloc(unsigned long size)
+> >  {
+> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
+> > +	return text_alloc(size);
+> > +#else
+> >  	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
+> >  			GFP_KERNEL, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
+> >  			NUMA_NO_NODE, __builtin_return_address(0));
+> > +#endif
+> >  }
+> 
+> Please don't touch kernel/module.c too. This seems to make things complicated.
+> 
+> Thank you,
+> 
+> -- 
+> Masami Hiramatsu <mhiramat@kernel.org>
+
+Thanks for the review. Agree with your remarks.
+
+/Jarkko
