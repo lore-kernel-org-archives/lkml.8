@@ -2,165 +2,152 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0292067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:42:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R69s7Lac"
+	by mail.kernel.org (Postfix) with ESMTP id 31CD62067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgGPFmV (ORCPT
+        id S1726515AbgGPFnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:42:21 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32841 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725913AbgGPFmU (ORCPT
+        Thu, 16 Jul 2020 01:43:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13388 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725844AbgGPFnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:42:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594878139;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7iOIeIlKEJcsPpbGDHdQOFqlT3P7K/L/+J8sfRdcsv8=;
-        b=R69s7LactDAhvrFV18FlxBPbYq1ZwWa4ksF7JtBfp1uMW3uvZJWBeR5jSVwUYkpk68DjEq
-        7Ij/R7pqznoaAjPz+yAoAYrdEY9WjTiVuiWudNMp3FjGnKwk7+4ADJFYq3Xdc23eejZ1xW
-        eumZrxVYiOTlyHef+ikNhRCB5iWvotE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-270-rQWCdGBGPC22mc1Ieh8pbQ-1; Thu, 16 Jul 2020 01:42:17 -0400
-X-MC-Unique: rQWCdGBGPC22mc1Ieh8pbQ-1
-Received: by mail-wm1-f72.google.com with SMTP id o13so4010280wmh.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:42:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=7iOIeIlKEJcsPpbGDHdQOFqlT3P7K/L/+J8sfRdcsv8=;
-        b=Q2nnVQUpfvX3RVEVGk6iIoRWQ8ej5Qpm+S3N3YqkYOfDEi3cTyihjuPyzHGRsiJLTQ
-         FMf5VJC+Lg0Ip1pAzUqPjVLGP+sUGIlOr7/PgbzaCC3cvj/so6Tk5TR8SZ8iJOYWi9dm
-         5VNc1bAfjueCqhsAq+AarnE4oYPTG/vbbXiXtWenAlcbYtue8wXU7xX0miIeRvHl4IGv
-         Wn70f3cGrkwCmQ57Ax3Z49YOSSkl9mnIQXWusyJ7Kl54odqpDoEleDncPjm3sxjtjhjc
-         RDp+I/ZOC2Cc7W0M0uxo6jba0esTZ4dlhbFwnil1FpQx5tEBuO07TOZBfLKBBTgpvSCq
-         AZ1Q==
-X-Gm-Message-State: AOAM533rEWcYjbuoaUndNrFYKf5X82qtrKIh1CzcJ/xcaNrJEbfpgHky
-        6XaPxAHnQWjycPCsJ1hE3E6mdr0QBeTRVQe/W2AiOJCZZHY3swYhp6GGG6vVmHIFHimAHM+/9HO
-        N8unV0nuCTORC1pAJS2D5un/Z
-X-Received: by 2002:a05:600c:2152:: with SMTP id v18mr2861027wml.5.1594878135967;
-        Wed, 15 Jul 2020 22:42:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzk2KiSkJtmITnTvlIhxB0cz7evD1urhzNi5ygQuhGm8+M1oimW0b4DZK0pti7JeSPSHt1ykw==
-X-Received: by 2002:a05:600c:2152:: with SMTP id v18mr2861015wml.5.1594878135700;
-        Wed, 15 Jul 2020 22:42:15 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id k11sm7467756wrd.23.2020.07.15.22.42.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 22:42:15 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 01:42:12 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH RFC don't apply] vdpa_sim: endian-ness for config space
-Message-ID: <20200716013306-mutt-send-email-mst@kernel.org>
-References: <20200715135540.22832-1-mst@redhat.com>
- <8f39dcc1-0899-7ed8-8a6e-75672417b9e3@redhat.com>
+        Thu, 16 Jul 2020 01:43:23 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06G5WcAJ164468;
+        Thu, 16 Jul 2020 01:43:11 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32adafn42y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 01:43:11 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06G5XK0w166197;
+        Thu, 16 Jul 2020 01:43:10 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32adafn42h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 01:43:10 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06G5ebaQ015824;
+        Thu, 16 Jul 2020 05:43:09 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01dal.us.ibm.com with ESMTP id 328ux7hu5d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 05:43:09 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06G5h9TV15991466
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 05:43:09 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04EA7112061;
+        Thu, 16 Jul 2020 05:43:09 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C9C2112064;
+        Thu, 16 Jul 2020 05:43:04 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.73.114])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 16 Jul 2020 05:43:04 +0000 (GMT)
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466101903.24747.7234708045729315954.stgit@hbathini.in.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v3 12/12] ppc64/kexec_file: fix kexec load failure with lack of memory hole
+In-reply-to: <159466101903.24747.7234708045729315954.stgit@hbathini.in.ibm.com>
+Date:   Thu, 16 Jul 2020 02:43:01 -0300
+Message-ID: <87r1tc817e.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8f39dcc1-0899-7ed8-8a6e-75672417b9e3@redhat.com>
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-15_12:2020-07-15,2020-07-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 bulkscore=0
+ adultscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0 spamscore=100
+ impostorscore=0 suspectscore=0 phishscore=0 mlxlogscore=-1000
+ priorityscore=1501 mlxscore=100 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007160042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:02:32PM +0800, Jason Wang wrote:
-> 
-> On 2020/7/15 下午9:58, Michael S. Tsirkin wrote:
-> > VDPA sim stores config space as native endian, but that
-> > is wrong: modern guests expect LE.
-> > I coded up the following to fix it up, but it is wrong too:
-> > vdpasim_create is called before guest features are known.
-> > 
-> > So what should we do? New ioctl to specify the interface used?
-> > More ideas?
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> 
-> 
-> Can we do the endian conversion in set_config/get_config()?
-> 
-> Thanks
 
-That is problematic at least from static checking point of view.
-It would be reasonable to do it in vdpasim_set_features, except
-legacy guests might not set features at all.
-So my proposal is:
-- set config in vdpasim_set_features
-- document that this is where devices should initialize config
-- vdpa core will maintain a "features set" flag, if get/set config
-  is called without set features, core will call set features
-  automatically with 0 value.
+Hari Bathini <hbathini@linux.ibm.com> writes:
 
-Thoughts?
+> The kexec purgatory has to run in real mode. Only the first memory
+> block maybe accessible in real mode. And, unlike the case with panic
+> kernel, no memory is set aside for regular kexec load. Another thing
+> to note is, the memory for crashkernel is reserved at an offset of
+> 128MB. So, when crashkernel memory is reserved, the memory ranges to
+> load kexec segments shrink further as the generic code only looks for
+> memblock free memory ranges and in all likelihood only a tiny bit of
+> memory from 0 to 128MB would be available to load kexec segments.
+>
+> With kdump being used by default in general, kexec file load is likely
+> to fail almost always.
 
+Ah. I wasn't aware of this problem.
 
-> 
-> > 
-> > 
-> > ---
-> >   drivers/vdpa/vdpa_sim/vdpa_sim.c | 22 ++++++++++++++++++++--
-> >   1 file changed, 20 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> > index a9bc5e0fb353..cc754ae0ec15 100644
-> > --- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> > +++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> > @@ -24,6 +24,7 @@
-> >   #include <linux/etherdevice.h>
-> >   #include <linux/vringh.h>
-> >   #include <linux/vdpa.h>
-> > +#include <linux/virtio_byteorder.h>
-> >   #include <linux/vhost_iotlb.h>
-> >   #include <uapi/linux/virtio_config.h>
-> >   #include <uapi/linux/virtio_net.h>
-> > @@ -72,6 +73,23 @@ struct vdpasim {
-> >   	u64 features;
-> >   };
-> > +/* TODO: cross-endian support */
-> > +static inline bool vdpasim_is_little_endian(struct vdpasim *vdpasim)
-> > +{
-> > +	return virtio_legacy_is_little_endian() ||
-> > +		(vdpasim->features & (1ULL << VIRTIO_F_VERSION_1));
-> > +}
-> > +
-> > +static inline u16 vdpasim16_to_cpu(struct vdpasim *vdpasim, __virtio16 val)
-> > +{
-> > +	return __virtio16_to_cpu(vdpasim_is_little_endian(vdpasim), val);
-> > +}
-> > +
-> > +static inline __virtio16 cpu_to_vdpasim16(struct vdpasim *vdpasim, u16 val)
-> > +{
-> > +	return __cpu_to_virtio16(vdpasim_is_little_endian(vdpasim), val);
-> > +}
-> > +
-> >   static struct vdpasim *vdpasim_dev;
-> >   static struct vdpasim *vdpa_to_sim(struct vdpa_device *vdpa)
-> > @@ -332,8 +350,8 @@ static struct vdpasim *vdpasim_create(void)
-> >   		goto err_iommu;
-> >   	config = &vdpasim->config;
-> > -	config->mtu = 1500;
-> > -	config->status = VIRTIO_NET_S_LINK_UP;
-> > +	config->mtu = cpu_to_vdpasim16(vdpasim, 1500);
-> > +	config->status = cpu_to_vdpasim16(vdpasim, VIRTIO_NET_S_LINK_UP);
-> >   	eth_random_addr(config->mac);
-> >   	vringh_set_iotlb(&vdpasim->vqs[0].vring, vdpasim->iommu);
+> This can be fixed by changing the memory hole
+> lookup logic for regular kexec to use the same method as kdump.
 
+Right. It doesn't make that much sense to use memblock to find free
+memory areas for the kexec kernel, because memblock tracks which memory
+areas are free for the currently running kernel. But that's not what
+matters for the kernel that will be kexec'd into. In this case, regions
+which may be reserved for the current OS instance may well be free for a
+freshly started kernel. The kdump method is better at knowing which
+memory regions are actually reserved by the firmware/hardware.
+
+> This
+> would mean that most kexec segments will overlap with crashkernel
+> memory region. That should still be ok as the pages, whose destination
+> address isn't available while loading, are placed in an intermediate
+> location till a flush to the actual destination address happens during
+> kexec boot sequence.
+
+Yes, since the kdump kernel and the "regular" kexec kernel can't be both
+booted at the same time, it's not a problem if both plan to use the same
+region of memory.
+
+>
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> Tested-by: Pingfan Liu <piliu@redhat.com>
+
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+
+> ---
+>
+> v2 -> v3:
+> * Unchanged. Added Tested-by tag from Pingfan.
+>
+> v1 -> v2:
+> * New patch to fix locating memory hole for kexec_file_load (kexec -s -l)
+>   when memory is reserved for crashkernel.
+>
+>
+>  arch/powerpc/kexec/file_load_64.c |   33 ++++++++++++++-------------------
+>  1 file changed, 14 insertions(+), 19 deletions(-)
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
