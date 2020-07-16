@@ -2,158 +2,334 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD89BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95A47207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9E42083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2OYpSaj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrtuqfKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgGPVdM (ORCPT
+        id S1726359AbgGPVcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56826 "EHLO
+        Thu, 16 Jul 2020 17:32:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgGPVdL (ORCPT
+        with ESMTP id S1725959AbgGPVcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:33:11 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B115C061755;
-        Thu, 16 Jul 2020 14:33:11 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f139so13196567wmf.5;
-        Thu, 16 Jul 2020 14:33:11 -0700 (PDT)
+        Thu, 16 Jul 2020 17:32:51 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC5AC061755;
+        Thu, 16 Jul 2020 14:32:51 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id f23so7691302iof.6;
+        Thu, 16 Jul 2020 14:32:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=jVRCxAU1h8uuMP5tlk5Q3qw+CDViJUj6+cwcmkFoV2I=;
-        b=m2OYpSajgIdqjKm9kQG8kvxpt0MuknTil2/DXtr3coNClLWwVDowL4oW+qaM1nPeEQ
-         tdKEGdYGp+qtPT15R2/PG4xjaIlSn3zzelPRoUwurVJQvHplOJ+nvOpzuKV6TQppv46b
-         rHzDsX0tPxfrUVbXV9HZlESUPIFEuHknSIimxf8z0PLKPD9ZGeqZlyujR8Y8XUW5Hdzm
-         1GhZEJxeYK+uMiYtJUngU81CpTJwWMlKst5ZzS9O6H3RssbleNq4FHvbxUpsn/lweUVz
-         rk6iykT4jlf3Fftfw0bQ3eBAU3IrE8145Jm4ZVCycNSN/2p3p+CjhdRW0HF2towyYiem
-         Y0ww==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WCPVcqFuiCdUoJYXeYbmBF6DGMw5rsz8t1arNpaHm/Q=;
+        b=KrtuqfKLe1HresqYP0nYMAMlhSHrS4z3wZlak6tIf9Sc+8bZ+DnymZHD1TlFkkHIkt
+         +eeUM9kjrXHgYezAodfxHYeNe/WyjTcrY7uEE8opCtb0olqS2Gdkvl781a2c0ddmyDuF
+         EAh5aHgfGMI3ZoFLtdav2bTekuWibtY40jWTG7FKCgsxsTYnJmzcwtKPdveljQGwcBdh
+         IW9qf1f/xdpBBhTRlSpnRW6SrhS+g53ccA+Vh5lgWBRk3Kki6o2gOq47FWGFoNBMuwoh
+         qR8zfKq45Dea0rRqxfkQ/BGwu7pQ2fmDcOs5RGv5yKFMK/7cabijhHnGeOAhapjTJ4mt
+         lAbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jVRCxAU1h8uuMP5tlk5Q3qw+CDViJUj6+cwcmkFoV2I=;
-        b=JTpuB2sTB+hDVtVAIltMORi2FFqcBHAyKvL9KM2ZS1wP6WwSviHn2XU+LAxKtxoIKx
-         IbANQkA45TCRB/MfnvRHMwH3/qvdIMidGLeIQ+NXT2twqvPatmvdLbX44pluF14JfBsO
-         8eKPwLYyFD4aYILTxrc/Nx7BoYlBofEyGZTOeEKIJZZZ0lWA0f9L9cc2WHxLISrnH2RZ
-         kgX16PM9vI+kzGL7u/ecbJGjlOc6ZL0dydKpOKYGTqbsTgKveBkLgVeEaoBKbSdRcLeh
-         hViZHzwfeKJ1o86tA56XTtZ7bMH3SVSqi/nNpqJf1lD01cCzQGtI790WLYdLZAtMMBo3
-         WHUg==
-X-Gm-Message-State: AOAM530GfUpAxALGECaHR1vAAmu7Ou7XFFuUe/m7UyuRdGjTBpI3KDeo
-        +BjjfqGvNd6qjrsM8JjGkI6eNutgrw==
-X-Google-Smtp-Source: ABdhPJzyU+1bToje+Yv8U/cWOGO3OKW1Aeh17ICpPtjpRkx2p87s8HuYdnwNug4TFPuzHzsS5CZc0Q==
-X-Received: by 2002:a7b:c194:: with SMTP id y20mr6420782wmi.83.1594935189465;
-        Thu, 16 Jul 2020 14:33:09 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:810b:f40:e00:922b:34ff:fe38:6455])
-        by smtp.googlemail.com with ESMTPSA id v11sm7444825wmb.3.2020.07.16.14.33.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 14:33:08 -0700 (PDT)
-From:   Alex Bee <knaerzche@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     Alex Bee <knaerzche@gmail.com>, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH] media: dvb_usb_pctv452e: use ISL6423 voltage regulator per default
-Date:   Thu, 16 Jul 2020 23:33:03 +0200
-Message-Id: <20200716213303.20044-1-knaerzche@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WCPVcqFuiCdUoJYXeYbmBF6DGMw5rsz8t1arNpaHm/Q=;
+        b=sborYYuzPi64LbO/JZPi8qICY5UJFfwIZ3JWY7mUNwKzLCYHYRCj0cKul8opX2Dexf
+         48hh5rISYsv7v7BcIdqCgR9UF1bNVElFghybWWh1zU+nKq5lq4EoK0J2KEuNAfTFI6Ec
+         JvZaC49Jm3MT0eOeh4+zBAKluwI5TFDI5Fkaf/Ve7AuOuTvzYZYnw/VvgI4lh4q7rOcG
+         Y/bLDXmYFO8deqHmPkEeO86vBT7/soQkfVm16urdrjSbsvYs100f+jTYjvx77xyyETEV
+         Urrl9om3G3JVke9r7Gvpb+ydaAHrRIm0mMZcmMgHWwFhEHZZEaUSSRfmi1vlkLgcxhtb
+         HnmA==
+X-Gm-Message-State: AOAM533fEFj92CQeN1jUqeeluKEJBv+0CrwyUgMLZclmPlwKV6tziLuu
+        y9TFoh/QOu8fOmQP9+E4HqXO11cwq0iO4fyU54A=
+X-Google-Smtp-Source: ABdhPJwlkKnjQKpDgnnAlSJD7m0HJKooPQCbYM4cllqOAxIG6bMA2HhR43hzrGc21eQRRx1kXzerU3wVAFR4p2nj8/Y=
+X-Received: by 2002:a02:ce9a:: with SMTP id y26mr7535180jaq.121.1594935170180;
+ Thu, 16 Jul 2020 14:32:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com> <1594429136-20002-16-git-send-email-alex.shi@linux.alibaba.com>
+In-Reply-To: <1594429136-20002-16-git-send-email-alex.shi@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 16 Jul 2020 14:32:39 -0700
+Message-ID: <CAKgT0Ue72SfAmxCS+tay1NjioW9WBOvVgrhwUtVPz2aDCrcHPQ@mail.gmail.com>
+Subject: Re: [PATCH v16 15/22] mm/compaction: do page isolation first in compaction
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both TT-connect S2-3600 and Pinnacle PCTV Sat HDTV are using
-Intersil ISL6423 as LNB voltage regulator. This makes
-TT-connect S2-3650 CI the only device which uses STM LNBP22 regulator
-which is currently used for all devices driven by pctv452e driver.
+On Fri, Jul 10, 2020 at 5:59 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+> Johannes Weiner has suggested:
+> "So here is a crazy idea that may be worth exploring:
+>
+> Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
+> linked list.
+>
+> Can we make PageLRU atomic and use it to stabilize the lru_lock
+> instead, and then use the lru_lock only serialize list operations?
+> ..."
+>
+> Yes, this patch is doing so on  __isolate_lru_page which is the core
+> page isolation func in compaction and shrinking path.
+> With this patch, the compaction will only deal the PageLRU set and now
+> isolated pages to skip the just alloced page which no LRU bit. And the
+> isolation could exclusive the other isolations in memcg move_account,
+> page migrations and thp split_huge_page.
+>
+> As a side effect, PageLRU may be cleared during shrink_inactive_list
+> path for isolation reason. If so, we can skip that page.
+>
+> Hugh Dickins <hughd@google.com> fixed following bugs in this patch's
+> early version:
+>
+> Fix lots of crashes under compaction load: isolate_migratepages_block()
+> must clean up appropriately when rejecting a page, setting PageLRU again
+> if it had been cleared; and a put_page() after get_page_unless_zero()
+> cannot safely be done while holding locked_lruvec - it may turn out to
+> be the final put_page(), which will take an lruvec lock when PageLRU.
+> And move __isolate_lru_page_prepare back after get_page_unless_zero to
+> make trylock_page() safe:
+> trylock_page() is not safe to use at this time: its setting PG_locked
+> can race with the page being freed or allocated ("Bad page"), and can
+> also erase flags being set by one of those "sole owners" of a freshly
+> allocated page who use non-atomic __SetPageFlag().
+>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> ---
+>  include/linux/swap.h |  2 +-
+>  mm/compaction.c      | 42 +++++++++++++++++++++++++++++++++---------
+>  mm/vmscan.c          | 38 ++++++++++++++++++++++----------------
+>  3 files changed, 56 insertions(+), 26 deletions(-)
+>
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 2c29399b29a0..6d23d3beeff7 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -358,7 +358,7 @@ extern void lru_cache_add_active_or_unevictable(struct page *page,
+>  extern unsigned long zone_reclaimable_pages(struct zone *zone);
+>  extern unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+>                                         gfp_t gfp_mask, nodemask_t *mask);
+> -extern int __isolate_lru_page(struct page *page, isolate_mode_t mode);
+> +extern int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode);
+>  extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
+>                                                   unsigned long nr_pages,
+>                                                   gfp_t gfp_mask,
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index f14780fc296a..2da2933fe56b 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -869,6 +869,7 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                 if (!valid_page && IS_ALIGNED(low_pfn, pageblock_nr_pages)) {
+>                         if (!cc->ignore_skip_hint && get_pageblock_skip(page)) {
+>                                 low_pfn = end_pfn;
+> +                               page = NULL;
+>                                 goto isolate_abort;
+>                         }
+>                         valid_page = page;
+> @@ -950,6 +951,21 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                 if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
+>                         goto isolate_fail;
+>
+> +               /*
+> +                * Be careful not to clear PageLRU until after we're
+> +                * sure the page is not being freed elsewhere -- the
+> +                * page release code relies on it.
+> +                */
+> +               if (unlikely(!get_page_unless_zero(page)))
+> +                       goto isolate_fail;
+> +
+> +               if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
+> +                       goto isolate_fail_put;
+> +
+> +               /* Try isolate the page */
+> +               if (!TestClearPageLRU(page))
+> +                       goto isolate_fail_put;
+> +
+>                 /* If we already hold the lock, we can skip some rechecking */
+>                 if (!locked) {
+>                         locked = compact_lock_irqsave(&pgdat->lru_lock,
 
-This patch fixes this by creating an exception for TT-connect S2-3650 CI
-to continue to use STM LNBP22 while all others now using correct ISL6423
-driver which makes DiSEqC/EN50494 comands which involve voltage changes
-now working on the other devices (which didn't work before).
+Why not do the __isolate_lru_page_prepare before getting the page?
+That way you can avoid performing an extra atomic operation on non-LRU
+pages.
 
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
----
- drivers/media/usb/dvb-usb/Kconfig    |  1 +
- drivers/media/usb/dvb-usb/pctv452e.c | 24 ++++++++++++++++++++----
- 2 files changed, 21 insertions(+), 4 deletions(-)
+> @@ -962,10 +978,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                                         goto isolate_abort;
+>                         }
+>
+> -                       /* Recheck PageLRU and PageCompound under lock */
+> -                       if (!PageLRU(page))
+> -                               goto isolate_fail;
+> -
+>                         /*
+>                          * Page become compound since the non-locked check,
+>                          * and it's on LRU. It can only be a THP so the order
+> @@ -973,16 +985,13 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                          */
+>                         if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
+>                                 low_pfn += compound_nr(page) - 1;
+> -                               goto isolate_fail;
+> +                               SetPageLRU(page);
+> +                               goto isolate_fail_put;
+>                         }
+>                 }
+>
+>                 lruvec = mem_cgroup_page_lruvec(page, pgdat);
+>
+> -               /* Try isolate the page */
+> -               if (__isolate_lru_page(page, isolate_mode) != 0)
+> -                       goto isolate_fail;
+> -
+>                 /* The whole page is taken off the LRU; skip the tail pages. */
+>                 if (PageCompound(page))
+>                         low_pfn += compound_nr(page) - 1;
+> @@ -1011,6 +1020,15 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                 }
+>
+>                 continue;
+> +
+> +isolate_fail_put:
+> +               /* Avoid potential deadlock in freeing page under lru_lock */
+> +               if (locked) {
+> +                       spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> +                       locked = false;
+> +               }
+> +               put_page(page);
+> +
+>  isolate_fail:
+>                 if (!skip_on_failure)
+>                         continue;
+> @@ -1047,9 +1065,15 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>         if (unlikely(low_pfn > end_pfn))
+>                 low_pfn = end_pfn;
+>
+> +       page = NULL;
+> +
+>  isolate_abort:
+>         if (locked)
+>                 spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> +       if (page) {
+> +               SetPageLRU(page);
+> +               put_page(page);
+> +       }
+>
+>         /*
+>          * Updated the cached scanner pfn once the pageblock has been scanned
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 18986fefd49b..f77748adc340 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1544,7 +1544,7 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+>   *
+>   * returns 0 on success, -ve errno on failure.
+>   */
+> -int __isolate_lru_page(struct page *page, isolate_mode_t mode)
+> +int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode)
+>  {
+>         int ret = -EINVAL;
+>
+> @@ -1598,20 +1598,9 @@ int __isolate_lru_page(struct page *page, isolate_mode_t mode)
+>         if ((mode & ISOLATE_UNMAPPED) && page_mapped(page))
+>                 return ret;
+>
+> -       if (likely(get_page_unless_zero(page))) {
+> -               /*
+> -                * Be careful not to clear PageLRU until after we're
+> -                * sure the page is not being freed elsewhere -- the
+> -                * page release code relies on it.
+> -                */
+> -               ClearPageLRU(page);
+> -               ret = 0;
+> -       }
+> -
+> -       return ret;
+> +       return 0;
+>  }
+>
+> -
+>  /*
+>   * Update LRU sizes after isolating pages. The LRU size updates must
+>   * be complete before mem_cgroup_update_lru_size due to a sanity check.
+> @@ -1691,17 +1680,34 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+>                  * only when the page is being freed somewhere else.
+>                  */
+>                 scan += nr_pages;
+> -               switch (__isolate_lru_page(page, mode)) {
+> +               switch (__isolate_lru_page_prepare(page, mode)) {
+>                 case 0:
+> +                       /*
+> +                        * Be careful not to clear PageLRU until after we're
+> +                        * sure the page is not being freed elsewhere -- the
+> +                        * page release code relies on it.
+> +                        */
+> +                       if (unlikely(!get_page_unless_zero(page)))
+> +                               goto busy;
+> +
+> +                       if (!TestClearPageLRU(page)) {
+> +                               /*
+> +                                * This page may in other isolation path,
+> +                                * but we still hold lru_lock.
+> +                                */
+> +                               put_page(page);
+> +                               goto busy;
+> +                       }
+> +
 
-diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
-index 25ba03edcb5c..7498110142e4 100644
---- a/drivers/media/usb/dvb-usb/Kconfig
-+++ b/drivers/media/usb/dvb-usb/Kconfig
-@@ -279,6 +279,7 @@ config DVB_USB_PCTV452E
- 	tristate "Pinnacle PCTV HDTV Pro USB device/TT Connect S2-3600"
- 	depends on DVB_USB
- 	select TTPCI_EEPROM
-+	select DVB_ISL6423 if MEDIA_SUBDRV_AUTOSELECT
- 	select DVB_LNBP22 if MEDIA_SUBDRV_AUTOSELECT
- 	select DVB_STB0899 if MEDIA_SUBDRV_AUTOSELECT
- 	select DVB_STB6100 if MEDIA_SUBDRV_AUTOSELECT
-diff --git a/drivers/media/usb/dvb-usb/pctv452e.c b/drivers/media/usb/dvb-usb/pctv452e.c
-index 441d878fc22c..4b13c1f35b28 100644
---- a/drivers/media/usb/dvb-usb/pctv452e.c
-+++ b/drivers/media/usb/dvb-usb/pctv452e.c
-@@ -20,6 +20,7 @@
- #include "stb6100.h"
- #include "stb6100_cfg.h"
- /* FE Power */
-+#include "isl6423.h"
- #include "lnbp22.h"
- 
- #include <media/dvb_ca_en50221.h>
-@@ -83,6 +84,13 @@ static struct stb0899_postproc pctv45e_postproc[] = {
- 	{ 0, 0 }
- };
- 
-+static struct isl6423_config pctv452e_isl6423_config = {
-+	.current_max		= SEC_CURRENT_515m,
-+	.curlim			= SEC_CURRENT_LIM_ON,
-+	.mod_extern		= 1,
-+	.addr			= 0x08,
-+};
-+
- /*
-  * stores all private variables for communication with the PCTV452e DVB-S2
-  */
-@@ -909,15 +917,23 @@ static int pctv452e_frontend_attach(struct dvb_usb_adapter *a)
- 						&a->dev->i2c_adap);
- 	if (!a->fe_adap[0].fe)
- 		return -ENODEV;
--	if ((dvb_attach(lnbp22_attach, a->fe_adap[0].fe,
--					&a->dev->i2c_adap)) == NULL)
--		err("Cannot attach lnbp22\n");
- 
- 	id = a->dev->desc->warm_ids[0];
- 	if (USB_VID_TECHNOTREND == id->idVendor
--	    && USB_PID_TECHNOTREND_CONNECT_S2_3650_CI == id->idProduct)
-+	    && USB_PID_TECHNOTREND_CONNECT_S2_3650_CI == id->idProduct) {
-+		if (dvb_attach(lnbp22_attach,
-+			       a->fe_adap[0].fe,
-+			       &a->dev->i2c_adap) == NULL) {
-+			err("Cannot attach lnbp22\n");
-+		}
- 		/* Error ignored. */
- 		tt3650_ci_init(a);
-+	} else if (dvb_attach(isl6423_attach,
-+			      a->fe_adap[0].fe,
-+			      &a->dev->i2c_adap,
-+			      &pctv452e_isl6423_config) == NULL) {
-+		err("Cannot attach isl6423\n");
-+	}
- 
- 	return 0;
- }
--- 
-2.17.1
+I wonder if it wouldn't make sense to combine these two atomic ops
+with tests and the put_page into a single inline function? Then it
+could be possible to just do one check and if succeeds you do the
+block of code below, otherwise you just fall-through into the -EBUSY
+case.
 
+>                         nr_taken += nr_pages;
+>                         nr_zone_taken[page_zonenum(page)] += nr_pages;
+>                         list_move(&page->lru, dst);
+>                         break;
+> -
+> +busy:
+>                 case -EBUSY:
+>                         /* else it is being freed elsewhere */
+>                         list_move(&page->lru, src);
+> -                       continue;
+> +                       break;
+>
+>                 default:
+>                         BUG();
+> --
+> 1.8.3.1
+>
+>
