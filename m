@@ -2,138 +2,91 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAEBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B48DC433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC8072071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24399206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:45:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MzrX8p2+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Mo/Fg7lk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgGPFjQ (ORCPT
+        id S1726293AbgGPFpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:39:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgGPFjQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:39:16 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E600C061755;
-        Wed, 15 Jul 2020 22:39:16 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l63so4266615pge.12;
-        Wed, 15 Jul 2020 22:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mkDB3tdwP3ZrecyeuZ2HihfaUMSWIkxJsdLLCDHoVsk=;
-        b=MzrX8p2+gdJ26geWwsRzsyc0TF1UDznhbV5hI3aNqJhCu+rv8D1lKeKroazYErM4Sd
-         cbOOoWcsUBFoB3Lm8E36OV/EgQSKd4A46hXps+vvRDZpwmSYb+SEWgtMnGv5aDuUf0sV
-         WQRvkBJOm0V1jt04PRm2tFazIHX3Vv6vjn6KHQDyrLVx1/2siRWXPafm8dRVTByOVMwZ
-         +if5MKet5U72+VLkpezzfCIabqc6L3fdUV7OsKNG8fFLxJz9viafaRhnVhiuLnvGnEaf
-         ZyV008Sw985wDIC9S+W6p6VAWmT3X4kypQC2HLrekV6PJnNslW6szh/7I25dOycUWUCH
-         nAhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mkDB3tdwP3ZrecyeuZ2HihfaUMSWIkxJsdLLCDHoVsk=;
-        b=EqrbyXOs5V+2xvO1848aRsMBItZe4brO5Tt9cjddR8WKBJUEU3gIK5HQdPnhgcAQtw
-         +tH34PHhe+WLzpDib7r9lYxjN8qgbF4yEkkmggn7S1TXs2nt26c3CTP45fSZy4UPbe5f
-         4abfKdN8pgVh+038QA/5kFErdzx7ds6MWb4ljkPFryl3XhzqM1GdoSK03oRBt1nPH8/0
-         T2Vw8wIPqeWoyBPIxGXbYpFH19kBErNPkM78dlnQGPFEbfDPwM4i7nNF1uVE2mM/yjJ4
-         u52p50uCXxPwHUEplVz4CyNrpOOR0ToY4d514N3vlZfoIOJrr4YHqTZTEN8Jph8QXbYf
-         V7dg==
-X-Gm-Message-State: AOAM532BBonFQvcJH0Ftf3t/MMiGdAejziMHzsjOfXo+xAohMpoaeFkj
-        Lxf0mUoxsLa2Tn55KWLQ6JY=
-X-Google-Smtp-Source: ABdhPJz11bQpBPtDJEqYJOrjjIBcv+c6JOeKl8NgT+dN8p0yn3yWvlKdnfhGAPVVfM+3P+lRTsMXXQ==
-X-Received: by 2002:aa7:9241:: with SMTP id 1mr2442967pfp.188.1594877955324;
-        Wed, 15 Jul 2020 22:39:15 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id b82sm3576371pfb.215.2020.07.15.22.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 22:39:14 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 22:39:12 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jingle Wu <jingle.wu@emc.com.tw>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        phoenix@emc.com.tw, josh.chen@emc.com.tw,
-        kai.heng.feng@canonical.com
-Subject: Re: [PATCH 2/2] Input: elan_i2c - Modify the IAP related function
- for page sizes 128, 512 bytes.
-Message-ID: <20200716053912.GB1665100@dtor-ws>
-References: <20200714105641.15151-1-jingle.wu@emc.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714105641.15151-1-jingle.wu@emc.com.tw>
+        Thu, 16 Jul 2020 01:45:54 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:57786 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbgGPFpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 01:45:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594878352; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=QCdzWtaoCFQUbVW6Q4oVXM+yOcrN8PD2KCUkLjOvy2I=; b=Mo/Fg7lk7bwH8ysX4dHBNJNFvtTVIZIkcuR187zPafOT7bmBPr2FerxBOFXaoUvWBC/u3IYD
+ f44X+jOlBMcYhmzaf8LCtxvX2ESd61JmKbrPgQJRp3NfAseR3B/uX6Aqo4Ewka/Em8+hJAY/
+ hNnACl8DzMERraWI8PprNZf/h+g=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
+ 5f0fe97fc7a053446a791c99 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 05:45:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D2A1EC43395; Thu, 16 Jul 2020 05:45:34 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 80335C433C9;
+        Thu, 16 Jul 2020 05:45:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 80335C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v2 0/4] DVFS support for Venus
+Date:   Thu, 16 Jul 2020 11:12:15 +0530
+Message-Id: <1594878139-3402-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jingle,
+v2: Fixed up the labels of OPP nodes in patch 4
+    Included the bindings update patch as part of this series,
+    a resend of https://lore.kernel.org/patchwork/patch/1241077/
 
-On Tue, Jul 14, 2020 at 06:56:41AM -0400, Jingle Wu wrote:
-> +	if (!iap)
-> +		cmd = ETP_I2C_FW_VERSION_CMD;
-> +	else if (pattern_ver == 0)
-> +		cmd = ETP_I2C_IAP_VERSION_CMD_OLD;
+These patches add DVFS support for Venus
 
-Just to confirm, the older devices (I assume that pattern 0 means older)
-have version command that is numerically higher than the one for the
-newer (pattern >= 1) devices?
+Patch 1 will need to be picked by Rob.
+Patch 2 will need to be picked by Stan,
+Patch 3 and 4 should land via the qcom tree.
 
-> +	else
-> +		cmd = ETP_I2C_IAP_VERSION_CMD;
->  
-> -	error = elan_i2c_read_cmd(client,
-> -				  iap ? ETP_I2C_IAP_VERSION_CMD :
-> -					ETP_I2C_FW_VERSION_CMD,
-> -				  val);
-> +	error = elan_i2c_read_cmd(client, cmd, val);
->  	if (error) {
->  		dev_err(&client->dev, "failed to get %s version: %d\n",
->  			iap ? "IAP" : "FW", error);
->  		return error;
->  	}
->  
-> -	if (pattern_ver == 0x01)
-> +	if (pattern_ver >= 0x01)
->  		*version = iap ? val[1] : val[0];
->  	else
->  		*version = val[0];
-> @@ -298,7 +316,7 @@ static int elan_i2c_get_sm_version(struct i2c_client *client,
->  		return error;
->  	}
->  
-> -	if (pattern_ver == 0x01) {
-> +	if (pattern_ver >= 0x01) {
->  		error = elan_i2c_read_cmd(client, ETP_I2C_IC_TYPE_CMD, val);
->  		if (error) {
->  			dev_err(&client->dev, "failed to get ic type: %d\n",
-> @@ -324,7 +342,14 @@ static int elan_i2c_get_sm_version(struct i2c_client *client,
->  			return error;
->  		}
->  		*version = val[0];
-> -		*ic_type = val[1];
-> +
-> +		error = elan_i2c_read_cmd(client, ETP_I2C_IAP_VERSION_CMD, val);
-> +		if (error) {
-> +			dev_err(&client->dev, "failed to get ic type: %d\n",
-> +				error);
-> +			return error;
-> +		}
+Rajendra Nayak (4):
+  dt-bindings: media: venus: Add an optional power domain for perf
+    voting
+  media: venus: core: Add support for opp tables/perf voting
+  arm64: dts: sdm845: Add OPP tables and power-domains for venus
+  arm64: dts: sc7180: Add OPP tables and power-domains for venus
 
-Could you please tell me why this chunk is needed?
-
-Thanks.
+ .../bindings/media/qcom,sc7180-venus.yaml          |  6 ++-
+ .../bindings/media/qcom,sdm845-venus-v2.yaml       |  6 ++-
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               | 35 +++++++++++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 40 +++++++++++++++-
+ drivers/media/platform/qcom/venus/core.c           | 43 ++++++++++++++---
+ drivers/media/platform/qcom/venus/core.h           |  5 ++
+ drivers/media/platform/qcom/venus/pm_helpers.c     | 54 ++++++++++++++++++++--
+ 7 files changed, 173 insertions(+), 16 deletions(-)
 
 -- 
-Dmitry
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
