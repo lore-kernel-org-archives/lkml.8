@@ -2,104 +2,100 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C85BC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 728CC206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G4oAcF1W"
+	by mail.kernel.org (Postfix) with ESMTP id 7494120787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgGPO24 (ORCPT
+        id S1728878AbgGPO3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728054AbgGPO24 (ORCPT
+        Thu, 16 Jul 2020 10:29:12 -0400
+Received: from mail-oo1-f68.google.com ([209.85.161.68]:45704 "EHLO
+        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728054AbgGPO3L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:28:56 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6B1AC061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:28:55 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 22so10499315wmg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6JRMdst6t7X7TTp06c6DTXphcwzBl33/L2DKEvEWMHo=;
-        b=G4oAcF1WPTVdBIfQ6w4eXULeQ2T9EmAs2gdHdIkD85BVqmrgSroOjiHjaFRsNv+ONM
-         11SpMBLH/32DcLe9/3OQXSFB+QpMyeh4A85hOTFlfBLndrUMQsln2TLZb+JGTaqqXxwW
-         +nzB3p7n7MfL+bs62aknL2LPN3THFvneyLQNSNP6r2AdyEAxBS0ccFGXCF+90nu8kPVB
-         e7oJqVZly8pPKFcbyYVTz83UsmhekrwEWFp4gtJS3xKSKtZuefKVn5dnPQrKK5z12g8W
-         RDlsa0GC5XuWSi8r/5uXG0jkIlJwEjipOecoOCQ1Qfj8ZgU76eHA/fcSA1kHagm1A2sU
-         BqvA==
+        Thu, 16 Jul 2020 10:29:11 -0400
+Received: by mail-oo1-f68.google.com with SMTP id a9so1202769oof.12;
+        Thu, 16 Jul 2020 07:29:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6JRMdst6t7X7TTp06c6DTXphcwzBl33/L2DKEvEWMHo=;
-        b=F8jWSwo+G7MkPhM/jbWY30CUgKSBYzjuYUu7gPlXhch/M80w/evddjWiMUi97Ji2ZW
-         GvGWjbWSJGp86Hnw9rGbTiBmmUQVRWcbNAFuvh2m2RrC19z6FBsG1PWU9CAr91mY21ME
-         jpbLrWqzHdpn34I7zq4nq1dKuF9MY3eMMtofbLPQgJMC58WWNjp06PezfyevKAbU047e
-         Q4z3Z8dLNO38MtkDwJBbg6QBXoveUiDTlIxcTV55BjHFC2y0O0R91ek9rX45WSIDSJ7l
-         NncppHkGYpRDi17y2L5wH+Bugiz6wyVpyXLGpTiTnQTxceTZVkSDiJFHXnkCBuYA8YF0
-         H8AA==
-X-Gm-Message-State: AOAM532u1eJfU+R1DIbuWEsp2p7gtZ7RUw91VoQRRnLkcdz6z5tAaFwY
-        /mppZgnHMDzyezl/Sga0P2tH6w==
-X-Google-Smtp-Source: ABdhPJyHD8zrYi+EFetvc8uxd6vCIsnhmVFTMZ1dM9PRcghcTi/sTsarwrSdkE7Ex8nZ31dAkNCURg==
-X-Received: by 2002:a05:600c:204d:: with SMTP id p13mr4584426wmg.88.1594909734319;
-        Thu, 16 Jul 2020 07:28:54 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id 59sm9749215wrj.37.2020.07.16.07.28.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 07:28:53 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     lee.jones@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] mfd: core: Fix memory leak of 'cell'
-Date:   Thu, 16 Jul 2020 15:28:51 +0100
-Message-Id: <20200716142851.1669946-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wbLycxU+N0h95t3MHG+c9KvWEt/sZuHeu2nuR80b1nw=;
+        b=oZMPHTGFougK3XHEVEJsQOPHwbzAVzBWgBgrTp4zBnNtvFdsay3DqSKBul2w+0OG+8
+         d0VxTy17fqju2Pp2W4zKOWw4pliJyfVPNu8QjJnYdWgrU+1CVhSfERYyZPVLMO7NmCa3
+         SfMdkgWicxijikkANBhBq6XQq1YundO38mv86zwTCcSdayzjfPoBQvdgFllc1HKYyAVX
+         fqfsritQivsJWCVs0xnr8hl7GMU1zVrEMZq+mJRAtl6qcWX3epcOMAe81kawYf/GkeaJ
+         6rEZoniARpMXV/x8lAmpFsbTK6xKaY87tt5Yz8dZHCnBRoc2R2tDA8xCf3HF+XrPaWIT
+         moEA==
+X-Gm-Message-State: AOAM530zmC6Gow7Bxi83DikDdF0iGR0mr3QR+ob+SAC+W1PwI8DdeMCw
+        95GSvuA7RZnzCln84ICwDkDQPsE7Dm6Rmm8o09k=
+X-Google-Smtp-Source: ABdhPJxgpqG3VxzPzTYPatOvZfYeSh1wMMWCs1sv4nhFJKhZhzppSv70Xifb8MB7fpIeWUkupymjehrXXlJuOxdCMU0=
+X-Received: by 2002:a4a:675a:: with SMTP id j26mr1440477oof.1.1594909750520;
+ Thu, 16 Jul 2020 07:29:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594811350-14066-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 Jul 2020 16:28:59 +0200
+Message-ID: <CAMuHMdUsVKLABUYgG1EBtXHdg-PTuBfntvN8hw_PDLj+ybufmQ@mail.gmail.com>
+Subject: Re: [PATCH 12/20] dt-bindings: i2c: renesas,iic: Document r8a774e1 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-can@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When creating a platform device from an MFD cell description, we
-allocate some memory and make a copy which is then stored inside the
-platform_device's structure.  However, care is not currently taken to
-free the allocated memory when the platform device is torn down.
+On Wed, Jul 15, 2020 at 1:10 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document IIC controller for RZ/G2H (R8A774E1) SoC, which is compatible
+> with R-Car Gen3 SoC family.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-This patch takes care of the leak.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/mfd-core.c | 3 +++
- 1 file changed, 3 insertions(+)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index f5a73af60dd40..e831e733b38cf 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -297,7 +297,10 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
- 	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
- 					       cell->num_parent_supplies);
- 
-+	kfree(cell);
-+
- 	platform_device_unregister(pdev);
-+
- 	return 0;
- }
- 
+                        Geert
+
 -- 
-2.25.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
