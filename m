@@ -2,127 +2,90 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DE6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECCC20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA2720739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgGPQ3J (ORCPT
+        id S1729304AbgGPQ3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:29:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:35621 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728845AbgGPQ3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:29:08 -0400
-IronPort-SDR: JmVOYr2Ka0wOxCC1OClse1Vp4g1mr8dIvNevBrot2EHibBa5KQa+ZtU5QfgL1TcNaJGYHmfONM
- vrm4M+uAc9pA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="234285576"
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="234285576"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 09:29:07 -0700
-IronPort-SDR: jVayiEFqbp2750im/htz5hT5AFKhoNCXs9RNDhLQ0oKLziiHP1ztfXWKy4FWsWUDyjU51Mt+qx
- /r4ub4vJDnLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="326574290"
-Received: from hmehl-mobl2.ger.corp.intel.com (HELO [10.254.156.209]) ([10.254.156.209])
-  by orsmga007.jf.intel.com with ESMTP; 16 Jul 2020 09:29:04 -0700
-Subject: Re: [Intel-wired-lan] [PATCH] igc: Do not use link uninitialized in
- igc_check_for_copper_link
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        intel-wired-lan@lists.osuosl.org, Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
-        "Neftin, Sasha" <sasha.neftin@intel.com>,
-        "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>
-References: <20200716044934.152364-1-natechancellor@gmail.com>
-From:   "Neftin, Sasha" <sasha.neftin@intel.com>
-Message-ID: <cdfec63a-e51f-e1a6-aa60-6ca949338306@intel.com>
-Date:   Thu, 16 Jul 2020 19:29:03 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 12:29:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33338 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728845AbgGPQ3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:29:42 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jw6lI-0001Zl-5G; Thu, 16 Jul 2020 16:29:32 +0000
+Date:   Thu, 16 Jul 2020 18:29:31 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve Hjonnevag <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH v2] binder: Don't use mmput() from shrinker function.
+Message-ID: <20200716162931.g3delsp7qmfjup6x@wittgenstein>
+References: <0000000000001fbbb605aa805c9b@google.com>
+ <5ce3ee90-333e-638d-ac8c-cd6d7ab7aa3b@I-love.SAKURA.ne.jp>
+ <20200716083506.GA20915@dhcp22.suse.cz>
+ <36db7016-98d6-2c6b-110b-b2481fd480ac@i-love.sakura.ne.jp>
+ <20200716135445.GN31089@dhcp22.suse.cz>
+ <4ba9adb2-43f5-2de0-22de-f6075c1fab50@i-love.sakura.ne.jp>
+ <20200716151756.GO31089@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200716044934.152364-1-natechancellor@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200716151756.GO31089@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/2020 07:49, Nathan Chancellor wrote:
-> Clang warns:
+On Thu, Jul 16, 2020 at 05:17:56PM +0200, Michal Hocko wrote:
+> On Fri 17-07-20 00:12:15, Tetsuo Handa wrote:
+> > syzbot is reporting that mmput() from shrinker function has a risk of
+> > deadlock [1], for delayed_uprobe_add() from update_ref_ctr() calls
+> > kzalloc(GFP_KERNEL) with delayed_uprobe_lock held, and
+> > uprobe_clear_state() from __mmput() also holds delayed_uprobe_lock.
+> > 
+> > Commit a1b2289cef92ef0e ("android: binder: drop lru lock in isolate
+> > callback") replaced mmput() with mmput_async() in order to avoid sleeping
+> > with spinlock held. But this patch replaces mmput() with mmput_async() in
+> > order not to start __mmput() from shrinker context.
+> > 
+> > [1] https://syzkaller.appspot.com/bug?id=bc9e7303f537c41b2b0cc2dfcea3fc42964c2d45
+> > 
+> > Reported-by: syzbot <syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com>
+> > Reported-by: syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>
+> > Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 > 
-Hello Nathan,
-Thanks for tracking our code.Please, look at 
-https://patchwork.ozlabs.org/project/intel-wired-lan/patch/20200709073416.14126-1-sasha.neftin@intel.com/ 
-- I hope this patch already address this Clang warns - please, let me know.
-> drivers/net/ethernet/intel/igc/igc_mac.c:374:6: warning: variable 'link'
-> is used uninitialized whenever 'if' condition is true
-> [-Wsometimes-uninitialized]
->          if (!mac->get_link_status) {
->              ^~~~~~~~~~~~~~~~~~~~~
-> drivers/net/ethernet/intel/igc/igc_mac.c:424:33: note: uninitialized use
-> occurs here
->          ret_val = igc_set_ltr_i225(hw, link);
->                                         ^~~~
-> drivers/net/ethernet/intel/igc/igc_mac.c:374:2: note: remove the 'if' if
-> its condition is always false
->          if (!mac->get_link_status) {
->          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/ethernet/intel/igc/igc_mac.c:367:11: note: initialize the
-> variable 'link' to silence this warning
->          bool link;
->                   ^
->                    = 0
-> 1 warning generated.
-> 
-> It is not wrong, link is only uninitialized after this through
-> igc_phy_has_link. Presumably, if we skip the majority of this function
-> when get_link_status is false, we should skip calling igc_set_ltr_i225
-> as well. Just directly return 0 in this case, rather than bothering with
-> adding another label or initializing link in the if statement.
-> 
-> Fixes: 707abf069548 ("igc: Add initial LTR support")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1095
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->   drivers/net/ethernet/intel/igc/igc_mac.c | 6 ++----
->   1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/igc/igc_mac.c b/drivers/net/ethernet/intel/igc/igc_mac.c
-> index b47e7b0a6398..26e3c56a4a8b 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_mac.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_mac.c
-> @@ -371,10 +371,8 @@ s32 igc_check_for_copper_link(struct igc_hw *hw)
->   	 * get_link_status flag is set upon receiving a Link Status
->   	 * Change or Rx Sequence Error interrupt.
->   	 */
-> -	if (!mac->get_link_status) {
-> -		ret_val = 0;
-> -		goto out;
-> -	}
-> +	if (!mac->get_link_status)
-> +		return 0;
->   
->   	/* First we want to see if the MII Status Register reports
->   	 * link.  If so, then we want to get the current speed/duplex
-> 
-> base-commit: ca0e494af5edb59002665bf12871e94b4163a257
-> 
-Thanks,
-Sasha
+> Reviewed-by: Michal Hocko <mhocko@suse.com>
+
+Thanks for the careful review Michal!
+Does this need a Cc: stable?
+
+Otherwise
+
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+
+Thanks!
+Christian
