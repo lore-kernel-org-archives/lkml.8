@@ -2,58 +2,60 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F38C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40B1C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F839206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7BE20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:08:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DepxCFxm"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PCX3eNBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgGPIIv (ORCPT
+        id S1726855AbgGPIIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:08:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45118 "EHLO
+        Thu, 16 Jul 2020 04:08:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgGPIIt (ORCPT
+        with ESMTP id S1726834AbgGPIIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:08:49 -0400
+        Thu, 16 Jul 2020 04:08:54 -0400
 Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04568C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 01:08:48 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id a24so3316155pfc.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 01:08:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A680CC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 01:08:53 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id s26so3313214pfm.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 01:08:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Q1NMSOrdmEBAoODvtBeWiT8XzpHbNfB6Y0FWPWAR6Ao=;
-        b=DepxCFxm7ID3zD8asyMdeo2OHoYRep9fEEaBt1u31Rm+EkGIlRUZHG4m6dn/vzgXW4
-         xiIdufe9s4RSt9eu4RvFRP6695QDvAHkwzRU2s2kQxHGdNF+TSccMFln30QwHjpjZCqn
-         Qe8+9x2GOXHdLcV4zcQ4EcgLapnlyT9M6/CWQ=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=DQl00yYXYwsbpEtRwxsV9i6tqBPWGw0OYdTItL8Npos=;
+        b=PCX3eNBJh2mqYNaMPMn0gVvxkCAmz8mqNsRWiN5HBvqOC3YNoY+sXnQEa7TLgzm7yz
+         OxRZajCzl6VnFa0FbTdELIg4dQXr66IYV9Xb3vjeNrQCLsdGmhpg3pWKBlVTqgYEv0lK
+         gxQsQ9Tofpz1qTaejYFP6lDGToXNhgTJMrM04=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Q1NMSOrdmEBAoODvtBeWiT8XzpHbNfB6Y0FWPWAR6Ao=;
-        b=LdSfzB3z/MsTdab34c/KTt+NZ45f+OwsfstTBQ/6H3K/QjqatFbMvTv96O+QlGfSGY
-         KuZpDFfFL9Cqnc+68GFK0qA0AC41N9lI/Bbc1ysBwXBZdotNJNWLSUStJtYcpnV7Q6+e
-         kMTvGlEojizC1rP8jrMOc5YzGH0WGrmd9/8AedKkwMiF+4GyeUIEmtkwY8O/phKhrVUP
-         5eVbMalQG0hhcYPS9SLsszoHviUh5Eo6J+XWQAEmBN6beQ/lkJGzmA3W0FfHWK2NBYU3
-         nLZQSyQlHUbi2oFljOEXzRv8WU6Nu9LGSTX8vEqFe+4SgWX4F31xZ3FnISxKwpYS81Xs
-         yFtg==
-X-Gm-Message-State: AOAM532iP8nYKNqWtC4D/++JMhbzu48dBRWR89rNYcksAVE4zUgbPs0i
-        3oMA3eab4b7F/oeR7jS3JExM8Q==
-X-Google-Smtp-Source: ABdhPJz5dxnbGGR/Zl7SKoHACsCiYpWWIE1uv3TQqThSvMRdNM7XbkWBeI+Zu8/IQX1kEz+mVF+SqQ==
-X-Received: by 2002:a63:725c:: with SMTP id c28mr3198841pgn.156.1594886927693;
-        Thu, 16 Jul 2020 01:08:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=DQl00yYXYwsbpEtRwxsV9i6tqBPWGw0OYdTItL8Npos=;
+        b=ae35SAnrMpeTghvKrgqHmvflflqByDVTZ8SzvxI5CFW/d4q64f+Tgrb0/3IL60sDvX
+         4/FHakyomNT6SIhGC5i3gRMq6EBYo8lEpOJ5IUaMW3BJ5pXEXhKFrpyc1PXJ4s6RvIxE
+         irZ82dL7RRzfcyyj69FEoE6unLCbbv/NBSFjOeB0TDxjuwGyMJDpSmyx8ASQhvEoahXB
+         vsrgMlyTf7jC7UybqRF6RPyivIqQjlsck9D/DqwQ53oD86Tzlc5ziZSE4SqqGLyZWj8H
+         kyMp4btD95NwJ2wrB+hjN+D06h4wlm/qSp4ZOCo71cla5utSwNJddNAeplHJ/V8PE+3S
+         BXSg==
+X-Gm-Message-State: AOAM530E91Xnk9b51dKVu/pcMAmyrTnKdvDCyrvwRfdYnrsbhw/MkvK6
+        RncJ583KtYfm++zkwACC862c/g==
+X-Google-Smtp-Source: ABdhPJxm7zAj2YaUS8iycAQbwnHzDM0z0BXDv4TUVD79cq9vyE7R2aq700W4lTKv5MMyGXmEi6aBUA==
+X-Received: by 2002:a62:347:: with SMTP id 68mr2540133pfd.185.1594886933131;
+        Thu, 16 Jul 2020 01:08:53 -0700 (PDT)
 Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id a3sm4353085pgd.73.2020.07.16.01.08.43
+        by smtp.gmail.com with ESMTPSA id a3sm4353085pgd.73.2020.07.16.01.08.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 01:08:46 -0700 (PDT)
+        Thu, 16 Jul 2020 01:08:52 -0700 (PDT)
 From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 To:     Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
@@ -65,25 +67,38 @@ To:     Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-arm-kernel@lists.infradead.org
 Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH V1 0/2] add PEC support on slave side
-Date:   Thu, 16 Jul 2020 13:38:34 +0530
-Message-Id: <20200716080836.2279-1-rayagonda.kokatanur@broadcom.com>
+Subject: [PATCH V1 1/2] i2c: add PEC error event
+Date:   Thu, 16 Jul 2020 13:38:35 +0530
+Message-Id: <20200716080836.2279-2-rayagonda.kokatanur@broadcom.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200716080836.2279-1-rayagonda.kokatanur@broadcom.com>
+References: <20200716080836.2279-1-rayagonda.kokatanur@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set adds support for PEC on Slave side.
+Add new event I2C_SLAVE_PEC_ERR to list of slave events.
+This event will be used by slave bus driver to indicate
+PEC error to slave client or backend driver.
 
-Rayagonda Kokatanur (2):
-  i2c: add PEC error event
-  i2c: iproc: add slave pec support
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+---
+ include/linux/i2c.h | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/i2c/busses/i2c-bcm-iproc.c | 50 +++++++++++++++++++++++++++---
- include/linux/i2c.h                |  1 +
- 2 files changed, 47 insertions(+), 4 deletions(-)
-
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index b8b8963f8bb9..e04acd04eb48 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -370,6 +370,7 @@ enum i2c_slave_event {
+ 	I2C_SLAVE_READ_PROCESSED,
+ 	I2C_SLAVE_WRITE_RECEIVED,
+ 	I2C_SLAVE_STOP,
++	I2C_SLAVE_PEC_ERR,
+ };
+ 
+ int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
 -- 
 2.17.1
 
