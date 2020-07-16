@@ -2,119 +2,165 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E9BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC817C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8862063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB73E20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ac55q3Zm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JUlcFezn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgGPPGY (ORCPT
+        id S1728885AbgGPPG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:06:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgGPPGY (ORCPT
+        Thu, 16 Jul 2020 11:06:28 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36158 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgGPPG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:06:24 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8C3C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:06:23 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id j18so10613821wmi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:06:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=HlvGKFaG5MmOytwqLGoLiKZ8wGbh30D2hsn+mi7pUuU=;
-        b=Ac55q3ZmAh67qDQuBn4DTTOG8vcWoh7dxtGs/WOeLrGqlKo0uI+1fhS4pKjqn+0YHd
-         T/YzD4qM732SL9QwSoZnWEn2cXyqy0HvjnfygIOhJcLkzwt86qEbrNh3KM8EV5GVwhpG
-         w0BZNA+Jmv37bXLC81zeL/HjHwB/+gHHb14EkWSmqfnUTy4w0p8XPQmmF5X0hldTjecO
-         MXKb6qq/02Y25bS4OQRMUMTUlaCZuXIfDdLJ6sJSR0qey9WaxMswCss7uE9SUS9p31tr
-         BIs1tRbsgpWxIfuzShoLx307H66HN4glRDsYxDWqW2D4iJsU9ud8uOBQgCrmfHsfcRh3
-         fxvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=HlvGKFaG5MmOytwqLGoLiKZ8wGbh30D2hsn+mi7pUuU=;
-        b=Vey8oqhU+nzFyCpdZudsCrlmoCRw8J76EuGZq4XDaStb9Z+8dtLABha5gU5LCNv7p/
-         wMLwg1oDsgRq8pn+OkVaTXXTncoltfosCkgS3tqOudAJqJBoc4h1hTLgt7su47IkQUIq
-         kpFQvnX/QJyxhZ7LFLuZ2lC+itg8lsHr1dyhIbQlzyY64UKFGgmyHC1U2b/wAeO1zF2A
-         jaMyORgWquqoaTH4kSuH0nbFZcGE3GAdLOu+Z+cb1pV4dAJutl8hHh+bkm6h2UJwPlzG
-         EVywP9mMrKN1LXpqqB/1qlr99sOQhTBSGpoxoTCsyFvMpmRM7NhfKKymOG2yLSIebOIg
-         Iiig==
-X-Gm-Message-State: AOAM532XLN+/JyvP+oQOWDKWCENnIgR2l3X2dWL+ZvcSmzVGkLVw+dSA
-        TQMxPyS6DThs1ZcBItAkBp1gTunY5Og=
-X-Google-Smtp-Source: ABdhPJwe5waIrGsT7rvEsA2OlS5xHGXLFf1lFYnd1zBtOx1SbonyLFYC+sR0GdPMilGXS/FbHJhfhw==
-X-Received: by 2002:a1c:2e57:: with SMTP id u84mr5064742wmu.52.1594911982685;
-        Thu, 16 Jul 2020 08:06:22 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id j75sm10521336wrj.22.2020.07.16.08.06.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 08:06:22 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 16:06:20 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Support Opensource <support.opensource@diasemi.com>
-Subject: Re: [RESEND PATCH v3 1/2] mfd: da9063: Fix revision handling to
- correctly select reg tables
-Message-ID: <20200716150620.GW3165313@dell>
-References: <cover.1594632559.git.Adam.Thomson.Opensource@diasemi.com>
- <565560ffd791f597826fe724843e69dd0a315c18.1594632559.git.Adam.Thomson.Opensource@diasemi.com>
+        Thu, 16 Jul 2020 11:06:27 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06GF67vT094865;
+        Thu, 16 Jul 2020 10:06:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594911967;
+        bh=ZRXaPKqO824iMUfjsyA2RVRrQ8jqiJKdpERWl5OpL1U=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=JUlcFeznp6WTiJQYcfC7EhpCejnuoFMP2l4GWOsEpCx/9t2Gg28zuM5fine/boBB7
+         JL4wDkRY1yH2NWk/bzjSMMUscxLtlkRu1bjQTAmHZh4hpH6vl8J31/vI6mVNwpqlhc
+         HiTShs2KPLu7P3f7UHDnsI9WTeRMXaibeejVybrM=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06GF67dk062299
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jul 2020 10:06:07 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 16
+ Jul 2020 10:06:05 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 16 Jul 2020 10:06:05 -0500
+Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06GF64Xo039745;
+        Thu, 16 Jul 2020 10:06:04 -0500
+Subject: Re: [PATCH v30 05/16] leds: multicolor: Introduce a multicolor class
+ definition
+From:   Dan Murphy <dmurphy@ti.com>
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
+        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200713154544.1683-1-dmurphy@ti.com>
+ <20200713154544.1683-6-dmurphy@ti.com> <20200716083104.GA30361@amd>
+ <b298158e-327f-cf97-2723-75a7d832931e@ti.com>
+Message-ID: <a7cf67e7-680b-8e67-a4ee-207eff316316@ti.com>
+Date:   Thu, 16 Jul 2020 10:06:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <b298158e-327f-cf97-2723-75a7d832931e@ti.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <565560ffd791f597826fe724843e69dd0a315c18.1594632559.git.Adam.Thomson.Opensource@diasemi.com>
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020, Adam Thomson wrote:
+Pavel
 
-> The current implementation performs checking in the i2c_probe()
-> function of the variant_code but does this immediately after the
-> containing struct has been initialised as all zero. This means the
-> check for variant code will always default to using the BB tables
-> and will never select AD. The variant code is subsequently set
-> by device_init() and later used by the RTC so really it's a little
-> fortunate this mismatch works.
-> 
-> This update adds raw I2C read access functionality to read the chip
-> and variant/revision information (common to all revisions) so that
-> it can subsequently correctly choose the proper regmap tables for
-> real initialisation.
-> 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> ---
-> 
-> v3:
->  - Replaced magic numbers around I2C paged access code with enums and defines
->  - Small style tidy ups as requested by Lee Jones
-> 
-> v2:
->  - Use raw I2C read access instead of a temporary regmap to interrogate chip and
->    variant id registers
-> 
->  drivers/mfd/da9063-core.c            |  31 ------
->  drivers/mfd/da9063-i2c.c             | 184 +++++++++++++++++++++++++++++++----
->  include/linux/mfd/da9063/registers.h |  15 ++-
->  3 files changed, 177 insertions(+), 53 deletions(-)
+On 7/16/20 10:03 AM, Dan Murphy wrote:
+> Pavel
+>
+> On 7/16/20 3:31 AM, Pavel Machek wrote:
+>> Hi!
+>>
+>> First, let's substitute multi.color -> multicolor globally,
+>> LEDS_CLASS_MULTI_COLOR is most visible example of this. Please also
+>> decide whether it is MultiColor or multicolor, and make it consistent.
+>
+> Dictionary definition is multicolor no space.  Capitalization is 
+> dependent on how it is use.
+>
+> Basically no capital in the middle of a sentence
+>
+>>> Introduce a multicolor class that groups colored LEDs
+>>> within a LED node.
+>>>
+>>> The multi color class groups monochrome LEDs and allows controlling two
+>> For example here. Plus, the LEDs are not neccessarily monochrome, we
+>> support white LEDs, too. Let's use "simple LEDs"?
+> OK
+>>
+>>> aspects of the final combined color: hue and lightness. The former is
+>>> controlled via the intensity file and the latter is controlled
+>>> via brightness file.
+>>> +    depends on LEDS_CLASS
+>>> +    help
+>>> +      This option enables the multicolor LED sysfs class in 
+>>> /sys/class/leds.
+>>> +      It wraps LED class and adds multicolor LED specific sysfs 
+>>> attributes
+>>> +      and kernel internal API to it. You'll need this to provide 
+>>> support
+>>> +      for multicolor LEDs that are grouped together. This class is not
+>>> +      intended for single color LEDs. It can be built as a module.
+>> "single color" -> "simple"?
+> ok
+>>
+>>> +    /* account for the new line at the end of the buffer */
+>>> +    offset++;
+>>> +    if (offset < size) {
+>>> +        ret = -EINVAL;
+>>> +        goto err_out;
+>>> +    }
+>> "new line" -> "newline", and actually check that character you are
+>> skipping is newline. Someone could put '%' in there...
+>
+> Actually we don't need to check for the character.  Even if someone 
+> put the '%' there there will still be a '\n' at the end of the buffer.
+>
+> The for..loop above only processes the total number of available 
+> colors so effectively the '%' will be ignored just like the '\n'.
+>
+> If the buffer contains more entries then the number of colors an error 
+> will be returned via the check below since size will be greater then 
+> offset
+>
+>     if (offset < size) {
+>         ret = -EINVAL;
+>         goto err_out;
+>     }
+>
+> Maybe I should remove the comment as it is a bit confusing.
+>
+>>> +        if (i < mcled_cdev->num_colors - 1)
+>>> +            len += sprintf(buf + len, " ");
+>>> +    len += sprintf(buf + len, "\n");
+>> Using sprintf for single character has... quite a lot of
+>> overhead. Something like buf[len++] = '\n' would be
+>> simpler/shorter/better. Please fix all relevant places.
+>
+> OK
+>
+>
+>> Note I already applied patches 1-4.
+>
+> I will rebase on top
+>
+>
+One last change my legal team came back and said no to GPL v2+ so I 
+reverted that change
 
-Applied, thanks.
+Dan
 
--- 
-Lee Jones [æŽç¼æ–¯]
-Senior Technical Lead - Developer Services
-Linaro.org â”‚ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+>> Best regards,
+>>                                     Pavel
