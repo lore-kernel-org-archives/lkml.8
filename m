@@ -2,96 +2,151 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5369C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BECF420663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:41:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JHxuqay5"
+	by mail.kernel.org (Postfix) with ESMTP id 6D9E820663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgGPClo (ORCPT
+        id S1727817AbgGPCmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGPCln (ORCPT
+        Wed, 15 Jul 2020 22:42:15 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:47743 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727105AbgGPCmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:41:43 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C7CC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 19:41:43 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so4099444pgc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 19:41:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jqVUIDpGCAipRS+ecPG15XM7TieBrIaHAd9mloEKAfg=;
-        b=JHxuqay54G74N6vgudi5DVmCfb4LywmFRGcKR/VpugHM8EUk43/s0CR2VP3/5kLIdx
-         UvyJZpGYeun6i18sh6eYGHmfAvaouR2XxCQugfkAC5YUal7+JFzkKqNxJm/QVlqbFxeq
-         Z/OHtPeZEPIIoWCPsB5YvZ+H78MRYn8SrV2cM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jqVUIDpGCAipRS+ecPG15XM7TieBrIaHAd9mloEKAfg=;
-        b=WqUyC9VI4UOHEpyWiBNdeg6Zic95B2Pn2n+3UtHh8x7nDbpqsxY4SQK9sij0fCUtRN
-         2++3qi+nfF1qUGBYw/Q8Dg8O1yf2uNfy/9ILJkNOD7yrhplpwAoeejTx47pSc3adNBBh
-         96hBInaCEnfCkZR4ajgiTNWkX8yk1qE7kXKNybT92ZnOdCx+zCaBaLHYN7Y+DBsK5PdE
-         kNpXIerjph46STHdV6k3ZgM/QQl7TNhxeXS3aZyRT4zWGhqpdDtX62glMqUL6GqrUzyI
-         NyTKTPqEC5tHsA+3BUrH7kLtbUZKp9DTb6oeReaqspc70eQCNi2Zmxuzj+Iq9QXcVDp6
-         J6rg==
-X-Gm-Message-State: AOAM531fS4j785jLC57gZHKmBibd/Qi5sn5U3HCr+jQUYbIfPfEJ+MxA
-        zf/Ozhm2hpwy1t4l/U09uy1cNA==
-X-Google-Smtp-Source: ABdhPJzMM1zSFnYR3x2DnMDjCvyMLDkK5b+zSz4ErPk651/nIfO+yLt/HL7ZZk7cQTCfVqxRQyJNQw==
-X-Received: by 2002:a65:6883:: with SMTP id e3mr2401712pgt.5.1594867303051;
-        Wed, 15 Jul 2020 19:41:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z2sm3271605pff.36.2020.07.15.19.41.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 19:41:42 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 19:41:41 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     David Gow <davidgow@google.com>
-Cc:     Vitor Massaru Iha <vitor@massaru.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [RFC 0/3] kunit: add support to use modules
-Message-ID: <202007151939.62EFE6F@keescook>
-References: <20200715031120.1002016-1-vitor@massaru.org>
- <CABVgOSkBAiMSMzCx62_CRo_0e2SGdvRWZ0dSC4t628YJBw-3Aw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABVgOSkBAiMSMzCx62_CRo_0e2SGdvRWZ0dSC4t628YJBw-3Aw@mail.gmail.com>
+        Wed, 15 Jul 2020 22:42:15 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0U2rEMt5_1594867319;
+Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0U2rEMt5_1594867319)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 16 Jul 2020 10:42:09 +0800
+From:   Hui Zhu <teawater@gmail.com>
+To:     mst@redhat.com, david@redhat.com, jasowang@redhat.com,
+        akpm@linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        qemu-devel@nongnu.org, virtio-dev@lists.oasis-open.org
+Cc:     Hui Zhu <teawater@gmail.com>
+Subject: [RFC for Linux v4 0/2] virtio_balloon: Add VIRTIO_BALLOON_F_CONT_PAGES to report continuous pages
+Date:   Thu, 16 Jul 2020 10:41:50 +0800
+Message-Id: <1594867315-8626-1-git-send-email-teawater@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:47:11AM +0800, David Gow wrote:
-> - The inheriting of the mm stuff still means that
-> copy_{from,to}_user() will only work if loaded as a module. This
-> really needs to be documented. (Ideally, we'd find a way of having
-> this work even for built-in tests, but I don't have any real ideas as
-> to how that could be done).
+The first, second and third version are in [1], [2] and [3].
+Code of current version for Linux and qemu is available in [4] and [5].
+Update of this version:
+1. Report continuous pages will increase the speed.  So added deflate
+   continuous pages.
+2. According to the comments from David in [6], added 2 new vqs inflate_cont_vq
+   and deflate_cont_vq to report continuous pages with format 32 bits pfn and 32
+   bits size.
+Following is the introduction of the function.
+These patches add VIRTIO_BALLOON_F_CONT_PAGES to virtio_balloon. With this
+flag, balloon tries to use continuous pages to inflate and deflate.
+Opening this flag can bring two benefits:
+1. Report continuous pages will increase memory report size of each time
+   call tell_host.  Then it will increase the speed of balloon inflate and
+   deflate.
+2. Host THPs will be splitted when qemu release the page of balloon inflate.
+   Inflate balloon with continuous pages will let QEMU release the pages
+   of same THPs.  That will help decrease the splitted THPs number in
+   the host.
+   Following is an example in a VM with 1G memory 1CPU.  This test setups an
+   environment that has a lot of fragmentation pages.  Then inflate balloon will
+   split the THPs.
+// This is the THP number before VM execution in the host.
+// None use THP.
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:         0 kB
+// After VM start, use usemem
+// (https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git)
+// punch-holes function generates 400m fragmentation pages in the guest
+// kernel.
+usemem --punch-holes -s -1 800m &
+// This is the THP number after this command in the host.
+// Some THP is used by VM because usemem will access 800M memory
+// in the guest.
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:    911360 kB
+// Connect to the QEMU monitor, setup balloon, and set it size to 600M.
+(qemu) device_add virtio-balloon-pci,id=balloon1
+(qemu) info balloon
+balloon: actual=1024
+(qemu) balloon 600
+(qemu) info balloon
+balloon: actual=600
+// This is the THP number after inflate the balloon in the host.
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:     88064 kB
+// Set the size back to 1024M in the QEMU monitor.
+(qemu) balloon 1024
+(qemu) info balloon
+balloon: actual=1024
+// Use usemem to increase the memory usage of QEMU.
+killall usemem
+usemem 800m
+// This is the THP number after this operation.
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:     65536 kB
 
-I'd like to better understand this ... are there conditions where
-vm_mmap() doesn't work? I thought this would either use current() (e.g.
-how LKDTM uses it when getting triggered from debugfs), or use init_mm.
+Following example change to use continuous pages balloon.  The number of
+splitted THPs is decreased.
+// This is the THP number before VM execution in the host.
+// None use THP.
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:         0 kB
+// After VM start, use usemem punch-holes function generates 400M
+// fragmentation pages in the guest kernel.
+usemem --punch-holes -s -1 800m &
+// This is the THP number after this command in the host.
+// Some THP is used by VM because usemem will access 800M memory
+// in the guest.
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:    911360 kB
+// Connect to the QEMU monitor, setup balloon, and set it size to 600M.
+(qemu) device_add virtio-balloon-pci,id=balloon1,cont-pages=on
+(qemu) info balloon
+balloon: actual=1024
+(qemu) balloon 600
+(qemu) info balloon
+balloon: actual=600
+// This is the THP number after inflate the balloon in the host.
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:    616448 kB
+// Set the size back to 1024M in the QEMU monitor.
+(qemu) balloon 1024
+(qemu) info balloon
+balloon: actual=1024
+// Use usemem to increase the memory usage of QEMU.
+killall usemem
+usemem 800m
+// This is the THP number after this operation.
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:    907264 kB
 
-I'd really like to see the mm patch more well described/justified.
+[1] https://lkml.org/lkml/2020/3/12/144
+[2] https://lore.kernel.org/linux-mm/1584893097-12317-1-git-send-email-teawater@gmail.com/
+[3] https://lkml.org/lkml/2020/5/12/324
+[4] https://github.com/teawater/linux/tree/balloon_conts
+[5] https://github.com/teawater/qemu/tree/balloon_conts
+[6] https://lkml.org/lkml/2020/5/13/1211
 
--- 
-Kees Cook
+Hui Zhu (2):
+  virtio_balloon: Add VIRTIO_BALLOON_F_CONT_PAGES and inflate_cont_vq
+  virtio_balloon: Add deflate_cont_vq to deflate continuous pages
+
+ drivers/virtio/virtio_balloon.c     |  180 +++++++++++++++++++++++++++++++-----
+ include/linux/balloon_compaction.h  |   12 ++
+ include/uapi/linux/virtio_balloon.h |    1
+ mm/balloon_compaction.c             |  117 +++++++++++++++++++++--
+ 4 files changed, 280 insertions(+), 30 deletions(-)
