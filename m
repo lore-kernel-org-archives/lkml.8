@@ -2,114 +2,105 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC07C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1AA1207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A551E207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:26:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fygTz1Ak"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gA+yRPgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgGPU0G (ORCPT
+        id S1726514AbgGPU0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:26:06 -0400
-Received: from crapouillou.net ([89.234.176.41]:41410 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbgGPU0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:26:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1594931164; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SX7hdu69Ya5NdmyT12h41uasgZBzqU3phiTCNybRetM=;
-        b=fygTz1AkK3F+KkSqLcdpUfyr3zmBZjEUKSa/Vt00eTSF72jQDKtklUryyIrQc3Oa8rtmYM
-        YWSRB4PVWihapc0vvKQgXHwti43BXsbCFSDEk4IVlkAUUAib8gf6krgrd5yvZjzNZB1DvT
-        EDDLKtIE3EVZe0Sk+6bYeKsdbWK+UkI=
-Date:   Thu, 16 Jul 2020 22:25:54 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 01/12] drm/ingenic: Fix incorrect assumption about
- plane->index
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Message-Id: <6RWKDQ.JP0OMXFFTGWS1@crapouillou.net>
-In-Reply-To: <20200716174335.GC2235355@ravnborg.org>
-References: <20200716163846.174790-1-paul@crapouillou.net>
-        <20200716174335.GC2235355@ravnborg.org>
+        Thu, 16 Jul 2020 16:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbgGPU0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 16:26:39 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD14C061755;
+        Thu, 16 Jul 2020 13:26:39 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id i80so4611007lfi.13;
+        Thu, 16 Jul 2020 13:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U6MZ/y/vPc6q78+jPG12T4yfylcbWZbgihagmhF1ua4=;
+        b=gA+yRPgZzqn5fKMZMo/S2JVYKAXcoeW74ALQSddU1jHtrEIMlxogLceEj9SrllM02k
+         qIJF7psdB+PldiFOps2dounuPdIP3iZCfBnn4kHrXskxGjB5AX3m+pDtXY1Zgss4L55z
+         HOAQk0tLv5VpfW21i9I3XHIAJ5kAFd9htOacywsaOMVi4B0ft9D046r7zS6tyNChxIIy
+         uvMz3O0b0KA08lIpsEFNgEczmuhH3MZ+cuAHI4m9BoCA98hQNJmh5q1HRrTjL45w190z
+         WLFQ3rnFyAPSfRKjD/ylru4OASJPfVKvI1lLCRfwC8Nnm2x+bXPYa28IGKH1hzvKMEEW
+         WV1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U6MZ/y/vPc6q78+jPG12T4yfylcbWZbgihagmhF1ua4=;
+        b=qx0ER/5l5i2fmQTkQLUolKKeDYlk07k2krfOiQZTtki3nffWobK1Ganr+fueBGBUWU
+         ftJ6qXCZVsRmRIBmlRh1X8vqHJInBv2Azw9YaBns7nVgG9effSaOh4269KsSoFFROPeF
+         TiCmVZYWP5aHwRFVzcbHcbo1FtR0VcnlEjh1Vb8HGuPXfTIxwwXo7SWBXTp9r0ytN5VC
+         W7AIFcDPxp3EsgrK6AucXQEgb0Vz89hXpziKGu7+NddVU4bqTMSAVJxap4OdyiLiF1VS
+         6aEsYgQmZJs1ODHukVvLOK3SeNlnwQgk9iXZIdgqctqNcvzGd1OjK5J6xwUZ8XONZS6e
+         g0Dg==
+X-Gm-Message-State: AOAM533gsqOwvpJJRiV3EAMxh55NoZAyygWRtTD95Fy63DDpcDF/LuGM
+        Tc3BzgDllQmNjDgN55d/ZSaZLh7t
+X-Google-Smtp-Source: ABdhPJy0enoMVs6BkDVaIJm0D5Yr9QDNFNLLIvHjUmf9593o8LzOQ4n67cUT0e7FYJseihDzuMNs1A==
+X-Received: by 2002:a19:814c:: with SMTP id c73mr2266198lfd.16.1594931196681;
+        Thu, 16 Jul 2020 13:26:36 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
+        by smtp.googlemail.com with ESMTPSA id w4sm1253214ljw.16.2020.07.16.13.26.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 13:26:35 -0700 (PDT)
+Subject: Re: [RFC PATCH v3 14/18] gpu: host1x: mipi: Update
+ tegra_mipi_request() to be node based
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+ <1594786855-26506-15-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5542c166-5a60-a8c3-281b-5560b7c2dfc6@gmail.com>
+Date:   Thu, 16 Jul 2020 23:26:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594786855-26506-15-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+15.07.2020 07:20, Sowjanya Komatineni пишет:
+> Tegra CSI driver need a separate MIPI device for each channel as
+> calibration of corresponding MIPI pads for each channel should
+> happen independently.
+> 
+> So, this patch updates tegra_mipi_request() API to add a device_node
+> pointer argument to allow creating mipi device for specific device
+> node rather than a device.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
 
-Le jeu. 16 juil. 2020 =E0 19:43, Sam Ravnborg <sam@ravnborg.org> a=20
-=E9crit :
-> Hi Paul.
->=20
-> On Thu, Jul 16, 2020 at 06:38:35PM +0200, Paul Cercueil wrote:
->>  plane->index is NOT the index of the color plane in a YUV frame.
->>  Actually, a YUV frame is represented by a single drm_plane, even=20
->> though
->>  it contains three Y, U, V planes.
->>=20
->>  v2-v3: No change
->>=20
->>  Cc: stable@vger.kernel.org # v5.3
->>  Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx=20
->> SoCs")
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  Acked-by: Sam Ravnborg <sam@ravnborg.org>
->=20
-> A cover letter would have been useful. Please consider that in the
-> future.
-> All patches in this set are:
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
->=20
-> A few requires some trivial issues fixed. They can be fixed while
-> applying.
->=20
-> I consider the patch-set ready to go in and I expect you to commit=20
-> them.
+Thanks!
 
-Great! Thanks!
-
--Paul
-
-> 	Sam
->=20
->>  ---
->>   drivers/gpu/drm/ingenic/ingenic-drm.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->>  diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
->> b/drivers/gpu/drm/ingenic/ingenic-drm.c
->>  index deb37b4a8e91..606d8acb0954 100644
->>  --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
->>  +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
->>  @@ -386,7 +386,7 @@ static void=20
->> ingenic_drm_plane_atomic_update(struct drm_plane *plane,
->>   		addr =3D drm_fb_cma_get_gem_addr(state->fb, state, 0);
->>   		width =3D state->src_w >> 16;
->>   		height =3D state->src_h >> 16;
->>  -		cpp =3D state->fb->format->cpp[plane->index];
->>  +		cpp =3D state->fb->format->cpp[0];
->>=20
->>   		priv->dma_hwdesc->addr =3D addr;
->>   		priv->dma_hwdesc->cmd =3D width * height * cpp / 4;
->>  --
->>  2.27.0
-
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 
