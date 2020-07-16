@@ -2,113 +2,190 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4628C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9A9C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBE7E2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34E52076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgGQDEw (ORCPT
+        id S1727119AbgGQDEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 23:04:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:27257 "EHLO mga07.intel.com"
+        Thu, 16 Jul 2020 23:04:43 -0400
+Received: from mga17.intel.com ([192.55.52.151]:62906 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgGQDEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 23:04:50 -0400
-IronPort-SDR: frDmIyvt8bPd8Bu1l1sgSEV1fJFbP5AxUDFHNtzsL9FmxkTAXN9YCs3ftYXPFn6ZJXpK3TkFSz
- Ni8R8aBkK7zg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="214253048"
+        id S1727045AbgGQDEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 23:04:36 -0400
+IronPort-SDR: qIH6smwxCQyAqchAOKSV1ZXVrcYKCo51EBoBXlZ45Lw4Tgc0YBdgel2xNx25CtjaaZAWlsCbje
+ HpYXRKTjUlfQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129613879"
 X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
-   d="scan'208";a="214253048"
+   d="scan'208";a="129613879"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 20:04:47 -0700
-IronPort-SDR: uOu7cDqrL7+h5l+5Fn+h1S/hkwpsAu3mNfFB15mMGo34p9NETnRqPy7GMfFMXihLf5C3f6k9GL
- 0dvnImOzaUIQ==
-X-ExtLoop1: 1
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 20:04:34 -0700
+IronPort-SDR: cXQhLz1rXdGUBytHWCtRlr4dCnu6zLJYveBPg0/fD/8s3SSk1IcWvk9/KyqzVXpNFMsSn4IVq3
+ A5Z4wVrINaXA==
 X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
-   d="scan'208";a="286686891"
-Received: from pgerasim-mobl1.ccr.corp.intel.com (HELO localhost) ([10.249.34.31])
-  by orsmga006.jf.intel.com with ESMTP; 16 Jul 2020 20:04:43 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
-Subject: [PATCH v4 3/7] vmalloc: Add text_alloc() and text_free()
-Date:   Fri, 17 Jul 2020 06:04:17 +0300
-Message-Id: <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
-References: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="460699767"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 20:04:30 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
+        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
+        bard.liao@intel.com
+Subject: [PATCH v2 8/9] soundwire: intel: add wake interrupt support
+Date:   Thu, 16 Jul 2020 23:09:46 +0800
+Message-Id: <20200716150947.22119-9-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200716150947.22119-1-yung-chuan.liao@linux.intel.com>
+References: <20200716150947.22119-1-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce functions for allocating memory for dynamic trampolines, such
-as kprobes. An arch can promote the availability of these functions with
-CONFIG_ARCH_HAS_TEXT_ALLOC. Provide default/fallback implementation
-wrapping module_alloc() and module_memfree().
+From: Rander Wang <rander.wang@intel.com>
 
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+When system is suspended in clock stop mode on intel platforms, both
+master and slave are in clock stop mode and soundwire bus is taken
+over by a glue hardware. The bus message for jack event is processed
+by this glue hardware, which will trigger an interrupt to resume audio
+pci device. Then audio pci driver will resume soundwire master and slave,
+transfer bus ownership to master, finally slave will report jack event
+to master and codec driver is triggered to check jack status.
+
+if a slave has been attached to a bus, the slave->dev_num_sticky
+should be non-zero, so we can check this value to skip the
+ghost devices defined in ACPI table but not populated in hardware.
+
+Signed-off-by: Rander Wang <rander.wang@intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 ---
- include/linux/vmalloc.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/soundwire/intel.c      | 40 +++++++++++++++++++++++++++++++++-
+ drivers/soundwire/intel.h      |  1 +
+ drivers/soundwire/intel_init.c | 22 +++++++++++++++++++
+ 3 files changed, 62 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 0221f852a7e1..e981436e30b6 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -9,6 +9,7 @@
- #include <asm/page.h>		/* pgprot_t */
- #include <linux/rbtree.h>
- #include <linux/overflow.h>
-+#include <linux/moduleloader.h>
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 06c553d94890..23b66dcf9966 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -13,6 +13,7 @@
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <sound/pcm_params.h>
++#include <linux/pm_runtime.h>
+ #include <sound/soc.h>
+ #include <linux/soundwire/sdw_registers.h>
+ #include <linux/soundwire/sdw.h>
+@@ -436,7 +437,7 @@ static int intel_shim_init(struct sdw_intel *sdw, bool clock_stop)
+ 	return ret;
+ }
  
- #include <asm/vmalloc.h>
+-static void __maybe_unused intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
++static void intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
+ {
+ 	void __iomem *shim = sdw->link_res->shim;
+ 	unsigned int link_id = sdw->instance;
+@@ -1337,6 +1338,43 @@ static int intel_master_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
-@@ -249,4 +250,26 @@ pcpu_free_vm_areas(struct vm_struct **vms, int nr_vms)
- int register_vmap_purge_notifier(struct notifier_block *nb);
- int unregister_vmap_purge_notifier(struct notifier_block *nb);
- 
-+#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-+/*
-+ * Allocate memory to be used for dynamic trampoline code.
-+ */
-+void *text_alloc(unsigned long size);
-+
-+/*
-+ * Free memory returned from text_alloc().
-+ */
-+void text_free(void *region);
-+#else
-+static inline void *text_alloc(unsigned long size)
++int intel_master_process_wakeen_event(struct platform_device *pdev)
 +{
-+	return module_alloc(size);
++	struct device *dev = &pdev->dev;
++	struct sdw_intel *sdw;
++	struct sdw_bus *bus;
++	void __iomem *shim;
++	u16 wake_sts;
++
++	sdw = platform_get_drvdata(pdev);
++	bus = &sdw->cdns.bus;
++
++	if (bus->prop.hw_disabled) {
++		dev_dbg(dev, "SoundWire master %d is disabled, ignoring\n", bus->link_id);
++		return 0;
++	}
++
++	shim = sdw->link_res->shim;
++	wake_sts = intel_readw(shim, SDW_SHIM_WAKESTS);
++
++	if (!(wake_sts & BIT(sdw->instance)))
++		return 0;
++
++	/* disable WAKEEN interrupt ASAP to prevent interrupt flood */
++	intel_shim_wake(sdw, false);
++
++	/*
++	 * resume the Master, which will generate a bus reset and result in
++	 * Slaves re-attaching and be re-enumerated. The SoundWire physical
++	 * device which generated the wake will trigger an interrupt, which
++	 * will in turn cause the corresponding Linux Slave device to be
++	 * resumed and the Slave codec driver to check the status.
++	 */
++	pm_request_resume(dev);
++
++	return 0;
 +}
 +
-+static inline void text_free(void *region)
+ static struct platform_driver sdw_intel_drv = {
+ 	.probe = intel_master_probe,
+ 	.remove = intel_master_remove,
+diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
+index bf127c88eb51..4ea3d262d249 100644
+--- a/drivers/soundwire/intel.h
++++ b/drivers/soundwire/intel.h
+@@ -47,5 +47,6 @@ struct sdw_intel {
+ #define SDW_INTEL_QUIRK_MASK_BUS_DISABLE      BIT(1)
+ 
+ int intel_master_startup(struct platform_device *pdev);
++int intel_master_process_wakeen_event(struct platform_device *pdev);
+ 
+ #endif /* __SDW_INTEL_LOCAL_H */
+diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+index a97d3577eb57..8d3992f9fcdd 100644
+--- a/drivers/soundwire/intel_init.c
++++ b/drivers/soundwire/intel_init.c
+@@ -415,5 +415,27 @@ void sdw_intel_exit(struct sdw_intel_ctx *ctx)
+ }
+ EXPORT_SYMBOL_NS(sdw_intel_exit, SOUNDWIRE_INTEL_INIT);
+ 
++void sdw_intel_process_wakeen_event(struct sdw_intel_ctx *ctx)
 +{
-+	module_memfree(region);
-+}
-+#endif
++	struct sdw_intel_link_res *link;
++	u32 link_mask;
++	int i;
 +
- #endif /* _LINUX_VMALLOC_H */
++	if (!ctx->links)
++		return;
++
++	link = ctx->links;
++	link_mask = ctx->link_mask;
++
++	/* Startup SDW Master devices */
++	for (i = 0; i < ctx->count; i++, link++) {
++		if (!(link_mask & BIT(i)))
++			continue;
++
++		intel_master_process_wakeen_event(link->pdev);
++	}
++}
++EXPORT_SYMBOL_NS(sdw_intel_process_wakeen_event, SOUNDWIRE_INTEL_INIT);
++
+ MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_DESCRIPTION("Intel Soundwire Init Library");
 -- 
-2.25.1
+2.17.1
 
