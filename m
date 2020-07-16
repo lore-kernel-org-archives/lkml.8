@@ -2,165 +2,170 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E88CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B86C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D99B5207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EAE207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nx5KryYW"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="o8BjnoF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgGPFIu (ORCPT
+        id S1726105AbgGPFK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgGPFIu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:08:50 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 280B7C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:08:50 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id i203so5787585yba.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=/ASv5dAELns8VVIKC04I8VtuZPqEPBD90P+R5xqH+S8=;
-        b=nx5KryYWxGY5HdEReewTvGrAt4vEZgN1uDIJMhQ9FCh3mF09JRhkfjlOqs1YPrNxwa
-         ivUgcpI92V1THDb7Fxnstt/ZVp8CRQoRk8GwLKf3mSjb1Xgk/6M2e45qJahFMsh5nH57
-         yBn3jjz6RwM+CJU5P7kZmgIhHKU07BufDxNmxMGRasG+UjdD0oThKS8KQ9VAJ0I6QFQO
-         0E/CDhc9Ox+WNcfP5kwP+HJUVb+ffzTHGdl2AGlGvE099kp45nSRSOgCTHU8g5sEb4Yo
-         xHwttBJ75WsgoWCFtHn0FAoEHOeioMMa7cxSlGIQtcg76aYXPRpJYrn9nxjDN2oVUezC
-         CDdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=/ASv5dAELns8VVIKC04I8VtuZPqEPBD90P+R5xqH+S8=;
-        b=hkHa87kzjvN10cO1tsr7ZJ8F3ZwFp+CpgsuvYitqcb7UBeoTxrUo4UvKgfiEN14Zdv
-         DNrNetTAkfumHmvYl+zmF84502PkkAdaQ8abioWwQXuNDsNqoLrYAKqUkq4ODHqc8wqc
-         ZhT6O3sJz9ZRqXn3/wKo9wAvGe5wxtV1JP26KSFcvPJ0poqsx5C9bd7AtSock7qMTrsj
-         cXeJHCRwDTlsV9YZmkoThtRCXyEa3XqTAhVEs4o1I7HZ7H1BWhMySOrFWEYpXyHMpsAl
-         P0lPBO4Ld0i9sO87Jy+zGDYllsefynj+Y0wB2DBOnCqr0wgkHuDSUHMXush3/c4NQrYR
-         MAnw==
-X-Gm-Message-State: AOAM533D8PmGbgz7OJLOcQ9uqNAbM5ALwT5C3Zh764bKB/06DIOi8rWv
-        XC8mM8YmIS/lvQxHCWTUP0GpySXEnjrtYuc=
-X-Google-Smtp-Source: ABdhPJwJwRzkZPs+Oh0TI3mGWF7hNxFBYsX3qVynjwB7JhvM1PAJCRFfBSac4Uw4P3euzGwq0O7N4EN+Nkv7W0U=
-X-Received: by 2002:a25:e78f:: with SMTP id e137mr3755515ybh.153.1594876129385;
- Wed, 15 Jul 2020 22:08:49 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 22:08:46 -0700
-Message-Id: <20200716050846.2047110-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [PATCH v1] driver core: Fix scheduling while atomic warnings during
- device link deletion
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Jul 2020 01:10:58 -0400
+Received: from mga12.intel.com ([192.55.52.136]:52379 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgGPFK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 01:10:58 -0400
+IronPort-SDR: YySXkUVc31vDCiTVTVIqUhDNkYHCZWI3nZsdi1ZYcdf9ElwJ/DfjvvoIVs/Y8UUSbdHPDWBXzB
+ pViqwHgJMLyg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="128887540"
+X-IronPort-AV: E=Sophos;i="5.75,358,1589266800"; 
+   d="scan'208";a="128887540"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 22:10:57 -0700
+IronPort-SDR: OYFEqHJiwdKUXq2AcA3T+3GlmMhd8o/gSVtIZoJQRjGbavQz6kuwEDFClFN2RJ1yPwBwtuVHsW
+ dkVSrNE/P3JQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,358,1589266800"; 
+   d="scan'208";a="300136101"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga002.jf.intel.com with ESMTP; 15 Jul 2020 22:10:56 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 15 Jul 2020 22:10:56 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 15 Jul 2020 22:10:56 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 15 Jul 2020 22:10:56 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.107)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Wed, 15 Jul 2020 22:10:55 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qw/lnhiOzlRqKk/4pRwRl/pLuL1ar0QGtcNGpgjzjXPO/LaDFDfBq2OMNfvDu7bZi87UKX/N1cHGKVaWXvanbTp6Qt+WwHcTE5EgUqrQQ7EiJQV6V1JCPNy8kcNetD2cph1YJWycsh+/OWhMt8tuxRnZPevlyp/arQutpAPIu+oo8q7HX9iXxQ+KcGP5pfgZJOQy3X4sKotDqWs8mGF2WJs7Fumg7xWAPkL2Ish7ud91XYMCK5uoocG/JUnRvoVQoPHXNjIeNct7GOHxDSKVt86vTSsSSD1ukt9neOlorJegoNHW/c2xpysuisLcLmgob8cn+JOrTeC4wwEtRjBbzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xj08Eq4kzpY5drLBv2fgO2hFkPxAKZld2G/IxIp87mU=;
+ b=iOrOtRmc0msWFcdrPZuK3TiQRwCmCqmaeJFsmMt1my8/og++HubwCPtFx/hijLIGwqzKJZAqPEyc8op+s6Zn5lKpMMihKiTncDsOcTXHGXarNpqpV5PdtUDguaAwh2uFmFoNb4Cv+ky431aOiw0qXq9uFCv2phsiJs7sNKe5Ve/2vuIAuLnUifuBXbBWDmUoqJBm2wgiwP4rQFfjscQsC1xL6eDjMswElSxFR7j1jIoH8nyOKJYX/15E3g4YlvvLEOCje9BUaiTW/w/vVhMnfgw341CkLVmbqYnu9GU5SxvGUGdxmGiC8po2sUKNzFrH21+1uOC/NmN/Vt3kuQjbEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xj08Eq4kzpY5drLBv2fgO2hFkPxAKZld2G/IxIp87mU=;
+ b=o8BjnoF1xoeQoT6FHNI9+0t70mitfxuQ896Q2DGq0GEVYeVxxe2P9F3R/DsLezMo778B/9jFTYeTghx8COEMZ3FBC3xgmKaD+r4/XqqAG8A/66mC9jSY6+e8a5D+8872uQLPCdNcLbysmXKriVKK3vvrX0bv5LfeDB/vXwpY/Ng=
+Received: from BL0PR11MB3363.namprd11.prod.outlook.com (10.167.240.148) by
+ MN2PR11MB4759.namprd11.prod.outlook.com (20.180.246.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3174.22; Thu, 16 Jul 2020 05:10:54 +0000
+Received: from BL0PR11MB3363.namprd11.prod.outlook.com
+ ([fe80::fcc1:eb92:1f03:8622]) by BL0PR11MB3363.namprd11.prod.outlook.com
+ ([fe80::fcc1:eb92:1f03:8622%7]) with mapi id 15.20.3195.018; Thu, 16 Jul 2020
+ 05:10:54 +0000
+From:   "Pawnikar, Sumeet R" <sumeet.r.pawnikar@intel.com>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: RE: [PATCH v2] powercap: Add Power Limit4 support
+Thread-Topic: [PATCH v2] powercap: Add Power Limit4 support
+Thread-Index: AQHWWbfiWjBrO+3IOUeiOzKQuUxHfKkHD9wAgAC2QACAAeIdkA==
+Date:   Thu, 16 Jul 2020 05:10:54 +0000
+Message-ID: <BL0PR11MB3363757AEC2CF48D77F68F89BB7F0@BL0PR11MB3363.namprd11.prod.outlook.com>
+References: <1594715306-10411-1-git-send-email-sumeet.r.pawnikar@intel.com>
+         <CAJZ5v0hYv5TsAWduzaoErS2a2r6dn9vq2t_s4EJ47U7Dz-C50w@mail.gmail.com>
+ <ec0336b09ccf932aef6bbe51fed1e79c864c55ea.camel@linux.intel.com>
+In-Reply-To: <ec0336b09ccf932aef6bbe51fed1e79c864c55ea.camel@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [171.61.90.22]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c7341fb9-8c46-4009-de1f-08d829469da6
+x-ms-traffictypediagnostic: MN2PR11MB4759:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB475962371178D3A74F3F61EFBB7F0@MN2PR11MB4759.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:901;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hK3J8GZM0qrxZos71jcK6q2x/FHdASF7z8F5zJFgZ1JxNaoqVcMkvARlty4pmlWwLXL1SFTDJFRaqQmoWnCoZlSMMzH42zsO6dp5kEST5YEp2HoXs+u9zhwx2gtWzRDNiMQQgfXNFR6V9zrmJVYhBmH0Yas0hJbzkyiMms6zAaW3GdzHd7aimpVe3wBG4nVBwY0V2TYGiJSlfrGrdffiohadHtqJhXJ93Nac8dh3mZZEjJG+ypR60Udm92S8OpfKj0elS2MaLiEVsIUUxhwmh7WG0UrTuLj3uo5wCn68bgC9kRx+cezxOg7aXCT4TzIFYi3mQAofxY66DC4uLhOjJQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR11MB3363.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(396003)(136003)(366004)(39860400002)(6506007)(7696005)(4326008)(8936002)(8676002)(478600001)(186003)(83380400001)(86362001)(5660300002)(71200400001)(26005)(110136005)(54906003)(316002)(53546011)(76116006)(66446008)(64756008)(66556008)(66476007)(55016002)(66946007)(2906002)(52536014)(33656002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: El54bHILW71T+y/duKfQRXEYYbAyVkdmtAwuaGUo9QB1SzaQqZmQkVWV5g/D8UBgAEoA1RbeuBkRUG/3FJWQjJWoixun8tkEZ77FPjvqz0w5ZeZvC64UOCBc8LjAkWttb1ZYJTcJRa8748eeW4YPrqX2g1S63sRdx5HYejjh4K8e/bBgAf9yIykPVEiUN9zX/z7dbsa4vVSE7ZyiZKLl2fomBK67JAoPIXHl6vRv0OgHVPLb9Np/Bh+5lxrA0mYJRtz8IjHycGXDlUsuX08+QpreZvbAKIGei8ZRW79yzxV0wttEZ3Y44163SWCBu2KWsvCzD2yJchjUei/U5+sYlRSCwteuCrVnzTfssLx9QMjeUGInd8mzM6b4Q+aX7XzBIYe+DuLTBwBRWwgeF4GioS4W2AcMU7XPbibT3g0Q5KCIbCwbR+nXK+pHrluft48FBL0C2R/3zEMYa49by/MXBuOTD366XUdWczvr5KJUxKk=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR11MB3363.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7341fb9-8c46-4009-de1f-08d829469da6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 05:10:54.0754
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nc7AzU2IfVyGHbm/hzu/LaORMEGzSpve6/H/S5586TJXBdY6aSFsO1OHgXgfqzYk2ibbv+bj3la5Rz0u1sc7TCde+Xbo5v4muN8TG4bMkts=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4759
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marek and Guenter reported that commit 287905e68dd2 ("driver core:
-Expose device link details in sysfs") caused sleeping/scheduling while
-atomic warnings.
-
-BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 12, name: kworker/0:1
-2 locks held by kworker/0:1/12:
-  #0: ee8074a8 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x174/0x7dc
-  #1: ee921f20 ((work_completion)(&sdp->work)){+.+.}-{0:0}, at: process_one_work+0x174/0x7dc
-Preemption disabled at:
-[<c01b10f0>] srcu_invoke_callbacks+0xc0/0x154
------ 8< ----- SNIP
-[<c064590c>] (device_del) from [<c0645c9c>] (device_unregister+0x24/0x64)
-[<c0645c9c>] (device_unregister) from [<c01b10fc>] (srcu_invoke_callbacks+0xcc/0x154)
-[<c01b10fc>] (srcu_invoke_callbacks) from [<c01493c4>] (process_one_work+0x234/0x7dc)
-[<c01493c4>] (process_one_work) from [<c01499b0>] (worker_thread+0x44/0x51c)
-[<c01499b0>] (worker_thread) from [<c0150bf4>] (kthread+0x158/0x1a0)
-[<c0150bf4>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
-Exception stack(0xee921fb0 to 0xee921ff8)
-
-This was caused by the device link device being released in the context
-of srcu_invoke_callbacks().  There is no need to wait till the RCU
-callback to release the device link device.  So release the device
-earlier and revert the RCU callback code to what it was before
-commit 287905e68dd2 ("driver core: Expose device link details in sysfs")
-
-Fixes: 287905e68dd2 ("driver core: Expose device link details in sysfs")
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
-Marek and Guenter,
-
-It haven't had a chance to test this yet. Can one of you please test it
-and confirm it fixes the issue?
-
-Thanks,
-Saravana
-
- drivers/base/core.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 5373ddd029f6..ccb2ce11f5b5 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -306,16 +306,10 @@ static struct attribute *devlink_attrs[] = {
- };
- ATTRIBUTE_GROUPS(devlink);
- 
--static void devlink_dev_release(struct device *dev)
--{
--	kfree(to_devlink(dev));
--}
--
- static struct class devlink_class = {
- 	.name = "devlink",
- 	.owner = THIS_MODULE,
- 	.dev_groups = devlink_groups,
--	.dev_release = devlink_dev_release,
- };
- 
- static int devlink_add_symlinks(struct device *dev,
-@@ -737,7 +731,7 @@ static void device_link_free(struct device_link *link)
- 
- 	put_device(link->consumer);
- 	put_device(link->supplier);
--	device_unregister(&link->link_dev);
-+	kfree(link);
- }
- 
- #ifdef CONFIG_SRCU
-@@ -756,6 +750,7 @@ static void __device_link_del(struct kref *kref)
- 	if (link->flags & DL_FLAG_PM_RUNTIME)
- 		pm_runtime_drop_link(link->consumer);
- 
-+	device_unregister(&link->link_dev);
- 	list_del_rcu(&link->s_node);
- 	list_del_rcu(&link->c_node);
- 	call_srcu(&device_links_srcu, &link->rcu_head, __device_link_free_srcu);
-@@ -771,6 +766,7 @@ static void __device_link_del(struct kref *kref)
- 	if (link->flags & DL_FLAG_PM_RUNTIME)
- 		pm_runtime_drop_link(link->consumer);
- 
-+	device_unregister(&link->link_dev);
- 	list_del(&link->s_node);
- 	list_del(&link->c_node);
- 	device_link_free(link);
--- 
-2.28.0.rc0.105.gf9edc3c819-goog
-
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNyaW5pdmFzIFBhbmRydXZh
+ZGEgPHNyaW5pdmFzLnBhbmRydXZhZGFAbGludXguaW50ZWwuY29tPg0KPiBTZW50OiBXZWRuZXNk
+YXksIEp1bHkgMTUsIDIwMjAgNTo0NCBBTQ0KPiBUbzogUmFmYWVsIEouIFd5c29ja2kgPHJhZmFl
+bEBrZXJuZWwub3JnPjsgUGF3bmlrYXIsIFN1bWVldCBSDQo+IDxzdW1lZXQuci5wYXduaWthckBp
+bnRlbC5jb20+DQo+IENjOiBSYWZhZWwgSi4gV3lzb2NraSA8cmp3QHJqd3lzb2NraS5uZXQ+OyBa
+aGFuZywgUnVpDQo+IDxydWkuemhhbmdAaW50ZWwuY29tPjsgTGludXggUE0gPGxpbnV4LXBtQHZn
+ZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbA0KPiBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc+OyBTaGV2Y2hlbmtvLCBBbmRyaXkNCj4gPGFuZHJpeS5zaGV2Y2hl
+bmtvQGludGVsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2Ml0gcG93ZXJjYXA6IEFkZCBQ
+b3dlciBMaW1pdDQgc3VwcG9ydA0KPiANCj4gT24gVHVlLCAyMDIwLTA3LTE0IGF0IDE1OjIxICsw
+MjAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90ZToNCj4gPiA+DQo+IA0KPiBbLi4uXQ0KPiANCj4g
+PiBPbiBUdWUsIEp1bCAxNCwgMjAyMCBhdCAxMDoyMiBBTSBTdW1lZXQgUGF3bmlrYXINCj4gPiA8
+c3VtZWV0LnIucGF3bmlrYXJAaW50ZWwuY29tPiB3cm90ZToNCj4gPg0KPiA+IFNyaW5pdmFzLCBk
+b2VzIHRoZSBwYXRjaCBsb29rIGdvb2QgdG8geW91Pw0KPiANCj4gU29tZSBtaW5vciBjb21tZW50
+cyB0aGVuIFN1bW1ldCBjYW4gYWRkIG15DQo+IA0KPiBSZXZpZXdlZC1hbmQtdGVzdGVkLWJ5OiBT
+cmluaXZhcyBQYW5kcnV2YWRhIDwNCj4gc3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+b20+DQo+IA0KDQpUaGFua3MgU3Jpbml2YXMgZm9yIHRlc3RpbmcgdGhpcy4gDQpJIHdpbGwgYWRk
+cmVzcyB5b3VyIGJlbG93IGNvbW1lbnQNCmFuZCBzdWJtaXQgdjMgd2l0aCBhYm92ZSB0YWcuIA0K
+DQo+ID4gPiAtLS0NCj4gPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4gPiAgLSBBZGRyZXNzZWQgcmV2
+aWV3IGNvbW1lbnRzIGZyb20gUmFmYWVsLg0KPiA+ID4gIC0gTWFkZSB0aGUgY29tbWl0IG1lc3Nh
+Z2UgbW9yZSBjbGVhcmVyLg0KPiA+ID4gIC0gVXBkYXRlZCBwb3dlcmNhcCBkb2N1bWVudGF0aW9u
+Lg0KPiA+ID4gLS0tDQo+ID4gPg0KPiANCj4gWy4uLl0NCj4gDQo+ID4gPiAwLDEpLg0KPiA+ID4g
+K0RlcGVuZGluZyBvbiBkaWZmZXJlbnQgcG93ZXIgem9uZXMsIHRoZSBJbnRlbCBSQVBMIHRlY2hu
+b2xvZ3kNCj4gPiA+IGFsbG93cw0KPiA+ID4gK29uZSBvciBtdWx0aXBsZSBjb25zdHJhaW50cyBs
+aWtlIHNob3J0IHRlcm0sIGxvbmcgdGVybSBhbmQgcGVhaw0KPiA+ID4gcG93ZXIsDQo+ID4gPiAr
+d2l0aCBkaWZmZXJlbnQgdGltZSB3aW5kb3dzIHRvIGJlIGFwcGxpZWQgdG8gZWFjaCBwb3dlciB6
+b25lLg0KPiBJIHRoaW5rIGJldHRlciB0byBzcGVsbCBvdXQgdGhhdCB0aW1lIHdpbmRvdyBpcyBu
+b3QgYXBwbGljYWJsZSB0byAicGVhayBwb3dlciIuDQo+IE90aGVyd2lzZSBzb21lb25lIHdpbGwg
+c2VuZCBhIGJ1ZyByZXBvcnQuDQo+IA0KPiANCj4gWy4uLl0NCj4gDQo+ID4gPiAgc3RhdGljIGlu
+dCByYXBsX21zcl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSAgew0KPiA+ID4g
+ICAgICAgICBpbnQgcmV0Ow0KPiA+ID4gKyAgICAgICBjb25zdCBzdHJ1Y3QgeDg2X2NwdV9pZCAq
+aWQgPQ0KPiA+ID4geDg2X21hdGNoX2NwdShwbDRfc3VwcG9ydF9pZHMpOw0KPiANCj4gVG8gbWF0
+Y2ggY29kaW5nIHN0eWxlIGluIHRoaXMgZmlsZToNCj4gCWNvbnN0IHN0cnVjdCB4ODZfY3B1X2lk
+ICppZCA9IHg4Nl9tYXRjaF9jcHUocGw0X3N1cHBvcnRfaWRzKTsNCj4gICAgICAgICBpbnQgcmV0
+Ow0KPiANCg0KVGhhbmtzIGZvciByZXZpZXcuICANCg0KUmVnYXJkcywNClN1bWVldC4NCg0KPiA+
+ID4gICAgICAgICByYXBsX21zcl9wcml2LnJlYWRfcmF3ID0gcmFwbF9tc3JfcmVhZF9yYXc7DQo+
+IA0KPiBUaGFua3MsDQo+IFNyaW5pdmFzDQoNCg==
