@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF073C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B25C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A923920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4698520787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgGPCnY (ORCPT
+        id S1728096AbgGPCn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:43:24 -0400
+        Wed, 15 Jul 2020 22:43:28 -0400
 Received: from mx.socionext.com ([202.248.49.38]:52330 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbgGPCnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:43:23 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 16 Jul 2020 11:43:21 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 9C53C60060;
-        Thu, 16 Jul 2020 11:43:21 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 16 Jul 2020 11:43:21 +0900
+        id S1728066AbgGPCn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 22:43:26 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 16 Jul 2020 11:43:24 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 640B4180BC2;
+        Thu, 16 Jul 2020 11:43:24 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 16 Jul 2020 11:43:24 +0900
 Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 3A11E1A0509;
-        Thu, 16 Jul 2020 11:43:21 +0900 (JST)
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 2879C1A0509;
+        Thu, 16 Jul 2020 11:43:24 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -37,9 +37,9 @@ To:     Kishon Vijay Abraham I <kishon@ti.com>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v3 1/2] dt-bindings: phy: Add UniPhier AHCI PHY description
-Date:   Thu, 16 Jul 2020 11:43:01 +0900
-Message-Id: <1594867382-27509-2-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v3 2/2] phy: socionext: Add UniPhier AHCI PHY driver support
+Date:   Thu, 16 Jul 2020 11:43:02 +0900
+Message-Id: <1594867382-27509-3-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594867382-27509-1-git-send-email-hayashi.kunihiko@socionext.com>
 References: <1594867382-27509-1-git-send-email-hayashi.kunihiko@socionext.com>
@@ -48,98 +48,373 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for PHY interface built into ahci controller implemented
-in UniPhier SoCs.
+Add a driver for PHY interface built into ahci controller implemented
+in UniPhier SoCs. This supports PXs2 and PXs3 SoCs.
 
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/phy/socionext,uniphier-ahci-phy.yaml  | 76 ++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
+ drivers/phy/socionext/Kconfig             |  10 +
+ drivers/phy/socionext/Makefile            |   1 +
+ drivers/phy/socionext/phy-uniphier-ahci.c | 323 ++++++++++++++++++++++++++++++
+ 3 files changed, 334 insertions(+)
+ create mode 100644 drivers/phy/socionext/phy-uniphier-ahci.c
 
-diff --git a/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml b/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
+diff --git a/drivers/phy/socionext/Kconfig b/drivers/phy/socionext/Kconfig
+index 8c9d7c3..a3970e0 100644
+--- a/drivers/phy/socionext/Kconfig
++++ b/drivers/phy/socionext/Kconfig
+@@ -34,3 +34,13 @@ config PHY_UNIPHIER_PCIE
+ 	help
+ 	  Enable this to support PHY implemented in PCIe controller
+ 	  on UniPhier SoCs. This driver supports LD20 and PXs3 SoCs.
++
++config PHY_UNIPHIER_AHCI
++	tristate "UniPhier AHCI PHY driver"
++	depends on ARCH_UNIPHIER || COMPILE_TEST
++	depends on OF && HAS_IOMEM
++	default SATA_AHCI_PLATFORM
++	select GENERIC_PHY
++	help
++	  Enable this to support PHY implemented in AHCI controller
++	  on UniPhier SoCs. This driver supports PXs2 and PXs3 SoCs.
+diff --git a/drivers/phy/socionext/Makefile b/drivers/phy/socionext/Makefile
+index 7dc9095..e67c2da 100644
+--- a/drivers/phy/socionext/Makefile
++++ b/drivers/phy/socionext/Makefile
+@@ -6,3 +6,4 @@
+ obj-$(CONFIG_PHY_UNIPHIER_USB2)	+= phy-uniphier-usb2.o
+ obj-$(CONFIG_PHY_UNIPHIER_USB3)	+= phy-uniphier-usb3hs.o phy-uniphier-usb3ss.o
+ obj-$(CONFIG_PHY_UNIPHIER_PCIE)	+= phy-uniphier-pcie.o
++obj-$(CONFIG_PHY_UNIPHIER_AHCI)	+= phy-uniphier-ahci.o
+diff --git a/drivers/phy/socionext/phy-uniphier-ahci.c b/drivers/phy/socionext/phy-uniphier-ahci.c
 new file mode 100644
-index 0000000..bab2ff4
+index 0000000..d1a79f5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/socionext,uniphier-ahci-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/phy/socionext/phy-uniphier-ahci.c
+@@ -0,0 +1,323 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * phy-uniphier-ahci.c - PHY driver for UniPhier AHCI controller
++ * Copyright 2016-2020, Socionext Inc.
++ * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
++ */
 +
-+title: Socionext UniPhier AHCI PHY
++#include <linux/bitfield.h>
++#include <linux/bitops.h>
++#include <linux/clk.h>
++#include <linux/iopoll.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/reset.h>
 +
-+description: |
-+  This describes the deivcetree bindings for PHY interfaces built into
-+  AHCI controller implemented on Socionext UniPhier SoCs.
++struct uniphier_ahciphy_priv {
++	struct device *dev;
++	void __iomem  *base;
++	struct clk *clk, *clk_parent;
++	struct reset_control *rst, *rst_parent;
++	const struct uniphier_ahciphy_soc_data *data;
++};
 +
-+maintainers:
-+  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
++struct uniphier_ahciphy_soc_data {
++	int (*init)(struct uniphier_ahciphy_priv *priv);
++	int (*power_on)(struct uniphier_ahciphy_priv *priv);
++	int (*power_off)(struct uniphier_ahciphy_priv *priv);
++	bool is_ready_high;
++	bool is_phy_clk;
++};
 +
-+properties:
-+  compatible:
-+    enum:
-+      - socionext,uniphier-pxs2-ahci-phy
-+      - socionext,uniphier-pxs3-ahci-phy
++/* for PXs2/PXs3 */
++#define CKCTRL				0x0
++#define CKCTRL_P0_READY			BIT(15)
++#define CKCTRL_P0_RESET			BIT(10)
++#define CKCTRL_REF_SSP_EN		BIT(9)
++#define TXCTRL0				0x4
++#define TXCTRL0_AMP_G3_MASK		GENMASK(22, 16)
++#define TXCTRL0_AMP_G2_MASK		GENMASK(14, 8)
++#define TXCTRL0_AMP_G1_MASK		GENMASK(6, 0)
++#define TXCTRL1				0x8
++#define TXCTRL1_DEEMPH_G3_MASK		GENMASK(21, 16)
++#define TXCTRL1_DEEMPH_G2_MASK		GENMASK(13, 8)
++#define TXCTRL1_DEEMPH_G1_MASK		GENMASK(5, 0)
++#define RXCTRL				0xc
++#define RXCTRL_LOS_LVL_MASK		GENMASK(20, 16)
++#define RXCTRL_LOS_BIAS_MASK		GENMASK(10, 8)
++#define RXCTRL_RX_EQ_MASK		GENMASK(2, 0)
 +
-+  reg:
-+    description: PHY register region (offset and length)
++static void uniphier_ahciphy_pxs2_enable(struct uniphier_ahciphy_priv *priv,
++					 bool enable)
++{
++	u32 val;
 +
-+  "#phy-cells":
-+    const: 0
++	val = readl(priv->base + CKCTRL);
 +
-+  clocks:
-+    maxItems: 2
++	if (enable) {
++		val |= CKCTRL_REF_SSP_EN;
++		writel(val, priv->base + CKCTRL);
++		val &= ~CKCTRL_P0_RESET;
++		writel(val, priv->base + CKCTRL);
++	} else {
++		val |= CKCTRL_P0_RESET;
++		writel(val, priv->base + CKCTRL);
++		val &= ~CKCTRL_REF_SSP_EN;
++		writel(val, priv->base + CKCTRL);
++	}
++}
 +
-+  clock-names:
-+    oneOf:
-+      - items:          # for PXs2
-+        - const: link
-+      - items:          # for others
-+        - const: link
-+        - const: phy
++static int uniphier_ahciphy_pxs2_power_on(struct uniphier_ahciphy_priv *priv)
++{
++	int ret;
++	u32 val;
 +
-+  resets:
-+    maxItems: 2
++	uniphier_ahciphy_pxs2_enable(priv, true);
 +
-+  reset-names:
-+    items:
-+      - const: link
-+      - const: phy
++	/* wait until PLL is ready */
++	if (priv->data->is_ready_high)
++		ret = readl_poll_timeout(priv->base + CKCTRL, val,
++					 (val & CKCTRL_P0_READY), 200, 400);
++	else
++		ret = readl_poll_timeout(priv->base + CKCTRL, val,
++					 !(val & CKCTRL_P0_READY), 200, 400);
++	if (ret) {
++		dev_err(priv->dev, "Failed to check whether PHY PLL is ready\n");
++		uniphier_ahciphy_pxs2_enable(priv, false);
++	}
 +
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
++	return ret;
++}
 +
-+additionalProperties: false
++static int uniphier_ahciphy_pxs2_power_off(struct uniphier_ahciphy_priv *priv)
++{
++	uniphier_ahciphy_pxs2_enable(priv, false);
 +
-+examples:
-+  - |
-+    ahci-glue@65700000 {
-+        compatible = "socionext,uniphier-pxs3-ahci-glue",
-+                     "simple-mfd";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0 0x65700000 0x100>;
++	return 0;
++}
 +
-+        ahci_phy: phy@10 {
-+            compatible = "socionext,uniphier-pxs3-ahci-phy";
-+            reg = <0x10 0x10>;
-+            #phy-cells = <0>;
-+            clock-names = "link", "phy";
-+            clocks = <&sys_clk 28>, <&sys_clk 30>;
-+            reset-names = "link", "phy";
-+            resets = <&sys_rst 28>, <&sys_rst 30>;
-+        };
-+    };
++static int uniphier_ahciphy_pxs3_init(struct uniphier_ahciphy_priv *priv)
++{
++	int i;
++	u32 val;
++
++	/* setup port parameter */
++	val = readl(priv->base + TXCTRL0);
++	val &= ~TXCTRL0_AMP_G3_MASK;
++	val |= FIELD_PREP(TXCTRL0_AMP_G3_MASK, 0x73);
++	val &= ~TXCTRL0_AMP_G2_MASK;
++	val |= FIELD_PREP(TXCTRL0_AMP_G2_MASK, 0x46);
++	val &= ~TXCTRL0_AMP_G1_MASK;
++	val |= FIELD_PREP(TXCTRL0_AMP_G1_MASK, 0x42);
++	writel(val, priv->base + TXCTRL0);
++
++	val = readl(priv->base + TXCTRL1);
++	val &= ~TXCTRL1_DEEMPH_G3_MASK;
++	val |= FIELD_PREP(TXCTRL1_DEEMPH_G3_MASK, 0x23);
++	val &= ~TXCTRL1_DEEMPH_G2_MASK;
++	val |= FIELD_PREP(TXCTRL1_DEEMPH_G2_MASK, 0x05);
++	val &= ~TXCTRL1_DEEMPH_G1_MASK;
++	val |= FIELD_PREP(TXCTRL1_DEEMPH_G1_MASK, 0x05);
++
++	val = readl(priv->base + RXCTRL);
++	val &= ~RXCTRL_LOS_LVL_MASK;
++	val |= FIELD_PREP(RXCTRL_LOS_LVL_MASK, 0x9);
++	val &= ~RXCTRL_LOS_BIAS_MASK;
++	val |= FIELD_PREP(RXCTRL_LOS_BIAS_MASK, 0x2);
++	val &= ~RXCTRL_RX_EQ_MASK;
++	val |= FIELD_PREP(RXCTRL_RX_EQ_MASK, 0x1);
++
++	/* dummy read 25 times to make a wait time for the phy to stablize */
++	for (i = 0; i < 25; i++)
++		readl(priv->base + CKCTRL);
++
++	return 0;
++}
++
++static int uniphier_ahciphy_init(struct phy *phy)
++{
++	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
++	int ret;
++
++	ret = clk_prepare_enable(priv->clk_parent);
++	if (ret)
++		return ret;
++
++	ret = reset_control_deassert(priv->rst_parent);
++	if (ret)
++		goto out_clk_disable;
++
++	if (priv->data->init) {
++		ret = priv->data->init(priv);
++		if (ret)
++			goto out_rst_assert;
++	}
++
++	return 0;
++
++out_rst_assert:
++	reset_control_assert(priv->rst_parent);
++out_clk_disable:
++	clk_disable_unprepare(priv->clk_parent);
++
++	return ret;
++}
++
++static int uniphier_ahciphy_exit(struct phy *phy)
++{
++	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
++
++	reset_control_assert(priv->rst_parent);
++	clk_disable_unprepare(priv->clk_parent);
++
++	return 0;
++}
++
++static int uniphier_ahciphy_power_on(struct phy *phy)
++{
++	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
++	int ret = 0;
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret)
++		return ret;
++
++	ret = reset_control_deassert(priv->rst);
++	if (ret)
++		goto out_clk_disable;
++
++	if (priv->data->power_on) {
++		ret = priv->data->power_on(priv);
++		if (ret)
++			goto out_reset_assert;
++	}
++
++	return 0;
++
++out_reset_assert:
++	reset_control_assert(priv->rst);
++out_clk_disable:
++	clk_disable_unprepare(priv->clk);
++
++	return ret;
++}
++
++static int uniphier_ahciphy_power_off(struct phy *phy)
++{
++	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
++	int ret = 0;
++
++	if (priv->data->power_off)
++		ret = priv->data->power_off(priv);
++
++	reset_control_assert(priv->rst);
++	clk_disable_unprepare(priv->clk);
++
++	return ret;
++}
++
++
++static const struct phy_ops uniphier_ahciphy_ops = {
++	.init  = uniphier_ahciphy_init,
++	.exit  = uniphier_ahciphy_exit,
++	.power_on  = uniphier_ahciphy_power_on,
++	.power_off = uniphier_ahciphy_power_off,
++	.owner = THIS_MODULE,
++};
++
++static int uniphier_ahciphy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct uniphier_ahciphy_priv *priv;
++	struct phy *phy;
++	struct phy_provider *phy_provider;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->dev = dev;
++	priv->data = of_device_get_match_data(dev);
++	if (WARN_ON(!priv->data))
++		return -EINVAL;
++
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(priv->base))
++		return PTR_ERR(priv->base);
++
++	priv->clk_parent = devm_clk_get(dev, "link");
++	if (IS_ERR(priv->clk_parent))
++		return PTR_ERR(priv->clk_parent);
++
++	if (priv->data->is_phy_clk) {
++		priv->clk = devm_clk_get(dev, "phy");
++		if (IS_ERR(priv->clk))
++			return PTR_ERR(priv->clk);
++	}
++
++	priv->rst_parent = devm_reset_control_get_shared(dev, "link");
++	if (IS_ERR(priv->rst_parent))
++		return PTR_ERR(priv->rst_parent);
++
++	priv->rst = devm_reset_control_get_shared(dev, "phy");
++	if (IS_ERR(priv->rst))
++		return PTR_ERR(priv->rst);
++
++	phy = devm_phy_create(dev, dev->of_node, &uniphier_ahciphy_ops);
++	if (IS_ERR(phy)) {
++		dev_err(dev, "failed to create phy\n");
++		return PTR_ERR(phy);
++	}
++
++	phy_set_drvdata(phy, priv);
++	phy_provider = devm_of_phy_provider_register(dev,
++						     of_phy_simple_xlate);
++	if (IS_ERR(phy_provider))
++		return PTR_ERR(phy_provider);
++
++	return 0;
++}
++
++static const struct uniphier_ahciphy_soc_data uniphier_pxs2_data = {
++	.power_on  = uniphier_ahciphy_pxs2_power_on,
++	.power_off = uniphier_ahciphy_pxs2_power_off,
++	.is_ready_high = false,
++	.is_phy_clk = false,
++};
++
++static const struct uniphier_ahciphy_soc_data uniphier_pxs3_data = {
++	.init      = uniphier_ahciphy_pxs3_init,
++	.power_on  = uniphier_ahciphy_pxs2_power_on,
++	.power_off = uniphier_ahciphy_pxs2_power_off,
++	.is_ready_high = true,
++	.is_phy_clk = true,
++};
++
++static const struct of_device_id uniphier_ahciphy_match[] = {
++	{
++		.compatible = "socionext,uniphier-pxs2-ahci-phy",
++		.data = &uniphier_pxs2_data,
++	},
++	{
++		.compatible = "socionext,uniphier-pxs3-ahci-phy",
++		.data = &uniphier_pxs3_data,
++	},
++	{ /* Sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, uniphier_ahciphy_match);
++
++static struct platform_driver uniphier_ahciphy_driver = {
++	.probe = uniphier_ahciphy_probe,
++	.driver = {
++		.name = "uniphier-ahci-phy",
++		.of_match_table = uniphier_ahciphy_match,
++	},
++};
++module_platform_driver(uniphier_ahciphy_driver);
++
++MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
++MODULE_DESCRIPTION("UniPhier PHY driver for AHCI controller");
++MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
 
