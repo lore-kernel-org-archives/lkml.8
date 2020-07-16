@@ -2,120 +2,115 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0A4C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C906FC433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A18F2212CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A5A2137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pzWBph9R"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WbeVJMO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgGPXJZ (ORCPT
+        id S1728041AbgGPXJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:09:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43404 "EHLO
+        Thu, 16 Jul 2020 19:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727935AbgGPXJT (ORCPT
+        with ESMTP id S1727932AbgGPXJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:09:19 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F85C08C5DD;
-        Thu, 16 Jul 2020 15:19:41 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z15so8778351wrl.8;
-        Thu, 16 Jul 2020 15:19:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H5QoX0EnQtJ7nKvUo3g53hwz6ZnHeI+UuONUkGNSIOg=;
-        b=pzWBph9RVupA8tGWneYRS9IeaLJh04bMZnsi+xitFm22eyJx78DiPYE4JnWKVmlfln
-         SHSHJy0RkoRquZDZuHr/e/PEgFL/3EoQwdSv+cgF7cuo2YcpBVRS68EiR/QazpvR5QnX
-         rA878Lo8v4MuZEupYGkzYTDpGjLOGwugksfpbRcZ4Kb5cRNNUlj7YTilUIU4OlTeiyHf
-         OSG4RpYBYXs9yqCXaRidWdkU4sG7ZOqUtD35k+mUO4NAOgTZSeXLUJD+E6ONWYBaVuyU
-         NOp1TMvf/tiNS85lz3cEmeT1W0vO6+UnAh+B1KZ7qO046bV62mB0t+QdBbuI+shekPr9
-         RqQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H5QoX0EnQtJ7nKvUo3g53hwz6ZnHeI+UuONUkGNSIOg=;
-        b=BbplC3geyzTgNms0Z/TvuBebbtbTtrV7vVUMk7CAv3yyLj0kYJZim2b/s4ZogBX1ox
-         mukXyySLWE5PgAxhKG6dtrMTusNuDK57GgqLnupkWbBXbPpzAC+tyIC6N9mzor7UVThq
-         5IB1h3GkUI0Ncv2sqQiWIqVHQNpEYo91Q8jG2ZlY0n8qX0msrmlOuzIdBYPNawucoxme
-         7Av1porplSKHWL0iGHJJvVnhbRUJGpp7aweMkTo9QNsb0BlaJGM+MeAXz6a4qj4DjX+m
-         dG2QGJbBpkeqOo6ebIQ7rJRphWmf53oBbyj9iWdzlGmNy6gnZmXWsE12NxiQz0L68hV0
-         zArw==
-X-Gm-Message-State: AOAM532cG7YzzBK/0Rjf+lZtzLIsZBMYQFxNdff2b1qs/J8lmi11FdMA
-        oPTSS2qWxBxXexgCh4LJUlGR/n4G
-X-Google-Smtp-Source: ABdhPJzk6a7MmutVrxKKsxmTRCi8FyROM04Oh+yTPj75zNfkwUQOxrwiMg5l5Wv3amORXEUjGV1Lfw==
-X-Received: by 2002:a5d:54c9:: with SMTP id x9mr7437293wrv.247.1594937979124;
-        Thu, 16 Jul 2020 15:19:39 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id d10sm10822130wrx.66.2020.07.16.15.19.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 15:19:38 -0700 (PDT)
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-To:     Matthew Hagan <mnhagan88@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
- <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <21d25c2f-8a8b-81db-b665-916676a0df65@gmail.com>
-Date:   Thu, 16 Jul 2020 15:19:34 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Thu, 16 Jul 2020 19:09:18 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5526C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 15:14:56 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B77pk0wbsz9sRW;
+        Fri, 17 Jul 2020 08:14:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594937694;
+        bh=WbKC4vHYjG/L2xjR4Kz3ljWUlwM3GL392sM2wMXaNrY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WbeVJMO3HzRvwKZlCho9ai47gUDSvbuccBnDFYWCNgDn2zYBd0RqwZFSVuRbE9gl4
+         o5RTRy/rbPJMMgUlwkSPTloOdWdW5+a6YxH8O7V5AWIvMjGecPVwehFemqXTciIWzc
+         QM9YCdEBumkD0Et9g0rCX8fLEureocjN5jmpABTWqcQrowf/Y1GAoZCmbSobc45o5g
+         0SeihO3zR6jGRCsxqivoDPNerQAHfQ4jd6LJ+uYIfu9hxOnU2IbIwfdWESpu85r3Wx
+         opSnS2wQWHyUYgurjJ42IbU7TY/iBOoQPEkuN6/wdyXA82024RzJuhtE6Vcwepp8Ix
+         Q0/CK7s56q7wQ==
+Date:   Fri, 17 Jul 2020 08:14:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: please add the init/ cleanup tree to linux-next
+Message-ID: <20200717081453.38d96678@canb.auug.org.au>
+In-Reply-To: <20200716150511.GA25454@lst.de>
+References: <20200716150511.GA25454@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/f7lswCwx9ckTWPhEyYK4qI/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/f7lswCwx9ckTWPhEyYK4qI/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi Christoph,
 
-On 7/13/2020 1:50 PM, Matthew Hagan wrote:
-> Add names and decriptions of additional PORT0_PAD_CTRL properties.
-> 
-> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
-> ---
->  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> index ccbc6d89325d..3d34c4f2e891 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> @@ -13,6 +13,14 @@ Optional properties:
->  
->  - reset-gpios: GPIO to be used to reset the whole device
->  
-> +Optional MAC configuration properties:
-> +
-> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
-> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
-> +				falling edge.
-> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
-> +				falling edge.
+On Thu, 16 Jul 2020 17:05:11 +0200 Christoph Hellwig <hch@lst.de> wrote:
+>
+> can you add the init/ cleanup tree:
+>=20
+>    git://git.infradead.org/users/hch/misc.git init-user-pointers
+>=20
+> to linux-next?
 
-Are not these two mutually exclusive, that is the presence of one
-implies the absence of the other?
--- 
-Florian
+Added from today.
+
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
+
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
+
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
+
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/f7lswCwx9ckTWPhEyYK4qI/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Q0V0ACgkQAVBC80lX
+0GzkpAf/QmU8ueZ/h/AcYnKoBI3pRAViPC6nxDx2t7xDZYoUSFYqQih0PoTl5HT7
+K03sU11ewf06v3HUIP6PaHHtk45LVCM1l1wBJqwcw0rY+bqEHz0YCPXkxUKbrLn4
+zgXaY/rpxFJ7TTcLe9vlk0Yss7oo1Kt9PZw9ZzELE+Y3ii3ACMvyAA0gXpx+xg7u
+XG6vVwGs4JL/iez944GCIUbjBTZeuEzPjbNX/uH+qo4mNDMt8GvkgSpnRz/rVEAw
+dx3k3wEAtDa/C3tZyfUMg2DTE36TF3kL/felzkLY8ffpGXY77lHD2rqpncxw4XSf
+/SKftrZcw4NRW5NHF9VGN6nHNtBuKA==
+=1ucm
+-----END PGP SIGNATURE-----
+
+--Sig_/f7lswCwx9ckTWPhEyYK4qI/--
