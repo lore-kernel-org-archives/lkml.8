@@ -2,149 +2,201 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAE1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 812302070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043462067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DQGZmtUd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hq0RvrjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgGPHQe (ORCPT
+        id S1728257AbgGPHR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37082 "EHLO
+        Thu, 16 Jul 2020 03:17:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbgGPHQd (ORCPT
+        with ESMTP id S1726547AbgGPHR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:16:33 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CEADC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:16:33 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f7so5912908wrw.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:16:33 -0700 (PDT)
+        Thu, 16 Jul 2020 03:17:27 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A8C1C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:17:27 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id ed14so2282710qvb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:17:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9TnnQvnYMsBS0vFfEzAxKLwtEZGAGG6CcdplbZMdhCc=;
-        b=DQGZmtUd5D7DGrgYJg5d4qjzrMV8zzQUHs5k8iiQhVG7EQahFIFd4b+6MWW7KKJWXu
-         9hd+xCe0GFilk2D2+1oO6Xrd62fWTRKbGiv4QaDfAGvIcQxBxjySgKNhXR6OWiaFl8eu
-         R56mw+/K0MT18pFd4LniG1zIn3O2fsZiCJx25K/lLK4cv+2FILM1yK3OtcBuxcoPyf61
-         mp3aP9AXAbBHaXdttvMF40HnC0cOLYD7c8LI8/ZflrdHOwaG8bJzk1T8STgHsPAHSmPU
-         HayfvrAoWtPv7nRMH0pBn04iWkZB0ci+xItt1xNg/E2Xmr7BSIRpq0bf3HQ00q6/RiYP
-         PCMg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qFJeQp9yLjeo1LueV7R117p7wDlHHRU//0IndFc0hb8=;
+        b=hq0RvrjZoxwXtX/+7e0srDBAAiDfaVR5clywSt2R4RKvebtDb0SMFREULAZlSn2erw
+         P7pCf+lWj01mHJnuf3WIuMbg5uTP0T1nAVSOJsArVdPtCZeQuPVsbauE64zYcfKsUrvh
+         YdLQIpT6RrujoUWB7hV3fJ7GBuRACjeUQIIoAU7W2C20nyy5hd1P9HeBrAu2jE/az9Gy
+         oOghaQfLeP93paCjPwZ5mUzb5FOOuwK05ohx/qzoAjWcTT1vv4k3c7uJsGZVaFSuFUh5
+         Kk/su6YIaOGq2N4C8FmMM/Qd1erNIisJCv4EV7mE8kE5oxR1GfNU1whoVCcFacWNMSKR
+         Ilnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9TnnQvnYMsBS0vFfEzAxKLwtEZGAGG6CcdplbZMdhCc=;
-        b=WImfKlB1wuwkiIXZ1tb6r9iO7Y3+nHqfC/UoH4U2anSVRDFu4mfZfXoz8bkn+C+EYA
-         8ToUKg+ATAspePYTdlkFZJFGW7zLdvVOQEn31x0vWMUIBTo7PAFrxWMqE67L12vOhgzU
-         bFi9+CXOkuhwQp0KY9g6biZTtWS84uXp68eIa9stRvzoaYt2OO8w3lx/cjQgJ79o8dB2
-         Z5Hh8+71ORc8IMvL2tPDNdY3mHXiwzHH8bAtQ2c0owsK+vMWePeiWd+JUQKBdFhJPlSS
-         a1z00CIbXg2LTizbJWtYWulGQTHbyqtEZbFmWwuS2L3ycKTVo99m4j6bb52POxZ1pm+U
-         4jDg==
-X-Gm-Message-State: AOAM533TjGc0HtRwIBMpryqNchAYvD6CtdKJb9hAlHVXjqxSW58tXnaL
-        KlwBfzkzjIh3FYJehAT4inXw/g==
-X-Google-Smtp-Source: ABdhPJwde/Sm7IwZvWeaenQ6ChaPiZppJbMc8dn7sEBf5jP2JUN5dQczjgShnCejDNri1Dt1sSyOuA==
-X-Received: by 2002:adf:e850:: with SMTP id d16mr3761655wrn.426.1594883791687;
-        Thu, 16 Jul 2020 00:16:31 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id g82sm6810915wma.37.2020.07.16.00.16.30
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qFJeQp9yLjeo1LueV7R117p7wDlHHRU//0IndFc0hb8=;
+        b=IxzEli0KTQ7Ay1m80hRZQnOccQ1ckLcNgpSjGe/iv6t4uQVPkoCQHUNuMCT2pTAE0e
+         Dt8S1peXlX8aoLAsOr3+3HZ64Hh7lSqJCJxkG8cV+lFecYtu3ZRq63M+00vWswolv+4R
+         C4ZxVZGC4Bb7nnwFlznj5iG/Rr7L/QDkodjtvsXQ9Zqkei5cl+VR5dDoMOXR6IXjqoem
+         G13EaAfv6ea4VDWimk4jh016XDN1gtblwyCETa3upE64qqcpN6/atjMaOZLeckD7H2eu
+         k/B6/PI2L40o0jVOzkSw7xZL3fFPh5gTDpgQ+FgkNlNTkJIwMlxTObttkO/4Pl9zw80l
+         sjUQ==
+X-Gm-Message-State: AOAM530hp7/GtbxMNfY31SEPVw7HiFSxOOBSfMICc8kwbqNvURk0RN8V
+        cVZm8clp6BTZCWoxHp2dzdo=
+X-Google-Smtp-Source: ABdhPJwBJbMI6eG3Zk4rR1nbOO4ynRMu74+qWIZ98Od3aHrrqqWDlb4lLAaubRaQOXRVX3bkdc3weg==
+X-Received: by 2002:a05:6214:851:: with SMTP id dg17mr2964534qvb.235.1594883846364;
+        Thu, 16 Jul 2020 00:17:26 -0700 (PDT)
+Received: from LeoBras.ibmuc.com (200-236-239-31.dynamic.desktop.com.br. [200.236.239.31])
+        by smtp.gmail.com with ESMTPSA id a5sm6637989qtd.84.2020.07.16.00.17.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 00:16:31 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 08:16:29 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     jejb@linux.ibm.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/24] Set 3: Fix another set of SCSI related W=1
- warnings
-Message-ID: <20200716071629.GL3165313@dell>
-References: <20200713080001.128044-1-lee.jones@linaro.org>
- <159484884355.21107.3732344826044180939.b4-ty@oracle.com>
+        Thu, 16 Jul 2020 00:17:25 -0700 (PDT)
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Joel Stanley <joel@jms.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/7] Remove default DMA window before creating DDW
+Date:   Thu, 16 Jul 2020 04:16:52 -0300
+Message-Id: <20200716071658.467820-1-leobras.c@gmail.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <159484884355.21107.3732344826044180939.b4-ty@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020, Martin K. Petersen wrote:
+There are some devices in which a hypervisor may only allow 1 DMA window
+to exist at a time, and in those cases, a DDW is never created to them,
+since the default DMA window keeps using this resource.
 
-> On Mon, 13 Jul 2020 08:59:37 +0100, Lee Jones wrote:
-> 
-> > This set is part of a larger effort attempting to clean-up W=1
-> > kernel builds, which are currently overwhelmingly riddled with
-> > niggly little warnings.
-> > 
-> > Slowly working through the SCSI related ones.  There are many.
-> > 
-> > This brings the total of W=1 SCSI wanings from 1690 in v5.8-rc1 to 1109.
-> > 
-> > [...]
-> 
-> [01/24] scsi: aacraid: Repair two kerneldoc headers
->         https://git.kernel.org/mkp/scsi/c/b115958d91f5
-> [02/24] scsi: aacraid: Fix a few kerneldoc issues
->         https://git.kernel.org/mkp/scsi/c/cf93fffac261
-> [03/24] scsi: aacraid: Fix logical bug when !DBG
->         https://git.kernel.org/mkp/scsi/c/2fee77e5b820
-> [04/24] scsi: aacraid: Remove unused variable 'status'
->         https://git.kernel.org/mkp/scsi/c/0123c7c62d6c
-> [05/24] scsi: aacraid: Demote partially documented function header
->         https://git.kernel.org/mkp/scsi/c/71aa4d3e0e78
-> [06/24] scsi: aic94xx: Document 'lseq' and repair asd_update_port_links() header
->         https://git.kernel.org/mkp/scsi/c/966fdadf6fea
-> [07/24] scsi: aacraid: Fix a bunch of function header issues
->         https://git.kernel.org/mkp/scsi/c/f1134f0eb184
-> [08/24] scsi: aic94xx: Fix a couple of formatting and bitrot issues
->         https://git.kernel.org/mkp/scsi/c/d2e510505006
-> [09/24] scsi: aacraid: Fill in the very parameter descriptions for rx_sync_cmd()
->         https://git.kernel.org/mkp/scsi/c/ae272a95133a
-> [10/24] scsi: pm8001: Provide descriptions for the many undocumented 'attr's
->         https://git.kernel.org/mkp/scsi/c/e1c3e0f8a2ae
-> [11/24] scsi: ipr: Fix a mountain of kerneldoc misdemeanours
->         https://git.kernel.org/mkp/scsi/c/a96099e2c164
-> [12/24] scsi: virtio_scsi: Demote seemingly unintentional kerneldoc header
->         https://git.kernel.org/mkp/scsi/c/e31f2661ff41
-> [13/24] scsi: ipr: Remove a bunch of set but checked variables
->         https://git.kernel.org/mkp/scsi/c/4dc833999e37
-> [14/24] scsi: ipr: Fix struct packed-not-aligned issues
->         https://git.kernel.org/mkp/scsi/c/f3bdc59f9b11
-> [15/24] scsi: myrs: Demote obvious misuse of kerneldoc to standard comment blocks
->         https://git.kernel.org/mkp/scsi/c/8a692fdb1d04
+LoPAR recommends this procedure:
+1. Remove the default DMA window,
+2. Query for which configs the DDW can be created,
+3. Create a DDW.
 
-Something wrong with [16/24]?
+Patch #1:
+Create defines for outputs of ibm,ddw-applicable, so it's easier to
+identify them.
 
-> [17/24] scsi: be2iscsi: Fix API/documentation slip
->         https://git.kernel.org/mkp/scsi/c/abad069ef0da
-> [18/24] scsi: be2iscsi: Fix misdocumentation of 'pcontext'
->         https://git.kernel.org/mkp/scsi/c/dbc019a48f97
-> [19/24] scsi: be2iscsi: Add missing function parameter description
->         https://git.kernel.org/mkp/scsi/c/7405edfdfb96
-> [20/24] scsi: lpfc: Correct some pretty obvious misdocumentation
->         https://git.kernel.org/mkp/scsi/c/09d99705b5d2
-> [21/24] scsi: aic7xxx: Remove unused variable 'ahd'
->         https://git.kernel.org/mkp/scsi/c/91b6e191c4dc
-> [22/24] scsi: aic7xxx: Remove unused variables 'wait' and 'paused'
->         https://git.kernel.org/mkp/scsi/c/532d56c631f1
-> [23/24] scsi: aic7xxx: Fix 'amount_xferred' set but not used issue
->         https://git.kernel.org/mkp/scsi/c/42b840bcfc16
-> 
+Patch #2:
+- After LoPAR level 2.8, there is an extension that can make
+  ibm,query-pe-dma-windows to have 6 outputs instead of 5. This changes the
+  order of the outputs, and that can cause some trouble. 
+- query_ddw() was updated to check how many outputs the 
+  ibm,query-pe-dma-windows is supposed to have, update the rtas_call() and
+  deal correctly with the outputs in both cases.
+- This patch looks somehow unrelated to the series, but it can avoid future
+  problems on DDW creation.
+
+Patch #3 moves the window-removing code from remove_ddw() to
+remove_dma_window(), creating a way to delete any DMA window, so it can be
+used to delete the default DMA window.
+
+Patch #4 makes use of the remove_dma_window() from patch #3 to remove the
+default DMA window before query_ddw(). It also implements a new rtas call
+to recover the default DMA window, in case anything fails after it was
+removed, and a DDW couldn't be created.
+
+Patch #5 moves the part of iommu_table_free() that does struct iommu_table
+cleaning into iommu_table_clean, so we can invoke it separately in
+patch #6.
+
+Patch #6:
+Instead of destroying the created DDW if it doesn't map the whole
+partition, make use of it instead of the default DMA window as it improves
+performance. Also, update the iommu_table and re-generate the pools.
+
+Patch #7:
+Does some renaming of 'direct window' to 'dma window', given the DDW
+created can now be also used in indirect mapping if direct mapping is not
+available.
+
+All patches were tested into an LPAR with an Ethernet VF:
+4005:01:00.0 Ethernet controller: Mellanox Technologies MT27700 Family
+[ConnectX-4 Virtual Function]
+
+Patch #6 It was tested with a 64GB DDW which did not map the whole
+partition (128G). Performance improvement noticed by using the DDW instead
+of the default DMA window:
+
+64 thread write throughput: +203.0%
+64 thread read throughput: +17.5%
+1 thread write throughput: +20.5%
+1 thread read throughput: +3.43%
+Average write latency: -23.0%
+Average read latency:  -2.26%
+
+---
+Changes since v3:
+- Introduces new patch #5, to prepare for an important change in #6
+- struct iommu_table was not being updated, so include a way to do this
+  in patch #6.
+- Improved patch #4 based in a suggestion from Alexey, to make code
+  more easily understandable
+- v3 link: http://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=187348&state=%2A&archive=both
+
+Changes since v2:
+- Change the way ibm,ddw-extensions is accessed, using a proper function
+  instead of doing this inline everytime it's used.
+- Remove previous patch #6, as it doesn't look like it would be useful.
+- Add new patch, for changing names from direct* to dma*, as indirect 
+  mapping can be used from now on.
+- Fix some typos, corrects some define usage.
+- v2 link: http://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=185433&state=%2A&archive=both
+
+Changes since v1:
+- Add defines for ibm,ddw-applicable and ibm,ddw-extensions outputs
+- Merge aux function query_ddw_out_sz() into query_ddw()
+- Merge reset_dma_window() patch (prev. #2) into remove default DMA
+  window patch (#4).
+- Keep device_node *np name instead of using pdn in remove_*()
+- Rename 'device_node *pdn' into 'parent' in new functions
+- Rename dfl_win to default_win
+- Only remove the default DMA window if there is no window available
+  in first query.
+- Check if default DMA window can be restored before removing it.
+- Fix 'unitialized use' (found by travis mpe:ci-test)
+- New patches #5 and #6
+- v1 link: http://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=184420&state=%2A&archive=both
+
+Special thanks for Alexey Kardashevskiy, Brian King and
+Oliver O'Halloran for the feedback provided!
+
+
+Leonardo Bras (7):
+  powerpc/pseries/iommu: Create defines for operations in
+    ibm,ddw-applicable
+  powerpc/pseries/iommu: Update call to ibm,query-pe-dma-windows
+  powerpc/pseries/iommu: Move window-removing part of remove_ddw into
+    remove_dma_window
+  powerpc/pseries/iommu: Remove default DMA window before creating DDW
+  powerpc/iommu: Move iommu_table cleaning routine to iommu_table_clean
+  powerpc/pseries/iommu: Make use of DDW even if it does not map the
+    partition
+  powerpc/pseries/iommu: Rename "direct window" to "dma window"
+
+ arch/powerpc/include/asm/iommu.h       |   3 +
+ arch/powerpc/kernel/iommu.c            |  45 ++-
+ arch/powerpc/platforms/pseries/iommu.c | 380 ++++++++++++++++++-------
+ 3 files changed, 313 insertions(+), 115 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.25.4
+
