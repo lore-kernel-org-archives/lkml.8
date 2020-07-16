@@ -2,211 +2,147 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53CEC433F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8FEC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E864206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711FF204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="iaKiuBHO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKfOr/DZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgGPXlf (ORCPT
+        id S1726216AbgGPXr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:41:35 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:7125 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgGPXl2 (ORCPT
+        Thu, 16 Jul 2020 19:47:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgGPXr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:41:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594942887; x=1626478887;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+GUmN6ZNbnCfom5PIzX3LeRfgAzIkaN7Tqfa0vPyyjQ=;
-  b=iaKiuBHORH7HSvx6drSIEOysxJab2DFI4PMCq8j5cbOlgWc0L7aKkRkW
-   huG05ie6hMPalI/kHGSfts5LLeI4PnkQlcbme9ga83hLQNtANyRwCuw3n
-   tSEHGWHTp74tBbLaOVW1SD+opF9b335RoDmMQOikKHq+Cqek8L2nKeZI+
-   E3a8ULw/vLsWhfmqcpFtZhFTki0E0tG0RvKxnArIA23sw3lbDhtsA2AGH
-   YODGmJwxrc0J+Zta0Lv/cROTgO0hikwBHD16Sv2oJ9nhC5/xbedwBktpN
-   16ey5L3zKzRekXaXK23GXUSGRc8PZdBkOLr8a7Yg+hPDs9/U96eJutTlu
-   A==;
-IronPort-SDR: OR+ttN/pi7wvpyn6PJCffXCruklEf4leftVs4JmpNvvebz0srXfohWXaQAmNhvaVtUyzOmuNwN
- XtvCzPdkGyG/uLLqxhudsP1AzFx4CBUhVEhDzSm9ID3k4NCmead6suh3M1E0hcTHCrIGZQNS4Z
- 3VGrSjBshorrYdHqFS5KMC7mlqHhAUffKQw3sIOICbDiCXbUD6apys5wPca6L0jIn5WTBM1hHY
- emEpgmoOGAeANaIDzZGk8oLqHn4ia4PVQk3XyvhTUDz3nhyqJQQq7OKynclUJvI4QNVNiZx1Wp
- HeQ=
-X-IronPort-AV: E=Sophos;i="5.75,360,1589212800"; 
-   d="scan'208";a="251923256"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 17 Jul 2020 07:41:27 +0800
-IronPort-SDR: z33pVsdJtjTVuCGhuphFzW0oGSnpbKxaqBZPBGZILT1d6fevpX+UoQXSnLmowO3gtEYNgsrUrb
- Vq7Q6kvHjqUT39Y1t3MTuVVGxbDhUEWZE=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 16:29:51 -0700
-IronPort-SDR: VCDmHz9Po+SyWMa2wkQ6fO1BA4c8cJ8S21BUcZ+C96V9L2BSJuvr7B+3fwjWpRBN+TU8iuP1OY
- xP/JAlmmqMqQ==
-WDCIronportException: Internal
-Received: from phd004806.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.54])
-  by uls-op-cesaip02.wdc.com with ESMTP; 16 Jul 2020 16:41:25 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Kees Cook <keescook@chromium.org>, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Will Deacon <will@kernel.org>, Zong Li <zong.li@sifive.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [RFT PATCH v3 9/9] RISC-V: Add page table dump support for uefi
-Date:   Thu, 16 Jul 2020 16:41:04 -0700
-Message-Id: <20200716234104.29049-10-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200716234104.29049-1-atish.patra@wdc.com>
-References: <20200716234104.29049-1-atish.patra@wdc.com>
+        Thu, 16 Jul 2020 19:47:56 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F53C061755;
+        Thu, 16 Jul 2020 16:47:56 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id i80so4948852lfi.13;
+        Thu, 16 Jul 2020 16:47:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A1jn6c7kFJPkQon2SVOTVHBfqbqTtwTIfeuqRURf4Ug=;
+        b=PKfOr/DZLkDBdJpo4cehHWUJ3UzAwunBUGjeH54n1BEgrMmkKvXW6t8Uaa75NEkVIi
+         eXt5QJa5YKtqbb6dWts5NZNafBl7/DaaVAh+R+VSwXNmIRuWPjLylhxWYhIdOvvb4SEZ
+         Vi0B9Fa9UlO82BDQzgrqib3v/iyn333Y0Ha7SlwiWSXQdkV2DwzreZ7quH+FmXx8ZqWV
+         ViyT4luwEyp2XUiupKhNsEtKIWcg2TciioRQJGGdGUJZFl+VPCRVsO1i4Q4RIfwEbUmw
+         DeO9ZATWn8TwGHaFwSINclBe5qEKPLOMZwBepEw8Y7nVZIbjRpDvItrMaq/kCWnYkhos
+         /rwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A1jn6c7kFJPkQon2SVOTVHBfqbqTtwTIfeuqRURf4Ug=;
+        b=o9tH3c86hHSIrK4H/dke0gcszXqWAEnHIiA5pVA7Upfev7aSGhAx90qAeDyvsGtOoV
+         WNFuuYj/N3W5ue/ZLedNJWKnYy1bgBLwNi3RFQvWtZVADaBSEICu61eV5IzJmqZpyRXd
+         0K2zZFl/e+BqGEVyQM0loQ3GSx3JTPfMIvaeNERDHQEi8moTTX3NOQoP48WlaIfqekRy
+         SwxJCRjHAQTwFT9vR0Q3oAW9xgTGCZHibxmAPrTe59fbheF96boViIy+Ubs/6zkzvPWt
+         7mJOiZ+VaK6J1sYTQy46FwCieZXQDvMEteyh/dwCmirAqtZgk46WgmPeGElWfvt12m28
+         /2KQ==
+X-Gm-Message-State: AOAM533XHaflqYVCR8tlS/9oS+bPrKSjnevWVu/eFzqcowlt2J1k1OIg
+        AkJrZhOAJYo1xhgpNUfSJMU4rmra
+X-Google-Smtp-Source: ABdhPJxPXRlZnIakzEq9kDotxPaAbFxj5XNB36qCPTk2TdYQ/jB+VGMj7ZWGuPNBjUj/HtViFD5hAg==
+X-Received: by 2002:a19:c797:: with SMTP id x145mr3283492lff.143.1594943274284;
+        Thu, 16 Jul 2020 16:47:54 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
+        by smtp.googlemail.com with ESMTPSA id k6sm1482260lfm.89.2020.07.16.16.47.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 16:47:53 -0700 (PDT)
+Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
+ tegra_mipi_calibrate and tegra_mipi_wait
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+ <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
+ <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
+ <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
+ <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
+ <ce0c5ffb-f859-0eab-1ea5-044623dff221@nvidia.com>
+ <a2b8169c-c4a3-4862-cd27-8c1a51ddc558@gmail.com>
+ <4690e682-8495-2327-87c7-c2f06a7a479d@nvidia.com>
+ <66812127-38cf-2af3-51c0-50edbe446e73@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <9b4fbf9d-d651-aa35-c0a6-b8f16aeb0900@gmail.com>
+Date:   Fri, 17 Jul 2020 02:47:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <66812127-38cf-2af3-51c0-50edbe446e73@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend the current page table dump support in RISC-V to include efi
-pages as well.
+17.07.2020 02:09, Sowjanya Komatineni пишет:
+> 
+> On 7/16/20 4:06 PM, Sowjanya Komatineni wrote:
+>>
+>> On 7/16/20 4:01 PM, Dmitry Osipenko wrote:
+>>> 17.07.2020 01:49, Sowjanya Komatineni пишет:
+>>>>> What keeps MIPI clock enabled after completion of the
+>>>>> tegra_mipi_calibrate() invocation?
+>>>> MIPI clock is disabled at end of tegra_mipi_calibrate and is re-enabled
+>>>> during tegra_mipi_wait.
+>>>>
+>>>> I think I should fix this to keep the clock enabled till calibration
+>>>> results are latched.
+>>>>
+>>>> All consumers of tegra_mipi_calibrate() will call tegra_mipi_wait().
+>>>>
+>>>> So will remove clk_disable mipi clk at end of tegra_mipi_calibrate()
+>>>> and
+>>>> clk_enable mipi_clk at beginning of tegra_mipi_wait()
+>>> Isn't it possible to perform the calibration after enabling CSI and
+>>> before of starting the sensor streaming?
+>> Currently this is what I am doing. Triggering calibration start during
+>> CSI receiver being ready and then sensor streaming will happen where
+>> internal MIPI CAL detects for LP -> HS transition and applies results
+>> to pads. So checking for calibration results after sensor stream is
+>> enabled
+> 
+> 1. Calling tegra_mipi_calibrate() during CSI streaming where CSI pads
+> are enabled and receiver is kept ready
+> 
+> 2. Start Sensor stream
+> 
+> 3. Calling tegra_mipi_wait() to check for MIPI Cal status.
+> 
+> So as mipi cal clk need to be kept enabled till 3rd step, we can enable
+> clock during tegra_mipi_calibrate() and leave it enabled and disable it
+> in tegra_mipi_wait after status check.
 
-Here is the output of efi runtime page table mappings.
+From TRM:
 
----[ UEFI runtime start ]---
-0x0000000020002000-0x0000000020003000 0x00000000be732000 4K PTE D A . . . W R V
-0x0000000020018000-0x0000000020019000 0x00000000be738000 4K PTE D A . . . W R V
-0x000000002002c000-0x000000002002d000 0x00000000be73c000 4K PTE D A . . . W R V
-0x0000000020031000-0x0000000020032000 0x00000000bff61000 4K PTE D A . . X W R V
----[ UEFI runtime end ]---
+The following sequence is recommended for capturing a single frame:
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/mm/ptdump.c | 48 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 42 insertions(+), 6 deletions(-)
+1. Set up CSI registers for use case such as number of lanes, virtual
+channel, etc.
+2. Initialize and power up CSI interface
+3. Wait for initialization time or done signal from calibration logic
+4. Power up camera through the I2C interface
+5. All CSI data and clock lanes are in stop state, LP11
+6. Initiate frame capture through the I2C
+7. Frame done, CSI goes back to stop state, LP11
 
-diff --git a/arch/riscv/mm/ptdump.c b/arch/riscv/mm/ptdump.c
-index 0831c2e61a8f..ace74dec7492 100644
---- a/arch/riscv/mm/ptdump.c
-+++ b/arch/riscv/mm/ptdump.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2019 SiFive
-  */
- 
-+#include <linux/efi.h>
- #include <linux/init.h>
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
-@@ -49,6 +50,14 @@ struct addr_marker {
- 	const char *name;
- };
- 
-+/* Private information for debugfs */
-+struct ptd_mm_info {
-+	struct mm_struct		*mm;
-+	const struct addr_marker	*markers;
-+	unsigned long base_addr;
-+	unsigned long end;
-+};
-+
- static struct addr_marker address_markers[] = {
- #ifdef CONFIG_KASAN
- 	{KASAN_SHADOW_START,	"Kasan shadow start"},
-@@ -68,6 +77,28 @@ static struct addr_marker address_markers[] = {
- 	{-1, NULL},
- };
- 
-+static struct ptd_mm_info kernel_ptd_info = {
-+	.mm		= &init_mm,
-+	.markers	= address_markers,
-+	.base_addr	= KERN_VIRT_START,
-+	.end		= ULONG_MAX,
-+};
-+
-+#ifdef CONFIG_EFI
-+static struct addr_marker efi_addr_markers[] = {
-+		{ 0,		"UEFI runtime start" },
-+		{ SZ_1G,	"UEFI runtime end" },
-+		{ -1,		NULL }
-+};
-+
-+static struct ptd_mm_info efi_ptd_info = {
-+	.mm		= &efi_mm,
-+	.markers	= efi_addr_markers,
-+	.base_addr	= 0,
-+	.end		= SZ_2G,
-+};
-+#endif
-+
- /* Page Table Entry */
- struct prot_bits {
- 	u64 mask;
-@@ -245,22 +276,22 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr,
- 	}
- }
- 
--static void ptdump_walk(struct seq_file *s)
-+static void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo)
- {
- 	struct pg_state st = {
- 		.seq = s,
--		.marker = address_markers,
-+		.marker = pinfo->markers,
- 		.level = -1,
- 		.ptdump = {
- 			.note_page = note_page,
- 			.range = (struct ptdump_range[]) {
--				{KERN_VIRT_START, ULONG_MAX},
-+				{pinfo->base_addr, pinfo->end},
- 				{0, 0}
- 			}
- 		}
- 	};
- 
--	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
-+	ptdump_walk_pgd(&st.ptdump, pinfo->mm, NULL);
- }
- 
- void ptdump_check_wx(void)
-@@ -293,7 +324,7 @@ void ptdump_check_wx(void)
- 
- static int ptdump_show(struct seq_file *m, void *v)
- {
--	ptdump_walk(m);
-+	ptdump_walk(m, m->private);
- 
- 	return 0;
- }
-@@ -308,8 +339,13 @@ static int ptdump_init(void)
- 		for (j = 0; j < ARRAY_SIZE(pte_bits); j++)
- 			pg_level[i].mask |= pte_bits[j].mask;
- 
--	debugfs_create_file("kernel_page_tables", 0400, NULL, NULL,
-+	debugfs_create_file("kernel_page_tables", 0400, NULL, &kernel_ptd_info,
- 			    &ptdump_fops);
-+#ifdef CONFIG_EFI
-+	if (efi_enabled(EFI_RUNTIME_SERVICES))
-+		debugfs_create_file("efi_page_tables", 0400, NULL, &efi_ptd_info,
-+				    &ptdump_fops);
-+#endif
- 
- 	return 0;
- }
--- 
-2.24.0
-
+Hence, is it really necessary to perform the manual calibration?
