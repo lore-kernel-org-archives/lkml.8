@@ -2,241 +2,260 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72141C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD18206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F561206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:27:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="l7mI2G2F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jn671trs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgGPH00 (ORCPT
+        id S1728337AbgGPH1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:26:26 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:49665 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725921AbgGPH00 (ORCPT
+        Thu, 16 Jul 2020 03:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbgGPH1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:26:26 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id vyHbjTWYkyPEdvyHej3Gwl; Thu, 16 Jul 2020 09:26:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1594884383; bh=sm0b7lKUT098hOr0xJiQUxYPsCrvjQ+KSuBFPghGMcM=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=l7mI2G2FSfrhoq3P4z5cxv678uVEfq7Kji1dq1fFpOpX2GLDHa2T+tIQDH+7kiwbg
-         xmyUemK1Ea00SjoVUFgpJe+LbkkpFBRzm0LZXLeHcW6YxDYBPtln0Jyr7nJbFIPYb+
-         ZEvn93arqQcyOz19ngv3+TvVFihV+CP3xAmORj2/KqyzjgdJ7ehwslBk5pMRNNP+b+
-         iJi/IylEJp1aaE8h/4BLDgHrq7bbxvUeHZEYUJ92qDquAyTlYONvZYSWstSOvTzVf3
-         aIGJ3N13achdYhW6Fz5AutB6Mg73MDjqLg2AxChPRJsAy+ao4ObE0aPtd0/7+4TZU6
-         u38g18n8aa5Bw==
-Subject: Re: [PATCH 03/10] media: uapi: h264: Split prediction weight
- parameters
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-References: <20200715202233.185680-1-ezequiel@collabora.com>
- <20200715202233.185680-4-ezequiel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <15cd77f2-30ac-8d23-1be1-e9a58d85c088@xs4all.nl>
-Date:   Thu, 16 Jul 2020 09:26:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 03:27:20 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB2CC061755;
+        Thu, 16 Jul 2020 00:27:20 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id a32so4170171qtb.5;
+        Thu, 16 Jul 2020 00:27:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=mG+5r3Bbvfyvan+6MBZ/JpRKfD01WWFPaoiNv0YZf7w=;
+        b=Jn671trs6n5nTnZti1vRIBPjT5T06LAsnG/I6MhPlPjgcI9ST7lvhP0NLrvxJtrwge
+         nyn0gwE2ggSL2JIYRtSTlG2W52m9yxANKk7uuYhddC25RBdSX+cizQG9Mpe69ht1mj95
+         iyerwy63/2w4hgEr4PnT5TdzXywa1m+yzOahAhcuxya0Hb3lqfGReAxTXSiDVj36EBlY
+         iNjkIhJodq8jTE+s5Wfg+Xi0Oc5omdDCmpER6iZGu07zAcPXqYTEzymHYeJf6L9kWDYF
+         MPqmGS1V1Ydc+FLEryF6Hn8DLphkWdbjFghjDll1nFeezs/tAYtykGEc0f9AaZURauLs
+         1bag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mG+5r3Bbvfyvan+6MBZ/JpRKfD01WWFPaoiNv0YZf7w=;
+        b=c1YC+1oFH2e2h9zQGEBoucjOfa0Bjz4hALs1uhKNnZ0wxsO4QGFubOxzpT4f28MQu5
+         ST8GxW8sp/mnOV9TlTQFGkBmtlaK9gnX/vydfCww8kIjXZliaaFv1Nc5H2CekeGwd0/z
+         W2z9BREx/g6wDwIGYenwTQmQ08Sj9UofVBxtPeSwHJm1Wgaj6mQ+HWGoXHM4T/klDAAO
+         3cxS9ewbj6U48VPT2e/ICSqjzszqULoxmMkPj7FFdQRqkOBok6cYJCwMN33pX1zAIUIl
+         SrY1mu+eVA2ehKTRd1+WQrW/CILZcNsjUxTzMfTHeYmBtpJlhjFzb6dPdevLsMfgI1EF
+         BVXQ==
+X-Gm-Message-State: AOAM531t+3ZyJxvSNQfBtSyqyIl5qhMe8ZEjy+CLkt7bJwf0ZWmu2QaT
+        IgXgLMWDhMqybSvxlAFflDmBeE5LbeFkmDMKLNM=
+X-Google-Smtp-Source: ABdhPJysGNQjcai2r2CbeSRjjukHEMXPMsjgUJj66qgAo1u2YzZb7m/C/IhHcy7yV5ZvPH2pJ4AIJUWlj3rRsutLwMc=
+X-Received: by 2002:aed:22ef:: with SMTP id q44mr3559256qtc.333.1594884439849;
+ Thu, 16 Jul 2020 00:27:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200715202233.185680-4-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfE02NBFHz5Hbo/MwLM1BTSIzBPN61r0E0TLP6/dUaCyYJvTUPFkesxcQfgo86Q8TdUFEEOgTRgWn2GnGEqrD7rfKZRcAzvtnb2ybTyZ2/QdBc3Z102Wp
- X4+UwfGYDTGo0ppx/sbRvyPTNXTs5J/R7deOxff0UTLAalAp0J4PqvEVMRG9f9LqyV3E2BSFXz+Pvwowt4odB7EAhXrLsM0dneVERwlysQCBtCkQ1unMKSc7
- nniPzzhqPjvskUtEcggLlAHldDXK+gYqgmw4YtU31hE0TcuKlTJJeYFnEasu4ZSGGzv6dIvEas+80RvI1p/82p/mshjhctDzZVDBdhPmzyXtcAL6Y/Kzl7RM
- Feg2/ZAMvimHucu9lvm7LZ7R2pcuoDYkEm2x/2G+LFb3D0IzPZuUoFLxkxmYTbs7yxFzSkIxfS70kS5ZQ5toi3IiHH3NOa3SgvRT7t0Ld4FcooEFq8DoW/71
- 9X+084GmDMoZll82AfnISOsLv904dI6HuqeuBHwO3TgFzVNb7FDFyQn8TkZvnMwTqXRFs6vLVRmdOKHUpcstTAvl2uoQTdActL5Knw==
+References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com> <332d620b-bfe3-3b69-931b-77e3a74edbfd@suse.cz>
+In-Reply-To: <332d620b-bfe3-3b69-931b-77e3a74edbfd@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Thu, 16 Jul 2020 16:27:09 +0900
+Message-ID: <CAAmzW4NbG0fCtU2mV83pRamUeOEqKKxGTpQK2zuDxzmoF2FVrg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] mm/page_alloc: fix non cma alloc context
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/2020 22:22, Ezequiel Garcia wrote:
-> The prediction weight parameters are only required under
-> certain conditions, which depend on slice header parameters.
-> 
-> The slice header syntax specifies that the prediction
-> weight table is present if:
-> 
-> ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
-> (weighted_bipred_idc == 1 && slice_type == B))
-> 
-> Given its size, it makes sense to move this table to its control,
-> so applications can avoid passing it if the slice doesn't specify it.
-> 
-> Before this change struct v4l2_ctrl_h264_slice_params was 960 bytes.
-> With this change, it's 188 bytes and struct v4l2_ctrl_h264_pred_weight
-> is 772 bytes.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  .../userspace-api/media/v4l/ext-ctrls-codec.rst    | 14 +++++++++-----
->  drivers/media/v4l2-core/v4l2-ctrls.c               |  6 ++++++
->  drivers/staging/media/sunxi/cedrus/cedrus.h        |  1 +
->  drivers/staging/media/sunxi/cedrus/cedrus_dec.c    |  2 ++
->  drivers/staging/media/sunxi/cedrus/cedrus_h264.c   |  6 ++----
->  include/media/h264-ctrls.h                         |  5 +++--
->  6 files changed, 23 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index 16bfc98ab2f6..d1695ae96700 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -1879,18 +1879,22 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->        - 0x00000008
->        -
->  
-> -``Prediction Weight Table``
-> -
-> -    The bitstream parameters are defined according to :ref:`h264`,
-> +``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT (struct)``
-> +    Prediction weight table defined according to :ref:`h264`,
->      section 7.4.3.2 "Prediction Weight Table Semantics". For further
->      documentation, refer to the above specification, unless there is
->      an explicit comment stating otherwise.
->  
-> -.. c:type:: v4l2_h264_pred_weight_table
-> +    .. note::
-> +
-> +       This compound control is not yet part of the public kernel API and
-> +       it is expected to change.
-> +
-> +.. c:type:: v4l2_ctrl_h264_pred_weight
->  
->  .. cssclass:: longtable
->  
-> -.. flat-table:: struct v4l2_h264_pred_weight_table
-> +.. flat-table:: struct v4l2_ctrl_h264_pred_weight
->      :header-rows:  0
->      :stub-columns: 0
->      :widths:       1 1 2
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 3f3fbcd60cc6..3a8a23e34c70 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -1412,6 +1412,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  	case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
->  		*type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
->  		break;
-> +	case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT:
-> +		*type = V4L2_CTRL_TYPE_H264_PRED_WEIGHT;
-> +		break;
->  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
->  		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
->  		break;
-> @@ -2553,6 +2556,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
->  	case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
->  		elem_size = sizeof(struct v4l2_ctrl_h264_decode_params);
->  		break;
-> +	case V4L2_CTRL_TYPE_H264_PRED_WEIGHT:
-> +		elem_size = sizeof(struct v4l2_ctrl_h264_pred_weight);
-> +		break;
->  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
->  		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
->  		break;
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> index 96765555ab8a..80a0ecffa384 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> @@ -62,6 +62,7 @@ struct cedrus_h264_run {
->  	const struct v4l2_ctrl_h264_scaling_matrix	*scaling_matrix;
->  	const struct v4l2_ctrl_h264_slice_params	*slice_params;
->  	const struct v4l2_ctrl_h264_sps			*sps;
-> +	const struct v4l2_ctrl_h264_pred_weight		*pred_weight;
->  };
->  
->  struct cedrus_mpeg2_run {
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> index 58c48e4fdfe9..047f773f64f9 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> @@ -57,6 +57,8 @@ void cedrus_device_run(void *priv)
->  			V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS);
->  		run.h264.sps = cedrus_find_control_data(ctx,
->  			V4L2_CID_MPEG_VIDEO_H264_SPS);
-> +		run.h264.pred_weight = cedrus_find_control_data(ctx,
-> +			V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT);
->  		break;
->  
->  	case V4L2_PIX_FMT_HEVC_SLICE:
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> index cce527bbdf86..614b1b496e40 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> @@ -256,10 +256,8 @@ static void cedrus_write_scaling_lists(struct cedrus_ctx *ctx,
->  static void cedrus_write_pred_weight_table(struct cedrus_ctx *ctx,
->  					   struct cedrus_run *run)
->  {
-> -	const struct v4l2_ctrl_h264_slice_params *slice =
-> -		run->h264.slice_params;
-> -	const struct v4l2_h264_pred_weight_table *pred_weight =
-> -		&slice->pred_weight_table;
-> +	const struct v4l2_ctrl_h264_pred_weight *pred_weight =
-> +		run->h264.pred_weight;
->  	struct cedrus_dev *dev = ctx->dev;
->  	int i, j, k;
->  
-> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> index bca4a9887e7e..da2ffb77b491 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/media/h264-ctrls.h
-> @@ -36,6 +36,7 @@
->  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS	(V4L2_CID_MPEG_BASE+1004)
->  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE	(V4L2_CID_MPEG_BASE+1005)
->  #define V4L2_CID_MPEG_VIDEO_H264_START_CODE	(V4L2_CID_MPEG_BASE+1006)
-> +#define V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT	(V4L2_CID_MPEG_BASE+1007)
->  
->  /* enum v4l2_ctrl_type type values */
->  #define V4L2_CTRL_TYPE_H264_SPS			0x0110
-> @@ -43,6 +44,7 @@
->  #define V4L2_CTRL_TYPE_H264_SCALING_MATRIX	0x0112
->  #define V4L2_CTRL_TYPE_H264_SLICE_PARAMS	0x0113
->  #define V4L2_CTRL_TYPE_H264_DECODE_PARAMS	0x0114
-> +#define V4L2_CTRL_TYPE_H264_PRED_WEIGHT		0x0115
->  
->  enum v4l2_mpeg_video_h264_decode_mode {
->  	V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
-> @@ -125,7 +127,7 @@ struct v4l2_h264_weight_factors {
->  	__s16 chroma_offset[32][2];
->  };
->  
-> -struct v4l2_h264_pred_weight_table {
-> +struct v4l2_ctrl_h264_pred_weight {
->  	__u16 luma_log2_weight_denom;
->  	__u16 chroma_log2_weight_denom;
->  	struct v4l2_h264_weight_factors weight_factors[2];
-> @@ -174,7 +176,6 @@ struct v4l2_ctrl_h264_slice_params {
->  	__s32 delta_pic_order_cnt0;
->  	__s32 delta_pic_order_cnt1;
->  
-> -	struct v4l2_h264_pred_weight_table pred_weight_table;
->  	/* Size in bits of dec_ref_pic_marking() syntax element. */
->  	__u32 dec_ref_pic_marking_bit_size;
->  	/* Size in bits of pic order count syntax. */
-> 
+2020=EB=85=84 7=EC=9B=94 15=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 5:24, V=
+lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On 7/15/20 7:05 AM, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> >
+> > Currently, preventing cma area in page allocation is implemented by usi=
+ng
+> > current_gfp_context(). However, there are two problems of this
+> > implementation.
+> >
+> > First, this doesn't work for allocation fastpath. In the fastpath,
+> > original gfp_mask is used since current_gfp_context() is introduced in
+> > order to control reclaim and it is on slowpath.
+> > Second, clearing __GFP_MOVABLE has a side effect to exclude the memory
+> > on the ZONE_MOVABLE for allocation target.
+> >
+> > To fix these problems, this patch changes the implementation to exclude
+> > cma area in page allocation. Main point of this change is using the
+> > alloc_flags. alloc_flags is mainly used to control allocation so it fit=
+s
+> > for excluding cma area in allocation.
+>
+> Agreed, should have been done with ALLOC_CMA since the beginning.
+>
+> > Fixes: d7fefcc (mm/cma: add PF flag to force non cma alloc)
+>
+> More digits please.
+> Fixes: d7fefcc8de91 ("mm/cma: add PF flag to force non cma alloc")
 
-Shouldn't this be added to union v4l2_ctrl_ptr as well?
+Will do.
 
-Regards,
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > ---
+> >  include/linux/sched/mm.h |  4 ----
+> >  mm/page_alloc.c          | 27 +++++++++++++++------------
+> >  2 files changed, 15 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> > index 44ad5b7..a73847a 100644
+> > --- a/include/linux/sched/mm.h
+> > +++ b/include/linux/sched/mm.h
+> > @@ -191,10 +191,6 @@ static inline gfp_t current_gfp_context(gfp_t flag=
+s)
+> >                       flags &=3D ~(__GFP_IO | __GFP_FS);
+> >               else if (pflags & PF_MEMALLOC_NOFS)
+> >                       flags &=3D ~__GFP_FS;
+>
+> Above this hunk you should also remove PF_MEMALLOC_NOCMA from the test.
 
-	Hans
+Will do.
+
+> > -#ifdef CONFIG_CMA
+> > -             if (pflags & PF_MEMALLOC_NOCMA)
+> > -                     flags &=3D ~__GFP_MOVABLE;
+> > -#endif
+> >       }
+> >       return flags;
+> >  }
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index 6416d08..cd53894 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -2791,7 +2791,7 @@ __rmqueue(struct zone *zone, unsigned int order, =
+int migratetype,
+> >        * allocating from CMA when over half of the zone's free memory
+> >        * is in the CMA area.
+> >        */
+> > -     if (migratetype =3D=3D MIGRATE_MOVABLE &&
+> > +     if (alloc_flags & ALLOC_CMA &&
+> >           zone_page_state(zone, NR_FREE_CMA_PAGES) >
+> >           zone_page_state(zone, NR_FREE_PAGES) / 2) {
+> >               page =3D __rmqueue_cma_fallback(zone, order);
+> > @@ -2802,7 +2802,7 @@ __rmqueue(struct zone *zone, unsigned int order, =
+int migratetype,
+> >  retry:
+> >       page =3D __rmqueue_smallest(zone, order, migratetype);
+> >       if (unlikely(!page)) {
+> > -             if (migratetype =3D=3D MIGRATE_MOVABLE)
+> > +             if (alloc_flags & ALLOC_CMA)
+> >                       page =3D __rmqueue_cma_fallback(zone, order);
+> >
+> >               if (!page && __rmqueue_fallback(zone, order, migratetype,
+> > @@ -3502,11 +3502,9 @@ static inline long __zone_watermark_unusable_fre=
+e(struct zone *z,
+> >       if (likely(!alloc_harder))
+> >               unusable_free +=3D z->nr_reserved_highatomic;
+> >
+> > -#ifdef CONFIG_CMA
+> >       /* If allocation can't use CMA areas don't use free CMA pages */
+> > -     if (!(alloc_flags & ALLOC_CMA))
+> > +     if (IS_ENABLED(CONFIG_CMA) && !(alloc_flags & ALLOC_CMA))
+> >               unusable_free +=3D zone_page_state(z, NR_FREE_CMA_PAGES);
+> > -#endif
+> >
+> >       return unusable_free;
+> >  }
+> > @@ -3693,6 +3691,16 @@ alloc_flags_nofragment(struct zone *zone, gfp_t =
+gfp_mask)
+> >       return alloc_flags;
+> >  }
+> >
+> > +static inline void current_alloc_flags(gfp_t gfp_mask,
+> > +                             unsigned int *alloc_flags)
+> > +{
+> > +     unsigned int pflags =3D READ_ONCE(current->flags);
+> > +
+> > +     if (!(pflags & PF_MEMALLOC_NOCMA) &&
+> > +             gfp_migratetype(gfp_mask) =3D=3D MIGRATE_MOVABLE)
+> > +             *alloc_flags |=3D ALLOC_CMA;
+> > +}
+>
+> I don't like the modification through parameter, would just do what
+> current_gfp_context() does and return the modified value.
+> Also make it a no-op (including no READ_ONCE(current->flags)) if !CONFIG_=
+CMA,
+> please.
+
+Okay.
+
+> >  /*
+> >   * get_page_from_freelist goes through the zonelist trying to allocate
+> >   * a page.
+> > @@ -3706,6 +3714,8 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned i=
+nt order, int alloc_flags,
+> >       struct pglist_data *last_pgdat_dirty_limit =3D NULL;
+> >       bool no_fallback;
+> >
+> > +     current_alloc_flags(gfp_mask, &alloc_flags);
+>
+> I don't see why to move the test here? It will still be executed in the
+> fastpath, if that's what you wanted to avoid.
+
+I want to execute it on the fastpath, too. Reason that I moved it here
+is that alloc_flags could be reset on slowpath. See the code where
+__gfp_pfmemalloc_flags() is on. This is the only place that I can apply
+this option to all the allocation paths at once.
+
+Thanks.
+
+> > +
+> >  retry:
+> >       /*
+> >        * Scan zonelist, looking for a zone with enough free.
+> > @@ -4339,10 +4349,6 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
+> >       } else if (unlikely(rt_task(current)) && !in_interrupt())
+> >               alloc_flags |=3D ALLOC_HARDER;
+> >
+> > -#ifdef CONFIG_CMA
+> > -     if (gfp_migratetype(gfp_mask) =3D=3D MIGRATE_MOVABLE)
+> > -             alloc_flags |=3D ALLOC_CMA;
+> > -#endif
+>
+> I would just replace this here with:
+> alloc_flags =3D current_alloc_flags(gfp_mask, alloc_flags);
+>
+> >       return alloc_flags;
+> >  }
+> >
+> > @@ -4808,9 +4814,6 @@ static inline bool prepare_alloc_pages(gfp_t gfp_=
+mask, unsigned int order,
+> >       if (should_fail_alloc_page(gfp_mask, order))
+> >               return false;
+> >
+> > -     if (IS_ENABLED(CONFIG_CMA) && ac->migratetype =3D=3D MIGRATE_MOVA=
+BLE)
+> > -             *alloc_flags |=3D ALLOC_CMA;
+>
+> And same here... Ah, I see. current_alloc_flags() should probably take a
+> migratetype parameter instead of gfp_mask then.
+>
+> > -
+> >       return true;
+> >  }
+> >
+> >
+>
