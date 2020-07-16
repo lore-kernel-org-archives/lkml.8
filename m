@@ -2,165 +2,338 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F190C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1BD2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF212074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:25:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="QZD5YOJf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgGPJV0 (ORCPT
+        id S1726293AbgGPJZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 05:21:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7873 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726027AbgGPJVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 05:21:25 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 43A44EA7FF2CEFEB46D5;
-        Thu, 16 Jul 2020 17:21:22 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Jul 2020 17:21:13 +0800
-From:   Qi Liu <liuqi115@huawei.com>
-To:     <john.garry@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>
-CC:     <wang.wanghaifeng@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH] drivers/perf: Fix kernel panic when rmmod PMU modules during perf sampling
-Date:   Thu, 16 Jul 2020 17:19:25 +0800
-Message-ID: <1594891165-8228-1-git-send-email-liuqi115@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 16 Jul 2020 05:25:42 -0400
+Received: from www381.your-server.de ([78.46.137.84]:34946 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgGPJZl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 05:25:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=u5afwLQ4bTJ2L6PgOK+WAAnynA84GEc3NeAsN62Ya1c=; b=QZD5YOJf93Gn9yw5UqCnh/iXWx
+        TwMBFVZXlf/J45jEjXKTcSc0bhOmDyDVSZzrXo9g2ix90HrMmE6huHOwNoC0G7yffCmlGZFqtxks7
+        X4PqRMVLwyT8KCakQxCw8qNb38RVz5sH0GqDMyL0kUxoGLnByjHwoqTZSlLIibk+a6L8ryGaL5Uas
+        BmHhamjoyEuYj3kZgEBI5Q3lgNQUXavK9i6qwidpk97FadfaWDJrxAwTQBJsXJI2bJiwCPXuVgdH0
+        Z8L+YnnHtT4qA8B9ckGtuBCHPwfreu5Gxgnu7jy1jZ2KBUppaFNbiroFbK3VSxh2k+leaHC4hOm8Y
+        F6v/r+iQ==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jw092-0001FK-VR; Thu, 16 Jul 2020 11:25:37 +0200
+Received: from [2a01:598:b880:d18a:2462:7ce5:9424:a9d7]
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jw092-000Pau-Q1; Thu, 16 Jul 2020 11:25:36 +0200
+Subject: Re: [RFC PATCH] one-bit-adc-dac: Add initial version of one bit ADC,
+ DAC
+To:     Cristian Pop <cristian.pop@analog.com>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     jic23@kernel.org
+References: <20200716072737.9535-1-cristian.pop@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <9bd0363c-e8fb-a36f-a107-0afd8f7851d0@metafoo.de>
+Date:   Thu, 16 Jul 2020 11:25:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200716072737.9535-1-cristian.pop@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.3/25874/Wed Jul 15 16:18:08 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When users try to remove PMU modules during perf sampling, kernel panic
-will happen because the pmu->read() is a NULL pointer here.
+On 7/16/20 9:27 AM, Cristian Pop wrote:
+> Implementation for 1-bit ADC (comparator) and a 1-bit DAC (switch)
 
-INFO on HiSilicon hip08 platform as follow:
-pc : hisi_uncore_pmu_event_update+0x30/0xa4 [hisi_uncore_pmu]
-lr : hisi_uncore_pmu_read+0x20/0x2c [hisi_uncore_pmu]
-sp : ffff800010103e90
-x29: ffff800010103e90 x28: ffff0027db0c0e40
-x27: ffffa29a76f129d8 x26: ffffa29a77ceb000
-x25: ffffa29a773a5000 x24: ffffa29a77392000
-x23: ffffddffe5943f08 x22: ffff002784285960
-x21: ffff002784285800 x20: ffff0027d2e76c80
-x19: ffff0027842859e0 x18: ffff80003498bcc8
-x17: ffffa29a76afe910 x16: ffffa29a7583f530
-x15: 16151a1512061a1e x14: 0000000000000000
-x13: ffffa29a76f1e238 x12: 0000000000000001
-x11: 0000000000000400 x10: 00000000000009f0
-x9 : ffff8000107b3e70 x8 : ffff0027db0c1890
-x7 : ffffa29a773a7000 x6 : 00000007f5131013
-x5 : 00000007f5131013 x4 : 09f257d417c00000
-x3 : 00000002187bd7ce x2 : ffffa29a38f0f0d8
-x1 : ffffa29a38eae268 x0 : ffff0027d2e76c80
-Call trace:
-hisi_uncore_pmu_event_update+0x30/0xa4 [hisi_uncore_pmu]
-hisi_uncore_pmu_read+0x20/0x2c [hisi_uncore_pmu]
-__perf_event_read+0x1a0/0x1f8
-flush_smp_call_function_queue+0xa0/0x160
-generic_smp_call_function_single_interrupt+0x18/0x20
-handle_IPI+0x31c/0x4dc
-gic_handle_irq+0x2c8/0x310
-el1_irq+0xcc/0x180
-arch_cpu_idle+0x4c/0x20c
-default_idle_call+0x20/0x30
-do_idle+0x1b4/0x270
-cpu_startup_entry+0x28/0x30
-secondary_start_kernel+0x1a4/0x1fc
+Very sneaky way of introducing a iio-gpio-proxy driver to be able to 
+access GPIOs through libiio ;). I'm not really a fan of the whole idea.
 
-To solve the above issue, current module should be registered to kernel,
-so that try_module_get() can be invoked when perf sampling starts. This
-adds the reference counting of module and could prevent users from removing
-modules during sampling.
+But either way I think this needs a better description of what 1-bit 
+converters are and how they are used.
 
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
-Reported-by: Haifeng Wang <wang.wanghaifeng@huawei.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
----
-Kernel panic will also happen when users try to unbind PMU drivers with
-device. This unbind issue could be solved by another patch latter.
+>
+> Signed-off-by: Cristian Pop <cristian.pop@analog.com>
+> ---
+>   drivers/iio/addac/one-bit-adc-dac.c | 229 ++++++++++++++++++++++++++++
+>   1 file changed, 229 insertions(+)
+>   create mode 100644 drivers/iio/addac/one-bit-adc-dac.c
+>
+> diff --git a/drivers/iio/addac/one-bit-adc-dac.c b/drivers/iio/addac/one-bit-adc-dac.c
+> new file mode 100644
+> index 000000000000..8e2a8a09fedb
+> --- /dev/null
+> +++ b/drivers/iio/addac/one-bit-adc-dac.c
+> @@ -0,0 +1,229 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Analog Devices ONE_BIT_ADC_DAC
+> + * Digital to Analog Converters driver
+> + *
+> + * Copyright 2019 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/gpio/consumer.h>
+> +
+> +enum ch_direction {
+> +	CH_IN,
+> +	CH_OUT,
+> +};
+> +
+> +struct one_bit_adc_dac_state {
+> +	struct platform_device  *pdev;
+> +	struct gpio_descs       *in_gpio_descs;
+> +	struct gpio_descs       *out_gpio_descs;
+> +};
+> +
+> + #define ONE_BIT_ADC_DAC_CHANNEL(idx, direction)			\
+> +	{								\
+> +		.type = IIO_VOLTAGE,					\
+> +		.indexed = 1,						\
+> +		.channel = idx,						\
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> +		.output = direction,					\
+> +	}
+> +
+> +static int one_bit_adc_dac_read_raw(struct iio_dev *indio_dev,
+> +	const struct iio_chan_spec *chan, int *val, int *val2, long info)
+> +{
+> +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
+> +	int in_num_ch = 0, out_num_ch = 0;
+> +	int channel = chan->channel;
+> +
+> +	if (st->in_gpio_descs)
+> +		in_num_ch = st->in_gpio_descs->ndescs;
+> +
+> +	if (st->out_gpio_descs)
+> +		out_num_ch = st->out_gpio_descs->ndescs;
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (channel < in_num_ch) {
+> +			*val = gpiod_get_value_cansleep(
+> +				st->in_gpio_descs->desc[channel]);
+> +		} else {
+> +			channel -= in_num_ch;
+> +			*val = gpiod_get_value_cansleep(
+> +				st->out_gpio_descs->desc[channel]);
+> +		}
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int one_bit_adc_dac_write_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int val,
+> +			    int val2,
+> +			    long info)
+> +{
+> +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
+> +	int in_num_ch = 0, out_num_ch = 0;
+> +	int channel = chan->channel;
+> +
+> +	if (st->in_gpio_descs)
+> +		in_num_ch = st->in_gpio_descs->ndescs;
+> +
+> +	if (st->out_gpio_descs)
+> +		out_num_ch = st->out_gpio_descs->ndescs;
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (channel < in_num_ch) {
+> +			gpiod_set_value_cansleep(
+> +				st->in_gpio_descs->desc[channel], val);
 
- drivers/perf/arm_smmuv3_pmu.c                 | 1 +
- drivers/perf/fsl_imx8_ddr_perf.c              | 1 +
- drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c | 1 +
- drivers/perf/hisilicon/hisi_uncore_hha_pmu.c  | 1 +
- drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c  | 1 +
- 5 files changed, 5 insertions(+)
+How can we set a value on an input GPIO?
 
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index 48e28ef..90caba56 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -742,6 +742,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, smmu_pmu);
+> +		} else {
+> +			channel -= in_num_ch;
+> +			gpiod_set_value_cansleep(
+> +				st->out_gpio_descs->desc[channel], val);
+> +		}
+> +
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info one_bit_adc_dac_info = {
+> +	.read_raw = &one_bit_adc_dac_read_raw,
+> +	.write_raw = &one_bit_adc_dac_write_raw,
+> +};
+> +
+> +static int one_bit_adc_dac_set_ch(struct iio_dev *indio_dev,
+> +					struct iio_chan_spec *channels,
+> +					const char *propname,
+> +					int num_ch,
+> +					enum ch_direction direction,
+> +					int offset)
+> +{
+> +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
+> +	const char **gpio_names;
+> +	int ret, i;
+> +
+> +	if (num_ch <= 0)
+> +		return 0;
+> +
+> +	gpio_names = devm_kcalloc(indio_dev->dev.parent,
+> +					num_ch,
+> +					sizeof(char *),
+sizeof(*gpio_names). It might be better to use normal kcalloc, kfree 
+here since you only use it in this function.
+> +					GFP_KERNEL);
+> +	if (!gpio_names)
+> +		return -ENOMEM;
+> +
+> +	ret = device_property_read_string_array(&st->pdev->dev,
+> +					propname,
+> +					gpio_names,
+> +					num_ch);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (i = 0; i < num_ch; i++) {
+> +		channels[i] = (struct iio_chan_spec)ONE_BIT_ADC_DAC_CHANNEL(i +
+> +							offset,
+> +							direction);
+> +		channels[i].extend_name = gpio_names[i];
+I think we want to avoid using extend_name in new drivers because it 
+makes for a very clumsy ABI. We should add a label property like we have 
+for the device for channels to have a symbolic name of the channel.
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int one_bit_adc_dac_parse_dt(struct iio_dev *indio_dev)
+> +{
+> +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
+> +	struct iio_chan_spec *channels;
+> +	int ret, in_num_ch = 0, out_num_ch = 0;
+> +
+> +	st->in_gpio_descs = devm_gpiod_get_array_optional(&st->pdev->dev,
+> +						"in", GPIOD_IN);
+> +	if (IS_ERR(st->in_gpio_descs))
+> +		return PTR_ERR(st->in_gpio_descs);
+> +
+> +	if (st->in_gpio_descs)
+> +		in_num_ch = st->in_gpio_descs->ndescs;
+> +
+> +	st->out_gpio_descs = devm_gpiod_get_array_optional(&st->pdev->dev,
+> +						"out", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(st->out_gpio_descs))
+> +		return PTR_ERR(st->out_gpio_descs);
+> +
+> +	if (st->out_gpio_descs)
+> +		out_num_ch = st->out_gpio_descs->ndescs;
+> +
+> +	channels = devm_kcalloc(indio_dev->dev.parent, (in_num_ch + out_num_ch),
+> +				sizeof(struct iio_chan_spec), GFP_KERNEL);
 
- 	smmu_pmu->pmu = (struct pmu) {
-+		.module		= THIS_MODULE,
- 		.task_ctx_nr    = perf_invalid_context,
- 		.pmu_enable	= smmu_pmu_enable,
- 		.pmu_disable	= smmu_pmu_disable,
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index 90884d1..2aed2d9 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -512,6 +512,7 @@ static int ddr_perf_init(struct ddr_pmu *pmu, void __iomem *base,
- {
- 	*pmu = (struct ddr_pmu) {
- 		.pmu = (struct pmu) {
-+			.module	      = THIS_MODULE,
- 			.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
- 			.task_ctx_nr = perf_invalid_context,
- 			.attr_groups = attr_groups,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-index 15713fa..71587f1 100644
---- a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-@@ -378,6 +378,7 @@ static int hisi_ddrc_pmu_probe(struct platform_device *pdev)
- 			      ddrc_pmu->sccl_id, ddrc_pmu->index_id);
- 	ddrc_pmu->pmu = (struct pmu) {
- 		.name		= name,
-+		.module		= THIS_MODULE,
- 		.task_ctx_nr	= perf_invalid_context,
- 		.event_init	= hisi_uncore_pmu_event_init,
- 		.pmu_enable	= hisi_uncore_pmu_enable,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-index dcc5600..c199de7 100644
---- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-@@ -390,6 +390,7 @@ static int hisi_hha_pmu_probe(struct platform_device *pdev)
- 			      hha_pmu->sccl_id, hha_pmu->index_id);
- 	hha_pmu->pmu = (struct pmu) {
- 		.name		= name,
-+		.module		= THIS_MODULE,
- 		.task_ctx_nr	= perf_invalid_context,
- 		.event_init	= hisi_uncore_pmu_event_init,
- 		.pmu_enable	= hisi_uncore_pmu_enable,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-index 7719ae4..567d7e6 100644
---- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-@@ -380,6 +380,7 @@ static int hisi_l3c_pmu_probe(struct platform_device *pdev)
- 			      l3c_pmu->sccl_id, l3c_pmu->index_id);
- 	l3c_pmu->pmu = (struct pmu) {
- 		.name		= name,
-+		.module		= THIS_MODULE,
- 		.task_ctx_nr	= perf_invalid_context,
- 		.event_init	= hisi_uncore_pmu_event_init,
- 		.pmu_enable	= hisi_uncore_pmu_enable,
---
-2.7.4
+sizeof(*channels) to avoid accidentally using the wrong type.
+
+> +	if (!channels)
+> +		return -ENOMEM;
+> +
+> +	ret = one_bit_adc_dac_set_ch(indio_dev, &channels[0],
+> +					"in-gpio-names", in_num_ch,
+> +					CH_IN, 0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = one_bit_adc_dac_set_ch(indio_dev, &channels[in_num_ch],
+> +					"out-gpio-names", out_num_ch,
+> +					CH_OUT, in_num_ch);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	indio_dev->channels = channels;
+> +	indio_dev->num_channels = in_num_ch + out_num_ch;
+> +
+> +	return 0;
+> +}
+> +
+> +static int one_bit_adc_dac_probe(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct one_bit_adc_dac_state *st;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +	st->pdev = pdev;
+> +	indio_dev->dev.parent = &pdev->dev;
+parent assignment should not be needed thanks to Alex's work.
+> +	indio_dev->name = "one-bit-adc-dac";
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &one_bit_adc_dac_info;
+> +
+> +	ret = one_bit_adc_dac_parse_dt(indio_dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+
+There does not seem to be a matching get_drvdata() anywhere so this is 
+not needed.
+
+> +	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
+> +}
+> +
+> +static const struct of_device_id one_bit_adc_dac_dt_match[] = {
+> +	{ .compatible = "adi,one-bit-adc-dac" },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, one_bit_adc_dac_dt_match);
+> +
+> +static struct platform_driver one_bit_adc_dac_driver = {
+> +	.driver = {
+> +		.name = "one-bit-adc-dac",
+> +		.of_match_table = one_bit_adc_dac_dt_match,
+> +	},
+> +	.probe = one_bit_adc_dac_probe,
+> +};
+> +
+> +module_platform_driver(one_bit_adc_dac_driver);
+> +
+> +MODULE_AUTHOR("Cristian Pop <cristian.pop@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices ONE_BIT_ADC_DAC");
+> +MODULE_LICENSE("GPL v2");
+
 
