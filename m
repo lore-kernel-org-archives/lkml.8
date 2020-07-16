@@ -2,109 +2,163 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6763CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C13C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5F5206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:02:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nh/dOd3G"
+	by mail.kernel.org (Postfix) with ESMTP id 622462065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgGPLCH (ORCPT
+        id S1727927AbgGPLHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:02:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbgGPLCH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:02:07 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 123D3C061755;
-        Thu, 16 Jul 2020 04:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=e31p62iGYKy+vgmRoyuczROmqwdKAPPJmVxsEICRpk0=; b=nh/dOd3GGcljWzx0ky0SfaWPQo
-        ZRl9DeamjbNa8TE+Ro3fIW9Qsm5xQrBiKY3AH2abAYBhEEjcLjENFBwWgAUdz0ydCw/s7jd+ARbYb
-        /3YOozvf3YEQFtqAtd8LTlxhF3RZKAxH+W87v6WXIrlAwobRyxukGjZdZ+7UxYtl3oXcpXxqqg1/M
-        FbLgpTjdMa/jZ7D3SdMX5hfXu3xiFSHPbbB74cC1b86tcnQkMy0GlIPiBNpPZDqTOj/vooVTISRoJ
-        u4hdrtFNpPv4TS+hG+/UurgNxwkby8cYSAG0WabsRz0XV4BqDwIolXHAY25p4/pDixYSm+Kojp4Oc
-        y8VcE9Cw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jw1e9-00017a-Sc; Thu, 16 Jul 2020 11:01:50 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2D692304B90;
-        Thu, 16 Jul 2020 13:01:47 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EEB3E26501E50; Thu, 16 Jul 2020 13:01:46 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 13:01:46 +0200
-From:   peterz@infradead.org
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
-Message-ID: <20200716110146.GB119549@hirez.programming.kicks-ass.net>
-References: <def65208-a38b-8663-492a-cae150027003@physik.fu-berlin.de>
- <b5f1853e-031d-c09d-57d2-fb4baffa01ea@physik.fu-berlin.de>
- <CAMuHMdW8RtJKk3u7RWQKP2tA3AYT2rB2aqhUT1KnJ4tJwWWKDA@mail.gmail.com>
- <b5cd845f-7b5e-af8e-a15d-3ede7e61ced4@physik.fu-berlin.de>
- <0322def7-fc16-c805-8f2b-c88fffce2f1e@physik.fu-berlin.de>
- <2df7ca7f-7e26-c916-b6ac-4ec1913fb8d7@physik.fu-berlin.de>
- <CAMuHMdXjfq=RjJ2doR7XyQMnZUA8ccxKc7_tyUzTX29tpyZojw@mail.gmail.com>
- <20200716094039.GQ10769@hirez.programming.kicks-ass.net>
- <20200716102934.GC43129@hirez.programming.kicks-ass.net>
- <f4fcb2e7-eca3-9a70-8e32-e3bf341b62eb@physik.fu-berlin.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f4fcb2e7-eca3-9a70-8e32-e3bf341b62eb@physik.fu-berlin.de>
+        Thu, 16 Jul 2020 07:07:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:58178 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbgGPLHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 07:07:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 639B91FB;
+        Thu, 16 Jul 2020 04:07:20 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5D6C3F68F;
+        Thu, 16 Jul 2020 04:07:17 -0700 (PDT)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v7 0/3] sched/uclamp: new sysctl for default RT boost value
+Date:   Thu, 16 Jul 2020 12:03:44 +0100
+Message-Id: <20200716110347.19553-1-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 12:54:51PM +0200, John Paul Adrian Glaubitz wrote:
-> Hi Peter!
-> 
-> On 7/16/20 12:29 PM, peterz@infradead.org wrote:
-> >> Then Aneesh got a bunch of those patches merged because he needed it for
-> >> Power, but the rest bitrotted again.
-> >>
-> >> Let me rebase/refresh the rest of that and send it out again.
-> > 
-> > OK, latest patches here:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git mm/tlb
-> > 
-> > I'll post once the robot is all green.
-> 
-> Thanks. I just cherry-picked the two patches for SH and applied them on top
-> of Linus' tree plus the patch 73c348f31b63d28d ("sh: Fix unneeded constructor
-> in page table allocation") from next-20200710.
-> 
-> The build fails with:
-> 
->   CC      mm/mmu_gather.o
-> mm/mmu_gather.c: In function ‘tlb_table_invalidate’:
-> mm/mmu_gather.c:180:6: error: implicit declaration of function ‘tlb_needs_table_invalidate’; did you mean ‘tlb_table_invalidate’? [-Werror=implicit-function-declaration]
->   180 |  if (tlb_needs_table_invalidate()) {
->       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
->       |      tlb_table_invalidate
-> cc1: some warnings being treated as errors
-> make[1]: *** [scripts/Makefile.build:281: mm/mmu_gather.o] Error 1
-> make: *** [Makefile:1756: mm] Error 2
+Changes in v7:
 
-*sigh*, thanks, I'll go dig out the local cross compiler set then.
+	* Rebase on top of tip/sched/core
+	* Hold task_rq_lock() instead of using RCU.
+	* Better document that changes to p->uclamp_ require task_rq_lock()
+	* Remove smp_{wr}mp()
+	* Hold the the tasklist_lock with smp_mp__after_spinlock()
+	* Add patch 3 which addresses a splat I've seen while testing.
+	  static_branch_enable() in __setscheduler_uclamp() was causing it.
+	  Remove the call outside of the critical section to fix it.
+
+
+*** v6 cover-letter ***
+
+This series introduces a new sysctl_sched_uclamp_util_min_rt_default to control
+at runtime the default boost value of RT tasks.
+
+Full rationale is in patch 1 commit message.
+
+v6 has changed the approach taken in v5 [1] and earlier by moving away from the
+lazy update approach that touched the fast path to a synchronous one that is
+performed when the write to the procfs entry is done.
+
+for_each_process_thread() is used to update all existing RT tasks now. And to
+handle the race with a concurrent fork() we introduce sched_post_fork() in
+_do_fork() to ensure a concurrently forked RT tasks gets the right update.
+
+To ensure the race condition is handled correctly, I wrote this small (simple!)
+test program:
+
+	https://github.com/qais-yousef/uclamp_test.git
+
+And ran it on 4core x86 system and 8core big.LITTLE juno-r2 system.
+
+From juno-r2 run, 10 iterations each run:
+
+Without sched_post_fork()
+
+	# ./run.sh
+	pid 3105 has 336 but default should be 337
+	pid 13162 has 336 but default should be 337
+	pid 23256 has 338 but default should be 339
+	All forked RT tasks had the correct uclamp.min
+	pid 10638 has 334 but default should be 335
+	All forked RT tasks had the correct uclamp.min
+	pid 30683 has 335 but default should be 336
+	pid 8247 has 336 but default should be 337
+	pid 18170 has 1024 but default should be 334
+	pid 28274 has 336 but default should be 337
+
+With sched_post_fork()
+
+	# ./run.sh
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+	All forked RT tasks had the correct uclamp.min
+
+Thanks
+
+--
+Qais Yousef
+
+[1] https://lore.kernel.org/lkml/20200511154053.7822-1-qais.yousef@arm.com/
+
+CC: Jonathan Corbet <corbet@lwn.net>
+CC: Juri Lelli <juri.lelli@redhat.com>
+CC: Vincent Guittot <vincent.guittot@linaro.org>
+CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: Ben Segall <bsegall@google.com>
+CC: Mel Gorman <mgorman@suse.de>
+CC: Luis Chamberlain <mcgrof@kernel.org>
+CC: Kees Cook <keescook@chromium.org>
+CC: Iurii Zaikin <yzaikin@google.com>
+CC: Quentin Perret <qperret@google.com>
+CC: Valentin Schneider <valentin.schneider@arm.com>
+CC: Patrick Bellasi <patrick.bellasi@matbug.net>
+CC: Pavan Kondeti <pkondeti@codeaurora.org>
+CC: linux-doc@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-fsdevel@vger.kernel.org
+
+
+Qais Yousef (3):
+  sched/uclamp: Add a new sysctl to control RT default boost value
+  Documentation/sysctl: Document uclamp sysctl knobs
+  sched/uclamp: Fix a deadlock when enabling uclamp static key
+
+ Documentation/admin-guide/sysctl/kernel.rst |  54 +++++++
+ include/linux/sched.h                       |  10 +-
+ include/linux/sched/sysctl.h                |   1 +
+ include/linux/sched/task.h                  |   1 +
+ kernel/fork.c                               |   1 +
+ kernel/sched/core.c                         | 149 ++++++++++++++++++--
+ kernel/sysctl.c                             |   7 +
+ 7 files changed, 208 insertions(+), 15 deletions(-)
+
+-- 
+2.17.1
+
