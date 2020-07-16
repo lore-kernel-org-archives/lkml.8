@@ -2,167 +2,196 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2808EC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F02592074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C8720739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="oI9QDurP"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="YSxWDKID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgGPQuf (ORCPT
+        id S1729008AbgGPQvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:50:35 -0400
-Received: from mail-eopbgr1400110.outbound.protection.outlook.com ([40.107.140.110]:59424
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728415AbgGPQuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:50:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k4ebYTp7s2Psau3pppV8KWB/+TGd8hhWl0POpaLu1pcUSM5X8tsxEk1GLLIh/mdEZw+FoGRspth8qBVoL/OqulUujREIVelh8ch7VyiqG9i3HMeoaEmASF1AAKNlbZ9f1Mf+2UBbanvc2PFcdiihGhF4hEPh4sxYMQUcTbTGISnjif43C5XWRlm0K+SLlZu02P7rqSK405NYlmfb0XcdH9+NdsDlhKvKmJWb7FHG/BT6iZAyBef2bpQQAYH+8Cr3z90xkwuoEJ3ESC6iqALlVgeyQYYqgZy/CMozsuHmQOe6NXKf9RFFqUEAiKeZ3io8QwK0x1wa0wR0AdOo0cgolw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=taykd8y8jMBO41xXFE+NWR/Yzx+KYl6gOuMxvy+fdK8=;
- b=NlAuyZpqv0yZN5AWU0degJHT/XyPNWp2CGubsMaUGukuGd8anJvQFEynOEePJsz9Ts9JqmjoMGbElpvny0uRl/dLtEGt7Lg7bMCPU/o3v5EWf2oodddVMJrpwiaH8uUhGSKopeNiMQDZ1NEtFw4XkMV7GeRVd6RSXLmG1LMBFzROv9R/40QXhQrL+CEIICrLMbQisGjL5NrfSd6O0f4iqJEXN8zWPXg5UNOSU1INdqwSafGw+clQkpKhR4SoMGYyr4Sw0J54ALyleQLM7QpVup8iNjt2NZh3PtnDFNAdrfpQm18r51I06yKkYzoDyjFuv/dwF4/tJq7EpELF25rYMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+        Thu, 16 Jul 2020 12:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgGPQvM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:51:12 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41399C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:51:12 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ch3so5102766pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:51:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=taykd8y8jMBO41xXFE+NWR/Yzx+KYl6gOuMxvy+fdK8=;
- b=oI9QDurPsT2RYveu7yO3FbSpbnC11zGYgU3ALxgOcMgYsg29GkBfkKfI1l5g24xEozwoOQPvp8Q1q2SciiqzL4O3eX0xwCw7jic5x22aPRKKZb254f5WhQrpeHKrTNcyLvMN703oMbvrP/FbUh0lApBkAlyl/QPwjCGfuikzfXA=
-Received: from OSAPR01MB1748.jpnprd01.prod.outlook.com (2603:1096:603:32::19)
- by OSAPR01MB3041.jpnprd01.prod.outlook.com (2603:1096:603:3e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Thu, 16 Jul
- 2020 16:50:24 +0000
-Received: from OSAPR01MB1748.jpnprd01.prod.outlook.com
- ([fe80::8902:d50b:a2a:9f0a]) by OSAPR01MB1748.jpnprd01.prod.outlook.com
- ([fe80::8902:d50b:a2a:9f0a%2]) with mapi id 15.20.3195.019; Thu, 16 Jul 2020
- 16:50:23 +0000
-From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: RE: [PATCH 6/8] arm64: dts: renesas: Initial r8a774e1 SoC device tree
-Thread-Topic: [PATCH 6/8] arm64: dts: renesas: Initial r8a774e1 SoC device
- tree
-Thread-Index: AQHWVVARu8MnMherwUCzbazhwdeoQKkKVlkAgAAhO0A=
-Date:   Thu, 16 Jul 2020 16:50:23 +0000
-Message-ID: <OSAPR01MB1748AAB4C372427D67D02981AA7F0@OSAPR01MB1748.jpnprd01.prod.outlook.com>
-References: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594230511-24790-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVy4O9vbyO-j1eJbjQGon-3MEng42EOYJ2PoRmRY5ttKQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdVy4O9vbyO-j1eJbjQGon-3MEng42EOYJ2PoRmRY5ttKQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux-m68k.org; dkim=none (message not signed)
- header.d=none;linux-m68k.org; dmarc=none action=none
- header.from=bp.renesas.com;
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 88708588-ddd5-4300-4e32-08d829a85590
-x-ms-traffictypediagnostic: OSAPR01MB3041:
-x-microsoft-antispam-prvs: <OSAPR01MB30414FE78102035090E1DE25AA7F0@OSAPR01MB3041.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3A4IJtM7VJ3xIWKSoxIC02lRZ40bcFEkTDpm65OVEwaVJyLA64/q+4wCbe3930hUDwDQPN3G3U5sCIl4ErGF0O6dIjgWpIJAWxg9BBVsOiZjnybIIj65IQTSr07hfuspd21eBIvhWCAVJ7TwJ7gIeekk++k4PbUiKypAL/pcu1LTsacpaVTZTaa4f2A8ovUShViC9O4MUb7lsRJT8EwDhOF+YV2alz8677yyZ8yuiczRHDtdUJmzhNxnPZl4AgIhSFoxRJ3o+Ju52U+y+jcM0lKQsmA4wASh7xUhe5RDDUuChRa2TSTMbDtH/NhaUHhTUFhn1bMS4OGA2znRbEsMOw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB1748.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(366004)(376002)(396003)(64756008)(66556008)(66476007)(52536014)(66946007)(53546011)(83380400001)(76116006)(6506007)(66446008)(4326008)(186003)(33656002)(26005)(7696005)(5660300002)(86362001)(2906002)(316002)(9686003)(8676002)(7416002)(8936002)(6916009)(71200400001)(54906003)(55016002)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: OCmQ+QZ3+kfFAtqoouhY+RQN4/qhQs1i1wLEAM9ZNEgHIu/5zMcpA960S21kiGS6PQZFtp6TkWBNutCFPL+2Aw6uUCLUZUrOT6iotZdRq4IteLu35t871rI7GXBPv06D4/GyhhZifPbFfKmyFGMWXHuEh2KF/PFGTP3z6eL85AtNYz60Y6i3deyENHCT0+EU44tFDibTREXQiWa/zCZQwKu08nFljg1LGC/oSy3IaOIFfOJLQwGDDL7Tnu6dUVAMgRJaAz5FfQ73JEmEHmLKXskaLDH2QNQGdGrRIPmqW6xiQIlDKBhrkeR3PlCIsjmU8TCdR7EUKy4Okk5yHt8O2S5xQKxaAIkDeTEeI72MBiZKTMaICC6yQ6DYQrjGOwniP2O4zZIxqnX5V4zrAREmj+oVyRoCayMoWxYlFn+xt+pG42s1jjliVox/EECkISywJi5UTlem/6ox9MvjBp5CQUwpF6aB8zecUdln/eEcaTEwhCGBKiziN2GT8HcFQd2C
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cF35zEvlnFpJY3nfpx97DjW7Gk4E2o0HW6YJ/cWLW0E=;
+        b=YSxWDKIDfcBSYuOyxNod6mj4RwZI2A5Ll5tUvgkulF0i1xibjfZWN8vmrzek+38ikU
+         8gsuL3tBZfDCVkKWU8lx2Hwz1z4o2YZUoI8KnsmItXNHGEiEs6b4nS+QaJ84OFKURdtY
+         c+ihceQOt7HZu5sC8dXqp7NOLN4Jbhcc+pmKCT9r5WDSCqMPq30iBCSbag32ALY9h045
+         kFqPQrEWbGiSxL8Z42U79YBcUe7A3ZAjPsiguhs34L9SeOtl/16hog2659hq+WoQtuhP
+         3HKzavr3m2z3T8DFH8FIBdxJlCYCZu4/5u1MJZRKM6X2wp8PLTLB3p7WlA0vRugtc3Qr
+         kk8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cF35zEvlnFpJY3nfpx97DjW7Gk4E2o0HW6YJ/cWLW0E=;
+        b=D5iLlAo8RcgNqQP3x78N+PmKwk+5KE7qGOXBgAe5YnyM9YytnrPdXC7Z41dnPNslTP
+         pMAQTNWyzZ9uzeylJs5JuqSXWvmWU3yAEwi3josI+C5di46qUFg5hlJvz4ZmnPixFifz
+         OhT4dtmg6Z2QI1kNPOLfuzxl3z7UiRfOHsjck35a6VhJsvGXmBx9msIfIWQErGhjU6QN
+         ZOYePrxkYdpmpn1XJ+muWnyvvDNr8muETWhT+nDLdtEa/lUcVmr5VJuwvYuLRqLGhF8j
+         8yz5pzuCMZQnOsk778PiiW440vQKwb+P3K87Tyx5JKEixlY3cYqGWKvj+b3jxZWkyRXM
+         sTnQ==
+X-Gm-Message-State: AOAM532H1STcIuTIQ8ULsdqFL6ybdKNAx9RqYeZbEpJ7hBSuOgbO2YiG
+        9yFtQ1qJTgsXSnb4d4gNevP6SA==
+X-Google-Smtp-Source: ABdhPJwdevQTM4sdK9fP5vns0qbYVTO0UmGpDT1jIwWKwkkQ0EzGWmVgIbLDkPYvgbG+ezdTfBOBXQ==
+X-Received: by 2002:a17:90a:6281:: with SMTP id d1mr37699pjj.231.1594918271685;
+        Thu, 16 Jul 2020 09:51:11 -0700 (PDT)
+Received: from Smcdef-MBP.lan ([103.136.220.68])
+        by smtp.gmail.com with ESMTPSA id z11sm5628013pfg.169.2020.07.16.09.51.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Jul 2020 09:51:11 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     guro@fb.com, vbabka@suse.cz, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, shakeelb@google.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH v3] mm: memcg/slab: fix memory leak at non-root kmem_cache destroy
+Date:   Fri, 17 Jul 2020 00:51:03 +0800
+Message-Id: <20200716165103.83462-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB1748.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88708588-ddd5-4300-4e32-08d829a85590
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 16:50:23.8750
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Aorx6wLGTwI5STeSQk4+39ctyVBBg+T6mg0yaM4dPa+GhZ0yqiVXoF8wmK5quPA76QE7JFjdRrrG7yrS+BW2OcGhMOqPfUW1/7GMPjgSC3d90seigsyDpY9cWxNMKX2M
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB3041
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQg
-VXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gU2VudDogMTYgSnVseSAyMDIw
-IDE1OjUxDQo+IFRvOiBQcmFiaGFrYXIgTWFoYWRldiBMYWQgPHByYWJoYWthci5tYWhhZGV2LWxh
-ZC5yakBicC5yZW5lc2FzLmNvbT4NCj4gQ2M6IE1hZ251cyBEYW1tIDxtYWdudXMuZGFtbUBnbWFp
-bC5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgVGhvbWFzIEdsZWl4bmVy
-IDx0Z2x4QGxpbnV0cm9uaXguZGU+OyBKYXNvbg0KPiBDb29wZXIgPGphc29uQGxha2VkYWVtb24u
-bmV0PjsgTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz47IFVsZiBIYW5zc29uIDx1bGYuaGFu
-c3NvbkBsaW5hcm8ub3JnPjsgR3JlZyBLcm9haC1IYXJ0bWFuDQo+IDxncmVna2hAbGludXhmb3Vu
-ZGF0aW9uLm9yZz47IENhdGFsaW4gTWFyaW5hcyA8Y2F0YWxpbi5tYXJpbmFzQGFybS5jb20+OyBX
-aWxsIERlYWNvbiA8d2lsbEBrZXJuZWwub3JnPjsgTGludXgtUmVuZXNhcyA8bGludXgtDQo+IHJl
-bmVzYXMtc29jQHZnZXIua2VybmVsLm9yZz47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBG
-TEFUVEVORUQgREVWSUNFIFRSRUUgQklORElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-PjsgTGludXgNCj4gTU1DIExpc3QgPGxpbnV4LW1tY0B2Z2VyLmtlcm5lbC5vcmc+OyBvcGVuIGxp
-c3Q6U0VSSUFMIERSSVZFUlMgPGxpbnV4LXNlcmlhbEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBB
-Uk0gPGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBMaW51eCBLZXJu
-ZWwgTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgUHJhYmhha2Fy
-IDxwcmFiaGFrYXIuY3NlbmdnQGdtYWlsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCA2Lzhd
-IGFybTY0OiBkdHM6IHJlbmVzYXM6IEluaXRpYWwgcjhhNzc0ZTEgU29DIGRldmljZSB0cmVlDQo+
-DQo+IEhpIFByYWJoYWthciwNCj4NCj4gT24gV2VkLCBKdWwgOCwgMjAyMCBhdCA3OjQ5IFBNIExh
-ZCBQcmFiaGFrYXINCj4gPHByYWJoYWthci5tYWhhZGV2LWxhZC5yakBicC5yZW5lc2FzLmNvbT4g
-d3JvdGU6DQo+ID4gRnJvbTogTWFyaWFuLUNyaXN0aWFuIFJvdGFyaXUgPG1hcmlhbi1jcmlzdGlh
-bi5yb3Rhcml1LnJiQGJwLnJlbmVzYXMuY29tPg0KPiA+DQo+ID4gQmFzaWMgc3VwcG9ydCBmb3Ig
-dGhlIFJaL0cySCBTb0MuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXJpYW4tQ3Jpc3RpYW4g
-Um90YXJpdSA8bWFyaWFuLWNyaXN0aWFuLnJvdGFyaXUucmJAYnAucmVuZXNhcy5jb20+DQo+ID4g
-U2lnbmVkLW9mZi1ieTogTGFkIFByYWJoYWthciA8cHJhYmhha2FyLm1haGFkZXYtbGFkLnJqQGJw
-LnJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMv
-cjhhNzc0ZTEuZHRzaSB8IDY1MiArKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCA2NTIgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9h
-cm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3NGUxLmR0c2kNCj4gPg0KPiA+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc0ZTEuZHRzaSBiL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvcmVuZXNhcy9yOGE3NzRlMS5kdHNpDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQN
-Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjY2MzdlMTU3ZmZjZA0KPiA+IC0tLSAvZGV2L251bGwN
-Cj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc0ZTEuZHRzaQ0KPg0K
-PiA+ICsgICAgICAgICAgICAgICBpbnRjX2V4OiBpbnRlcnJ1cHQtY29udHJvbGxlckBlNjFjMDAw
-MCB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJyZW5lc2FzLGlu
-dGMtZXgtcjhhNzc0YjEiLCAicmVuZXNhcyxpcnFjIjsNCj4NCj4gV29vcHMsICc0ZTEsIG9mIGNv
-dXJzZS4NCj4NCj4gQXMgSSBoYXZlbid0IHNlbnQgYSBQUiBmb3IgYXJtLXNvYyB5ZXQsIEknbGwg
-Zml4IGl0IHVwIGluIHJlbmVzYXMtZGV2ZWwuDQo+DQpBcmdoLCB0aGFua3MgZm9yIHRoZSBjYXRj
-aC4NCg0KQ2hlZXJzLA0KLS1QcmFiaGFrYXINCg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4NCj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4NCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9l
-dmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1t
-NjhrLm9yZw0KPg0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBl
-b3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8g
-am91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhh
-dC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
-DQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEdtYkgsIEdlc2NoYWVmdHNmdWVocmVyL1By
-ZXNpZGVudDogQ2Fyc3RlbiBKYXVjaCwgU2l0eiBkZXIgR2VzZWxsc2NoYWZ0L1JlZ2lzdGVyZWQg
-b2ZmaWNlOiBEdWVzc2VsZG9yZiwgQXJjYWRpYXN0cmFzc2UgMTAsIDQwNDcyIER1ZXNzZWxkb3Jm
-LCBHZXJtYW55LCBIYW5kZWxzcmVnaXN0ZXIvQ29tbWVyY2lhbCBSZWdpc3RlcjogRHVlc3NlbGRv
-cmYsIEhSQiAzNzA4IFVTdC1JRE5yLi9UYXggaWRlbnRpZmljYXRpb24gbm8uOiBERSAxMTkzNTM0
-MDYgV0VFRS1SZWcuLU5yLi9XRUVFIHJlZy4gbm8uOiBERSAxNDk3ODY0Nw0K
+If the kmem_cache refcount is greater than one, we should not
+mark the root kmem_cache as dying. If we mark the root kmem_cache
+dying incorrectly, the non-root kmem_cache can never be destroyed.
+It resulted in memory leak when memcg was destroyed. We can use the
+following steps to reproduce.
+
+  1) Use kmem_cache_create() to create a new kmem_cache named A.
+  2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
+     so the refcount of B is just increased.
+  3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
+     decrease the B's refcount but mark the B as dying.
+  4) Create a new memory cgroup and alloc memory from the kmem_cache
+     B. It leads to create a non-root kmem_cache for allocating memory.
+  5) When destroy the memory cgroup created in the step 4), the
+     non-root kmem_cache can never be destroyed.
+
+If we repeat steps 4) and 5), this will cause a lot of memory leak.
+So only when refcount reach zero, we mark the root kmem_cache as dying.
+
+Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+---
+
+changelog in v3:
+ 1) Simplify the code suggested by Roman.
+
+changelog in v2:
+ 1) Fix a confusing typo in the commit log.
+ 2) Remove flush_memcg_workqueue() for !CONFIG_MEMCG_KMEM.
+ 3) Introduce a new helper memcg_set_kmem_cache_dying() to fix a race
+    condition between flush_memcg_workqueue() and slab_unmergeable().
+
+ mm/slab_common.c | 35 ++++++++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 7 deletions(-)
+
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 37d48a56431d..fe8b68482670 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -326,6 +326,14 @@ int slab_unmergeable(struct kmem_cache *s)
+ 	if (s->refcount < 0)
+ 		return 1;
+ 
++#ifdef CONFIG_MEMCG_KMEM
++	/*
++	 * Skip the dying kmem_cache.
++	 */
++	if (s->memcg_params.dying)
++		return 1;
++#endif
++
+ 	return 0;
+ }
+ 
+@@ -886,12 +894,15 @@ static int shutdown_memcg_caches(struct kmem_cache *s)
+ 	return 0;
+ }
+ 
+-static void flush_memcg_workqueue(struct kmem_cache *s)
++static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
+ {
+ 	spin_lock_irq(&memcg_kmem_wq_lock);
+ 	s->memcg_params.dying = true;
+ 	spin_unlock_irq(&memcg_kmem_wq_lock);
++}
+ 
++static void flush_memcg_workqueue(struct kmem_cache *s)
++{
+ 	/*
+ 	 * SLAB and SLUB deactivate the kmem_caches through call_rcu. Make
+ 	 * sure all registered rcu callbacks have been invoked.
+@@ -923,10 +934,6 @@ static inline int shutdown_memcg_caches(struct kmem_cache *s)
+ {
+ 	return 0;
+ }
+-
+-static inline void flush_memcg_workqueue(struct kmem_cache *s)
+-{
+-}
+ #endif /* CONFIG_MEMCG_KMEM */
+ 
+ void slab_kmem_cache_release(struct kmem_cache *s)
+@@ -944,8 +951,6 @@ void kmem_cache_destroy(struct kmem_cache *s)
+ 	if (unlikely(!s))
+ 		return;
+ 
+-	flush_memcg_workqueue(s);
+-
+ 	get_online_cpus();
+ 	get_online_mems();
+ 
+@@ -955,6 +960,22 @@ void kmem_cache_destroy(struct kmem_cache *s)
+ 	if (s->refcount)
+ 		goto out_unlock;
+ 
++#ifdef CONFIG_MEMCG_KMEM
++	memcg_set_kmem_cache_dying(s);
++
++	mutex_unlock(&slab_mutex);
++
++	put_online_mems();
++	put_online_cpus();
++
++	flush_memcg_workqueue(s);
++
++	get_online_cpus();
++	get_online_mems();
++
++	mutex_lock(&slab_mutex);
++#endif
++
+ 	err = shutdown_memcg_caches(s);
+ 	if (!err)
+ 		err = shutdown_cache(s);
+-- 
+2.11.0
+
