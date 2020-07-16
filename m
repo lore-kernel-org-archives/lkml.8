@@ -2,133 +2,104 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EAEC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB86C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC72206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D920D206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:41:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LqYpIMN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgGPOle (ORCPT
+        id S1728987AbgGPOl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:41:34 -0400
-Received: from smtp-190a.mail.infomaniak.ch ([185.125.25.10]:55913 "EHLO
-        smtp-190a.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728316AbgGPOld (ORCPT
+        Thu, 16 Jul 2020 10:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728316AbgGPOl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:41:33 -0400
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4B6xl11VDMzlhbhx;
-        Thu, 16 Jul 2020 16:41:01 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4B6xkx3gxBzlh8TS;
-        Thu, 16 Jul 2020 16:40:57 +0200 (CEST)
-Subject: Re: [PATCH v6 5/7] fs,doc: Enable to enforce noexec mounts or file
- exec through O_MAYEXEC
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200714181638.45751-1-mic@digikod.net>
- <20200714181638.45751-6-mic@digikod.net>
- <038639b1-92da-13c1-b3e5-8f13639a815e@infradead.org>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <67fe6c17-a0b3-5c7e-a7c8-4c2b6e0c0592@digikod.net>
-Date:   Thu, 16 Jul 2020 16:40:56 +0200
-User-Agent: 
+        Thu, 16 Jul 2020 10:41:56 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBB3C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:41:55 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f139so11855103wmf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=sN2LdCbI27V4TnKB9wh8afeVJvtWYQtUpnWRsMz8Zks=;
+        b=LqYpIMN9wvmgA1DTp8rlOpEaMotfR07FK2SWTADyQCqbT19CPZ+por9zowh4KhkuM/
+         Mn4hmjtiXAn7q5b90eYyVNs+rWXcN/K2DGyqZZs6+40darqkzapC0/NA04voUvVWYhZ0
+         XUUL8VdXPHybbNzitMTmz539tmfjM+Zmk63ahQNmOILUxI84F/KeV48nSGRLt7rsbcJ1
+         g68Ru5UK8DMeSbLFkZ7W9WOvut/9slSCu+zdaBH1y5jK5lIW4aBUe+ZSgnftwQxv/cX9
+         MXzxIVEEhNj9PUXaIH3Zpk5pC8dHXfcPoFkzVLdCd/Ol2alhnf7L9SkJXaGfrT16NAXx
+         c5zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=sN2LdCbI27V4TnKB9wh8afeVJvtWYQtUpnWRsMz8Zks=;
+        b=t8hSBxfDakgUVXWmxuE17tDAi68KqQ2ztSWPYHDLAkwoRb8mkfdvA5vCbaRvHzq+Qi
+         k6nt21rQKMwwYodEVBGPgHzeZvaUi/e+YgD2+V9OpoXJ9JinCT97CRMe9nA/A6nXLBEC
+         EmAK5pf4pXxDDC5ShM+FKl4/L83E839M4SPyJ40JYMgwBOxVkjMdV2O7p5XtY2fcDcRg
+         iiKgaLDGLLZbtsGk0LNJGnS6OwaH7nYJDxJ/ZboPUflg50gp2lLJpKokJvdrCyBx+VMK
+         JIbWQWgbfg+mQlIfZHRD2X3Jfba/AL0ZOqYIkoOCJts+UYo6NWinQWLBFFtsr/2aqLdp
+         8MpA==
+X-Gm-Message-State: AOAM531WlyOZtXtvac6lAsHGjJcG1QWt/fJDNN4lkofJc/enVSydrPG0
+        vSPGpxBMxHXlypEH5KGZpXfJq4H9sSo=
+X-Google-Smtp-Source: ABdhPJwBq2ThH8soqX/E9iFm4UIc9XoMt2M8Wu9RmHhIzpOafZNxt0SByhM1GnyBn70DrOfRHlBySA==
+X-Received: by 2002:a7b:c4d8:: with SMTP id g24mr4413392wmk.127.1594910514584;
+        Thu, 16 Jul 2020 07:41:54 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id p4sm9414957wrx.63.2020.07.16.07.41.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 07:41:53 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 15:41:51 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>
+Subject: Re: [PATCH] mfd: remove smsc-ece1099 MFD driver
+Message-ID: <20200716144151.GT3165313@dell>
+References: <20200701212348.8085-1-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <038639b1-92da-13c1-b3e5-8f13639a815e@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: fr
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+In-Reply-To: <20200701212348.8085-1-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 01 Jul 2020, Michael Walle wrote:
 
-On 14/07/2020 20:40, Randy Dunlap wrote:
-> Hi,
+> This MFD driver has no user. The keypad driver of this device never made
+> it into the kernel. Therefore, this driver is useless. Remove it.
 > 
-> On 7/14/20 11:16 AM, Mickaël Salaün wrote:
-> 
->> ---
->>  Documentation/admin-guide/sysctl/fs.rst | 45 +++++++++++++++++++++++++
->>  fs/namei.c                              | 29 +++++++++++++---
->>  include/linux/fs.h                      |  1 +
->>  kernel/sysctl.c                         | 12 +++++--
->>  4 files changed, 80 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/sysctl/fs.rst b/Documentation/admin-guide/sysctl/fs.rst
->> index 2a45119e3331..02ec384b8bbf 100644
->> --- a/Documentation/admin-guide/sysctl/fs.rst
->> +++ b/Documentation/admin-guide/sysctl/fs.rst
-> 
-> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-> 
-> with one tiny nit:
-> 
->> @@ -165,6 +166,50 @@ system needs to prune the inode list instead of allocating
->> +The ability to restrict code execution must be thought as a system-wide policy,
->> +which first starts by restricting mount points with the ``noexec`` option.
->> +This option is also automatically applied to special filesystems such as /proc
->> +.  This prevents files on such mount points to be directly executed by the
-> 
-> Can you move that period from the beginning of the line to the end of the
-> previous line?
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> Cc: Sourav Poddar <sourav.poddar@ti.com>
+> ---
+>  Documentation/driver-api/index.rst        |   1 -
+>  Documentation/driver-api/smsc_ece1099.rst |  60 -------------
+>  drivers/mfd/Kconfig                       |  12 ---
+>  drivers/mfd/Makefile                      |   1 -
+>  drivers/mfd/smsc-ece1099.c                |  87 ------------------
+>  include/linux/mfd/smsc.h                  | 104 ----------------------
+>  6 files changed, 265 deletions(-)
+>  delete mode 100644 Documentation/driver-api/smsc_ece1099.rst
+>  delete mode 100644 drivers/mfd/smsc-ece1099.c
+>  delete mode 100644 include/linux/mfd/smsc.h
 
-OK, done. Thanks!
+Applied, thanks.
 
-> 
->> +kernel or mapped as executable memory (e.g. libraries).  With script
->> +interpreters using the ``O_MAYEXEC`` flag, the executable permission can then
->> +be checked before reading commands from files. This makes it possible to
->> +enforce the ``noexec`` at the interpreter level, and thus propagates this
->> +security policy to scripts.  To be fully effective, these interpreters also
->> +need to handle the other ways to execute code: command line parameters (e.g.,
->> +option ``-e`` for Perl), module loading (e.g., option ``-m`` for Python),
->> +stdin, file sourcing, environment variables, configuration files, etc.
->> +According to the threat model, it may be acceptable to allow some script
->> +interpreters (e.g. Bash) to interpret commands from stdin, may it be a TTY or a
->> +pipe, because it may not be enough to (directly) perform syscalls.
-> 
-> thanks.
-> 
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
