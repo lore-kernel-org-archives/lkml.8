@@ -2,135 +2,101 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B44C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54A6C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22E2F2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594878657;
-	bh=K5M9VEUTLX2kdCyJTiXSp+ySzNwauaOQDdXxsbEw4Cs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xFyIKtZtMFPApu99igAnL/gtgS79O2iDm+RMA9ucbnMfhJypLo3MKM2vgbZaT9z8I
-	 qRfXT7uQmi+R3OqRr1rf1Gna9m4iiGENXycKSycqxiJl/x0YjrZSjAdaSD98F5jgRs
-	 h0OzKbg6NTHh2zg3o7SmUZwQUszFNtYACFlO5vvM=
+	by mail.kernel.org (Postfix) with ESMTP id 7BA9C2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgGPFu4 (ORCPT
+        id S1727891AbgGPF53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:50:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39842 "EHLO mail.kernel.org"
+        Thu, 16 Jul 2020 01:57:29 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21083 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbgGPFuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:50:55 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E5122065E;
-        Thu, 16 Jul 2020 05:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594878655;
-        bh=K5M9VEUTLX2kdCyJTiXSp+ySzNwauaOQDdXxsbEw4Cs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=juZS0NKwsR33k8Y4iWXZk8HbFaogclJ9Cw5A9iVAP32qqQG4Unc1rqMDeuesHXXQc
-         WfRrqJAYpIBDMBSmaOLVp7vHEFdDlHXzanW6eW0Nb3vNuFUfzjmYgYh2EcQIHvtNs2
-         rhejvi6M+Qshdsw1P7jATHZ7BUqn8U+VoZ9CBWWw=
-Date:   Thu, 16 Jul 2020 11:20:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v4] phy: samsung: Use readl_poll_timeout function
-Message-ID: <20200716055050.GE55478@vkoul-mobl>
-References: <20200713074243.530-1-linux.amoon@gmail.com>
+        id S1725913AbgGPF53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 01:57:29 -0400
+IronPort-SDR: SN3YeReBx3/xvVTO9vtz3DLFwtLxgdD6TGLhsWMTzy1ji330TepabSKX8fTFvATBp3BEXqUucI
+ yv1RCEZlOT5Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="148474320"
+X-IronPort-AV: E=Sophos;i="5.75,358,1589266800"; 
+   d="scan'208";a="148474320"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 22:57:28 -0700
+IronPort-SDR: MPGHtP5Mo5iznd3fSSzeBdWK+RCVI7u0o8wdolS9IgjK2FVvrdKLhk/4gEdIoKoGrZUhrty3v5
+ QHnj9VIglqvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,358,1589266800"; 
+   d="scan'208";a="269157167"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Jul 2020 22:57:27 -0700
+Received: from [10.249.231.152] (abudanko-mobl.ccr.corp.intel.com [10.249.231.152])
+        by linux.intel.com (Postfix) with ESMTP id 26BED580821;
+        Wed, 15 Jul 2020 22:57:24 -0700 (PDT)
+Subject: Re: [PATCH V3 3/3] platform/x86: Intel PMT Telemetry capability
+ driver
+To:     david.e.box@linux.intel.com, lee.jones@linaro.org,
+        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        alexander.h.duyck@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+References: <20200508021844.6911-1-david.e.box@linux.intel.com>
+ <20200714062323.19990-4-david.e.box@linux.intel.com>
+ <727a75a0-3fb5-769a-cf1f-70a2a0bab0c8@linux.intel.com>
+ <245ecc65a839bd69413045ae5ee307ba03ca0869.camel@linux.intel.com>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <8a580318-9bd4-1146-f2e9-6cb851828762@linux.intel.com>
+Date:   Thu, 16 Jul 2020 08:57:24 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713074243.530-1-linux.amoon@gmail.com>
+In-Reply-To: <245ecc65a839bd69413045ae5ee307ba03ca0869.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-07-20, 07:42, Anand Moon wrote:
-> Instead of a busy waiting while loop using udelay
-> use readl_poll_timeout function to check the condition
-> is met or timeout occurs in crport_handshake function.
-> readl_poll_timeout is called in non atomic context so
-> it safe to sleep until the condition is met.
+
+On 16.07.2020 2:59, David E. Box wrote:
+> On Wed, 2020-07-15 at 10:39 +0300, Alexey Budankov wrote:
+>> Hi David,
+>>
+>> On 14.07.2020 9:23, David E. Box wrote:
 > 
-> Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Changes v4:
-> Rebased on to of patch [0] https://patchwork.kernel.org/patch/11651673/
-> --Fix the commit message.
-> --Fix the error timeout condition for -ETIMEDOUT
-> ---
-> Changes v3:
-> --Fix the commit message.
-> --Drop the variable, used the value directly.
-> Changes v2:
-> --used the default timeout values.
-> --Added missing Fixed tags.
-> ---
->  drivers/phy/samsung/phy-exynos5-usbdrd.c | 39 ++++++++----------------
->  1 file changed, 12 insertions(+), 27 deletions(-)
+> ...
 > 
-> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> index 7f6279fb4f8f..ad81aa65cdff 100644
-> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> @@ -16,6 +16,7 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_device.h>
-> +#include <linux/iopoll.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/mutex.h>
-> @@ -556,41 +557,25 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
->  static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
->  			    u32 val, u32 cmd)
->  {
-> -	u32 usec = 100;
->  	unsigned int result;
-> +	int err;
->  
->  	writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
->  
-> -	do {
-> -		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
-> -		if (result & PHYREG1_CR_ACK)
-> -			break;
-> -
-> -		udelay(1);
-> -	} while (usec-- > 0);
-> -
-> -	if (!usec) {
-> -		dev_err(phy_drd->dev,
-> -			"CRPORT handshake timeout1 (0x%08x)\n", val);
-> -		return -ETIME;
-> +	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-> +			result,	(result & PHYREG1_CR_ACK), 1, 100);
+>>>
+>>> +static int pmt_telem_open(struct inode *inode, struct file *filp)
+>>> +{
+>>> +	struct pmt_telem_priv *priv;
+>>> +	struct pmt_telem_entry *entry;
+>>> +	struct pci_driver *pci_drv;
+>>> +	struct pci_dev *pci_dev;
+>>> +
+>>> +	if (!capable(CAP_SYS_ADMIN))
+>>
+>> Thanks for supplying these patches.
+>> Are there any reasons not to expose this feature to CAP_PERFMON
+>> privileged
+>> processes too that currently have access to performance monitoring
+>> features
+>> of the kernel without root/CAP_SYS_ADMIN credentials? This could be
+>> done by
+>> pefmon_capable() function call starting from v5.8+.
+> 
+> The new capability is well suited for this feature. I'll make the
+> change. Thanks.
 
-pls align this line to opening brace of preceding line:
+I appreciate your cooperation. Thanks!
 
-        err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-                                 result, (result & PHYREG1_CR_ACK), 1, 100);
-
-This is recommended way of splitting lines, see
-Documentation/process/coding-style.rst and run checkpatch.pl with
---strict option
-
-thanks
--- 
-~Vinod
+Alexei
