@@ -7,137 +7,154 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDE6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE42C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0AFE2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DBAE207F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnwxWB5n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIKvHRB/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgGPKNE (ORCPT
+        id S1726832AbgGPKOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 06:13:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36092 "EHLO
+        Thu, 16 Jul 2020 06:14:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgGPKND (ORCPT
+        with ESMTP id S1726027AbgGPKOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 06:13:03 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BE25C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 03:13:03 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id l1so5413277ioh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 03:13:03 -0700 (PDT)
+        Thu, 16 Jul 2020 06:14:31 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03868C061755;
+        Thu, 16 Jul 2020 03:14:31 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t15so4421575pjq.5;
+        Thu, 16 Jul 2020 03:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UVSUvMmGFLUkKum7MuCJsKB4zScIvSW6XBRGHMBXovI=;
-        b=nnwxWB5nbEedMdL5kQECjnAUyHVcThBpkh6AyS0YxPd+lLGuMcdd6ft4Xg2OMx30Ln
-         KBjZzmMZkOmtBTJo1yCIriviCdDdEDp7J7WtdD1mvH7IEZaSjkjYnPF6FS2UmIO9flBg
-         F7athv29zSKXA9nurBHOa8Plv/B++y7PnIi0rBac5qGardrV4PM8GGF0zRCnUBGExE/y
-         k+urYbu5ntw4oFyBiU42isFOleRMLPe7fi2D5elIJ9/rrtaS18g+Aawd2BOQRVaOD80b
-         lujgb33HFwX6FX1Egb6uByYdqNqs9gcY26XuWMrMtW6i1WrfaeFKHeyLH43wy8+15r3C
-         HduA==
+         :cc;
+        bh=ZutxaYEpmEySv3UmHMi5+FROX85B8I1ijTI1ru6Ewl4=;
+        b=hIKvHRB/cueR0iOI58m532legrB8eMWxHzMvO9fAmlo5ViRbW3bpLZG1OXuUlO06LQ
+         f3swevYFeW3+p1KoKjcbf7Vf2lggHFR/IU00Kg6IStQAzvP6JbqSGWdOPNHA0AdWuieg
+         ZABrV/DfkxDoYNctqxtJU6D3jKvatjTZHKv+Ka0t8KkT4m0YjyOKE7E0bw9rCNgnMBxJ
+         vdnT3BjodKSYR3M911mzpQJlNGIHM+VWZya4n19X/Q5cdEEyPXar5a2V6K+82CagGNKm
+         BxuP2QghQ//+98N+z21AkJglg+Isb0WDFbwsmBKvpdVOfiT1g9e4wwXwEFCHEy/U2E0y
+         VryA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UVSUvMmGFLUkKum7MuCJsKB4zScIvSW6XBRGHMBXovI=;
-        b=h5P0kXO4egHdsPth/8yDYPuZSaNPytk5vMyUiNexu1fQnQ4pX/fNZe9vAbAxsbdhmT
-         Ep6+z7QbuusYMfC39OJokvVLV2f+1qf/hkxDzgIwAKqQ97JF9BRzuzN5zn8jdp/gYJSC
-         vFYN0PYqnQ7yO6iFXpmjlWfttbTp6GCLFls3muK98A+2k8xx7+PN2lYVe7Ly291b0PBl
-         JgRTvNYxj0WDJWcJuGBY8bHqkLHdDj837if7DO2oHBbrl8hNfSk1zjA8Sc16ymDKHRLA
-         vrUo68g+t+bQw9zNlZbYPY7ehWtVDsbOsChPYaR2kySlDkPGazUUA9vGXXOBq3gaO+ni
-         QGsQ==
-X-Gm-Message-State: AOAM530ZOg5rrZ8rzMD7xockMe7pmyMitXeypresuD8n0VLSpX018E/i
-        0FBnN3OwmBO6n2axsl/4g2mj0Eg1UqPGhY0wOvE=
-X-Google-Smtp-Source: ABdhPJwZ7zUlj1sz0Az8nGVh3eFi91mGEmmIlOpREI9vwpsWQttiLfwEFzvS3P2giktGt3C6aCmxYXO/tcvR/Ws0G8g=
-X-Received: by 2002:a05:6638:240f:: with SMTP id z15mr4300797jat.76.1594894382841;
- Thu, 16 Jul 2020 03:13:02 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=ZutxaYEpmEySv3UmHMi5+FROX85B8I1ijTI1ru6Ewl4=;
+        b=kvhj5dldhOpdBIJlmFD5gj8eC1RUnc2aqAGqXqaTBoPMVUkYWxGurdIHPxXh+5eIhU
+         s7mqET74hM4HPyeDhiqJeQWk3hGQ5226aoAYX/NlBRV2pDKrJ1CZj2p235Qh34PFZNzO
+         8JFdle52vmefmy8B3bHDem1IFElqLMHqM+i3z0jtEoIc7djQZDuXM3MCc+g2VHzaPVEK
+         eJxJSmW9ChSckdgfuDvD181tnpun3BajJS3vDnE3fhjweUdBbizfKA83UCIZTPrjf9Wn
+         41s3g3eED00JE1g6KbQVC2arztLEvFr3oh2I1kyIUCp1KvcsLoirnT4LzSUXLbC2Xo4O
+         J0Dw==
+X-Gm-Message-State: AOAM532F1Yq5rPBNnXNmf9PR3WAJ8xZAK3aXzwwR1G3bF4LWnkamUuP/
+        cOSPBvIYOY8BwsZW6SXhyz1KjbPVSRQnvBnYwAtBzcEH
+X-Google-Smtp-Source: ABdhPJwQFoM4iZtiHWAuEwqpo/JQvqiBk0vdFRrwv7kOdg027V9PMwF0z+LQ2HpUSPOZy6PgjuOQ02qyFMJEcoYPLvo=
+X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr4290355pjb.129.1594894470264;
+ Thu, 16 Jul 2020 03:14:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594117856-14343-1-git-send-email-gene.chen.richtek@gmail.com>
- <1594117856-14343-2-git-send-email-gene.chen.richtek@gmail.com>
- <b9540dc6-4d43-45e4-8878-15d2df24a268@gmail.com> <20200713065110.GB3500@dell>
- <CAE+NS36uRRqHetQE5QVJ94WX4g7CdQzvD-0VOnLfKAbqdHs3Sg@mail.gmail.com> <20200713104816.GD3500@dell>
-In-Reply-To: <20200713104816.GD3500@dell>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Thu, 16 Jul 2020 18:12:51 +0800
-Message-ID: <CAE+NS36EEVb0JLDuZ_0tyocu7PeQSpyNGOWm-jWLW2kZFD=jYg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] mfd: mt6360: Refactor and fix code style
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, shufan_lee@richtek.com,
-        cy_huang@richtek.com, benjamin.chao@mediatek.com
+References: <20200716080836.2279-1-rayagonda.kokatanur@broadcom.com> <20200716080836.2279-3-rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <20200716080836.2279-3-rayagonda.kokatanur@broadcom.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 16 Jul 2020 13:14:13 +0300
+Message-ID: <CAHp75VeXBCqEhfna2mQaHv7bZKOrj+A6KkbCrMAfM=X9+boDjA@mail.gmail.com>
+Subject: Re: [PATCH V1 2/2] i2c: iproc: add slave pec support
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Wolfram Sang <wsa@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B47=E6=9C=8813=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=886:48=E5=AF=AB=E9=81=93=EF=BC=9A
+On Thu, Jul 16, 2020 at 11:14 AM Rayagonda Kokatanur
+<rayagonda.kokatanur@broadcom.com> wrote:
 >
-> On Mon, 13 Jul 2020, Gene Chen wrote:
+> Iproc supports PEC computation and checking in both Master
+> and Slave mode.
 >
-> > Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B47=E6=9C=8813=E6=
-=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=882:51=E5=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > On Fri, 10 Jul 2020, Matthias Brugger wrote:
-> > >
-> > > >
-> > > >
-> > > > On 07/07/2020 12:30, Gene Chen wrote:
-> > > > > From: Gene Chen <gene_chen@richtek.com>
-> > > > >
-> > > > > Rearrange include file.
-> > > > > Remove brackets around raw numbers.
-> > > > > Indicate sub-dev compatible name by using "-"
-> > > > > Combine mt6360 pmic/ldo resouces into mt6360 regulator resources.
-> > > > > Rename mt6360_pmu_data by mt6360_data.
-> > > > > Rename mt6360_pmu by mt6360.
-> > > >
-> > > > That seems like a lot of cosmetics. Why is this needed?
-> > > > If you think that's needed it should be split up in different commi=
-ts, each
-> > > > explaining in the commit message why you do that.
-> > >
-> > > Agreed.  This set is still not broken up enough.
-> > >
-> > > Please place each logical change into its own patch for review.
-> > >
-> >
-> > 1. Rearrange include file.
-> > After check serveral file about coding style, include file seems sort
-> > by architecture, not by alphabet
-> > 2. Remove brackets around raw numbers.
-> > Due to redundant brackets, another reviewer recommended to delete them.
-> > 3. Indicate sub-dev compatible name by using "-"
-> > Suggestion by Lees when review mfd binding document.
-> > 4. Combine mt6360 pmic/ldo resouces into mt6360 regulator resources.
-> > Simplify the similar resources object.
-> > 5. Rename mt6360_pmu_data by mt6360_data.
-> > Not only include pmu part, but also entire MT6360 IC.
-> > 6. Rename mt6360_pmu by mt6360.
-> > Same reason as above.
-> >
-> > We try to make code more simpler and easier to understand
-> > We can also discard changes if patch 1,2,4,5,6 doesn't make any differe=
-nce.
->
-> I'm not sure what you're trying to say.
->
-> Please place each on of these changes into their own patch.
->
+> This patch adds support for PEC in slave mode.
 
-I list all topic and reason why we want to modify.
-Before split into patches, can we discuss which topic reviewer can accept?
-or I need fix first?
+...
 
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> -#define S_RX_PEC_ERR_SHIFT           29
+> +#define S_RX_PEC_ERR_SHIFT           28
+> +#define S_RX_PEC_ERR_MASK            0x3
+> +#define S_RX_PEC_ERR                 0x1
+
+This needs to be explained in the commit message, in particular why
+this change makes no regression.
+
+...
+
+> +static int bcm_iproc_smbus_check_slave_pec(struct bcm_iproc_i2c_dev *iproc_i2c,
+> +                                          u32 val)
+> +{
+> +       u8 err_status;
+
+> +       int ret = 0;
+
+Completely redundant variable.
+
+> +       if (!iproc_i2c->en_s_pec)
+> +               return ret;
+
+return 0;
+
+> +       err_status = (u8)((val >> S_RX_PEC_ERR_SHIFT) & S_RX_PEC_ERR_MASK);
+
+Why casting?
+
+> +       if (err_status == S_RX_PEC_ERR) {
+> +               dev_err(iproc_i2c->device, "Slave PEC error\n");
+
+> +               ret = -EBADMSG;
+
+return ...
+
+> +       }
+> +
+> +       return ret;
+
+return 0;
+
+> +}
+
+...
+
+> +                       if (rx_status == I2C_SLAVE_RX_END) {
+> +                               int ret;
+> +
+> +                               ret = bcm_iproc_smbus_check_slave_pec(iproc_i2c,
+> +                                                                     val);
+
+One line looks better.
+
+> +                               if (!ret)
+
+Why not positive conditional?
+
+> +                                       i2c_slave_event(iproc_i2c->slave,
+> +                                                       I2C_SLAVE_STOP, &value);
+> +                               else
+> +                                       i2c_slave_event(iproc_i2c->slave,
+> +                                                       I2C_SLAVE_PEC_ERR,
+> +                                                       &value);
+> +                       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
