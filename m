@@ -2,156 +2,153 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8606FC4345A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232DDC433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF82214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DF0212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:10:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/RPdWvQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgGPXJp (ORCPT
+        id S1728183AbgGPXKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:09:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34356 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728006AbgGPXJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:09:22 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 554288012DFCE76CF193;
-        Fri, 17 Jul 2020 07:09:19 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.203.111) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 17 Jul 2020 07:09:12 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <robin.murphy@arm.com>, <will@kernel.org>, <joro@8bytes.org>
-CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        Prime Zeng <prime.zeng@hisilicon.com>
-Subject: [PATCH] iommu/arm-smmu-v3: remove the approach of MSI polling for CMD SYNC
-Date:   Fri, 17 Jul 2020 11:07:09 +1200
-Message-ID: <20200716230709.32820-1-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        Thu, 16 Jul 2020 19:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727946AbgGPXJU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 19:09:20 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D293C08C5E3;
+        Thu, 16 Jul 2020 15:38:26 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id br7so8462405ejb.5;
+        Thu, 16 Jul 2020 15:38:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LmdF87AgMThrWVMnKDsPrAO+JtBMhojr7BAJuj4Mos4=;
+        b=B/RPdWvQDiakdK6Rsjt4FftXkqJwuPOHipdMdoDczJI6xEo/Yf0yPur7/sRo32E+zw
+         BkU4vwctVyFhUWohOj+WYAxWNzSRRfqR5QSJph4gN7VeSFffiVQBEtdDkfyeOS1Ih598
+         QlfGI/HQ/sEpLLQxJMJgQMB0fZlH1OCEL0bTCK0QDQfTgTzCKMr2YmzF+PAdWY8hyeJq
+         qHA5FbWo2GZFjSeQE3eZMYMB09MYnMxWhDPk2Qdc4RMIffPBYQ+QNIXUdf3w4r2xkRHR
+         lLuhgsC7e8e13TLM+t3cPhqU4Ci2T/HhWMoX29cyKkFSZPdy2D9F4rD5PP6vuduiuHn8
+         ECxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LmdF87AgMThrWVMnKDsPrAO+JtBMhojr7BAJuj4Mos4=;
+        b=iI48WuQw9+ekELFUV1EpJ/TeM4UeiLhSkgQIKM+EmYVhdVcQ0svserVwJQVX+6sqrx
+         zcpO+Qp23Zv0PI2vp6kZQDMJsIUHnApiPlkg9vInIAhBe4GTe8ItadvASCLvilqJFPI1
+         F9DCWqs9vK+Q5yiIzNCWIb2MBheZyjz/DrXMKqpdRx7YVxKSk6J9Ln1W4QNFDwkcZj+Z
+         nwmKG9S1JhxqA2ajuoRmkDiy6zcwiudER12L6W/7ttpXWnZbf/2yVesu607aocO5pq/1
+         vkkCVM+dpweo79MWM+qPD32e3blpm2cvj6XpU3L7o4/uq2fm81CZwp3cb+nrtwzG50ln
+         fl2Q==
+X-Gm-Message-State: AOAM5322Vo4dn12nrB9aE4sEc2EpsD3s9TFK/IyX+eq6vPrKTb0+7a96
+        k8FukaKNzKPNaUdlrzJhAdU=
+X-Google-Smtp-Source: ABdhPJzapfHHGhirfMsPtF3vhw+bi57Qr2t0qUC2pIbXuSMdeTeBYSATfLh5F/krFsl8XJs1du6ucg==
+X-Received: by 2002:a17:906:82d2:: with SMTP id a18mr5751822ejy.522.1594939105148;
+        Thu, 16 Jul 2020 15:38:25 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id bm21sm6077578ejb.13.2020.07.16.15.38.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 15:38:24 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 01:38:22 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Matthew Hagan <mnhagan88@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
+ properties
+Message-ID: <20200716223822.yptldqqn36fbp2i7@skbuf>
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+ <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+ <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.203.111]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before commit 587e6c10a7ce ("iommu/arm-smmu-v3: Reduce contention during
-command-queue insertion"), msi polling perhaps performed better since
-it could run outside the spin_lock_irqsave() while the code polling cons
-reg was running in the lock.
+On Thu, Jul 16, 2020 at 03:09:25PM -0700, Jakub Kicinski wrote:
+> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
+> > Add names and decriptions of additional PORT0_PAD_CTRL properties.
+> > 
+> > Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> > index ccbc6d89325d..3d34c4f2e891 100644
+> > --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> > +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> > @@ -13,6 +13,14 @@ Optional properties:
+> >  
+> >  - reset-gpios: GPIO to be used to reset the whole device
+> >  
+> > +Optional MAC configuration properties:
+> > +
+> > +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
+> 
+> Perhaps we can say a little more here?
+> 
+> > +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
+> > +				falling edge.
+> > +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
+> > +				falling edge.
+> 
+> These are not something that other vendors may implement and therefore
+> something we may want to make generic? Andrew?
+> 
 
-But after the great reorganization of smmu queue, neither of these two
-polling methods are running in a spinlock. And real tests show polling
-cons reg via sev means smaller latency. It is probably because polling
-by msi will ask hardware to write memory but sev polling depends on the
-update of register only.
+It was asked before whether this device uses source-synchronous clock
+for SGMII or if it recovers the clock from the data stream. Just "pass"
+was given for a response.
 
-Using 16 threads to run netperf on hns3 100G NIC with UDP packet size
-in 32768bytes and set iommu to strict, TX throughput can improve from
-25227.74Mbps to 27145.59Mbps by this patch. In this case, SMMU is super
-busy as hns3 sends map/unmap requests extremely frequently.
+https://patchwork.ozlabs.org/project/netdev/patch/8ddd76e484e1bedd12c87ea0810826b60e004a65.1591380105.git.noodles@earth.li/
 
-Cc: Prime Zeng <prime.zeng@hisilicon.com>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- drivers/iommu/arm-smmu-v3.c | 46 +------------------------------------
- 1 file changed, 1 insertion(+), 45 deletions(-)
+One can, in principle, tell easily by examining schematics. If the SGMII
+is only connected via RX_P, RX_N, TX_P, TX_N (and optionally there might
+be external reference clocks for the SERDES lanes, but these are not
+part of the data connection itself), then the clock is recovered from
+the serial data stream, and we have no idea what "SGMII delays" are.
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index f578677a5c41..e55282a636c8 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -964,12 +964,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
- 		cmd[1] |= FIELD_PREP(CMDQ_PRI_1_RESP, ent->pri.resp);
- 		break;
- 	case CMDQ_OP_CMD_SYNC:
--		if (ent->sync.msiaddr) {
--			cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_CS, CMDQ_SYNC_0_CS_IRQ);
--			cmd[1] |= ent->sync.msiaddr & CMDQ_SYNC_1_MSIADDR_MASK;
--		} else {
--			cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_CS, CMDQ_SYNC_0_CS_SEV);
--		}
-+		cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_CS, CMDQ_SYNC_0_CS_SEV);
- 		cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_MSH, ARM_SMMU_SH_ISH);
- 		cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_MSIATTR, ARM_SMMU_MEMATTR_OIWB);
- 		break;
-@@ -983,21 +978,10 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
- static void arm_smmu_cmdq_build_sync_cmd(u64 *cmd, struct arm_smmu_device *smmu,
- 					 u32 prod)
- {
--	struct arm_smmu_queue *q = &smmu->cmdq.q;
- 	struct arm_smmu_cmdq_ent ent = {
- 		.opcode = CMDQ_OP_CMD_SYNC,
- 	};
- 
--	/*
--	 * Beware that Hi16xx adds an extra 32 bits of goodness to its MSI
--	 * payload, so the write will zero the entire command on that platform.
--	 */
--	if (smmu->features & ARM_SMMU_FEAT_MSI &&
--	    smmu->features & ARM_SMMU_FEAT_COHERENCY) {
--		ent.sync.msiaddr = q->base_dma + Q_IDX(&q->llq, prod) *
--				   q->ent_dwords * 8;
--	}
--
- 	arm_smmu_cmdq_build_cmd(cmd, &ent);
- }
- 
-@@ -1251,30 +1235,6 @@ static int arm_smmu_cmdq_poll_until_not_full(struct arm_smmu_device *smmu,
- 	return ret;
- }
- 
--/*
-- * Wait until the SMMU signals a CMD_SYNC completion MSI.
-- * Must be called with the cmdq lock held in some capacity.
-- */
--static int __arm_smmu_cmdq_poll_until_msi(struct arm_smmu_device *smmu,
--					  struct arm_smmu_ll_queue *llq)
--{
--	int ret = 0;
--	struct arm_smmu_queue_poll qp;
--	struct arm_smmu_cmdq *cmdq = &smmu->cmdq;
--	u32 *cmd = (u32 *)(Q_ENT(&cmdq->q, llq->prod));
--
--	queue_poll_init(smmu, &qp);
--
--	/*
--	 * The MSI won't generate an event, since it's being written back
--	 * into the command queue.
--	 */
--	qp.wfe = false;
--	smp_cond_load_relaxed(cmd, !VAL || (ret = queue_poll(&qp)));
--	llq->cons = ret ? llq->prod : queue_inc_prod_n(llq, 1);
--	return ret;
--}
--
- /*
-  * Wait until the SMMU cons index passes llq->prod.
-  * Must be called with the cmdq lock held in some capacity.
-@@ -1332,10 +1292,6 @@ static int __arm_smmu_cmdq_poll_until_consumed(struct arm_smmu_device *smmu,
- static int arm_smmu_cmdq_poll_until_sync(struct arm_smmu_device *smmu,
- 					 struct arm_smmu_ll_queue *llq)
- {
--	if (smmu->features & ARM_SMMU_FEAT_MSI &&
--	    smmu->features & ARM_SMMU_FEAT_COHERENCY)
--		return __arm_smmu_cmdq_poll_until_msi(smmu, llq);
--
- 	return __arm_smmu_cmdq_poll_until_consumed(smmu, llq);
- }
- 
--- 
-2.27.0
+If the schematic shows 2 extra clock signals, one in each transmit
+direction, then this is, in Russell King's words, "a new world of RGMII
+delay pain but for SGMII". In principle I would fully expect clock skews
+to be necessary for any high-speed protocol with source-synchronous
+clocking. The problem, really, is that we aren't ready to deal with this
+properly. We aren't distinguishing "SGMII with clock" from "SGMII
+without clock" in any way. We have no idea who else is using such a
+thing. Depending on the magnitude of this new world, it may be wise to
+let these bindings go in as-is, or do something more kernel-wide...
 
+One simple question to ask Matthew is what are you connecting to these
+SGMII lanes, and if you need any special configuration on the other end
+of those lanes too (and what is the configuration you are using on the
+qca8k: enable the "SGMII delays" in both directions?).
 
+> >  Subnodes:
+> >  
+> >  The integrated switch subnode should be specified according to the binding
+> 
+
+Thanks,
+-Vladimir
