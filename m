@@ -2,447 +2,170 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DA1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92304C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFB6F2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714E02084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:34:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DgIAFh9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgGPReE (ORCPT
+        id S1729187AbgGPRex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:34:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:8310 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbgGPReE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:34:04 -0400
-IronPort-SDR: prXYuzaGFeHTcVC1whhMDAqFCnFNwvZLy0x4YzUr+ST3behykREDK28TQXsznCTWIH2g5+ELCY
- bZQEr64c3f6w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129530697"
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="129530697"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 10:33:02 -0700
-IronPort-SDR: /A1swBRl2D9D4iQMPYPf3LMDW/IgGaM1OQNxeDzcYuWsWQCRDvldwa9AjpJeb3FhAJXATv0eVl
- WuIeCyDhhPQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="325206927"
-Received: from unknown (HELO localhost) ([10.249.34.156])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Jul 2020 10:32:45 -0700
-Date:   Thu, 16 Jul 2020 20:32:44 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, x86@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jessica Yu <jeyu@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Omar Sandoval <osandov@fb.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Marco Elver <elver@google.com>,
-        Brian Gerst <brgerst@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v3 1/3] kprobes: Add text_alloc() and text_free()
-Message-ID: <20200716173244.GD14135@linux.intel.com>
-References: <20200714223239.1543716-1-jarkko.sakkinen@linux.intel.com>
- <20200714223239.1543716-2-jarkko.sakkinen@linux.intel.com>
- <20200715172732.35110a4e53e84fcec9aeac83@kernel.org>
+        Thu, 16 Jul 2020 13:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728562AbgGPRew (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:34:52 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFC16C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:34:51 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id d198so3450669vsc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:34:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+YZ4K32ILO0YG7+Onb9+bb1wbPOZ0IsAwcOMvX1Wf1U=;
+        b=DgIAFh9xOdcGljTcbCAE1IcHuv2aaa2mBbzzoSyx+PkPEnrbCyvTBNyFXPYLKiG9Pm
+         8pVv0O31SbSSnI5+44WNuLdO577HNgfluZBBRqvKCeX59P3Z6sO4UXk0PT8vXh6Lx/2V
+         3FtSeQB0FwxrAc1mp5ySe0Pf0i5r+sXaq8c6M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+YZ4K32ILO0YG7+Onb9+bb1wbPOZ0IsAwcOMvX1Wf1U=;
+        b=dSAeR0n6Qcm8UjabXVXEFu197dZFFxBnlXxCieadov03aFSdWO09jxcZwb1y/Vsinm
+         i42docLkrgoCugABO03yIIgko4F7Tq4oVBQ/i78Q5I2Hj3Z/jD+fL29dR9sWFhsUZx/d
+         cWj2A9DOEd5jX99P+yNUO/hky1GOdvMr5PoUZxUJHdbYsY1QTMu0uOYug8MyIvAY6vLI
+         G5Rk0iztvXqoYPDZvveeJIVYjPq/aLlgKP6C6q+RvTs5lrf2BuGnGNS8EbTp/Tk14deF
+         zeEkjf4h8/MM90nzzPPvwYYv/9pr+Sco8a3BzRhYqlNHFPYdBtnt4/6TTs5ngupB70Fl
+         bzhQ==
+X-Gm-Message-State: AOAM533oio6oKAODbR09hxRLsbYoxiKggP54si4ZqaIKpRCpRf4j8ORF
+        lL1MkH+IMNPdLEHFtZWrWga6bC2hM0o=
+X-Google-Smtp-Source: ABdhPJx5BatjcAv72y5vLzJWVyhZ4SFz1ZPgbjcddpimD5PrPcsIR1GS56tregUy88/rt4qDEA5gOw==
+X-Received: by 2002:a67:ce8d:: with SMTP id c13mr4061860vse.152.1594920890384;
+        Thu, 16 Jul 2020 10:34:50 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id m143sm822411vkm.1.2020.07.16.10.34.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 10:34:49 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id h18so2022100uao.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:34:48 -0700 (PDT)
+X-Received: by 2002:ab0:150c:: with SMTP id o12mr4397825uae.90.1594920887766;
+ Thu, 16 Jul 2020 10:34:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715172732.35110a4e53e84fcec9aeac83@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <1594796149-14778-1-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <1594796149-14778-1-git-send-email-tdas@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 16 Jul 2020 10:34:36 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XwYQxkKQruVPnO9Nbsv_3uyD75-dcyOeB62zLVjJE5+Q@mail.gmail.com>
+Message-ID: <CAD=FV=XwYQxkKQruVPnO9Nbsv_3uyD75-dcyOeB62zLVjJE5+Q@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add LPASS clock controller nodes
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jimmy Cheng-Yi Chiang <cychiang@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 05:27:32PM +0900, Masami Hiramatsu wrote:
-> Hi Jarkko,
-> 
-> On Wed, 15 Jul 2020 01:32:27 +0300
-> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> 
-> > Introduce new API for allocating space for code generaed at run-time
-> > leveraging from module_alloc() and module_memfree() code. Use this to
-> > perform memory allocations in the kprobes code in order to loose the
-> > bound between kprobes and modules subsystem.
-> > 
-> > Initially, use this API only with arch/x86 and define a new config
-> > flag CONFIG_ARCH_HAS_TEXT_ALLOC to promote the availability of the
-> > new API.
-> 
-> This might need to be extended for the text_alloc() flags as we discuss
-> in previous thread. (e.g. bpf on arm64)
-> 
-> > Cc: Andi Kleen <ak@linux.intel.com>
-> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  arch/Kconfig             |  2 +-
-> >  arch/x86/Kconfig         |  3 ++
-> >  arch/x86/kernel/Makefile |  1 +
-> >  arch/x86/kernel/module.c | 49 ---------------------------
-> >  arch/x86/kernel/text.c   | 71 ++++++++++++++++++++++++++++++++++++++++
-> 
-> I think this would better be arch/x86/mm/text_alloc.c (text.c is too
-> generic, and this only provides memory allocation.)
+Hi,
 
-Agreed.
+On Tue, Jul 14, 2020 at 11:56 PM Taniya Das <tdas@codeaurora.org> wrote:
+>
+> Update the clock controller nodes for Low power audio subsystem
+> functionality.
+>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
 
-> 
-> >  include/linux/text.h     | 17 ++++++++++
-> 
-> "text_alloc.h" would be better, or puting the prototype in vmalloc.h
-> will be easier to use.
-> 
-> >  kernel/kprobes.c         | 11 +++++++
-> >  kernel/module.c          | 10 ++++++
-> >  8 files changed, 114 insertions(+), 50 deletions(-)
-> >  create mode 100644 arch/x86/kernel/text.c
-> >  create mode 100644 include/linux/text.h
-> > 
-> > diff --git a/arch/Kconfig b/arch/Kconfig
-> > index 8cc35dc556c7..e3d6b6868ccb 100644
-> > --- a/arch/Kconfig
-> > +++ b/arch/Kconfig
-> > @@ -61,7 +61,7 @@ config OPROFILE_NMI_TIMER
-> >  
-> >  config KPROBES
-> >  	bool "Kprobes"
-> > -	depends on MODULES
-> > +	depends on MODULES || ARCH_HAS_TEXT_ALLOC
-> >  	depends on HAVE_KPROBES
-> >  	select KALLSYMS
-> >  	help
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 0dea7fdd7a00..a4ee5d1300f6 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -2035,6 +2035,9 @@ config KEXEC_FILE
-> >  config ARCH_HAS_KEXEC_PURGATORY
-> >  	def_bool KEXEC_FILE
-> >  
-> > +config ARCH_HAS_TEXT_ALLOC
-> > +	def_bool y
-> > +
-> >  config KEXEC_SIG
-> >  	bool "Verify kernel signature during kexec_file_load() syscall"
-> >  	depends on KEXEC_FILE
-> > diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> > index e77261db2391..2878e4b753a0 100644
-> > --- a/arch/x86/kernel/Makefile
-> > +++ b/arch/x86/kernel/Makefile
-> > @@ -68,6 +68,7 @@ obj-y			+= tsc.o tsc_msr.o io_delay.o rtc.o
-> >  obj-y			+= pci-iommu_table.o
-> >  obj-y			+= resource.o
-> >  obj-y			+= irqflags.o
-> > +obj-y			+= text.o
-> >  
-> >  obj-y				+= process.o
-> >  obj-y				+= fpu/
-> > diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
-> > index 34b153cbd4ac..261df078f127 100644
-> > --- a/arch/x86/kernel/module.c
-> > +++ b/arch/x86/kernel/module.c
-> > @@ -36,55 +36,6 @@ do {							\
-> >  } while (0)
-> >  #endif
-> >  
-> > -#ifdef CONFIG_RANDOMIZE_BASE
-> > -static unsigned long module_load_offset;
-> > -
-> > -/* Mutex protects the module_load_offset. */
-> > -static DEFINE_MUTEX(module_kaslr_mutex);
-> > -
-> > -static unsigned long int get_module_load_offset(void)
-> > -{
-> > -	if (kaslr_enabled()) {
-> > -		mutex_lock(&module_kaslr_mutex);
-> > -		/*
-> > -		 * Calculate the module_load_offset the first time this
-> > -		 * code is called. Once calculated it stays the same until
-> > -		 * reboot.
-> > -		 */
-> > -		if (module_load_offset == 0)
-> > -			module_load_offset =
-> > -				(get_random_int() % 1024 + 1) * PAGE_SIZE;
-> > -		mutex_unlock(&module_kaslr_mutex);
-> > -	}
-> > -	return module_load_offset;
-> > -}
-> > -#else
-> > -static unsigned long int get_module_load_offset(void)
-> > -{
-> > -	return 0;
-> > -}
-> > -#endif
-> > -
-> > -void *module_alloc(unsigned long size)
-> > -{
-> > -	void *p;
-> > -
-> > -	if (PAGE_ALIGN(size) > MODULES_LEN)
-> > -		return NULL;
-> > -
-> > -	p = __vmalloc_node_range(size, MODULE_ALIGN,
-> > -				    MODULES_VADDR + get_module_load_offset(),
-> > -				    MODULES_END, GFP_KERNEL,
-> > -				    PAGE_KERNEL, 0, NUMA_NO_NODE,
-> > -				    __builtin_return_address(0));
-> > -	if (p && (kasan_module_alloc(p, size) < 0)) {
-> > -		vfree(p);
-> > -		return NULL;
-> > -	}
-> > -
-> > -	return p;
-> > -}
-> 
-> Please don't touch this module_alloc() at all. Then we can
-> just call __vmalloc_node_range() in the text_alloc().
+Somewhere here you should be pointing to the unlanded bindings patch, AKA:
 
-This is my mistake, not intentional. Had a fixup that by mistake did not
-end up to the final patch set. Sorry about that.
+https://lore.kernel.org/r/1594795010-9074-3-git-send-email-tdas@codeaurora.org
 
-> 
-> > -
-> >  #ifdef CONFIG_X86_32
-> >  int apply_relocate(Elf32_Shdr *sechdrs,
-> >  		   const char *strtab,
-> > diff --git a/arch/x86/kernel/text.c b/arch/x86/kernel/text.c
-> > new file mode 100644
-> > index 000000000000..986b92ff1434
-> > --- /dev/null
-> > +++ b/arch/x86/kernel/text.c
-> > @@ -0,0 +1,71 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + *  Kernel module help for x86.
-> > + *  Copyright (C) 2001 Rusty Russell.
-> > + */
-> > +
-> > +#include <linux/kasan.h>
-> > +#include <linux/mm.h>
-> > +#include <linux/moduleloader.h>
-> > +#include <linux/vmalloc.h>
-> > +#include <asm/setup.h>
-> > +
-> > +#ifdef CONFIG_RANDOMIZE_BASE
-> > +static unsigned long module_load_offset;
-> > +
-> > +/* Mutex protects the module_load_offset. */
-> > +static DEFINE_MUTEX(module_kaslr_mutex);
-> > +
-> > +static unsigned long get_module_load_offset(void)
-> > +{
-> > +	if (kaslr_enabled()) {
-> > +		mutex_lock(&module_kaslr_mutex);
-> > +		/*
-> > +		 * Calculate the module_load_offset the first time this
-> > +		 * code is called. Once calculated it stays the same until
-> > +		 * reboot.
-> > +		 */
-> > +		if (module_load_offset == 0)
-> > +			module_load_offset =
-> > +				(get_random_int() % 1024 + 1) * PAGE_SIZE;
-> > +		mutex_unlock(&module_kaslr_mutex);
-> > +	}
-> > +	return module_load_offset;
-> > +}
-> > +#else
-> > +static unsigned long get_module_load_offset(void)
-> > +{
-> > +	return 0;
-> > +}
-> > +#endif
-> 
-> So as I pointed, we can ignore this for kprobes (and other
-> dynamic allocated trampoline code).
-> 
-> > +
-> > +void *text_alloc(unsigned long size)
-> > +{
-> > +	void *p;
-> > +
-> > +	if (PAGE_ALIGN(size) > MODULES_LEN)
-> > +		return NULL;
-> > +
-> > +	p = __vmalloc_node_range(size, MODULE_ALIGN,
-> > +				    MODULES_VADDR + get_module_load_offset(),
-> > +				    MODULES_END, GFP_KERNEL,
-> > +				    PAGE_KERNEL, 0, NUMA_NO_NODE,
-> > +				    __builtin_return_address(0));
-> > +	if (p && (kasan_module_alloc(p, size) < 0)) {
-> > +		vfree(p);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	return p;
-> > +}
-> > +
-> > +void text_free(void *region)
-> > +{
-> > +	/*
-> > +	 * This memory may be RO, and freeing RO memory in an interrupt is not
-> > +	 * supported by vmalloc.
-> > +	 */
-> > +	WARN_ON(in_interrupt());
-> > +
-> > +	vfree(region);
-> > +}
-> > diff --git a/include/linux/text.h b/include/linux/text.h
-> > new file mode 100644
-> > index 000000000000..a27d4a42ecda
-> > --- /dev/null
-> > +++ b/include/linux/text.h
-> > @@ -0,0 +1,17 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +
-> > +#ifndef _LINUX_TEXT_H
-> > +#define _LINUX_TEXT_H
-> > +
-> > +/*
-> > + * An allocator used for allocating modules, core sections and init sections.
-> > + * Returns NULL on failure.
-> > + */
-> > +void *text_alloc(unsigned long size);
-> > +
-> > +/*
-> > + * Free memory returned from text_alloc().
-> > + */
-> > +void text_free(void *region);
-> 
-> Hmm, if this is this short, in this version we might better move
-> these to vmalloc.h.
-> 
-> > +
-> > +#endif /* _LINUX_TEXT_H */
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index 2e97febeef77..fa7687eb0c0e 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -35,6 +35,7 @@
-> >  #include <linux/ftrace.h>
-> >  #include <linux/cpu.h>
-> >  #include <linux/jump_label.h>
-> > +#include <linux/text.h>
-> >  
-> >  #include <asm/sections.h>
-> >  #include <asm/cacheflush.h>
-> > @@ -111,12 +112,20 @@ enum kprobe_slot_state {
-> >  
-> >  void __weak *alloc_insn_page(void)
-> >  {
-> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > +	return text_alloc(PAGE_SIZE);
-> > +#else
-> >  	return module_alloc(PAGE_SIZE);
-> > +#endif
-> >  }
-> >  
-> >  void __weak free_insn_page(void *page)
-> >  {
-> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > +	text_free(page);
-> > +#else
-> >  	module_memfree(page);
-> > +#endif
-> >  }
-> >  
-> >  struct kprobe_insn_cache kprobe_insn_slots = {
-> > @@ -1608,6 +1617,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
-> >  			goto out;
-> >  		}
-> >  
-> > +#ifdef CONFIG_MODULES
-> >  		/*
-> >  		 * If the module freed .init.text, we couldn't insert
-> >  		 * kprobes in there.
-> > @@ -1618,6 +1628,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
-> >  			*probed_mod = NULL;
-> >  			ret = -ENOENT;
-> >  		}
-> > +#endif
-> 
-> This change is not related to text_alloc(). Please move this to 3/3.
-> 
-> >  	}
-> >  out:
-> >  	preempt_enable();
-> > diff --git a/kernel/module.c b/kernel/module.c
-> > index aa183c9ac0a2..8adeb126b02c 100644
-> > --- a/kernel/module.c
-> > +++ b/kernel/module.c
-> > @@ -56,6 +56,7 @@
-> >  #include <linux/bsearch.h>
-> >  #include <linux/dynamic_debug.h>
-> >  #include <linux/audit.h>
-> > +#include <linux/text.h>
-> >  #include <uapi/linux/module.h>
-> >  #include "module-internal.h"
-> >  
-> > @@ -2151,7 +2152,12 @@ void __weak module_memfree(void *module_region)
-> >  	 * supported by vmalloc.
-> >  	 */
-> >  	WARN_ON(in_interrupt());
-> > +
-> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > +	text_free(module_region);
-> > +#else
-> >  	vfree(module_region);
-> > +#endif
-> >  }
-> >  
-> >  void __weak module_arch_cleanup(struct module *mod)
-> > @@ -2786,9 +2792,13 @@ static void dynamic_debug_remove(struct module *mod, struct _ddebug *debug)
-> >  
-> >  void * __weak module_alloc(unsigned long size)
-> >  {
-> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > +	return text_alloc(size);
-> > +#else
-> >  	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
-> >  			GFP_KERNEL, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
-> >  			NUMA_NO_NODE, __builtin_return_address(0));
-> > +#endif
-> >  }
-> 
-> Please don't touch kernel/module.c too. This seems to make things complicated.
-> 
-> Thank you,
-> 
-> -- 
-> Masami Hiramatsu <mhiramat@kernel.org>
+As per usual the fact that are using a new bindings #include file
+means Qualcomm maintainers and clock maintainers will need to
+coordinate landing and this needs to be pointed out.
 
-Thanks for the review. Agree with your remarks.
 
-/Jarkko
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 2be81a2..8c30a17 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -8,6 +8,7 @@
+>  #include <dt-bindings/clock/qcom,dispcc-sc7180.h>
+>  #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+>  #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+> +#include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/clock/qcom,videocc-sc7180.h>
+>  #include <dt-bindings/interconnect/qcom,osm-l3.h>
+> @@ -2136,6 +2137,27 @@
+>                         };
+>                 };
+>
+> +               lpasscc: clock-controller@62d00000 {
+> +                       compatible = "qcom,sc7180-lpasscorecc";
+> +                       reg = <0 0x62d00000 0 0x50000>,
+> +                           <0 0x62780000 0 0x30000>;
+> +                       reg-names = "lpass_core_cc", "lpass_audio_cc";
+> +                       clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
+> +                       clock-names = "iface";
+> +                       power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
+> +                       #clock-cells = <1>;
+> +                       #power-domain-cells = <1>;
+> +               };
+> +
+> +               lpass_hm: clock-controller@63000000 {
+> +                       compatible = "qcom,sc7180-lpasshm";
+> +                       reg = <0 0x63000000 0 0x28>;
+> +                       clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
+> +                       clock-names = "iface";
+> +                       #clock-cells = <1>;
+> +                       #power-domain-cells = <1>;
+> +               };
+
+Question: would it ever make sense for a board not to need this clock
+controller?  I ask because the sdm845 "lpass" clock controller is
+"disabled" by default but yours here isn't.  I know sc7180 and sdm845
+work pretty differently and perhaps the sdm845's default of "disabled"
+was just overkill, but I thought I'd ask.
+
+
+> +
+>                 etm@7040000 {
+>                         compatible = "arm,coresight-etm4x", "arm,primecell";
+>                         reg = <0 0x07040000 0 0x1000>;
+
+Your sort order is off.  You should be sorting by unit address.  Note
+that the "ETM" has an extra 0 before its 7, so you're comparing 63 to
+07 and you should be after.
+
+Other than those small things above this patch looks like it matches
+the example in the bindings, so as long as Rob / the clock guys are
+fine with the bindings then this seems good to go.
+
+-Doug
