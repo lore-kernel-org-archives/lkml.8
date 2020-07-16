@@ -6,52 +6,59 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C38CC433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 532012074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F3D20857
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgGPMz7 (ORCPT
+        id S1728714AbgGPM4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:55:59 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42627 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726537AbgGPMzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:55:55 -0400
+        Thu, 16 Jul 2020 08:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728652AbgGPM4G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:56:06 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD44AC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 05:56:05 -0700 (PDT)
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4B6vPg1xcLz9sTk; Thu, 16 Jul 2020 22:55:50 +1000 (AEST)
+        id 4B6vPp1gQVz9sV6; Thu, 16 Jul 2020 22:55:57 +1000 (AEST)
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        corbet@lwn.net, Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <261923c075d1cb49d02493685e8585d4ea2a5197.1593698951.git.christophe.leroy@csgroup.eu>
-References: <261923c075d1cb49d02493685e8585d4ea2a5197.1593698951.git.christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH] docs: powerpc: Clarify book3s/32 MMU families
-Message-Id: <159490400710.3805857.5851125255446308712.b4-ty@ellerman.id.au>
-Date:   Thu, 16 Jul 2020 22:55:50 +1000 (AEST)
+To:     oss@buserror.net, linux-kernel@vger.kernel.org, mpe@ellerman.id.au,
+        paulus@samba.org, linuxppc-dev@lists.ozlabs.org,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        benh@kernel.crashing.org
+In-Reply-To: <20200713192656.37443-1-grandmaster@al2klimov.de>
+References: <20200713192656.37443-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH] powerpc/Kconfig: Replace HTTP links with HTTPS ones
+Message-Id: <159490401741.3805857.15601592351577773975.b4-ty@ellerman.id.au>
+Date:   Thu, 16 Jul 2020 22:55:57 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020 14:09:21 +0000 (UTC), Christophe Leroy wrote:
-> Documentation wrongly tells that book3s/32 CPU have hash MMU.
+On Mon, 13 Jul 2020 21:26:56 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> 603 and e300 core only have software loaded TLB.
-> 
-> 755, 7450 family and e600 core have both hash MMU and software loaded
-> TLB. This can be selected by setting a bit in HID2 (755) or
-> HID0 (others). At the time being this is not supported by the kernel.
-> 
-> [...]
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 
 Applied to powerpc/next.
 
-[1/1] docs: powerpc: Clarify book3s/32 MMU families
-      https://git.kernel.org/powerpc/c/7d38f089731fe129a49e254028caec6f05420f18
+[1/1] powerpc/Kconfig: Replace HTTP links with HTTPS ones
+      https://git.kernel.org/powerpc/c/9a3e3dccbf4317d02d28f8f99a5d1ccce42f9922
 
 cheers
