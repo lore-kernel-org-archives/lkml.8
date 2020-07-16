@@ -8,73 +8,73 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC606C433F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAACC43446
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F3320663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678B120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IqzVrO6b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l8cR4NU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgGPC2m (ORCPT
+        id S1728023AbgGPC2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:28:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49236 "EHLO
+        Wed, 15 Jul 2020 22:28:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbgGPC2j (ORCPT
+        with ESMTP id S1727883AbgGPC22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:28:39 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B05C061755;
-        Wed, 15 Jul 2020 19:28:39 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 17so8699533wmo.1;
-        Wed, 15 Jul 2020 19:28:39 -0700 (PDT)
+        Wed, 15 Jul 2020 22:28:28 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE9EC061755;
+        Wed, 15 Jul 2020 19:28:28 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a6so5249936wrm.4;
+        Wed, 15 Jul 2020 19:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ESxPvjOg/M0b94Gq1OGqi1pUcN1nE3zYRLLlIkcJLwU=;
-        b=IqzVrO6bpFVJMnKF2Iy149n7Mgr+SnjSUNZjbbTDQENDIMhpAVei/3t/9kzQdXzyqF
-         xIkY5biSBqPjVD46aTsOWllm34DxiezGe+KNDf5vWNPuy0HdRmhfMHzYnpoY8sYG3V1U
-         yKCnUG+IYmkIOIYQ7ZuXcO0qWcn7isGFvCkdQbplnbOr5dkC84McFxAxY6N/eDmeMNzf
-         oKdvs0SseOkLD9okfGLuNKh+ZIqI/CNnetsYAaFm4RRXt0mqByA5VK+3KKVvqVnGaKcX
-         7WINjQRjF2J7akzU21GZhv9MR4AWDiYrZksfG82Jm7SWdMbXutCxjNbANM9Dy4mVUBSG
-         Xuog==
+        bh=NMGpsGsTomyvbhuxUBbF2KBZ5U7/Gj4W0Zm7Cz/Tuck=;
+        b=l8cR4NU56aOZ3mHbYkRDNMhvVeRyLGj1gne9YoLCdF45QWddvdGfSTQoVMt4jSHnan
+         sD1BLjXjlUbcUyWf9KYEzw7XkXdBpsv/zXhJ4UZo+23E8TX9y7iWGrxxPviqy76fCR20
+         an/vgp6jlxa1LmK+X6s6ZfZxdkqae5svzQAb33Po1C8G8E98cUFjxVomblId6v8P+LtI
+         ppkeAMnCIc6DNCYcG3RLxrqglDo/pD1AxP4IgXlwr7CNu8Z92t0C52OnRYLi/PLpbgV/
+         tGMlzNoEoIyBrghcBIAZYgrUFK8AOzG05tFHDd4bh/rfq83JNqZI1JwpQbRSJBG65sO7
+         DQDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ESxPvjOg/M0b94Gq1OGqi1pUcN1nE3zYRLLlIkcJLwU=;
-        b=jBDmgEOWYQLiJT3idNFnvasexj/32GsSByPNhJtIZOdGo6mPeAVLCUFw6KzCV4hUUr
-         0YdouUxDcBks5R4sVJ/YYc0QX0W/Igb8LfmeUgNLMIgA1lGWWfuOckp2qWpisxtg4sF2
-         fVMgKNvZtp5a5jfGzAx9dzQZ6v3OxsIro3odgMRglMTa6w2dnTjM6nuUlpODrqb8RnGv
-         T5WbdV4iHgkF11I+IZ3GVeO0OqvXVuxXjENPUeAD6c9x8zGcOeFD0X6Gw3jg0g4kGtqL
-         W87yu5+f8VafBwdLKdpb4j57yfxcQ62knv/V1+qxa27EwFu+Ym0GsHhRRMkZPgfDOzRT
-         fjIA==
-X-Gm-Message-State: AOAM530pyGgB6sq/6x3kLV/tXb8L/gOhhdrc3JO5Rs5eyJhGMH7DBrUv
-        Tok9MLa9eRoCMghBx6cQpag=
-X-Google-Smtp-Source: ABdhPJxKEIBLPZoqyV04U9TIOoADK3i9+srFiq66flMSuILK932X+QGrfSNjtvMsCX01JN7SgV/sUw==
-X-Received: by 2002:a1c:7d85:: with SMTP id y127mr2277029wmc.181.1594866518123;
-        Wed, 15 Jul 2020 19:28:38 -0700 (PDT)
+        bh=NMGpsGsTomyvbhuxUBbF2KBZ5U7/Gj4W0Zm7Cz/Tuck=;
+        b=OckZ1HD/sZke8VDowamon4DymowUkxPa5TSZguOYNffk/OiGoA0RLeED17kQN0KZXM
+         qG28hqax8BSLURGhoDc5MVEZsVRMfGmhanrCrlowtsc0MHdoni/hEgWRZJvBslYDKdr7
+         q3Za3RUtG7+ZibHznouhhPqFWSgPMbx0LSAxgiJo8ZNmZuh67ZUPa6SHYbriUJIxJprF
+         Cv1ysY+l23cOCzSIS7wxvUGz0shbOquzn4K8KoITjzeU7ZrAKb+Oq7eS6nZDYSktYyoo
+         nHHuEsApfTP0fYouAfv8MaO6RWJgLJfZxLMXTL+YHr3LXrMhVh87y9ZbNK4IdvZ/o6gt
+         MHYg==
+X-Gm-Message-State: AOAM531w4MR8OblfKA2biQSrU9KJa/qwK53cQNwuKSznq5dkquVEVPRf
+        CFblrJvfo6KqITVtj7UyuZU=
+X-Google-Smtp-Source: ABdhPJxJAsBtiMpZ3+Al418gUaONCeToX/sTi4riGXieRkPadBAWYCNCqBF6C+rfo4Gp8wicLCmFNg==
+X-Received: by 2002:adf:e9c4:: with SMTP id l4mr2644495wrn.9.1594866506692;
+        Wed, 15 Jul 2020 19:28:26 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
-        by smtp.googlemail.com with ESMTPSA id u1sm7477611wrb.78.2020.07.15.19.28.36
+        by smtp.googlemail.com with ESMTPSA id u1sm7477611wrb.78.2020.07.15.19.28.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 19:28:37 -0700 (PDT)
+        Wed, 15 Jul 2020 19:28:26 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH v4 7/7] drivers: thermal: tsens: add set_trip support for 8960
-Date:   Thu, 16 Jul 2020 04:28:16 +0200
-Message-Id: <20200716022817.30439-8-ansuelsmth@gmail.com>
+Subject: [PATCH v4 2/7] drivers: thermal: tsens: try load regmap from parent for 8960
+Date:   Thu, 16 Jul 2020 04:28:11 +0200
+Message-Id: <20200716022817.30439-3-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200716022817.30439-1-ansuelsmth@gmail.com>
 References: <20200716022817.30439-1-ansuelsmth@gmail.com>
@@ -85,124 +85,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add custom set_trip function for 8960 needed to set trip point to the
-tsens driver for 8960 driver.
+Devices based on 8060 tsens driver (ipq8064) use the reg of the gcc
+driver. Try to load the regmap of the parent as they share the same
+regs.
 
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- drivers/thermal/qcom/tsens-8960.c | 78 +++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+ drivers/thermal/qcom/tsens-8960.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
-index 20d0bfb10f1f..4ad65ab3fd18 100644
+index 2a28a5af209e..45788eb3c666 100644
 --- a/drivers/thermal/qcom/tsens-8960.c
 +++ b/drivers/thermal/qcom/tsens-8960.c
-@@ -93,6 +93,15 @@
- 						TSENS_8064_SENSOR9_EN | \
- 						TSENS_8064_SENSOR10_EN)
+@@ -7,6 +7,7 @@
+ #include <linux/delay.h>
+ #include <linux/bitops.h>
+ #include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/thermal.h>
+ #include "tsens.h"
  
-+/* Trips: from very hot to very cold */
-+enum tsens_trip_type {
-+	TSENS_TRIP_STAGE3 = 0,
-+	TSENS_TRIP_STAGE2,
-+	TSENS_TRIP_STAGE1,
-+	TSENS_TRIP_STAGE0,
-+	TSENS_TRIP_NUM,
-+};
-+
- u32 tsens_8960_slope[] = {
- 			1176, 1176, 1154, 1176,
- 			1111, 1132, 1132, 1199,
-@@ -110,6 +119,16 @@ static inline int code_to_mdegC(u32 adc_code, const struct tsens_sensor *s)
- 	return adc_code * slope + offset;
- }
+@@ -168,8 +169,17 @@ static int init_8960(struct tsens_priv *priv)
+ 	u32 reg_cntl;
  
-+static int mdegC_to_code(int degC, const struct tsens_sensor *s)
-+{
-+	int slope, offset;
+ 	priv->tm_map = dev_get_regmap(priv->dev, NULL);
+-	if (!priv->tm_map)
++	if (!priv->tm_map) {
++		struct device *parent = priv->dev->parent;
 +
-+	slope = thermal_zone_get_slope(s->tzd);
-+	offset = CAL_MDEGC - slope * s->offset;
-+
-+	return degC / slope - offset;
-+}
-+
- static void notify_uspace_tsens_fn(struct work_struct *work)
- {
- 	struct tsens_sensor *s = container_of(work, struct tsens_sensor,
-@@ -448,6 +467,64 @@ static int get_temp_8960(const struct tsens_sensor *s, int *temp)
- 	return -ETIMEDOUT;
- }
- 
-+static int set_trip_temp_ipq8064(void *data, int trip, int temp)
-+{
-+	unsigned int reg_th, reg_cntl;
-+	int ret, code, code_chk, hi_code, lo_code;
-+	const struct tsens_sensor *s = data;
-+	struct tsens_priv *priv = s->priv;
-+
-+	code = mdegC_to_code(temp, s);
-+	code_chk = code;
-+
-+	if (code < THRESHOLD_MIN_CODE || code > THRESHOLD_MAX_CODE)
-+		return -EINVAL;
-+
-+	ret = regmap_read(priv->tm_map, STATUS_CNTL_ADDR_8064, &reg_cntl);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(priv->tm_map, THRESHOLD_ADDR, &reg_th);
-+	if (ret)
-+		return ret;
-+
-+	hi_code = (reg_th & THRESHOLD_UPPER_LIMIT_MASK)
-+			>> THRESHOLD_UPPER_LIMIT_SHIFT;
-+	lo_code = (reg_th & THRESHOLD_LOWER_LIMIT_MASK)
-+			>> THRESHOLD_LOWER_LIMIT_SHIFT;
-+
-+	switch (trip) {
-+	case TSENS_TRIP_STAGE3:
-+		code <<= THRESHOLD_MAX_LIMIT_SHIFT;
-+		reg_th &= ~THRESHOLD_MAX_LIMIT_MASK;
-+		break;
-+	case TSENS_TRIP_STAGE2:
-+		if (code_chk <= lo_code)
-+			return -EINVAL;
-+		code <<= THRESHOLD_UPPER_LIMIT_SHIFT;
-+		reg_th &= ~THRESHOLD_UPPER_LIMIT_MASK;
-+		break;
-+	case TSENS_TRIP_STAGE1:
-+		if (code_chk >= hi_code)
-+			return -EINVAL;
-+		code <<= THRESHOLD_LOWER_LIMIT_SHIFT;
-+		reg_th &= ~THRESHOLD_LOWER_LIMIT_MASK;
-+		break;
-+	case TSENS_TRIP_STAGE0:
-+		code <<= THRESHOLD_MIN_LIMIT_SHIFT;
-+		reg_th &= ~THRESHOLD_MIN_LIMIT_MASK;
-+		break;
-+	default:
-+		return -EINVAL;
++		if (parent)
++			priv->tm_map = syscon_node_to_regmap(parent->of_node);
 +	}
 +
-+	ret = regmap_write(priv->tm_map, THRESHOLD_ADDR, reg_th | code);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static const struct tsens_ops ops_8960 = {
- 	.init		= init_8960,
- 	.calibrate	= calibrate_8960,
-@@ -456,6 +533,7 @@ static const struct tsens_ops ops_8960 = {
- 	.disable	= disable_8960,
- 	.suspend	= suspend_8960,
- 	.resume		= resume_8960,
-+	.set_trip_temp	= set_trip_temp_ipq8064,
- };
++	if (!priv->tm_map || IS_ERR(priv->tm_map)) {
++		dev_err(priv->dev, "failed to get tsens regmap\n");
+ 		return -ENODEV;
++	}
  
- struct tsens_plat_data data_8960 = {
+ 	/*
+ 	 * The status registers for each sensor are discontiguous
 -- 
 2.27.0
 
