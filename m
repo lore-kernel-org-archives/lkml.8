@@ -2,108 +2,98 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A5DC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A32C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 234B9207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C39207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:03:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="2oaE269/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aSTygcvF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgGPPAj (ORCPT
+        id S1728589AbgGPPD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:00:39 -0400
-Received: from mx.kolabnow.com ([95.128.36.40]:18900 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbgGPPAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:00:38 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTP id 6097FB2A;
-        Thu, 16 Jul 2020 17:00:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        message-id:references:in-reply-to:subject:subject:from:from:date
-        :date:content-transfer-encoding:content-type:content-type
-        :mime-version:received:received:received; s=dkim20160331; t=
-        1594911634; x=1596726035; bh=sprv0swZgJ0cprIpnN8M/f26efVa2WNU/nN
-        rTW2ClXc=; b=2oaE269/hlYwcjuH1a66XNC4wFgUlrvOysCgr9o59i1p0lhs5UB
-        W6wIqr0TafviV4bZTNidSPk3HbDy+AwMGOF8UH1oUf8w3qgGCYueXCXWgHobgToW
-        +5noYaTaVsSdsoUqT0F5m0+d9qUVENt0BAMtXDpxZS/A8VsOS2nxGCqcjftWwKUW
-        7rP+B2kXXkmcoUSalZvKDSQdCuHPuMhiC5Mfs+Gwa0zPfmxOzShv/stTH/dRiY3m
-        tA3Gk5tGYiNRraQzu33x1ciXUYFZRMsLORq2ZvXQaZ6oswafZlPINruWDKehJiLf
-        uYPTZrumfJAMCKDZFcfCm6t8iwGfUWK5kfChSB/GMsW10yFKwqWS+P+lKwkgqxCY
-        aL5DrGgpC+RTxIqYNa+/4m73GrKoO7rsE1RA7OmDYaPhvUUqqgfwzs4PFzCILkqN
-        z+AqO1Kv7R4Gmu8VWdPcCeibZaVbmZU2ruxcus+HpoTH6KB3B1/HWzPU+PhGFqvJ
-        iQu9Wr5HtTR+gtRmdnj6XOIyLJhFXcEPKdNbjS6xgM5oG12dRoS7XhA6GYFG/Kvj
-        Otk7YIi0V8KoVYILiNzmXGYQYicpk1HBpXIVA+qeluIE7L4tKZAv9r+ajClNLh3h
-        NQMZshssBvX4axB6sbPiPL5aEy9LK3PGv/ORm+aaFCy1e2S2NzxW3wq4=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out001.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id fngKv0t-mioE; Thu, 16 Jul 2020 17:00:34 +0200 (CEST)
-Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTPS id 7762AA6D;
-        Thu, 16 Jul 2020 17:00:34 +0200 (CEST)
-Received: from int-subm003.mykolab.com (unknown [10.9.37.3])
-        by int-mx003.mykolab.com (Postfix) with ESMTPS id 014D4A77;
-        Thu, 16 Jul 2020 17:00:33 +0200 (CEST)
+        Thu, 16 Jul 2020 11:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgGPPD6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:03:58 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC391C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:03:57 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c80so10624089wme.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JPLGKYvPWiqpNYuL3GvYJBLgtiIfcJFyxLc31xTCZqE=;
+        b=aSTygcvFj3BM54yPG1naF6qqQYQffYWkUlzNJeZjJoT68o5aTeAkMH4qxtE4XY9iTP
+         sCarUxAtzrCroS/IcCStbCyqbjDMVzEfsS2lD4VAuEVR3O5U1JpbV8ibh7uN+3hJaced
+         QOt4aXYuXURjbfkOWEIISm8Av4Y9cMSK9zv63agg5fZ7mRkCa3IovGYroVkETwCoyWZ5
+         JN7+H3TWn28e+ExIdKksmWuYJfZr7VFsinUOrzrgQfxbgVMAqloOV5HJkLGdxsVfVXvo
+         Y9ttM8CNSF2iSP/Qh4BbgeZ2OxMsqU74mW/qwAMhnrRIu0PNlbCrVaGFuVZaEPPVpWgc
+         loow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JPLGKYvPWiqpNYuL3GvYJBLgtiIfcJFyxLc31xTCZqE=;
+        b=IFRqvQ7rYyDoc5vibb1zQ68Ow2RCUCq6AFsp7tw1bF3/d1jWZnJQ005sGNBKz0pwNs
+         BOa1tdCtJ7BpOqadR34i0KQ5KhLL9f9nLw1QHvdnpyTAAKTNMoPnuqDJdKgw1LBOZOJC
+         4KJR1jKLIBOPDK8hFIgmzTq4AxbF9YmoDkbVL/Jcl2lvkgBy/aDGWNuTED+gDJQDIm3m
+         svGZ8ICQnSQsO3aTp6cP12g30kBLHjiZr9+CnvR0wo1c3o8rbQz93S7ZXYTUdJZgRaKN
+         4qQE24SDKRK3htOsUPO6DiFL0NOmv2Q+XXDDQklRTfhHBsTFV7T734fKELQCdpX4cdnj
+         PPwA==
+X-Gm-Message-State: AOAM5301zULmzvWqv0ptdiacUl1PUv2twBUCUOMYp5JCmJ4Nw/Yk5xV3
+        +B0RbboBMvTg64Eb3rAStfXjqA==
+X-Google-Smtp-Source: ABdhPJyvPJlcY1vqSxNpRYbkqjpGZyDiWc2jjZwif8snElap0J5LYNE0q0SFG1TJcIqCFSWkqk+aVA==
+X-Received: by 2002:a1c:6354:: with SMTP id x81mr4586411wmb.98.1594911835282;
+        Thu, 16 Jul 2020 08:03:55 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id 133sm9452438wme.5.2020.07.16.08.03.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 08:03:54 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 16:03:52 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, benjamin.gaignard@st.com
+Subject: Re: [PATCH] dt-bindings: mfd: st,stmfx: Remove I2C unit name
+Message-ID: <20200716150352.GV3165313@dell>
+References: <20200702113233.5327-1-festevam@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Date:   Thu, 16 Jul 2020 17:00:32 +0200
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 1/1] doc:it_IT: process: coding-style.rst: Correct
- __maybe_unused compiler label
-In-Reply-To: <20200715122328.3882187-1-lee.jones@linaro.org>
-References: <20200715122328.3882187-1-lee.jones@linaro.org>
-Message-ID: <4e50d1ee2ebd55f8f87fcd5c631e97f3@vaga.pv.it>
-X-Sender: federico.vaga@vaga.pv.it
+In-Reply-To: <20200702113233.5327-1-festevam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Of course, you are right! Thanks
+On Thu, 02 Jul 2020, Fabio Estevam wrote:
 
-On 2020-07-15 14:23, Lee Jones wrote:
-> Flag is __maybe_unused, not __maybe_used.
+> Remove the I2C unit name to fix the following build warning with
+> 'make dt_binding_check':
 > 
-> Cc: Federico Vaga <federico.vaga@vaga.pv.it>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: clang-built-linux@googlegroups.com
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Warning (unit_address_vs_reg): /example-0/i2c@0: node has a unit name, but no reg or ranges property
+> 
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
 > ---
->  Documentation/translations/it_IT/process/coding-style.rst | 2 +-
+>  Documentation/devicetree/bindings/mfd/st,stmfx.yaml | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/translations/it_IT/process/coding-style.rst
-> b/Documentation/translations/it_IT/process/coding-style.rst
-> index 6f4f85832deea..a346f1f2ce21f 100644
-> --- a/Documentation/translations/it_IT/process/coding-style.rst
-> +++ b/Documentation/translations/it_IT/process/coding-style.rst
-> @@ -1097,7 +1097,7 @@ la direttiva condizionale su di esse.
-> 
->  Se avete una variabile o funzione che potrebbe non essere usata in 
-> alcune
->  configurazioni, e quindi il compilatore potrebbe avvisarvi circa la 
-> definizione
-> -inutilizzata, marcate questa definizione come __maybe_used piuttosto 
-> che
-> +inutilizzata, marcate questa definizione come __maybe_unused piuttosto 
-> che
->  racchiuderla in una direttiva condizionale del preprocessore.  
-> (Comunque,
->  se una variabile o funzione è *sempre* inutilizzata, rimuovetela).
+
+Applied, thanks.
 
 -- 
-Federico Vaga
-http://www.federicovaga.it/
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
