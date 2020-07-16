@@ -2,166 +2,117 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FF2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F638C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF62B207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC10207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:22:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d1KqoUc9"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0IJN0M0O";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vV2mLSuW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgGPUV2 (ORCPT
+        id S1726125AbgGPUWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:21:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
+        Thu, 16 Jul 2020 16:22:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgGPUV1 (ORCPT
+        with ESMTP id S1725844AbgGPUWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:21:27 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85607C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:21:27 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ls15so5362143pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:21:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Pz5u7Nl+iTJUonoiBLwcqOKTZmTebMlmblSIOFO6rAM=;
-        b=d1KqoUc9C65mdlIM1wphjX9P9IvQqnkH+VGwg/9vsqbDhMF3tDcIpZMzzqkhrqVqiP
-         uBxiOsyg8SCYYZ7sMGB0J94YxMnLxQWj9PiFOhub5rbkZikf76aLsDuutPUqOHMg5Wfg
-         /UTwEqcNRFWh5p+d8sfnnwVnT90s2PhcNYhw8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Pz5u7Nl+iTJUonoiBLwcqOKTZmTebMlmblSIOFO6rAM=;
-        b=nTKyCU2pjWGccDgsxaAb/oGyNS7Hcge9D8SkAOQAP6RWTEUV+V2C3qDCmmB1tkrOeW
-         CcY+NgohFBhNIYb9p5shEAiryIdk6sahmHg6tHr61uaPgfYAf8iONBpIWT2NKBj0ZH3i
-         eQeELm886g5qlE1Gta4pTbAuvA35KDwAL9kh+QFWd1uGPmo4/AI9pEVVDhoHjcZMcFls
-         7SpGANah/y/xAvO5GDfyHglTQ/aLd2xRAAcCA38sFPHtLxE5dJHflBUVuURFYV9JIukn
-         kYQpD+aISJgPRueP3eJbnJUYOSYBafDCg0c1ZFUdHTmo81fQCcvuxyC+g2Fm2KSrZkTY
-         yW+Q==
-X-Gm-Message-State: AOAM532v1P3iktPX0mnoAV3zN6flTSG2kKCI1BNrxmgn99wQDIafvopc
-        1qbAnvuXEulwUn/HgeEBvXwv5g==
-X-Google-Smtp-Source: ABdhPJzawA3nZe2sQ2O21b+jEe2lje6nBGUfnkf12tO9O2zxF36z+tkqvDv1LnqypSnSRKd1+UUnNg==
-X-Received: by 2002:a17:902:5981:: with SMTP id p1mr4745234pli.141.1594930886819;
-        Thu, 16 Jul 2020 13:21:26 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id m17sm5815606pfo.182.2020.07.16.13.21.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 13:21:26 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     robdclark@chromium.org, steev@kali.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: panel: simple: Delay HPD checking on boe_nv133fhm_n61 for 15 ms
-Date:   Thu, 16 Jul 2020 13:21:22 -0700
-Message-Id: <20200716132120.1.I01e738cd469b61fc9b28b3ef1c6541a4f48b11bf@changeid>
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Jul 2020 16:22:10 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CD7C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:22:10 -0700 (PDT)
+Message-Id: <20200716201923.228696399@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594930929;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-transfer-encoding:content-transfer-encoding;
+        bh=B2z75b9EVAFdPiAkFYGJ2QvpOBVmIkm00c1ZqJcTUIw=;
+        b=0IJN0M0O1MtNeuRYOJKOp7hDmFApvmvbLSRPfNNXnvX35YYgdy80oqIi19GnepXpbFtmoG
+        AnCKcJ508ImoOxQBtR+8Bw6tT11Xjez8f2SvC4QZpKrY4e7vOKbaHSc6yKEUHEjG54MUPB
+        R83xbIk4IBHClM228LQ/dHc7hRqQZ4j7I6ncwDZaw1c4IZ4FjnsO9sOkTWuJBK89VgQ1qZ
+        VR0vmXH36UvFwt5+zEQljf9/GwIkjSt0RAzPksWz7Io23rdQLTU7b/skMTTtP3C//z4Jnp
+        iQuG4TPS7LIX24qOOqX54qkPIR/c8ACSX+rIusqiXV3ykupp5tHpqJXYLsBYCw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594930929;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-transfer-encoding:content-transfer-encoding;
+        bh=B2z75b9EVAFdPiAkFYGJ2QvpOBVmIkm00c1ZqJcTUIw=;
+        b=vV2mLSuWmGOg55yi8Tcdy0CjDVlmui8kVF1dkCDAi4Cy58LsTXaFHTPu/OfmsvBZxzL0G5
+        5+MtMJlP17a5/TAw==
+Date:   Thu, 16 Jul 2020 22:19:23 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [patch V2 0/5] posix-cpu-timers: Move expiry into task work context
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On boe_nv133fhm_n62 (and presumably on boe_nv133fhm_n61) a scope shows
-a small spike on the HPD line right when you power the panel on.  The
-picture looks something like this:
+This is the second attempt of moving the posix CPU timer heavy lifting out
+of interrupt context. The initial version can be found here:
 
-         +--------------------------------------
-         |
-         |
-         |
-Power ---+
-                                           +---
-                                           |
-              ++                           |
-         +----+|                           |
-HPD -----+     +---------------------------+
+   https://lore.kernel.org/r/20190801143250.370326052@linutronix.de
 
-So right when power is applied there's a little bump in HPD and then
-there's small spike right before it goes low.  The total time of the
-little bump plus the spike was measured on one panel as being 8 ms
-long.  The total time for the HPD to go high on the same panel was
-51.2 ms, though the datasheet only promises it is < 200 ms.
+Running posix cpu timers in hard interrupt context has a few downsides:
 
-When asked about this glitch, BOE indicated that it was expected and
-persisted until the TCON has been initialized.
+ - For PREEMPT_RT it cannot work as the expiry code needs to take sighand
+   lock, which is a 'sleeping spinlock' in RT
 
-If this was a real hotpluggable DP panel then this wouldn't matter a
-whole lot.  We'd debounce the HPD signal for a really long time and so
-the little blip wouldn't hurt.  However, this is not a hotpluggable DP
-panel and the the debouncing logic isn't needed and just shows down
-the time needed to get the display working.  This is why the code in
-panel_simple_prepare() doesn't do debouncing and just waits for HPD to
-go high once.  Unfortunately if we get unlucky and happen to poll the
-HPD line right at the spike we can try talking to the panel before
-it's ready.
+ - For fine grained accounting it's just wrong to run this in context of
+   the timer interrupt because that way a process specific cpu time is
+   accounted to the timer interrupt.
 
-Let's handle this situation by putting in a 15 ms prepare delay and
-decreasing the "hpd absent delay" by 15 ms.  That means:
-* If you don't have HPD hooked up at all you've still got the
-  hardcoded 200 ms delay.
-* If you've got HPD hooked up you will always wait at least 15 ms
-  before checking HPD.  The only case where this could be bad is if
-  the panel is sharing a voltage rail with something else in the
-  system and was already turned on long before the panel came up.  In
-  such a case we'll be delaying 15 ms for no reason, but it's not a
-  huge delay and I don't see any other good solution to handle that
-  case.
+ - Long running timer interrupts caused by a large amount of expiring
+   timers which can be created and armed by unpriviledged user space.
 
-Even though the delay was measured as 8 ms, 15 ms was chosen to give a
-bit of margin.
+There is no real hard requirement to run the expiry code in hard interrupt
+context. The posix CPU timers are an approximation anyway, so having them
+expired and evaluated in task work context does not really make them worse.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-I don't actually have a device in front of me that is exhibiting these
-problems.  I believe that it is only some devices and some of the
-time.  Still, this patch seems safe and seems likely to fix the issue
-given the scope shots.
+This version is more or less a resend of the posix CPU timer bits of
+V1. The back then observed issue that KVM does not handle pending task work
+before going into guest mode has been solved differently. The related
+patches have been posted here:
 
- drivers/gpu/drm/panel/panel-simple.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+  https://lore.kernel.org/r/20200716182208.180916541@linutronix.de
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 88493538a147..046a06b55800 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1260,7 +1260,21 @@ static const struct panel_desc boe_nv133fhm_n61 = {
- 		.height = 165,
- 	},
- 	.delay = {
--		.hpd_absent_delay = 200,
-+		/*
-+		 * When power is first given to the panel there's a short
-+		 * spike on the HPD line.  It was explained that this spike
-+		 * was until the TCON data download was complete.  On
-+		 * one system this was measured at 8 ms.  We'll put 15 ms
-+		 * in the prepare delay just to be safe and take it away
-+		 * from the hpd_absent_delay (which would otherwise be 200 ms)
-+		 * to handle this.  That means:
-+		 * - If HPD isn't hooked up you still have 200 ms delay.
-+		 * - If HPD is hooked up we won't try to look at it for the
-+		 *   first 15 ms.
-+		 */
-+		.prepare = 15,
-+		.hpd_absent_delay = 185,
-+
- 		.unprepare = 500,
- 	},
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
--- 
-2.28.0.rc0.105.gf9edc3c819-goog
+This patch series has no code dependency on the entry/KVM work, but the
+functional dependency vs. KVM exists.
+
+It applies on mainline and passes all tests - except when KVM is active and
+timers are armed on the KVM threads. This particular issue is solved when
+the entry/KVM series is applied as well.
+
+The entry/KVM changes are available from:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git x86/entry
+
+and the whole lot (entry/kvm + posix CPU timers) is available from:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git timers/posixtimer
+
+Thanks,
+
+	tglx
+
+----
+ b/arch/x86/Kconfig             |    1 
+ include/linux/posix-timers.h   |   33 ++++--
+ include/linux/sched/cputime.h  |    2 
+ kernel/time/Kconfig            |    5 
+ kernel/time/posix-cpu-timers.c |  213 ++++++++++++++++++++++++++++++-----------
+ 5 files changed, 192 insertions(+), 62 deletions(-)
+
 
