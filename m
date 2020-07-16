@@ -2,86 +2,306 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE1FC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0C6D20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594900930;
-	bh=7Iqze3aCKTzGVZ3weRCFFcPpfvMEeMQ6YLx2H6XwexA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q2ZowAYSEEEidcCQnAluxUZJhw2WxZlRX9N/wN7gFKlXPnHQBY5kXSkokD+89WdTf
-	 wtSabFZYnsoG8GMlsJG0DY2fsRjPBGJippXUXuirUsGWt3qehq09o4/SApbz+Bx4dp
-	 rPtz03i9Ho+Mpij6f5Y+U8aiudOSskPuvNtqO6PI=
+	by mail.kernel.org (Postfix) with ESMTP id A87102076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="l452QEXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgGPMCI (ORCPT
+        id S1728804AbgGPL5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbgGPMCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:02:08 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 103B820760;
-        Thu, 16 Jul 2020 12:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594900928;
-        bh=7Iqze3aCKTzGVZ3weRCFFcPpfvMEeMQ6YLx2H6XwexA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GHV4KnYsXxST+2z6LAqo10KTo00UVUVTgIiq9sBwY3Uho5g5NGlcbdJcI6TjYZvYb
-         rI5dEhHh3U+SQcsxC7NecKQ34qblRCi7T6fXXsTq19Zb2P+3V2AZgv0z9Zk33DC3LI
-         vUVjHrZwTvFC4TrJVLKNynFaXN2SxkT8kGyMHfV4=
-Date:   Thu, 16 Jul 2020 13:02:03 +0100
-From:   Will Deacon <will@kernel.org>
-To:     robh+dt@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
-        Tomasz Nowicki <tn@semihalf.com>, hannah@marvell.com,
-        gregory.clement@bootlin.com
-Cc:     catalin.marinas@arm.com, kernel-team@android.com,
-        nadavh@marvell.com, mw@semihalf.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 0/4] Add system mmu support for Armada-806
-Message-ID: <20200716120202.GA7485@willie-the-truck>
-References: <20200715070649.18733-1-tn@semihalf.com>
- <159488817559.3788855.4350396507732052751.b4-ty@kernel.org>
+        Thu, 16 Jul 2020 07:57:34 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:17408 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728500AbgGPLz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 07:55:57 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GBp71h006965;
+        Thu, 16 Jul 2020 04:55:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=gqHzddxXNL1kLeB7UxsH/ZDxivMxLXQstkcfoKf/b78=;
+ b=l452QEXYo27ZTpGWJcrNiG2/jVZYBVqG1Da0qCJicyQIv3YoxElEnba2LVyriuG2BHl2
+ 4muwjJg7iT/onykSWCNImUMq5LOHSSiCE+PL2u1NiGX2Ybg0JIor7F29JZWfCUfw9xoe
+ qWWZ6WX/Wxi6qL6kmrRUiXUHdovCbONL10wNC7xEZA+P26uYaCZy12XOz87429uTyJvC
+ VAF2ObwL43WBjsXDFMy8plpogpXXz5VRtyPT7aV7+Kne38M2Oc3ncFU4GrJDSN8XDpKC
+ 6JtOYutoT8Ia/DRu9Avkbrejf0BBqW1DdCdG8cQAzTls3dHnzLGna6eUaE00xvQtCKWN sg== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0b-0016f401.pphosted.com with ESMTP id 328mmhyg15-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 04:55:51 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 16 Jul
+ 2020 04:55:50 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 16 Jul 2020 04:55:49 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id C00153F703F;
+        Thu, 16 Jul 2020 04:55:45 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        <GR-everest-linux-l2@marvell.com>,
+        <QLogic-Storage-Upstream@cavium.com>, <netdev@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next 03/13] qed: add support for multi-rate transceivers
+Date:   Thu, 16 Jul 2020 14:54:36 +0300
+Message-ID: <20200716115446.994-4-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200716115446.994-1-alobakin@marvell.com>
+References: <20200716115446.994-1-alobakin@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159488817559.3788855.4350396507732052751.b4-ty@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_05:2020-07-16,2020-07-16 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 01:00:43PM +0100, Will Deacon wrote:
-> On Wed, 15 Jul 2020 09:06:45 +0200, Tomasz Nowicki wrote:
-> > The series is meant to support SMMU for AP806 and a workaround
-> > for accessing ARM SMMU 64bit registers is the gist of it.
-> > 
-> > For the record, AP-806 can't access SMMU registers with 64bit width.
-> > This patches split the readq/writeq into two 32bit accesses instead
-> > and update DT bindings.
-> > 
-> > [...]
-> 
-> Applied to will (for-joerg/arm-smmu/updates), thanks!
-> 
-> [1/3] iommu/arm-smmu: Call configuration impl hook before consuming features
->       https://git.kernel.org/will/c/6a79a5a3842b
-> [2/3] iommu/arm-smmu: Workaround for Marvell Armada-AP806 SoC erratum #582743
->       https://git.kernel.org/will/c/f2d9848aeb9f
-> [3/3] dt-bindings: arm-smmu: add compatible string for Marvell Armada-AP806 SMMU-500
->       https://git.kernel.org/will/c/e85e84d19b9d
+Set the corresponding advertised and supported link modes according
+to the detected transceiver type and device capabilities.
 
-(note that I left patch 4 for arm-soc, as that's just updating .dts files)
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+---
+ drivers/net/ethernet/qlogic/qed/qed_hsi.h  |   4 +
+ drivers/net/ethernet/qlogic/qed/qed_main.c | 112 ++++++++++++++++-----
+ drivers/net/ethernet/qlogic/qed/qed_mcp.c  |   9 +-
+ 3 files changed, 98 insertions(+), 27 deletions(-)
 
-Will
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_hsi.h b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
+index 0d0a109d94b4..ebc25b34e491 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_hsi.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
+@@ -12027,6 +12027,10 @@ struct public_port {
+ #define ETH_TRANSCEIVER_TYPE_MULTI_RATE_40G_100G_CR	0x34
+ #define ETH_TRANSCEIVER_TYPE_MULTI_RATE_40G_100G_LR	0x35
+ #define ETH_TRANSCEIVER_TYPE_MULTI_RATE_40G_100G_AOC	0x36
++#define ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_25G_SR	0x37
++#define ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_25G_LR	0x38
++#define ETH_TRANSCEIVER_TYPE_MULTI_RATE_1G_10G_SR	0x39
++#define ETH_TRANSCEIVER_TYPE_MULTI_RATE_1G_10G_LR	0x3a
+ 
+ 	u32 wol_info;
+ 	u32 wol_pkt_len;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
+index 8a0b8da19547..9df27c3f5cab 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_main.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+@@ -1695,21 +1695,38 @@ static void qed_fill_link_capability(struct qed_hwfn *hwfn,
+ 		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_20G)
+ 			__set_bit(QED_LM_20000baseKR2_Full, if_caps);
+ 
+-		/* For DAC media multiple speed capabilities are supported*/
+-		capability = capability & speed_mask;
++		/* For DAC media multiple speed capabilities are supported */
++		capability |= speed_mask;
++
+ 		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_1G)
+ 			__set_bit(QED_LM_1000baseKX_Full, if_caps);
+ 		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_10G)
+ 			__set_bit(QED_LM_10000baseCR_Full, if_caps);
++
+ 		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_40G)
+-			__set_bit(QED_LM_40000baseCR4_Full, if_caps);
++			switch (tcvr_type) {
++			case ETH_TRANSCEIVER_TYPE_40G_CR4:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_40G_CR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_40G_100G_CR:
++				__set_bit(QED_LM_40000baseCR4_Full, if_caps);
++			default:
++				break;
++			}
++
+ 		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_25G)
+ 			__set_bit(QED_LM_25000baseCR_Full, if_caps);
+ 		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_50G)
+ 			__set_bit(QED_LM_50000baseCR2_Full, if_caps);
++
+ 		if (capability &
+ 		    NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_BB_100G)
+-			__set_bit(QED_LM_100000baseCR4_Full, if_caps);
++			switch (tcvr_type) {
++			case ETH_TRANSCEIVER_TYPE_100G_CR4:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_40G_100G_CR:
++				__set_bit(QED_LM_100000baseCR4_Full, if_caps);
++			default:
++				break;
++			}
+ 
+ 		break;
+ 	case MEDIA_BASE_T:
+@@ -1727,10 +1744,15 @@ static void qed_fill_link_capability(struct qed_hwfn *hwfn,
+ 		if (board_cfg & NVM_CFG1_PORT_PORT_TYPE_MODULE) {
+ 			__set_bit(QED_LM_FIBRE, if_caps);
+ 
+-			if (tcvr_type == ETH_TRANSCEIVER_TYPE_1000BASET)
++			switch (tcvr_type) {
++			case ETH_TRANSCEIVER_TYPE_1000BASET:
+ 				__set_bit(QED_LM_1000baseT_Full, if_caps);
+-			if (tcvr_type == ETH_TRANSCEIVER_TYPE_10G_BASET)
++				break;
++			case ETH_TRANSCEIVER_TYPE_10G_BASET:
+ 				__set_bit(QED_LM_10000baseT_Full, if_caps);
++			default:
++				break;
++			}
+ 		}
+ 
+ 		break;
+@@ -1739,47 +1761,85 @@ static void qed_fill_link_capability(struct qed_hwfn *hwfn,
+ 	case MEDIA_XFP_FIBER:
+ 	case MEDIA_MODULE_FIBER:
+ 		__set_bit(QED_LM_FIBRE, if_caps);
++		capability |= speed_mask;
+ 
+-		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_1G) {
+-			if ((tcvr_type == ETH_TRANSCEIVER_TYPE_1G_LX) ||
+-			    (tcvr_type == ETH_TRANSCEIVER_TYPE_1G_SX))
++		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_1G)
++			switch (tcvr_type) {
++			case ETH_TRANSCEIVER_TYPE_1G_LX:
++			case ETH_TRANSCEIVER_TYPE_1G_SX:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_1G_10G_SR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_1G_10G_LR:
+ 				__set_bit(QED_LM_1000baseKX_Full, if_caps);
+-		}
++			default:
++				break;
++			}
+ 
+-		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_10G) {
+-			if (tcvr_type == ETH_TRANSCEIVER_TYPE_10G_SR)
++		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_10G)
++			switch (tcvr_type) {
++			case ETH_TRANSCEIVER_TYPE_10G_SR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_40G_SR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_25G_SR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_1G_10G_SR:
+ 				__set_bit(QED_LM_10000baseSR_Full, if_caps);
+-			if (tcvr_type == ETH_TRANSCEIVER_TYPE_10G_LR)
++				break;
++			case ETH_TRANSCEIVER_TYPE_10G_LR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_40G_LR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_25G_LR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_1G_10G_LR:
+ 				__set_bit(QED_LM_10000baseLR_Full, if_caps);
+-			if (tcvr_type == ETH_TRANSCEIVER_TYPE_10G_LRM)
++				break;
++			case ETH_TRANSCEIVER_TYPE_10G_LRM:
+ 				__set_bit(QED_LM_10000baseLRM_Full, if_caps);
+-			if (tcvr_type == ETH_TRANSCEIVER_TYPE_10G_ER)
++				break;
++			case ETH_TRANSCEIVER_TYPE_10G_ER:
+ 				__set_bit(QED_LM_10000baseR_FEC, if_caps);
+-		}
++			default:
++				break;
++			}
+ 
+ 		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_20G)
+ 			__set_bit(QED_LM_20000baseKR2_Full, if_caps);
+ 
+-		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_25G) {
+-			if (tcvr_type == ETH_TRANSCEIVER_TYPE_25G_SR)
++		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_25G)
++			switch (tcvr_type) {
++			case ETH_TRANSCEIVER_TYPE_25G_SR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_25G_SR:
+ 				__set_bit(QED_LM_25000baseSR_Full, if_caps);
+-		}
++			default:
++				break;
++			}
+ 
+-		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_40G) {
+-			if (tcvr_type == ETH_TRANSCEIVER_TYPE_40G_LR4)
++		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_40G)
++			switch (tcvr_type) {
++			case ETH_TRANSCEIVER_TYPE_40G_LR4:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_40G_LR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_40G_100G_LR:
+ 				__set_bit(QED_LM_40000baseLR4_Full, if_caps);
+-			if (tcvr_type == ETH_TRANSCEIVER_TYPE_40G_SR4)
++				break;
++			case ETH_TRANSCEIVER_TYPE_40G_SR4:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_40G_100G_SR:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_40G_SR:
+ 				__set_bit(QED_LM_40000baseSR4_Full, if_caps);
+-		}
++			default:
++				break;
++			}
+ 
+ 		if (capability & NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_50G)
+ 			__set_bit(QED_LM_50000baseKR2_Full, if_caps);
+ 
+ 		if (capability &
+-		    NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_BB_100G) {
+-			if (tcvr_type == ETH_TRANSCEIVER_TYPE_100G_SR4)
++		    NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_BB_100G)
++			switch (tcvr_type) {
++			case ETH_TRANSCEIVER_TYPE_100G_SR4:
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_40G_100G_SR:
+ 				__set_bit(QED_LM_100000baseSR4_Full, if_caps);
+-		}
++				break;
++			case ETH_TRANSCEIVER_TYPE_MULTI_RATE_40G_100G_LR:
++				__set_bit(QED_LM_100000baseLR4_ER4_Full,
++					  if_caps);
++			default:
++				break;
++			}
+ 
+ 		break;
+ 	case MEDIA_KR:
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.c b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+index 2d12bb27560c..b10a92488630 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_mcp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+@@ -2193,6 +2193,11 @@ int qed_mcp_trans_speed_mask(struct qed_hwfn *p_hwfn,
+ 		    NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_10G |
+ 		    NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_1G;
+ 		break;
++	case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_25G_SR:
++	case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_25G_LR:
++		*p_speed_mask = NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_25G |
++				NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_10G;
++		break;
+ 	case ETH_TRANSCEIVER_TYPE_40G_CR4:
+ 	case ETH_TRANSCEIVER_TYPE_MULTI_RATE_10G_40G_CR:
+ 		*p_speed_mask = NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_40G |
+@@ -2223,8 +2228,10 @@ int qed_mcp_trans_speed_mask(struct qed_hwfn *p_hwfn,
+ 		*p_speed_mask = NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_40G;
+ 		break;
+ 	case ETH_TRANSCEIVER_TYPE_10G_BASET:
++	case ETH_TRANSCEIVER_TYPE_MULTI_RATE_1G_10G_SR:
++	case ETH_TRANSCEIVER_TYPE_MULTI_RATE_1G_10G_LR:
+ 		*p_speed_mask = NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_10G |
+-		    NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_1G;
++				NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_1G;
+ 		break;
+ 	default:
+ 		DP_INFO(p_hwfn, "Unknown transceiver type 0x%x\n",
+-- 
+2.25.1
+
