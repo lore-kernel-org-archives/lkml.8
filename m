@@ -2,150 +2,211 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E584BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53CEC433F2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C24A42063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E864206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a5rn2ThY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="iaKiuBHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgGPXpO (ORCPT
+        id S1726858AbgGPXlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgGPXpN (ORCPT
+        Thu, 16 Jul 2020 19:41:35 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:7125 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgGPXl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:45:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FCD8C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:45:13 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id q17so4461433pfu.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7HMps4EVe5QouaH170Ni6vFF1hKv4OVRQ58+hvK869s=;
-        b=a5rn2ThYvk32OHonppZRgr0gWChDuOIPVBbDLQ1uQhEBEWduMAs8sxC7Wtn5610Kwf
-         BciU3PiM4HVbTqEi+YdL05OTqTb7BhYaltbnoIY1SK98AUoRxrJlxTW7LgrHy8yaaFzg
-         wHc8SukhPm1z3uRr1c6PYMn6oqqCyyOOZztVtJfyLTr/Rw9rWqSwpZ1q30JamSf1DvS4
-         cK+9L1/ntRGxVe4zJRnol1izTRhavFA1NySWDPzwZ39usxUlrRmIR0YXRyolCBGhoqhD
-         myQZ6X+dn2KLMSc73YoDPqwaaCFslzde3FXdY5+5qBfVbX8WlFGpZY3zk9f4aIRfvls5
-         3E3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7HMps4EVe5QouaH170Ni6vFF1hKv4OVRQ58+hvK869s=;
-        b=UV+/6v/fgVXEGtQFsrc8eG0goP6nMPLOl3IT2p9M9j6GHyq+qmwGIn+UUq/+ecuVZU
-         Sm8bjZjNLxxghIjo3NKmoSswDLMWZn4UOQSpWJNcW1mYUH2anF2MckZbqY1/JFdl3Tgd
-         dyeIvEpzSm/OdIYiz8s10vCmvI9Ws2eRgfxsSodsxDTjXEMlCh39reyZAqNXAeHEqRtV
-         F16dFiF4zRDVnKNc90czudaGo9H1n7QjF5ECzxcNBcslPNy/rIvqOl3Cz9D3aDUfD7jx
-         thnHBbyKJH1RCplh5JAwP3FOQDbzUXB0Ald5bZU8TGnyg7yZ+5cL/8as1ugoQPkMNHHk
-         vKBg==
-X-Gm-Message-State: AOAM530Sds1ucLjP/6XyONtSz812270PqplYHDVOdjJrnyA4fsTVGrGO
-        2+T/uOb3sK9H7g8TLo2UUH4hvQ==
-X-Google-Smtp-Source: ABdhPJwmfESAulSis3weUqV/31ICtbnWJSbR9MqBo6uiZUCmpXjfWM5F052GbpZ/gabM+1BDHHe16A==
-X-Received: by 2002:a65:4786:: with SMTP id e6mr6275744pgs.258.1594943113069;
-        Thu, 16 Jul 2020 16:45:13 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o8sm5752304pgb.23.2020.07.16.16.45.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 16:45:12 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 16:43:10 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
-        agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: media: venus: Add an optional power
- domain for perf voting
-Message-ID: <20200716234310.GH1218486@builder.lan>
-References: <1594878139-3402-1-git-send-email-rnayak@codeaurora.org>
- <1594878139-3402-2-git-send-email-rnayak@codeaurora.org>
+        Thu, 16 Jul 2020 19:41:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1594942887; x=1626478887;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=+GUmN6ZNbnCfom5PIzX3LeRfgAzIkaN7Tqfa0vPyyjQ=;
+  b=iaKiuBHORH7HSvx6drSIEOysxJab2DFI4PMCq8j5cbOlgWc0L7aKkRkW
+   huG05ie6hMPalI/kHGSfts5LLeI4PnkQlcbme9ga83hLQNtANyRwCuw3n
+   tSEHGWHTp74tBbLaOVW1SD+opF9b335RoDmMQOikKHq+Cqek8L2nKeZI+
+   E3a8ULw/vLsWhfmqcpFtZhFTki0E0tG0RvKxnArIA23sw3lbDhtsA2AGH
+   YODGmJwxrc0J+Zta0Lv/cROTgO0hikwBHD16Sv2oJ9nhC5/xbedwBktpN
+   16ey5L3zKzRekXaXK23GXUSGRc8PZdBkOLr8a7Yg+hPDs9/U96eJutTlu
+   A==;
+IronPort-SDR: OR+ttN/pi7wvpyn6PJCffXCruklEf4leftVs4JmpNvvebz0srXfohWXaQAmNhvaVtUyzOmuNwN
+ XtvCzPdkGyG/uLLqxhudsP1AzFx4CBUhVEhDzSm9ID3k4NCmead6suh3M1E0hcTHCrIGZQNS4Z
+ 3VGrSjBshorrYdHqFS5KMC7mlqHhAUffKQw3sIOICbDiCXbUD6apys5wPca6L0jIn5WTBM1hHY
+ emEpgmoOGAeANaIDzZGk8oLqHn4ia4PVQk3XyvhTUDz3nhyqJQQq7OKynclUJvI4QNVNiZx1Wp
+ HeQ=
+X-IronPort-AV: E=Sophos;i="5.75,360,1589212800"; 
+   d="scan'208";a="251923256"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 17 Jul 2020 07:41:27 +0800
+IronPort-SDR: z33pVsdJtjTVuCGhuphFzW0oGSnpbKxaqBZPBGZILT1d6fevpX+UoQXSnLmowO3gtEYNgsrUrb
+ Vq7Q6kvHjqUT39Y1t3MTuVVGxbDhUEWZE=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 16:29:51 -0700
+IronPort-SDR: VCDmHz9Po+SyWMa2wkQ6fO1BA4c8cJ8S21BUcZ+C96V9L2BSJuvr7B+3fwjWpRBN+TU8iuP1OY
+ xP/JAlmmqMqQ==
+WDCIronportException: Internal
+Received: from phd004806.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.54])
+  by uls-op-cesaip02.wdc.com with ESMTP; 16 Jul 2020 16:41:25 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Kees Cook <keescook@chromium.org>, linux-efi@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Will Deacon <will@kernel.org>, Zong Li <zong.li@sifive.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [RFT PATCH v3 9/9] RISC-V: Add page table dump support for uefi
+Date:   Thu, 16 Jul 2020 16:41:04 -0700
+Message-Id: <20200716234104.29049-10-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200716234104.29049-1-atish.patra@wdc.com>
+References: <20200716234104.29049-1-atish.patra@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594878139-3402-2-git-send-email-rnayak@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 15 Jul 22:42 PDT 2020, Rajendra Nayak wrote:
+Extend the current page table dump support in RISC-V to include efi
+pages as well.
 
-> Add an optional power domain which when specified can be used for
-> setting the performance state of Venus.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
-> This is a resend of https://lore.kernel.org/patchwork/patch/1241077/
-> 
->  Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
->  Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
->  2 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-> index 55f2d67..1e8675b 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-> @@ -25,12 +25,16 @@ properties:
->      maxItems: 1
->  
->    power-domains:
-> -    maxItems: 2
-> +    minItems: 2
-> +    maxItems: 3
->  
->    power-domain-names:
-> +    minItems: 2
-> +    maxItems: 3
->      items:
->        - const: venus
->        - const: vcodec0
-> +      - const: opp-pd
+Here is the output of efi runtime page table mappings.
 
-In line with Rob's question, the "opp power-domain" seems like a
-software construct, wouldn't this be better named e.g. "cx"?
+---[ UEFI runtime start ]---
+0x0000000020002000-0x0000000020003000 0x00000000be732000 4K PTE D A . . . W R V
+0x0000000020018000-0x0000000020019000 0x00000000be738000 4K PTE D A . . . W R V
+0x000000002002c000-0x000000002002d000 0x00000000be73c000 4K PTE D A . . . W R V
+0x0000000020031000-0x0000000020032000 0x00000000bff61000 4K PTE D A . . X W R V
+---[ UEFI runtime end ]---
 
-Regards,
-Bjorn
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+---
+ arch/riscv/mm/ptdump.c | 48 ++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 42 insertions(+), 6 deletions(-)
 
->  
->    clocks:
->      maxItems: 5
-> diff --git a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
-> index 157dff8..437286d 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
-> +++ b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
-> @@ -25,13 +25,17 @@ properties:
->      maxItems: 1
->  
->    power-domains:
-> -    maxItems: 3
-> +    minItems: 3
-> +    maxItems: 4
->  
->    power-domain-names:
-> +    minItems: 3
-> +    maxItems: 4
->      items:
->        - const: venus
->        - const: vcodec0
->        - const: vcodec1
-> +      - const: opp-pd
->  
->    clocks:
->      maxItems: 7
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+diff --git a/arch/riscv/mm/ptdump.c b/arch/riscv/mm/ptdump.c
+index 0831c2e61a8f..ace74dec7492 100644
+--- a/arch/riscv/mm/ptdump.c
++++ b/arch/riscv/mm/ptdump.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2019 SiFive
+  */
+ 
++#include <linux/efi.h>
+ #include <linux/init.h>
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
+@@ -49,6 +50,14 @@ struct addr_marker {
+ 	const char *name;
+ };
+ 
++/* Private information for debugfs */
++struct ptd_mm_info {
++	struct mm_struct		*mm;
++	const struct addr_marker	*markers;
++	unsigned long base_addr;
++	unsigned long end;
++};
++
+ static struct addr_marker address_markers[] = {
+ #ifdef CONFIG_KASAN
+ 	{KASAN_SHADOW_START,	"Kasan shadow start"},
+@@ -68,6 +77,28 @@ static struct addr_marker address_markers[] = {
+ 	{-1, NULL},
+ };
+ 
++static struct ptd_mm_info kernel_ptd_info = {
++	.mm		= &init_mm,
++	.markers	= address_markers,
++	.base_addr	= KERN_VIRT_START,
++	.end		= ULONG_MAX,
++};
++
++#ifdef CONFIG_EFI
++static struct addr_marker efi_addr_markers[] = {
++		{ 0,		"UEFI runtime start" },
++		{ SZ_1G,	"UEFI runtime end" },
++		{ -1,		NULL }
++};
++
++static struct ptd_mm_info efi_ptd_info = {
++	.mm		= &efi_mm,
++	.markers	= efi_addr_markers,
++	.base_addr	= 0,
++	.end		= SZ_2G,
++};
++#endif
++
+ /* Page Table Entry */
+ struct prot_bits {
+ 	u64 mask;
+@@ -245,22 +276,22 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr,
+ 	}
+ }
+ 
+-static void ptdump_walk(struct seq_file *s)
++static void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo)
+ {
+ 	struct pg_state st = {
+ 		.seq = s,
+-		.marker = address_markers,
++		.marker = pinfo->markers,
+ 		.level = -1,
+ 		.ptdump = {
+ 			.note_page = note_page,
+ 			.range = (struct ptdump_range[]) {
+-				{KERN_VIRT_START, ULONG_MAX},
++				{pinfo->base_addr, pinfo->end},
+ 				{0, 0}
+ 			}
+ 		}
+ 	};
+ 
+-	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
++	ptdump_walk_pgd(&st.ptdump, pinfo->mm, NULL);
+ }
+ 
+ void ptdump_check_wx(void)
+@@ -293,7 +324,7 @@ void ptdump_check_wx(void)
+ 
+ static int ptdump_show(struct seq_file *m, void *v)
+ {
+-	ptdump_walk(m);
++	ptdump_walk(m, m->private);
+ 
+ 	return 0;
+ }
+@@ -308,8 +339,13 @@ static int ptdump_init(void)
+ 		for (j = 0; j < ARRAY_SIZE(pte_bits); j++)
+ 			pg_level[i].mask |= pte_bits[j].mask;
+ 
+-	debugfs_create_file("kernel_page_tables", 0400, NULL, NULL,
++	debugfs_create_file("kernel_page_tables", 0400, NULL, &kernel_ptd_info,
+ 			    &ptdump_fops);
++#ifdef CONFIG_EFI
++	if (efi_enabled(EFI_RUNTIME_SERVICES))
++		debugfs_create_file("efi_page_tables", 0400, NULL, &efi_ptd_info,
++				    &ptdump_fops);
++#endif
+ 
+ 	return 0;
+ }
+-- 
+2.24.0
+
