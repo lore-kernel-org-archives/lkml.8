@@ -6,55 +6,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EED9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31577C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 156E720739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1321F20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgGPMzr (ORCPT
+        id S1728571AbgGPMzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:55:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50895 "EHLO ozlabs.org"
+        Thu, 16 Jul 2020 08:55:52 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35969 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726537AbgGPMzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:55:46 -0400
+        id S1726537AbgGPMzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:55:51 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4B6vPV6BmRz9sTX; Thu, 16 Jul 2020 22:55:42 +1000 (AEST)
+        id 4B6vPb6rTHz9sTC; Thu, 16 Jul 2020 22:55:47 +1000 (AEST)
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Jeremy Kerr <jk@ozlabs.org>, linuxppc-dev@lists.ozlabs.org,
-        Paul Mackerras <paulus@samba.org>,
-        kernel test robot <lkp@intel.com>
-In-Reply-To: <20200706132302.3885935-1-arnd@arndb.de>
-References: <20200706132302.3885935-1-arnd@arndb.de>
-Subject: Re: [PATCH] powerpc/spufs: add CONFIG_COREDUMP dependency
-Message-Id: <159490400659.3805857.11376912001537489857.b4-ty@ellerman.id.au>
-Date:   Thu, 16 Jul 2020 22:55:42 +1000 (AEST)
+To:     nathanl@linux.ibm.com, Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vincenzo.frascino@arm.com, tglx@linutronix.de, luto@kernel.org,
+        arnd@arndb.de, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <cover.1588079622.git.christophe.leroy@c-s.fr>
+References: <cover.1588079622.git.christophe.leroy@c-s.fr>
+Subject: Re: [PATCH v8 0/8] powerpc: switch VDSO to C implementation
+Message-Id: <159490400799.3805857.1673818426986159282.b4-ty@ellerman.id.au>
+Date:   Thu, 16 Jul 2020 22:55:47 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jul 2020 15:22:46 +0200, Arnd Bergmann wrote:
-> The kernel test robot pointed out a slightly different error message
-> after recent commit 5456ffdee666 ("powerpc/spufs: simplify spufs core
-> dumping") to spufs for a configuration that never worked:
+On Tue, 28 Apr 2020 13:16:46 +0000 (UTC), Christophe Leroy wrote:
+> This is the seventh version of a series to switch powerpc VDSO to
+> generic C implementation.
 > 
->    powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_proxydma_info_dump':
-> >> file.c:(.text+0x4c68): undefined reference to `.dump_emit'
->    powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_dma_info_dump':
->    file.c:(.text+0x4d70): undefined reference to `.dump_emit'
->    powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_wbox_info_dump':
->    file.c:(.text+0x4df4): undefined reference to `.dump_emit'
+> Main changes since v7 are:
+> - Added gettime64 on PPC32
+> 
+> This series applies on today's powerpc/merge branch.
 > 
 > [...]
 
-Applied to powerpc/next.
+Patch 1 applied to powerpc/next.
 
-[1/1] powerpc/spufs: add CONFIG_COREDUMP dependency
-      https://git.kernel.org/powerpc/c/b648a5132ca3237a0f1ce5d871fff342b0efcf8a
+[1/8] powerpc/vdso64: Switch from __get_datapage() to get_datapage inline macro
+      https://git.kernel.org/powerpc/c/793d74a8c78e05d6833bfcf582e24e40bd92518f
 
 cheers
