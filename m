@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF2C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32523C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D564320775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D09E207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:30:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TCIyS9PO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fsxo3kFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgGPBaR (ORCPT
+        id S1728124AbgGPBaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 21:30:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40324 "EHLO
+        Wed, 15 Jul 2020 21:30:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgGPBaR (ORCPT
+        with ESMTP id S1727105AbgGPBaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 21:30:17 -0400
+        Wed, 15 Jul 2020 21:30:07 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4ECC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 18:30:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E7EC061755;
+        Wed, 15 Jul 2020 18:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:To:Subject:From:Sender:Reply-To:Cc:Content-ID:
+        MIME-Version:Date:Message-ID:Cc:To:Subject:From:Sender:Reply-To:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=FXWTphzrW3vR3I8XbwNjBExTeT5BTHwhRLPG9dUD25I=; b=TCIyS9POj33Ywy9ZzSqL1x7k5Y
-        YFcrZQnslWppa4+qd9OVbMQfsq5SuLF3YM+3fkvBduCq9NNqFBAsq0NeUmiTUctnE8Hqphwfl88Jo
-        5J9DJRS+Aoiy78X8XFKPvvbpbrAzNiLhTGJQC+6m8XUMPU+2UXh0mRWC/tn1sbJ7bqdCKSRc97mjA
-        TUs7DVBqt4mXuJASM1+NpNiZeFeBj7AAQOQb3GMGmgkFHW4Ufi94NaSatqxfwTjewdX2P31mFoNiW
-        kC0TgWrmM/eatHudKikAurZ0ApRdaR3yeim4gO8/FeEBmVvKDiWXd/ZORWioQYEsvlGwe10Wx+iVm
-        bRsV9+cg==;
+        bh=9NuwhqVj/zsoi98TNdlLdHx/B5plb0BCl27m5hSL7VA=; b=fsxo3kFl/nwOdchW2Be3CHpyQx
+        EqPJAhl0r5NK9PJN2jIiXh3j4svZXxKIfmlLiVLlN8TObAsQCujTIHMr93EELHUj5ehHplvkr2YhP
+        SBnJWY+z+lCVc6OKEheNQ1dEnTmGPrEP7xy2c4CeOC0Y8Vpw1oODtd+mlOA74bzQqAGClV2lS5X56
+        mhVL+7VZQrlRdN5mtCSSlUrNIHekcEeaUN3+de8H08wF35JGwNO6EWBG98TGVV2Z0Zi1bD+qlKfjH
+        emVkR5IoMYsezsEM5NmOctej0NihCTBxjFyGF+emUcdid8/PWmTnppQdHlLgdG5InKpadX863V8Zi
+        ciDbMZiw==;
 Received: from [2601:1c0:6280:3f0::19c2]
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvsj0-0000W0-Oy; Thu, 16 Jul 2020 01:30:15 +0000
+        id 1jvsiq-0000Uh-JB; Thu, 16 Jul 2020 01:30:04 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] regmap: fix duplicated word in <linux/regmap.h>
+Subject: [PATCH] power: fix duplicated words in bq2415x_charger.h
 To:     LKML <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Message-ID: <7ef41bfc-de3e-073a-8746-0b3fdf7628c0@infradead.org>
-Date:   Wed, 15 Jul 2020 18:30:12 -0700
+        Linux PM list <linux-pm@vger.kernel.org>
+Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>
+Message-ID: <74a380ee-d0a7-a58b-5740-6f1049d05d76@infradead.org>
+Date:   Wed, 15 Jul 2020 18:30:01 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,23 +60,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Change doubled word "be" to "to be".
+Drop the doubled word "for".
+Change "It it" to "If it".
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Mark Brown <broonie@kernel.org>
+Cc: Pali Rohár <pali@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: linux-pm@vger.kernel.org
 ---
- include/linux/regmap.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/power/bq2415x_charger.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- linux-next-20200714.orig/include/linux/regmap.h
-+++ linux-next-20200714/include/linux/regmap.h
-@@ -275,7 +275,7 @@ typedef void (*regmap_unlock)(void *);
-  *			readable if it belongs to one of the ranges specified
-  *			by rd_noinc_table).
-  * @disable_locking: This regmap is either protected by external means or
-- *                   is guaranteed not be be accessed from multiple threads.
-+ *                   is guaranteed not to be accessed from multiple threads.
-  *                   Don't use any locking mechanisms.
-  * @lock:	  Optional lock callback (overrides regmap's default lock
-  *		  function, based on spinlock or mutex).
+--- linux-next-20200714.orig/include/linux/power/bq2415x_charger.h
++++ linux-next-20200714/include/linux/power/bq2415x_charger.h
+@@ -14,8 +14,8 @@
+  * value is -1 then default chip value (specified in datasheet) will be
+  * used.
+  *
+- * Value resistor_sense is needed for for configuring charge and
+- * termination current. It it is less or equal to zero, configuring charge
++ * Value resistor_sense is needed for configuring charge and
++ * termination current. If it is less or equal to zero, configuring charge
+  * and termination current will not be possible.
+  *
+  * For automode support is needed to provide name of power supply device
 
