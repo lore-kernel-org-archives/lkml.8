@@ -2,96 +2,153 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C765AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02899C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A57A2206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:25:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BsCJ6kU3"
+	by mail.kernel.org (Postfix) with ESMTP id CC7AD206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgGPAZU (ORCPT
+        id S1726983AbgGPAUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 20:25:20 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33927 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgGPAZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 20:25:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B6Zld2MlRz9sDX;
-        Thu, 16 Jul 2020 10:25:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594859117;
-        bh=FgzQ/5FpACI+HBCtnA5PxzdCoZK0LnHa59Fs+lvFQQE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BsCJ6kU3yaUR0AOxSBwEzoNekFOJD9RwnLKLc6TaaTdc4sM+OjkCIWWba72yef1Ob
-         5s75kplxdxvMhBYlhIbE++nFiG9yHcr2ymyYum0VGKssQfTfaru290A7fP3Am1hqLv
-         Q4wV8lPlH9ZDcqsrW7g480dbluxf8Px/V3Za6drx4ymwveMclFJjLDQg+PFkx8UkNq
-         X1hOYJCaAV+mGrpW3eG4NOcReWGyB4DbTjNFlHMpxnZSaz8A6ML78SGEAjtt1RntAs
-         zFQHnqaHNJSxX36wYcAs9cPJ5d2+4nhSttCQC9CTr61ya5VzJSr5n67nU9mi3jAbPY
-         FGK4deIHehzPA==
-Date:   Thu, 16 Jul 2020 10:25:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the drm-msm tree
-Message-ID: <20200716102516.71eac9ce@canb.auug.org.au>
+        Wed, 15 Jul 2020 20:20:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4128 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726479AbgGPAUy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 20:20:54 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06G02nFu017494;
+        Wed, 15 Jul 2020 20:20:42 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3298ec8pkx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 20:20:42 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06G049A9020564;
+        Wed, 15 Jul 2020 20:20:41 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3298ec8pkp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 20:20:41 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06G0KIl8015970;
+        Thu, 16 Jul 2020 00:20:40 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma03wdc.us.ibm.com with ESMTP id 327529cq4q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 00:20:40 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06G0KedW30802178
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 00:20:40 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1EF93AC059;
+        Thu, 16 Jul 2020 00:20:40 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4F708AC05F;
+        Thu, 16 Jul 2020 00:20:35 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.73.114])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 16 Jul 2020 00:20:34 +0000 (GMT)
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466093748.24747.4655547403463921814.stgit@hbathini.in.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel test robot <lkp@intel.com>,
+        Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v3 07/12] ppc64/kexec_file: add support to relocate purgatory
+In-reply-to: <159466093748.24747.4655547403463921814.stgit@hbathini.in.ibm.com>
+Date:   Wed, 15 Jul 2020 21:20:31 -0300
+Message-ID: <871rlc9upc.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/08z2xdNVYSJ0kscP98ixYs.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-15_12:2020-07-15,2020-07-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007150175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/08z2xdNVYSJ0kscP98ixYs.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hari Bathini <hbathini@linux.ibm.com> writes:
 
-In commit
+> Right now purgatory implementation is only minimal. But if purgatory
+> code is to be enhanced to copy memory to the backup region and verify
 
-  9e3d8cc1cfbc ("drm/msm/adreno: fix gpu probe if no interconnect-names")
+Can't the memcpy be done in asm? We have arch/powerpc/lib/memcpy_64.S
+for example, perhaps it could be linked in with the purgatory?
 
-Fixes tag
+> sha256 digest, relocations may have to be applied to the purgatory.
 
-  Fixes: 8e29fb37b301 ("drm/msm: handle for EPROBE_DEFER for of_icc_get")
+Do we want to do the sha256 verification? My original patch series for
+kexec_file_load() had a purgatory in C from kexec-tools which did the
+sha256 verification but Michael Ellerman thought it was unnecessary and
+decided to use the simpler purgatory in asm from kexec-lite.
 
-has these problem(s):
+As a result, this relocation processing became unnecessary.
 
-  - Target SHA1 does not exist
+> So, add support to relocate purgatory in kexec_file_load system call
+> by setting up TOC pointer and applying RELA relocations as needed.
 
-Maybe you meant
+If we do want to use a C purgatory, Michael Ellerman had suggested
+building it as a Position Independent Executable, which greatly reduces
+the number and types of relocations that are needed. See patches 4 and 9
+here:
 
-Fixes: 937c55f6b726 ("drm/msm: handle for EPROBE_DEFER for of_icc_get")
+https://lore.kernel.org/linuxppc-dev/1478748449-3894-1-git-send-email-bauerman@linux.vnet.ibm.com/
 
---=20
-Cheers,
-Stephen Rothwell
+In the series above I hadn't converted x86 to PIE. If I had done that,
+possibly Dave Young's opinion would have been different. :-)
 
---Sig_/08z2xdNVYSJ0kscP98ixYs.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+If that's still not desirable, he suggested in that discussion lifting
+some code from x86 to generic code, which I implemented and would
+simplify this patch as well:
 
------BEGIN PGP SIGNATURE-----
+https://lore.kernel.org/linuxppc-dev/5009580.5GxAkTrMYA@morokweng/
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8PnmwACgkQAVBC80lX
-0GxjlAgAmOMsoIeaUEqizo61Rh+cuejA3+GS4tBVh0I3qKUnnCsejP0FQejAyk0D
-1Ll24hwO1QlM20TVP+osLp9UAjFtQEAaGztaz6GEp7gYMoeh8xHh7pMO2c4+9App
-4rPMD4/6EtflWKYo/PP/qaMyXCVRtZ++kVpkPXhfzG3uaxG0gAFElbBOVVxQHvCk
-DecjqZVKLXUedxJTV3WuycEbHg7ONYuX5Ismyfcm/El5i9gu/M5d9N1gzNpabqCm
-q2qKbE9WLHge8MIL+RcdV09Mbb8Qi5kXaVkbt31o5yol40jhOKeqGYYKQPlXitYo
-n8FfVOi3ZExP7Ds36lyh/jl5s8PIUA==
-=gTqb
------END PGP SIGNATURE-----
+> Reported-by: kernel test robot <lkp@intel.com>
+> [lkp: In v1, 'struct mem_sym' was declared in parameter list]
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> ---
+>
+> v2 -> v3:
+> * Fixed get_toc_section() to return the section info that had relocations
+>   applied, to calculate the correct toc pointer.
+> * Fixed how relocation value is converted to relative while applying
+>   R_PPC64_REL64 & R_PPC64_REL32 relocations.
+>
+> v1 -> v2:
+> * Fixed wrong use of 'struct mem_sym' in local_entry_offset() as
+>   reported by lkp. lkp report for reference:
+>     - https://lore.kernel.org/patchwork/patch/1264421/
+>
+>
+>  arch/powerpc/kexec/file_load_64.c      |  337 ++++++++++++++++++++++++++++++++
+>  arch/powerpc/purgatory/trampoline_64.S |    8 +
+>  2 files changed, 345 insertions(+)
 
---Sig_/08z2xdNVYSJ0kscP98ixYs.--
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
