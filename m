@@ -2,144 +2,99 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B01C433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DBDC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D443A2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FgLsRGtO"
+	by mail.kernel.org (Postfix) with ESMTP id 2D76D2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594889460;
+	bh=U7X430J5V6ePsxTX3punZtP6BZO/DUniM8aSGD0rCbE=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=0gsXZUTXyoFmVEUnlZBWCE2hWXEj0q+mxQdFW8xHkhHGGCUpO757kcWZ1JlvAqs++
+	 mGEBlVKywOffZUbcdaMW85MaxU3igtIjZ/QOcO7CTwsDtWHlIUjYN/eUF3cZXMKyiC
+	 v1MgTSaNSK5HpClYefF+/CiOiS5iQXVzJW/ss5qE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgGPIvD (ORCPT
+        id S1728115AbgGPIu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgGPIvD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:51:03 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C7FC061755;
-        Thu, 16 Jul 2020 01:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=z1twT3lJBd5IZc2w7iBnl5n86j3pbxlaFsHT2cAY39E=; b=FgLsRGtOEAwDu+7SJ8Zs8QpPt/
-        fdY7AqF+mSRLDjWRN/qas1RvwO/wkXn0a0/xvS2I2FUUwFLsVGdGen6BCtgn+AlbyJGKjfETxSk4H
-        dYoDWOK5KuZbwq2WqL6y6LJLii3T7D0F4KsgOw7OGmRI6K+rWMsHwkkFNbEpcrifG/Gtuc0pMwwfe
-        OK5rWaVxhCmA/ydjktAe0iVbDOeACB8ocHSoTXQyoyteZ5h6jA/Rv9AlYbVZwxeefMcayX3tKQXs0
-        thw1o4CG3/tAi4C1Os+lDnbFzkYr91dDhGwuJSq9Tf6DI8CYx8KKIbuc47NFuDyipXo4oGJFtp09p
-        Wfi7/fag==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvzb9-0001Lr-5V; Thu, 16 Jul 2020 08:50:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 16 Jul 2020 04:50:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgGPIu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:50:58 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6A21A304B90;
-        Thu, 16 Jul 2020 10:50:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4F411207A6644; Thu, 16 Jul 2020 10:50:32 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 10:50:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
-Message-ID: <20200716085032.GO10769@hirez.programming.kicks-ass.net>
-References: <1594868476.6k5kvx8684.astroid@bobo.none>
- <EFAD6E2F-EC08-4EB3-9ECC-2A963C023FC5@amacapital.net>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7ABE2067D;
+        Thu, 16 Jul 2020 08:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594889458;
+        bh=U7X430J5V6ePsxTX3punZtP6BZO/DUniM8aSGD0rCbE=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=lZz7/S2vinkg3caYNt3YEW0+aHk66D0ubE/cVS+1d1BJj1TOMJLdy0VXqxtqvmFif
+         cDATDWQ5495bMsQhe9jCZDMOaj8c/C54/Gzxzj3D8BOc5ai8vt33x1Nk/IMcu71aBm
+         4fkAgq1cHMXKB9HNNTG5q2laTa6Mvod6Foqi0R5M=
+Date:   Thu, 16 Jul 2020 09:50:53 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        John Stultz <john.stultz@linaro.org>,
+        freedreno@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [Freedreno] [PATCH v9 4/7] iommu/arm-smmu: Add a pointer to the
+ attached device to smmu_domain
+Message-ID: <20200716085053.GB6771@willie-the-truck>
+References: <20200626200042.13713-1-jcrouse@codeaurora.org>
+ <20200626200042.13713-5-jcrouse@codeaurora.org>
+ <20200713150901.GA3072@willie-the-truck>
+ <20200713171917.GA3815@jcrouse1-lnx.qualcomm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <EFAD6E2F-EC08-4EB3-9ECC-2A963C023FC5@amacapital.net>
+In-Reply-To: <20200713171917.GA3815@jcrouse1-lnx.qualcomm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:18:20PM -0700, Andy Lutomirski wrote:
-> > On Jul 15, 2020, at 9:15 PM, Nicholas Piggin <npiggin@gmail.com> wrote:
+On Mon, Jul 13, 2020 at 11:19:17AM -0600, Jordan Crouse wrote:
+> On Mon, Jul 13, 2020 at 04:09:02PM +0100, Will Deacon wrote:
+> > On Fri, Jun 26, 2020 at 02:00:38PM -0600, Jordan Crouse wrote:
+> > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> > > index 5f2de20e883b..d33cfe26b2f5 100644
+> > > --- a/drivers/iommu/arm-smmu.h
+> > > +++ b/drivers/iommu/arm-smmu.h
+> > > @@ -345,6 +345,7 @@ struct arm_smmu_domain {
+> > >  	struct mutex			init_mutex; /* Protects smmu pointer */
+> > >  	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
+> > >  	struct iommu_domain		domain;
+> > > +	struct device			*dev;	/* Device attached to this domain */
+> > 
+> > This really doesn't feel right to me -- you can generally have multiple
+> > devices attached to a domain and they can come and go without the domain
+> > being destroyed. Perhaps you could instead identify the GPU during
+> > cfg_probe() and squirrel that information away somewhere?
+> 
+> I need some help here. The SMMU device (qcom,adreno-smmu) will have at least two
+> stream ids from two different platform devices (GPU and GMU) and I need to
+> configure split-pagetable and stall/terminate differently on the two domains.
 
-> > CPU0                     CPU1
-> >                         1. user stuff
-> > a. membarrier()          2. enter kernel
-> > b. read rq->curr         3. rq->curr switched to kthread
-> > c. is kthread, skip IPI  4. switch_to kthread
-> > d. return to user        5. rq->curr switched to user thread
-> >                 6. switch_to user thread
-> >                 7. exit kernel
-> >                         8. more user stuff
+Hmm. How does the GPU driver know which context bank is assigned to the GPU
+and which one is assigned to the GMU? I assume it needs this information so
+that it can play its nasty tricks with the TTBR registers?
 
-> I find it hard to believe that this is x86 only. Why would thread
-> switch imply core sync on any architecture?  Is x86 unique in having a
-> stupid expensive core sync that is heavier than smp_mb()?
+I ask because if we need to guarantee stability of the context-bank
+assignment, then you could match on that in the ->init_context() callback,
+but now I worry that it currently works by luck :/
 
-smp_mb() is nowhere near the most expensive barrier we have in Linux,
-mb() might qualify, since that has some completion requirements since it
-needs to serialize against external actors.
+Do we need to add an extra callback to allocate the context bank?
 
-On x86_64 things are rather murky, we have:
-
-	LOCK prefix -- which implies smp_mb() before and after RmW
-	LFENCE -- which used to be rmb like, until Spectre, and now it
-		  is ISYNC like. Since ISYNC ensures an empty pipeline,
-		  it also implies all loads are retired (and therefore
-		  complete) it implies rmb.
-	MFENCE -- which is a memop completion barrier like, it makes
-		  sure all previously issued memops are complete.
-
-if you read that carefully, you'll note you'll have to use LFENCE +
-MFENCE to order against non-memops instructions.
-
-But none of them imply dumping the instruction decoder caches, that only
-happens on core serializing instructions like CR3 writes, IRET, CPUID
-and a few others, I think we recently got a SERIALIZE instruction to add
-to this list.
-
-
-On ARM64 there's something a whole different set of barriers, and again
-smp_mb() isn't nowhere near the top of the list. They have roughly 3
-classes:
-
-	ISB -- instruction sync barrier
-	DMB(x) -- memory ordering in domain x
-	DSB(x) -- memory completion in domain x
-
-And they have at least 3 domains (IIRC), system, outer, inner.
-
-The ARM64 __switch_to() includes a dsb(sy), just like PowerPC used to
-have a SYNC, but since PowerPC is rare for only having one rediculously
-heavy serializing instruction, we got to re-use the smp_mb() early in
-__schedule() instead, but ARM64 can't do that.
-
-
-So rather than say that x86 is special here, I'd say that PowerPC is
-special here.
-
-> But I’m wondering if all this deferred sync stuff is wrong. In the
-> brave new world of io_uring and such, perhaps kernel access matter
-> too.  Heck, even:
-
-IIRC the membarrier SYNC_CORE use-case is about user-space
-self-modifying code.
-
-Userspace re-uses a text address and needs to SYNC_CORE before it can be
-sure the old text is forgotten. Nothing the kernel does matters there.
-
-I suppose the manpage could be more clear there.
-
+Will
