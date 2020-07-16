@@ -2,37 +2,38 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D8DC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A760FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5851B2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7CF2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgGPDoN (ORCPT
+        id S1728277AbgGPDoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:44:13 -0400
+        Wed, 15 Jul 2020 23:44:11 -0400
 Received: from mga09.intel.com ([134.134.136.24]:54949 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
         id S1726905AbgGPDoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jul 2020 23:44:11 -0400
-IronPort-SDR: rrdjT8Kh/Aqb5wHcOYeYfj7aCSZMGB9dkkEbUef91a+mI/Z3NDDexkuude93/mlMxsGTibSQKt
- xYAUoy7eHsLQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="150699761"
+IronPort-SDR: /fZd8rCwJpiKyri9jPiGJHHrTOyNp2KlCTLkZ6pyyqR9GvyTEwQu0xidqCjeIqPlf/ukvlZIyy
+ a+YNJVe6pC2Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="150699763"
 X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="150699761"
+   d="scan'208";a="150699763"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 20:44:10 -0700
-IronPort-SDR: cAuAFNKXBGmV5pOIWhocUCC1JqwEtI7ncH5HpTHwW4pvIncSzWWBL6s3nlNM4eeLeXygHnUdZ2
- PuMonLEU/veQ==
+IronPort-SDR: FoScwJ/y6PpfgYO0eWBfL/C9+7AOnuYVy1wgjYxDO0siAXT4tI19VBEMmMiM7KppUZz4Upfub6
+ 0M6RzHi4UQFg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="282314257"
+   d="scan'208";a="282314263"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
   by orsmga003.jf.intel.com with ESMTP; 15 Jul 2020 20:44:10 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -43,10 +44,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] KVM: VMX: Clean up RTIT MAXPHYADDR usage
-Date:   Wed, 15 Jul 2020 20:44:05 -0700
-Message-Id: <20200716034408.6342-1-sean.j.christopherson@intel.com>
+Subject: [PATCH 2/3] KVM: VMX: Replace MSR_IA32_RTIT_OUTPUT_BASE_MASK with helper function
+Date:   Wed, 15 Jul 2020 20:44:07 -0700
+Message-Id: <20200716034408.6342-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200716034408.6342-1-sean.j.christopherson@intel.com>
+References: <20200716034408.6342-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,18 +57,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stop using cpuid_query_maxphyaddr() for a random RTIT MSR check and
-unexport said function to discourage future use.
+Replace the subtly not-a-constant MSR_IA32_RTIT_OUTPUT_BASE_MASK with a
+proper helper function to check whether or not the specified base is
+valid.  Blindly referencing the local 'vcpu' is especially nasty.
 
-Sean Christopherson (3):
-  KVM: VMX: Use precomputed MAXPHYADDR for RTIT base MSR check
-  KVM: VMX: Replace MSR_IA32_RTIT_OUTPUT_BASE_MASK with helper function
-  KVM: x86: Unexport cpuid_query_maxphyaddr()
-
- arch/x86/kvm/cpuid.c   |  1 -
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
  arch/x86/kvm/vmx/vmx.c | 11 +++++++----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 50b7e85d37352..cf3c3562e843c 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -145,9 +145,6 @@ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
+ 	RTIT_STATUS_ERROR | RTIT_STATUS_STOPPED | \
+ 	RTIT_STATUS_BYTECNT))
+ 
+-#define MSR_IA32_RTIT_OUTPUT_BASE_MASK \
+-	(~((1UL << cpuid_maxphyaddr(vcpu)) - 1) | 0x7f)
+-
+ /*
+  * These 2 parameters are used to config the controls for Pause-Loop Exiting:
+  * ple_gap:    upper bound on the amount of time between two successive
+@@ -1036,6 +1033,12 @@ static inline bool pt_can_write_msr(struct vcpu_vmx *vmx)
+ 	       !(vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN);
+ }
+ 
++static inline bool pt_output_base_valid(struct kvm_vcpu *vcpu, u64 base)
++{
++	/* The base must be 128-byte aligned and a legal physical address. */
++	return !(base & (~((1UL << cpuid_maxphyaddr(vcpu)) - 1) | 0x7f));
++}
++
+ static inline void pt_load_msr(struct pt_ctx *ctx, u32 addr_range)
+ {
+ 	u32 i;
+@@ -2193,7 +2196,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		    !intel_pt_validate_cap(vmx->pt_desc.caps,
+ 					   PT_CAP_single_range_output))
+ 			return 1;
+-		if (data & MSR_IA32_RTIT_OUTPUT_BASE_MASK)
++		if (!pt_output_base_valid(vcpu, data))
+ 			return 1;
+ 		vmx->pt_desc.guest.output_base = data;
+ 		break;
 -- 
 2.26.0
 
