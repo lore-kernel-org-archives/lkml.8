@@ -2,182 +2,181 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B837FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2931207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B62020656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:52:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="SlhjXobo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e4nnEJcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGPUvb (ORCPT
+        id S1726243AbgGPUwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50336 "EHLO
+        Thu, 16 Jul 2020 16:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgGPUva (ORCPT
+        with ESMTP id S1725959AbgGPUwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:51:30 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491E2C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:51:30 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id c16so7476763ioi.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:51:30 -0700 (PDT)
+        Thu, 16 Jul 2020 16:52:36 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35748C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:52:36 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id b92so5244072pjc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/OMgh93Kb2HkE6P0kAr28R6z12ut/xwA3vG3iFDckbI=;
-        b=SlhjXoboBAxGh2VTbr9NcInkijK7jQpCCQnuS6p+0nfgmyeVsheY4bc3BdXFSkBPTD
-         j3PQMvPR5EZ0k3Bz8aBB5FiDK5eypyjPNP42owrGwPGZalFhiDbNSwOk1bM4s3eSCZkC
-         t1nHWdMiS5XFpAFhIGk1PPbIC5sxZ+0K5oQFobuIKINk+5fhlhrQu/zBAXEjKjL+37fc
-         B6KHhfMuEiwftkGVc+I9WskJLKiqmTxyD0TGV3XaLT5nKUXr0t/bhvar61NQsvEBNFm8
-         bk9eKcwh96dfrbzu5YVUq0wY8MOR9LXEocoukxOjqRuQYvzHQ7lq/lJ6VWFgpiEeWzYQ
-         hvYA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aquIO2FGAE3lkoXCYp5iGwupgQI/65LCYOM68Vjw6Tk=;
+        b=e4nnEJcZ/2dm2oYM392D+Ygv7VRrVE4tmm+yuKAqRtbsZNjS/1PkZ46Uxg8lMawtjg
+         El2Z81ViYhNC0aaun3sECRkjhMsnRv98wWpt8kupNRE2/dtD/TMRkXdwdzaMZqMcaa4L
+         ei0O+fZuVfuoMtxgfqNKcekKxywb2hDgAl3ec=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/OMgh93Kb2HkE6P0kAr28R6z12ut/xwA3vG3iFDckbI=;
-        b=Mw3ePd+dPySQfrIkYMO9I+N/9zRFd2Xffa+RX/aqr6zivwnQh7z1GOY8xAj8s/e6f1
-         gKThgPsdhGeQkrFYHMYG/T5Dui7TG6UGZ9SrGSlVgk1FVvhvG6V318Y8qbnnvl6fFzem
-         NC4cE31mGUxub7mU+6kElwcz5QCYICLeM+UPxKLOvGxHRY5zVfjlMDyik0aQpqnX7JuC
-         XThbvzNi/Vl5AiRY0I+OGHSHRlROsrzIJpACLtut7NO5Q97ERxy1HiyTqQVzj87tb578
-         hEYzSDzmolv4P4bjIFuHpuOa31tcyMxIIBBcoI9el0OF4uyha+S9EuCo1S31FF9B9WC2
-         yAaw==
-X-Gm-Message-State: AOAM530rwWGDxDzKxO0GSIccGmbOa38N8UwzszDCnmsHu1VjfvqKx5Sx
-        KlJLD5fkgrbVokRcoM3/fLvv/57EQi8nkg==
-X-Google-Smtp-Source: ABdhPJy2wUZWh2Y4jruQ6d5kCL/LKMYVm6LNd8/aYi1fc8AM2ykPWqla4cvX5vltX/y94v5ZxMTqlA==
-X-Received: by 2002:a5e:a60d:: with SMTP id q13mr6237726ioi.199.1594932689231;
-        Thu, 16 Jul 2020 13:51:29 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id i12sm3469283ioi.48.2020.07.16.13.51.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 13:51:28 -0700 (PDT)
-Subject: Re: [PATCH RFC v2 1/3] io_uring: use an enumeration for
- io_uring_register(2) opcodes
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kees Cook <keescook@chromium.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20200716124833.93667-1-sgarzare@redhat.com>
- <20200716124833.93667-2-sgarzare@redhat.com>
- <ca242a15-576d-4099-a5f8-85c08985e3ff@gmail.com>
- <a2f109b2-adbf-147d-9423-7a1a4bf99967@kernel.dk>
- <20326d79-fb5a-2480-e52a-e154e056171f@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <76879432-745d-a5ca-b171-b1391b926ea2@kernel.dk>
-Date:   Thu, 16 Jul 2020 14:51:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aquIO2FGAE3lkoXCYp5iGwupgQI/65LCYOM68Vjw6Tk=;
+        b=oF05Aj5n+gcdBFxOAt1R2vYk5fn1RWjXlkDY7b4HAgN0jEN5kxp9CQQv/x9FJHCkK4
+         Fwu7eALHu0w8rTeBTrCiz0XmrUxtl8FZgli8wbZPxj0pUVcDkOLGLlc6aa0uc5yOcaxF
+         9smuTkndXX5mura5VinaKHpMt5y0ikv05vfMST4FOwimaUVrQYeux7A0ibvbDb99OLnZ
+         IZbHuHupXgBulQsJkouiLneyjX/tLCTx6RmjmzoMq8lNuj/AThS9ZH3HPJFq7S1bc1+0
+         yDUyBdrH4adZnEXuaioEEUVAGxJr3TOYXAb55Ym2UXZIZF9RQgzyh3LWQ30kgP0QmjY4
+         QBAg==
+X-Gm-Message-State: AOAM533IZgMmtP9k32XN3Weg7ZXS8opFvyut5t4DndMrqxGHdyUeMDFL
+        3MPDgcVnP7PypSAMuIuEgCRQYw==
+X-Google-Smtp-Source: ABdhPJzbQgJCDG9LnefQx5i570VFQUbYsZndgRWWuoW2VeaNkft010xcMMlGVftM1UOa8T+so1E6cQ==
+X-Received: by 2002:a17:902:a611:: with SMTP id u17mr5040902plq.263.1594932755485;
+        Thu, 16 Jul 2020 13:52:35 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 4sm5532894pgk.68.2020.07.16.13.52.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 13:52:34 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 13:52:33 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry
+ functionality
+Message-ID: <202007161336.B993ED938@keescook>
+References: <20200716182208.180916541@linutronix.de>
+ <20200716185424.011950288@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20326d79-fb5a-2480-e52a-e154e056171f@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716185424.011950288@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/20 2:47 PM, Pavel Begunkov wrote:
-> On 16/07/2020 23:42, Jens Axboe wrote:
->> On 7/16/20 2:16 PM, Pavel Begunkov wrote:
->>> On 16/07/2020 15:48, Stefano Garzarella wrote:
->>>> The enumeration allows us to keep track of the last
->>>> io_uring_register(2) opcode available.
->>>>
->>>> Behaviour and opcodes names don't change.
->>>>
->>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
->>>> ---
->>>>  include/uapi/linux/io_uring.h | 27 ++++++++++++++++-----------
->>>>  1 file changed, 16 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
->>>> index 7843742b8b74..efc50bd0af34 100644
->>>> --- a/include/uapi/linux/io_uring.h
->>>> +++ b/include/uapi/linux/io_uring.h
->>>> @@ -253,17 +253,22 @@ struct io_uring_params {
->>>>  /*
->>>>   * io_uring_register(2) opcodes and arguments
->>>>   */
->>>> -#define IORING_REGISTER_BUFFERS		0
->>>> -#define IORING_UNREGISTER_BUFFERS	1
->>>> -#define IORING_REGISTER_FILES		2
->>>> -#define IORING_UNREGISTER_FILES		3
->>>> -#define IORING_REGISTER_EVENTFD		4
->>>> -#define IORING_UNREGISTER_EVENTFD	5
->>>> -#define IORING_REGISTER_FILES_UPDATE	6
->>>> -#define IORING_REGISTER_EVENTFD_ASYNC	7
->>>> -#define IORING_REGISTER_PROBE		8
->>>> -#define IORING_REGISTER_PERSONALITY	9
->>>> -#define IORING_UNREGISTER_PERSONALITY	10
->>>> +enum {
->>>> +	IORING_REGISTER_BUFFERS,
->>>> +	IORING_UNREGISTER_BUFFERS,
->>>> +	IORING_REGISTER_FILES,
->>>> +	IORING_UNREGISTER_FILES,
->>>> +	IORING_REGISTER_EVENTFD,
->>>> +	IORING_UNREGISTER_EVENTFD,
->>>> +	IORING_REGISTER_FILES_UPDATE,
->>>> +	IORING_REGISTER_EVENTFD_ASYNC,
->>>> +	IORING_REGISTER_PROBE,
->>>> +	IORING_REGISTER_PERSONALITY,
->>>> +	IORING_UNREGISTER_PERSONALITY,
->>>> +
->>>> +	/* this goes last */
->>>> +	IORING_REGISTER_LAST
->>>> +};
->>>
->>> It breaks userspace API. E.g.
->>>
->>> #ifdef IORING_REGISTER_BUFFERS
->>
->> It can, yes, but we have done that in the past. In this one, for
+On Thu, Jul 16, 2020 at 08:22:09PM +0200, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
 > 
-> Ok, if nobody on the userspace side cares, then better to do that
-> sooner than later.
+> On syscall entry certain work needs to be done:
 > 
+>    - Establish state (lockdep, context tracking, tracing)
+>    - Conditional work (ptrace, seccomp, audit...)
 > 
->> example:
->>
->> commit 9e3aa61ae3e01ce1ce6361a41ef725e1f4d1d2bf (tag: io_uring-5.5-20191212)
->> Author: Jens Axboe <axboe@kernel.dk>
->> Date:   Wed Dec 11 15:55:43 2019 -0700
->>
->>     io_uring: ensure we return -EINVAL on unknown opcod
->>
->> But it would be safer/saner to do this like we have the done the IOSQE_
->> flags.
+> This code is needlessly duplicated and  different in all
+> architectures.
 > 
-> IOSQE_ are a bitmask, but this would look peculiar
-> 
-> enum {
-> 	__IORING_REGISTER_BUFFERS,
-> 	...
-> };
-> define IORING_REGISTER_BUFFERS __IORING_REGISTER_BUFFERS
+> Provide a generic version based on the x86 implementation which has all the
+> RCU and instrumentation bits right.
 
-Yeah true of course, that won't really work for this case at all.
+Ahh! You're reading my mind! I was just thinking about this while
+reviewing the proposed syscall redirection series[1], and pondering the
+lack of x86 TIF flags, and that nearly everything in the series (and for
+seccomp and other things) didn't need to be arch-specific. And now that
+series absolutely needs to be rebased and it'll magically work for every
+arch that switches to the generic entry code. :)
 
-That said, I don't think it's a huge deal to turn it into an enum.
+Notes below...
 
+[1] https://lore.kernel.org/lkml/20200716193141.4068476-2-krisman@collabora.com/
+
+> +/*
+> + * Define dummy _TIF work flags if not defined by the architecture or for
+> + * disabled functionality.
+> + */
+
+When I was thinking about this last week I was pondering having a split
+between the arch-agnositc TIF flags and the arch-specific TIF flags, and
+that each arch could have a single "there is agnostic work to be done"
+TIF in their thread_info, and the agnostic flags could live in
+task_struct or something. Anyway, I'll keep reading...
+
+> +/**
+> + * syscall_enter_from_user_mode - Check and handle work before invoking
+> + *				 a syscall
+> + * @regs:	Pointer to currents pt_regs
+> + * @syscall:	The syscall number
+> + *
+> + * Invoked from architecture specific syscall entry code with interrupts
+> + * disabled. The calling code has to be non-instrumentable. When the
+> + * function returns all state is correct and the subsequent functions can be
+> + * instrumented.
+> + *
+> + * Returns: The original or a modified syscall number
+> + *
+> + * If the returned syscall number is -1 then the syscall should be
+> + * skipped. In this case the caller may invoke syscall_set_error() or
+> + * syscall_set_return_value() first.  If neither of those are called and -1
+> + * is returned, then the syscall will fail with ENOSYS.
+
+There's been some recent confusion over "has the syscall changed,
+or did seccomp request it be skipped?" that was explored in arm64[2]
+(though I see Will and Keno in CC already). There might need to be a
+clearer way to distinguish between "wild userspace issued a -1 syscall"
+and "seccomp or ptrace asked for the syscall to be skipped". The
+difference is mostly about when ENOSYS gets set, with respect to calls
+to syscall_set_return_value(), but if the syscall gets changed, the arch
+may need to recheck the value and consider ENOSYS, etc. IIUC, what Will
+ended up with[3] was having syscall_trace_enter() return the syscall return
+value instead of the new syscall.
+
+[2] https://lore.kernel.org/lkml/20200704125027.GB21185@willie-the-truck/
+[3] https://lore.kernel.org/lkml/20200703083914.GA18516@willie-the-truck/
+
+> +static long syscall_trace_enter(struct pt_regs *regs, long syscall,
+> +				unsigned long ti_work)
+> +{
+> +	long ret = 0;
+> +
+> +	/* Handle ptrace */
+> +	if (ti_work & (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_EMU)) {
+> +		ret = arch_syscall_enter_tracehook(regs);
+> +		if (ret || (ti_work & _TIF_SYSCALL_EMU))
+> +			return -1L;
+> +	}
+> +
+> +	/* Do seccomp after ptrace, to catch any tracer changes. */
+> +	if (ti_work & _TIF_SECCOMP) {
+> +		ret = arch_syscall_enter_seccomp(regs);
+> +		if (ret == -1L)
+> +			return ret;
+> +	}
+> +
+> +	if (unlikely(ti_work & _TIF_SYSCALL_TRACEPOINT))
+> +		trace_sys_enter(regs, syscall);
+> +
+> +	arch_syscall_enter_audit(regs);
+> +
+> +	return ret ? : syscall;
+> +}
+
+Modulo the notes about -1 vs syscall number above, this looks correct to
+me for ptrace and seccomp.
 
 -- 
-Jens Axboe
-
+Kees Cook
