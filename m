@@ -2,105 +2,143 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D5FC433EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BECC433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B75A2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594926806;
-	bh=X1aR/huNEfYLCRr8+3522sI2xD/ke+fRwnZPt7eYnvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0e0FvgCk6+yzatRdn7ymOA+OHUNEo74BkmlPfIMorY7wWZm6ATi2IgX4BkTgTkvl9
-	 wRbu3IwUd57944urmVEMj4QPKVM2QQmkHkw33kQhoBZ5VwyFpDNWBVEwf2LF8yD1Pr
-	 OsnjwlFSNQbw3CCbOMG41luwgmy79WV2xiGcUSUc=
+	by mail.kernel.org (Postfix) with ESMTP id 3C08C2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:13:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PGufXFeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgGPTNZ (ORCPT
+        id S1729554AbgGPTNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:13:25 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35927 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729551AbgGPTNV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jul 2020 15:13:21 -0400
-Received: by mail-io1-f68.google.com with SMTP id y2so7227482ioy.3;
-        Thu, 16 Jul 2020 12:13:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZIttOoTOPqMFdqazs8PahDWs8uAzKu3fQLp00yEZzEs=;
-        b=TbVAODPO+rMbA9zuoD6Z50MZax9GeDZrdAgkp4ldskfYF8MzHxQyeuv8DAIdgXsLsw
-         mdTkscg0WEm5r3D6c4zaHjMcAPwa5Ok74eEnl3gbjb5VBNFMs1p4A/9cnXmVM15elc1N
-         pBb2Rne6Hw0ffP7AYR5hV1mAcdRvT9vGtnetL11obUkq4bHzub/oh3JNztr8DVcbdj5E
-         wOLQ1WQjoftFpY/peFh5C55qkhKR0dTOIxJ7COF6aPtIhzIJ1ZMwPPOVKrD86xgJDlsr
-         lcLwEZkWBv4Uh1FGUIQg3OB8EZxyUv8Q6x0qRP9FY9hPdrTczQ/rW2LAlLxq0sp3W149
-         t+TQ==
-X-Gm-Message-State: AOAM532+3e17TfSy6YHZ8/ymHyqPtsL5944MTfYMBQ4OGlUbgYebYhyq
-        MMlMf1zAk27KzKvtYkLzKQ==
-X-Google-Smtp-Source: ABdhPJxDve+bGac++TOwwv477fCT+JMtLC0r9pSjhKoL4JqwZLLbzbzYgXnmngm9qddR1vgcFbbpQg==
-X-Received: by 2002:a02:8308:: with SMTP id v8mr6689601jag.101.1594926800526;
-        Thu, 16 Jul 2020 12:13:20 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p9sm3201232ilc.78.2020.07.16.12.13.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 12:13:19 -0700 (PDT)
-Received: (nullmailer pid 2685058 invoked by uid 1000);
-        Thu, 16 Jul 2020 19:13:18 -0000
-Date:   Thu, 16 Jul 2020 13:13:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Eric Peers <epeers@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.Kernel.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: mfd: Add DT compatible string
- "google,cros_ec_uart"
-Message-ID: <20200716191318.GA2683551@bogus>
-References: <20200715221150.v3.2.I113cdbaf66d48b37ac0faefb9b845480d122f3b9@changeid>
+Received: from linux.microsoft.com ([13.77.154.182]:37646 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729048AbgGPTNR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 15:13:17 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 48ED520B4909;
+        Thu, 16 Jul 2020 12:13:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 48ED520B4909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594926796;
+        bh=rJqLOziw2osdo15zsPugmz5im9Pv3tHMh1e9Igalmc8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PGufXFeubXILzI0FUQYAfve2Zm8SYb5HgltkEq/48sHn2lOJrw9tjMaDwamk2KUwH
+         Cvqy9knLTQLdB4ki88SmMf51+IUaUfxuVvU66AMpz88PvI7qs6iP3qmxOL01T0Cdh3
+         A72XDO/LEcgBDQd+QQHQg57Suwx/P+jSdqJg7cYA=
+Subject: Re: [PATCH v2 4/5] LSM: Define SELinux function to measure security
+ state
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200716174351.20128-1-nramas@linux.microsoft.com>
+ <20200716174351.20128-5-nramas@linux.microsoft.com>
+ <CAEjxPJ43eXK0xgrE=gDxZVg2SDTz4bkd7N4otjk-cvxf3fKL-g@mail.gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <9478ddca-8298-5170-836d-8cbc7a070df2@linux.microsoft.com>
+Date:   Thu, 16 Jul 2020 12:13:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715221150.v3.2.I113cdbaf66d48b37ac0faefb9b845480d122f3b9@changeid>
+In-Reply-To: <CAEjxPJ43eXK0xgrE=gDxZVg2SDTz4bkd7N4otjk-cvxf3fKL-g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:16:04PM -0700, Bhanu Prakash Maiya wrote:
-> From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-> 
-> Add DT compatible string in
-> Documentation/devicetree/bindings/mfd/cros_ec.txt
+On 7/16/20 11:54 AM, Stephen Smalley wrote:
 
-Need to update this.
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-> ---
+>> The data for selinux-state in the above measurement is:
+>> enabled=1;enforcing=0;checkreqprot=1;network_peer_controls=1;open_perms=1;extended_socket_class=1;always_check_network=0;cgroup_seclabel=1;nnp_nosuid_transition=1;genfs_seclabel_symlinks=0;
+>>
+>> The data for selinux-policy-hash in the above measurement is
+>> the SHA256 hash of the SELinux policy.
 > 
-> Changes in v3:
-> - Rebased changes on google,cros-ec.yaml
+> Can you show an example of how to verify that the above measurement
+> matches a given state and policy, e.g. the sha256sum commands and
+> inputs to reproduce the same from an expected state and policy?
+Sure - I'll provide an example.
+
+>> +/* Pre-allocated buffer used for measuring state */
+>> +static char *selinux_state_string;
+>> +static size_t selinux_state_string_len;
+>> +static char *selinux_state_string_fmt =
+>> +       "%s=%d;%s=%d;%s=%d;%s=%d;%s=%d;%s=%d;%s=%d;%s=%d;%s=%d;%s=%d;";
+>> +
+>> +void __init selinux_init_measurement(void)
+>> +{
+>> +       selinux_state_string_len =
+>> +       snprintf(NULL, 0, selinux_state_string_fmt,
+>> +       "enabled", 0,
+>> +       "enforcing", 0,
+>> +       "checkreqprot", 0,
+>> +       selinux_policycap_names[POLICYDB_CAPABILITY_NETPEER], 0,
+>> +       selinux_policycap_names[POLICYDB_CAPABILITY_OPENPERM], 0,
+>> +       selinux_policycap_names[POLICYDB_CAPABILITY_EXTSOCKCLASS], 0,
+>> +       selinux_policycap_names[POLICYDB_CAPABILITY_ALWAYSNETWORK], 0,
+>> +       selinux_policycap_names[POLICYDB_CAPABILITY_CGROUPSECLABEL], 0,
+>> +       selinux_policycap_names[POLICYDB_CAPABILITY_NNP_NOSUID_TRANSITION], 0,
+>> +       selinux_policycap_names[POLICYDB_CAPABILITY_GENFS_SECLABEL_SYMLINKS],
+>> +       0);
 > 
-> Changes in v2:
-> - No change
+> I was thinking you'd dynamically construct the format string with a
+> for loop from 0 to POLICYDB_CAPABILITY_MAX
+> and likewise for the values so that we wouldn't have to patch this
+> code every time we add a new one.
+That's a good point - will do.
+
 > 
->  Documentation/devicetree/bindings/mfd/google,cros-ec.yaml | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>> +
+>> +       if (selinux_state_string_len < 0)
+>> +               return;
+> 
+> How can this happen legitimately (i.e. as a result of something other
+> than a kernel bug)?
+Since snprintf can return an error I wanted to handle that. But I agree 
+this should not happen for the input data to snprintf used here.
+
+> 
+>> +
+>> +       ++selinux_state_string_len;
+>> +
+>> +       selinux_state_string = kzalloc(selinux_state_string_len, GFP_KERNEL);
+>> +       if (!selinux_state_string)
+>> +               selinux_state_string_len = 0;
+>> +}
+> 
+> Not sure about this error handling approach (silent, proceeding as if
+> the length was zero and then later failing with ENOMEM on every
+> attempt?). I'd be more inclined to panic/BUG here but I know Linus
+> doesn't like that.
+I am not sure if failing (kernel panic/BUG) to "measure" LSM data under 
+memory pressure conditions is the right thing. But I am open to treating 
+this error as a fatal error. Please let me know.
+
+> 
+>> +       if (ret)
+>> +               pr_err("%s: error %d\n", __func__, ret);
+> 
+> This doesn't seem terribly useful as an error message; I'd be inclined
+> to drop it.
+> 
+Will do.
+
+thanks,
+  -lakshmi
+
