@@ -2,157 +2,250 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D22C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC84AC433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7AA20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C549420760
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="md/+XRNj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IOBC9VwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgGPL4Y (ORCPT
+        id S1728568AbgGPL4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:56:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52164 "EHLO
+        Thu, 16 Jul 2020 07:56:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgGPL4T (ORCPT
+        with ESMTP id S1728532AbgGPL4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:56:19 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFE92C061755;
-        Thu, 16 Jul 2020 04:56:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9J/2b3b7YX/w3J/Y99T7XKn5p5MncV/hBcAxZFSpP/o=; b=md/+XRNjQfIIl04ga7+CuiYGkD
-        23HE25+cL7oCCu6eiZqV11gN85lh57Bkl4/WYxZwIgXB8CZvL1CW1FkvES3ed5bEGaP9TXuxYf6vJ
-        DVU5QYkHxxERZLAvUooucsUg3WwPRcwHjKrfaHvkynBJUGJx4iNl3AXt/miZSxgpEGJZOIQkkhmVi
-        mG4eLrjSTMqhBbCZadjsGFvWlh4KqSQyph6U+CR4WeE0QlKEO7G1XKRkqtN/gUo8xt0bRX+MPuaWO
-        GKq925mMwcrX6jiBbzU/hDLiN3KDpijvwTtrM9tbFAznWJtSb3sbu3iRGAuYir0aJ6WwhbndTLE2X
-        qNyjyVjQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jw2Ug-0006Cm-Rk; Thu, 16 Jul 2020 11:56:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 474A0305DD1;
-        Thu, 16 Jul 2020 13:56:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 27ACE20D27ABC; Thu, 16 Jul 2020 13:56:05 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 13:56:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-kernel@vger.kernel.org, Quentin Perret <qperret@google.com>,
-        Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        lukasz.luba@arm.com
-Subject: Re: [PATCH 2/2] thermal: cpufreq_cooling: Reuse effective_cpu_util()
-Message-ID: <20200716115605.GR10769@hirez.programming.kicks-ass.net>
-References: <cover.1594707424.git.viresh.kumar@linaro.org>
- <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
+        Thu, 16 Jul 2020 07:56:00 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627F8C08C5C0;
+        Thu, 16 Jul 2020 04:56:00 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id f18so6809871wrs.0;
+        Thu, 16 Jul 2020 04:56:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vs4AfRAnPExeeuyiR5DGWNr9f7rEdWEHMwAyJzCVFy0=;
+        b=IOBC9VwP63/cdjmvOOd6YnjYshzw/J8qeWYn+1Cd3xkkl5wp9JFqZC24SxSMmtJ5zk
+         iqfJnYDuEELw6Sk83huKQGRI1zSfr8z7u1VISsht6yEyM9IdR2gHiuP1zsRQuBksSO2b
+         V4yBZnUAxHIBmlmu/ks14VpvhUcBPkcnAQAFKCR+MKyBk2o/12fRJOR1FIzPgl2SF1VM
+         E2i/5wLW0gy1GCTS/omC1Y4BheQb8Zbg8raQHBvUmtY4IoqI0DunFV6sxqXz2doVK3Vx
+         gRFc0v8+YlCoHElHqbeCJI5HM+xXKoRnc7pkarQ8hVWOf/Ctgm8F+bQ5p1/tIudIfHBC
+         Mc8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vs4AfRAnPExeeuyiR5DGWNr9f7rEdWEHMwAyJzCVFy0=;
+        b=IWoP9lJKXZZxl148t+JxH566HvowueakNeu9qMT22VuPj54i+nj6N9MYJEpemvGTuJ
+         OOAMDNmav5DQq6ApQ+atDwZxebjNgWb/nmgJIdiVB+ZvyBczgTcxu3mEc5YpckBhCmkj
+         1jppqV6ltdTq2t0cqobt3N3k6BMl0yHuTSydX/DjSBuafedNEDbZPAJEFpAFoaYL2GME
+         64eSMOpPgk4NT9rYmXB4c/Baa/UH1cKf00DARoIMorI4KVaNietfP5oZzG7Gzx2simql
+         JG33mIZYdhck1i7vgtuCkxjE1GY5xcqz6cACkiBAoEOAgtdipRf6ddKoOn0pipEhRRfy
+         AOLw==
+X-Gm-Message-State: AOAM530BCqJTjTc19/U6Ad/K/uDKPOIM6QBq9NaDFgROLMlzJulagAJG
+        iUInkwQMRcVAqWhN18zHr98=
+X-Google-Smtp-Source: ABdhPJz64upI91irFUhybMw7rYZAcHiJhyz+RaRl6rUrzjGpwBroG+4PHoyuz0P9cAmdzZAeBefYQg==
+X-Received: by 2002:a5d:60c5:: with SMTP id x5mr4856628wrt.67.1594900558855;
+        Thu, 16 Jul 2020 04:55:58 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
+        by smtp.googlemail.com with ESMTPSA id a4sm9553060wrg.80.2020.07.16.04.55.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 04:55:58 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v9 2/2] devicetree: bindings: phy: Document ipq806x dwc3 qcom phy
+Date:   Thu, 16 Jul 2020 13:55:46 +0200
+Message-Id: <20200716115547.11903-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200716115547.11903-1-ansuelsmth@gmail.com>
+References: <20200716115547.11903-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:06:53PM +0530, Viresh Kumar wrote:
->  /**
-> + * get_load() - get current load for a cpu
->   * @cpufreq_cdev:	&struct cpufreq_cooling_device for this cpu
->   * @cpu:	cpu number
-> + * @cpu_idx:	index of the cpu
->   *
-> + * Return: The current load of cpu @cpu in percentage.
->   */
->  static u32 get_load(struct cpufreq_cooling_device *cpufreq_cdev, int cpu,
->  		    int cpu_idx)
->  {
-> +	unsigned long util = cpu_util_cfs(cpu_rq(cpu));
-> +	unsigned long max = arch_scale_cpu_capacity(cpu);
->  
-> +	util = effective_cpu_util(cpu, util, max, ENERGY_UTIL, NULL);
-> +	return (util * 100) / max;
->  }
+Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+inizialize and use usb on ipq806x SoC.
 
-So there's a number of things... let me recap a bunch of things that
-got mentioned on IRC earlier this week and then continue from there..
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v7:
+* Drop useless AllOf 
+v6:
+* Add maximum value
+v5:
+* Fix dt_binding_check error
+v4:
+* Add qcom to specific bindings
+v3:
+* Use explicit reg instead of regmap
 
-So IPA* (or any other thermal governor) needs energy estimates for the
-various managed devices, cpufreq_cooling, being the driver for the CPU
-device, needs to provide that and in return receives feedback on how
-much energy it is allowed to consume, cpufreq_cooling then dynamically
-enables/disables OPP states.
+ .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 55 ++++++++++++++
+ .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 73 +++++++++++++++++++
+ 2 files changed, 128 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
 
-There are actually two methods the thermal governor will use:
-get_real_power() and get_requested_power().
-
-The first isn't used anywhere in mainline, but could be implemented on
-hardware that has energy counters (like say x86 RAPL).
-
-The second attempts to guesstimate power, and is the subject of this
-patch.
-
-Currently cpufreq_cooling appears to estimate the CPU energy usage by
-calculating the percentage of idle time using the per-cpu cpustat stuff,
-which is pretty horrific.
-
-This patch then attempts to improve upon that by using the scheduler's
-cpu_util(ENERGY_UTIL) estimate, which is also used to select OPP state
-and improves upon avg idle. This should be a big improvement as higher
-frequency consumes more energy, but should we not also consider that:
-
-	E = C V^2 f
-
-The EAS energy model has tables for the OPPs that contain this, but in
-this case we seem to be assuming a linear enery/frequency curve, which
-is just not the case.
-
-I suppose we could do something like **:
-
-	100 * util^3 / max^3
-
-which assumes V~f.
-
-Another point is that cpu_util() vs turbo is a bit iffy, and to that,
-things like x86-APERF/MPERF and ARM-AMU got mentioned. Those might also
-have the benefit of giving you values that match your own sampling
-interval (100ms), where the sched stuff is PELT (64,32.. based).
-
-So what I've been thinking is that cpufreq drivers ought to be able to
-supply this method, and only when they lack, can the cpufreq-governor
-(schedutil) install a fallback. And then cpufreq-cooling can use
-whatever is provided (through the cpufreq interfaces).
-
-That way, we:
-
- 1) don't have to export anything
- 2) get arch drivers to provide something 'better'
-
-
-Does that sounds like something sensible?
-
-
-
-
-[*] I always want a beer when I see that name :-)
-
-[**] I despise code that uses percentages, computers suck at
-/100 and there is no reason not to use any other random fraction, so why
-pick a bad one.
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+new file mode 100644
+index 000000000000..23887ebe08fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description:
++  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
++  controllers used in ipq806x. Each DWC3 PHY controller should have its
++  own node.
++
++properties:
++  compatible:
++    const: qcom,ipq806x-usb-phy-hs
++
++  "#phy-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: ref
++      - const: xo
++
++required:
++  - compatible
++  - "#phy-cells"
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
++
++    hs_phy_0: phy@110f8800 {
++      compatible = "qcom,ipq806x-usb-phy-hs";
++      reg = <0x110f8800 0x30>;
++      clocks = <&gcc USB30_0_UTMI_CLK>;
++      clock-names = "ref";
++      #phy-cells = <0>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+new file mode 100644
+index 000000000000..fa30c24b4405
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description:
++  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
++  controllers used in ipq806x. Each DWC3 PHY controller should have its
++  own node.
++
++properties:
++  compatible:
++    const: qcom,ipq806x-usb-phy-ss
++
++  "#phy-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: ref
++      - const: xo
++
++  qcom,rx-eq:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Override value for rx_eq.
++    default: 4
++    maximum: 7
++
++  qcom,tx-deamp-3_5db:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Override value for transmit preemphasis.
++    default: 23
++    maximum: 63
++
++  qcom,mpll:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Override value for mpll.
++    default: 0
++    maximum: 7
++
++required:
++  - compatible
++  - "#phy-cells"
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
++
++    ss_phy_0: phy@110f8830 {
++      compatible = "qcom,ipq806x-usb-phy-ss";
++      reg = <0x110f8830 0x30>;
++      clocks = <&gcc USB30_0_MASTER_CLK>;
++      clock-names = "ref";
++      #phy-cells = <0>;
++    };
+-- 
+2.27.0
 
