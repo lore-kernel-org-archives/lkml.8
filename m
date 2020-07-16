@@ -2,160 +2,114 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9725AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B86AC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77DB220663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647DA207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJqvRTCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgGPC1v (ORCPT
+        id S1727863AbgGPC2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:27:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5000 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726479AbgGPC1u (ORCPT
+        Wed, 15 Jul 2020 22:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgGPC2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:27:50 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06G21fjI038567;
-        Wed, 15 Jul 2020 22:27:41 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 329uej2pfb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 22:27:41 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06G22SBt045227;
-        Wed, 15 Jul 2020 22:27:40 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 329uej2pf3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 22:27:40 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06G2PgDn011514;
-        Thu, 16 Jul 2020 02:27:39 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma04dal.us.ibm.com with ESMTP id 327529ppqv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 02:27:39 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06G2RcCj56033684
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 02:27:39 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1D8F112062;
-        Thu, 16 Jul 2020 02:27:38 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6CCF5112061;
-        Thu, 16 Jul 2020 02:27:34 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.73.114])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Jul 2020 02:27:34 +0000 (GMT)
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466100206.24747.3782313430191321863.stgit@hbathini.in.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v3 11/12] ppc64/kexec_file: add appropriate regions for memory reserve map
-In-reply-to: <159466100206.24747.3782313430191321863.stgit@hbathini.in.ibm.com>
-Date:   Wed, 15 Jul 2020 23:27:30 -0300
-Message-ID: <87sgds8a99.fsf@morokweng.localdomain>
+        Wed, 15 Jul 2020 22:28:24 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB39C061755;
+        Wed, 15 Jul 2020 19:28:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z2so5266515wrp.2;
+        Wed, 15 Jul 2020 19:28:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gsRpl4HFoDzQHdJmbJ2aLmqfJZ85+Q+C8XgOBbFtdNk=;
+        b=iJqvRTCjPwF29LVysp5cR+WTjEK0keVLezq5UpBh8TBKpPZMK/F1qaiNn1b5v5B8D/
+         FwctVpY5g6H34diBhlhZNS/o24RejCvBwMPgfodxR9W7lY1L1ma7q9zqrPlsldw+BTW7
+         Gx/b+M7X8ZWs2xUpCoWMwWF94G84TibCIrYoiVvZ2xvCgr/qre442EmfS4tTlmggpjqU
+         fFtFOjQuTtdRrxJ8UgiV9lQGFkf59TbBtj0Ub8HLW+7UYT+vkmOSLKVtdBfxZ9LTLW3Q
+         6qZf2jga/SNKtQ4BSDn07BsiXrSc/MslbL/NgvxM/WzNW1dZCrfFE8aH2/qNTNN8Qd4Q
+         4MmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gsRpl4HFoDzQHdJmbJ2aLmqfJZ85+Q+C8XgOBbFtdNk=;
+        b=FseyxY/qq96AnUI1ztkjKrsb8l6jUoB+DyeEr7wMLE8l8nVX6pv/vrw5mhs7xvc1Sg
+         B4dF6DArC9XJe/vUY9CmOqJq2fDFfOxxniS3B5GjsdvUOBwRr8XyUUHVWVx2CgRYLDN/
+         AwSxw24HMEWu1uAdbp0/ATSZA63y5rFaZBMJaIWfcFGgVyU6u+X10eO7AWes9CfJR59O
+         tRbEyNEwlt7FJu93dfILXZTcvZoBflqp1do45aPvRjHIFUA4pcIeAqQlq2jNmTVM0/e4
+         rXVncZlCp/SvKuyezUbepDZq/uce2XWqz18I5SlXsGuygwLuKG4e3L/QIbP50nBCYA7Z
+         oO4Q==
+X-Gm-Message-State: AOAM533Dbg7ENMtUGUh+SeJvtcVH3xrX3aqjpvdkR3TqrtxO4f5OCwdi
+        c4jj9KqF1RwFNbfp9nrx8mE=
+X-Google-Smtp-Source: ABdhPJwrSM7RmbkryD0nvdl24d++HH4tjwvWPp/fUZyADj3sIpMbiC0aSTMbqhMcCPbZCNQrTAFH4g==
+X-Received: by 2002:a5d:51ce:: with SMTP id n14mr2579614wrv.155.1594866502289;
+        Wed, 15 Jul 2020 19:28:22 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
+        by smtp.googlemail.com with ESMTPSA id u1sm7477611wrb.78.2020.07.15.19.28.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 19:28:21 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: [PATCH v4 0/7] Add support for ipq8064 tsens
+Date:   Thu, 16 Jul 2020 04:28:09 +0200
+Message-Id: <20200716022817.30439-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-15_12:2020-07-15,2020-07-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 spamscore=0 phishscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 clxscore=1015 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160009
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ipq8064 SoCs tsens driver is based on 8960 tsens driver. This patchset 
+expand the 8960 unused driver with interrupt support and set_trip point.
+Ipq8064 needs to be registered as a gcc child as the tsens regs on
+this platform are shared with the controller.
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
+v4:
+* Fix compilation error and warning reported by the bot
+v3:
+* Change driver to register as child instead of use phandle
+v2:
+* Fix dt-bindings problems
 
-> While initrd, elfcorehdr and backup regions are already added to the
-> reserve map, there are a few missing regions that need to be added to
-> the memory reserve map. Add them here. And now that all the changes
-> to load panic kernel are in place, claim likewise.
->
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
+Ansuel Smith (7):
+  ipq806x: gcc: add support for child probe
+  drivers: thermal: tsens: try load regmap from parent for 8960
+  drivers: thermal: tsens: add ipq8064 support
+  dt-bindings: thermal: tsens: document ipq8064 bindings
+  drivers: thermal: tsens: add interrupt support for 9860 driver
+  drivers: thermal: tsens: add support for custom set_trip function
+  drivers: thermal: tsens: add set_trip support for 8960
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-
-Just one oinor nit below.
-
-> ---
->
-> v2 -> v3:
-> * Unchanged. Added Tested-by tag from Pingfan.
->
-> v1 -> v2:
-> * Updated add_rtas_mem_range() & add_opal_mem_range() callsites based on
->   the new prototype for these functions.
->
->
->  arch/powerpc/kexec/file_load_64.c |   58 ++++++++++++++++++++++++++++++++++---
->  1 file changed, 53 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-> index 2531bb5..29e5d11 100644
-> --- a/arch/powerpc/kexec/file_load_64.c
-> +++ b/arch/powerpc/kexec/file_load_64.c
-> @@ -193,6 +193,34 @@ static int get_crash_memory_ranges(struct crash_mem **mem_ranges)
->  }
->  
->  /**
-> + * get_reserved_memory_ranges - Get reserve memory ranges. This list includes
-> + *                              memory regions that should be added to the
-> + *                              memory reserve map to ensure the region is
-> + *                              protected from any mischeif.
-
-s/mischeif/mischief/
-
-> + * @mem_ranges:                 Range list to add the memory ranges to.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +static int get_reserved_memory_ranges(struct crash_mem **mem_ranges)
-> +{
-> +	int ret;
-> +
-> +	ret = add_rtas_mem_range(mem_ranges);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = add_tce_mem_ranges(mem_ranges);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = add_reserved_ranges(mem_ranges);
-> +out:
-> +	if (ret)
-> +		pr_err("Failed to setup reserved memory ranges\n");
-> +	return ret;
-> +}
+ .../bindings/thermal/qcom-tsens.yaml          |  50 ++-
+ drivers/clk/qcom/gcc-ipq806x.c                |   2 +-
+ drivers/thermal/qcom/tsens-8960.c             | 287 +++++++++++++++++-
+ drivers/thermal/qcom/tsens.c                  |   7 +
+ drivers/thermal/qcom/tsens.h                  |   5 +
+ 5 files changed, 328 insertions(+), 23 deletions(-)
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+2.27.0
+
