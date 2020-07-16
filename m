@@ -2,104 +2,137 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DF8C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF5820739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:17:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d1BIlQya"
+	by mail.kernel.org (Postfix) with ESMTP id 982D220739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgGPXRY (ORCPT
+        id S1727847AbgGPXTZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:17:24 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55426 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgGPXRX (ORCPT
+        Thu, 16 Jul 2020 19:19:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37712 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726846AbgGPXTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:17:23 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GNDPgK088443;
-        Thu, 16 Jul 2020 23:17:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=8jtki/pU95bZMs51t72Fvdic/OjDlvBAeH0vxva+v1M=;
- b=d1BIlQyasWZQ9MBtOcWLb43omvjPgkZWmnYzB71AFO0OcQc+6doqyh8kCIQnKRDmFggS
- xZsMl0rbWhLZRY66Kwjdho6Q7gptc2icRRCVHEaKHyLYaUWCNaX4Vrhs+tkBcLGSf1AJ
- HMJybpVlmy4UNTSTNnq+xjoHHQs98r2OTElwLvyZPGHDliwl/RSX6+SNQzSzBavtNA+Z
- oV98Ev4fcwSrtUr3k+vFBmFL7LzpSATz8Y+J9AVj+Xvco0eUBKZ2RkaSEvGPgfbaJPRg
- 8Qv1Q/MFs9S9Tjj3/ynJ7n7YQbfrc7VrJWCTYvSsapQaq/X34KorYouq+TU70KjwLAUu jg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 3275cmm8mr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jul 2020 23:17:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GNDiTN111977;
-        Thu, 16 Jul 2020 23:15:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 327qbctyd5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 23:15:06 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06GNF3TF013005;
-        Thu, 16 Jul 2020 23:15:04 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jul 2020 16:15:03 -0700
-Subject: Re: [PATCH v4 03/15] mm,madvise: call soft_offline_page() without
- MF_COUNT_INCREASED
-To:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, linux-mm@kvack.org, david@redhat.com,
-        aneesh.kumar@linux.vnet.ibm.com, naoya.horiguchi@nec.com,
-        linux-kernel@vger.kernel.org,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Oscar Salvador <osalvador@suse.com>
-References: <20200716123810.25292-1-osalvador@suse.de>
- <20200716123810.25292-4-osalvador@suse.de>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <0467947a-4306-bc36-2c5e-04e578990d36@oracle.com>
-Date:   Thu, 16 Jul 2020 16:15:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 16 Jul 2020 19:19:21 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GN2r0f177405;
+        Thu, 16 Jul 2020 19:18:36 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 329x6077m7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 19:18:36 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GNBBQ8031579;
+        Thu, 16 Jul 2020 23:18:34 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma04wdc.us.ibm.com with ESMTP id 327529cf4m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 23:18:34 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GNIYpI53281202
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 23:18:34 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4081DAE060;
+        Thu, 16 Jul 2020 23:18:34 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 996E5AE05C;
+        Thu, 16 Jul 2020 23:18:33 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.65.214.95])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Jul 2020 23:18:33 +0000 (GMT)
+From:   Tulio Magno Quites Machado Filho <tuliom@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-arch@vger.kernel.org, nathanl@linux.ibm.com, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>, luto@kernel.org,
+        tglx@linutronix.de, vincenzo.frascino@arm.com,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v8 5/8] powerpc/vdso: Prepare for switching VDSO to generic C implementation.
+In-Reply-To: <20200715204725.Horde.5GZvsEv4ZkdzFHL76HZiFg8@messagerie.si.c-s.fr>
+References: <cover.1588079622.git.christophe.leroy@c-s.fr> <2a67c333893454868bbfda773ba4b01c20272a5d.1588079622.git.christophe.leroy@c-s.fr> <878sflvbad.fsf@mpe.ellerman.id.au> <20200715204725.Horde.5GZvsEv4ZkdzFHL76HZiFg8@messagerie.si.c-s.fr>
+User-Agent: Notmuch/0.29.1 (http://notmuchmail.org) Emacs/26.3 (x86_64-redhat-linux-gnu)
+Date:   Thu, 16 Jul 2020 20:18:32 -0300
+Message-ID: <87ft9rdp6f.fsf@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200716123810.25292-4-osalvador@suse.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160149
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 mlxscore=0
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 suspectscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007160149
+ definitions=main-2007160148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/20 5:37 AM, Oscar Salvador wrote:
-> From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> 
-> The call to get_user_pages_fast is only to get the pointer to a struct
-> page of a given address, pinning it is memory-poisoning handler's job,
-> so drop the refcount grabbed by get_user_pages_fast
-> 
-> Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> Signed-off-by: Oscar Salvador <osalvador@suse.com>
+Christophe Leroy <christophe.leroy@csgroup.eu> writes:
 
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+> Michael Ellerman <mpe@ellerman.id.au> a écrit :
+>
+>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>>> Prepare for switching VDSO to generic C implementation in following
+>>> patch. Here, we:
+>>> - Modify __get_datapage() to take an offset
+>>> - Prepare the helpers to call the C VDSO functions
+>>> - Prepare the required callbacks for the C VDSO functions
+>>> - Prepare the clocksource.h files to define VDSO_ARCH_CLOCKMODES
+>>> - Add the C trampolines to the generic C VDSO functions
+>>>
+>>> powerpc is a bit special for VDSO as well as system calls in the
+>>> way that it requires setting CR SO bit which cannot be done in C.
+>>> Therefore, entry/exit needs to be performed in ASM.
+>>>
+>>> Implementing __arch_get_vdso_data() would clobber the link register,
+>>> requiring the caller to save it. As the ASM calling function already
+>>> has to set a stack frame and saves the link register before calling
+>>> the C vdso function, retriving the vdso data pointer there is lighter.
+>> ...
+>>
+>>> diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h  
+>>> b/arch/powerpc/include/asm/vdso/gettimeofday.h
+>>> new file mode 100644
+>>> index 000000000000..4452897f9bd8
+>>> --- /dev/null
+>>> +++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
+>>> @@ -0,0 +1,175 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +#ifndef __ASM_VDSO_GETTIMEOFDAY_H
+>>> +#define __ASM_VDSO_GETTIMEOFDAY_H
+>>> +
+>>> +#include <asm/ptrace.h>
+>>> +
+>>> +#ifdef __ASSEMBLY__
+>>> +
+>>> +.macro cvdso_call funct
+>>> +  .cfi_startproc
+>>> +	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
+>>> +	mflr		r0
+>>> +  .cfi_register lr, r0
+>>> +	PPC_STL		r0, STACK_FRAME_OVERHEAD + PPC_LR_STKOFF(r1)
+>>
+>> This doesn't work for me on ppc64(le) with glibc.
+>>
+>> glibc doesn't create a stack frame before making the VDSO call, so the
+>> store of r0 (LR) goes into the caller's frame, corrupting the saved LR,
+>> leading to an infinite loop.
+>
+> Where should it be saved if it can't be saved in the standard location ?
+
+As Michael pointed out, userspace doesn't treat the VDSO as a normal function
+call.  In order to keep compatibility with existent software, LR would need to
+be saved on another stack frame.
 
 -- 
-Mike Kravetz
+Tulio Magno
