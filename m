@@ -7,47 +7,44 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCEFC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E36C207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01BDA20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D7FuUAYt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/vm5ygBP"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kv1LVKj3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uFh4Wbtt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbgGPTvI (ORCPT
+        id S1729837AbgGPTv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729727AbgGPTvA (ORCPT
+        Thu, 16 Jul 2020 15:51:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35274 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729718AbgGPTu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:51:00 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE37C08C5CE;
-        Thu, 16 Jul 2020 12:50:59 -0700 (PDT)
-Message-Id: <20200716185425.307587523@linutronix.de>
+        Thu, 16 Jul 2020 15:50:56 -0400
+Message-Id: <20200716185424.980336370@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594929058;
+        s=2020; t=1594929054;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=9xkAs7jG5EBlpBrFKUyEy4hqz+L6GrXswNue6258hSg=;
-        b=D7FuUAYthunwvlhxyDHFNWxdUIk+TTqXfqddyjMDbxw+FGiYiviomWcOF9jyUZdTqCv1FH
-        KNVuVw8VQXyoSW4+y3Y8SgzpeEM7se6uVodXFIJkKQXt7dym+na+BClavT4KmTd4ZsBENT
-        1CsN51U85hqJQ85ylh+y+BlMgjwwD57D3i9gjkQVCttMNWqgm+FL/EghUSXqbIXroSKT47
-        Z1Efk495z2Y56LloFcnWl8VOPL6O+qljnxzk9R62zoeQCCb6fALbUyQRB5eO4pBLVCr11x
-        c2vfDn/IKyUWf2FBPv7m/I+10+NFyFr2c2hpQDZ28LK0Zi3q1Orlog9PB2GgXQ==
+        bh=TW2YREFZRpmpV7lTAtkkgutVDumUXCXPLDpmUk0C+O8=;
+        b=Kv1LVKj3M48EaAVRlz3/IW4tZuacIc+gqhsM0b7h4CDi70/Bme8m/APPR7VrQtAx1BFSKG
+        aAexOvv/vawtRMevc/PkwmHR02f1nnyahLC1AvnrwiQ11a3I9ai+s5kym/E0hw+i6c4x+6
+        pv9w6GOG5EhVeKkx6BDZ8IZKdM9ZdCs+Pc6whWz3evgTboXJ2rd00L8QDV2V2lxxehmOTQ
+        zbiw6xfMR2bJ+b7wjXLSiKu2/crkmSPdPVWawbTkDsUI7SXMGgOJ4fp4nZBQM/bfGlNDwD
+        QNP0uUYH8Fi3saagAcTFgQsRns/fOyCM4wfP0iuNv8q1n8Xar9uG6C8NcirGkg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594929058;
+        s=2020e; t=1594929054;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=9xkAs7jG5EBlpBrFKUyEy4hqz+L6GrXswNue6258hSg=;
-        b=/vm5ygBP046ZbGw4YdWZBN+fbSUqdCpS9v7s3dN4aTrESeC/JaK2E/UCk4ht37doKd7DBC
-        SsjBKMh/ITvg4wDg==
-Date:   Thu, 16 Jul 2020 20:22:21 +0200
+        bh=TW2YREFZRpmpV7lTAtkkgutVDumUXCXPLDpmUk0C+O8=;
+        b=uFh4Wbtt8O7CAnX4F4BeD2cBAoNzMxd7LJrrxfK7MbD4F4lj10vl62eg5JB4tByajyizPP
+        iStBrfEZt+/lU2Cw==
+Date:   Thu, 16 Jul 2020 20:22:18 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
@@ -56,7 +53,7 @@ Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
         Keno Fischer <keno@juliacomputing.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [patch V3 13/13] x86/kvm: Use generic exit to guest work function
+Subject: [patch V3 10/13] x86/entry: Cleanup idtentry_entry/exit_user
 References: <20200716182208.180916541@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,98 +63,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the generic infrastructure to check for and handle pending work before
-entering into guest mode.
-
-This now handles TIF_NOTIFY_RESUME as well which was ignored so
-far. Handling it is important as this covers task work and task work will
-be used to offload the heavy lifting of POSIX CPU timers to thread context.
+Cleanup the temporary defines and use irqentry_ instead of idtentry_.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org
 ---
- arch/x86/kvm/Kconfig   |    1 +
- arch/x86/kvm/vmx/vmx.c |   11 +++++------
- arch/x86/kvm/x86.c     |   15 ++++++---------
- 3 files changed, 12 insertions(+), 15 deletions(-)
+ arch/x86/include/asm/idtentry.h |    4 ----
+ arch/x86/kernel/cpu/mce/core.c  |    4 ++--
+ arch/x86/kernel/traps.c         |   18 +++++++++---------
+ 3 files changed, 11 insertions(+), 15 deletions(-)
 
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -42,6 +42,7 @@ config KVM
- 	select HAVE_KVM_MSI
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_NO_POLL
-+	select KVM_EXIT_TO_GUEST_WORK
- 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
- 	select KVM_VFIO
- 	select SRCU
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -27,6 +27,7 @@
- #include <linux/slab.h>
- #include <linux/tboot.h>
- #include <linux/trace_events.h>
-+#include <linux/entry-kvm.h>
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -11,10 +11,6 @@
  
- #include <asm/apic.h>
- #include <asm/asm.h>
-@@ -5376,14 +5377,12 @@ static int handle_invalid_guest_state(st
- 		}
+ #include <asm/irq_stack.h>
  
- 		/*
--		 * Note, return 1 and not 0, vcpu_run() is responsible for
--		 * morphing the pending signal into the proper return code.
-+		 * Note, return 1 and not 0, vcpu_run() will invoke
-+		 * exit_to_guest_mode() which will create a proper return
-+		 * code.
- 		 */
--		if (signal_pending(current))
-+		if (__exit_to_guest_mode_work_pending())
- 			return 1;
+-/* Temporary define */
+-#define idtentry_enter_user	irqentry_enter_from_user_mode
+-#define idtentry_exit_user	irqentry_exit_to_user_mode
 -
--		if (need_resched())
--			schedule();
- 	}
+ typedef struct idtentry_state {
+ 	bool exit_rcu;
+ } idtentry_state_t;
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1927,11 +1927,11 @@ static __always_inline void exc_machine_
  
- 	return 1;
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -56,6 +56,7 @@
- #include <linux/sched/stat.h>
- #include <linux/sched/isolation.h>
- #include <linux/mem_encrypt.h>
-+#include <linux/entry-kvm.h>
- 
- #include <trace/events/kvm.h>
- 
-@@ -1585,7 +1586,7 @@ EXPORT_SYMBOL_GPL(kvm_emulate_wrmsr);
- bool kvm_vcpu_exit_request(struct kvm_vcpu *vcpu)
+ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
  {
- 	return vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu) ||
--		need_resched() || signal_pending(current);
-+		exit_to_guest_mode_work_pending();
+-	idtentry_enter_user(regs);
++	irqentry_enter_from_user_mode(regs);
+ 	instrumentation_begin();
+ 	machine_check_vector(regs);
+ 	instrumentation_end();
+-	idtentry_exit_user(regs);
++	irqentry_exit_to_user_mode(regs);
  }
- EXPORT_SYMBOL_GPL(kvm_vcpu_exit_request);
  
-@@ -8676,15 +8677,11 @@ static int vcpu_run(struct kvm_vcpu *vcp
- 			break;
- 		}
+ #ifdef CONFIG_X86_64
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -638,18 +638,18 @@ DEFINE_IDTENTRY_RAW(exc_int3)
+ 		return;
  
--		if (signal_pending(current)) {
--			r = -EINTR;
--			vcpu->run->exit_reason = KVM_EXIT_INTR;
--			++vcpu->stat.signal_exits;
--			break;
--		}
--		if (need_resched()) {
-+		if (exit_to_guest_mode_work_pending()) {
- 			srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
--			cond_resched();
-+			r = exit_to_guest_mode(vcpu);
-+			if (r)
-+				return r;
- 			vcpu->srcu_idx = srcu_read_lock(&kvm->srcu);
- 		}
- 	}
+ 	/*
+-	 * idtentry_enter_user() uses static_branch_{,un}likely() and therefore
+-	 * can trigger INT3, hence poke_int3_handler() must be done
+-	 * before. If the entry came from kernel mode, then use nmi_enter()
+-	 * because the INT3 could have been hit in any context including
+-	 * NMI.
++	 * irqentry_enter_from_user_mode() uses static_branch_{,un}likely()
++	 * and therefore can trigger INT3, hence poke_int3_handler() must
++	 * be done before. If the entry came from kernel mode, then use
++	 * nmi_enter() because the INT3 could have been hit in any context
++	 * including NMI.
+ 	 */
+ 	if (user_mode(regs)) {
+-		idtentry_enter_user(regs);
++		irqentry_enter_from_user_mode(regs);
+ 		instrumentation_begin();
+ 		do_int3_user(regs);
+ 		instrumentation_end();
+-		idtentry_exit_user(regs);
++		irqentry_exit_to_user_mode(regs);
+ 	} else {
+ 		nmi_enter();
+ 		instrumentation_begin();
+@@ -901,12 +901,12 @@ static __always_inline void exc_debug_us
+ 	 */
+ 	WARN_ON_ONCE(!user_mode(regs));
+ 
+-	idtentry_enter_user(regs);
++	irqentry_enter_from_user_mode(regs);
+ 	instrumentation_begin();
+ 
+ 	handle_debug(regs, dr6, true);
+ 	instrumentation_end();
+-	idtentry_exit_user(regs);
++	irqentry_exit_to_user_mode(regs);
+ }
+ 
+ #ifdef CONFIG_X86_64
 
