@@ -2,89 +2,120 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB918C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0A4C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B8D2145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18F2212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eHu1cIr7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pzWBph9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgGPXJ1 (ORCPT
+        id S1728052AbgGPXJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43400 "EHLO
+        Thu, 16 Jul 2020 19:09:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbgGPXJS (ORCPT
+        with ESMTP id S1727935AbgGPXJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:09:18 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A776C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 15:16:41 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id k71so5507213pje.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 15:16:41 -0700 (PDT)
+        Thu, 16 Jul 2020 19:09:19 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F85C08C5DD;
+        Thu, 16 Jul 2020 15:19:41 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z15so8778351wrl.8;
+        Thu, 16 Jul 2020 15:19:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uyJjNcCyaCd1x5/819IrrY1FHu5p7NCmrwELbf92SAw=;
-        b=eHu1cIr74RawyPqX0Cqg3kfkYi/drr3HXHWhaWKTivMGMKCMf3e0XRoQ2En4jdjC4o
-         l0QXBXm6ndcTw0e1BnIhRnI9fmTiAZsUsu0D17CFOrD4RGcofnUAKaBCktK0WZ3HIVfj
-         xabBG2ZxSqmkP5rHOF+BNiSMHYS5PaLoIfFLIMpffgQpnHBG0JhA3lwQzxqpQJRN1Igr
-         Ol5E/Gp0zFDAv77oilMTq1A6jnLxF8MKYnrfILiWK6THw1VBn9dDuu8Xz+SeXubQM64h
-         RRBKDl3Y3FuU2gfHgGMY94DzYfV9XveiQNE1WNtju12Jzz60Joi1KZzd8kS0V40voa54
-         cnGA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H5QoX0EnQtJ7nKvUo3g53hwz6ZnHeI+UuONUkGNSIOg=;
+        b=pzWBph9RVupA8tGWneYRS9IeaLJh04bMZnsi+xitFm22eyJx78DiPYE4JnWKVmlfln
+         SHSHJy0RkoRquZDZuHr/e/PEgFL/3EoQwdSv+cgF7cuo2YcpBVRS68EiR/QazpvR5QnX
+         rA878Lo8v4MuZEupYGkzYTDpGjLOGwugksfpbRcZ4Kb5cRNNUlj7YTilUIU4OlTeiyHf
+         OSG4RpYBYXs9yqCXaRidWdkU4sG7ZOqUtD35k+mUO4NAOgTZSeXLUJD+E6ONWYBaVuyU
+         NOp1TMvf/tiNS85lz3cEmeT1W0vO6+UnAh+B1KZ7qO046bV62mB0t+QdBbuI+shekPr9
+         RqQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uyJjNcCyaCd1x5/819IrrY1FHu5p7NCmrwELbf92SAw=;
-        b=tfOYJj1mDfN4DbrVI9ZZhCQ/KyrCJtc0V6DzJagAxEeyFIUWWClHIhLzLJxdL03abL
-         2+A2aEuKAj7nUJLi1DcDbrGz76grn5VFYcnDbJzykZEPXwJ5H2bcgIe80VVkH8kp5CfC
-         YRci13YjjiL9ajrICTjIvLCKpYc0jzIBIxTEzsC+D/CzrgKmB5p2kgUr3SmQ6xy5FgT9
-         Vuy2Hv4AmXZfTaMQikm61quuCS2kFHe0Sz592plmCCKtzaZJ0JOugnFEr0ShIu9Lrq2c
-         axqkMx85IJmEC8CaD5flR8AtAtnt8UMa/KDwESg57Ems1Uxl6tWIu7WMs0BwMb5kflVM
-         RYrg==
-X-Gm-Message-State: AOAM532+9zTAf868v7Vay8YXkGnsK8bwEFLPWX0aqCnuRoT7Y7wa66Gs
-        4ohK1yg0BA8k/HPVKZu/hFSBOHd9yLnhQgEIhdUnoQ==
-X-Google-Smtp-Source: ABdhPJzd3SJxIS4HsCUds4zwHzaxq83M1tXUciur4bETKG0e7fh8+z+LpQ32CtOhhi4oDDmKD7oe/79nInT7mEGSln8=
-X-Received: by 2002:a17:90a:cc03:: with SMTP id b3mr6368860pju.80.1594937800591;
- Thu, 16 Jul 2020 15:16:40 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H5QoX0EnQtJ7nKvUo3g53hwz6ZnHeI+UuONUkGNSIOg=;
+        b=BbplC3geyzTgNms0Z/TvuBebbtbTtrV7vVUMk7CAv3yyLj0kYJZim2b/s4ZogBX1ox
+         mukXyySLWE5PgAxhKG6dtrMTusNuDK57GgqLnupkWbBXbPpzAC+tyIC6N9mzor7UVThq
+         5IB1h3GkUI0Ncv2sqQiWIqVHQNpEYo91Q8jG2ZlY0n8qX0msrmlOuzIdBYPNawucoxme
+         7Av1porplSKHWL0iGHJJvVnhbRUJGpp7aweMkTo9QNsb0BlaJGM+MeAXz6a4qj4DjX+m
+         dG2QGJbBpkeqOo6ebIQ7rJRphWmf53oBbyj9iWdzlGmNy6gnZmXWsE12NxiQz0L68hV0
+         zArw==
+X-Gm-Message-State: AOAM532cG7YzzBK/0Rjf+lZtzLIsZBMYQFxNdff2b1qs/J8lmi11FdMA
+        oPTSS2qWxBxXexgCh4LJUlGR/n4G
+X-Google-Smtp-Source: ABdhPJzk6a7MmutVrxKKsxmTRCi8FyROM04Oh+yTPj75zNfkwUQOxrwiMg5l5Wv3amORXEUjGV1Lfw==
+X-Received: by 2002:a5d:54c9:: with SMTP id x9mr7437293wrv.247.1594937979124;
+        Thu, 16 Jul 2020 15:19:39 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id d10sm10822130wrx.66.2020.07.16.15.19.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 15:19:38 -0700 (PDT)
+Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
+ properties
+To:     Matthew Hagan <mnhagan88@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+ <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <21d25c2f-8a8b-81db-b665-916676a0df65@gmail.com>
+Date:   Thu, 16 Jul 2020 15:19:34 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200716215242.GA19193@embeddedor>
-In-Reply-To: <20200716215242.GA19193@embeddedor>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 16 Jul 2020 15:16:29 -0700
-Message-ID: <CAFd5g44yqds4xUp=xVbXTpFZydLobfpyLrVdwZOjrRa4=TOj5Q@mail.gmail.com>
-Subject: Re: [PATCH][next] i2c: aspeed: Use fallthrough pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 2:47 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1].
->
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+
+On 7/13/2020 1:50 PM, Matthew Hagan wrote:
+> Add names and decriptions of additional PORT0_PAD_CTRL properties.
+> 
+> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> index ccbc6d89325d..3d34c4f2e891 100644
+> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> @@ -13,6 +13,14 @@ Optional properties:
+>  
+>  - reset-gpios: GPIO to be used to reset the whole device
+>  
+> +Optional MAC configuration properties:
+> +
+> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
+> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
+> +				falling edge.
+> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
+> +				falling edge.
+
+Are not these two mutually exclusive, that is the presence of one
+implies the absence of the other?
+-- 
+Florian
