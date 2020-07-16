@@ -7,100 +7,128 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC64C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD7E92065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED1802076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="wTAAXqYW"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="YAS31mZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgGPNT5 (ORCPT
+        id S1728707AbgGPNUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36838 "EHLO
+        Thu, 16 Jul 2020 09:20:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbgGPNT5 (ORCPT
+        with ESMTP id S1728150AbgGPNUa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:19:57 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15365C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:19:57 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g75so10269010wme.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:19:57 -0700 (PDT)
+        Thu, 16 Jul 2020 09:20:30 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C703C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:20:30 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j4so7009495wrp.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:20:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+Opa04oEqgTBiOKYS1pjpUdtak0oL8WBVStzXqF1+/8=;
-        b=wTAAXqYWiNlP2B6mjWEgbI3KTLl2M0kIkndJjf3MujFAWW6KxBgEHGHnK6nLsvxQUr
-         uNgBkwVHPilPpPR06GmDjPi2JrQ0jdDsCMihlJEk9FBcMg0Krm8g2F14514JnrBaooXY
-         ueu2SQbxihXqtyfVhrolWOPfnc8ouBq15nSh8Yo1YM5S1/Xxu4qMnNFBi/K/eKppxuZs
-         GR6RLTrq5iVnR/rOOo/1PhFSyUv7yUDXRWj0d5d0tRE1eauZk9bDibb/+TZsMU3rb5qF
-         uvBU2KmfSz5ySW/3Gbl2KKGrQVT1eB/mEYz/y/oUWRiKJSR3JD6Phk20cSntOYmLKPoa
-         H6rg==
+        bh=pfpSq4DvBlL0D7ejymaDz8bArWnsRIi88cDneCbu2y8=;
+        b=YAS31mZ/STKIbmeo2sBBPloQfilq26Uf4dTWQCS2bWyUHtZRLm2xpBxxXLF4fuj9f1
+         Wmo4WpB8a+hibAYAD8LrJVxMgJQqYfkiDjgOPxYJfrVyntyI/aqWXKvihxJTsOEQdug1
+         zobpXzlLehzzNhH9tloFP8WLI5hMkghNQGOQGaNThXI0cB4IufWue9wTdZDBHtVgH/KG
+         481nblD7Y/1/C5/uIeNqa4kZP8XpcYFRRBIDCpeEUO8UJyaV3NoKql4KEIRMi4GYUArK
+         OYbESX2VcAc3b9E2YdzxiPLMq9DRhasta+A2+i4bbuEoVfFoJ9jxL3+VOSwwws1QHJQk
+         HOvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+Opa04oEqgTBiOKYS1pjpUdtak0oL8WBVStzXqF1+/8=;
-        b=BBFol5pYipsv1uKeZKVrc0fZD86+HGhfkn/X12eVea9wPvtmwiPGVoiaOECpUlu68X
-         A6nUsmIEEwws0HuwSl42ISIu/BzAiAy7/XOBv2G8WlC3tO0nCGpxeQzUYGrY+seuxPCW
-         xNLeibVS3M0FLo6BvPHCwuHNo9CbzwFU/yly5xpA/kPZxWkJ1UnINaRaztgs1nC5NoOP
-         e2J0aAHO77ZcmYNOooHmhqyvZbU+u/5GrZYuMCJfvTB/fEMzuxMJnolcE8psI/V4G6pq
-         umW2DU0bMvHG/aRdVkJu4dB2cW3WAKBP+ODY9Xk4I6NH3zQJ0YbeAyJx7RlCeYxaDJ+k
-         EYMg==
-X-Gm-Message-State: AOAM530IuQVKdoWkPLxQP0hpBj8MCn4K2OkS0/VCdu7a1w7QYhFUaThL
-        FqXpyFdb1T5zoAaxgV5xF/of0JsPekgb/3H8ItbdXQ==
-X-Google-Smtp-Source: ABdhPJylq+3o0Lu5wXx1xEQJXkr2imDIzJcWCeXrqYKBHTAAktFAHHv5KdeprXPI7ialRp6Hxj+DFYXMEvHWz62F8/Y=
-X-Received: by 2002:a1c:2d91:: with SMTP id t139mr4306095wmt.3.1594905595633;
- Thu, 16 Jul 2020 06:19:55 -0700 (PDT)
+        bh=pfpSq4DvBlL0D7ejymaDz8bArWnsRIi88cDneCbu2y8=;
+        b=Hv9Gxs3dO57bX3N8tONTB/lz0SwQcweK0mjjmSfycuxhnS+qC16IUOgM1R7neaVFxr
+         CcM/9BR0Xt4rIXSRsKyZGIhKwg6c7mv2P9FgLibiI/oNXlW+tWXtT266NEmm2OBYQ59s
+         kB2XzfnksFRba0gZQzfZqBuvZ05WirKfFqR3O1j8SGuKgd41ZYLoEb/TsrZTEEMwR4/h
+         LJyQWUV1seIuR6UaraZ4MH1JrFaJsUp5yYThvadMzU5hxIL3xZStGZrxFMu0sKrG3tL9
+         mKXngZIPgtTRkHY1mWA467Lmmt9JQ7f9ozKzL2caJ0/vHt+y8ltPoW9Vk6Klvhf6cKN+
+         F/JA==
+X-Gm-Message-State: AOAM533IhIP/ZgtbTbIA8V75gGHdg6NkG+9AIDyrjFTS/e/hZ5QYWsvt
+        omxfgdZquUfmgkhImva6uhaSIU3bP78tGTyN2p3BmQ==
+X-Google-Smtp-Source: ABdhPJwdS5FgCKFmROVTu2BMJ/9+zwBq3b9LDYGDDGp/YQhzWsDX2aDEPh7oicx6LMFSG8DHSjtjKOnoj3Z6bCb3V1I=
+X-Received: by 2002:adf:fcca:: with SMTP id f10mr4975330wrs.325.1594905629196;
+ Thu, 16 Jul 2020 06:20:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1594886530.git.zong.li@sifive.com> <628efa24c79a493e39ce6ef13017ae52eaf13388.1594886530.git.zong.li@sifive.com>
-In-Reply-To: <628efa24c79a493e39ce6ef13017ae52eaf13388.1594886530.git.zong.li@sifive.com>
+References: <cover.1594886530.git.zong.li@sifive.com> <8691a6a78271c748a2f75f1430b36f304551838d.1594886530.git.zong.li@sifive.com>
+In-Reply-To: <8691a6a78271c748a2f75f1430b36f304551838d.1594886530.git.zong.li@sifive.com>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 16 Jul 2020 18:49:42 +0530
-Message-ID: <CAAhSdy38QtmA-D2iOyC=dwrwtfVWfEiYQY529zJVsPS+FwTuzg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] riscv: Fix build warning for mm/init
+Date:   Thu, 16 Jul 2020 18:50:14 +0530
+Message-ID: <CAAhSdy3q8SCj4aTanyvgywuEa+DWCOZeOF3=-xHW+UjzXXcd_w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] riscv: Fix build warning for mm/pageattr
 To:     Zong Li <zong.li@sifive.com>
 Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Pekka Enberg <penberg@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 6:35 PM Zong Li <zong.li@sifive.com> wrote:
+On Thu, Jul 16, 2020 at 6:36 PM Zong Li <zong.li@sifive.com> wrote:
 >
-> Add static keyword for resource_init, this function is only used in this
-> object file.
+> Add header for missing prototype. Also, static keyword should be at
+> beginning of declaration.
 >
-> The warning message as follow (with W=1 build):
+> The warning messages as follows (with W=1 build):
 >
-> arch/riscv/mm/init.c:520:13:
-> warning: no previous prototype for 'resource_init' [-Wmissing-prototypes]
+> arch/riscv/mm/pageattr.c:130:5:
+> warning: no previous prototype for 'set_memory_ro' [-Wmissing-prototypes]
+>
+> arch/riscv/mm/pageattr.c:136:5:
+> warning: no previous prototype for 'set_memory_rw' [-Wmissing-prototypes]
+>
+> arch/riscv/mm/pageattr.c:142:5:
+> warning: no previous prototype for 'set_memory_x' [-Wmissing-prototypes]
+>
+> arch/riscv/mm/pageattr.c:147:5:
+> warning: no previous prototype for 'set_memory_nx' [-Wmissing-prototypes]
+>
+> arch/riscv/mm/pageattr.c:152:5:
+> warning: no previous prototype for 'set_direct_map_invalid_noflush' [-Wmissing-prototypes]
+>
+> arch/riscv/mm/pageattr.c:169:5:
+> warning: no previous prototype for 'set_direct_map_default_noflush' [-Wmissing-prototypes]
+>
+> arch/riscv/mm/pageattr.c:97:1:
+> warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
 >
 > Signed-off-by: Zong Li <zong.li@sifive.com>
+> Reviewed-by: Pekka Enberg <penberg@kernel.org>
 > ---
->  arch/riscv/mm/init.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/riscv/mm/pageattr.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 92002952c621..66f5952f39c0 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -517,7 +517,7 @@ void mark_rodata_ro(void)
+> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
+> index 289a9a5ea5b5..19fecb362d81 100644
+> --- a/arch/riscv/mm/pageattr.c
+> +++ b/arch/riscv/mm/pageattr.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/pgtable.h>
+>  #include <asm/tlbflush.h>
+>  #include <asm/bitops.h>
+> +#include <asm/set_memory.h>
+>
+>  struct pageattr_masks {
+>         pgprot_t set_mask;
+> @@ -94,7 +95,7 @@ static int pageattr_pte_hole(unsigned long addr, unsigned long next,
+>         return 0;
 >  }
->  #endif
 >
-> -void __init resource_init(void)
-> +static void __init resource_init(void)
->  {
->         struct memblock_region *region;
->
+> -const static struct mm_walk_ops pageattr_ops = {
+> +static const struct mm_walk_ops pageattr_ops = {
+>         .pgd_entry = pageattr_pgd_entry,
+>         .p4d_entry = pageattr_p4d_entry,
+>         .pud_entry = pageattr_pud_entry,
 > --
 > 2.27.0
 >
