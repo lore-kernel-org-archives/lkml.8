@@ -2,127 +2,78 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CEEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B95C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5771220787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:38:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGLwwXq2"
+	by mail.kernel.org (Postfix) with ESMTP id 1439820787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgGPUic (ORCPT
+        id S1726603AbgGPUlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:38:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgGPUib (ORCPT
+        Thu, 16 Jul 2020 16:41:05 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:45135 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgGPUlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:38:31 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32A34C08C5C0;
-        Thu, 16 Jul 2020 13:38:31 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id h19so9760646ljg.13;
-        Thu, 16 Jul 2020 13:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dUwf2SMXCQ1iQciXg69AWLDyg5prbuTXReBC1ioTJ8Y=;
-        b=SGLwwXq2CI4EVB0UiHTAEqbvsFXDidx0M1N7tS8Rj8WrqXdoYV/rESjLDlwzoJPene
-         ZjDSaSYSeVyrU3d7rd3Znj6OqmnKntQ/oAQP1/rxYECMUZB1ZEp2PGyJsKHkmXoDa9gq
-         iG1qOU759DQRydOGVrN8b2/qqp95bXNWhbbyic9nGPaNSSdJtMuGXAtsgtmdnLyimoPC
-         SnPZQrriIhJ5zUqpyabZ2typEWtiAuDGV6KYWm/XAiDdvqS7UBhPmPFLzmNG3Q9KA5bR
-         upsfPKPBZkyqg1gLyOI42Br04BISstAm9B1cIv3lkoZEr+F5z3BjEtdxQlyTo1pDv8Yg
-         tyVA==
+        Thu, 16 Jul 2020 16:41:05 -0400
+Received: by mail-io1-f70.google.com with SMTP id d64so4322825iof.12
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:41:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dUwf2SMXCQ1iQciXg69AWLDyg5prbuTXReBC1ioTJ8Y=;
-        b=M4diU6KpU6iJ+wYXAZrE412e9OPUzoSr32MgiKK6ALWlB9ooPniD5vLXy8C8rrUB4o
-         XAPKuj5azOX/wseLJ682jRfURpDuWyNIpPCRjf0Ro/jj79+N1wc963/hptgADs33d/66
-         yBGe/+0S/h5ARU0nvyUYubQa+O62YN7v11C//yclrJoCdnmKj+h81GFRLrQoS3jPhlTT
-         3CySBf39HfveajZrIzqqjqrUPMUjttqNUpaPcCuBmT7mik0NkJb9ho2T825lgGIPwV2w
-         WkdKQgvbPbQN/4qTj9sqD3KePrYkDVmFNWTPDYixzx9n1kiLmEwOYC+QItfHkzUsl12X
-         Cm7A==
-X-Gm-Message-State: AOAM5317Hws4r6BT/AG52rkkxu4aNHIYh5UsZNvJyFok883+BsmFPSGk
-        oL9MOHILxS+EjXQJHdMxBYjGUxmN
-X-Google-Smtp-Source: ABdhPJxPctuvp6UlqlM2B1w7IXQRvdqWx/rbi+MNpxhCTWEqFRkKZuRkplVaMknN0ntDCYtcCBplpw==
-X-Received: by 2002:a2e:9a59:: with SMTP id k25mr2863517ljj.133.1594931909299;
-        Thu, 16 Jul 2020 13:38:29 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
-        by smtp.googlemail.com with ESMTPSA id i22sm1249818ljb.19.2020.07.16.13.38.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 13:38:28 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
- tegra_mipi_calibrate and tegra_mipi_wait
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
-Date:   Thu, 16 Jul 2020 23:38:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=MJOPP91fI02T11IImb5jr+gjqr0RxeB4C7mwZ09S0ac=;
+        b=QzRS8M96yReCrQKnVKZQVn5hfZgmL+7QgFE2TvsKn7Ornfl9hLqiuW6vy49G9eStRJ
+         k7J+6t9m/DWodMnTafDA8Y1LAg5UKGN8aQjaoBFojgCXkhkklHFeCHDFiGRDRmCtIqVa
+         a+1zgBz16R3pz2bJogNt0XewnSubX5ke/BQawYvVoF0wX2z1W/Tbp3mWo4H7zQKWD5/D
+         zC6a1ngnCcG9O3dlFoJqjcIlDY2VbCjdPjE+n4DGPELQwzziQEveZUWoQxFyIDx2QWd6
+         b5+4j68TIPZSA2QPIKb9iq1p0p7iA/c7l0u5GfFxT/qDqndL/R2UxnmHvDFyr/mqkAYF
+         XTZw==
+X-Gm-Message-State: AOAM531qFK/RXNtf3qsloQ5oECHkOaSvmyXi4ahzQZFCHB0AMDHA5N+A
+        IaCnGq4+aitPIb/14A4o3RKWxTtmycEVOdOHi6ljqmruEOp0
+X-Google-Smtp-Source: ABdhPJzv2CNM+Kml3MecWCgob+RHzrgpODX2HxZNVirGkjOmGSYqaiVYO323EJ7wT8l+qtjglQjZCXtHQGB8uokL4mPFWgQs++oy
 MIME-Version: 1.0
-In-Reply-To: <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a02:cf12:: with SMTP id q18mr7002957jar.3.1594932064186;
+ Thu, 16 Jul 2020 13:41:04 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 13:41:04 -0700
+In-Reply-To: <000000000000983e0405a9c7b870@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002077ca05aa950f9f@google.com>
+Subject: Re: INFO: rcu detected stall in __sys_sendmsg
+From:   syzbot <syzbot+f517075b510306f61903@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        vinicius.gomes@intel.com, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.07.2020 07:20, Sowjanya Komatineni пишет:
-> SW can trigger MIPI pads calibration any time after power on
-> but calibration results will be latched and applied to the pads
-> by MIPI CAL unit only when the link is in LP-11 state and then
-> status register will be updated.
-> 
-> For CSI, trigger of pads calibration happen during CSI stream
-> enable where CSI receiver is kept ready prior to sensor or CSI
-> transmitter stream start.
-> 
-> So, pads may not be in LP-11 at this time and waiting for the
-> calibration to be done immediate after calibration start will
-> result in timeout.
-> 
-> This patch splits tegra_mipi_calibrate() and tegra_mipi_wait()
-> so triggering for calibration and waiting for it to complete can
-> happen at different stages.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
-...
->  int tegra_mipi_calibrate(struct tegra_mipi_device *device)
->  {
-> @@ -370,12 +381,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
->  	value |= MIPI_CAL_CTRL_START;
->  	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
->  
-> -	err = tegra_mipi_wait(device->mipi);
+syzbot has bisected this issue to:
 
-Doesn't MIPI clock need to be enabled during of the calibration process?
+commit 5a781ccbd19e4664babcbe4b4ead7aa2b9283d22
+Author: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Date:   Sat Sep 29 00:59:43 2018 +0000
 
->  	mutex_unlock(&device->mipi->lock);
->  	clk_disable(device->mipi->clk);
->  
-> -	return err;
-> +	return 0;
->  }
->  EXPORT_SYMBOL(tegra_mipi_calibrate);
+    tc: Add support for configuring the taprio scheduler
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=109a63cf100000
+start commit:   7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=149a63cf100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=183dd243398ba7ec
+dashboard link: https://syzkaller.appspot.com/bug?extid=f517075b510306f61903
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f01c1f100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16c40ba7100000
+
+Reported-by: syzbot+f517075b510306f61903@syzkaller.appspotmail.com
+Fixes: 5a781ccbd19e ("tc: Add support for configuring the taprio scheduler")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
