@@ -2,203 +2,137 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B64C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34722070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1DD2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgGPSIY (ORCPT
+        id S1728975AbgGPSOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:08:24 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:54016 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgGPSIX (ORCPT
+        Thu, 16 Jul 2020 14:14:44 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:59385 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728182AbgGPSOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:08:23 -0400
-Received: by mail-io1-f72.google.com with SMTP id g11so4083969ioc.20
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 11:08:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=SyFRYH38AbxdGG8YhsFqsJe3A32MYR05LhqTmyXFUfw=;
-        b=OosKtw80rt32Gi8h6PVL5vrskLFSOLvs+RniU5mdCeNuWxwyi22RJ5rFjvrADS65qa
-         +96FVO+X6Eb7QvVzkBSzWNItoDmlGUM91O472Sb47Hw6Q1R4j9amzYCKZ0OviOkZHu+7
-         wIkizxHc7fouwVJlK0W7lX/T5vQuQflV6ZGKWHdxns4rmA1Cz7tvj5/666dTpAEyrjC9
-         hzcRaqxlGXNbM8IK/xe0W7FOSDiFmGbJosn4roWE6xmmffOX7QgcJTSO17F2ZV2Qaen1
-         GofW9nNbjJLNHHFU5aUF4Yfb+HsqkWnPl8zEYxlR/kXOXm0fsODSHgJJCflnfdgQQ6Da
-         5MoQ==
-X-Gm-Message-State: AOAM532ZghLUkSOF2IOr74Y2fBwupTUnKhhJ7ZLGAbe2/FW/0bvIPmvE
-        JAByLITGZZAkMTY85R+whfMcpuE7OWGFuuKqhlU6Mpyimfxf
-X-Google-Smtp-Source: ABdhPJzdNygBUlghhbz34SGcB/qFOaqeRDNmtEri0Ca8NWCM4Y243yX7jWgBfk5QpfDvKUWveqk2ycvIPiY9cs4Sb3HdEYTeTfxU
+        Thu, 16 Jul 2020 14:14:43 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jw8P1-003l2e-8q; Thu, 16 Jul 2020 20:14:39 +0200
+Received: from p57bd93f9.dip0.t-ipconnect.de ([87.189.147.249] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jw8P1-002Hse-1p; Thu, 16 Jul 2020 20:14:39 +0200
+Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
+To:     peterz@infradead.org
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <b5cd845f-7b5e-af8e-a15d-3ede7e61ced4@physik.fu-berlin.de>
+ <0322def7-fc16-c805-8f2b-c88fffce2f1e@physik.fu-berlin.de>
+ <2df7ca7f-7e26-c916-b6ac-4ec1913fb8d7@physik.fu-berlin.de>
+ <CAMuHMdXjfq=RjJ2doR7XyQMnZUA8ccxKc7_tyUzTX29tpyZojw@mail.gmail.com>
+ <20200716094039.GQ10769@hirez.programming.kicks-ass.net>
+ <20200716102934.GC43129@hirez.programming.kicks-ass.net>
+ <f4fcb2e7-eca3-9a70-8e32-e3bf341b62eb@physik.fu-berlin.de>
+ <20200716110146.GB119549@hirez.programming.kicks-ass.net>
+ <008b06d4-1edd-1610-2ee1-6ea402d06114@physik.fu-berlin.de>
+ <20200716113720.GC119549@hirez.programming.kicks-ass.net>
+ <20200716120440.GD43129@hirez.programming.kicks-ass.net>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <a2e39d5a-77e9-3038-f117-a33353e93f34@physik.fu-berlin.de>
+Date:   Thu, 16 Jul 2020 20:14:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:8b51:: with SMTP id i78mr5564034ild.179.1594922900973;
- Thu, 16 Jul 2020 11:08:20 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 11:08:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f4ef6a05aa92ec6c@google.com>
-Subject: KASAN: slab-out-of-bounds Read in get_block
-From:   syzbot <syzbot+7d3e463b43b093527e84@syzkaller.appspotmail.com>
-To:     danarag@gmail.com, jack@suse.cz, linux-kernel@vger.kernel.org,
-        pombredanne@nexb.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200716120440.GD43129@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.147.249
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Peter!
 
-syzbot found the following issue on:
+On 7/16/20 2:04 PM, peterz@infradead.org wrote:
+> On Thu, Jul 16, 2020 at 01:37:20PM +0200, peterz@infradead.org wrote:
+>> $ /opt/cross/bin/sh4-linux-gcc --version
+>> sh4-linux-gcc (GCC) 10.1.0
+> 
+> $ git checkout origin/master # linus' tree
+> $ mkdir sh-defconfig
+> $ make O=sh-defconfig/ ARCH=sh CROSS_COMPILE=/opt/cross/bin/sh4-linux- defconfig # shx3_defconfig
+> $ make O=sh-defconfig/ ARCH=sh CROSS_COMPILE=/opt/cross/bin/sh4-linux- -j80
+> 
+> insane stream of errors
 
-HEAD commit:    0aea6d5c Merge tag 'for-linus-5.8b-rc5-tag' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14af114f100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b1a5a263f7a540cb
-dashboard link: https://syzkaller.appspot.com/bug?extid=7d3e463b43b093527e84
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+I assume it's a problem with your toolchain. I will try to reproduce it tonight
+or tomorrow.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Adrian
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7d3e463b43b093527e84@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in add_chain fs/minix/itree_common.c:14 [inline]
-BUG: KASAN: slab-out-of-bounds in get_branch fs/minix/itree_common.c:52 [inline]
-BUG: KASAN: slab-out-of-bounds in get_block+0x69a/0x1600 fs/minix/itree_common.c:160
-Read of size 2 at addr ffff8880a91b018a by task syz-executor.1/28305
-
-CPU: 0 PID: 28305 Comm: syz-executor.1 Not tainted 5.8.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- print_address_description+0x66/0x5a0 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report+0x132/0x1d0 mm/kasan/report.c:530
- add_chain fs/minix/itree_common.c:14 [inline]
- get_branch fs/minix/itree_common.c:52 [inline]
- get_block+0x69a/0x1600 fs/minix/itree_common.c:160
- __block_write_begin_int+0x708/0x1a00 fs/buffer.c:2012
- __block_write_begin fs/buffer.c:2062 [inline]
- block_write_begin+0x59/0x280 fs/buffer.c:2121
- minix_write_begin+0x38/0x1f0 fs/minix/inode.c:412
- generic_perform_write+0x23b/0x4e0 mm/filemap.c:3318
- __generic_file_write_iter+0x22b/0x4e0 mm/filemap.c:3447
- generic_file_write_iter+0x4a6/0x650 mm/filemap.c:3479
- call_write_iter include/linux/fs.h:1908 [inline]
- new_sync_write fs/read_write.c:503 [inline]
- __kernel_write+0x85b/0xa60 fs/read_write.c:530
- do_acct_process+0xec6/0x12b0 kernel/acct.c:522
- slow_acct_process kernel/acct.c:581 [inline]
- acct_process+0x398/0x4a0 kernel/acct.c:607
- do_exit+0x593/0x1f80 kernel/exit.c:795
- do_group_exit+0x161/0x2d0 kernel/exit.c:903
- get_signal+0x139b/0x1d30 kernel/signal.c:2743
- do_signal+0x33/0x610 arch/x86/kernel/signal.c:810
- exit_to_usermode_loop arch/x86/entry/common.c:235 [inline]
- __prepare_exit_to_usermode+0xd7/0x1e0 arch/x86/entry/common.c:269
- do_syscall_64+0x7f/0xe0 arch/x86/entry/common.c:393
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cba9
-Code: Bad RIP value.
-RSP: 002b:00007f0364adcc78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a3
-RAX: 0000000000000000 RBX: 00000000004da400 RCX: 000000000045cba9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000480
-RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000001c R14: 00000000004c2f71 R15: 00007f0364add6d4
-
-Allocated by task 28189:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x1f5/0x2d0 mm/slab.c:3484
- skb_clone+0x1b2/0x370 net/core/skbuff.c:1447
- __netlink_deliver_tap_skb net/netlink/af_netlink.c:287 [inline]
- __netlink_deliver_tap net/netlink/af_netlink.c:312 [inline]
- netlink_deliver_tap+0x478/0x810 net/netlink/af_netlink.c:325
- netlink_deliver_tap_kernel net/netlink/af_netlink.c:334 [inline]
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x75c/0x940 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x519/0x800 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmmsg+0x45b/0x680 net/socket.c:2496
- __do_sys_sendmmsg net/socket.c:2525 [inline]
- __se_sys_sendmmsg net/socket.c:2522 [inline]
- __x64_sys_sendmmsg+0x9c/0xb0 net/socket.c:2522
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 28189:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kmem_cache_free+0x7e/0xf0 mm/slab.c:3694
- nlmon_xmit+0x8d/0xb0 drivers/net/nlmon.c:14
- __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
- netdev_start_xmit include/linux/netdevice.h:4625 [inline]
- xmit_one net/core/dev.c:3556 [inline]
- dev_hard_start_xmit+0x1bd/0x3d0 net/core/dev.c:3572
- __dev_queue_xmit+0x1bda/0x2940 net/core/dev.c:4131
- __netlink_deliver_tap_skb net/netlink/af_netlink.c:294 [inline]
- __netlink_deliver_tap net/netlink/af_netlink.c:312 [inline]
- netlink_deliver_tap+0x5be/0x810 net/netlink/af_netlink.c:325
- netlink_deliver_tap_kernel net/netlink/af_netlink.c:334 [inline]
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x75c/0x940 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x519/0x800 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmmsg+0x45b/0x680 net/socket.c:2496
- __do_sys_sendmmsg net/socket.c:2525 [inline]
- __se_sys_sendmmsg net/socket.c:2522 [inline]
- __x64_sys_sendmmsg+0x9c/0xb0 net/socket.c:2522
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff8880a91b0080
- which belongs to the cache skbuff_head_cache of size 224
-The buggy address is located 42 bytes to the right of
- 224-byte region [ffff8880a91b0080, ffff8880a91b0160)
-The buggy address belongs to the page:
-page:ffffea0002a46c00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00024781c8 ffffea00012e3688 ffff88821bb6b700
-raw: 0000000000000000 ffff8880a91b0080 000000010000000c 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a91b0080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a91b0100: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
->ffff8880a91b0180: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-                      ^
- ffff8880a91b0200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a91b0280: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
