@@ -2,83 +2,132 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05696C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE19C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37B0206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB84206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:13:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbgGPUKf (ORCPT
+        id S1729521AbgGPUNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:10:35 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:60733 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728907AbgGPUKf (ORCPT
+        Thu, 16 Jul 2020 16:13:12 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:50318 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728788AbgGPUNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:10:35 -0400
-Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MeCd5-1kX9G22kSN-00bJXo; Thu, 16 Jul 2020 22:10:33 +0200
-Received: by mail-qv1-f44.google.com with SMTP id t11so3320396qvk.1;
-        Thu, 16 Jul 2020 13:10:33 -0700 (PDT)
-X-Gm-Message-State: AOAM5327dbr353eCdcRtNK6j6ef50MttfAigcuX18sini8AyJfh6BCMO
-        j+0XaHr7QjDjoQmeob+fzC1kP5QsXKF8M83TRYM=
-X-Google-Smtp-Source: ABdhPJwf7kynnKai6Afz4/H0ZOfc7dZWYD0b8lXfjI914wMkP72ofpm/hkrkGhRuFEea9pz2bjdqMx8ipsD3ImBVJTk=
-X-Received: by 2002:ad4:4c09:: with SMTP id bz9mr5708144qvb.210.1594930232427;
- Thu, 16 Jul 2020 13:10:32 -0700 (PDT)
+        Thu, 16 Jul 2020 16:13:11 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 7B1DC20024;
+        Thu, 16 Jul 2020 22:13:08 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 22:13:07 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     hdegoede@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/vboxvideo: Replace HTTP links with HTTPS ones
+Message-ID: <20200716201307.GC2254583@ravnborg.org>
+References: <20200713124923.34282-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200714075729.68b92239@canb.auug.org.au> <1381a6c0-22fe-a175-f649-ea49da3451da@kernel.org>
-In-Reply-To: <1381a6c0-22fe-a175-f649-ea49da3451da@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Jul 2020 22:10:16 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a06bHeOqkQPG3Ap4hu4yFU-LA3L-5nwqk+7VGhSrKO_ng@mail.gmail.com>
-Message-ID: <CAK8P3a06bHeOqkQPG3Ap4hu4yFU-LA3L-5nwqk+7VGhSrKO_ng@mail.gmail.com>
-Subject: Re: linux-next: Fixes tags need some work in the arm-soc-fixes tree
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Olof Johansson <olof@lixom.net>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Xd04xb6AfbcMeaVp2O5+oAotMu02M4is0P1oZOZNRddIdv5h3wf
- wiGEDgcgcAVFCILgN8gvrIN5UDfiFezxAuL0T0Uf/rl9uBURUQG2U4PKT9CkfbP2itjZKqp
- xECZtDiPO9v33CDblevk6VJClfExoccMN0SIilRWAoSPUy8TVLcTCVBVVouJEtYoixmJi0R
- ZPVUNYJfMKOyPYbSCmptQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:P5u18hlfURo=:zq8//lt1fQ4GBjvBMJyN05
- MZaptGCWpcozdo0WAOGu/IHPcurpw1l1rJobQ07wALffLLgPFiGSaqJCz/PEmgoQlHMpRGd4+
- 0hVej9B+GYNc58YpPL6cTkGKuW8bSt18xTaOeHYFkH8IVG16oFEiA2xrl6rqKiAdhZ66F9FCk
- Hx11n3ZjUgcRJx01p0AgOvqLknxRePXil2a0tgwAg/8ETPOBa77PZ6LTLUr+XYhr0tpowZWlm
- CeRAQrpqIXDzGeRd43RO+mnbcMs3r/8WZ1Pf2lqYOlcpX66J7pKbG0zmPsOfVa9Ne3Quuxox/
- Y8yZPXW1d/2FB/jFwQgnBRpa+gqsRiyeh5bLKutonA5z6yLrl6iRP99PkAzEPjOtOVLmcBggu
- qriBsGixfyHt1PhYdtSccAAbBFKqYIGhRwAadvJNU81q4b2dlkkUyWTfi5Fkd/L+SEu2O3Z4V
- 9GWPQIh40qR7K/RmleSUli8Zo8awBnwSJfUM2hmDEo0w0NlnCXdTPlOznoBba48osnue5mqsg
- hA061v7GNUA675tmKNsD4jdSc0iKe8AQYW+s3/MizolWMftXFgd0XsfQDcCfNJzbtX3Gx+Qrx
- tt8tzbbzvfKoouVYFCn07GAaRj00V4JkJClyzbRWLWRFn8sK7E48brwuW1xDqBCaU+JzLy2QW
- hX94GjJzGzxV6dIer24n5la6Ej0T8TEEy+3Lh9wNqsD1LK9qXCIrOc0J7ao4DK3Tpz4MOePAQ
- 1VNWdLLQ/jY36/UNEbOZjNT4zDhZGDDGezvuwOKc4hvxU+0h2ivraBZYdDMvKhW4qC6c492gE
- B03tTnIWBEyVKkvWkTlBG9ZW7vHvoJI5KbbIFO2RJDRnsxQpF2rhaAV/MtgTUiGaEbL/7rC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713124923.34282-1-grandmaster@al2klimov.de>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=D19gQVrFAAAA:8 a=hOkPH7apAAAA:8 a=e5mUnYsNAAAA:8
+        a=XgQJnKahRCJPmaHFw9QA:9 a=CjuIK1q_8ugA:10 a=q5qCbkKORm8A:10
+        a=EzwKAMo-yAEA:10 a=W4TVW4IDbPiebHqcZpNg:22 a=hPNTZtN9UGdAj5b0s3uK:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 9:14 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
->
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA512
->
-> Hi,
->
-> I apologize for this! I have an updated branch that fixes these tags.
-> Let me know if I need to respin the pull request.
+On Mon, Jul 13, 2020 at 02:49:23PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-I've recreated the branch from scratch now (this was one of only
-two pull requests I got anyway), it should be fine now.
+Applied to drm-misc-next.
 
-       Arnd
+	Sam
+
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>  If there are any URLs to be removed completely or at least not just HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+> 
+> 
+>  drivers/gpu/drm/vboxvideo/hgsmi_defs.h | 2 +-
+>  drivers/gpu/drm/vboxvideo/vbox_hgsmi.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vboxvideo/hgsmi_defs.h b/drivers/gpu/drm/vboxvideo/hgsmi_defs.h
+> index 6c8df1cdb087..3cb52f2b2274 100644
+> --- a/drivers/gpu/drm/vboxvideo/hgsmi_defs.h
+> +++ b/drivers/gpu/drm/vboxvideo/hgsmi_defs.h
+> @@ -58,7 +58,7 @@ struct hgsmi_buffer_tail {
+>  	/* Reserved, must be initialized to 0. */
+>  	u32 reserved;
+>  	/*
+> -	 * One-at-a-Time Hash: http://www.burtleburtle.net/bob/hash/doobs.html
+> +	 * One-at-a-Time Hash: https://www.burtleburtle.net/bob/hash/doobs.html
+>  	 * Over the header, offset and for first 4 bytes of the tail.
+>  	 */
+>  	u32 checksum;
+> diff --git a/drivers/gpu/drm/vboxvideo/vbox_hgsmi.c b/drivers/gpu/drm/vboxvideo/vbox_hgsmi.c
+> index 94b60654a012..a9ca4d0c3eca 100644
+> --- a/drivers/gpu/drm/vboxvideo/vbox_hgsmi.c
+> +++ b/drivers/gpu/drm/vboxvideo/vbox_hgsmi.c
+> @@ -8,7 +8,7 @@
+>  #include "vboxvideo_vbe.h"
+>  #include "hgsmi_defs.h"
+>  
+> -/* One-at-a-Time Hash from http://www.burtleburtle.net/bob/hash/doobs.html */
+> +/* One-at-a-Time Hash from https://www.burtleburtle.net/bob/hash/doobs.html */
+>  static u32 hgsmi_hash_process(u32 hash, const u8 *data, int size)
+>  {
+>  	while (size--) {
+> -- 
+> 2.27.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
