@@ -2,255 +2,91 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF221C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4578CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2DFE207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:31:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uy3nLAv/"
+	by mail.kernel.org (Postfix) with ESMTP id 229092074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbgGPTbH (ORCPT
+        id S1729700AbgGPTbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:31:07 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34239 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729611AbgGPTbC (ORCPT
+        Thu, 16 Jul 2020 15:31:53 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48958 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729376AbgGPTbx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:31:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594927861;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=4G03ao0IqhS+yawog6tsoUqq/BT2hKG9U4PF9Ly9ods=;
-        b=Uy3nLAv/aWSuJ0DonOb0BVczBT8dt310o3N98DB2lILJdnbXfcuCAOd//Isxm+5bjctpHC
-        FDCBeQAfqlsEuxPgYARWK5TsRn3QKx21y3UiFnfgziHkT5aJKsbBT09HiOOWWYIpZBXA6V
-        1Iytk68rH/GwO1UZSNv1NU5WT4Sxg9M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-5c7_pQlqNqi8Me3SVB25hw-1; Thu, 16 Jul 2020 15:30:56 -0400
-X-MC-Unique: 5c7_pQlqNqi8Me3SVB25hw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C94C91940920;
-        Thu, 16 Jul 2020 19:30:54 +0000 (UTC)
-Received: from llong.com (ovpn-119-61.rdu2.redhat.com [10.10.119.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A9DBA74F70;
-        Thu, 16 Jul 2020 19:30:53 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v2 3/5] locking/qspinlock: Pass lock value as function argument
-Date:   Thu, 16 Jul 2020 15:29:25 -0400
-Message-Id: <20200716192927.12944-4-longman@redhat.com>
-In-Reply-To: <20200716192927.12944-1-longman@redhat.com>
-References: <20200716192927.12944-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Thu, 16 Jul 2020 15:31:53 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id 750E12A5A2D
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
+        willy@infradead.org, luto@kernel.org, gofmanp@gmail.com,
+        keescook@chromium.org, linux-kselftest@vger.kernel.org,
+        shuah@kernel.org, Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: [PATCH v4 0/2] Syscall User Redirection
+Date:   Thu, 16 Jul 2020 15:31:39 -0400
+Message-Id: <20200716193141.4068476-1-krisman@collabora.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the various internal qspinlock functions to pass in the lock
-value to be used as a function argument instead of hardcoding it to
-_Q_LOCKED_VAL. There is no functional change.
+Hi,
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/locking/qspinlock.c          | 19 ++++++++++---------
- kernel/locking/qspinlock_paravirt.h | 24 +++++++++++++-----------
- 2 files changed, 23 insertions(+), 20 deletions(-)
+This is v4 of Syscall User Redirection.  The implementation itself is
+not modified from v3, it only applies the latest round of reviews to the
+selftests.
 
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index b256e2d03817..527601eab7bf 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -158,9 +158,9 @@ static __always_inline void clear_pending(struct qspinlock *lock)
-  *
-  * Lock stealing is not allowed if this function is used.
-  */
--static __always_inline void clear_pending_set_locked(struct qspinlock *lock)
-+static __always_inline void clear_pending_set_locked(struct qspinlock *lock, const u8 lockval)
- {
--	WRITE_ONCE(lock->locked_pending, _Q_LOCKED_VAL);
-+	WRITE_ONCE(lock->locked_pending, lockval);
- }
- 
- /*
-@@ -202,9 +202,9 @@ static __always_inline void clear_pending(struct qspinlock *lock)
-  *
-  * *,1,0 -> *,0,1
-  */
--static __always_inline void clear_pending_set_locked(struct qspinlock *lock)
-+static __always_inline void clear_pending_set_locked(struct qspinlock *lock, const u8 lockval)
- {
--	atomic_add(-_Q_PENDING_VAL + _Q_LOCKED_VAL, &lock->val);
-+	atomic_add(-_Q_PENDING_VAL + lockval, &lock->val);
- }
- 
- /**
-@@ -258,9 +258,9 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
-  *
-  * *,*,0 -> *,0,1
-  */
--static __always_inline void set_locked(struct qspinlock *lock)
-+static __always_inline void set_locked(struct qspinlock *lock, const u8 lockval)
- {
--	WRITE_ONCE(lock->locked, _Q_LOCKED_VAL);
-+	WRITE_ONCE(lock->locked, lockval);
- }
- 
- 
-@@ -317,6 +317,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	struct mcs_spinlock *prev, *next, *node;
- 	u32 old, tail;
- 	int idx;
-+	const u8 lockval = _Q_LOCKED_VAL;
- 
- 	BUILD_BUG_ON(CONFIG_NR_CPUS >= (1U << _Q_TAIL_CPU_BITS));
- 
-@@ -386,7 +387,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	 *
- 	 * 0,1,0 -> 0,0,1
- 	 */
--	clear_pending_set_locked(lock);
-+	clear_pending_set_locked(lock, lockval);
- 	lockevent_inc(lock_pending);
- 	return;
- 
-@@ -529,7 +530,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	 *       PENDING will make the uncontended transition fail.
- 	 */
- 	if ((val & _Q_TAIL_MASK) == tail) {
--		if (atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL))
-+		if (atomic_try_cmpxchg_relaxed(&lock->val, &val, lockval))
- 			goto release; /* No contention */
- 	}
- 
-@@ -538,7 +539,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	 * which will then detect the remaining tail and queue behind us
- 	 * ensuring we'll see a @next.
- 	 */
--	set_locked(lock);
-+	set_locked(lock, lockval);
- 
- 	/*
- 	 * contended path; wait for next if not observed yet, release.
-diff --git a/kernel/locking/qspinlock_paravirt.h b/kernel/locking/qspinlock_paravirt.h
-index 17878e531f51..c8558876fc69 100644
---- a/kernel/locking/qspinlock_paravirt.h
-+++ b/kernel/locking/qspinlock_paravirt.h
-@@ -80,6 +80,8 @@ struct pv_node {
- #define queued_spin_trylock(l)	pv_hybrid_queued_unfair_trylock(l)
- static inline bool pv_hybrid_queued_unfair_trylock(struct qspinlock *lock)
- {
-+	const u8 lockval = _Q_LOCKED_VAL;
-+
- 	/*
- 	 * Stay in unfair lock mode as long as queued mode waiters are
- 	 * present in the MCS wait queue but the pending bit isn't set.
-@@ -88,7 +90,7 @@ static inline bool pv_hybrid_queued_unfair_trylock(struct qspinlock *lock)
- 		int val = atomic_read(&lock->val);
- 
- 		if (!(val & _Q_LOCKED_PENDING_MASK) &&
--		   (cmpxchg_acquire(&lock->locked, 0, _Q_LOCKED_VAL) == 0)) {
-+		   (cmpxchg_acquire(&lock->locked, 0, lockval) == 0)) {
- 			lockevent_inc(pv_lock_stealing);
- 			return true;
- 		}
-@@ -112,15 +114,15 @@ static __always_inline void set_pending(struct qspinlock *lock)
- }
- 
- /*
-- * The pending bit check in pv_queued_spin_steal_lock() isn't a memory
-+ * The pending bit check in pv_hybrid_queued_unfair_trylock() isn't a memory
-  * barrier. Therefore, an atomic cmpxchg_acquire() is used to acquire the
-  * lock just to be sure that it will get it.
-  */
--static __always_inline int trylock_clear_pending(struct qspinlock *lock)
-+static __always_inline int trylock_clear_pending(struct qspinlock *lock, const u8 lockval)
- {
- 	return !READ_ONCE(lock->locked) &&
- 	       (cmpxchg_acquire(&lock->locked_pending, _Q_PENDING_VAL,
--				_Q_LOCKED_VAL) == _Q_PENDING_VAL);
-+				lockval) == _Q_PENDING_VAL);
- }
- #else /* _Q_PENDING_BITS == 8 */
- static __always_inline void set_pending(struct qspinlock *lock)
-@@ -128,7 +130,7 @@ static __always_inline void set_pending(struct qspinlock *lock)
- 	atomic_or(_Q_PENDING_VAL, &lock->val);
- }
- 
--static __always_inline int trylock_clear_pending(struct qspinlock *lock)
-+static __always_inline int trylock_clear_pending(struct qspinlock *lock, const u8 lockval)
- {
- 	int val = atomic_read(&lock->val);
- 
-@@ -142,7 +144,7 @@ static __always_inline int trylock_clear_pending(struct qspinlock *lock)
- 		 * Try to clear pending bit & set locked bit
- 		 */
- 		old = val;
--		new = (val & ~_Q_PENDING_MASK) | _Q_LOCKED_VAL;
-+		new = (val & ~_Q_PENDING_MASK) | lockval;
- 		val = atomic_cmpxchg_acquire(&lock->val, old, new);
- 
- 		if (val == old)
-@@ -406,6 +408,7 @@ pv_wait_head_or_lock(struct qspinlock *lock, struct mcs_spinlock *node)
- 	struct qspinlock **lp = NULL;
- 	int waitcnt = 0;
- 	int loop;
-+	const u8 lockval = _Q_LOCKED_VAL;
- 
- 	/*
- 	 * If pv_kick_node() already advanced our state, we don't need to
-@@ -432,7 +435,7 @@ pv_wait_head_or_lock(struct qspinlock *lock, struct mcs_spinlock *node)
- 		 */
- 		set_pending(lock);
- 		for (loop = SPIN_THRESHOLD; loop; loop--) {
--			if (trylock_clear_pending(lock))
-+			if (trylock_clear_pending(lock, lockval))
- 				goto gotlock;
- 			cpu_relax();
- 		}
-@@ -459,7 +462,7 @@ pv_wait_head_or_lock(struct qspinlock *lock, struct mcs_spinlock *node)
- 				 * Change the lock value back to _Q_LOCKED_VAL
- 				 * and unhash the table.
- 				 */
--				WRITE_ONCE(lock->locked, _Q_LOCKED_VAL);
-+				WRITE_ONCE(lock->locked, lockval);
- 				WRITE_ONCE(*lp, NULL);
- 				goto gotlock;
- 			}
-@@ -544,14 +547,13 @@ __pv_queued_spin_unlock_slowpath(struct qspinlock *lock, u8 locked)
- #ifndef __pv_queued_spin_unlock
- __visible void __pv_queued_spin_unlock(struct qspinlock *lock)
- {
--	u8 locked;
--
- 	/*
- 	 * We must not unlock if SLOW, because in that case we must first
- 	 * unhash. Otherwise it would be possible to have multiple @lock
- 	 * entries, which would be BAD.
- 	 */
--	locked = cmpxchg_release(&lock->locked, _Q_LOCKED_VAL, 0);
-+	u8 locked = cmpxchg_release(&lock->locked, _Q_LOCKED_VAL, 0);
-+
- 	if (likely(locked == _Q_LOCKED_VAL))
- 		return;
- 
+__NR_syscalls is not really exported in header files other than
+asm-generic for every architecture, so it felt safer to optionally
+expose it with a fallback to a high value.
+
+Also, I didn't expose tests for PR_GET as that is not currently
+implemented.  If possible, I'd have it supported by a future patchset,
+since it is not immediately necessary to support this feature.
+
+Finally, one question: Which tree would this go through?
+
+Gabriel Krisman Bertazi (2):
+  kernel: Implement selective syscall userspace redirection
+  selftests: Add kselftest for syscall user dispatch
+
+ arch/Kconfig                                  |  20 ++
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/entry/common.c                       |   5 +
+ arch/x86/include/asm/thread_info.h            |   4 +-
+ arch/x86/kernel/signal_compat.c               |   2 +-
+ fs/exec.c                                     |   2 +
+ include/linux/sched.h                         |   3 +
+ include/linux/syscall_user_dispatch.h         |  50 ++++
+ include/uapi/asm-generic/siginfo.h            |   3 +-
+ include/uapi/linux/prctl.h                    |   5 +
+ kernel/Makefile                               |   1 +
+ kernel/fork.c                                 |   1 +
+ kernel/sys.c                                  |   5 +
+ kernel/syscall_user_dispatch.c                |  92 +++++++
+ tools/testing/selftests/Makefile              |   1 +
+ .../syscall_user_dispatch/.gitignore          |   2 +
+ .../selftests/syscall_user_dispatch/Makefile  |   9 +
+ .../selftests/syscall_user_dispatch/config    |   1 +
+ .../syscall_user_dispatch.c                   | 256 ++++++++++++++++++
+ 19 files changed, 460 insertions(+), 3 deletions(-)
+ create mode 100644 include/linux/syscall_user_dispatch.h
+ create mode 100644 kernel/syscall_user_dispatch.c
+ create mode 100644 tools/testing/selftests/syscall_user_dispatch/.gitignore
+ create mode 100644 tools/testing/selftests/syscall_user_dispatch/Makefile
+ create mode 100644 tools/testing/selftests/syscall_user_dispatch/config
+ create mode 100644 tools/testing/selftests/syscall_user_dispatch/syscall_user_dispatch.c
+
 -- 
-2.18.1
+2.27.0
 
