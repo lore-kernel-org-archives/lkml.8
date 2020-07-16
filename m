@@ -2,88 +2,144 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66652C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9219DC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDA4207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:09:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594933796;
-	bh=AcwhowgLvFEZNKhytEiTcdGfl0j994HbxXy5LFPSc18=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=DR2xHLPEJ8XQID7NnEQLpShgp4ZhHi2duNaKOKfAAq3RdRLJ32H+emqXQ3w44mJn3
-	 B8WX2K3DD0n0ue3/tndohc2gbY/b9vRPhwF+Gq2NPv/KX2L3hReerc+s4eZ06SC86f
-	 rhlCCKAgNBMVBERF24Wa1Gwx+52ITRVz54O2PyB4=
+	by mail.kernel.org (Postfix) with ESMTP id 6AFBC20760
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgGPVJz (ORCPT
+        id S1727065AbgGPVKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:09:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbgGPVJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:09:54 -0400
-Received: from embeddedor (unknown [201.162.240.161])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A08E0207DD;
-        Thu, 16 Jul 2020 21:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594933794;
-        bh=AcwhowgLvFEZNKhytEiTcdGfl0j994HbxXy5LFPSc18=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WkZDqo7FDqKZ6oomojkl8Say6lmEeGL8iewbke1QHhFyqu9tTR8MbbAWx1jtqszSB
-         Jv+Vlu8aujRO7T7O4hZG02RTqSg8s3yTFFjgmyGPMe1iJQpr2P0PqEplXfmiMhoEZ7
-         ZovdgyAIR1uhQfGsmv6B3+WBA/k9JkM2w+p8hr9E=
-Date:   Thu, 16 Jul 2020 16:15:17 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] PCI: rcar-gen2: Use fallthrough pseudo-keyword
-Message-ID: <20200716211517.GA17174@embeddedor>
+        Thu, 16 Jul 2020 17:10:23 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65258 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727049AbgGPVKW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 17:10:22 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GL3I62074156;
+        Thu, 16 Jul 2020 17:10:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32aut4cqmr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 17:10:15 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GL3Obu074761;
+        Thu, 16 Jul 2020 17:10:15 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32aut4cqm6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 17:10:15 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GKouPK028029;
+        Thu, 16 Jul 2020 21:10:13 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 327527x09q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 21:10:13 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GLAAAp15597958
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 21:10:10 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 74FECAE045;
+        Thu, 16 Jul 2020 21:10:10 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49316AE059;
+        Thu, 16 Jul 2020 21:10:07 +0000 (GMT)
+Received: from [9.102.2.181] (unknown [9.102.2.181])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Jul 2020 21:10:07 +0000 (GMT)
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Subject: Re: [PATCH v3 06/12] ppc64/kexec_file: restrict memory usage of kdump
+ kernel
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
+ <159466091925.24747.6840028682768745598.stgit@hbathini.in.ibm.com>
+ <87365s9ysj.fsf@morokweng.localdomain>
+Message-ID: <baa29ea9-7698-a7e8-e5a4-c9f842e1fcc8@linux.ibm.com>
+Date:   Fri, 17 Jul 2020 02:40:06 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87365s9ysj.fsf@morokweng.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 malwarescore=0
+ priorityscore=1501 adultscore=0 clxscore=1015 bulkscore=0 spamscore=100
+ suspectscore=0 impostorscore=0 mlxlogscore=-1000 lowpriorityscore=0
+ mlxscore=100 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/pci/controller/pci-rcar-gen2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 16/07/20 4:22 am, Thiago Jung Bauermann wrote:
+> 
+> Hari Bathini <hbathini@linux.ibm.com> writes:
+> 
 
-diff --git a/drivers/pci/controller/pci-rcar-gen2.c b/drivers/pci/controller/pci-rcar-gen2.c
-index 326171cb1a97..2ec7093a7588 100644
---- a/drivers/pci/controller/pci-rcar-gen2.c
-+++ b/drivers/pci/controller/pci-rcar-gen2.c
-@@ -228,7 +228,7 @@ static int rcar_pci_setup(int nr, struct pci_sys_data *sys)
- 		pr_warn("unknown window size %ld - defaulting to 256M\n",
- 			priv->window_size);
- 		priv->window_size = SZ_256M;
--		/* fall-through */
-+		fallthrough;
- 	case SZ_256M:
- 		val |= RCAR_USBCTR_PCIAHB_WIN1_256M;
- 		break;
--- 
-2.27.0
+<snip>
 
+>> +/**
+>> + * get_node_path - Get the full path of the given node.
+>> + * @dn:            Node.
+>> + * @path:          Updated with the full path of the node.
+>> + *
+>> + * Returns nothing.
+>> + */
+>> +static void get_node_path(struct device_node *dn, char *path)
+>> +{
+>> +	if (!dn)
+>> +		return;
+>> +
+>> +	get_node_path(dn->parent, path);
+> 
+> Is it ok to do recursion in the kernel? In this case I believe it's not
+> problematic since the maximum call depth will be the maximum depth of a
+> device tree node which shouldn't be too much. Also, there are no local
+> variables in this function. But I thought it was worth mentioning.
+
+You are right. We are better off avoiding the recursion here. Will
+change it to an iterative version instead.
+ 
+>> +	 * each representing a memory range.
+>> +	 */
+>> +	ranges = (len >> 2) / (n_mem_addr_cells + n_mem_size_cells);
+>> +
+>> +	for (i = 0; i < ranges; i++) {
+>> +		base = of_read_number(prop, n_mem_addr_cells);
+>> +		prop += n_mem_addr_cells;
+>> +		end = base + of_read_number(prop, n_mem_size_cells) - 1;
+
+prop is not used after the above.
+
+> You need to `prop += n_mem_size_cells` here.
+
+But yeah, adding it would make it look complete in some sense..
+
+Thanks
+Hari
