@@ -2,133 +2,84 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D35C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58A1C20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ijalJuL9"
+	by mail.kernel.org (Postfix) with ESMTP id 351E920775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgGPDLa (ORCPT
+        id S1727915AbgGPDQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:11:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgGPDLa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 23:11:30 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46112C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 20:11:30 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l63so4111389pge.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 20:11:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QLoWBC0BJ34kcTABjgpHRAC9g5IOexIa4Kkz6/GXqs8=;
-        b=ijalJuL9PGxOrIsrIUwPgLKAwFP9kmsjcYbHNxc+aaEXHPHVEkxRH3D1TxMn6YtWdc
-         fJ59p1EBxUmbvlDi6KkjStMofhrvt+csKuX+vs4IRMq89BiKJpFo1Pv+VCZbxIVqSVyt
-         1MR3LlWOesnrBBGsGbCIPxBAl385jEJ5PGRYdY9yjUur0FWod5qyRE2EsdVO0mtkdR1y
-         EGuy5zC+fPrlDlnH57JJKjUi6l3pS7HtepmEuMBQWrnSAw5QCRELuXsqUaVTdnvNoIrl
-         5yPDdkvrtTlungl+Ra/JF7QjuVjtZSSa+aq10gZtIzEzqUspziaFnWYDMwOO3CAOQwTm
-         a3SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QLoWBC0BJ34kcTABjgpHRAC9g5IOexIa4Kkz6/GXqs8=;
-        b=V4c0vYyoZP5kXvAreue2v5VAyA+5OV38pX1MvweNgyEAd9lrF/Dd/MA9m8k5BETDTH
-         FfgC8KchPdJRqfXnKT5enR/3GAeIFzHE30MiunKtZ/+RlBz/ZjJqDRFKQy0ayvnxxXpZ
-         JEal3d4MtIgtg1/ap43Vd1LYeYFviePXYx9ZFt8V856Bfq8g9ommZjzlpuSWAdPRos9l
-         2ruIBW9M56R6UmhCuSDB7Bie0nTo3XTG57n78RilnVxv2AGcwVgZoyMShwR/g6XaWJJM
-         Ij485VkvzP4vuBPVFyMk0RS7wI2xlsLl7lPyVxZSvO6vG6jkn6mK2e8TcAsfZvd/mSDv
-         EWjg==
-X-Gm-Message-State: AOAM530sOB5xp8AYGrb589Bg4lljvbBi7/HR+9Z2ORUyarAipYia4psU
-        gfKywzrK+xRpCis6AgqirMk5
-X-Google-Smtp-Source: ABdhPJx8qzuAcYQYs9VvKUu35phOkt2EJG4oIBl/MnxUezG+NMCCfUn3ns+lQahCvc6jA5gHENh/oA==
-X-Received: by 2002:a62:e712:: with SMTP id s18mr1936293pfh.224.1594869089523;
-        Wed, 15 Jul 2020 20:11:29 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6d89:fed1:9157:c271:c363:4849])
-        by smtp.gmail.com with ESMTPSA id az13sm3165742pjb.34.2020.07.15.20.11.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jul 2020 20:11:28 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 08:41:24 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Hemant Kumar <hemantk@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH] mhi: fix doubled words and struct image_info kernel-doc
-Message-ID: <20200716031124.GC3271@Mani-XPS-13-9360>
-References: <cab64692-31f6-5a2b-a540-aa434d35f9a9@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cab64692-31f6-5a2b-a540-aa434d35f9a9@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 15 Jul 2020 23:16:42 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:48546 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727081AbgGPDQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 23:16:41 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx7x+Pxg9f1GoFAA--.6749S4;
+        Thu, 16 Jul 2020 11:16:33 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/8] irqchip/loongson-htpic: Remove unneeded select of I8259
+Date:   Thu, 16 Jul 2020 11:16:24 +0800
+Message-Id: <1594869390-21053-3-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1594869390-21053-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1594869390-21053-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dx7x+Pxg9f1GoFAA--.6749S4
+X-Coremail-Antispam: 1UD129KBjvdXoWruFW3Cw13KF4kAr4DXF15CFg_yoWxAFg_Ca
+        9xtFZ7JF1Ikry7G34agF4fWFyjya1qgFs7ur4jqryfX34xX3s7Ka45Ja98Xr17GayqgF4S
+        vrZ7ur1kCr1IkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbSxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
+        IE14v26r15M28IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC64kIII0Yj41l84x0c7CE
+        w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6x
+        kF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv
+        6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4
+        CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvj
+        eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_Gr4l42xK82IYc2
+        Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+        6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+        vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+        42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+        kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUVEfODUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 06:29:32PM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Drop doubled word "table" in kernel-doc.
-> Fix syntax for the kernel-doc notation for struct image_info.
-> Note that the bhi_vec field is private and not part of the kernel-doc.
-> 
-> Drop doubled word "device" in a comment.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+LOONGSON_HTPIC depends on MACH_LOONGSON64 and MACH_LOONGSON64 already
+selects I8259 in arch/mips/Kconfig, so no need to select I8259 again
+when config LOONGSON_HTPIC.
 
-Applied to mhi-next!
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/irqchip/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks,
-Mani
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 216b3b8..bfc9719 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -541,7 +541,6 @@ config LOONGSON_HTPIC
+ 	default y
+ 	select IRQ_DOMAIN
+ 	select GENERIC_IRQ_CHIP
+-	select I8259
+ 	help
+ 	  Support for the Loongson-3 HyperTransport PIC Controller.
+ 
+-- 
+2.1.0
 
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Hemant Kumar <hemantk@codeaurora.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> ---
->  include/linux/mhi.h |   10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> --- linux-next-20200714.orig/include/linux/mhi.h
-> +++ linux-next-20200714/include/linux/mhi.h
-> @@ -85,13 +85,15 @@ enum mhi_ch_type {
->  };
->  
->  /**
-> - * struct image_info - Firmware and RDDM table table
-> - * @mhi_buf - Buffer for firmware and RDDM table
-> - * @entries - # of entries in table
-> + * struct image_info - Firmware and RDDM table
-> + * @mhi_buf: Buffer for firmware and RDDM table
-> + * @entries: # of entries in table
->   */
->  struct image_info {
->  	struct mhi_buf *mhi_buf;
-> +	/* private: from internal.h */
->  	struct bhi_vec_entry *bhi_vec;
-> +	/* public: */
->  	u32 entries;
->  };
->  
-> @@ -593,7 +595,7 @@ int mhi_async_power_up(struct mhi_contro
->  
->  /**
->   * mhi_sync_power_up - Start MHI power up sequence and wait till the device
-> - *                     device enters valid EE state
-> + *                     enters valid EE state
->   * @mhi_cntrl: MHI controller
->   */
->  int mhi_sync_power_up(struct mhi_controller *mhi_cntrl);
-> 
