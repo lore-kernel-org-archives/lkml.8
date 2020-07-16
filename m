@@ -2,122 +2,93 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC859C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00021C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 881CD20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8AA206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:30:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVF+hrfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgGPAf1 (ORCPT
+        id S1727090AbgGPAav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 20:35:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48868 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726479AbgGPAf0 (ORCPT
+        Wed, 15 Jul 2020 20:30:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59408 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgGPAav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 20:35:26 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06G0WP27006018;
-        Wed, 15 Jul 2020 20:35:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 329r1jcupq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 20:35:16 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06G0WQg3006534;
-        Wed, 15 Jul 2020 20:35:16 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 329r1jcupe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 20:35:16 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06G0KJoq015981;
-        Thu, 16 Jul 2020 00:35:15 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03wdc.us.ibm.com with ESMTP id 327529cswp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 00:35:15 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06G0ZEiA46334458
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 00:35:14 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 454917805F;
-        Thu, 16 Jul 2020 00:35:14 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2BE87805E;
-        Thu, 16 Jul 2020 00:35:10 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.73.114])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Jul 2020 00:35:10 +0000 (GMT)
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466095278.24747.9161591016931052627.stgit@hbathini.in.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v3 08/12] ppc64/kexec_file: setup the stack for purgatory
-In-reply-to: <159466095278.24747.9161591016931052627.stgit@hbathini.in.ibm.com>
-Date:   Wed, 15 Jul 2020 21:35:07 -0300
-Message-ID: <87zh808fgk.fsf@morokweng.localdomain>
+        Wed, 15 Jul 2020 20:30:51 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CDC2C061755;
+        Wed, 15 Jul 2020 17:30:51 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u5so2850592pfn.7;
+        Wed, 15 Jul 2020 17:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=uBPdtbhMDCIggv17A7lK3I7hrccMMLMD89OHuuDi1eU=;
+        b=bVF+hrfSIOlIlmuAGTW5yiXwT4RoYYlnCvPXrvElEncMCO//sXA+rvu0EkYVIbM0yv
+         FEdY7jJOK09kJubN3ipoG4VKHPdJhqUAUjoHwdTInEV8wD2TE/W4chYi/D4j9EPjjfHx
+         xHQX0hA0C/ZsQU2Je1EniCNAMbauy5Yfv0BymXRiCaFq6oVu1XZ7GN/AQpAmJRbzkKDU
+         sCjkWUd7QsyPwcSYk3+W/QGPnCAu+29ObprDLm0vbvh+rrRW34BGpNrjVhaJfsVTzabu
+         QjT4CUZRZ4tveBTuoHsPfwaIxzKlLlgIkWBbAt9hSQBzNaWYxdNAMDpKN6FF2kEdmw/T
+         uO9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=uBPdtbhMDCIggv17A7lK3I7hrccMMLMD89OHuuDi1eU=;
+        b=nfjKXDWHILM0QLZNON5YGLS8W2NglRVg1l+307ad4iYhiDHffZQmp4KZa6yeYhzDsS
+         17YGinV3yeZcKKgUs6k94oKgxEMejEfXp1/I3BY4Ax/LfD1fBvF3Eo/jvl2132bDPIC+
+         QqB8+X2jxS3uBp4oBUmPiVBffRAuGlkNk3lOVwCW8kse7EnOrmoNCeMafb/5ITY3kwb3
+         3uUwEGLrerWZKPuP4w3g3zaxSxd1HyPC92+dxhZojzt2pzMlygl+tBqjxM+lL/BGZ548
+         P7ygdS1VHwVawGXZc6kmCzC+N2XKvzvI6CTNmdm1U8PTHF38+Hg/2sFhBEpSxdCE6X1Q
+         sWkg==
+X-Gm-Message-State: AOAM533N/s0FylIm5Ul2IQ1QmNAaLGBU1aRDC6DNsfDU4F/0uGNYORdH
+        ucOk6Zluk0H1FeWPcVKSJeWpEeAnzX0=
+X-Google-Smtp-Source: ABdhPJyD+t29HuVzUhJe/yC3SyDbA1xtQsKOt8C3Hm+nYyCZ1rph5BZPsVsiqsQGoPHg9vVsLqJCCQ==
+X-Received: by 2002:a63:3646:: with SMTP id d67mr1967957pga.363.1594859450491;
+        Wed, 15 Jul 2020 17:30:50 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id m17sm3223968pfo.182.2020.07.15.17.30.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 17:30:49 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 17:30:47 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Henrik Rydberg <rydberg@bitmath.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Scott Liu <scott.liu@emc.com.tw>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 5/5] input: mt: cleanup open-coded __set_bit()
+Message-ID: <20200716003047.GA1665100@dtor-ws>
+References: <cover.1594599118.git.mirq-linux@rere.qmqm.pl>
+ <cf1dda3a372896cb01033ce084a7deb9620df7aa.1594599118.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-15_12:2020-07-15,2020-07-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- priorityscore=1501 spamscore=0 mlxlogscore=999 lowpriorityscore=0
- impostorscore=0 adultscore=0 mlxscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007150175
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cf1dda3a372896cb01033ce084a7deb9620df7aa.1594599118.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 13, 2020 at 02:24:55AM +0200, Michał Mirosław wrote:
+> Replace open-coded __set_bit() with the function.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
-
-> To avoid any weird errors, the purgatory should run with its own
-> stack. Set one up by adding the stack buffer to .data section of
-> the purgatory. Also, setup opal base & entry values in r8 & r9
-> registers to help early OPAL debugging.
->
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
-
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-
-> ---
->
-> v2 -> v3:
-> * Unchanged. Added Tested-by tag from Pingfan.
->
-> v1 -> v2:
-> * Setting up opal base & entry values in r8 & r9 for early OPAL debug.
->
->
->  arch/powerpc/include/asm/kexec.h       |    4 ++++
->  arch/powerpc/kexec/file_load_64.c      |   29 +++++++++++++++++++++++++++++
->  arch/powerpc/purgatory/trampoline_64.S |   32 ++++++++++++++++++++++++++++++++
->  3 files changed, 65 insertions(+)
->
+Applied, thank you.
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Dmitry
