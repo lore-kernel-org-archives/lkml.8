@@ -3,410 +3,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D0DC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E203CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 187862076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5682070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgGPRwc (ORCPT
+        id S1729031AbgGPRxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:52:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60272 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727844AbgGPRwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:52:31 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GHUn94090213;
-        Thu, 16 Jul 2020 13:51:40 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 329r213dxp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 13:51:40 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GHUqo3090481;
-        Thu, 16 Jul 2020 13:51:39 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 329r213dx4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 13:51:39 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GHoZEX009663;
-        Thu, 16 Jul 2020 17:51:37 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma01dal.us.ibm.com with ESMTP id 328ux7q581-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 17:51:37 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GHpaWu52101480
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 17:51:36 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 455A7BE053;
-        Thu, 16 Jul 2020 17:51:36 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 589D3BE04F;
-        Thu, 16 Jul 2020 17:51:28 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.8.110])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Jul 2020 17:51:28 +0000 (GMT)
-References: <20200618071045.471131-1-prsriva@linux.microsoft.com> <20200618071045.471131-2-prsriva@linux.microsoft.com> <87o8per3m0.fsf@morokweng.localdomain> <1385c8bb-cd25-8dc4-7224-8e27135f3356@linux.microsoft.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
-        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
-        tao.li@vivo.com, christophe.leroy@c-s.fr,
-        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
-        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [V2 PATCH 1/3] Refactoring powerpc code for carrying over IMA measurement logs, to move non architecture specific code to security/ima.
-In-reply-to: <1385c8bb-cd25-8dc4-7224-8e27135f3356@linux.microsoft.com>
-Date:   Thu, 16 Jul 2020 14:51:24 -0300
-Message-ID: <87blkfcpr7.fsf@morokweng.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_07:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 lowpriorityscore=0
- bulkscore=0 adultscore=0 spamscore=100 mlxscore=100 phishscore=0
- malwarescore=0 clxscore=1011 priorityscore=1501 impostorscore=0
- mlxlogscore=-1000 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007160125
+        Thu, 16 Jul 2020 13:53:44 -0400
+Received: from mga01.intel.com ([192.55.52.88]:50547 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgGPRxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:53:44 -0400
+IronPort-SDR: QvjqUDUIGcrJxy4bdgglUTRiRUQ62EC55pNPN17xdCyFSPJsIB9BxnhDZLrl3oegbED5k1ITj3
+ iXS0yaru4BrA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="167589774"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="167589774"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 10:53:43 -0700
+IronPort-SDR: ix0C8chqeI5gwCmmhNRJJbVvQ1BfIuy3WxSy5AeLJVQVk7wRB8dlbUSrpjBVQLAyNEVGhBUH+J
+ bH9WoLwfVtkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="326594901"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga007.jf.intel.com with ESMTP; 16 Jul 2020 10:53:43 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Borislav Petkov" <bp@alien8.de>, "Ingo Molnar" <mingo@redhat.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Reinette Chatre" <reinette.chatre@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>,
+        "Kuo-Lang Tseng" <kuo-lang.tsenng@intel.com>,
+        "Babu Moger" <babu.moger@amd.com>, "H Peter Anvin" <hpa@zytor.com>
+Cc:     "x86" <x86@kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH 0/2] x86/resctrl: Enable user to view thread or core throttling mode
+Date:   Thu, 16 Jul 2020 10:53:12 -0700
+Message-Id: <1594921994-66192-1-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series enumerates Memory Bandwidth Allocation (MBA) per-thread
+feature and introduces a new resctrl file "thread_throttle_mode".
+The file shows either "per-thread" on newer systems that implement the MBA
+per-thread feature or "max" on other systems that allocate maximum
+throttling per-core.
 
-Hello Prakhar,
+Details about the feature can be found in the commit description and
+in Chapter 9 of the most recent Intel ISE available from
+https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
 
-Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
+This series replaces the original MBA thread throttling patch series
+found at
+https://lore.kernel.org/lkml/cover.1592841671.git.reinette.chatre@intel.com/
 
-> On 6/19/20 5:19 PM, Thiago Jung Bauermann wrote:
->>
->> Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
->>
->>> Powerpc has support to carry over the IMA measurement logs. Refatoring the
->>> non-architecture specific code out of arch/powerpc and into security/ima.
->>>
->>> The code adds support for reserving and freeing up of memory for IMA measurement
->>> logs.
->>
->> Last week, Mimi provided this feedback:
->>
->> "From your patch description, this patch should be broken up.  Moving
->> the non-architecture specific code out of powerpc should be one patch.
->>   Additional support should be in another patch.  After each patch, the
->> code should work properly."
->>
->> That's not what you do here. You move the code, but you also make other
->> changes at the same time. This has two problems:
->>
->> 1. It makes the patch harder to review, because it's very easy to miss a
->>     change.
->>
->> 2. If in the future a git bisect later points to this patch, it's not
->>     clear whether the problem is because of the code movement, or because
->>     of the other changes.
->>
->> When you move code, ideally the patch should only make the changes
->> necessary to make the code work at its new location. The patch which
->> does code movement should not cause any change in behavior.
->>
->> Other changes should go in separate patches, either before or after the
->> one moving the code.
->>
->> More comments below.
->>
-> Hi Thiago,
->
-> Apologies for the delayed response i was away for a few days.
-> I am working on breaking up the changes so that its easier to review and update
-> as well.
+This is a simplified version of the previous series that skips the
+min/max mode and just provides the per-core vs. per-thread indicator.
 
-No problem.
+Fenghua Yu (2):
+  x86/resctrl: Enumerate per-thread MBA
+  x86/resctrl: Enable user to view thread or core throttling mode
 
->
-> Thanks,
-> Prakhar Srivastava
->
->>>
->>> ---
->>>   arch/powerpc/include/asm/ima.h     |  10 ---
->>>   arch/powerpc/kexec/ima.c           | 126 ++---------------------------
->>>   security/integrity/ima/ima_kexec.c | 116 ++++++++++++++++++++++++++
->>>   3 files changed, 124 insertions(+), 128 deletions(-)
->>>
->>> diff --git a/arch/powerpc/include/asm/ima.h b/arch/powerpc/include/asm/ima.h
->>> index ead488cf3981..c29ec86498f8 100644
->>> --- a/arch/powerpc/include/asm/ima.h
->>> +++ b/arch/powerpc/include/asm/ima.h
->>> @@ -4,15 +4,6 @@
->>>
->>>   struct kimage;
->>>
->>> -int ima_get_kexec_buffer(void **addr, size_t *size);
->>> -int ima_free_kexec_buffer(void);
->>> -
->>> -#ifdef CONFIG_IMA
->>> -void remove_ima_buffer(void *fdt, int chosen_node);
->>> -#else
->>> -static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
->>> -#endif
->>> -
->>>   #ifdef CONFIG_IMA_KEXEC
->>>   int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
->>>   			      size_t size);
->>> @@ -22,7 +13,6 @@ int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node);
->>>   static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
->>>   				   int chosen_node)
->>>   {
->>> -	remove_ima_buffer(fdt, chosen_node);
->>>   	return 0;
->>>   }
->>
->> This is wrong. Even if the currently running kernel doesn't have
->> CONFIG_IMA_KEXEC, it should remove the IMA buffer property and memory
->> reservation from the FDT that is being prepared for the next kernel.
->>
->> This is because the IMA kexec buffer is useless for the next kernel,
->> regardless of whether the current kernel supports CONFIG_IMA_KEXEC or
->> not. Keeping it around would be a waste of memory.
->>
-> I will keep it in my next revision.
-> My understanding was the reserved memory is freed and property removed when IMA
-> loads the logs on init.
-
-If CONFIG_IMA_KEXEC is set, then yes. If it isn't then that needs to
-happen in the function above.
-
-> During setup_fdt in kexec, a duplicate copy of the dt is
-> used, but memory still needs to be allocated, thus the property itself indicats
-> presence of reserved memory.
-> 
->>> @@ -179,13 +64,18 @@ int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
->>>   	int ret, addr_cells, size_cells, entry_size;
->>>   	u8 value[16];
->>>
->>> -	remove_ima_buffer(fdt, chosen_node);
->>
->> This is wrong, for the same reason stated above.
->>
->>>   	if (!image->arch.ima_buffer_size)
->>>   		return 0;
->>>
->>> -	ret = get_addr_size_cells(&addr_cells, &size_cells);
->>> -	if (ret)
->>> +	ret = fdt_address_cells(fdt, chosen_node);
->>> +	if (ret < 0)
->>> +		return ret;
->>> +	addr_cells = ret;
->>> +
->>> +	ret = fdt_size_cells(fdt, chosen_node);
->>> +	if (ret < 0)
->>>   		return ret;
->>> +	size_cells = ret;
->>>
->>>   	entry_size = 4 * (addr_cells + size_cells);
->>>
->>
->> I liked this change. Thanks! I agree it's better to use
->> fdt_address_cells() and fdt_size_cells() here.
->>
->> But it should be in a separate patch. Either before or after the one
->> moving the code.
->>
->>> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
->>> index 121de3e04af2..e1e6d6154015 100644
->>> --- a/security/integrity/ima/ima_kexec.c
->>> +++ b/security/integrity/ima/ima_kexec.c
->>> @@ -10,8 +10,124 @@
->>>   #include <linux/seq_file.h>
->>>   #include <linux/vmalloc.h>
->>>   #include <linux/kexec.h>
->>> +#include <linux/of.h>
->>> +#include <linux/memblock.h>
->>> +#include <linux/libfdt.h>
->>>   #include "ima.h"
->>>
->>> +static int get_addr_size_cells(int *addr_cells, int *size_cells)
->>> +{
->>> +	struct device_node *root;
->>> +
->>> +	root = of_find_node_by_path("/");
->>> +	if (!root)
->>> +		return -EINVAL;
->>> +
->>> +	*addr_cells = of_n_addr_cells(root);
->>> +	*size_cells = of_n_size_cells(root);
->>> +
->>> +	of_node_put(root);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
->>> +			       size_t *size)
->>> +{
->>> +	int ret, addr_cells, size_cells;
->>> +
->>> +	ret = get_addr_size_cells(&addr_cells, &size_cells);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	if (len < 4 * (addr_cells + size_cells))
->>> +		return -ENOENT;
->>> +
->>> +	*addr = of_read_number(prop, addr_cells);
->>> +	*size = of_read_number(prop + 4 * addr_cells, size_cells);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +/**
->>> + * ima_get_kexec_buffer - get IMA buffer from the previous kernel
->>> + * @addr:	On successful return, set to point to the buffer contents.
->>> + * @size:	On successful return, set to the buffer size.
->>> + *
->>> + * Return: 0 on success, negative errno on error.
->>> + */
->>> +int ima_get_kexec_buffer(void **addr, size_t *size)
->>> +{
->>> +	int ret, len;
->>> +	unsigned long tmp_addr;
->>> +	size_t tmp_size;
->>> +	const void *prop;
->>> +
->>> +	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
->>> +	if (!prop)
->>> +		return -ENOENT;
->>> +
->>> +	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	*addr = __va(tmp_addr);
->>> +	*size = tmp_size;
->>> +
->>> +	return 0;
->>> +}
->>
->> The functions above were moved without being changed. Good.
->>
->>> +/**
->>> + * ima_free_kexec_buffer - free memory used by the IMA buffer
->>> + */
->>> +int ima_free_kexec_buffer(void)
->>> +{
->>> +	int ret;
->>> +	unsigned long addr;
->>> +	size_t size;
->>> +	struct property *prop;
->>> +
->>> +	prop = of_find_property(of_chosen, "linux,ima-kexec-buffer", NULL);
->>> +	if (!prop)
->>> +		return -ENOENT;
->>> +
->>> +	ret = do_get_kexec_buffer(prop->value, prop->length, &addr, &size);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	ret = of_remove_property(of_chosen, prop);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	return memblock_free(__pa(addr), size);
->>
->> Here you added a __pa() call. Do you store a virtual address in
->> linux,ima-kexec-buffer property? Doesn't it make more sense to store a
->> physical address?
->>
-> trying to minimize the changes here as do_get_kexec_buffer return the va.
-> I will refactor this to remove the double translation.
-
-In the powerpc version, do_get_kexec_buffer() returns the pa, and one of
-its callers does the va translation. I think that worked well.
-
->> Even if making this change is the correct thing to do, it should be a
->> separate patch, unless it can't be avoided. And if that is the case,
->> then it should be explained in the commit message.
->>
->>> +
->>> +}
->>> +
->>> +/**
->>> + * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
->>> + *
->>> + * The IMA measurement buffer is of no use to a subsequent kernel, so we always
->>> + * remove it from the device tree.
->>> + */
->>> +void remove_ima_buffer(void *fdt, int chosen_node)
->>> +{
->>> +	int ret, len;
->>> +	unsigned long addr;
->>> +	size_t size;
->>> +	const void *prop;
->>> +
->>> +	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
->>> +	if (!prop)
->>> +		return;
->>> +
->>> +	do_get_kexec_buffer(prop, len, &addr, &size);
->>> +	ret = fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
->>> +	if (ret < 0)
->>> +		return;
->>> +
->>> +	memblock_free(addr, size);
->>> +}
->>
->> Here is another function that changed when moved. This one I know to be
->> wrong. You're confusing the purposes of remove_ima_buffer() and
->> ima_free_kexec_buffer().
->>
->> You did send me a question about them nearly three weeks ago which I
->> only answered today, so I apologize. Also, their names could more
->> clearly reflect their differences, so it's bad naming on my part.
->>
->> With IMA kexec buffers, there are two kernels (and thus their two
->> respective, separate device trees) to be concerned about:
->>
->> 1. the currently running kernel, which uses the live device tree
->> (accessed with the of_* functions) and the memblock subsystem;
->>
->> 2. the kernel which is being loaded by kexec, which will use the FDT
->> blob being passed around as argument to these functions, and the memory
->> reservations in the memory reservation table of the FDT blob.
->>
->> ima_free_kexec_buffer() is used by IMA in the currently running kernel.
->> Therefore the device tree it is concerned about is the live one, and
->> thus uses the of_* functions to access it. And uses memblock to change
->> the memory reservation.
->>
->> remove_ima_buffer() on the other hand is used by the kexec code to
->> prepare an FDT blob for the kernel that is being loaded. It should not
->> make any changes to live device tree, nor to memblock allocations. It
->> should only make changes to the FDT blob.
->>
-> Thank you for this, greatly appreciate clearing my misunderstandings.
-
-You're welcome. Sorry again for not answering your question before you
-sent this patch series.
+ Documentation/x86/resctrl_ui.rst       | 18 ++++++++-
+ arch/x86/include/asm/cpufeatures.h     |  1 +
+ arch/x86/kernel/cpu/cpuid-deps.c       |  1 +
+ arch/x86/kernel/cpu/resctrl/core.c     | 11 ++++++
+ arch/x86/kernel/cpu/resctrl/internal.h | 30 ++++++++++++---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 53 +++++++++++++++++++++++++-
+ arch/x86/kernel/cpu/scattered.c        |  1 +
+ 7 files changed, 106 insertions(+), 9 deletions(-)
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+2.19.1
+
