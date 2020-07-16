@@ -2,145 +2,124 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90448C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6616DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750652074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403E82076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lv8wc5MB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbgGPT34 (ORCPT
+        id S1729530AbgGPTak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:29:56 -0400
-Received: from mga01.intel.com ([192.55.52.88]:62386 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728788AbgGPT34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:29:56 -0400
-IronPort-SDR: dXX6OC5CoOkqakY0NaniPr/XTx4mAwfVa9u4jRPr/O9/lNSXcNWnwWxTISVfjsWdBdvGGOMzqi
- VrTEmm8eRHNg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="167616024"
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="167616024"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 12:29:55 -0700
-IronPort-SDR: Rw/CNHn192L0+R8y7GGaKRMKcHlm3dB/wEHRSknCC3Mzc7hl/2FGCndwvsfD2gY3p6lsaNLv7p
- pEUq9GnywRMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="486217234"
-Received: from guptapadev.jf.intel.com (HELO guptapadev.amr) ([10.54.74.188])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Jul 2020 12:29:54 -0700
-Date:   Thu, 16 Jul 2020 12:23:59 -0700
-From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Waiman Long <longman@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mark Gross <mgross@linux.intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH v2] x86/bugs/multihit: Fix mitigation reporting when VMX is
- not in use
-Message-ID: <0ba029932a816179b9d14a30db38f0f11ef1f166.1594925782.git.pawan.kumar.gupta@linux.intel.com>
+        Thu, 16 Jul 2020 15:30:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729136AbgGPTaj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 15:30:39 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A5A9C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 12:30:39 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id o184so3648619vsc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 12:30:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5JHL6dtY9/obxl6PVDueE6KgqOWo1hP8aToaLoJogXM=;
+        b=Lv8wc5MBk1xMDoVDniZJYSNIRYaVwYd563pj/BmHDv29qhlkxXzVxJn/UycDj5BI55
+         0o7EKZrbVLG1OH9iMGZCjUaydi2H0vTAwdpEKzb4PDFVmlhuT2w5pIQV1wJSSWKsjDnk
+         fvfiqoflke0iz/+NpbwihrTIcQZdfdIcAV8aHK0JN2ysHxmhrqZbA3VmcRSa9jqUfjsB
+         fMQlsVKQdqcwLjEJX7bJ4Qed9+Rn6rYUC4en/fQ9rUNxGrl03j2+7zPJiON+pYZQfpbO
+         EzxaJQcjLJ5PPVoVTuuALA5gujvbGUxCdHyehPNe2VtYJaHy1nYydB7CQfP374ARk7Zu
+         rU4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5JHL6dtY9/obxl6PVDueE6KgqOWo1hP8aToaLoJogXM=;
+        b=dOymsTjTZpGobFXELlBxphB5Q+YyYVs+SSZ3e1shT9PmCPE+eS/tsh+5e9fdofnXMO
+         wnnjI7hSAtD97pI8UmDdm1Kc6ylOjxCkAn8fF80rJjRT+SYCgZ6oilWnXLmnWbYSHjfi
+         amXuzEYYdFkSSB1cn05gOUzpjSlZ3Q/4cs9MlxUUWXsurrHLpGUpfEFmJgOLv87e25Os
+         +IEUGWW9sPV0maPBXtn4H0f5eHts0NM2b1d0X+EpvEzLrISsDS0CtXMu3abNk83yH+eT
+         OMHoTCPArqdr9uZylXLtnNLmcO5k/YNAldQAe4PoYTgh9jTr02/aUVYBQQzLjUUIhM0X
+         nAwQ==
+X-Gm-Message-State: AOAM530Fal+fuwbjRIgirdvflqIXIQlN0D2wVStPxQUS/avY4+Elv3SF
+        IS261SKTxRASzwdjru7jQhCeSliIjVzg2+V/hJPOuA==
+X-Google-Smtp-Source: ABdhPJwWkXtOPLOqrVcmtyJlG0aP+T8u+bPUV6PKoDH5U90Xrq5hIuM+nD03u5LdjnNO/fWF+VkxFtBnpluxWXZxTok=
+X-Received: by 2002:a67:69c1:: with SMTP id e184mr4865729vsc.119.1594927838113;
+ Thu, 16 Jul 2020 12:30:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200716024527.4009170-1-surenb@google.com> <20200716033048.GG1167@sol.localdomain>
+In-Reply-To: <20200716033048.GG1167@sol.localdomain>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Thu, 16 Jul 2020 12:30:27 -0700
+Message-ID: <CAJuCfpGwgmAD0v+F3CxieZmXHnjnbzrZ4Cpugi+8=-fDPgCU7w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] staging: android: ashmem: Fix lockdep warning for
+ write operation
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hillf Danton <hdanton@sina.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On systems that have virtualization disabled or unsupported, sysfs
-mitigation for X86_BUG_ITLB_MULTIHIT is reported incorrectly as:
+On Wed, Jul 15, 2020 at 8:30 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Wed, Jul 15, 2020 at 07:45:27PM -0700, Suren Baghdasaryan wrote:
+> > syzbot report [1] describes a deadlock when write operation against an
+> > ashmem fd executed at the time when ashmem is shrinking its cache results
+> > in the following lock sequence:
+> >
+> > Possible unsafe locking scenario:
+> >
+> >         CPU0                    CPU1
+> >         ----                    ----
+> >    lock(fs_reclaim);
+> >                                 lock(&sb->s_type->i_mutex_key#13);
+> >                                 lock(fs_reclaim);
+> >    lock(&sb->s_type->i_mutex_key#13);
+> >
+> > kswapd takes fs_reclaim and then inode_lock while generic_perform_write
+> > takes inode_lock and then fs_reclaim. However ashmem does not support
+> > writing into backing shmem with a write syscall. The only way to change
+> > its content is to mmap it and operate on mapped memory. Therefore the race
+> > that lockdep is warning about is not valid. Resolve this by introducing a
+> > separate lockdep class for the backing shmem inodes.
+> >
+> > [1]: https://lkml.kernel.org/lkml/0000000000000b5f9d059aa2037f@google.com/
+> >
+> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+>
+> Please add proper tags:
+>
+> Reported-by: syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com
+> Fixes: ...
+> Cc: stable@vger.kernel.org
+>
+>
+> The Reported-by tag to use was given in the original syzbot report.
 
-  $ cat /sys/devices/system/cpu/vulnerabilities/itlb_multihit
-  KVM: Vulnerable
+Will add in v2. Thanks!
 
-System is not vulnerable to DoS attack from a rogue guest when
-virtualization is disabled or unsupported in the hardware. Change the
-mitigation reporting for these cases.
-
-Fixes: b8e8c8303ff2 ("kvm: mmu: ITLB_MULTIHIT mitigation")
-Reported-by: Nelson Dsouza <nelson.dsouza@linux.intel.com>
-Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
-v2:
- - Change mitigation reporting as per the state on VMX feature.
-
-v1: https://lore.kernel.org/lkml/267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com/
-
- Documentation/admin-guide/hw-vuln/multihit.rst | 4 ++++
- arch/x86/kernel/cpu/bugs.c                     | 8 +++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
-index ba9988d8bce5..140e4cec38c3 100644
---- a/Documentation/admin-guide/hw-vuln/multihit.rst
-+++ b/Documentation/admin-guide/hw-vuln/multihit.rst
-@@ -80,6 +80,10 @@ The possible values in this file are:
-        - The processor is not vulnerable.
-      * - KVM: Mitigation: Split huge pages
-        - Software changes mitigate this issue.
-+     * - KVM: Mitigation: VMX unsupported
-+       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is not supported.
-+     * - KVM: Mitigation: VMX disabled
-+       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is disabled.
-      * - KVM: Vulnerable
-        - The processor is vulnerable, but no mitigation enabled
- 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 0b71970d2d3d..b0802d45abd3 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -31,6 +31,7 @@
- #include <asm/intel-family.h>
- #include <asm/e820/api.h>
- #include <asm/hypervisor.h>
-+#include <asm/tlbflush.h>
- 
- #include "cpu.h"
- 
-@@ -1556,7 +1557,12 @@ static ssize_t l1tf_show_state(char *buf)
- 
- static ssize_t itlb_multihit_show_state(char *buf)
- {
--	if (itlb_multihit_kvm_mitigation)
-+	if (!boot_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL) ||
-+	    !boot_cpu_has(X86_FEATURE_VMX))
-+		return sprintf(buf, "KVM: Mitigation: VMX unsupported\n");
-+	else if (!(cr4_read_shadow() & X86_CR4_VMXE))
-+		return sprintf(buf, "KVM: Mitigation: VMX disabled\n");
-+	else if (itlb_multihit_kvm_mitigation)
- 		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
- 	else
- 		return sprintf(buf, "KVM: Vulnerable\n");
--- 
-2.21.3
-
+>
+> - Eric
