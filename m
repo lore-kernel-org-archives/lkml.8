@@ -2,174 +2,125 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494D0C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8289E20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D632076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594936665;
+	bh=FHwxDK6igepiClPQE90tVnqtFkR6rnuVQojDpvUDhng=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=odhkV6AjDr1HuJPUWN+P8TZNfXiYUCgad2bCPbiaSdjzsuq1Yim5XAer/SB5ftkr4
+	 6kiM7aOHnpYaB5TMkXMtcJvRQSYBaV7SwJfazyGF1YDKNdvD6nNfeCRkaXwDLYC4mj
+	 zWG4+QvdF+YYEwJ2ovdG7Ef5USDuhVtGm7OkWwnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgGPV5c (ORCPT
+        id S1726856AbgGPV5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:57:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32782 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726104AbgGPV5c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:57:32 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GL3GIM074078;
-        Thu, 16 Jul 2020 17:57:23 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32aut4dns4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 17:57:23 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GLTWFM139142;
-        Thu, 16 Jul 2020 17:57:23 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32aut4dnrv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 17:57:23 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GLk9b6016594;
-        Thu, 16 Jul 2020 21:57:22 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma02dal.us.ibm.com with ESMTP id 327529xy0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 21:57:22 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GLvLTo58786132
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 21:57:21 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 032F9BE051;
-        Thu, 16 Jul 2020 21:57:21 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF126BE04F;
-        Thu, 16 Jul 2020 21:57:17 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.8.110])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Jul 2020 21:57:17 +0000 (GMT)
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466098739.24747.5860501703617893464.stgit@hbathini.in.ibm.com> <87tuy88ai7.fsf@morokweng.localdomain> <929db6fe-b221-a514-8ea1-93227f8d47b0@linux.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Young <dyoung@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v3 10/12] ppc64/kexec_file: prepare elfcore header for crashing kernel
-In-reply-to: <929db6fe-b221-a514-8ea1-93227f8d47b0@linux.ibm.com>
-Date:   Thu, 16 Jul 2020 18:57:15 -0300
-Message-ID: <87a6zzcedg.fsf@morokweng.localdomain>
+        Thu, 16 Jul 2020 17:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbgGPV5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 17:57:42 -0400
+Received: from embeddedor (unknown [201.162.240.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3E5C20760;
+        Thu, 16 Jul 2020 21:57:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594936662;
+        bh=FHwxDK6igepiClPQE90tVnqtFkR6rnuVQojDpvUDhng=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lh48t//CK7yWibSt6BTRlq2Qj8l0UzaVq2UJWHVbrEM2SICTxHPdPXvDRtEgOW+4J
+         zpMHTMO1HOIMs7R+CKKpX4XzP2LWYMqBzdGZuCnszjP8TfPlP31MhSSjFwYPLVAPVI
+         Wiz9qfgGbgTFegz48iH/0yK2jFwWWNPrP8ZCQixs=
+Date:   Thu, 16 Jul 2020 17:03:07 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jean Delvare <jdelvare@suse.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] i2c: busses: Use fallthrough pseudo-keyword
+Message-ID: <20200716220307.GA19706@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 malwarescore=0
- priorityscore=1501 adultscore=0 clxscore=1015 bulkscore=0 spamscore=100
- suspectscore=0 impostorscore=0 mlxlogscore=-1000 lowpriorityscore=0
- mlxscore=100 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160140
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-> On 16/07/20 7:52 am, Thiago Jung Bauermann wrote:
->> 
->> Hari Bathini <hbathini@linux.ibm.com> writes:
->> 
->>>  /**
->>> + * get_crash_memory_ranges - Get crash memory ranges. This list includes
->>> + *                           first/crashing kernel's memory regions that
->>> + *                           would be exported via an elfcore.
->>> + * @mem_ranges:              Range list to add the memory ranges to.
->>> + *
->>> + * Returns 0 on success, negative errno on error.
->>> + */
->>> +static int get_crash_memory_ranges(struct crash_mem **mem_ranges)
->>> +{
->>> +	struct memblock_region *reg;
->>> +	struct crash_mem *tmem;
->>> +	int ret;
->>> +
->>> +	for_each_memblock(memory, reg) {
->>> +		u64 base, size;
->>> +
->>> +		base = (u64)reg->base;
->>> +		size = (u64)reg->size;
->>> +
->>> +		/* Skip backup memory region, which needs a separate entry */
->>> +		if (base == BACKUP_SRC_START) {
->>> +			if (size > BACKUP_SRC_SIZE) {
->>> +				base = BACKUP_SRC_END + 1;
->>> +				size -= BACKUP_SRC_SIZE;
->>> +			} else
->>> +				continue;
->>> +		}
->>> +
->>> +		ret = add_mem_range(mem_ranges, base, size);
->>> +		if (ret)
->>> +			goto out;
->>> +
->>> +		/* Try merging adjacent ranges before reallocation attempt */
->>> +		if ((*mem_ranges)->nr_ranges == (*mem_ranges)->max_nr_ranges)
->>> +			sort_memory_ranges(*mem_ranges, true);
->>> +	}
->>> +
->>> +	/* Reallocate memory ranges if there is no space to split ranges */
->>> +	tmem = *mem_ranges;
->>> +	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
->>> +		tmem = realloc_mem_ranges(mem_ranges);
->>> +		if (!tmem)
->>> +			goto out;
->>> +	}
->>> +
->>> +	/* Exclude crashkernel region */
->>> +	ret = crash_exclude_mem_range(tmem, crashk_res.start, crashk_res.end);
->>> +	if (ret)
->>> +		goto out;
->>> +
->>> +	ret = add_rtas_mem_range(mem_ranges);
->>> +	if (ret)
->>> +		goto out;
->>> +
->>> +	ret = add_opal_mem_range(mem_ranges);
->>> +	if (ret)
->>> +		goto out;
->> 
->> Maybe I'm confused, but don't you add the RTAS and OPAL regions as
->> usable memory for the crashkernel? In that case they shouldn't show up
->> in the core file.
->
-> kexec-tools does the same thing. I am not endorsing it but I was trying to stay
-> in parity to avoid breaking any userspace tools/commands. But as you rightly
-> pointed, this is NOT right. The right thing to do, to get the rtas/opal data at
-> the time of crash, is to have a backup region for them just like we have for
-> the first 64K memory. I was hoping to do that later.
->
-> Will check how userspace tools respond to dropping these regions. If that makes
-> the tools unhappy, will retain the regions with a FIXME. Sorry about the confusion.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/i2c/busses/i2c-amd8111.c | 2 +-
+ drivers/i2c/busses/i2c-i801.c    | 8 ++++----
+ drivers/i2c/busses/i2c-viapro.c  | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-No problem, thanks for the clarification.
-
+diff --git a/drivers/i2c/busses/i2c-amd8111.c b/drivers/i2c/busses/i2c-amd8111.c
+index 2b14fef5bf26..34862ad3423e 100644
+--- a/drivers/i2c/busses/i2c-amd8111.c
++++ b/drivers/i2c/busses/i2c-amd8111.c
+@@ -381,7 +381,7 @@ static s32 amd8111_access(struct i2c_adapter * adap, u16 addr,
+ 			if (status)
+ 				return status;
+ 			len = min_t(u8, len, I2C_SMBUS_BLOCK_MAX);
+-			/* fall through */
++			fallthrough;
+ 		case I2C_SMBUS_I2C_BLOCK_DATA:
+ 			for (i = 0; i < len; i++) {
+ 				status = amd_ec_read(smbus, AMD_SMB_DATA + i,
+diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+index 1fc7ae77753d..638e7f7c66cc 100644
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -1765,19 +1765,19 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	case PCI_DEVICE_ID_INTEL_WELLSBURG_SMBUS_MS1:
+ 	case PCI_DEVICE_ID_INTEL_WELLSBURG_SMBUS_MS2:
+ 		priv->features |= FEATURE_IDF;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		priv->features |= FEATURE_BLOCK_PROC;
+ 		priv->features |= FEATURE_I2C_BLOCK_READ;
+ 		priv->features |= FEATURE_IRQ;
+-		/* fall through */
++		fallthrough;
+ 	case PCI_DEVICE_ID_INTEL_82801DB_3:
+ 		priv->features |= FEATURE_SMBUS_PEC;
+ 		priv->features |= FEATURE_BLOCK_BUFFER;
+-		/* fall through */
++		fallthrough;
+ 	case PCI_DEVICE_ID_INTEL_82801CA_3:
+ 		priv->features |= FEATURE_HOST_NOTIFY;
+-		/* fall through */
++		fallthrough;
+ 	case PCI_DEVICE_ID_INTEL_82801BA_2:
+ 	case PCI_DEVICE_ID_INTEL_82801AB_3:
+ 	case PCI_DEVICE_ID_INTEL_82801AA_3:
+diff --git a/drivers/i2c/busses/i2c-viapro.c b/drivers/i2c/busses/i2c-viapro.c
+index 05aa92a3fbe0..970ccdcbb889 100644
+--- a/drivers/i2c/busses/i2c-viapro.c
++++ b/drivers/i2c/busses/i2c-viapro.c
+@@ -228,7 +228,7 @@ static s32 vt596_access(struct i2c_adapter *adap, u16 addr,
+ 			goto exit_unsupported;
+ 		if (read_write == I2C_SMBUS_READ)
+ 			outb_p(data->block[0], SMBHSTDAT0);
+-		/* Fall through */
++		fallthrough;
+ 	case I2C_SMBUS_BLOCK_DATA:
+ 		outb_p(command, SMBHSTCMD);
+ 		if (read_write == I2C_SMBUS_WRITE) {
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+2.27.0
+
