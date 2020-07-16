@@ -2,150 +2,134 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BBAC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F15C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABF02074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D860C2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:26:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="soTF6V0N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCe2KSeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgGPMUk (ORCPT
+        id S1728362AbgGPM0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:20:40 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:43709 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbgGPMUi (ORCPT
+        Thu, 16 Jul 2020 08:26:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728126AbgGPM0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:20:38 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200716122035epoutp02b5e669b955710cad15fdc999b937bcb0~iOvOOCuPX2932729327epoutp02H
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 12:20:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200716122035epoutp02b5e669b955710cad15fdc999b937bcb0~iOvOOCuPX2932729327epoutp02H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594902035;
-        bh=mYyGwdaGLsmdtAnpge0iP3YLiOv1LCA0Vl9pK3Po7a4=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=soTF6V0NMRUkwsl0TPXGPewGx4bmbqpAFyXj4YRH5DMyjYIjaiDJs6c/y1+KhUKnV
-         1zlgfThqlrFmuiAkTZLEJQh5f8NAmQRsSjMfLhL++5QkcOrmVOR0DztDpASjrBzeh2
-         PCMdagaVzghIxtN+bvvL5DHgVNRMHo/8Odz35f0Q=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20200716122035epcas5p14e6b0541c6899cca10ba2613c2c05c4c~iOvNpA3J-0450304503epcas5p15;
-        Thu, 16 Jul 2020 12:20:35 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        73.B3.09475.316401F5; Thu, 16 Jul 2020 21:20:35 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200716121621epcas5p376ac02b9774d95451d56b888babfc3f8~iOrh3mmSd3060430604epcas5p3o;
-        Thu, 16 Jul 2020 12:16:21 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200716121621epsmtrp2efc5b0ac875237d9833ab0af08e9dae8~iOrh2_XPI0694906949epsmtrp2A;
-        Thu, 16 Jul 2020 12:16:21 +0000 (GMT)
-X-AuditID: b6c32a4b-389ff70000002503-dc-5f10461330d1
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        80.7A.08303.515401F5; Thu, 16 Jul 2020 21:16:21 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200716121620epsmtip1d5ea675329ad0e84bb768e4dfaf56876~iOrgpTDh01388213882epsmtip1C;
-        Thu, 16 Jul 2020 12:16:20 +0000 (GMT)
-From:   Tamseel Shams <m.shams@samsung.com>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        krzk@kernel.org, linux-samsung-soc@vger.kernel.org,
-        alim.akhtar@samsung.com, Tamseel Shams <m.shams@samsung.com>
-Subject: [PATCH] serial: core: Fix Coding Style
-Date:   Thu, 16 Jul 2020 17:24:38 +0530
-Message-Id: <20200716115438.9967-1-m.shams@samsung.com>
+        Thu, 16 Jul 2020 08:26:33 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59073C061755;
+        Thu, 16 Jul 2020 05:26:33 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id c16so5747556ioi.9;
+        Thu, 16 Jul 2020 05:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=doFUSPu+F9XWVoD0er+QTsCiGOPKHkPF6UHj7R181iw=;
+        b=mCe2KSeUnzmk3A8gQQiBEhYjSIGSvpLq2JzMLdPPyPKgIJSHIhvnuOc9gfCKTOX4vg
+         8yrjJnNByYOAtKATSSwAgY+8Q5gq+xAy4sdJx9RujTXUREBm76w30qbFW1tdz9vnsN+Y
+         tDJoGU3A6uJWPOl2dXB2G1UOxfcvv9W1W0LAYInw7GW8T6j5gVd2LQNshWa7oSWyWmeS
+         wjCGqa7j0DbICJBi5uKkTjTS8qsW6PHSv6CWhHrBnkue4HupvWLsO+qGcEqw/Xzc7RfH
+         pJ+hlojFQ9+WL/lH80WVuAnGtoPN3hd9uc4QeveINvwewCgKBXG8bY+v52f2AFkIZw7p
+         sqqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=doFUSPu+F9XWVoD0er+QTsCiGOPKHkPF6UHj7R181iw=;
+        b=Sr9VKWltC+znnIrBdH/khIq0n8Q6tr/5sCAlHphe5V12dH0gtq1gzbHFTXQEnI8fze
+         X7/h5/vrGklokwCAAY4lkaIGHMNsHQHN7Ba8CJ3seoP1uCdcKLZly456c2dIX7RAsweG
+         H3Dy56oXX72bIa8yW02ZvAnLkwzCEj70Wb74hYpUXI82NeqBTbYYFygRPw8PViXS8IKT
+         U9LQSzBlZvtqRAsib4CieKHNjGJcFPT5z1ZVyN0k2SD0uNy5QvuT1QXDFqADJDYywt1C
+         u+8lx+W1KgAnHym6Yj5iveBRRENFfJqyExVnLoB92ZqtCR64WMMWr6n3si/ZU642cqbR
+         M06w==
+X-Gm-Message-State: AOAM530YouTi7SaY5ElJ99VTV2uisVNunB8Uf4VONAqZGkW3lv+P9BHS
+        AYNcMVxQPMjzF8AEXnc78Cuq4PR6
+X-Google-Smtp-Source: ABdhPJxiuNMoaGJIohrtAZ/TChqlgCmzOk5riegFW+xC5Gq8hkCNMIkfjUhjgF9PW9V0O776vPLbDQ==
+X-Received: by 2002:a6b:c9c4:: with SMTP id z187mr4285455iof.27.1594902392215;
+        Thu, 16 Jul 2020 05:26:32 -0700 (PDT)
+Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
+        by smtp.gmail.com with ESMTPSA id o67sm2568708ila.25.2020.07.16.05.26.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 05:26:31 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-clk@vger.kernel.org
+Cc:     dan.carpenter@oracle.com, luca@lucaceresoli.net,
+        aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH V3] clk: vc5: Add memory check to prevent oops
+Date:   Thu, 16 Jul 2020 07:26:20 -0500
+Message-Id: <20200716122620.4538-1-aford173@gmail.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRmVeSWpSXmKPExsWy7bCmlq6wm0C8QVM7u8WDedvYLJoXr2ez
-        mLLhA5PF+fMb2C0u75rDZjHj/D4mizOLe9kt7rYuZnfg8Ni0qpPNY//cNewefVtWMXqs33KV
-        xePzJrkA1igum5TUnMyy1CJ9uwSujFn7mpkL7nFXnPj5jamB8QxnFyMnh4SAicSrO+fYuxi5
-        OIQEdjNKzP66hRXC+cQosXvjMjYI5zOjxN5tC1hhWj59eMwIkdjFKHF+80Wo/hYmieaLl4Cq
-        ODjYBDQljp/nBmkQEdCXWNd4jwWkhllgC6PEknObmUESwkCJb1ues4DYLAKqErdbdoPZvALm
-        Erd/z2SC2CYvsXrDAWaQZgmBfewSp589Z4NIuEjcetXHCGELS7w6voUdwpaS+PxuL1RNvsT8
-        eauYIewKiZUX3kDZ9hIHrsxhATmUGejQ9bv0IcKyElNPrQPbyyzAJ9H7+wnUDbwSO+bB2IoS
-        /3f3Q60Sl3i3Ygo0VDwkGrZvA1srJBAr8fbxRrYJjLKzEDYsYGRcxSiZWlCcm55abFpgnJda
-        rlecmFtcmpeul5yfu4kRnAS0vHcwPnrwQe8QIxMH4yFGCQ5mJRFeHi7eeCHelMTKqtSi/Pii
-        0pzU4kOM0hwsSuK8Sj/OxAkJpCeWpGanphakFsFkmTg4pRqYXrbcaj3RZ7BgTrxqb9q0Ywce
-        hajXsRqe376ySsOKU9hIdKvIfO70R7FSX/afZ7imzfqZ//GN5b8fiQWyS3yNc3sXpxSf+PHp
-        mbsKYm91FyYKX5TO4Ahemdf16VTvxLRf9Y3Cdt19Cy6ckfl8SuHkv0vP76+97/iprfCO2Dnm
-        SynttStF7fWLCpoyIys4C7d+3HLaMG1S91rFhycUVi4IvJnOtrxCx2eRZLb4lRn9z6zann/U
-        mJMqwnRpl/Pc3b8Tr8/zCetK+F3yzMFHtvt4oXLXg6jDi+2vF3ibvHZcUHyoIH9Z81d7wWsl
-        v5inT1nw+9/ribrTjG7+blfi4P9dv9Dg8mOerqVFF8XuXLqxV4mlOCPRUIu5qDgRAGbueM5x
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphluLIzCtJLcpLzFFi42LZdlhJTlfUVSDe4NQ6S4sH87axWTQvXs9m
-        MWXDByaL8+c3sFtc3jWHzWLG+X1MFmcW97Jb3G1dzO7A4bFpVSebx/65a9g9+rasYvRYv+Uq
-        i8fnTXIBrFFcNimpOZllqUX6dglcGbP2NTMX3OOuOPHzG1MD4xnOLkZODgkBE4lPHx4zdjFy
-        cQgJ7GCUeHlsATtEQlxi2q/9jBC2sMTKf8/ZIYqamCQe7V3O1MXIwcEmoClx/Dw3SI2IgKHE
-        0dWfmUBqmAV2MUos7l3DBpIQFtCX+LblOQuIzSKgKnG7ZTeYzStgLnH790wmiAXyEqs3HGCe
-        wMizgJFhFaNkakFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcEBpae1g3LPqg94hRiYOxkOM
-        EhzMSiK8PFy88UK8KYmVValF+fFFpTmpxYcYpTlYlMR5v85aGCckkJ5YkpqdmlqQWgSTZeLg
-        lGpguuC++3yPsfjlGRyPe2/f8fSPM17JELPwVuJK156POcveR9T/ZNp+/a1Jotn0F4z9Z1Yl
-        7vm1IHe54ZvFZ0yCjlrOOBDcsn2BumKAZNAB5TLpxy63zETr5tb9v8Z9bMaW89dN14e2mb6o
-        y98YNKd+6R+NxX+/8szy6tq36veeA7vP5X9xT/v+y2Yt8+GSmRdvyL2752m1oLKsZvvd7ZVN
-        ahkHZnZJ72S+Z/1sXeqnteujLZyehZZwpK74+HNCU/htUZdajVN1hfcYBWU23F5x1v/Xebc3
-        /jPNZ7nbntY8M9HYP0GR9coe7XdZqd852BbMnvSNz/JVzu28zsovbmJtznHFr8va3Qw2cqRM
-        PjmjslGJpTgj0VCLuag4EQA04xailwIAAA==
-X-CMS-MailID: 20200716121621epcas5p376ac02b9774d95451d56b888babfc3f8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200716121621epcas5p376ac02b9774d95451d56b888babfc3f8
-References: <CGME20200716121621epcas5p376ac02b9774d95451d56b888babfc3f8@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the following checkpatch error and warning:
-  1. space required after ','
-  2. Missing a blank line after declarations
+When getting the names of the child nodes, kasprintf is used to
+allocate memory which is used to create the string for the node
+name.  Unfortunately, there is no memory check to determine
+if this allocation fails, it may cause an error when trying
+to get child node name.
 
-Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+This patch will check if the memory allocation fails, and returns
+and -ENOMEM error instead of blindly moving on.
+
+Fixes: 260249f929e8 ("clk: vc5: Enable addition output configurations of the Versaclock")
+
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
 ---
- drivers/tty/serial/serial_core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+V3:   Fix spelling error, and use the style of checking (!variable) instead of
+      (variable == NULL)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 66a5e2faf57e..9334e8d238b1 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1122,7 +1122,7 @@ static int uart_break_ctl(struct tty_struct *tty, int break_state)
+V2:   Fix an issue where a goto was going to use an unitialized variable.
+
+diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
+index 9a5fb3834b9a..9a37168c4afc 100644
+--- a/drivers/clk/clk-versaclock5.c
++++ b/drivers/clk/clk-versaclock5.c
+@@ -789,10 +789,13 @@ static int vc5_get_output_config(struct i2c_client *client,
+ 	int ret = 0;
+ 
+ 	child_name = kasprintf(GFP_KERNEL, "OUT%d", clk_out->num + 1);
++	if (!child_name)
++		return -ENOMEM;
++
+ 	np_output = of_get_child_by_name(client->dev.of_node, child_name);
+ 	kfree(child_name);
+ 	if (!np_output)
+-		goto output_done;
++		return 0;
+ 
+ 	ret = vc5_update_mode(np_output, clk_out);
+ 	if (ret)
+@@ -813,7 +816,6 @@ static int vc5_get_output_config(struct i2c_client *client,
+ 
+ 	of_node_put(np_output);
+ 
+-output_done:
  	return ret;
  }
  
--static int uart_do_autoconfig(struct tty_struct *tty,struct uart_state *state)
-+static int uart_do_autoconfig(struct tty_struct *tty, struct uart_state *state)
- {
- 	struct tty_port *port = &state->port;
- 	struct uart_port *uport;
-@@ -1525,6 +1525,7 @@ static void uart_set_termios(struct tty_struct *tty,
- 	/* Handle transition away from B0 status */
- 	else if (!(old_termios->c_cflag & CBAUD) && (cflag & CBAUD)) {
- 		unsigned int mask = TIOCM_DTR;
-+
- 		if (!(cflag & CRTSCTS) || !tty_throttled(tty))
- 			mask |= TIOCM_RTS;
- 		uart_set_mctrl(uport, mask);
-@@ -2276,6 +2277,7 @@ int uart_resume_port(struct uart_driver *drv, struct uart_port *uport)
- 		if (console_suspend_enabled || !uart_console(uport)) {
- 			/* Protected by port mutex for now */
- 			struct tty_struct *tty = port->tty;
-+
- 			ret = ops->startup(uport);
- 			if (ret == 0) {
- 				if (tty)
+@@ -828,7 +830,7 @@ static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	int ret;
+ 
+ 	vc5 = devm_kzalloc(&client->dev, sizeof(*vc5), GFP_KERNEL);
+-	if (vc5 == NULL)
++	if (!vc5)
+ 		return -ENOMEM;
+ 
+ 	i2c_set_clientdata(client, vc5);
 -- 
 2.17.1
 
