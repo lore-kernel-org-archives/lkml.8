@@ -2,105 +2,185 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43392C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5034C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2412E207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3D0207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:58:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="YgwfmSUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbgGPS5D (ORCPT
+        id S1729412AbgGPS6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:57:03 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:39326 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728163AbgGPS5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:57:03 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jw93n-005UW2-Ba; Thu, 16 Jul 2020 20:56:47 +0200
-Date:   Thu, 16 Jul 2020 20:56:47 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next 0/3] Add support for LEDs on Marvell
- PHYs
-Message-ID: <20200716185647.GA1308244@lunn.ch>
-References: <20200716171730.13227-1-marek.behun@nic.cz>
+        Thu, 16 Jul 2020 14:58:44 -0400
+Received: from mail.efficios.com ([167.114.26.124]:59594 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgGPS6n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 14:58:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 2493D297CAB;
+        Thu, 16 Jul 2020 14:58:42 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id jho3kzP0Uhx3; Thu, 16 Jul 2020 14:58:41 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id B8552297D0D;
+        Thu, 16 Jul 2020 14:58:41 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B8552297D0D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594925921;
+        bh=4y3OZc0uvqLRNtfhBnb/Pl6FBzMj468Y31eGzsZO15Y=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=YgwfmSUmKI5QGNkVW/ZZ4DkKkDfr6+Hx/88oYF+i0AnoO/Z9FhYpe84gUEYocOQZs
+         9YhXWYkwGT6T1MBDwQSVG52oBQHsCzbEu3te/aG2x3gC6D4Ct4Tg+ZhasUje9+KMDx
+         hU95kX5H6X+56H71ssixg7KPiZhw6SOybRTXFdnfUfURYh5zYw+0WneFlzLtl/t4Tt
+         JN1LzdW1iz+hxNNqnAVpLaaIAAdfyWLN/KTn9tdroxw0L7iCs0t9rq5BBsFGHyBULI
+         j1YpgVOwQwHVBV5Rdk21VIMyt9QZIbAt3Xw3/fbE14m0SXc+CByVsMsZHcPrXKlX/h
+         dYSAnCv5SaUAA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id T-n-DAhdMKvn; Thu, 16 Jul 2020 14:58:41 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id A1E69297CA8;
+        Thu, 16 Jul 2020 14:58:41 -0400 (EDT)
+Date:   Thu, 16 Jul 2020 14:58:41 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Nicholas Piggin <npiggin@gmail.com>, paulmck <paulmck@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
+Message-ID: <595582123.17106.1594925921537.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1370747990.15974.1594915396143.JavaMail.zimbra@efficios.com>
+References: <20200710015646.2020871-1-npiggin@gmail.com> <1594613902.1wzayj0p15.astroid@bobo.none> <1594647408.wmrazhwjzb.astroid@bobo.none> <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com> <1594868476.6k5kvx8684.astroid@bobo.none> <1594873644.viept6os6j.astroid@bobo.none> <1494299304.15894.1594914382695.JavaMail.zimbra@efficios.com> <1370747990.15974.1594915396143.JavaMail.zimbra@efficios.com>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200716171730.13227-1-marek.behun@nic.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
+Thread-Index: cb6zdS0KPjkbq8hxmgetruE+ExgftXKEdKLPFXA9iBY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 07:17:27PM +0200, Marek Behún wrote:
-> Hello,
+----- On Jul 16, 2020, at 12:03 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+
+> ----- On Jul 16, 2020, at 11:46 AM, Mathieu Desnoyers
+> mathieu.desnoyers@efficios.com wrote:
 > 
-> this RFC series should apply on both net-next/master and Pavel's
-> linux-leds/for-master tree.
+>> ----- On Jul 16, 2020, at 12:42 AM, Nicholas Piggin npiggin@gmail.com wrote:
+>>> I should be more complete here, especially since I was complaining
+>>> about unclear barrier comment :)
+>>> 
+>>> 
+>>> CPU0                     CPU1
+>>> a. user stuff            1. user stuff
+>>> b. membarrier()          2. enter kernel
+>>> c. smp_mb()              3. smp_mb__after_spinlock(); // in __schedule
+>>> d. read rq->curr         4. rq->curr switched to kthread
+>>> e. is kthread, skip IPI  5. switch_to kthread
+>>> f. return to user        6. rq->curr switched to user thread
+>>> g. user stuff            7. switch_to user thread
+>>>                         8. exit kernel
+>>>                         9. more user stuff
+>>> 
+>>> What you're really ordering is a, g vs 1, 9 right?
+>>> 
+>>> In other words, 9 must see a if it sees g, g must see 1 if it saw 9,
+>>> etc.
+>>> 
+>>> Userspace does not care where the barriers are exactly or what kernel
+>>> memory accesses might be being ordered by them, so long as there is a
+>>> mb somewhere between a and g, and 1 and 9. Right?
+>> 
+>> This is correct.
 > 
-> This adds support for LED's connected to some Marvell PHYs.
+> Actually, sorry, the above is not quite right. It's been a while
+> since I looked into the details of membarrier.
 > 
-> LEDs are specified via device-tree. Example:
+> The smp_mb() at the beginning of membarrier() needs to be paired with a
+> smp_mb() _after_ rq->curr is switched back to the user thread, so the
+> memory barrier is between store to rq->curr and following user-space
+> accesses.
+> 
+> The smp_mb() at the end of membarrier() needs to be paired with the
+> smp_mb__after_spinlock() at the beginning of schedule, which is
+> between accesses to userspace memory and switching rq->curr to kthread.
+> 
+> As to *why* this ordering is needed, I'd have to dig through additional
+> scenarios from https://lwn.net/Articles/573436/. Or maybe Paul remembers ?
 
-Hi Marek
+Thinking further about this, I'm beginning to consider that maybe we have been
+overly cautious by requiring memory barriers before and after store to rq->curr.
 
-I've been playing with something similar, off and on, mostly off.
+If CPU0 observes a CPU1's rq->curr->mm which differs from its own process (current)
+while running the membarrier system call, it necessarily means that CPU1 had
+to issue smp_mb__after_spinlock when entering the scheduler, between any user-space
+loads/stores and update of rq->curr.
 
-Take a look at
+Requiring a memory barrier between update of rq->curr (back to current process's
+thread) and following user-space memory accesses does not seem to guarantee
+anything more than what the initial barrier at the beginning of __schedule already
+provides, because the guarantees are only about accesses to user-space memory.
 
-https://github.com/lunn/linux v5.4-rc6-hw-led-triggers
+Therefore, with the memory barrier at the beginning of __schedule, just observing that
+CPU1's rq->curr differs from current should guarantee that a memory barrier was issued
+between any sequentially consistent instructions belonging to the current process on
+CPU1.
 
-The binding i have is pretty much the same, since we are both
-following the common LED binding. I see no problems with this.
+Or am I missing/misremembering an important point here ?
 
-> This is achieved by extending the LED trigger API with LED-private triggers.
-> The proposal for this is based on work by Ondrej and Pavel.
+Thanks,
 
-So what i did here was allow triggers to be registered against a
-specific LED. The /sys/class/leds/<LED>/trigger lists both the generic
-triggers and the triggers for this specific LED. Phylib can then
-register a trigger for each blink reason that specific LED can
-perform. Which does result in a lot of triggers. Especially when you
-start talking about a 10 port switch each with 2 LEDs.
+Mathieu
 
-I still have some open issues...
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> 
+>> Note that the accesses to user-space memory can be
+>> done either by user-space code or kernel code, it doesn't matter.
+>> However, in order to be considered as happening before/after
+>> either membarrier or the matching compiler barrier, kernel code
+>> needs to have causality relationship with user-space execution,
+>> e.g. user-space does a system call, or returns from a system call.
+>> 
+>> In the case of io_uring, submitting a request or returning from waiting
+>> on request completion appear to provide this causality relationship.
+>> 
+>> Thanks,
+>> 
+>> Mathieu
+>> 
+>> 
+>> --
+>> Mathieu Desnoyers
+>> EfficiOS Inc.
+>> http://www.efficios.com
+> 
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> http://www.efficios.com
 
-1) Polarity. It would be nice to be able to configure the polarity of
-the LED in the bindings.
-
-2) PHY LEDs which are not actually part of the PHY. Most of the
-Marvell Ethernet switches have inbuilt PHYs, which are driven by the
-Marvell PHY driver. The Marvell PHY driver has no idea the PHY is
-inside a switch, it is just a PHY.  However, the LEDs are not
-controlled via PHY registers, but Switch registers. So the switch
-driver is going to end up controlling these LEDs. It would be good to
-be able to share as much code as possible, keep the naming consistent,
-and keep the user API the same.
-
-3) Some PHYs cannot control the LEDs independently. Or they have modes
-which configure two or more LEDs. The Marvell PHYs are like
-this. There are something like ~10 blink modes which are
-independent. And then there are 4 modes which control multiple LEDs.
-There is no simple way to support this with Linux LEDs which assume
-the LEDs are fully independent. I suspect we simply cannot support
-these combined modes.
-
-As a PHY maintainer, i would like to see a solution which makes use of
-Linux LEDs. I don't really care who's code it is, and feel free to
-borrow my code, or ideas, or ignore it.
-
-      Andrew
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
