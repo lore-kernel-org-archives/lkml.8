@@ -2,200 +2,148 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46385C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E68AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF172076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C052071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fGVtEIMM"
+	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="oFCTg4DU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgGPQLX (ORCPT
+        id S1729262AbgGPQMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:11:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbgGPQLV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:11:21 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56FCC061755;
-        Thu, 16 Jul 2020 09:11:20 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a21so7131021ejj.10;
-        Thu, 16 Jul 2020 09:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=afikj2x6d80faw5ihr4eewg9zarzp6KGseVCVHdo4Xc=;
-        b=fGVtEIMMVzv7JQI7ZwCO1ec93nwrG0eR8KkMl6HxIa8zP53rpG4eecbAlNDXUB5EQw
-         0uGmIYBFKOkLsPakr9gBU4jxgpIT62ecZKmjtepYHJ5z0NgBhK5tx6V1GVXvSXH/3cAp
-         mb9pI4UIrY1NxC03ZiAxK6ATO/4yuPJtkEAERro8FHBTtkocyj34RmGfZ117vEodlVkh
-         X/3DUK4o5vbSuKYE2+6lAjE8aTbIguxkkkT91zoICdY7WKpZNA52vP2bGWBNwyxLqZbn
-         YVuAF0Ct2Ssx8NYaO4FVRb+uCAF0+09dgFJoxmJKXDfootnEbbzaxGmghhIxWkr7J/7D
-         MfPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=afikj2x6d80faw5ihr4eewg9zarzp6KGseVCVHdo4Xc=;
-        b=ff8DBJZHtzLbfQ+slnHJpS0w7u6rs9c2Ql9Dy6pHFHiWBrBMw1NRmt5VIdSbl1hZoD
-         p4mFcJvLKrsaB/oRBcjTFmYbnLe77HAC29Z84B/0im2yBt1w/YmcSPnR1sw8fua28+AB
-         ItS6Qrr07S1h/g3xoeoK4nZZ6x16fooWfwH4Pxx6zU+WjJ/WpkXzbUs54kgEUs9saKsd
-         ZIijpW34nvCD964KXdHOQ/BKDa16SX8YEl1Cvr8tI+J0TrDJ6HjuvKW+A94p/yd1p/wV
-         KQ6pn33eHuaLGBFwyR0PdDLjHY+B4LPIDGl4yoiCK0/dlbWydMHbb3YAyVo0S2E97bEL
-         T+kw==
-X-Gm-Message-State: AOAM533X7vTB8hPsNQwPqGJcZ02cAiJ/TzWbR09ceIYoa9lWXpJGR3m6
-        ws/LINwCpmM17Ul0GJEz0EGkpuax9OE=
-X-Google-Smtp-Source: ABdhPJw3Sjmye5JUDNp0BJHq8yK9rY4J+JijCf75AbIl4nClN+7v8c0wXm4G8SksZjQzW8i1NpFtng==
-X-Received: by 2002:a17:906:f94c:: with SMTP id ld12mr4608617ejb.426.1594915879041;
-        Thu, 16 Jul 2020 09:11:19 -0700 (PDT)
-Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id j21sm5781506edq.20.2020.07.16.09.11.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 09:11:18 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 1/2] dt-bindings: arm: rockchip: add A95X Z2
- description
-To:     Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>
-Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        heiko@sntech.de, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-References: <20200620134659.4592-1-jbx6244@gmail.com>
- <20200620134659.4592-2-jbx6244@gmail.com> <20200715192935.GA684031@bogus>
- <14b39efe-f38b-b471-560d-1ecaeafc5dd5@gmail.com>
- <56b1447d-6c62-9e73-a7ce-08fb70096a97@arm.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <544f9182-034b-6309-a945-72b5a34ee2e8@gmail.com>
-Date:   Thu, 16 Jul 2020 18:11:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 16 Jul 2020 12:12:33 -0400
+Received: from mail-am6eur05on2121.outbound.protection.outlook.com ([40.107.22.121]:15712
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728837AbgGPQMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:12:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m2lIW+4jliBiFlBvlCvBJ2VEnPYYsivl4fTfahpcpzJbWh6CrGA8hSFVUi3o5TTMJv+85a4KexsrmKVAZGTpUiT0pvPLgh32OY8ybLBMLDW4x1j1Mmn0Pu1JygacDeDqvtvbtYMiDycZONnO2TWiCSoOPJ110tB+ymNQ7ASWxZn0WsuaNKRH0gCFCWS4DjLXsrmV5Ur7tuE2Cc7hYyKVsorQ1r5caiLDa6rdP+7HWBfUJVdlRyJluO1QTczKFmYAxcZXt3EZDL+WoNwqyXK056FxrYZtZ1RmLHcrEVEOZlEjP9DwdwldjECn7HUxry9skhPeiR/TBzl+unPfqHVgSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3PL0phlUnPQ0FdHdR9WVyYU9N1YaMsQbo606tHWKUUI=;
+ b=hPSykzVOagQzgJqC/vFntlrLANn/iSwJkUC0zf1dOq2EkPv4qzi2fdSL10VQO/ungLUE+hOE8gL/t0nGCMEvqBK0ottqUOEbBIoigFWiAsNkVezJGAIdDpbaDkKtdKvLauhXwrBfJOfNkhbY9zXPLzPaUBClzZ8qdgXZNMgGo5ocm4GgQH0Oa8Zejw2NWMKSqOUeJMl9V7WeuTHEgKOzU/b2X/Xyrygq5OsLCvRSZBZMq15HAqSHJP8lGA46HIRMe4IpIeCKTuum9j1XgahvB83+wY5OOzJ2ss2KpTPaMSE7m/rHUxPyJdZa2ptxRw93pKbelkdSZxu5KtrFKzdefA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
+ dkim=pass header.d=kontron.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
+ s=selector2-mysnt-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3PL0phlUnPQ0FdHdR9WVyYU9N1YaMsQbo606tHWKUUI=;
+ b=oFCTg4DUDrxSAV+19pHJ7LIlDyWT3/cWuw3h95NAp7K2Vlw+ZKM08jTp/sGm70VTdo3YlF0gae8KnAYl/9ckMFajtNJlovU6kdaCNsey3XKCzxzWOAvCHIlI0QD0YLbMvjmjhPfl5cPDKJhGpJRo8XrKiQDyjqW/LRrZBK6EoXc=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=kontron.de;
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
+ by DB8PR10MB3339.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:119::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Thu, 16 Jul
+ 2020 16:12:28 +0000
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ac04:ef33:baf3:36f3]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ac04:ef33:baf3:36f3%4]) with mapi id 15.20.3174.027; Thu, 16 Jul 2020
+ 16:12:28 +0000
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Li Yang <leoyang.li@nxp.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Michael Walle <michael@walle.cc>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Robert Jones <rjones@gateworks.com>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>, Shawn Guo <shawnguo@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/2] Add support for Kontron i.MX8MM SoMs and boards
+Date:   Thu, 16 Jul 2020 18:11:57 +0200
+Message-Id: <20200716161216.15461-1-frieder.schrempf@kontron.de>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR05CA0092.eurprd05.prod.outlook.com
+ (2603:10a6:208:136::32) To DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:50::12)
 MIME-Version: 1.0
-In-Reply-To: <56b1447d-6c62-9e73-a7ce-08fb70096a97@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fs-work.localdomain (88.130.73.71) by AM0PR05CA0092.eurprd05.prod.outlook.com (2603:10a6:208:136::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Thu, 16 Jul 2020 16:12:26 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [88.130.73.71]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cc477780-e753-4c41-cfde-08d829a308e2
+X-MS-TrafficTypeDiagnostic: DB8PR10MB3339:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR10MB333949A8E2AE58A0C93E2B80E97F0@DB8PR10MB3339.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1360;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UXeTimA+DcZ3BOuEw5bcsLRkkgWzcHTs7Zn0EJdNco2cuTXsOo6y+865puohn9Gwm0nD7scn5+crqeExFSUOGvdsb2k3KrTj92diDdSO9EqSZnTSLFEuV9Wp629KLMjT+XMdaIN4S0oskdFk2EaaXVVRHhu6t1IkzMRiqaj5SaiLknrAJaRTbdqfXELVZS0GoKv99taRYFmWFYmDcAEvZ20L7clcOhufe2Ja9O+d/ztBs0ZK0xEqLXEW3mUHOQ/IPwmfuJfYb+n/3vsjTcZ6ojFzeDc823dDPqxpWNf3BHHEhQdQpKxsIfq91t64J3WjUw/uUlrXn9SiAaLINpNeK2egh/O14giRHWMOyil7bUI7Cm+34X2Q/Yt/7dVWfOh/Q/TrfrNZYYn/mZEb0zc2qwO+jL3KuKYuV17vrHKPi57WWtPhPa3kCZlW7sc4hWCw
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(4636009)(366004)(136003)(376002)(396003)(39860400002)(346002)(52116002)(86362001)(6512007)(66946007)(956004)(4326008)(6506007)(110136005)(2616005)(8676002)(186003)(26005)(8936002)(16526019)(2906002)(6486002)(7416002)(36756003)(5660300002)(1076003)(66476007)(66556008)(316002)(6666004)(478600001)(966005)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: r1YQ3OczkVDtRmZMPw3a6fgh+LIih4wW96Jlq6yiGyBrTvbYk1W1a+wvpcnmn9G4zCqfYgxCu6Bi/WK1mz+zu6vga9s6UXpIutb6VJFbyA4AliNIKMtn3S7i3Di26usSaQle9MIp8ejRaumgPa/l9m77mnyeJiATJuOA695LKLsB0UXDUEKYAAuJsgec1OG1k/Cm/U/m5MrZJHKaw3l3vU9deg71jGRm2Y+Q00QJ3dFcB5yQbqR/ihOxZgG5hWdVFQL6LxsYGOgXvCszvnkUU2TKmHnRFFCmS0xqoWggVQemj7PAO+jYnIqkKWjLWQbZkWChUNtfkN+EsJTmh5PR4Z934clqG3RTaSXYQUpu5vT9Fkx78GzSqn+oSllKhYdSaRyQ3QfnjDuZrqbLOKi/CqW2r/NC50F2m8BaTqRW52uCnGwb2a7Yt/xX3GLUM7Tci/ZLjsv3eGsztNn8zQF5cjnaj4or8Jou0YiK7tobdNw=
+X-OriginatorOrg: kontron.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc477780-e753-4c41-cfde-08d829a308e2
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2020 16:12:28.0743
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2uSXMUDcpzVHvF/6gtbyRC0WRudjWwH4PmsSKzjxnAsnJYRJxnIfyJu+eZbeGfvt6q1xgbcaz/ueL7e7tkaCA5z7Mk7bdEEaiYeJ2lBr4Y8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3339
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/20 3:34 PM, Robin Murphy wrote:
-> On 2020-07-16 13:05, Johan Jonker wrote:
->> Hi Rob,
->>
->> The A95X Z2 boxes are sold by various vendors/manufacturers/web shops.
->> The box it self only shows a label with a model name.
->> Determining the true vendor is a kind of tricky for a outsider of the
->> business.
->> Could you advise what would be a save choice to the rather rigid vendor
->> requirements.
->> Is for example this a option:
->>
->>    "^a95x,.*":
->>      description: A95X
->>
->> Is there someone who can give more info on this subject?
-> 
-> FWIW we already have some "A95X" branded things attributed to Nexbox in
-> upstream DTs, however, the evidence from scraping around the internet
-> suggests that the closest thing to an original vendor for the "A95X Z2"
-> model is probably these folks:
-> 
-> https://zkmagic.en.alibaba.com/
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-That's where I got my update/backup img from.
-A mail was sent, but what if they all claim to be a 'official' or
-'direct' store?
+Kontron Electronics GmbH offers small and powerful SoMs based on the
+i.MX8M Mini SoC including PMIC, LPDDR4-RAM, eMMC and SPI NOR.
 
-option 1:
+Currently there are two SoM models:
+  * SL i.MX8MM N8010 with 1GB RAM and 8 GB eMMC
+  * SL i.MX8MM N8011 with 2GB RAM and 8 GB eMMC
 
-      - description: A95X Z2
-        items:
-          - const: a95x,z2
+The matching baseboard has the same form factor and similar interfaces
+as the other boards from the Kontron "Board-Line" family, including
+SD card, 1G Ethernet, 100M Ethernet, USB Host/OTG, digital IOs, RS232,
+RS485, CAN, LVDS or HDMI, RTC and much more.
 
-  "^a95x,.*":
-    description: A95X
+This adds the basic support for the SoMs and boards. Some things to note:
+  * The SoMs use the PCA9450 PMIC. The driver support is queued: [1].
+  * The support for the SPI NOR flash is queued: [2].
+  * The graphics and display peripherals (DSI, LVDS, HDMI, GPU, etc.) are not
+    supported upstream yet.
+  * There seems to be an unresolved issue with the upstream SPI driver for
+    i.MX8MM which breaks SPI devices: [3].
 
-or option 2:
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200716&id=0935ff5f1f0a44f66a13e075ed49f97ad99d2fdc
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit?h=next-20200716&id=482dcb2a04fdf6d4306e40f2b0537a313a466558
+[3] https://patchwork.kernel.org/patch/11037107/#23227681.
 
-      - description: Zkmagic A95X Z2
-        items:
-          - const: zkmagic,a95x-z2
+Frieder Schrempf (2):
+  arm64: dts: Add the Kontron i.MX8M Mini SoMs and baseboards
+  dt-bindings: arm: fsl: Add Kontron i.MX8M Mini SoMs and boards
 
-  "^zkmagic,.*":
-    description: Shenzhen Zkmagic Technology Co., Ltd.
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ .../dts/freescale/imx8mm-kontron-n801x-s.dts  | 327 ++++++++++++++++++
+ .../freescale/imx8mm-kontron-n801x-som.dtsi   | 294 ++++++++++++++++
+ 3 files changed, 628 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-kontron-n801x-s.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-kontron-n801x-som.dtsi
 
-I'ld rather prefer a short neutral name like option 1 just to be save. ;)
-For the completeness there seems to be:
-a95x a2
-a95x a3
-a95x f1
-a95x f2
-a95x f3
-a95x max
-a95x max plus
-a95x r1
-a95x r2
-a95x r3
-a95x r5
-a95x z2
-a95x z2 +
-
-Any advice welcome..
-
-Johan
-
-> 
-> Robin.
-> 
->>
->> Kind regards,
->>
->> Johan Jonker
->>
->> On 7/15/20 9:29 PM, Rob Herring wrote:
->>> On Sat, Jun 20, 2020 at 03:46:58PM +0200, Johan Jonker wrote:
->>>> Add A95X Z2 description for a board with rk3318 processor.
->>>>
->>>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->>>> ---
->>>>   Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->>>>   1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml
->>>> b/Documentation/devicetree/bindings/arm/rockchip.yaml
->>>> index d4a404509..3d44b3cf0 100644
->>>> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
->>>> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
->>>> @@ -25,6 +25,11 @@ properties:
->>>>             - const: vamrs,rock960
->>>>             - const: rockchip,rk3399
->>>>   +      - description: A95X Z2
->>>> +        items:
->>>> +          - const: a95x,z2
->>>
->>> Need to document vendor prefix.
->>>
->>>> +          - const: rockchip,rk3318
->>>> +
->>>>         - description: Amarula Vyasa RK3288
->>>>           items:
->>>>             - const: amarula,vyasa-rk3288
->>>> -- 
->>>> 2.11.0
->>>>
->>
->>
->> _______________________________________________
->> Linux-rockchip mailing list
->> Linux-rockchip@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->>
+-- 
+2.17.1
 
