@@ -2,126 +2,151 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB582C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D66AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7956C20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:58:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aZboL+Ls"
+	by mail.kernel.org (Postfix) with ESMTP id 6D5422076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgGPV6Y (ORCPT
+        id S1726784AbgGPWAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:58:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgGPV6Y (ORCPT
+        Thu, 16 Jul 2020 18:00:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60604 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726002AbgGPWAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:58:24 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3681CC061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:58:24 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id m22so5535756pgv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eFUIFCXr3un/HX1xYqaCN4hY8qd5k3HqOlsX9/aIkxY=;
-        b=aZboL+LsskojMwhKfws0MypsgvhoeSdNzBTb6nbV7rFUWA1OjhM0tB0bFLqeCYvxcM
-         md8ZX1gK2WhbNKLzpoCoUz88zRHNFKOFWNoTsKQ+K/qTFLx/uRzsAMKf9ntuuWDUU1pK
-         1N0RuHNnce6o4GYPaOB6Rw/30LvSNgrc7ztS4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eFUIFCXr3un/HX1xYqaCN4hY8qd5k3HqOlsX9/aIkxY=;
-        b=G4jlr9A9/UxPj2bntAgFk3eSy0dlwCaTirEkhW1PYO3dRMjA89dSN5TuIFOZ6fHYEf
-         EP8eayOticNHQfKKu8DRMufbTBxC7qAhnd67QTvjNIXTMqAEeqG5dM7mKiBWzMrY+2M1
-         udD1enjoCNWNtL82cWT5+O60qfCp7bgI6kPlt5/ywyM8C9jqrdY7L7LD1Q920llZi0iw
-         Qz5pq2+NHdWll7L0HoPR6wP+kFbpFdzZidbieOvO3J+tVCKQjAANJ1/EWDzSeQCiWym/
-         b9SKfKmtaczx4kSCukhQHcBxE52YWJXED7oDAYksFasqebLVeVCdp8rGn1u6AzDSlj3b
-         oFZQ==
-X-Gm-Message-State: AOAM533o5pjPsp14bZRcAzkp1VcK3jsdF1jd7bZaALLP8MDPvONhOsw9
-        l/RzpmNek2mBHSSkEhxqU0EaK3Z84X8=
-X-Google-Smtp-Source: ABdhPJxl1Eu1rdF0kLBdh+x1CqAHyD8/aVY+62VpKPCfoBx1DwJJDO++90eIUBjS3eDY8RRI/CZFGw==
-X-Received: by 2002:a63:3c2:: with SMTP id 185mr6172121pgd.46.1594936703403;
-        Thu, 16 Jul 2020 14:58:23 -0700 (PDT)
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com. [209.85.210.179])
-        by smtp.gmail.com with ESMTPSA id g10sm843436pjs.20.2020.07.16.14.58.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 14:58:23 -0700 (PDT)
-Received: by mail-pf1-f179.google.com with SMTP id j20so4329987pfe.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:58:23 -0700 (PDT)
-X-Received: by 2002:a1f:61c2:: with SMTP id v185mr5122193vkb.42.1594936298466;
- Thu, 16 Jul 2020 14:51:38 -0700 (PDT)
+        Thu, 16 Jul 2020 18:00:08 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GLlGmP086747;
+        Thu, 16 Jul 2020 18:00:01 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32792xnkqc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 18:00:01 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GL3CvL087521;
+        Thu, 16 Jul 2020 18:00:00 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32792xnkpt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 18:00:00 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GLioHt021034;
+        Thu, 16 Jul 2020 21:59:59 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma02wdc.us.ibm.com with ESMTP id 327urt51sb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 21:59:59 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GLxxdt54067484
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 21:59:59 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C560AC064;
+        Thu, 16 Jul 2020 21:59:59 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72C2FAC059;
+        Thu, 16 Jul 2020 21:59:54 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.8.110])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 16 Jul 2020 21:59:54 +0000 (GMT)
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466088775.24747.1248185448154277951.stgit@hbathini.in.ibm.com> <87365t8pse.fsf@morokweng.localdomain> <0582476e-415e-3f60-2bb2-6199d0340156@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 04/12] ppc64/kexec_file: avoid stomping memory used by special regions
+In-reply-to: <0582476e-415e-3f60-2bb2-6199d0340156@linux.ibm.com>
+Date:   Thu, 16 Jul 2020 18:59:49 -0300
+Message-ID: <878sfjce96.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org>
- <1592818308-23001-4-git-send-email-mkshah@codeaurora.org> <CACRpkdb-3Tf4s5=Gxjhy62GX=HUYkLOcPKZ6JWaLTQipz-0r6A@mail.gmail.com>
-In-Reply-To: <CACRpkdb-3Tf4s5=Gxjhy62GX=HUYkLOcPKZ6JWaLTQipz-0r6A@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 16 Jul 2020 14:51:27 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vpz9k1k0JYW45D4V+a5+YnRmVzOVRXZudYZzjHugJZMw@mail.gmail.com>
-Message-ID: <CAD=FV=Vpz9k1k0JYW45D4V+a5+YnRmVzOVRXZudYZzjHugJZMw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] pinctrl: qcom: Use return value from irq_set_wake call
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        =?UTF-8?Q?open_list=3AGPIO_SUBSYSTEM_=3Clinux=2Dgpio=40vger=2Ekernel=2Eorg=3E=2C_Andy_?=
-         =?UTF-8?Q?Gross_=3Cagross=40kernel=2Eorg=3E=2C_Thomas_Gleixner_=3Ctglx=40linutronix=2E?=
-         =?UTF-8?Q?de=3E=2C_Jason_Cooper_=3Cjason=40lakedaemon=2Enet=3E=2C_Doug_Anderson_=3Cdia?=
-         =?UTF-8?Q?nders=40chromium=2Eorg=3E=2C_Rajendra_Nayak_=3Crnayak=40codeaurora=2Eorg=3E=2C?=
-         =?UTF-8?Q?_Lina_Iyer_=3Cilina=40codeaurora=2Eorg=3E=2C?= 
-        <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 suspectscore=0
+ mlxlogscore=-1000 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ adultscore=0 impostorscore=0 spamscore=100 malwarescore=0 bulkscore=0
+ mlxscore=100 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Thu, Jul 16, 2020 at 6:19 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+Hari Bathini <hbathini@linux.ibm.com> writes:
+
+> On 15/07/20 8:09 am, Thiago Jung Bauermann wrote:
+>> 
+>> Hari Bathini <hbathini@linux.ibm.com> writes:
+>> 
 >
-> On Mon, Jun 22, 2020 at 11:32 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+> <snip>
+>  
+>>> +/**
+>>> + * __locate_mem_hole_top_down - Looks top down for a large enough memory hole
+>>> + *                              in the memory regions between buf_min & buf_max
+>>> + *                              for the buffer. If found, sets kbuf->mem.
+>>> + * @kbuf:                       Buffer contents and memory parameters.
+>>> + * @buf_min:                    Minimum address for the buffer.
+>>> + * @buf_max:                    Maximum address for the buffer.
+>>> + *
+>>> + * Returns 0 on success, negative errno on error.
+>>> + */
+>>> +static int __locate_mem_hole_top_down(struct kexec_buf *kbuf,
+>>> +				      u64 buf_min, u64 buf_max)
+>>> +{
+>>> +	int ret = -EADDRNOTAVAIL;
+>>> +	phys_addr_t start, end;
+>>> +	u64 i;
+>>> +
+>>> +	for_each_mem_range_rev(i, &memblock.memory, NULL, NUMA_NO_NODE,
+>>> +			       MEMBLOCK_NONE, &start, &end, NULL) {
+>>> +		if (start > buf_max)
+>>> +			continue;
+>>> +
+>>> +		/* Memory hole not found */
+>>> +		if (end < buf_min)
+>>> +			break;
+>>> +
+>>> +		/* Adjust memory region based on the given range */
+>>> +		if (start < buf_min)
+>>> +			start = buf_min;
+>>> +		if (end > buf_max)
+>>> +			end = buf_max;
+>>> +
+>>> +		start = ALIGN(start, kbuf->buf_align);
+>>> +		if (start < end && (end - start + 1) >= kbuf->memsz) {
+>> 
+>> This is why I dislike using start and end to express address ranges:
+>> 
+>> While struct resource seems to use the [address, end] convention, my
 >
-> > msmgpio irqchip is not using return value of irq_set_wake call.
-> > Start using it.
-> >
-> > Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> struct crash_mem also uses [address, end] convention.
+> This off-by-one error did not cause any issues as the hole start and size we try to find
+> are at least page aligned.
 >
-> Is this something that's causing regressions so I should apply it for
-> fixes, or is it fine to keep this with the rest of the series for v5.9?
+> Nonetheless, I think fixing 'end' early in the loop with "end -= 1" would ensure
+> correctness while continuing to use the same convention for structs crash_mem & resource.
 
-I would let Maulik comment more, but as far as I can tell the function
-has been ignoring the return value of irq_set_irq_wake() for much
-longer.  Presumably one could logically say:
+Sounds good.
 
-Fixes: 6aced33f4974 ("pinctrl: msm: drop wake_irqs bitmap")
-
-...though when you get past the commit that Maulik tagged you need a
-backport rather than a straight cherry-pick.
-
-That would make me believe that there is no real hurry to land the fix here.
-
-
--Doug
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
