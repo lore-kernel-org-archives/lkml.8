@@ -2,144 +2,174 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA0CC43619
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4560EC43616
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0AAA2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:21:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594920112;
-	bh=ctSOUR51zUNLOTRs5i7BKOjlKSkDjPbwBTLa6Z1gzwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SGFh2NyYE97Z8JLu/olKdRiFPJ9sWzKIf3EzIuFVuZcBeYKH/DRaj4MBQUN6by3QH
-	 bQLjvTWkmX6m9HjqdKt8zxTDhfCSi91LRi6N90oFigI887vm7+wet50xSu77Rzq7L7
-	 YdOV2LICEJpl60Boh1fjkNZ4KZnfcbHIkF7BDMWY=
+	by mail.kernel.org (Postfix) with ESMTP id 2AF92207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbgGPRVv (ORCPT
+        id S1729375AbgGPRVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728807AbgGPRVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jul 2020 13:21:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BD3420657;
-        Thu, 16 Jul 2020 17:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594920109;
-        bh=ctSOUR51zUNLOTRs5i7BKOjlKSkDjPbwBTLa6Z1gzwQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HZeRoY0aGb1fLAHBnoI42rOigziBskvvTO+Qpo3p4wN2ZLO0Kznsn3NuJbyxLybz9
-         T8CKkfj/YzPBQOEGbP5r/Dc+icJ5pS81q30niNjoEEPrvX6eGBssXZTZrUNgUjLRu1
-         0Z7GOjq7tVQf+Jik+vu/bTZiBvZqmCLNVU52/3L8=
-Date:   Thu, 16 Jul 2020 19:21:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-        Rui Feng <rui_feng@realsil.com.cn>,
-        linux-nvme@lists.infradead.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH] mmc: core: Initial support for SD express card/host
-Message-ID: <20200716172141.GA3143216@kroah.com>
-References: <20200716141534.30241-1-ulf.hansson@linaro.org>
- <20200716161358.GA3135454@kroah.com>
- <CAPDyKFr6eSZr2V-=YvAEZH9SmsE2SZ9j5ZS5zZEFHBqwyWRfpw@mail.gmail.com>
+Received: from mx2.suse.de ([195.135.220.15]:34556 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728126AbgGPRVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:21:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 16602AC36;
+        Thu, 16 Jul 2020 17:21:51 +0000 (UTC)
+Subject: Re: [PATCH v3] mm: memcg/slab: fix memory leak at non-root kmem_cache
+ destroy
+To:     Muchun Song <songmuchun@bytedance.com>, guro@fb.com, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, shakeelb@google.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200716165103.83462-1-songmuchun@bytedance.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <a1e6a270-e7e2-78f0-62dd-c7e9ad1b2903@suse.cz>
+Date:   Thu, 16 Jul 2020 19:21:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFr6eSZr2V-=YvAEZH9SmsE2SZ9j5ZS5zZEFHBqwyWRfpw@mail.gmail.com>
+In-Reply-To: <20200716165103.83462-1-songmuchun@bytedance.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 07:04:21PM +0200, Ulf Hansson wrote:
-> On Thu, 16 Jul 2020 at 18:14, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Jul 16, 2020 at 04:15:34PM +0200, Ulf Hansson wrote:
-> > > +int mmc_send_if_cond_pcie(struct mmc_host *host, u32 ocr)
-> > > +{
-> > > +     u32 resp = 0;
-> > > +     u8 pcie_bits = 0;
-> > > +     int ret;
-> > > +
-> > > +     if (host->caps2 & MMC_CAP2_SD_EXP) {
-> > > +             /* Probe card for SD express support via PCIe. */
-> > > +             pcie_bits = 0x10;
-> > > +             if (host->caps2 & MMC_CAP2_SD_EXP_1_2V)
-> > > +                     /* Probe also for 1.2V support. */
-> > > +                     pcie_bits = 0x30;
-> > > +     }
-> > > +
-> > > +     ret = __mmc_send_if_cond(host, ocr, pcie_bits, &resp);
-> > > +     if (ret)
-> > > +             return 0;
-> > > +
-> > > +     /* Continue with the SD express init, if the card supports it. */
-> > > +     resp &= 0x3000;
-> > > +     if (pcie_bits && resp) {
-> > > +             if (resp == 0x3000)
-> >
-> > 0x3000 should be some defined value, right?  Otherwise it just looks
-> > like magic bits :)
+On 7/16/20 6:51 PM, Muchun Song wrote:
+> If the kmem_cache refcount is greater than one, we should not
+> mark the root kmem_cache as dying. If we mark the root kmem_cache
+> dying incorrectly, the non-root kmem_cache can never be destroyed.
+> It resulted in memory leak when memcg was destroyed. We can use the
+> following steps to reproduce.
 > 
-> Yeah, I was considering that, but there are already lots of magic bits
-> around here in this code. On top of that, the bits are shifted,
-> depending on how they are used.
+>   1) Use kmem_cache_create() to create a new kmem_cache named A.
+>   2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
+>      so the refcount of B is just increased.
+>   3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
+>      decrease the B's refcount but mark the B as dying.
+>   4) Create a new memory cgroup and alloc memory from the kmem_cache
+>      B. It leads to create a non-root kmem_cache for allocating memory.
+>   5) When destroy the memory cgroup created in the step 4), the
+>      non-root kmem_cache can never be destroyed.
 > 
-> We should probably look into doing a cleanup, so this gets clearer overall.
+> If we repeat steps 4) and 5), this will cause a lot of memory leak.
+> So only when refcount reach zero, we mark the root kmem_cache as dying.
 > 
-> >
-> > > --- a/include/linux/mmc/host.h
-> > > +++ b/include/linux/mmc/host.h
-> > > @@ -60,6 +60,8 @@ struct mmc_ios {
-> > >  #define MMC_TIMING_MMC_DDR52 8
-> > >  #define MMC_TIMING_MMC_HS200 9
-> > >  #define MMC_TIMING_MMC_HS400 10
-> > > +#define MMC_TIMING_SD_EXP    11
-> > > +#define MMC_TIMING_SD_EXP_1_2V       12
-> > >
-> > >       unsigned char   signal_voltage;         /* signalling voltage (1.8V or 3.3V) */
-> > >
-> > > @@ -172,6 +174,9 @@ struct mmc_host_ops {
-> > >        */
-> > >       int     (*multi_io_quirk)(struct mmc_card *card,
-> > >                                 unsigned int direction, int blk_size);
-> > > +
-> > > +     /* Initialize an SD express card, mandatory for MMC_CAP2_SD_EXP. */
-> > > +     int     (*init_sd_express)(struct mmc_host *host, struct mmc_ios *ios);
-> > >  };
-> > >
-> > >  struct mmc_cqe_ops {
-> > > @@ -357,6 +362,8 @@ struct mmc_host {
-> > >  #define MMC_CAP2_HS200_1_2V_SDR      (1 << 6)        /* can support */
-> > >  #define MMC_CAP2_HS200               (MMC_CAP2_HS200_1_8V_SDR | \
-> > >                                MMC_CAP2_HS200_1_2V_SDR)
-> > > +#define MMC_CAP2_SD_EXP              (1 << 7)        /* SD express via PCIe */
-> >
-> > BIT(7)?
-> >
-> > > +#define MMC_CAP2_SD_EXP_1_2V (1 << 8)        /* SD express 1.2V */
-> >
-> > BIT(8)?
-> 
-> I can change to that, but it wouldn't be consistent with existing
-> code. Again, probably better targeted as a separate bigger cleanup on
-> top.
+> Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> Acked-by: Roman Gushchin <guro@fb.com>
 
-Ah, good point.
+Cc: <stable@vger.kernel.org>
 
-Ok, no objection from me!
+And it will need to go before the series that starts with
+mm-memcg-factor-out-memcg-and-lruvec-level-changes-out-of-__mod_lruvec_state.patch
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+most likely causing some collisions there to be fixed up...
+
+> ---
+> 
+> changelog in v3:
+>  1) Simplify the code suggested by Roman.
+> 
+> changelog in v2:
+>  1) Fix a confusing typo in the commit log.
+>  2) Remove flush_memcg_workqueue() for !CONFIG_MEMCG_KMEM.
+>  3) Introduce a new helper memcg_set_kmem_cache_dying() to fix a race
+>     condition between flush_memcg_workqueue() and slab_unmergeable().
+> 
+>  mm/slab_common.c | 35 ++++++++++++++++++++++++++++-------
+>  1 file changed, 28 insertions(+), 7 deletions(-)
+> 
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 37d48a56431d..fe8b68482670 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -326,6 +326,14 @@ int slab_unmergeable(struct kmem_cache *s)
+>  	if (s->refcount < 0)
+>  		return 1;
+>  
+> +#ifdef CONFIG_MEMCG_KMEM
+> +	/*
+> +	 * Skip the dying kmem_cache.
+> +	 */
+> +	if (s->memcg_params.dying)
+> +		return 1;
+> +#endif
+> +
+>  	return 0;
+>  }
+>  
+> @@ -886,12 +894,15 @@ static int shutdown_memcg_caches(struct kmem_cache *s)
+>  	return 0;
+>  }
+>  
+> -static void flush_memcg_workqueue(struct kmem_cache *s)
+> +static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
+>  {
+>  	spin_lock_irq(&memcg_kmem_wq_lock);
+>  	s->memcg_params.dying = true;
+>  	spin_unlock_irq(&memcg_kmem_wq_lock);
+> +}
+>  
+> +static void flush_memcg_workqueue(struct kmem_cache *s)
+> +{
+>  	/*
+>  	 * SLAB and SLUB deactivate the kmem_caches through call_rcu. Make
+>  	 * sure all registered rcu callbacks have been invoked.
+> @@ -923,10 +934,6 @@ static inline int shutdown_memcg_caches(struct kmem_cache *s)
+>  {
+>  	return 0;
+>  }
+> -
+> -static inline void flush_memcg_workqueue(struct kmem_cache *s)
+> -{
+> -}
+>  #endif /* CONFIG_MEMCG_KMEM */
+>  
+>  void slab_kmem_cache_release(struct kmem_cache *s)
+> @@ -944,8 +951,6 @@ void kmem_cache_destroy(struct kmem_cache *s)
+>  	if (unlikely(!s))
+>  		return;
+>  
+> -	flush_memcg_workqueue(s);
+> -
+>  	get_online_cpus();
+>  	get_online_mems();
+>  
+> @@ -955,6 +960,22 @@ void kmem_cache_destroy(struct kmem_cache *s)
+>  	if (s->refcount)
+>  		goto out_unlock;
+>  
+> +#ifdef CONFIG_MEMCG_KMEM
+> +	memcg_set_kmem_cache_dying(s);
+> +
+> +	mutex_unlock(&slab_mutex);
+> +
+> +	put_online_mems();
+> +	put_online_cpus();
+> +
+> +	flush_memcg_workqueue(s);
+> +
+> +	get_online_cpus();
+> +	get_online_mems();
+> +
+> +	mutex_lock(&slab_mutex);
+> +#endif
+> +
+>  	err = shutdown_memcg_caches(s);
+>  	if (!err)
+>  		err = shutdown_cache(s);
+> 
+
