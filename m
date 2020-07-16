@@ -7,121 +7,99 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CFAC43459
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 345FBC4345D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1F9720775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A6920775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgGPDRr (ORCPT
+        id S1728415AbgGPDSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:17:47 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8148 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbgGPDRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 23:17:08 -0400
-IronPort-SDR: zMQUJhGJfoPkGBBjXbUOHcNmdY2OH5THH0qS6xqVqTgCIjizHLsDM8DCcEfhFSLjBLvengRX8Y
- yg8gy1zsDkmg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="210844857"
-X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="210844857"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 20:17:07 -0700
-IronPort-SDR: US4WisnG2Zr98tq6JL3gDlbeQdJrC9ygahEMWmD/J2CGNunAV7Mv0fm5vqY2+QeevkkPUC8fpb
- 3geOCdJiNY4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="360910458"
-Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by orsmga001.jf.intel.com with ESMTP; 15 Jul 2020 20:17:06 -0700
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        jmattson@google.com
-Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [RESEND v13 06/11] KVM: x86: Load guest fpu state when access MSRs managed by XSAVES
-Date:   Thu, 16 Jul 2020 11:16:22 +0800
-Message-Id: <20200716031627.11492-7-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200716031627.11492-1-weijiang.yang@intel.com>
-References: <20200716031627.11492-1-weijiang.yang@intel.com>
+        Wed, 15 Jul 2020 23:18:13 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:48538 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726960AbgGPDQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 23:16:41 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx7x+Pxg9f1GoFAA--.6749S7;
+        Thu, 16 Jul 2020 11:16:34 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 5/8] irqchip/loongson-pch-pic: Check return value of irq_domain_translate_twocell()
+Date:   Thu, 16 Jul 2020 11:16:27 +0800
+Message-Id: <1594869390-21053-6-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1594869390-21053-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1594869390-21053-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dx7x+Pxg9f1GoFAA--.6749S7
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF17JrW8tw15tw4UZry7Jrb_yoW8WF1xpF
+        4UAwnrXr4DJFyUZw1xCws5X343Jw1ftFW7KayfKas3WrZ5J34qkF1UCFn5ur4rZF43JFyU
+        Zrs8KFWUuF13AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBqb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
+        8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28C
+        jxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI
+        8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
+        xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWx
+        JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r48MxAIw2
+        8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+        x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrw
+        CI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
+        42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+        80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0rhL5UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+Check the return value of irq_domain_translate_twocell() due to
+it may returns -EINVAL if failed and use variable fwspec for it,
+and then use a new variable parent_fwspec which is proper for
+irq_domain_alloc_irqs_parent().
 
-A handful of CET MSRs are not context switched through "traditional"
-methods, e.g. VMCS or manual switching, but rather are passed through
-to the guest and are saved and restored by XSAVES/XRSTORS, i.e. in the
-guest's FPU state.
-
-Load the guest's FPU state if userspace is accessing MSRs whose values
-are managed by XSAVES so that the MSR helper, e.g. vmx_{get,set}_msr(),
-can simply do {RD,WR}MSR to access the guest's value.
-
-Note that guest_cpuid_has() is not queried as host userspace is allowed
-to access MSRs that have not been exposed to the guest, e.g. it might do
-KVM_SET_MSRS prior to KVM_SET_CPUID2.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+Fixes: ef8c01eb64ca ("irqchip: Add Loongson PCH PIC controller")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/x86/kvm/x86.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-loongson-pch-pic.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 8aed32ff9c0c..c437ddc22ad6 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -107,6 +107,8 @@ static void enter_smm(struct kvm_vcpu *vcpu);
- static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
- static void store_regs(struct kvm_vcpu *vcpu);
- static int sync_regs(struct kvm_vcpu *vcpu);
-+static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu);
-+static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu);
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index 2a05b93..016f32c 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -135,16 +135,19 @@ static int pch_pic_alloc(struct irq_domain *domain, unsigned int virq,
+ 	int err;
+ 	unsigned int type;
+ 	unsigned long hwirq;
+-	struct irq_fwspec fwspec;
++	struct irq_fwspec *fwspec = arg;
++	struct irq_fwspec parent_fwspec;
+ 	struct pch_pic *priv = domain->host_data;
  
- struct kvm_x86_ops kvm_x86_ops __read_mostly;
- EXPORT_SYMBOL_GPL(kvm_x86_ops);
-@@ -3356,6 +3358,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- }
- EXPORT_SYMBOL_GPL(kvm_get_msr_common);
+-	irq_domain_translate_twocell(domain, arg, &hwirq, &type);
++	err = irq_domain_translate_twocell(domain, fwspec, &hwirq, &type);
++	if (err)
++		return err;
  
-+static bool is_xsaves_msr(u32 index)
-+{
-+	return index == MSR_IA32_U_CET ||
-+	       (index >= MSR_IA32_PL0_SSP && index <= MSR_IA32_PL3_SSP);
-+}
-+
- /*
-  * Read or write a bunch of msrs. All parameters are kernel addresses.
-  *
-@@ -3366,11 +3374,20 @@ static int __msr_io(struct kvm_vcpu *vcpu, struct kvm_msrs *msrs,
- 		    int (*do_msr)(struct kvm_vcpu *vcpu,
- 				  unsigned index, u64 *data))
- {
-+	bool fpu_loaded = false;
- 	int i;
+-	fwspec.fwnode = domain->parent->fwnode;
+-	fwspec.param_count = 1;
+-	fwspec.param[0] = hwirq + priv->ht_vec_base;
++	parent_fwspec.fwnode = domain->parent->fwnode;
++	parent_fwspec.param_count = 1;
++	parent_fwspec.param[0] = hwirq + priv->ht_vec_base;
  
--	for (i = 0; i < msrs->nmsrs; ++i)
-+	for (i = 0; i < msrs->nmsrs; ++i) {
-+		if (vcpu && !fpu_loaded && supported_xss &&
-+		    is_xsaves_msr(entries[i].index)) {
-+			kvm_load_guest_fpu(vcpu);
-+			fpu_loaded = true;
-+		}
- 		if (do_msr(vcpu, entries[i].index, &entries[i].data))
- 			break;
-+	}
-+	if (fpu_loaded)
-+		kvm_put_guest_fpu(vcpu);
+-	err = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
++	err = irq_domain_alloc_irqs_parent(domain, virq, 1, &parent_fwspec);
+ 	if (err)
+ 		return err;
  
- 	return i;
- }
 -- 
-2.17.2
+2.1.0
 
