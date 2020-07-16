@@ -2,91 +2,138 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F04FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 661BD206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:26:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="l/k9sQX5"
+	by mail.kernel.org (Postfix) with ESMTP id E02CC206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594859253;
+	bh=vT3xLEFkOcP2t0RQKK47xJd9RemOzqIloLTiufJQd4Y=;
+	h=Date:From:To:To:To:To:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=ZNdw6WcEMrCuafgHPa3ko9isO+crQ4QPGH4v23W/hVz8Qyb9QlRYljKnDlQMGNcv/
+	 7I1LeY7yN6kKs4qaUg/FnLsMO+cnBq+8BaAPtPVGCDBSxI09eaFwNiMbmoKvk61SPI
+	 a0pIEgD4zgJOt5ry39q5Mk0IpVu8k/aQYRQZKsts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgGPA00 (ORCPT
+        id S1727817AbgGPA1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 20:26:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGPA00 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 20:26:26 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E922CC061755;
-        Wed, 15 Jul 2020 17:26:25 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 15 Jul 2020 20:27:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbgGPA1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 20:27:31 -0400
+Received: from localhost (unknown [137.135.114.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B6Zmt2j4nz9sDX;
-        Thu, 16 Jul 2020 10:26:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594859182;
-        bh=Qm6tyrRZb6eunf+LW+9roC1agW0dpeCfwEPJ3E7wFl0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=l/k9sQX53ckdpdWKbTmC3Lck2lnHJ8Rvgh6r72lccmrR+wgJkHaK+wRDeBJZg5kuE
-         j1rL+mTC0yTtb1nHY0lRyi9W298xUeXFX8JO1XmrCOi7ivXgg2kxj6SRK1xYyCuicr
-         w89KTQ22EWPsJryqJj3gSb2I80zULsiuz7T0BBjLhp12Xh/qpgsMrWwBto4U6TNMn/
-         Lin6I441evl5iCn7oXxykNzgw/F1XqJUE+33Ua7rtEcCf9ccizU5XQEkpm1iO3ex/h
-         QFrjX4q0bMEn5qL5RhZA6qVjEBkHEYA/KZjLwqIQk5eORp/eRhOyrCqjwzRdBqQr0N
-         2+fdmn+bewSig==
-Date:   Thu, 16 Jul 2020 10:26:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commits in the drm-msm tree
-Message-ID: <20200716102621.3dc1f8e6@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/t.4YD+B_TuPMMrZRkM3APuL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        by mail.kernel.org (Postfix) with ESMTPSA id 26E14206F5;
+        Thu, 16 Jul 2020 00:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594859250;
+        bh=vT3xLEFkOcP2t0RQKK47xJd9RemOzqIloLTiufJQd4Y=;
+        h=Date:From:To:To:To:To:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=kAoQdChEIX4MqzOUSzrMPY4WnlT19MA6/fV6gGgwCcffezv6pcP5+Eh1Fmluju7IU
+         6Viv4UyzyeaBHBqCSMkX2HklOH+aDW5BIJTmbEcEw62t52hozBdPlt5+xp6OviJ0Nq
+         n+iBKI40FLQNzbItGY5e/dZwz2sUORRI881jj5R0=
+Date:   Thu, 16 Jul 2020 00:27:29 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+To:     Eric Biggers <ebiggers@google.com>
+To:     linux-security-module@vger.kernel.org
+Cc:     syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH] Smack: fix use-after-free in smk_write_relabel_self()
+In-Reply-To: <20200708201520.140376-1-ebiggers@kernel.org>
+References: <20200708201520.140376-1-ebiggers@kernel.org>
+Message-Id: <20200716002730.26E14206F5@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/t.4YD+B_TuPMMrZRkM3APuL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi
 
-Hi all,
+[This is an automated email]
 
-Commits
+This commit has been processed because it contains a "Fixes:" tag
+fixing commit: 38416e53936e ("Smack: limited capability for changing process label").
 
-  bead89dec68a ("drm/msm: dsi: Use OPP API to set clk/perf state")
-  4a66a5ce8137 ("drm/msm/dpu: Use OPP API to set clk/perf state")
+The bot has tested the following trees: v5.7.8, v5.4.51, v4.19.132, v4.14.188, v4.9.230, v4.4.230.
 
-are missing a Signed-off-by from their committer.
+v5.7.8: Build OK!
+v5.4.51: Build OK!
+v4.19.132: Failed to apply! Possible dependencies:
+    b17103a8b8ae9 ("Smack: Abstract use of cred security blob")
 
---=20
-Cheers,
-Stephen Rothwell
+v4.14.188: Failed to apply! Possible dependencies:
+    03450e271a160 ("fs: add ksys_fchmod() and do_fchmodat() helpers and ksys_chmod() wrapper; remove in-kernel calls to syscall")
+    312db1aa1dc7b ("fs: add ksys_mount() helper; remove in-kernel calls to sys_mount()")
+    3a18ef5c1b393 ("fs: add ksys_umount() helper; remove in-kernel call to sys_umount()")
+    447016e968196 ("fs: add ksys_chdir() helper; remove in-kernel calls to sys_chdir()")
+    819671ff849b0 ("syscalls: define and explain goal to not call syscalls in the kernel")
+    9481769208b5e ("->file_open(): lose cred argument")
+    a16fe33ab5572 ("fs: add ksys_chroot() helper; remove-in kernel calls to sys_chroot()")
+    ae2bb293a3e8a ("get rid of cred argument of vfs_open() and do_dentry_open()")
+    af04fadcaa932 ("Revert "fs: fold open_check_o_direct into do_dentry_open"")
+    b17103a8b8ae9 ("Smack: Abstract use of cred security blob")
+    c7248321a3d42 ("fs: add ksys_dup{,3}() helper; remove in-kernel calls to sys_dup{,3}()")
+    d19dfe58b7ecb ("Smack: Privilege check on key operations")
+    dcb569cf6ac99 ("Smack: ptrace capability use fixes")
+    e3f20ae21079e ("security_file_open(): lose cred argument")
+    e7a3e8b2edf54 ("fs: add ksys_write() helper; remove in-kernel calls to sys_write()")
 
---Sig_/t.4YD+B_TuPMMrZRkM3APuL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+v4.9.230: Failed to apply! Possible dependencies:
+    078c73c63fb28 ("apparmor: add profile and ns params to aa_may_manage_policy()")
+    121d4a91e3c12 ("apparmor: rename sid to secid")
+    12557dcba21b0 ("apparmor: move lib definitions into separate lib include")
+    2bd8dbbf22fe9 ("apparmor: add ns being viewed as a param to policy_view_capable()")
+    5ac8c355ae001 ("apparmor: allow introspecting the loaded policy pre internal transform")
+    637f688dc3dc3 ("apparmor: switch from profiles to using labels on contexts")
+    73688d1ed0b8f ("apparmor: refactor prepare_ns() and make usable from different views")
+    9481769208b5e ("->file_open(): lose cred argument")
+    98849dff90e27 ("apparmor: rename namespace to ns to improve code line lengths")
+    9a2d40c12d00e ("apparmor: add strn version of aa_find_ns")
+    a6f233003b1af ("apparmor: allow specifying the profile doing the management")
+    b17103a8b8ae9 ("Smack: Abstract use of cred security blob")
+    cff281f6861e7 ("apparmor: split apparmor policy namespaces code into its own file")
+    d19dfe58b7ecb ("Smack: Privilege check on key operations")
+    dcb569cf6ac99 ("Smack: ptrace capability use fixes")
+    f28e783ff668c ("Smack: Use cap_capable in privilege check")
+    fd2a80438d736 ("apparmor: add ns being viewed as a param to policy_admin_capable()")
+    fe6bb31f590c9 ("apparmor: split out shared policy_XXX fns to lib")
 
------BEGIN PGP SIGNATURE-----
+v4.4.230: Failed to apply! Possible dependencies:
+    078c73c63fb28 ("apparmor: add profile and ns params to aa_may_manage_policy()")
+    121d4a91e3c12 ("apparmor: rename sid to secid")
+    12557dcba21b0 ("apparmor: move lib definitions into separate lib include")
+    2bd8dbbf22fe9 ("apparmor: add ns being viewed as a param to policy_view_capable()")
+    5ac8c355ae001 ("apparmor: allow introspecting the loaded policy pre internal transform")
+    637f688dc3dc3 ("apparmor: switch from profiles to using labels on contexts")
+    73688d1ed0b8f ("apparmor: refactor prepare_ns() and make usable from different views")
+    79be093500791 ("Smack: File receive for sockets")
+    9481769208b5e ("->file_open(): lose cred argument")
+    98849dff90e27 ("apparmor: rename namespace to ns to improve code line lengths")
+    9a2d40c12d00e ("apparmor: add strn version of aa_find_ns")
+    a6f233003b1af ("apparmor: allow specifying the profile doing the management")
+    b17103a8b8ae9 ("Smack: Abstract use of cred security blob")
+    c60b906673eeb ("Smack: Signal delivery as an append operation")
+    cff281f6861e7 ("apparmor: split apparmor policy namespaces code into its own file")
+    d19dfe58b7ecb ("Smack: Privilege check on key operations")
+    dcb569cf6ac99 ("Smack: ptrace capability use fixes")
+    f28e783ff668c ("Smack: Use cap_capable in privilege check")
+    fd2a80438d736 ("apparmor: add ns being viewed as a param to policy_admin_capable()")
+    fe6bb31f590c9 ("apparmor: split out shared policy_XXX fns to lib")
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Pnq0ACgkQAVBC80lX
-0GznPQf/ZLVdh09l7fNNNDnr8lxA7AMuhX/z7Doy7fUddKCcBuB9Prd8E8rGdiY2
-pIHV+qxUlmsKcmAdWpukHXE1Sk8ClPGY4iQFctMi6KVI/ouLtu+PoyzRk24hNXd0
-zA67hXSyiLm3xW5c08P7ngQvVGOMsV5lxI6s3SAfQehXi8j5nVVsh9Ov4bD0dIqO
-NDvNQMn/vip8WaRTOUbaeHkdQyRUJt7n+ZFdZm8/PI8u1Xk3qHIPWA49Jl2KZqvk
-ralzbmGtB6lAB8YoxrTVypKNzDwIc85oFMirapxJopyDs9L/jL4+HjxOQzgdQo9r
-b99St9hbcPz4jaWGvFISg/cRjxGLng==
-=Ro98
------END PGP SIGNATURE-----
 
---Sig_/t.4YD+B_TuPMMrZRkM3APuL--
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
