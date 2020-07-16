@@ -6,58 +6,60 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FDBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8671BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA0520809
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5116F20760
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgGPVJ4 (ORCPT
+        id S1726977AbgGPVKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:09:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38110 "EHLO
+        Thu, 16 Jul 2020 17:10:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62844 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726665AbgGPVJz (ORCPT
+        by vger.kernel.org with ESMTP id S1725999AbgGPVKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:09:55 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GL3GfG084584;
-        Thu, 16 Jul 2020 17:09:49 -0400
+        Thu, 16 Jul 2020 17:10:54 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GL3B88056822;
+        Thu, 16 Jul 2020 17:10:47 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32autamr7j-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32auqucwen-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 17:09:48 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GL3JoY084887;
-        Thu, 16 Jul 2020 17:09:48 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32autamr6y-1
+        Thu, 16 Jul 2020 17:10:47 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GL5nPs066215;
+        Thu, 16 Jul 2020 17:10:47 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32auqucwdx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 17:09:48 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GKpeKs022862;
-        Thu, 16 Jul 2020 21:09:46 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06ams.nl.ibm.com with ESMTP id 3274pgwsyw-1
+        Thu, 16 Jul 2020 17:10:47 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GLA8UB014886;
+        Thu, 16 Jul 2020 21:10:44 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 329nmyj6xy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 21:09:46 +0000
+        Thu, 16 Jul 2020 21:10:44 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GL9h2b27656218
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GLAf2Q54198436
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 21:09:43 GMT
+        Thu, 16 Jul 2020 21:10:41 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08403AE045;
-        Thu, 16 Jul 2020 21:09:43 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id BE184AE051;
+        Thu, 16 Jul 2020 21:10:41 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 06B33AE055;
-        Thu, 16 Jul 2020 21:09:40 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 4ECCFAE04D;
+        Thu, 16 Jul 2020 21:10:38 +0000 (GMT)
 Received: from [9.102.2.181] (unknown [9.102.2.181])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Jul 2020 21:09:39 +0000 (GMT)
+        Thu, 16 Jul 2020 21:10:38 +0000 (GMT)
 From:   Hari Bathini <hbathini@linux.ibm.com>
-Subject: Re: [PATCH v3 05/12] powerpc/drmem: make lmb walk a bit more flexible
+Subject: Re: [PATCH v3 09/12] ppc64/kexec_file: setup backup region for kdump
+ kernel
 To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
+Cc:     kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
         Kexec-ml <kexec@lists.infradead.org>,
         Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
         Mimi Zohar <zohar@linux.ibm.com>,
@@ -70,25 +72,25 @@ Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
         Vivek Goyal <vgoyal@redhat.com>,
         Eric Biederman <ebiederm@xmission.com>
 References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
- <159466090332.24747.9255471295044653085.stgit@hbathini.in.ibm.com>
- <871rld8mic.fsf@morokweng.localdomain>
-Message-ID: <30e8f02a-f009-70a5-01e9-dec9eff213b1@linux.ibm.com>
-Date:   Fri, 17 Jul 2020 02:39:38 +0530
+ <159466096898.24747.16701009925943468066.stgit@hbathini.in.ibm.com>
+ <87y2nk8cjq.fsf@morokweng.localdomain>
+Message-ID: <bea19627-c6b7-5d59-e194-03038bb4d9f6@linux.ibm.com>
+Date:   Fri, 17 Jul 2020 02:40:37 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <871rld8mic.fsf@morokweng.localdomain>
+In-Reply-To: <87y2nk8cjq.fsf@morokweng.localdomain>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 spamscore=100
- priorityscore=1501 suspectscore=0 mlxscore=100 phishscore=0 bulkscore=0
- impostorscore=0 mlxlogscore=-1000 clxscore=1015 lowpriorityscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007160140
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 malwarescore=0
+ bulkscore=0 adultscore=0 clxscore=1015 phishscore=0 spamscore=100
+ impostorscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
+ mlxscore=100 mlxlogscore=-1000 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007160139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -96,39 +98,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 15/07/20 9:20 am, Thiago Jung Bauermann wrote:
+On 16/07/20 7:08 am, Thiago Jung Bauermann wrote:
 > 
 > Hari Bathini <hbathini@linux.ibm.com> writes:
 > 
->> @@ -534,7 +537,7 @@ static int __init early_init_dt_scan_memory_ppc(unsigned long node,
->>  #ifdef CONFIG_PPC_PSERIES
->>  	if (depth == 1 &&
->>  	    strcmp(uname, "ibm,dynamic-reconfiguration-memory") == 0) {
->> -		walk_drmem_lmbs_early(node, early_init_drmem_lmb);
->> +		walk_drmem_lmbs_early(node, NULL, early_init_drmem_lmb);
-> 
-> walk_drmem_lmbs_early() can now fail. Should this failure be propagated
-> as a return value of early_init_dt_scan_memory_ppc()?
-  
-> 
->>  		return 0;
->>  	}
->>  #endif
-> <snip>
-> 
->> @@ -787,7 +790,7 @@ static int __init parse_numa_properties(void)
+>> @@ -968,7 +1040,7 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+>>
+>>  	/*
+>>  	 * Restrict memory usage for kdump kernel by setting up
+>> -	 * usable memory ranges.
+>> +	 * usable memory ranges and memory reserve map.
 >>  	 */
->>  	memory = of_find_node_by_path("/ibm,dynamic-reconfiguration-memory");
->>  	if (memory) {
->> -		walk_drmem_lmbs(memory, numa_setup_drmem_lmb);
->> +		walk_drmem_lmbs(memory, NULL, numa_setup_drmem_lmb);
+>>  	if (image->type == KEXEC_TYPE_CRASH) {
+>>  		ret = get_usable_memory_ranges(&umem);
+>> @@ -980,6 +1052,24 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+>>  			pr_err("Error setting up usable-memory property for kdump kernel\n");
+>>  			goto out;
+>>  		}
+>> +
+>> +		ret = fdt_add_mem_rsv(fdt, BACKUP_SRC_START + BACKUP_SRC_SIZE,
+>> +				      crashk_res.start - BACKUP_SRC_SIZE);
 > 
-> Similarly here. Now that this call can fail, should
-> parse_numa_properties() handle or propagate the failure?
+> I believe this answers my question from the other email about how the
+> crashkernel is prevented from stomping in the crashed kernel's memory,
+> right? I needed to think for a bit to understand what the above
+> reservation was protecting. I think it's worth adding a comment.
 
-They would still not fail unless the callbacks early_init_drmem_lmb() & numa_setup_drmem_lmb()
-are updated to have failure scenarios. Also, these call sites always ignored failure scenarios
-even before walk_drmem_lmbs() was introduced. So, I prefer to keep them the way they are?
+Right. The reason to add it in the first place is, prom presses the panic button if
+it can't find low memory. Marking it reserved seems to keep it quiet though. so..
+
+Will add comment mentioning that..
+
+>> +void purgatory(void)
+>> +{
+>> +	void *dest, *src;
+>> +
+>> +	src = (void *)BACKUP_SRC_START;
+>> +	if (backup_start) {
+>> +		dest = (void *)backup_start;
+>> +		__memcpy(dest, src, BACKUP_SRC_SIZE);
+>> +	}
+>> +}
+> 
+> In general I'm in favor of using C code over assembly, but having to
+> bring in that relocation support just for the above makes me wonder if
+> it's worth it in this case.
+
+I am planning to build on purgatory later with "I'm in purgatory" print support
+for pseries at least and also, sha256 digest check.
 
 Thanks
 Hari
