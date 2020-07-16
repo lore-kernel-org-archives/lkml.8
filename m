@@ -2,86 +2,156 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD62C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8606FC4345A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8141D21532
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF82214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgGPXJn (ORCPT
+        id S1728123AbgGPXJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:09:43 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:38540 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgGPXJf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:09:35 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06GMcUf3029747
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 16 Jul 2020 17:38:33 -0500
-Message-ID: <b1aa976cf9788ed7d2bf949b2b5e5e5b2e3f9776.camel@kernel.crashing.org>
-Subject: Re: [PATCH] powerpc/64: Fix an out of date comment about MMIO
- ordering
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Will Deacon <willdeacon@google.com>
-Cc:     mpe@ellerman.id.au, paulus@samba.org, npiggin@gmail.com,
-        msuchanek@suse.de, tglx@linutronix.de, bigeasy@linutronix.de,
-        jniethe5@gmail.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Date:   Fri, 17 Jul 2020 08:38:29 +1000
-In-Reply-To: <20200716193820.1141936-1-palmer@dabbelt.com>
-References: <20200716193820.1141936-1-palmer@dabbelt.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Jul 2020 19:09:45 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34356 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728006AbgGPXJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 19:09:22 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 554288012DFCE76CF193;
+        Fri, 17 Jul 2020 07:09:19 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.203.111) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 17 Jul 2020 07:09:12 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <robin.murphy@arm.com>, <will@kernel.org>, <joro@8bytes.org>
+CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        Prime Zeng <prime.zeng@hisilicon.com>
+Subject: [PATCH] iommu/arm-smmu-v3: remove the approach of MSI polling for CMD SYNC
+Date:   Fri, 17 Jul 2020 11:07:09 +1200
+Message-ID: <20200716230709.32820-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.203.111]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-16 at 12:38 -0700, Palmer Dabbelt wrote:
-> From: Palmer Dabbelt <palmerdabbelt@google.com>
-> 
-> This primitive has been renamed, but because it was spelled incorrectly in the
-> first place it must have escaped the fixup patch.  As far as I can tell this
-> logic is still correct: smp_mb__after_spinlock() uses the default smp_mb()
-> implementation, which is "sync" rather than "hwsync" but those are the same
-> (though I'm not that familiar with PowerPC).
+Before commit 587e6c10a7ce ("iommu/arm-smmu-v3: Reduce contention during
+command-queue insertion"), msi polling perhaps performed better since
+it could run outside the spin_lock_irqsave() while the code polling cons
+reg was running in the lock.
 
-Typo ? That must be me ... :)
+But after the great reorganization of smmu queue, neither of these two
+polling methods are running in a spinlock. And real tests show polling
+cons reg via sev means smaller latency. It is probably because polling
+by msi will ask hardware to write memory but sev polling depends on the
+update of register only.
 
-Looks fine. Yes, sync and hwsync are the same (by opposition to lwsync
-which is lighter weight and doesn't order cache inhibited).
+Using 16 threads to run netperf on hns3 100G NIC with UDP packet size
+in 32768bytes and set iommu to strict, TX throughput can improve from
+25227.74Mbps to 27145.59Mbps by this patch. In this case, SMMU is super
+busy as hns3 sends map/unmap requests extremely frequently.
 
-Cheers,
-Ben.
+Cc: Prime Zeng <prime.zeng@hisilicon.com>
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+ drivers/iommu/arm-smmu-v3.c | 46 +------------------------------------
+ 1 file changed, 1 insertion(+), 45 deletions(-)
 
-> Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> ---
->  arch/powerpc/kernel/entry_64.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-> index b3c9f15089b6..7b38b4daca93 100644
-> --- a/arch/powerpc/kernel/entry_64.S
-> +++ b/arch/powerpc/kernel/entry_64.S
-> @@ -357,7 +357,7 @@ _GLOBAL(_switch)
->  	 * kernel/sched/core.c).
->  	 *
->  	 * Uncacheable stores in the case of involuntary preemption must
-> -	 * be taken care of. The smp_mb__before_spin_lock() in __schedule()
-> +	 * be taken care of. The smp_mb__after_spinlock() in __schedule()
->  	 * is implemented as hwsync on powerpc, which orders MMIO too. So
->  	 * long as there is an hwsync in the context switch path, it will
->  	 * be executed on the source CPU after the task has performed
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index f578677a5c41..e55282a636c8 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -964,12 +964,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
+ 		cmd[1] |= FIELD_PREP(CMDQ_PRI_1_RESP, ent->pri.resp);
+ 		break;
+ 	case CMDQ_OP_CMD_SYNC:
+-		if (ent->sync.msiaddr) {
+-			cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_CS, CMDQ_SYNC_0_CS_IRQ);
+-			cmd[1] |= ent->sync.msiaddr & CMDQ_SYNC_1_MSIADDR_MASK;
+-		} else {
+-			cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_CS, CMDQ_SYNC_0_CS_SEV);
+-		}
++		cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_CS, CMDQ_SYNC_0_CS_SEV);
+ 		cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_MSH, ARM_SMMU_SH_ISH);
+ 		cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_MSIATTR, ARM_SMMU_MEMATTR_OIWB);
+ 		break;
+@@ -983,21 +978,10 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
+ static void arm_smmu_cmdq_build_sync_cmd(u64 *cmd, struct arm_smmu_device *smmu,
+ 					 u32 prod)
+ {
+-	struct arm_smmu_queue *q = &smmu->cmdq.q;
+ 	struct arm_smmu_cmdq_ent ent = {
+ 		.opcode = CMDQ_OP_CMD_SYNC,
+ 	};
+ 
+-	/*
+-	 * Beware that Hi16xx adds an extra 32 bits of goodness to its MSI
+-	 * payload, so the write will zero the entire command on that platform.
+-	 */
+-	if (smmu->features & ARM_SMMU_FEAT_MSI &&
+-	    smmu->features & ARM_SMMU_FEAT_COHERENCY) {
+-		ent.sync.msiaddr = q->base_dma + Q_IDX(&q->llq, prod) *
+-				   q->ent_dwords * 8;
+-	}
+-
+ 	arm_smmu_cmdq_build_cmd(cmd, &ent);
+ }
+ 
+@@ -1251,30 +1235,6 @@ static int arm_smmu_cmdq_poll_until_not_full(struct arm_smmu_device *smmu,
+ 	return ret;
+ }
+ 
+-/*
+- * Wait until the SMMU signals a CMD_SYNC completion MSI.
+- * Must be called with the cmdq lock held in some capacity.
+- */
+-static int __arm_smmu_cmdq_poll_until_msi(struct arm_smmu_device *smmu,
+-					  struct arm_smmu_ll_queue *llq)
+-{
+-	int ret = 0;
+-	struct arm_smmu_queue_poll qp;
+-	struct arm_smmu_cmdq *cmdq = &smmu->cmdq;
+-	u32 *cmd = (u32 *)(Q_ENT(&cmdq->q, llq->prod));
+-
+-	queue_poll_init(smmu, &qp);
+-
+-	/*
+-	 * The MSI won't generate an event, since it's being written back
+-	 * into the command queue.
+-	 */
+-	qp.wfe = false;
+-	smp_cond_load_relaxed(cmd, !VAL || (ret = queue_poll(&qp)));
+-	llq->cons = ret ? llq->prod : queue_inc_prod_n(llq, 1);
+-	return ret;
+-}
+-
+ /*
+  * Wait until the SMMU cons index passes llq->prod.
+  * Must be called with the cmdq lock held in some capacity.
+@@ -1332,10 +1292,6 @@ static int __arm_smmu_cmdq_poll_until_consumed(struct arm_smmu_device *smmu,
+ static int arm_smmu_cmdq_poll_until_sync(struct arm_smmu_device *smmu,
+ 					 struct arm_smmu_ll_queue *llq)
+ {
+-	if (smmu->features & ARM_SMMU_FEAT_MSI &&
+-	    smmu->features & ARM_SMMU_FEAT_COHERENCY)
+-		return __arm_smmu_cmdq_poll_until_msi(smmu, llq);
+-
+ 	return __arm_smmu_cmdq_poll_until_consumed(smmu, llq);
+ }
+ 
+-- 
+2.27.0
+
 
