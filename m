@@ -2,334 +2,169 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9632C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9E42083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDA0207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:46:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrtuqfKL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZzYdJTqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgGPVcw (ORCPT
+        id S1726691AbgGPVq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgGPVcv (ORCPT
+        Thu, 16 Jul 2020 17:46:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25062 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726528AbgGPVqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:32:51 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC5AC061755;
-        Thu, 16 Jul 2020 14:32:51 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id f23so7691302iof.6;
-        Thu, 16 Jul 2020 14:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WCPVcqFuiCdUoJYXeYbmBF6DGMw5rsz8t1arNpaHm/Q=;
-        b=KrtuqfKLe1HresqYP0nYMAMlhSHrS4z3wZlak6tIf9Sc+8bZ+DnymZHD1TlFkkHIkt
-         +eeUM9kjrXHgYezAodfxHYeNe/WyjTcrY7uEE8opCtb0olqS2Gdkvl781a2c0ddmyDuF
-         EAh5aHgfGMI3ZoFLtdav2bTekuWibtY40jWTG7FKCgsxsTYnJmzcwtKPdveljQGwcBdh
-         IW9qf1f/xdpBBhTRlSpnRW6SrhS+g53ccA+Vh5lgWBRk3Kki6o2gOq47FWGFoNBMuwoh
-         qR8zfKq45Dea0rRqxfkQ/BGwu7pQ2fmDcOs5RGv5yKFMK/7cabijhHnGeOAhapjTJ4mt
-         lAbQ==
+        Thu, 16 Jul 2020 17:46:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594935983;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BEo6DsOD3gtcpeqatc/jWU3HzAeT6ubK4oUjqlbQ034=;
+        b=ZzYdJTqBcoRbBkP7QZdrktSO39GYoDQ1TTyaKvhVA7nF0B2KGthyCG/tUqVHB/1N7zJwqs
+        kSJ02ArN2cQbk1lFf6gvM9wxQnJ4u+wQAeTSpisbYPa9I8/8i7QwH5PXWBFXBjOvz0DLp3
+        4vdFmWTOazjnKe6EpGoKegSOw0Y+b5U=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-269-zClFBwsDO62qMaDyt9VNFQ-1; Thu, 16 Jul 2020 17:46:21 -0400
+X-MC-Unique: zClFBwsDO62qMaDyt9VNFQ-1
+Received: by mail-wr1-f71.google.com with SMTP id f5so6262938wrv.22
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:46:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WCPVcqFuiCdUoJYXeYbmBF6DGMw5rsz8t1arNpaHm/Q=;
-        b=sborYYuzPi64LbO/JZPi8qICY5UJFfwIZ3JWY7mUNwKzLCYHYRCj0cKul8opX2Dexf
-         48hh5rISYsv7v7BcIdqCgR9UF1bNVElFghybWWh1zU+nKq5lq4EoK0J2KEuNAfTFI6Ec
-         JvZaC49Jm3MT0eOeh4+zBAKluwI5TFDI5Fkaf/Ve7AuOuTvzYZYnw/VvgI4lh4q7rOcG
-         Y/bLDXmYFO8deqHmPkEeO86vBT7/soQkfVm16urdrjSbsvYs100f+jTYjvx77xyyETEV
-         Urrl9om3G3JVke9r7Gvpb+ydaAHrRIm0mMZcmMgHWwFhEHZZEaUSSRfmi1vlkLgcxhtb
-         HnmA==
-X-Gm-Message-State: AOAM533fEFj92CQeN1jUqeeluKEJBv+0CrwyUgMLZclmPlwKV6tziLuu
-        y9TFoh/QOu8fOmQP9+E4HqXO11cwq0iO4fyU54A=
-X-Google-Smtp-Source: ABdhPJwlkKnjQKpDgnnAlSJD7m0HJKooPQCbYM4cllqOAxIG6bMA2HhR43hzrGc21eQRRx1kXzerU3wVAFR4p2nj8/Y=
-X-Received: by 2002:a02:ce9a:: with SMTP id y26mr7535180jaq.121.1594935170180;
- Thu, 16 Jul 2020 14:32:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=BEo6DsOD3gtcpeqatc/jWU3HzAeT6ubK4oUjqlbQ034=;
+        b=MklnkcnKSP6aHIKp3fsBBD76ME0g4j09I6SZbNblwjgFGPehfkmmKgrgIPprhcTjZL
+         Xv338K+i2jAF0DRufed9l6SvREbRxmlOKXnseTWzEyyzWHcFtpm67FxplL4OXkLAsD7J
+         moa8JawWPrG+icdX6Q+jsCqVwAnV6hMzu9ORpK+FussupGD7mxKgQoF+tbgP7vZcAQAD
+         0e9fAA4w+vBVnbW+a7tpvWFZUPOJ+YqtRbMnwWOl6OtqW1AXnaAI1AIroW6OeQsMdBZr
+         eBf9iUqLFjzJM0ynXRH7p8LHy1q4PdGCmBGS/h8iNVM692r7+jLrOB7fc4l43PygCxgK
+         dIZA==
+X-Gm-Message-State: AOAM532+IUNiB37J3cy9iCHFJ6q5r+JDihU78fjLWV9ZfP76mEL3NYYx
+        iufKs6SPMiYePrNfyRukiYA7XysVhZhrkTYiJHrYTCb+izSmS6pt/nHBdFW4FUfMkoVp//cgzOm
+        UCWcaaXG/V1xDfFwW+u7F+nmp
+X-Received: by 2002:a1c:3b02:: with SMTP id i2mr5994134wma.24.1594935980615;
+        Thu, 16 Jul 2020 14:46:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJykF2SVrQjmKDsKZhICrs30JZzeJmmbjM8l48AsSy4p8sKCLYwCNUjd1Gwxnb6QBEg+LM58nw==
+X-Received: by 2002:a1c:3b02:: with SMTP id i2mr5994113wma.24.1594935980304;
+        Thu, 16 Jul 2020 14:46:20 -0700 (PDT)
+Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
+        by smtp.gmail.com with ESMTPSA id k4sm10900176wrp.86.2020.07.16.14.46.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 14:46:19 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 17:46:15 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        frankja@linux.ibm.com, cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v7 2/2] s390: virtio: PV needs VIRTIO I/O device
+ protection
+Message-ID: <20200716174603-mutt-send-email-mst@kernel.org>
+References: <1594801869-13365-1-git-send-email-pmorel@linux.ibm.com>
+ <1594801869-13365-3-git-send-email-pmorel@linux.ibm.com>
+ <20200715054807-mutt-send-email-mst@kernel.org>
+ <bc5e09ad-faaf-8b38-83e0-5f4a4b1daeb0@redhat.com>
+ <20200715074917-mutt-send-email-mst@kernel.org>
+ <3782338a-6491-dc35-7c66-97b91a20df0d@de.ibm.com>
 MIME-Version: 1.0
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com> <1594429136-20002-16-git-send-email-alex.shi@linux.alibaba.com>
-In-Reply-To: <1594429136-20002-16-git-send-email-alex.shi@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 16 Jul 2020 14:32:39 -0700
-Message-ID: <CAKgT0Ue72SfAmxCS+tay1NjioW9WBOvVgrhwUtVPz2aDCrcHPQ@mail.gmail.com>
-Subject: Re: [PATCH v16 15/22] mm/compaction: do page isolation first in compaction
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3782338a-6491-dc35-7c66-97b91a20df0d@de.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 5:59 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
-> Johannes Weiner has suggested:
-> "So here is a crazy idea that may be worth exploring:
->
-> Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
-> linked list.
->
-> Can we make PageLRU atomic and use it to stabilize the lru_lock
-> instead, and then use the lru_lock only serialize list operations?
-> ..."
->
-> Yes, this patch is doing so on  __isolate_lru_page which is the core
-> page isolation func in compaction and shrinking path.
-> With this patch, the compaction will only deal the PageLRU set and now
-> isolated pages to skip the just alloced page which no LRU bit. And the
-> isolation could exclusive the other isolations in memcg move_account,
-> page migrations and thp split_huge_page.
->
-> As a side effect, PageLRU may be cleared during shrink_inactive_list
-> path for isolation reason. If so, we can skip that page.
->
-> Hugh Dickins <hughd@google.com> fixed following bugs in this patch's
-> early version:
->
-> Fix lots of crashes under compaction load: isolate_migratepages_block()
-> must clean up appropriately when rejecting a page, setting PageLRU again
-> if it had been cleared; and a put_page() after get_page_unless_zero()
-> cannot safely be done while holding locked_lruvec - it may turn out to
-> be the final put_page(), which will take an lruvec lock when PageLRU.
-> And move __isolate_lru_page_prepare back after get_page_unless_zero to
-> make trylock_page() safe:
-> trylock_page() is not safe to use at this time: its setting PG_locked
-> can race with the page being freed or allocated ("Bad page"), and can
-> also erase flags being set by one of those "sole owners" of a freshly
-> allocated page who use non-atomic __SetPageFlag().
->
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> ---
->  include/linux/swap.h |  2 +-
->  mm/compaction.c      | 42 +++++++++++++++++++++++++++++++++---------
->  mm/vmscan.c          | 38 ++++++++++++++++++++++----------------
->  3 files changed, 56 insertions(+), 26 deletions(-)
->
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index 2c29399b29a0..6d23d3beeff7 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -358,7 +358,7 @@ extern void lru_cache_add_active_or_unevictable(struct page *page,
->  extern unsigned long zone_reclaimable_pages(struct zone *zone);
->  extern unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
->                                         gfp_t gfp_mask, nodemask_t *mask);
-> -extern int __isolate_lru_page(struct page *page, isolate_mode_t mode);
-> +extern int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode);
->  extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
->                                                   unsigned long nr_pages,
->                                                   gfp_t gfp_mask,
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index f14780fc296a..2da2933fe56b 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -869,6 +869,7 @@ static bool too_many_isolated(pg_data_t *pgdat)
->                 if (!valid_page && IS_ALIGNED(low_pfn, pageblock_nr_pages)) {
->                         if (!cc->ignore_skip_hint && get_pageblock_skip(page)) {
->                                 low_pfn = end_pfn;
-> +                               page = NULL;
->                                 goto isolate_abort;
->                         }
->                         valid_page = page;
-> @@ -950,6 +951,21 @@ static bool too_many_isolated(pg_data_t *pgdat)
->                 if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
->                         goto isolate_fail;
->
-> +               /*
-> +                * Be careful not to clear PageLRU until after we're
-> +                * sure the page is not being freed elsewhere -- the
-> +                * page release code relies on it.
-> +                */
-> +               if (unlikely(!get_page_unless_zero(page)))
-> +                       goto isolate_fail;
-> +
-> +               if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
-> +                       goto isolate_fail_put;
-> +
-> +               /* Try isolate the page */
-> +               if (!TestClearPageLRU(page))
-> +                       goto isolate_fail_put;
-> +
->                 /* If we already hold the lock, we can skip some rechecking */
->                 if (!locked) {
->                         locked = compact_lock_irqsave(&pgdat->lru_lock,
+On Thu, Jul 16, 2020 at 01:19:55PM +0200, Christian Borntraeger wrote:
+> 
+> 
+> On 15.07.20 13:51, Michael S. Tsirkin wrote:
+> > On Wed, Jul 15, 2020 at 06:16:59PM +0800, Jason Wang wrote:
+> >>
+> >> On 2020/7/15 下午5:50, Michael S. Tsirkin wrote:
+> >>> On Wed, Jul 15, 2020 at 10:31:09AM +0200, Pierre Morel wrote:
+> >>>> If protected virtualization is active on s390, the virtio queues are
+> >>>> not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
+> >>>> negotiated. Use the new arch_validate_virtio_features() interface to
+> >>>> fail probe if that's not the case, preventing a host error on access
+> >>>> attempt.
+> >>>>
+> >>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> >>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> >>>> Acked-by: Halil Pasic <pasic@linux.ibm.com>
+> >>>> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> >>>> ---
+> >>>>   arch/s390/mm/init.c | 28 ++++++++++++++++++++++++++++
+> >>>>   1 file changed, 28 insertions(+)
+> >>>>
+> >>>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> >>>> index 6dc7c3b60ef6..d39af6554d4f 100644
+> >>>> --- a/arch/s390/mm/init.c
+> >>>> +++ b/arch/s390/mm/init.c
+> >>>> @@ -45,6 +45,7 @@
+> >>>>   #include <asm/kasan.h>
+> >>>>   #include <asm/dma-mapping.h>
+> >>>>   #include <asm/uv.h>
+> >>>> +#include <linux/virtio_config.h>
+> >>>>   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+> >>>> @@ -161,6 +162,33 @@ bool force_dma_unencrypted(struct device *dev)
+> >>>>   	return is_prot_virt_guest();
+> >>>>   }
+> >>>> +/*
+> >>>> + * arch_validate_virtio_features
+> >>>> + * @dev: the VIRTIO device being added
+> >>>> + *
+> >>>> + * Return an error if required features are missing on a guest running
+> >>>> + * with protected virtualization.
+> >>>> + */
+> >>>> +int arch_validate_virtio_features(struct virtio_device *dev)
+> >>>> +{
+> >>>> +	if (!is_prot_virt_guest())
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
+> >>>> +		dev_warn(&dev->dev,
+> >>>> +			 "legacy virtio not supported with protected virtualization\n");
+> >>>> +		return -ENODEV;
+> >>>> +	}
+> >>>> +
+> >>>> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
+> >>>> +		dev_warn(&dev->dev,
+> >>>> +			 "support for limited memory access required for protected virtualization\n");
+> >>>> +		return -ENODEV;
+> >>>> +	}
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>>   /* protected virtualization */
+> >>>>   static void pv_init(void)
+> >>>>   {
+> >>> What bothers me here is that arch code depends on virtio now.
+> >>> It works even with a modular virtio when functions are inline,
+> >>> but it seems fragile: e.g. it breaks virtio as an out of tree module,
+> >>> since layout of struct virtio_device can change.
+> >>
+> 
+> If you prefer that, we can simply create an arch/s390/kernel/virtio.c ?
 
-Why not do the __isolate_lru_page_prepare before getting the page?
-That way you can avoid performing an extra atomic operation on non-LRU
-pages.
+How would that address the issues above?
 
-> @@ -962,10 +978,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
->                                         goto isolate_abort;
->                         }
->
-> -                       /* Recheck PageLRU and PageCompound under lock */
-> -                       if (!PageLRU(page))
-> -                               goto isolate_fail;
-> -
->                         /*
->                          * Page become compound since the non-locked check,
->                          * and it's on LRU. It can only be a THP so the order
-> @@ -973,16 +985,13 @@ static bool too_many_isolated(pg_data_t *pgdat)
->                          */
->                         if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
->                                 low_pfn += compound_nr(page) - 1;
-> -                               goto isolate_fail;
-> +                               SetPageLRU(page);
-> +                               goto isolate_fail_put;
->                         }
->                 }
->
->                 lruvec = mem_cgroup_page_lruvec(page, pgdat);
->
-> -               /* Try isolate the page */
-> -               if (__isolate_lru_page(page, isolate_mode) != 0)
-> -                       goto isolate_fail;
-> -
->                 /* The whole page is taken off the LRU; skip the tail pages. */
->                 if (PageCompound(page))
->                         low_pfn += compound_nr(page) - 1;
-> @@ -1011,6 +1020,15 @@ static bool too_many_isolated(pg_data_t *pgdat)
->                 }
->
->                 continue;
-> +
-> +isolate_fail_put:
-> +               /* Avoid potential deadlock in freeing page under lru_lock */
-> +               if (locked) {
-> +                       spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-> +                       locked = false;
-> +               }
-> +               put_page(page);
-> +
->  isolate_fail:
->                 if (!skip_on_failure)
->                         continue;
-> @@ -1047,9 +1065,15 @@ static bool too_many_isolated(pg_data_t *pgdat)
->         if (unlikely(low_pfn > end_pfn))
->                 low_pfn = end_pfn;
->
-> +       page = NULL;
-> +
->  isolate_abort:
->         if (locked)
->                 spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-> +       if (page) {
-> +               SetPageLRU(page);
-> +               put_page(page);
-> +       }
->
->         /*
->          * Updated the cached scanner pfn once the pageblock has been scanned
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 18986fefd49b..f77748adc340 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1544,7 +1544,7 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
->   *
->   * returns 0 on success, -ve errno on failure.
->   */
-> -int __isolate_lru_page(struct page *page, isolate_mode_t mode)
-> +int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode)
->  {
->         int ret = -EINVAL;
->
-> @@ -1598,20 +1598,9 @@ int __isolate_lru_page(struct page *page, isolate_mode_t mode)
->         if ((mode & ISOLATE_UNMAPPED) && page_mapped(page))
->                 return ret;
->
-> -       if (likely(get_page_unless_zero(page))) {
-> -               /*
-> -                * Be careful not to clear PageLRU until after we're
-> -                * sure the page is not being freed elsewhere -- the
-> -                * page release code relies on it.
-> -                */
-> -               ClearPageLRU(page);
-> -               ret = 0;
-> -       }
-> -
-> -       return ret;
-> +       return 0;
->  }
->
-> -
->  /*
->   * Update LRU sizes after isolating pages. The LRU size updates must
->   * be complete before mem_cgroup_update_lru_size due to a sanity check.
-> @@ -1691,17 +1680,34 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
->                  * only when the page is being freed somewhere else.
->                  */
->                 scan += nr_pages;
-> -               switch (__isolate_lru_page(page, mode)) {
-> +               switch (__isolate_lru_page_prepare(page, mode)) {
->                 case 0:
-> +                       /*
-> +                        * Be careful not to clear PageLRU until after we're
-> +                        * sure the page is not being freed elsewhere -- the
-> +                        * page release code relies on it.
-> +                        */
-> +                       if (unlikely(!get_page_unless_zero(page)))
-> +                               goto busy;
-> +
-> +                       if (!TestClearPageLRU(page)) {
-> +                               /*
-> +                                * This page may in other isolation path,
-> +                                * but we still hold lru_lock.
-> +                                */
-> +                               put_page(page);
-> +                               goto busy;
-> +                       }
-> +
-
-I wonder if it wouldn't make sense to combine these two atomic ops
-with tests and the put_page into a single inline function? Then it
-could be possible to just do one check and if succeeds you do the
-block of code below, otherwise you just fall-through into the -EBUSY
-case.
-
->                         nr_taken += nr_pages;
->                         nr_zone_taken[page_zonenum(page)] += nr_pages;
->                         list_move(&page->lru, dst);
->                         break;
-> -
-> +busy:
->                 case -EBUSY:
->                         /* else it is being freed elsewhere */
->                         list_move(&page->lru, src);
-> -                       continue;
-> +                       break;
->
->                 default:
->                         BUG();
-> --
-> 1.8.3.1
->
->
