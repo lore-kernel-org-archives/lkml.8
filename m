@@ -2,133 +2,107 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9657C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A784C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4FF12063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8BB2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MuN+e1HP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ftnj5nzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgGPPWD (ORCPT
+        id S1729024AbgGPPWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:22:03 -0400
-Received: from mail-db8eur05on2065.outbound.protection.outlook.com ([40.107.20.65]:20449
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728150AbgGPPWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:22:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bNVtg0L1FQdaP3G9kf9Peeg5p/5/Sst6QQ+G1C8+FpZIx9yq1miHOjl+Bcc/0SX8yIj7+1MVA+t+WnV8EwVtlF1ZI1OnxLDQMPCrqc9Zstd3fQJV0fsvMtIm/6N1ek9/+TrHtOFvgwSyTuhJQDj6ZiDWbsTEjL1iJvyB6ylmqU6aZ6s/PvAzqzdLQUU49DlEOBG3H8c9+TBKnbP+PZB6BaNJxy/WczwYUCv4oXCYrYDfzInJcSYkYhEGu3c/rINGOZxs5SdDzyLeYRj9dIFsgpYUaPnMB8kXtV5fzg/Y7RiFu2/hF+viapY8Qc9SUGMo0+OjO68NWuDeNG9V6naycg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gys8RntV6GQAINAXAMmQ4Y7rnlOo78//SkEzXt7ipHM=;
- b=mAHNcstBkSHnOXlODSLJITk21ADJYkH36E5QNotjYRH0eP0pCxkfsd88XlRdgYi3R4ZsHnMMLCrXd7a0sp2Ngg1yTE+SxWC3DNVvdT4ZUTaHCcQXX9k5C5fRamyRyIdcZblY+wXxZdEUeFbASJwscS0TSzcVZOrBRe2bzT5V0kCmMmTff42gcnQ7/Lhe6GAFR2RBwehwUOWzVt2yjcDNc6aEo49csojtNFoPBCS59sW/5QoitSvol4vOzxdvJOvWbLeX/3fH9wPVq9D5b1cEEJEsC8679LM57K/IWVZQ6lyuGPgBfXmbS7lb7G7Zn79qY1INSHarXcqzlbDYmxrt3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gys8RntV6GQAINAXAMmQ4Y7rnlOo78//SkEzXt7ipHM=;
- b=MuN+e1HP+rcuD7onsaqUxlsNVjYAV0UCMG9uhqkqcGOXLOS4tnE/X3ihMsuDulS14LTk73+Z9cDcYRhoyAqOT5+ANsUjVv+muD/N7EpyPC+eSSHk1oB2aLkdmCnIT9snQ/6TSQ2bc6ymGwAMDaCyPTzvZmCl3cQBcS1qTwUJ+G4=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB6PR0402MB2933.eurprd04.prod.outlook.com (2603:10a6:4:9c::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Thu, 16 Jul
- 2020 15:21:59 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3174.026; Thu, 16 Jul 2020
- 15:21:59 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] pinctrl: imx: Support building SCU pinctrl driver as
- module
-Thread-Topic: [PATCH 1/2] pinctrl: imx: Support building SCU pinctrl driver as
- module
-Thread-Index: AQHWW4NHWrU0ATUAm0ydC8gIz0Rl9akKUIoAgAABVNA=
-Date:   Thu, 16 Jul 2020 15:21:58 +0000
-Message-ID: <DB3PR0402MB3916C9FE00C0F4FC62ACB711F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1594912013-20859-1-git-send-email-Anson.Huang@nxp.com>
- <c00f8fe3-d12a-0f91-c301-c028e5aa3f25@nxp.com>
-In-Reply-To: <c00f8fe3-d12a-0f91-c301-c028e5aa3f25@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e5a4d184-e7fb-44ca-b012-08d8299bfb9e
-x-ms-traffictypediagnostic: DB6PR0402MB2933:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB293387366543EE1B2E7780CAF57F0@DB6PR0402MB2933.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OnUq4dD+VqtyGJR2SNyhRVlxnN7NFuI8noGSdBIZFZYGOOrmzuWWB11ci5Fl2uQeSbygQXSUNBIj4aF4zE4wSvFieF/hKsLdaodFtX8NGkW4eLv6ZJEP5SmPlxLWF8v0BtbY0OTTangRljV3JPUOMUrU6vxYMWPRVh9xwqVCoslGr6dtSf04y5BN5yDDonrTSsSNdUJYeNDpsQJvUeI3wRJvRyKYFDcKPFaJupXYKvr6My7Bh7coZ8GO5wcM6p3LcXDmreYkBFeI2mjNUtbdq6J1ld//9UNx4ABXajQRcPO4xCgeQgYBAn2cSgF4oSLbsvbIbgKH9Z+Ls7Mv7gfi5NH/X8mbAB7t06CCmMr+W+DxFEqO9HbYJvu+CG1X7xYc
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(2906002)(83380400001)(76116006)(5660300002)(66946007)(66556008)(66446008)(64756008)(33656002)(66476007)(26005)(4326008)(478600001)(316002)(186003)(8936002)(53546011)(6506007)(86362001)(8676002)(55016002)(52536014)(110136005)(7696005)(71200400001)(44832011)(9686003)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: d2wNVzkt2BmoKo1fdz6E4xFhyGYxD6jWI94OnRFGKRBEIKh+IKRjjvn8vN02+VkspXRVcddLq5LHszkb0MEGHwrej6lIAOa/NCFid+uOFaOA1RuuiQ3cUkz9wtMU+LA1LQJxbuLglo1Hrw8niLvnl9FXnIzNVhdLkMigWjcJAolzami6DCmbvlGHsaNa75hbLht9crX08dfUz7Sx6dyGd7hDMn+CXeLpruHjGRz+jFYDcALjVrT7IBgYdMeqpzbt3QjNZ0aFrJUAQOGqF9B8bkFkGD+5rpO/7TfMuLaSChXb7fq5e21tTKaudouwSZIuQNnCi/XyVt4uiSIO43XKZ+sLiXtSS4HJQW1/bBOxpqJXnWZDZd2tyHnU0lwnwACccw/OtLS/OPP72UEQKlCaYGTiqtohOfnD3q/koQZLMsgib5xEuJ+4dH6U90aArkhLC4Gie6iC+Tt48JP7JX+aM1QuZ/yayFCj+mnCRiEnRexHwk6o5CUVjz91GmP3jTNR
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 16 Jul 2020 11:22:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728911AbgGPPWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:22:10 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89461C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:22:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=tMW+FSjHDJDd5sV7mMP8PFIFsHf/Bo6cCti4h2al50Y=; b=Ftnj5nzs4K7ODC7QCGM0rkVVkN
+        wcbHZpBzkKKlK/7BMXiwAGjl1hT1Vy0e99SZxNHhZEkcDDk4iVgf/pGy4H+GQ5C+mzMWwFcZmEdCV
+        I8xR9z12UhzHMB5j4b5LUTL9cr4BENvkCxiTv8k+pR703OrGzmwNE5LQ7xA0cJ/haNnhULehsKl39
+        /2xsYix8hmiW2htwfu5p3jcGk/JurDBWh3r7YwesHFfjSO0qk/6/jQaYrKZXuY6S5ji2MEFOwS0Kv
+        0aThAb4icQMHfk98+G1LXtWO5KH8qITNS6jrDfi/wNlZb41JVcLAE3b3S1BROzMboDvWjS5jTWJg9
+        F3kd+zDw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jw5i1-0007Za-5R; Thu, 16 Jul 2020 15:22:05 +0000
+Subject: Re: [PATCH] phy: sun4i-usb: explicitly include gpio/consumer.h
+To:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200716062427.71763-1-vkoul@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <7d4fa99a-627b-67bb-33d6-85655deb15a5@infradead.org>
+Date:   Thu, 16 Jul 2020 08:22:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5a4d184-e7fb-44ca-b012-08d8299bfb9e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 15:21:58.9546
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3nKWUv40tv0makeDpPeHvdC0KOzl+JIwD1mYJ0zOYubkkF5tuF/Q0CmDhaJHRX92nKzlpGzpqX6iijgM5Xym/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2933
+In-Reply-To: <20200716062427.71763-1-vkoul@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERhbmllbA0KDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIHBpbmN0cmw6IGlteDog
-U3VwcG9ydCBidWlsZGluZyBTQ1UgcGluY3RybCBkcml2ZXIgYXMNCj4gbW9kdWxlDQo+IA0KPiBI
-aSBBbnNvbiwNCj4gDQo+IEZldyBjb21tZW50cyBpbmxpbmU6DQo+IA0KPiBPbiA3LzE2LzIwIDY6
-MDYgUE0sIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IFRvIHN1cHBvcnQgYnVpbGRpbmcgaS5NWCBT
-Q1UgcGluY3RybCBkcml2ZXIgYXMgbW9kdWxlLCBiZWxvdyB0aGluZ3MgbmVlZCB0bw0KPiBiZSBj
-aGFuZ2VkOg0KPiA+DQo+ID4gICAgICAtIEV4cG9ydCBTQ1UgcmVsYXRlZCBmdW5jdGlvbnMgYW5k
-IHVzZSAiSVNfRU5BQkxFRCIgaW5zdGVhZCBvZg0KPiA+ICAgICAgICAiaWZkZWYiIHRvIHN1cHBv
-cnQgU0NVIHBpbmN0cmwgZHJpdmVyIHVzZXIgYW5kIGl0c2VsZiB0byBiZQ0KPiA+ICAgICAgICBi
-dWlsdCBhcyBtb2R1bGU7DQo+ID4gICAgICAtIFVzZSBmdW5jdGlvbiBjYWxsYmFja3MgZm9yIFND
-VSByZWxhdGVkIGZ1bmN0aW9ucyBpbiBwaW5jdHJsLWlteC5jDQo+ID4gICAgICAgIGluIG9yZGVy
-IHRvIHN1cHBvcnQgdGhlIHNjZW5hcmlvIG9mIFBJTkNUUkxfSU1YIGlzIGJ1aWx0IGluDQo+ID4g
-ICAgICAgIHdoaWxlIFBJTkNUUkxfSU1YX1NDVSBpcyBidWlsdCBhcyBtb2R1bGU7DQo+ID4gICAg
-ICAtIEFsbCBkcml2ZXJzIHVzaW5nIFNDVSBwaW5jdHJsIGRyaXZlciBuZWVkIHRvIGluaXRpYWxp
-emUgdGhlDQo+ID4gICAgICAgIFNDVSByZWxhdGVkIGZ1bmN0aW9uIGNhbGxiYWNrOw0KPiA+ICAg
-ICAgLSBDaGFuZ2UgUElOQ1RSX0lNWF9TQ1UgdG8gdHJpc3RhdGU7DQo+ID4gICAgICAtIEFkZCBt
-b2R1bGUgYXV0aG9yLCBkZXNjcmlwdGlvbiBhbmQgbGljZW5zZS4NCj4gPg0KPiA+IFdpdGggYWJv
-dmUgY2hhbmdlcywgaS5NWCBTQ1UgcGluY3RybCBkcml2ZXIgY2FuIGJlIGJ1aWx0IGFzIG1vZHVs
-ZS4NCj4gDQo+IA0KPiBUaGVyZSBhcmUgYSBsb3Qgb2YgY2hhbmdlcyBoZXJlLiBJIHRoaW5rIGl0
-IHdvdWxkIGJlIGJldHRlciB0byB0cnkgdG8gc3BsaXQgdGhlbQ0KPiANCj4gcGVyIGZ1bmN0aW9u
-YWxpdHkuIE9uZSBmdW5jdGlvbmFsIGNoYW5nZSBwZXIgcGF0Y2guDQoNCkFjdHVhbGx5LCBJIGV2
-ZXIgdHJpZWQgdG8gc3BsaXQgdGhlbSwgYnV0IHRoZSBmdW5jdGlvbiB3aWxsIGJlIGJyb2tlbi4g
-QWxsIHRoZSBjaGFuZ2VzDQphcmUganVzdCB0byBzdXBwb3J0IHRoZSBtb2R1bGUgYnVpbGQuIElm
-IHNwbGl0IHRoZW0sIHRoZSBiaXNlY3Qgd2lsbCBoYXZlIHBpbmN0cmwNCmJ1aWxkIG9yIGZ1bmN0
-aW9uIGJyb2tlbi4NCg0KVGhhbmtzLA0KQW5zb24NCg==
+On 7/15/20 11:24 PM, Vinod Koul wrote:
+> Driver uses GPIO functions but doesn't include the header explcitly. Add
+> that to fix build errors when GPIOLIB is disabled.
+> 
+> drivers/phy/allwinner/phy-sun4i-usb.c:367:11: error: implicit
+> declaration of function ‘gpiod_get_value_cansleep’; did you mean
+> ‘gpio_get_value_cansleep’? [-Werror=implicit-function-declaration]
+> drivers/phy/allwinner/phy-sun4i-usb.c:707:22: error: implicit
+> declaration of function ‘devm_gpiod_get_optional’; did you mean
+> ‘devm_clk_get_optional’? [-Werror=implicit-function-declaration]
+> drivers/phy/allwinner/phy-sun4i-usb.c:708:11: error: ‘GPIOD_IN’
+> undeclared (first use in this function); did you mean ‘GPIOF_IN’?
+> drivers/phy/allwinner/phy-sun4i-usb.c:815:21: error: implicit
+> declaration of function ‘gpiod_to_irq’; did you mean ‘gpio_to_irq’?
+> [-Werror=implicit-function-declaration]
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
+> ---
+>  drivers/phy/allwinner/phy-sun4i-usb.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+> index 7e09ad6a0b42..585d0a59e712 100644
+> --- a/drivers/phy/allwinner/phy-sun4i-usb.c
+> +++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/err.h>
+>  #include <linux/extcon-provider.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/io.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+> 
+
+
+-- 
+~Randy
