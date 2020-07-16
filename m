@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034ACC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CADC206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02B22063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fxPQnWz5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JqIq+nSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgGPPUK (ORCPT
+        id S1728907AbgGPPUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55572 "EHLO
+        Thu, 16 Jul 2020 11:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729049AbgGPPUH (ORCPT
+        with ESMTP id S1728515AbgGPPUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:20:07 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B8A9C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:20:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f18so7515045wrs.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:20:07 -0700 (PDT)
+        Thu, 16 Jul 2020 11:20:08 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639D0C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:20:08 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so11965077wml.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:20:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Bt894HzKEOa1juEk1zUwT+0wI2k83kLqjbCs4ktmwwU=;
-        b=fxPQnWz59Up3zrl0RzjlzsOI92Vi4xDMdkMXTsmF5eF0O69S/9QxQx9W5N0gO6uQYd
-         KMdRrpjWnQyRnQJhnI6HgyildgntrisyLJWqjKqgeKOSYhViY94se2D0JSclNyQnA7db
-         /fQRmh33E3YqGzdcKag+knbWwqpO2rA1HbbXG8iZ20YU/Zz9EcyhlYo/iDnsTKFSEgz8
-         +BRuUnqW73/9iSuxSWWRFjGUnIRJA12dw1cdtZODQbLbyaGOD2jj2/KVPM8esB70T8Xm
-         8d31C4aC+oKfEyti14BQW7FsyMfy65bFrwItW48j94uqHi2wA1eBpeyR9pj7QXhoSVIG
-         5u8g==
+        bh=MA+kP4DlJmfdXBdpErlC9E+irTIJBNObkffFIf2y82I=;
+        b=JqIq+nSSgbqT32taOoagK4GvW1IjeH/ECen5VaQpTPssRfgi2K/8DOcl6JBC0QxDeW
+         L9hLCUvRYISHnV89d2sJRdD+6c5sxQkufYhP3jxVx68jsxG0TdCDZiP70lmDH+wZdRTC
+         FznHjEsKE7OT6A1QXZ5HM+aeuVDeWOUeieYNavx54TIHRGrU3K6MgOS/grSopWEWTAaO
+         hlCL5R4TMZFizDEe8gDbVEiz3XHHsc3Q22RNnsXKbadgu4t28iDUBY7TwTIPfdOnEURW
+         2jL1tZurcc5gb75TDGPuPCEicPFYNSgzjJ08eexA4pnUfomSRpk/TrpZMqsicqzagoh1
+         vmYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Bt894HzKEOa1juEk1zUwT+0wI2k83kLqjbCs4ktmwwU=;
-        b=JFCFhKagg6msuIeKaqk5Z9/X2ZVRQyX+KjGz+stbE58zzX+4h7ntxnqZ/K/QSB61qj
-         LqWKvi8nDIHfRnx8xPSw8gWdj9a+vcR0Y4QOgx0WoF9WN/B8IogX8SY8YTOMukHaNy7S
-         oBa7+MK5c1nfBcDe7DA/rEPjNYjWaztJl6d2WQ6ZnHXuBmmZ9FV0GxtjNi1p9HqaQF0C
-         mDg6rPo0bBDh0lt2yCJGzwdceaecc1bDNGP5rOVUmUdvH71c4JaCAJuj/JnPrkMMDnyV
-         jVSo0t8a7tVxY6+RYrWvBDFxNaKvvZO+9C0a4lKimVaXqT7xyP64lzfw88oHYg0+7eTP
-         6a3g==
-X-Gm-Message-State: AOAM5304QsHY/zTauoi5PjRWCau/jFzRE/zAzD2K1K+vUD92CLwlTTZG
-        U36U38eWc7A4B7HvsCrBD5xgQA==
-X-Google-Smtp-Source: ABdhPJxL8ueR/OcnC3ZDGghtoI6P4Ks6MOUOjDetInyQZqPmjy2evPI+PENXwSQ2/p8MNK4GuK8RpA==
-X-Received: by 2002:adf:f14c:: with SMTP id y12mr5460591wro.30.1594912805876;
-        Thu, 16 Jul 2020 08:20:05 -0700 (PDT)
+        bh=MA+kP4DlJmfdXBdpErlC9E+irTIJBNObkffFIf2y82I=;
+        b=eHh1PdFMw0kAfgnsuQKENUEE/jYkPejVVkK9al3ghOZSgEU9CITL7+i9KjZtc6Tq0O
+         a0QprmbDtiaXmKM6pihhPVgDxy7Jj4NpXm/r92d8awzSmKV/MITK4cYQ7Uh+ZVOVmmH0
+         DAvER/VINazioskIzs97APR8/XQwpz0wzL9yvPtX9QZBdbvwR77R2+kCYyCICdX6wCW9
+         ZcpcaXJR4ZKXbsAxU6Fy+aaPLHlAWuVKQEUvDnR2n6kqlVYUdb0QoI0mB/Tl0bAgO86R
+         NLQOkCHSX0YV7PYtLzDE3118Qim+dF3pmeQcKVBdM2bHyfv+eEsNtmThKuAO89RisMC0
+         blJA==
+X-Gm-Message-State: AOAM531Hyh19/TWmoS92puFJUBCzN8fcrhox50RjcHJ6RwBti/M4lcO6
+        D71mDwYWdlbehY1zrY8U4IoBnw==
+X-Google-Smtp-Source: ABdhPJwWZzro9ckYK2greM7KjTK8oMd0961HXp/aw47Rj9PySVK21oCV8YKb2OYPEOZ0KHUJkUyCTw==
+X-Received: by 2002:a7b:c38c:: with SMTP id s12mr4799097wmj.136.1594912807056;
+        Thu, 16 Jul 2020 08:20:07 -0700 (PDT)
 Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id u17sm9877687wrp.70.2020.07.16.08.20.04
+        by smtp.gmail.com with ESMTPSA id u17sm9877687wrp.70.2020.07.16.08.20.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 08:20:05 -0700 (PDT)
+        Thu, 16 Jul 2020 08:20:06 -0700 (PDT)
 From:   Daniel Thompson <daniel.thompson@linaro.org>
 To:     Jason Wessel <jason.wessel@windriver.com>,
         Douglas Anderson <dianders@chromium.org>
@@ -68,9 +68,9 @@ Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
         patches@linaro.org
-Subject: [PATCH v2 1/3] kgdb: Honour the kprobe blocklist when setting breakpoints
-Date:   Thu, 16 Jul 2020 16:19:41 +0100
-Message-Id: <20200716151943.2167652-2-daniel.thompson@linaro.org>
+Subject: [PATCH v2 2/3] kgdb: Use the kprobe blocklist to limit single stepping
+Date:   Thu, 16 Jul 2020 16:19:42 +0100
+Message-Id: <20200716151943.2167652-3-daniel.thompson@linaro.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200716151943.2167652-1-daniel.thompson@linaro.org>
 References: <20200716151943.2167652-1-daniel.thompson@linaro.org>
@@ -81,123 +81,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently kgdb has absolutely no safety rails in place to discourage or
-prevent a user from placing a breakpoint in dangerous places such as
-the debugger's own trap entry/exit and other places where it is not safe
-to take synchronous traps.
+If we are running in a part of the kernel that dislikes breakpoint
+debugging then it is very unlikely to be safe to single step. Add
+some safety rails to prevent stepping through anything on the kprobe
+blocklist.
 
-Introduce a new config symbol KGDB_HONOUR_BLOCKLIST and modify the
-default implementation of kgdb_validate_break_address() so that we use
-the kprobe blocklist to prohibit instrumentation of critical functions
-if the config symbol is set. The config symbol dependencies are set to
-ensure that the blocklist will be enabled by default if we enable KGDB
-and are compiling for an architecture where we HAVE_KPROBES.
+As part of this kdb_ss() will no longer set the DOING_SS flags when it
+requests a step. This is safe because this flag is already redundant,
+returning KDB_CMD_SS is all that is needed to request a step (and this
+saves us from having to unset the flag if the safety check fails).
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 ---
- include/linux/kgdb.h      | 18 ++++++++++++++++++
- kernel/debug/debug_core.c |  4 ++++
- kernel/debug/kdb/kdb_bp.c |  9 +++++++++
- lib/Kconfig.kgdb          | 14 ++++++++++++++
- 4 files changed, 45 insertions(+)
+ include/linux/kgdb.h        |  1 +
+ kernel/debug/debug_core.c   | 13 +++++++++++++
+ kernel/debug/gdbstub.c      | 10 +++++++++-
+ kernel/debug/kdb/kdb_bp.c   |  8 ++------
+ kernel/debug/kdb/kdb_main.c | 10 ++++++++--
+ 5 files changed, 33 insertions(+), 9 deletions(-)
 
 diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-index 529116b0cabe..7caba4604edc 100644
+index 7caba4604edc..aefe823998cb 100644
 --- a/include/linux/kgdb.h
 +++ b/include/linux/kgdb.h
-@@ -16,6 +16,7 @@
- #include <linux/linkage.h>
- #include <linux/init.h>
- #include <linux/atomic.h>
-+#include <linux/kprobes.h>
- #ifdef CONFIG_HAVE_ARCH_KGDB
- #include <asm/kgdb.h>
- #endif
-@@ -323,6 +324,23 @@ extern int kgdb_nmicallin(int cpu, int trapnr, void *regs, int err_code,
- 			  atomic_t *snd_rdy);
- extern void gdbstub_exit(int status);
+@@ -214,6 +214,7 @@ extern void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc);
  
-+/*
-+ * kgdb and kprobes both use the same (kprobe) blocklist (which makes sense
-+ * given they are both typically hooked up to the same trap meaning on most
-+ * architectures one cannot be used to debug the other)
-+ *
-+ * However on architectures where kprobes is not (yet) implemented we permit
-+ * breakpoints everywhere rather than blocking everything by default.
-+ */
-+static inline bool kgdb_within_blocklist(unsigned long addr)
-+{
-+#ifdef CONFIG_KGDB_HONOUR_BLOCKLIST
-+	return within_kprobe_blacklist(addr);
-+#else
-+	return false;
-+#endif
-+}
-+
- extern int			kgdb_single_step;
- extern atomic_t			kgdb_active;
- #define in_dbg_master() \
+ /* Optional functions. */
+ extern int kgdb_validate_break_address(unsigned long addr);
++extern int kgdb_validate_single_step_address(unsigned long addr);
+ extern int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt);
+ extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
+ 
 diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 9e5934780f41..133a361578dc 100644
+index 133a361578dc..4b59bcc90c5d 100644
 --- a/kernel/debug/debug_core.c
 +++ b/kernel/debug/debug_core.c
-@@ -188,6 +188,10 @@ int __weak kgdb_validate_break_address(unsigned long addr)
- {
- 	struct kgdb_bkpt tmp;
- 	int err;
-+
+@@ -208,6 +208,19 @@ int __weak kgdb_validate_break_address(unsigned long addr)
+ 	return err;
+ }
+ 
++int __weak kgdb_validate_single_step_address(unsigned long addr)
++{
++	/*
++	 * Disallow stepping when we are executing code that is marked
++	 * as unsuitable for breakpointing... stepping won't be safe
++	 * either!
++	 */
 +	if (kgdb_within_blocklist(addr))
 +		return -EINVAL;
 +
- 	/* Validate setting the breakpoint and then removing it.  If the
- 	 * remove fails, the kernel needs to emit a bad message because we
- 	 * are deep trouble not being able to put things back the way we
++	return 0;
++}
++
+ unsigned long __weak kgdb_arch_pc(int exception, struct pt_regs *regs)
+ {
+ 	return instruction_pointer(regs);
+diff --git a/kernel/debug/gdbstub.c b/kernel/debug/gdbstub.c
+index 61774aec46b4..f1c88007cc2b 100644
+--- a/kernel/debug/gdbstub.c
++++ b/kernel/debug/gdbstub.c
+@@ -1041,8 +1041,16 @@ int gdb_serial_stub(struct kgdb_state *ks)
+ 			if (tmp == 0)
+ 				break;
+ 			/* Fall through - on tmp < 0 */
+-		case 'c': /* Continue packet */
+ 		case 's': /* Single step packet */
++			error = kgdb_validate_single_step_address(
++					kgdb_arch_pc(ks->ex_vector,
++						     ks->linux_regs));
++			if (error != 0) {
++				error_packet(remcom_out_buffer, error);
++				break;
++			}
++			fallthrough;
++		case 'c': /* Continue packet */
+ 			if (kgdb_contthread && kgdb_contthread != current) {
+ 				/* Can't switch threads in kgdb */
+ 				error_packet(remcom_out_buffer, -EINVAL);
 diff --git a/kernel/debug/kdb/kdb_bp.c b/kernel/debug/kdb/kdb_bp.c
-index d7ebb2c79cb8..ec4940146612 100644
+index ec4940146612..4853c413f579 100644
 --- a/kernel/debug/kdb/kdb_bp.c
 +++ b/kernel/debug/kdb/kdb_bp.c
-@@ -306,6 +306,15 @@ static int kdb_bp(int argc, const char **argv)
- 	if (!template.bp_addr)
- 		return KDB_BADINT;
+@@ -507,18 +507,14 @@ static int kdb_bc(int argc, const char **argv)
+  *	None.
+  * Remarks:
+  *
+- *	Set the arch specific option to trigger a debug trap after the next
+- *	instruction.
++ *	KDB_CMD_SS is a command that our caller acts on to effect the step.
+  */
  
-+	/*
-+	 * This check is redundant (since the breakpoint machinery should
-+	 * be doing the same check during kdb_bp_install) but gives the
-+	 * user immediate feedback.
-+	 */
-+	diag = kgdb_validate_break_address(template.bp_addr);
-+	if (diag)
-+		return diag;
+ static int kdb_ss(int argc, const char **argv)
+ {
+ 	if (argc != 0)
+ 		return KDB_ARGCOUNT;
+-	/*
+-	 * Set trace flag and go.
+-	 */
+-	KDB_STATE_SET(DOING_SS);
 +
- 	/*
- 	 * Find an empty bp structure to allocate
- 	 */
-diff --git a/lib/Kconfig.kgdb b/lib/Kconfig.kgdb
-index ffa7a76de086..9d0d408f81b1 100644
---- a/lib/Kconfig.kgdb
-+++ b/lib/Kconfig.kgdb
-@@ -19,6 +19,20 @@ menuconfig KGDB
+ 	return KDB_CMD_SS;
+ }
  
- if KGDB
+diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+index 5c7949061671..cd40bf780b93 100644
+--- a/kernel/debug/kdb/kdb_main.c
++++ b/kernel/debug/kdb/kdb_main.c
+@@ -1189,7 +1189,7 @@ static int kdb_local(kdb_reason_t reason, int error, struct pt_regs *regs,
+ 		     kdb_dbtrap_t db_result)
+ {
+ 	char *cmdbuf;
+-	int diag;
++	int diag, res;
+ 	struct task_struct *kdb_current =
+ 		kdb_curr_task(raw_smp_processor_id());
  
-+config KGDB_HONOUR_BLOCKLIST
-+	bool "KGDB: use kprobe blocklist to prohibit unsafe breakpoints"
-+	depends on HAVE_KPROBES
-+	select KPROBES
-+	default y
-+	help
-+	  If set to Y the debug core will use the kprobe blocklist to
-+	  identify symbols where it is unsafe to set breakpoints.
-+	  In particular this disallows instrumentation of functions
-+	  called during debug trap handling and thus makes it very
-+	  difficult to inadvertently provoke recursive trap handling.
+@@ -1346,10 +1346,16 @@ static int kdb_local(kdb_reason_t reason, int error, struct pt_regs *regs,
+ 		}
+ 		if (diag == KDB_CMD_GO
+ 		 || diag == KDB_CMD_CPU
+-		 || diag == KDB_CMD_SS
+ 		 || diag == KDB_CMD_KGDB)
+ 			break;
+ 
++		if (diag == KDB_CMD_SS) {
++			res = kgdb_validate_single_step_address(instruction_pointer(regs));
++			if (res == 0)
++				break;
++			diag = res;
++		}
 +
-+	  If unsure, say Y.
-+
- config KGDB_SERIAL_CONSOLE
- 	tristate "KGDB: use kgdb over the serial console"
- 	select CONSOLE_POLL
+ 		if (diag)
+ 			kdb_cmderror(diag);
+ 	}
 -- 
 2.25.4
 
