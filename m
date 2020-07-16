@@ -2,108 +2,69 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF46C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7117E20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928DA20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgGPSvi (ORCPT
+        id S1729428AbgGPSws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:51:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40704 "EHLO mx2.suse.de"
+        Thu, 16 Jul 2020 14:52:48 -0400
+Received: from mga02.intel.com ([134.134.136.20]:38349 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbgGPSvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:51:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 446E8AB76;
-        Thu, 16 Jul 2020 18:51:39 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 468A6DA790; Thu, 16 Jul 2020 20:51:10 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 20:51:10 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Boris Burkov <boris@bur.io>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2] btrfs: fix mount failure caused by race with umount
-Message-ID: <20200716185110.GB3703@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Boris Burkov <boris@bur.io>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-References: <e2857658-230e-48e6-d6cf-587be4a8a0bc@toxicpanda.com>
- <20200710172304.139763-1-boris@bur.io>
+        id S1726986AbgGPSwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 14:52:47 -0400
+IronPort-SDR: B853POwWx+C/LctXjItTXIXyz4MJo0OqgSgiiuYMWaQ0VjYYX8/7yJt6n+1TFmpBZzTKup3BG3
+ v3wF5TS/FquA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="137597756"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="137597756"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 11:52:45 -0700
+IronPort-SDR: N3vv3ND+OnFJU9V0jEIRGgw0vxCUTShGBSE6hTDap1fDoKWpNoKTUhnT+137SEhsp507I8dbry
+ 7ovP33xCmHgw==
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="460575619"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 11:52:45 -0700
+Date:   Thu, 16 Jul 2020 11:52:42 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     bp@suse.de, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>
+Subject: Re: [PATCH] EDAC/ie31200: fallback if host bridge device is already
+ initialized
+Message-ID: <20200716185242.GA7045@agluck-desk2.amr.corp.intel.com>
+References: <1594923911-10885-1-git-send-email-jbaron@akamai.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710172304.139763-1-boris@bur.io>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <1594923911-10885-1-git-send-email-jbaron@akamai.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 10:23:04AM -0700, Boris Burkov wrote:
-> Here is the sequence laid out in greater detail:
+On Thu, Jul 16, 2020 at 02:25:11PM -0400, Jason Baron wrote:
+> The Intel uncore driver may claim some of the pci ids from ie31200 which
+> means that the ie31200 edac driver will not initialize them as part of
+> pci_register_driver().
 > 
-> CPU0                                                    CPU1
-> down_write sb->s_umount
-> btrfs_kill_super
->   kill_anon_super(sb)
->     generic_shutdown_super(sb);
->       shrink_dcache_for_umount(sb);
->       sync_filesystem(sb);
->       evict_inodes(sb); // SLOW
-> 
->                                               btrfs_mount_root
->                                                 btrfs_scan_one_device
->                                                 fs_devices = device->fs_devices
->                                                 fs_info->fs_devices = fs_devices
->                                                 // fs_devices-opened makes this a no-op
->                                                 btrfs_open_devices(fs_devices, mode, fs_type)
->                                                 s = sget(fs_type, test, set, flags, fs_info);
->                                                   find sb in s_instances
->                                                   grab_super(sb);
->                                                     down_write(&s->s_umount); // blocks
-> 
->       sop->put_super(sb)
->         // sb->fs_devices->opened == 2; no-op
->       spin_lock(&sb_lock);
->       hlist_del_init(&sb->s_instances);
->       spin_unlock(&sb_lock);
->       up_write(&sb->s_umount);
->                                                     return 0;
->                                                   retry lookup
->                                                   don't find sb in s_instances (deleted by CPU0)
->                                                   s = alloc_super
->                                                   return s;
->                                                 btrfs_fill_super(s, fs_devices, data)
->                                                   open_ctree // fs_devices total_rw_bytes improperly set!
->                                                     btrfs_read_chunk_tree
->                                                       read_one_dev // increment total_rw_bytes again!!
->                                                       super_total_bytes < fs_devices->total_rw_bytes // ERROR!!!
+> Let's add a fallback for this case to 'pci_get_device()' to get a
+> reference on the device such that it can still be configured. This is
+> similar in approach to other edac drivers.
 
-It seems weird that umount and mount can be mixed in such way but with
-the VFS locks and structures it's valid, so the devices managed by btrfs
-slipped through.
+What functionality is lost when this happens?
 
-With the suggested fix, the bit BTRFS_DEV_STATE_IN_FS_METADATA becomes
-quite important and the synchronization of the device related data.
-The semantics seems quite subtle and inconsistent regarding other uses
-of set_bit or clear_bit and the total_rw_bytes.
+Does the user see some message in the console
+log to let them know?
 
-I'm thinkig about unconditional setting of IN_FS_METADATA as it is now,
-but recalculating total_rw_size outside of read_one_dev in
-btrfs_read_chunk_tree. There it should not matter if the bit was set by
-the unmounted or the mounted filesystem, as long as the locking rules
-for updating fs_devices hold. For that we have uuid_mutex and
-fs_devices::device_list_mutex, this is used elsewhere so fixing it using
-existing mechanisms is IMHO better way than relying on subtle
-undocumented semantics of the state bit.
+-Tony
