@@ -2,338 +2,292 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD52EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF212074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7497A207F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:26:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="QZD5YOJf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jdaFxBQB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgGPJZm (ORCPT
+        id S1726440AbgGPJ0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 05:25:42 -0400
-Received: from www381.your-server.de ([78.46.137.84]:34946 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgGPJZl (ORCPT
+        Thu, 16 Jul 2020 05:26:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgGPJ0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 05:25:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=u5afwLQ4bTJ2L6PgOK+WAAnynA84GEc3NeAsN62Ya1c=; b=QZD5YOJf93Gn9yw5UqCnh/iXWx
-        TwMBFVZXlf/J45jEjXKTcSc0bhOmDyDVSZzrXo9g2ix90HrMmE6huHOwNoC0G7yffCmlGZFqtxks7
-        X4PqRMVLwyT8KCakQxCw8qNb38RVz5sH0GqDMyL0kUxoGLnByjHwoqTZSlLIibk+a6L8ryGaL5Uas
-        BmHhamjoyEuYj3kZgEBI5Q3lgNQUXavK9i6qwidpk97FadfaWDJrxAwTQBJsXJI2bJiwCPXuVgdH0
-        Z8L+YnnHtT4qA8B9ckGtuBCHPwfreu5Gxgnu7jy1jZ2KBUppaFNbiroFbK3VSxh2k+leaHC4hOm8Y
-        F6v/r+iQ==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jw092-0001FK-VR; Thu, 16 Jul 2020 11:25:37 +0200
-Received: from [2a01:598:b880:d18a:2462:7ce5:9424:a9d7]
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jw092-000Pau-Q1; Thu, 16 Jul 2020 11:25:36 +0200
-Subject: Re: [RFC PATCH] one-bit-adc-dac: Add initial version of one bit ADC,
- DAC
-To:     Cristian Pop <cristian.pop@analog.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     jic23@kernel.org
-References: <20200716072737.9535-1-cristian.pop@analog.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <9bd0363c-e8fb-a36f-a107-0afd8f7851d0@metafoo.de>
-Date:   Thu, 16 Jul 2020 11:25:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 05:26:01 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16740C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 02:26:01 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id b25so4360061qto.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 02:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oZgJatqnmCksA5XOZI2wml9ctaRhyij9S6QhCqQOdQ0=;
+        b=jdaFxBQB42rrH2WNPSR+xGK2Vj+uZXV4E8XIyxZE7NzEgRQEz6pfwuylmQ3FZQYN3K
+         chN9q01ki6MQS9Ew4B9w9lQ1s5RGYd2VdUM8gjhB50U2rBWjUBkGjnCKO2+/lT1k1BNY
+         oFaCJGZNiE93a/5SRumpyQxjh0Nw4l5sw1ITNlXP/6FDytrROn+Uv0b6Ag8iKYsDplyt
+         tgYm+zBq3BGGlbqz4kjuYlwrB0uvGLLHZBN0fFa/OEdnOnD6oQ90XZQGXh5zncDr9DWj
+         xssnUdU2GlSciJUZhyrp8vbpYJcKWkpJGonFDDh6Vm61ZWpPwpqOHvMFWo+glY5Wo0c+
+         BVJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oZgJatqnmCksA5XOZI2wml9ctaRhyij9S6QhCqQOdQ0=;
+        b=ASc+HEJayzW2LUbHImKB/YAlEVLqbq2RNKZdL4zMP4afqnsdD9DzfTGocUlx9OzaEo
+         4W30U3tpMPtCWMA4xtHlUTmXRpH40Qp5YU6WTKRH9bOaupbjihqfP5MYSH3x0UIn4rM3
+         c7PKwOnEDrP52ExJXy85Fd3vEKC3lWNYKbyyaHcwa2q/7bGm10H4bXZPwLEEWjJA7iAf
+         tgh4yuFxk4Kcve2vMafNoZoOREdXTbmpoLwQw31KwzvtR2uaoFFH1u/tBAlVqYt6xO22
+         mbytsXgDxqGRK2QM6bhm4AvDQQS6VeqkSQLmwGQU03ZyJtX7gyio0CWsaiWP9WvaDNE7
+         0xTg==
+X-Gm-Message-State: AOAM5329xXFxy15OUvZxDcVHvW+hTClgauvneSP9+vJLufwPAt8nJmVA
+        NwwripZu517uYA20Sus5f2Bz+ny5UAfK5prT+WfcpA==
+X-Google-Smtp-Source: ABdhPJxX9zpFHt41pKxK6FcW8o05ZoDTzb+MJBq3REeRO9+D71zDpXwxuBvyU9FGFLgZeTS4MZHrE5si5O0eTNCmlGw=
+X-Received: by 2002:ac8:66d1:: with SMTP id m17mr4141174qtp.88.1594891560020;
+ Thu, 16 Jul 2020 02:26:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200716072737.9535-1-cristian.pop@analog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25874/Wed Jul 15 16:18:08 2020)
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-2-git-send-email-grzegorz.jaszczyk@linaro.org> <20200713212534.GA742734@bogus>
+In-Reply-To: <20200713212534.GA742734@bogus>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Thu, 16 Jul 2020 11:25:48 +0200
+Message-ID: <CAMxfBF46X99H+oRXD-dtUkn0YhRi7f7AdbzCO0GZRds6F0wK9g@mail.gmail.com>
+Subject: Re: [PATCHv3 1/6] dt-bindings: irqchip: Add PRU-ICSS interrupt
+ controller bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>, "Anna, Suman" <s-anna@ti.com>,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
+        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
+        Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/20 9:27 AM, Cristian Pop wrote:
-> Implementation for 1-bit ADC (comparator) and a 1-bit DAC (switch)
+On Mon, 13 Jul 2020 at 23:25, Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Jul 02, 2020 at 04:17:54PM +0200, Grzegorz Jaszczyk wrote:
+> > From: Suman Anna <s-anna@ti.com>
+> >
+> > The Programmable Real-Time Unit and Industrial Communication Subsystem
+> > (PRU-ICSS or simply PRUSS) contains an interrupt controller (INTC) that
+> > can handle various system input events and post interrupts back to the
+> > device-level initiators. The INTC can support upto 64 input events on
+> > most SoCs with individual control configuration and h/w prioritization.
+> > These events are mapped onto 10 output interrupt lines through two levels
+> > of many-to-one mapping support. Different interrupt lines are routed to
+> > the individual PRU cores or to the host CPU or to other PRUSS instances.
+> >
+> > The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
+> > commonly called ICSSG. The ICSSG interrupt controller on K3 SoCs provide
+> > a higher number of host interrupts (20 vs 10) and can handle an increased
+> > number of input events (160 vs 64) from various SoC interrupt sources.
+> >
+> > Add the bindings document for these interrupt controllers on all the
+> > applicable SoCs. It covers the OMAP architecture SoCs - AM33xx, AM437x
+> > and AM57xx; the Keystone 2 architecture based 66AK2G SoC; the Davinci
+> > architecture based OMAPL138 SoCs, and the K3 architecture based AM65x
+> > and J721E SoCs.
+> >
+> > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > Signed-off-by: Andrew F. Davis <afd@ti.com>
+> > Signed-off-by: Roger Quadros <rogerq@ti.com>
+> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> > Reviewed-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> > v2->v3:
+> > - Convert dt-binding to YAML
+> > v1->v2:
+> > - https://patchwork.kernel.org/patch/11069767/
+> > ---
+> >  .../interrupt-controller/ti,pruss-intc.yaml        | 135 +++++++++++++++++++++
+> >  1 file changed, 135 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.yaml
+> > new file mode 100644
+> > index 0000000..7fe4b95
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.yaml
+> > @@ -0,0 +1,135 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/interrupt-controller/ti,pruss-intc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: TI PRU-ICSS Local Interrupt Controller
+> > +
+> > +maintainers:
+> > +  - Suman Anna <s-anna@ti.com>
+> > +
+> > +description: |
+> > +  Each PRU-ICSS has a single interrupt controller instance that is common
+> > +  to all the PRU cores. Most interrupt controllers can route 64 input events
+> > +  which are then mapped to 10 possible output interrupts through two levels
+> > +  of mapping. The input events can be triggered by either the PRUs and/or
+> > +  various other PRUSS internal and external peripherals. The first 2 output
+> > +  interrupts (0, 1) are fed exclusively to the internal PRU cores, with the
+> > +  remaining 8 (2 through 9) connected to external interrupt controllers
+> > +  including the MPU and/or other PRUSS instances, DSPs or devices.
+> > +
+> > +  The properties "ti,irqs-reserved" and "ti,irqs-shared" are used for denoting
+> > +  the connection differences on the output interrupts 2 through 9. If neither
+> > +  of these properties are defined, it implies that all the PRUSS INTC output
+> > +  interrupts 2 through 9 (host_intr0 through host_intr7) are connected
+> > +  exclusively to the Arm interrupt controller.
+> > +
+> > +  The K3 family of SoCs can handle 160 input events that can be mapped to 20
+> > +  different possible output interrupts. The additional output interrupts (10
+> > +  through 19) are connected to new sub-modules within the ICSSG instances.
+> > +
+> > +  This interrupt-controller node should be defined as a child node of the
+> > +  corresponding PRUSS node. The node should be named "interrupt-controller".
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/interrupt-controller.yaml#
+> > +  - $ref: /schemas/interrupts.yaml#
+>
+> Drop these. They already get applied.
 
-Very sneaky way of introducing a iio-gpio-proxy driver to be able to 
-access GPIOs through libiio ;). I'm not really a fan of the whole idea.
-
-But either way I think this needs a better description of what 1-bit 
-converters are and how they are used.
+Ok.
 
 >
-> Signed-off-by: Cristian Pop <cristian.pop@analog.com>
-> ---
->   drivers/iio/addac/one-bit-adc-dac.c | 229 ++++++++++++++++++++++++++++
->   1 file changed, 229 insertions(+)
->   create mode 100644 drivers/iio/addac/one-bit-adc-dac.c
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - ti,pruss-intc
+> > +      - ti,icssg-intc
+> > +    description: |
+> > +      Use "ti,pruss-intc" for OMAP-L13x/AM18x/DA850 SoCs,
+> > +                              AM335x family of SoCs,
+> > +                              AM437x family of SoCs,
+> > +                              AM57xx family of SoCs
+> > +                              66AK2G family of SoCs
 >
-> diff --git a/drivers/iio/addac/one-bit-adc-dac.c b/drivers/iio/addac/one-bit-adc-dac.c
-> new file mode 100644
-> index 000000000000..8e2a8a09fedb
-> --- /dev/null
-> +++ b/drivers/iio/addac/one-bit-adc-dac.c
-> @@ -0,0 +1,229 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Analog Devices ONE_BIT_ADC_DAC
-> + * Digital to Analog Converters driver
-> + *
-> + * Copyright 2019 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/gpio/consumer.h>
-> +
-> +enum ch_direction {
-> +	CH_IN,
-> +	CH_OUT,
-> +};
-> +
-> +struct one_bit_adc_dac_state {
-> +	struct platform_device  *pdev;
-> +	struct gpio_descs       *in_gpio_descs;
-> +	struct gpio_descs       *out_gpio_descs;
-> +};
-> +
-> + #define ONE_BIT_ADC_DAC_CHANNEL(idx, direction)			\
-> +	{								\
-> +		.type = IIO_VOLTAGE,					\
-> +		.indexed = 1,						\
-> +		.channel = idx,						\
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> +		.output = direction,					\
-> +	}
-> +
-> +static int one_bit_adc_dac_read_raw(struct iio_dev *indio_dev,
-> +	const struct iio_chan_spec *chan, int *val, int *val2, long info)
-> +{
-> +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
-> +	int in_num_ch = 0, out_num_ch = 0;
-> +	int channel = chan->channel;
-> +
-> +	if (st->in_gpio_descs)
-> +		in_num_ch = st->in_gpio_descs->ndescs;
-> +
-> +	if (st->out_gpio_descs)
-> +		out_num_ch = st->out_gpio_descs->ndescs;
-> +
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		if (channel < in_num_ch) {
-> +			*val = gpiod_get_value_cansleep(
-> +				st->in_gpio_descs->desc[channel]);
-> +		} else {
-> +			channel -= in_num_ch;
-> +			*val = gpiod_get_value_cansleep(
-> +				st->out_gpio_descs->desc[channel]);
-> +		}
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int one_bit_adc_dac_write_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *chan,
-> +			    int val,
-> +			    int val2,
-> +			    long info)
-> +{
-> +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
-> +	int in_num_ch = 0, out_num_ch = 0;
-> +	int channel = chan->channel;
-> +
-> +	if (st->in_gpio_descs)
-> +		in_num_ch = st->in_gpio_descs->ndescs;
-> +
-> +	if (st->out_gpio_descs)
-> +		out_num_ch = st->out_gpio_descs->ndescs;
-> +
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		if (channel < in_num_ch) {
-> +			gpiod_set_value_cansleep(
-> +				st->in_gpio_descs->desc[channel], val);
+> I guess you can look at the parent if there's differences in features
+> and bugs.
 
-How can we set a value on an input GPIO?
+Currently we are using of_device_id data in the driver to store the
+number of system events and number of host interrupts which are
+different for pruss-intc and icssg-intc. I prefer to keep it for
+clarity if you don't mind.
 
-> +		} else {
-> +			channel -= in_num_ch;
-> +			gpiod_set_value_cansleep(
-> +				st->out_gpio_descs->desc[channel], val);
-> +		}
-> +
-> +		return 0;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_info one_bit_adc_dac_info = {
-> +	.read_raw = &one_bit_adc_dac_read_raw,
-> +	.write_raw = &one_bit_adc_dac_write_raw,
-> +};
-> +
-> +static int one_bit_adc_dac_set_ch(struct iio_dev *indio_dev,
-> +					struct iio_chan_spec *channels,
-> +					const char *propname,
-> +					int num_ch,
-> +					enum ch_direction direction,
-> +					int offset)
-> +{
-> +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
-> +	const char **gpio_names;
-> +	int ret, i;
-> +
-> +	if (num_ch <= 0)
-> +		return 0;
-> +
-> +	gpio_names = devm_kcalloc(indio_dev->dev.parent,
-> +					num_ch,
-> +					sizeof(char *),
-sizeof(*gpio_names). It might be better to use normal kcalloc, kfree 
-here since you only use it in this function.
-> +					GFP_KERNEL);
-> +	if (!gpio_names)
-> +		return -ENOMEM;
-> +
-> +	ret = device_property_read_string_array(&st->pdev->dev,
-> +					propname,
-> +					gpio_names,
-> +					num_ch);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	for (i = 0; i < num_ch; i++) {
-> +		channels[i] = (struct iio_chan_spec)ONE_BIT_ADC_DAC_CHANNEL(i +
-> +							offset,
-> +							direction);
-> +		channels[i].extend_name = gpio_names[i];
-I think we want to avoid using extend_name in new drivers because it 
-makes for a very clumsy ABI. We should add a label property like we have 
-for the device for channels to have a symbolic name of the channel.
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int one_bit_adc_dac_parse_dt(struct iio_dev *indio_dev)
-> +{
-> +	struct one_bit_adc_dac_state *st = iio_priv(indio_dev);
-> +	struct iio_chan_spec *channels;
-> +	int ret, in_num_ch = 0, out_num_ch = 0;
-> +
-> +	st->in_gpio_descs = devm_gpiod_get_array_optional(&st->pdev->dev,
-> +						"in", GPIOD_IN);
-> +	if (IS_ERR(st->in_gpio_descs))
-> +		return PTR_ERR(st->in_gpio_descs);
-> +
-> +	if (st->in_gpio_descs)
-> +		in_num_ch = st->in_gpio_descs->ndescs;
-> +
-> +	st->out_gpio_descs = devm_gpiod_get_array_optional(&st->pdev->dev,
-> +						"out", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(st->out_gpio_descs))
-> +		return PTR_ERR(st->out_gpio_descs);
-> +
-> +	if (st->out_gpio_descs)
-> +		out_num_ch = st->out_gpio_descs->ndescs;
-> +
-> +	channels = devm_kcalloc(indio_dev->dev.parent, (in_num_ch + out_num_ch),
-> +				sizeof(struct iio_chan_spec), GFP_KERNEL);
+>
+> > +      Use "ti,icssg-intc" for K3 AM65x & J721E family of SoCs
+> > +
+> > +  reg:
+> > +    items:
+> > +      - description: base address and size for the PRUSS INTC sub-module
+>
+> Just: maxItems: 1
+>
+> Don't need genericish descriptions.
 
-sizeof(*channels) to avoid accidentally using the wrong type.
+Ok.
 
-> +	if (!channels)
-> +		return -ENOMEM;
-> +
-> +	ret = one_bit_adc_dac_set_ch(indio_dev, &channels[0],
-> +					"in-gpio-names", in_num_ch,
-> +					CH_IN, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = one_bit_adc_dac_set_ch(indio_dev, &channels[in_num_ch],
-> +					"out-gpio-names", out_num_ch,
-> +					CH_OUT, in_num_ch);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	indio_dev->channels = channels;
-> +	indio_dev->num_channels = in_num_ch + out_num_ch;
-> +
-> +	return 0;
-> +}
-> +
-> +static int one_bit_adc_dac_probe(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev;
-> +	struct one_bit_adc_dac_state *st;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(indio_dev);
-> +	st->pdev = pdev;
-> +	indio_dev->dev.parent = &pdev->dev;
-parent assignment should not be needed thanks to Alex's work.
-> +	indio_dev->name = "one-bit-adc-dac";
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->info = &one_bit_adc_dac_info;
-> +
-> +	ret = one_bit_adc_dac_parse_dt(indio_dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, indio_dev);
+>
+> > +
+> > +  interrupts:
+> > +    minItems: 1
+> > +    maxItems: 8
+> > +    description: |
+> > +      all the interrupts generated towards the main host processor in the SoC.
+>
+> > +      The format depends on the interrupt specifier for the particular SoC's
+> > +      Arm parent interrupt controller. A shared interrupt can be skipped if
+>
+> That's true for all 'interrupts' properties, so not needed here.
 
-There does not seem to be a matching get_drvdata() anywhere so this is 
-not needed.
+Ok.
 
-> +	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
-> +}
-> +
-> +static const struct of_device_id one_bit_adc_dac_dt_match[] = {
-> +	{ .compatible = "adi,one-bit-adc-dac" },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, one_bit_adc_dac_dt_match);
-> +
-> +static struct platform_driver one_bit_adc_dac_driver = {
-> +	.driver = {
-> +		.name = "one-bit-adc-dac",
-> +		.of_match_table = one_bit_adc_dac_dt_match,
-> +	},
-> +	.probe = one_bit_adc_dac_probe,
-> +};
-> +
-> +module_platform_driver(one_bit_adc_dac_driver);
-> +
-> +MODULE_AUTHOR("Cristian Pop <cristian.pop@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices ONE_BIT_ADC_DAC");
-> +MODULE_LICENSE("GPL v2");
+>
+> > +      the desired destination and usage is by a different processor/device.
+> > +
+> > +  interrupt-names:
+> > +    minItems: 1
+> > +    maxItems: 8
+> > +    items:
+> > +      pattern: host_intr[0-7]
+>
+> 'intr' is redundant.
 
+Those names are also used in TRM so I prefer to keep it as is. IMO it
+will be less confusing.
 
+>
+> So we could have?:  host0, host3, host4
+
+Currently most of the SoCs have 8 valid host interrupts wired to the
+main CPU. But there are some exceptions e.g. in AM437x the host_intr5
+is not wired to the main CPU. Additionally e.g. AM335x has host
+interrupt 0 shared between MPU and TSC_ADC and host interrupts 6 & 7
+shared between MPU and  a DMA controller. Therefore valid example are
+e.g.:
+1) host_intr[0-4], host_intr[6-7] (without host_intr5)
+2) host_intr[1-5] (without host_intr0 and hostr_intr[6-7].
+
+>
+> > +    description: |
+> > +      should use one of the above names for each valid host event interrupt
+> > +      connected to Arm interrupt controller, the name should match the
+> > +      corresponding host event interrupt number
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  "#interrupt-cells":
+> > +    const: 1
+> > +    description: |
+> > +      Client users shall use the PRU System event number (the interrupt source
+> > +      that the client is interested in) as the value of the interrupts property
+> > +      in their node
+> > +
+> > +  ti,irqs-reserved:
+> > +    $ref: /schemas/types.yaml#definitions/uint8-array
+> > +    description: |
+> > +      an array of 8-bit elements of host interrupts between 0 and 7
+> > +      (corresponding to PRUSS INTC output interrupts 2 through 9) that are
+> > +      not connected to the Arm interrupt controller.
+> > +        Eg: AM437x and 66AK2G SoCs do not have "host_intr5" interrupt connected
+> > +            to MPU
+>
+> Seems redundant with interrupt-names.
+
+It can be seen as redundant but it describes the hardware more
+precisely and emphasizes that some irqs are not available for the main
+CPU in some SoC's, even if they are mentioned in several places in
+TRM. If you don't mind I will prefer to keep it as is.
+
+>
+> > +
+> > +  ti,irqs-shared:
+> > +    $ref: /schemas/types.yaml#definitions/uint8-array
+> > +    description: |
+> > +      an array of 8-bit elements of host interrupts between 0 and 7
+> > +      (corresponding to PRUSS INTC output interrupts 2 through 9) that are
+> > +      also connected to other devices or processors in the SoC.
+> > +         Eg: AM65x and J721E SoCs have "host_intr5", "host_intr6" and
+> > +             "host_intr7" interrupts connected to MPU, and other ICSSG
+> > +             instances
+>
+> Wouldn't a bit mask work for both of these?
+
+Yes - I will convert it as you suggested.
+
+Thank you for your review.
+Grzegorz
