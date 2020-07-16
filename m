@@ -2,136 +2,99 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E628C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C301C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0C0D20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:56:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ctmn+yI/"
+	by mail.kernel.org (Postfix) with ESMTP id 7050020760
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgGPH4L (ORCPT
+        id S1726715AbgGPH6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:56:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgGPH4L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:56:11 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9982C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:56:10 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 17so10387957wmo.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 00:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=E3RYKNb85oZ0Zx4y7onyr244i3mIIOsmBXwDkItqE+k=;
-        b=ctmn+yI/FZFifjCNYzMz9Bq9cteGr8LhZ9mVVlZ1Fug41fk3w7p/ReVoVuTtHDwyHV
-         B9jbYA1ikUtXdtJzxEOhmVTJ8dYaZmDcYAIdt0i99dAaif664G3O2T42EYMdm68F75Q4
-         3x0Q+AuMzzXsczEVHbUMel3NhLKq0xsjzhbUn+SAzCdPB6IGCMiTpL+IN/5/ocn7PayG
-         4zQ/lGe9l1m8CqZEMl8VpRAe4W1RNOcb7vERHMDUuOtYD4YoBBCPOXHf0olaU8KeQ1hO
-         0OHLpM/7XjSSiHoohK6rOoLQl4iTtSjvcNYqLgT0G4cUzdcBZZYX8n0GlBThMlpDw0Iw
-         /cmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=E3RYKNb85oZ0Zx4y7onyr244i3mIIOsmBXwDkItqE+k=;
-        b=qlzgTZci9wnwRtd0FwHh2SmnZxE1YdN/QAOuMvQuuBzgiKnPiv/5WbFDLlZGK4NR93
-         vsl3SLmP1AlSs7pljydY9Ncb7KzAclKOG5IZXooHJPf0FUj1Pm/V/NEmu4Ls/dI9c6sq
-         Oph/DWgezG+PlYi2o7etC+IRx3AgpCcSJcimu6zWWX/y2Ydk9VJfknYsv9QgX0kFCvmE
-         bAtvNgh02xfJoFakDt4PZCfqibYaUEdh4aR3hvZksJRsOGdmQS7G8iVwMyWkj+iijvr/
-         QWSaY6bKxt13ZCgHaECBzeBTwdk+CbckxutbwbRWbBZxZWr6YoTkduMIILUksOt2L1oq
-         NPNQ==
-X-Gm-Message-State: AOAM531Hv0cGtW8M4OHcl+WCjDM5ZEqDN05rBduspMiDfJD6L21rbLNF
-        rT/4QrWCiO310kaoGdxP9Dzzfw==
-X-Google-Smtp-Source: ABdhPJw3VrvtHsivvIaotZC5ddMt77keOADIJTHX4XCZZ5qFOosY50Z87c19woDUrLHGVN9dOoqKuA==
-X-Received: by 2002:a1c:dfd6:: with SMTP id w205mr3331097wmg.118.1594886169187;
-        Thu, 16 Jul 2020 00:56:09 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id z8sm7302939wmg.39.2020.07.16.00.56.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 00:56:08 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 08:56:06 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     broonie@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Radu Pirea <radu_nicolae.pirea@upb.ro>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 12/14] spi: spi-at91-usart: Make use of the defined
- 'struct of_device_id'
-Message-ID: <20200716075606.GM3165313@dell>
-References: <20200715150632.409077-1-lee.jones@linaro.org>
- <20200715150632.409077-13-lee.jones@linaro.org>
- <20200715212443.GC23553@piout.net>
+        Thu, 16 Jul 2020 03:58:38 -0400
+Received: from nautica.notk.org ([91.121.71.147]:45383 "EHLO nautica.notk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbgGPH6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 03:58:38 -0400
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id 637A9C01B; Thu, 16 Jul 2020 09:58:35 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 09:58:20 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     hch@lst.de, nazard@nazar.ca, ericvh@gmail.com, lucho@ionkov.net,
+        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
+Subject: Re: [PATCH] net/9p: validate fds in p9_fd_open
+Message-ID: <20200716075820.GA3720@nautica>
+References: <20200711104923.GA6584@nautica>
+ <20200715073715.GA22899@lst.de>
+ <20200715134756.GB22828@nautica>
+ <20200715.142459.1215411672362681844.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715212443.GC23553@piout.net>
+In-Reply-To: <20200715.142459.1215411672362681844.davem@davemloft.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020, Alexandre Belloni wrote:
-
-> Hi Lee,
+David Miller wrote on Wed, Jul 15, 2020:
+> From: Dominique Martinet <asmadeus@codewreck.org>
+> Date: Wed, 15 Jul 2020 15:47:56 +0200
+> > It's honestly just a warn on something that would fail anyway so I'd
+> > rather let it live in -next first, I don't get why syzbot is so verbose
+> > about this - it sent a mail when it found a c repro and one more once it
+> > bisected the commit yesterday but it should not be sending more?
 > 
-> On 15/07/2020 16:06:30+0100, Lee Jones wrote:
-> > It's there so why not use it.
-> > 
+> I honestly find it hard to understand the resistence to fixing the
+> warning in mainline.
 > 
-> Is that the correct resolution? Isn't the proper thing to do simply
-> removing at91_usart_spi_dt_ids as the only way it will ever be probed is
-> through drivers/mfd/at91-usart.c and I would think matching the driver
-> name is enough.
+> I merge such fixes aggressively.
 
-I'm 50/50 on this.
+Well, if it was something a user could ever see with normal (even
+exotic) 9p workloads, sure; I would want that in mainline asap and do
+what's required in a hurry.
 
-Happy with whatever the authors/maintainers decide most appropriate.
+But this warning only happens when passing fd that are invalid, so the
+mount would fail with EIO anyway, and it's not a dos either -- I don't
+see the harm really.
+Someone who'd get errors anyway will just get slightly more verbose
+errors (and for people like me with kernel.panic_on_warn set it'll even
+crash their machines sure), and "normal" users won't ever see it -- I
+see no reason to rush this.
 
-> > Fixes the following W=1 kernel build warning(s):
-> > 
-> >  drivers/spi/spi-at91-usart.c:684:34: warning: ‘at91_usart_spi_dt_ids’ defined but not used [-Wunused-const-variable=]
-> >  684 | static const struct of_device_id at91_usart_spi_dt_ids[] = {
-> >  | ^~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Cc: Radu Pirea <radu_nicolae.pirea@upb.ro>
-> > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/spi/spi-at91-usart.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/spi/spi-at91-usart.c b/drivers/spi/spi-at91-usart.c
-> > index 88033422a42ae..d47a20be43ccd 100644
-> > --- a/drivers/spi/spi-at91-usart.c
-> > +++ b/drivers/spi/spi-at91-usart.c
-> > @@ -692,6 +692,7 @@ static struct platform_driver at91_usart_spi_driver = {
-> >  	.driver = {
-> >  		.name = "at91_usart_spi",
-> >  		.pm = &at91_usart_spi_pm_ops,
-> > +		.of_match_table = at91_usart_spi_dt_ids,
-> >  	},
-> >  	.probe = at91_usart_spi_probe,
-> >  	.remove = at91_usart_spi_remove,
-> 
 
+It's not about the "extra work" of sending things to linus in a single
+patch PR (it's honestly a wonder 9p gets maintainers at all, the volume
+of patches doesn't really mandate it), but I need to fix tests first
+anyway as said previously.
+I've spent a couple of hours on it yesterday, and should be able to get
+things running again soonish -- meanwhile I'm not comfortable sending
+any patch anywhere anyway.
+
+Yes given the patch content it's probably fine but syzbot doesn't test
+that a 9p mount with a fd argument works, just that there's no warning /
+crash, so for all I know we could just be returning -EIO early and
+calling it a fix.
+I don't see any reason this would fail, but the point of tests is to...
+test things work the things we think they do?
+
+
+
+Anyways, if you care about this feel free to take the patch and send it
+along with your process earlier. I'm just stubborn in not wanting to
+send things I could test untested and it came at a bad time / don't
+think this is critical enough to manually test. Then again I probably
+just spent more time arguing about it than it would have taken to
+test...
+(if you do please fix the goto as pointed out in a review)
+
+Thanks,
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Dominique
