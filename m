@@ -2,147 +2,103 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5D0C433ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7435DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C042067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BEB82071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgGPHXp (ORCPT
+        id S1728293AbgGPH3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:23:45 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:59998 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728332AbgGPHXl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:23:41 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
-        with SMTP; 16 Jul 2020 10:23:34 +0300
-Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06G7NY5M006447;
-        Thu, 16 Jul 2020 10:23:34 +0300
-Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06G7NYbG005410;
-        Thu, 16 Jul 2020 10:23:34 +0300
-Received: (from eli@localhost)
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06G7NYEB005409;
-        Thu, 16 Jul 2020 10:23:34 +0300
-From:   Eli Cohen <eli@mellanox.com>
-To:     mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     shahafs@mellanox.com, saeedm@mellanox.com,
-        Eli Cohen <eli@mellanox.com>
-Subject: [PATCH vhost next 00/10] VDPA support for Mellanox ConnectX devices
-Date:   Thu, 16 Jul 2020 10:23:17 +0300
-Message-Id: <20200716072327.5359-1-eli@mellanox.com>
-X-Mailer: git-send-email 2.26.0
+        Thu, 16 Jul 2020 03:29:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7860 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727768AbgGPH3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 03:29:23 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 554A03FAAE9145B17DAF;
+        Thu, 16 Jul 2020 15:29:16 +0800 (CST)
+Received: from huawei.com (10.174.28.241) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 16 Jul 2020
+ 15:29:09 +0800
+From:   Bixuan Cui <cuibixuan@huawei.com>
+To:     <linux-next@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <gustavoars@kernel.org>, <qiang.zhang@windriver.com>,
+        <stern@rowland.harvard.edu>, <gregkh@linuxfoundation.org>,
+        <cuibixuan@huawei.com>
+Subject: [PATCH] usb: usbtest: reduce stack usage in test_queue
+Date:   Thu, 16 Jul 2020 08:27:35 +0000
+Message-ID: <20200716082735.66342-1-cuibixuan@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.174.28.241]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
-please note that this series depends on mlx5 core device driver patches
-in mlx5-next branch in
-git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git.
+Fix the warning: [-Werror=-Wframe-larger-than=]
 
-git pull git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git mlx5-next 
+drivers/usb/misc/usbtest.c: In function 'test_queue':
+drivers/usb/misc/usbtest.c:2148:1:
+warning: the frame size of 1232 bytes is larger than 1024 bytes
 
-They also depend Jason Wang's patches submitted a couple of weeks ago. I
-included them in this series.
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Bixuan Cui <cuibixuan@huawei.com>
+---
+ drivers/usb/misc/usbtest.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-vdpa_sim: use the batching API
-vhost-vdpa: support batch updating
+diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
+index 8b220d56647b..a9b40953d6bc 100644
+--- a/drivers/usb/misc/usbtest.c
++++ b/drivers/usb/misc/usbtest.c
+@@ -2043,7 +2043,7 @@ test_queue(struct usbtest_dev *dev, struct usbtest_param_32 *param,
+ 	unsigned		i;
+ 	unsigned long		packets = 0;
+ 	int			status = 0;
+-	struct urb		*urbs[MAX_SGLEN];
++	struct urb		**urbs;
 
+ 	if (!param->sglen || param->iterations > UINT_MAX / param->sglen)
+ 		return -EINVAL;
+@@ -2051,6 +2051,10 @@ test_queue(struct usbtest_dev *dev, struct usbtest_param_32 *param,
+ 	if (param->sglen > MAX_SGLEN)
+ 		return -EINVAL;
 
-The following series of patches provide VDPA support for Mellanox
-devices. The supported devices are ConnectX6 DX and newer.
++	urbs = kcalloc(MAX_SGLEN, sizeof(*urbs), GFP_KERNEL);
++	if (!urbs)
++		return -ENOMEM;
++
+ 	memset(&context, 0, sizeof(context));
+ 	context.count = param->iterations * param->sglen;
+ 	context.dev = dev;
+@@ -2137,6 +2141,8 @@ test_queue(struct usbtest_dev *dev, struct usbtest_param_32 *param,
+ 	else if (context.errors >
+ 			(context.is_iso ? context.packet_count / 10 : 0))
+ 		status = -EIO;
++
++	kfree(urbs);
+ 	return status;
 
-Currently, only a network driver is implemented; future patches will
-introduce a block device driver. iperf performance on a single queue is
-around 12 Gbps.  Future patches will introduce multi queue support.
+ fail:
+@@ -2144,6 +2150,8 @@ test_queue(struct usbtest_dev *dev, struct usbtest_param_32 *param,
+ 		if (urbs[i])
+ 			simple_free_urb(urbs[i]);
+ 	}
++
++	kfree(urbs);
+ 	return status;
+ }
 
-The files are organized in such a way that code that can be used by
-different VDPA implementations will be placed in a common are resides in
-drivers/vdpa/mlx5/core.
-
-Only virtual functions are currently supported. Also, certain firmware
-capabilities must be set to enable the driver. Physical functions (PFs)
-are skipped by the driver.
-
-To make use of the VDPA net driver, one must load mlx5_vdpa. In such
-case, VFs will be operated by the VDPA driver. Although one can see a
-regular instance of a network driver on the VF, the VDPA driver takes
-precedence over the NIC driver, steering-wize.
-
-Currently, the device/interface infrastructure in mlx5_core is used to
-probe drivers. Future patches will introduce virtbus as a means to
-register devices and drivers and VDPA will be adapted to it.
-
-The mlx5 mode of operation required to support VDPA is switchdev mode.
-Once can use Linux or OVS bridge to take care of layer 2 switching.
-
-In order to provide virtio networking to a guest, an updated version of
-qemu is required. This version has been tested by the following quemu
-version:
-
-url: https://github.com/jasowang/qemu.git
-branch: vdpa
-Commit ID: 6f4e59b807db
-
-Eli Cohen (7):
-  net/vdpa: Use struct for set/get vq state
-  vhost: Fix documentation
-  vdpa: Add means to communicate vq status on get_vq_state
-  vdpa/mlx5: Add hardware descriptive header file
-  vdpa/mlx5: Add support library for mlx5 VDPA implementation
-  vdpa/mlx5: Add shared memory registration code
-  vdpa/mlx5: Add VDPA driver for supported mlx5 devices
-
-Jason Wang (2):
-  vhost-vdpa: support batch updating
-  vdpa_sim: use the batching API
-
-Max Gurtovoy (1):
-  vdpa: remove hard coded virtq num
-
- drivers/vdpa/Kconfig                   |   18 +
- drivers/vdpa/Makefile                  |    1 +
- drivers/vdpa/ifcvf/ifcvf_base.c        |    4 +-
- drivers/vdpa/ifcvf/ifcvf_base.h        |    4 +-
- drivers/vdpa/ifcvf/ifcvf_main.c        |   13 +-
- drivers/vdpa/mlx5/Makefile             |    4 +
- drivers/vdpa/mlx5/core/mlx5_vdpa.h     |   89 ++
- drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h |  168 ++
- drivers/vdpa/mlx5/core/mr.c            |  473 ++++++
- drivers/vdpa/mlx5/core/resources.c     |  284 ++++
- drivers/vdpa/mlx5/net/main.c           |   76 +
- drivers/vdpa/mlx5/net/mlx5_vnet.c      | 1966 ++++++++++++++++++++++++
- drivers/vdpa/mlx5/net/mlx5_vnet.h      |   32 +
- drivers/vdpa/vdpa.c                    |    3 +
- drivers/vdpa/vdpa_sim/vdpa_sim.c       |   35 +-
- drivers/vhost/iotlb.c                  |    4 +-
- drivers/vhost/vdpa.c                   |   43 +-
- include/linux/vdpa.h                   |   33 +-
- include/uapi/linux/vhost_types.h       |    2 +
- 19 files changed, 3193 insertions(+), 59 deletions(-)
- create mode 100644 drivers/vdpa/mlx5/Makefile
- create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa.h
- create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h
- create mode 100644 drivers/vdpa/mlx5/core/mr.c
- create mode 100644 drivers/vdpa/mlx5/core/resources.c
- create mode 100644 drivers/vdpa/mlx5/net/main.c
- create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.c
- create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.h
-
--- 
-2.27.0
+--
+2.17.1
 
