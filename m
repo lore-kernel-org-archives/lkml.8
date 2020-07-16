@@ -2,100 +2,86 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E551920760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:01:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ftg/+qYG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iStjl+L/"
+	by mail.kernel.org (Postfix) with ESMTP id F0C6D20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594900930;
+	bh=7Iqze3aCKTzGVZ3weRCFFcPpfvMEeMQ6YLx2H6XwexA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q2ZowAYSEEEidcCQnAluxUZJhw2WxZlRX9N/wN7gFKlXPnHQBY5kXSkokD+89WdTf
+	 wtSabFZYnsoG8GMlsJG0DY2fsRjPBGJippXUXuirUsGWt3qehq09o4/SApbz+Bx4dp
+	 rPtz03i9Ho+Mpij6f5Y+U8aiudOSskPuvNtqO6PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgGPMBl (ORCPT
+        id S1728440AbgGPMCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:01:41 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:58637 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727030AbgGPMBl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:01:41 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id CF20C5C00ED;
-        Thu, 16 Jul 2020 08:01:39 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Thu, 16 Jul 2020 08:01:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=OKr73vCti4bFblGmMb69BINrdrP
-        ppP6UKgi+39pFjDc=; b=ftg/+qYGtojlQ2Tbck945AomimC0uj5swacufwaOQjR
-        meNtwBfUMSnvnMAUmJulvrVF6iTRKS/GmET5WOcWsAOjr66gXmI7OHQ0O/FNbCC4
-        j021wh2RzAoKbUcgkE3IcUPR/LIdoAIhDDH0bnmVZAIk1UC9tl9X3oxPtYfCLrXz
-        cBOHPBCgDAn3KgQW2R05ojUB8q44JHCDoF9zrsV9qCYB4JSOPzbZ2CvVhqKs88vg
-        mD1JG41A2HK0TegZasLVRocajyiUp07MqCH1CfimXZXavv+xKrfhx2EvzeXt1bl+
-        adIgOGfHhti1ZD5/teLMw0eoisxBmEDnU3kxKxkZfdg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=OKr73v
-        Cti4bFblGmMb69BINrdrPppP6UKgi+39pFjDc=; b=iStjl+L/TPUDQYZXVv2z1G
-        7PqFZXH7jcBvsMeuk++ah3gKiJuSDATLzlOaAPlasRNIMC28i98qZbmaVFmIZshM
-        1mUsgv3D7ctKW/vulTyY/G7GvBSO1KEEXWjMj17B+8vThWWnUBjgBf8xFwrLRXVV
-        rT/raPyJ5bpAF/7Su+p4nBMjIDNT1BpTvjiXf7ovy/D6vi1Tz8B34g8RVRwaCYCx
-        hEo/8vJSqi2Iyp0BJz7ai8wiKOjeS+HRTOD3PBA7j2CxXtRHfqmz1gmDcsxGkgER
-        REpuzr6DGaMGoSAOfP9SMWVSWW+E62o+gEhCXwm9ct7duDnSH0OeqWOjEKuQKv2A
-        ==
-X-ME-Sender: <xms:okEQX2hb6l-1I45nF4gzfsfklDTmfXZMzlggu2pqbkcwdfx4w4WR_Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrfeeggdegiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuheejgf
-    ffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeekfedr
-    keeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:okEQX3B3viD6VpiI59ushpf7nxl03aRufB8KLQ-tcuTk8s0RBKNi0g>
-    <xmx:okEQX-HSB0MXnzvAbebCyWkLdfnra4psaolBCtubxHwbA-1iw8yfgA>
-    <xmx:okEQX_RbGlw1wbNSZ-r4sSCjy7QHKMSAkPxx4WYD_12IznLqlhljzw>
-    <xmx:o0EQX-pKuYLQxBoSpt-uNUdyqjW-K7i1Ksur8VCPu0d6Z1qGioEIww>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 57B99306005F;
-        Thu, 16 Jul 2020 08:01:38 -0400 (EDT)
-Date:   Thu, 16 Jul 2020 14:01:29 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Jianmin Wang <jianmin@iscas.ac.cn>
-Cc:     Marek Vasut <marex@denx.de>, changbin.du@gmail.com,
-        linux-stable <stable@vger.kernel.org>, acme@kernel.org,
-        jolsa@redhat.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org
-Subject: Re: [PATCH] perf: Make perf able to build with latest libbfd
-Message-ID: <20200716120129.GD1668009@kroah.com>
-References: <20200128152938.31413-1-changbin.du@gmail.com>
- <70322330-524c-14ab-aace-e460677e25e3@denx.de>
- <20200601164727.GB1037203@kroah.com>
- <46FC68D5-0AB5-45F7-8851-555779C5685F@iscas.ac.cn>
+        Thu, 16 Jul 2020 08:02:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbgGPMCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:02:08 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 103B820760;
+        Thu, 16 Jul 2020 12:02:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594900928;
+        bh=7Iqze3aCKTzGVZ3weRCFFcPpfvMEeMQ6YLx2H6XwexA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GHV4KnYsXxST+2z6LAqo10KTo00UVUVTgIiq9sBwY3Uho5g5NGlcbdJcI6TjYZvYb
+         rI5dEhHh3U+SQcsxC7NecKQ34qblRCi7T6fXXsTq19Zb2P+3V2AZgv0z9Zk33DC3LI
+         vUVjHrZwTvFC4TrJVLKNynFaXN2SxkT8kGyMHfV4=
+Date:   Thu, 16 Jul 2020 13:02:03 +0100
+From:   Will Deacon <will@kernel.org>
+To:     robh+dt@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
+        Tomasz Nowicki <tn@semihalf.com>, hannah@marvell.com,
+        gregory.clement@bootlin.com
+Cc:     catalin.marinas@arm.com, kernel-team@android.com,
+        nadavh@marvell.com, mw@semihalf.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 0/4] Add system mmu support for Armada-806
+Message-ID: <20200716120202.GA7485@willie-the-truck>
+References: <20200715070649.18733-1-tn@semihalf.com>
+ <159488817559.3788855.4350396507732052751.b4-ty@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <46FC68D5-0AB5-45F7-8851-555779C5685F@iscas.ac.cn>
+In-Reply-To: <159488817559.3788855.4350396507732052751.b4-ty@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 10:07:15AM +0800, Jianmin Wang wrote:
-> Hi, Greg KH,
+On Thu, Jul 16, 2020 at 01:00:43PM +0100, Will Deacon wrote:
+> On Wed, 15 Jul 2020 09:06:45 +0200, Tomasz Nowicki wrote:
+> > The series is meant to support SMMU for AP806 and a workaround
+> > for accessing ARM SMMU 64bit registers is the gist of it.
+> > 
+> > For the record, AP-806 can't access SMMU registers with 64bit width.
+> > This patches split the readq/writeq into two 32bit accesses instead
+> > and update DT bindings.
+> > 
+> > [...]
 > 
-> There is the same problem found on Linux 4.19.y, while compiling linux 4.19.y
-> with binutils 2.34.
+> Applied to will (for-joerg/arm-smmu/updates), thanks!
 > 
-> Can the follow commit be backported to stable branch 4.19.y as well?
-> 
-> Commit id: 0ada120c883d ("perf: Make perf able to build with latest libbfd")
+> [1/3] iommu/arm-smmu: Call configuration impl hook before consuming features
+>       https://git.kernel.org/will/c/6a79a5a3842b
+> [2/3] iommu/arm-smmu: Workaround for Marvell Armada-AP806 SoC erratum #582743
+>       https://git.kernel.org/will/c/f2d9848aeb9f
+> [3/3] dt-bindings: arm-smmu: add compatible string for Marvell Armada-AP806 SMMU-500
+>       https://git.kernel.org/will/c/e85e84d19b9d
 
-Now queued up, thanks.
+(note that I left patch 4 for arm-soc, as that's just updating .dts files)
 
-greg k-h
+Will
