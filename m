@@ -2,443 +2,247 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCB2C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C84C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7AC206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:25:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="snnlaOQr"
+	by mail.kernel.org (Postfix) with ESMTP id 883DF20775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594887977;
+	bh=lxfAn6BNaSwjTLhOEgDOCBR4i63Fi8Sd4MASqhudiqA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cA5wpHuo8lxrg2DZIojcAY8QJ4b2Dl2PfT1vTcdIYVFyOJk0a5Cs17u9n+xvYXecC
+	 8syQhQYXgJSPPMOmV6LCXHQg2a/H0tbCA3T3G/DWfd+Anhi1bmfCIn+TQRe8SJBZLj
+	 TsgnPqOPHVHhKNf/qqVadnv6Y/m9o/CBXyk5w61k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGPIZs (ORCPT
+        id S1727114AbgGPI0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:25:48 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:45302 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725934AbgGPIZs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:25:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594887946; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=DNHF23jz4Z3H6gsfjQKaCTJhQOIsY1lcYDhRDlQy2VI=;
- b=snnlaOQrDWLO9CCgGQyd35KVshoxZtnUIfPnLcQbbah7P3pFDgDhNWU0DOjtUlDalh/rENxf
- uqfHojoI6dTMRnnM2h9CeYMhxYo+EdL1bFGs9QnxvqEy8i5i2DPNFdQDFyYKETaHlq8k2gLW
- 09vDH3kIHdwIUrV3NNT08zsyurQ=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5f100f09e3bee1251019957b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 08:25:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7A197C433CA; Thu, 16 Jul 2020 08:25:44 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Thu, 16 Jul 2020 04:26:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727055AbgGPI0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:26:15 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5B8BC433C6;
-        Thu, 16 Jul 2020 08:25:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52752206C1;
+        Thu, 16 Jul 2020 08:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594887974;
+        bh=lxfAn6BNaSwjTLhOEgDOCBR4i63Fi8Sd4MASqhudiqA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ib6iY3s+wDJ95xLjGL4OrXljlGxOiTpIteiLh8aQdeJ/gSCf1MIVfSIE+8tKPEgcx
+         p4pyU6JtXFCTTvoW3knQH/OoSN2cpcZNEaU221byeTOjS2GhEAwU5SG5SuGKBXFebl
+         WMsp5nNzRjwRoFU6sTTxiTIcfmOUJyH/LOJMCDXQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jvzDY-00CF9n-SB; Thu, 16 Jul 2020 09:26:13 +0100
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 16 Jul 2020 13:55:43 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
-        tsoni@codeaurora.org, psodagud@codeaurora.org,
-        sidgup@codeaurora.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v7 3/4] remoteproc: Add inline coredump functionality
-In-Reply-To: <1594326716-15474-4-git-send-email-rishabhb@codeaurora.org>
-References: <1594326716-15474-1-git-send-email-rishabhb@codeaurora.org>
- <1594326716-15474-4-git-send-email-rishabhb@codeaurora.org>
-Message-ID: <3a7f78c9178a6fa02dc339c3507c5229@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Date:   Thu, 16 Jul 2020 09:26:12 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Salil Mehta <salil.mehta@huawei.com>
+Cc:     yuzenghui <yuzenghui@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
+        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>
+Subject: Re: [REPORT] possible circular locking dependency when booting a VM
+ on arm64 host
+In-Reply-To: <d5b23de249bc441aa7ec4fa5966e25c2@huawei.com>
+References: <7225eba7-6e5e-ec7e-953b-d1fef0b1775b@huawei.com>
+ <99e001bba70216d9e9a54a786791cb92@kernel.org>
+ <d5b23de249bc441aa7ec4fa5966e25c2@huawei.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <45a5a940eca50642a3781f254edf3e45@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: salil.mehta@huawei.com, yuzenghui@huawei.com, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yisen.zhuang@huawei.com, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-10 02:01, Rishabh Bhatnagar wrote:
-> The current coredump implementation uses vmalloc area to copy
-> all the segments. But this might put strain on low memory targets
-> as the firmware size sometimes is in tens of MBs. The situation
-> becomes worse if there are multiple remote processors undergoing
-> recovery at the same time. This patch adds inline coredump
-> functionality that avoids extra memory usage. This requires
-> recovery to be halted until data is read by userspace and free
-> function is called. Also modify the qcom_q6v5_mss driver to include
-> size and offset in the segment dump function.
+On 2020-07-16 01:58, Salil Mehta wrote:
+>> From: Marc Zyngier [mailto:maz@kernel.org]
+>> Sent: Wednesday, July 15, 2020 5:09 PM
+>> To: yuzenghui <yuzenghui@huawei.com>
+>> 
+>> Hi Zenghui,
+>> 
+>> On 2020-07-09 11:41, Zenghui Yu wrote:
+>> > Hi All,
+>> >
+>> > I had seen the following lockdep splat when booting a guest on my
+>> > Kunpeng 920 with GICv4 enabled. I can also trigger the same splat
+>> > on v5.5 so it should already exist in the kernel for a while. I'm
+>> > not sure what the exact problem is and hope someone can have a look!
+>> 
+>> I can't manage to trigger this splat on my D05, despite running guests
+>> with GICv4 enabled. A couple of questions below:
 > 
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/remoteproc/qcom_q6v5_mss.c       |  11 ++-
->  drivers/remoteproc/remoteproc_coredump.c | 160 
-> +++++++++++++++++++++++++++----
->  include/linux/remoteproc.h               |  21 +++-
->  3 files changed, 166 insertions(+), 26 deletions(-)
 > 
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
-> b/drivers/remoteproc/qcom_q6v5_mss.c
-> index c6ce032..79df354 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -1199,11 +1199,12 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+> Sorry I forgot to update but I did try on Friday and I could not manage
+> to trigger it on D06/Kunpeng920 either. I used 5.8.0-rc4.
 > 
->  static void qcom_q6v5_dump_segment(struct rproc *rproc,
->  				   struct rproc_dump_segment *segment,
-> -				   void *dest)
-> +				   void *dest, size_t cp_offset, size_t size)
->  {
->  	int ret = 0;
->  	struct q6v5 *qproc = rproc->priv;
->  	int offset = segment->da - qproc->mpss_reloc;
-> +	size_t cp_size = size ? size : segment->size;
->  	void *ptr = NULL;
 > 
->  	/* Unlock mba before copying segments */
-> @@ -1219,16 +1220,16 @@ static void qcom_q6v5_dump_segment(struct rproc 
-> *rproc,
->  	}
+>> > Thanks,
+>> > Zenghui
+>> >
+>> > [  103.855511] ======================================================
+>> > [  103.861664] WARNING: possible circular locking dependency detected
+>> > [  103.867817] 5.8.0-rc4+ #35 Tainted: G        W
+>> > [  103.872932] ------------------------------------------------------
+>> > [  103.879083] CPU 2/KVM/20515 is trying to acquire lock:
+>> > [  103.884200] ffff202fcd5865b0 (&irq_desc_lock_class){-.-.}-{2:2},
+>> > at: __irq_get_desc_lock+0x60/0xa0
+>> > [  103.893127]
+>> >                but task is already holding lock:
+>> > [  103.898933] ffff202fcfd07f58 (&rq->lock){-.-.}-{2:2}, at:
+>> > __schedule+0x114/0x8b8
+>> > [  103.906301]
+>> >                which lock already depends on the new lock.
+>> >
+>> > [  103.914441]
+>> >                the existing dependency chain (in reverse order) is:
+>> > [  103.921888]
+>> >                -> #3 (&rq->lock){-.-.}-{2:2}:
+>> > [  103.927438]        _raw_spin_lock+0x54/0x70
+>> > [  103.931605]        task_fork_fair+0x48/0x150
+>> > [  103.935860]        sched_fork+0x100/0x268
+>> > [  103.939856]        copy_process+0x628/0x1868
+>> > [  103.944106]        _do_fork+0x74/0x710
+>> > [  103.947840]        kernel_thread+0x78/0xa0
+>> > [  103.951917]        rest_init+0x30/0x270
+>> > [  103.955742]        arch_call_rest_init+0x14/0x1c
+>> > [  103.960339]        start_kernel+0x534/0x568
+>> > [  103.964503]
+>> >                -> #2 (&p->pi_lock){-.-.}-{2:2}:
+>> > [  103.970224]        _raw_spin_lock_irqsave+0x70/0x98
+>> > [  103.975080]        try_to_wake_up+0x5c/0x5b0
+>> > [  103.979330]        wake_up_process+0x28/0x38
+>> > [  103.983581]        create_worker+0x128/0x1b8
+>> > [  103.987834]        workqueue_init+0x308/0x3bc
+>> > [  103.992172]        kernel_init_freeable+0x180/0x33c
+>> > [  103.997027]        kernel_init+0x18/0x118
+>> > [  104.001020]        ret_from_fork+0x10/0x18
+>> > [  104.005097]
+>> >                -> #1 (&pool->lock){-.-.}-{2:2}:
+>> > [  104.010817]        _raw_spin_lock+0x54/0x70
+>> > [  104.014983]        __queue_work+0x120/0x6e8
+>> > [  104.019146]        queue_work_on+0xa0/0xd8
+>> > [  104.023225]        irq_set_affinity_locked+0xa8/0x178
+>> > [  104.028253]        __irq_set_affinity+0x5c/0x90
+>> > [  104.032762]        irq_set_affinity_hint+0x74/0xb0
+>> > [  104.037540]        hns3_nic_init_irq+0xe0/0x210 [hns3]
+>> > [  104.042655]        hns3_client_init+0x2d8/0x4e0 [hns3]
+>> > [  104.047779]        hclge_init_client_instance+0xf0/0x3a8 [hclge]
+>> > [  104.053760]        hnae3_init_client_instance.part.3+0x30/0x68
+>> > [hnae3]
+>> > [  104.060257]        hnae3_register_ae_dev+0x100/0x1f0 [hnae3]
+>> > [  104.065892]        hns3_probe+0x60/0xa8 [hns3]
+>> 
+>> Are you performing some kind of PCIe hot-plug here? Or is that done
+>> at boot only? It seems to help triggering the splat.
 > 
->  	if (!ret)
-> -		ptr = ioremap_wc(qproc->mpss_phys + offset, segment->size);
-> +		ptr = ioremap_wc(qproc->mpss_phys + offset + cp_offset, cp_size);
 > 
->  	if (ptr) {
-> -		memcpy(dest, ptr, segment->size);
-> +		memcpy(dest, ptr, cp_size);
->  		iounmap(ptr);
->  	} else {
-> -		memset(dest, 0xff, segment->size);
-> +		memset(dest, 0xff, cp_size);
->  	}
+> I am not sure how you can do that since HNS3 is integrated NIC so
+> physical hot-plug is definitely ruled out. local_pci_probe()
+> should also get called when we insert the hns3_enet module which
+> eventually initializes the driver.
 > 
-> -	qproc->current_dump_size += segment->size;
-> +	qproc->current_dump_size += cp_size;
 > 
->  	/* Reclaim mba after copying segments */
->  	if (qproc->current_dump_size == qproc->total_dump_size) {
-> diff --git a/drivers/remoteproc/remoteproc_coredump.c
-> b/drivers/remoteproc/remoteproc_coredump.c
-> index ded0244..646886f 100644
-> --- a/drivers/remoteproc/remoteproc_coredump.c
-> +++ b/drivers/remoteproc/remoteproc_coredump.c
-> @@ -5,6 +5,7 @@
->   * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->   */
+>> > [  104.070319]        local_pci_probe+0x44/0x98
+>> > [  104.074573]        work_for_cpu_fn+0x20/0x30
+>> > [  104.078823]        process_one_work+0x258/0x618
+>> > [  104.083333]        worker_thread+0x1c0/0x438
+>> > [  104.087585]        kthread+0x120/0x128
+>> > [  104.091318]        ret_from_fork+0x10/0x18
+>> > [  104.095394]
+>> >                -> #0 (&irq_desc_lock_class){-.-.}-{2:2}:
+>> > [  104.101895]        __lock_acquire+0x11bc/0x1530
+>> > [  104.106406]        lock_acquire+0x100/0x3f8
+>> > [  104.110570]        _raw_spin_lock_irqsave+0x70/0x98
+>> > [  104.115426]        __irq_get_desc_lock+0x60/0xa0
+>> > [  104.120021]        irq_set_vcpu_affinity+0x48/0xc8
+>> > [  104.124793]        its_make_vpe_non_resident+0x6c/0xc0
+>> > [  104.129910]        vgic_v4_put+0x64/0x70
+>> > [  104.133815]        vgic_v3_put+0x28/0x100
+>> > [  104.137806]        kvm_vgic_put+0x3c/0x60
+>> > [  104.141801]        kvm_arch_vcpu_put+0x38/0x58
+>> > [  104.146228]        kvm_sched_out+0x38/0x58
+>> > [  104.150306]        __schedule+0x554/0x8b8
+>> > [  104.154298]        schedule+0x50/0xe0
+>> > [  104.157946]        kvm_arch_vcpu_ioctl_run+0x644/0x9e8
+>> > [  104.163063]        kvm_vcpu_ioctl+0x4b4/0x918
+>> > [  104.167403]        ksys_ioctl+0xb4/0xd0
+>> > [  104.171222]        __arm64_sys_ioctl+0x28/0xc8
+>> > [  104.175647]        el0_svc_common.constprop.2+0x74/0x138
+>> > [  104.180935]        do_el0_svc+0x34/0xa0
+>> > [  104.184755]        el0_sync_handler+0xec/0x128
+>> > [  104.189179]        el0_sync+0x140/0x180
+>> > [  104.192997]
+>> 
+>> The kernel seems to scream at us because we have two paths
+>> exercising  the irq_desc_lock_class, one holding the rq->lock
+>> because we are on the schedule out path.
+>> 
+>> These two locks are somehow unrelated (they just belong to the
+>> same class), but the kernel cannot know that.
 > 
-> +#include <linux/completion.h>
->  #include <linux/devcoredump.h>
->  #include <linux/device.h>
->  #include <linux/kernel.h>
-> @@ -12,6 +13,12 @@
->  #include "remoteproc_internal.h"
->  #include "remoteproc_elf_helpers.h"
 > 
-> +struct rproc_coredump_state {
-> +	struct rproc *rproc;
-> +	void *header;
-> +	struct completion dump_done;
-> +};
-> +
->  /**
->   * rproc_coredump_cleanup() - clean up dump_segments list
->   * @rproc: the remote processor handle
-> @@ -72,7 +79,8 @@ int rproc_coredump_add_custom_segment(struct rproc 
-> *rproc,
->  				      dma_addr_t da, size_t size,
->  				      void (*dumpfn)(struct rproc *rproc,
->  						     struct rproc_dump_segment *segment,
-> -						     void *dest),
-> +						     void *dest, size_t offset,
-> +						     size_t size),
->  				      void *priv)
->  {
->  	struct rproc_dump_segment *segment;
-> @@ -114,12 +122,110 @@ int rproc_coredump_set_elf_info(struct rproc
-> *rproc, u8 class, u16 machine)
->  }
->  EXPORT_SYMBOL(rproc_coredump_set_elf_info);
-> 
-> +static void rproc_coredump_free(void *data)
-> +{
-> +	struct rproc_coredump_state *dump_state = data;
-> +
-> +	complete(&dump_state->dump_done);
-> +	vfree(dump_state->header);
+> Sure. I understand that part. But if this is a ABBA type deadlock
+> then beside the irq_desc lock the rq->lock should belong to the
+> same runqueue which effectively means the 2 context of the hns and
+> the VM are referring to same cpu?
 
-Rishabh,
+They may have happened on the same CPU *at some point*. Not necessarily
+at the point of the splat (this is a lock class, not a single lock).
 
-I observed a system hang when I trigger
-recovery of a number of remoteproc
-simultaneously (after a number of iterations
-consistently). This goes away if I free the
-header and  then issue the dump completion
-and that does seem to be the right thing to
-do.
+>> Not quite sure how to solve it though. The set_vcpu_affinity
+>> call is necessary on the preemption path in order to make the
+>> vpe non-resident. But it would help if I could reproduce it...
+> 
+> 
+> Sure. That also means if the lock ordering has to be imposed then
+> perhaps it has to be taken care from the other context of hns3.
+> 
+> One way is to avoid calling irq_set_affinity_hint() during 
+> initialization
+> but this does not guarantees that this conflict will not happen in 
+> future
+> while using irq_set_affinity_hint() as it is well possible that VM is 
+> again
+> about to be scheduled out at that time.
 
-> +}
-> +
-> +static void *rproc_coredump_find_segment(loff_t user_offset,
-> +					 struct list_head *segments,
-> +					 size_t *data_left)
-> +{
-> +	struct rproc_dump_segment *segment;
-> +
-> +	list_for_each_entry(segment, segments, node) {
-> +		if (user_offset < segment->size) {
-> +			*data_left = segment->size - user_offset;
-> +			return segment;
-> +		}
-> +		user_offset -= segment->size;
-> +	}
-> +
-> +	*data_left = 0;
-> +	return NULL;
-> +}
-> +
-> +static void rproc_copy_segment(struct rproc *rproc, void *dest,
-> +			       struct rproc_dump_segment *segment,
-> +			       size_t offset, size_t size)
-> +{
-> +	void *ptr;
-> +
-> +	if (segment->dump) {
-> +		segment->dump(rproc, segment, dest, offset, size);
-> +	} else {
-> +		ptr = rproc_da_to_va(rproc, segment->da + offset, size);
-> +		if (!ptr) {
-> +			dev_err(&rproc->dev,
-> +				"invalid copy request for segment %pad with offset %zu and size 
-> %zu)\n",
-> +				&segment->da, offset, size);
-> +			memset(dest, 0xff, size);
-> +		} else {
-> +			memcpy(dest, ptr, size);
-> +		}
-> +	}
-> +}
-> +
-> +static ssize_t rproc_coredump_read(char *buffer, loff_t offset, size_t 
-> count,
-> +				   void *data, size_t header_sz)
-> +{
-> +	size_t seg_data, bytes_left = count;
-> +	ssize_t copy_sz;
-> +	struct rproc_dump_segment *seg;
-> +	struct rproc_coredump_state *dump_state = data;
-> +	struct rproc *rproc = dump_state->rproc;
-> +	void *elfcore = dump_state->header;
-> +
-> +	/* Copy the vmalloc'ed header first. */
-> +	if (offset < header_sz) {
-> +		copy_sz = memory_read_from_buffer(buffer, count, &offset,
-> +						  elfcore, header_sz);
-> +
-> +		return copy_sz;
-> +	}
-> +
-> +	/*
-> +	 * Find out the segment memory chunk to be copied based on offset.
-> +	 * Keep copying data until count bytes are read.
-> +	 */
-> +	while (bytes_left) {
-> +		seg = rproc_coredump_find_segment(offset - header_sz,
-> +						  &rproc->dump_segments,
-> +						  &seg_data);
-> +		/* EOF check */
-> +		if (!seg) {
-> +			dev_info(&rproc->dev, "Ramdump done, %lld bytes read",
-> +				 offset);
-> +			break;
-> +		}
-> +
-> +		copy_sz = min_t(size_t, bytes_left, seg_data);
-> +
-> +		rproc_copy_segment(rproc, buffer, seg, seg->size - seg_data,
-> +				   copy_sz);
-> +
-> +		offset += copy_sz;
-> +		buffer += copy_sz;
-> +		bytes_left -= copy_sz;
-> +	}
-> +
-> +	return count - bytes_left;
-> +}
-> +
->  /**
->   * rproc_coredump() - perform coredump
->   * @rproc:	rproc handle
->   *
->   * This function will generate an ELF header for the registered 
-> segments
-> - * and create a devcoredump device associated with rproc.
-> + * and create a devcoredump device associated with rproc. Based on the
-> + * coredump configuration this function will directly copy the 
-> segments
-> + * from device memory to userspace or copy segments from device memory 
-> to
-> + * a separate buffer, which can then be read by userspace.
-> + * The first approach avoids using extra vmalloc memory. But it will 
-> stall
-> + * recovery flow until dump is read by userspace.
->   */
->  void rproc_coredump(struct rproc *rproc)
->  {
-> @@ -129,11 +235,13 @@ void rproc_coredump(struct rproc *rproc)
->  	size_t data_size;
->  	size_t offset;
->  	void *data;
-> -	void *ptr;
->  	u8 class = rproc->elf_class;
->  	int phnum = 0;
-> +	struct rproc_coredump_state dump_state;
-> +	enum rproc_dump_mechanism dump_conf = rproc->dump_conf;
-> 
-> -	if (list_empty(&rproc->dump_segments))
-> +	if (list_empty(&rproc->dump_segments) ||
-> +	    dump_conf == RPROC_COREDUMP_DISABLED)
->  		return;
-> 
->  	if (class == ELFCLASSNONE) {
-> @@ -143,7 +251,14 @@ void rproc_coredump(struct rproc *rproc)
-> 
->  	data_size = elf_size_of_hdr(class);
->  	list_for_each_entry(segment, &rproc->dump_segments, node) {
-> -		data_size += elf_size_of_phdr(class) + segment->size;
-> +		/*
-> +		 * For default configuration buffer includes headers & segments.
-> +		 * For inline dump buffer just includes headers as segments are
-> +		 * directly read from device memory.
-> +		 */
-> +		data_size += elf_size_of_phdr(class);
-> +		if (dump_conf == RPROC_COREDUMP_DEFAULT)
-> +			data_size += segment->size;
-> 
->  		phnum++;
->  	}
-> @@ -182,23 +297,30 @@ void rproc_coredump(struct rproc *rproc)
->  		elf_phdr_set_p_flags(class, phdr, PF_R | PF_W | PF_X);
->  		elf_phdr_set_p_align(class, phdr, 0);
-> 
-> -		if (segment->dump) {
-> -			segment->dump(rproc, segment, data + offset);
-> -		} else {
-> -			ptr = rproc_da_to_va(rproc, segment->da, segment->size);
-> -			if (!ptr) {
-> -				dev_err(&rproc->dev,
-> -					"invalid coredump segment (%pad, %zu)\n",
-> -					&segment->da, segment->size);
-> -				memset(data + offset, 0xff, segment->size);
-> -			} else {
-> -				memcpy(data + offset, ptr, segment->size);
-> -			}
-> -		}
-> +		if (dump_conf == RPROC_COREDUMP_DEFAULT)
-> +			rproc_copy_segment(rproc, data + offset, segment, 0,
-> +					   segment->size);
-> 
->  		offset += elf_phdr_get_p_filesz(class, phdr);
->  		phdr += elf_size_of_phdr(class);
->  	}
-> 
-> -	dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
-> +	if (dump_conf == RPROC_COREDUMP_DEFAULT) {
-> +		dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
-> +		return;
-> +	}
-> +
-> +	/* Initialize the dump state struct to be used by rproc_coredump_read 
-> */
-> +	dump_state.rproc = rproc;
-> +	dump_state.header = data;
-> +	init_completion(&dump_state.dump_done);
-> +
-> +	dev_coredumpm(&rproc->dev, NULL, &dump_state, data_size, GFP_KERNEL,
-> +		      rproc_coredump_read, rproc_coredump_free);
-> +
-> +	/*
-> +	 * Wait until the dump is read and free is called. Data is freed
-> +	 * by devcoredump framework automatically after 5 minutes.
-> +	 */
-> +	wait_for_completion(&dump_state.dump_done);
->  }
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index e7b7bab..38d037d 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -435,6 +435,20 @@ enum rproc_crash_type {
->  };
-> 
->  /**
-> + * enum rproc_dump_mechanism - Coredump options for core
-> + * @RPROC_COREDUMP_DEFAULT:	Copy dump to separate buffer and carry on 
-> with
-> +				recovery
-> + * @RPROC_COREDUMP_INLINE:	Read segments directly from device memory. 
-> Stall
-> +				recovery until all segments are read
-> + * @RPROC_COREDUMP_DISABLED:	Don't perform any dump
-> + */
-> +enum rproc_dump_mechanism {
-> +	RPROC_COREDUMP_DEFAULT,
-> +	RPROC_COREDUMP_INLINE,
-> +	RPROC_COREDUMP_DISABLED,
-> +};
-> +
-> +/**
->   * struct rproc_dump_segment - segment info from ELF header
->   * @node:	list node related to the rproc segment list
->   * @da:		device address of the segment
-> @@ -451,7 +465,7 @@ struct rproc_dump_segment {
-> 
->  	void *priv;
->  	void (*dump)(struct rproc *rproc, struct rproc_dump_segment *segment,
-> -		     void *dest);
-> +		     void *dest, size_t offset, size_t size);
->  	loff_t offset;
->  };
-> 
-> @@ -466,6 +480,7 @@ struct rproc_dump_segment {
->   * @dev: virtual device for refcounting and common remoteproc behavior
->   * @power: refcount of users who need this rproc powered up
->   * @state: state of the device
-> + * @dump_conf: Currently selected coredump configuration
->   * @lock: lock which protects concurrent manipulations of the rproc
->   * @dbg_dir: debugfs directory of this rproc device
->   * @traces: list of trace buffers
-> @@ -499,6 +514,7 @@ struct rproc {
->  	struct device dev;
->  	atomic_t power;
->  	unsigned int state;
-> +	enum rproc_dump_mechanism dump_conf;
->  	struct mutex lock;
->  	struct dentry *dbg_dir;
->  	struct list_head traces;
-> @@ -630,7 +646,8 @@ int rproc_coredump_add_custom_segment(struct rproc 
-> *rproc,
->  				      dma_addr_t da, size_t size,
->  				      void (*dumpfn)(struct rproc *rproc,
->  						     struct rproc_dump_segment *segment,
-> -						     void *dest),
-> +						     void *dest, size_t offset,
-> +						     size_t size),
->  				      void *priv);
->  int rproc_coredump_set_elf_info(struct rproc *rproc, u8 class, u16 
-> machine);
+No, the issue is with the affinity notifier, not with the affinity
+setting itself. It is the one that implies irq_desc_lock -> rq->lock.
 
+> 
+> Also, I think this problem should appear even if we use Intel NIC and
+> perform the same set of steps.
+
+I'm using an Intel X540 without any issue, but that's irrelevant.
+
+This is a general problem of using anything having any impact on
+an interrupt) from the schedule() path, which triggers either
+rq->lock -> irq_desc_lock OR the opposite one, depending where
+you are coming from.
+
+Both behavior exist in the kernel today, and it is hard to picture
+why one would be more valid than the other.
+
+         M.
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Jazz is not dead. It just smells funny...
