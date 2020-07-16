@@ -2,171 +2,138 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D7BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B736C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF15206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:49:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Uj/0xDaO"
+	by mail.kernel.org (Postfix) with ESMTP id 7AE582070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgGPGtO (ORCPT
+        id S1728218AbgGPGtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 02:49:14 -0400
-Received: from mail-eopbgr00043.outbound.protection.outlook.com ([40.107.0.43]:5506
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728036AbgGPGtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 02:49:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oNVpeC7qO5IWHmLYZbDFn4CsG+F0HoyNKUiPtsGdhK7ahhi9Vc12kif8lnqwTegzk7MHTbZvXGbWG+F8MQU+nPEHFPSKa4M1r3rkw7MkniQtuF7ON2PYk6p3JD2oZUcaA9QvP3d0nqZbXtNb3PI0cbyYGbwaDCZnIXA/UF5mgbaiDtbc7H9xGKq8fpXo0kJf3PLJ99cYwIdgkr6QCgxiY8wQeC8L8lUoAyKuMajL6k4d2o98yha+zLGTA4Ri5vWA4tfTNPVELo0yt8PXhSfMenVQfFrr11YBQ5Xl0KsqZkKANDDuRCZhVkh0dSxEHGVX6YzykVHJSxe1S6xXBgAnrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YGX4OjM2wLwxGZ8vctQebaIuaCA0LiKNYdCHhaev3bU=;
- b=JKg5retGyCEnrbskGHAoD44sQHQK+qMqwzVo6pBsVfMEGr3Lz6nsOtVyEyPNkMCvFIw8vSpmRYNhfD/qg7rhG53IrvZ1oC6vm5Q7cDtKlr3h2GmvVrrPeWJVWYrgFGuRXErCToI6EtsRAZ/rT9OVnQt/XWDFNOtQF0ckZ9Z4KtA7SPAQRLsQFRZgz5USCpP57wOc7mpvdn7cLSeIO3HUlxmAqpTzbB7hoNiDWDxX+EoAUKw+mW1fR01DM34Vqg1XoV/pZNBoxsKVA0qA35zRGM+V0Xr1IPdPnpkHyJtHJ/T5Y6WiHvYpGPhERmVHeIJm1ucIqI4+qqsev6SeREopiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YGX4OjM2wLwxGZ8vctQebaIuaCA0LiKNYdCHhaev3bU=;
- b=Uj/0xDaO5CnaSI4sWhOo75QpdwssWQEe78aIN5nmSIBcJ6oDR1pmGsU6ISor/haZw4+ujALGpb1rXxswFHVkoohgOB2c+e0yMO3CxYD3vJ6ygwfz0m3q0M/plTrXWV8zPQm3GiwDZ9QIp9RjXXTxg1na4MoQbpHn82Ci6jd7ZMI=
-Received: from DB8PR04MB5785.eurprd04.prod.outlook.com (2603:10a6:10:b0::22)
- by DB7PR04MB5498.eurprd04.prod.outlook.com (2603:10a6:10:80::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Thu, 16 Jul
- 2020 06:49:09 +0000
-Received: from DB8PR04MB5785.eurprd04.prod.outlook.com
- ([fe80::b502:cec6:9389:665]) by DB8PR04MB5785.eurprd04.prod.outlook.com
- ([fe80::b502:cec6:9389:665%3]) with mapi id 15.20.3174.026; Thu, 16 Jul 2020
- 06:49:09 +0000
-From:   Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Vladimir Oltean <olteanv@gmail.com>
-CC:     Po Liu <po.liu@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Ido Schimmel <idosch@idosch.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Joergen Andreasen <joergen.andreasen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>
-Subject: RE: [EXT] Re: [PATCH v2 net-next 03/10] net: mscc: ocelot: allocated
- rules to different hardware VCAP TCAMs by chain index
-Thread-Topic: [EXT] Re: [PATCH v2 net-next 03/10] net: mscc: ocelot: allocated
- rules to different hardware VCAP TCAMs by chain index
-Thread-Index: AQHWOJ4IR5sw1Ew6RUWo30td44MCGqjFAIOAgAGq+gCACByDgIABgUeAgAHscQCAN6b3AA==
-Date:   Thu, 16 Jul 2020 06:49:09 +0000
-Message-ID: <DB8PR04MB57851605ACFE209B4E54208EF07F0@DB8PR04MB5785.eurprd04.prod.outlook.com>
-References: <20200602051828.5734-1-xiaoliang.yang_1@nxp.com>
- <20200602051828.5734-4-xiaoliang.yang_1@nxp.com>
- <20200602083613.ddzjh54zxtbklytw@ws.localdomain>
- <CA+h21hocBOyuDFvnLq-sBEG5phaJPxbhvZ_P5H8HnTkBDv1x+w@mail.gmail.com>
- <20200608135633.jznoxwny6qtzxjng@ws.localdomain>
- <CA+h21hqoZdQeSxTtrEsVEHi6ZP1LrWKQGwZ9zPvjyWZ62TNfbg@mail.gmail.com>
- <20200610181802.2sqdhsoyrkd4awcg@ws.localdomain>
-In-Reply-To: <20200610181802.2sqdhsoyrkd4awcg@ws.localdomain>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: microchip.com; dkim=none (message not signed)
- header.d=none;microchip.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 328eabbf-f913-4d43-e283-08d829545777
-x-ms-traffictypediagnostic: DB7PR04MB5498:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5498FD61CD2A35EB8BD87A3EF07F0@DB7PR04MB5498.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0U7oulUowWWbgylU3A0Bl1Vy8uooLNtIdK64RjBr32ybmH2iyL1iy3+OCKDON+JL4A9r+rZXKGmIZsqxjD0VSzzhygatYCVfav4nYYnRP7vNrW5fqL1dwsf04cJvMKmnKA5TG4RAzINi5e+D9wH8xnYB5vzYxFvSW26BqDgCgTCj8BIg5/gbi3RSLGsvo8rdwGKqRWsxy0SMVpXs/jZ0d7j+7xCf1KAqnpy8Pqsx9X09DCNmX0LiJfDaaXYNuFZlCB1gHDKRi6sJfzoojwG9e3Tc7hrDnzz+7haojoqlMcCFMWKiM9rYHy5SqXFDQwr/
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB5785.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(136003)(376002)(39860400002)(66476007)(2906002)(33656002)(478600001)(55016002)(86362001)(26005)(8936002)(52536014)(7416002)(316002)(66556008)(54906003)(7696005)(66946007)(71200400001)(186003)(64756008)(76116006)(6506007)(5660300002)(8676002)(66446008)(83380400001)(53546011)(9686003)(110136005)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Z30DLjBMMwD6UPpTB2UUt5X3kU1Mp73H/RWKkcY0w/SECQzllnQ2PHKY6G9uDqBdSo2lYfosjjDoTObB7WvqKXMeBnSVmT7gUQW/1mS/35ZIdCnZq4LszFGPPRQfRNOQEAmc4lwV2gqB3E0L3dPsIsvTTlb2hgEJsa23t7PmPlU5B1nyT+2g6TOC6I2iE/XQzJxR3J5zFM1YmcwzixNQgxwUBsSAqFD60lAeT50IGvX1X1H/cwTHA5NTOFrGUPatsdyhB8ISzLAdH8FN/e8WgXGmXcaRc3/+l0UVCnrDWBUDe0a1h+6nANblXqdD6XxJFXV52YUbbM+qk5Uu2cE+7r7QF53Dc/8rrsb3S0L840juu23vF0Ks3R+47E+jSOcHzHs0hmIixCjHxvgsJI5ew5ICbN5oWlgZhLK3jau4slphNAObRJC3SathmNmD4mfRcYXSAaS2EJ74eqKZwRetan5AsuqyYuMY00BGcRO+CHw=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 16 Jul 2020 02:49:22 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:55686 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbgGPGtV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 02:49:21 -0400
+Received: by mail-il1-f199.google.com with SMTP id b2so3029070ilh.22
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 23:49:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Jb66gF5TU/5G0RQu96O7sxpWsrW4mYp2swVpVG+8PLQ=;
+        b=az+hitFOrznmjbwCGPqITcQ2h/KJyUO36Fm8R2Dijj8esquThIl0z+M7mRnH2FjFWh
+         gi8E6Xm8Zxwxb0q6OKOjQ7mpUw7DD2GNyJ4lhB0px25sehN+7mTFe276Liecn7ggJYIu
+         CgX0SiDK682lHdRA80Mdjr7omybZwIem/KhT1O3WEN+9eaY7EwCoEKqcA3PGgQmNninW
+         uBloNhoY8V5ls7wZXmmjzqqwSxsIgqsayQbANmXI/x1ykoJN/utz4ggtzyL7euqfYXuf
+         jw+7wbxjJkeBZmo1bk0J8PoLqH+QdXLXno43/k0t8XXCTWQ5imFykkA6fmGOFN6cxSc9
+         9JOw==
+X-Gm-Message-State: AOAM533fmbKzGIhEPHU2aBh7qxjTYxP/EE4LZ7O2CxIti7kjj6WvzGLJ
+        E8o8otEADi3fr6Au4Imy9APhtTGWi20C0eNRf2a4NAn6C5P2
+X-Google-Smtp-Source: ABdhPJx25uyIgSwV9oiD3qZEmSnsqUaWzZ4i3gAqzxYixj++WyS0bT5dhEynXbtVsWXRz6JzdgIZqwA4GA4mxkvDycbXlHETAQxe
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB5785.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 328eabbf-f913-4d43-e283-08d829545777
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 06:49:09.2552
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4hNNKpxn//r7DQJ/v4OxCWMTYcsyKn9HM4Ua1LVI2CQVtDRLDGRLBeIPqwQbXULHYpz46XNZFB3TZgV08VpZpBDaIIhVTedppXCQSbHfw5o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5498
+X-Received: by 2002:a02:854a:: with SMTP id g68mr3561329jai.24.1594882160593;
+ Wed, 15 Jul 2020 23:49:20 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 23:49:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a4189005aa8970c7@google.com>
+Subject: BUG: corrupted list in evict
+From:   syzbot <syzbot+2677e2f48b47153e3838@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxsYW4sDQoNCk9uIDExLjA2LjIwMDIgMjoxOCwgQWxsYW4gVy4gTmllbHNlbiA8YWxsYW4u
-bmllbHNlbkBtaWNyb2NoaXAuY29tPiB3cm90ZToNCj4+ID4+IEhlcmUgaXMgbXkgaW5pdGlhbCBz
-dWdnZXN0aW9uIGZvciBhbiBhbHRlcm5hdGl2ZSBjaGFpbi1zY2hlbWE6DQo+PiA+Pg0KPj4gPj4g
-Q2hhaW4gMDogICAgICAgICAgIFRoZSBkZWZhdWx0IGNoYWluIC0gdG9kYXkgdGhpcyBpcyBpbiBJ
-UzIuIElmIHdlIHByb2NlZWQNCj4+ID4+ICAgICAgICAgICAgICAgICAgICAgd2l0aCB0aGlzIGFz
-IGlzIC0gdGhlbiB0aGlzIHdpbGwgY2hhbmdlLg0KPj4gPj4gQ2hhaW4gMS05OTk5OiAgICAgIFRo
-ZXNlIGFyZSBvZmZsb2FkZWQgYnkgImJhc2ljIiBjbGFzc2lmaWNhdGlvbi4NCj4+ID4+IENoYWlu
-IDEwMDAwLTE5OTk5OiBUaGVzZSBhcmUgb2ZmbG9hZGVkIGluIElTMQ0KPj4gPj4gICAgICAgICAg
-ICAgICAgICAgICBDaGFpbiAxMDAwMDogTG9va3VwLTAgaW4gSVMxLCBhbmQgaGVyZSB3ZSBjb3Vs
-ZCBsaW1pdCB0aGUNCj4+ID4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFjdGlv
-biB0byBkbyBRb1MgcmVsYXRlZCBzdHVmZiAocHJpb3JpdHkNCj4+ID4+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHVwZGF0ZSkNCj4+ID4+ICAgICAgICAgICAgICAgICAgICAgQ2hh
-aW4gMTEwMDA6IExvb2t1cC0xIGluIElTMSwgaGVyZSB3ZSBjb3VsZCBkbyBWTEFODQo+PiA+PiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHVmZg0KPj4gPj4gICAgICAgICAgICAg
-ICAgICAgICBDaGFpbiAxMjAwMDogTG9va3VwLTIgaW4gSVMxLCBoZXJlIHdlIGNvdWxkIGFwcGx5
-IHRoZQ0KPj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIlBBRyIgd2hpY2gg
-aXMgZXNzZW50aWFsbHkgYSBHT1RPLg0KPj4gPj4NCj4+ID4+IENoYWluIDIwMDAwLTI5OTk5OiBU
-aGVzZSBhcmUgb2ZmbG9hZGVkIGluIElTMg0KPj4gPj4gICAgICAgICAgICAgICAgICAgICBDaGFp
-biAyMDAwMC0yMDI1NTogTG9va3VwLTAgaW4gSVMyLCB3aGVyZSBDSEFJTi1JRCAtDQo+PiA+PiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMDAwMCBpcyB0aGUgUEFHIHZh
-bHVlLg0KPj4gPj4gICAgICAgICAgICAgICAgICAgICBDaGFpbiAyMTAwMC0yMTAwMDogTG9va3Vw
-LTEgaW4gSVMyLg0KPj4gPj4NCj4+ID4+IEFsbCB0aGVzZSBjaGFpbnMgc2hvdWxkIGJlIG9wdGlv
-bmFsIC0gdXNlcnMgc2hvdWxkIG9ubHkgbmVlZCB0byANCj4+ID4+IGNvbmZpZ3VyZSB0aGUgY2hh
-aW5zIHRoZXkgbmVlZC4gVG8gbWFrZSB0aGlzIHdvcmssIHdlIG5lZWQgdG8gDQo+PiA+PiBjb25m
-aWd1cmUgYm90aCB0aGUgZGVzaXJlZCBhY3Rpb25zIChjb3VsZCBiZSBwcmlvcml0eSB1cGRhdGUp
-IGFuZCB0aGUgZ290byBhY3Rpb24uDQo+PiA+PiBSZW1lbWJlciBpbiBIVywgYWxsIHBhY2tldHMg
-Z29lcyB0aHJvdWdoIHRoaXMgcHJvY2Vzcywgd2hpbGUgaW4gU1cgDQo+PiA+PiB0aGV5IG9ubHkg
-Zm9sbG93IHRoZSAiZ290byIgcGF0aC4NCj4+ID4+DQoNCkkgYWdyZWUgd2l0aCB0aGlzIGNoYWlu
-IGFzc2lnbm1lbnQsIGZvbGxvd2luZyBpcyBhbiBleGFtcGxlIHRvIHNldCBydWxlczoNCg0KMS4g
-U2V0IGEgbWF0Y2hhbGwgcnVsZSBmb3IgZWFjaCBjaGFpbiwgdGhlIGxhc3QgY2hhaW4gZG8gbm90
-IG5lZWQgZ290byBjaGFpbiBhY3Rpb24uDQojIHRjIGZpbHRlciBhZGQgZGV2IHN3cDAgY2hhaW4g
-MCBmbG93ZXIgc2tpcF9zdyBhY3Rpb24gZ290byBjaGFpbiAxMDAwMA0KIyB0YyBmaWx0ZXIgYWRk
-IGRldiBzd3AwIGNoYWluIDEwMDAwIGZsb3dlciBza2lwX3N3IGFjdGlvbiBnb3RvIGNoYWluIDIx
-MDAwDQpJbiBkcml2ZXIsIHVzZSB0aGVzZSBydWxlcyB0byByZWdpc3RlciB0aGUgY2hhaW4uDQoN
-CjIuIFNldCBub3JtYWwgcnVsZXMuDQojIHRjIGZpbHRlciBhZGQgZGV2IHN3cDAgY2hhaW4gMTAw
-MDAgcHJvdG9jb2wgODAyLjFRIHBhcmVudCBmZmZmOiBmbG93ZXIgc2tpcF9zdyB2bGFuX2lkIDEg
-dmxhbl9wcmlvIDEgYWN0aW9uIHNrYmVkaXQgcHJpb3JpdHkgMSBhY3Rpb24gZ290byBjaGFpbiAy
-MTAwMA0KIyB0YyBmaWx0ZXIgYWRkIGRldiBzd3AwIGNoYWluIDIxMDAwIHByb3RvY29sIDgwMi4x
-USBwYXJlbnQgZmZmZjogZmxvd2VyIHNraXBfc3cgdmxhbl9pZCAxIHZsYW5fcHJpbyAxIGFjdGlv
-biBkcm9wDQoNCkluIGRyaXZlciwgd2UgY2hlY2sgaWYgdGhlIGNoYWluIElEIGhhcyBiZWVuIHJl
-Z2lzdGVyZWQsIGFuZCBnb3RvIGNoYWluIGlzIHRoZSBzYW1lIGFzIGZpcnN0IG1hdGNoYWxsIHJ1
-bGUsIGlmIGlzIG5vdCwgdGhlbiByZXR1cm4gZXJyb3IuIEVhY2ggcnVsZSBuZWVkIGhhcyBnb3Rv
-IGFjdGlvbiBleGNlcHQgbGFzdCBjaGFpbi4NCg0KSSBhbHNvIGhhdmUgY2hlY2sgYWJvdXQgY2hh
-aW4gdGVtcGxhdGUsIGl0IGNhbiBub3Qgc2V0IGFuIGFjdGlvbiB0ZW1wbGF0ZSBmb3IgZWFjaCBj
-aGFpbiwgc28gSSB0aGluayBpdCdzIG5vIHVzZSBmb3Igb3VyIGNhc2UuIElmIHRoaXMgd2F5IHRv
-IHNldCBydWxlcyBpcyBPSywgSSB3aWxsIHVwZGF0ZSB0aGUgcGF0Y2ggdG8gZG8gYXMgdGhpcy4N
-Cg0KVGhhbmtzLA0KWGlhb2xpYW5nIFlhbmcNCg0K
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    d31958b3 Add linux-next specific files for 20200710
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1050b2af100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3fe4fccb94cbc1a6
+dashboard link: https://syzkaller.appspot.com/bug?extid=2677e2f48b47153e3838
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2677e2f48b47153e3838@syzkaller.appspotmail.com
+
+list_del corruption. next->prev should be ffff88808970f818, but was 0000000000000000
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:54!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 7059 Comm: syz-executor.3 Not tainted 5.8.0-rc4-next-20200710-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__list_del_entry_valid.cold+0x48/0x55 lib/list_debug.c:54
+Code: e8 a1 71 c0 fd 0f 0b 4c 89 e2 48 89 ee 48 c7 c7 e0 db 93 88 e8 8d 71 c0 fd 0f 0b 48 89 ee 48 c7 c7 a0 dc 93 88 e8 7c 71 c0 fd <0f> 0b cc cc cc cc cc cc cc cc cc cc cc 41 57 41 56 41 55 41 54 55
+RSP: 0018:ffffc90003ed7958 EFLAGS: 00010282
+RAX: 0000000000000054 RBX: ffff88808970f818 RCX: 0000000000000000
+RDX: ffff88805e3401c0 RSI: ffffffff815d7e07 RDI: fffff520007daf1d
+RBP: ffff88808970f818 R08: 0000000000000054 R09: ffff8880ae6318e7
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880494b5c60
+R13: ffff88800082e290 R14: ffffffff88598f60 R15: ffff88808970f728
+FS:  0000000001ce5940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000ca3b72 CR3: 00000000a1033000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __list_del_entry include/linux/list.h:132 [inline]
+ list_del_init include/linux/list.h:204 [inline]
+ inode_sb_list_del fs/inode.c:471 [inline]
+ evict+0x181/0x750 fs/inode.c:565
+ iput_final fs/inode.c:1652 [inline]
+ iput.part.0+0x424/0x850 fs/inode.c:1678
+ iput+0x58/0x70 fs/inode.c:1668
+ proc_invalidate_siblings_dcache+0x28d/0x600 fs/proc/inode.c:160
+ release_task+0xc63/0x14d0 kernel/exit.c:221
+ wait_task_zombie kernel/exit.c:1088 [inline]
+ wait_consider_task+0x2fb3/0x3b20 kernel/exit.c:1315
+ do_wait_thread kernel/exit.c:1378 [inline]
+ do_wait+0x36a/0x9e0 kernel/exit.c:1449
+ kernel_wait4+0x14c/0x260 kernel/exit.c:1604
+ __do_sys_wait4+0x13f/0x150 kernel/exit.c:1616
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4169ca
+Code: Bad RIP value.
+RSP: 002b:00007ffc79eed098 EFLAGS: 00000246 ORIG_RAX: 000000000000003d
+RAX: ffffffffffffffda RBX: 00000000000f83dc RCX: 00000000004169ca
+RDX: 0000000040000001 RSI: 00007ffc79eed0d0 RDI: ffffffffffffffff
+RBP: 00000000000018e5 R08: 0000000000000001 R09: 0000000001ce5940
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
+R13: 00007ffc79eed0d0 R14: 00000000000f838e R15: 00007ffc79eed0e0
+Modules linked in:
+---[ end trace 532812e394e0dae0 ]---
+RIP: 0010:__list_del_entry_valid.cold+0x48/0x55 lib/list_debug.c:54
+Code: e8 a1 71 c0 fd 0f 0b 4c 89 e2 48 89 ee 48 c7 c7 e0 db 93 88 e8 8d 71 c0 fd 0f 0b 48 89 ee 48 c7 c7 a0 dc 93 88 e8 7c 71 c0 fd <0f> 0b cc cc cc cc cc cc cc cc cc cc cc 41 57 41 56 41 55 41 54 55
+RSP: 0018:ffffc90003ed7958 EFLAGS: 00010282
+RAX: 0000000000000054 RBX: ffff88808970f818 RCX: 0000000000000000
+RDX: ffff88805e3401c0 RSI: ffffffff815d7e07 RDI: fffff520007daf1d
+RBP: ffff88808970f818 R08: 0000000000000054 R09: ffff8880ae6318e7
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880494b5c60
+R13: ffff88800082e290 R14: ffffffff88598f60 R15: ffff88808970f728
+FS:  0000000001ce5940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000ca3b72 CR3: 00000000a1033000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
