@@ -2,148 +2,228 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95883C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A7BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 675DE207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:17:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="mGIKW6k4"
+	by mail.kernel.org (Postfix) with ESMTP id 01CFF207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgGPORz (ORCPT
+        id S1728716AbgGPOTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:17:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgGPORy (ORCPT
+        Thu, 16 Jul 2020 10:19:00 -0400
+Received: from smtp-190b.mail.infomaniak.ch ([185.125.25.11]:55351 "EHLO
+        smtp-190b.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728412AbgGPOS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:17:54 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89CA6C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:17:54 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id md7so4753767pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:17:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=rEeIaOldDGNkjFcOuft9AGbgxpRWfSHpKo4JvfAcXn8=;
-        b=mGIKW6k4TxGGkzHtFF3wKDWKOgsrV88cP5ed7M9sUknwmJYa5D3/6enGw4Yq8NPu0U
-         CSHGb2CfNe8wexNxP7KNcPBQwMAuQt80Wiz6T77N72qf1mGK8Vc1O9P/m7iFU/Kuo1jL
-         HtssFEpKxPwtZIeXCV8kdmaFNkPOmIvXfnjahFC1xMf4d8VEc/352ajCnQkMg3kEv+kq
-         YbO5qpze6zf3rL4tjo4sTBzfVThYBiBU1v9MP8MruTnvwgkE2uHACdCaAY2RC02TChn/
-         oO+JWuuvnksVzZLzRXJv/c3ylbavlzfzAKJSdy9lfIsAc0tkwv0DUc28uEhjjiwq3in4
-         wWew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=rEeIaOldDGNkjFcOuft9AGbgxpRWfSHpKo4JvfAcXn8=;
-        b=aVd48irUZ3EKIyqf88YsD4QyiDCgkrkgRYX+HPN3sM/l9V1QHlfuoaHvxPyJHaB5Z+
-         w68pZ9qYLf6DjIsm9A6CJDCOmFS26TmW6FZ78bzNfB1t5+QO/NEUJMe3Rk2KyrpSJNeB
-         tCCuNB7xxM4bEk5cekeiscnjoyH3kF8BOvkjeqnr+o8Xu0I4w5VQbOB3tJ1NJNszsrw/
-         3QZOrHG1Kp0p/7J89ZyRZsUmtEycm+F6uNSpGd/MGTkyTXlWaQ15LjvmwToN78xVZoPR
-         jMjJHv0mGk0HcV3bxqWCi1PAA4uTY17xg/L5VEudtcZw6uouEqMABs3cWQrH9cUAbw17
-         K81g==
-X-Gm-Message-State: AOAM531BhOtJN/DdZmAFjHzM/gZ13lu5i4cISiQJ3fc4xNrdbIuoOcxi
-        nJWJ2FT+HzEfHnc5JL2b8RfuTQ==
-X-Google-Smtp-Source: ABdhPJzorlas012rUFUtmkee7W89cvDYC8KxwWfBaT4RjUZgzUmMOY2Z847ju5xrQvvZN1XAg1ho/Q==
-X-Received: by 2002:a17:902:bd90:: with SMTP id q16mr3536713pls.54.1594909074008;
-        Thu, 16 Jul 2020 07:17:54 -0700 (PDT)
-Received: from localhost ([2406:7400:73:bebb:9750:968d:7cd5:3ec7])
-        by smtp.gmail.com with ESMTPSA id n15sm315045pjf.12.2020.07.16.07.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 07:17:52 -0700 (PDT)
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Thu, 16 Jul 2020 10:17:47 -0400
-To:     Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 16 Jul 2020 10:18:59 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4B6xFW2DSnzlhJYD;
+        Thu, 16 Jul 2020 16:18:55 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4B6xFN4zMgzlh8TM;
+        Thu, 16 Jul 2020 16:18:48 +0200 (CEST)
+Subject: Re: [PATCH v6 4/7] fs: Introduce O_MAYEXEC flag for openat2(2)
+To:     Kees Cook <keescook@chromium.org>, Jan Kara <jack@suse.cz>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        linux-nfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Michel Lespinasse <walken@google.com>,
-        Divyansh Kamboj <kambojdivyansh2000@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] staging: comedi: comedi_fops.c: added casts to get rid of
- sparse warnings
-Message-ID: <20200716141747.wewrnejrygosqhd5@pesu-pes-edu>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200714181638.45751-1-mic@digikod.net>
+ <20200714181638.45751-5-mic@digikod.net> <202007151304.9F48071@keescook>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <b209ea10-5b7f-c40e-5b6a-3da9028403d5@digikod.net>
+Date:   Thu, 16 Jul 2020 16:18:27 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zyxfsogd63ii4ru7"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <202007151304.9F48071@keescook>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---zyxfsogd63ii4ru7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 15/07/2020 22:06, Kees Cook wrote:
+> On Tue, Jul 14, 2020 at 08:16:35PM +0200, Mickaël Salaün wrote:
+>> When the O_MAYEXEC flag is passed, openat2(2) may be subject to
+>> additional restrictions depending on a security policy managed by the
+>> kernel through a sysctl or implemented by an LSM thanks to the
+>> inode_permission hook.  This new flag is ignored by open(2) and
+>> openat(2) because of their unspecified flags handling.
+>>
+>> The underlying idea is to be able to restrict scripts interpretation
+>> according to a policy defined by the system administrator.  For this to
+>> be possible, script interpreters must use the O_MAYEXEC flag
+>> appropriately.  To be fully effective, these interpreters also need to
+>> handle the other ways to execute code: command line parameters (e.g.,
+>> option -e for Perl), module loading (e.g., option -m for Python), stdin,
+>> file sourcing, environment variables, configuration files, etc.
+>> According to the threat model, it may be acceptable to allow some script
+>> interpreters (e.g. Bash) to interpret commands from stdin, may it be a
+>> TTY or a pipe, because it may not be enough to (directly) perform
+>> syscalls.  Further documentation can be found in a following patch.
+>>
+>> Even without enforced security policy, userland interpreters can set it
+>> to enforce the system policy at their level, knowing that it will not
+>> break anything on running systems which do not care about this feature.
+>> However, on systems which want this feature enforced, there will be
+>> knowledgeable people (i.e. sysadmins who enforced O_MAYEXEC
+>> deliberately) to manage it.  A simple security policy implementation,
+>> configured through a dedicated sysctl, is available in a following
+>> patch.
+>>
+>> O_MAYEXEC should not be confused with the O_EXEC flag which is intended
+>> for execute-only, which obviously doesn't work for scripts.  However, a
+>> similar behavior could be implemented in userland with O_PATH:
+>> https://lore.kernel.org/lkml/1e2f6913-42f2-3578-28ed-567f6a4bdda1@digikod.net/
+>>
+>> The implementation of O_MAYEXEC almost duplicates what execve(2) and
+>> uselib(2) are already doing: setting MAY_OPENEXEC in acc_mode (which can
+>> then be checked as MAY_EXEC, if enforced), and propagating FMODE_EXEC to
+>> _fmode via __FMODE_EXEC flag (which can then trigger a
+>> fanotify/FAN_OPEN_EXEC event).
+>>
+>> This is an updated subset of the patch initially written by Vincent
+>> Strubel for CLIP OS 4:
+>> https://github.com/clipos-archive/src_platform_clip-patches/blob/f5cb330d6b684752e403b4e41b39f7004d88e561/1901_open_mayexec.patch
+>> This patch has been used for more than 12 years with customized script
+>> interpreters.  Some examples (with the original name O_MAYEXEC) can be
+>> found here:
+>> https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
+>>
+>> Co-developed-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
+>> Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
+>> Co-developed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+>> Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+>> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+>> Reviewed-by: Deven Bowers <deven.desai@linux.microsoft.com>
+>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>> Cc: Aleksa Sarai <cyphar@cyphar.com>
+>> Cc: Al Viro <viro@zeniv.linux.org.uk>
+>> ---
+>>
+>> Changes since v5:
+>> * Update commit message.
+>>
+>> Changes since v3:
+>> * Switch back to O_MAYEXEC, but only handle it with openat2(2) which
+>>   checks unknown flags (suggested by Aleksa Sarai). Cf.
+>>   https://lore.kernel.org/lkml/20200430015429.wuob7m5ofdewubui@yavin.dot.cyphar.com/
+>>
+>> Changes since v2:
+>> * Replace O_MAYEXEC with RESOLVE_MAYEXEC from openat2(2).  This change
+>>   enables to not break existing application using bogus O_* flags that
+>>   may be ignored by current kernels by using a new dedicated flag, only
+>>   usable through openat2(2) (suggested by Jeff Layton).  Using this flag
+>>   will results in an error if the running kernel does not support it.
+>>   User space needs to manage this case, as with other RESOLVE_* flags.
+>>   The best effort approach to security (for most common distros) will
+>>   simply consists of ignoring such an error and retry without
+>>   RESOLVE_MAYEXEC.  However, a fully controlled system may which to
+>>   error out if such an inconsistency is detected.
+>>
+>> Changes since v1:
+>> * Set __FMODE_EXEC when using O_MAYEXEC to make this information
+>>   available through the new fanotify/FAN_OPEN_EXEC event (suggested by
+>>   Jan Kara and Matthew Bobrowski):
+>>   https://lore.kernel.org/lkml/20181213094658.GA996@lithium.mbobrowski.org/
+>> ---
+>>  fs/fcntl.c                       | 2 +-
+>>  fs/open.c                        | 8 ++++++++
+>>  include/linux/fcntl.h            | 2 +-
+>>  include/linux/fs.h               | 2 ++
+>>  include/uapi/asm-generic/fcntl.h | 7 +++++++
+>>  5 files changed, 19 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/fcntl.c b/fs/fcntl.c
+>> index 2e4c0fa2074b..0357ad667563 100644
+>> --- a/fs/fcntl.c
+>> +++ b/fs/fcntl.c
+>> @@ -1033,7 +1033,7 @@ static int __init fcntl_init(void)
+>>  	 * Exceptions: O_NONBLOCK is a two bit define on parisc; O_NDELAY
+>>  	 * is defined as O_NONBLOCK on some platforms and not on others.
+>>  	 */
+>> -	BUILD_BUG_ON(21 - 1 /* for O_RDONLY being 0 */ !=
+>> +	BUILD_BUG_ON(22 - 1 /* for O_RDONLY being 0 */ !=
+>>  		HWEIGHT32(
+>>  			(VALID_OPEN_FLAGS & ~(O_NONBLOCK | O_NDELAY)) |
+>>  			__FMODE_EXEC | __FMODE_NONOTIFY));
+>> diff --git a/fs/open.c b/fs/open.c
+>> index 623b7506a6db..38e434bdbbb6 100644
+>> --- a/fs/open.c
+>> +++ b/fs/open.c
+>> @@ -987,6 +987,8 @@ inline struct open_how build_open_how(int flags, umode_t mode)
+>>  		.mode = mode & S_IALLUGO,
+>>  	};
+>>  
+>> +	/* O_MAYEXEC is ignored by syscalls relying on build_open_how(). */
+>> +	how.flags &= ~O_MAYEXEC;
+>>  	/* O_PATH beats everything else. */
+>>  	if (how.flags & O_PATH)
+>>  		how.flags &= O_PATH_FLAGS;
+>> @@ -1054,6 +1056,12 @@ inline int build_open_flags(const struct open_how *how, struct open_flags *op)
+>>  	if (flags & __O_SYNC)
+>>  		flags |= O_DSYNC;
+>>  
+>> +	/* Checks execution permissions on open. */
+>> +	if (flags & O_MAYEXEC) {
+>> +		acc_mode |= MAY_OPENEXEC;
+>> +		flags |= __FMODE_EXEC;
+>> +	}
+> 
+> Adding __FMODE_EXEC here will immediately change the behaviors of NFS
+> and fsnotify. If that's going to happen, I think it needs to be under
+> the control of the later patches doing the behavioral controls.
+> (specifically, NFS looks like it completely changes its access control
+> test when this is set and ignores the read/write checks entirely, which
+> is not what's wanted).
 
-fixed sparse warnings by adding a cast in assignment from
-void [noderef] __user * to unsigned int __force *
-and a reverse cast in argument from
-unsigned int * to  unsigned int __user * .
+__FMODE_EXEC was suggested by Jan Kara and Matthew Bobrowski because of
+fsnotify. However, the NFS handling of SUID binaries [1] indeed leads to
+an unintended behavior. This also means that uselib(2) shouldn't work
+properly with NFS. I can remove the __FMODE_EXEC flag for now.
 
-Signed-off-by: B K Karthik <karthik.bk2000@live.com>
----
- drivers/staging/comedi/comedi_fops.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/=
-comedi_fops.c
-index 3f70e5dfac39..9cdc1e8a022d 100644
---- a/drivers/staging/comedi/comedi_fops.c
-+++ b/drivers/staging/comedi/comedi_fops.c
-@@ -2956,7 +2956,7 @@ static int get_compat_cmd(struct comedi_cmd *cmd,
- 	cmd->scan_end_arg =3D v32.scan_end_arg;
- 	cmd->stop_src =3D v32.stop_src;
- 	cmd->stop_arg =3D v32.stop_arg;
--	cmd->chanlist =3D compat_ptr(v32.chanlist);
-+	cmd->chanlist =3D (unsigned int __force *)compat_ptr(v32.chanlist);
- 	cmd->chanlist_len =3D v32.chanlist_len;
- 	cmd->data =3D compat_ptr(v32.data);
- 	cmd->data_len =3D v32.data_len;
-@@ -2983,7 +2983,7 @@ static int put_compat_cmd(struct comedi32_cmd_struct =
-__user *cmd32,
- 	v32.stop_src =3D cmd->stop_src;
- 	v32.stop_arg =3D cmd->stop_arg;
- 	/* Assume chanlist pointer is unchanged. */
--	v32.chanlist =3D ptr_to_compat(cmd->chanlist);
-+	v32.chanlist =3D ptr_to_compat((unsigned int __user *)cmd->chanlist);
- 	v32.chanlist_len =3D cmd->chanlist_len;
- 	v32.data =3D ptr_to_compat(cmd->data);
- 	v32.data_len =3D cmd->data_len;
---=20
-2.20.1
-
-
---zyxfsogd63ii4ru7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl8QYYsACgkQ471Q5AHe
-Z2pdswv/eH6bR7z/dfqHeEvgMCkUBSMsHEZwIofJ73sEiS9x4p9iEdVHIRDo9CQ/
-O5mOXQWbdAd5LH34YahhT07MV7W5CLFC0/t0qLm9qMeDdIMwJBz8ZI3kgkJZ+Gfm
-tSK/CEF3wgglkhuD1OxPWPZJZzyUVbGOwsBcWQdR1vpf1CXatE10T5niZr9QEhZS
-QjoguQEHmjpuUfJoYJHH/29sQwi7uDgzVjEGCwB+fzBRt2nOwf6kGNd5B55q7DNn
-bFfaAk6Xx8K9TNFBpFoFnEefbjOL7ew3OIO60aF1A0SqqJ5vW18rUnWe3EeF+Bp3
-hmwGCc2usRLifx2pgQ3FVUUX64G6EaBms1YO3ok+j+KBazM6HiE+TrTjA+CSbhv2
-vnwVCDu6n7cck675mNEypjCoQgdBcQ3rGCbaOxe1SyB07ZwvZGyqXwEZCC33wmDw
-rEYTAWc1q2QKhhTfk3Z+oDcc1jcrNOvTyKTSHPqYMZj0AUcXIBUoZ+EvVbexOD6f
-BtUoBfk+
-=5tym
------END PGP SIGNATURE-----
-
---zyxfsogd63ii4ru7--
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=f8d9a897d4384b77f13781ea813156568f68b83e
