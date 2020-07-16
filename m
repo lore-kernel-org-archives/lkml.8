@@ -2,133 +2,339 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419EBC433FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41641C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F08E212CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145A0212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mst7gel3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hCwyDE+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgGPXJV (ORCPT
+        id S1727812AbgGPXI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbgGPXJS (ORCPT
+        Thu, 16 Jul 2020 19:08:56 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:47433 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726189AbgGPXIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:09:18 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC9FC08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 15:17:32 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x72so4352607pfc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 15:17:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fKhPiYD9NcrQRpGcdGZj40gj8kQ14shj2rOSqaCnLy8=;
-        b=Mst7gel3VBVQzOLyDQc4MiMlTFuTEiShGv3qqgOuhaXUyMGeV4zTgdVmkOgMTj9gKQ
-         z2iOtKgtrQZxHToj4Qz1Q0faDBqYksccsEsRKj8z8QIKGVF0mNdJd6qZSNIfI7xcqeA2
-         v+DmOEuHmIEMAQVHk4i6Lb8RS5iL58W8azgnQssZ2Lz578yN7dZZRWayMfLPgqFzhe7m
-         lPI3FC0itrcx/3rQgT/Qn1wwGjVH6H8Qq094WgUNOTwF/AP0DIO+pCtocpLliGfy2kr+
-         Ipq7GN/NuNUe8At/AHKbHMBRGyzr2/wykc43zU8dDXEQ3n/giOipL/YtkEEg4U5tSzw8
-         D87g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fKhPiYD9NcrQRpGcdGZj40gj8kQ14shj2rOSqaCnLy8=;
-        b=N3flK1R2E3fxYxMIpPhSbz3AnRoE35kmORrJKms65PEWDx8byLjNekyNmcNBHlWQA1
-         TCTulhQaveHiGZkPHT+exHzLY6K9mPPUCk/3tgTSDWZjJFS3i+lLFNCfdXtTHCXbLuId
-         uHeiuLnrcSOW/pZWZmYizxb2y/ZRI7zKbOHD/iJLoMFao3zNLYEWDF+3ZPBLbuBTk7TO
-         JWs6KrS7w6WWs9dBH2IUB9p0IrH4NGFYhkB0SkfFhVjk2ItM/JBtvDwJ/jmY35y0o/qG
-         t8oCHXkfD/c38F8X+zQP56argkUf4aQJXcfCNBFzWawWalSpaiM5rQoh319C2JTBP66c
-         TGeg==
-X-Gm-Message-State: AOAM533VIEfI7AqwPykRlU0XnvrnmspMXrC5oshBXe/zb5ulIC5fddQI
-        5mSz6rWEO3qLXVE+JZIOP84+X+myjFPOF7fgI6d/Og==
-X-Google-Smtp-Source: ABdhPJyB1S2SygSzhySIsQA8wZTB5mqkgjWM0X235I1SrN5gy+5Lds4v98EN7Jiyscyi/bmY8Sy6UyuNhQdcc0ETlHQ=
-X-Received: by 2002:a62:8c54:: with SMTP id m81mr5296241pfd.215.1594937851949;
- Thu, 16 Jul 2020 15:17:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20200716214531eucas1p2c173df09a6e00ef15dfae43ce8f1f9cd@eucas1p2.samsung.com>
- <20200716214523.2924704-1-saravanak@google.com> <6b37125c-96f5-c59c-f170-934d68c9bed1@samsung.com>
-In-Reply-To: <6b37125c-96f5-c59c-f170-934d68c9bed1@samsung.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 16 Jul 2020 15:16:55 -0700
-Message-ID: <CAGETcx_Zyj2sVrT3H9W5gnnBDRa9HMXde3vSXNKvnEDzN4_05A@mail.gmail.com>
-Subject: Re: [PATCH v2] driver core: Fix sleeping in invalid context during
- device link deletion
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Jul 2020 19:08:53 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594940932; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=aQAIYDio+kelkHPSSUUnoWiFSvoHYjeG1smhYpgcbBk=; b=hCwyDE+bCMM7RPJx2Qa8JKgaXNYOm2S1gNget0chTvtzRBvjx1p6k/qOO7QSKjei6NRqRMJn
+ ZvG5iChwmZuqlrQtkd2MQvyia3FWMgL1Oqsffho2w0duWbqyU39DkB8vmRPxkbq9j/gfcxUp
+ VDuZREITYC5J7ECf40xx06tiFts=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f10d31f1e603dbb4460be66 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 22:22:23
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B86DCC433A0; Thu, 16 Jul 2020 22:22:22 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BBE1EC433CA;
+        Thu, 16 Jul 2020 22:22:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BBE1EC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
+        sibis@codearora.org, tsoni@codeaurora.org, psodagud@codeaurora.org,
+        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH v8 4/5] remoteproc: Add inline coredump functionality
+Date:   Thu, 16 Jul 2020 15:20:34 -0700
+Message-Id: <1594938035-7327-5-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594938035-7327-1-git-send-email-rishabhb@codeaurora.org>
+References: <1594938035-7327-1-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 3:13 PM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
->
-> Hi Saravana,
->
-> On 16.07.2020 23:45, Saravana Kannan wrote:
-> > Marek and Guenter reported that commit 287905e68dd2 ("driver core:
-> > Expose device link details in sysfs") caused sleeping/scheduling while
-> > atomic warnings.
-> >
-> > BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
-> > in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 12, name: kworker/0:1
-> > 2 locks held by kworker/0:1/12:
-> >    #0: ee8074a8 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x174/0x7dc
-> >    #1: ee921f20 ((work_completion)(&sdp->work)){+.+.}-{0:0}, at: process_one_work+0x174/0x7dc
-> > Preemption disabled at:
-> > [<c01b10f0>] srcu_invoke_callbacks+0xc0/0x154
-> > ----- 8< ----- SNIP
-> > [<c064590c>] (device_del) from [<c0645c9c>] (device_unregister+0x24/0x64)
-> > [<c0645c9c>] (device_unregister) from [<c01b10fc>] (srcu_invoke_callbacks+0xcc/0x154)
-> > [<c01b10fc>] (srcu_invoke_callbacks) from [<c01493c4>] (process_one_work+0x234/0x7dc)
-> > [<c01493c4>] (process_one_work) from [<c01499b0>] (worker_thread+0x44/0x51c)
-> > [<c01499b0>] (worker_thread) from [<c0150bf4>] (kthread+0x158/0x1a0)
-> > [<c0150bf4>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
-> > Exception stack(0xee921fb0 to 0xee921ff8)
-> >
-> > This was caused by the device link device being released in the context
-> > of srcu_invoke_callbacks().  There is no need to wait till the RCU
-> > callback to release the device link device.  So release the device
-> > earlier and move the call_srcu() into the device release code. That way,
-> > the memory will get freed only after the device is released AND the RCU
-> > callback is called.
-> >
-> > Fixes: 287905e68dd2 ("driver core: Expose device link details in sysfs")
-> > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >
-> > v1->v2:
-> > - Better fix
-> > - Changed subject
-> > - v1 is this patch https://lore.kernel.org/lkml/20200716050846.2047110-1-saravanak@google.com/
-> >
-> > Marek and Guenter,
-> >
-> > I reproduced the original issue and tested this fix. Seems to work for
-> > me. Can you confirm?
->
-> Confirmed, this one fixes the issue! :)
->
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+The current coredump implementation uses vmalloc area to copy
+all the segments. But this might put strain on low memory targets
+as the firmware size sometimes is in tens of MBs. The situation
+becomes worse if there are multiple remote processors undergoing
+recovery at the same time. This patch adds inline coredump
+functionality that avoids extra memory usage. This requires
+recovery to be halted until data is read by userspace and free
+function is called.
 
-Thanks!
+Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ drivers/remoteproc/remoteproc_coredump.c | 156 +++++++++++++++++++++++++++----
+ include/linux/remoteproc.h               |  16 ++++
+ 2 files changed, 154 insertions(+), 18 deletions(-)
 
--Saravana
+diff --git a/drivers/remoteproc/remoteproc_coredump.c b/drivers/remoteproc/remoteproc_coredump.c
+index 390f563..bb15a29 100644
+--- a/drivers/remoteproc/remoteproc_coredump.c
++++ b/drivers/remoteproc/remoteproc_coredump.c
+@@ -5,6 +5,7 @@
+  * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+  */
+ 
++#include <linux/completion.h>
+ #include <linux/devcoredump.h>
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+@@ -12,6 +13,12 @@
+ #include "remoteproc_internal.h"
+ #include "remoteproc_elf_helpers.h"
+ 
++struct rproc_coredump_state {
++	struct rproc *rproc;
++	void *header;
++	struct completion dump_done;
++};
++
+ /**
+  * rproc_coredump_cleanup() - clean up dump_segments list
+  * @rproc: the remote processor handle
+@@ -115,12 +122,110 @@ int rproc_coredump_set_elf_info(struct rproc *rproc, u8 class, u16 machine)
+ }
+ EXPORT_SYMBOL(rproc_coredump_set_elf_info);
+ 
++static void rproc_coredump_free(void *data)
++{
++	struct rproc_coredump_state *dump_state = data;
++
++	vfree(dump_state->header);
++	complete(&dump_state->dump_done);
++}
++
++static void *rproc_coredump_find_segment(loff_t user_offset,
++					 struct list_head *segments,
++					 size_t *data_left)
++{
++	struct rproc_dump_segment *segment;
++
++	list_for_each_entry(segment, segments, node) {
++		if (user_offset < segment->size) {
++			*data_left = segment->size - user_offset;
++			return segment;
++		}
++		user_offset -= segment->size;
++	}
++
++	*data_left = 0;
++	return NULL;
++}
++
++static void rproc_copy_segment(struct rproc *rproc, void *dest,
++			       struct rproc_dump_segment *segment,
++			       size_t offset, size_t size)
++{
++	void *ptr;
++
++	if (segment->dump) {
++		segment->dump(rproc, segment, dest, offset, size);
++	} else {
++		ptr = rproc_da_to_va(rproc, segment->da + offset, size);
++		if (!ptr) {
++			dev_err(&rproc->dev,
++				"invalid copy request for segment %pad with offset %zu and size %zu)\n",
++				&segment->da, offset, size);
++			memset(dest, 0xff, size);
++		} else {
++			memcpy(dest, ptr, size);
++		}
++	}
++}
++
++static ssize_t rproc_coredump_read(char *buffer, loff_t offset, size_t count,
++				   void *data, size_t header_sz)
++{
++	size_t seg_data, bytes_left = count;
++	ssize_t copy_sz;
++	struct rproc_dump_segment *seg;
++	struct rproc_coredump_state *dump_state = data;
++	struct rproc *rproc = dump_state->rproc;
++	void *elfcore = dump_state->header;
++
++	/* Copy the vmalloc'ed header first. */
++	if (offset < header_sz) {
++		copy_sz = memory_read_from_buffer(buffer, count, &offset,
++						  elfcore, header_sz);
++
++		return copy_sz;
++	}
++
++	/*
++	 * Find out the segment memory chunk to be copied based on offset.
++	 * Keep copying data until count bytes are read.
++	 */
++	while (bytes_left) {
++		seg = rproc_coredump_find_segment(offset - header_sz,
++						  &rproc->dump_segments,
++						  &seg_data);
++		/* EOF check */
++		if (!seg) {
++			dev_info(&rproc->dev, "Ramdump done, %lld bytes read",
++				 offset);
++			break;
++		}
++
++		copy_sz = min_t(size_t, bytes_left, seg_data);
++
++		rproc_copy_segment(rproc, buffer, seg, seg->size - seg_data,
++				   copy_sz);
++
++		offset += copy_sz;
++		buffer += copy_sz;
++		bytes_left -= copy_sz;
++	}
++
++	return count - bytes_left;
++}
++
+ /**
+  * rproc_coredump() - perform coredump
+  * @rproc:	rproc handle
+  *
+  * This function will generate an ELF header for the registered segments
+- * and create a devcoredump device associated with rproc.
++ * and create a devcoredump device associated with rproc. Based on the
++ * coredump configuration this function will directly copy the segments
++ * from device memory to userspace or copy segments from device memory to
++ * a separate buffer, which can then be read by userspace.
++ * The first approach avoids using extra vmalloc memory. But it will stall
++ * recovery flow until dump is read by userspace.
+  */
+ void rproc_coredump(struct rproc *rproc)
+ {
+@@ -130,11 +235,13 @@ void rproc_coredump(struct rproc *rproc)
+ 	size_t data_size;
+ 	size_t offset;
+ 	void *data;
+-	void *ptr;
+ 	u8 class = rproc->elf_class;
+ 	int phnum = 0;
++	struct rproc_coredump_state dump_state;
++	enum rproc_dump_mechanism dump_conf = rproc->dump_conf;
+ 
+-	if (list_empty(&rproc->dump_segments))
++	if (list_empty(&rproc->dump_segments) ||
++	    dump_conf == RPROC_COREDUMP_DISABLED)
+ 		return;
+ 
+ 	if (class == ELFCLASSNONE) {
+@@ -144,7 +251,14 @@ void rproc_coredump(struct rproc *rproc)
+ 
+ 	data_size = elf_size_of_hdr(class);
+ 	list_for_each_entry(segment, &rproc->dump_segments, node) {
+-		data_size += elf_size_of_phdr(class) + segment->size;
++		/*
++		 * For default configuration buffer includes headers & segments.
++		 * For inline dump buffer just includes headers as segments are
++		 * directly read from device memory.
++		 */
++		data_size += elf_size_of_phdr(class);
++		if (dump_conf == RPROC_COREDUMP_DEFAULT)
++			data_size += segment->size;
+ 
+ 		phnum++;
+ 	}
+@@ -183,23 +297,29 @@ void rproc_coredump(struct rproc *rproc)
+ 		elf_phdr_set_p_flags(class, phdr, PF_R | PF_W | PF_X);
+ 		elf_phdr_set_p_align(class, phdr, 0);
+ 
+-		if (segment->dump) {
+-			segment->dump(rproc, segment, data + offset, 0, segment->size);
+-		} else {
+-			ptr = rproc_da_to_va(rproc, segment->da, segment->size);
+-			if (!ptr) {
+-				dev_err(&rproc->dev,
+-					"invalid coredump segment (%pad, %zu)\n",
+-					&segment->da, segment->size);
+-				memset(data + offset, 0xff, segment->size);
+-			} else {
+-				memcpy(data + offset, ptr, segment->size);
+-			}
+-		}
++		if (dump_conf == RPROC_COREDUMP_DEFAULT)
++			rproc_copy_segment(rproc, data + offset, segment, 0,
++					   segment->size);
+ 
+ 		offset += elf_phdr_get_p_filesz(class, phdr);
+ 		phdr += elf_size_of_phdr(class);
+ 	}
++	if (dump_conf == RPROC_COREDUMP_DEFAULT) {
++		dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
++		return;
++	}
++
++	/* Initialize the dump state struct to be used by rproc_coredump_read */
++	dump_state.rproc = rproc;
++	dump_state.header = data;
++	init_completion(&dump_state.dump_done);
++
++	dev_coredumpm(&rproc->dev, NULL, &dump_state, data_size, GFP_KERNEL,
++		      rproc_coredump_read, rproc_coredump_free);
+ 
+-	dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
++	/*
++	 * Wait until the dump is read and free is called. Data is freed
++	 * by devcoredump framework automatically after 5 minutes.
++	 */
++	wait_for_completion(&dump_state.dump_done);
+ }
+diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+index eb08139..38d037d 100644
+--- a/include/linux/remoteproc.h
++++ b/include/linux/remoteproc.h
+@@ -435,6 +435,20 @@ enum rproc_crash_type {
+ };
+ 
+ /**
++ * enum rproc_dump_mechanism - Coredump options for core
++ * @RPROC_COREDUMP_DEFAULT:	Copy dump to separate buffer and carry on with
++				recovery
++ * @RPROC_COREDUMP_INLINE:	Read segments directly from device memory. Stall
++				recovery until all segments are read
++ * @RPROC_COREDUMP_DISABLED:	Don't perform any dump
++ */
++enum rproc_dump_mechanism {
++	RPROC_COREDUMP_DEFAULT,
++	RPROC_COREDUMP_INLINE,
++	RPROC_COREDUMP_DISABLED,
++};
++
++/**
+  * struct rproc_dump_segment - segment info from ELF header
+  * @node:	list node related to the rproc segment list
+  * @da:		device address of the segment
+@@ -466,6 +480,7 @@ struct rproc_dump_segment {
+  * @dev: virtual device for refcounting and common remoteproc behavior
+  * @power: refcount of users who need this rproc powered up
+  * @state: state of the device
++ * @dump_conf: Currently selected coredump configuration
+  * @lock: lock which protects concurrent manipulations of the rproc
+  * @dbg_dir: debugfs directory of this rproc device
+  * @traces: list of trace buffers
+@@ -499,6 +514,7 @@ struct rproc {
+ 	struct device dev;
+ 	atomic_t power;
+ 	unsigned int state;
++	enum rproc_dump_mechanism dump_conf;
+ 	struct mutex lock;
+ 	struct dentry *dbg_dir;
+ 	struct list_head traces;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
