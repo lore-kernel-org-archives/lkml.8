@@ -2,161 +2,93 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E548BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750B12076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:08:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="k5lh+koQ"
+	by mail.kernel.org (Postfix) with ESMTP id B98B82076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:08:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594926504;
+	bh=DQsVaHM0XCrz69/Whg7hTliz4EEyfi090AyIDlqcw+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OuHasLNC6uk/eMHy7nf5FnPOc8RloTXHY2zh61s5hZn67BaffKRO0C/wzyNNx5m3s
+	 gS+lOPUspZI0VmaX8wu9ddx0Sdmo9y9Vmgm1zOnBxW9l7gbESmo0l9/2zmoJUgtSQA
+	 XsOETHhjpCBuxuEApZYbE6M/ChnPsoPbXNkPZo/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbgGPTIQ (ORCPT
+        id S1729556AbgGPTIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:08:16 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.89]:32362 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728163AbgGPTIP (ORCPT
+        Thu, 16 Jul 2020 15:08:23 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44207 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728163AbgGPTIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:08:15 -0400
-X-Greylist: delayed 1230 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jul 2020 15:08:14 EDT
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 3B6E740112CD6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:47:42 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id w8v0juMwjBb5dw8v0jndqP; Thu, 16 Jul 2020 13:47:42 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8IqV0d4ijCF3CnpKsDzE8OB4Fr535nEtPrtd0jJ2VMM=; b=k5lh+koQpZm8gML9fuAcogiRxm
-        kclV+0LZ0HqyMmujjipydBYf4syibz2bB/ilLi0GY8LOE/8MjBeJGPUKV7AMkYS0r9of+qAhw3OVd
-        RcEtSBiXYuI5GyXYvisFdPrd5W7fhHCnhU/vNrqkmijzqbBqvm1cJQvT4HSOSLi8CnCYvz48LN7gg
-        KSZIqUiPtwugg4r1f0/DgRFiHlL+R9cMJN5/0lgjC0RvnDfQTeTbjiSR0CG7VvRTlv2o6F29KveLY
-        SUziJSxGvuqHcoHFYMif4yvjCvOcPnTRnYvwbgjBWikhIbPEXV0TyTC1BaDMCFppRR38CjyQN0gLs
-        4F96Qo5A==;
-Received: from [201.162.240.161] (port=18888 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jw8uz-0013aH-Of; Thu, 16 Jul 2020 13:47:41 -0500
-Subject: Re: [PATCH v2][next] IB/hfi1: Remove unnecessary fall-through
- markings
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200709235250.GA26678@embeddedor>
- <20200716184141.GA2660905@nvidia.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <5a6bbb8d-fe45-26d9-a602-74094f843310@embeddedor.com>
-Date:   Thu, 16 Jul 2020 13:53:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 16 Jul 2020 15:08:22 -0400
+Received: by mail-il1-f193.google.com with SMTP id h16so6016381ilj.11;
+        Thu, 16 Jul 2020 12:08:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cDpA3rYM1yVNrNZeExXuXrwxkeLlMEpe8XbtLwOxE/E=;
+        b=seeZFUu5nwbYH2UsMos/M6WnDCZaJmy6aCd2mkSj31/Xm5cdtZPeRx1zv9dFGj8Ffk
+         oyCLKcaUjmLyDdF9hX1iaxk9/A+PM0ufmzRx/zsRFXdpSdSXSnEwFGm+HChtODbJsprp
+         BAVLmQeIF19s2VLr3DAwEkwtJQF+6c5xvnwGDDV3jcrBSjOk3YSkdOh6y4Pdw6tU/G/m
+         HcsylEw8d5Vhx7YNtRFidQVWCSjwldxs8LI5tvvpdk5YiukmSLvTgu2DMFhOu5nFxJLR
+         Z+1IXxpgAIncqZ2sEuJijzqUFkY/i2sI2ewhZSVJOFfT7dxRgSeyfTnBFkjmptB1JRlg
+         uqxA==
+X-Gm-Message-State: AOAM5315mvR3xnL5AcKgT708bwa4eixnC12IKBZUCPJPYUDJrWnLsDRO
+        KGXeMeTKEc+/bWRGB7eWhg==
+X-Google-Smtp-Source: ABdhPJzYGfEUybyWdL4OqS0VBQp60v2KMqvKIimCPqW+BTohHRfji7lXRslRbTotCF9Kk4cBkh8m7Q==
+X-Received: by 2002:a92:77c1:: with SMTP id s184mr6124392ilc.196.1594926501714;
+        Thu, 16 Jul 2020 12:08:21 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id f2sm3176638ioc.52.2020.07.16.12.08.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 12:08:21 -0700 (PDT)
+Received: (nullmailer pid 2678347 invoked by uid 1000);
+        Thu, 16 Jul 2020 19:08:20 -0000
+Date:   Thu, 16 Jul 2020 13:08:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        devicetree@vger.kernel.org, Huacai Chen <chenhc@lemote.com>
+Subject: Re: [PATCH v4 8/8] dt-bindings: interrupt-controller: Fix typos in
+ loongson,liointc.yaml
+Message-ID: <20200716190820.GA2678097@bogus>
+References: <1594869390-21053-1-git-send-email-yangtiezhu@loongson.cn>
+ <1594869390-21053-9-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-In-Reply-To: <20200716184141.GA2660905@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.161
-X-Source-L: No
-X-Exim-ID: 1jw8uz-0013aH-Of
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.240.161]:18888
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594869390-21053-9-git-send-email-yangtiezhu@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/16/20 13:41, Jason Gunthorpe wrote:
-> On Thu, Jul 09, 2020 at 06:52:50PM -0500, Gustavo A. R. Silva wrote:
->> Reorganize the code a bit in a more standard way[1] and remove
->> unnecessary fall-through markings.
->>
->> [1] https://lore.kernel.org/lkml/20200708054703.GR207186@unreal/
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
->> ---
->> Changes in v2:
->>  - Remove additional overlooked fall-through markings.
->>
->>  drivers/infiniband/hw/hfi1/chip.c | 27 ++++++++++++++-------------
->>  1 file changed, 14 insertions(+), 13 deletions(-)
+On Thu, 16 Jul 2020 11:16:30 +0800, Tiezhu Yang wrote:
+> Fix the following typos in loongson,liointc.yaml:
+> children -> child
+> fron -> from
+> connected -> connect
+> it's -> its
 > 
-> Applied to for-next, thanks
+> Fixes: b6280c8bb6f5 ("dt-bindings: interrupt-controller: Add Loongson LIOINTC")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  .../devicetree/bindings/interrupt-controller/loongson,liointc.yaml    | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 
-Thanks, Jason.
-
---
-Gustavo
+Applied, thanks!
