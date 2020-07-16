@@ -2,98 +2,91 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC1CC433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8301EC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8E7520787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5003F20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:24:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594923876;
+	bh=lUrKAN9yNahYk7DUhEVFApBsMcGwcqcB0K958hQove4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iFd9+GQQ3VpNDvuRxsjV32ruhwSbzQNCaa2aAeWvzAhhpoFsHRTeDQtQL0S6cYLrY
+	 2OjDz2H4LDdnqSR7KZWe6SCH6BtjtfsJFkDx4/x+7g2+gmFMDOHWLZLTzr/uOohZfb
+	 YgDabJs1NG9lD3B1spdERKFRqKQWHVfqOnmO0LWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgGPSXN (ORCPT
+        id S1729284AbgGPSYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:23:13 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:52849 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbgGPSXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:23:12 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mn2Fb-1kfxPt3VPr-00k99o; Thu, 16 Jul 2020 20:23:11 +0200
-Received: by mail-qk1-f179.google.com with SMTP id 80so6447878qko.7;
-        Thu, 16 Jul 2020 11:23:10 -0700 (PDT)
-X-Gm-Message-State: AOAM530huo458TG5uk3Z/WsTLqhlmCFbrPZjAMEQAI827hRKlTINiWTw
-        ez81v9L38s7QIwEJHT5pbXXDfw07c3Cu6qP0quk=
-X-Google-Smtp-Source: ABdhPJxGrriyRsR3c/KbpnjkC2s9ZK2i9yjLtrI7t9taPXMe6YEy79uW5SDiSgg7Rvt4nATRSACGzmEr51YGyOvKzdk=
-X-Received: by 2002:a37:a496:: with SMTP id n144mr5371218qke.286.1594923789486;
- Thu, 16 Jul 2020 11:23:09 -0700 (PDT)
+        Thu, 16 Jul 2020 14:24:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726986AbgGPSYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 14:24:34 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D609D2074B;
+        Thu, 16 Jul 2020 18:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594923874;
+        bh=lUrKAN9yNahYk7DUhEVFApBsMcGwcqcB0K958hQove4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UKdl1ElnQFjpW7KDv9qP3KZasaypvi6rKGvuPkI8JqV+ITm+nFBjSBFQRNZfzwQKS
+         dNlgdYtJt9Op41llLbthsSk6EKgovcbOAQHzR/PsMB14FIJEfSAkN4JDS0dHAFABJr
+         8HcJS1TtQEihKUgASpgn6ZLKpELaumP4Xm1AxQKE=
+Date:   Thu, 16 Jul 2020 11:24:32 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Sergey Organov <sorganov@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v3 net] net: fec: fix hardware time stamping by external
+ devices
+Message-ID: <20200716112432.127b9d99@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200714162802.11926-1-sorganov@gmail.com>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+        <20200714162802.11926-1-sorganov@gmail.com>
 MIME-Version: 1.0
-References: <20200716141534.30241-1-ulf.hansson@linaro.org>
-In-Reply-To: <20200716141534.30241-1-ulf.hansson@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Jul 2020 20:22:53 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1+rwY5uFpUMijgET_W78Tj+tqqKDevgqstjUmmhxdKuA@mail.gmail.com>
-Message-ID: <CAK8P3a1+rwY5uFpUMijgET_W78Tj+tqqKDevgqstjUmmhxdKuA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core: Initial support for SD express card/host
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Rui Feng <rui_feng@realsil.com.cn>,
-        linux-nvme@lists.infradead.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+TjDQ9YUAMYyAEtk98Cm3V/08UfVGlPkR6Yp9cG9e0a8gFt3h07
- 3AnnmZL7waJLYasGA6NDFjQPYJ1yyyRYpJf/wasOBsOi4+LI2SFJOwBHKzL+ITG6Sf69tP7
- I88E1UDokMqPfftDjM+1wQ5thTYl46T59zRHIayUPGPWloZw6G0H3LF9seqGcwZPmxWguCy
- oxPxlBaX81A+9jNsiFEmA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uZs/R89mfro=:SC6jXf7/yn75Xjer/U6coL
- +JsUU+t2kRt3Iq74fK9DOUlLz+2EjGqKwjd9492PCn8BA3abiZoUdTaxd3HjpTc2UNBRJLUFY
- MYI0aXbZ5Mtefnkrr1IU7+Ryex8gBsBFCJUd7wgc/q2NUpMjC3tKJ2t7B4WpFQT20q/JkBLgp
- GWHmjzhFTeviqwDElHZ3P1oUG4ILOZDtsTVcHUoL4YFKxuoGvE131PgZukPPGdjxZKf0aiRSP
- BAAWEeSCCR9LBNleJ13Jt97ia1cG09ET57QocXeE9lLse2ftTYG71PpibgmF49NVUnrDX5PxL
- GjlTebdmXKHddFzGNAa8SUKayjFDiJk3PajwcSbiAMf422F+sa3LkeAY7A/0B/YKNUI7mnhuZ
- 0QG1Ar2J3JYYg5ycoLvdiQ2w5TbUD0iwbrN/ZDiDpCSs2Qo+pFaUmLA0bBx0rjHbwqceF6tpu
- cn2FUBxzAEYDmWhuU1WeqEuIiKSJom0z0UvL14uLbPnlqhaTtSHiaoT4Zm0gW4br0FcvhxAQK
- 7TX9qqk/Do4JxM+Sd6yGIXwaRa/4EWQOV1XXXJkdDtF+RrhM4EhmWRohgb2D4HAbmGh4KxieG
- phUnjQZcH+8KsHRIhMddZnfz7qHITNM2DrZTyb32M787r1rkDH9bdJAjlLhmQXoRHxabzlItI
- 3wvfeM0Ob5O6SCpIp3NeBhhDa2cuSMH5WgAGlpQzy9M6aNj3FIhx4xFYEJ8cScIACQdNW5rXq
- onT1Ce7c2WI5PXhJZh9sco0+FW7g2jTjoYKtThNmchUQ1T1UBx75z9P7lgf1tsrU9lPGaCkIj
- B2lbFRovJGfGJ4Vaaw+7Hrhg4Y5Gmalr7VFQRIPR8fo3Lw1tE5XIaWFuxV8Rz6sG+5t7Zyv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 4:16 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+On Tue, 14 Jul 2020 19:28:02 +0300 Sergey Organov wrote:
+> Fix support for external PTP-aware devices such as DSA or PTP PHY:
+> 
+> Make sure we never time stamp tx packets when hardware time stamping
+> is disabled.
+> 
+> Check for PTP PHY being in use and then pass ioctls related to time
+> stamping of Ethernet packets to the PTP PHY rather than handle them
+> ourselves. In addition, disable our own hardware time stamping in this
+> case.
+> 
+> Fixes: 6605b730c061 ("FEC: Add time stamping code and a PTP hardware clock")
+> Signed-off-by: Sergey Organov <sorganov@gmail.com>
+> Acked-by: Richard Cochran <richardcochran@gmail.com>
+> Acked-by: Vladimir Oltean <olteanv@gmail.com>
+> ---
+> 
+> v3:
+>   - Fixed SHA1 length of Fixes: tag
+>   - Added Acked-by: tags
+> 
+> v2:
+>   - Extracted from larger patch series
+>   - Description/comments updated according to discussions
+>   - Added Fixes: tag
 
-> +       /* Continue with the SD express init, if the card supports it. */
-> +       resp &= 0x3000;
-> +       if (pcie_bits && resp) {
-> +               if (resp == 0x3000)
-> +                       host->ios.timing = MMC_TIMING_SD_EXP_1_2V;
-> +               else
-> +                       host->ios.timing = MMC_TIMING_SD_EXP;
-> +
-> +               /*
-> +                * According to the spec the clock shall also be gated, but
-> +                * let's leave this to the host driver for more flexibility.
-> +                */
-> +               return host->ops->init_sd_express(host, &host->ios);
-> +       }
-> +
->         return 0;
->  }
+FWIW in the networking subsystem we like the changelog to be part of the
+commit.
 
-Does this need an additional handshake or timeout to see if the
-device was successfully probed by the nvme driver?
-
-It looks like the card would just disappear here if e.g. the nvme driver
-is not loaded or runs into a runtime error.
-
-     Arnd
+Applied, and added to the stable queue, thanks!
