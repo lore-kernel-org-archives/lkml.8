@@ -1,96 +1,78 @@
-Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A30C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 967E1206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA6F2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 00:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgGOX7F (ORCPT
+        id S1727062AbgGPACP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:59:05 -0400
-Received: from mga04.intel.com ([192.55.52.120]:5924 "EHLO mga04.intel.com"
+        Wed, 15 Jul 2020 20:02:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgGOX7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 19:59:05 -0400
-IronPort-SDR: KLgvHFXcRh38FN7gbZ6ItsR5oewuCOcmjE3HRPhPku85bLYowyHWACKKaybZHlPJOfzPKpSOLV
- ouuzIaQY4hIg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="146801793"
-X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="146801793"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 16:59:03 -0700
-IronPort-SDR: 0TmZbslzAOCQo6mG8/jVAAjrHfUzRwAxwIQvIo0gPMYykLtKtYKTkYiKowe47wWp8qThbOujf5
- OcNlUMineMHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="270415280"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Jul 2020 16:59:03 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 0C38158081E;
-        Wed, 15 Jul 2020 16:59:03 -0700 (PDT)
-Message-ID: <245ecc65a839bd69413045ae5ee307ba03ca0869.camel@linux.intel.com>
-Subject: Re: [PATCH V3 3/3] platform/x86: Intel PMT Telemetry capability
- driver
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        lee.jones@linaro.org, dvhart@infradead.org, andy@infradead.org,
-        bhelgaas@google.com, alexander.h.duyck@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Date:   Wed, 15 Jul 2020 16:59:02 -0700
-In-Reply-To: <727a75a0-3fb5-769a-cf1f-70a2a0bab0c8@linux.intel.com>
-References: <20200508021844.6911-1-david.e.box@linux.intel.com>
-         <20200714062323.19990-4-david.e.box@linux.intel.com>
-         <727a75a0-3fb5-769a-cf1f-70a2a0bab0c8@linux.intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        id S1726479AbgGPACO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 20:02:14 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23F9620714;
+        Thu, 16 Jul 2020 00:02:14 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 20:02:12 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Alistair Delva <adelva@google.com>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] bootconfig: Add value override operator
+Message-ID: <20200715200212.0db61d5a@oasis.local.home>
+In-Reply-To: <20200716073843.e7b1921aae962da9e5714fe0@kernel.org>
+References: <159482882056.126704.15508672095852220119.stgit@devnote2>
+        <20200715164504.3400efc5@oasis.local.home>
+        <20200716073843.e7b1921aae962da9e5714fe0@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-15 at 10:39 +0300, Alexey Budankov wrote:
-> Hi David,
-> 
-> On 14.07.2020 9:23, David E. Box wrote:
+On Thu, 16 Jul 2020 07:38:43 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-...
 
+> > So the end of the initrd would have:
 > > 
-> > +static int pmt_telem_open(struct inode *inode, struct file *filp)
-> > +{
-> > +	struct pmt_telem_priv *priv;
-> > +	struct pmt_telem_entry *entry;
-> > +	struct pci_driver *pci_drv;
-> > +	struct pci_dev *pci_dev;
-> > +
-> > +	if (!capable(CAP_SYS_ADMIN))
+> >  [data][size/checksum/magic][more-data][size/checksum/magic]
+> > 
+> > 
+> > And the kernel could do the following:
+> > 
+> >  1. read the end of the initrd for bootconfig
+> >  2. If found parse the bootconfig data.
+> >  3. look at the content before the bootconfig
+> >  4. if another bootconfig exists, goto 2.
+> >   
 > 
-> Thanks for supplying these patches.
-> Are there any reasons not to expose this feature to CAP_PERFMON
-> privileged
-> processes too that currently have access to performance monitoring
-> features
-> of the kernel without root/CAP_SYS_ADMIN credentials? This could be
-> done by
-> pefmon_capable() function call starting from v5.8+.
+> Yeah, that is possible. But since the total size of the bootconfig
+> is limited to 32KB (this means data + 1st footer + more-data),
+> I would like to give a chance of sanity check to the bootloader.
 
-The new capability is well suited for this feature. I'll make the
-change. Thanks.
 
-David
+That's a limit of the size field, right?
+
+The bootloader (and all tools including the kernel) could check for
+multiple instances, and that would even increase the size of what can
+be added. As each section would be 32KB max size, but there's no limit
+to how many you have. All tools, bootconfig, the bootloader, and the
+kernel can perform the checksum.
+
+-- Steve
 
