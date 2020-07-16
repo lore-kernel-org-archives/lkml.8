@@ -2,104 +2,122 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152A1C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7532065E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE5002065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgGPQsK (ORCPT
+        id S1728937AbgGPQs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:48:10 -0400
-Received: from mga04.intel.com ([192.55.52.120]:50403 "EHLO mga04.intel.com"
+        Thu, 16 Jul 2020 12:48:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:47596 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728721AbgGPQsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:48:09 -0400
-IronPort-SDR: IMB8suGiAK+sW7RJXXNPvABRBhvK0MPw+rsJ5TBKXcwOMC4eEdbhyNbVYrXNkwjzYLuXOgUDrw
- xS2wtxBNQlTA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="146942444"
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="146942444"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 09:48:09 -0700
-IronPort-SDR: ZA7q2BJMG9dZklnBPNFeSbY2pb+Z2/ehqdKBomNyLVBvDQ88gZ+ViD81h0cABUL4xa+XPO7QO6
- 1kvKZFaRlAlA==
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="486672417"
-Received: from unknown (HELO [10.254.114.13]) ([10.254.114.13])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 09:48:08 -0700
-Subject: Re: [PATCH] ASoC: Intel: bytcht_es8316: Add missed put_device()
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        cezary.rojewski@intel.com, liam.r.girdwood@linux.intel.com,
-        yang.jie@linux.intel.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, kuninori.morimoto.gx@renesas.com,
-        paul@crapouillou.net
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200714080918.148196-1-jingxiangfeng@huawei.com>
- <25abce87-5572-a78a-f001-7776f07be4ac@redhat.com>
- <48bdc22e-a0fc-0402-a003-1d0736107e8a@linux.intel.com>
- <0405e05d-3f46-dba4-6558-7cf09fa3abe4@redhat.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <9ace068c-5ec7-7e2b-0aa5-56cb59a55f7e@linux.intel.com>
-Date:   Thu, 16 Jul 2020 11:48:06 -0500
+        id S1725867AbgGPQs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:48:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83F9630E;
+        Thu, 16 Jul 2020 09:48:55 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A5EC3F68F;
+        Thu, 16 Jul 2020 09:48:53 -0700 (PDT)
+Subject: Re: [SchedulerWakeupLatency] Per-task vruntime wakeup bonus
+To:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>, Ben Segall <bsegall@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Josef Bacik <jbacik@fb.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Parth Shah <parth@linux.ibm.com>
+References: <87v9kv2545.derkling@matbug.com> <87h7wd15v2.derkling@matbug.net>
+ <87imgrlrqi.derkling@matbug.net> <87mu5sqwkt.derkling@matbug.net>
+ <87eer42clt.derkling@matbug.net> <87imfi2qbk.derkling@matbug.net>
+ <87blla2pdt.derkling@matbug.net>
+ <CAKfTPtBHmP6BOrx6XGqZ7UpCFxWCZz23KWf4DXtAhRGUPfjebA@mail.gmail.com>
+ <878sfrywd8.derkling@matbug.net>
+ <CAKfTPtAWgWZMx4GA_N0j1jxXRtDDdo9yix7mOBZ_zdsRrqJA8Q@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <46c7f966-6679-bb9e-dabe-bb385298d19b@arm.com>
+Date:   Thu, 16 Jul 2020 18:48:37 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <0405e05d-3f46-dba4-6558-7cf09fa3abe4@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAKfTPtAWgWZMx4GA_N0j1jxXRtDDdo9yix7mOBZ_zdsRrqJA8Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 13/07/2020 14:59, Vincent Guittot wrote:
+> On Fri, 10 Jul 2020 at 21:59, Patrick Bellasi
+> <patrick.bellasi@matbug.net> wrote:
+>>
+>>
+>> On Fri, Jul 10, 2020 at 15:21:48 +0200, Vincent Guittot <vincent.guittot@linaro.org> wrote...
 
+[...]
 
->>>> snd_byt_cht_es8316_mc_probe() misses to call put_device() in an error
->>>> path. Add the missed function call to fix it.
->>>>
->>>> Fixes: ba49cf6f8e4a ("ASoC: Intel: bytcht_es8316: Add quirk for 
->>>> inverted jack detect")
->>>> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
->>>
->>> Patch looks good to me:
->>>
->>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>> Instead, it should weight the decision in wakeup_preempt_entity() and
+>>> wakeup_gran()
 >>
->> Actually the existing code looks quite odd to me:
+>> In those functions we already take the task prio into consideration
+>> (ref details at the end of this message).
 >>
->> if (cnt) {
->>      ret = device_add_properties(codec_dev, props);
->>      if (ret)
->>          return ret;
->> }
->>
->> devm_acpi_dev_add_driver_gpios(codec_dev, byt_cht_es8316_gpios);
->> priv->speaker_en_gpio =
->>      gpiod_get_index(codec_dev, "speaker-enable", 0,
->>              /* see comment in byt_cht_es8316_resume */
->>              GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
->> put_device(codec_dev);
->>
->> if the first branch is not taken the put_device() will not be balanced.
+>> Lower nice value tasks have more chances to preempt current since they
+>> will have a smaller wakeup_gran, indeed:
 > 
-> The get_device() does not come from the device_add_properties, it comes
-> from the earlier:
+> yes, and this is there to ensure a fair distribution of running time
+> and prevent a task to increase significantly its vruntime compare to
+> others
 > 
-> codec_dev = bus_find_device_by_name(&i2c_bus_type, NULL, codec_name);
+> -1 min that se already got more runtime than current
+> 0 that se's vruntime will go above current's vruntime after a runtime
+> duration of  sched_min_granularity
+> and 1 means that se got less runtime than current and its vruntime
+> will still be lower than current ones even after a runtime duration of
+> sched_min_granularity
 > 
-> call.
+> IMHO, latency_nice should impact the decision only for case 0 but not
+> the case -1 and 1.
+> That being said, we can extend the case 0 a bit to include the
+> situation where current's vruntime will become greater than se's
+> vruntimes after a runtime duration of  sched_min_granularity like
+> below:
+> 
+>                                                            curr->vruntime
+>                                           |<-- wakeup_gran(se) -->|<--
+> wakeupgran(curr) -->|
+> current range: se->vruntime          +1   |        0              |    -1
+> new range:     se->vruntime          +1   |                       0
+>                     |   -1
+> 
 
-I probably needed more coffee when I wrote this, indeed this is fine...
+I assume this got messed up by line break somehow:
 
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+                                                   curr->vruntime
+                                 |<-- wakeup_gran(se) -->|<-- wakeup_gran(curr) -->|
+current range: se->vruntime  +1  |        0              |    -1
+new range:     se->vruntime  +1  |                       0                         | -1
 
+IMHO, with the current use of wakeup_preempt_entity() I don't see what
+will change with that.
+We check 'wakeup_preempt_entity() == 1' in check_preempt_wakeup() and 
+'wakeup_preempt_entity() < 1' in pick_next_entity().
+
+How should the mapping between se's latency_nice value to the consideration of
+wakeup_gran(curr) look like?
+
+[...]
