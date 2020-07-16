@@ -2,78 +2,160 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B95C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1439820787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6095920787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:42:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RrmG/J3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgGPUlF (ORCPT
+        id S1726803AbgGPUmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:41:05 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:45135 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgGPUlF (ORCPT
+        Thu, 16 Jul 2020 16:42:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgGPUmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:41:05 -0400
-Received: by mail-io1-f70.google.com with SMTP id d64so4322825iof.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:41:04 -0700 (PDT)
+        Thu, 16 Jul 2020 16:42:11 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC0EC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:42:11 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id q3so6255697ilt.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:42:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fUE86W1UJN2bRiah1oXJUMER4mh/QPwIXSnuZ1uSW0s=;
+        b=RrmG/J3jpWBsDDFF3A7QzDzaGOTgfYaEMM3x8YgAQpVrskHu3wjzPimoTM0kdHrFb0
+         iNFr+wjScrrmoD7I50J4Zi3yLECilItoTsCVV0Em3VomnC/WFjs7rEp5q9JxO5JQvKTE
+         U4MhySnQ32ELsNDjgkQAWozxYFACiG7bEbJ1pqOCuNj9ufEjtPEl0+isdbLbQxWE4jVc
+         c9gWIhAoDv0MRdpB4OcjECdfW71Z27say8hMQmEYKwvEUFh+cdVeOsNTF8Mh+S5gQ+OK
+         1H4uj01Y0OlKGFrRWvVGpeCud+BF9xejRZdB3AotngwZTVY4Wycr3unxNHxYMZ7e/Ggf
+         Y2qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=MJOPP91fI02T11IImb5jr+gjqr0RxeB4C7mwZ09S0ac=;
-        b=QzRS8M96yReCrQKnVKZQVn5hfZgmL+7QgFE2TvsKn7Ornfl9hLqiuW6vy49G9eStRJ
-         k7J+6t9m/DWodMnTafDA8Y1LAg5UKGN8aQjaoBFojgCXkhkklHFeCHDFiGRDRmCtIqVa
-         a+1zgBz16R3pz2bJogNt0XewnSubX5ke/BQawYvVoF0wX2z1W/Tbp3mWo4H7zQKWD5/D
-         zC6a1ngnCcG9O3dlFoJqjcIlDY2VbCjdPjE+n4DGPELQwzziQEveZUWoQxFyIDx2QWd6
-         b5+4j68TIPZSA2QPIKb9iq1p0p7iA/c7l0u5GfFxT/qDqndL/R2UxnmHvDFyr/mqkAYF
-         XTZw==
-X-Gm-Message-State: AOAM531qFK/RXNtf3qsloQ5oECHkOaSvmyXi4ahzQZFCHB0AMDHA5N+A
-        IaCnGq4+aitPIb/14A4o3RKWxTtmycEVOdOHi6ljqmruEOp0
-X-Google-Smtp-Source: ABdhPJzv2CNM+Kml3MecWCgob+RHzrgpODX2HxZNVirGkjOmGSYqaiVYO323EJ7wT8l+qtjglQjZCXtHQGB8uokL4mPFWgQs++oy
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fUE86W1UJN2bRiah1oXJUMER4mh/QPwIXSnuZ1uSW0s=;
+        b=gMObuMVJa/OBKYdKH4fvq+jZV5FtPaX/RFtZY2DycP/2V3vbh6SIkzmrfKB5svjjhF
+         Ajj1274zRJSN6kxtbVZHETDZstD94ruFZHtdgcEThQ0TzKuRHBZiVNCfQ016EEfAUEyp
+         kZd8tPuNmApWgYR3UUpSGDTiWLwJ9InOtYPPs/DqluLXqoeCePWIFqBa4fSmRcU5Ek78
+         MIYgWSSWtehOY+gaESQtBo7dm+vzEPbcghTI6UB383SXfXWX9FaYtdMI4T2poGfGXlU9
+         LT220M4mShzwZbTDflr/nHZZ8L1d85X3HFu6nSfnO0ZUT8+ISLYcnddsDK0rP4pMXEqq
+         9RoA==
+X-Gm-Message-State: AOAM531D2o+KfVmxxTrQW4qmwO5Fqwzmkx/Svvsqb5qnJ4dHPJCDXjqn
+        rH7sciFAsNeNLkzAn2NK0vt9IVHu/JxD3Q==
+X-Google-Smtp-Source: ABdhPJxe5TOhSxedrrbH1LVWGedg+qBDzWZbftnSxmv/RaY3P0vwR96U4ppS3jdcGEaLKRSKLaqsMQ==
+X-Received: by 2002:a92:9108:: with SMTP id t8mr6735616ild.170.1594932130242;
+        Thu, 16 Jul 2020 13:42:10 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id e21sm3368142ioe.11.2020.07.16.13.42.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 13:42:09 -0700 (PDT)
+Subject: Re: [PATCH RFC v2 1/3] io_uring: use an enumeration for
+ io_uring_register(2) opcodes
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        linux-kernel@vger.kernel.org
+References: <20200716124833.93667-1-sgarzare@redhat.com>
+ <20200716124833.93667-2-sgarzare@redhat.com>
+ <ca242a15-576d-4099-a5f8-85c08985e3ff@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a2f109b2-adbf-147d-9423-7a1a4bf99967@kernel.dk>
+Date:   Thu, 16 Jul 2020 14:42:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:cf12:: with SMTP id q18mr7002957jar.3.1594932064186;
- Thu, 16 Jul 2020 13:41:04 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 13:41:04 -0700
-In-Reply-To: <000000000000983e0405a9c7b870@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002077ca05aa950f9f@google.com>
-Subject: Re: INFO: rcu detected stall in __sys_sendmsg
-From:   syzbot <syzbot+f517075b510306f61903@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        vinicius.gomes@intel.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ca242a15-576d-4099-a5f8-85c08985e3ff@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
+On 7/16/20 2:16 PM, Pavel Begunkov wrote:
+> On 16/07/2020 15:48, Stefano Garzarella wrote:
+>> The enumeration allows us to keep track of the last
+>> io_uring_register(2) opcode available.
+>>
+>> Behaviour and opcodes names don't change.
+>>
+>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>> ---
+>>  include/uapi/linux/io_uring.h | 27 ++++++++++++++++-----------
+>>  1 file changed, 16 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+>> index 7843742b8b74..efc50bd0af34 100644
+>> --- a/include/uapi/linux/io_uring.h
+>> +++ b/include/uapi/linux/io_uring.h
+>> @@ -253,17 +253,22 @@ struct io_uring_params {
+>>  /*
+>>   * io_uring_register(2) opcodes and arguments
+>>   */
+>> -#define IORING_REGISTER_BUFFERS		0
+>> -#define IORING_UNREGISTER_BUFFERS	1
+>> -#define IORING_REGISTER_FILES		2
+>> -#define IORING_UNREGISTER_FILES		3
+>> -#define IORING_REGISTER_EVENTFD		4
+>> -#define IORING_UNREGISTER_EVENTFD	5
+>> -#define IORING_REGISTER_FILES_UPDATE	6
+>> -#define IORING_REGISTER_EVENTFD_ASYNC	7
+>> -#define IORING_REGISTER_PROBE		8
+>> -#define IORING_REGISTER_PERSONALITY	9
+>> -#define IORING_UNREGISTER_PERSONALITY	10
+>> +enum {
+>> +	IORING_REGISTER_BUFFERS,
+>> +	IORING_UNREGISTER_BUFFERS,
+>> +	IORING_REGISTER_FILES,
+>> +	IORING_UNREGISTER_FILES,
+>> +	IORING_REGISTER_EVENTFD,
+>> +	IORING_UNREGISTER_EVENTFD,
+>> +	IORING_REGISTER_FILES_UPDATE,
+>> +	IORING_REGISTER_EVENTFD_ASYNC,
+>> +	IORING_REGISTER_PROBE,
+>> +	IORING_REGISTER_PERSONALITY,
+>> +	IORING_UNREGISTER_PERSONALITY,
+>> +
+>> +	/* this goes last */
+>> +	IORING_REGISTER_LAST
+>> +};
+> 
+> It breaks userspace API. E.g.
+> 
+> #ifdef IORING_REGISTER_BUFFERS
 
-commit 5a781ccbd19e4664babcbe4b4ead7aa2b9283d22
-Author: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Date:   Sat Sep 29 00:59:43 2018 +0000
+It can, yes, but we have done that in the past. In this one, for
+example:
 
-    tc: Add support for configuring the taprio scheduler
+commit 9e3aa61ae3e01ce1ce6361a41ef725e1f4d1d2bf (tag: io_uring-5.5-20191212)
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Wed Dec 11 15:55:43 2019 -0700
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=109a63cf100000
-start commit:   7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=149a63cf100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=183dd243398ba7ec
-dashboard link: https://syzkaller.appspot.com/bug?extid=f517075b510306f61903
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f01c1f100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16c40ba7100000
+    io_uring: ensure we return -EINVAL on unknown opcod
 
-Reported-by: syzbot+f517075b510306f61903@syzkaller.appspotmail.com
-Fixes: 5a781ccbd19e ("tc: Add support for configuring the taprio scheduler")
+But it would be safer/saner to do this like we have the done the IOSQE_
+flags.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Jens Axboe
+
