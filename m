@@ -2,71 +2,96 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B01C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C79BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 089742078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76FF52078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594861308;
-	bh=H0H1cfpKnnKuRaYYxUYCzxKrgJeczTSwegc9TcO0VAs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fqQWhmL381Gv16c+s3RjAyxpIuOr/seZqUwyiVKyznf/2gdhtLp3xX4PNbfexowY2
-	 CT4SZN3n2xvC9NacadV1qpot16ngDfXbVIFcLIBEN6W4RrDioyR6Z7Kltb5XjsBeym
-	 kK2oDZc8ixTqsLK70C9g0n7ks1KyvOGp2aXVslNY=
+	s=default; t=1594861399;
+	bh=6oZhkB9EWxV3GBYwjhNGD/mi4wQQrv5Y+A8n809Z7PU=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=bQizoRRxtvJwNCrgAcHp10TcQozVaNWtBPO2ig/tj2aZPomxQBxdTNVD6S9/jiYud
+	 kjIuAyu/vc0+/06EIMmtKs0ZJzaH1YsZl1eDZxaHpaKNnOAUmvMchH/5LfBHybKO1d
+	 yDGrr3tGloYele9HYj5+ytW/urYh+h+R1G4QNlkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgGPBBq (ORCPT
+        id S1727826AbgGPBDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 21:01:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37218 "EHLO mail.kernel.org"
+        Wed, 15 Jul 2020 21:03:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgGPBBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 21:01:46 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        id S1726479AbgGPBDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 21:03:17 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CADCD2078C;
-        Thu, 16 Jul 2020 01:01:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F2EF2078C;
+        Thu, 16 Jul 2020 01:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594861306;
-        bh=H0H1cfpKnnKuRaYYxUYCzxKrgJeczTSwegc9TcO0VAs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QSv1YLr1usVlJCw6XJOYCwZrbBpoj49kSi0E7j03zq9o84atnIeHjJEBjoM6hbFtR
-         dIr4hDDPgdHhGE6HzJp1ys9PZHDacnckoeShXBvXqxNQq2tjSAoXUrY5ks5BuqkdBL
-         NE8V+XPYjeFo40cdmba3AVHi/zaDUCps0R127rjA=
-Date:   Wed, 15 Jul 2020 18:01:44 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Paolo Pisati <paolo.pisati@canonical.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: net: ip_defrag: modprobe missing
- nf_defrag_ipv6 support
-Message-ID: <20200715180144.02b83ed5@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200714124032.49133-1-paolo.pisati@canonical.com>
-References: <20200714124032.49133-1-paolo.pisati@canonical.com>
+        s=default; t=1594861397;
+        bh=6oZhkB9EWxV3GBYwjhNGD/mi4wQQrv5Y+A8n809Z7PU=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=ha9iSYJxgqg5SF24utqMLGdWN6TNR9WG7Bwyear+4qjGZk8W8TVdt/HY6OC0u/cjK
+         SF8vyHqa5x9AR6BWHFW5aan3mNP4Ijs0k88TKBlAwBXeQWNzzVRBaRqHn7QWiXlDsi
+         +wZyDWTyIBGQCDIoitwQgW/rsoPu13TYYKObhNjU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200713010001.18976-4-akshu.agrawal@amd.com>
+References: <20200713010001.18976-1-akshu.agrawal@amd.com> <20200713010001.18976-4-akshu.agrawal@amd.com>
+Subject: Re: [PATCH 4/5] clk: x86: Support RV architecture
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     akshu.agrawal@amd.com
+Date:   Wed, 15 Jul 2020 18:03:16 -0700
+Message-ID: <159486139638.1987609.10837351469119432355@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 14:40:32 +0200 Paolo Pisati wrote:
->  #
->  # Run a couple of IP defragmentation tests.
->  
-> +modprobe -q nf_defrag_ipv6
+Quoting Akshu Agrawal (2020-07-12 17:59:52)
+> There is minor difference between previous family of SoC and
+> the current one. Which is the there is only 48Mh fixed clk.
+> There is no mux and no option to select another freq as there in previous.
+>=20
+> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+> ---
+
+I only see four out of five patches and there isn't a cover letter. I
+have no idea if I can apply this change or if you're expecting me to ack
+it. Please help make my life a little easier!
+
+>  drivers/clk/x86/clk-fch.c | 55 ++++++++++++++++++++++++++++-----------
+>  1 file changed, 40 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/clk/x86/clk-fch.c b/drivers/clk/x86/clk-fch.c
+> index b252f0cf0628..a8aac71a3b65 100644
+> --- a/drivers/clk/x86/clk-fch.c
+> +++ b/drivers/clk/x86/clk-fch.c
+> @@ -61,9 +78,17 @@ static int fch_clk_probe(struct platform_device *pdev)
+>  static int fch_clk_remove(struct platform_device *pdev)
+>  {
+>         int i;
+> +       struct fch_clk_data *fch_data;
 > +
->  set +x
->  set -e
->  
+> +       fch_data =3D dev_get_platdata(&pdev->dev);
+> =20
+> -       for (i =3D 0; i < ST_MAX_CLKS; i++)
+> -               clk_hw_unregister(hws[i]);
+> +       if (!fch_data->is_rv) {
+> +               for (i =3D 0; i < ST_MAX_CLKS; i++)
+> +                       clk_hw_unregister(hws[i]);
+> +       } else {
+> +               for (i =3D 0; i < RV_MAX_CLKS; i++)
+> +                       clk_hw_unregister(hws[i]);
 
-Any reason you add this command before set -e ?
-
-It seems we want the script to fail if module can't be loaded.
+Can ST_MAX_CLKS or RV_MAX_CLKS be a local variable and then the loop
+consolidated.
