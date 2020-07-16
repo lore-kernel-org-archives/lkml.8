@@ -2,188 +2,224 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4563CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7880C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F39C206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2347206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594882500;
+	bh=0wEDLws9/ZTCpyy4Gy8ssQKEcMWpiT/BR9A7+RU6y1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hsUQG+CJ1OujPe5CRHuVCAStmILXm94R73glPS+/F93sj3iLCcS0axRJ0QHfd/t1W
+	 YcHLNk3Uvn5EfBYAd9mmcS+pfp0cZHgCR8v4e1XLvTbj7eNIeMTWP4jT6Jnhc0bEoH
+	 8XCLKC1g88ubqp6gEgEV0n24NYSe7Ttp80rmTQTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgGPGya (ORCPT
+        id S1728150AbgGPGy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 02:54:30 -0400
-Received: from lonlinode-sdnproxy-1.icoremail.net ([139.162.193.133]:51568
-        "HELO lonlinode-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with SMTP id S1725921AbgGPGya (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 02:54:30 -0400
-X-Greylist: delayed 711 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jul 2020 02:54:28 EDT
-Received: from localhost.localdomain (unknown [106.19.113.251])
-        by c1app1 (Coremail) with SMTP id AQINCgDnyZLC9g9f7dSfAQ--.20987S2;
-        Thu, 16 Jul 2020 14:42:12 +0800 (CST)
-From:   Qiu Wenbo <qiuwenbo@phytium.com.cn>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        Linux Driver Project Developer List 
-        <driverdev-devel@linuxdriverproject.org>
-Cc:     Qiu Wenbo <qiuwenbo@phytium.com.cn>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marco Villegas <git@marvil07.net>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8712: Fixes coding style in several headers
-Date:   Thu, 16 Jul 2020 14:41:12 +0800
-Message-Id: <20200716064118.61243-1-qiuwenbo@phytium.com.cn>
-X-Mailer: git-send-email 2.27.0
+        Thu, 16 Jul 2020 02:54:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725921AbgGPGy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 02:54:57 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1200F206F4;
+        Thu, 16 Jul 2020 06:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594882496;
+        bh=0wEDLws9/ZTCpyy4Gy8ssQKEcMWpiT/BR9A7+RU6y1c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RITLOo6ydR0ZrwrhA3nb2jT94HHfu88oTfHLI/0AxjdLHBnZnMRZUNJLrsaWOMJov
+         8Inma7m2xfSoshaTvMvXLVFNqMVDDq5fauKFyaKlYhacVvSlsenf3szhl+Tzcqz9Ld
+         5/AOUk/t+CvM3e264V0RA4yRSPr0YC20C+m+jmfs=
+Date:   Wed, 15 Jul 2020 23:54:54 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Dave Chinner <david@fromorbit.com>, akpm@linux-foundation.org,
+        Marco Elver <elver@google.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        syzbot <syzbot+0f1e470df6a4316e0a11@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com, Will Deacon <will@kernel.org>
+Subject: Re: KCSAN: data-race in generic_file_buffered_read /
+ generic_file_buffered_read
+Message-ID: <20200716065454.GI1167@sol.localdomain>
+References: <0000000000004a4d6505aa7c688a@google.com>
+ <20200715152912.GA2209203@elver.google.com>
+ <20200715163256.GB1167@sol.localdomain>
+ <20200715234203.GK5369@dread.disaster.area>
+ <20200716030357.GE1167@sol.localdomain>
+ <1594880070.49b50i0a1p.astroid@bobo.none>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQINCgDnyZLC9g9f7dSfAQ--.20987S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGryUGF48WrWrGw4kKFW7Arb_yoW5tFWrpr
-        srX3ySyw1Uta1UWrnxtFyUuF1fKa4xCrWkG39rt34YvF1rurWFgFy7Aa4UJr43Gas5AF13
-        tFWUGry5W34UKrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-        4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-        628vn2kIc2xKxwCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-        1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-        AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyU
-        JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-        nIWIevJa73UjIFyTuYvjfUndb1UUUUU
-X-Originating-IP: [106.19.113.251]
-X-CM-SenderInfo: 5tlx4vhqerq15k1wx33pof0zgofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594880070.49b50i0a1p.astroid@bobo.none>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes warnings in several headers found by the checkpatch.pl tool.
+On Thu, Jul 16, 2020 at 04:24:01PM +1000, Nicholas Piggin wrote:
+> Excerpts from Eric Biggers's message of July 16, 2020 1:03 pm:
+> > On Thu, Jul 16, 2020 at 09:42:03AM +1000, Dave Chinner wrote:
+> >> On Wed, Jul 15, 2020 at 09:32:56AM -0700, Eric Biggers wrote:
+> >> > [+Cc linux-fsdevel]
+> >> > 
+> >> > On Wed, Jul 15, 2020 at 05:29:12PM +0200, 'Marco Elver' via syzkaller-bugs wrote:
+> >> > > On Wed, Jul 15, 2020 at 08:16AM -0700, syzbot wrote:
+> >> > > > Hello,
+> >> > > > 
+> >> > > > syzbot found the following issue on:
+> >> > > > 
+> >> > > > HEAD commit:    e9919e11 Merge branch 'for-linus' of git://git.kernel.org/..
+> >> > > > git tree:       upstream
+> >> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1217a83b100000
+> >> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=570eb530a65cd98e
+> >> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=0f1e470df6a4316e0a11
+> >> > > > compiler:       clang version 11.0.0 (https://github.com/llvm/llvm-project.git ca2dcbd030eadbf0aa9b660efe864ff08af6e18b)
+> >> > > > 
+> >> > > > Unfortunately, I don't have any reproducer for this issue yet.
+> >> > > > 
+> >> > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> >> > > > Reported-by: syzbot+0f1e470df6a4316e0a11@syzkaller.appspotmail.com
+> >> > > > 
+> >> > > > ==================================================================
+> >> > > > BUG: KCSAN: data-race in generic_file_buffered_read / generic_file_buffered_read
+> >> > > 
+> >> > > Our guess is that this is either misuse of an API from userspace, or a
+> >> > > bug. Can someone clarify?
+> >> > > 
+> >> > > Below are the snippets of code around these accesses.
+> >> > 
+> >> > Concurrent reads on the same file descriptor are allowed.  Not with sys_read(),
+> >> > as that implicitly uses the file position.  But it's allowed with sys_pread(),
+> >> > and also with sys_sendfile() which is the case syzbot is reporting here.
+> >> 
+> >> Concurrent read()s are fine, they'll just read from the same offset.
+> >> 
+> > 
+> > Actually the VFS serializes concurrent read()'s on the same fd, at least for
+> > regular files.
+> 
+> Hmm, where?
 
-Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
----
- drivers/staging/rtl8712/rtl871x_event.h   | 15 ++++++++++-----
- drivers/staging/rtl8712/rtl871x_io.h      |  3 ++-
- drivers/staging/rtl8712/rtl871x_pwrctrl.h | 15 ++++++++++-----
- drivers/staging/rtl8712/rtl871x_xmit.h    | 15 ++++++++++-----
- 4 files changed, 32 insertions(+), 16 deletions(-)
+It's serialized by file->f_pos_lock.  See fdget_pos().
 
-diff --git a/drivers/staging/rtl8712/rtl871x_event.h b/drivers/staging/rtl8712/rtl871x_event.h
-index d9a5476d2426..0e59d0ee6aae 100644
---- a/drivers/staging/rtl8712/rtl871x_event.h
-+++ b/drivers/staging/rtl8712/rtl871x_event.h
-@@ -78,13 +78,16 @@ struct event_node {
- 	unsigned char *node;
- 	unsigned char evt_code;
- 	unsigned short evt_sz;
--	/*volatile*/ int *caller_ff_tail;
-+	/*volatile*/
-+	int *caller_ff_tail;
- 	int	caller_ff_sz;
- };
- 
- struct c2hevent_queue {
--	/*volatile*/ int	head;
--	/*volatile*/ int	tail;
-+	/*volatile*/
-+	int	head;
-+	/*volatile*/
-+	int	tail;
- 	struct	event_node	nodes[C2HEVENT_SZ];
- 	unsigned char	seq;
- };
-@@ -92,8 +95,10 @@ struct c2hevent_queue {
- #define NETWORK_QUEUE_SZ	4
- 
- struct network_queue {
--	/*volatile*/ int	head;
--	/*volatile*/ int	tail;
-+	/*volatile*/
-+	int	head;
-+	/*volatile*/
-+	int	tail;
- 	struct wlan_bssid_ex networks[NETWORK_QUEUE_SZ];
- };
- 
-diff --git a/drivers/staging/rtl8712/rtl871x_io.h b/drivers/staging/rtl8712/rtl871x_io.h
-index c20dd5a6bbd1..2e269b71072c 100644
---- a/drivers/staging/rtl8712/rtl871x_io.h
-+++ b/drivers/staging/rtl8712/rtl871x_io.h
-@@ -101,7 +101,8 @@ struct	_io_ops {
- struct io_req {
- 	struct list_head list;
- 	u32	addr;
--	/*volatile*/ u32	val;
-+	/*volatile*/
-+	u32	val;
- 	u32	command;
- 	u32	status;
- 	u8	*pbuf;
-diff --git a/drivers/staging/rtl8712/rtl871x_pwrctrl.h b/drivers/staging/rtl8712/rtl871x_pwrctrl.h
-index dd5a79f90b1a..e6b740c09120 100644
---- a/drivers/staging/rtl8712/rtl871x_pwrctrl.h
-+++ b/drivers/staging/rtl8712/rtl871x_pwrctrl.h
-@@ -77,14 +77,19 @@ struct reportpwrstate_parm {
- 
- struct	pwrctrl_priv {
- 	struct mutex mutex_lock;
--	/*volatile*/ u8 rpwm; /* requested power state for fw */
-+	/*volatile*/
-+	u8 rpwm; /* requested power state for fw */
- 	/* fw current power state. updated when 1. read from HCPWM or
- 	 * 2. driver lowers power level
- 	 */
--	/*volatile*/ u8 cpwm;
--	/*volatile*/ u8 tog; /* toggling */
--	/*volatile*/ u8 cpwm_tog; /* toggling */
--	/*volatile*/ u8 tgt_rpwm; /* wanted power state */
-+	/*volatile*/
-+	u8 cpwm;
-+	/*volatile*/
-+	u8 tog; /* toggling */
-+	/*volatile*/
-+	u8 cpwm_tog; /* toggling */
-+	/*volatile*/
-+	u8 tgt_rpwm; /* wanted power state */
- 	uint pwr_mode;
- 	uint smart_ps;
- 	uint alives;
-diff --git a/drivers/staging/rtl8712/rtl871x_xmit.h b/drivers/staging/rtl8712/rtl871x_xmit.h
-index f227828094bf..6d2e12b35670 100644
---- a/drivers/staging/rtl8712/rtl871x_xmit.h
-+++ b/drivers/staging/rtl8712/rtl871x_xmit.h
-@@ -182,11 +182,16 @@ struct sta_xmit_priv {
- };
- 
- struct	hw_txqueue {
--	/*volatile*/ sint	head;
--	/*volatile*/ sint	tail;
--	/*volatile*/ sint	free_sz;	/*in units of 64 bytes*/
--	/*volatile*/ sint      free_cmdsz;
--	/*volatile*/ sint	 txsz[8];
-+	/*volatile*/
-+	sint	head;
-+	/*volatile*/
-+	sint	tail;
-+	/*volatile*/
-+	sint	free_sz;	/*in units of 64 bytes*/
-+	/*volatile*/
-+	sint      free_cmdsz;
-+	/*volatile*/
-+	sint	 txsz[8];
- 	uint	ff_hwaddr;
- 	uint	cmd_hwaddr;
- 	sint	ac_tag;
--- 
-2.27.0
+> >> > > > write to 0xffff8880968747b0 of 8 bytes by task 6336 on cpu 0:
+> >> > > >  generic_file_buffered_read+0x18be/0x19e0 mm/filemap.c:2246
+> >> > > 
+> >> > > 	...
+> >> > > 	would_block:
+> >> > > 		error = -EAGAIN;
+> >> > > 	out:
+> >> > > 		ra->prev_pos = prev_index;
+> >> > > 		ra->prev_pos <<= PAGE_SHIFT;
+> >> > > 2246)		ra->prev_pos |= prev_offset;
+> >> > > 
+> >> > > 		*ppos = ((loff_t)index << PAGE_SHIFT) + offset;
+> >> > > 		file_accessed(filp);
+> >> > > 		return written ? written : error;
+> >> > > 	}
+> >> > > 	EXPORT_SYMBOL_GPL(generic_file_buffered_read);
+> >> > > 	...
+> >> > 
+> >> > Well, it's a data race.  Each open file descriptor has just one readahead state
+> >> > (struct file_ra_state), and concurrent reads of the same file descriptor
+> >> > use/change that readahead state without any locking.
+> >> > 
+> >> > Presumably this has traditionally been considered okay, since readahead is
+> >> > "only" for performance and doesn't affect correctness.  And for performance
+> >> > reasons, we want to avoid locking during file reads.
+> >> > 
+> >> > So we may just need to annotate all access to file_ra_state with
+> >> > READ_ONCE() and WRITE_ONCE()...
+> >> 
+> >> Please, no. Can we stop making the code hard to read, more difficult
+> >> to maintain and preventing the compiler from optimising it by doing
+> >> stupid "turn off naive static checker warnings" stuff like this?
+> >> 
+> >> If the code is fine with races, then -leave it alone-. If it's not
+> >> fine with a data race, then please go and work out the correct
+> >> ordering and place well documented barriers and/or release/acquire
+> >> ordering semantics in the code so that we do not need to hide data
+> >> races behind a compiler optimisation defeating macro....
+> >> 
+> >> Yes, I know data_race() exists to tell the tooling that it should
+> >> ignore data races in the expression, but that makes just as much
+> >> mess of the code as READ_ONCE/WRITE_ONCE being spewed everywhere
+> >> indiscriminately because <some tool said we need to do that>.
+> >> 
+> > 
+> > Data races are undefined behavior, so it's never guaranteed "fine".
+> 
+> Is this a new requirement for the kernel? Even code which is purely an 
+> optimisation (e.g. a readahead heuristic) can never be guaranteed to
+> be fine for a data race? As in, the compiler might be free to start
+> scribbling on memory because of undefined behaviour?
+> 
+> What we used to be able to do is assume that the variable might take on 
+> one or other value at any time its used (or even see split between the
+> two if the thing wasn't naturally aligned for example), but that was 
+> quite well "defined". So we could in fact guarantee that it would be 
+> fine.
 
+Not really, it's always been undefined behavior.
+
+AFAICT, there's tribal knowledge among some kernel developers about what types
+of undefined behavior are "okay" because they're thought to be unlikely to cause
+problems in practice.  However except in certain cases (e.g., the kernel uses
+-fwrapv to make signed integer overflow well-defined, and -fno-strict-aliasing
+to make type aliasing well-defined) these cases have never been formally
+defined, and people disagree about them.  If they have actually been formally
+defined, please point me to the documentation or compiler options.
+
+Data races in particular are tricky because there are a lot of ways for things
+to go wrong that people fail to think of; for some examples see:
+https://www.usenix.org/legacy/event/hotpar11/tech/final_files/Boehm.pdf
+https://software.intel.com/content/www/us/en/develop/blogs/benign-data-races-what-could-possibly-go-wrong.html
+
+> > We can only
+> > attempt to conclude that it's fine "in practice" and is too difficult to fix,
+> > and therefore doesn't meet the bar to be fixed (for now).
+> > 
+> > Of course, in most cases the preferred solution for data races is to introduce
+> > proper synchronization.  As I said, I'm not sure that's feasible here.  Memory
+> > barriers aren't the issue here; we'd need *locking*, which would mean concurrent
+> > readers would start contending for the lock.  Other suggestions appreciated...
+> 
+> 
+>  		ra->prev_pos = prev_index;
+>  		ra->prev_pos <<= PAGE_SHIFT;
+>  2246)		ra->prev_pos |= prev_offset;
+> 
+> 
+> In this case we can do better I guess, in case some compiler decides to 
+> store a half-done calculation there because it ran out of registers.
+> 
+> WRITE_ONCE(ra->prev_pos, ((loff_t)prev_index << PAGE_SHIFT) | prev_offset);
+> 
+> As Dave said, adding WRITE_ONCE to the individual accesses would be 
+> stupid because it does nothing to solve the actual race and makes it 
+> harder to read in more than one way.
+
+Yes, obviously if we were to add READ/WRITE_ONCE we'd want to avoid storing
+intermediate results like that, in order to avoid some obvious race conditions.
+However, the overall use of file_ra_state is still racy.  And it's passed to the
+functions in mm/readahead.c like page_cache_async_readahead() too, so all the
+accesses to it in those functions are data races too.
+
+I'm not really suggesting any specific solution; locking isn't really feasible
+here, and there would be an annoyingly large number of places that would need
+READ/WRITE_ONCE.
+
+I just wish we had a better plan than "let's write some code with
+undefined behavior and hope it's okay".
+
+- Eric
