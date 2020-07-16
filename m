@@ -2,83 +2,158 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD43C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5474EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92C7E20842
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E10E2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:17:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hvf1/tU8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729745AbgGPRUS (ORCPT
+        id S1728728AbgGPRRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:20:18 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:28434 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729722AbgGPRUQ (ORCPT
+        Thu, 16 Jul 2020 13:17:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20092 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728257AbgGPRRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:20:16 -0400
-X-IronPort-AV: E=Sophos;i="5.75,360,1589209200"; 
-   d="scan'208";a="52107388"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 17 Jul 2020 02:20:14 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 05F0A40B597B;
-        Fri, 17 Jul 2020 02:20:08 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
-Cc:     linux-ide@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-renesas-soc@vger.kernel.org,
-        linux-usb@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 17/20] dt-bindings: media: renesas,vin: Add R8A774E1 support
-Date:   Thu, 16 Jul 2020 18:18:32 +0100
-Message-Id: <1594919915-5225-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 16 Jul 2020 13:17:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594919827;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3fQB3h1kkyYLBylVq5k4Bhd4Kz/DPg9j4ID1VQtmqZc=;
+        b=Hvf1/tU8hWLLy9wvqkrRKAGsFu+iZu6NoVrN8YyHrfBMqShAJIhMi6ZIoGa3R8nquMdZlt
+        gOINZ1KRHVvF07+Dunn2s69TCvld8ClFQMV/Iio51HcLXOltnMGobFYCB/TJanmGfq4/Pb
+        TSb3myUeiAtOsa4dkqEKqLR90OxWTYI=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-472-7mEkV_vTMBewRgQZK8CExQ-1; Thu, 16 Jul 2020 13:17:04 -0400
+X-MC-Unique: 7mEkV_vTMBewRgQZK8CExQ-1
+Received: by mail-qk1-f199.google.com with SMTP id h4so4183033qkl.23
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:17:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3fQB3h1kkyYLBylVq5k4Bhd4Kz/DPg9j4ID1VQtmqZc=;
+        b=eEYYxJRl1N9ZRpIjZCX+M3wQUcb+8q7+RhcfA4LxuyqpWgFzZybm4zzZCTOz6YYuse
+         WM0O+HdpywPJfyZLQFckRbGwxP5PJ/8P5/T45AlTBzga0htMpAWQoKOBHaYfCDOakiND
+         /nTtpwAi2hEAPp3VPXjjfQdRdAdNxSc2HyC+0heTLWUoVga6nPt20SoDwGj39x3sPzgX
+         DYPEPLVYsVAWkOjt/IE54FtvzWwF7DgE/kFPgg2TJTKGyF1DfAlCB3GYHfNjhcQuT/1/
+         KJYIEr3ZN1se2PSOJyrrDI4TgMpPagXtc3fYVUFfg/cRVsiuGGz8Xk1hOcD7PpcswaYS
+         feyQ==
+X-Gm-Message-State: AOAM532fty97OWiSI3iI6ZKwmZK/u5GmHtFp5rJWKYsB781Qtg+rnWmL
+        qFznTpVsgaaTF1jOjrChK9y4as8PdqTmEP+Sql4hRzuL+D345NcXn82i/UoNXQKMztpRvmJ9DQk
+        LRLb/hd4YCzL/+Eu+yCWvs/LsK5TvG4tP+D0QHD8b
+X-Received: by 2002:a05:620a:11b3:: with SMTP id c19mr5023053qkk.203.1594919824438;
+        Thu, 16 Jul 2020 10:17:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxyyC+DL23IP8O9brTPle0l22Dr445jM9hQ5TROISxF5aP01PD5Cpgh6/ubiVQT+bVCdjlg6+/nT3WxD41Gj1I=
+X-Received: by 2002:a05:620a:11b3:: with SMTP id c19mr5023025qkk.203.1594919824159;
+ Thu, 16 Jul 2020 10:17:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200622122546-mutt-send-email-mst@kernel.org>
+ <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
+ <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
+ <419cc689-adae-7ba4-fe22-577b3986688c@redhat.com> <CAJaqyWedEg9TBkH1MxGP1AecYHD-e-=ugJ6XUN+CWb=rQGf49g@mail.gmail.com>
+ <0a83aa03-8e3c-1271-82f5-4c07931edea3@redhat.com> <CAJaqyWeqF-KjFnXDWXJ2M3Hw3eQeCEE2-7p1KMLmMetMTm22DQ@mail.gmail.com>
+ <20200709133438-mutt-send-email-mst@kernel.org> <7dec8cc2-152c-83f4-aa45-8ef9c6aca56d@redhat.com>
+ <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com> <20200710015615-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200710015615-mutt-send-email-mst@kernel.org>
+From:   Eugenio Perez Martin <eperezma@redhat.com>
+Date:   Thu, 16 Jul 2020 19:16:27 +0200
+Message-ID: <CAJaqyWf1skGxrjuT9GLr6dtgd-433y-rCkbtStLHaAs2W2jYXA@mail.gmail.com>
+Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document support for the VIN module in the Renesas RZ/G2H (R8A774E1) SoC.
+On Fri, Jul 10, 2020 at 7:58 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Fri, Jul 10, 2020 at 07:39:26AM +0200, Eugenio Perez Martin wrote:
+> > > > How about playing with the batch size? Make it a mod parameter instead
+> > > > of the hard coded 64, and measure for all values 1 to 64 ...
+> > >
+> > >
+> > > Right, according to the test result, 64 seems to be too aggressive in
+> > > the case of TX.
+> > >
+> >
+> > Got it, thanks both!
+>
+> In particular I wonder whether with batch size 1
+> we get same performance as without batching
+> (would indicate 64 is too aggressive)
+> or not (would indicate one of the code changes
+> affects performance in an unexpected way).
+>
+> --
+> MST
+>
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
- Documentation/devicetree/bindings/media/renesas,vin.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Hi!
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-index 53c0a7238bac..4e0de280c1e5 100644
---- a/Documentation/devicetree/bindings/media/renesas,vin.yaml
-+++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-@@ -40,6 +40,7 @@ properties:
-               - renesas,vin-r8a774a1 # RZ/G2M
-               - renesas,vin-r8a774b1 # RZ/G2N
-               - renesas,vin-r8a774c0 # RZ/G2E
-+              - renesas,vin-r8a774e1 # RZ/G2H
-               - renesas,vin-r8a7778  # R-Car M1
-               - renesas,vin-r8a7779  # R-Car H1
-               - renesas,vin-r8a7795  # R-Car H3
--- 
-2.17.1
+Varying batch_size as drivers/vhost/net.c:VHOST_NET_BATCH, and testing
+the pps as previous mail says. This means that we have either only
+vhost_net batching (in base testing, like previously to apply this
+patch) or both batching sizes the same.
+
+I've checked that vhost process (and pktgen) goes 100% cpu also.
+
+For tx: Batching decrements always the performance, in all cases. Not
+sure why bufapi made things better the last time.
+
+Batching makes improvements until 64 bufs, I see increments of pps but like 1%.
+
+For rx: Batching always improves performance. It seems that if we
+batch little, bufapi decreases performance, but beyond 64, bufapi is
+much better. The bufapi version keeps improving until I set a batching
+of 1024. So I guess it is super good to have a bunch of buffers to
+receive.
+
+Since with this test I cannot disable event_idx or things like that,
+what would be the next step for testing?
+
+Thanks!
+
+--
+Results:
+# Buf size: 1,16,32,64,128,256,512
+
+# Tx
+# ===
+# Base
+2293304.308,3396057.769,3540860.615,3636056.077,3332950.846,3694276.154,3689820
+# Batch
+2286723.857,3307191.643,3400346.571,3452527.786,3460766.857,3431042.5,3440722.286
+# Batch + Bufapi
+2257970.769,3151268.385,3260150.538,3379383.846,3424028.846,3433384.308,3385635.231,3406554.538
+
+# Rx
+# ==
+# pktgen results (pps)
+1223275,1668868,1728794,1769261,1808574,1837252,1846436
+1456924,1797901,1831234,1868746,1877508,1931598,1936402
+1368923,1719716,1794373,1865170,1884803,1916021,1975160
+
+# Testpmd pps results
+1222698.143,1670604,1731040.6,1769218,1811206,1839308.75,1848478.75
+1450140.5,1799985.75,1834089.75,1871290,1880005.5,1934147.25,1939034
+1370621,1721858,1796287.75,1866618.5,1885466.5,1918670.75,1976173.5,1988760.75,1978316
+
+pktgen was run again for rx with 1024 and 2048 buf size, giving
+1988760.75 and 1978316 pps. Testpmd goes the same way.
 
