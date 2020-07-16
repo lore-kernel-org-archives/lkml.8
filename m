@@ -2,168 +2,118 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DC0C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBC620857
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A87A2076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594913350;
-	bh=hS5O6VbCGFstwe7qTNBkSKjk2+CRG9CpB7W6Gyem78Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0k8fYwGkVnBf7IX00/NugBsxDHl4BARrJz62V2rsjoK8t3YZx1k+Z0jYjFwA/Xr0T
-	 oSsd72b+8Iww13QMLupU6d21UabgLqoXfazH2f4scagS2MTrixWKq8RROuEc5dOpUZ
-	 EGXtbXa6S9Rnv9i9k1Y/owHMTqFwkaOXBnKZes1E=
+	s=default; t=1594913366;
+	bh=FzucnMldDqmK+Cy2gUOBiRptVK7gB8amQqI3OD5XAPY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ydtC+wFwwE9DmMSn5TdPvTUXT3qHopl51fY8pMENd55LkFnj3A60PcbZazE4GfTyJ
+	 +Y4CDXtmU+b8zqtT4vwiLLXW7xEZg2Zf3ZqDW6ysbrSleLCnbCtxOO08G6yh8zFihm
+	 fksobkEIjwaW5xxs8CicfFIfjve76XxinTAOkzPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgGPP3J (ORCPT
+        id S1729120AbgGPP3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:29:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45166 "EHLO mail.kernel.org"
+        Thu, 16 Jul 2020 11:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728402AbgGPP3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:29:08 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        id S1728412AbgGPP3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:29:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 141F9206F5;
-        Thu, 16 Jul 2020 15:29:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 551AE2065F;
+        Thu, 16 Jul 2020 15:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594913348;
-        bh=hS5O6VbCGFstwe7qTNBkSKjk2+CRG9CpB7W6Gyem78Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TJViGfjylYYNx4Cs5j83gcWalpBd2Q/s1i5cgL0hCYpfaKHLD7LIqDOwE2Qirnnnw
-         5YoBIzc/OgMd54v/TNi/zblfqKjbf7wpRwPLmTvvphX+0lLcWy0fpRgj8sG+ugl6Hy
-         i16ZXymnnOVVsN3TfieeYrledsJRz4MaalCsXmDA=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3A0F6403C7; Thu, 16 Jul 2020 12:29:06 -0300 (-03)
-Date:   Thu, 16 Jul 2020 12:29:06 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 03/18] perf metric: Add expr__add_id function
-Message-ID: <20200716152906.GC374956@kernel.org>
-References: <20200712132634.138901-1-jolsa@kernel.org>
- <20200712132634.138901-4-jolsa@kernel.org>
+        s=default; t=1594913364;
+        bh=FzucnMldDqmK+Cy2gUOBiRptVK7gB8amQqI3OD5XAPY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Ne3w8Bmm3s7y+REZ9uQP1EUd88b8tVS50zb2XpAk1MkNm/nhJ0PexdK+nNuYeMgf1
+         au3JsLCZ1R9GvlGJMiWz6FsCzs3NGsS23NVxZRd+NeMYkjVFcAEiX6WnqGiwCTV2XF
+         x1IkjLGTH0O4wWLKWchuk2Xmb3Pfvrhmq0pMAz3w=
+Date:   Thu, 16 Jul 2020 17:29:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [GIT PULL] TTY/Serial driver fixes for 5.8-rc6
+Message-ID: <20200716152917.GA2378726@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200712132634.138901-4-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, Jul 12, 2020 at 03:26:19PM +0200, Jiri Olsa escreveu:
-> Adding expr__add_id function to data for ID
-> with zero value, which is used when scanning
-> the expression for IDs.
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/util/expr.c | 29 +++++++++++++++++++++++------
->  tools/perf/util/expr.h |  1 +
->  tools/perf/util/expr.y |  2 +-
->  3 files changed, 25 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index 5d05f9765ed8..4b8953605aed 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -32,6 +32,24 @@ static bool key_equal(const void *key1, const void *key2,
->  	return !strcmp((const char *)key1, (const char *)key2);
->  }
->  
-> +/* Caller must make sure id is allocated */
-> +int expr__add_id(struct expr_parse_ctx *ctx, const char *id)
-> +{
-> +	struct expr_id_data *data_ptr = NULL, *old_data = NULL;
-> +	char *old_key = NULL;
-> +	int ret;
-> +
-> +	data_ptr = malloc(sizeof(*data_ptr));
-> +	if (!data_ptr)
-> +		return -ENOMEM;
-> +
-> +	ret = hashmap__set(&ctx->ids, id, data_ptr,
-> +			   (const void **)&old_key, (void **)&old_data);
-> +	free(old_key);
-> +	free(old_data);
+The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
 
-Hey, if hashmap__set() fails then we leak data_ptr?
+  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
 
-- Arnaldo
+are available in the Git repository at:
 
-> +	return ret;
-> +}
-> +
->  /* Caller must make sure id is allocated */
->  int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
->  {
-> @@ -39,12 +57,11 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
->  	char *old_key = NULL;
->  	int ret;
->  
-> -	if (val != 0.0) {
-> -		data_ptr = malloc(sizeof(*data_ptr));
-> -		if (!data_ptr)
-> -			return -ENOMEM;
-> -		data_ptr->val = val;
-> -	}
-> +	data_ptr = malloc(sizeof(*data_ptr));
-> +	if (!data_ptr)
-> +		return -ENOMEM;
-> +	data_ptr->val = val;
-> +
->  	ret = hashmap__set(&ctx->ids, id, data_ptr,
->  			   (const void **)&old_key, (void **)&old_data);
->  	free(old_key);
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index 21fe5bd85718..ac32cda42006 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -26,6 +26,7 @@ struct expr_scanner_ctx {
->  
->  void expr__ctx_init(struct expr_parse_ctx *ctx);
->  void expr__ctx_clear(struct expr_parse_ctx *ctx);
-> +int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
->  int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
->  int expr__get_id(struct expr_parse_ctx *ctx, const char *id, double *val_ptr);
->  int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index b2b3420ea6ec..8befe4a46f87 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -69,7 +69,7 @@ all_other: all_other other
->  
->  other: ID
->  {
-> -	expr__add_id_val(ctx, $1, 0.0);
-> +	expr__add_id(ctx, $1);
->  }
->  |
->  MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
-> -- 
-> 2.25.4
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.8-rc6
 
--- 
+for you to fetch changes up to f743061a85f5e9989df22ccbf07c80c98fc90e08:
 
-- Arnaldo
+  serial: core: Initialise spin lock before use in uart_configure_port() (2020-07-10 14:44:46 +0200)
+
+----------------------------------------------------------------
+TTY/Serial driver fixes for 5.8-rc6
+
+Here are some small tty and serial driver fixes for 5.8-rc6.
+
+The largest set of patches in here is a revert of the sysrq changes that
+went into 5.8-rc1 but turned out to cause a noticable overhead and cpu
+usage.
+
+Other than that, there's a few small serial driver fixes to resolve
+reported issues, and finally resolving the spinlock init problem on many
+serial driver consoles.
+
+All of these have been in linux-next for a while with no reported
+issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      serial: core: Initialise spin lock before use in uart_configure_port()
+
+Christophe Leroy (1):
+      tty: serial: cpm_uart: Fix behaviour for non existing GPIOs
+
+Chuhong Yuan (1):
+      serial: mxs-auart: add missed iounmap() in probe failure and remove
+
+Jan Kiszka (1):
+      Revert "tty: xilinx_uartps: Fix missing id assignment to the console"
+
+Johan Hovold (3):
+      Revert "serial: core: Refactor uart_unlock_and_check_sysrq()"
+      serial: core: fix sysrq overhead regression
+      serial: core: drop redundant sysrq checks
+
+Lad Prabhakar (1):
+      serial: sh-sci: Initialize spinlock for uart console
+
+Randy Dunlap (1):
+      tty/serial: fix serial_core.c kernel-doc warnings
+
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c |   9 ++-
+ drivers/tty/serial/mxs-auart.c              |  12 ++-
+ drivers/tty/serial/serial_core.c            | 115 ++++------------------------
+ drivers/tty/serial/sh-sci.c                 |   3 +
+ drivers/tty/serial/xilinx_uartps.c          |   1 -
+ include/linux/serial_core.h                 | 102 +++++++++++++++++++++++-
+ 6 files changed, 134 insertions(+), 108 deletions(-)
