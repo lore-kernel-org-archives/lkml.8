@@ -2,128 +2,108 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64528C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2678C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41647207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE122074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594927496;
+	bh=g4AlLsuVvnaAv6YKDeOzrIPXYOX/gRoXUfEGILBDLP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RUzrhm8czTpV2Fl1FoQPkPbkhHe3TwionzxjYClJgPLzdGVbCzpjjceDoXd4SMqx3
+	 d7c5+AsxqPpLEu3lH/nuxQVIhhVPSsGlAKk6f0zsEK4EO0OiFBEqJuij0hXvXU6VvD
+	 CSim9Luy+IqTrJ8WqtqY38NJ9KkTRX1VC/ycAeu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgGPTWh (ORCPT
+        id S1729444AbgGPTYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:22:37 -0400
-Received: from mga06.intel.com ([134.134.136.31]:45361 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbgGPTWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:22:33 -0400
-IronPort-SDR: vuLOwG2c9CV4RTvmahLiRteriNnTrLzj9qimqKWB06PaJJHs653bWr8iiV8fDqdnLp0OyOPKEO
- R02d11+Ta05A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="211019346"
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="211019346"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 12:22:32 -0700
-IronPort-SDR: sgWxlqjo1o6M17PeT2mAk1npmR0Kl1zMweC45j6CMnKH9JT+PJF2Rv8sb2dKMXOqY+CIftrs+L
- 90QbTPTpNyHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="269337770"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by fmsmga007.fm.intel.com with ESMTP; 16 Jul 2020 12:22:31 -0700
-Received: from orsmsx121.amr.corp.intel.com ([169.254.10.122]) by
- ORSMSX103.amr.corp.intel.com ([169.254.5.226]) with mapi id 14.03.0439.000;
- Thu, 16 Jul 2020 12:22:30 -0700
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Kaneda, Erik" <erik.kaneda@intel.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>
-CC:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "myron.stowe@redhat.com" <myron.stowe@redhat.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Moore, Robert" <robert.moore@intel.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] ACPICA: Preserve memory opregion mappings
-Thread-Topic: [PATCH v4 2/2] ACPICA: Preserve memory opregion mappings
-Thread-Index: AQHWTjNF6NPdlNtf4Ea9cCuLXaianakLJdUA
-Date:   Thu, 16 Jul 2020 19:22:30 +0000
-Message-ID: <1738949fd49e9804722bf82d790e3022fc714677.camel@intel.com>
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <2788992.3K7huLjdjL@kreacher> <1666722.UopIai5n7p@kreacher>
-         <1794490.F2OrUDcHQn@kreacher>
-In-Reply-To: <1794490.F2OrUDcHQn@kreacher>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.5 (3.32.5-1.fc30) 
-x-originating-ip: [10.18.116.7]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1158D79CC86D694ABE0899C328498051@intel.com>
-Content-Transfer-Encoding: base64
+        Thu, 16 Jul 2020 15:24:55 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36500 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728788AbgGPTYz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 15:24:55 -0400
+Received: by mail-io1-f65.google.com with SMTP id y2so7263781ioy.3;
+        Thu, 16 Jul 2020 12:24:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fqIIt2FaEzVEayUbwq9mftLIMcW2zYTtnZ5OVri9Dh0=;
+        b=g6cwOhoL8WXzP9LMbsXVCDKNbTaO1x6Zz8fwt2aQ13Tc4S1SZNufJRWiZXos9GNB0j
+         qQa/yfmX8vLyacvZjV7qvWAAtb72CJ0MEmxtgIURjLrO44VLpJEUo2nvYhAGpGO92tLG
+         xJhMbIGtsSWODQG/sQa5rID8BAnlrtY7N8YLvo3C0hJwvwAdisVylvuRMsMeUXm2DeDD
+         FdwyS534DFCsToK+mlZIVd2pTVNJQ/13PXA0LzJOh+iWWQkg6phVQJsztsNM93dROJNx
+         yE+iODSSdC1Xs1YhEXqey76rIdzDiw7z/lrkdvOrAv1sGjpy5sUXgd7xitD1WnP14rq5
+         WXbg==
+X-Gm-Message-State: AOAM532anIEsgGaBA632PTHlX0vdfuVrB4zR2bfSxrXFXGCo+rZ3pYZ9
+        5xwovAb0sQ44XQsYHW8XjQ==
+X-Google-Smtp-Source: ABdhPJx3vjYXOYDEqcmC6qufmiQ19b+sBDpjjIfctsp1sTzarUVj/7pFcLH5uwwo3iYmhB30ZbjW7w==
+X-Received: by 2002:a02:b81a:: with SMTP id o26mr6534437jam.41.1594927494418;
+        Thu, 16 Jul 2020 12:24:54 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id a11sm3342231iow.26.2020.07.16.12.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 12:24:53 -0700 (PDT)
+Received: (nullmailer pid 2701471 invoked by uid 1000);
+        Thu, 16 Jul 2020 19:24:52 -0000
+Date:   Thu, 16 Jul 2020 13:24:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: usb: ci-hdrc-usb2: add property
+ disable-runtime-pm
+Message-ID: <20200716192452.GA2699629@bogus>
+References: <20200714151822.250783-1-philippe.schenker@toradex.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714151822.250783-1-philippe.schenker@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA2LTI5IGF0IDE4OjMzICswMjAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
-ZToNCj4gRnJvbTogIlJhZmFlbCBKLiBXeXNvY2tpIiA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5j
-b20+DQo+IA0KPiBUaGUgQUNQSUNBJ3Mgc3RyYXRlZ3kgd2l0aCByZXNwZWN0IHRvIHRoZSBoYW5k
-bGluZyBvZiBtZW1vcnkgbWFwcGluZ3MNCj4gYXNzb2NpYXRlZCB3aXRoIG1lbW9yeSBvcGVyYXRp
-b24gcmVnaW9ucyBpcyB0byBhdm9pZCBtYXBwaW5nIHRoZQ0KPiBlbnRpcmUgcmVnaW9uIGF0IG9u
-Y2Ugd2hpY2ggbWF5IGJlIHByb2JsZW1hdGljIGF0IGxlYXN0IGluIHByaW5jaXBsZQ0KPiAoZm9y
-IGV4YW1wbGUsIGl0IG1heSBsZWFkIHRvIGNvbmZsaWN0cyB3aXRoIG92ZXJsYXBwaW5nIG1hcHBp
-bmdzDQo+IGhhdmluZyBkaWZmZXJlbnQgYXR0cmlidXRlcyBjcmVhdGVkIGJ5IGRyaXZlcnMpLiAg
-SXQgbWF5IGFsc28gYmUNCj4gd2FzdGVmdWwsIGJlY2F1c2UgbWVtb3J5IG9wcmVnaW9ucyBvbiBz
-b21lIHN5c3RlbXMgdGFrZSB1cCB2YXN0DQo+IGNodW5rcyBvZiBhZGRyZXNzIHNwYWNlIHdoaWxl
-IHRoZSBmaWVsZHMgaW4gdGhvc2UgcmVnaW9ucyBhY3R1YWxseQ0KPiBhY2Nlc3NlZCBieSBBTUwg
-YXJlIHNwYXJzZWx5IGRpc3RyaWJ1dGVkLg0KPiANCj4gRm9yIHRoaXMgcmVhc29uLCBhIG9uZS1w
-YWdlICJ3aW5kb3ciIGlzIG1hcHBlZCBmb3IgYSBnaXZlbiBvcHJlZ2lvbg0KPiBvbiB0aGUgZmly
-c3QgbWVtb3J5IGFjY2VzcyB0aHJvdWdoIGl0IGFuZCBpZiB0aGF0ICJ3aW5kb3ciIGRvZXMgbm90
-DQo+IGNvdmVyIGFuIGFkZHJlc3MgcmFuZ2UgYWNjZXNzZWQgdGhyb3VnaCB0aGF0IG9wcmVnaW9u
-IHN1YnNlcXVlbnRseSwNCj4gaXQgaXMgdW5tYXBwZWQgYW5kIGEgbmV3ICJ3aW5kb3ciIGlzIG1h
-cHBlZCB0byByZXBsYWNlIGl0LiAgTmV4dCwNCj4gaWYgdGhlIG5ldyAid2luZG93IiBpcyBub3Qg
-c3VmZmljaWVudCB0byBhY2VzcyBtZW1vcnkgdGhyb3VnaCB0aGUNCj4gb3ByZWdpb24gaW4gcXVl
-c3Rpb24gaW4gdGhlIGZ1dHVyZSwgaXQgd2lsbCBiZSByZXBsYWNlZCB3aXRoIHlldA0KPiBhbm90
-aGVyICJ3aW5kb3ciIGFuZCBzbyBvbi4gIFRoYXQgbWF5IGxlYWQgdG8gYSBzdWJvcHRpbWFsIHNl
-cXVlbmNlDQo+IG9mIG1lbW9yeSBtYXBwaW5nIGFuZCB1bm1hcHBpbmcgb3BlcmF0aW9ucywgZm9y
-IGV4YW1wbGUgaWYgdHdvIGZpZWxkcw0KPiBpbiBvbmUgb3ByZWdpb24gc2VwYXJhdGVkIGZyb20g
-ZWFjaCBvdGhlciBieSBhIHN1ZmZpY2llbnRseSB3aWRlDQo+IGNodW5rIG9mIHVudXNlZCBhZGRy
-ZXNzIHNwYWNlIGFyZSBhY2Nlc3NlZCBpbiBhbiBhbHRlcm5hdGluZyBwYXR0ZXJuLg0KPiANCj4g
-VGhlIHNpdHVhdGlvbiBtYXkgc3RpbGwgYmUgc3Vib3B0aW1hbCBpZiB0aGUgZGVmZXJyZWQgdW5t
-YXBwaW5nDQo+IGludHJvZHVjZWQgcHJldmlvdXNseSBpcyBzdXBwb3J0ZWQgYnkgdGhlIE9TIGxh
-eWVyLiAgRm9yIGluc3RhbmNlLA0KPiB0aGUgYWx0ZXJuYXRpbmcgbWVtb3J5IGFjY2VzcyBwYXR0
-ZXJuIG1lbnRpb25lZCBhYm92ZSBtYXkgcHJvZHVjZQ0KPiBhIHJlbGF0aXZlbHkgbG9uZyBsaXN0
-IG9mIG1hcHBpbmdzIHRvIHJlbGVhc2Ugd2l0aCBzdWJzdGFudGlhbA0KPiBkdXBsaWNhdGlvbiBh
-bW9uZyB0aGUgZW50cmllcyBpbiBpdCwgd2hpY2ggY291bGQgYmUgYXZvaWRlZCBpZg0KPiBhY3Bp
-X2V4X3N5c3RlbV9tZW1vcnlfc3BhY2VfaGFuZGxlcigpIGRpZCBub3QgcmVsZWFzZSB0aGUgbWFw
-cGluZw0KPiB1c2VkIGJ5IGl0IHByZXZpb3VzbHkgYXMgc29vbiBhcyB0aGUgY3VycmVudCBhY2Nl
-c3Mgd2FzIG5vdCBjb3ZlcmVkDQo+IGJ5IGl0Lg0KPiANCj4gSW4gb3JkZXIgdG8gaW1wcm92ZSB0
-aGF0LCBtb2RpZnkgYWNwaV9leF9zeXN0ZW1fbWVtb3J5X3NwYWNlX2hhbmRsZXIoKQ0KPiB0byBw
-cmVzZXJ2ZSBhbGwgb2YgdGhlIG1lbW9yeSBtYXBwaW5ncyBjcmVhdGVkIGJ5IGl0IHVudGlsIHRo
-ZSBtZW1vcnkNCj4gcmVnaW9ucyBhc3NvY2lhdGVkIHdpdGggdGhlbSBnbyBhd2F5Lg0KPiANCj4g
-QWNjb3JkaW5nbHksIHVwZGF0ZSBhY3BpX2V2X3N5c3RlbV9tZW1vcnlfcmVnaW9uX3NldHVwKCkg
-dG8gdW5tYXAgYWxsDQo+IG1lbW9yeSBhc3NvY2lhdGVkIHdpdGggbWVtb3J5IG9wcmVnaW9ucyB0
-aGF0IGdvIGF3YXkuDQo+IA0KPiBSZXBvcnRlZC1ieTogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxs
-aWFtc0BpbnRlbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZh
-ZWwuai53eXNvY2tpQGludGVsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2FjcGkvYWNwaWNhL2V2
-cmduaW5pLmMgfCAxNCArKysrLS0tLQ0KPiAgZHJpdmVycy9hY3BpL2FjcGljYS9leHJlZ2lvbi5j
-IHwgNjUgKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLQ0KPiAgaW5jbHVkZS9hY3Bp
-L2FjdHlwZXMuaCAgICAgICAgIHwgMTIgKysrKystLQ0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA2NCBp
-bnNlcnRpb25zKCspLCAyNyBkZWxldGlvbnMoLSkNCj4gDQoNCkhpIFJhZmFlbCwNCg0KUGlja2lu
-ZyB1cCBmcm9tIERhbiB3aGlsZSBoZSdzIG91dCAtIEkgaGFkIHRoZXNlIHBhdGNoZXMgdGVzdGVk
-IGJ5IHRoZQ0Kb3JpZ2luYWwgcmVwb3J0ZXIsIGFuZCB0aGV5IHdvcmsgZmluZS4gSSBzZWUgeW91
-IGhhZCB0aGVtIHN0YWdlZCBpbiB0aGUNCmFjcGljYS1vc2wgYnJhbmNoLiBJcyB0aGF0IHNsYXRl
-ZCB0byBnbyBpbiBkdXJpbmcgdGhlIDUuOSBtZXJnZSB3aW5kb3c/DQoNCllvdSBjYW4gYWRkOg0K
-VGVzdGVkLWJ5OiBYaWFuZyBMaSA8eGlhbmcuei5saUBpbnRlbC5jb20+DQo=
+On Tue, Jul 14, 2020 at 05:18:20PM +0200, Philippe Schenker wrote:
+> Chipidea depends on some hardware signals to be there in order
+> for runtime-pm to work well. Add the possibility to disable runtime
+> power management that is necessary for certain boards.
+
+This is why we have SoC specific compatible strings. Use that.
+
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> ---
+> 
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> index 51376cbe5f3d..67a31df13e69 100644
+> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> @@ -90,6 +90,7 @@ Optional properties:
+>    case, the "idle" state needs to pull down the data and strobe pin
+>    and the "active" state needs to pull up the strobe pin.
+>  - pinctrl-n: alternate pin modes
+> +- disable-runtime-pm: This disables the runtime power management.
+
+This is a Linux feature, not h/w description or config.
+
+>  
+>  i.mx specific properties
+>  - fsl,usbmisc: phandler of non-core register device, with one
+> -- 
+> 2.27.0
+> 
