@@ -2,141 +2,90 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D622C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEE292076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:17:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mkb+z21t"
+	by mail.kernel.org (Postfix) with ESMTP id 45F5C207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594927329;
+	bh=YOevmeNmRzLVDB0qxptJLPuC+Ggjdxk4VqcqAwZyahc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ew8evg/5VZ3Z2/CfPO/LZgwdsZsAKF2fBFdL69IMZf1jqO+FFTtd1TG9y2wd/alKz
+	 k+Ss2u7/E0OEgkCtj4ACXqwd+UzozXCpmU1WxVURqJvYap6Idr5Xrv7cSM5CFNzTD+
+	 0Kli6EOXmWLeuM9NgFxKWAL8nccYqDBOvxwWTGCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbgGPTRE (ORCPT
+        id S1729364AbgGPTWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728541AbgGPTRD (ORCPT
+        Thu, 16 Jul 2020 15:22:08 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43219 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728257AbgGPTWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:17:03 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A4DC061755;
-        Thu, 16 Jul 2020 12:17:03 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id l6so4279807plt.7;
-        Thu, 16 Jul 2020 12:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ctBf8/7XPdvbbAkJHl7up2LKX2yqPU2x4trxTx5gJxQ=;
-        b=mkb+z21tnzXUUogTFHF8Q1qb56fwTZmcZUnsDM+2Bl88ZPTCYaX4A1LtSFhV0mInzV
-         MmkU+tXreJo+pQCFKqIv9yfbKZmtP54qa9yKHCAG6y+fK/kme/KYpOvkEle+1C64AP5Q
-         j7HlJ+jyN2bF5vTjNNd6rrFuFjfHlZpvgKXYOip9Xw82nX0vdltTzpiEamt2kWonnCCA
-         x1Ka0lzXQNLmJnEgyXm9NEVXLNVNKhd3HAZ+9VK2RDJweEcQJUFVEsuY0Ae2AkpqYqFV
-         X7/TuA2CCGe7yL2ydyitajzK+o/G3CIQvnM/43Y6oN2tWH6h9+D7a4xPwaknoqfAfFRe
-         GLDw==
+        Thu, 16 Jul 2020 15:22:07 -0400
+Received: by mail-il1-f196.google.com with SMTP id i18so6054000ilk.10;
+        Thu, 16 Jul 2020 12:22:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ctBf8/7XPdvbbAkJHl7up2LKX2yqPU2x4trxTx5gJxQ=;
-        b=MC4NrMl51ZZxniBD0Y8ebdWut4F87pfQYCqCOBdT846IrBCte05BxRUXtQ/IZokyj9
-         Ocz0Wd+xOJufn28TUqZNHhVW4t20wKg68Ga67g5JV2RluIS5G7JGN0VVTaBXHSAdvy7f
-         0CbsmNoQ7sm4XuVOc+RVeBu/7rEvsNpsTPsJvHcsOAdCAyCy9WedWMDnrR7g57YX+Whk
-         N3S21mfiCnn0ulF8B0COIOnuW9RX+4HQRXRkYyTb++KKf3PK1ZniNcGrY/Ua4yOT3mHY
-         KTaeLSCP8bb1v2Q/CRr/pxdw3cft/j/1GT4SFu+6PSgrabL7TMX1IzVmr6pVNuzcgVpy
-         oOkQ==
-X-Gm-Message-State: AOAM5331UGrXoFA0N66PIQjn+c2/ttP27ZL022ZR73KvNk4qT8fzR3qa
-        ps0tojCzhUlH+kG5m0sx/fI=
-X-Google-Smtp-Source: ABdhPJwSzTaQlCtxnOXDeWa3n+peKBrIVM9xhShLR8fMayDya6j6FbD33dwdlWUE+CtW9NUj15lS+g==
-X-Received: by 2002:a17:902:d70f:: with SMTP id w15mr4792036ply.110.1594927023223;
-        Thu, 16 Jul 2020 12:17:03 -0700 (PDT)
-Received: from blackclown ([103.88.82.145])
-        by smtp.gmail.com with ESMTPSA id q10sm6124187pfk.86.2020.07.16.12.17.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 Jul 2020 12:17:02 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 00:46:45 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: decnet: af_decnet: Simplify goto loop.
-Message-ID: <20200716191645.GA4953@blackclown>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=khkn4T4UpW3MWVOEs8OJAq3mrIQ/B8iZQcHJwo8TpP0=;
+        b=geDUBvWr04isbEMX+Qopu5Au+yeBzTAj0q3o5AAqWXCy86K1k6XXGuKAXwKC8praic
+         UGYtPwIcYU1/MV1V1vRa6h4U8eUgGNjcgbTVXKhHECRl+BfeO+fPHIpqLZDIsVluzotz
+         aEJgt4uqoMJIdwLjlNeqeIlIRvpec/L0FS7ONolINVIlXcmZuFd1wwRK8Wr3YjyM749D
+         Tsp374Yc1c3vg7wk4d4VortSMcIFPEsY1r8QnTV2mivzPaD9ezrmvL4pikbrh/HCWjDF
+         U+6F2rCsCh/RM0sJYajSgkOu22FRbeq+hah3upSmIVY8PPFjMCF5yvRYTwh7OKLvulcm
+         iflg==
+X-Gm-Message-State: AOAM5300e4yM4n2mSOj2ciPbIB+0y2e3p/PMaRj+oQgyhnKjd6tiSSbu
+        vKRI8JV3Km5iXiDxrko5vPWWRvDZ46+Y
+X-Google-Smtp-Source: ABdhPJzKRvOl5dJErYnlVV9nkZglTeQrubGKWVUGLK4EA2N846XRgBL/oS7PcTa/GtfaBKer7H7BXg==
+X-Received: by 2002:a92:41d0:: with SMTP id o199mr6212179ila.205.1594927326323;
+        Thu, 16 Jul 2020 12:22:06 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id q2sm3109196ilp.82.2020.07.16.12.22.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 12:22:05 -0700 (PDT)
+Received: (nullmailer pid 2696847 invoked by uid 1000);
+        Thu, 16 Jul 2020 19:22:04 -0000
+Date:   Thu, 16 Jul 2020 13:22:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        linux-pm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] dt-bindings: interconnect: Add Qualcomm SM8150 DT
+ bindings
+Message-ID: <20200716192204.GA2696793@bogus>
+References: <20200713154121.22094-1-jonathan@marek.ca>
+ <20200713154121.22094-3-jonathan@marek.ca>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200713154121.22094-3-jonathan@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 13 Jul 2020 11:41:11 -0400, Jonathan Marek wrote:
+> The Qualcomm SM8150 platform has several bus fabrics that could be
+> controlled and tuned dynamically according to the bandwidth demand.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  .../bindings/interconnect/qcom,rpmh.yaml      |  11 ++
+>  .../dt-bindings/interconnect/qcom,sm8150.h    | 163 ++++++++++++++++++
+>  2 files changed, 174 insertions(+)
+>  create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
+> 
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Replace goto loop with while loop.
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- net/decnet/af_decnet.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/net/decnet/af_decnet.c b/net/decnet/af_decnet.c
-index 0a46ea3bddd5..7d7ae2dd69b8 100644
---- a/net/decnet/af_decnet.c
-+++ b/net/decnet/af_decnet.c
-@@ -2134,14 +2134,11 @@ static struct sock *dn_socket_get_next(struct seq_f=
-ile *seq,
- 	struct dn_iter_state *state =3D seq->private;
-=20
- 	n =3D sk_next(n);
--try_again:
--	if (n)
--		goto out;
--	if (++state->bucket >=3D DN_SK_HASH_SIZE)
--		goto out;
--	n =3D sk_head(&dn_sk_hash[state->bucket]);
--	goto try_again;
--out:
-+	while (!n) {
-+		if (++state->bucket >=3D DN_SK_HASH_SIZE)
-+			break;
-+		n =3D sk_head(&dn_sk_hash[state->bucket]);
-+	}
- 	return n;
- }
-=20
---=20
-2.17.1
-
-
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8Qp5wACgkQ+gRsbIfe
-74734BAAorwVxz+f8hyIOXsQT3a5bVBzZlIZLjZGqBMc2M45GtFrb2NQRPTmwr+s
-f0I/PbgtXj5+tADrCSY7FD4AOkBk3qHgUfWze8dpM0/9EopSqOzNp6x88nO4LLqu
-P8raX7c55wujcWqqDdwe/4Kk3Uhs3ZxobwPGwBivUEFCHFqXFyAFOxNdBqh5geXE
-xlh0WTrnvbD8Pwt+D9aP02QjTIp/7n3hGsf4lznPsVt4u32hl51QrXdOp9AL25B4
-1ligDFPjt+2VrnQrdJ/NZ2pORjF7pEYcG5kPMk3qPathqN9gz2sRrFg8IyOY9UvZ
-6BeOd3h7HbhyHezaROSxIf8puIVNWybxqidy3aPk7yLIptDzTqk8/JhlD/Js7Fle
-XBlMinF0M+I+YXIWMipVx2mvldqmnuwDhYvEMwQF3xhp4N2A7r8ruAdztQyAJR+k
-k308k6hm/Op54yvksym93rv3VngYjFJ8MtUjHzuLhQ+jHs19dOpKHfI8gfMdqQsY
-NIWcUKHYF3ZTcT2aRcdHdBdYIolOt45Qidap99nf47aUjHBTNavB8+6vxeA+hbV/
-PzrSdZYO8r/my10iz3Ihgpm7R7iFTnChlWL70XGDOsURINn8jOKPTBBRm4xs38Eq
-0UpzqU4ej+DZP5mz1yg3uxpwxTNceCeHIEY8PrVjytcNgEGuM/Y=
-=TBRA
------END PGP SIGNATURE-----
-
---IJpNTDwzlM2Ie8A6--
+Reviewed-by: Rob Herring <robh@kernel.org>
