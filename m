@@ -2,161 +2,174 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5610BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3252065E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sl3ESia3"
+	by mail.kernel.org (Postfix) with ESMTP id 35428206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594879511;
+	bh=8P2zKP9fwTAESRcSXu8PidqEv90XXPnh3+R3n6iZJwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Sl4tl4eJV7izS9tQhg5/JNgR4Cx00gv1Lm0Wzv65RUTOXhxt5km7ADhEx27UWxXq3
+	 WYHDr7krJyDFaIH1HFhhb3H4qIGQXR+2X8FCD5sBcpoWz9tcXKM2Yoz/fx3qN/UnVh
+	 EIwAIL1VMiQQUm3P5vzq1Rs/lWyWb6McOLlakqDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgGPF4d (ORCPT
+        id S1727097AbgGPGFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgGPF4c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:56:32 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47529C061755;
-        Wed, 15 Jul 2020 22:56:32 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id p15so4022439ilh.13;
-        Wed, 15 Jul 2020 22:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NKqwxZGmcFZhkY5PqY2mOI3LFTBG3HphbeVkF+HUG8I=;
-        b=Sl3ESia33DmCibkAjRcraHWL27fvPEF8j8dd17Jru4nbSwqYbWexILtWJHHa4lujF6
-         ZJa16QmCDxCr+AkYmjBPZP6Pi4r1RJ2OOjfj/x0YFt/dJqS8rFb71m2Iu7si3/xzSwJm
-         eDW407oO1We8b1NxGhofAq2djtIjynweShZBDUticICj6+9qGcgtTq7HVaBVaNKhJWFz
-         a2aP9wd3PME8RwWkLgX9KnJNRCZ9ILmgVVOIsYpT926KGWqU179QaI8l2yeHQ3OTxX39
-         clLipZ/jtiF5MjCcVAhHxK2NPAea//5SdiGIJVWIS7eBGLIiDKKoaaOveCVTpIyeHNUD
-         /zkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NKqwxZGmcFZhkY5PqY2mOI3LFTBG3HphbeVkF+HUG8I=;
-        b=cvJjJIIBAzvgWbbzNSV8p1UQLUNJSZu7LIeOu5k9rYHaOBiuZt6jIoYbCkUlWLFei/
-         1kpje3f7BPGAxIniynKYfbBx6cFAFIFBFd9fPGxfenPqUarp1RyZPI5PG6q7Zk38uA5C
-         yC6ohHicSkvmHvV0ZGeMRr8/RLGTOS4d9G5Q67qxosy7n3eH9nlvmJgyeLemZuSvHyLQ
-         3nLt+jO8szDz33IUNyIoBwwnU0Osq8rsQjXXpmtx3c+Mn/vqUd/i9mJT5T9AMStmeOFj
-         CRMEfmHw6W2c2+THRVjWK+t2rkpsPlsATV6d00/yGsqk0O0/JSZT2vhuyBGXTdcBv5Sv
-         AuWA==
-X-Gm-Message-State: AOAM531HH6rJfWeJZCIb8FImfwevj+7/Tx58ju4+CJ0j+oDJYqwfEFaR
-        AqXqZxm2GKsVqM6ex/jURxuYBSZY57A90be5BJE=
-X-Google-Smtp-Source: ABdhPJzplWKsBmnfCnlFFgUFbdLvvNrvpFk8y8sFgwWqO2bTqu25XaP4zfDj9HlbP17tw0BkEeEcAQuF3r2ybvsACjI=
-X-Received: by 2002:a05:6e02:1070:: with SMTP id q16mr2836705ilj.221.1594878991645;
- Wed, 15 Jul 2020 22:56:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200713074243.530-1-linux.amoon@gmail.com> <20200716055050.GE55478@vkoul-mobl>
-In-Reply-To: <20200716055050.GE55478@vkoul-mobl>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Thu, 16 Jul 2020 11:26:20 +0530
-Message-ID: <CANAwSgRcgOxwT1+avVJp3GaX1dKzFuzoDuggUXk7-MFQ7cOG8A@mail.gmail.com>
-Subject: Re: [PATCH v4] phy: samsung: Use readl_poll_timeout function
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Thu, 16 Jul 2020 02:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbgGPGFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 02:05:09 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F167120578;
+        Thu, 16 Jul 2020 06:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594879508;
+        bh=8P2zKP9fwTAESRcSXu8PidqEv90XXPnh3+R3n6iZJwE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ETyy3TeDfhRQFQtPrFIhGv+A00ZcHddCwE8EzxqgKfBY1/SZpl9tr+ar58K0oEOnv
+         3xoRC4GVghh+vSBw5MHJ+OWjd35oMAKyfy1xL1RO/NBMPQYIGEaPCNngU1AiFHzwdh
+         7TnS/i7HrrT0UZ4441RG7cHELhWtBspgtYApeMbg=
+Date:   Thu, 16 Jul 2020 11:35:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@codeaurora.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy driver
+Message-ID: <20200716060504.GF55478@vkoul-mobl>
+References: <20200713132309.14353-1-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713132309.14353-1-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+On 13-07-20, 15:23, Ansuel Smith wrote:
 
-On Thu, 16 Jul 2020 at 11:20, Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 13-07-20, 07:42, Anand Moon wrote:
-> > Instead of a busy waiting while loop using udelay
-> > use readl_poll_timeout function to check the condition
-> > is met or timeout occurs in crport_handshake function.
-> > readl_poll_timeout is called in non atomic context so
-> > it safe to sleep until the condition is met.
-> >
-> > Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > Changes v4:
-> > Rebased on to of patch [0] https://patchwork.kernel.org/patch/11651673/
-> > --Fix the commit message.
-> > --Fix the error timeout condition for -ETIMEDOUT
-> > ---
-> > Changes v3:
-> > --Fix the commit message.
-> > --Drop the variable, used the value directly.
-> > Changes v2:
-> > --used the default timeout values.
-> > --Added missing Fixed tags.
-> > ---
-> >  drivers/phy/samsung/phy-exynos5-usbdrd.c | 39 ++++++++----------------
-> >  1 file changed, 12 insertions(+), 27 deletions(-)
-> >
-> > diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> > index 7f6279fb4f8f..ad81aa65cdff 100644
-> > --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> > +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/of.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/iopoll.h>
-> >  #include <linux/phy/phy.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/mutex.h>
-> > @@ -556,41 +557,25 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
-> >  static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
-> >                           u32 val, u32 cmd)
-> >  {
-> > -     u32 usec = 100;
-> >       unsigned int result;
-> > +     int err;
-> >
-> >       writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
-> >
-> > -     do {
-> > -             result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
-> > -             if (result & PHYREG1_CR_ACK)
-> > -                     break;
-> > -
-> > -             udelay(1);
-> > -     } while (usec-- > 0);
-> > -
-> > -     if (!usec) {
-> > -             dev_err(phy_drd->dev,
-> > -                     "CRPORT handshake timeout1 (0x%08x)\n", val);
-> > -             return -ETIME;
-> > +     err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-> > +                     result, (result & PHYREG1_CR_ACK), 1, 100);
->
-> pls align this line to opening brace of preceding line:
->
->         err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
->                                  result, (result & PHYREG1_CR_ACK), 1, 100);
->
-> This is recommended way of splitting lines, see
-> Documentation/process/coding-style.rst and run checkpatch.pl with
-> --strict option
+> +static inline void usb_phy_write_readback(struct usb_phy *phy_dwc3,
+> +					  u32 offset,
+> +					  const u32 mask, u32 val)
+> +{
+> +	u32 write_val, tmp = readl(phy_dwc3->base + offset);
+> +
+> +	tmp &= ~mask;		/* retain other bits */
+> +	write_val = tmp | val;
+> +
+> +	writel(write_val, phy_dwc3->base + offset);
+> +
+> +	/* Read back to see if val was written */
+> +	tmp = readl(phy_dwc3->base + offset);
+> +	tmp &= mask;		/* clear other bits */
+> +
+> +	if (tmp != val)
+> +		dev_err(phy_dwc3->dev, "write: %x to QSCRATCH: %x FAILED\n",
+> +			val, offset);
 
-Ok, I will do this, just waiting for some more feedback on these changes.
->
-> thanks
-> --
-> ~Vinod
+lets use single line for these, it looks much better that way. Btw we
+can extend to 100 chars now :)
 
--Anand
+> +static int qcom_ipq806x_usb_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	resource_size_t size;
+> +	struct device_node *np;
+> +	struct phy *generic_phy;
+> +	struct usb_phy *phy_dwc3;
+> +	const struct phy_drvdata *data;
+> +	const struct of_device_id *match;
+> +	struct phy_provider *phy_provider;
+> +
+> +	phy_dwc3 = devm_kzalloc(&pdev->dev, sizeof(*phy_dwc3), GFP_KERNEL);
+> +	if (!phy_dwc3)
+> +		return -ENOMEM;
+> +
+> +	match = of_match_node(qcom_ipq806x_usb_phy_table, pdev->dev.of_node);
+> +	data = match->data;
+> +
+> +	phy_dwc3->dev = &pdev->dev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +	size = resource_size(res);
+> +	phy_dwc3->base = devm_ioremap(phy_dwc3->dev, res->start, size);
+> +
+> +	if (IS_ERR(phy_dwc3->base)) {
+> +		dev_err(phy_dwc3->dev, "failed to map reg\n");
+> +		return PTR_ERR(phy_dwc3->base);
+> +	}
+> +
+> +	phy_dwc3->ref_clk = devm_clk_get(phy_dwc3->dev, "ref");
+> +	if (IS_ERR(phy_dwc3->ref_clk)) {
+> +		dev_dbg(phy_dwc3->dev, "cannot get reference clock\n");
+> +		return PTR_ERR(phy_dwc3->ref_clk);
+> +	}
+> +
+> +	clk_set_rate(phy_dwc3->ref_clk, data->clk_rate);
+> +
+> +	phy_dwc3->xo_clk = devm_clk_get(phy_dwc3->dev, "xo");
+> +	if (IS_ERR(phy_dwc3->xo_clk)) {
+> +		dev_dbg(phy_dwc3->dev, "cannot get TCXO clock\n");
+> +		phy_dwc3->xo_clk = NULL;
+> +	}
+> +
+> +	/* Parse device node to probe HSIO settings */
+> +	np = of_node_get(pdev->dev.of_node);
+> +	if (!of_compat_cmp(match->compatible, "qcom,ipq806x-usb-phy-ss",
+> +			   strlen(match->compatible))) {
+
+aha, why are we doing this? If you want to do this for only phy-ss then
+you can read these optionally and set them if found..
+
+
+> +		if (of_property_read_u32(np, "qcom,rx-eq", &phy_dwc3->rx_eq) ||
+> +		    of_property_read_u32(np, "qcom,tx-deamp_3_5db",
+> +					 &phy_dwc3->tx_deamp_3_5db) ||
+> +		    of_property_read_u32(np, "qcom,mpll", &phy_dwc3->mpll)) {
+> +			dev_err(phy_dwc3->dev, "cannot get HSIO settings from device node, using default values\n");
+> +
+> +			/* Default HSIO settings */
+> +			phy_dwc3->rx_eq = SSPHY_RX_EQ_VALUE;
+> +			phy_dwc3->tx_deamp_3_5db = SSPHY_TX_DEEMPH_3_5DB;
+> +			phy_dwc3->mpll = SSPHY_MPLL_VALUE;
+> +		}
+> +	}
+> +
+> +	generic_phy = devm_phy_create(phy_dwc3->dev, pdev->dev.of_node,
+> +				      &data->ops);
+> +
+> +	if (IS_ERR(generic_phy))
+> +		return PTR_ERR(generic_phy);
+> +
+> +	phy_set_drvdata(generic_phy, phy_dwc3);
+> +	platform_set_drvdata(pdev, phy_dwc3);
+> +
+> +	phy_provider = devm_of_phy_provider_register(phy_dwc3->dev,
+> +						     of_phy_simple_xlate);
+> +
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+> +	return 0;
+> +}
+
+-- 
+~Vinod
