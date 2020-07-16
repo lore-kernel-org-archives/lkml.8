@@ -2,203 +2,177 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0819AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B387BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7ABD207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594933678;
-	bh=YoUSoM3xGxkRWbb8SYHwwTUnz9+8wwbU0xwpr/carJw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=uC8sN7+8vXBb+6r92wQZmhibWdUEmjlYloLkWeK0Apy1i3RH2Zmnkrm5emDInPf+7
-	 OM930TSizILoOXIYjFFqX9fQQuH085DkP1Xh/lP+IeedVyOM+2MBdubBa9pj8MayQQ
-	 wDQupkEG2BKUYnEDnZTWND3tL19kGiZ7TpICdSCg=
+	by mail.kernel.org (Postfix) with ESMTP id 8BD3E207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgGPVH5 (ORCPT
+        id S1726970AbgGPVIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:07:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbgGPVH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:07:56 -0400
-Received: from embeddedor (unknown [201.162.240.161])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CF9E207DD;
-        Thu, 16 Jul 2020 21:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594933675;
-        bh=YoUSoM3xGxkRWbb8SYHwwTUnz9+8wwbU0xwpr/carJw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ovEcFwCV3dckQXi+gnA2oZ9MWLDRFoYNggAdSPid8aV+FhzCx7w49YKmIgpMm1gM2
-         fsjCPSjfnogqYJN9OkrGrJZWzGN6Z5peh7uCrTHG3uTz80hDovGJicnawXZtM5cRkq
-         rNmlft5b0TPTuKbLzzvjCOqFzPLN2yZUXq2lqy5Q=
-Date:   Thu, 16 Jul 2020 16:13:20 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] PCI: Use fallthrough pseudo-keyword
-Message-ID: <20200716211320.GA17054@embeddedor>
+        Thu, 16 Jul 2020 17:08:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33060 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725959AbgGPVIO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 17:08:14 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GL3Hew187534;
+        Thu, 16 Jul 2020 17:08:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32ax788gna-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 17:08:06 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GL3LO6188037;
+        Thu, 16 Jul 2020 17:08:05 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32ax788gmn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 17:08:05 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GL6lTn011429;
+        Thu, 16 Jul 2020 21:08:03 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06fra.de.ibm.com with ESMTP id 328rbqst6m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 21:08:03 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GL80vd54198472
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 21:08:00 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80CECAE053;
+        Thu, 16 Jul 2020 21:08:00 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 541C9AE051;
+        Thu, 16 Jul 2020 21:07:57 +0000 (GMT)
+Received: from [9.102.2.181] (unknown [9.102.2.181])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Jul 2020 21:07:57 +0000 (GMT)
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Subject: Re: [PATCH v3 10/12] ppc64/kexec_file: prepare elfcore header for
+ crashing kernel
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
+ <159466098739.24747.5860501703617893464.stgit@hbathini.in.ibm.com>
+ <87tuy88ai7.fsf@morokweng.localdomain>
+Message-ID: <929db6fe-b221-a514-8ea1-93227f8d47b0@linux.ibm.com>
+Date:   Fri, 17 Jul 2020 02:37:56 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87tuy88ai7.fsf@morokweng.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 bulkscore=0
+ adultscore=0 spamscore=100 priorityscore=1501 mlxscore=100
+ mlxlogscore=-1000 phishscore=0 lowpriorityscore=0 clxscore=1015
+ malwarescore=0 suspectscore=0 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007160140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/pci/hotplug/ibmphp_res.c  | 2 +-
- drivers/pci/hotplug/pciehp_ctrl.c | 4 ++--
- drivers/pci/hotplug/shpchp_ctrl.c | 4 ++--
- drivers/pci/pci.c                 | 4 ++--
- drivers/pci/proc.c                | 2 +-
- drivers/pci/quirks.c              | 4 ++--
- drivers/pci/setup-bus.c           | 2 +-
- 7 files changed, 11 insertions(+), 11 deletions(-)
+On 16/07/20 7:52 am, Thiago Jung Bauermann wrote:
+> 
+> Hari Bathini <hbathini@linux.ibm.com> writes:
+> 
+>>  /**
+>> + * get_crash_memory_ranges - Get crash memory ranges. This list includes
+>> + *                           first/crashing kernel's memory regions that
+>> + *                           would be exported via an elfcore.
+>> + * @mem_ranges:              Range list to add the memory ranges to.
+>> + *
+>> + * Returns 0 on success, negative errno on error.
+>> + */
+>> +static int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+>> +{
+>> +	struct memblock_region *reg;
+>> +	struct crash_mem *tmem;
+>> +	int ret;
+>> +
+>> +	for_each_memblock(memory, reg) {
+>> +		u64 base, size;
+>> +
+>> +		base = (u64)reg->base;
+>> +		size = (u64)reg->size;
+>> +
+>> +		/* Skip backup memory region, which needs a separate entry */
+>> +		if (base == BACKUP_SRC_START) {
+>> +			if (size > BACKUP_SRC_SIZE) {
+>> +				base = BACKUP_SRC_END + 1;
+>> +				size -= BACKUP_SRC_SIZE;
+>> +			} else
+>> +				continue;
+>> +		}
+>> +
+>> +		ret = add_mem_range(mem_ranges, base, size);
+>> +		if (ret)
+>> +			goto out;
+>> +
+>> +		/* Try merging adjacent ranges before reallocation attempt */
+>> +		if ((*mem_ranges)->nr_ranges == (*mem_ranges)->max_nr_ranges)
+>> +			sort_memory_ranges(*mem_ranges, true);
+>> +	}
+>> +
+>> +	/* Reallocate memory ranges if there is no space to split ranges */
+>> +	tmem = *mem_ranges;
+>> +	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
+>> +		tmem = realloc_mem_ranges(mem_ranges);
+>> +		if (!tmem)
+>> +			goto out;
+>> +	}
+>> +
+>> +	/* Exclude crashkernel region */
+>> +	ret = crash_exclude_mem_range(tmem, crashk_res.start, crashk_res.end);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_rtas_mem_range(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_opal_mem_range(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+> 
+> Maybe I'm confused, but don't you add the RTAS and OPAL regions as
+> usable memory for the crashkernel? In that case they shouldn't show up
+> in the core file.
 
-diff --git a/drivers/pci/hotplug/ibmphp_res.c b/drivers/pci/hotplug/ibmphp_res.c
-index 5c93aa14f0de..ae9acc77d14f 100644
---- a/drivers/pci/hotplug/ibmphp_res.c
-+++ b/drivers/pci/hotplug/ibmphp_res.c
-@@ -1941,7 +1941,7 @@ static int __init update_bridge_ranges(struct bus_node **bus)
- 						break;
- 					case PCI_HEADER_TYPE_BRIDGE:
- 						function = 0x8;
--						/* fall through */
-+						fallthrough;
- 					case PCI_HEADER_TYPE_MULTIBRIDGE:
- 						/* We assume here that only 1 bus behind the bridge
- 						   TO DO: add functionality for several:
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 6503d15effbb..9f85815b4f53 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -236,7 +236,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	switch (ctrl->state) {
- 	case BLINKINGOFF_STATE:
- 		cancel_delayed_work(&ctrl->button_work);
--		/* fall through */
-+		fallthrough;
- 	case ON_STATE:
- 		ctrl->state = POWEROFF_STATE;
- 		mutex_unlock(&ctrl->state_lock);
-@@ -265,7 +265,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	switch (ctrl->state) {
- 	case BLINKINGON_STATE:
- 		cancel_delayed_work(&ctrl->button_work);
--		/* fall through */
-+		fallthrough;
- 	case OFF_STATE:
- 		ctrl->state = POWERON_STATE;
- 		mutex_unlock(&ctrl->state_lock);
-diff --git a/drivers/pci/hotplug/shpchp_ctrl.c b/drivers/pci/hotplug/shpchp_ctrl.c
-index afdc52d1cae7..65502e3f7b4f 100644
---- a/drivers/pci/hotplug/shpchp_ctrl.c
-+++ b/drivers/pci/hotplug/shpchp_ctrl.c
-@@ -642,7 +642,7 @@ int shpchp_sysfs_enable_slot(struct slot *p_slot)
- 	switch (p_slot->state) {
- 	case BLINKINGON_STATE:
- 		cancel_delayed_work(&p_slot->work);
--		/* fall through */
-+		fallthrough;
- 	case STATIC_STATE:
- 		p_slot->state = POWERON_STATE;
- 		mutex_unlock(&p_slot->lock);
-@@ -678,7 +678,7 @@ int shpchp_sysfs_disable_slot(struct slot *p_slot)
- 	switch (p_slot->state) {
- 	case BLINKINGOFF_STATE:
- 		cancel_delayed_work(&p_slot->work);
--		/* fall through */
-+		fallthrough;
- 	case STATIC_STATE:
- 		p_slot->state = POWEROFF_STATE;
- 		mutex_unlock(&p_slot->lock);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 45c51aff9c03..b02c5e6f5b67 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -922,7 +922,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 		if ((pmcsr & PCI_PM_CTRL_STATE_MASK) == PCI_D3hot
- 		 && !(pmcsr & PCI_PM_CTRL_NO_SOFT_RESET))
- 			need_restore = true;
--		/* Fall-through - force to D0 */
-+		fallthrough;	/* force to D0 */
- 	default:
- 		pmcsr = 0;
- 		break;
-@@ -2406,7 +2406,7 @@ static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
- 		case PCI_D2:
- 			if (pci_no_d1d2(dev))
- 				break;
--			/* else, fall through */
-+			fallthrough;
- 		default:
- 			target_state = state;
- 		}
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index bd2b691fa7a3..d35186b01d98 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -231,7 +231,7 @@ static long proc_bus_pci_ioctl(struct file *file, unsigned int cmd,
- 		}
- 		/* If arch decided it can't, fall through... */
- #endif /* HAVE_PCI_MMAP */
--		/* fall through */
-+		fallthrough;
- 	default:
- 		ret = -EINVAL;
- 		break;
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 9d7a43261613..0f18237e57a8 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1730,7 +1730,7 @@ static void quirk_jmicron_ata(struct pci_dev *pdev)
- 	case PCI_DEVICE_ID_JMICRON_JMB366:
- 		/* Redirect IDE second PATA port to the right spot */
- 		conf5 |= (1 << 24);
--		/* Fall through */
-+		fallthrough;
- 	case PCI_DEVICE_ID_JMICRON_JMB361:
- 	case PCI_DEVICE_ID_JMICRON_JMB363:
- 	case PCI_DEVICE_ID_JMICRON_JMB369:
-@@ -2224,7 +2224,7 @@ static void quirk_netmos(struct pci_dev *dev)
- 		if (dev->subsystem_vendor == PCI_VENDOR_ID_IBM &&
- 				dev->subsystem_device == 0x0299)
- 			return;
--		/* else, fall through */
-+		fallthrough;
- 	case PCI_DEVICE_ID_NETMOS_9735:
- 	case PCI_DEVICE_ID_NETMOS_9745:
- 	case PCI_DEVICE_ID_NETMOS_9845:
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 9b94b1f16d80..bd04a6a916d4 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1252,7 +1252,7 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 			additional_mmio_size = pci_hotplug_mmio_size;
- 			additional_mmio_pref_size = pci_hotplug_mmio_pref_size;
- 		}
--		/* Fall through */
-+		fallthrough;
- 	default:
- 		pbus_size_io(bus, realloc_head ? 0 : additional_io_size,
- 			     additional_io_size, realloc_head);
--- 
-2.27.0
+kexec-tools does the same thing. I am not endorsing it but I was trying to stay
+in parity to avoid breaking any userspace tools/commands. But as you rightly
+pointed, this is NOT right. The right thing to do, to get the rtas/opal data at
+the time of crash, is to have a backup region for them just like we have for
+the first 64K memory. I was hoping to do that later.
 
+Will check how userspace tools respond to dropping these regions. If that makes
+the tools unhappy, will retain the regions with a FIXME. Sorry about the confusion.
+
+Thanks
+Hari
