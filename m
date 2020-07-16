@@ -2,79 +2,132 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2289CC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E67C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09E1620760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5952074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:58:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3HTu2Zm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgGPI5b (ORCPT
+        id S1726759AbgGPI62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:57:31 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43170 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbgGPI5b (ORCPT
+        Thu, 16 Jul 2020 04:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgGPI62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:57:31 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 7143826103D
-Subject: Re: mainline/master bisection: baseline.dmesg.crit on
- qemu_arm-vexpress-a15
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     kernelci-results@groups.io,
-        Andre Przywara <andre.przywara@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
+        Thu, 16 Jul 2020 04:58:28 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26812C061755;
+        Thu, 16 Jul 2020 01:58:28 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ch3so4463895pjb.5;
+        Thu, 16 Jul 2020 01:58:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=rU2AvrUF1MSQNhOVtZSsFfE23nrV3JkloSDmiaF1rgQ=;
+        b=K3HTu2ZmadRX8xzBvryPFb5wAdcUVb0mZ4VBzLUH2tP6diUz22RvUOt0KI03cqJtva
+         ZKtTG4JRONNq9vH0+R6FxNCksupFsjlIpa25bMtCP4y3ZUrUwo8MVneh2tUtcYpMofRx
+         CanUgsDK2xXw7GQQNnQQ1jZ8rcejE41OwnkDhu2iMGSzWq9CaLgW5RJEleHjDLGHNkKs
+         NKiPdNCvxIUlWh6UdqPWeaiZ0Ur36VLTQl+Z6E9SIA+G43rD7GQN/Ftc1+kI4Ixfd139
+         aBPbkXRGA/iBXQSsnpAJQ8lqLB/wHeqaC21gyFRZmzpyi4kltB4hQiko1yM4JqIjxG8p
+         uraw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=rU2AvrUF1MSQNhOVtZSsFfE23nrV3JkloSDmiaF1rgQ=;
+        b=PWMNTlJSNlauN2AGGYaV1IlYg4LsZq7jyddRTZK1Y9yve7DNFqqVdGFvm8t4NKruD/
+         u10NXTFG4oF1tFZ7XbYnMNJlYd0Zs/ElKNODTRLnZtAMmziRzN2NLwQLEGSjYJas35pj
+         RK7Bhr4Qu1GQ9+uwhOC27Mtahf7912wxa2fiqdofRArTxl34wmTHx/eROGNq4EEy6R1q
+         nK+ZIPWLsS8IwXZ0PfKA44omif8K1hLp6SmoEEAoDByGf3754un8xbZpGZri35uqTAnU
+         /y5lQ1AKWJv8SfXo9pu8+R43lPkh5bBVUkmvNiEhWCdFtW9HpK1TCN2H+/UQWmxY0UxV
+         FN4A==
+X-Gm-Message-State: AOAM532CXs1q3yhg0s9ONIusYVkU0dvaiPpVCwc4vEDaQqeEt7oSGJsP
+        Pb+Tm+V7u4GRQFJgWBULsMwmEmM5ezI=
+X-Google-Smtp-Source: ABdhPJw5wys6nZkU2EwXlUQZltuw00zMlClC9BBY3XvLGB5xWrjt9v+5HR5AWIyGOo0u67fCgTVgsA==
+X-Received: by 2002:a17:90a:6448:: with SMTP id y8mr3846953pjm.142.1594889907702;
+        Thu, 16 Jul 2020 01:58:27 -0700 (PDT)
+Received: from blackclown ([103.88.82.145])
+        by smtp.gmail.com with ESMTPSA id t187sm4364244pgb.76.2020.07.16.01.58.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Jul 2020 01:58:26 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 14:28:11 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     gregkh@linuxfoundation.org, GR-Linux-NIC-Dev@marvell.com,
+        manishc@marvell.com
+Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-References: <5f0288aa.1c69fb81.b1c2a.eea4@mx.google.com>
- <20200706124951.GA32234@bogus>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <b7d63093-a1a8-fbc1-6673-040d6ba8cc8d@collabora.com>
-Date:   Thu, 16 Jul 2020 09:57:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: [PATCH] staging: qlge/qlge_main.c: Replace depracated MSI API.
+Message-ID: <20200716085811.GA29239@blackclown>
 MIME-Version: 1.0
-In-Reply-To: <20200706124951.GA32234@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/07/2020 13:49, Sudeep Holla wrote:
-> Hi,
-> 
-> On Sun, Jul 05, 2020 at 07:12:58PM -0700, kernelci.org bot wrote:
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->> * This automated bisection report was sent to you on the basis  *
->> * that you may be involved with the breaking commit it has      *
->> * found.  No manual investigation has been done to verify it,   *
->> * and the root cause of the problem may be somewhere else.      *
->> *                                                               *
->> * If you do send a fix, please include this trailer:            *
->> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
->> *                                                               *
->> * Hope this helps!                                              *
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>
-> 
-> Andre test and replied to one of the similar but earlier reports.
-> Unless we get some response to that, we can't proceed and we can't
-> do much other than ignoring these reports. Please respond to Andre's
-> queries.
+
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Replace the depracated MSI API pci_enable_msi()
+with pci_alloc_irq_vectors().
+
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+---
+ drivers/staging/qlge/qlge_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_m=
+ain.c
+index f7e26defb844..44ef00f1f8ee 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -3181,7 +3181,7 @@ static void ql_enable_msix(struct ql_adapter *qdev)
+ msi:
+ 	qdev->intr_count =3D 1;
+ 	if (qlge_irq_type =3D=3D MSI_IRQ) {
+-		if (!pci_enable_msi(qdev->pdev)) {
++		if (pci_alloc_irq_vectors(qdev->pdev, 1, 1, PCI_IRQ_MSI) >=3D 0) {
+ 			set_bit(QL_MSI_ENABLED, &qdev->flags);
+ 			netif_info(qdev, ifup, qdev->ndev,
+ 				   "Running with MSI interrupts.\n");
+--=20
+2.17.1
 
 
-Sorry I missed your email, the regression is still there.  I'll
-reply to André.
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Guillaume
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8QFqMACgkQ+gRsbIfe
+747zow//ZLAF3gs132hkWk5iOyoAp9G/oCE0GXRsND9P4To3CoYUuX5be27oZdzR
++JGvWRf2sraAene3fa+VweceoGu4kEX5mRVzRSRfAP9r/ah6Vug1bAAZ6zPFeeTx
+XFjiRqGFIDev2h5WNnGEnQQZWCtzCJbHu3+cImEkgMnfQjGOy+iPU/xJieBBQkY7
+/zMTb3+C//3VG7y1KhsW8+Wet+zv8xuPRtn+bUrNoja8Ak9pY32IThgyRu3UiNE7
+eiVvXnCz+VRF2lHP0J5lGBssZHjqni6IZ500rYxWLkATtEbN3nC73CuAx1XgIIMV
++cm/a+3y4aY8XBbPnXsG0OkxIXI5B/vsEJtGUyR5to7DVv2oPsLTPp24QVHFftqM
+vQk0wS7cZmOCTYtOJcaGMVWo8wvY2TNk4U5L7KGu5BEXHRxFkkFtD6uARS5CcciR
+lyOkNQH2dcwm+9/JD5fvGJAHL3XMnI9C3v9ludnW+GiyOrM7wZPH+6rayh+pgb/K
+PF2Ts5a/cdyjX3bfOk/xlTZZdbPT7kr4ML6AKu3+smZVoU4Jq2wLUrykuZqxcB/N
+fBIl0bSPNsqAGxKDAIN9/GYX85nlNrHoRBEgX5HYS+6lSxHBIqOmEv1YvrxmvOa5
+pcrR9R17bWpX9uW6Ndjggi4VXkfSRPfaexAUxP48zdNhA8LiaMg=
+=0UMt
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
