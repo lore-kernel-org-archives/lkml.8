@@ -2,124 +2,144 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84913C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEDFC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D40D207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD2720842
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCYfE678"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="voqqdiqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbgGPNe6 (ORCPT
+        id S1728717AbgGPNgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:34:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39214 "EHLO
+        Thu, 16 Jul 2020 09:36:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728260AbgGPNe5 (ORCPT
+        with ESMTP id S1728260AbgGPNgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:34:57 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C46C061755;
-        Thu, 16 Jul 2020 06:34:57 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id by13so4756468edb.11;
-        Thu, 16 Jul 2020 06:34:57 -0700 (PDT)
+        Thu, 16 Jul 2020 09:36:50 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84402C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:36:50 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id p7so2688201qvl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QmxJzAqj8acGvVOZn8jwBv3VA4GKb9FdYZOWeVpHqgY=;
-        b=qCYfE678wmXVOSh7y3NoCzQ2arV7maAlNilVxwIOjNkaW/KZz27JBGkxz5KYAjtyti
-         yZ+3+3MYjQSYlk+PIR3PUpzpZ6zguoyTGDXZVWJsoWxW7OZ3G35U6TQeMW2NeFteiQWl
-         yJ30pS86Y4mGxUW8eMRJ9Wj26dDLY5pcBuz6GkQ6M4syuDJvtL7h2sbOB0aVoGdYxSmb
-         QdhceUSO1r4AMRh8Og08BXpL/Df1N5Xus/w5tsdAjF2pE/2m1xCgZF+GqBazU2MrR3iA
-         Hj2wiFkCqtNimwizzyy1v4xQkjRBxDPmd3XPrnN9AfqclTCahGAm2AVPFhd15Ah3UAxa
-         6g3w==
+         :content-disposition:in-reply-to;
+        bh=6aq1gxLlCQK8XhsdwZ3YqrWIC5XXHCM06bHTQ9xWYQc=;
+        b=voqqdiqO2d2c7Lb6zYlFDZcOuUpzAlEMW0o94zl8C+kidNqA1TSDQyciGHybaUX7NB
+         dvypIDKKqk6APBuPrfEjnM2ZeUbiAkToqE76Xd/m/KsokB6GVBcoPaKj+RlhJJeth63v
+         Go3xiF3ToRSz3qlKoKlu3sBhW2rMlz2M/pBBw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QmxJzAqj8acGvVOZn8jwBv3VA4GKb9FdYZOWeVpHqgY=;
-        b=jq4iwsYGufe1fCgn2N3lMoJOeNKGedp3edW2gUV/axazIVRx4aN9hIN+GlXg8JACQ+
-         i7897wGUr2USXhE/+MgUle2ux9CgTs1CE1P1X+ss8Atfhhtm2qvV39291lm3aIM7yV8+
-         MGUtZjkpaTLSYPE2AcAuglSiyJgu2l9+eD06KY/YsQ0uDnkpN3ERzWWSoZBBADIXbxwt
-         1zB383ewhcSA/SjofY0QjUdHTD/WacndNrUdcptCYpbUJdmwyNaeFcSHffQayt/bKFyr
-         vzVJdt6H0cx4xUVSnnGgucFepoJJ/fDl27hxKZNshcO2BJKA759h1J4TFePaiRNA13x9
-         Mykw==
-X-Gm-Message-State: AOAM533iDXdVq6kbGAwKO5qG0EZCC06jst/CjL0inH/VANk/iYwpEX/1
-        4xJPdhX4TQTaXjQbWe4xmdw=
-X-Google-Smtp-Source: ABdhPJw0rCFRJeytOYppBCsq/TAXQWqyMPzMyq8a2a4DDMh36NJT34ibY9iByeVFo2LJpEuJ9ecCEw==
-X-Received: by 2002:aa7:cdc2:: with SMTP id h2mr4669366edw.274.1594906495731;
-        Thu, 16 Jul 2020 06:34:55 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id z5sm5031303ejw.114.2020.07.16.06.34.50
+         :mime-version:content-disposition:in-reply-to;
+        bh=6aq1gxLlCQK8XhsdwZ3YqrWIC5XXHCM06bHTQ9xWYQc=;
+        b=qQrk2h6WC+IXON9KFTBZV7P+2bP/58veICY0BRoQHU1JEMooc3nmSfvCc3QhFWAAUo
+         JCu7fP2q/Awzmm1Q5ahlklFiUJXiuTOZuPMO4xKYz4xFcDkqtfhy6U1QwIuTv5SEzyFm
+         m5s73jl3yd368jFxN5ksU62n9MegPTcCLcfABsK3CcDda98ZHL2Te3mnYxlVd8YTp0VN
+         RfvqJe9j6aFPRXrnmiAbizpkhAZNMP9oZXZ3eswJyY93JOOxHVbkNZHpXN7MVtfPPwvD
+         LieGp7Jv8qmCdfw8O9UQwX1Se6cGTGOI7grECI2I2p6HY3XP3ChVwJ+ACqvqjVfOVyYt
+         Xw7w==
+X-Gm-Message-State: AOAM531qGctspkeC9xn4vdRK9vFlMb0Rj37djiK3P7RGdrPNx5pl6EVH
+        Ele6fsVmB4PTtnRh0MK3ai42cQ==
+X-Google-Smtp-Source: ABdhPJyvmYE8tl+5jdGs3PA4YDZHp+glxE8uFXeEo/ltW9QL85Nyr6Lvai+kPlsNjjTSjr4iipqBYg==
+X-Received: by 2002:a0c:e80c:: with SMTP id y12mr4338586qvn.146.1594906609571;
+        Thu, 16 Jul 2020 06:36:49 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id x13sm7378525qts.57.2020.07.16.06.36.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 06:34:51 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 15:34:50 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] gpu: host1x: Convert to DEFINE_SHOW_ATTRIBUTE
-Message-ID: <20200716133450.GJ535268@ulmo>
-References: <20200716090323.13274-1-miaoqinglang@huawei.com>
+        Thu, 16 Jul 2020 06:36:48 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 09:36:47 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
+ allocator
+Message-ID: <20200716133647.GA242690@google.com>
+References: <20200715183537.4010-1-urezki@gmail.com>
+ <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
+ <CAEXW_YRoTvQfqqcM9fi+MkMxCPEaoJh4zHRM3qNYkv=-nAVuBQ@mail.gmail.com>
+ <20200716091913.GA28595@pc636>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="EVh9lyqKgK19OcEf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716090323.13274-1-miaoqinglang@huawei.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <20200716091913.GA28595@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 16, 2020 at 11:19:13AM +0200, Uladzislau Rezki wrote:
+> On Wed, Jul 15, 2020 at 07:13:33PM -0400, Joel Fernandes wrote:
+> > On Wed, Jul 15, 2020 at 2:56 PM Sebastian Andrzej Siewior
+> > <bigeasy@linutronix.de> wrote:
+> > >
+> > > On 2020-07-15 20:35:37 [+0200], Uladzislau Rezki (Sony) wrote:
+> > > > @@ -3306,6 +3307,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+> > > >                       if (IS_ENABLED(CONFIG_PREEMPT_RT))
+> > > >                               return false;
+> > > >
+> > > > +                     preempt_disable();
+> > > > +                     krc_this_cpu_unlock(*krcp, *flags);
+> > >
+> > > Now you enter memory allocator with disabled preemption. This isn't any
+> > > better but we don't have a warning for this yet.
+> > > What happened to the part where I asked for a spinlock_t?
+> > 
+> > Ulad,
+> > Wouldn't the replacing of preempt_disable() with migrate_disable()
+> > above resolve Sebastian's issue?
+> >
+> This for regular kernel only. That means that migrate_disable() is
+> equal to preempt_disable(). So, no difference.
 
---EVh9lyqKgK19OcEf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+But this will force preempt_disable() context into the low-level page
+allocator on -RT kernels which I believe is not what Sebastian wants. The
+whole reason why the spinlock vs raw-spinlock ordering matters is, because on
+RT, the spinlock is sleeping. So if you have:
 
-On Thu, Jul 16, 2020 at 05:03:23PM +0800, Qinglang Miao wrote:
-> From: Yongqiang Liu <liuyongqiang13@huawei.com>
->=20
-> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
->=20
-> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
-> ---
->  drivers/gpu/host1x/debug.c | 28 ++++------------------------
->  1 file changed, 4 insertions(+), 24 deletions(-)
+raw_spin_lock(..);
+spin_lock(..);   <-- can sleep on RT, so Sleep while atomic (SWA) violation.
 
-This doesn't apply. Can you please resend, based on something like
-linux-next?
+That's the main reason you are dropping the lock before calling the
+allocator.
 
-Thanks,
-Thierry
+But if you call preempt_disable() and drop the lock, then that may fix the
+lock ordering violation only to reintroduce the SWA issue, which is why you
+wanted to drop the lock in the first place.
 
---EVh9lyqKgK19OcEf
-Content-Type: application/pgp-signature; name="signature.asc"
+migrate_disable() on -RT kernels will not disable preemption which is where
+Sebastian is coming from I think:
+https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git/tree/kernel/sched/core.c?h=v5.4-rt#n8178
 
------BEGIN PGP SIGNATURE-----
+In your defense, the "don't disable preemption on migrate_disable()" on -RT
+part is not upstream yet. So maybe this will not work on upstream PREEMPT_RT,
+but I'm not sure whether folks are really running upstream PREEMPT_RT without
+going through the RT tree.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8QV3kACgkQ3SOs138+
-s6GieRAAjSgN0wLDgrWyzyjLy54sFADuaoAruNpwMPVnPG89QRmsEboAxzzDdZDD
-/zlTd/PJVCZVKWbIlLkP7Rna+jyUuhamF/BgQujzjbSYk76Gk1KCuhoZw86z8KGG
-Fh23wZ+zX1RP+URwJatUvhZUKKEVaQl8ldHWBQG32bChAJLf2EhOqrIsMA0v0FE7
-CQneC38MD9kT3m/LqV2yWyvGAP0Xy8/n0hqLSyZpPBvGLpZ/D4doXZb1Xs1PTQIp
-kMi+Ia4RKh4VHRxVTDovG9v/3aBY4jX8SqFqZBUM9CMJynezT4+iZtHSx7xxw7Ir
-9a1BO0r/xAMcgq5m4N8RTE5Q07kOCf/Hi4qTP5MQu1E3jYitOUB0AAuyvwFYa074
-NBx0kOJmJq/rL03WZ6RM/euMCQCDwh2e9zJfiXu2eLA8R73bW+kClRv4u7RstsKc
-rwQn3BjuJWY6Y183D6ZnAN7IRwZL/vxFoWvK5LhfnDTbNtHWGmZMvf3Q6FRk9U1r
-jUdSy8Ptc5ozFt2IGWzTePsYp6BCwRMQ0Ja6CpMiw4hMgRJDSHmk5woB8heUY6LK
-O8GbqeQ3vkz96MLjtoUxsdsPEz/Ebkh7GQXOzrQ9QyN+/jAgvE5QfGicXK+HbGrO
-TcTST7suEXl4F+LubMElfG7k87ZvgRTPYaKNBo3tTOKhaX8K9dM=
-=3yVO
------END PGP SIGNATURE-----
+I did not see the drawback of just keeping it as migrate_disable() which
+should make everyone happy but Sebastian may have other opinions such as
+maybe that converting the lock to normal spinlock makes the code work on
+upstream's version of PREEMPT_RT without requiring the migrate_disable()
+change. But he can elaborate more.
 
---EVh9lyqKgK19OcEf--
+Paul, how does all this sound to you?
+
+thanks,
+
+ - Joel
+
