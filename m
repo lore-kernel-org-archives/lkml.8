@@ -2,98 +2,237 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F516C433F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD4DC433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54D18207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:39:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594910399;
-	bh=8iw2omV+8rcbIE2y5sg+rVi5KY6cy+c5PEsFn625WuY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RRZKF7omK1Y5ElcqW1WcSf25cFH9Cd6sgrfKCgIc+upZrIcct29hfyxknC44z9xjH
-	 UtecBr+9Tp444Aqf5w+eaZFqr/jFwRgbcH3BSrVrj0mzi9uV5mv6rR8qU4C5DQaKd5
-	 COdbOxTeewi7kaldkrQ5HCKKE7o4SVOka1wqksw0=
+	by mail.kernel.org (Postfix) with ESMTP id C5492207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgGPOj6 (ORCPT
+        id S1729084AbgGPOjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:39:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbgGPOj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:39:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 921A5206F4;
-        Thu, 16 Jul 2020 14:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594910396;
-        bh=8iw2omV+8rcbIE2y5sg+rVi5KY6cy+c5PEsFn625WuY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wTqQV6KUMnjpRsu1sz4//WWIEsxgic8HNIIfQe05WfEVGsAvcynFS7DsrPSkizuIB
-         MzjhcxIOYPk1cDld8mdlE/11Pi2/xcEneZ9IDPOckuftgUI2K2hKFrWyHzAR8Yim71
-         nPKtVOpo6CY6nidbg3xc87XIG6JxJWCx55F8urts=
-Date:   Thu, 16 Jul 2020 16:39:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     B K Karthik <bkkarthik@pesu.pes.edu>
-Cc:     devel@driverdev.osuosl.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        linux-kernel@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>,
+        Thu, 16 Jul 2020 10:39:54 -0400
+Received: from smtp-8fa8.mail.infomaniak.ch ([83.166.143.168]:38881 "EHLO
+        smtp-8fa8.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728589AbgGPOjy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 10:39:54 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4B6xj50yGczlhmqm;
+        Thu, 16 Jul 2020 16:39:21 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4B6xhz5Kbbzlh8Tq;
+        Thu, 16 Jul 2020 16:39:15 +0200 (CEST)
+Subject: Re: [PATCH v6 5/7] fs,doc: Enable to enforce noexec mounts or file
+ exec through O_MAYEXEC
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        Michel Lespinasse <walken@google.com>,
-        Divyansh Kamboj <kambojdivyansh2000@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v3] staging: comedi: comedi_fops.c: added casts to get
- rid of sparse warnings
-Message-ID: <20200716143949.GA2230084@kroah.com>
-References: <20200716141747.wewrnejrygosqhd5@pesu-pes-edu>
- <20200716142537.GA2176745@kroah.com>
- <CAAhDqq3EeWGOJHaW37iQN5UgmvTf3AP10fhrVdJ5GuYjBt8f3w@mail.gmail.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200714181638.45751-1-mic@digikod.net>
+ <20200714181638.45751-6-mic@digikod.net> <202007151312.C28D112013@keescook>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <35ea0914-7360-43ab-e381-9614d18cceba@digikod.net>
+Date:   Thu, 16 Jul 2020 16:39:14 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhDqq3EeWGOJHaW37iQN5UgmvTf3AP10fhrVdJ5GuYjBt8f3w@mail.gmail.com>
+In-Reply-To: <202007151312.C28D112013@keescook>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 10:28:06AM -0400, B K Karthik wrote:
-> On Thu, Jul 16, 2020 at 10:25 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Jul 16, 2020 at 10:17:47AM -0400, B K Karthik wrote:
-> > > fixed sparse warnings by adding a cast in assignment from
-> > > void [noderef] __user * to unsigned int __force *
-> > > and a reverse cast in argument from
-> > > unsigned int * to  unsigned int __user * .
-> > >
-> > > Signed-off-by: B K Karthik <karthik.bk2000@live.com>
-> > > ---
-> > >  drivers/staging/comedi/comedi_fops.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > What changed from previous versions?
+
+On 15/07/2020 22:37, Kees Cook wrote:
+> On Tue, Jul 14, 2020 at 08:16:36PM +0200, Mickaël Salaün wrote:
+>> @@ -2849,7 +2855,7 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+>>  	case S_IFLNK:
+>>  		return -ELOOP;
+>>  	case S_IFDIR:
+>> -		if (acc_mode & (MAY_WRITE | MAY_EXEC))
+>> +		if (acc_mode & (MAY_WRITE | MAY_EXEC | MAY_OPENEXEC))
+>>  			return -EISDIR;
+>>  		break;
 > 
-> As Ian Abbott said "Minor quibble: the reverse cast is actually from
-> unsigned int * to"
+> (I need to figure out where "open for reading" rejects S_IFDIR, since
+> it's clearly not here...)
 > 
-> Hence this is a change in the commit description.
-
-How was anyone supposed to know this?  :)
-
-> > That always goes below the --- line.
+>>  	case S_IFBLK:
+>> @@ -2859,13 +2865,26 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+>>  		fallthrough;
+>>  	case S_IFIFO:
+>>  	case S_IFSOCK:
+>> -		if (acc_mode & MAY_EXEC)
+>> +		if (acc_mode & (MAY_EXEC | MAY_OPENEXEC))
+>>  			return -EACCES;
+>>  		flag &= ~O_TRUNC;
+>>  		break;
 > 
-> I did not understand this sir, can you please clarify?
+> This will immediately break a system that runs code with MAY_OPENEXEC
+> set but reads from a block, char, fifo, or socket, even in the case of
+> a sysadmin leaving the "file" sysctl disabled.
 
-Please read the documentation for how to properly version patches, it's
-in the submitting patches document.  Do that and send a v4 for this.
+As documented, O_MAYEXEC is for regular files. The only legitimate use
+case seems to be with pipes, which should probably be allowed when
+enforcement is disabled.
 
-thanks,
+> 
+>>  	case S_IFREG:
+>> -		if ((acc_mode & MAY_EXEC) && path_noexec(path))
+>> -			return -EACCES;
+>> +		if (path_noexec(path)) {
+>> +			if (acc_mode & MAY_EXEC)
+>> +				return -EACCES;
+>> +			if ((acc_mode & MAY_OPENEXEC) &&
+>> +					(sysctl_open_mayexec_enforce & OPEN_MAYEXEC_ENFORCE_MOUNT))
+>> +				return -EACCES;
+>> +		}
+>> +		if ((acc_mode & MAY_OPENEXEC) &&
+>> +				(sysctl_open_mayexec_enforce & OPEN_MAYEXEC_ENFORCE_FILE))
+>> +			/*
+>> +			 * Because acc_mode may change here, the next and only
+>> +			 * use of acc_mode should then be by the following call
+>> +			 * to inode_permission().
+>> +			 */
+>> +			acc_mode |= MAY_EXEC;
+>>  		break;
+>>  	}
+> 
+> Likely very minor, but I'd like to avoid the path_noexec() call in the
+> fast-path (it dereferences a couple pointers where as doing bit tests on
+> acc_mode is fast).
+> 
+> Given that and the above observations, I think that may_open() likely
+> needs to start with:
+> 
+> 	if (acc_mode & MAY_OPENEXEC) {
+> 		/* Reject all file types when mount enforcement set. */
+> 		if ((sysctl_open_mayexec_enforce & OPEN_MAYEXEC_ENFORCE_MOUNT) &&
+> 		    path_noexec(path))
+> 			return -EACCES;
+> 		/* Treat the same as MAY_EXEC. */
+> 		if (sysctl_open_mayexec_enforce & OPEN_MAYEXEC_ENFORCE_FILE))
+> 			acc_mode |= MAY_EXEC;
+> 	}
 
-greg k-h
+OK
+
+> 
+> (Though I'm not 100% sure that path_noexec() is safe to be called for
+> all file types: i.e. path->mnt and path->-mnt->mnt_sb *always* non-NULL?)
+
+path->mnt should always be non-NULL:
+https://lore.kernel.org/lkml/20200317164709.GA23230@ZenIV.linux.org.uk/
+
+> 
+> This change would also imply that OPEN_MAYEXEC_ENFORCE_FILE *includes*
+> OPEN_MAYEXEC_ENFORCE_MOUNT (i.e. the sysctl should not be a bitfield),
+> since path_noexec() would get checked for S_ISREG. I can't come up with
+> a rationale where one would want OPEN_MAYEXEC_ENFORCE_FILE but _not_
+> OPEN_MAYEXEC_ENFORCE_MOUNT?
+
+I don't see why it is an inclusion.
+
+> 
+> (I can absolutely see wanting only OPEN_MAYEXEC_ENFORCE_MOUNT, or
+> suddenly one has to go mark every loaded thing with the exec bit and
+> most distros haven't done this to, for example, shared libraries. But
+> setting the exec bit and then NOT wanting to enforce the mount check
+> seems... not sensible?)
+> 
+> Outside of this change, yes, I like this now -- it's much cleaner
+> because we have all the checks in the same place where they belong. :)
+> 
+>> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+>> index db1ce7af2563..5008a2566e79 100644
+>> --- a/kernel/sysctl.c
+>> +++ b/kernel/sysctl.c
+>> @@ -113,6 +113,7 @@ static int sixty = 60;
+>>  
+>>  static int __maybe_unused neg_one = -1;
+>>  static int __maybe_unused two = 2;
+>> +static int __maybe_unused three = 3;
+>>  static int __maybe_unused four = 4;
+>>  static unsigned long zero_ul;
+>>  static unsigned long one_ul = 1;
+> 
+> Oh, are these still here? I thought they got removed (or at least made
+> const). Where did that series go? Hmpf, see sysctl_vals, but yes, for
+> now, this is fine.
+> 
+>> @@ -888,7 +889,6 @@ static int proc_taint(struct ctl_table *table, int write,
+>>  	return err;
+>>  }
+>>  
+>> -#ifdef CONFIG_PRINTK
+>>  static int proc_dointvec_minmax_sysadmin(struct ctl_table *table, int write,
+>>  				void *buffer, size_t *lenp, loff_t *ppos)
+>>  {
+>> @@ -897,7 +897,6 @@ static int proc_dointvec_minmax_sysadmin(struct ctl_table *table, int write,
+>>  
+>>  	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+>>  }
+>> -#endif
+>>  
+>>  /**
+>>   * struct do_proc_dointvec_minmax_conv_param - proc_dointvec_minmax() range checking structure
+>> @@ -3264,6 +3263,15 @@ static struct ctl_table fs_table[] = {
+>>  		.extra1		= SYSCTL_ZERO,
+>>  		.extra2		= &two,
+>>  	},
+>> +	{
+>> +		.procname       = "open_mayexec_enforce",
+>> +		.data           = &sysctl_open_mayexec_enforce,
+>> +		.maxlen         = sizeof(int),
+>> +		.mode           = 0600,
+>> +		.proc_handler	= proc_dointvec_minmax_sysadmin,
+>> +		.extra1		= SYSCTL_ZERO,
+>> +		.extra2		= &three,
+>> +	},
+>>  #if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
+>>  	{
+>>  		.procname	= "binfmt_misc",
+>> -- 
+>> 2.27.0
+>>
+> 
