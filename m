@@ -2,105 +2,84 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F249C433FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11938C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 574552076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC60620787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbgGPPjE (ORCPT
+        id S1729100AbgGPPpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:39:04 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46969 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728967AbgGPPjA (ORCPT
+        Thu, 16 Jul 2020 11:45:16 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:56655 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728669AbgGPPpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:39:00 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l63so5391650oih.13;
-        Thu, 16 Jul 2020 08:38:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=55jfOQrsK0L1I5YXuMIdr4caeEX2QkxMqO7QLDfDfTE=;
-        b=OJNb/3CZdDYdzXBR/FZKOEH1E8x79ukV4KlNK0I9Zvjqcqi8GBZ5P5/mE/v+JZd5y8
-         7YGhcalW3migO5YLoZaShePGFX5HXO70CZx1ETbjY6bnN9Dw/rQNXrN1KstprIMB816z
-         MeTHoQtCjomtjtYza/aPBsYwUu1v81D44wHqHG0PNxCEAbsrbsm2XKr0l2QwSky7O/UZ
-         6YWEu5ock0X31HkwIPBNx0PaLsDo1QwBDokzZjptSOVvocCyOqcC97Wu1IhzAgoZwhl9
-         eb+j4W9YRxSfPzF4kRmC5N5VnOC4E0TiAadRJnxcT5RAZQGVXoNNuFtQXbYXHFlWzGuY
-         BgHQ==
-X-Gm-Message-State: AOAM530c0ORPjHgy3yWtYRoUSRQGvXpJ99Z/Ct60n0oosGCuQgtDXAfO
-        Q1OCL7fVxXxbxlawi9KKm5eGOYkZpkrGmyjsISk=
-X-Google-Smtp-Source: ABdhPJxlQJRAKwt8VHHL6j/C+ElgfmWMk9g6riN/0HgdloQA+L26Uh68R5kB11G1HZGjTIU8odcycK0XWy9zO26BCZA=
-X-Received: by 2002:aca:5c41:: with SMTP id q62mr4141682oib.148.1594913939213;
- Thu, 16 Jul 2020 08:38:59 -0700 (PDT)
+        Thu, 16 Jul 2020 11:45:16 -0400
+Received: (qmail 1114215 invoked by uid 1000); 16 Jul 2020 11:45:10 -0400
+Date:   Thu, 16 Jul 2020 11:45:10 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Bixuan Cui <cuibixuan@huawei.com>
+Cc:     linux-next@vger.kernel.org, gustavoars@kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, qiang.zhang@windriver.com,
+        "Wanghui \(John\)" <john.wanghui@huawei.com>
+Subject: Re: [PATCH -next v2] usb: usbtest: reduce stack usage in test_queue
+Message-ID: <20200716154510.GE1112537@rowland.harvard.edu>
+References: <20200716082735.66342-1-cuibixuan@huawei.com>
+ <42fe1a83-38a5-816b-9258-8a344008f398@huawei.com>
 MIME-Version: 1.0
-References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594811350-14066-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594811350-14066-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 Jul 2020 17:38:48 +0200
-Message-ID: <CAMuHMdXRHOqtFWgExiksemXXQzxbokbT_nZDp4o4UzOD_gB5yQ@mail.gmail.com>
-Subject: Re: [PATCH 04/20] arm64: dts: renesas: r8a774e1: Add RZ/G2H thermal support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-can@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42fe1a83-38a5-816b-9258-8a344008f398@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 1:09 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Add thermal support for R8A774E1 (RZ/G2H) SoC.
->
-> Based on the work done for r8a774a1 SoC.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, Jul 16, 2020 at 09:47:10PM +0800, Bixuan Cui wrote:
+> Fix the warning: [-Werror=-Wframe-larger-than=]
+> 
+> drivers/usb/misc/usbtest.c: In function 'test_queue':
+> drivers/usb/misc/usbtest.c:2148:1:
+> warning: the frame size of 1232 bytes is larger than 1024 bytes
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Bixuan Cui <cuibixuan@huawei.com>
+> ---
+>  drivers/usb/misc/usbtest.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
+> index 8b220d56647b..a9b40953d6bc 100644
+> --- a/drivers/usb/misc/usbtest.c
+> +++ b/drivers/usb/misc/usbtest.c
+> @@ -2043,7 +2043,7 @@ test_queue(struct usbtest_dev *dev, struct usbtest_param_32 *param,
+>  	unsigned		i;
+>  	unsigned long		packets = 0;
+>  	int			status = 0;
+> -	struct urb		*urbs[MAX_SGLEN];
+> +	struct urb		**urbs;
+> 
+>  	if (!param->sglen || param->iterations > UINT_MAX / param->sglen)
+>  		return -EINVAL;
+> @@ -2051,6 +2051,10 @@ test_queue(struct usbtest_dev *dev, struct usbtest_param_32 *param,
+>  	if (param->sglen > MAX_SGLEN)
+>  		return -EINVAL;
+> 
+> +	urbs = kcalloc(MAX_SGLEN, sizeof(*urbs), GFP_KERNEL);
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+Since you know at runtime how many URBs will be needed, why not use that 
+information?  Change MAX_SGLEN to param->sglen.
 
-Gr{oetje,eeting}s,
+Aside from that,
 
-                        Geert
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Alan Stern
