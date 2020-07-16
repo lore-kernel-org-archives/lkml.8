@@ -2,141 +2,239 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF189C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95C7C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8FA2078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7F42078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgGPBkj (ORCPT
+        id S1727910AbgGPBsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 21:40:39 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11228 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726785AbgGPBkj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 21:40:39 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06G1VSFp114462;
-        Wed, 15 Jul 2020 21:40:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1k67fj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 21:40:24 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06G1VgdQ114895;
-        Wed, 15 Jul 2020 21:40:24 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1k67fc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 21:40:23 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06G1Zxat001424;
-        Thu, 16 Jul 2020 01:40:23 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03dal.us.ibm.com with ESMTP id 327529ef74-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 01:40:23 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06G1eMnm53608770
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 01:40:22 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80A69AE05F;
-        Thu, 16 Jul 2020 01:40:22 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70051AE05C;
-        Thu, 16 Jul 2020 01:40:18 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.73.114])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Jul 2020 01:40:18 +0000 (GMT)
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466095278.24747.9161591016931052627.stgit@hbathini.in.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v3 08/12] ppc64/kexec_file: setup the stack for purgatory
-In-reply-to: <159466095278.24747.9161591016931052627.stgit@hbathini.in.ibm.com>
-Date:   Wed, 15 Jul 2020 22:40:13 -0300
-Message-ID: <87wo348cg2.fsf@morokweng.localdomain>
+        Wed, 15 Jul 2020 21:48:31 -0400
+Received: from mga09.intel.com ([134.134.136.24]:45030 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726785AbgGPBsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 21:48:30 -0400
+IronPort-SDR: VJdOjsTGR32VX5w2hBwRo66fs16dvv/8df5lYA0h5Yc2LrDuV+nEMz2noMjEjBbzuNTqngaHt/
+ 8Zyuc9r1lCoQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="150689518"
+X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
+   d="scan'208";a="150689518"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 18:48:28 -0700
+IronPort-SDR: gQWfjTPxlyJ4nqYRxf0GpqjZPNlcfbjb5b4r5XXdiX1MDpXKOytShrJQPjwaD4+EMH3ilS7RNE
+ BYY0ilEOwHZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
+   d="scan'208";a="486444956"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by fmsmga005.fm.intel.com with ESMTP; 15 Jul 2020 18:48:26 -0700
+Date:   Thu, 16 Jul 2020 09:49:46 +0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2][RESEND v3] PM-runtime: change the tracepoints to
+ cover all usage_count
+Message-ID: <20200716014946.GB4588@chenyu-office.sh.intel.com>
+References: <cover.1594790493.git.yu.c.chen@intel.com>
+ <395187057e486df9a4328bc6d7d4ee912967fdb3.1594790493.git.yu.c.chen@intel.com>
+ <CAJZ5v0j9Jb5c7AQT611Zjep+jx+iTqKB8-KbPCKb8SCXMqEiJQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-15_12:2020-07-15,2020-07-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- spamscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999
- suspectscore=0 phishscore=0 bulkscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160005
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0j9Jb5c7AQT611Zjep+jx+iTqKB8-KbPCKb8SCXMqEiJQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Sorry, forgot to send one comment for this patch:
-
-Hari Bathini <hbathini@linux.ibm.com> writes:
-
-> @@ -898,10 +900,37 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
->  			goto out;
->  	}
+On Wed, Jul 15, 2020 at 05:47:36PM +0200, Rafael J. Wysocki wrote:
+> On Wed, Jul 15, 2020 at 8:26 AM Chen Yu <yu.c.chen@intel.com> wrote:
+> >
+> > Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
+> > has added some tracepoints to monitor the change of runtime usage, and
+> > there is something to improve:
+> > 1. There are some places that adjust the usage count not
+> >    been traced yet. For example, pm_runtime_get_noresume() and
+> >    pm_runtime_put_noidle()
+> > 2. The change of the usage count will not be tracked if decreased
+> >    from 1 to 0.
+> >
+> > This patch intends to adjust the logic to be consistent with the
+> > change of usage_counter, that is to say, only after the counter has
+> > been possibly modified, we record it. Besides, all usage changes will
+> > be shown using rpm_usage even if included by other trace points.
+> > And these changes has helped track down the e1000e runtime issue.
+> >
+> > Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> > ---
+> >  drivers/base/power/runtime.c | 38 +++++++++++++++++++++++-------------
+> >  1 file changed, 24 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+> > index 85a248e196ca..5789d2624513 100644
+> > --- a/drivers/base/power/runtime.c
+> > +++ b/drivers/base/power/runtime.c
+> > @@ -1004,10 +1004,11 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
+> >         int retval;
+> >
+> >         if (rpmflags & RPM_GET_PUT) {
+> > -               if (!atomic_dec_and_test(&dev->power.usage_count)) {
+> > -                       trace_rpm_usage_rcuidle(dev, rpmflags);
+> > +               bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
+> > +
+> > +               trace_rpm_usage_rcuidle(dev, rpmflags);
+> 
+> It looks like you could move the trace event before the atomic variable check.
+> 
+> The ordering between the two doesn't matter, because usage_count may
+> change between the check and the trace event anyway.
+> 
+> But then what is the trace event useful for in the first place?
 >
-> +	/* Setup the stack top */
-> +	stack_buf = kexec_purgatory_get_symbol_addr(image, "stack_buf");
-> +	if (!stack_buf)
-> +		goto out;
-> +
-> +	val = (u64)stack_buf + KEXEC_PURGATORY_STACK_SIZE;
-> +	ret = kexec_purgatory_get_set_symbol(image, "stack", &val, sizeof(val),
-> +					     false);
-> +	if (ret)
-> +		goto out;
-> +
->  	/* Setup the TOC pointer */
->  	val = get_toc_ptr(&(image->purgatory_info));
->  	ret = kexec_purgatory_get_set_symbol(image, "my_toc", &val, sizeof(val),
->  					     false);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* Setup OPAL base & entry values */
-> +	dn = of_find_node_by_path("/ibm,opal");
-> +	if (dn) {
-> +		of_property_read_u64(dn, "opal-base-address", &val);
-> +		ret = kexec_purgatory_get_set_symbol(image, "opal_base", &val,
-> +						     sizeof(val), false);
-> +		if (ret)
-> +			goto out;
-> +
-> +		of_property_read_u64(dn, "opal-entry-address", &val);
-> +		ret = kexec_purgatory_get_set_symbol(image, "opal_entry", &val,
-> +						     sizeof(val), false);
+Thanks for explanation, I've changed my mind, it seems that we should not
+trace the counter because we don't know who the operator is due to race condition.
+> > +               if (non_zero)
+> >                         return 0;
+> > -               }
+> >         }
+> >
+> >         might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
+> > @@ -1038,10 +1039,12 @@ int __pm_runtime_suspend(struct device *dev, int rpmflags)
+> >         int retval;
+> >
+> >         if (rpmflags & RPM_GET_PUT) {
+> > -               if (!atomic_dec_and_test(&dev->power.usage_count)) {
+> > -                       trace_rpm_usage_rcuidle(dev, rpmflags);
+> > +               bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
+> > +
+> > +               trace_rpm_usage_rcuidle(dev, rpmflags);
+> 
+> And the same comments apply here.
+> 
+> > +               if (non_zero)
+> >                         return 0;
+> > -               }
+> > +
+> >         }
+> >
+> >         might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
+> > @@ -1073,8 +1076,10 @@ int __pm_runtime_resume(struct device *dev, int rpmflags)
+> >         might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe &&
+> >                         dev->power.runtime_status != RPM_ACTIVE);
+> >
+> > -       if (rpmflags & RPM_GET_PUT)
+> > +       if (rpmflags & RPM_GET_PUT) {
+> >                 atomic_inc(&dev->power.usage_count);
+> 
+> So the reason why things like that don't work is because the atomic
+> variable can change again between the inc and the trace event.
+> 
+Got it.
+> > +               trace_rpm_usage_rcuidle(dev, rpmflags);
+> > +       }
+> >
+> >         spin_lock_irqsave(&dev->power.lock, flags);
+> >         retval = rpm_resume(dev, rpmflags);
+> > @@ -1433,6 +1438,7 @@ void pm_runtime_forbid(struct device *dev)
+> >
+> >         dev->power.runtime_auto = false;
+> >         atomic_inc(&dev->power.usage_count);
+> 
+> Analogously here.
+> 
+> > +       trace_rpm_usage_rcuidle(dev, 0);
+> >         rpm_resume(dev, 0);
+> >
+> >   out:
+> > @@ -1448,16 +1454,17 @@ EXPORT_SYMBOL_GPL(pm_runtime_forbid);
+> >   */
+> >  void pm_runtime_allow(struct device *dev)
+> >  {
+> > +       bool is_zero;
+> > +
+> >         spin_lock_irq(&dev->power.lock);
+> >         if (dev->power.runtime_auto)
+> >                 goto out;
+> >
+> >         dev->power.runtime_auto = true;
+> > -       if (atomic_dec_and_test(&dev->power.usage_count))
+> > +       is_zero = atomic_dec_and_test(&dev->power.usage_count);
+> > +       trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
+> > +       if (is_zero)
+> >                 rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
+> > -       else
+> > -               trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
+> 
+> The change of ordering is pointless for the reasons outlined above.
+> 
+> And so on.
+> 
+> > -
+> >   out:
+> >         spin_unlock_irq(&dev->power.lock);
+> >  }
+> > @@ -1523,9 +1530,8 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
+> >                 /* If it used to be allowed then prevent it. */
+> >                 if (!old_use || old_delay >= 0) {
+> >                         atomic_inc(&dev->power.usage_count);
+> > -                       rpm_resume(dev, 0);
+> > -               } else {
+> >                         trace_rpm_usage_rcuidle(dev, 0);
+> > +                       rpm_resume(dev, 0);
+> >                 }
+> >         }
+> >
+> > @@ -1533,8 +1539,10 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
+> >         else {
+> >
+> >                 /* If it used to be prevented then allow it. */
+> > -               if (old_use && old_delay < 0)
+> > +               if (old_use && old_delay < 0) {
+> >                         atomic_dec(&dev->power.usage_count);
+> > +                       trace_rpm_usage_rcuidle(dev, 0);
+> > +               }
+> >
+> >                 /* Maybe we can autosuspend now. */
+> >                 rpm_idle(dev, RPM_AUTO);
+> > @@ -1741,12 +1749,14 @@ void pm_runtime_drop_link(struct device *dev)
+> >  void pm_runtime_get_noresume(struct device *dev)
+> >  {
+> >         atomic_inc(&dev->power.usage_count);
+> > +       trace_rpm_usage_rcuidle(dev, 0);
+> >  }
+> 
+> This actually kind of makes sense, as a matter of tracing the
+> pm_runtime_get_noresume() usage, but not as a matter of tracing the
+> atomic variable value.
+> 
+Okay, I'll re-iterate the code and re-think about it on how to
+track the runtime process more robustly.
 
-You need to call of_node_put(dn) here and in the if (ret) case above.
-
-> +	}
->  out:
->  	if (ret)
->  		pr_err("Failed to setup purgatory symbols");
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Thanks,
+Chenyu
+> >  EXPORT_SYMBOL_GPL(pm_runtime_get_noresume);
+> >
+> >  void pm_runtime_put_noidle(struct device *dev)
+> >  {
+> >         atomic_add_unless(&dev->power.usage_count, -1, 0);
+> > +       trace_rpm_usage_rcuidle(dev, 0);
+> >  }
+> >  EXPORT_SYMBOL_GPL(pm_runtime_put_noidle);
+> >
+> > --
