@@ -2,159 +2,115 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5547FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F02C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBA02065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594913433;
-	bh=LERIzcvbxVhDX2gmDEv+F+XnIKRI1tmhRZzNp2zDKak=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=o5NNcuQftw7Jzkpw7GbT/rFq91pFcwF2Nwf0X4hRsmmFw6Uor/Qjhi4GKmxWe7ATj
-	 MrkVJQbSObrgfvC0saPLEarBCcoGZc8YN1PVe2PNOUU3knPRxA7CS0A3iOSzS1JJ1a
-	 UfqMP3RsWp/JL9hrPRJMljvYZOUT4fQFeGasM3Hg=
+	by mail.kernel.org (Postfix) with ESMTP id D2FBD20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:30:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p6KFpuck";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hQpABB1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgGPPab (ORCPT
+        id S1729181AbgGPPah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:30:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728630AbgGPPab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:30:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09F162065F;
-        Thu, 16 Jul 2020 15:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594913430;
-        bh=LERIzcvbxVhDX2gmDEv+F+XnIKRI1tmhRZzNp2zDKak=;
-        h=Date:From:To:Cc:Subject:From;
-        b=k5vsxhMffMEzc9AUutiJUEVbnGRxRvV4wE+O8+mvSUp3T54FEfqKgY2jBdjyVSFzx
-         4SpYButw7Mu6PqE4rXPyYnec4u2kP1olItveLJFV43gB++2MUQcxv+5fG5Gq8GCDCy
-         GE3bDvdkYR3kk9gLQwQruUjULDYo2CxkTDv4NxUk=
-Date:   Thu, 16 Jul 2020 17:30:24 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Char/Misc driver fixes for 5.8-rc6
-Message-ID: <20200716153024.GA2379109@kroah.com>
+        Thu, 16 Jul 2020 11:30:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729167AbgGPPag (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:30:36 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C67BC061755;
+        Thu, 16 Jul 2020 08:30:36 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 15:30:33 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594913434;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JQ/sBhBjSgAmz+Xpp5cNpgbzQiTMNd29YJCKR9OgmVs=;
+        b=p6KFpuckZMD5b+WIILEkjN03SzhwaqOn1N2rXaz6coUuda/sv636v1HHPEVmrxFP0iFqkn
+        cmzfjX+2N/qikppSu5CYi0qtxoe2auEmb6z7WPP0JDDTrVmL6I9YndVyVjV3/ANar5r/NH
+        /sxdepCZy8XV4xQ1YajUVH5YqqZHu8U8E3lgHlQ2i5Yjb40EMAhFJZcEiBKhdq+Yknn1Di
+        3CSF/5jX6YIIchHSCE7AVPtIigLrIP19AIs+6r/POOScEdZWtOhB/o1hq7o7v334qH7T6y
+        kmEyrPpEHKhA6Afo3Wf+tGl4o/BxB+rYqnrvbMB3A2EMLZa7gjArKxXyn0XOcw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594913434;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JQ/sBhBjSgAmz+Xpp5cNpgbzQiTMNd29YJCKR9OgmVs=;
+        b=hQpABB1fvOGRoo0aqgsicnldEgjApxYc4E2J92P3z2CrjGsoywqC0K9DQIqOcptViCkHq6
+        DlOLYgK9LwYZ/MDw==
+From:   "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86: math-emu: Fix up 'cmp' insn for clang ias
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200527135352.1198078-1-arnd@arndb.de>
+References: <20200527135352.1198078-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Message-ID: <159491343346.4006.6445776713545348721.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
+The following commit has been merged into the x86/urgent branch of tip:
 
-  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
+Commit-ID:     81e96851ea32deb2c921c870eecabf335f598aeb
+Gitweb:        https://git.kernel.org/tip/81e96851ea32deb2c921c870eecabf335f598aeb
+Author:        Arnd Bergmann <arnd@arndb.de>
+AuthorDate:    Wed, 27 May 2020 15:53:46 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 16 Jul 2020 17:26:42 +02:00
 
-are available in the Git repository at:
+x86: math-emu: Fix up 'cmp' insn for clang ias
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.8-rc6
+The clang integrated assembler requires the 'cmp' instruction to
+have a length prefix here:
 
-for you to fetch changes up to 897c44f0bae574c5fb318c759b060bebf9dd6013:
+arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
+ cmp $0xffffffff,-24(%ebp)
+ ^
 
-  virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial (2020-07-10 15:12:48 +0200)
+Make this a 32-bit comparison, which it was clearly meant to be.
 
-----------------------------------------------------------------
-Char/Misc fixes for 5.8-rc6
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Link: https://lkml.kernel.org/r/20200527135352.1198078-1-arnd@arndb.de
 
-Here are number of small char/misc driver fixes for 5.8-rc6
+---
+ arch/x86/math-emu/wm_sqrt.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Not that many complex fixes here, just a number of small fixes for
-reported issues, and some new device ids.  Nothing fancy.
-
-All of these have been in linux-next for a while with no reported
-issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Alexander Lobakin (1):
-      virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial
-
-Alexander Shishkin (4):
-      intel_th: pci: Add Jasper Lake CPU support
-      intel_th: pci: Add Tiger Lake PCH-H support
-      intel_th: pci: Add Emmitsburg PCH support
-      intel_th: Fix a NULL dereference when hub driver is not loaded
-
-Alexander Usyskin (1):
-      mei: bus: don't clean driver pointer
-
-Arnd Bergmann (1):
-      phy: intel: fix enum type mismatch warning
-
-Colin Ian King (1):
-      phy: sun4i-usb: fix dereference of pointer phy0 before it is null checked
-
-Dan Carpenter (1):
-      coresight: cti: Fix error handling in probe
-
-Dilip Kota (1):
-      phy: intel: Fix compilation error on FIELD_PREP usage
-
-Esben Haabendal (2):
-      uio_pdrv_genirq: Remove warning when irq is not specified
-      uio_pdrv_genirq: fix use without device tree and no interrupt
-
-Greg Kroah-Hartman (2):
-      Merge tag 'soundwire-5.8-fixes' of git://git.kernel.org/.../vkoul/soundwire into char--misc-linus
-      Merge tag 'phy-fixes-5.8' of git://git.kernel.org/.../phy/linux-phy into char-misc-next
-
-Hans de Goede (2):
-      virt: vbox: Fix VBGL_IOCTL_VMMDEV_REQUEST_BIG and _LOG req numbers to match upstream
-      virt: vbox: Fix guest capabilities mask check
-
-Michał Mirosław (1):
-      misc: atmel-ssc: lock with mutex instead of spinlock
-
-Mike Leach (1):
-      coresight: etmv4: Fix CPU power management setup in probe() function
-
-Pierre-Louis Bossart (1):
-      soundwire: intel: fix memory leak with devm_kasprintf
-
-Rikard Falkeborn (2):
-      phy: ti: am654-serdes: Constify regmap_config
-      phy: ti: j721e-wiz: Constify structs
-
-Tiezhu Yang (1):
-      phy: rockchip: Fix return value of inno_dsidphy_probe()
-
-Wade Mealing (1):
-      Revert "zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()"
-
- drivers/block/zram/zram_drv.c                    |  3 +-
- drivers/char/virtio_console.c                    |  3 +-
- drivers/hwtracing/coresight/coresight-cti.c      | 96 +++++++++++++-----------
- drivers/hwtracing/coresight/coresight-etm4x.c    | 82 +++++++++++++-------
- drivers/hwtracing/intel_th/core.c                | 21 +++++-
- drivers/hwtracing/intel_th/pci.c                 | 15 ++++
- drivers/hwtracing/intel_th/sth.c                 |  4 +-
- drivers/misc/atmel-ssc.c                         | 24 +++---
- drivers/misc/mei/bus.c                           |  3 +-
- drivers/phy/allwinner/phy-sun4i-usb.c            |  5 +-
- drivers/phy/intel/phy-intel-combo.c              | 14 ++--
- drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c |  4 +-
- drivers/phy/ti/phy-am654-serdes.c                |  2 +-
- drivers/phy/ti/phy-j721e-wiz.c                   | 10 +--
- drivers/soundwire/intel.c                        |  5 +-
- drivers/uio/uio_pdrv_genirq.c                    |  4 +-
- drivers/virt/vboxguest/vboxguest_core.c          |  6 +-
- drivers/virt/vboxguest/vboxguest_core.h          | 15 ++++
- drivers/virt/vboxguest/vboxguest_linux.c         |  3 +-
- drivers/virt/vboxguest/vmmdev.h                  |  2 +
- include/uapi/linux/vboxguest.h                   |  4 +-
- 21 files changed, 207 insertions(+), 118 deletions(-)
+diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
+index 3b2b581..40526dd 100644
+--- a/arch/x86/math-emu/wm_sqrt.S
++++ b/arch/x86/math-emu/wm_sqrt.S
+@@ -209,7 +209,7 @@ sqrt_stage_2_finish:
+ 
+ #ifdef PARANOID
+ /* It should be possible to get here only if the arg is ffff....ffff */
+-	cmp	$0xffffffff,FPU_fsqrt_arg_1
++	cmpl	$0xffffffff,FPU_fsqrt_arg_1
+ 	jnz	sqrt_stage_2_error
+ #endif /* PARANOID */
+ 
