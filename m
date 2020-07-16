@@ -2,93 +2,197 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E548BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADFEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B98B82076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594926504;
-	bh=DQsVaHM0XCrz69/Whg7hTliz4EEyfi090AyIDlqcw+M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OuHasLNC6uk/eMHy7nf5FnPOc8RloTXHY2zh61s5hZn67BaffKRO0C/wzyNNx5m3s
-	 gS+lOPUspZI0VmaX8wu9ddx0Sdmo9y9Vmgm1zOnBxW9l7gbESmo0l9/2zmoJUgtSQA
-	 XsOETHhjpCBuxuEApZYbE6M/ChnPsoPbXNkPZo/E=
+	by mail.kernel.org (Postfix) with ESMTP id 8048E2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbgGPTIX (ORCPT
+        id S1729571AbgGPTIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:08:23 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44207 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728163AbgGPTIW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:08:22 -0400
-Received: by mail-il1-f193.google.com with SMTP id h16so6016381ilj.11;
-        Thu, 16 Jul 2020 12:08:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cDpA3rYM1yVNrNZeExXuXrwxkeLlMEpe8XbtLwOxE/E=;
-        b=seeZFUu5nwbYH2UsMos/M6WnDCZaJmy6aCd2mkSj31/Xm5cdtZPeRx1zv9dFGj8Ffk
-         oyCLKcaUjmLyDdF9hX1iaxk9/A+PM0ufmzRx/zsRFXdpSdSXSnEwFGm+HChtODbJsprp
-         BAVLmQeIF19s2VLr3DAwEkwtJQF+6c5xvnwGDDV3jcrBSjOk3YSkdOh6y4Pdw6tU/G/m
-         HcsylEw8d5Vhx7YNtRFidQVWCSjwldxs8LI5tvvpdk5YiukmSLvTgu2DMFhOu5nFxJLR
-         Z+1IXxpgAIncqZ2sEuJijzqUFkY/i2sI2ewhZSVJOFfT7dxRgSeyfTnBFkjmptB1JRlg
-         uqxA==
-X-Gm-Message-State: AOAM5315mvR3xnL5AcKgT708bwa4eixnC12IKBZUCPJPYUDJrWnLsDRO
-        KGXeMeTKEc+/bWRGB7eWhg==
-X-Google-Smtp-Source: ABdhPJzYGfEUybyWdL4OqS0VBQp60v2KMqvKIimCPqW+BTohHRfji7lXRslRbTotCF9Kk4cBkh8m7Q==
-X-Received: by 2002:a92:77c1:: with SMTP id s184mr6124392ilc.196.1594926501714;
-        Thu, 16 Jul 2020 12:08:21 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f2sm3176638ioc.52.2020.07.16.12.08.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 12:08:21 -0700 (PDT)
-Received: (nullmailer pid 2678347 invoked by uid 1000);
-        Thu, 16 Jul 2020 19:08:20 -0000
-Date:   Thu, 16 Jul 2020 13:08:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        devicetree@vger.kernel.org, Huacai Chen <chenhc@lemote.com>
-Subject: Re: [PATCH v4 8/8] dt-bindings: interrupt-controller: Fix typos in
- loongson,liointc.yaml
-Message-ID: <20200716190820.GA2678097@bogus>
-References: <1594869390-21053-1-git-send-email-yangtiezhu@loongson.cn>
- <1594869390-21053-9-git-send-email-yangtiezhu@loongson.cn>
+        Thu, 16 Jul 2020 15:08:51 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:44352 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728163AbgGPTIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 15:08:51 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id B68BBBC063;
+        Thu, 16 Jul 2020 19:08:45 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     edubezval@gmail.com, j-keerthy@ti.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        linux-pm@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] thermal: ti-soc-thermal: Replace HTTP links with HTTPS ones
+Date:   Thu, 16 Jul 2020 21:08:39 +0200
+Message-Id: <20200716190839.63380-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594869390-21053-9-git-send-email-yangtiezhu@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 11:16:30 +0800, Tiezhu Yang wrote:
-> Fix the following typos in loongson,liointc.yaml:
-> children -> child
-> fron -> from
-> connected -> connect
-> it's -> its
-> 
-> Fixes: b6280c8bb6f5 ("dt-bindings: interrupt-controller: Add Loongson LIOINTC")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../devicetree/bindings/interrupt-controller/loongson,liointc.yaml    | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Applied, thanks!
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/thermal/ti-soc-thermal/dra752-bandgap.h     | 2 +-
+ drivers/thermal/ti-soc-thermal/omap3-thermal-data.c | 2 +-
+ drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h   | 2 +-
+ drivers/thermal/ti-soc-thermal/omap5xxx-bandgap.h   | 2 +-
+ drivers/thermal/ti-soc-thermal/ti-bandgap.c         | 2 +-
+ drivers/thermal/ti-soc-thermal/ti-bandgap.h         | 2 +-
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c  | 2 +-
+ drivers/thermal/ti-soc-thermal/ti-thermal.h         | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/thermal/ti-soc-thermal/dra752-bandgap.h b/drivers/thermal/ti-soc-thermal/dra752-bandgap.h
+index d1b5b699cf23..c3eae80b2ab5 100644
+--- a/drivers/thermal/ti-soc-thermal/dra752-bandgap.h
++++ b/drivers/thermal/ti-soc-thermal/dra752-bandgap.h
+@@ -2,7 +2,7 @@
+ /*
+  * DRA752 bandgap registers, bitfields and temperature definitions
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
+  * Contact:
+  *   Eduardo Valentin <eduardo.valentin@ti.com>
+  *   Tero Kristo <t-kristo@ti.com>
+diff --git a/drivers/thermal/ti-soc-thermal/omap3-thermal-data.c b/drivers/thermal/ti-soc-thermal/omap3-thermal-data.c
+index 72e1ff270af7..80af315bae35 100644
+--- a/drivers/thermal/ti-soc-thermal/omap3-thermal-data.c
++++ b/drivers/thermal/ti-soc-thermal/omap3-thermal-data.c
+@@ -6,7 +6,7 @@
+  * Copyright (C) 2014 Pavel Machek <pavel@ucw.cz>
+  *
+  * Note
+- * http://www.ti.com/lit/er/sprz278f/sprz278f.pdf "Advisory
++ * https://www.ti.com/lit/er/sprz278f/sprz278f.pdf "Advisory
+  * 3.1.1.186 MMC OCP Clock Not Gated When Thermal Sensor Is Used"
+  *
+  * Also TI says:
+diff --git a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
+index a453ff8eb313..23352183dfe8 100644
+--- a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
++++ b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
+@@ -2,7 +2,7 @@
+ /*
+  * OMAP4xxx bandgap registers, bitfields and temperature definitions
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
+  * Contact:
+  *   Eduardo Valentin <eduardo.valentin@ti.com>
+  */
+diff --git a/drivers/thermal/ti-soc-thermal/omap5xxx-bandgap.h b/drivers/thermal/ti-soc-thermal/omap5xxx-bandgap.h
+index 3880e667ea96..c5a2e2abbe5f 100644
+--- a/drivers/thermal/ti-soc-thermal/omap5xxx-bandgap.h
++++ b/drivers/thermal/ti-soc-thermal/omap5xxx-bandgap.h
+@@ -2,7 +2,7 @@
+ /*
+  * OMAP5xxx bandgap registers, bitfields and temperature definitions
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
+  * Contact:
+  *   Eduardo Valentin <eduardo.valentin@ti.com>
+  */
+diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+index ab19ceff6e2a..7bb7e9d12cda 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
++++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+@@ -2,7 +2,7 @@
+ /*
+  * TI Bandgap temperature sensor driver
+  *
+- * Copyright (C) 2011-2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011-2012 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: J Keerthy <j-keerthy@ti.com>
+  * Author: Moiz Sonasath <m-sonasath@ti.com>
+  * Couple of fixes, DT and MFD adaptation:
+diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.h b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
+index fce4657e9486..457027d07f05 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-bandgap.h
++++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
+@@ -2,7 +2,7 @@
+ /*
+  * OMAP4 Bandgap temperature sensor driver
+  *
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Contact:
+  *   Eduardo Valentin <eduardo.valentin@ti.com>
+  */
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index 85776db4bf34..9121d28325a8 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -2,7 +2,7 @@
+ /*
+  * OMAP thermal driver interface
+  *
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
+  * Contact:
+  *   Eduardo Valentin <eduardo.valentin@ti.com>
+  */
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal.h b/drivers/thermal/ti-soc-thermal/ti-thermal.h
+index c388ecf31834..7fb1e56a8333 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal.h
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal.h
+@@ -2,7 +2,7 @@
+ /*
+  * OMAP thermal definitions
+  *
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
+  * Contact:
+  *   Eduardo Valentin <eduardo.valentin@ti.com>
+  */
+-- 
+2.27.0
+
