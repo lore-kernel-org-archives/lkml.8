@@ -2,130 +2,180 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8D9C433F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8805C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B1C207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iBaOVvOB"
+	by mail.kernel.org (Postfix) with ESMTP id 8588A207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgGPCeT (ORCPT
+        id S1727812AbgGPCeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727939AbgGPCeI (ORCPT
+        Wed, 15 Jul 2020 22:34:02 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:57574 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgGPCd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:34:08 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB47C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 19:34:08 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id q17so2976299pfu.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 19:34:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OBHFrLP+zznPw6dlb+xXG2h+uzB263gsWgoLrOM5A/U=;
-        b=iBaOVvOBp/8cpWJBRzkHXXsvpirEoq1CjGUnb1KIpi1G+rcRPDkFLIFlGBCVL54pKM
-         s7xII+/8u3NGU8VPmuhB1E288OtTD10FzrwznllqHJ7H13zf+muLeTiFCh3hmbfAJ7bU
-         rkAfVlG5pbOycj9rqP2MwkqPEtLXoqGt4BkMQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OBHFrLP+zznPw6dlb+xXG2h+uzB263gsWgoLrOM5A/U=;
-        b=QJjhDdhP4oBUruAParVLlhTC4aEwIOjHs6Mop8lTTkke0A4H9/fNZMVGwJ+XS3GsVI
-         rXtRtLNTrbTH1ZYLfquiXNzaYqNuscDrADWJk8rNIM0Re+iG+Q3FthI6oFgOG2fRcou+
-         z0ujA11M3tOuLOw75gsn/8TMrod3Gp3OioskabH5RpQAj0MMki0Hk06UQKWU+OUKe9Gl
-         JI+mr8QR1Hky822mJHGNKtVcFE31XubXDvZFTWgSj4S1cQ3OhoVqAbvq01wGv5MnDxiJ
-         gm/ughIvrKHmtNnOjYZKVNVYe4ggzVw3LbT/PiqbuetK1Cs32heDe6/oK7JHtsrjU9WO
-         T2zw==
-X-Gm-Message-State: AOAM5328Il3lmcoUyUiYWATeod3eTy3Q83jrVEDyNPIBcGAicfaLjYaL
-        G2M41ruwKNvboHAYWEsEsi4Ntg==
-X-Google-Smtp-Source: ABdhPJwT2W5XcXGiXUbSxWDU3H1XbGT7OIjiB+N9Wb/ir/tyFHQzD+xKtJnodqbNxpjPU8gbPlwKtA==
-X-Received: by 2002:aa7:8597:: with SMTP id w23mr1732977pfn.219.1594866848006;
-        Wed, 15 Jul 2020 19:34:08 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c139sm3047867pfb.65.2020.07.15.19.34.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 19:34:07 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 19:34:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-        davidgow@google.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [RFC 3/3] lib: Convert test_user_copy to KUnit test
-Message-ID: <202007151929.7A4E04E@keescook>
-References: <20200715031120.1002016-1-vitor@massaru.org>
- <20200715031120.1002016-4-vitor@massaru.org>
+        Wed, 15 Jul 2020 22:33:59 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06G2Xei26017581, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06G2Xei26017581
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 16 Jul 2020 10:33:40 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 16 Jul 2020 10:33:39 +0800
+Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 16 Jul 2020 10:33:39 +0800
+Received: from localhost.localdomain (172.21.252.101) by
+ RTEXMB01.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server id
+ 15.1.1779.2 via Frontend Transport; Thu, 16 Jul 2020 10:33:39 +0800
+From:   TY Chang <tychang@realtek.com>
+To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
+CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 4/8] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1195
+Date:   Thu, 16 Jul 2020 10:33:34 +0800
+Message-ID: <20200716023338.14922-5-tychang@realtek.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200716023338.14922-1-tychang@realtek.com>
+References: <20200716023338.14922-1-tychang@realtek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715031120.1002016-4-vitor@massaru.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 12:11:20AM -0300, Vitor Massaru Iha wrote:
-> This adds the conversion of the runtime tests of test_user_copy fuctions,
-> from `lib/test_user_copy.c`to KUnit tests.
-> 
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> [...]
-> @@ -16,6 +16,7 @@
->  #include <linux/slab.h>
->  #include <linux/uaccess.h>
->  #include <linux/vmalloc.h>
-> +#include <kunit/test.h>
->  
->  /*
->   * Several 32-bit architectures support 64-bit {get,put}_user() calls.
-> @@ -31,26 +32,16 @@
->  # define TEST_U64
->  #endif
->  
-> -#define test(condition, msg, ...)					\
-> -({									\
-> -	int cond = (condition);						\
-> -	if (cond)							\
-> -		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
-> -	cond;								\
-> -})
-> -
->  static bool is_zeroed(void *from, size_t size)
->  {
->  	return memchr_inv(from, 0x0, size) == NULL;
->  }
->  
-> -static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
-> +static void test_check_nonzero_user(struct kunit *test, char *kmem, char __user *umem, size_t size)
->  {
-> -	int ret = 0;
->  	size_t start, end, i, zero_start, zero_end;
->  
-> -	if (test(size < 2 * PAGE_SIZE, "buffer too small"))
-> -		return -EINVAL;
-> +	KUNIT_EXPECT_FALSE_MSG(test, size < 2 * PAGE_SIZE, "buffer too small");
+Add device tree binding Documentation for rtd1195
+pinctrl driver.
 
-I think this could be a much smaller diff if you just replaced the
-"test" macro:
+Signed-off-by: TY Chang <tychang@realtek.com>
+---
+ .../pinctrl/realtek,rtd1195-pinctrl.yaml      | 104 ++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml
 
-#define test(condition, msg, ...)					\
-({									\
-	int cond = !!(condition);					\
-	KUNIT_EXPECT_FALSE_MSG(kunit_context, cond, msg, ##__VA_ARGS__);\
-	cond;								\
-})
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml
+new file mode 100644
+index 000000000000..50a95bc46e2b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml
+@@ -0,0 +1,104 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/realtek,rtd1195-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Realtek DHC RTD1195 pin control
++
++maintainers:
++  - Andreas Farber <afaerber@suse.de>
++
++properties:
++  compatible:
++    enum:
++      - realtek,rtd1195-iso-pinctrl
++      - realtek,rtd1195-crt-pinctrl
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++#PIN CONFIGURATION NODES
++patternProperties:
++  '-pins$':
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++    allOf:
++      - $ref: "/schemas/pinctrl/pincfg-node.yaml"
++
++    properties:
++      groups:
++        items:
++          enum: [ iso_gpio_0, iso_gpio_1, usb0, usb1, vfd_cs_n,
++          vfd_clk, vfd_d, ir_rx, ir_tx, ur0_rx, ur0_tx,
++          ur1_rx, ur1_tx, ur1_cts_n, ur1_rts_n, i2c_scl_0,
++          i2c_sda_0, etn_led_link, etn_led_rxtx,
++          i2c_scl_6, i2c_sda_6, ai_loc, ejtag_avcpu_loc,
++          ur1_loc, pwm_01_open_drain, pwm_23_open_drain,
++          gpio_0, gpio_1, gpio_2, gpio_3, gpio_4, gpio_5,
++          gpio_6, gpio_7, gpio_8, nf_dd_0, nf_dd_1,
++          nf_dd_2, nf_dd_3, nf_dd_4, nf_dd_5, nf_dd_6,
++          nf_dd_7, nf_rdy, nf_rd_n, nf_wr_n, nf_ale,
++          nf_cle, nf_ce_n_0, nf_ce_n_1, mmc_data_0,
++          mmc_data_1, mmc_data_2, mmc_data_3, mmc_clk,
++          mmc_cmd, mmc_wp, mmc_cd, sdio_clk, sdio_data_0,
++          sdio_data_1, sdio_data_2, sdio_data_3, sdio_cmd,
++          i2c_scl_5, i2c_sda_5, tp1_data, tp1_clk,
++          tp1_valid, tp1_sync, tp0_data, tp0_clk,
++          tp0_valid, tp0_sync, usb_id, hdmi_hpd, spdif,
++          i2c_scl_1, i2c_sda_1, i2c_scl_4, i2c_sda_4,
++          sensor_cko_0, sensor_cko_1, sensor_rst,
++          sensor_stb_0, sensor_stb_1, ejtag_scpu_loc,
++          hif_loc, ao_loc ]
++        minItems: 1
++
++      function:
++        enum: [ gpio, ai_ur1, ai_vfd, avcpu_ejtag_iso,
++        avcpu_ejtag_misc_loc, etn_led, i2c0, i2c2,
++        i2c3, i2c6, ir_rx, ir_tx, pwm, standby_dbg,
++        uart0, uart1, ur1_misc, vfd, pwm_01_normal,
++        pwm_23_normal, pwm_01_open_drain, pwm_23_open_drain,
++        ao_tp0, ao_gpio, avcpu_ejtag_misc, cpu_loop, emmc,
++        gspi, hif_misc, hif_nf, i2c1, i2c2, i2c3,
++        i2c4, i2c5, mmc, nand, scpu_ejtag_gpio,
++        scpu_ejtag_cr, sdio, sensor, spdif, tp0, tp1,
++        uart1, usb ]
++
++      drive-strength:
++        enum: [2, 4, 8]
++
++      bias-pull-down: true
++
++      bias-pull-up: true
++
++      bias-disable: true
++
++      input-schmitt-disable: true
++
++      input-schmitt-enable: true
++
++    required:
++      - groups
++      - function
++
++    additionalProperties: false
++
++examples:
++  - |
++    iso_pinctrl: pinctrl@300 {
++        compatible = "realtek,rtd1195-iso-pinctrl";
++        reg = <0x300 0x14>;
++
++        i2c0_pins: i2c0-pins {
++            function = "i2c0";
++            groups = "i2c_scl_0", "i2c_sda_0";
++            drive-strength = <4>;
++            bias-disable;
++        };
++    };
++
 -- 
-Kees Cook
+2.27.0
+
