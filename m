@@ -2,139 +2,103 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11763C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 917A4207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:59:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594929557;
-	bh=nXGa4B25m7oCI8oZAKH9r8H1hHo6A6ox0bBaNrmuAvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tIKsImo7LkdhmvQqIMj2tkYTcK8BEcMwqrp4JH1S4OWLL4kajF+fuf4h1huFlWDLH
-	 i4z080Y8aZobCQCDTtJPD+FfkTq5xc+oZf4x/ZJHFkGD/xb8B7OF+ZAxcbXzzSIQVT
-	 WynC5yhJvoDZZQM+mrBzh22LeUN5QgGQBwow2Ad8=
+	by mail.kernel.org (Postfix) with ESMTP id DD2D6207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R2wl2O3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgGPT7Q (ORCPT
+        id S1729611AbgGPUEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:59:16 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41912 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728907AbgGPT7Q (ORCPT
+        Thu, 16 Jul 2020 16:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729048AbgGPUEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:59:16 -0400
-Received: by mail-il1-f194.google.com with SMTP id q3so6150669ilt.8;
-        Thu, 16 Jul 2020 12:59:15 -0700 (PDT)
+        Thu, 16 Jul 2020 16:04:40 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E1F7C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:04:40 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k71so5341076pje.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:04:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8cjlPgn09p7l40db0k5FtyWMlNcHlH5a0ko12DoYDl8=;
+        b=R2wl2O3bAKRmcG8CwSs2Q1w5Hfu4lrQCtvgaHOXYz089uxJGqL7jfyozh0dElVhkht
+         HihXpzUVBYBgCTDp49G6vJod1zIH+8LnNuatOpdSaa02mG64zIzslDVh2t4P2ws/pltF
+         4GmSr2KOtIN649ayUtFptrou3zZo1Q2nqVrD8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=FL21avLY/Lnq90kgzzubqkTLnnlFhaGfUjSOp7X5A5k=;
-        b=AUmSjAz/saiZ21z4+vGf6TSgHXio+6z4DwnBRQiVOEwmEFkxQqtSBOXtZSB2z0Ja/t
-         kPCKTLnEzttyLYKsUQz8B0KqUpGJYfi9bob6bxScuj5WHaf/72xu2TFLh+3JWJKRGJRL
-         aakVZ2JhNsXCTopXWjtJrdOm47MplB8P03Wxjz4gNm0rlJzhMjLrFhtMksxZPQCvTUfG
-         ChaS43K8Sx8ckup2hYNslQYYYQSuhx81NXmgOaeQC3INyBdW9mBQtEB2QGV6wxkm+Lvd
-         7VD27qeFeAM/GJzR304giuusj473WpC+IWL02lQuBB3ipQlD59p/DGU8zQ8JbREQvnEu
-         VtPA==
-X-Gm-Message-State: AOAM532LrEjoe+IFMYsNIU6gpFnOrccK4VtNcJBCoEPcO8H9xyqykAP+
-        USdAKcdQGEtXe0NN01nq5A==
-X-Google-Smtp-Source: ABdhPJyk4T63EL//8HysjeLcqxJ6LMeSttLh3+63l5cd1Uk6GocVrUuD6UDDX+TUPYDRhXPwIQVuvA==
-X-Received: by 2002:a92:5f12:: with SMTP id t18mr6317395ilb.267.1594929554891;
-        Thu, 16 Jul 2020 12:59:14 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a24sm3268789ioe.46.2020.07.16.12.59.13
+        bh=8cjlPgn09p7l40db0k5FtyWMlNcHlH5a0ko12DoYDl8=;
+        b=fy731MVGaHKg+12ckmgVD7Ir01j87soJcowRTP7tyvQkRD7+c9jiuoOghk9N4+QDNX
+         F/mLUU7ALI1K+05uz78VYzFzYWEN7fMRi4SSVKHQeyiwYHbLIOFec6uzE/QdBs3fvI9+
+         ahsqHTqN3ec6T1FxdQQ+YEB5AC6JtrweK1Gp4ZS8FgWFlRyjMp3ePy3CqMdusp1u71w/
+         R9UTEMv4lEUUvZUc98WYeSiuwNQaJaqmGwicJ6j6ZKxwiMnVQFKVzMV9vIA89RqH9HHW
+         4hmFtUS48upMDiacNouYehMXfaNelSKAowJAfW+iD9XRJLbmniAwudDz0DPpWgSW6VXj
+         /5oQ==
+X-Gm-Message-State: AOAM532E9o6o+oW14BgOqEZ9yiTHZHVG2OATmV2bkfIEu3fTa43rMEUO
+        llR1iTwua8AnIWC6PZ7GZ8qo3A==
+X-Google-Smtp-Source: ABdhPJzQmwwQY4qaLuGuH2c57JaOLP7yXkUxTXHj7pOsYZEf+Uu5diFNUB050bd6hczoiR9qcdlZ9g==
+X-Received: by 2002:a17:90a:a50d:: with SMTP id a13mr6205936pjq.95.1594929879858;
+        Thu, 16 Jul 2020 13:04:39 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y19sm5695800pgj.35.2020.07.16.13.04.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 12:59:14 -0700 (PDT)
-Received: (nullmailer pid 2747004 invoked by uid 1000);
-        Thu, 16 Jul 2020 19:59:13 -0000
-Date:   Thu, 16 Jul 2020 13:59:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: media: venus: Add an optional power
- domain for perf voting
-Message-ID: <20200716195913.GA2744252@bogus>
-References: <1594878139-3402-1-git-send-email-rnayak@codeaurora.org>
- <1594878139-3402-2-git-send-email-rnayak@codeaurora.org>
+        Thu, 16 Jul 2020 13:04:38 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 13:04:38 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, gofmanp@gmail.com, linux-api@vger.kernel.org,
+        x86@kernel.org, linux-kselftest@vger.kernel.org, shuah@kernel.org
+Subject: Re: [PATCH v4 0/2] Syscall User Redirection
+Message-ID: <202007161300.7452A2C5@keescook>
+References: <20200716193141.4068476-1-krisman@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594878139-3402-2-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <20200716193141.4068476-1-krisman@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 11:12:16AM +0530, Rajendra Nayak wrote:
-> Add an optional power domain which when specified can be used for
-> setting the performance state of Venus.
+On Thu, Jul 16, 2020 at 03:31:39PM -0400, Gabriel Krisman Bertazi wrote:
+> This is v4 of Syscall User Redirection.  The implementation itself is
+> not modified from v3, it only applies the latest round of reviews to the
+> selftests.
+> 
+> __NR_syscalls is not really exported in header files other than
+> asm-generic for every architecture, so it felt safer to optionally
+> expose it with a fallback to a high value.
+> 
+> Also, I didn't expose tests for PR_GET as that is not currently
+> implemented.  If possible, I'd have it supported by a future patchset,
+> since it is not immediately necessary to support this feature.
 
-The h/w suddenly grew a new power island/domain? Seems like an abuse of 
-power-domains...
+Thanks! That all looks good to me.
 
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
-> This is a resend of https://lore.kernel.org/patchwork/patch/1241077/
-> 
->  Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
->  Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
->  2 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-> index 55f2d67..1e8675b 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-> @@ -25,12 +25,16 @@ properties:
->      maxItems: 1
->  
->    power-domains:
-> -    maxItems: 2
-> +    minItems: 2
-> +    maxItems: 3
->  
->    power-domain-names:
-> +    minItems: 2
-> +    maxItems: 3
->      items:
->        - const: venus
->        - const: vcodec0
-> +      - const: opp-pd
->  
->    clocks:
->      maxItems: 5
-> diff --git a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
-> index 157dff8..437286d 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
-> +++ b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
-> @@ -25,13 +25,17 @@ properties:
->      maxItems: 1
->  
->    power-domains:
-> -    maxItems: 3
-> +    minItems: 3
-> +    maxItems: 4
->  
->    power-domain-names:
-> +    minItems: 3
-> +    maxItems: 4
->      items:
->        - const: venus
->        - const: vcodec0
->        - const: vcodec1
-> +      - const: opp-pd
->  
->    clocks:
->      maxItems: 7
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+> Finally, one question: Which tree would this go through?
+
+I haven't heard from several other x86 maintainers yet (which is where
+I would normally expect this series to land), but I would be comfortable
+taking this through my seccomp tree if I got Acks/Reviews at least from
+Andy and Matthew.
+
+Andy, Matthew, what do you think of this?
+
+-- 
+Kees Cook
