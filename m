@@ -2,59 +2,63 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84028C433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFBBC433F2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65229208FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED902084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgGPKCH (ORCPT
+        id S1728054AbgGPKCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 06:02:07 -0400
-Received: from elvis.franken.de ([193.175.24.41]:38190 "EHLO elvis.franken.de"
+        Thu, 16 Jul 2020 06:02:15 -0400
+Received: from elvis.franken.de ([193.175.24.41]:38170 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727030AbgGPKB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 06:01:58 -0400
+        id S1726963AbgGPKB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 06:01:57 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jw0iA-0008Mc-00; Thu, 16 Jul 2020 12:01:54 +0200
+        id 1jw0iA-0008Mc-01; Thu, 16 Jul 2020 12:01:54 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 66B5CC07DD; Thu, 16 Jul 2020 11:39:40 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 11:39:40 +0200
+        id 5301CC080E; Thu, 16 Jul 2020 11:45:26 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 11:45:26 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] dt-bindings: vendor-prefixes: Add YLM
-Message-ID: <20200716093940.GA8455@alpha.franken.de>
-References: <20200623182432.187843-1-paul@crapouillou.net>
+To:     Zhi Li <lizhi01@loongson.cn>
+Cc:     chenhc@lemote.com, jiaxun.yang@flygoat.com, lixuefeng@loongson.cn,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] MIPS: Loongson: Fix some issues of cpu_hwmon.c
+Message-ID: <20200716094526.GB8455@alpha.franken.de>
+References: <1594266921-28971-1-git-send-email-lizhi01@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623182432.187843-1-paul@crapouillou.net>
+In-Reply-To: <1594266921-28971-1-git-send-email-lizhi01@loongson.cn>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 08:24:26PM +0200, Paul Cercueil wrote:
-> Shenzhen Yangliming Electronic Technology Co., Ltd., abbreviated YLM or
-> YLMChina, and known as Anbernic in the rest of the world, is a Chinese
-> manufacturer of handheld game consoles, some of which are known to be
-> running Linux.
+On Thu, Jul 09, 2020 at 11:55:18AM +0800, Zhi Li wrote:
+> v2:
+>   - Drop the patch "MIPS: Loongson: Add hwmon support for generic CPU"
+>   - Reduce possible loop times in do_thermal_timer()
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> v3:
+>   - Fix boot warning about hwmon_device_register()
+> 
+> Tiezhu Yang (2):
+>   MIPS: Loongson: Cleanup cpu_hwmon.c
+>   MIPS: Loongson: Reduce possible loop times and add log in
+>     do_thermal_timer()
+> 
+> Zhi Li (1):
+>   MIPS: Loongson: Fix boot warning about hwmon_device_register()
+> 
+>  drivers/platform/mips/cpu_hwmon.c | 66 +++++++++++++++------------------------
 
 series applied to mips-next.
 
