@@ -2,110 +2,75 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A96AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37519C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5475B20791
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:50:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FVon6Pb3"
+	by mail.kernel.org (Postfix) with ESMTP id 1C2262076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgGPCuF (ORCPT
+        id S1727833AbgGPCzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:50:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52502 "EHLO
+        Wed, 15 Jul 2020 22:55:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgGPCuE (ORCPT
+        with ESMTP id S1727034AbgGPCzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:50:04 -0400
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB7EC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 19:50:04 -0700 (PDT)
-Received: by mail-vs1-xe35.google.com with SMTP id s20so2205513vsq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 19:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WEKmkAw0uwcvvBEVpu10W/Sa5gQp5k7qXmo5AR9AurA=;
-        b=FVon6Pb3ZKgtvlu6hExXOR+GxSVISq63TByCX4gSkKOhQlnbEzC4eSF6fOoXpDTtq0
-         pQY3Vxm7slt/77qZ7EjB8PYM7R7tPC2UnR3whxkMhALBsJPZm2mtqNBNYJ50MId7sz/U
-         VnFSnIlZpMtl294S/qgEb0x4zixD73XKt8NlreDpuTshjgFnl7ORvOC8c6e7j0POYBwS
-         AyyyoLhV+/agwsr3q70DWj82Eymx6336qEJaKKGTYOvPmsSVlF4I4ZURExC+91VAkSYE
-         8GCvhcqpaZV5yPhIUU4To8aSIbgvsvoMJhg0JwOeryqCUOrOUaBendC536fqgWMM5yGf
-         ZwUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WEKmkAw0uwcvvBEVpu10W/Sa5gQp5k7qXmo5AR9AurA=;
-        b=DySBwzwGqWHSzCAH7E2wk6KQPYvMsRvYV9hOnLeRYLWP+/yQ6rQBBa6RKl1HiteCBN
-         0WJLZHlLdp0xWjJQ5G3ckthXC/6ZJt8HmzANnDQzJlDNXCufGXgY0D/OOrYlLqX21BxJ
-         0QDbHX9+X8QGBNeFsB/riB8K2i8SbkTiAJ6Lx9uLw8595nwKczRos5KGQG0Bl4dQxIYe
-         EeEjn6rCNa5/TBFlQFgn77bY+Tcfr0ov/dNwJGJueQQ0wwNxLibRkR9ckCPniq8lt7uA
-         An+F6Xqp0oaY5p14do2xANG0DP3LDV5kXL8+bayiWEbHZqokLnEZgTL3kn0jbCkk9Una
-         TkAw==
-X-Gm-Message-State: AOAM530LTNhJVB8WOlkoQ4Pmzu86M9vvAeIDjXpK3oj7CnrKqqDK2Uev
-        UHdN9f6U2ndzRXDvqt7+psmLe8Dwf85YHjuCN1khgA==
-X-Google-Smtp-Source: ABdhPJwxCXQz0WoadyQHNKpsbOvxJMTRPicLoxVEytHah6x5/VcIKiVX4ciSJ6j/Gj2uPkLh6VB0DKXak2Z5ddYHgFM=
-X-Received: by 2002:a67:6441:: with SMTP id y62mr1679674vsb.82.1594867803345;
- Wed, 15 Jul 2020 19:50:03 -0700 (PDT)
+        Wed, 15 Jul 2020 22:55:02 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6524C061755;
+        Wed, 15 Jul 2020 19:55:02 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: wlozano)
+        with ESMTPSA id ED2ED2A3753
+From:   Walter Lozano <walter.lozano@collabora.com>
+To:     linux-pm@vger.kernel.org
+Cc:     kernel@collabora.com, Walter Lozano <walter.lozano@collabora.com>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] opp: Increase parsed_static_opps on _of_add_opp_table_v1
+Date:   Wed, 15 Jul 2020 23:54:52 -0300
+Message-Id: <20200716025452.25761-1-walter.lozano@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <0000000000000b5f9d059aa2037f@google.com> <20200714033252.8748-1-hdanton@sina.com>
- <20200714053205.15240-1-hdanton@sina.com> <20200714140859.15156-1-hdanton@sina.com>
- <20200714141815.GP24642@dhcp22.suse.cz> <CAHRSSEzbCW3E0QTR0ryf3p=5J5uhs_vY2D6fFQEzP=HeCDkPGQ@mail.gmail.com>
- <CAJuCfpExhJJO_xPk663-eUkmAXVVwNDd9a7ahQuwMW8JVMBJpg@mail.gmail.com>
- <CAJuCfpFz9kEfTPxcausVj63mUvU7i6Dvv6=KNePVX2qR+-Ci2A@mail.gmail.com> <20200715063639.GA5451@dhcp22.suse.cz>
-In-Reply-To: <20200715063639.GA5451@dhcp22.suse.cz>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Wed, 15 Jul 2020 19:49:52 -0700
-Message-ID: <CAJuCfpFFCtmbvjLWDLZ9_bpNq-iT2+1cfdkpEcGV5tFCnbd+5g@mail.gmail.com>
-Subject: Re: possible deadlock in shmem_fallocate (4)
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Todd Kjos <tkjos@google.com>, Hridya Valsaraju <hridya@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        syzbot <syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Martijn Coenen <maco@android.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Todd Kjos <tkjos@android.com>,
-        Markus Elfring <Markus.Elfring@web.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:36 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 14-07-20 10:32:20, Suren Baghdasaryan wrote:
-> [...]
-> > I'm not sure how we can annotate the fact that the inode_lock in
-> > generic_file_write_iter and in shmem_fallocate always operate on
-> > different inodes. Ideas?
->
-> I believe that the standard way is to use lockdep_set_class on your
-> backing inode. But asking lockdep experts would be better than relying
-> on my vague recollection
+Currently, when using _of_add_opp_table_v2 parsed_static_opps is
+increased and this value is used on _opp_remove_all_static to
+check if there are static opps entries that need to be freed.
+Unfortunately this does not happens when using _of_add_opp_table_v1,
+which leads to warnings.
 
-Thanks Michal! I think https://lkml.org/lkml/2020/7/15/1390 should fix
-it, however I was unable to reproduce the lockdep warning to confirm
-that this warning gets fixed by the patch.
+This patch increases parsed_static_opps on _of_add_opp_table_v1 in a
+similar way as in _of_add_opp_table_v2.
 
->
-> --
-> Michal Hocko
-> SUSE Labs
+Signed-off-by: Walter Lozano <walter.lozano@collabora.com>
+---
+
+ drivers/opp/of.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+index 9a5873591a40..b2bc82bf8b42 100644
+--- a/drivers/opp/of.c
++++ b/drivers/opp/of.c
+@@ -917,6 +917,8 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
+ 		nr -= 2;
+ 	}
+ 
++	opp_table->parsed_static_opps++;
++
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
+
