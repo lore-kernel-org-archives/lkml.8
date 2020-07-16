@@ -2,92 +2,101 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95934C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA27EC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB2F20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA3920775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgGPIoO (ORCPT
+        id S1728265AbgGPInp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:44:14 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39199 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgGPIoL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:44:11 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w17so4491984oie.6;
-        Thu, 16 Jul 2020 01:44:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c43oANq6OzYmzlJxSTpUKdWNvyI03SAvrrJGrRoQ9Lw=;
-        b=cEZMz1uqOpGjEqB/3ive611VHMZHjBmNO7M5uDdyUxnbqeDimNZ4da0WvKPPMWdZka
-         Zgq0dqoSr9gsN3z6G2vWAM1G3VBGisoqThYGEnXSnnJlv1WHYl7nkd1Kzrh+nXHTU3Kh
-         ea+ilp9nbLKCb1sKArTF6et/pZugGFF0wXbkEwuuSbjk2WT2KkLRAIfsoSufeRiB7Sk4
-         TwcXGXeI0+PAlg1SfAjKNBv5e5JXz2WNAlnrcVL3HLo67f139nVdqC3ZB9KYtCJM+xb5
-         D1yaIlMj/GzWm9O3/bfqgAy8fYTido+5C3eBPQdJaAqwKMM2gCH82zppbScrjmcMKINW
-         Nnyg==
-X-Gm-Message-State: AOAM532MUQ+1RZvn7XjiBdYatzwiz72a3DINWy3Y2KgnnkmNFA7LczJV
-        xyPFqcgHWPm6MRVVhqvEZdw7ZlDoZw+dYYnfhSo=
-X-Google-Smtp-Source: ABdhPJwNp44runSJD/wbft9WqzyuECnuZJT6DojqUYIfIs76R3X3bBHIwYj/c7l6O1oNa1zeCCJ71Siwmynt7kFgD8A=
-X-Received: by 2002:a05:6808:64a:: with SMTP id z10mr3066870oih.54.1594889050195;
- Thu, 16 Jul 2020 01:44:10 -0700 (PDT)
+        Thu, 16 Jul 2020 04:43:45 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51044 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725921AbgGPIno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:43:44 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 18DE657D27D285A20981;
+        Thu, 16 Jul 2020 16:43:43 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 16 Jul 2020 16:43:41 +0800
+From:   Qinglang Miao <miaoqinglang@huawei.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] hsr: Convert to DEFINE_SHOW_ATTRIBUTE
+Date:   Thu, 16 Jul 2020 16:47:28 +0800
+Message-ID: <20200716084728.7944-1-miaoqinglang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200715140622.1295370-1-aford173@gmail.com>
-In-Reply-To: <20200715140622.1295370-1-aford173@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 Jul 2020 10:43:58 +0200
-Message-ID: <CAMuHMdXfTCDmKS88vSztdgvgTUK8-5+DMLfXbqstPGmO3QpJUw@mail.gmail.com>
-Subject: Re: [PATCH V3] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 4:06 PM Adam Ford <aford173@gmail.com> wrote:
-> Beacon EmebeddedWorks, formerly Logic PD is introducing a new
-> SOM and development kit based on the RZ/G2M SoC from Renesas.
->
-> The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
-> cellular radio.
->
-> The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
-> along with a variety of push buttons and LED's, and support for
-> a parallel RGB and an LVDS display.
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> ---
-> V3:  Updated makefile so the beacon dtb reference is alphabetically in
->      order, made 'vsync-active' in lvds node a valid number, added
->      power-supply for the RGB node, and changed the versaclock on the
->      baseboard to state 'clock-controller@6a' The SOM cannot be named
->      this yet due to how the driver extracts its name.
+Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+---
+ net/hsr/hsr_debugfs.c | 20 ++------------------
+ 1 file changed, 2 insertions(+), 18 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/net/hsr/hsr_debugfs.c b/net/hsr/hsr_debugfs.c
+index d994c83b0..ed7f53475 100644
+--- a/net/hsr/hsr_debugfs.c
++++ b/net/hsr/hsr_debugfs.c
+@@ -54,16 +54,7 @@ hsr_node_table_show(struct seq_file *sfp, void *data)
+ 	return 0;
+ }
+ 
+-/* hsr_node_table_open - Open the node_table file
+- *
+- * Description:
+- * This routine opens a debugfs file node_table of specific hsr device
+- */
+-static int
+-hsr_node_table_open(struct inode *inode, struct file *filp)
+-{
+-	return single_open(filp, hsr_node_table_show, inode->i_private);
+-}
++DEFINE_SHOW_ATTRIBUTE(hsr_node_table);
+ 
+ void hsr_debugfs_rename(struct net_device *dev)
+ {
+@@ -78,13 +69,6 @@ void hsr_debugfs_rename(struct net_device *dev)
+ 		priv->node_tbl_root = d;
+ }
+ 
+-static const struct file_operations hsr_fops = {
+-	.open	= hsr_node_table_open,
+-	.read_iter	= seq_read_iter,
+-	.llseek = seq_lseek,
+-	.release = single_release,
+-};
+-
+ /* hsr_debugfs_init - create hsr node_table file for dumping
+  * the node table
+  *
+@@ -106,7 +90,7 @@ void hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev)
+ 
+ 	de = debugfs_create_file("node_table", S_IFREG | 0444,
+ 				 priv->node_tbl_root, priv,
+-				 &hsr_fops);
++				 &hsr_node_table_fops);
+ 	if (IS_ERR(de)) {
+ 		pr_err("Cannot create hsr node_table file\n");
+ 		debugfs_remove(priv->node_tbl_root);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
