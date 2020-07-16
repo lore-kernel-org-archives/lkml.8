@@ -2,122 +2,89 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98120C43457
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC41C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC2B2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0302065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:07:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCv/Msoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgGPNGW (ORCPT
+        id S1728316AbgGPNHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:06:22 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:33107 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728087AbgGPNGV (ORCPT
+        Thu, 16 Jul 2020 09:07:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbgGPNH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:06:21 -0400
-Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MwQGj-1koIlq14Rp-00sR1K for <linux-kernel@vger.kernel.org>; Thu, 16 Jul
- 2020 15:06:19 +0200
-Received: by mail-qv1-f42.google.com with SMTP id p7so2639156qvl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:06:19 -0700 (PDT)
-X-Gm-Message-State: AOAM533u8poQ9nQGDrVokh3JhVyiwbZStt251J/Ycrd8vQuLYkV9d78Y
-        EUrVoreBJDSH3b3LFueyKj7+ffQLpFucCQECrgM=
-X-Google-Smtp-Source: ABdhPJxNeCsNSf0Q6nH5Bu1+2ccIGi3fJ3q5Aaw5a35m7D7la4pI0jBb24AUhcQ+TrmiFxWfKsLX5fT0btz4Ib/UIvg=
-X-Received: by 2002:ad4:4c09:: with SMTP id bz9mr3944948qvb.210.1594904778075;
- Thu, 16 Jul 2020 06:06:18 -0700 (PDT)
+        Thu, 16 Jul 2020 09:07:29 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 793C4C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:07:29 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id ed14so2647903qvb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yTCgb6pNfriHa7QdwxnKN0JEx+SnNfgA6oWTF7AfWbo=;
+        b=cCv/Msoh8UW7Bm1Ew8GT4XIMHQ5AJwvGTe8s9LT94fF+PJeTQgsP+v5v1GAmtbExv4
+         AZSIzhBLiBCorjt2hS6uoOZf3czaI3ZFMgL0smOQJjeSTYT/fXqHwrKG7qIY1e+MVnF1
+         pdhbZMbDN4UFVQ7ArTXFQ1Wj7wV9UKXSdeZrHyxP6hN+L11P7Ft/kzJocP8n4wn9TRDl
+         UR5G/QfuxcTytcAFVRnxVNxv8I13sJI6+uh+bcHqlhKRRdjngerDzHOHo5qC/55+MmTF
+         Fcw0EL5Pk2ZUydhrgaAjpwPsvCd18e8CY8m0lkfnhfJaYQeKi8qj3zqARNnlmdcy5qDt
+         yW4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yTCgb6pNfriHa7QdwxnKN0JEx+SnNfgA6oWTF7AfWbo=;
+        b=GmjjPdyfoOi3legAGj2uEckX+NGSO/T+eX4RSpmOEmKRYvkeOI6yQ9bc4nyjsCo93V
+         ST9MZYGm6Bh6J25Grcb6y88wRKMOopeAfHh83KUfwxlStYOyhhsOJGZy1dRCdyLwqjQm
+         rM+xH1IjBcKconT+QtGcGvOPjaGeZqUdalXg/LfTm/aTj63jh8rJyiNpKos2Va7SneE6
+         K7VzHPM5AaknAIjo/7IgEMHPQ8vzuRoRmxxbSEGT6a8Jbx7qNmT0crAzZRLhwC2OJWzD
+         uwRcNem7KmF2oNRnvDG7v5q++w4uB8duCKb77jMLPLsfcqNC4W3Yz1F6rXN2s20YsNbm
+         6whQ==
+X-Gm-Message-State: AOAM533h1SSV7vOjnSvL5pvhqXkNaF1RY5IpzcFAd4NIQZlwUvT3E3gm
+        hRcWxUlXKQC0+Fbbly/Xy4ezjszTTc5S1FYx508=
+X-Google-Smtp-Source: ABdhPJzn1A/7btlIYG1X8bKeCTor+oIvCx7P+mI1jm4vqroo6Gd9feuKoyUcA12m6b+vBd3k4GzVkMJZVa3kylzK+iM=
+X-Received: by 2002:ad4:4cc3:: with SMTP id i3mr4073553qvz.114.1594904848734;
+ Thu, 16 Jul 2020 06:07:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
- <20200712123151.GB25970@localhost> <20200712193944.GA81641@localhost>
-In-Reply-To: <20200712193944.GA81641@localhost>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Jul 2020 15:06:01 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a20UQvQO0U=p1kBEUvRdwm8VFBa31aCe7C70hwTzcu_yw@mail.gmail.com>
-Message-ID: <CAK8P3a20UQvQO0U=p1kBEUvRdwm8VFBa31aCe7C70hwTzcu_yw@mail.gmail.com>
-Subject: Re: Linux kernel in-tree Rust support
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     Adrian Bunk <bunk@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        alex.gaynor@gmail.com, geofft@ldpreload.com, jbaublitz@redhat.com,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <cover.1594886530.git.zong.li@sifive.com> <628efa24c79a493e39ce6ef13017ae52eaf13388.1594886530.git.zong.li@sifive.com>
+In-Reply-To: <628efa24c79a493e39ce6ef13017ae52eaf13388.1594886530.git.zong.li@sifive.com>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Thu, 16 Jul 2020 16:07:12 +0300
+Message-ID: <CAOJsxLHrOjaUVUASz067_VX8tYV2DZgR6pvK4V07+ZvhSophPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] riscv: Fix build warning for mm/init
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:AEcPFNHArkNcZZ0+ETR/vEnUCCOZxPeq7Rlim5BeET1reyAB6aV
- kn0pu/q2ZptSBdJ7iU/G1Bk5LWLe14MkG5V9s08nSThzyBiDAssBvXcU4zQN5aHLlzoJsRF
- NGPtP5/z2VeyWdmYMnnxywY6HbDJIAybpjlKeGsb+baTeYCaGWyKTWpFjUFnXBwVO39j4a0
- P9zjM8XBJVI1jlpC4EZdA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ArF/SCQ3AgM=:m4+RoHOJemSVIw7aAMkQeG
- vB13xxXqcH7urL0nkWEh/60qYAVYLqK1zUVl20mNfjiMid4YlCFbFSKFGa7xLU4ASIpiZR72g
- JNP8AoD6231oGB8zLkgcETzv803mNP36Rwgh7nQGtvO0jq3wSOv3xVZQ2LmeryEDzf0le/V0y
- rpl0BAwyvc0vB6OT+pMo0FPYL2wgR7qZqZ4p81ju7QEju189a1OayhTs2MUhVlt71OqPf1TSy
- LB8Q5h/l79bYPOtwXkouNCigb8MswLAtAIiiO/3hnDzbttdYsTisIt3Mz5pl2CAwMGKPgiI0m
- Qb2myXNO8E+csgO0NGePJQ6kfvGd5G/ko9P7MUGRN9xSybGTVcsSXLxKVXq1hMlyLDSQDK3HB
- +OY1CSQh879JQOD/+hTuDlUSn5FAJ7Xnyd/Vbg2HwnFeea3cOSkp929x88TwHoyrCXBakxb98
- /aY1cxBiQvCjbd9ZEL7vQSSFD44WTuFa6qH/Mb1jIWmjT5Hftd0rtPY4By9gDXA46vuYrJq5f
- nFLxkGxMbgJPpPhlDFDlW0Tu66VVeLTo+wK4ivsozwdw+PnNLiQ84dXIcmdmxcJv02UQ33nWj
- 5A6BY8TJ3CEyNm4xRohobM2X7im/20vVI+d85i6J3Hk7VcJjNeTFvZ8zjE6OIIpoc7mWCpVt+
- cs3muzdFHBKGkNeR1d01/Utm6UBgMzhjYnMpKjyeAqKnbiiVSohXQhkf+uosCwC1hxwdmIKrW
- Vkyy0uFjcoz4tePUy8LD72c3jhbm8WeX7Znk6a31yTWkx9U0g2t8a1XC+fkj+Blc3/ARsPY/V
- qm+6w601s44fAAs4a360SlsIr5+A3lGRdVLVtEJByKFGr0n90uQTcSNwSHOXSrswzNTFXqt
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 9:39 PM Josh Triplett <josh@joshtriplett.org> wrote:
-> On Sun, Jul 12, 2020 at 03:31:51PM +0300, Adrian Bunk wrote:
-> >
-> > As an example:
-> > Ubuntu LTS releases upgrade to a new Rust version every 1-2 months.
-> > Ubuntu 16.04 started with Rust 1.7.0 and is now at Rust 1.41.0.
-> >
-> > It would not sound good to me if security updates of distribution
-> > kernels might additionally end up using a different version of the
-> > Rust compiler - the toolchain for the kernel should be stable.
-> >
-> > Would Rust usage in the kernel require distributions to ship
-> > a "Rust for Firefox" and a "Rust for the kernel"?
+On Thu, Jul 16, 2020 at 4:06 PM Zong Li <zong.li@sifive.com> wrote:
 >
-> Rust has hard stability guarantees when upgrading from one stable
-> version to the next. If code compiles with a given stable version of
-> Rust, it'll compile with a newer stable version of Rust. Given that, a
-> stable distribution will just need a single sufficiently up-to-date Rust
-> that meets the minimum version requirements of both Firefox and Linux.
+> Add static keyword for resource_init, this function is only used in this
+> object file.
 >
-> (That would not apply if the kernel used nightly Rust, since
-> nightly-only features are allowed to change before becoming stable;
-> that's one reason why we should use stable Rust, and try to get Firefox
-> to stick to stable Rust.)
+> The warning message as follow (with W=1 build):
+>
+> arch/riscv/mm/init.c:520:13:
+> warning: no previous prototype for 'resource_init' [-Wmissing-prototypes]
+>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
 
-I would expect we'd want a fairly tight coupling between kernel
-releases and minimum rust releases at first. Whatever is the latest
-stable rust version during the kernel's merge window might be
-assumed to be the minimum version for the life of that kernel, but
-an LTS release would not suddenly start relying on features
-from a newer compiler (thought it might warn about known bugs).
+Reviewed-by: Pekka Enberg <penberg@kernel.org>
 
-This might mean that linux-next requires a beta version of rust, if
-the release is expected before the merge window and it contains
-an important change. Staying with fairly recent versions of clang
-certainly helped in getting clang and the kernel to co-evolve and
-get to the point we are now in using it as an alternative to gcc.
-
-While Linux used to build with 12 year old compilers (4.1 until
-2018), we now require a 6 year old gcc (4.9) or 1 year old
-clang/llvm. I don't know whether these will fully converge over
-time but it seems sensible that the minimum rust frontend version
-we require for a new kernel release would eventually also fall
-in that range, requiring a compiler that is no more than a few
-years old, but not requiring the latest stable release.
-
-      Arnd
+- Pekka
