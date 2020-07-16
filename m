@@ -2,144 +2,125 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69CFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77504C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABDA20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567B020760
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:42:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcOx8bvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgGPNlU (ORCPT
+        id S1728839AbgGPNmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:41:20 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:49244 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgGPNlT (ORCPT
+        Thu, 16 Jul 2020 09:42:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbgGPNmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:41:19 -0400
-Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06GDfHDn085146;
-        Thu, 16 Jul 2020 22:41:17 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp);
- Thu, 16 Jul 2020 22:41:17 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06GDfGUv085143
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 16 Jul 2020 22:41:17 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] binder: Don't use mmput() from shrinker function.
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve Hjonnevag <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>
-References: <0000000000001fbbb605aa805c9b@google.com>
- <5ce3ee90-333e-638d-ac8c-cd6d7ab7aa3b@I-love.SAKURA.ne.jp>
- <20200716083506.GA20915@dhcp22.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <36db7016-98d6-2c6b-110b-b2481fd480ac@i-love.sakura.ne.jp>
-Date:   Thu, 16 Jul 2020 22:41:14 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 09:42:03 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD94C061755;
+        Thu, 16 Jul 2020 06:42:03 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id o13so4890788pgf.0;
+        Thu, 16 Jul 2020 06:42:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=tdZ5atcYmkHDWD75u9CN+9LB8lA8YvS/gtJmV0KCUEU=;
+        b=RcOx8bvKvkR/mVCBWIYeOX0vWefVIqLx8DYbd0S64GG1tDa2e1GwYlxJNCvbjVt9Mq
+         /TFYlJz3vVu+xaMh95Qso21ghU6xPHw1jHPclzhKWHhVHe10Qkbe/x/Aq7MGnRGIEV9T
+         IDd2SAG2JBVNxTTNTJxGUOLEs0MrTePqz0LLnPb06xxTFfXDinGG6UvqZQv9l6n7LVxB
+         WBzJBcHB1iuCTrhs4oTh3A2E0uiaWW1LObGM9e3AJFGD9Q+6HOFzKCuBXqwySokT1LGn
+         YrHiZGtaG14xlshqi13iPDizi+jf6TZuBMA+eDe2qvBUFQDL8+Dk6RUWY4uEsQI8qxyc
+         LvzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=tdZ5atcYmkHDWD75u9CN+9LB8lA8YvS/gtJmV0KCUEU=;
+        b=tsbvKadEDVjdxrGMXcKeR0pKQUBKOd3bWYuO9gVveD02mITkTqajNBdaa3lJHSk6gD
+         AldF9Rij0SU9xZ/xiUl1+euyeBVlCbuCMGRswsIPPgi0nhaTwiTKv4q6y8nEnGP77NR7
+         fOJIrZRVn/ZEYq6304wUG4wVjeYpqeVq6/a7XXQlfXl0yXnsE7j7ytrnv898TFOsg2Ua
+         IauEmszx2udU4pxhCQTRbemA1ih8wf0th90emW1+f53434lij7zwadPe2cKdKZDSKJho
+         Vdzos50vzHQk7HWdAH1Jw2wwoU0lrzmmRk+vvLd4/WVlH1ItxxhlS8O/v8dN2uS/HfD3
+         Wm4g==
+X-Gm-Message-State: AOAM531Crc0OYBcj8T0q4u2XSaHBZFqcxgN5uqBp1WRlQ7Ub7YqB/NTB
+        feKCeSzRgs9tp4LZ7njLDGI=
+X-Google-Smtp-Source: ABdhPJwFr5xcS/OGf6NXQXDzh1UTdkKrkaezqiDI4uvqb0LtgnSvJBDxjWFOC73ayoUX52ZP/37AmQ==
+X-Received: by 2002:a63:db46:: with SMTP id x6mr4171830pgi.265.1594906922719;
+        Thu, 16 Jul 2020 06:42:02 -0700 (PDT)
+Received: from vm_111_229_centos ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id io3sm229510pjb.22.2020.07.16.06.42.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Jul 2020 06:42:02 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 21:41:54 +0800
+From:   YangYuxi <yx.atom1@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ebpf: fix parameter naming confusing
+Message-ID: <20200716134154.GA7123@vm_111_229_centos>
 MIME-Version: 1.0
-In-Reply-To: <20200716083506.GA20915@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/16 17:35, Michal Hocko wrote:
-> On Thu 16-07-20 08:36:52, Tetsuo Handa wrote:
->> syzbot is reporting that mmput() from shrinker function has a risk of
->> deadlock [1]. Don't start synchronous teardown of mm when called from
->> shrinker function.
-> 
-> Please add the actual lock dependency to the changelog.
-> 
-> Anyway is this deadlock real? Mayve I have missed some details but the
-> call graph points to these two paths.
-> uprobe_mmap					do_shrink_slab	
->   uprobes_mmap_hash #lock
->   install_breakpoint				  binder_shrink_scan
->     set_swbp					    binder_alloc_free_page
->       uprobe_write_opcode			      __mmput
-> 	update_ref_ctr				        uprobe_clear_state
->     	  mutex_lock(&delayed_uprobe_lock)	          mutex_lock(&delayed_uprobe_lock);
-> 	    allocation -> reclaim
-> 
+Signed-off-by: YangYuxi <yx.atom1@gmail.com>
+---
+ kernel/bpf/syscall.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm, short d) {
-  mutex_lock(&delayed_uprobe_lock);
-  ret = delayed_uprobe_add(uprobe, mm1) {
-    du = kzalloc(sizeof(*du), GFP_KERNEL) {
-      do_shrink_slab() {
-        binder_shrink_scan() {
-          binder_alloc_free_page() {
-            mmget_not_zero(mm2);
-            mmput(mm2) {
-              __mmput(mm2) {
-                uprobe_clear_state(mm2) {
-                  mutex_lock(&delayed_uprobe_lock);
-                  delayed_uprobe_remove(NULL, mm2);
-                  mutex_unlock(&delayed_uprobe_lock);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  mutex_unlock(&delayed_uprobe_lock);
-}
-
-> But in order for this to happen the shrinker would have to do the last
-> put on the mm. But mm cannot go away from under uprobe_mmap so those two
-> paths cannot race with each other.
-
-and mm1 != mm2 is possible, isn't it?
-
-> 
-> Unless I am missing something this is a false positive. I do not mind
-> using mmput_async from the shrinker as a workaround but the changelog
-> should be explicit about the fact.
-> 
-
-binder_alloc_free_page() is already using mmput_async() 14 lines later.
-It just took 18 months to hit this race for the third time, for it is
-quite difficult to let the owner of mm2 to call mmput(mm2) between
-binder_alloc_free_page() calls mmget_not_zero(mm2) and mmput(mm2).
-
-The reason I added you is to see whether we can do
-
- void mmput(struct mm_struct *mm)
- {
- 	might_sleep();
-+	/* Calling mmput() from shrinker context can deadlock. */
-+	WARN_ON(current->flags & PF_MEMALLOC);
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 0fd80ac81f70..42406f7275b7 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1881,13 +1881,13 @@ struct bpf_prog *bpf_prog_inc_not_zero(struct bpf_prog *prog)
+ EXPORT_SYMBOL_GPL(bpf_prog_inc_not_zero);
  
- 	if (atomic_dec_and_test(&mm->mm_users))
- 		__mmput(mm);
+ bool bpf_prog_get_ok(struct bpf_prog *prog,
+-			    enum bpf_prog_type *attach_type, bool attach_drv)
++			    enum bpf_prog_type *prog_type, bool attach_drv)
+ {
+ 	/* not an attachment, just a refcount inc, always allow */
+ 	if (!attach_type)
+ 		return true;
+ 
+-	if (prog->type != *attach_type)
++	if (prog->type != *prog_type)
+ 		return false;
+ 	if (bpf_prog_is_dev_bound(prog->aux) && !attach_drv)
+ 		return false;
+@@ -1895,7 +1895,7 @@ bool bpf_prog_get_ok(struct bpf_prog *prog,
+ 	return true;
  }
-
-in order to catch this bug easier.
+ 
+-static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *attach_type,
++static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *prog_type,
+ 				       bool attach_drv)
+ {
+ 	struct fd f = fdget(ufd);
+@@ -1904,7 +1904,7 @@ static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *attach_type,
+ 	prog = ____bpf_prog_get(f);
+ 	if (IS_ERR(prog))
+ 		return prog;
+-	if (!bpf_prog_get_ok(prog, attach_type, attach_drv)) {
++	if (!bpf_prog_get_ok(prog, prog_type, attach_drv)) {
+ 		prog = ERR_PTR(-EINVAL);
+ 		goto out;
+ 	}
+-- 
+1.8.3.1
 
