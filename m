@@ -2,135 +2,113 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39F2C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056ABC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2A0F2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:17:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="kUvNiNFv"
+	by mail.kernel.org (Postfix) with ESMTP id E28A02070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgGPRRu (ORCPT
+        id S1729312AbgGPRSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728885AbgGPRRd (ORCPT
+        Thu, 16 Jul 2020 13:18:44 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:52329 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728182AbgGPRSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:17:33 -0400
-Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5846BC061755;
-        Thu, 16 Jul 2020 10:17:33 -0700 (PDT)
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id E1900140A85;
-        Thu, 16 Jul 2020 19:17:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1594919851; bh=XOAfNxH04Dfv8nWGDodRl3W9aRo3avZUgZgHgn5hpn4=;
-        h=From:To:Date;
-        b=kUvNiNFvr235PstZgBkhO+fqGWxiiaUdRMn8KfQa9MBotIBOF1KG4SkdDmJV7Xjqq
-         HySlUuwxNcos160kngDFQyR17PehN9c1BI+5pLbwFNt+EpxA6Jn58IvUIdwexb1X17
-         PONsZn+A/BZ4Tk+f5C5cxDFWOC2watM+/tMrR13I=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     linux-leds@vger.kernel.org
-Cc:     Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
-        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH RFC leds + net-next 0/3] Add support for LEDs on Marvell PHYs
-Date:   Thu, 16 Jul 2020 19:17:27 +0200
-Message-Id: <20200716171730.13227-1-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: /
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+        Thu, 16 Jul 2020 13:18:43 -0400
+X-IronPort-AV: E=Sophos;i="5.75,360,1589209200"; 
+   d="scan'208";a="52107158"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 17 Jul 2020 02:18:41 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 75C8B40B5142;
+        Fri, 17 Jul 2020 02:18:36 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
+Cc:     linux-ide@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-renesas-soc@vger.kernel.org,
+        linux-usb@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 00/20] Add support for SATA/PCIe/USB2[3]/VIN/CSI on R8A774E1
+Date:   Thu, 16 Jul 2020 18:18:15 +0100
+Message-Id: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi All,
 
-this RFC series should apply on both net-next/master and Pavel's
-linux-leds/for-master tree.
+This patch series adds support for the following peripherals on RZ/G2H SoC
+ * PCIe
+ * SATA
+ * USB2
+ * USB3
+ * Audio
+ * VIN
+ * CSI
 
-This adds support for LED's connected to some Marvell PHYs.
+Cheers,
+Prabhakar
 
-LEDs are specified via device-tree. Example:
+Lad Prabhakar (20):
+  dt-bindings: pci: rcar-pci: Add device tree support for r8a774e1
+  arm64: dts: renesas: r8a774e1: Add PCIe device nodes
+  dt-bindings: ata: renesas,rcar-sata: Add r8a774e1 support
+  arm64: dts: renesas: r8a774e1: Add SATA controller node
+  dt-bindings: phy: renesas,usb2-phy: Add r8a774e1 support
+  arm64: dts: renesas: r8a774e1: Add USB2.0 phy and host (EHCI/OHCI)
+    device nodes
+  dt-bindings: usb: renesas,usb3-peri: Document r8a774e1 support
+  dt-bindings: usb: usb-xhci: Document r8a774e1 support
+  dt-bindings: phy: renesas,usb3-phy: Add r8a774e1 support
+  arm64: dts: renesas: r8a774e1: Add USB3.0 device nodes
+  dt-bindings: usb: renesas,usbhs: Add r8a774e1 support
+  dt-bindings: dma: renesas,usb-dmac: Add binding for r8a774e1
+  arm64: dts: renesas: r8a774e1: Add USB-DMAC and HSUSB device nodes
+  dt-bindings: sound: renesas,rsnd: Document r8a774e1 bindings
+  arm64: dts: renesas: r8a774e1: Add audio support
+  dt-bindings: media: renesas,csi2: Add R8A774E1 support
+  dt-bindings: media: renesas,vin: Add R8A774E1 support
+  media: rcar-csi2: Enable support for R8A774E1
+  media: rcar-vin: Enable support for R8A774E1
+  arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
 
-ethernet-phy@1 {
-	reg = <1>;
-
-	leds {
-		led@0 {
-			reg = <0>;
-			color = <LED_COLOR_ID_GREEN>;
-			function = LED_FUNCTION_LINK;
-			linux,default-trigger = "hw:1000/100/10/nolink";
-		};
-
-		led@1 {
-			reg = <1>;
-			color = <LED_COLOR_ID_YELLOW>;
-			function = LED_FUNCTION_ACTIVITY;
-			linux,default-trigger = "hw:act/noact";
-		};
-	};
-};
-
-Since Marvell PHYs can control the LEDs themselves in various modes,
-we need to be able to switch between them or disable them.
-
-This is achieved by extending the LED trigger API with LED-private triggers.
-The proposal for this is based on work by Ondrej and Pavel, but after writing
-this support for Marvell PHYs I am not very happy how this turned out:
-- this LED-private triggers API works by registering triggers with specific
-  private trigger type. If this trigger type is defined for a trigger, only
-  those LEDs will be able to set this trigger which also have this trigger type.
-  (Both structs led_classdev and led_trigger have member trigger_type)
-- on Marvell PHYs each LED can have up to 8 different triggers
-- currently the driver supports up to 6 LEDs, since at least 88E1340 support
-  6 LEDs
-- almost every LED supports some mode which is not supported by at least one
-  other LED
-- this leads to the following dillema:
-  1. either we support one trigger type across the driver, but then the
-     /sys/class/leds/<LED>/trigger file will also list HW triggers not
-     supported by this specific LED,
-  2. or we add 6 trigger types, each different one LED, and register up to
-     8 HW triggers for each trigger type, which results in up to 48 triggers
-     per this driver.
-  In this proposal alternative 1 is taken and when unsupported HW trigger
-  is requested by writing to /sys/class/leds/<LED>/trigger file, the write
-  system call returns -EOPNOTSUPP.
-- therefore I think that this is not the correct way how to implement
-  LED-private triggers, and instead an approach as desribed in [1].
-  What do you people think?
-
-Marek
-
-Marek Behún (3):
-  leds: trigger: add support for LED-private device triggers
-  leds: trigger: return error value if .activate() failed
-  net: phy: marvell: add support for PHY LEDs via LED class
-
- drivers/leds/led-triggers.c |  32 ++--
- drivers/net/phy/Kconfig     |   7 +
- drivers/net/phy/marvell.c   | 307 +++++++++++++++++++++++++++++++++++-
- include/linux/leds.h        |  10 ++
- 4 files changed, 346 insertions(+), 10 deletions(-)
+ .../bindings/ata/renesas,rcar-sata.yaml       |   1 +
+ .../bindings/dma/renesas,usb-dmac.yaml        |   1 +
+ .../bindings/media/renesas,csi2.yaml          |   1 +
+ .../bindings/media/renesas,vin.yaml           |   1 +
+ .../devicetree/bindings/pci/rcar-pci.txt      |   1 +
+ .../bindings/phy/renesas,usb2-phy.yaml        |   1 +
+ .../bindings/phy/renesas,usb3-phy.yaml        |   1 +
+ .../bindings/sound/renesas,rsnd.txt           |   1 +
+ .../bindings/usb/renesas,usb3-peri.yaml       |   1 +
+ .../bindings/usb/renesas,usbhs.yaml           |   1 +
+ .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
+ arch/arm64/boot/dts/renesas/r8a774e1.dtsi     | 989 +++++++++++++++++-
+ drivers/media/platform/rcar-vin/rcar-core.c   |  40 +
+ drivers/media/platform/rcar-vin/rcar-csi2.c   |   4 +
+ 14 files changed, 1022 insertions(+), 22 deletions(-)
 
 -- 
-2.26.2
+2.17.1
 
