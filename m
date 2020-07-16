@@ -2,177 +2,119 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB677C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C173C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE88A2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EAAD2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:55:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594922114;
+	bh=lLJldrxIoCk4M8C+GINWVcU4GYYV6tS/oFagogB61Z8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=T2yOiFA3E4MlMjGZPOraJLrXVJl000BastN5ZRF4K30Rydkkke0iEeYZIs/HhvuIw
+	 RJv/AheoDK+TB2ZqFAsRf/OyTqVQ13GNK8aMQ+4thO9YUWqNGyDCErh9vs9F1AxLn+
+	 wjCvu+vh6HKEfm7qV6XUlfLnZsxMpwRuucqMWU6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgGPRyH (ORCPT
+        id S1729048AbgGPRzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:54:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4852 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727844AbgGPRyG (ORCPT
+        Thu, 16 Jul 2020 13:55:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727844AbgGPRzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:54:06 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GHWA58140286;
-        Thu, 16 Jul 2020 13:53:52 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32afv0qk1f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 13:53:51 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GHXYJd144707;
-        Thu, 16 Jul 2020 13:53:51 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32afv0qk02-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 13:53:51 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GHpJdk003707;
-        Thu, 16 Jul 2020 17:53:48 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 3274pgwntf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 17:53:48 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GHrk6V62915054
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 17:53:46 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89AB6AE055;
-        Thu, 16 Jul 2020 17:53:46 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3117AE051;
-        Thu, 16 Jul 2020 17:53:45 +0000 (GMT)
-Received: from sig-9-145-186-215.de.ibm.com (unknown [9.145.186.215])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Jul 2020 17:53:45 +0000 (GMT)
-Message-ID: <4e0c4f3f6278617dc54fc755d899dbbab396f24d.camel@linux.ibm.com>
-Subject: Re: [PATCH] Revert "test_bpf: flag tests that cannot be jited on
- s390"
-From:   Ilya Leoshkevich <iii@linux.ibm.com>
-To:     Seth Forshee <seth.forshee@canonical.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 16 Jul 2020 19:53:45 +0200
-In-Reply-To: <20200716143931.330122-1-seth.forshee@canonical.com>
-References: <20200716143931.330122-1-seth.forshee@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Thu, 16 Jul 2020 13:55:12 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC5BC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:55:12 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id u25so4309809lfm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xq2JH4o8fhssULM8OxiE+8BVwjY6u3DAco48q1luJAA=;
+        b=ObQzTlhrDJzFPiBqNrDCENTQ8eDuKme5lbe0pge63Qy9tUEn0lpb9Ibc70CsMa5rJp
+         w8lsRsux3WCKeRWxpK6T76ywqmXf6GOGmCHC3Y9Ch4w0CY3EGTy5ho0T+peufUbLOykN
+         oxttWek9XqXN20xjMRBA6JbA31+SDZptabSZQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xq2JH4o8fhssULM8OxiE+8BVwjY6u3DAco48q1luJAA=;
+        b=Kdi0kXE/zjyvxz7sG/s4rPXIXm+0xeKBogzjVyUodMaUgk4v/ILTVhxg3ZIMy6mplo
+         wHP7/fPXaq92pJkmZG1kEiB/FZPYW2hBM/EI8GMKx6+QQuRSRNyCtoBdgpC2nA2JDmvl
+         cnrWhip7gX6tKju4XYVarmqLh0A/lNqS7nAOYCGSkXQij4uoxKbRzN53XBbuZu7kzDAY
+         VbFBL7wF7ehZt0EqD900iYahfnO7bvlJg7sEx8hCgiKla+3YGz3pJC96fLZbLxhkaA1S
+         mz8RpsU4EZMe8Z+X2a+vzecHM2Vzz9kalXoml6BI/CZtiYmsQvtf7aBEIINyWHlzgQkR
+         IEfg==
+X-Gm-Message-State: AOAM5336TWqnrm7aZrD0F5MgzjRQLR4BPvNM+MK2I4BcPFwe84JYCHTe
+        9GyTz7pf3JEbp2HldnZOL0zmfS/tMwY=
+X-Google-Smtp-Source: ABdhPJwevqIpaIkLvhtVIuX7Rz4Zynanw1ielf8XiloMHasx1yRbLe4l74qBd5vq4A5+DvQuJ3KA0A==
+X-Received: by 2002:a19:ca48:: with SMTP id h8mr2745889lfj.161.1594922110206;
+        Thu, 16 Jul 2020 10:55:10 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id l4sm1176259ljc.83.2020.07.16.10.55.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 10:55:08 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id x9so9114754ljc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:55:08 -0700 (PDT)
+X-Received: by 2002:a2e:9b42:: with SMTP id o2mr2516849ljj.102.1594922108423;
+ Thu, 16 Jul 2020 10:55:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_07:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- clxscore=1011 mlxscore=0 priorityscore=1501 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 suspectscore=3
- adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160125
+References: <20200715135011.42743-1-kirill.shutemov@linux.intel.com>
+ <CAHk-=wh4pB-jRngOjcGxpc8=NPds3jWqJwDMUWC3-OEo4dRiKg@mail.gmail.com>
+ <20200715205428.GA201569@google.com> <CAHk-=wg-_Oof43pKUHMk4ySdLwpYi7+shFg+aeV18UP2Akiv8g@mail.gmail.com>
+ <CAHk-=wg+iVwK7MDXB+BPbhTmP-1eBa-y4vxRNr_G8ETnzv5pZg@mail.gmail.com>
+ <20200715222228.jf2pv5u2wyhtc5o5@box> <CAHk-=wgp-ZJ+J250DMaJFBDU2hnhUUqXcUnVnZZ1iFQEK6O-jg@mail.gmail.com>
+ <CAHk-=wh3jD4dwXWWFors9OnYp-YCzYN2bCGs9HDxrtZ=TiFyDQ@mail.gmail.com>
+ <CAHk-=wjw2yuQjP1rqB=ocr9W3=ak+6h4XygoFTAgM5meiM1Q0A@mail.gmail.com> <20200716131612.b7ottczdgnxwdvrp@box>
+In-Reply-To: <20200716131612.b7ottczdgnxwdvrp@box>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 16 Jul 2020 10:54:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi1PKGsk-Nr_Jd1vHGqg5AjTUtJkeh9R-a9SN-H=i2-1A@mail.gmail.com>
+Message-ID: <CAHk-=wi1PKGsk-Nr_Jd1vHGqg5AjTUtJkeh9R-a9SN-H=i2-1A@mail.gmail.com>
+Subject: Re: [PATCHv2] mm: Fix warning in move_normal_pmd()
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        William Kucharski <william.kucharski@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-16 at 09:39 -0500, Seth Forshee wrote:
-> This reverts commit 3203c9010060806ff88c9989aeab4dc8d9a474dc.
-> 
-> The s390 bpf JIT previously had a restriction on the maximum
-> program size, which required some tests in test_bpf to be flagged
-> as expected failures. The program size limitation has been removed,
-> and the tests now pass, so these tests should no longer be flagged.
-> 
-> Fixes: d1242b10ff03 ("s390/bpf: Remove JITed image size limitations")
-> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
-> ---
->  lib/test_bpf.c | 20 --------------------
->  1 file changed, 20 deletions(-)
-> 
-> diff --git a/lib/test_bpf.c b/lib/test_bpf.c
-> index a5fddf9ebcb7..ca7d635bccd9 100644
-> --- a/lib/test_bpf.c
-> +++ b/lib/test_bpf.c
-> @@ -5275,31 +5275,21 @@ static struct bpf_test tests[] = {
->  	{	/* Mainly checking JIT here. */
->  		"BPF_MAXINSNS: Ctx heavy transformations",
->  		{ },
-> -#if defined(CONFIG_BPF_JIT_ALWAYS_ON) && defined(CONFIG_S390)
-> -		CLASSIC | FLAG_EXPECTED_FAIL,
-> -#else
->  		CLASSIC,
-> -#endif
->  		{ },
->  		{
->  			{  1, SKB_VLAN_PRESENT },
->  			{ 10, SKB_VLAN_PRESENT }
->  		},
->  		.fill_helper = bpf_fill_maxinsns6,
-> -		.expected_errcode = -ENOTSUPP,
->  	},
->  	{	/* Mainly checking JIT here. */
->  		"BPF_MAXINSNS: Call heavy transformations",
->  		{ },
-> -#if defined(CONFIG_BPF_JIT_ALWAYS_ON) && defined(CONFIG_S390)
-> -		CLASSIC | FLAG_NO_DATA | FLAG_EXPECTED_FAIL,
-> -#else
->  		CLASSIC | FLAG_NO_DATA,
-> -#endif
->  		{ },
->  		{ { 1, 0 }, { 10, 0 } },
->  		.fill_helper = bpf_fill_maxinsns7,
-> -		.expected_errcode = -ENOTSUPP,
->  	},
->  	{	/* Mainly checking JIT here. */
->  		"BPF_MAXINSNS: Jump heavy test",
-> @@ -5350,28 +5340,18 @@ static struct bpf_test tests[] = {
->  	{
->  		"BPF_MAXINSNS: exec all MSH",
->  		{ },
-> -#if defined(CONFIG_BPF_JIT_ALWAYS_ON) && defined(CONFIG_S390)
-> -		CLASSIC | FLAG_EXPECTED_FAIL,
-> -#else
->  		CLASSIC,
-> -#endif
->  		{ 0xfa, 0xfb, 0xfc, 0xfd, },
->  		{ { 4, 0xababab83 } },
->  		.fill_helper = bpf_fill_maxinsns13,
-> -		.expected_errcode = -ENOTSUPP,
->  	},
->  	{
->  		"BPF_MAXINSNS: ld_abs+get_processor_id",
->  		{ },
-> -#if defined(CONFIG_BPF_JIT_ALWAYS_ON) && defined(CONFIG_S390)
-> -		CLASSIC | FLAG_EXPECTED_FAIL,
-> -#else
->  		CLASSIC,
-> -#endif
->  		{ },
->  		{ { 1, 0xbee } },
->  		.fill_helper = bpf_fill_ld_abs_get_processor_id,
-> -		.expected_errcode = -ENOTSUPP,
->  	},
->  	/*
->  	 * LD_IND / LD_ABS on fragmented SKBs
+On Thu, Jul 16, 2020 at 6:16 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+>
+> It can also lead to performance regression: for small mremap() if only one
+> side of the range got aligned and there's no PMD_SIZE range to move,
+> kernel will still iterate over PTEs, but it would need to handle more
+> pte_none()s than without the patch.
 
-Thank you for the fix!
-I tested it and it indeed fixes these 4 failures.
+Ack, I've dropped the patch from my queue of experiments, because it
+doesn't work for the case I wanted to do, and the other cases could
+regress, as you say.
 
-I will have a look at the remaining 8 tomorrow.
+Plus considering how many problems that patch had, I decided it wasn't
+as simple as I initially thought it would be anyway ;)
 
-Reviewed-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Joel - while it's gone from my mind, if you're still interested in
+this, maybe you can do something _similar_ that patch, except perhaps
+also start out checking that the initial size is large enough for this
+to make sense even when one of the sides doesn't align, for example.
 
+(It might be as simple as checking that the initial 'len' is at least
+PMD_SIZE - then you're guaranteed that whichever side gets aligned,
+it's not doing extra work because the other side didn't).
+
+               Linus
