@@ -2,113 +2,128 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78267C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 505C42063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6A62063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="SEWq1E9U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNT1KJPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgGPXh4 (ORCPT
+        id S1726189AbgGPXiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:37:56 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:4968 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725933AbgGPXh4 (ORCPT
+        Thu, 16 Jul 2020 19:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgGPXiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:37:56 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GMoKkV008939
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:01:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=LL2rGApnWJch90rgZTalBSdlaarxIQ3540QQIkq13K0=;
- b=SEWq1E9UlTTJFt8WWCCY16XLbk/XwxiN0s3fI4RRBgSclvbQ27nKvvN3MODXhy5z/trt
- yGpm+BBWl+nu01MIvnjPyVBtNyetJmqz98LYOOfjcZKc2bAQdviOBrrYnSVY+kJeuiwz
- e0hP2dEvW4WQ3E5pbJ0gncxbQOvRoVgbdMI= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 32avg5h41h-12
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:01:49 -0700
-Received: from intmgw004.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 16 Jul 2020 16:01:39 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id B453F62E523E; Thu, 16 Jul 2020 15:59:36 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
-        <brouer@redhat.com>, <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v3 bpf-next 0/2] bpf: fix stackmap on perf_events with PEBS
-Date:   Thu, 16 Jul 2020 15:59:31 -0700
-Message-ID: <20200716225933.196342-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 16 Jul 2020 19:38:14 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CC3C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:38:13 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id m22so5704073pgv.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YI7Vx/uvEtkVHjbnn5enh7Amkd8UUwSoGpt+t0J9E6s=;
+        b=HNT1KJPvsw+DsJ8EOVLWmzitrBpr2yo7OeDS/ByQPu3+8YItroTU5tRmB2KmRs4P21
+         1XdBvcw8tcZZxmOTswgMDE9PbYsIPXJqexuThr4oua0stDFqoqRnQfWaVLDynSbDgGBP
+         +mRMfWfUqqnWFa/3agfFCCVTwGyXE9Uf0XW6eMoUfi0Y7i6+FT+TzKmhujId02r1dSpP
+         EoRiQkBwdafl5ekL2/7NLOuVhAxIIsA3G0q6hzrXbZWVczzNTRhwCuaVqWJ5sR6J8rIC
+         k6eEdlyYzR+qvFsGOEyzIzVx5a23yduG38u5JOFP5rsy3N26hZFlRa6mxiYAppwLyvYL
+         4vGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YI7Vx/uvEtkVHjbnn5enh7Amkd8UUwSoGpt+t0J9E6s=;
+        b=L6Ltqr1WR5trdheHjX9BDBYMW4IRCaegMBKg/GhVfwmD4NUPqHzECf5s3Cu1TqBSvJ
+         s7MyIjSqdSYGKPKgxfbnTxht8N8CN5BLgSzrdsheU3Desxi9vBQrxzQD64h9KjFeip3a
+         TvHbpi568VsI5Rm7OiT7b/wnF7Bqiz5vzzf1D6cnfMl0ZLqbzUNH+aSXHiMyi4A2KQR1
+         3DSbna+wfETqeFteRZCmu1I/O5G7fwdF91TVEmMaiitOm9OD85MqZquJnRCzliY72RNO
+         t5/pSPvX107OlfaymPHMp0v9qrEWQiuWNlcb/JL4w4nRvBdmrVKa5FgwE4A6aFxp/q1u
+         3EPA==
+X-Gm-Message-State: AOAM530/xOOtlBKJkFg/pibnhycZCuFvjwlfBa/be4dcHWZA7/zTKNqs
+        3z1BaHwzIVeBP/DVIft6WfI=
+X-Google-Smtp-Source: ABdhPJzQHxH3wEjRwLvQBEJM/Bkm1Yppl+9h/O55FOV43a+W6m9xAk7+6BmVoJgvPO1jc9/gw2Zwfw==
+X-Received: by 2002:a63:ac53:: with SMTP id z19mr6120867pgn.181.1594942693154;
+        Thu, 16 Jul 2020 16:38:13 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id y20sm5585405pfo.170.2020.07.16.16.38.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Jul 2020 16:38:12 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 16:37:46 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Cc:     alsa-devel@alsa-project.org, Timur Tabi <timur@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCH v2 2/2] ASoC: fsl_asrc: always use internal ratio
+Message-ID: <20200716233742.GA27376@Asurada-Nvidia>
+References: <20200716145201.186270-1-arnaud.ferraris@collabora.com>
+ <20200716151352.193451-1-arnaud.ferraris@collabora.com>
+ <20200716151352.193451-3-arnaud.ferraris@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 clxscore=1015 impostorscore=0 phishscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160148
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716151352.193451-3-arnaud.ferraris@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling get_perf_callchain() on perf_events from PEBS entries may cause
-unwinder errors. To fix this issue, perf subsystem fetches callchain earl=
-y,
-and marks perf_events are marked with __PERF_SAMPLE_CALLCHAIN_EARLY.
-Similar issue exists when BPF program calls get_perf_callchain() via
-helper functions. For more information about this issue, please refer to
-discussions in [1].
+On Thu, Jul 16, 2020 at 05:13:54PM +0200, Arnaud Ferraris wrote:
+> Even though the current driver calculates the dividers to be used
+> depending on the clocks and sample rates, enabling the internal ratio
+> can lead to noticeable improvements in the audio quality, based on my
+> testing.
+> 
+> As stated in the documentation, "When USRx=1 and IDRx=0, ASRC internal
+> measured ratio will be used", so setting this bit even when not in
+> "Ideal Ratio" mode still makes sense.
+> 
+> Signed-off-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
+> ---
+>  sound/soc/fsl/fsl_asrc.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+> index 6d43cab6c885..0b79a02d0d76 100644
+> --- a/sound/soc/fsl/fsl_asrc.c
+> +++ b/sound/soc/fsl/fsl_asrc.c
+> @@ -465,7 +465,7 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
+>  	regmap_update_bits(asrc->regmap, REG_ASRCTR,
+>  			   ASRCTR_ATSi_MASK(index), ASRCTR_ATS(index));
+>  	regmap_update_bits(asrc->regmap, REG_ASRCTR,
+> -			   ASRCTR_USRi_MASK(index), 0);
+> +			   ASRCTR_USRi_MASK(index), ASRCTR_USR(index));
+>  
+>  	/* Set the input and output clock sources */
+>  	regmap_update_bits(asrc->regmap, REG_ASRCSR,
+> @@ -507,8 +507,7 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
+>  
+>  	/* Enable Ideal Ratio mode */
 
-This set fixes this issue with helper proto bpf_get_stackid_pe and
-bpf_get_stack_pe.
+The code is against the comments now -- need to update this line.
 
-[1] https://lore.kernel.org/lkml/ED7B9430-6489-4260-B3C5-9CFA2E3AA87A@fb.=
-com/
+>  	regmap_update_bits(asrc->regmap, REG_ASRCTR,
+> -			   ASRCTR_IDRi_MASK(index) | ASRCTR_USRi_MASK(index),
+> -			   ASRCTR_IDR(index) | ASRCTR_USR(index));
+> +			   ASRCTR_IDRi_MASK(index), ASRCTR_IDR(index);
 
-Changes v2 =3D> v3:
-1. Fix handling of stackmap skip field. (Andrii)
-2. Simplify the code in a few places. (Andrii)
-
-Changes v1 =3D> v2:
-1. Simplify the design and avoid introducing new helper function. (Andrii=
-)
-
-Song Liu (2):
-  bpf: separate bpf_get_[stack|stackid] for perf events BPF
-  selftests/bpf: add callchain_stackid
-
- include/linux/bpf.h                           |   2 +
- kernel/bpf/stackmap.c                         | 202 ++++++++++++++++--
- kernel/trace/bpf_trace.c                      |   4 +-
- .../bpf/prog_tests/perf_event_stackmap.c      | 116 ++++++++++
- .../selftests/bpf/progs/perf_event_stackmap.c |  59 +++++
- 5 files changed, 363 insertions(+), 20 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_event_sta=
-ckmap.c
- create mode 100644 tools/testing/selftests/bpf/progs/perf_event_stackmap=
-.c
-
---
-2.24.1
+The driver falls back to ideal ratio mode if there is no matched
+clock source. Your change seems to apply internal ratio mode any
+way? Probably would break the fallback routine.
