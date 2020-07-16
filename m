@@ -2,204 +2,97 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2928BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2D7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 014992070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF32E20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594883066;
-	bh=DV5zKc/ZWVUvHklF0tyr4PwKp6kaVLmlesNhot2hFgo=;
+	s=default; t=1594883116;
+	bh=Z5RhkkqLX0D9XYZKqSxiQ7QYhDFUhsRN5R5vtcfRhec=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q9OacycV9JlLqdqZacCss3yTC37vrUOr9TE07mYSyZyPRyE36Oeevd5g2cln/CcyM
-	 OdbCiZ189QLxbgTPSLaNIGmqL4PkDrDZesujsILFkOIDb5Q+2Ya9XyqPvBw6z/uwhu
-	 4bmIxIwq7xoKneW4WFtyHLa7kA8W8WBMIszlH2m8=
+	b=uF4o30gbxS3Hrecu7sRvrdhMewmgy5z017HePOh1MLCEQ33TBCbeDmHMNBRJLzZpm
+	 JdUYZDsmPaQpSE+UE9yMUXw+hYJ4D3tG+/h49kX2r0Oo68IpLaoIc9lE9hAqpHpNzF
+	 gW3oqqsJeNHIZPHTjDhL/gjEkSz/pq+kxbMTYkFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgGPHEY (ORCPT
+        id S1728250AbgGPHFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:04:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36418 "EHLO mail.kernel.org"
+        Thu, 16 Jul 2020 03:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbgGPHEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:04:23 -0400
+        id S1725921AbgGPHFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 03:05:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BAE1206F4;
-        Thu, 16 Jul 2020 07:04:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 404502067D;
+        Thu, 16 Jul 2020 07:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594883062;
-        bh=DV5zKc/ZWVUvHklF0tyr4PwKp6kaVLmlesNhot2hFgo=;
+        s=default; t=1594883113;
+        bh=Z5RhkkqLX0D9XYZKqSxiQ7QYhDFUhsRN5R5vtcfRhec=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OYFVjxV5k9yB/i4gwIJF2lqTwXuMDkamt5mmUDgF5kgsQRDjjU3yMQGzeUIGSVp3d
-         AROD9O1qtZ/4/oZiB9e4eceD/516OtCK1qKO2K7qxcnAFaWslYY6Aqzezaa5ugTxFo
-         hfbofGjOPkH6OW6NCLuoHfmH4ERtGfWAYZ9242J8=
-Date:   Thu, 16 Jul 2020 09:04:16 +0200
+        b=n5zAmkh8wu5Nyyl5cprsTdFtEXaolIRhWe8a3K0gQQPvIaeq2KOcgDPksGPkR0fs4
+         +qXez5kL+vKEJG1Hl2QZbeZwkg2v2a2mb6oXUmJNr211Nqkk69y2zllc4nBzPEoNUU
+         pVa3OAe2I5nT4OTAKHZgmA4Ja2B4SqzyLNRmDv7w=
+Date:   Thu, 16 Jul 2020 09:05:08 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Qiu Wenbo <qiuwenbo@phytium.com.cn>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        Linux Driver Project Developer List 
-        <driverdev-devel@linuxdriverproject.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marco Villegas <git@marvil07.net>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8712: Fixes coding style in several headers
-Message-ID: <20200716070416.GA962748@kroah.com>
-References: <20200716064118.61243-1-qiuwenbo@phytium.com.cn>
+To:     Rajmohan Mani <rajmohan.mani@intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-usb@vger.kernel.org, pmalani@chromium.org,
+        bleung@chromium.org
+Subject: Re: [PATCH 2/2] usb: typec: intel_pmc_mux: Check the port status
+ before connect
+Message-ID: <20200716070508.GB962748@kroah.com>
+References: <20200716003310.26125-1-rajmohan.mani@intel.com>
+ <20200716003310.26125-3-rajmohan.mani@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716064118.61243-1-qiuwenbo@phytium.com.cn>
+In-Reply-To: <20200716003310.26125-3-rajmohan.mani@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 02:41:12PM +0800, Qiu Wenbo wrote:
-> This patch fixes warnings in several headers found by the checkpatch.pl tool.
-
-What warnings specifically?
-
-Please only fix one type of warning per patch.
-
+On Wed, Jul 15, 2020 at 05:33:10PM -0700, Rajmohan Mani wrote:
+> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 > 
-> Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
-> ---
->  drivers/staging/rtl8712/rtl871x_event.h   | 15 ++++++++++-----
->  drivers/staging/rtl8712/rtl871x_io.h      |  3 ++-
->  drivers/staging/rtl8712/rtl871x_pwrctrl.h | 15 ++++++++++-----
->  drivers/staging/rtl8712/rtl871x_xmit.h    | 15 ++++++++++-----
->  4 files changed, 32 insertions(+), 16 deletions(-)
+> The PMC microcontroller that we use for configuration, does
+> not supply any status information back. For port status we
+> need to talk to another controller on the board called IOM
+> (I/O manager).
 > 
-> diff --git a/drivers/staging/rtl8712/rtl871x_event.h b/drivers/staging/rtl8712/rtl871x_event.h
-> index d9a5476d2426..0e59d0ee6aae 100644
-> --- a/drivers/staging/rtl8712/rtl871x_event.h
-> +++ b/drivers/staging/rtl8712/rtl871x_event.h
-> @@ -78,13 +78,16 @@ struct event_node {
->  	unsigned char *node;
->  	unsigned char evt_code;
->  	unsigned short evt_sz;
-> -	/*volatile*/ int *caller_ff_tail;
-> +	/*volatile*/
-> +	int *caller_ff_tail;
-
-Why did you change this?  It's fine as is, and a hint something needs to
-be fixed.
-
->  	int	caller_ff_sz;
->  };
->  
->  struct c2hevent_queue {
-> -	/*volatile*/ int	head;
-> -	/*volatile*/ int	tail;
-> +	/*volatile*/
-> +	int	head;
-> +	/*volatile*/
-> +	int	tail;
-
-Same for these.
-
-
-
->  	struct	event_node	nodes[C2HEVENT_SZ];
->  	unsigned char	seq;
->  };
-> @@ -92,8 +95,10 @@ struct c2hevent_queue {
->  #define NETWORK_QUEUE_SZ	4
->  
->  struct network_queue {
-> -	/*volatile*/ int	head;
-> -	/*volatile*/ int	tail;
-> +	/*volatile*/
-> +	int	head;
-> +	/*volatile*/
-> +	int	tail;
->  	struct wlan_bssid_ex networks[NETWORK_QUEUE_SZ];
->  };
->  
-> diff --git a/drivers/staging/rtl8712/rtl871x_io.h b/drivers/staging/rtl8712/rtl871x_io.h
-> index c20dd5a6bbd1..2e269b71072c 100644
-> --- a/drivers/staging/rtl8712/rtl871x_io.h
-> +++ b/drivers/staging/rtl8712/rtl871x_io.h
-> @@ -101,7 +101,8 @@ struct	_io_ops {
->  struct io_req {
->  	struct list_head list;
->  	u32	addr;
-> -	/*volatile*/ u32	val;
-> +	/*volatile*/
-> +	u32	val;
->  	u32	command;
->  	u32	status;
->  	u8	*pbuf;
-> diff --git a/drivers/staging/rtl8712/rtl871x_pwrctrl.h b/drivers/staging/rtl8712/rtl871x_pwrctrl.h
-> index dd5a79f90b1a..e6b740c09120 100644
-> --- a/drivers/staging/rtl8712/rtl871x_pwrctrl.h
-> +++ b/drivers/staging/rtl8712/rtl871x_pwrctrl.h
-> @@ -77,14 +77,19 @@ struct reportpwrstate_parm {
->  
->  struct	pwrctrl_priv {
->  	struct mutex mutex_lock;
-> -	/*volatile*/ u8 rpwm; /* requested power state for fw */
-> +	/*volatile*/
-> +	u8 rpwm; /* requested power state for fw */
->  	/* fw current power state. updated when 1. read from HCPWM or
->  	 * 2. driver lowers power level
->  	 */
-> -	/*volatile*/ u8 cpwm;
-> -	/*volatile*/ u8 tog; /* toggling */
-> -	/*volatile*/ u8 cpwm_tog; /* toggling */
-> -	/*volatile*/ u8 tgt_rpwm; /* wanted power state */
-> +	/*volatile*/
-> +	u8 cpwm;
-> +	/*volatile*/
-> +	u8 tog; /* toggling */
-> +	/*volatile*/
-> +	u8 cpwm_tog; /* toggling */
-> +	/*volatile*/
-> +	u8 tgt_rpwm; /* wanted power state */
->  	uint pwr_mode;
->  	uint smart_ps;
->  	uint alives;
-> diff --git a/drivers/staging/rtl8712/rtl871x_xmit.h b/drivers/staging/rtl8712/rtl871x_xmit.h
-> index f227828094bf..6d2e12b35670 100644
-> --- a/drivers/staging/rtl8712/rtl871x_xmit.h
-> +++ b/drivers/staging/rtl8712/rtl871x_xmit.h
-> @@ -182,11 +182,16 @@ struct sta_xmit_priv {
->  };
->  
->  struct	hw_txqueue {
-> -	/*volatile*/ sint	head;
-> -	/*volatile*/ sint	tail;
-> -	/*volatile*/ sint	free_sz;	/*in units of 64 bytes*/
-> -	/*volatile*/ sint      free_cmdsz;
-> -	/*volatile*/ sint	 txsz[8];
-> +	/*volatile*/
-> +	sint	head;
-> +	/*volatile*/
-> +	sint	tail;
-> +	/*volatile*/
-> +	sint	free_sz;	/*in units of 64 bytes*/
-> +	/*volatile*/
-> +	sint      free_cmdsz;
-> +	/*volatile*/
-> +	sint	 txsz[8];
->  	uint	ff_hwaddr;
->  	uint	cmd_hwaddr;
->  	sint	ac_tag;
-> -- 
-> 2.27.0
+> By checking the port status before configuring the muxes, we
+> can make sure that we do not reconfigure the port after
+> bootup when the system firmware (for example BIOS) has
+> already configured it.
 > 
+> Using the status information also to check if DisplayPort
+> HPD is still asserted when the cable plug is disconnected,
+> and clearing it if it is.
+> 
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Actually same for all of these, the code is fine as-is.
+You can't just forward on patches from others without also adding your
+signed-off-by to them, right?
+
+Please fix up this series and try again.
 
 thanks,
 
