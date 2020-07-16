@@ -2,100 +2,117 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 220C4C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F243F20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161042074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RD67+ys1"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WkOXxk5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgGPJfb (ORCPT
+        id S1726665AbgGPJbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 05:35:31 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38269 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726080AbgGPJfb (ORCPT
+        Thu, 16 Jul 2020 05:31:06 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:44456 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbgGPJbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 05:35:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594892130;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IJFxd0jLmfzMQe2B9WNqDr2oh3ke3LZeNfHLfAyP12M=;
-        b=RD67+ys1TUuu8QrLchyEvQ97UfCNMF1ukS+t9KMYJjXvgjBejkXa0lIl7saGdE1wfLfT2q
-        sb7quTd/0msd9P0eJlz1Mj45+WtXiYs5H6B3OiWenkFrN7sI/+3NB7L57tiqnJccw2ADnu
-        uT68gO5wHDDf9JtPhP32VysPm79BWJc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-27-OiUrh0QhPKywNJPooNFGRQ-1; Thu, 16 Jul 2020 05:35:26 -0400
-X-MC-Unique: OiUrh0QhPKywNJPooNFGRQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F25961005269;
-        Thu, 16 Jul 2020 09:35:24 +0000 (UTC)
-Received: from [10.72.12.131] (ovpn-12-131.pek2.redhat.com [10.72.12.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DACCD5D9DC;
-        Thu, 16 Jul 2020 09:35:19 +0000 (UTC)
-Subject: Re: [PATCH vhost next 06/10] vdpa: Add means to communicate vq status
- on get_vq_state
-To:     Eli Cohen <eli@mellanox.com>
-Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, shahafs@mellanox.com,
-        saeedm@mellanox.com, Parav Pandit <parav@mellanox.com>
-References: <20200716072327.5359-1-eli@mellanox.com>
- <20200716072327.5359-7-eli@mellanox.com>
- <cb9bced7-1a7e-150a-875c-1b75f77ee853@redhat.com>
- <20200716082116.GA182860@mtl-vdi-166.wap.labs.mlnx>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <296e6fcb-946c-f577-2e22-46528f78fda9@redhat.com>
-Date:   Thu, 16 Jul 2020 17:35:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 05:31:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594891866; x=1626427866;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=CTM7Lg+kTZhV/28ULjCgZGcDn3aqFihZ0oeYbYMaRzM=;
+  b=WkOXxk5cl9Bbj9+ueRvKoLohtkgrg8EabXmGXKPwETPpqg2QuZfObjfR
+   k6hH44BbhPD7Ga6drvVME5T5IOngdqPS62SqbBvA1hvO2kvv/hb0KpHcb
+   Q2vT5hwHU5/Wt4Ql6QHBLNlQ8DPVbooq47T49oqakhonH9N01m3OqrOvP
+   I=;
+IronPort-SDR: 02zWTIZn0DoG/hiyNBhP3Vk32tZ6iPLCTwTVIpce3Jig3wsuOZySn3dzIgWJlGLAROiUk1N8qb
+ 8Me9iK9u8ulA==
+X-IronPort-AV: E=Sophos;i="5.75,358,1589241600"; 
+   d="scan'208";a="43659948"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 16 Jul 2020 09:31:05 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id 9949EC065A;
+        Thu, 16 Jul 2020 09:31:03 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 16 Jul 2020 09:31:03 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.146) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 16 Jul 2020 09:30:53 +0000
+Subject: Re: [PATCH v5 01/18] nitro_enclaves: Add ioctl interface definition
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        David Duncan <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Karen Noel <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>, Alexander Graf <graf@amazon.com>
+References: <20200715194540.45532-1-andraprs@amazon.com>
+ <20200715194540.45532-2-andraprs@amazon.com>
+ <20200716083010.GA85868@stefanha-x1.localdomain>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <5c1deb3f-35fe-f89f-3eb7-bae07f7a1e6c@amazon.com>
+Date:   Thu, 16 Jul 2020 12:30:31 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200716082116.GA182860@mtl-vdi-166.wap.labs.mlnx>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200716083010.GA85868@stefanha-x1.localdomain>
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Originating-IP: [10.43.161.146]
+X-ClientProxiedBy: EX13D16UWC003.ant.amazon.com (10.43.162.15) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/7/16 下午4:21, Eli Cohen wrote:
-> On Thu, Jul 16, 2020 at 04:11:00PM +0800, Jason Wang wrote:
->> On 2020/7/16 下午3:23, Eli Cohen wrote:
->>> Currently, get_vq_state() is used only to pass the available index value
->>> of a vq. Extend the struct to return status on the VQ to the caller.
->>> For now, define VQ_STATE_NOT_READY. In the future it will be extended to
->>> include other infomration.
->>>
->>> Modify current vdpa driver to update this field.
->>>
->>> Reviewed-by: Parav Pandit<parav@mellanox.com>
->>> Signed-off-by: Eli Cohen<eli@mellanox.com>
->> What's the difference between this and get_vq_ready()?
->>
->> Thanks
->>
-> There is no difference. It is just a way to communicate a problem to
-> with the state of the VQ back to the caller. This is not available now.
-> I think an asynchronous is preferred but that is not available
-> currently.
+
+On 16/07/2020 11:30, Stefan Hajnoczi wrote:
+> On Wed, Jul 15, 2020 at 10:45:23PM +0300, Andra Paraschiv wrote:
+>> + * A NE CPU pool has be set before calling this function. The pool can =
+be set
+> s/has be/has to be/
+
+Fixed.
+
+>
+> Thanks, this looks good!
+>
+> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+Thanks for review, glad to hear it's in a better shape.
+
+Andra
 
 
-I still don't see the reason, maybe you can give me an example?
 
-Thanks
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
+ Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
+omania. Registration number J22/2621/2005.
 
