@@ -7,58 +7,56 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16FEC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0859C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7FC2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2179207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgGPNxh (ORCPT
+        id S1728907AbgGPNyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:53:37 -0400
-Received: from mga14.intel.com ([192.55.52.115]:11202 "EHLO mga14.intel.com"
+        Thu, 16 Jul 2020 09:54:01 -0400
+Received: from mga03.intel.com ([134.134.136.65]:23644 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbgGPNxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:53:36 -0400
-IronPort-SDR: /PhmuxPOh2YC+MN8cbNmwcgsTohC0r9QWKmbrW50UsgP9RTNsfAv3Ott4I+Biq9h+xW6wPGeZY
- uifvbh0l/wiw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="148533809"
+        id S1726986AbgGPNyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 09:54:00 -0400
+IronPort-SDR: w+QU2Sg+icR1dR85uuECpxybGKfHJGuSjzJNoEYxXBNoPoiWEcJZwRsM07/u4ONivELCISWtkp
+ 8hA1d34X8I1Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="149368483"
 X-IronPort-AV: E=Sophos;i="5.75,359,1589266800"; 
-   d="scan'208";a="148533809"
+   d="scan'208";a="149368483"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 06:53:32 -0700
-IronPort-SDR: 8isOYeRx5q+fC1pvwKjci+e567n7YiEHP60UQ7Z9EitF+7fylWCsJl0YJhVHwo+mdkUXP2Iyba
- eGuUuKVb5r/w==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 06:53:59 -0700
+IronPort-SDR: M2g6KUIQiTyzoq8ctF3vSur4t1WL2Oln3sweHYzSn5sAT2s6eO38HvdiKXiBkRZLSOxdEucH75
+ 1aUB6rHMcunQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,359,1589266800"; 
-   d="scan'208";a="325150013"
+   d="scan'208";a="325150042"
 Received: from lettner-mobl.ger.corp.intel.com (HELO localhost) ([10.252.32.212])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Jul 2020 06:53:20 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Jul 2020 06:53:46 -0700
 From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 To:     x86@kernel.org, linux-sgx@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
         Jethro Beekman <jethro@fortanix.com>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
+        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
         josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
         kmoy@google.com, ludloff@google.com, luto@kernel.org,
         nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
         rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: [PATCH v36 01/24] x86/cpufeatures: x86/msr: Add Intel SGX hardware bits
-Date:   Thu, 16 Jul 2020 16:52:40 +0300
-Message-Id: <20200716135303.276442-2-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v36 03/24] x86/mm: x86/sgx: Signal SIGSEGV with PF_SGX
+Date:   Thu, 16 Jul 2020 16:52:42 +0300
+Message-Id: <20200716135303.276442-4-jarkko.sakkinen@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
 References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -67,188 +65,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Add X86_FEATURE_SGX from CPUID.(EAX=7, ECX=1), which informs whether the
-CPU has SGX.
+Include SGX bit to the PF error codes and throw SIGSEGV with PF_SGX when
+a #PF with SGX set happens.
 
-Add X86_FEATURE_SGX1 and X86_FEATURE_SGX2 from CPUID.(EAX=12H, ECX=0),
-which describe the level of SGX support available [1].
+CPU throws a #PF with the SGX set in the event of Enclave Page Cache Map
+(EPCM) conflict. The EPCM is a CPU-internal table, which describes the
+properties for a enclave page. Enclaves are measured and signed software
+entities, which SGX hosts. [1]
 
-Add IA32_FEATURE_CONTROL.SGX_ENABLE. BIOS can use this bit to opt-in SGX
-before locking the feature control MSR [2].
+Although the primary purpose of the EPCM conflict checks  is to prevent
+malicious accesses to an enclave, an illegit access can happen also for
+legit reasons.
 
-[1] Intel SDM: 36.7.2 Intel® SGX Resource Enumeration Leaves
-[2] Intel SDM: 36.7.1 Intel® SGX Opt-In Configuration
+All SGX reserved memory, including EPCM is encrypted with a transient key
+that does not survive from the power transition. Throwing a SIGSEGV allows
+user space software to react when this happens (e.g. recreate the enclave,
+which was invalidated).
 
-Reviewed-by: Borislav Petkov <bp@alien8.de>
+[1] Intel SDM: 36.5.1 Enclave Page Cache Map (EPCM)
+
 Acked-by: Jethro Beekman <jethro@fortanix.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- arch/x86/include/asm/cpufeature.h        |  5 +++--
- arch/x86/include/asm/cpufeatures.h       |  7 ++++++-
- arch/x86/include/asm/disabled-features.h | 18 +++++++++++++++---
- arch/x86/include/asm/msr-index.h         |  1 +
- arch/x86/include/asm/required-features.h |  2 +-
- arch/x86/kernel/cpu/common.c             |  4 ++++
- 6 files changed, 30 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/traps.h | 14 ++++++++------
+ arch/x86/mm/fault.c          | 13 +++++++++++++
+ 2 files changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 59bf91c57aa8..efbdba5170a3 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -30,6 +30,7 @@ enum cpuid_leafs
- 	CPUID_7_ECX,
- 	CPUID_8000_0007_EBX,
- 	CPUID_7_EDX,
-+	CPUID_12_EAX,
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index 714b1a30e7b0..4446f95ad997 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -44,12 +44,13 @@ void __noreturn handle_stack_overflow(const char *message,
+ /*
+  * Page fault error code bits:
+  *
+- *   bit 0 ==	 0: no page found	1: protection fault
+- *   bit 1 ==	 0: read access		1: write access
+- *   bit 2 ==	 0: kernel-mode access	1: user-mode access
+- *   bit 3 ==				1: use of reserved bit detected
+- *   bit 4 ==				1: fault was an instruction fetch
+- *   bit 5 ==				1: protection keys block access
++ *   bit 0  ==	 0: no page found	1: protection fault
++ *   bit 1  ==	 0: read access		1: write access
++ *   bit 2  ==	 0: kernel-mode access	1: user-mode access
++ *   bit 3  ==				1: use of reserved bit detected
++ *   bit 4  ==				1: fault was an instruction fetch
++ *   bit 5  ==				1: protection keys block access
++ *   bit 15 ==				1: inside SGX enclave
+  */
+ enum x86_pf_error_code {
+ 	X86_PF_PROT	=		1 << 0,
+@@ -58,5 +59,6 @@ enum x86_pf_error_code {
+ 	X86_PF_RSVD	=		1 << 3,
+ 	X86_PF_INSTR	=		1 << 4,
+ 	X86_PF_PK	=		1 << 5,
++	X86_PF_SGX	=		1 << 15,
  };
+ #endif /* _ASM_X86_TRAPS_H */
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 1ead568c0101..1db6fbd7af8e 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1055,6 +1055,19 @@ access_error(unsigned long error_code, struct vm_area_struct *vma)
+ 	if (error_code & X86_PF_PK)
+ 		return 1;
  
- #ifdef CONFIG_X86_FEATURE_NAMES
-@@ -89,7 +90,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
- 	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 17, feature_bit) ||	\
- 	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||	\
- 	   REQUIRED_MASK_CHECK					  ||	\
--	   BUILD_BUG_ON_ZERO(NCAPINTS != 19))
-+	   BUILD_BUG_ON_ZERO(NCAPINTS != 20))
- 
- #define DISABLED_MASK_BIT_SET(feature_bit)				\
- 	 ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||	\
-@@ -112,7 +113,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
- 	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 17, feature_bit) ||	\
- 	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||	\
- 	   DISABLED_MASK_CHECK					  ||	\
--	   BUILD_BUG_ON_ZERO(NCAPINTS != 19))
-+	   BUILD_BUG_ON_ZERO(NCAPINTS != 20))
- 
- #define cpu_has(c, bit)							\
- 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 02dabc9e77b0..545ac3e0e269 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -13,7 +13,7 @@
- /*
-  * Defines x86 CPU feature bits
-  */
--#define NCAPINTS			19	   /* N 32-bit words worth of info */
-+#define NCAPINTS			20	   /* N 32-bit words worth of info */
- #define NBUGINTS			1	   /* N 32-bit bug flags */
- 
- /*
-@@ -238,6 +238,7 @@
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
- #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
- #define X86_FEATURE_TSC_ADJUST		( 9*32+ 1) /* TSC adjustment MSR 0x3B */
-+#define X86_FEATURE_SGX			( 9*32+ 2) /* Software Guard Extensions */
- #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
- #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
- #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
-@@ -373,6 +374,10 @@
- #define X86_FEATURE_CORE_CAPABILITIES	(18*32+30) /* "" IA32_CORE_CAPABILITIES MSR */
- #define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
- 
-+/* Intel-defined SGX features, CPUID level 0x00000012:0 (EAX), word 19 */
-+#define X86_FEATURE_SGX1		(19*32+ 0) /* SGX1 leaf functions */
-+#define X86_FEATURE_SGX2		(19*32+ 1) /* SGX2 leaf functions */
++	/*
++	 * Access is blocked by the Enclave Page Cache Map (EPCM), i.e. the
++	 * access is allowed by the PTE but not the EPCM. This usually happens
++	 * when the EPCM is yanked out from under us, e.g. by hardware after a
++	 * suspend/resume cycle. In any case, software, i.e. the kernel, can't
++	 * fix the source of the fault as the EPCM can't be directly modified by
++	 * software. Handle the fault as an access error in order to signal
++	 * userspace so that userspace can rebuild their enclave(s), even though
++	 * userspace may not have actually violated access permissions.
++	 */
++	if (unlikely(error_code & X86_PF_SGX))
++		return 1;
 +
- /*
-  * BUG word(s)
-  */
-diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-index 4ea8584682f9..dbe534d5153f 100644
---- a/arch/x86/include/asm/disabled-features.h
-+++ b/arch/x86/include/asm/disabled-features.h
-@@ -28,13 +28,18 @@
- # define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
- # define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
- # define DISABLE_PCID		0
-+# define DISABLE_SGX1		0
-+# define DISABLE_SGX2		0
- #else
- # define DISABLE_VME		0
- # define DISABLE_K6_MTRR	0
- # define DISABLE_CYRIX_ARR	0
- # define DISABLE_CENTAUR_MCR	0
- # define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
--#endif /* CONFIG_X86_64 */
-+# define DISABLE_SGX1		(1<<(X86_FEATURE_SGX1 & 31))
-+# define DISABLE_SGX2		(1<<(X86_FEATURE_SGX2 & 31))
-+ #endif /* CONFIG_X86_64 */
-+
- 
- #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
- # define DISABLE_PKU		0
-@@ -56,6 +61,12 @@
- # define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
- #endif
- 
-+#ifdef CONFIG_INTEL_SGX
-+# define DISABLE_SGX	0
-+#else
-+# define DISABLE_SGX	(1 << (X86_FEATURE_SGX & 31))
-+#endif
-+
- /*
-  * Make sure to add features to the correct mask
-  */
-@@ -68,7 +79,7 @@
- #define DISABLED_MASK6	0
- #define DISABLED_MASK7	(DISABLE_PTI)
- #define DISABLED_MASK8	0
--#define DISABLED_MASK9	(DISABLE_SMAP)
-+#define DISABLED_MASK9	(DISABLE_SMAP|DISABLE_SGX)
- #define DISABLED_MASK10	0
- #define DISABLED_MASK11	0
- #define DISABLED_MASK12	0
-@@ -78,6 +89,7 @@
- #define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP)
- #define DISABLED_MASK17	0
- #define DISABLED_MASK18	0
--#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
-+#define DISABLED_MASK19	(DISABLE_SGX1|DISABLE_SGX2)
-+#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 20)
- 
- #endif /* _ASM_X86_DISABLED_FEATURES_H */
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index e8370e64a155..18e08da19f16 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -582,6 +582,7 @@
- #define FEAT_CTL_LOCKED				BIT(0)
- #define FEAT_CTL_VMX_ENABLED_INSIDE_SMX		BIT(1)
- #define FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX	BIT(2)
-+#define FEAT_CTL_SGX_ENABLED			BIT(18)
- #define FEAT_CTL_LMCE_ENABLED			BIT(20)
- 
- #define MSR_IA32_TSC_ADJUST             0x0000003b
-diff --git a/arch/x86/include/asm/required-features.h b/arch/x86/include/asm/required-features.h
-index 6847d85400a8..039e58be2fe6 100644
---- a/arch/x86/include/asm/required-features.h
-+++ b/arch/x86/include/asm/required-features.h
-@@ -101,6 +101,6 @@
- #define REQUIRED_MASK16	0
- #define REQUIRED_MASK17	0
- #define REQUIRED_MASK18	0
--#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
-+#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 20)
- 
- #endif /* _ASM_X86_REQUIRED_FEATURES_H */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 95c090a45b4b..7aecf5d07c70 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -914,6 +914,10 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
- 		c->x86_capability[CPUID_D_1_EAX] = eax;
- 	}
- 
-+	/* Additional Intel-defined SGX flags: level 0x00000012 */
-+	if (c->cpuid_level >= 0x00000012)
-+		c->x86_capability[CPUID_12_EAX] = cpuid_eax(0x00000012);
-+
- 	/* AMD-defined flags: level 0x80000001 */
- 	eax = cpuid_eax(0x80000000);
- 	c->extended_cpuid_level = eax;
+ 	/*
+ 	 * Make sure to check the VMA so that we do not perform
+ 	 * faults just to hit a X86_PF_PK as soon as we fill in a
 -- 
 2.25.1
 
