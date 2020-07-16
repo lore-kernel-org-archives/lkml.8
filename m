@@ -2,174 +2,83 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9985FC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DD5C43469
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 760C72070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:19:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dsZ2q5RS"
+	by mail.kernel.org (Postfix) with ESMTP id 2F2CF20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbgGPRTf (ORCPT
+        id S1729559AbgGPRTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729562AbgGPRT2 (ORCPT
+        Thu, 16 Jul 2020 13:19:24 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:6141 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729533AbgGPRTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:19:28 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8DCEC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:19:27 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h22so8772935lji.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bPbXwwYWyet5Kf6gV4HyZCVuYdSTHiTLHNtCwYMlFTo=;
-        b=dsZ2q5RSVCFI3KsQRstQ0D3jAOV7yGWHXz52xAjtYsg+LkGGeyOdT+AVmFM4u574a5
-         TXxs1z65QBUjbcFhnBCXuGjoF5xKxgTbY5Gp1PwcMDfg42XYzh2E4emUWXXhP8iodhb1
-         29nzU8YaCQ1J2UdYaBJn+M5xNgLpSYFIVwec0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bPbXwwYWyet5Kf6gV4HyZCVuYdSTHiTLHNtCwYMlFTo=;
-        b=FpCSdZlVdZY3DYustxfzAA+P1YO0AifRLi0i8PFokzjZ7iS+v+9DoORkqh5fZwtanQ
-         kxrsNt5IY/yvnFWz5PXuti0Dts1k1Ycl9eHLLFIYJHR5PCZ5B3GAQxzzti9I51aQ5P2o
-         IYCVfXmE1eyLJSs2FwdHS9YSCbSIRj9l/QN/KluJ3G+EejcyP9hJzj1S3RHR5KNQ3iE+
-         HCj2uIWf/MCIiRmBqbHJfBpmw082Pe/9v80bJfr5uW4sYc3ueokmN5AcvF1Rf65cqKbv
-         xtDhVAapfzZg448uiS3IF89ZHS/SonMggV2iIJ1H9QmCgWgvoZJ5thtvH51I9yxWiL1i
-         5l7A==
-X-Gm-Message-State: AOAM533ToQh8kmU68VtFvBet2Cf8GraDdONJojK3T9K77MikjDiHhJkF
-        oGnv9JfFqSOwnsd/ebiQ/xlAfm21jwPbJ+LTF2OOwGLoZ28=
-X-Google-Smtp-Source: ABdhPJwGxLT2usBO4lXx7qp+6gAfGOmZ7j1wJh2qMJgfgQJkTnzJ6n1LfM0au7+6CVfcEM/4fxXXeErgijZltfHxE84=
-X-Received: by 2002:a2e:9f13:: with SMTP id u19mr2393590ljk.427.1594919965973;
- Thu, 16 Jul 2020 10:19:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200716080836.2279-1-rayagonda.kokatanur@broadcom.com>
- <20200716080836.2279-3-rayagonda.kokatanur@broadcom.com> <CAHp75VeXBCqEhfna2mQaHv7bZKOrj+A6KkbCrMAfM=X9+boDjA@mail.gmail.com>
-In-Reply-To: <CAHp75VeXBCqEhfna2mQaHv7bZKOrj+A6KkbCrMAfM=X9+boDjA@mail.gmail.com>
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Date:   Thu, 16 Jul 2020 22:49:14 +0530
-Message-ID: <CAHO=5PEMou=a7Kqc=_ZJ8V9FQ=dHA0cJkkojdq91NBsO1Dp3TQ@mail.gmail.com>
-Subject: Re: [PATCH V1 2/2] i2c: iproc: add slave pec support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Wolfram Sang <wsa@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Lori Hikichi <lori.hikichi@broadcom.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Jul 2020 13:19:21 -0400
+X-IronPort-AV: E=Sophos;i="5.75,360,1589209200"; 
+   d="scan'208";a="52318929"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 17 Jul 2020 02:19:19 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 95EE740B55ED;
+        Fri, 17 Jul 2020 02:19:14 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
+Cc:     linux-ide@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-renesas-soc@vger.kernel.org,
+        linux-usb@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 07/20] dt-bindings: usb: renesas,usb3-peri: Document r8a774e1 support
+Date:   Thu, 16 Jul 2020 18:18:22 +0100
+Message-Id: <1594919915-5225-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Document RZ/G2H (R8A774E1) SoC bindings.
 
-On Thu, Jul 16, 2020 at 3:44 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Jul 16, 2020 at 11:14 AM Rayagonda Kokatanur
-> <rayagonda.kokatanur@broadcom.com> wrote:
-> >
-> > Iproc supports PEC computation and checking in both Master
-> > and Slave mode.
-> >
-> > This patch adds support for PEC in slave mode.
->
-> ...
->
-> > -#define S_RX_PEC_ERR_SHIFT           29
-> > +#define S_RX_PEC_ERR_SHIFT           28
-> > +#define S_RX_PEC_ERR_MASK            0x3
-> > +#define S_RX_PEC_ERR                 0x1
->
-> This needs to be explained in the commit message, in particular why
-> this change makes no regression.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+---
+ Documentation/devicetree/bindings/usb/renesas,usb3-peri.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-I didn't get what do you mean by "no regression", please elaborate.
+diff --git a/Documentation/devicetree/bindings/usb/renesas,usb3-peri.yaml b/Documentation/devicetree/bindings/usb/renesas,usb3-peri.yaml
+index e3cdeab1199f..b9a008e8469f 100644
+--- a/Documentation/devicetree/bindings/usb/renesas,usb3-peri.yaml
++++ b/Documentation/devicetree/bindings/usb/renesas,usb3-peri.yaml
+@@ -16,6 +16,7 @@ properties:
+           - renesas,r8a774a1-usb3-peri # RZ/G2M
+           - renesas,r8a774b1-usb3-peri # RZ/G2N
+           - renesas,r8a774c0-usb3-peri # RZ/G2E
++          - renesas,r8a774e1-usb3-peri # RZ/G2H
+           - renesas,r8a7795-usb3-peri  # R-Car H3
+           - renesas,r8a7796-usb3-peri  # R-Car M3-W
+           - renesas,r8a77961-usb3-peri # R-Car M3-W+
+-- 
+2.17.1
 
->
-> ...
->
-> > +static int bcm_iproc_smbus_check_slave_pec(struct bcm_iproc_i2c_dev *iproc_i2c,
-> > +                                          u32 val)
-> > +{
-> > +       u8 err_status;
->
-> > +       int ret = 0;
->
-> Completely redundant variable.
->
-> > +       if (!iproc_i2c->en_s_pec)
-> > +               return ret;
->
-> return 0;
->
-> > +       err_status = (u8)((val >> S_RX_PEC_ERR_SHIFT) & S_RX_PEC_ERR_MASK);
->
-> Why casting?
->
-> > +       if (err_status == S_RX_PEC_ERR) {
-> > +               dev_err(iproc_i2c->device, "Slave PEC error\n");
->
-> > +               ret = -EBADMSG;
->
-> return ...
->
-> > +       }
-> > +
-> > +       return ret;
->
-> return 0;
->
-> > +}
->
-> ...
->
-> > +                       if (rx_status == I2C_SLAVE_RX_END) {
-> > +                               int ret;
-> > +
-> > +                               ret = bcm_iproc_smbus_check_slave_pec(iproc_i2c,
-> > +                                                                     val);
->
-> One line looks better.
-
-Yes, but to have 80 char per line, I have to do this.
->
-> > +                               if (!ret)
->
-> Why not positive conditional?
-
-Thank you for your review.
-Will fix all above.
-
-Best regards,
-Rayagonda
-
->
-> > +                                       i2c_slave_event(iproc_i2c->slave,
-> > +                                                       I2C_SLAVE_STOP, &value);
-> > +                               else
-> > +                                       i2c_slave_event(iproc_i2c->slave,
-> > +                                                       I2C_SLAVE_PEC_ERR,
-> > +                                                       &value);
-> > +                       }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
