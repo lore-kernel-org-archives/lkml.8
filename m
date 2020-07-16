@@ -2,73 +2,227 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA0DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E156C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2E4220760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF6A2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgGPLNd (ORCPT
+        id S1728054AbgGPLOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:13:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:59056 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726332AbgGPLNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:13:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BF401FB;
-        Thu, 16 Jul 2020 04:13:32 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED7383F68F;
-        Thu, 16 Jul 2020 04:13:30 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 12:13:28 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 3/3] sched/uclamp: Fix a deadlock when enabling uclamp
- static key
-Message-ID: <20200716111328.zkhncw2aurrs4mad@e107158-lin.cambridge.arm.com>
-References: <20200716110347.19553-1-qais.yousef@arm.com>
- <20200716110347.19553-4-qais.yousef@arm.com>
+        Thu, 16 Jul 2020 07:14:31 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44400 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgGPLOa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 07:14:30 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 4663B2A0EFD
+Message-ID: <c2087b2fc66661791a38bdf5028702767392b82e.camel@collabora.com>
+Subject: Re: [PATCH 03/10] media: uapi: h264: Split prediction weight
+ parameters
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Thu, 16 Jul 2020 08:14:17 -0300
+In-Reply-To: <15cd77f2-30ac-8d23-1be1-e9a58d85c088@xs4all.nl>
+References: <20200715202233.185680-1-ezequiel@collabora.com>
+         <20200715202233.185680-4-ezequiel@collabora.com>
+         <15cd77f2-30ac-8d23-1be1-e9a58d85c088@xs4all.nl>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200716110347.19553-4-qais.yousef@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/16/20 12:03, Qais Yousef wrote:
-
-[...]
-
-> Fix by ensuring we enable the key outside of the critical section in
-> __sched_setscheduler()
+On Thu, 2020-07-16 at 09:26 +0200, Hans Verkuil wrote:
+> On 15/07/2020 22:22, Ezequiel Garcia wrote:
+> > The prediction weight parameters are only required under
+> > certain conditions, which depend on slice header parameters.
+> > 
+> > The slice header syntax specifies that the prediction
+> > weight table is present if:
+> > 
+> > ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
+> > (weighted_bipred_idc == 1 && slice_type == B))
+> > 
+> > Given its size, it makes sense to move this table to its control,
+> > so applications can avoid passing it if the slice doesn't specify it.
+> > 
+> > Before this change struct v4l2_ctrl_h264_slice_params was 960 bytes.
+> > With this change, it's 188 bytes and struct v4l2_ctrl_h264_pred_weight
+> > is 772 bytes.
+> > 
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  .../userspace-api/media/v4l/ext-ctrls-codec.rst    | 14 +++++++++-----
+> >  drivers/media/v4l2-core/v4l2-ctrls.c               |  6 ++++++
+> >  drivers/staging/media/sunxi/cedrus/cedrus.h        |  1 +
+> >  drivers/staging/media/sunxi/cedrus/cedrus_dec.c    |  2 ++
+> >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c   |  6 ++----
+> >  include/media/h264-ctrls.h                         |  5 +++--
+> >  6 files changed, 23 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > index 16bfc98ab2f6..d1695ae96700 100644
+> > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > @@ -1879,18 +1879,22 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >        - 0x00000008
+> >        -
+> >  
+> > -``Prediction Weight Table``
+> > -
+> > -    The bitstream parameters are defined according to :ref:`h264`,
+> > +``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT (struct)``
+> > +    Prediction weight table defined according to :ref:`h264`,
+> >      section 7.4.3.2 "Prediction Weight Table Semantics". For further
+> >      documentation, refer to the above specification, unless there is
+> >      an explicit comment stating otherwise.
+> >  
+> > -.. c:type:: v4l2_h264_pred_weight_table
+> > +    .. note::
+> > +
+> > +       This compound control is not yet part of the public kernel API and
+> > +       it is expected to change.
+> > +
+> > +.. c:type:: v4l2_ctrl_h264_pred_weight
+> >  
+> >  .. cssclass:: longtable
+> >  
+> > -.. flat-table:: struct v4l2_h264_pred_weight_table
+> > +.. flat-table:: struct v4l2_ctrl_h264_pred_weight
+> >      :header-rows:  0
+> >      :stub-columns: 0
+> >      :widths:       1 1 2
+> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > index 3f3fbcd60cc6..3a8a23e34c70 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -1412,6 +1412,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+> >  	case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
+> >  		*type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
+> >  		break;
+> > +	case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT:
+> > +		*type = V4L2_CTRL_TYPE_H264_PRED_WEIGHT;
+> > +		break;
+> >  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+> >  		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+> >  		break;
+> > @@ -2553,6 +2556,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+> >  	case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+> >  		elem_size = sizeof(struct v4l2_ctrl_h264_decode_params);
+> >  		break;
+> > +	case V4L2_CTRL_TYPE_H264_PRED_WEIGHT:
+> > +		elem_size = sizeof(struct v4l2_ctrl_h264_pred_weight);
+> > +		break;
+> >  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+> >  		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+> >  		break;
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > index 96765555ab8a..80a0ecffa384 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > @@ -62,6 +62,7 @@ struct cedrus_h264_run {
+> >  	const struct v4l2_ctrl_h264_scaling_matrix	*scaling_matrix;
+> >  	const struct v4l2_ctrl_h264_slice_params	*slice_params;
+> >  	const struct v4l2_ctrl_h264_sps			*sps;
+> > +	const struct v4l2_ctrl_h264_pred_weight		*pred_weight;
+> >  };
+> >  
+> >  struct cedrus_mpeg2_run {
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > index 58c48e4fdfe9..047f773f64f9 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > @@ -57,6 +57,8 @@ void cedrus_device_run(void *priv)
+> >  			V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS);
+> >  		run.h264.sps = cedrus_find_control_data(ctx,
+> >  			V4L2_CID_MPEG_VIDEO_H264_SPS);
+> > +		run.h264.pred_weight = cedrus_find_control_data(ctx,
+> > +			V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT);
+> >  		break;
+> >  
+> >  	case V4L2_PIX_FMT_HEVC_SLICE:
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > index cce527bbdf86..614b1b496e40 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > @@ -256,10 +256,8 @@ static void cedrus_write_scaling_lists(struct cedrus_ctx *ctx,
+> >  static void cedrus_write_pred_weight_table(struct cedrus_ctx *ctx,
+> >  					   struct cedrus_run *run)
+> >  {
+> > -	const struct v4l2_ctrl_h264_slice_params *slice =
+> > -		run->h264.slice_params;
+> > -	const struct v4l2_h264_pred_weight_table *pred_weight =
+> > -		&slice->pred_weight_table;
+> > +	const struct v4l2_ctrl_h264_pred_weight *pred_weight =
+> > +		run->h264.pred_weight;
+> >  	struct cedrus_dev *dev = ctx->dev;
+> >  	int i, j, k;
+> >  
+> > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> > index bca4a9887e7e..da2ffb77b491 100644
+> > --- a/include/media/h264-ctrls.h
+> > +++ b/include/media/h264-ctrls.h
+> > @@ -36,6 +36,7 @@
+> >  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS	(V4L2_CID_MPEG_BASE+1004)
+> >  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE	(V4L2_CID_MPEG_BASE+1005)
+> >  #define V4L2_CID_MPEG_VIDEO_H264_START_CODE	(V4L2_CID_MPEG_BASE+1006)
+> > +#define V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT	(V4L2_CID_MPEG_BASE+1007)
+> >  
+> >  /* enum v4l2_ctrl_type type values */
+> >  #define V4L2_CTRL_TYPE_H264_SPS			0x0110
+> > @@ -43,6 +44,7 @@
+> >  #define V4L2_CTRL_TYPE_H264_SCALING_MATRIX	0x0112
+> >  #define V4L2_CTRL_TYPE_H264_SLICE_PARAMS	0x0113
+> >  #define V4L2_CTRL_TYPE_H264_DECODE_PARAMS	0x0114
+> > +#define V4L2_CTRL_TYPE_H264_PRED_WEIGHT		0x0115
+> >  
+> >  enum v4l2_mpeg_video_h264_decode_mode {
+> >  	V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
+> > @@ -125,7 +127,7 @@ struct v4l2_h264_weight_factors {
+> >  	__s16 chroma_offset[32][2];
+> >  };
+> >  
+> > -struct v4l2_h264_pred_weight_table {
+> > +struct v4l2_ctrl_h264_pred_weight {
+> >  	__u16 luma_log2_weight_denom;
+> >  	__u16 chroma_log2_weight_denom;
+> >  	struct v4l2_h264_weight_factors weight_factors[2];
+> > @@ -174,7 +176,6 @@ struct v4l2_ctrl_h264_slice_params {
+> >  	__s32 delta_pic_order_cnt0;
+> >  	__s32 delta_pic_order_cnt1;
+> >  
+> > -	struct v4l2_h264_pred_weight_table pred_weight_table;
+> >  	/* Size in bits of dec_ref_pic_marking() syntax element. */
+> >  	__u32 dec_ref_pic_marking_bit_size;
+> >  	/* Size in bits of pic order count syntax. */
+> > 
 > 
-> Fixes: 46609ce22703 ("sched/uclamp: Protect uclamp fast path code with static key")
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> Shouldn't this be added to union v4l2_ctrl_ptr as well?
+> 
 
-I am assuming this Fixes tag is still valid given the patch is only in
-tip/sched/core only. And that the hash value won't change after Linus merges
-it.
+Yup, that's correct.
 
-Thanks
+Thanks,
+Ezequiel
 
---
-Qais Yousef
