@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA236C43457
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C19C43459
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87252207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FF9207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgGPCea (ORCPT
+        id S1728102AbgGPCeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:34:30 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:57582 "EHLO
+        Wed, 15 Jul 2020 22:34:36 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:57580 "EHLO
         rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgGPCeB (ORCPT
+        with ESMTP id S1726479AbgGPCeA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:34:01 -0400
+        Wed, 15 Jul 2020 22:34:00 -0400
 Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06G2Xei66017581, This message is accepted by code: ctloc85258
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06G2Xei36017581, This message is accepted by code: ctloc85258
 Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06G2Xei66017581
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06G2Xei36017581
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
         Thu, 16 Jul 2020 10:33:40 +0800
-Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+Received: from RTIITEXHVM1.realtek.com.tw (172.21.6.62) by
  RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 16 Jul 2020 10:33:40 +0800
+ 15.1.1779.2; Thu, 16 Jul 2020 10:33:39 +0800
 Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
- RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ RTIITEXHVM1.realtek.com.tw (172.21.6.62) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 16 Jul 2020 10:33:40 +0800
+ 15.1.1779.2; Thu, 16 Jul 2020 10:33:39 +0800
 Received: from localhost.localdomain (172.21.252.101) by
  RTEXMB01.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server id
- 15.1.1779.2 via Frontend Transport; Thu, 16 Jul 2020 10:33:40 +0800
+ 15.1.1779.2 via Frontend Transport; Thu, 16 Jul 2020 10:33:39 +0800
 From:   TY Chang <tychang@realtek.com>
 To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
 CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
         <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 8/8] pinctrl: realtek: DHC: Add suspend/resume callback function.
-Date:   Thu, 16 Jul 2020 10:33:38 +0800
-Message-ID: <20200716023338.14922-9-tychang@realtek.com>
+Subject: [PATCH v2 5/8] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1295
+Date:   Thu, 16 Jul 2020 10:33:35 +0800
+Message-ID: <20200716023338.14922-6-tychang@realtek.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200716023338.14922-1-tychang@realtek.com>
 References: <20200716023338.14922-1-tychang@realtek.com>
@@ -57,274 +57,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add suspend and resume callback function for
-Realtek DHC SoC pinctrl driver.
+Add device tree binding Documentation for rtd1295
+pinctrl driver.
 
 Signed-off-by: TY Chang <tychang@realtek.com>
 ---
- drivers/pinctrl/realtek/pinctrl-rtd.c     | 39 +++++++++++++
- drivers/pinctrl/realtek/pinctrl-rtd1195.h | 33 +++++++++++
- drivers/pinctrl/realtek/pinctrl-rtd1295.h | 67 ++++++++++++++++++++++-
- 3 files changed, 138 insertions(+), 1 deletion(-)
+ .../pinctrl/realtek,rtd1295-pinctrl.yaml      | 121 ++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
 
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
-index 4d9740f875ff..f327453b01df 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd.c
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd.c
-@@ -57,6 +57,12 @@ struct rtd_pin_desc {
- 	const struct rtd_pin_mux_desc *functions;
- };
- 
-+struct rtd_pin_reg_list {
-+	unsigned int reg_offset;
-+	unsigned int val;
-+};
+diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
+new file mode 100644
+index 000000000000..8cd6cfa2282e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
+@@ -0,0 +1,121 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/realtek,rtd1295-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
++title: Realtek DHC RTD1295 pin control
 +
- #define RTK_PIN_CONFIG(_name, _reg_off, _base_bit, _pud_en_off, \
- 		_pud_sel_off, _curr_off, _smt_off, _curr_type) \
- 	{ \
-@@ -98,6 +104,8 @@ struct rtd_pinctrl_desc {
- 	unsigned int num_muxes;
- 	const struct rtd_pin_config_desc *configs;
- 	unsigned int num_configs;
-+	struct rtd_pin_reg_list *lists;
-+	unsigned int num_regs;
- };
- 
- #define PCONF_UNSUPP 0xffffffff
-@@ -549,8 +557,39 @@ static int rtd_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int rtd_pinctrl_suspend(struct platform_device *pdev, pm_message_t state)
-+{
-+	struct rtd_pinctrl *data = platform_get_drvdata(pdev);
-+	struct rtd_pin_reg_list *list;
-+	int i;
++maintainers:
++  - Andreas Farber <afaerber@suse.de>
 +
-+	for (i = 0; i < data->info->num_regs; i++) {
-+		list = &data->info->lists[i];
-+		list->val = readl(data->base + list->reg_offset);
-+	}
++properties:
++  compatible:
++    enum:
++      - realtek,rtd1295-iso-pinctrl
++      - realtek,rtd1295-sb2-pinctrl
++      - realtek,rtd1295-disp-pinctrl
++      - realtek,rtd1295-cr-pinctrl
++  reg:
++    maxItems: 1
 +
-+	return 0;
-+}
++required:
++  - compatible
++  - reg
 +
-+static int rtd_pinctrl_resume(struct platform_device *pdev)
-+{
-+	struct rtd_pinctrl *data = platform_get_drvdata(pdev);
-+	const struct rtd_pin_reg_list *list;
-+	int i;
++#PIN CONFIGURATION NODES
++patternProperties:
++  '-pins$':
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++    allOf:
++      - $ref: "/schemas/pinctrl/pincfg-node.yaml"
 +
-+	for (i = 0; i < data->info->num_regs; i++) {
-+		list = &data->info->lists[i];
-+		writel(list->val, data->base + list->reg_offset);
-+	}
++    properties:
++      groups:
++        items:
++          enum: [ iso_gpio_0, iso_gpio_1, iso_gpio_2, iso_gpio_3, iso_gpio_4,
++          iso_gpio_5, hdmi_hpd, iso_gpio_7, ir_rx, ir_tx, ur0_rx,
++          ur0_tx, ur1_rx, ur1_tx, ur1_cts_n, ur1_rts_n, i2c_scl_0,
++          i2c_sda_0, i2c_scl_1, i2c_sda_1, i2c_scl_6, iso_gpio_21,
++          iso_gpio_22, iso_gpio_23, iso_gpio_24, iso_gpio_25,
++          i2c_sda_6, etn_led_link, etn_led_rxtx, nat_led_0,
++          nat_led_1, nat_led_2, nat_led_3, iso_gpio_33,
++          iso_gpio_34, pwm_23_loc0, pwm_01_loc0, pwm_23_loc1,
++          pwm_01_loc1, ejtag_avcpu_loc, ur2_loc, i2c0, i2c1,
++          i2c6, uart0, uart1, uart2_0, uart2_1, gpio_0, gpio_1,
++          gpio_2, gpio_3, gpio_4, gpio_5, gpio_6, gpio_7, gpio_8,
++          gpio_9, tp1_sync, i2c_scl_4, i2c_sda_4, i2c_scl_5,
++          i2c_sda_5, usb_id, sensor_cko_0, sensor_cko_1, sensor_rst,
++          sensor_stb_0, sensor_stb_1, tp0_data, tp0_clk, tp0_valid,
++          tp0_sync, tp1_data, tp1_clk, tp1_valid, rgmii0_txc,
++          rgmii0_tx_ctl,rgmii0_txd_0, rgmii0_txd_1, rgmii0_txd_2,
++          rgmii0_txd_3, rgmii0_rxc, rgmii0_rx_ctl, rgmii0_rxd_0,
++          rgmii0_rxd_1, rgmii0_rxd_2, rgmii0_rxd_3, rgmii0_mdio,
++          rgmii0_mdc, rgmii1_txc, rgmii1_tx_ctl, rgmii1_txd_0,
++          rgmii1_txd_1, rgmii1_txd_2, rgmii1_txd_3, rgmii1_rxc,
++          rgmii1_rx_ctl, rgmii1_rxd_0, rgmii1_rxd_1, rgmii1_rxd_2,
++          rgmii1_rxd_3, hif_loc, ejtag_scpu_loc, sf_en, tp0_loc,
++          tp1_loc, spdif, dmic_clk, dmic_data, ao_lrck, ao_bck,
++          aock, ao_sd_0, ao_sd_1, ao_sd_2, ao_sd_3, nf_cle,
++          nf_ale, nf_rd_n, nf_wr_n, nf_rdy, nf_dd_7, nf_dd_6,
++          nf_dd_5, nf_dd_4, nf_dd_3, nf_dd_2, nf_dd_1, nf_dd_0,
++          nf_dqs, nf_ce_n_0, nf_ce_n_1, emmc_dd_sb, mmc_cmd,
++          mmc_clk, mmc_wp, mmc_cd, mmc_data_0, mmc_data_1,
++          mmc_data_2, mmc_data_3, sdio_cmd, sdio_clk, sdio_data_0,
++          sdio_data_1, sdio_data_2, sdio_data_3, pcie_clkreq_0,
++          pcie_clkreq_1, prob_0, prob_1, prob_2, prob_3, sdio_loc ]
++        minItems: 1
 +
-+	return 0;
-+}
++      function:
++        enum: [ gpio, acpu_ejtag_loc_iso, edp_hpd, etn_led, i2c0, i2c1, i2c6,
++        ir_rx, ir_tx, nat_led, pwm_0, pwm_1, rtc, sc, standby_dbg,
++        uart0, uart1, uart2_0, uart2_1, pwm_01_loc0_normal,
++        pwm_23_loc0_normal, pwm_01_loc0_open_drain, pwm_23_loc0_open_drain,
++        pwm_01_loc1_normal, pwm_23_loc1_normal, pwm_01_loc1_open_drain,
++        pwm_23_loc1_open_drain, acpu_ejtag_loc_nf, ai, dc_fan_sensor,
++        eth_gpy, gspi, i2c2, i2c3, i2c4, i2c5, nand, rgmii, scpu_ejtag_loc_gpio,
++        sensor_cko_output, spi, test_loop_dis, tp0_loc_rgmii0_tx, tp0_loc_tp0,
++        tp0_loc_tp1, tp1_loc_rgmii0_rx, tp1_loc_tp0, tp1_loc_tp1,
++        usb_clock_output, hif_loc_misc, hif_loc_nf, scpu_ejtag_loc_cr, ao,
++        dmic, spdif_out, avcpu_ej, emmc, hif, nand, p2s, pcie, pll_test,
++        scpu_ejtag_loc_cr, sd_card, sdio_0, sdio_1 ]
 +
++      drive-strength:
++        enum: [2, 4, 8]
 +
- static struct platform_driver rtd_pinctrl_driver = {
- 	.probe = rtd_pinctrl_probe,
-+	.suspend = rtd_pinctrl_suspend,
-+	.resume = rtd_pinctrl_resume,
- 	.driver = {
- 		.name = "rtd-pinctrl",
- 		.of_match_table	= rtd_pinctrl_dt_ids,
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1195.h b/drivers/pinctrl/realtek/pinctrl-rtd1195.h
-index 74139345083c..c9d6e7894d66 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd1195.h
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd1195.h
-@@ -358,6 +358,16 @@ static const struct rtd_pin_config_desc rtd1195_iso_configs[] = {
- };
- 
- 
-+static struct rtd_pin_reg_list rtd1195_iso_reg_lists[] = {
-+	{.reg_offset = 0x0},
-+	{.reg_offset = 0x4},
-+	{.reg_offset = 0x8},
-+	{.reg_offset = 0xc},
-+	{.reg_offset = 0x10},
-+	{.reg_offset = 0x14},
-+};
++      bias-pull-down: true
 +
++      bias-pull-up: true
 +
- static const struct rtd_pinctrl_desc rtd1195_iso_pinctrl_desc = {
- 	.pins = rtd1195_iso_pins,
- 	.num_pins = ARRAY_SIZE(rtd1195_iso_pins),
-@@ -369,6 +379,8 @@ static const struct rtd_pinctrl_desc rtd1195_iso_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1195_iso_muxes),
- 	.configs = rtd1195_iso_configs,
- 	.num_configs = ARRAY_SIZE(rtd1195_iso_configs),
-+	.lists = rtd1195_iso_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1195_iso_reg_lists),
- };
- 
- /* CRT */
-@@ -1110,6 +1122,25 @@ static const struct rtd_pin_config_desc rtd1195_crt_configs[] = {
- 	RTK_PIN_CONFIG(sensor_cko_1, 0x9c, 28, 1, 0, 2, 3, PADDRI_2_4),
- };
- 
-+static struct rtd_pin_reg_list rtd1195_crt_reg_lists[] = {
-+	{.reg_offset = 0x60},
-+	{.reg_offset = 0x64},
-+	{.reg_offset = 0x68},
-+	{.reg_offset = 0x6c},
-+	{.reg_offset = 0x70},
-+	{.reg_offset = 0x74},
-+	{.reg_offset = 0x78},
-+	{.reg_offset = 0x7c},
-+	{.reg_offset = 0x80},
-+	{.reg_offset = 0x84},
-+	{.reg_offset = 0x88},
-+	{.reg_offset = 0x8c},
-+	{.reg_offset = 0x90},
-+	{.reg_offset = 0x94},
-+	{.reg_offset = 0x98},
-+	{.reg_offset = 0x9c},
-+};
++      bias-disable: true
 +
- 
- static const struct rtd_pinctrl_desc rtd1195_crt_pinctrl_desc = {
- 	.pins = rtd1195_crt_pins,
-@@ -1122,6 +1153,8 @@ static const struct rtd_pinctrl_desc rtd1195_crt_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1195_crt_muxes),
- 	.configs = rtd1195_crt_configs,
- 	.num_configs = ARRAY_SIZE(rtd1195_crt_configs),
-+	.lists = rtd1195_crt_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1195_crt_reg_lists),
- };
- 
- #endif
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1295.h b/drivers/pinctrl/realtek/pinctrl-rtd1295.h
-index 14d46baa97d8..7cd12f66e02f 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd1295.h
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd1295.h
-@@ -525,7 +525,17 @@ static const struct rtd_pin_config_desc rtd1295_iso_configs[] = {
- 	RTK_PIN_CONFIG(iso_gpio_34, 0x20, 4, 1, 0, 2, 3, 2),
- };
- 
--
-+static struct rtd_pin_reg_list rtd1295_iso_reg_lists[] = {
-+	{.reg_offset = 0x0},
-+	{.reg_offset = 0x4},
-+	{.reg_offset = 0x8},
-+	{.reg_offset = 0xc},
-+	{.reg_offset = 0x10},
-+	{.reg_offset = 0x14},
-+	{.reg_offset = 0x18},
-+	{.reg_offset = 0x1c},
-+	{.reg_offset = 0x20},
-+};
- 
- static const struct rtd_pinctrl_desc rtd1295_iso_pinctrl_desc = {
- 	.pins = rtd1295_iso_pins,
-@@ -538,6 +548,8 @@ static const struct rtd_pinctrl_desc rtd1295_iso_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1295_iso_muxes),
- 	.configs = rtd1295_iso_configs,
- 	.num_configs = ARRAY_SIZE(rtd1295_iso_configs),
-+	.lists = rtd1295_iso_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1295_iso_reg_lists),
- };
- 
- /* SB2 */
-@@ -1225,6 +1237,28 @@ static const struct rtd_pin_config_desc rtd1295_sb2_configs[] = {
- 	RTK_PIN_CONFIG(rgmii1_rxd_3, 0x78, 12, 1, 0, 2, 3, PADDRI_4_8),
- };
- 
-+static struct rtd_pin_reg_list rtd1295_sb2_reg_lists[] = {
-+	{.reg_offset = 0x8},
-+	{.reg_offset = 0xc},
-+	{.reg_offset = 0x10},
-+	{.reg_offset = 0x14},
-+	{.reg_offset = 0x28},
-+	{.reg_offset = 0x14},
-+	{.reg_offset = 0x2c},
-+	{.reg_offset = 0x30},
-+	{.reg_offset = 0x34},
-+	{.reg_offset = 0x38},
-+	{.reg_offset = 0x3c},
-+	{.reg_offset = 0x60},
-+	{.reg_offset = 0x64},
-+	{.reg_offset = 0x68},
-+	{.reg_offset = 0x6c},
-+	{.reg_offset = 0x70},
-+	{.reg_offset = 0x74},
-+	{.reg_offset = 0x78},
-+	{.reg_offset = 0x7c},
-+};
++      input-schmitt-disable: true
 +
- 
- static const struct rtd_pinctrl_desc rtd1295_sb2_pinctrl_desc = {
- 	.pins = rtd1295_sb2_pins,
-@@ -1237,6 +1271,8 @@ static const struct rtd_pinctrl_desc rtd1295_sb2_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1295_sb2_muxes),
- 	.configs = rtd1295_sb2_configs,
- 	.num_configs = ARRAY_SIZE(rtd1295_sb2_configs),
-+	.lists = rtd1295_sb2_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1295_sb2_reg_lists),
- };
- 
- /* Disp */
-@@ -1373,6 +1409,12 @@ static const struct rtd_pin_config_desc rtd1295_disp_configs[] = {
- 	RTK_PIN_CONFIG(ao_sd_3, 0x4, 24, 1, 0, 2, 3, PADDRI_2_4),
- };
- 
-+static struct rtd_pin_reg_list rtd1295_disp_reg_lists[] = {
-+	{.reg_offset = 0x0},
-+	{.reg_offset = 0x4},
-+	{.reg_offset = 0x8},
-+};
++      input-schmitt-enable: true
 +
- 
- static const struct rtd_pinctrl_desc rtd1295_disp_pinctrl_desc = {
- 	.pins = rtd1295_disp_pins,
-@@ -1385,6 +1427,8 @@ static const struct rtd_pinctrl_desc rtd1295_disp_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1295_disp_muxes),
- 	.configs = rtd1295_disp_configs,
- 	.num_configs = ARRAY_SIZE(rtd1295_disp_configs),
-+	.lists = rtd1295_disp_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1295_disp_reg_lists),
- };
- 
- /* CR */
-@@ -1825,6 +1869,25 @@ static const struct rtd_pin_config_desc rtd1295_cr_configs[] = {
- 	RTK_PIN_CONFIG(prob_3, 0x18, 24, 1, 0, 2, 3, PADDRI_4_8),
- };
- 
-+static struct rtd_pin_reg_list rtd1295_cr_reg_lists[] = {
-+	{.reg_offset = 0x0},
-+	{.reg_offset = 0x4},
-+	{.reg_offset = 0x8},
-+	{.reg_offset = 0xc},
-+	{.reg_offset = 0x10},
-+	{.reg_offset = 0x14},
-+	{.reg_offset = 0x18},
-+	{.reg_offset = 0x1c},
-+	{.reg_offset = 0x20},
-+	{.reg_offset = 0x24},
-+	{.reg_offset = 0x28},
-+	{.reg_offset = 0x2c},
-+	{.reg_offset = 0x30},
-+	{.reg_offset = 0x34},
-+	{.reg_offset = 0x38},
-+	{.reg_offset = 0x3c},
-+	{.reg_offset = 0x40},
-+};
- 
- static const struct rtd_pinctrl_desc rtd1295_cr_pinctrl_desc = {
- 	.pins = rtd1295_cr_pins,
-@@ -1837,6 +1900,8 @@ static const struct rtd_pinctrl_desc rtd1295_cr_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1295_cr_muxes),
- 	.configs = rtd1295_cr_configs,
- 	.num_configs = ARRAY_SIZE(rtd1295_cr_configs),
-+	.lists = rtd1295_cr_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1295_cr_reg_lists),
- };
- 
- #endif
++    required:
++      - groups
++      - function
++
++    additionalProperties: false
++
++examples:
++  - |
++    iso_pinctrl: pinctrl@300 {
++        compatible = "realtek,rtd1295-iso-pinctrl";
++        reg = <0x300 0x24>;
++
++        pinctrl-names = "default";
++        pinctrl-0 = <&etn_led_pins>;
++
++        etn_led_pins: etn-led-pins {
++            function = "etn_led";
++            groups = "etn_led_link", "etn_led_rxtx";
++            bias-pull-up;
++            drive-strength = <4>;
++        };
++    };
++
 -- 
 2.27.0
 
