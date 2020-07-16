@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6512CC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1AFC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 500FA2076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2211F2076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgGPPi6 (ORCPT
+        id S1729356AbgGPPjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:38:58 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45742 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728967AbgGPPi4 (ORCPT
+        Thu, 16 Jul 2020 11:39:13 -0400
+Received: from mail-oo1-f68.google.com ([209.85.161.68]:37090 "EHLO
+        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729298AbgGPPjF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:38:56 -0400
-Received: by mail-ot1-f65.google.com with SMTP id h1so4524111otq.12;
-        Thu, 16 Jul 2020 08:38:55 -0700 (PDT)
+        Thu, 16 Jul 2020 11:39:05 -0400
+Received: by mail-oo1-f68.google.com with SMTP id t6so1257906ooh.4;
+        Thu, 16 Jul 2020 08:39:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=U90hHEc54jdrWNma8Ae66aUnovbTk060PhIZQuQR+QY=;
-        b=Byt9bKj4gM5ybZPk/tMcE2C+FKnbynrlDnBkbpp8R1bgpyMEkhAptqZutYQ2IrV1oX
-         V1NwkwizhYquGkzMpAv1dgDr4pguOftRFEU1V2QAs6QeZFpwk+bSgQUgEZaLUeiQ0axc
-         zSnBxbwct4Dr6c2lA9K7fN6Xe2kRCbPzrNCJioVEixDMPvB0N3zfBoW5hk5zEJMpXglY
-         J3rZQX+e0KO3MuMxHr5Tpi16xyrGlpxIXH7fLQDQux01lZzPfUt7FezhWnY+2e3TaIT9
-         H9YN8X0iMCr9T6t66f2F83c31V6djPGtkpJq377twI+uxy0LT0uC2DlbmGQsLLU1tzwL
-         o/mQ==
-X-Gm-Message-State: AOAM533lbWJfcbW8dyfxqWJRCwbclNkPqkaXs5wUvyc9OEVSiBoQLXpQ
-        nLfH0g2C3ZOK/d0df2h1V+pJRntyddOx5q6SiqQ=
-X-Google-Smtp-Source: ABdhPJwZ5OQQ9EGRyQ3xUMXe0z77A9hIeMmqlCkxDKaqcv1Z/fgnXN/N+/X37FauDrLUuxCrtlxdJJObhqTJMAWoTSQ=
-X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr5037827otp.250.1594913935397;
- Thu, 16 Jul 2020 08:38:55 -0700 (PDT)
+        bh=4LrRL/OWFuVfhHNu2nauYQQFtFCQrHsVXHq0n4+BNnU=;
+        b=eZwKc4f9MixV87et9vjy0pqkJwBVqBoMZvImcDNEeUGBgqxiUUGeE9ASofGM1q9nQi
+         hf7JKu4ntw9zfr3/7Zm0BrnfRQomhR2j9F7R7ogsCqvTgPXE6+sp+AnCm/Wk4dd33DYF
+         zvfxpNJfBXTJthCtjqdBBRif7nF5aZGaREIlP1TFs1hFp4z/hnznfVt+xxrdzsplG+cz
+         BQIs8jV8nKXlyLvnLwnV9c6CZ52DlfIVc6lK4nqtILyt+/RVdy+FWbgujwISFYEwIoEY
+         26UH0+91a9bP8YlMi2lMp1hga95vjsp2hNomBIOpqSssrYhcymBSy8UTXxItIAfedUXv
+         3Guw==
+X-Gm-Message-State: AOAM533ab9mbMJfpimNI5DR+VPlrjmfBhMYGwL/ydLeCeMojNQ7H1zg0
+        D/Ck2tcuCpoSHSOaQiRg6vKxSDaG+F+MP3Xgx88=
+X-Google-Smtp-Source: ABdhPJwsIQgMnFHyeYC2Mob7tatUJLiAfHETR2cM0YIIHKykVq2LUvqmbenn0R82jwmOiWqzyNsLsGAIu2pEG4GS8hY=
+X-Received: by 2002:a4a:5209:: with SMTP id d9mr4775708oob.40.1594913942493;
+ Thu, 16 Jul 2020 08:39:02 -0700 (PDT)
 MIME-Version: 1.0
 References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594811350-14066-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594811350-14066-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594811350-14066-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 Jul 2020 17:38:44 +0200
-Message-ID: <CAMuHMdWH2y6p3J4S3qeZNFN6v=_Rnz_zg0etG7DzcQ+NhS9RHA@mail.gmail.com>
-Subject: Re: [PATCH 01/20] arm64: dts: renesas: r8a774e1: Add operating points
+Date:   Thu, 16 Jul 2020 17:38:51 +0200
+Message-ID: <CAMuHMdX0iXv5=Po1d2LwJFo7ezOnfYi9vjf=wFe9YFY0xyLCWg@mail.gmail.com>
+Subject: Re: [PATCH 06/20] arm64: dts: renesas: r8a774e1: Add CMT device nodes
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -79,37 +79,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
-
 On Wed, Jul 15, 2020 at 1:09 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 > From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 >
-> The RZ/G2H (r8a774e1) comes with two clusters of processors, similarly to
-> the r8a774a1. The first cluster is made of A57s, the second cluster is made
-> of A53s.
->
-> The operating points for the cluster with the A57s are:
->
-> Frequency | Voltage
-> ----------|---------
-> 500 MHz   | 0.82V
-> 1.0 GHz   | 0.82V
-> 1.5 GHz   | 0.82V
->
-> The operating points for the cluster with the A53s are:
->
-> Frequency | Voltage
-> ----------|---------
-> 800 MHz   | 0.82V
-> 1.0 GHz   | 0.82V
-> 1.2 GHz   | 0.82V
-
-I trust you on the actual values...
-
->
-> This patch adds the definitions for the operating points to the SoC
-> specific DT.
+> This patch adds the CMT[0123] device tree nodes to the
+> r8a774e1 SoC specific DT.
 >
 > Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
