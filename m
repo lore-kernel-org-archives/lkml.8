@@ -2,333 +2,145 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66FDC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90448C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A76A20899
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750652074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgGPT2c (ORCPT
+        id S1729603AbgGPT34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:28:32 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:55255 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728788AbgGPT2b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:28:31 -0400
-Received: from localhost.localdomain ([93.22.39.121])
-        by mwinf5d33 with ME
-        id 3vUS2300U2cqCS503vUTT8; Thu, 16 Jul 2020 21:28:28 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 16 Jul 2020 21:28:28 +0200
-X-ME-IP: 93.22.39.121
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     davem@davemloft.net, kuba@kernel.org, hkallweit1@gmail.com,
-        mst@redhat.com, vaibhavgupta40@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] net: sungem: switch from 'pci_' to 'dma_' API
-Date:   Thu, 16 Jul 2020 21:28:21 +0200
-Message-Id: <20200716192821.321233-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Thu, 16 Jul 2020 15:29:56 -0400
+Received: from mga01.intel.com ([192.55.52.88]:62386 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728788AbgGPT34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 15:29:56 -0400
+IronPort-SDR: dXX6OC5CoOkqakY0NaniPr/XTx4mAwfVa9u4jRPr/O9/lNSXcNWnwWxTISVfjsWdBdvGGOMzqi
+ VrTEmm8eRHNg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="167616024"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="167616024"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 12:29:55 -0700
+IronPort-SDR: Rw/CNHn192L0+R8y7GGaKRMKcHlm3dB/wEHRSknCC3Mzc7hl/2FGCndwvsfD2gY3p6lsaNLv7p
+ pEUq9GnywRMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="486217234"
+Received: from guptapadev.jf.intel.com (HELO guptapadev.amr) ([10.54.74.188])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Jul 2020 12:29:54 -0700
+Date:   Thu, 16 Jul 2020 12:23:59 -0700
+From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Waiman Long <longman@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mark Gross <mgross@linux.intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH v2] x86/bugs/multihit: Fix mitigation reporting when VMX is
+ not in use
+Message-ID: <0ba029932a816179b9d14a30db38f0f11ef1f166.1594925782.git.pawan.kumar.gupta@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+On systems that have virtualization disabled or unsupported, sysfs
+mitigation for X86_BUG_ITLB_MULTIHIT is reported incorrectly as:
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
+  $ cat /sys/devices/system/cpu/vulnerabilities/itlb_multihit
+  KVM: Vulnerable
 
-When memory is allocated in 'gem_init_one()', GFP_KERNEL can be used
-because it is a probe function and no lock is acquired.
+System is not vulnerable to DoS attack from a rogue guest when
+virtualization is disabled or unsupported in the hardware. Change the
+mitigation reporting for these cases.
 
-
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
-
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
-
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
-
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Fixes: b8e8c8303ff2 ("kvm: mmu: ITLB_MULTIHIT mitigation")
+Reported-by: Nelson Dsouza <nelson.dsouza@linux.intel.com>
+Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/net/ethernet/sun/sungem.c | 53 ++++++++++++++++---------------
- 1 file changed, 27 insertions(+), 26 deletions(-)
+v2:
+ - Change mitigation reporting as per the state on VMX feature.
 
-diff --git a/drivers/net/ethernet/sun/sungem.c b/drivers/net/ethernet/sun/sungem.c
-index 0e9d2cf7979b..eeb8518c8a84 100644
---- a/drivers/net/ethernet/sun/sungem.c
-+++ b/drivers/net/ethernet/sun/sungem.c
-@@ -670,7 +670,8 @@ static __inline__ void gem_tx(struct net_device *dev, struct gem *gp, u32 gem_st
- 			dma_addr = le64_to_cpu(txd->buffer);
- 			dma_len = le64_to_cpu(txd->control_word) & TXDCTRL_BUFSZ;
+v1: https://lore.kernel.org/lkml/267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com/
+
+ Documentation/admin-guide/hw-vuln/multihit.rst | 4 ++++
+ arch/x86/kernel/cpu/bugs.c                     | 8 +++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
+index ba9988d8bce5..140e4cec38c3 100644
+--- a/Documentation/admin-guide/hw-vuln/multihit.rst
++++ b/Documentation/admin-guide/hw-vuln/multihit.rst
+@@ -80,6 +80,10 @@ The possible values in this file are:
+        - The processor is not vulnerable.
+      * - KVM: Mitigation: Split huge pages
+        - Software changes mitigate this issue.
++     * - KVM: Mitigation: VMX unsupported
++       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is not supported.
++     * - KVM: Mitigation: VMX disabled
++       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is disabled.
+      * - KVM: Vulnerable
+        - The processor is vulnerable, but no mitigation enabled
  
--			pci_unmap_page(gp->pdev, dma_addr, dma_len, PCI_DMA_TODEVICE);
-+			dma_unmap_page(&gp->pdev->dev, dma_addr, dma_len,
-+				       DMA_TO_DEVICE);
- 			entry = NEXT_TX(entry);
- 		}
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 0b71970d2d3d..b0802d45abd3 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -31,6 +31,7 @@
+ #include <asm/intel-family.h>
+ #include <asm/e820/api.h>
+ #include <asm/hypervisor.h>
++#include <asm/tlbflush.h>
  
-@@ -809,16 +810,15 @@ static int gem_rx(struct gem *gp, int work_to_do)
- 				drops++;
- 				goto drop_it;
- 			}
--			pci_unmap_page(gp->pdev, dma_addr,
--				       RX_BUF_ALLOC_SIZE(gp),
--				       PCI_DMA_FROMDEVICE);
-+			dma_unmap_page(&gp->pdev->dev, dma_addr,
-+				       RX_BUF_ALLOC_SIZE(gp), DMA_FROM_DEVICE);
- 			gp->rx_skbs[entry] = new_skb;
- 			skb_put(new_skb, (gp->rx_buf_sz + RX_OFFSET));
--			rxd->buffer = cpu_to_le64(pci_map_page(gp->pdev,
-+			rxd->buffer = cpu_to_le64(dma_map_page(&gp->pdev->dev,
- 							       virt_to_page(new_skb->data),
- 							       offset_in_page(new_skb->data),
- 							       RX_BUF_ALLOC_SIZE(gp),
--							       PCI_DMA_FROMDEVICE));
-+							       DMA_FROM_DEVICE));
- 			skb_reserve(new_skb, RX_OFFSET);
+ #include "cpu.h"
  
- 			/* Trim the original skb for the netif. */
-@@ -833,9 +833,11 @@ static int gem_rx(struct gem *gp, int work_to_do)
+@@ -1556,7 +1557,12 @@ static ssize_t l1tf_show_state(char *buf)
  
- 			skb_reserve(copy_skb, 2);
- 			skb_put(copy_skb, len);
--			pci_dma_sync_single_for_cpu(gp->pdev, dma_addr, len, PCI_DMA_FROMDEVICE);
-+			dma_sync_single_for_cpu(&gp->pdev->dev, dma_addr, len,
-+						DMA_FROM_DEVICE);
- 			skb_copy_from_linear_data(skb, copy_skb->data, len);
--			pci_dma_sync_single_for_device(gp->pdev, dma_addr, len, PCI_DMA_FROMDEVICE);
-+			dma_sync_single_for_device(&gp->pdev->dev, dma_addr,
-+						   len, DMA_FROM_DEVICE);
- 
- 			/* We'll reuse the original ring buffer. */
- 			skb = copy_skb;
-@@ -1020,10 +1022,10 @@ static netdev_tx_t gem_start_xmit(struct sk_buff *skb,
- 		u32 len;
- 
- 		len = skb->len;
--		mapping = pci_map_page(gp->pdev,
-+		mapping = dma_map_page(&gp->pdev->dev,
- 				       virt_to_page(skb->data),
- 				       offset_in_page(skb->data),
--				       len, PCI_DMA_TODEVICE);
-+				       len, DMA_TO_DEVICE);
- 		ctrl |= TXDCTRL_SOF | TXDCTRL_EOF | len;
- 		if (gem_intme(entry))
- 			ctrl |= TXDCTRL_INTME;
-@@ -1046,9 +1048,10 @@ static netdev_tx_t gem_start_xmit(struct sk_buff *skb,
- 		 * Otherwise we could race with the device.
- 		 */
- 		first_len = skb_headlen(skb);
--		first_mapping = pci_map_page(gp->pdev, virt_to_page(skb->data),
-+		first_mapping = dma_map_page(&gp->pdev->dev,
-+					     virt_to_page(skb->data),
- 					     offset_in_page(skb->data),
--					     first_len, PCI_DMA_TODEVICE);
-+					     first_len, DMA_TO_DEVICE);
- 		entry = NEXT_TX(entry);
- 
- 		for (frag = 0; frag < skb_shinfo(skb)->nr_frags; frag++) {
-@@ -1574,9 +1577,9 @@ static void gem_clean_rings(struct gem *gp)
- 		if (gp->rx_skbs[i] != NULL) {
- 			skb = gp->rx_skbs[i];
- 			dma_addr = le64_to_cpu(rxd->buffer);
--			pci_unmap_page(gp->pdev, dma_addr,
-+			dma_unmap_page(&gp->pdev->dev, dma_addr,
- 				       RX_BUF_ALLOC_SIZE(gp),
--				       PCI_DMA_FROMDEVICE);
-+				       DMA_FROM_DEVICE);
- 			dev_kfree_skb_any(skb);
- 			gp->rx_skbs[i] = NULL;
- 		}
-@@ -1598,9 +1601,9 @@ static void gem_clean_rings(struct gem *gp)
- 
- 				txd = &gb->txd[ent];
- 				dma_addr = le64_to_cpu(txd->buffer);
--				pci_unmap_page(gp->pdev, dma_addr,
-+				dma_unmap_page(&gp->pdev->dev, dma_addr,
- 					       le64_to_cpu(txd->control_word) &
--					       TXDCTRL_BUFSZ, PCI_DMA_TODEVICE);
-+					       TXDCTRL_BUFSZ, DMA_TO_DEVICE);
- 
- 				if (frag != skb_shinfo(skb)->nr_frags)
- 					i++;
-@@ -1637,11 +1640,11 @@ static void gem_init_rings(struct gem *gp)
- 
- 		gp->rx_skbs[i] = skb;
- 		skb_put(skb, (gp->rx_buf_sz + RX_OFFSET));
--		dma_addr = pci_map_page(gp->pdev,
-+		dma_addr = dma_map_page(&gp->pdev->dev,
- 					virt_to_page(skb->data),
- 					offset_in_page(skb->data),
- 					RX_BUF_ALLOC_SIZE(gp),
--					PCI_DMA_FROMDEVICE);
-+					DMA_FROM_DEVICE);
- 		rxd->buffer = cpu_to_le64(dma_addr);
- 		dma_wmb();
- 		rxd->status_word = cpu_to_le64(RXDCTRL_FRESH(gp));
-@@ -2814,10 +2817,8 @@ static void gem_remove_one(struct pci_dev *pdev)
- 		cancel_work_sync(&gp->reset_task);
- 
- 		/* Free resources */
--		pci_free_consistent(pdev,
--				    sizeof(struct gem_init_block),
--				    gp->init_block,
--				    gp->gblock_dvma);
-+		dma_free_coherent(&pdev->dev, sizeof(struct gem_init_block),
-+				  gp->init_block, gp->gblock_dvma);
- 		iounmap(gp->regs);
- 		pci_release_regions(pdev);
- 		free_netdev(dev);
-@@ -2873,10 +2874,10 @@ static int gem_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	 */
- 	if (pdev->vendor == PCI_VENDOR_ID_SUN &&
- 	    pdev->device == PCI_DEVICE_ID_SUN_GEM &&
--	    !pci_set_dma_mask(pdev, DMA_BIT_MASK(64))) {
-+	    !dma_set_mask(&pdev->dev, DMA_BIT_MASK(64))) {
- 		pci_using_dac = 1;
- 	} else {
--		err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-+		err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
- 		if (err) {
- 			pr_err("No usable DMA configuration, aborting\n");
- 			goto err_disable_device;
-@@ -2965,8 +2966,8 @@ static int gem_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	 * PAGE_SIZE aligned.
- 	 */
- 	gp->init_block = (struct gem_init_block *)
--		pci_alloc_consistent(pdev, sizeof(struct gem_init_block),
--				     &gp->gblock_dvma);
-+		dma_alloc_coherent(&pdev->dev, sizeof(struct gem_init_block),
-+				   &gp->gblock_dvma, GFP_KERNEL);
- 	if (!gp->init_block) {
- 		pr_err("Cannot allocate init block, aborting\n");
- 		err = -ENOMEM;
+ static ssize_t itlb_multihit_show_state(char *buf)
+ {
+-	if (itlb_multihit_kvm_mitigation)
++	if (!boot_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL) ||
++	    !boot_cpu_has(X86_FEATURE_VMX))
++		return sprintf(buf, "KVM: Mitigation: VMX unsupported\n");
++	else if (!(cr4_read_shadow() & X86_CR4_VMXE))
++		return sprintf(buf, "KVM: Mitigation: VMX disabled\n");
++	else if (itlb_multihit_kvm_mitigation)
+ 		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
+ 	else
+ 		return sprintf(buf, "KVM: Vulnerable\n");
 -- 
-2.25.1
+2.21.3
 
