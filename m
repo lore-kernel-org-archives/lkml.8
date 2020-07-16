@@ -2,75 +2,102 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A0BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FD1C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA29A20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 892A8204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:20:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZLAVt/e6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgGPMTh (ORCPT
+        id S1728562AbgGPMUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:19:37 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:40246 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbgGPMTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:19:37 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jw2rM-0000pc-Ed; Thu, 16 Jul 2020 22:19:33 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Jul 2020 22:19:32 +1000
-Date:   Thu, 16 Jul 2020 22:19:32 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] crypto: caam - support tagged keys for skcipher
- algorithms
-Message-ID: <20200716121932.GA31870@gondor.apana.org.au>
-References: <1594591536-531-1-git-send-email-iuliana.prodan@nxp.com>
- <1594591536-531-3-git-send-email-iuliana.prodan@nxp.com>
- <20200716073610.GA28215@gondor.apana.org.au>
- <0c818beb-05e5-a6c6-717d-782b32afff26@nxp.com>
- <20200716115253.GA25035@gondor.apana.org.au>
- <59436173-9891-b857-f36b-e97c0a3264c8@nxp.com>
+        Thu, 16 Jul 2020 08:20:07 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46522 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728548AbgGPMUF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:20:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06GCJruJ055896;
+        Thu, 16 Jul 2020 07:19:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594901993;
+        bh=wOEZHIUvj01ZD2FMQ4zD9/pEgy9hFpYL3VYW3EcKwD0=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=ZLAVt/e6ycLEwuRHmkvqCc0XTPS1TtVKLJ33xJO08KGwy/G6TCZ+sYvrnhZsCc6cs
+         z/L8xIN8UNTJTntbfzOo2L/kb0VL9SVKJ9I2cLApiuTthe9dTPkpx1gLZEe5yXjeKB
+         /KO2WDdIan5/Ba2bfXRLLONyaSm+fIf+/t64o5VM=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06GCJrHS068726
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jul 2020 07:19:53 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 16
+ Jul 2020 07:19:53 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 16 Jul 2020 07:19:53 -0500
+Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06GCJnWW071711;
+        Thu, 16 Jul 2020 07:19:50 -0500
+Subject: Re: [PATCH 7/7] arm64: defconfig: Enable AM654x SDHCI controller
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <adrian.hunter@intel.com>,
+        <will@kernel.org>, <catalin.marinas@arm.com>, <robh+dt@kernel.org>,
+        <ulf.hansson@linaro.org>
+References: <20200619125801.9530-1-faiz_abbas@ti.com>
+ <20200619125801.9530-8-faiz_abbas@ti.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <3ed03440-7fbd-6abc-8a15-67e7217e2c3d@ti.com>
+Date:   Thu, 16 Jul 2020 17:49:48 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <59436173-9891-b857-f36b-e97c0a3264c8@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200619125801.9530-8-faiz_abbas@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 03:07:50PM +0300, Horia Geantă wrote:
->
-> So instead of tk(cbc(aes)) use paes(cbc(aes) or cbc(paes)?
+Hi,
 
-Well if we're following the existing paes model then it'd be
-cbc(paes).
+On 19/06/20 6:28 pm, Faiz Abbas wrote:
+> Enable CONFIG_SDHCI_AM654 to Support AM65x sdhci controller.
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 883e8bace3ed..40dd13e0adc5 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -731,6 +731,7 @@ CONFIG_MMC_DW_ROCKCHIP=y
+>  CONFIG_MMC_SUNXI=y
+>  CONFIG_MMC_BCM2835=y
+>  CONFIG_MMC_SDHCI_XENON=y
+> +CONFIG_MMC_SDHCI_AM654=y
+>  CONFIG_MMC_OWL=y
+>  CONFIG_NEW_LEDS=y
+>  CONFIG_LEDS_CLASS=y
+> 
 
-> How would this work for hmac(sha512),
-> paes(hmac(sha512)) or hmac(psha512), or even phmac(sha512)?
+Gentle ping. Will, Catalin, can this patch be picked up?
 
-Perhaps hmac(psha512).
-
-The point is whatever scheme you come up with has to be consistent
-across all drivers.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks,
+Faiz
