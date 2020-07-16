@@ -2,304 +2,133 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC335C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F39C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7928D207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CAB207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aPTdIjtb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gczDwv0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbgGPO7R (ORCPT
+        id S1728665AbgGPO7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:59:17 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:46253 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728415AbgGPO7P (ORCPT
+        Thu, 16 Jul 2020 10:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727844AbgGPO7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:59:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594911554; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=lviIp5N3o+U+RFbWg6NZAHu7oQNpiBl8ehCNV8kxfmk=;
- b=aPTdIjtb1Oqxp7Cxtgw5njLDMaqhmEmLhNV2B7BFS/Qwm6v/ZyKPKJ/ixb+b4sA/f83JQAWh
- aEca7a1vmsa4Zph65QRujVdzSKm3EU0upe2Gto5Fb+diGQJoRqJJP8HYksDpfIARRTiummaM
- TknQbVgeJAuDOlqlOjTXaC1lmgM=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f106b2c7c8ca473a8ce19a4 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 14:58:52
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D59A4C43395; Thu, 16 Jul 2020 14:58:51 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7FAFC433C6;
-        Thu, 16 Jul 2020 14:58:50 +0000 (UTC)
+        Thu, 16 Jul 2020 10:59:39 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88CAAC061755;
+        Thu, 16 Jul 2020 07:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=0utnqY8s+MOoo2WbklOSO0CnKqfkeDdOlM8s5Xa1IOA=; b=gczDwv0uJQk5yeRN4+5UTWmgXy
+        cHAn5JjOIUtVDoOt8iBk3JQkDtD3g+HBjnj9u0l822Zzxm+3FqOOqiW2+vNWA+lEh2HozyB6E8lLp
+        hNIOwq6cuEmZYdf2jf4PynnHzp/RpCX6U6I/nAT/kBBKILiO8lYQW4/GQ8xGad5IB72pRMAFDNuD/
+        DQl+aPQkFuBNTCjKLE6WpzWx1lv3CbMCYZDxALR9c+rOObkaeGD659dqAj2iNEEwuPkOXnPbtlWb3
+        Vs6dkY6OnnLl3hrsjzl1wWl1kPo/FCG59e8UGEV3bdkSVDlWpLwlOFivRVX0o/qC8Jhg8NfKYldBN
+        CimgmZrQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jw5MC-0003Ta-Vm; Thu, 16 Jul 2020 14:59:33 +0000
+Subject: Re: [PATCH v6 7/7] ima: add policy support for the new file open
+ MAY_OPENEXEC flag
+To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200714181638.45751-1-mic@digikod.net>
+ <20200714181638.45751-8-mic@digikod.net> <202007151339.283D7CD@keescook>
+ <8df69733-0088-3e3c-9c3d-2610414cea2b@digikod.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <61c05cb0-a956-3cc7-5dab-e11ebf0e95bf@infradead.org>
+Date:   Thu, 16 Jul 2020 07:59:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 16 Jul 2020 20:28:50 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, evgreen@chromium.org,
-        ohad@wizery.com, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 2/3] remoteproc: qcom_q6v5_mss: Add MBA log extraction
- support
-In-Reply-To: <20200716134316.GI3271@Mani-XPS-13-9360>
-References: <20200716123630.21892-1-sibis@codeaurora.org>
- <20200716123630.21892-3-sibis@codeaurora.org>
- <20200716134316.GI3271@Mani-XPS-13-9360>
-Message-ID: <4f91a75852104dbeafea3af0c8673505@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <8df69733-0088-3e3c-9c3d-2610414cea2b@digikod.net>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-16 19:13, Manivannan Sadhasivam wrote:
-> Hi Sibi,
+On 7/16/20 7:40 AM, Mickaël Salaün wrote:
 > 
-> On Thu, Jul 16, 2020 at 06:06:29PM +0530, Sibi Sankar wrote:
->> On SC7180 the MBA firmware stores the bootup text logs in a 4K segment
->> at the beginning of the MBA region. Add support to extract the logs
->> which will be useful to debug mba boot/authentication issues.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  drivers/remoteproc/qcom_q6v5_mss.c | 41 
->> ++++++++++++++++++++++++++----
->>  1 file changed, 36 insertions(+), 5 deletions(-)
->> 
->> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c 
->> b/drivers/remoteproc/qcom_q6v5_mss.c
->> index 95e21ed607cb9..4ddf084b2c6fc 100644
->> --- a/drivers/remoteproc/qcom_q6v5_mss.c
->> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
->> @@ -9,6 +9,7 @@
->> 
->>  #include <linux/clk.h>
->>  #include <linux/delay.h>
->> +#include <linux/devcoredump.h>
->>  #include <linux/dma-mapping.h>
->>  #include <linux/interrupt.h>
->>  #include <linux/kernel.h>
->> @@ -37,6 +38,8 @@
->> 
->>  #define MPSS_CRASH_REASON_SMEM		421
->> 
->> +#define MBA_LOG_SIZE			SZ_4K
->> +
->>  /* RMB Status Register Values */
->>  #define RMB_PBL_SUCCESS			0x1
->> 
->> @@ -139,6 +142,7 @@ struct rproc_hexagon_res {
->>  	int version;
->>  	bool need_mem_protection;
->>  	bool has_alt_reset;
->> +	bool has_mba_logs;
->>  	bool has_spare_reg;
->>  };
->> 
->> @@ -200,6 +204,7 @@ struct q6v5 {
->>  	struct qcom_sysmon *sysmon;
->>  	bool need_mem_protection;
->>  	bool has_alt_reset;
->> +	bool has_mba_logs;
->>  	bool has_spare_reg;
->>  	int mpss_perm;
->>  	int mba_perm;
->> @@ -518,6 +523,19 @@ static int q6v5_rmb_mba_wait(struct q6v5 *qproc, 
->> u32 status, int ms)
->>  	return val;
->>  }
->> 
->> +static void q6v5_dump_mba_logs(struct q6v5 *qproc)
->> +{
->> +	struct rproc *rproc = qproc->rproc;
->> +	void *data;
->> +
->> +	data = vmalloc(MBA_LOG_SIZE);
+> On 15/07/2020 22:40, Kees Cook wrote:
+>> On Tue, Jul 14, 2020 at 08:16:38PM +0200, Mickaël Salaün wrote:
+>>> From: Mimi Zohar <zohar@linux.ibm.com>
+>>>
+>>> The kernel has no way of differentiating between a file containing data
+>>> or code being opened by an interpreter.  The proposed O_MAYEXEC
+>>> openat2(2) flag bridges this gap by defining and enabling the
+>>> MAY_OPENEXEC flag.
+>>>
+>>> This patch adds IMA policy support for the new MAY_OPENEXEC flag.
+>>>
+>>> Example:
+>>> measure func=FILE_CHECK mask=^MAY_OPENEXEC
+>>> appraise func=FILE_CHECK appraise_type=imasig mask=^MAY_OPENEXEC
+>>>
+>>> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+>>> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+>>> Acked-by: Mickaël Salaün <mic@digikod.net>
+>>
+>> (Process nit: if you're sending this on behalf of another author, then
+>> this should be Signed-off-by rather than Acked-by.)
 > 
-> Is there any specific reason to use vmalloc for the size of 4K?
+> I'm not a co-author of this patch.
+> 
 
-data is passed onto dev_coredumpv
-which takes ownership of the memory
-and would eventually do a vfree of the
-data.
+from Documentation/process/submitting-patches.rst:
 
-> 
-> Thanks,
-> Mani
-> 
->> +	if (!data)
->> +		return;
->> +
->> +	memcpy(data, qproc->mba_region, MBA_LOG_SIZE);
->> +	dev_coredumpv(&rproc->dev, data, MBA_LOG_SIZE, GFP_KERNEL);
->> +}
->> +
->>  static int q6v5proc_reset(struct q6v5 *qproc)
->>  {
->>  	u32 val;
->> @@ -838,6 +856,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
->>  {
->>  	int ret;
->>  	int xfermemop_ret;
->> +	bool mba_load_err = false;
->> 
->>  	qcom_q6v5_prepare(&qproc->q6v5);
->> 
->> @@ -931,7 +950,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
->>  	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
->>  	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
->>  	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
->> -
->> +	mba_load_err = true;
->>  reclaim_mba:
->>  	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, 
->> true,
->>  						false, qproc->mba_phys,
->> @@ -939,6 +958,8 @@ static int q6v5_mba_load(struct q6v5 *qproc)
->>  	if (xfermemop_ret) {
->>  		dev_err(qproc->dev,
->>  			"Failed to reclaim mba buffer, system may become unstable\n");
->> +	} else if (qproc->has_mba_logs & mba_load_err) {
->> +		q6v5_dump_mba_logs(qproc);
->>  	}
->> 
->>  disable_active_clks:
->> @@ -968,7 +989,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
->>  	return ret;
->>  }
->> 
->> -static void q6v5_mba_reclaim(struct q6v5 *qproc)
->> +static void q6v5_mba_reclaim(struct q6v5 *qproc, bool err_path)
->>  {
->>  	int ret;
->>  	u32 val;
->> @@ -1006,6 +1027,9 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
->>  				      qproc->mba_size);
->>  	WARN_ON(ret);
->> 
->> +	if (qproc->has_mba_logs && err_path && !ret)
->> +		q6v5_dump_mba_logs(qproc);
->> +
->>  	ret = qcom_q6v5_unprepare(&qproc->q6v5);
->>  	if (ret) {
->>  		q6v5_pds_disable(qproc, qproc->proxy_pds,
->> @@ -1255,7 +1279,7 @@ static void qcom_q6v5_dump_segment(struct rproc 
->> *rproc,
->>  						false, true,
->>  						qproc->mpss_phys,
->>  						qproc->mpss_size);
->> -			q6v5_mba_reclaim(qproc);
->> +			q6v5_mba_reclaim(qproc, false);
->>  		}
->>  	}
->>  }
->> @@ -1297,7 +1321,7 @@ static int q6v5_start(struct rproc *rproc)
->>  	return 0;
->> 
->>  reclaim_mpss:
->> -	q6v5_mba_reclaim(qproc);
->> +	q6v5_mba_reclaim(qproc, true);
->> 
->>  	return ret;
->>  }
->> @@ -1313,7 +1337,7 @@ static int q6v5_stop(struct rproc *rproc)
->>  	if (ret == -ETIMEDOUT)
->>  		dev_err(qproc->dev, "timed out on wait\n");
->> 
->> -	q6v5_mba_reclaim(qproc);
->> +	q6v5_mba_reclaim(qproc, false);
->> 
->>  	return 0;
->>  }
->> @@ -1717,6 +1741,7 @@ static int q6v5_probe(struct platform_device 
->> *pdev)
->> 
->>  	qproc->version = desc->version;
->>  	qproc->need_mem_protection = desc->need_mem_protection;
->> +	qproc->has_mba_logs = desc->has_mba_logs;
->> 
->>  	ret = qcom_q6v5_init(&qproc->q6v5, pdev, rproc, 
->> MPSS_CRASH_REASON_SMEM,
->>  			     qcom_msa_handover);
->> @@ -1808,6 +1833,7 @@ static const struct rproc_hexagon_res sc7180_mss 
->> = {
->>  	},
->>  	.need_mem_protection = true,
->>  	.has_alt_reset = false,
->> +	.has_mba_logs = true,
->>  	.has_spare_reg = true,
->>  	.version = MSS_SC7180,
->>  };
->> @@ -1843,6 +1869,7 @@ static const struct rproc_hexagon_res sdm845_mss 
->> = {
->>  	},
->>  	.need_mem_protection = true,
->>  	.has_alt_reset = true,
->> +	.has_mba_logs = true,
->>  	.has_spare_reg = false,
->>  	.version = MSS_SDM845,
->>  };
->> @@ -1870,6 +1897,7 @@ static const struct rproc_hexagon_res 
->> msm8998_mss = {
->>  	},
->>  	.need_mem_protection = true,
->>  	.has_alt_reset = false,
->> +	.has_mba_logs = false,
->>  	.has_spare_reg = false,
->>  	.version = MSS_MSM8998,
->>  };
->> @@ -1900,6 +1928,7 @@ static const struct rproc_hexagon_res 
->> msm8996_mss = {
->>  	},
->>  	.need_mem_protection = true,
->>  	.has_alt_reset = false,
->> +	.has_mba_logs = false,
->>  	.has_spare_reg = false,
->>  	.version = MSS_MSM8996,
->>  };
->> @@ -1933,6 +1962,7 @@ static const struct rproc_hexagon_res 
->> msm8916_mss = {
->>  	},
->>  	.need_mem_protection = false,
->>  	.has_alt_reset = false,
->> +	.has_mba_logs = false,
->>  	.has_spare_reg = false,
->>  	.version = MSS_MSM8916,
->>  };
->> @@ -1974,6 +2004,7 @@ static const struct rproc_hexagon_res 
->> msm8974_mss = {
->>  	},
->>  	.need_mem_protection = false,
->>  	.has_alt_reset = false,
->> +	.has_mba_logs = false,
->>  	.has_spare_reg = false,
->>  	.version = MSS_MSM8974,
->>  };
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
+The Signed-off-by: tag indicates that the signer was involved in the
+development of the patch, or that he/she was in the patch's delivery path.
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+~Randy
+
