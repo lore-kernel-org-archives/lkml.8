@@ -2,89 +2,165 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BD5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 881B92074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBAC2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgGPL0n (ORCPT
+        id S1728219AbgGPLWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:26:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62290 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726350AbgGPL0n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:26:43 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GB2Ipa100156;
-        Thu, 16 Jul 2020 07:26:38 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 329uejfmn9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 07:26:37 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GBPgFm009090;
-        Thu, 16 Jul 2020 11:26:35 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma02fra.de.ibm.com with ESMTP id 327527wnx8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 11:26:35 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GBQW4J18481230
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 11:26:32 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA41811C050;
-        Thu, 16 Jul 2020 11:26:32 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F12A11C04C;
-        Thu, 16 Jul 2020 11:26:32 +0000 (GMT)
-Received: from osiris (unknown [9.171.13.43])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Jul 2020 11:26:32 +0000 (GMT)
-Date:   Thu, 16 Jul 2020 13:26:30 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH -next] s390/mm: Convert to DEFINE_SHOW_ATTRIBUTE
-Message-ID: <20200716112630.GB8484@osiris>
-References: <20200716090703.14315-1-miaoqinglang@huawei.com>
+        Thu, 16 Jul 2020 07:22:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:60232 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbgGPLWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 07:22:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50BA91FB;
+        Thu, 16 Jul 2020 04:22:21 -0700 (PDT)
+Received: from [10.57.35.46] (unknown [10.57.35.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9D3C3F68F;
+        Thu, 16 Jul 2020 04:22:16 -0700 (PDT)
+Subject: Re: [PATCH 0/4] iommu/arm-smmu-v3: Improve cmdq lock efficiency
+To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>
+Cc:     joro@8bytes.org, trivial@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, maz@kernel.org
+References: <1592846920-45338-1-git-send-email-john.garry@huawei.com>
+ <20200716101940.GA7036@willie-the-truck>
+ <20200716102233.GC7036@willie-the-truck>
+ <20200716102814.GD7036@willie-the-truck>
+ <bd302efa-20d8-e1b3-6a80-db65ab5ad752@huawei.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <aef1e4a4-d594-f477-9029-8f4295bb9f6c@arm.com>
+Date:   Thu, 16 Jul 2020 12:22:05 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716090703.14315-1-miaoqinglang@huawei.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_05:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 spamscore=0 phishscore=0 adultscore=0
- suspectscore=1 mlxlogscore=999 clxscore=1011 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160084
+In-Reply-To: <bd302efa-20d8-e1b3-6a80-db65ab5ad752@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 05:07:03PM +0800, Qinglang Miao wrote:
-> From: Chen Huang <chenhuang5@huawei.com>
+On 2020-07-16 11:56, John Garry wrote:
+> On 16/07/2020 11:28, Will Deacon wrote:
+>> On Thu, Jul 16, 2020 at 11:22:33AM +0100, Will Deacon wrote:
+>>> On Thu, Jul 16, 2020 at 11:19:41AM +0100, Will Deacon wrote:
+>>>> On Tue, Jun 23, 2020 at 01:28:36AM +0800, John Garry wrote:
+>>>>> As mentioned in [0], the CPU may consume many cycles processing
+>>>>> arm_smmu_cmdq_issue_cmdlist(). One issue we find is the cmpxchg() 
+>>>>> loop to
+>>>>> get space on the queue takes approx 25% of the cycles for this 
+>>>>> function.
+>>>>>
+>>>>> This series removes that cmpxchg().
+>>>>
+>>>> How about something much simpler like the diff below? >>
+>>> Ah, scratch that, I don't drop the lock if we fail the cas with it held.
+>>> Let me hack it some more (I have no hardware so I can only build-test 
+>>> this).
+>>
+>> Right, second attempt...
 > 
-> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
-> 
-> Signed-off-by: Chen Huang <chenhuang5@huawei.com>
-> ---
->  arch/s390/mm/dump_pagetables.c | 12 +-----------
->  1 file changed, 1 insertion(+), 11 deletions(-)
+> I can try it, but if performance if not as good, then please check mine 
+> further (patch 4/4 specifically) - performance is really good, IMHO.
 
-Thanks for the patch, however we are going to convert the s390 page
-table dumper to generic code, so I'm not going to apply any cleanup
-patches for this code anymore.
+Perhaps a silly question (I'm too engrossed in PMU world ATM to get 
+properly back up to speed on this), but couldn't this be done without 
+cmpxchg anyway? Instinctively it feels like instead of maintaining a 
+literal software copy of the prod value, we could resolve the "claim my 
+slot in the queue" part with atomic_fetch_add on a free-running 32-bit 
+"pseudo-prod" index, then whoever updates the hardware deals with the 
+truncation and wrap bit to convert it to an actual register value.
+
+Robin.
+
+> 
+> Thanks,
+> 
+>>
+>> Will
+>>
+>> --->8
+>>
+>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+>> index f578677a5c41..e6bcddd6ef69 100644
+>> --- a/drivers/iommu/arm-smmu-v3.c
+>> +++ b/drivers/iommu/arm-smmu-v3.c
+>> @@ -560,6 +560,7 @@ struct arm_smmu_cmdq {
+>>       atomic_long_t            *valid_map;
+>>       atomic_t            owner_prod;
+>>       atomic_t            lock;
+>> +    spinlock_t            slock;
+>>   };
+>>   struct arm_smmu_cmdq_batch {
+>> @@ -1378,7 +1379,7 @@ static int arm_smmu_cmdq_issue_cmdlist(struct 
+>> arm_smmu_device *smmu,
+>>       u64 cmd_sync[CMDQ_ENT_DWORDS];
+>>       u32 prod;
+>>       unsigned long flags;
+>> -    bool owner;
+>> +    bool owner, locked = false;
+>>       struct arm_smmu_cmdq *cmdq = &smmu->cmdq;
+>>       struct arm_smmu_ll_queue llq = {
+>>           .max_n_shift = cmdq->q.llq.max_n_shift,
+>> @@ -1387,27 +1388,38 @@ static int arm_smmu_cmdq_issue_cmdlist(struct 
+>> arm_smmu_device *smmu,
+>>       /* 1. Allocate some space in the queue */
+>>       local_irq_save(flags);
+>> -    llq.val = READ_ONCE(cmdq->q.llq.val);
+>>       do {
+>>           u64 old;
+>> +        llq.val = READ_ONCE(cmdq->q.llq.val);
+>> -        while (!queue_has_space(&llq, n + sync)) {
+>> +        if (queue_has_space(&llq, n + sync))
+>> +            goto try_cas;
+>> +
+>> +        if (locked)
+>> +            spin_unlock(&cmdq->slock);
+>> +
+>> +        do {
+>>               local_irq_restore(flags);
+>>               if (arm_smmu_cmdq_poll_until_not_full(smmu, &llq))
+>>                   dev_err_ratelimited(smmu->dev, "CMDQ timeout\n");
+>>               local_irq_save(flags);
+>> -        }
+>> +        } while (!queue_has_space(&llq, n + sync));
+>> +try_cas:
+>>           head.cons = llq.cons;
+>>           head.prod = queue_inc_prod_n(&llq, n + sync) |
+>>                            CMDQ_PROD_OWNED_FLAG;
+>>           old = cmpxchg_relaxed(&cmdq->q.llq.val, llq.val, head.val);
+>> -        if (old == llq.val)
+>> +        if (old != llq.val)
+>>               break;
+>> -        llq.val = old;
+>> +        if (!locked) {
+>> +            spin_lock(&cmdq->slock);
+>> +            locked = true;
+>> +        }
+>>       } while (1);
+>> +
+>>       owner = !(llq.prod & CMDQ_PROD_OWNED_FLAG);
+>>       head.prod &= ~CMDQ_PROD_OWNED_FLAG;
+>>       llq.prod &= ~CMDQ_PROD_OWNED_FLAG;
+>> @@ -3192,6 +3204,7 @@ static int arm_smmu_cmdq_init(struct 
+>> arm_smmu_device *smmu)
+>>       atomic_set(&cmdq->owner_prod, 0);
+>>       atomic_set(&cmdq->lock, 0);
+>> +    spin_lock_init(&cmdq->slock);
+>>       bitmap = (atomic_long_t *)bitmap_zalloc(nents, GFP_KERNEL);
+>>       if (!bitmap) {
+>> .
+>>
+> 
