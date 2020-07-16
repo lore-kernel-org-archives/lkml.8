@@ -2,99 +2,333 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93204C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66FDC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6615A2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:28:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bcULIolJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8A76A20899
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgGPT2T (ORCPT
+        id S1729585AbgGPT2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:28:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728788AbgGPT2S (ORCPT
+        Thu, 16 Jul 2020 15:28:32 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:55255 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728788AbgGPT2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:28:18 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FD5C061755;
-        Thu, 16 Jul 2020 12:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IOn9jn/LD/uPdbpUIc5mamK0HBeBMrztqWjIYaVOAJk=; b=bcULIolJSykGr9P6OD5+DbAiJO
-        DXIuSiCxFaI5KbZpFylox1U4fRbabImPxYJnmU8UCAk5ffMErIt8IibTkK/Mnh1pKoqLN4vnvwqBw
-        dNvL8P82Cqf7SeUV/f5VDHgfWkCEo3TgZ1dY6I/2Ua2THPduX1l+8J6uWV/pmNGgrsaTOJcpWNc+z
-        kCoWJTIodpevv7KchVAx8KfM7s1oij4MKZuS0N8oS41B/szpTtjUa6AKF6Ke7TN3JIHIgUhUsJtcY
-        ryDj5Zae8ko/LnaTtsuQklpxJ/Z5CW70Xq30QXr+7XN1iQosPJc/0tuwyK24mlpGG8bMANah6hRM+
-        I/jPRXnA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jw9Y4-00019A-RZ; Thu, 16 Jul 2020 19:28:05 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EAC613007CD;
-        Thu, 16 Jul 2020 21:28:01 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9B063203C0A4C; Thu, 16 Jul 2020 21:28:01 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 21:28:01 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
-Message-ID: <20200716192801.GU10769@hirez.programming.kicks-ass.net>
-References: <2df7ca7f-7e26-c916-b6ac-4ec1913fb8d7@physik.fu-berlin.de>
- <CAMuHMdXjfq=RjJ2doR7XyQMnZUA8ccxKc7_tyUzTX29tpyZojw@mail.gmail.com>
- <20200716094039.GQ10769@hirez.programming.kicks-ass.net>
- <20200716102934.GC43129@hirez.programming.kicks-ass.net>
- <f4fcb2e7-eca3-9a70-8e32-e3bf341b62eb@physik.fu-berlin.de>
- <20200716110146.GB119549@hirez.programming.kicks-ass.net>
- <008b06d4-1edd-1610-2ee1-6ea402d06114@physik.fu-berlin.de>
- <20200716113720.GC119549@hirez.programming.kicks-ass.net>
- <20200716120440.GD43129@hirez.programming.kicks-ass.net>
- <a2e39d5a-77e9-3038-f117-a33353e93f34@physik.fu-berlin.de>
+        Thu, 16 Jul 2020 15:28:31 -0400
+Received: from localhost.localdomain ([93.22.39.121])
+        by mwinf5d33 with ME
+        id 3vUS2300U2cqCS503vUTT8; Thu, 16 Jul 2020 21:28:28 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 16 Jul 2020 21:28:28 +0200
+X-ME-IP: 93.22.39.121
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     davem@davemloft.net, kuba@kernel.org, hkallweit1@gmail.com,
+        mst@redhat.com, vaibhavgupta40@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] net: sungem: switch from 'pci_' to 'dma_' API
+Date:   Thu, 16 Jul 2020 21:28:21 +0200
+Message-Id: <20200716192821.321233-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a2e39d5a-77e9-3038-f117-a33353e93f34@physik.fu-berlin.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 08:14:38PM +0200, John Paul Adrian Glaubitz wrote:
-> Hi Peter!
-> 
-> On 7/16/20 2:04 PM, peterz@infradead.org wrote:
-> > On Thu, Jul 16, 2020 at 01:37:20PM +0200, peterz@infradead.org wrote:
-> >> $ /opt/cross/bin/sh4-linux-gcc --version
-> >> sh4-linux-gcc (GCC) 10.1.0
-> > 
-> > $ git checkout origin/master # linus' tree
-> > $ mkdir sh-defconfig
-> > $ make O=sh-defconfig/ ARCH=sh CROSS_COMPILE=/opt/cross/bin/sh4-linux- defconfig # shx3_defconfig
-> > $ make O=sh-defconfig/ ARCH=sh CROSS_COMPILE=/opt/cross/bin/sh4-linux- -j80
-> > 
-> > insane stream of errors
-> 
-> I assume it's a problem with your toolchain. I will try to reproduce it tonight
-> or tomorrow.
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-For some reason I had a whole bunch of junk left in my checkout and had
-to basically: rm `git status -s | awk '{print $2}'`.
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
 
-Sorry for the noise.
+When memory is allocated in 'gem_init_one()', GFP_KERNEL can be used
+because it is a probe function and no lock is acquired.
 
-OK, let me go try my own patches :-)
+
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
+
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
+
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
+
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/net/ethernet/sun/sungem.c | 53 ++++++++++++++++---------------
+ 1 file changed, 27 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/net/ethernet/sun/sungem.c b/drivers/net/ethernet/sun/sungem.c
+index 0e9d2cf7979b..eeb8518c8a84 100644
+--- a/drivers/net/ethernet/sun/sungem.c
++++ b/drivers/net/ethernet/sun/sungem.c
+@@ -670,7 +670,8 @@ static __inline__ void gem_tx(struct net_device *dev, struct gem *gp, u32 gem_st
+ 			dma_addr = le64_to_cpu(txd->buffer);
+ 			dma_len = le64_to_cpu(txd->control_word) & TXDCTRL_BUFSZ;
+ 
+-			pci_unmap_page(gp->pdev, dma_addr, dma_len, PCI_DMA_TODEVICE);
++			dma_unmap_page(&gp->pdev->dev, dma_addr, dma_len,
++				       DMA_TO_DEVICE);
+ 			entry = NEXT_TX(entry);
+ 		}
+ 
+@@ -809,16 +810,15 @@ static int gem_rx(struct gem *gp, int work_to_do)
+ 				drops++;
+ 				goto drop_it;
+ 			}
+-			pci_unmap_page(gp->pdev, dma_addr,
+-				       RX_BUF_ALLOC_SIZE(gp),
+-				       PCI_DMA_FROMDEVICE);
++			dma_unmap_page(&gp->pdev->dev, dma_addr,
++				       RX_BUF_ALLOC_SIZE(gp), DMA_FROM_DEVICE);
+ 			gp->rx_skbs[entry] = new_skb;
+ 			skb_put(new_skb, (gp->rx_buf_sz + RX_OFFSET));
+-			rxd->buffer = cpu_to_le64(pci_map_page(gp->pdev,
++			rxd->buffer = cpu_to_le64(dma_map_page(&gp->pdev->dev,
+ 							       virt_to_page(new_skb->data),
+ 							       offset_in_page(new_skb->data),
+ 							       RX_BUF_ALLOC_SIZE(gp),
+-							       PCI_DMA_FROMDEVICE));
++							       DMA_FROM_DEVICE));
+ 			skb_reserve(new_skb, RX_OFFSET);
+ 
+ 			/* Trim the original skb for the netif. */
+@@ -833,9 +833,11 @@ static int gem_rx(struct gem *gp, int work_to_do)
+ 
+ 			skb_reserve(copy_skb, 2);
+ 			skb_put(copy_skb, len);
+-			pci_dma_sync_single_for_cpu(gp->pdev, dma_addr, len, PCI_DMA_FROMDEVICE);
++			dma_sync_single_for_cpu(&gp->pdev->dev, dma_addr, len,
++						DMA_FROM_DEVICE);
+ 			skb_copy_from_linear_data(skb, copy_skb->data, len);
+-			pci_dma_sync_single_for_device(gp->pdev, dma_addr, len, PCI_DMA_FROMDEVICE);
++			dma_sync_single_for_device(&gp->pdev->dev, dma_addr,
++						   len, DMA_FROM_DEVICE);
+ 
+ 			/* We'll reuse the original ring buffer. */
+ 			skb = copy_skb;
+@@ -1020,10 +1022,10 @@ static netdev_tx_t gem_start_xmit(struct sk_buff *skb,
+ 		u32 len;
+ 
+ 		len = skb->len;
+-		mapping = pci_map_page(gp->pdev,
++		mapping = dma_map_page(&gp->pdev->dev,
+ 				       virt_to_page(skb->data),
+ 				       offset_in_page(skb->data),
+-				       len, PCI_DMA_TODEVICE);
++				       len, DMA_TO_DEVICE);
+ 		ctrl |= TXDCTRL_SOF | TXDCTRL_EOF | len;
+ 		if (gem_intme(entry))
+ 			ctrl |= TXDCTRL_INTME;
+@@ -1046,9 +1048,10 @@ static netdev_tx_t gem_start_xmit(struct sk_buff *skb,
+ 		 * Otherwise we could race with the device.
+ 		 */
+ 		first_len = skb_headlen(skb);
+-		first_mapping = pci_map_page(gp->pdev, virt_to_page(skb->data),
++		first_mapping = dma_map_page(&gp->pdev->dev,
++					     virt_to_page(skb->data),
+ 					     offset_in_page(skb->data),
+-					     first_len, PCI_DMA_TODEVICE);
++					     first_len, DMA_TO_DEVICE);
+ 		entry = NEXT_TX(entry);
+ 
+ 		for (frag = 0; frag < skb_shinfo(skb)->nr_frags; frag++) {
+@@ -1574,9 +1577,9 @@ static void gem_clean_rings(struct gem *gp)
+ 		if (gp->rx_skbs[i] != NULL) {
+ 			skb = gp->rx_skbs[i];
+ 			dma_addr = le64_to_cpu(rxd->buffer);
+-			pci_unmap_page(gp->pdev, dma_addr,
++			dma_unmap_page(&gp->pdev->dev, dma_addr,
+ 				       RX_BUF_ALLOC_SIZE(gp),
+-				       PCI_DMA_FROMDEVICE);
++				       DMA_FROM_DEVICE);
+ 			dev_kfree_skb_any(skb);
+ 			gp->rx_skbs[i] = NULL;
+ 		}
+@@ -1598,9 +1601,9 @@ static void gem_clean_rings(struct gem *gp)
+ 
+ 				txd = &gb->txd[ent];
+ 				dma_addr = le64_to_cpu(txd->buffer);
+-				pci_unmap_page(gp->pdev, dma_addr,
++				dma_unmap_page(&gp->pdev->dev, dma_addr,
+ 					       le64_to_cpu(txd->control_word) &
+-					       TXDCTRL_BUFSZ, PCI_DMA_TODEVICE);
++					       TXDCTRL_BUFSZ, DMA_TO_DEVICE);
+ 
+ 				if (frag != skb_shinfo(skb)->nr_frags)
+ 					i++;
+@@ -1637,11 +1640,11 @@ static void gem_init_rings(struct gem *gp)
+ 
+ 		gp->rx_skbs[i] = skb;
+ 		skb_put(skb, (gp->rx_buf_sz + RX_OFFSET));
+-		dma_addr = pci_map_page(gp->pdev,
++		dma_addr = dma_map_page(&gp->pdev->dev,
+ 					virt_to_page(skb->data),
+ 					offset_in_page(skb->data),
+ 					RX_BUF_ALLOC_SIZE(gp),
+-					PCI_DMA_FROMDEVICE);
++					DMA_FROM_DEVICE);
+ 		rxd->buffer = cpu_to_le64(dma_addr);
+ 		dma_wmb();
+ 		rxd->status_word = cpu_to_le64(RXDCTRL_FRESH(gp));
+@@ -2814,10 +2817,8 @@ static void gem_remove_one(struct pci_dev *pdev)
+ 		cancel_work_sync(&gp->reset_task);
+ 
+ 		/* Free resources */
+-		pci_free_consistent(pdev,
+-				    sizeof(struct gem_init_block),
+-				    gp->init_block,
+-				    gp->gblock_dvma);
++		dma_free_coherent(&pdev->dev, sizeof(struct gem_init_block),
++				  gp->init_block, gp->gblock_dvma);
+ 		iounmap(gp->regs);
+ 		pci_release_regions(pdev);
+ 		free_netdev(dev);
+@@ -2873,10 +2874,10 @@ static int gem_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	 */
+ 	if (pdev->vendor == PCI_VENDOR_ID_SUN &&
+ 	    pdev->device == PCI_DEVICE_ID_SUN_GEM &&
+-	    !pci_set_dma_mask(pdev, DMA_BIT_MASK(64))) {
++	    !dma_set_mask(&pdev->dev, DMA_BIT_MASK(64))) {
+ 		pci_using_dac = 1;
+ 	} else {
+-		err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
++		err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
+ 		if (err) {
+ 			pr_err("No usable DMA configuration, aborting\n");
+ 			goto err_disable_device;
+@@ -2965,8 +2966,8 @@ static int gem_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	 * PAGE_SIZE aligned.
+ 	 */
+ 	gp->init_block = (struct gem_init_block *)
+-		pci_alloc_consistent(pdev, sizeof(struct gem_init_block),
+-				     &gp->gblock_dvma);
++		dma_alloc_coherent(&pdev->dev, sizeof(struct gem_init_block),
++				   &gp->gblock_dvma, GFP_KERNEL);
+ 	if (!gp->init_block) {
+ 		pr_err("Cannot allocate init block, aborting\n");
+ 		err = -ENOMEM;
+-- 
+2.25.1
+
