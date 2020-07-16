@@ -2,182 +2,124 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BA6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9AAC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC852074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952362063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bWozXJjW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W9vYm1Lw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgGPXls (ORCPT
+        id S1726832AbgGPXmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:41:48 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:7110 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgGPXlS (ORCPT
+        Thu, 16 Jul 2020 19:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbgGPXmi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:41:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594942877; x=1626478877;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/BM/mH4XsaV/6iCpj8IfqSeogZjHIyxg63ZlS/DCX0c=;
-  b=bWozXJjWX/dLxTFMipke3XG5IhtTUqj4XSYdvBgzXvnjtIcpgjL4Pl6+
-   9hbkSYLDgYSh8eINSJdS9rI5SGi/mHKXsHyv0xN2wkM5sDjDwE8vBGLUV
-   /TkDZZVy/FZWF90xre1wjNkC2Fxz4JT44vJyLOXBZNwvN9AiKYXP5U0c9
-   2CgzfgkUh++BtruY5kcXCtGJjgYBkohLLaAfyhUzElyDe3SK/KI0jueN4
-   c1jjn1BH0v9QK9g9b1Cw9KJ9LVb/EIRKYO3+lxPAtRIhRFxYlyPujFjls
-   KbVPqeibev9Vpb790t+BO1hGBebUFCQCQ78tA6oWqzJ2CcIXnHrhPUefj
-   g==;
-IronPort-SDR: E1qMwgvkhJXXAEncXXncfyJ4a/P1BjVROU9A+TlcQ1cgvLxTAOC2ei+mesUBZRCuIWr/FEQVqF
- NfzQOA25+ohKVCme4k5FGKJO7TZ1zTPRI7LpQ3uCm8Vkfw0iBKcgNUc0pKMSOiJOYeHkLomYs9
- bzWN2p8VDrlCxz2qoVlVz9nBgBdboRAdeL2AdUJeS8pDXZCxI1Z8xR/dJbbUdWquxLg+Y+6h0j
- mhQjAzRPKadBgneGzBwzf1anJAuv4ORVTkQMU682LfzbK40kdkF3ptJ9e2sZmcKaUHBqk84Xvx
- fMw=
-X-IronPort-AV: E=Sophos;i="5.75,360,1589212800"; 
-   d="scan'208";a="251923207"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 17 Jul 2020 07:41:16 +0800
-IronPort-SDR: 59Rt/3fG9F5IciexHfeGgmO95EmL3uclDqx+YJIiaQPe1tLY5yFiFRaTMz+W/dmEzlO5BQfZBO
- N9aTNqnNjguHAlhjwMA5ySakMEJYFi/OE=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 16:29:40 -0700
-IronPort-SDR: 1+ar9xAJ3WTp7oABqVmJQP3GTHTux1IitmQm3mpW+sB48jlZAs+hJYRHCo86g6rEcJCK8R9Kxq
- CuVbwebNiq1g==
-WDCIronportException: Internal
-Received: from phd004806.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.54])
-  by uls-op-cesaip02.wdc.com with ESMTP; 16 Jul 2020 16:41:16 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Kees Cook <keescook@chromium.org>, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Will Deacon <will@kernel.org>, Zong Li <zong.li@sifive.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [RFT PATCH v3 3/9] RISC-V: Implement late mapping page table allocation functions
-Date:   Thu, 16 Jul 2020 16:40:58 -0700
-Message-Id: <20200716234104.29049-4-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200716234104.29049-1-atish.patra@wdc.com>
-References: <20200716234104.29049-1-atish.patra@wdc.com>
+        Thu, 16 Jul 2020 19:42:38 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7698C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:42:37 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d1so4605325plr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+CvHI04bee7ou84OwZFiCwpXnlzPN58BvC/9GjdJkKo=;
+        b=W9vYm1LwlJM95d17qeGx9zV4E+nImNdan0XM+3kJtATqoAFRaD5E2hFuYOhtOaZGZ5
+         FnpVe1QIyPA1FAkkVbWMvO/e13GdXRg6/mt1RnvlNZxibyhvNgjtyms/kRroqQG/LyQ8
+         e6n1WYaTz4HUpHfKVbB/IilJuKEeENNnnkhfMMUm3n9pceNp2MHSX9W60WztQ583k5xS
+         TEvmniXNQPKWB45FxZ7yYIvxaa6zO4hLxbR+tj2Ob0fa2OJ52akYZhEl2lsLgB4D7SOk
+         5XSEMszunLvRU3c2Ju7GK4I74ue1sm4mD1QbOq9QZFS//G3gUwBsVINGUIWIS/FedzZ+
+         V4VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+CvHI04bee7ou84OwZFiCwpXnlzPN58BvC/9GjdJkKo=;
+        b=fc5skexVc1gWXPyZB7yCn7Rv5ig8J3E6DM+1ps18QDEIL7dz7GqhhS/+PcgZ9ajAYN
+         w2XCqV9GBc+NV/kYu0F+HEDtlP5NpuCfZre7G2oS29qDv4DuJ5cfeHO1h9P1ZRj+spvp
+         B1hDXDegrm8Vwd+qAtTuGXQJHuRIdtID8rjOhXlkOZxKax2Mq7dgeVX/u0HoVkrLAN14
+         e/hoPEqppDNFX6NCsxvyrjdNb9ePhsa/fEkYe68kFy5UZev0M5EFj3uAYV6JCz0LEKYC
+         IvXG99Fzjih/STHUrbYrGq2fZtfy6dpz5WA79RdCdayc99oJSirPDdXSVrxqJ/xXnhit
+         B8IQ==
+X-Gm-Message-State: AOAM530P6hspDWXdlqFdOpy6g6n5allZd0+qWRJQXaTYkMrMIzT5wy+R
+        949sFsGaE9Mt/ab3QWno6VaGoQ==
+X-Google-Smtp-Source: ABdhPJxmftRI2/TXZH5UmgckYK3a26ACKc4ckDTkV3rSoYQpJAj7FgJW2jBK5gtFwQNFFLX3lsM0pg==
+X-Received: by 2002:a17:90a:c28f:: with SMTP id f15mr7340552pjt.72.1594942957244;
+        Thu, 16 Jul 2020 16:42:37 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i132sm5862078pfe.9.2020.07.16.16.42.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 16:42:36 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 16:40:34 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        evgreen@chromium.org, dianders@chromium.org,
+        pillair@codeaurora.org, robh+dt@kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Move the fixed-perm property
+ to SoC dtsi
+Message-ID: <20200716234034.GG1218486@builder.lan>
+References: <20200716191746.23196-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716191746.23196-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, page table setup is done during setup_va_final where fixmap can
-be used to create the temporary mappings. The physical frame is allocated
-from memblock_alloc_* functions. However, this won't work if page table
-mapping needs to be created for a different mm context (i.e. efi mm) at
-a later point of time.
+On Thu 16 Jul 12:17 PDT 2020, Sibi Sankar wrote:
 
-Use generic kernel page allocation function & macros for any mapping
-after setup_vm_final.
+> All the platforms using SC7180 SoC are expected to have the wlan firmware
+> memory statically mapped by the Trusted Firmware. Hence move back the
+> qcom,msa-fixed-perm property to the SoC dtsi.
+> 
+> Fixes: 7d484566087c0 ("arm64: dts: qcom: sc7180: Add missing properties for Wifi node")
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/mm/init.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+Thank you, applied.
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 62c90161765f..9f3129c76985 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -209,6 +209,7 @@ pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
- pgd_t trampoline_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
- pte_t fixmap_pte[PTRS_PER_PTE] __page_aligned_bss;
- static bool mmu_enabled;
-+static bool late_mapping;
- 
- #define MAX_EARLY_MAPPING_SIZE	SZ_128M
- 
-@@ -233,7 +234,9 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
- 
- static pte_t *__init get_pte_virt(phys_addr_t pa)
- {
--	if (mmu_enabled) {
-+	if (late_mapping)
-+		return (pte_t *) __va(pa);
-+	else if (mmu_enabled) {
- 		clear_fixmap(FIX_PTE);
- 		return (pte_t *)set_fixmap_offset(FIX_PTE, pa);
- 	} else {
-@@ -243,13 +246,19 @@ static pte_t *__init get_pte_virt(phys_addr_t pa)
- 
- static phys_addr_t __init alloc_pte(uintptr_t va)
- {
-+	unsigned long vaddr;
- 	/*
- 	 * We only create PMD or PGD early mappings so we
- 	 * should never reach here with MMU disabled.
- 	 */
- 	BUG_ON(!mmu_enabled);
--
--	return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
-+	if (late_mapping) {
-+		vaddr = __get_free_page(GFP_KERNEL);
-+		if (!vaddr || !pgtable_pte_page_ctor(virt_to_page(vaddr)))
-+			BUG();
-+		return __pa(vaddr);
-+	} else
-+		return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
- }
- 
- static void __init create_pte_mapping(pte_t *ptep,
-@@ -278,7 +287,9 @@ pmd_t early_pmd[PTRS_PER_PMD * NUM_EARLY_PMDS] __initdata __aligned(PAGE_SIZE);
- 
- static pmd_t *__init get_pmd_virt(phys_addr_t pa)
- {
--	if (mmu_enabled) {
-+	if (late_mapping)
-+		return (pmd_t *) __va(pa);
-+	else if (mmu_enabled) {
- 		clear_fixmap(FIX_PMD);
- 		return (pmd_t *)set_fixmap_offset(FIX_PMD, pa);
- 	} else {
-@@ -289,8 +300,13 @@ static pmd_t *__init get_pmd_virt(phys_addr_t pa)
- static phys_addr_t __init alloc_pmd(uintptr_t va)
- {
- 	uintptr_t pmd_num;
-+	unsigned long vaddr;
- 
--	if (mmu_enabled)
-+	if (late_mapping) {
-+		vaddr = __get_free_page(GFP_KERNEL);
-+		BUG_ON(!vaddr);
-+		return __pa(vaddr);
-+	} else if (mmu_enabled)
- 		return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
- 
- 	pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
-@@ -528,6 +544,9 @@ static void __init setup_vm_final(void)
- 	/* Move to swapper page table */
- 	csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
- 	local_flush_tlb_all();
-+
-+	/* generic page allocation function must be used to setup page table */
-+	late_mapping = true;
- }
- #else
- void *dtb_early_va __initdata;
--- 
-2.24.0
-
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 1 -
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 1 +
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 860fc4658b8b1..26cc4913d3ddc 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -392,7 +392,6 @@ video-firmware {
+>  
+>  &wifi {
+>  	status = "okay";
+> -	qcom,msa-fixed-perm;
+>  	vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
+>  	vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
+>  	vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 126e2fce26c1a..a91d3f074625e 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -3233,6 +3233,7 @@ wifi: wifi@18800000 {
+>  				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
+>  				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
+>  			memory-region = <&wlan_mem>;
+> +			qcom,msa-fixed-perm;
+>  			status = "disabled";
+>  		};
+>  	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
