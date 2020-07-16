@@ -2,197 +2,134 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BD4C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCBCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AACE92074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:27:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnJd5dGa"
+	by mail.kernel.org (Postfix) with ESMTP id 5452120775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:28:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594898905;
+	bh=NmaDjWnidDv8ZRl7yVZMR6adac4yMJAr86FhFbJ4wqw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AlqEL/0bhzdWdIUVpkfM3vJigNSLKMEgA9gg5HWXKMjKHl3wW+tzTr3jQ075qRQiP
+	 9hwNYq3d0cJa7zFdpsVmp3ev1pUpBaytY0OAtwYlEfZLvha5jB5INPSxXezaqgabYZ
+	 Sgmh3CgKPXMzH0zpuIa7H5z+lirnejjQaQgJiv2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgGPL1m (ORCPT
+        id S1728317AbgGPL2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbgGPL1i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:27:38 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF04C061755;
-        Thu, 16 Jul 2020 04:27:38 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id p15so4687856ilh.13;
-        Thu, 16 Jul 2020 04:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r1Nbw723xRe0D2BBkUXpJ7ShezLnvTtLnosvWdL1Azg=;
-        b=AnJd5dGaykfwBK08S9lQ0poe3iNdNYwMyMBOl8233ingMIsplvheDpIsF9NBiyvME5
-         perMgBJB1kfnDh3AOpAuSFJOXg7Q6q8UnOo15c9CtCVmShd4xNKos/371dpew/q38lrp
-         MFtLc4T/W7s3xM0TD8TY2IY11PcezPW19LFo+SKs2BzLhYb0bBVp2sWAClmoa5YLRKyP
-         DsmTeN2cLpDJ/p6oGFvae8oekGjCc0blhTULpGDYptryLbEb2Ph8Ad3NOcpNGNGunmc0
-         7ZNhYz0FlWRbaJSvhkz2FSONHaCy6K8npyL0jlvuIajPpwap75DKhAJ1/UaH2+FaaYXH
-         g89A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r1Nbw723xRe0D2BBkUXpJ7ShezLnvTtLnosvWdL1Azg=;
-        b=PeZfUxMY+IE7Lp7Nslg9FENPwVLthlOFuzP4wCjdFPu5wa2TBIMechal3iGDO72+Hv
-         N1ofryzXjpYLf7Kg4iXYO07AzVTtLVHEGYITuGNTYTIqAqNZR5ScLRaEGEiBv0UltS40
-         DRwQxl9MKC/CRD2ULxfTyYoqQgdh9OSEntaZHZjOQdRTlXQ45CO3gSC+oItbNqxa9pUR
-         adhvNRI9uwECi70CYyp931CHIf0ilq4bBQRk50tLklQU+WNttlRh9ih0JCqvh4cBQCL9
-         Ns8kmomf1twFO/1fz4BYxq2fNJBteH9u7O+5F2e24lXSgqBOEoIhkwdD+CZYpI7yRXCc
-         Ro1Q==
-X-Gm-Message-State: AOAM533urvCrubZUYOHdAj/MzinYtwOaU1zeMRkOJ0UsygTzwUMbiKD6
-        kcEGo0ScQ1z07q4J1OND0ZgPtNLJs3mW9xeS0lg=
-X-Google-Smtp-Source: ABdhPJx6MgANsHMj9B5Wb2FN8dd/SUw9STBAQjeDTAUHA2tFBS9y904MgD8pFIsE8i64R3pwaf88QZQH0nvkIBxOmZc=
-X-Received: by 2002:a92:5a52:: with SMTP id o79mr4043958ilb.89.1594898857518;
- Thu, 16 Jul 2020 04:27:37 -0700 (PDT)
+        Thu, 16 Jul 2020 07:28:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728145AbgGPL2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 07:28:23 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6974D2074B;
+        Thu, 16 Jul 2020 11:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594898902;
+        bh=NmaDjWnidDv8ZRl7yVZMR6adac4yMJAr86FhFbJ4wqw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=E7LA0cA68QUICdVkFR1WtGBQxmBEKl/7pjFJVXYq78eoCcVFDwuDOWctHUPqsrO9k
+         M3F9msSMFT3XlzLiQZOAlxz38jGOsygpzQ6mMxhxNbmasPSdZlUrvvdATSE33/YVW+
+         0qP55FUKJl9CQW+lF0gcLh0jQJaMhnQqNguCR1/c=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, linux-riscv@lists.infradead.org,
+        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Guo Ren <guoren@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Palmer Dabbelt <palmer@dabbelt.com>
+Subject: [PATCH] asm-generic/mmiowb: Allow mmiowb_set_pending() when preemptible()
+Date:   Thu, 16 Jul 2020 12:28:16 +0100
+Message-Id: <20200716112816.7356-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200617120510.25071-1-aford173@gmail.com> <CAMuHMdWjpyi6QiGTHkwXcepMzP8hN7MkXSJ=Xnxn40VkRU9OXg@mail.gmail.com>
- <CAHCN7xJWbP16SA-Ok-5syNnqOZAt8OFJo2_rtg5VrNVsN2-eiQ@mail.gmail.com>
- <CAHCN7xLygG5YRG0wt0b9JWW3PHDwMV_kiLRpJqPdSAx7gOoc9w@mail.gmail.com>
- <CAMuHMdWzcKa1xXdQ8W=fmjTKvPRN68GNVhBi4pFD5OW1_R_aAw@mail.gmail.com>
- <159485990993.1987609.15025594064431049459@swboyd.mtv.corp.google.com> <CAMuHMdVEVNOex0uk1Ko0rghskmephYWGe49e4hUbbfdgSUBCtQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdVEVNOex0uk1Ko0rghskmephYWGe49e4hUbbfdgSUBCtQ@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Thu, 16 Jul 2020 06:27:26 -0500
-Message-ID: <CAHCN7xJ3ccwQtieUA-8gXAitQaTvuF=DrX-UW1hhhPcjr=tr0g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-        <devicetree@vger.kernel.org>, Linux Kernel Mailing List" 
-        <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 2:39 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Stephen,
->
-> On Thu, Jul 16, 2020 at 2:38 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> > Quoting Geert Uytterhoeven (2020-07-13 05:45:00)
-> > > On Thu, Jul 9, 2020 at 12:00 AM Adam Ford <aford173@gmail.com> wrote:
-> > > > On Wed, Jul 8, 2020 at 4:53 PM Adam Ford <aford173@gmail.com> wrote:
-> > > > > On Mon, Jun 22, 2020 at 8:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > > On Wed, Jun 17, 2020 at 2:05 PM Adam Ford <aford173@gmail.com> wrote:
-> > > > > > > Beacon EmebddedWorks, formerly Logic PD is introducing a new
-> > > > > > > SOM and development kit based on the RZ/G2M SoC from Renesas.
-> > > > > > >
-> > > > > > > The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
-> > > > > > > cellular radio.
-> > > > > > >
-> > > > > > > The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
-> > > > > > > along with a vareity of push buttons and LED's.
-> > >
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
-> > > > > > > @@ -0,0 +1,733 @@
-> > > > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > > > +/*
-> > > > > > > + * Copyright 2020, Compass Electronics Group, LLC
-> > > > > > > + */
-> > > > > > > +
-> > > > > > > +#include <dt-bindings/gpio/gpio.h>
-> > > > > > > +#include <dt-bindings/input/input.h>
-> > > > > > > +#include <dt-bindings/clk/versaclock.h>
-> > > > > >
-> > > > > > This depends on "[PATCH V3 2/3] dt: Add additional option bindings for
-> > > > > > IDT VersaClock", which hasn't been accepted yet, AFAIK.
-> > > >
-> > > > Geert,
-> > > >
-> > > > I forgot to ask.  What is the protocol for something when new bindings
-> > > > have been accepted in one branch, but another branch where I want to
-> > > > reference them hasn't merged with the other branch?  I'd really like
-> > > > to get this board into the next kernel.  I could remove these
-> > > > references and the calling functions, but that may cause instability
-> > > > due to undefined behaviour of some of the versaclock functions because
-> > > > they are not programmed.
-> > >
-> > > As soon as a binding update has been accepted into the maintainer's
-> > > for-next branch, I happily accept DTS patches that start using it,
-> > > unless doing so would introduce a regression.
-> > > In this case, it's not a pure binding update, but also an update to
-> > > binding definitions in a header file, thus creating a hard dependency.
-> > > Usually this is mitigated by committing the header file change to an
-> > > immutable branch, to be shared by driver and DTS, and to be pulled by
-> > > all maintainers affected by the dependency.
-> > >
-> > > As Stephen has already applied the binding update to his clk-next
-> > > branch, it's too late to go for the immutable branch approach.  Hence
-> > > the simplest solution would be to postpone your DTS patch to v5.10.
-> > >
-> > > > However, I would rather have the board mostly work if it means getting
-> > > > it accepted into the kernel.  Beacon hasn't shipped any outside of the
-> > > > company yet, so I am not really worried about people seeing problems.
-> > > > If the board gets accepted without these, I could apply some 'fixes'
-> > > > at a late date to correct the undefined behavior.  Let me know what
-> > > > the best way to proceed should be, and I'll send a V2 patch.
-> > >
-> > > An alternative would be for me to cherry-pick commit 34662f6e30846ae0
-> > > ("dt: Add additional option bindings for IDT VersaClock") from the
-> > > clk-next branch into renesas-devel, before applying your patch.
-> > > While that would help you, it may introduce a merge conflict for
-> > > linux-next and for upstream later, as Luca has already posted multiple
-> > > patches for idt,versaclock5.txt, to fix typos and do the json-schema
-> > > conversion.  These may or may not land in v5.9.
-> > >
-> > > Stephen: what do you think?
-> > > Thanks!
-> > >
-> >
-> > Do you need to use something in clk-next as an immutable branch?
-> > Typically I don't rebase patches once applying to clk-next and all
-> > patches are put on topic branches in case something is needed in another
-> > tree. So you should be fine to pull the clk-vc5 branch (which is sort of
-> > busted) into your dts tree, or if you need the defines/numbers in the
->
-> busted?
->
+Although mmiowb() is concerned only with serialising MMIO writes occuring
+in contexts where a spinlock is held, the call to mmiowb_set_pending()
+from the MMIO write accessors can occur in preemptible contexts, such
+as during driver probe() functions where ordering between CPUs is not
+usually a concern, assuming that the task migration path provides the
+necessary ordering guarantees.
 
-I owe a fix for the VC5 driver, but I was focussed on getting the new
-dev kit pushed.  My goal is to have another revision of the fix pushed
-today.
+Unfortunately, the default implementation of mmiowb_set_pending() is not
+preempt-safe, as it makes use of a a per-cpu variable to track its
+internal state. This has been reported to generate the following splat
+on riscv:
 
-> > header file you can use the raw numbers and then replace them with the
-> > includes after -rc1.
->
-> Thanks, I forgot about the raw number solution, as it's been a while I
-> used that.  In the meantime we solved the issue by postponing the new
-> VC5 options.
-> Adam: if you still want to send a v4 using the raw numbers, feel free
-> to do so.
+ | BUG: using smp_processor_id() in preemptible [00000000] code: swapper/0/1
+ | caller is regmap_mmio_write32le+0x1c/0x46
+ | CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-hfu+ #1
+ | Call Trace:
+ |  walk_stackframe+0x0/0x7a
+ |  dump_stack+0x6e/0x88
+ |  regmap_mmio_write32le+0x18/0x46
+ |  check_preemption_disabled+0xa4/0xaa
+ |  regmap_mmio_write32le+0x18/0x46
+ |  regmap_mmio_write+0x26/0x44
+ |  regmap_write+0x28/0x48
+ |  sifive_gpio_probe+0xc0/0x1da
 
-It's in the queue now, so I'll hold off.  I have a few other fires to
-put out before the end of the week.
+Although it's possible to fix the driver in this case, other splats have
+been seen from other drivers, including the infamous 8250 UART, and so
+it's better to address this problem in the mmiowb core itself.
 
-thanks,
+Fix mmiowb_set_pending() by using the raw_cpu_ptr() to get at the mmiowb
+state and then only updating the 'mmiowb_pending' field if we are not
+preemptible (i.e. we have a non-zero nesting count).
 
-adam
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Reported-by: Palmer Dabbelt <palmer@dabbelt.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+
+I can queue this in the arm64 tree as a fix, as I already have some other
+fixes targetting -rc6.
+
+ include/asm-generic/mmiowb.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/include/asm-generic/mmiowb.h b/include/asm-generic/mmiowb.h
+index 9439ff037b2d..5698fca3bf56 100644
+--- a/include/asm-generic/mmiowb.h
++++ b/include/asm-generic/mmiowb.h
+@@ -27,7 +27,7 @@
+ #include <asm/smp.h>
+ 
+ DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
+-#define __mmiowb_state()	this_cpu_ptr(&__mmiowb_state)
++#define __mmiowb_state()	raw_cpu_ptr(&__mmiowb_state)
+ #else
+ #define __mmiowb_state()	arch_mmiowb_state()
+ #endif	/* arch_mmiowb_state */
+@@ -35,7 +35,9 @@ DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
+ static inline void mmiowb_set_pending(void)
+ {
+ 	struct mmiowb_state *ms = __mmiowb_state();
+-	ms->mmiowb_pending = ms->nesting_count;
++
++	if (likely(ms->nesting_count))
++		ms->mmiowb_pending = ms->nesting_count;
+ }
+ 
+ static inline void mmiowb_spin_lock(void)
+-- 
+2.27.0.389.gc38d7665816-goog
+
