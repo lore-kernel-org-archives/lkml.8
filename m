@@ -2,115 +2,86 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16B4C43445
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD62C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8798F2137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594940979;
-	bh=oZQUIN0T3e/W14X1ipGHgVlqksyFRf0ot5zg7bunJLM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vLMkEX31SJBMxaFCG0cVXDTxJDB8rcHq6cM5/kLj6qj4YMSP+FysIXnYzu/bbdP5T
-	 1m54Djt4XwsmaXm64H9DBKOUvvmaadR8to7nY5jqqX8+Zi3Y7z3rGDmnvJSb3oXIYb
-	 4B3i9YpaRjkRP1q56ZcMOqJkTad9fmI6YXI844zw=
+	by mail.kernel.org (Postfix) with ESMTP id 8141D21532
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgGPXJh (ORCPT
+        id S1728112AbgGPXJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:09:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728028AbgGPXJW (ORCPT
+        Thu, 16 Jul 2020 19:09:43 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:38540 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgGPXJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:09:22 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB68EC08C5FD;
-        Thu, 16 Jul 2020 16:04:54 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id k23so8069059iom.10;
-        Thu, 16 Jul 2020 16:04:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eDT8ZBhNeJbznzfPJdQt1GGooj/iP+F7BcxCoXIsS98=;
-        b=ZO/ZUOOKENY4J7SKNW83pfoweXvjpCYUuMVcEOOM8350v42vBjpuim6/Z5Grl3HWrl
-         LQ/0XYZ9uSE8b8c1HOjVYq/AaFSu0bd5J28AfyLx/sEs2AygquWIXma6os8cTsLUsYHN
-         iEP6IfnxgTouvXt3p8JcIaQEFpXmdj00qamIY2IYAmcf3aoDh2EPWjMG+aJDy4VkQjUl
-         i4hAtJVulCm9a2vW++ZItkCB1T+El/LMxpgbX5rv3fQulQQFP5Ha79+Ubamb1hWACczk
-         /1T4YfE8r6gcfpWEcC43LNk/+siPwOrtZGoEb1wIjEAGtKI5WBKDO1eTzEgI1VyZ4fx/
-         OjYg==
-X-Gm-Message-State: AOAM530ClT62bp3RYyXQZGgW/EFfChGQDRjhvabAr2O5Dd+IDIxeXK20
-        po6Le+9qMXA681wW6IzjNw==
-X-Google-Smtp-Source: ABdhPJxtvwZsJGPyF4/aHmjE6iE0550P7hSG08wHNUdd2IYc9L30ABvSfVU3gTVaBW7qJaETeEmXVA==
-X-Received: by 2002:a05:6638:223:: with SMTP id f3mr7706474jaq.144.1594940693894;
-        Thu, 16 Jul 2020 16:04:53 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q2sm3358270ilp.82.2020.07.16.16.04.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 16:04:53 -0700 (PDT)
-Received: (nullmailer pid 3053333 invoked by uid 1000);
-        Thu, 16 Jul 2020 23:04:51 -0000
-Date:   Thu, 16 Jul 2020 17:04:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: uniphier-thermal: add minItems to
- socionext,tmod-calibration
-Message-ID: <20200716230451.GA3041278@bogus>
-References: <20200707102338.989660-1-yamada.masahiro@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707102338.989660-1-yamada.masahiro@socionext.com>
+        Thu, 16 Jul 2020 19:09:35 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06GMcUf3029747
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 16 Jul 2020 17:38:33 -0500
+Message-ID: <b1aa976cf9788ed7d2bf949b2b5e5e5b2e3f9776.camel@kernel.crashing.org>
+Subject: Re: [PATCH] powerpc/64: Fix an out of date comment about MMIO
+ ordering
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Will Deacon <willdeacon@google.com>
+Cc:     mpe@ellerman.id.au, paulus@samba.org, npiggin@gmail.com,
+        msuchanek@suse.de, tglx@linutronix.de, bigeasy@linutronix.de,
+        jniethe5@gmail.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Date:   Fri, 17 Jul 2020 08:38:29 +1000
+In-Reply-To: <20200716193820.1141936-1-palmer@dabbelt.com>
+References: <20200716193820.1141936-1-palmer@dabbelt.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 07:23:38PM +0900, Masahiro Yamada wrote:
-> As the description says, this property contains a pair of calibration
-> values. The number of items must be exactly 2.
+On Thu, 2020-07-16 at 12:38 -0700, Palmer Dabbelt wrote:
+> From: Palmer Dabbelt <palmerdabbelt@google.com>
 > 
-> Add minItems to check a too short property.
-> 
-> While I was here, I also added this property to the example because
-> this is the case in the real DT file,
-> arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> 
-> Also, fix the interrupt type (edge -> level) to align with the
-> real DT.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> This primitive has been renamed, but because it was spelled incorrectly in the
+> first place it must have escaped the fixup patch.  As far as I can tell this
+> logic is still correct: smp_mb__after_spinlock() uses the default smp_mb()
+> implementation, which is "sync" rather than "hwsync" but those are the same
+> (though I'm not that familiar with PowerPC).
+
+Typo ? That must be me ... :)
+
+Looks fine. Yes, sync and hwsync are the same (by opposition to lwsync
+which is lighter weight and doesn't order cache inhibited).
+
+Cheers,
+Ben.
+
+> Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 > ---
+>  arch/powerpc/kernel/entry_64.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  .../bindings/thermal/socionext,uniphier-thermal.yaml          | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> index 553c9dcdaeeb..57ffd0c4c474 100644
-> --- a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> @@ -29,6 +29,7 @@ properties:
->  
->    socionext,tmod-calibration:
->      $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 2
+> diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+> index b3c9f15089b6..7b38b4daca93 100644
+> --- a/arch/powerpc/kernel/entry_64.S
+> +++ b/arch/powerpc/kernel/entry_64.S
+> @@ -357,7 +357,7 @@ _GLOBAL(_switch)
+>  	 * kernel/sched/core.c).
+>  	 *
+>  	 * Uncacheable stores in the case of involuntary preemption must
+> -	 * be taken care of. The smp_mb__before_spin_lock() in __schedule()
+> +	 * be taken care of. The smp_mb__after_spinlock() in __schedule()
+>  	 * is implemented as hwsync on powerpc, which orders MMIO too. So
+>  	 * long as there is an hwsync in the context switch path, it will
+>  	 * be executed on the source CPU after the task has performed
 
-The intent was if minItems is not defined, then the default is the same 
-as maxItems. This is not the default for json-schema, so the tooling is 
-supposed to add it. But looking at processed-schema.yaml, it doesn't 
-seem to be happening for one case here. I'm working on a fix in the 
-tools.
-
-Rob
