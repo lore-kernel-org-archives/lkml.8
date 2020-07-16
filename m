@@ -2,154 +2,189 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E84C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14368C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E68F12071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E355A20849
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:42:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="KEtm/NyG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ryAs+iuZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgGPEm2 (ORCPT
+        id S1726190AbgGPEms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 00:42:28 -0400
-Received: from mail-eopbgr1410107.outbound.protection.outlook.com ([40.107.141.107]:19595
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725844AbgGPEm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 00:42:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SIjgIw/++zk6fGfjfHjnVdbXDgM+cmAh4vG/wTAApGZLquU+42lwKEdgdRsrqqhjCBueLq/erWhX0IzePddeMwbSiEKt6q+JpPztSdJA3+ViBmJNvKmLkiUHZ+Rgk6eBvK929gwHyC5SD3krDq4Srjh9yQ/3AGIaGMgzIdXzxjTfMYqon1KQ9wvgGIuhHv4d+Q/oNJWOQMLullok+f+qhgJlp+JqVJY0veuB/QxboozvRCunWuMO37IaAJFWIPmlslx+XiV6n/CxuVbVPfRqUV1H3Zmvw6iJc46eJwXeyeA9TeQ6bwINo3R7N0hOPZuVCaADsx7Pv/pacRoNxOJldw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7DVXuK7GGEsLWJlaOFlMVK7TjEgvAtSeGuZSvF7Sxeo=;
- b=fVUBFBXDvZ+zsperyvp9sRIkTCCLjcd1Tor9JQQ6j2T8WqjYcUcBQVLhzwImphhHR0dLOcGSRoxl3rVGPRiM8OLIzXlmzFTGs2rfsN7W37JYyhqWev4y68qAkSQvi4jrG/YYaz5vz4Q03eM7xGIDVrfC4LKjdH6d10jxBmG+m6tccNJ9jw9cEV7sPhERFQYO0I0OFajvs46p/2upeAu51pHdCkMxFeaFLUS9TCVrZshAUIDPvpmnm8YeTJSMC9zbp0azY8cZcUaaaagaCMh+a+VBCUCGuvzVTas/L8HeQEdHoPHUULpMfjXRy7x/QO/olMxAp1p8dNgCEZR75IzQkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Thu, 16 Jul 2020 00:42:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbgGPEms (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 00:42:48 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D7CFC061755;
+        Wed, 15 Jul 2020 21:42:47 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so9352471wmh.2;
+        Wed, 15 Jul 2020 21:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7DVXuK7GGEsLWJlaOFlMVK7TjEgvAtSeGuZSvF7Sxeo=;
- b=KEtm/NyGi5hK2HI9ojd+4gDXDjKMIKzBX9A6TTFPNS2MJFutbsUn8J1ixbc6kGNnXLoH1mg6zj/fzUEvgY6zidBeBv29UfIZ4n5HmLq8Q+Y7g0jsuLeLoed9tqcPP1v2fcqFAhzfR7+MT7OYuhkgvNSRcMIkF+6FCgkYKuIT8Hw=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
- by TYAPR01MB2671.jpnprd01.prod.outlook.com (2603:1096:404:8d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Thu, 16 Jul
- 2020 04:42:21 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3195.017; Thu, 16 Jul 2020
- 04:42:21 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
-Thread-Topic: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
-Thread-Index: AQHWWV2MbTXg+hkXBUeG2IKsFpTIWqkGuXGAgAAF1ACAAAM3gIAALMKggAAVtICAAp3DYA==
-Date:   Thu, 16 Jul 2020 04:42:21 +0000
-Message-ID: <TY2PR01MB3692CFA8B51F91FB9735026FD87F0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV4zzrk_=-2Cmgq8=PKTeU457iveJ58gYekJ-Z8SXqaCQ@mail.gmail.com>
- <CA+V-a8tB0mA17f51GMQQ-Cj_CUXze_JjTahrpoAtmwuOFHQV6g@mail.gmail.com>
- <CAMuHMdXM3qf266exJtJrN0XAogEsJoM-k3FON9CjX+stLpuMFA@mail.gmail.com>
- <TY2PR01MB3692A868DD4E67D770C610E3D8610@TY2PR01MB3692.jpnprd01.prod.outlook.com>
- <CAMuHMdUry12MnLvVgmd7NJ+Gv4mA86qKKfsQobP1o-ohzKm=RQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdUry12MnLvVgmd7NJ+Gv4mA86qKKfsQobP1o-ohzKm=RQ@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux-m68k.org; dkim=none (message not signed)
- header.d=none;linux-m68k.org; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [240f:60:5f3e:1:999:df6f:dcad:bd95]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 86c67283-184a-47a2-e326-08d82942a0aa
-x-ms-traffictypediagnostic: TYAPR01MB2671:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB26710915A5EDF2C69467A2FBD87F0@TYAPR01MB2671.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: M4RkfSw2dSVC0Ylu4gbH8smqKZ1JZ5nYHnfx1DAInZC9j4sYADG5ObrAdZAMl3mtRkvB7OprMG3AJKRWYCSPyQ76yK9OCIEOOlbiYIOrq89jGyYAy/jhjFq2FXw0Y5HLUBvQcsPZ/mYMRGLiT46/sfCYFcll+3Gubt0TmwmaB2aGu/S0XpTlg0RhgJ7Rb1TdK3TI418OVdYSeJ5R8KucXEsBTBqlayvpdE+ZZoc7Qa8buA03KhcTTppzm2WnfGi5oXIg2sKr1F5lrMuvWH5v6V8zKkJ/WgfQt3E40jcDGXOz2iKZgN6XI6kqGMn78a3uE4d0EKM+7u+Z/+OOusn5GfT1zcfL5ijZuG/mREODedYd6NLBAdpzpma+L/m39peEmYPJaiub+wHgYbhjLKyW3A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(366004)(376002)(346002)(316002)(6916009)(76116006)(86362001)(66946007)(66446008)(71200400001)(7416002)(2906002)(66556008)(9686003)(54906003)(55016002)(64756008)(66476007)(8676002)(7696005)(4326008)(33656002)(5660300002)(52536014)(6506007)(53546011)(186003)(8936002)(478600001)(52103002)(158003001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: BZQ062kPob81tYpmM06yPo4OBfHiNnEJ8giVl1UFBgDYuTwdu7M5YZDWvNT5KJeG6pXVCLn55g5mkAYx36RmQ7E3Gjx0OnEPMaRdS0prhfvpi0cgwdSaiEVWnAC4QTLXzKh26CxPzOli4cH3RtaNZdNwfe+npuKrsc06/RtMLsQR4kwvpf2toLSEOcDp5moi0OQtvgABmYWwofNEgMXYEF/oYpnzfV09YU9ZZEukQ6T/6g6iuHLIHt5QzMXKrLXpvmnTfQ8tN4am/H9U7lLW/hjrsdZV36OrXh4G0AcTPjUY5d/TPBjG2cgkknHTbITbejmpl82xQAXVtMSnMuQA3WiLE3bIFbixhQkOIzZu9POrgGan7bls5VRycI3Q4itPixUwerBT064vBVH33/bSjNMwhaX3LJFXuRihuu86Ugr+FoBp+MqV90ODVcSmB2p6PV0SqVX9n8xy6+xOWDIvAAgjJPP0AqjrKgMJ2aTEhjmriXq/GH+8rMFedIHReEj5RQV62ow+H7Q9pvp1xFO06bTOo1sRUn5qDkbQS6GdVTE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=H2BpV1NO2gkfKzjkmWzHPaGPeCD37jRbwAmzGUUvtvg=;
+        b=ryAs+iuZxDdBOelrURzFuGPFnX8+vb2+bXhJ4s59n/Ar9hGvzuf9X3jxWHyxGP/wyR
+         Gwkn1PMk2u7J3dKg9zBJm2Gk6xJnrP+UuJdgtqJ7Y8JTnC0oR4W185OFScTPgkOMKSBK
+         rvygO506O+nKnk5TKi3WH4r/0yLcFhJsfm1FgsswH3HfhWjEzCk/AYt1xhSPAPYl0jIw
+         staBiW4w2WFxKG2lxGc6VCXXh+20cX24dpx5c7qX9dW70KqbPbvxzHqjTRNmStHtm/kq
+         LuxX7C2gVJSebBzp9gbJEN+rBoJQotkrXvTvBSK2S5XGlbcNlXW1WnV4UBbWk1pVOi2F
+         S0YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=H2BpV1NO2gkfKzjkmWzHPaGPeCD37jRbwAmzGUUvtvg=;
+        b=b/JF8ZO64jAcJBJCJvWCiNpcBaQN0rXpJwaF0u8u+ch4d5TTZGwrmJX8nFbSAr70J0
+         hJGUAHrb71+YTLnzz/WjG1thBU8oPVFoVa7OQ7wvimNCqXs6oMcLcKKZuPntZ4idOXrR
+         s6gatjMgzfmLYVg7P+FIFpG3oit6M1keiUNetUXSw9IJ+qNHx9Xi+m19b0+QzlfhvxSU
+         89iHKzbSTq9setfNy8auEreN4VXhBKuQ0X92SFtiQSz6j5wnNHq/AAPHx4ZJT0aothWJ
+         9mGctK0qoj64PScERmrzMlmVCQGFLjnkdJ/F/Q0exZepBOcg/OiWC6tZXWwMaJNUNaUf
+         1j4A==
+X-Gm-Message-State: AOAM53040vdZ9e8fxbslbzHzoIRx3DWRgrmI6nBcxu0v3Gc8OLQyjNDH
+        BIcdKvdkVkC7gvdJ0/fkkCjqwbFB
+X-Google-Smtp-Source: ABdhPJxZFpknsFk/eMkruNKL2oh7ijvzs4MWCRKjDl9HjyAuxw8OINhQvEieltyeeDR+RweU1Cs74g==
+X-Received: by 2002:a1c:1b0d:: with SMTP id b13mr2474312wmb.169.1594874566365;
+        Wed, 15 Jul 2020 21:42:46 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id 22sm6963529wmb.11.2020.07.15.21.42.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 21:42:45 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 14:42:38 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
+References: <20200710015646.2020871-1-npiggin@gmail.com>
+        <20200710015646.2020871-5-npiggin@gmail.com>
+        <CALCETrVqHDLo09HcaoeOoAVK8w+cNWkSNTLkDDU=evUhaXkyhQ@mail.gmail.com>
+        <1594613902.1wzayj0p15.astroid@bobo.none>
+        <1594647408.wmrazhwjzb.astroid@bobo.none>
+        <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com>
+        <1594868476.6k5kvx8684.astroid@bobo.none>
+In-Reply-To: <1594868476.6k5kvx8684.astroid@bobo.none>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86c67283-184a-47a2-e326-08d82942a0aa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 04:42:21.1420
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7z1K7SMbli5BPYc4Xt56Di64XGWfm2KzcRHuABMz1c2N0cl7vXzA/k6lasM5dL9KvKFVlSeE6tSb//WFbZoNg66zzlUpdTVp/8P+GlxDkXtAc3LE6MB0kjUCd+65XFIQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2671
+Message-Id: <1594873644.viept6os6j.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogVHVlc2Rh
-eSwgSnVseSAxNCwgMjAyMCA5OjQwIFBNDQo+IA0KPiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+IE9u
-IFR1ZSwgSnVsIDE0LCAyMDIwIGF0IDE6NDIgUE0gWW9zaGloaXJvIFNoaW1vZGENCj4gPHlvc2hp
-aGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiA+IEZyb206IEdlZXJ0IFV5
-dHRlcmhvZXZlbiwgU2VudDogVHVlc2RheSwgSnVseSAxNCwgMjAyMCA1OjQyIFBNDQo+ID4gPiBP
-biBUdWUsIEp1bCAxNCwgMjAyMCBhdCAxMDozMCBBTSBMYWQsIFByYWJoYWthcg0KPiA+ID4gPHBy
-YWJoYWthci5jc2VuZ2dAZ21haWwuY29tPiB3cm90ZToNCj4gPiA+ID4gT24gVHVlLCBKdWwgMTQs
-IDIwMjAgYXQgOTowOSBBTSBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3Jn
-PiB3cm90ZToNCj4gPiA+ID4gPiBPbiBNb24sIEp1bCAxMywgMjAyMCBhdCAxMTozNSBQTSBMYWQg
-UHJhYmhha2FyDQo+ID4gPiA+IEFsc28gdGhlIHJlY2VudCBwYXRjaCB0byBhZGQNCj4gPiA+ID4g
-InI4YTc3OTYxIiBqdXN0IGFkZHMgdG8gc29jX3JjYXJfZ2VuM193aGl0ZWxpc3QuDQo+ID4gPg0K
-PiA+ID4gT29wcywgY29tbWl0IDE3ZmUxNjE4MTYzOTgwMWIgKCJpb21tdS9yZW5lc2FzOiBBZGQg
-c3VwcG9ydCBmb3IgcjhhNzc5NjEiKQ0KPiA+ID4gZGlkIGl0IHdyb25nLCB0b28uDQo+ID4NCj4g
-PiBUaGFuayB5b3UgZm9yIHRoZSBwb2ludCBpdCBvdXQuIFdlIHNob3VsZCBhZGQgcjhhNzc5NjEg
-dG8gdGhlIHNvY19yY2FyX2dlbjNbXS4NCj4gPiBIb3dldmVyLCBJIGRvbid0IGtub3cgd2h5IEkg
-Y291bGQgbm90IHJlYWxpemUgdGhpcyBpc3N1ZS4uLg0KPiA+IFNvLCBJIGludmVzdGlnYXRlZCB0
-aGlzIGEgbGl0dGxlIGFuZCB0aGVuLCBJSVVDLCBnbG9iX21hdGNoKCkgd2hpY2gNCj4gPiBzb2Nf
-ZGV2aWNlX21hdGNoKCkgdXNlcyBzZWVtcyB0byByZXR1cm4gdHJ1ZSwgaWYgKnBhdCA9ICJyOGE3
-Nzk2IiBhbmQgKnN0ciA9ICJyOGE3Nzk2MSIuDQo+IA0KPiBBcmUgeW91IHN1cmUgYWJvdXQgdGhp
-cz8NCg0KSSdtIHZlcnkgc29ycnkuIEkgY29tcGxldGVseSBtaXN1bmRlcnN0b29kIHRoZSBnbG9i
-X21hdGNoKCkgYmVoYXZpb3IuDQpBbmQsIG5vdyBJIHVuZGVyc3Rvb2Qgd2h5IHRoZSBjdXJyZW50
-IGNvZGUgY2FuIHVzZSBJUE1NVSBvbiByOGE3Nzk2MS4uLg0KIyBTaW5jZSB0aGUgZmlyc3Qgc29j
-X2RldmljZV9tYXRjaCgpIHdpbGwgcmV0dXJuIGZhbHNlLCBpcG1tdV9zbGF2ZV93aGl0ZWxpc3Qo
-KQ0KIyB3aWxsIHJldHVybiB0cnVlIGFuZCB0aGVuIHRoZSBpcG1tdV9vZl94bGF0ZSgpIHdpbGwg
-YmUgc3VjY2VlZGVkLg0KDQo+IEkgZW5hYmxlZCBDT05GSUdfR0xPQl9TRUxGVEVTVCwgYW5kIGds
-b2J0ZXN0IHN1Y2NlZWRlZC4NCj4gSXQgZG9lcyB0ZXN0IGdsb2JfbWF0Y2goImEiLCAiYWEiKSwg
-d2hpY2ggaXMgYSBzaW1pbGFyIHRlc3QuDQo+IA0KPiBUbyBiZSAxMDAlIHN1cmUsIEkgYWRkZWQ6
-DQo+IA0KPiAtLS0gYS9saWIvZ2xvYnRlc3QuYw0KPiArKysgYi9saWIvZ2xvYnRlc3QuYw0KPiBA
-QCAtNTksNiArNTksNyBAQCBzdGF0aWMgY2hhciBjb25zdCBnbG9iX3Rlc3RzW10gX19pbml0Y29u
-c3QgPQ0KPiAgICAgICAgICIxIiAiYVwwIiAiYVwwIg0KPiAgICAgICAgICIwIiAiYVwwIiAiYlww
-Ig0KPiAgICAgICAgICIwIiAiYVwwIiAiYWFcMCINCj4gKyAgICAgICAiMCIgInI4YTc3OTZcMCIg
-InI4YTc3OTYxXDAiDQo+ICAgICAgICAgIjAiICJhXDAiICJcMCINCj4gICAgICAgICAiMSIgIlww
-IiAiXDAiDQo+ICAgICAgICAgIjAiICJcMCIgImFcMCINCj4gDQo+IGFuZCBpdCBzdGlsbCBzdWNj
-ZWVkZWQuDQoNCkknbSB2ZXJ5IHNvcnJ5IHRvIHdhc3RlIHlvdXIgdGltZSBhYm91dCB0aGlzLi4u
-DQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCg==
+Excerpts from Nicholas Piggin's message of July 16, 2020 2:15 pm:
+> Excerpts from Mathieu Desnoyers's message of July 14, 2020 12:13 am:
+>> ----- On Jul 13, 2020, at 9:47 AM, Nicholas Piggin npiggin@gmail.com wro=
+te:
+>>=20
+>>> Excerpts from Nicholas Piggin's message of July 13, 2020 2:45 pm:
+>>>> Excerpts from Andy Lutomirski's message of July 11, 2020 3:04 am:
+>>>>> Also, as it stands, I can easily see in_irq() ceasing to promise to
+>>>>> serialize.  There are older kernels for which it does not promise to
+>>>>> serialize.  And I have plans to make it stop serializing in the
+>>>>> nearish future.
+>>>>=20
+>>>> You mean x86's return from interrupt? Sounds fun... you'll konw where =
+to
+>>>> update the membarrier sync code, at least :)
+>>>=20
+>>> Oh, I should actually say Mathieu recently clarified a return from
+>>> interrupt doesn't fundamentally need to serialize in order to support
+>>> membarrier sync core.
+>>=20
+>> Clarification to your statement:
+>>=20
+>> Return from interrupt to kernel code does not need to be context seriali=
+zing
+>> as long as kernel serializes before returning to user-space.
+>>=20
+>> However, return from interrupt to user-space needs to be context seriali=
+zing.
+>=20
+> Hmm, I'm not sure it's enough even with the sync in the exit_lazy_tlb
+> in the right places.
+>=20
+> A kernel thread does a use_mm, then it blocks and the user process with
+> the same mm runs on that CPU, and then it calls into the kernel, blocks,
+> the kernel thread runs again, another CPU issues a membarrier which does
+> not IPI this one because it's running a kthread, and then the kthread
+> switches back to the user process (still without having unused the mm),
+> and then the user process returns from syscall without having done a=20
+> core synchronising instruction.
+>=20
+> The cause of the problem is you want to avoid IPI'ing kthreads. Why?
+> I'm guessing it really only matters as an optimisation in case of idle
+> threads. Idle thread is easy (well, easier) because it won't use_mm, so=20
+> you could check for rq->curr =3D=3D rq->idle in your loop (in a suitable=20
+> sched accessor function).
+>=20
+> But... I'm not really liking this subtlety in the scheduler for all this=20
+> (the scheduler still needs the barriers when switching out of idle).
+>=20
+> Can it be improved somehow? Let me forget x86 core sync problem for now
+> (that _may_ be a bit harder), and step back and look at what we're doing.
+> The memory barrier case would actually suffer from the same problem as
+> core sync, because in the same situation it has no implicit mmdrop in
+> the scheduler switch code either.
+>=20
+> So what are we doing with membarrier? We want any activity caused by the=20
+> set of CPUs/threads specified that can be observed by this thread before=20
+> calling membarrier is appropriately fenced from activity that can be=20
+> observed to happen after the call returns.
+>=20
+> CPU0                     CPU1
+>                          1. user stuff
+> a. membarrier()          2. enter kernel
+> b. read rq->curr         3. rq->curr switched to kthread
+> c. is kthread, skip IPI  4. switch_to kthread
+> d. return to user        5. rq->curr switched to user thread
+> 		         6. switch_to user thread
+> 		         7. exit kernel
+>                          8. more user stuff
+>=20
+> As far as I can see, the problem is CPU1 might reorder step 5 and step
+> 8, so you have mmdrop of lazy mm be a mb after step 6.
+>=20
+> But why? The membarrier call only cares that there is a full barrier
+> between 1 and 8, right? Which it will get from the previous context
+> switch to the kthread.
+
+I should be more complete here, especially since I was complaining
+about unclear barrier comment :)
+
+
+CPU0                     CPU1
+a. user stuff            1. user stuff
+b. membarrier()          2. enter kernel
+c. smp_mb()              3. smp_mb__after_spinlock(); // in __schedule
+d. read rq->curr         4. rq->curr switched to kthread
+e. is kthread, skip IPI  5. switch_to kthread
+f. return to user        6. rq->curr switched to user thread
+g. user stuff            7. switch_to user thread
+                         8. exit kernel
+                         9. more user stuff
+
+What you're really ordering is a, g vs 1, 9 right?
+
+In other words, 9 must see a if it sees g, g must see 1 if it saw 9,
+etc.
+
+Userspace does not care where the barriers are exactly or what kernel=20
+memory accesses might be being ordered by them, so long as there is a
+mb somewhere between a and g, and 1 and 9. Right?
