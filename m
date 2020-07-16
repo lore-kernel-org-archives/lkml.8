@@ -2,169 +2,174 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 485E62076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:56:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0bVNdp0B";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KgVJ09qA"
+	by mail.kernel.org (Postfix) with ESMTP id 8289E20760
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgGPV4D (ORCPT
+        id S1726579AbgGPV5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:56:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36182 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgGPV4C (ORCPT
+        Thu, 16 Jul 2020 17:57:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32782 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726104AbgGPV5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:56:02 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594936560;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bsyDj+dTue2WIP0pk5zGUno9OU1LywpIXSAi/vYPoQs=;
-        b=0bVNdp0B/UaxWgy72YFKyLzQWdf8CSVx64FHBr83D1ciBRuFI7A71FoDrXfl5k3sL2QxdA
-        O8HpHbYGFRD3puE/L/2afZxpVP0HFM0c2sKxDFinhbAagHNwd7GuBxrvsUULzf5yAcBN03
-        gcDoijt0QYA2T9DXQiY6GMOYLdn91/duWpMYvKapnmsS5SffIRK9PNF3ByiQ8I7gvFHKGg
-        dKkJdLi+8GIOHjNkjypLKkRgEATqfMP+fyLcyZgpWsaSwDxuxhyO8wj2wdurJEV6+UXbhh
-        Vhsvy4Y49jASsQb21QP69Hrr164Ifsyjk1FvdluSho+nGrUDX4bDffZ5y2TxkA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594936560;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bsyDj+dTue2WIP0pk5zGUno9OU1LywpIXSAi/vYPoQs=;
-        b=KgVJ09qAZ9uHZF5kMPNjFmsbcKwamC34NQluBD8GHOBcuwsj+txXWXeFm9UVhLJpJH7haY
-        4L92gYWqPCKrh3Cg==
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry functionality
-In-Reply-To: <202007161336.B993ED938@keescook>
-References: <20200716182208.180916541@linutronix.de> <20200716185424.011950288@linutronix.de> <202007161336.B993ED938@keescook>
-Date:   Thu, 16 Jul 2020 23:55:59 +0200
-Message-ID: <87d04vt98w.fsf@nanos.tec.linutronix.de>
+        Thu, 16 Jul 2020 17:57:32 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GL3GIM074078;
+        Thu, 16 Jul 2020 17:57:23 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32aut4dns4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 17:57:23 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GLTWFM139142;
+        Thu, 16 Jul 2020 17:57:23 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32aut4dnrv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 17:57:23 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GLk9b6016594;
+        Thu, 16 Jul 2020 21:57:22 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02dal.us.ibm.com with ESMTP id 327529xy0g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 21:57:22 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GLvLTo58786132
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 21:57:21 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 032F9BE051;
+        Thu, 16 Jul 2020 21:57:21 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF126BE04F;
+        Thu, 16 Jul 2020 21:57:17 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.8.110])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 16 Jul 2020 21:57:17 +0000 (GMT)
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466098739.24747.5860501703617893464.stgit@hbathini.in.ibm.com> <87tuy88ai7.fsf@morokweng.localdomain> <929db6fe-b221-a514-8ea1-93227f8d47b0@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 10/12] ppc64/kexec_file: prepare elfcore header for crashing kernel
+In-reply-to: <929db6fe-b221-a514-8ea1-93227f8d47b0@linux.ibm.com>
+Date:   Thu, 16 Jul 2020 18:57:15 -0300
+Message-ID: <87a6zzcedg.fsf@morokweng.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 malwarescore=0
+ priorityscore=1501 adultscore=0 clxscore=1015 bulkscore=0 spamscore=100
+ suspectscore=0 impostorscore=0 mlxlogscore=-1000 lowpriorityscore=0
+ mlxscore=100 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-> On Thu, Jul 16, 2020 at 08:22:09PM +0200, Thomas Gleixner wrote:
->> This code is needlessly duplicated and  different in all
->> architectures.
+
+Hari Bathini <hbathini@linux.ibm.com> writes:
+
+> On 16/07/20 7:52 am, Thiago Jung Bauermann wrote:
 >> 
->> Provide a generic version based on the x86 implementation which has all the
->> RCU and instrumentation bits right.
+>> Hari Bathini <hbathini@linux.ibm.com> writes:
+>> 
+>>>  /**
+>>> + * get_crash_memory_ranges - Get crash memory ranges. This list includes
+>>> + *                           first/crashing kernel's memory regions that
+>>> + *                           would be exported via an elfcore.
+>>> + * @mem_ranges:              Range list to add the memory ranges to.
+>>> + *
+>>> + * Returns 0 on success, negative errno on error.
+>>> + */
+>>> +static int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+>>> +{
+>>> +	struct memblock_region *reg;
+>>> +	struct crash_mem *tmem;
+>>> +	int ret;
+>>> +
+>>> +	for_each_memblock(memory, reg) {
+>>> +		u64 base, size;
+>>> +
+>>> +		base = (u64)reg->base;
+>>> +		size = (u64)reg->size;
+>>> +
+>>> +		/* Skip backup memory region, which needs a separate entry */
+>>> +		if (base == BACKUP_SRC_START) {
+>>> +			if (size > BACKUP_SRC_SIZE) {
+>>> +				base = BACKUP_SRC_END + 1;
+>>> +				size -= BACKUP_SRC_SIZE;
+>>> +			} else
+>>> +				continue;
+>>> +		}
+>>> +
+>>> +		ret = add_mem_range(mem_ranges, base, size);
+>>> +		if (ret)
+>>> +			goto out;
+>>> +
+>>> +		/* Try merging adjacent ranges before reallocation attempt */
+>>> +		if ((*mem_ranges)->nr_ranges == (*mem_ranges)->max_nr_ranges)
+>>> +			sort_memory_ranges(*mem_ranges, true);
+>>> +	}
+>>> +
+>>> +	/* Reallocate memory ranges if there is no space to split ranges */
+>>> +	tmem = *mem_ranges;
+>>> +	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
+>>> +		tmem = realloc_mem_ranges(mem_ranges);
+>>> +		if (!tmem)
+>>> +			goto out;
+>>> +	}
+>>> +
+>>> +	/* Exclude crashkernel region */
+>>> +	ret = crash_exclude_mem_range(tmem, crashk_res.start, crashk_res.end);
+>>> +	if (ret)
+>>> +		goto out;
+>>> +
+>>> +	ret = add_rtas_mem_range(mem_ranges);
+>>> +	if (ret)
+>>> +		goto out;
+>>> +
+>>> +	ret = add_opal_mem_range(mem_ranges);
+>>> +	if (ret)
+>>> +		goto out;
+>> 
+>> Maybe I'm confused, but don't you add the RTAS and OPAL regions as
+>> usable memory for the crashkernel? In that case they shouldn't show up
+>> in the core file.
 >
-> Ahh! You're reading my mind!
-
-I told you about that plan at the last conference over a beer :)
-
-> I was just thinking about this while reviewing the proposed syscall
-> redirection series[1], and pondering the lack of x86 TIF flags, and
-> that nearly everything in the series (and for seccomp and other
-> things) didn't need to be arch-specific. And now that series
-> absolutely needs to be rebased and it'll magically work for every arch
-> that switches to the generic entry code. :)
-
-That's the plan. 
-
-> Notes below...
+> kexec-tools does the same thing. I am not endorsing it but I was trying to stay
+> in parity to avoid breaking any userspace tools/commands. But as you rightly
+> pointed, this is NOT right. The right thing to do, to get the rtas/opal data at
+> the time of crash, is to have a backup region for them just like we have for
+> the first 64K memory. I was hoping to do that later.
 >
-> [1] https://lore.kernel.org/lkml/20200716193141.4068476-2-krisman@collabora.com/
+> Will check how userspace tools respond to dropping these regions. If that makes
+> the tools unhappy, will retain the regions with a FIXME. Sorry about the confusion.
 
-Saw that fly by. *shudder*
+No problem, thanks for the clarification.
 
->> +/*
->> + * Define dummy _TIF work flags if not defined by the architecture or for
->> + * disabled functionality.
->> + */
->
-> When I was thinking about this last week I was pondering having a split
-> between the arch-agnositc TIF flags and the arch-specific TIF flags, and
-> that each arch could have a single "there is agnostic work to be done"
-> TIF in their thread_info, and the agnostic flags could live in
-> task_struct or something. Anyway, I'll keep reading...
-
-That's going to be nasty. We rather go and expand the TIF storage to
-64bit. And then do the following in a generic header:
-
-#ifndef TIF_ARCH_SPECIFIC
-# define TIF_ARCH_SPECIFIC
-#endif
-
-enum tif_bits {
-	TIF_NEED_RESCHED = 0,
-        TIF_...,
-        TIF_LAST_GENERIC,
-        TIF_ARCH_SPECIFIC,
-};
-        
-and in the arch specific one:
-
-#define TIF_ARCH_SPECIFIC	\
-	TIF_ARCH_1,             \
-        TIF_ARCH_2,
-
-or something like that.
-
->> +/**
->> + * syscall_enter_from_user_mode - Check and handle work before invoking
->> + *				 a syscall
->> + * @regs:	Pointer to currents pt_regs
->> + * @syscall:	The syscall number
->> + *
->> + * Invoked from architecture specific syscall entry code with interrupts
->> + * disabled. The calling code has to be non-instrumentable. When the
->> + * function returns all state is correct and the subsequent functions can be
->> + * instrumented.
->> + *
->> + * Returns: The original or a modified syscall number
->> + *
->> + * If the returned syscall number is -1 then the syscall should be
->> + * skipped. In this case the caller may invoke syscall_set_error() or
->> + * syscall_set_return_value() first.  If neither of those are called and -1
->> + * is returned, then the syscall will fail with ENOSYS.
->
-> There's been some recent confusion over "has the syscall changed,
-> or did seccomp request it be skipped?" that was explored in arm64[2]
-> (though I see Will and Keno in CC already). There might need to be a
-> clearer way to distinguish between "wild userspace issued a -1 syscall"
-> and "seccomp or ptrace asked for the syscall to be skipped". The
-> difference is mostly about when ENOSYS gets set, with respect to calls
-> to syscall_set_return_value(), but if the syscall gets changed, the arch
-> may need to recheck the value and consider ENOSYS, etc. IIUC, what Will
-> ended up with[3] was having syscall_trace_enter() return the syscall return
-> value instead of the new syscall.
-
-I was chatting with Will about that yesterday. IIRC he plans to fix the
-immediate issue on arm64 first and then move arm64 over to the generic
-variant. That's the reason why I reshuffled the patch series so the
-generic parts are first which allows me to provide will a branch with
-just those. If there are any changes needed we can just feed them back
-into that branch and fixup the affected architecture trees.
-
-IOW, that should not block progress on this stuff.
-
-Thanks,
-
-        tglx
-
-
-
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
