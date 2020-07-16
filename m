@@ -2,103 +2,244 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A67C433FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 005BF2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF04F2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:49:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vuSLav+C"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BJCvd5uI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgGPMtt (ORCPT
+        id S1728580AbgGPMtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:49:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728619AbgGPMts (ORCPT
+        Thu, 16 Jul 2020 08:49:22 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40206 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726963AbgGPMtV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:49:48 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A82C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 05:49:48 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id j11so6983122ljo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 05:49:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SMUqbM/2tAa8/paafO1/gccjmbEp76TZl0DYAO5Htac=;
-        b=vuSLav+Cii51LYAbUmO1o2Rs7yss7EnlSKUR20VVaxbbxAYlCtWHJRMDU2Py8c8JTY
-         WKhP3yKme72urB8ucBIKLAPShsPH9qJuaUcriEuBK9Wjv8FMrcnFMZbgbhNpHDLpfeb1
-         2ZUxDC9TUvSLcWYF1QnnLlRGGq+l5vEZ5VQHiE2Ik+JiWFkWFqZ86Wsve2eOzvhGL+9K
-         ihffOk/HZOePmw9cpO/AebqqXNtNfd7wNPftBpKcRDP4/lSsTY8DAa+BNuR8dIOnpM5y
-         thFQEosZBhaeERRBEgpmtYGFLXBddwyP7XPHXPSRBypnXeSA/gggCvyS+NkEQJv0Cvb7
-         IUAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SMUqbM/2tAa8/paafO1/gccjmbEp76TZl0DYAO5Htac=;
-        b=Y7f9wzarolLROu+PitR2jQiKkGuogzLFXHgZ+dhphd6x48+9MjXLBde8RWjtKBpSqZ
-         Zzfq2/fKFECFtpjRn7Ociw+W9CcvRG2xEXLb+zW240pJD9LsoUfqoQYNKpBrWuukn7CJ
-         bkJlTscLEeLLHjamlbhwK0XS5Zt1OT2JAA0zedE7mmmpEt2OLuX3eptSVn9gbmgH1Hek
-         t+HFp2NSCbwlODuMw/VV8bwNNvahR5Glp3x+mTQlm1sEjYGoTAJCV4dBwOayrOnqDBeg
-         X6SiSBwN74AV76x8HHHnuuuxB2smacWEmmTwtbQ3uyZ7VhiPGhSVvX67p2r5loJYINZF
-         MluA==
-X-Gm-Message-State: AOAM531WPeImoG6PRRyud8s58mSK3WnLerR4tsKKni7o52uNmsuoxgC+
-        bHGlLLAP0+zM+e56Gl2P66w8ywgjWqayCZgQ9u6sMA==
-X-Google-Smtp-Source: ABdhPJzZjvVBo25Dqxum0154FLbEBUp91nFV11Hp0xSDYrsQ5aSM1HddHJViEwuAP/BPFZwNurh2InaBi7wl7mxu/zE=
-X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr1887718ljc.104.1594903786614;
- Thu, 16 Jul 2020 05:49:46 -0700 (PDT)
+        Thu, 16 Jul 2020 08:49:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594903759;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3IGotHJLDWHOMS4jfIFhav0o5esf4avDkRICTFAhyCo=;
+        b=BJCvd5uIGtgfTXD3qhMtI2Ae2gsT6eDP6OGRk4Ro9Rs7npfisWbo0mGEu7YR42nwqDfsKS
+        NATV69HYhBETqx+EMxrkfDjh9t+el4rwCSwPL0P0AynduwWlx4qxSNa+a4Cy3cRdrRp5RS
+        ZdpOC6rpEgCXSg4GoY1NVCkTVhFBOpE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-wSe4nHhrMv606IQIZUQ-PQ-1; Thu, 16 Jul 2020 08:49:15 -0400
+X-MC-Unique: wSe4nHhrMv606IQIZUQ-PQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A2C71B18BC1;
+        Thu, 16 Jul 2020 12:49:13 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-114-107.ams2.redhat.com [10.36.114.107])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 727D117D04;
+        Thu, 16 Jul 2020 12:49:00 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RFC v2 3/3] io_uring: allow disabling rings during the creation
+Date:   Thu, 16 Jul 2020 14:48:33 +0200
+Message-Id: <20200716124833.93667-4-sgarzare@redhat.com>
+In-Reply-To: <20200716124833.93667-1-sgarzare@redhat.com>
+References: <20200716124833.93667-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-References: <cover.1593243079.git.syednwaris@gmail.com>
-In-Reply-To: <cover.1593243079.git.syednwaris@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jul 2020 14:49:35 +0200
-Message-ID: <CACRpkdYyCNEUSOtCJMTm7t1z15oK7nH3KcTe5LreJAzZ0KtQuw@mail.gmail.com>
-Subject: Re: [PATCH v9 0/4] Introduce the for_each_set_clump macro
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robert Richter <rrichter@marvell.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-arch@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Syed,
+This patch adds a new IORING_SETUP_R_DISABLED flag to start the
+rings disabled, allowing the user to register restrictions,
+buffers, files, before to start processing SQEs.
 
-sorry for taking so long. I was on vacation and a bit snowed
-under by work.
+When IORING_SETUP_R_DISABLED is set, SQE are not processed and
+SQPOLL kthread is not started.
 
-On Sat, Jun 27, 2020 at 10:10 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+The restrictions registration are allowed only when the rings
+are disable to prevent concurrency issue while processing SQEs.
 
-> Since this patchset primarily affects GPIO drivers, would you like
-> to pick it up through your GPIO tree?
+The rings can be enabled using IORING_REGISTER_ENABLE_RINGS
+opcode with io_uring_register(2).
 
-I have applied the patches to an immutable branch and pushed
-to kernelorg for testing (autobuilders will play with it I hope).
+Suggested-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+RFC v2:
+ - removed return value of io_sq_offload_start()
+---
+ fs/io_uring.c                 | 50 +++++++++++++++++++++++++++++------
+ include/uapi/linux/io_uring.h |  2 ++
+ 2 files changed, 44 insertions(+), 8 deletions(-)
 
-If all works fine I will merge this into my devel branch for v5.9.
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 23a2b03d9528..2f2ecfa10c94 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -6969,8 +6969,8 @@ static int io_init_wq_offload(struct io_ring_ctx *ctx,
+ 	return ret;
+ }
+ 
+-static int io_sq_offload_start(struct io_ring_ctx *ctx,
+-			       struct io_uring_params *p)
++static int io_sq_offload_create(struct io_ring_ctx *ctx,
++				struct io_uring_params *p)
+ {
+ 	int ret;
+ 
+@@ -7007,7 +7007,6 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+ 			ctx->sqo_thread = NULL;
+ 			goto err;
+ 		}
+-		wake_up_process(ctx->sqo_thread);
+ 	} else if (p->flags & IORING_SETUP_SQ_AFF) {
+ 		/* Can't have SQ_AFF without SQPOLL */
+ 		ret = -EINVAL;
+@@ -7026,6 +7025,12 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+ 	return ret;
+ }
+ 
++static void io_sq_offload_start(struct io_ring_ctx *ctx)
++{
++	if ((ctx->flags & IORING_SETUP_SQPOLL) && ctx->sqo_thread)
++		wake_up_process(ctx->sqo_thread);
++}
++
+ static void io_unaccount_mem(struct user_struct *user, unsigned long nr_pages)
+ {
+ 	atomic_long_sub(nr_pages, &user->locked_vm);
+@@ -7654,9 +7659,6 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 	int submitted = 0;
+ 	struct fd f;
+ 
+-	if (current->task_works)
+-		task_work_run();
+-
+ 	if (flags & ~(IORING_ENTER_GETEVENTS | IORING_ENTER_SQ_WAKEUP))
+ 		return -EINVAL;
+ 
+@@ -7673,6 +7675,12 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 	if (!percpu_ref_tryget(&ctx->refs))
+ 		goto out_fput;
+ 
++	if (ctx->flags & IORING_SETUP_R_DISABLED)
++		return -EBADF;
++
++	if (current->task_works)
++		task_work_run();
++
+ 	/*
+ 	 * For SQ polling, the thread will do all submissions and completions.
+ 	 * Just return the requested submit count, and wake the thread if
+@@ -7978,10 +7986,13 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p,
+ 	if (ret)
+ 		goto err;
+ 
+-	ret = io_sq_offload_start(ctx, p);
++	ret = io_sq_offload_create(ctx, p);
+ 	if (ret)
+ 		goto err;
+ 
++	if (!(p->flags & IORING_SETUP_R_DISABLED))
++		io_sq_offload_start(ctx);
++
+ 	memset(&p->sq_off, 0, sizeof(p->sq_off));
+ 	p->sq_off.head = offsetof(struct io_rings, sq.head);
+ 	p->sq_off.tail = offsetof(struct io_rings, sq.tail);
+@@ -8042,7 +8053,8 @@ static long io_uring_setup(u32 entries, struct io_uring_params __user *params)
+ 
+ 	if (p.flags & ~(IORING_SETUP_IOPOLL | IORING_SETUP_SQPOLL |
+ 			IORING_SETUP_SQ_AFF | IORING_SETUP_CQSIZE |
+-			IORING_SETUP_CLAMP | IORING_SETUP_ATTACH_WQ))
++			IORING_SETUP_CLAMP | IORING_SETUP_ATTACH_WQ |
++			IORING_SETUP_R_DISABLED))
+ 		return -EINVAL;
+ 
+ 	return  io_uring_create(entries, &p, params);
+@@ -8125,6 +8137,10 @@ static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
+ 	size_t size;
+ 	int i, ret;
+ 
++	/* Restrictions allowed only if rings started disabled */
++	if (!(ctx->flags & IORING_SETUP_R_DISABLED))
++		return -EINVAL;
++
+ 	/* We allow only a single restrictions registration */
+ 	if (ctx->restricted)
+ 		return -EBUSY;
+@@ -8183,6 +8199,18 @@ static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
+ 	return ret;
+ }
+ 
++static int io_register_enable_rings(struct io_ring_ctx *ctx)
++{
++	if (!(ctx->flags & IORING_SETUP_R_DISABLED))
++		return -EINVAL;
++
++	ctx->flags &= ~IORING_SETUP_R_DISABLED;
++
++	io_sq_offload_start(ctx);
++
++	return 0;
++}
++
+ static bool io_register_op_must_quiesce(int op)
+ {
+ 	switch (op) {
+@@ -8304,6 +8332,12 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
+ 			break;
+ 		ret = io_unregister_personality(ctx, nr_args);
+ 		break;
++	case IORING_REGISTER_ENABLE_RINGS:
++		ret = -EINVAL;
++		if (arg || nr_args)
++			break;
++		ret = io_register_enable_rings(ctx);
++		break;
+ 	case IORING_REGISTER_RESTRICTIONS:
+ 		ret = io_register_restrictions(ctx, arg, nr_args);
+ 		break;
+diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+index 0774d5382c65..ce52333bdc2b 100644
+--- a/include/uapi/linux/io_uring.h
++++ b/include/uapi/linux/io_uring.h
+@@ -94,6 +94,7 @@ enum {
+ #define IORING_SETUP_CQSIZE	(1U << 3)	/* app defines CQ size */
+ #define IORING_SETUP_CLAMP	(1U << 4)	/* clamp SQ/CQ ring sizes */
+ #define IORING_SETUP_ATTACH_WQ	(1U << 5)	/* attach to existing wq */
++#define IORING_SETUP_R_DISABLED	(1U << 6)	/* start with ring disabled */
+ 
+ enum {
+ 	IORING_OP_NOP,
+@@ -266,6 +267,7 @@ enum {
+ 	IORING_REGISTER_PERSONALITY,
+ 	IORING_UNREGISTER_PERSONALITY,
+ 	IORING_REGISTER_RESTRICTIONS,
++	IORING_REGISTER_ENABLE_RINGS,
+ 
+ 	/* this goes last */
+ 	IORING_REGISTER_LAST
+-- 
+2.26.2
 
-It would be desirable if Andrew gave his explicit ACK on it too.
-
-Yours,
-Linus Walleij
