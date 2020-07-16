@@ -2,27 +2,27 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EDAC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD9DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60AFD20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 200AB20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgGPRm3 (ORCPT
+        id S1729100AbgGPRm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:42:29 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58898 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728807AbgGPRm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jul 2020 13:42:26 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42146 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728257AbgGPRmZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:42:25 -0400
 Received: from 89-64-86-30.dynamic.chello.pl (89.64.86.30) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 02801ab9c384c3c3; Thu, 16 Jul 2020 19:42:24 +0200
+ id fb6e85f8e17426b2; Thu, 16 Jul 2020 19:42:23 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Linux Documentation <linux-doc@vger.kernel.org>,
@@ -32,9 +32,11 @@ Cc:     Linux Documentation <linux-doc@vger.kernel.org>,
         Giovanni Gherdovich <ggherdovich@suse.cz>,
         Doug Smythies <dsmythies@telus.net>,
         Francisco Jerez <francisco.jerez.plata@intel.com>
-Subject: [PATCH v2 0/2] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Thu, 16 Jul 2020 19:37:04 +0200
-Message-ID: <4981405.3kqTVLv5tO@kreacher>
+Subject: [PATCH v2 1/2] cpufreq: intel_pstate: Rearrange the storing of newv EPP values
+Date:   Thu, 16 Jul 2020 19:38:25 +0200
+Message-ID: <2185721.1uhhhTEYdH@kreacher>
+In-Reply-To: <4981405.3kqTVLv5tO@kreacher>
+References: <4981405.3kqTVLv5tO@kreacher>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -43,16 +45,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-This really is a v2 of this patch:
+Move the locking away from intel_pstate_set_energy_pref_index()
+into its only caller and drop the (now redundant) return_pref label
+from it.
 
-https://patchwork.kernel.org/patch/11663271/
+Also move the "raw" EPP value check into the caller of that function,
+so as to do it before acquiring the mutex, and reduce code duplication
+related to the "raw" EPP values processing somewhat.
 
-with an extra preceding cleanup patch to avoid making unrelated changes in the
-[2/2].
+No intentional functional impact.
 
-Thanks!
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/cpufreq/intel_pstate.c |   29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
+
+Index: linux-pm/drivers/cpufreq/intel_pstate.c
+===================================================================
+--- linux-pm.orig/drivers/cpufreq/intel_pstate.c
++++ linux-pm/drivers/cpufreq/intel_pstate.c
+@@ -648,28 +648,18 @@ static int intel_pstate_set_energy_pref_
+ 	if (!pref_index)
+ 		epp = cpu_data->epp_default;
+ 
+-	mutex_lock(&intel_pstate_limits_lock);
+-
+ 	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+ 		u64 value;
+ 
+ 		ret = rdmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, &value);
+ 		if (ret)
+-			goto return_pref;
++			return ret;
+ 
+ 		value &= ~GENMASK_ULL(31, 24);
+ 
+-		if (use_raw) {
+-			if (raw_epp > 255) {
+-				ret = -EINVAL;
+-				goto return_pref;
+-			}
+-			value |= (u64)raw_epp << 24;
+-			ret = wrmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, value);
+-			goto return_pref;
+-		}
+-
+-		if (epp == -EINVAL)
++		if (use_raw)
++			epp = raw_epp;
++		else if (epp == -EINVAL)
+ 			epp = epp_values[pref_index - 1];
+ 
+ 		value |= (u64)epp << 24;
+@@ -679,8 +669,6 @@ static int intel_pstate_set_energy_pref_
+ 			epp = (pref_index - 1) << 2;
+ 		ret = intel_pstate_set_epb(cpu_data->cpu, epp);
+ 	}
+-return_pref:
+-	mutex_unlock(&intel_pstate_limits_lock);
+ 
+ 	return ret;
+ }
+@@ -723,12 +711,19 @@ static ssize_t store_energy_performance_
+ 		if (ret)
+ 			return ret;
+ 
++		if (epp > 255)
++			return -EINVAL;
++
+ 		raw = true;
+ 	}
+ 
++	mutex_lock(&intel_pstate_limits_lock);
++
+ 	ret = intel_pstate_set_energy_pref_index(cpu_data, ret, raw, epp);
+ 	if (ret)
+-		return ret;
++		count = ret;
++
++	mutex_unlock(&intel_pstate_limits_lock);
+ 
+ 	return count;
+ }
 
 
 
