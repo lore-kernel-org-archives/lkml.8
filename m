@@ -4,46 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C69C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99848C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7CAA20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F1720809
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="cC5Xks6q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="OvELqk/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGPVRr (ORCPT
+        id S1727780AbgGPVRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:17:47 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:47670 "EHLO
+        Thu, 16 Jul 2020 17:17:53 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:47678 "EHLO
         ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgGPVRq (ORCPT
+        with ESMTP id S1725970AbgGPVRt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:17:46 -0400
-X-Greylist: delayed 2660 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jul 2020 17:17:46 EDT
+        Thu, 16 Jul 2020 17:17:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AQCEG0bH+gkQSxPbjGRwXaXeTXWxGzo0AtT6lOP7ofI=; b=cC5Xks6q3R8siit7AR8s/XhBR9
-        Gk9Me2NXvxfqlW91YhlyIS91jjfA4RLHKNsgueYezzykphRMyjZ13YEYA/dRfn6sCv0f31hgM4Ekp
-        C2QVShJUyRIwxEHv4djE6DXJoiFy2SYV5kZpObKDb/CHvWA7+hRtTIskULvY0ek0zAHl6lGHLPJv6
-        sF3QPQHF+2CLv/9P0eKJTkbjGr89weq3HPa+b1ol7WWOJEwmVVvjHfpsWI9Ni/SMRDIfR9rf97f3Y
-        /IE2mmUJ2p92RHZm4jbBXH1O9/eIvVGCXRPU1TsSvSlM2BUG4rpQmtyq+SFbvjmyXcCx7dgPDzMom
-        3XUODU0Q==;
+        bh=KLNaO9lK6UgdCJIP+OQpXj9iPqUBFHQpBytP4QLFdz4=; b=OvELqk/MKB4E2pP6HcRZh3Fxa5
+        l5d3Q3tNyQRFd8rbb4qpVWsrdAL9I2baYLpT3WHO9jXGlUBzOFeaol30UPaly3Xm2H5l65dWiTt1H
+        6plgY9MrAI9vdQ1NOhlss2035S+XREnltXV2yQZkYfl2z5NeMlxGvr/NQavVh0T7mY1TTDKyNIOUQ
+        sIqkmcGVBNHXSMMFHwgU4qdXQwtL01JZns3+pcYc/hXimUTHYRfm7J3+c9GO/+X49KNyvzN1Q6XtF
+        ib28DpcOKAG4UkgaKFK0h4shWtP++a0twIyTMkdycgnJ+pYmsChOuzh1CvKlEbUz/bZ1epVXTEoV5
+        1LzAd9Vg==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1jwAZQ-0005uH-Ac; Thu, 16 Jul 2020 14:33:33 -0600
+        id 1jwAZL-0005uJ-Pf; Thu, 16 Jul 2020 14:33:28 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1jwAZF-0004BW-0u; Thu, 16 Jul 2020 14:33:21 -0600
+        id 1jwAZF-0004Bi-Op; Thu, 16 Jul 2020 14:33:21 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
@@ -52,8 +51,8 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 16 Jul 2020 14:33:15 -0600
-Message-Id: <20200716203319.16022-6-logang@deltatee.com>
+Date:   Thu, 16 Jul 2020 14:33:19 -0600
+Message-Id: <20200716203319.16022-10-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200716203319.16022-1-logang@deltatee.com>
 References: <20200716203319.16022-1-logang@deltatee.com>
@@ -62,7 +61,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v15 5/9] nvme-core: Introduce nvme_ctrl_get_by_path()
+Subject: [PATCH v15 9/9] nvmet-configfs: Introduce passthru configfs interface
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,79 +69,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nvme_ctrl_get_by_path() is analagous to blkdev_get_by_path() except it
-gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
-It makes use of filp_open() to open the file and uses the private
-data to obtain a pointer to the struct nvme_ctrl. If the fops of the
-file do not match, -EINVAL is returned.
+When CONFIG_NVME_TARGET_PASSTHRU as 'passthru' directory will
+be added to each subsystem. The directory is similar to a namespace
+and has two attributes: device_path and enable. The user must set the
+path to the nvme controller's char device and write '1' to enable the
+subsystem to use passthru.
 
-The purpose of this function is to support NVMe-OF target passthru.
+Any given subsystem is prevented from enabling both a regular namespace
+and the passthru device. If one is enabled, enabling the other will
+produce an error.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 ---
- drivers/nvme/host/core.c | 31 +++++++++++++++++++++++++++++++
- drivers/nvme/host/nvme.h |  6 ++++++
- 2 files changed, 37 insertions(+)
+ drivers/nvme/target/configfs.c | 99 ++++++++++++++++++++++++++++++++++
+ drivers/nvme/target/nvmet.h    |  1 +
+ 2 files changed, 100 insertions(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 817ab76d2838..6e7d5cb43a06 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -4572,6 +4572,37 @@ void nvme_sync_queues(struct nvme_ctrl *ctrl)
- }
- EXPORT_SYMBOL_GPL(nvme_sync_queues);
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
+index 61c258dea88a..74b2b61c773b 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -666,6 +666,103 @@ static const struct config_item_type nvmet_namespaces_type = {
+ 	.ct_owner		= THIS_MODULE,
+ };
  
 +#ifdef CONFIG_NVME_TARGET_PASSTHRU
-+/*
-+ * The exports that follow within this ifdef are only for
-+ * use by the nvmet-passthru and should not be used for
-+ * other things.
-+ */
 +
-+struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path)
++static ssize_t nvmet_passthru_device_path_show(struct config_item *item,
++		char *page)
 +{
-+	struct nvme_ctrl *ctrl;
-+	struct file *f;
++	struct nvmet_subsys *subsys = to_subsys(item->ci_parent);
 +
-+	f = filp_open(path, O_RDWR, 0);
-+	if (IS_ERR(f))
-+		return ERR_CAST(f);
-+
-+	if (f->f_op != &nvme_dev_fops) {
-+		ctrl = ERR_PTR(-EINVAL);
-+		goto out_close;
-+	}
-+
-+	ctrl = f->private_data;
-+	nvme_get_ctrl(ctrl);
-+
-+out_close:
-+	filp_close(f, NULL);
-+	return ctrl;
++	return snprintf(page, PAGE_SIZE, "%s\n", subsys->passthru_ctrl_path);
 +}
-+EXPORT_SYMBOL_GPL(nvme_ctrl_get_by_path);
++
++static ssize_t nvmet_passthru_device_path_store(struct config_item *item,
++		const char *page, size_t count)
++{
++	struct nvmet_subsys *subsys = to_subsys(item->ci_parent);
++	size_t len;
++	int ret;
++
++	mutex_lock(&subsys->lock);
++
++	ret = -EBUSY;
++	if (subsys->passthru_ctrl)
++		goto out_unlock;
++
++	ret = -EINVAL;
++	len = strcspn(page, "\n");
++	if (!len)
++		goto out_unlock;
++
++	kfree(subsys->passthru_ctrl_path);
++	ret = -ENOMEM;
++	subsys->passthru_ctrl_path = kstrndup(page, len, GFP_KERNEL);
++	if (!subsys->passthru_ctrl_path)
++		goto out_unlock;
++
++	mutex_unlock(&subsys->lock);
++
++	return count;
++out_unlock:
++	mutex_unlock(&subsys->lock);
++	return ret;
++}
++CONFIGFS_ATTR(nvmet_passthru_, device_path);
++
++static ssize_t nvmet_passthru_enable_show(struct config_item *item,
++		char *page)
++{
++	struct nvmet_subsys *subsys = to_subsys(item->ci_parent);
++
++	return sprintf(page, "%d\n", subsys->passthru_ctrl ? 1 : 0);
++}
++
++static ssize_t nvmet_passthru_enable_store(struct config_item *item,
++		const char *page, size_t count)
++{
++	struct nvmet_subsys *subsys = to_subsys(item->ci_parent);
++	bool enable;
++	int ret = 0;
++
++	if (strtobool(page, &enable))
++		return -EINVAL;
++
++	if (enable)
++		ret = nvmet_passthru_ctrl_enable(subsys);
++	else
++		nvmet_passthru_ctrl_disable(subsys);
++
++	return ret ? ret : count;
++}
++CONFIGFS_ATTR(nvmet_passthru_, enable);
++
++static struct configfs_attribute *nvmet_passthru_attrs[] = {
++	&nvmet_passthru_attr_device_path,
++	&nvmet_passthru_attr_enable,
++	NULL,
++};
++
++static const struct config_item_type nvmet_passthru_type = {
++	.ct_attrs		= nvmet_passthru_attrs,
++	.ct_owner		= THIS_MODULE,
++};
++
++static void nvmet_add_passthru_group(struct nvmet_subsys *subsys)
++{
++	config_group_init_type_name(&subsys->passthru_group,
++				    "passthru", &nvmet_passthru_type);
++	configfs_add_default_group(&subsys->passthru_group,
++				   &subsys->group);
++}
++
++#else /* CONFIG_NVME_TARGET_PASSTHRU */
++
++static void nvmet_add_passthru_group(struct nvmet_subsys *subsys)
++{
++}
++
 +#endif /* CONFIG_NVME_TARGET_PASSTHRU */
 +
- /*
-  * Check we didn't inadvertently grow the command structure sizes:
-  */
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 13ca90bcd352..485492a98ef5 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -763,4 +763,10 @@ void nvme_hwmon_init(struct nvme_ctrl *ctrl);
- static inline void nvme_hwmon_init(struct nvme_ctrl *ctrl) { }
- #endif
+ static int nvmet_port_subsys_allow_link(struct config_item *parent,
+ 		struct config_item *target)
+ {
+@@ -1125,6 +1222,8 @@ static struct config_group *nvmet_subsys_make(struct config_group *group,
+ 	configfs_add_default_group(&subsys->allowed_hosts_group,
+ 			&subsys->group);
  
-+/*
-+ * These functions are only for use by nvmet-passthru and are only exported
-+ * if CONFIG_NVME_TARGET_PASSTHRU is set.
-+ */
-+struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path);
++	nvmet_add_passthru_group(subsys);
 +
- #endif /* _NVME_H */
+ 	return &subsys->group;
+ }
+ 
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index d8689744e0f7..deb3c52aae6d 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -249,6 +249,7 @@ struct nvmet_subsys {
+ #ifdef CONFIG_NVME_TARGET_PASSTHRU
+ 	struct nvme_ctrl	*passthru_ctrl;
+ 	char			*passthru_ctrl_path;
++	struct config_group	passthru_group;
+ #endif /* CONFIG_NVME_TARGET_PASSTHRU */
+ };
+ 
 -- 
 2.20.1
 
