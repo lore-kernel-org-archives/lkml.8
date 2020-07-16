@@ -2,158 +2,236 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2604C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F2DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6286A2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC312070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="oUJVxjzJ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aV+zZZrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgGPRau (ORCPT
+        id S1729151AbgGPRbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:30:50 -0400
-Received: from vps.xff.cz ([195.181.215.36]:47818 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbgGPRat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:30:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1594920646; bh=iYn8jfeBSAzwnJBKIEFCuqwW/wbz6/V7dqN/0Nu0G/s=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=oUJVxjzJH49f84omY00AR4pWkrwXTkWSauU2gxPhOyctei7hiQK1+jpn5hkLX5IzJ
-         Emr1OPUlDE4jLdDJnedyHVcpy5JqlamZuVK6Wxb1phQVxmFdgJ1r61hDUrvDwrwMUC
-         TrPU4fsdEnfGDu3iebz2PJqbMT7809X2egHRTFas=
-Date:   Thu, 16 Jul 2020 19:30:46 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next 0/3] Add support for LEDs on Marvell
- PHYs
-Message-ID: <20200716173046.aea5rsfe47vnamvh@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
-References: <20200716171730.13227-1-marek.behun@nic.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200716171730.13227-1-marek.behun@nic.cz>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+        Thu, 16 Jul 2020 13:31:47 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51362 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728126AbgGPRbq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:31:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GHN5WN194015;
+        Thu, 16 Jul 2020 17:31:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=dh9XlH7tcErW5JjhDQpp3ynCODYBy0/3QNVW+UL0wEA=;
+ b=aV+zZZrpZJ2wySmoSVQDN4Qqx0QNkJN1J/D1VVPvQbCOcg+SxLlzymNDfLE6EvoQ0Hcv
+ E3gZBWDOyn+qDDKf5OjeT0oSSQS45jZUnVASqyjlM7q2hIktxGJi62/sAVOa+3D7ltG3
+ xPbn72KmZyxyKhyPIw+VrhZYDqKLEhNRFhjf37JGzMX4wduYOZ9lTgC/00lggZrDeP0z
+ 7W7AyvIICpshkuZZLg/UfgEgUXxuiE/e3OZRZaNjL3ch/dGuUnJQwfITuwQkprKk8/mK
+ OA3QkGTUCfri2P23ON1DwEOiy2TiBWcqkC8SPYElykdmZttzyf/5WcS0DqaXaSbvyezW yA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 3275cmjtf2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jul 2020 17:31:38 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GHHjKH005851;
+        Thu, 16 Jul 2020 17:29:38 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 327q0tvk2w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 17:29:38 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06GHTbK5019040;
+        Thu, 16 Jul 2020 17:29:37 GMT
+Received: from paddy.uk.oracle.com (/10.175.173.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Jul 2020 10:29:37 -0700
+From:   Joao Martins <joao.m.martins@oracle.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH v1 1/4] device-dax: Make align a per-device property
+Date:   Thu, 16 Jul 2020 18:29:10 +0100
+Message-Id: <20200716172913.19658-2-joao.m.martins@oracle.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200716172913.19658-1-joao.m.martins@oracle.com>
+References: <20200716172913.19658-1-joao.m.martins@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007160126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007160126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Introduce @align to struct dev_dax.
 
-On Thu, Jul 16, 2020 at 07:17:27PM +0200, Marek Behún wrote:
-> Hello,
-> 
-> this RFC series should apply on both net-next/master and Pavel's
-> linux-leds/for-master tree.
-> 
-> This adds support for LED's connected to some Marvell PHYs.
-> 
-> LEDs are specified via device-tree. Example:
-> 
-> ethernet-phy@1 {
-> 	reg = <1>;
-> 
-> 	leds {
-> 		led@0 {
-> 			reg = <0>;
-> 			color = <LED_COLOR_ID_GREEN>;
-> 			function = LED_FUNCTION_LINK;
-> 			linux,default-trigger = "hw:1000/100/10/nolink";
-> 		};
-> 
-> 		led@1 {
-> 			reg = <1>;
-> 			color = <LED_COLOR_ID_YELLOW>;
-> 			function = LED_FUNCTION_ACTIVITY;
-> 			linux,default-trigger = "hw:act/noact";
-> 		};
-> 	};
-> };
-> 
-> Since Marvell PHYs can control the LEDs themselves in various modes,
-> we need to be able to switch between them or disable them.
-> 
-> This is achieved by extending the LED trigger API with LED-private triggers.
-> The proposal for this is based on work by Ondrej and Pavel, but after writing
-> this support for Marvell PHYs I am not very happy how this turned out:
-> - this LED-private triggers API works by registering triggers with specific
->   private trigger type. If this trigger type is defined for a trigger, only
->   those LEDs will be able to set this trigger which also have this trigger type.
->   (Both structs led_classdev and led_trigger have member trigger_type)
-> - on Marvell PHYs each LED can have up to 8 different triggers
-> - currently the driver supports up to 6 LEDs, since at least 88E1340 support
->   6 LEDs
-> - almost every LED supports some mode which is not supported by at least one
->   other LED
-> - this leads to the following dillema:
->   1. either we support one trigger type across the driver, but then the
->      /sys/class/leds/<LED>/trigger file will also list HW triggers not
->      supported by this specific LED,
->   2. or we add 6 trigger types, each different one LED, and register up to
->      8 HW triggers for each trigger type, which results in up to 48 triggers
->      per this driver.
->   In this proposal alternative 1 is taken and when unsupported HW trigger
->   is requested by writing to /sys/class/leds/<LED>/trigger file, the write
->   system call returns -EOPNOTSUPP.
-> - therefore I think that this is not the correct way how to implement
->   LED-private triggers, and instead an approach as desribed in [1].
->   What do you people think?
+When creating a new device, we still initialize to the default
+dax_region @align. Child devices belonging to a region may wish
+to keep a different alignment property instead of a global
+region-defined one.
 
-This seems easily solvable by using sysfs attributes for specific hw mode
-configuration.
+Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+---
+ drivers/dax/bus.c         |  1 +
+ drivers/dax/dax-private.h |  1 +
+ drivers/dax/device.c      | 35 +++++++++++++++--------------------
+ 3 files changed, 17 insertions(+), 20 deletions(-)
 
-This would result in having one private trigger registered with all the special
-casing being done in your sysfs *_store/show functions that could be made per LED,
-because sysfs functions get a reference to led_classdev.
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index 8b6c4ddc5f42..2578651c596e 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -1215,6 +1215,7 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
+ 
+ 	dev_dax->dax_dev = dax_dev;
+ 	dev_dax->target_node = dax_region->target_node;
++	dev_dax->align = dax_region->align;
+ 	ida_init(&dev_dax->ida);
+ 	kref_get(&dax_region->kref);
+ 
+diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+index 13780f62b95e..96ef5a8ae0ba 100644
+--- a/drivers/dax/dax-private.h
++++ b/drivers/dax/dax-private.h
+@@ -62,6 +62,7 @@ struct dax_mapping {
+ struct dev_dax {
+ 	struct dax_region *region;
+ 	struct dax_device *dax_dev;
++	unsigned int align;
+ 	int target_node;
+ 	int id;
+ 	struct ida ida;
+diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+index 2bfc5c83e3b0..346c7bb8cf06 100644
+--- a/drivers/dax/device.c
++++ b/drivers/dax/device.c
+@@ -17,7 +17,6 @@
+ static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+ 		const char *func)
+ {
+-	struct dax_region *dax_region = dev_dax->region;
+ 	struct device *dev = &dev_dax->dev;
+ 	unsigned long mask;
+ 
+@@ -32,7 +31,7 @@ static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+ 		return -EINVAL;
+ 	}
+ 
+-	mask = dax_region->align - 1;
++	mask = dev_dax->align - 1;
+ 	if (vma->vm_start & mask || vma->vm_end & mask) {
+ 		dev_info_ratelimited(dev,
+ 				"%s: %s: fail, unaligned vma (%#lx - %#lx, %#lx)\n",
+@@ -86,13 +85,13 @@ static vm_fault_t __dev_dax_pte_fault(struct dev_dax *dev_dax,
+ 		return VM_FAULT_SIGBUS;
+ 
+ 	dax_region = dev_dax->region;
+-	if (dax_region->align > PAGE_SIZE) {
++	if (dev_dax->align > PAGE_SIZE) {
+ 		dev_dbg(dev, "alignment (%#x) > fault size (%#x)\n",
+-			dax_region->align, fault_size);
++			dev_dax->align, fault_size);
+ 		return VM_FAULT_SIGBUS;
+ 	}
+ 
+-	if (fault_size != dax_region->align)
++	if (fault_size != dev_dax->align)
+ 		return VM_FAULT_SIGBUS;
+ 
+ 	phys = dax_pgoff_to_phys(dev_dax, vmf->pgoff, PAGE_SIZE);
+@@ -120,15 +119,15 @@ static vm_fault_t __dev_dax_pmd_fault(struct dev_dax *dev_dax,
+ 		return VM_FAULT_SIGBUS;
+ 
+ 	dax_region = dev_dax->region;
+-	if (dax_region->align > PMD_SIZE) {
++	if (dev_dax->align > PMD_SIZE) {
+ 		dev_dbg(dev, "alignment (%#x) > fault size (%#x)\n",
+-			dax_region->align, fault_size);
++			dev_dax->align, fault_size);
+ 		return VM_FAULT_SIGBUS;
+ 	}
+ 
+-	if (fault_size < dax_region->align)
++	if (fault_size < dev_dax->align)
+ 		return VM_FAULT_SIGBUS;
+-	else if (fault_size > dax_region->align)
++	else if (fault_size > dev_dax->align)
+ 		return VM_FAULT_FALLBACK;
+ 
+ 	/* if we are outside of the VMA */
+@@ -164,15 +163,15 @@ static vm_fault_t __dev_dax_pud_fault(struct dev_dax *dev_dax,
+ 		return VM_FAULT_SIGBUS;
+ 
+ 	dax_region = dev_dax->region;
+-	if (dax_region->align > PUD_SIZE) {
++	if (dev_dax->align > PUD_SIZE) {
+ 		dev_dbg(dev, "alignment (%#x) > fault size (%#x)\n",
+-			dax_region->align, fault_size);
++			dev_dax->align, fault_size);
+ 		return VM_FAULT_SIGBUS;
+ 	}
+ 
+-	if (fault_size < dax_region->align)
++	if (fault_size < dev_dax->align)
+ 		return VM_FAULT_SIGBUS;
+-	else if (fault_size > dax_region->align)
++	else if (fault_size > dev_dax->align)
+ 		return VM_FAULT_FALLBACK;
+ 
+ 	/* if we are outside of the VMA */
+@@ -267,9 +266,8 @@ static int dev_dax_split(struct vm_area_struct *vma, unsigned long addr)
+ {
+ 	struct file *filp = vma->vm_file;
+ 	struct dev_dax *dev_dax = filp->private_data;
+-	struct dax_region *dax_region = dev_dax->region;
+ 
+-	if (!IS_ALIGNED(addr, dax_region->align))
++	if (!IS_ALIGNED(addr, dev_dax->align))
+ 		return -EINVAL;
+ 	return 0;
+ }
+@@ -278,9 +276,8 @@ static unsigned long dev_dax_pagesize(struct vm_area_struct *vma)
+ {
+ 	struct file *filp = vma->vm_file;
+ 	struct dev_dax *dev_dax = filp->private_data;
+-	struct dax_region *dax_region = dev_dax->region;
+ 
+-	return dax_region->align;
++	return dev_dax->align;
+ }
+ 
+ static const struct vm_operations_struct dax_vm_ops = {
+@@ -319,13 +316,11 @@ static unsigned long dax_get_unmapped_area(struct file *filp,
+ {
+ 	unsigned long off, off_end, off_align, len_align, addr_align, align;
+ 	struct dev_dax *dev_dax = filp ? filp->private_data : NULL;
+-	struct dax_region *dax_region;
+ 
+ 	if (!dev_dax || addr)
+ 		goto out;
+ 
+-	dax_region = dev_dax->region;
+-	align = dax_region->align;
++	align = dev_dax->align;
+ 	off = pgoff << PAGE_SHIFT;
+ 	off_end = off + len;
+ 	off_align = round_up(off, align);
+-- 
+2.17.1
 
-You can then apply any kind of constraints fairly easily in sysfs interface
-for your hw trigger.
-
-See my driver: https://megous.com/git/linux/commit/?h=tbs-a711-5.8&id=a4da688b5d48011777d1e870a7d2b42edc9d144f
-
-I guess unless you really want to have all possible configureations exposed
-as differently named triggers via the led/trigger sysfs interface. But as you
-see it makes things complicated.
-
-regards,
-	o.
-
-
-> Marek
-> 
-> Marek Behún (3):
->   leds: trigger: add support for LED-private device triggers
->   leds: trigger: return error value if .activate() failed
->   net: phy: marvell: add support for PHY LEDs via LED class
-> 
->  drivers/leds/led-triggers.c |  32 ++--
->  drivers/net/phy/Kconfig     |   7 +
->  drivers/net/phy/marvell.c   | 307 +++++++++++++++++++++++++++++++++++-
->  include/linux/leds.h        |  10 ++
->  4 files changed, 346 insertions(+), 10 deletions(-)
-> 
-> -- 
-> 2.26.2
-> 
