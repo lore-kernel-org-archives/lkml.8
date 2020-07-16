@@ -2,249 +2,152 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC990C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ECBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C421F2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594919427;
-	bh=j6kpk2g2tI37ixMcAFS4b2eXAS3B2LSFqvWtCJFWW08=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=HZLddnIawUoO1pSS90KzSEBmPP2StuaFP8h/lv2dB+qlCRD77ASiE6D0Cf6yEgaB1
-	 cvs1dBCuM7q9S4ju8ZyUEkf4rC1lvJlojqzvtUTsADO0QsRpNkenyXgJatbaHU/XKt
-	 hURi5lvNWhMG4OqBNg2MKelYdkSLYCT9yiZRDS2A=
+	by mail.kernel.org (Postfix) with ESMTP id DBC51204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgGPRK0 (ORCPT
+        id S1728807AbgGPROI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbgGPRK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:10:26 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1A5C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:10:25 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id g37so4773293otb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:10:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=74VCADifLAjW5QPg1wIiKFbTZE5Zk+0UxL1G9qiWDfU=;
-        b=ATLY3ADcfNMXjwxTz5e/3qQ/hjPPxzPinh3EbuXsvn07xGcW/3W5O22FyyqYP+GEfn
-         ZGHbXAseThuZQfmOpBANR07eo0wZrprTqC/UAFg4zXcWMDoy4xMX6brLRi9wSMc0JNoy
-         zbmXnRJFwCuMBF9gUZb+e7STiNbM/6whKcu8E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=74VCADifLAjW5QPg1wIiKFbTZE5Zk+0UxL1G9qiWDfU=;
-        b=P2BrEggJtgTVe2UoE6bsUeFOfykVcCFyhpY079o1UKaGoNbMEAY8gYD6qn9H0BngNt
-         IGixoF2YAbS9lGwT5jLMg2EtyuxkrcjZZtQblMwNEBiGcGu1JuZu18Q3O3UG15fsVEb+
-         zsekDWXYOfHuC+fsG82jNKTPirehpJYsmYbgOgqHFxilVpwPqHo6u75HSHK0hDlYG6O6
-         nW7d5V/VcHIsjjDHL5EKphgPJ+7gyh/xsux7PzZwnxfeMa7WXF2T+KAfq2KDgfgTm7VG
-         HCMQUYTkmGMTsD7EDP3Ov6zp1XmtpHz8ciBU0lIjxqvzVMVjz9sfgUVWzprQzi++kplJ
-         yzTQ==
-X-Gm-Message-State: AOAM530nDl6gzIfMMqnOrjynhzWTs6Qab1QMCVYlr+ePvSTNgl9PG/JS
-        LfzxozlxnOw0a+seralhARoO8Q==
-X-Google-Smtp-Source: ABdhPJzuDxQBmf0/WSARbFEvj0I0lNmxbC39konR22yd2dlhEBWFopRh0Q6fzhuY1pxfLBYQGaW8dQ==
-X-Received: by 2002:a9d:6b92:: with SMTP id b18mr5184027otq.367.1594919424977;
-        Thu, 16 Jul 2020 10:10:24 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id t10sm1268907otd.78.2020.07.16.10.10.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 10:10:24 -0700 (PDT)
-Subject: Re: [PATCH] cpupower: Provide offline CPU information for cpuidle-set
- and cpufreq-set options
-To:     latha@linux.vnet.ibm.com, trenn@suse.com, shuah@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200713075647.70036-1-latha@linux.vnet.ibm.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <839adf7f-8875-47c5-0126-038e69e638ac@linuxfoundation.org>
-Date:   Thu, 16 Jul 2020 11:10:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200713075647.70036-1-latha@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Jul 2020 13:14:08 -0400
+Received: from mga18.intel.com ([134.134.136.126]:3242 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728237AbgGPROI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:14:08 -0400
+IronPort-SDR: V7I+Fu9P0xR6n8pnXJ7lmTTRCZHOX/MV7eEMu8i9R6iGjBZajrzku09Scyl/nIm+k7BtxHds8D
+ dq/HQ552JHEw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="136896015"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="136896015"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 10:14:07 -0700
+IronPort-SDR: 6R0t2Qz3xSDnnYjKm0gNGfTjzRigT680d016xG8ijHFG4kqpS3pVSpC4YV+DWV4U1Pt2CT/GuN
+ Ad4BlzF4EQGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="308707428"
+Received: from joycetoh-desk.sc.intel.com ([172.25.206.187])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Jul 2020 10:14:06 -0700
+From:   Harsha Priya <harshapriya.n@intel.com>
+To:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        pierre-louis.bossart@linux.intel.com
+Cc:     lma@semihalf.com, yang.jie@linux.intel.com,
+        liam.r.girdwood@linux.intel.com, rad@semihalf.com,
+        zwisler@google.com, linux-kernel@vger.kernel.org,
+        sathya.prakash.m.r@intel.com, brndt@google.com, mw@semihalf.com,
+        levinale@chromium.org,
+        Vamshi Krishna Gopal <vamshi.krishna.gopal@intel.com>,
+        Harsha Priya <harshapriya.n@intel.com>
+Subject: [PATCH v6] ASoC: Intel: kbl_rt5663_rt5514_max98927: Fix kabylake_ssp_fixup function
+Date:   Thu, 16 Jul 2020 10:13:57 -0700
+Message-Id: <1594919637-31460-1-git-send-email-harshapriya.n@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 1:56 AM, latha@linux.vnet.ibm.com wrote:
-> From: Brahadambal Srinivasan <latha@linux.vnet.ibm.com>
-> 
-> When a user tries to modify cpuidle or cpufreq properties on offline
-> CPUs, the tool returns success (exit status 0) but also does not provide
-> any warning message regarding offline cpus that may have been specified
-> but left unchanged. In case of all or a few CPUs being offline, it can be
-> difficult to keep track of which CPUs didn't get the new frequency or idle
-> state set. Silent failures are difficult to keep track of when there are a
-> huge number of CPUs on which the action is performed.
-> 
-> This patch adds an additional message if the user attempts to modify
-> offline cpus.
-> 
+From: Vamshi Krishna Gopal <vamshi.krishna.gopal@intel.com>
 
-The idea is good. A few comments below on implementing it with
-duplicated code in cmd_freq_set() and cmd_idle_set().
+kabylake_ssp_fixup function uses snd_soc_dpcm to identify the codecs DAIs.
+The hw parameters are changed based on the codec DAI,
+the stream is intended for. The earlier approach to get
+snd_soc_dpcm was using container_of() macro on snd_pcm_hw_params.
+The structures have been modified over time and snd_soc_dpcm does 
+not have snd_pcm_hw_params as a reference but as a copy.
+This causes the current driver to crash when used.
+This patch changes the way snd_soc_dpcm is extracted.
+The snd_soc_pcm_runtime holds 2 dpcm
+instances (one for playback and one for capture).
+The 2 codecs on this SSP are dmic and speakers.
+One is for capture and one is for playback respectively.
+Based on the direction of the stream,
+the snd_soc_dpcm is extracted from the snd_soc_pcm_runtime structure.
+Tested for all use cases of the driver.
 
-Please eliminate code duplication as much as possible. Handling
-offline_cpus alloc/free similar to cpus_chosen will reduce some
-duplication.
+Signed-off-by: Harsha Priya <harshapriya.n@intel.com>
+Signed-off-by: Vamshi Krishna Gopal <vamshi.krishna.gopal@intel.com>
+Tested-by: Lukasz Majczak <lma@semihalf.com>
+---
+v1 -> v2:
+- Extract dmic from SSP0 as every BE should have own fixup function.
+v2 -> v3:
+- Restore naming in the dapm route table to not confuse with other
+drivers
+- Fixed indentations
+v3 -> v4:
+- Updated code and commit description according to
+solution proposed by Harsha
+v4 -> v5:
+- Cosmetic Changes
+v5 -> v6:
+- Dmic regression seen with v4 fixed 
+- Using available routines for obtaining dpcm information
+---
+---
+ .../intel/boards/kbl_rt5663_rt5514_max98927.c | 26 ++++++++++++-------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-> Reported-by: Pavithra R. Prakash <pavrampu@in.ibm.com>
-> Signed-off-by: Brahadambal Srinivasan <latha@linux.vnet.ibm.com>
-> ---
->   tools/power/cpupower/utils/cpufreq-set.c | 24 ++++++++++++++++++++++--
->   tools/power/cpupower/utils/cpuidle-set.c | 21 ++++++++++++++++++++-
->   2 files changed, 42 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
-> index 6ed82fba5aaa..87031120582a 100644
-> --- a/tools/power/cpupower/utils/cpufreq-set.c
-> +++ b/tools/power/cpupower/utils/cpufreq-set.c
-> @@ -195,10 +195,14 @@ int cmd_freq_set(int argc, char **argv)
->   	extern int optind, opterr, optopt;
->   	int ret = 0, cont = 1;
->   	int double_parm = 0, related = 0, policychange = 0;
-> +	int str_len = 0;
->   	unsigned long freq = 0;
->   	char gov[20];
-> +	char *offline_cpus_str = NULL;
->   	unsigned int cpu;
->   
-> +	struct bitmask *offline_cpus = NULL;
-> +
->   	struct cpufreq_policy new_pol = {
->   		.min = 0,
->   		.max = 0,
-> @@ -311,14 +315,21 @@ int cmd_freq_set(int argc, char **argv)
->   		}
->   	}
->   
-> +	offline_cpus = bitmask_alloc(sysconf(_SC_NPROCESSORS_CONF));
-> +	str_len = sysconf(_SC_NPROCESSORS_CONF) * 5;
-> +	offline_cpus_str = malloc(sizeof(char) * str_len);
->   
+diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+index 584e4f9cedc2..b261b1c466a8 100644
+--- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
++++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+@@ -379,22 +379,30 @@ static int kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
+ 	struct snd_interval *chan = hw_param_interval(params,
+ 			SNDRV_PCM_HW_PARAM_CHANNELS);
+ 	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
+-	struct snd_soc_dpcm *dpcm = container_of(
+-			params, struct snd_soc_dpcm, hw_params);
+-	struct snd_soc_dai_link *fe_dai_link = dpcm->fe->dai_link;
+-	struct snd_soc_dai_link *be_dai_link = dpcm->be->dai_link;
++	struct snd_soc_dpcm *dpcm, *rtd_dpcm;
++
++	/*
++	 * This macro will be called for playback stream
++	 */
++	for_each_dpcm_fe(rtd, SNDRV_PCM_STREAM_PLAYBACK, dpcm)
++		rtd_dpcm = dpcm;
++	/*
++	 * This macro will be called for capture stream
++	 */
++	for_each_dpcm_fe(rtd, SNDRV_PCM_STREAM_CAPTURE, dpcm)
++		rtd_dpcm = dpcm;
+ 
+ 	/*
+ 	 * The ADSP will convert the FE rate to 48k, stereo, 24 bit
+ 	 */
+-	if (!strcmp(fe_dai_link->name, "Kbl Audio Port") ||
+-	    !strcmp(fe_dai_link->name, "Kbl Audio Headset Playback") ||
+-	    !strcmp(fe_dai_link->name, "Kbl Audio Capture Port")) {
++	if (!strcmp(rtd_dpcm->fe->dai_link->name, "Kbl Audio Port") ||
++	    !strcmp(rtd_dpcm->fe->dai_link->name, "Kbl Audio Headset Playback") ||
++	    !strcmp(rtd_dpcm->fe->dai_link->name, "Kbl Audio Capture Port")) {
+ 		rate->min = rate->max = 48000;
+ 		chan->min = chan->max = 2;
+ 		snd_mask_none(fmt);
+ 		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S24_LE);
+-	} else if (!strcmp(fe_dai_link->name, "Kbl Audio DMIC cap")) {
++	} else if (!strcmp(rtd_dpcm->fe->dai_link->name, "Kbl Audio DMIC cap")) {
+ 		if (params_channels(params) == 2 ||
+ 				DMIC_CH(dmic_constraints) == 2)
+ 			chan->min = chan->max = 2;
+@@ -405,7 +413,7 @@ static int kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
+ 	 * The speaker on the SSP0 supports S16_LE and not S24_LE.
+ 	 * thus changing the mask here
+ 	 */
+-	if (!strcmp(be_dai_link->name, "SSP0-Codec"))
++	if (!strcmp(rtd_dpcm->be->dai_link->name, "SSP0-Codec"))
+ 		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
+ 
+ 	return 0;
+-- 
+2.17.1
 
-Allocate once when cpus_chosen is allocated.
-
->   	/* loop over CPUs */
->   	for (cpu = bitmask_first(cpus_chosen);
->   	     cpu <= bitmask_last(cpus_chosen); cpu++) {
->   
-> -		if (!bitmask_isbitset(cpus_chosen, cpu) ||
-> -		    cpupower_is_cpu_online(cpu) != 1)
-> +		if (!bitmask_isbitset(cpus_chosen, cpu))
-> +			continue;
-> +
-> +		if (cpupower_is_cpu_online(cpu) != 1) {
-> +			bitmask_setbit(offline_cpus, cpu);
->   			continue;
-> +		}
->   
->   		printf(_("Setting cpu: %d\n"), cpu);
->   		ret = do_one_cpu(cpu, &new_pol, freq, policychange);
-> @@ -328,5 +339,14 @@ int cmd_freq_set(int argc, char **argv)
->   		}
->   	}
->   
-> +	if (!bitmask_isallclear(offline_cpus)) {
-> +		bitmask_displaylist(offline_cpus_str, str_len, offline_cpus);
-> +		printf(_("Following CPUs are offline:\n%s\n"),
-> +			 offline_cpus_str);
-> +		printf(_("cpupower set operation was not performed on them\n"));
-> +	}
-
-Make the printing common for cmd_idle_set() and cmd_freq_set().
-Make this generic to be able to print online and offline cpus.
-
-> +	free(offline_cpus_str);
-> +	bitmask_free(offline_cpus);
-
-Free these from main()
-
-> +
->   	return 0;
->   }
-> diff --git a/tools/power/cpupower/utils/cpuidle-set.c b/tools/power/cpupower/utils/cpuidle-set.c
-> index 569f268f4c7f..adf6543fd3d6 100644
-> --- a/tools/power/cpupower/utils/cpuidle-set.c
-> +++ b/tools/power/cpupower/utils/cpuidle-set.c
-> @@ -27,9 +27,12 @@ int cmd_idle_set(int argc, char **argv)
->   	extern char *optarg;
->   	extern int optind, opterr, optopt;
->   	int ret = 0, cont = 1, param = 0, disabled;
-> +	int str_len = 0;
->   	unsigned long long latency = 0, state_latency;
->   	unsigned int cpu = 0, idlestate = 0, idlestates = 0;
->   	char *endptr;
-> +	char *offline_cpus_str = NULL;
-> +	struct bitmask *offline_cpus = NULL;
->   
->   	do {
->   		ret = getopt_long(argc, argv, "d:e:ED:", info_opts, NULL);
-> @@ -99,14 +102,20 @@ int cmd_idle_set(int argc, char **argv)
->   	if (bitmask_isallclear(cpus_chosen))
->   		bitmask_setall(cpus_chosen);
->   
-> +	offline_cpus = bitmask_alloc(sysconf(_SC_NPROCESSORS_CONF));
-> +	str_len = sysconf(_SC_NPROCESSORS_CONF) * 5;
-> +	offline_cpus_str = (void *)malloc(sizeof(char) * str_len);
-> +
-
-Same comment as before.
-
->   	for (cpu = bitmask_first(cpus_chosen);
->   	     cpu <= bitmask_last(cpus_chosen); cpu++) {
->   
->   		if (!bitmask_isbitset(cpus_chosen, cpu))
->   			continue;
->   
-> -		if (cpupower_is_cpu_online(cpu) != 1)
-> +		if (cpupower_is_cpu_online(cpu) != 1) {
-> +			bitmask_setbit(offline_cpus, cpu);
->   			continue;
-> +		}
->   
->   		idlestates = cpuidle_state_count(cpu);
->   		if (idlestates <= 0)
-> @@ -181,5 +190,15 @@ int cmd_idle_set(int argc, char **argv)
->   			break;
->   		}
->   	}
-> +
-> +	if (!bitmask_isallclear(offline_cpus)) {
-> +		bitmask_displaylist(offline_cpus_str, str_len, offline_cpus);
-> +		printf(_("Following CPUs are offline:\n%s\n"),
-> +			 offline_cpus_str);
-> +		printf(_("CPU idle operation was not performed on them\n"));
-> +	}
-
-Same comment as before.
-
-> +	free(offline_cpus_str);
-> +	bitmask_free(offline_cpus);
-> +
-
-Same comment as before.
->   	return EXIT_SUCCESS;
->   }
-> 
-
-thanks,
--- Shuah
