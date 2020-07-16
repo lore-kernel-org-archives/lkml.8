@@ -2,198 +2,162 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED148C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91ECCC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC56C207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AB5207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cr6sTEgr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgGPB2x convert rfc822-to-8bit (ORCPT
+        id S1728017AbgGPB3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 21:28:53 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2643 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726776AbgGPB2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 21:28:53 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 3CC0BA0E7C6EE7FA304C;
-        Thu, 16 Jul 2020 09:28:49 +0800 (CST)
-Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.195]) by
- DGGEMM402-HUB.china.huawei.com ([10.3.20.210]) with mapi id 14.03.0487.000;
- Thu, 16 Jul 2020 09:28:45 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Qian Cai <cai@lca.pw>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michel Lespinasse" <walken@google.com>,
-        Denis Efremov <efremov@linux.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] vfio/pci: fix racy on error and request eventfd ctx
-Thread-Topic: [PATCH] vfio/pci: fix racy on error and request eventfd ctx
-Thread-Index: AQHWWnqQ+QrCfngfhUOguFGy1o0RgqkIHjeAgAFMeKA=
-Date:   Thu, 16 Jul 2020 01:28:45 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED415861C7@dggemm526-mbx.china.huawei.com>
-References: <1594798484-20501-1-git-send-email-prime.zeng@hisilicon.com>
- <20200715133418.GA4426@lca.pw>
-In-Reply-To: <20200715133418.GA4426@lca.pw>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 15 Jul 2020 21:29:10 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:34655 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727948AbgGPB3J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 21:29:09 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200716012905epoutp023a649aa1a69de336404427e2597cc865~iF2Yv0NeD3102431024epoutp02H
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 01:29:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200716012905epoutp023a649aa1a69de336404427e2597cc865~iF2Yv0NeD3102431024epoutp02H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594862945;
+        bh=zJAofxopHC79zQoylSIOCNiUOlixBr/fMm5A5jguGag=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=cr6sTEgrDyJs7JdFPYKOvIvV+wvsaE5YN/VWHlqTjbAjbcy17E1+2iebkMk9ogdWl
+         9T9JSjXvVWCqqAijuRczGn9kcbkDAOpA8xu6+xGR1GPXqU/QJfguusMOqwfscBm1gu
+         5Ag/KzyulWI6CCgnZmdHt4qqcTr4raYkytyrmZqQ=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200716012905epcas5p204deaf7e5976678fc2ba273493f3b109~iF2YYM6EA0226702267epcas5p26;
+        Thu, 16 Jul 2020 01:29:05 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        10.1A.09467.16DAF0F5; Thu, 16 Jul 2020 10:29:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200716010507epcas5p39199ecd12a90acc5fd78638b81da8c7b~iFhc4Ll_o1595915959epcas5p3k;
+        Thu, 16 Jul 2020 01:05:07 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200716010507epsmtrp218aca61e5835c9e7fd938c3f5140c3e4~iFhc3M6wz1822418224epsmtrp2N;
+        Thu, 16 Jul 2020 01:05:07 +0000 (GMT)
+X-AuditID: b6c32a49-a29ff700000024fb-7d-5f0fad61209f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9B.CA.08303.2C7AF0F5; Thu, 16 Jul 2020 10:05:06 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200716010502epsmtip28c10b8dedc26391bce95c358131414f9~iFhY88V8K2786027860epsmtip2I;
+        Thu, 16 Jul 2020 01:05:02 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     <daejun7.park@samsung.com>, <avri.altman@wdc.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <asutoshd@codeaurora.org>, <beanhuo@micron.com>,
+        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
+        <bvanassche@acm.org>, <tomas.winkler@intel.com>
+Cc:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Sang-yoon Oh'" <sangyoon.oh@samsung.com>,
+        "'Sung-Jun Park'" <sungjun07.park@samsung.com>,
+        "'yongmyung lee'" <ymhungry.lee@samsung.com>,
+        "'Jinyoung CHOI'" <j-young.choi@samsung.com>,
+        "'Adel Choi'" <adel.choi@samsung.com>,
+        "'BoRam Shin'" <boram.shin@samsung.com>
+In-Reply-To: <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
+Subject: RE: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
+Date:   Thu, 16 Jul 2020 06:35:00 +0530
+Message-ID: <077301d65b0d$24d79920$6e86cb60$@samsung.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQNTAwbo7R95v2Jv+B+oDyvdEhuZkAJ3qsxbpfxVr7A=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLKsWRmVeSWpSXmKPExsWy7bCmlm7iWv54gzMzuC023n3FarG37QS7
+        xcufV9ksDj7sZLE4fPsdu8W0Dz+ZLT6tX8ZqsepBuEVv/1Y2i0U3tjFZXN41h82i+/oONovl
+        x/8xWUx4uYTFYunWm4wWndPXsFh86KmzWLRwN4uDkMflK94el/t6mTwW73nJ5DFh0QFGj5aT
+        +1k8vq/vYPP4+PQWi0ffllWMHp83yXm0H+hmCuCK4rJJSc3JLEst0rdL4MrY2LiVraCds+JX
+        6zrmBsaH7F2MnBwSAiYSPUs/MnYxcnEICexmlJhzbAczhPOJUeLEx79Qmc+MEvferoFreb31
+        GJgtJLCLUWJbozZE0RtGif1f1rKAJNgEdCV2LG5jA0mICLQwSRyf0g42l1ngApPEve+3WUGq
+        OAXsJT7+n8UGYgsLeEv8fjsDzGYRUJX4fPow2ApeAUuJQ59+skHYghInZz4B28AsoC2xbOFr
+        ZoiTFCR+Pl0GNlNEwEpiy7E57BA14hJHf/ZA1TRzStxt8YKwXSSutvexQdjCEq+Ob4F6TUri
+        87u9QHEOIDtbomeXMUS4RmLpvGMsELa9xIErc1hASpgFNCXW79KHCMtKTD21jgliK59E7+8n
+        TBBxXokd82BsVYnmd1ehxkhLTOzuZp3AqDQLyWOzkDw2C8kDsxC2LWBkWcUomVpQnJueWmxa
+        YJiXWq5XnJhbXJqXrpecn7uJEZwitTx3MN598EHvECMTB+MhRgkOZiURXh4u3ngh3pTEyqrU
+        ovz4otKc1OJDjNIcLErivEo/zsQJCaQnlqRmp6YWpBbBZJk4OKUamJKv8/Ue7opik5dNvfGf
+        S++qr5vUuo7DHHyb/gW9OVS58x6/yiK9NU+/KTZrc6mdmdc6971RVMkdN81nEas/n8ve9lz6
+        10ru7XK3KhMXr6xVnu8hZf67K7ZOZ8+NXWGB3xLYZfWkUnnFhCV7Ge1O/Pt/u3kmr0/V/aa1
+        PJM9dp2e1cxtU9UzIVGlqs1ro1W0+HOhnduOvefhXhYROWWrXIA2y632yaaHOHTsznqs5XB6
+        Y1F9M1ytfuN6v1ez1fvCPsSX64oxsM/IUo/ivfKH7V/is99XNxxSOHzv8/xDgbuD7zxheiUx
+        NSX+rJ1Pp9ehG8bMwq903pw+serR/fjVTN/mLrjAzXjV0yafQ2SijRJLcUaioRZzUXEiAEoh
+        ZqYABAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEIsWRmVeSWpSXmKPExsWy7bCSvO6h5fzxBhO3m1hsvPuK1WJv2wl2
+        i5c/r7JZHHzYyWJx+PY7dotpH34yW3xav4zVYtWDcIve/q1sFotubGOyuLxrDptF9/UdbBbL
+        j/9jspjwcgmLxdKtNxktOqevYbH40FNnsWjhbhYHIY/LV7w9Lvf1Mnks3vOSyWPCogOMHi0n
+        97N4fF/fwebx8ektFo++LasYPT5vkvNoP9DNFMAVxWWTkpqTWZZapG+XwJUx6d1ypoJrHBW3
+        b/xmb2DcxN7FyMkhIWAi8XrrMSCbi0NIYAejRNOkA1AJaYnrGydA2cISK/89hyp6xShx/dhl
+        NpAEm4CuxI7FbWwgCRGBCUwSE2d8YgVxmAWuMUn8+fgZrEpIoIVRYs8tThCbU8Be4uP/WWBx
+        YQFvid9vZ4DZLAKqEp9PHwZbxytgKXHo0082CFtQ4uTMJywgNrOAtsTTm0/h7GULXzNDnKcg
+        8fPpMlYQW0TASmLLsTnsEDXiEkd/9jBPYBSehWTULCSjZiEZNQtJywJGllWMkqkFxbnpucWG
+        BUZ5qeV6xYm5xaV56XrJ+bmbGMHRrqW1g3HPqg96hxiZOBgPMUpwMCuJ8PJw8cYL8aYkVlal
+        FuXHF5XmpBYfYpTmYFES5/06a2GckEB6YklqdmpqQWoRTJaJg1OqgUlh/cTuQ+VvZs6YpSwj
+        78VqZNC3atLc5c0Kvmnlb7cL+JxpmbF3z+x55wqL7ST+2P6tXrBH5ZJIYrQdx/domwfuMl0M
+        1VtcbwS7JR5e+DSuQyNpG69rm0d0dpykQOj66w8y7907uvH/lPhF/nw7pQ8Vcn674Pg+4bxD
+        xqfEXKvb/9/a9c6rfvRltqHxrj8SG/cw5De/8MkyvcEkln35jOx/g/jFPt2B9RuVbqcUmF21
+        LCxpvB/IdyHBY41T2KprM5543ih99ue6cmXvH+OHvuyu/ZPYF5npMaRynF7y6YTcPONNAibX
+        jvN6BbNvjL4/Idw1zuY9W5lPiG/xt4TSDI0zS5qils0ymt8gsLq/R4mlOCPRUIu5qDgRAMSm
+        rkNlAwAA
+X-CMS-MailID: 20200716010507epcas5p39199ecd12a90acc5fd78638b81da8c7b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8
+References: <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p8>
+        <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Avri,
+
 > -----Original Message-----
-> From: Qian Cai [mailto:cai@lca.pw]
-> Sent: Wednesday, July 15, 2020 9:34 PM
-> To: Zengtao (B)
-> Cc: alex.williamson@redhat.com; Cornelia Huck; Kevin Tian; Peter Xu;
-> Andrew Morton; Michel Lespinasse; Denis Efremov; kvm@vger.kernel.org;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] vfio/pci: fix racy on error and request eventfd ctx
-> 
-> On Wed, Jul 15, 2020 at 03:34:41PM +0800, Zeng Tao wrote:
-> > The vfio_pci_release call will free and clear the error and request
-> > eventfd ctx while these ctx could be in use at the same time in the
-> > function like vfio_pci_request, and it's expected to protect them under
-> > the vdev->igate mutex, which is missing in vfio_pci_release.
-> 
-> How about other similar places calling eventfd_ctx_put() for "struct
-> vfio_pci_device" ? For example, vfio_intx_set_signal().
->
-I think there is no need, since the only wrapper call is
-vfio_pci_set_irqs_ioctl which is already protected by the igate mutex.
- 
-> >
-> > This issue is introduced since commit 1518ac272e78 ("vfio/pci: fix
-> memory
-> > leaks of eventfd ctx"),and since commit 5c5866c593bb ("vfio/pci: Clear
-> > error and request eventfd ctx after releasing"), it's very easily to
-> > trigger the kernel panic like this:
-> >
-> > [ 9513.904346] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000008
-> > [ 9513.913091] Mem abort info:
-> > [ 9513.915871]   ESR = 0x96000006
-> > [ 9513.918912]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > [ 9513.924198]   SET = 0, FnV = 0
-> > [ 9513.927238]   EA = 0, S1PTW = 0
-> > [ 9513.930364] Data abort info:
-> > [ 9513.933231]   ISV = 0, ISS = 0x00000006
-> > [ 9513.937048]   CM = 0, WnR = 0
-> > [ 9513.940003] user pgtable: 4k pages, 48-bit VAs,
-> pgdp=0000007ec7d12000
-> > [ 9513.946414] [0000000000000008] pgd=0000007ec7d13003,
-> p4d=0000007ec7d13003, pud=0000007ec728c003,
-> pmd=0000000000000000
-> > [ 9513.956975] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> > [ 9513.962521] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1
-> vfio hclge hns3 hnae3 [last unloaded: vfio_pci]
-> > [ 9513.972998] CPU: 4 PID: 1327 Comm: bash Tainted: G        W
-> 5.8.0-rc4+ #3
-> > [ 9513.980443] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC,
-> BIOS 2280-V2 CS V3.B270.01 05/08/2020
-> > [ 9513.989274] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-> > [ 9513.994827] pc : _raw_spin_lock_irqsave+0x48/0x88
-> > [ 9513.999515] lr : eventfd_signal+0x6c/0x1b0
-> > [ 9514.003591] sp : ffff800038a0b960
-> > [ 9514.006889] x29: ffff800038a0b960 x28: ffff007ef7f4da10
-> > [ 9514.012175] x27: ffff207eefbbfc80 x26: ffffbb7903457000
-> > [ 9514.017462] x25: ffffbb7912191000 x24: ffff007ef7f4d400
-> > [ 9514.022747] x23: ffff20be6e0e4c00 x22: 0000000000000008
-> > [ 9514.028033] x21: 0000000000000000 x20: 0000000000000000
-> > [ 9514.033321] x19: 0000000000000008 x18: 0000000000000000
-> > [ 9514.038606] x17: 0000000000000000 x16: ffffbb7910029328
-> > [ 9514.043893] x15: 0000000000000000 x14: 0000000000000001
-> > [ 9514.049179] x13: 0000000000000000 x12: 0000000000000002
-> > [ 9514.054466] x11: 0000000000000000 x10: 0000000000000a00
-> > [ 9514.059752] x9 : ffff800038a0b840 x8 : ffff007ef7f4de60
-> > [ 9514.065038] x7 : ffff007fffc96690 x6 : fffffe01faffb748
-> > [ 9514.070324] x5 : 0000000000000000 x4 : 0000000000000000
-> > [ 9514.075609] x3 : 0000000000000000 x2 : 0000000000000001
-> > [ 9514.080895] x1 : ffff007ef7f4d400 x0 : 0000000000000000
-> > [ 9514.086181] Call trace:
-> > [ 9514.088618]  _raw_spin_lock_irqsave+0x48/0x88
-> > [ 9514.092954]  eventfd_signal+0x6c/0x1b0
-> > [ 9514.096691]  vfio_pci_request+0x84/0xd0 [vfio_pci]
-> > [ 9514.101464]  vfio_del_group_dev+0x150/0x290 [vfio]
-> > [ 9514.106234]  vfio_pci_remove+0x30/0x128 [vfio_pci]
-> > [ 9514.111007]  pci_device_remove+0x48/0x108
-> > [ 9514.115001]  device_release_driver_internal+0x100/0x1b8
-> > [ 9514.120200]  device_release_driver+0x28/0x38
-> > [ 9514.124452]  pci_stop_bus_device+0x68/0xa8
-> > [ 9514.128528]  pci_stop_and_remove_bus_device+0x20/0x38
-> > [ 9514.133557]  pci_iov_remove_virtfn+0xb4/0x128
-> > [ 9514.137893]  sriov_disable+0x3c/0x108
-> > [ 9514.141538]  pci_disable_sriov+0x28/0x38
-> > [ 9514.145445]  hns3_pci_sriov_configure+0x48/0xb8 [hns3]
-> > [ 9514.150558]  sriov_numvfs_store+0x110/0x198
-> > [ 9514.154724]  dev_attr_store+0x44/0x60
-> > [ 9514.158373]  sysfs_kf_write+0x5c/0x78
-> > [ 9514.162018]  kernfs_fop_write+0x104/0x210
-> > [ 9514.166010]  __vfs_write+0x48/0x90
-> > [ 9514.169395]  vfs_write+0xbc/0x1c0
-> > [ 9514.172694]  ksys_write+0x74/0x100
-> > [ 9514.176079]  __arm64_sys_write+0x24/0x30
-> > [ 9514.179987]  el0_svc_common.constprop.4+0x110/0x200
-> > [ 9514.184842]  do_el0_svc+0x34/0x98
-> > [ 9514.188144]  el0_svc+0x14/0x40
-> > [ 9514.191185]  el0_sync_handler+0xb0/0x2d0
-> > [ 9514.195088]  el0_sync+0x140/0x180
-> > [ 9514.198389] Code: b9001020 d2800000 52800022 f9800271
-> (885ffe61)
-> > [ 9514.204455] ---[ end trace 648de00c8406465f ]---
-> > [ 9514.212308] note: bash[1327] exited with preempt_count 1
-> >
-> > Cc: Qian Cai <cai@lca.pw>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Fixes: 1518ac272e78 ("vfio/pci: fix memory leaks of eventfd ctx")
-> > Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> > index f634c81..de881a6 100644
-> > --- a/drivers/vfio/pci/vfio_pci.c
-> > +++ b/drivers/vfio/pci/vfio_pci.c
-> > @@ -521,14 +521,19 @@ static void vfio_pci_release(void
-> *device_data)
-> >  		vfio_pci_vf_token_user_add(vdev, -1);
-> >  		vfio_spapr_pci_eeh_release(vdev->pdev);
-> >  		vfio_pci_disable(vdev);
-> > +		mutex_lock(&vdev->igate);
-> >  		if (vdev->err_trigger) {
-> >  			eventfd_ctx_put(vdev->err_trigger);
-> >  			vdev->err_trigger = NULL;
-> >  		}
-> > +		mutex_unlock(&vdev->igate);
-> > +
-> > +		mutex_lock(&vdev->igate);
-> >  		if (vdev->req_trigger) {
-> >  			eventfd_ctx_put(vdev->req_trigger);
-> >  			vdev->req_trigger = NULL;
-> >  		}
-> > +		mutex_unlock(&vdev->igate);
-> >  	}
-> >
-> >  	mutex_unlock(&vdev->reflck->lock);
-> > --
-> > 2.8.1
-> >
+> From: Daejun Park <daejun7.park=40samsung.com>
+> Sent: 13 July 2020 16:04
+> To: avri.altman=40wdc.com; jejb=40linux.ibm.com; martin.petersen=40oracle=
+.com;
+> asutoshd=40codeaurora.org; beanhuo=40micron.com;
+> stanley.chu=40mediatek.com; cang=40codeaurora.org; bvanassche=40acm.org;
+> tomas.winkler=40intel.com; ALIM AKHTAR <alim.akhtar=40samsung.com>; Daeju=
+n
+> Park <daejun7.park=40samsung.com>
+> Cc: linux-scsi=40vger.kernel.org; linux-kernel=40vger.kernel.org; Sang-yo=
+on Oh
+> <sangyoon.oh=40samsung.com>; Sung-Jun Park
+> <sungjun07.park=40samsung.com>; yongmyung lee
+> <ymhungry.lee=40samsung.com>; Jinyoung CHOI <j-young.choi=40samsung.com>;
+> Adel Choi <adel.choi=40samsung.com>; BoRam Shin
+> <boram.shin=40samsung.com>
+> Subject: =5BPATCH v6 0/5=5D scsi: ufs: Add Host Performance Booster Suppo=
+rt
+>=20
+> Changelog:
+>=20
+> v5 -> v6
+> Change base commit to b53293fa662e28ae0cdd40828dc641c09f133405
+>=20
+If no further comments, can this series have your Reviewed-by or Acked-by t=
+ag, so that this can be taken for 5.9?
+Thanks=21
+
+> v4 -> v5
+> Delete unused macro define.
+
+
