@@ -2,72 +2,61 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5726EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A802D206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594913234;
-	bh=HF59HhfAxezQDwn4F6WlpCVWM4NEHEuz/Hbn96vSJQ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Yub0iyoH7+T4i5AfFut3JnShDEtXmKMduxVYSfNpyr+WHoSmQBN0yHqUhP9mkzSMj
-	 k0ne7mub5KGN95adO1ercpvLE+Ln3ZY5d5/UIgUbhCYgtK15VkbahAUx4ncjEPpDxx
-	 2OjtQBCPiHwL1QYLcNhCTsNGEBF9qc6TvMkvrz0s=
+	by mail.kernel.org (Postfix) with ESMTP id ABCFA2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:27:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="NXoL1QNe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgGPP1N (ORCPT
+        id S1729081AbgGPP10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:27:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
+        Thu, 16 Jul 2020 11:27:26 -0400
+Received: from mx3.wp.pl ([212.77.101.9]:43640 "EHLO mx3.wp.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbgGPP1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:27:13 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88F9A2065F;
-        Thu, 16 Jul 2020 15:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594913232;
-        bh=HF59HhfAxezQDwn4F6WlpCVWM4NEHEuz/Hbn96vSJQ8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hHunC/3Bn6ikzPz93QBo3Z+rR5FUz50/isQUSN8mCNHNh9TcS0C9+yxAIsxnE2h7P
-         gaWn02IWJg/nviHEUXNLwf4ho2qjSLAzAYOFPXf4BnOFmtjsIMGqMtOH4P4inF7W/0
-         rRWASga/M7kzHPMJyegfS34x9OfELgicZ84sYJmo=
-Date:   Thu, 16 Jul 2020 08:27:10 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Luo bin <luobin9@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <chiqijun@huawei.com>
-Subject: Re: [PATCH net-next 2/2] hinic: add log in exception handling
- processes
-Message-ID: <20200716082710.22dd7c97@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200716125056.27160-3-luobin9@huawei.com>
-References: <20200716125056.27160-1-luobin9@huawei.com>
-        <20200716125056.27160-3-luobin9@huawei.com>
+        id S1728435AbgGPP1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:27:25 -0400
+Received: (wp-smtpd smtp.wp.pl 19161 invoked from network); 16 Jul 2020 17:20:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1594912843; bh=9fW0B4oNSv7yIfxXl+ZhVAEj7F5U6ofqhppdKS8yicI=;
+          h=From:To:Cc:Subject;
+          b=NXoL1QNeh7f5kKHa8b64OONYUMK8ef8n4vBRndg256WRGXWlJ4nzqK/NSauttb518
+           6FiteDjqG4DvNrD+hn5KEZ5row1gIRJaAS8VFI6skKTqMPxyMDwtLfF+oLzIovNTrn
+           bJQLNHSEDuhUc0/O0Dl1JsQaWZfuDpLTdd+Cl9t4=
+Received: from unknown (HELO kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com) (kubakici@wp.pl@[163.114.132.6])
+          (envelope-sender <kubakici@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <miaoqinglang@huawei.com>; 16 Jul 2020 17:20:43 +0200
+Date:   Thu, 16 Jul 2020 08:20:36 -0700
+From:   Jakub Kicinski <kubakici@wp.pl>
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-wireless@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] mt7601u: Convert to DEFINE_SHOW_ATTRIBUTE
+Message-ID: <20200716082036.76f47d2f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200716085749.11105-1-miaoqinglang@huawei.com>
+References: <20200716085749.11105-1-miaoqinglang@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-WP-MailID: b8cff0b399aaf7118fc46ef4354c9176
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000001 [UbKj]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 20:50:56 +0800 Luo bin wrote:
-> improve the error message when functions return failure and dump
-> relevant registers in some exception handling processes
+On Thu, 16 Jul 2020 16:57:49 +0800 Qinglang Miao wrote:
+> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 > 
-> Signed-off-by: Luo bin <luobin9@huawei.com>
+> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 
-For kernel builds with W=1 C=1 flags this patch adds 12 warnings to
-drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c and 39 warnings to 
-drivers/net/ethernet/huawei/hinic/hinic_hw_if.h.
-
-It seems like you're missing byte swaps.
+Acked-by: Jakub Kicinski <kubakici@wp.pl>
