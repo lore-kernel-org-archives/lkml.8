@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB57C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9943C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8CC4207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A366E207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:12:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gt773ugE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hc4i2Nr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgGPFMA (ORCPT
+        id S1727121AbgGPFMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:12:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
+        Thu, 16 Jul 2020 01:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgGPFL7 (ORCPT
+        with ESMTP id S1725268AbgGPFMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:11:59 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DE3C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:11:59 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id q17so3347302pls.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:11:59 -0700 (PDT)
+        Thu, 16 Jul 2020 01:12:08 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB31DC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:12:08 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id j19so4229046pgm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZudUuOTNYLjrn927Wl/0yhsw+jXTcOSpfU/HEVcjSaU=;
-        b=Gt773ugE0h5EgoccjmZl2Lzgz6qbZQF7ighWOfIN6A3dQJnKxXJTf185l8MbquwkH3
-         A3+XGKXQKfOqQSFhrCa1bopgyeKqM0oKMe2twwL7IkCP8d9+QlGYBdOryOLalN4+pQPz
-         IwdoyQj455gQ21EVTpL8VZ9ZFKuk7aOM+muj+xJV3nA+tnIzKQ9Fxw3QmBcMDNKDnsW7
-         KCgGh2vQQF69RT8FkDYELw2fVMBW78CdrIZvnieOJ5pX66eEAKt0fdlk2PlTDi7TNEoc
-         4SrCSCkMBcJPbPI3ktSXHbeZ8MbcQa++cZT4ln3YNWt4nvwMfLtGsq6smxxCsh2MZG2F
-         w0Jw==
+        bh=o/BsIfvqtTzak5Mv7ZiI0+KdUGs6co1ng50/6qYskQE=;
+        b=hc4i2Nr6oqKqPE2jXwZbSn/Rbqv8nFoXy79RI3Lk97cBQGfRExofkvamCUf5Oo9J3N
+         yCVbSC24M4e2k7egLH4YemLumM88fh51oKP7zE1T2CXUyJgLVTt7zf5bS1cYwcC4edI3
+         OGbsrEH/Xs2i9s0VV4IZDrB9e8OdDk9HfV1N3c3VbJtQ2oyhg4/xn6JqKVC4r34xpeXU
+         RQAJxud14c57X1UIFFQunjHv7cruYPst8np7S+LsS/NvbvI6kHk4MzxV8aLmCTglWn/n
+         B7FEK/9bbc3vgOnpC4QiAUgC6nxpnuYTSjJN+xkPXFlz5XLXb4WqqjEFKbm7lrl/n4xh
+         5IPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ZudUuOTNYLjrn927Wl/0yhsw+jXTcOSpfU/HEVcjSaU=;
-        b=Qaj+ixVF3+K+inuELSsksgHYub1YmBiMz8QaiLv5Cq3fpk4Ax+U4ce7fYoLiyiNNJJ
-         zJQCUUx7/6eBEcQRJWRg8zfUcM9Mj5DXumadsbMZhl+dJuqTtJ3ed0Pfh8xXs8oWvol9
-         3u4k14ic+IrUfNfoD5WkdFg3qY70DqrQOAhuC0QzngsmbdA6xba3hZtxmkUDijrUxY0N
-         8l7pwokqrb1E8q+Qt/BOQg8u2V5Ctq8vJWFx04CW3j++P5gFUgRgt6I4Vl1P3GH0yA1k
-         o74+0EGRBc0E0vru29e+hda0dUZZKl6/dD+8k52oeKtduAiKbabWpb9r8jocTRL6YyZ+
-         G+xA==
-X-Gm-Message-State: AOAM530P9u9Fr5NQVAmDCbMYQWX4vzL+wLAkwX7fIl9y2pCMagEkk/5t
-        63zFSK6ABYqDxQogjLhkulkldg==
-X-Google-Smtp-Source: ABdhPJxLGTY7dEuWAlIYrXYOh6qTVtPq90fdCUjRoXKAII2jiuebeKM7/zHYlSqnZ/kmm1PEMSqrCg==
-X-Received: by 2002:a17:90a:7406:: with SMTP id a6mr2798818pjg.152.1594876319114;
-        Wed, 15 Jul 2020 22:11:59 -0700 (PDT)
+        bh=o/BsIfvqtTzak5Mv7ZiI0+KdUGs6co1ng50/6qYskQE=;
+        b=OWniMjLG2r6/Bj1NCMYrJ3yLywI/HrRG0r6KXX11LA8A0X3YCKCtMDZsj4pxrndx1U
+         JnMlN3mm9RN6M+uGeboXAwAvNrlV2LitgcC545STkXZ898S9yGplGrGYVCdAvGkOLiDA
+         xYyFJTZNavUAvKRwKPoZPp0TqeWOmcr4VOtH4GXWUr/hszV8XO86iHpwlzOOUr99OxkN
+         sR7PwxJec53oShZ0Lkf1B0LtQEeKOC0Pq0eEDfojhULvWzCwGeP0kCl1yYWYv07BVxOy
+         XAYBIr1aV1nuMCvF36oFwbkqqtHMURJHUD7bEtz7o8Vj9h1OH/r2y/0Me02SqLWV5fjp
+         1aww==
+X-Gm-Message-State: AOAM5320tl1xrxJQ3ueuMbB+Cna+HPQqYhZNMycK28Erxw5aKbHxKwo5
+        NMSdCJu+DkjhLBfAfbH+Ty8sUg==
+X-Google-Smtp-Source: ABdhPJwB25v0txIQiG1pHuN6YTqIfWIpOVf/k+duttLSriG0rbXE+fdtIvbK4/pYXJVfwXjm2oYlcA==
+X-Received: by 2002:a62:a217:: with SMTP id m23mr2175657pff.291.1594876328190;
+        Wed, 15 Jul 2020 22:12:08 -0700 (PDT)
 Received: from localhost ([2400:8904::f03c:91ff:fe8a:bbe4])
-        by smtp.gmail.com with ESMTPSA id l17sm3701086pgn.48.2020.07.15.22.11.57
+        by smtp.gmail.com with ESMTPSA id a26sm3499222pgm.20.2020.07.15.22.12.07
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jul 2020 22:11:58 -0700 (PDT)
+        Wed, 15 Jul 2020 22:12:07 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
@@ -75,9 +75,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 1/7] sched_clock: Expose struct clock_read_data
-Date:   Thu, 16 Jul 2020 13:11:24 +0800
-Message-Id: <20200716051130.4359-2-leo.yan@linaro.org>
+Subject: [PATCH v3 2/7] time/sched_clock: Use raw_read_seqcount_latch()
+Date:   Thu, 16 Jul 2020 13:11:25 +0800
+Message-Id: <20200716051130.4359-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200716051130.4359-1-leo.yan@linaro.org>
 References: <20200716051130.4359-1-leo.yan@linaro.org>
@@ -86,132 +86,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: "Ahmed S. Darwish" <a.darwish@linutronix.de>
 
-In order to support perf_event_mmap_page::cap_time features, an
-architecture needs, aside from a userspace readable counter register,
-to expose the exact clock data so that userspace can convert the
-counter register into a correct timestamp.
+sched_clock uses seqcount_t latching to switch between two storage
+places protected by the sequence counter. This allows it to have
+interruptible, NMI-safe, seqcount_t write side critical sections.
 
-Provide struct clock_read_data and two (seqcount) helpers so that
-architectures (arm64 in specific) can expose the numbers to userspace.
+Since 7fc26327b756 ("seqlock: Introduce raw_read_seqcount_latch()"),
+raw_read_seqcount_latch() became the standardized way for seqcount_t
+latch read paths. Due to the dependent load, it also has one read
+memory barrier less than the currently used raw_read_seqcount() API.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Use raw_read_seqcount_latch() for the seqcount_t latch read path.
+
+Link: https://lkml.kernel.org/r/20200625085745.GD117543@hirez.programming.kicks-ass.net
+Link: https://lkml.kernel.org/r/20200715092345.GA231464@debian-buster-darwi.lab.linutronix.de
+References: 1809bfa44e10 ("timers, sched/clock: Avoid deadlock during read from NMI")
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- include/linux/sched_clock.h | 28 +++++++++++++++++++++++++
- kernel/time/sched_clock.c   | 41 ++++++++++++-------------------------
- 2 files changed, 41 insertions(+), 28 deletions(-)
+ kernel/time/sched_clock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/sched_clock.h b/include/linux/sched_clock.h
-index 0bb04a96a6d4..528718e4ed52 100644
---- a/include/linux/sched_clock.h
-+++ b/include/linux/sched_clock.h
-@@ -6,6 +6,34 @@
- #define LINUX_SCHED_CLOCK
- 
- #ifdef CONFIG_GENERIC_SCHED_CLOCK
-+/**
-+ * struct clock_read_data - data required to read from sched_clock()
-+ *
-+ * @epoch_ns:		sched_clock() value at last update
-+ * @epoch_cyc:		Clock cycle value at last update.
-+ * @sched_clock_mask:   Bitmask for two's complement subtraction of non 64bit
-+ *			clocks.
-+ * @read_sched_clock:	Current clock source (or dummy source when suspended).
-+ * @mult:		Multipler for scaled math conversion.
-+ * @shift:		Shift value for scaled math conversion.
-+ *
-+ * Care must be taken when updating this structure; it is read by
-+ * some very hot code paths. It occupies <=40 bytes and, when combined
-+ * with the seqcount used to synchronize access, comfortably fits into
-+ * a 64 byte cache line.
-+ */
-+struct clock_read_data {
-+	u64 epoch_ns;
-+	u64 epoch_cyc;
-+	u64 sched_clock_mask;
-+	u64 (*read_sched_clock)(void);
-+	u32 mult;
-+	u32 shift;
-+};
-+
-+extern struct clock_read_data *sched_clock_read_begin(unsigned int *seq);
-+extern int sched_clock_read_retry(unsigned int seq);
-+
- extern void generic_sched_clock_init(void);
- 
- extern void sched_clock_register(u64 (*read)(void), int bits,
 diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-index fa3f800d7d76..0acaadc3156c 100644
+index 0acaadc3156c..0deaf4b79fb4 100644
 --- a/kernel/time/sched_clock.c
 +++ b/kernel/time/sched_clock.c
-@@ -19,31 +19,6 @@
+@@ -70,7 +70,7 @@ static inline u64 notrace cyc_to_ns(u64 cyc, u32 mult, u32 shift)
  
- #include "timekeeping.h"
- 
--/**
-- * struct clock_read_data - data required to read from sched_clock()
-- *
-- * @epoch_ns:		sched_clock() value at last update
-- * @epoch_cyc:		Clock cycle value at last update.
-- * @sched_clock_mask:   Bitmask for two's complement subtraction of non 64bit
-- *			clocks.
-- * @read_sched_clock:	Current clock source (or dummy source when suspended).
-- * @mult:		Multipler for scaled math conversion.
-- * @shift:		Shift value for scaled math conversion.
-- *
-- * Care must be taken when updating this structure; it is read by
-- * some very hot code paths. It occupies <=40 bytes and, when combined
-- * with the seqcount used to synchronize access, comfortably fits into
-- * a 64 byte cache line.
-- */
--struct clock_read_data {
--	u64 epoch_ns;
--	u64 epoch_cyc;
--	u64 sched_clock_mask;
--	u64 (*read_sched_clock)(void);
--	u32 mult;
--	u32 shift;
--};
--
- /**
-  * struct clock_data - all data needed for sched_clock() (including
-  *                     registration of a new clock source)
-@@ -93,6 +68,17 @@ static inline u64 notrace cyc_to_ns(u64 cyc, u32 mult, u32 shift)
- 	return (cyc * mult) >> shift;
- }
- 
-+struct clock_read_data *sched_clock_read_begin(unsigned int *seq)
-+{
-+	*seq = raw_read_seqcount(&cd.seq);
-+	return cd.read_data + (*seq & 1);
-+}
-+
-+int sched_clock_read_retry(unsigned int seq)
-+{
-+	return read_seqcount_retry(&cd.seq, seq);
-+}
-+
- unsigned long long notrace sched_clock(void)
+ struct clock_read_data *sched_clock_read_begin(unsigned int *seq)
  {
- 	u64 cyc, res;
-@@ -100,13 +86,12 @@ unsigned long long notrace sched_clock(void)
- 	struct clock_read_data *rd;
- 
- 	do {
--		seq = raw_read_seqcount(&cd.seq);
--		rd = cd.read_data + (seq & 1);
-+		rd = sched_clock_read_begin(&seq);
- 
- 		cyc = (rd->read_sched_clock() - rd->epoch_cyc) &
- 		      rd->sched_clock_mask;
- 		res = rd->epoch_ns + cyc_to_ns(cyc, rd->mult, rd->shift);
--	} while (read_seqcount_retry(&cd.seq, seq));
-+	} while (sched_clock_read_retry(seq));
- 
- 	return res;
+-	*seq = raw_read_seqcount(&cd.seq);
++	*seq = raw_read_seqcount_latch(&cd.seq);
+ 	return cd.read_data + (*seq & 1);
  }
+ 
 -- 
 2.17.1
 
