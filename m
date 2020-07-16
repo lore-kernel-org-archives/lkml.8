@@ -2,152 +2,213 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBADDC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013E5C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F2320760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99DC207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:14:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I+5xqu6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgGPVNP (ORCPT
+        id S1727094AbgGPVOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:13:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65262 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725999AbgGPVNP (ORCPT
+        Thu, 16 Jul 2020 17:14:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgGPVOB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:13:15 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GL3Wp1055617;
-        Thu, 16 Jul 2020 17:13:07 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32aq0xykbs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 17:13:07 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GL3cOk056268;
-        Thu, 16 Jul 2020 17:13:06 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32aq0xykb0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 17:13:06 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GL9iaa021043;
-        Thu, 16 Jul 2020 21:13:05 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma02fra.de.ibm.com with ESMTP id 327527x5dh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 21:13:04 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GLBlfT28049892
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 21:11:47 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D319AE045;
-        Thu, 16 Jul 2020 21:11:47 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EB9B4AE051;
-        Thu, 16 Jul 2020 21:11:43 +0000 (GMT)
-Received: from [9.102.2.181] (unknown [9.102.2.181])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Jul 2020 21:11:43 +0000 (GMT)
-From:   Hari Bathini <hbathini@linux.ibm.com>
-Subject: Re: [PATCH v3 07/12] ppc64/kexec_file: add support to relocate
- purgatory
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Young <dyoung@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
- <159466093748.24747.4655547403463921814.stgit@hbathini.in.ibm.com>
- <871rlc9upc.fsf@morokweng.localdomain>
-Message-ID: <6f64a18a-352e-fdec-c902-45aefc31cc0a@linux.ibm.com>
-Date:   Fri, 17 Jul 2020 02:41:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 16 Jul 2020 17:14:01 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 088BCC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:14:01 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id 72so4422777ple.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:14:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CSCv+qenN8fQz+hz3SBJPq4lxH8/L5lNiF/O/RXH4cs=;
+        b=I+5xqu6T187eBlA+tL31dh5CS7wCkNI25QanX8f0QfAWVGToBzsZX8AeIKyT7710Bs
+         F94Tg6+plhmnLGCVlrr/UFEsPF9kU5zpXXmZwrmqg0W/0MYVN46CtWYu55uxwXw2fCn6
+         +2FGuZWQiqu1zo5Jq+VajaCuGX6Q4J7vQ4gJI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CSCv+qenN8fQz+hz3SBJPq4lxH8/L5lNiF/O/RXH4cs=;
+        b=SFIgI5OjMEowS1YrCiFltOeMFQe0sGnzFMax+c5WdS7EnVaWY2XF43R2jITXxrsHtb
+         N0uqKnUHkm32c/+HfPZdlhPgIu76wHM1G9bR8o+uCjo+jE0+o9xe9fbr98Rreaeh2lyo
+         8IL4lCdMzhodUAPVWmjOA4d1CcFxSPxpEM3LP1zpENOgfkQWYpjigKiHX/QRRU3ttLD3
+         +iC35yu/9apXPV6N3wNra8m7GETCI4EqOhZwYUp7o0jJTka6gPyfob6l7I47iUmqj0Md
+         +36MVGdJcQe0c9a/CX4QUd9+Q5AijBj3ny5gb/un+eikt9kfxo+ImJWz+ZCdDiZumhVv
+         R4Fg==
+X-Gm-Message-State: AOAM533HwLsCTiPkttWy05I03dSO28qvMMSgwDBBSDQ5O84LmzwH5KLO
+        mO8UkrGQFYt5eeH5XtkKuv6zjg==
+X-Google-Smtp-Source: ABdhPJz1BmB9fwt+demvs5kOAZ0MYGo3jfds+eP75BLBTh2DsDI3UFftrsMyrJVfYldCQpL3sKvIZQ==
+X-Received: by 2002:a17:902:8206:: with SMTP id x6mr5160870pln.328.1594934040349;
+        Thu, 16 Jul 2020 14:14:00 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x13sm5361936pfj.122.2020.07.16.14.13.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 14:13:59 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 14:13:58 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [patch V3 08/13] x86/entry: Use generic syscall entry function
+Message-ID: <202007161359.AB211685@keescook>
+References: <20200716182208.180916541@linutronix.de>
+ <20200716185424.765294277@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <871rlc9upc.fsf@morokweng.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 malwarescore=0
- spamscore=100 mlxlogscore=-1000 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 impostorscore=0 phishscore=0 suspectscore=0
- mlxscore=100 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160139
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716185424.765294277@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 16, 2020 at 08:22:16PM +0200, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> Replace the syscall entry work handling with the generic version. Provide
+> the necessary helper inlines to handle the real architecture specific
+> parts, e.g. audit and seccomp invocations.
+> 
+> Use a temporary define for idtentry_enter_user which will be cleaned up
+> seperately.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> [...]
+> --- /dev/null
+> +++ b/arch/x86/include/asm/entry-common.h
+> @@ -0,0 +1,86 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef _ASM_X86_ENTRY_COMMON_H
+> +#define _ASM_X86_ENTRY_COMMON_H
+> +
+> +#include <linux/seccomp.h>
+> +#include <linux/audit.h>
+> +
+> +/* Check that the stack and regs on entry from user mode are sane. */
+> +static __always_inline void arch_check_user_regs(struct pt_regs *regs)
+> +{
+> +	if (IS_ENABLED(CONFIG_DEBUG_ENTRY)) {
+> +		/*
+> +		 * Make sure that the entry code gave us a sensible EFLAGS
+> +		 * register.  Native because we want to check the actual CPU
+> +		 * state, not the interrupt state as imagined by Xen.
+> +		 */
+> +		unsigned long flags = native_save_fl();
+> +		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
+> +				      X86_EFLAGS_NT));
+> +
+> +		/* We think we came from user mode. Make sure pt_regs agrees. */
+> +		WARN_ON_ONCE(!user_mode(regs));
+> +
+> +		/*
+> +		 * All entries from user mode (except #DF) should be on the
+> +		 * normal thread stack and should have user pt_regs in the
+> +		 * correct location.
+> +		 */
+> +		WARN_ON_ONCE(!on_thread_stack());
+> +		WARN_ON_ONCE(regs != task_pt_regs(current));
+> +	}
+> +}
+> +#define arch_check_user_regs arch_check_user_regs
+
+Will architectures implement subsets of these functions? (i.e. instead
+of each of the defines, is CONFIG_ENTRY_GENERIC sufficient for the
+no-op inlines?)
+
+> +
+> +static inline long arch_syscall_enter_seccomp(struct pt_regs *regs)
+> +{
+> +#ifdef CONFIG_SECCOMP
+> +	u32 arch = in_ia32_syscall() ? AUDIT_ARCH_I386 : AUDIT_ARCH_X86_64;
+> +	struct seccomp_data sd;
+> +
+> +	sd.arch = arch;
+> +	sd.nr = regs->orig_ax;
+> +	sd.instruction_pointer = regs->ip;
+> +
+> +#ifdef CONFIG_X86_64
+> +	if (arch == AUDIT_ARCH_X86_64) {
+> +		sd.args[0] = regs->di;
+> +		sd.args[1] = regs->si;
+> +		sd.args[2] = regs->dx;
+> +		sd.args[3] = regs->r10;
+> +		sd.args[4] = regs->r8;
+> +		sd.args[5] = regs->r9;
+> +	} else
+> +#endif
+> +	{
+> +		sd.args[0] = regs->bx;
+> +		sd.args[1] = regs->cx;
+> +		sd.args[2] = regs->dx;
+> +		sd.args[3] = regs->si;
+> +		sd.args[4] = regs->di;
+> +		sd.args[5] = regs->bp;
+> +	}
+> +
+> +	return __secure_computing(&sd);
+> +#else
+> +	return 0;
+> +#endif
+> +}
+> +#define arch_syscall_enter_seccomp arch_syscall_enter_seccomp
+
+Actually, I've been meaning to clean this up. It's not needed at all.
+This was left over from the seccomp fast-path code that got ripped out a
+while ago. seccomp already has everything it needs to do this work, so
+just:
+
+	__secure_computing(NULL);
+
+is sufficient for every architecture that supports seccomp. (See kernel/seccomp.c
+populate_seccomp_data().)
+
+And if you want more generalization work, note that the secure_computing()
+macro performs a TIF test before calling __secure_computing(NULL). But
+my point is, I think arch_syscall_enter_seccomp() is not needed.
+
+> +static inline void arch_syscall_enter_audit(struct pt_regs *regs)
+> +{
+> +#ifdef CONFIG_X86_64
+> +	if (in_ia32_syscall()) {
+> +		audit_syscall_entry(regs->orig_ax, regs->di,
+> +				    regs->si, regs->dx, regs->r10);
+> +	} else
+> +#endif
+> +	{
+> +		audit_syscall_entry(regs->orig_ax, regs->bx,
+> +				    regs->cx, regs->dx, regs->si);
+> +	}
+> +}
+> +#define arch_syscall_enter_audit arch_syscall_enter_audit
+
+Similarly, I think these can be redefined in the generic case
+using the existing accessors for syscall arguments, etc. e.g.
+arch_syscall_enter_audit() is not needed for any architecture, and the
+generic is:
+
+	unsigned long args[6];
+
+        syscall_get_arguments(task, regs, args);
+	audit_syscall_entry(syscall_get_nr(current, regs),
+			    args[0], args[1], args[2], args[3]);
 
 
-On 16/07/20 5:50 am, Thiago Jung Bauermann wrote:
-> 
-> Hari Bathini <hbathini@linux.ibm.com> writes:
-> 
->> Right now purgatory implementation is only minimal. But if purgatory
->> code is to be enhanced to copy memory to the backup region and verify
-> 
-> Can't the memcpy be done in asm? We have arch/powerpc/lib/memcpy_64.S
-> for example, perhaps it could be linked in with the purgatory?
 
-I wanted to avoid touching common code to make it work for purgatory
-for now.
-
-> 
->> sha256 digest, relocations may have to be applied to the purgatory.
-> 
-> Do we want to do the sha256 verification? My original patch series for
-> kexec_file_load() had a purgatory in C from kexec-tools which did the
-> sha256 verification but Michael Ellerman thought it was unnecessary and
-> decided to use the simpler purgatory in asm from kexec-lite.
-
-kexec_file_load could as well be used without IMA or secureboot. With sha256 digest
-calculated anyway, verifying it would make sense to accommodate that case as well.
-
-> 
->> So, add support to relocate purgatory in kexec_file_load system call
->> by setting up TOC pointer and applying RELA relocations as needed.
-> 
-> If we do want to use a C purgatory, Michael Ellerman had suggested
-> building it as a Position Independent Executable, which greatly reduces
-> the number and types of relocations that are needed. See patches 4 and 9
-> here:
-> 
-> https://lore.kernel.org/linuxppc-dev/1478748449-3894-1-git-send-email-bauerman@linux.vnet.ibm.com/
-> 
-> In the series above I hadn't converted x86 to PIE. If I had done that,
-> possibly Dave Young's opinion would have been different. :-)
-> 
-> If that's still not desirable, he suggested in that discussion lifting
-> some code from x86 to generic code, which I implemented and would
-> simplify this patch as well:
-> 
-> https://lore.kernel.org/linuxppc-dev/5009580.5GxAkTrMYA@morokweng/
-> 
-
-Agreed. But I prefer to work on PIE and/or moving common relocation_add code
-for x86 & s390 to generic code later when I try to build on these purgatory
-changes. So, a separate series later to rework purgatory with the things you
-mentioned above sounds ok?
-
-Thanks
-Hari
-
+-- 
+Kees Cook
