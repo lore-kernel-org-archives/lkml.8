@@ -2,138 +2,92 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7040EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CBFC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55A392084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7468E2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594915882;
+	bh=nNc/kuurDlaeb/VyEXWmopbETmILE/nlhaJ5NuIlb+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DMD1ckPJ9PFu7aVuuEiFe9e7+M1pEJ8Nqlinrz+W7PFj56p2IAjdcIs4lyXNbBwgE
+	 TUBvSIM7n8GzULEf6yqlE1UCY52HH77rWZRzDFre1kxEtxEa+o7kK/XJbwf+L9MFGU
+	 tsvE7dmnYjwlNLqyCVhQpFpGHQw9VaoiNx1ooVCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgGPQFJ (ORCPT
+        id S1729211AbgGPQLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:05:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60732 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbgGPQFI (ORCPT
+        Thu, 16 Jul 2020 12:11:20 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43846 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728837AbgGPQLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:05:08 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jw6Nd-0007eh-Ef; Thu, 16 Jul 2020 16:05:05 +0000
-Subject: Re: [PATCH] crypto: xts: use memmove to avoid overlapped memory copy
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200716152900.1709694-1-colin.king@canonical.com>
- <CAMj1kXEWyweZ0E3WHthEG9oiOpOS9UxtTB7xskAsF8FeinNg9w@mail.gmail.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <dfca9007-c553-3724-ea52-ef86b919c9d6@canonical.com>
-Date:   Thu, 16 Jul 2020 17:05:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 12:11:20 -0400
+Received: by mail-il1-f196.google.com with SMTP id i18so5508929ilk.10;
+        Thu, 16 Jul 2020 09:11:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cbUUjgcnlKBB1y/HiNXUfJhKluzYQVIQ9rFJ6Jchx6Y=;
+        b=W8W/78cRMTbfyKz9nCEqBxnFvzZIYtWZ13uKkIKWBvWhWPFeQgKDwV6t0atv/shkBr
+         RN8dCMqHzS5HHeV4YFwrmlYYW1I9xO2sOV4j9UQ1isMBPdikceg4gGFfks9TVoq7NHQ3
+         P40MfJXWWj+rvUqIgB+kIJO4htoYxkjzheC4PSX0rxhfWGd3R99ITtzi/PwEVY/DNHAn
+         fuahjdiG0Po/rnmmGS2g5HdXhKrg3iX3rnijlSD4qEhGKBf2HLlMfDmgcRMyrL0FWF+F
+         ++fl0GUCvhhsjOfMqFgDO/YjEWAeT67OTz3eQu07tGjlL9ZdVLWdE1547/Yt1JbnH/jT
+         hiBg==
+X-Gm-Message-State: AOAM533XqmJJDD/uhqpVNqZuFx8u22oEeTheXXXH3PZSwH7aKQqgl+aE
+        D13Hn58JbheS+xwrJ3Pu8Q==
+X-Google-Smtp-Source: ABdhPJykgNPAQ0ukdx+9RHPQeuBGQg3i83rE/+gk01ha61WNVg1+tryT5iPiCWo/Zuq9lN7wfapCDg==
+X-Received: by 2002:a92:d148:: with SMTP id t8mr4803913ilg.12.1594915879180;
+        Thu, 16 Jul 2020 09:11:19 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y12sm2963784iot.49.2020.07.16.09.11.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 09:11:18 -0700 (PDT)
+Received: (nullmailer pid 2444477 invoked by uid 1000);
+        Thu, 16 Jul 2020 16:11:17 -0000
+Date:   Thu, 16 Jul 2020 10:11:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     robh+dt@kernel.org, thierry.reding@gmail.com,
+        viresh.kumar@linaro.org, catalin.marinas@arm.com, talho@nvidia.com,
+        bbasu@nvidia.com, will@kernel.org, linux-tegra@vger.kernel.org,
+        mirq-linux@rere.qmqm.pl, jonathanh@nvidia.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ PATCH v6 1/3] dt-bindings: arm: Add NVIDIA
+ Tegra194 CPU Complex binding
+Message-ID: <20200716161117.GA2444431@bogus>
+References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
+ <1594819885-31016-2-git-send-email-sumitg@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXEWyweZ0E3WHthEG9oiOpOS9UxtTB7xskAsF8FeinNg9w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594819885-31016-2-git-send-email-sumitg@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/07/2020 16:56, Ard Biesheuvel wrote:
-> On Thu, 16 Jul 2020 at 18:29, Colin King <colin.king@canonical.com> wrote:
->>
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> There is a memcpy that performs a potential overlapped memory copy
->> from source b to destination b + 1.  Fix this by using the safer
->> memmove instead.
->>
->> Addresses-Coverity: ("Overlapping buffer in memory copy")
->> Fixes: 8083b1bf8163 ("crypto: xts - add support for ciphertext stealing")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  crypto/xts.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/crypto/xts.c b/crypto/xts.c
->> index 3565f3b863a6..fa3e6e7b7043 100644
->> --- a/crypto/xts.c
->> +++ b/crypto/xts.c
->> @@ -169,7 +169,7 @@ static int cts_final(struct skcipher_request *req,
->>                                       offset - XTS_BLOCK_SIZE);
->>
->>         scatterwalk_map_and_copy(b, rctx->tail, 0, XTS_BLOCK_SIZE, 0);
->> -       memcpy(b + 1, b, tail);
->> +       memmove(b + 1, b, tail);
+On Wed, 15 Jul 2020 19:01:23 +0530, Sumit Gupta wrote:
+> Add device-tree binding documentation to represent Tegra194
+> CPU Complex with compatible string under 'cpus' node. This
+> can be used by drivers like cpufreq which don't have their
+> node or CPU Complex node to bind to. Also, documenting
+> 'nvidia,bpmp' property which points to BPMP device.
 > 
-> This is a false positive: tail is guaranteed to be smaller than
-> sizeof(*b), so memmove() is unnecessary here.
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+>  .../bindings/arm/nvidia,tegra194-ccplex.yaml       | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
 > 
-> If changing to memcpy(&b[1], &b[0], tail) makes the warning go away, i
-> am fine with it, but otherwise we should just leave it as is.
 
-In that case, just leave it as is. Apologies for the noise.
-
-Colin
-> 
-> 
->>         scatterwalk_map_and_copy(b, req->src, offset, tail, 0);
->>
->>         le128_xor(b, &rctx->t, b);
->> --
->> 2.27.0
->>
-
+Reviewed-by: Rob Herring <robh@kernel.org>
