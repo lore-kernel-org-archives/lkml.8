@@ -2,96 +2,113 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C79BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76FF52078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594861399;
-	bh=6oZhkB9EWxV3GBYwjhNGD/mi4wQQrv5Y+A8n809Z7PU=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=bQizoRRxtvJwNCrgAcHp10TcQozVaNWtBPO2ig/tj2aZPomxQBxdTNVD6S9/jiYud
-	 kjIuAyu/vc0+/06EIMmtKs0ZJzaH1YsZl1eDZxaHpaKNnOAUmvMchH/5LfBHybKO1d
-	 yDGrr3tGloYele9HYj5+ytW/urYh+h+R1G4QNlkQ=
+	by mail.kernel.org (Postfix) with ESMTP id 318C92078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgGPBDS (ORCPT
+        id S1727828AbgGPBEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 21:03:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgGPBDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 21:03:17 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F2EF2078C;
-        Thu, 16 Jul 2020 01:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594861397;
-        bh=6oZhkB9EWxV3GBYwjhNGD/mi4wQQrv5Y+A8n809Z7PU=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ha9iSYJxgqg5SF24utqMLGdWN6TNR9WG7Bwyear+4qjGZk8W8TVdt/HY6OC0u/cjK
-         SF8vyHqa5x9AR6BWHFW5aan3mNP4Ijs0k88TKBlAwBXeQWNzzVRBaRqHn7QWiXlDsi
-         +wZyDWTyIBGQCDIoitwQgW/rsoPu13TYYKObhNjU=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 15 Jul 2020 21:04:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7755 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726479AbgGPBEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 21:04:21 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 00D367C0197A199A374A;
+        Thu, 16 Jul 2020 09:04:20 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 16 Jul
+ 2020 09:04:16 +0800
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: change the way of handling range.len
+ in F2FS_IOC_SEC_TRIM_FILE
+To:     Eric Biggers <ebiggers@kernel.org>, Daeho Jeong <daeho43@gmail.com>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <kernel-team@android.com>, "Daeho Jeong" <daehojeong@google.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20200713031252.3873546-1-daeho43@gmail.com>
+ <20200713181152.GC2910046@google.com>
+ <3b02263d-a5e1-136c-40ed-514d34e4c895@huawei.com>
+ <CACOAw_wBD_ourGJSdRTDM-wzeH97aGE966QDB6bpjiyXRrh47A@mail.gmail.com>
+ <f4a594a1-464f-3a74-90cb-fd536bed9962@huawei.com>
+ <CACOAw_w3OWDVXSYHuTEEVv1HaBZir1CWcRAmxOt00MB4vXBKVg@mail.gmail.com>
+ <1d84bc01-fece-df55-6e33-07a705cfb432@huawei.com>
+ <CACOAw_xaS7qB22EPsZvHoC=uPiPtqGMAK5cP4Vk20xO21GQ-Kg@mail.gmail.com>
+ <20200715164220.GC1167@sol.localdomain>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <78df7d19-2744-34df-73b3-3c4650db8771@huawei.com>
+Date:   Thu, 16 Jul 2020 09:04:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200713010001.18976-4-akshu.agrawal@amd.com>
-References: <20200713010001.18976-1-akshu.agrawal@amd.com> <20200713010001.18976-4-akshu.agrawal@amd.com>
-Subject: Re: [PATCH 4/5] clk: x86: Support RV architecture
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     akshu.agrawal@amd.com
-Date:   Wed, 15 Jul 2020 18:03:16 -0700
-Message-ID: <159486139638.1987609.10837351469119432355@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200715164220.GC1167@sol.localdomain>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Akshu Agrawal (2020-07-12 17:59:52)
-> There is minor difference between previous family of SoC and
-> the current one. Which is the there is only 48Mh fixed clk.
-> There is no mux and no option to select another freq as there in previous.
->=20
-> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
-> ---
+On 2020/7/16 0:42, Eric Biggers wrote:
+> On Wed, Jul 15, 2020 at 07:25:13PM +0900, Daeho Jeong wrote:
+>> Chao,
+>>
+>> I can't find fscrypt_zeroout_range_inline_crypt() function. Do you
+>> mean we need to implement this one for inline encryption?
+>>
+>> 2020년 7월 15일 (수) 오후 4:17, Chao Yu <yuchao0@huawei.com>님이 작성:
+>>>
+>>> On 2020/7/15 14:54, Daeho Jeong wrote:
+>>>> You mean we can support ZEROOUT option only for encrypted files of
+>>>> non-multidevice f2fs,
+>>>> and return -EOPNOTSUPP in the multidevice case, right now?
+>>>
+>>> Yes, something like:
+>>>
+>>> f2fs_sec_trim_file()
+>>>
+>>> if ((range.flags & F2FS_TRIM_FILE_ZEROOUT) &&
+>>>         f2fs_encrypted_file() && f2fs_is_multi_device())
+>>>         return -EOPNOTSUPP;
+>>>
+>>>
+>>> f2fs_secure_erase()
+>>>
+>>> if (!ret && (flags & F2FS_TRIM_FILE_ZEROOUT)) {
+>>>         if (f2fs_encrypted_file()) {
+>>>                 if (fscrypt_inode_uses_fs_layer_crypto)
+>>>                         ret = fscrypt_zeroout_range();
+>>>                 else
+>>>                         ret = fscrypt_zeroout_range_inline_crypt();
+>>>         } else {
+>>>                 ret = blkdev_issue_zeroout();
+>>>         }
+>>> }
+> 
+> fscrypt_zeroout_range_inline_crypt() is being added by
+> "fscrypt: add inline encryption support", which is queued in the fscrypt tree
+> (the master branch of https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git).
+> 
+> But that's not actually relevant here because fscrypt_zeroout_range() calls
+> fscrypt_zeroout_range_inline_crypt() when needed.
 
-I only see four out of five patches and there isn't a cover letter. I
-have no idea if I can apply this change or if you're expecting me to ack
-it. Please help make my life a little easier!
+Oh, correct, thanks for pointing out.
 
->  drivers/clk/x86/clk-fch.c | 55 ++++++++++++++++++++++++++++-----------
->  1 file changed, 40 insertions(+), 15 deletions(-)
->=20
-> diff --git a/drivers/clk/x86/clk-fch.c b/drivers/clk/x86/clk-fch.c
-> index b252f0cf0628..a8aac71a3b65 100644
-> --- a/drivers/clk/x86/clk-fch.c
-> +++ b/drivers/clk/x86/clk-fch.c
-> @@ -61,9 +78,17 @@ static int fch_clk_probe(struct platform_device *pdev)
->  static int fch_clk_remove(struct platform_device *pdev)
->  {
->         int i;
-> +       struct fch_clk_data *fch_data;
-> +
-> +       fch_data =3D dev_get_platdata(&pdev->dev);
-> =20
-> -       for (i =3D 0; i < ST_MAX_CLKS; i++)
-> -               clk_hw_unregister(hws[i]);
-> +       if (!fch_data->is_rv) {
-> +               for (i =3D 0; i < ST_MAX_CLKS; i++)
-> +                       clk_hw_unregister(hws[i]);
-> +       } else {
-> +               for (i =3D 0; i < RV_MAX_CLKS; i++)
-> +                       clk_hw_unregister(hws[i]);
+Thanks,
 
-Can ST_MAX_CLKS or RV_MAX_CLKS be a local variable and then the loop
-consolidated.
+> 
+> Just use fscrypt_zeroout_range().
+> 
+> - Eric
+> .
+> 
