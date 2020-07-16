@@ -2,58 +2,58 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E580C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCECC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750C12063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BE72063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PG50fNwJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="DXKhZvSz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgGPXlU (ORCPT
+        id S1726233AbgGPXlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:41:20 -0400
+        Thu, 16 Jul 2020 19:41:15 -0400
 Received: from esa1.hgst.iphmx.com ([68.232.141.245]:7103 "EHLO
         esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbgGPXlQ (ORCPT
+        with ESMTP id S1725971AbgGPXlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:41:16 -0400
+        Thu, 16 Jul 2020 19:41:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594942875; x=1626478875;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qPX9w03TDCYp7bNgQz0FtRslpyDBjDFxb0GnLRnufaQ=;
-  b=PG50fNwJ7HPor8UlgMVLINB0Dqmd5WeD/WcsY1BEjVrfhwPyeutAdt/O
-   RBD/iKDUEju6JY3kWxVyBpQm8XUQ2kK7DCnzQgJ/4SclIxK+TrNb2GrAV
-   aJtCJqkFm7PbF3sfylzMuV8cEBnIXXbuvGWGBvl2iZbWp0pZxuo9wnrc8
-   n6zT4V1NDiTMoMrhdb44nKKVvDSX+54M7uoUIGXnMnEOnBFlvSmU4JvvV
-   RCEwCUSR98PyvQff5+Sj+QDK7j9PDd+mcdvEZNeO/SHqym5xCkAk9PF/p
-   lpzFyeyYxo24OcpKOS27FS7NIDhkFURxHjQ0Lah3XFcvKf409jb8WMaIV
-   g==;
-IronPort-SDR: q64N6C7EtLB+PEQsb3z75+pqdBQAykb2CRh9h8BHFv3umsZ4XHGswXNzuqXaJXgoRmnXihjK1M
- kRih+g96J0mmJTHZC9w/3YaMz0fXxuAFZbJgt/aDfKC6jdU9iZQgra1OW3+HK2G7ZbMOL1HoAK
- CQuif2ov/vVebEeGh3GN2fsSxejOlL/zk9s+qQjNpOq7HRjlzT85JIKuH5iN+5Qw/1kv0wGDsc
- fFFUiucbAQh8gbp98SHUAzSXJ9AS4WGv0UuFLTH7D6GOTkSRnd8OqUNVit3/P8aVo+8k551k0R
- +yA=
+  t=1594942873; x=1626478873;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kUG/HMv0nJnrst7Sns7/AKTyFHl/1SzBX+Bwh+vDZlA=;
+  b=DXKhZvSzvdjqPO4+0A0rP0JIMG6ednvd3evyD2Rtm0BMQN+8FS5MXGin
+   8RsHg5lQ+Fm8eJKffegxu902JUd0IrJvgk5DWXp6itR4n4dxxQn85Kits
+   AlddwWgWUMcuWnlihW/MpAFrFwMPAEx0hPTv866zyBv1kk5i+1hAcow0n
+   FNpcK4BEUnLB7MuWac1QBGM3TF+9abWDxxpDfTnJVPdOFSNuJSXjLQh2m
+   tjVb/rM+sST8WDcwp+Y007Rlo08v6vqdjSSMUOblDTDLyD12iNqZBbpfg
+   5aas2w8Nsc1frh6zLrXMSL5w0vqIq0/EnYtGWFn1AvIqCUxPEgGRJ6cDL
+   w==;
+IronPort-SDR: BLhPbpJhfWM0mZ2AZCcrovvwpscdA0fJAKvWT/ZtjSdVkLEF/JgT16fbV2WpnnuV9myM5+JKS2
+ ygLucAWc0G1LZGWwTJkn7uPfi/qvPFsxGj+AodjehVEah2QXDOk1xB9S/FM607JrdMC3+IlR5R
+ /hZ+hBp09C3tMWut3A2jgtC4KQCmMfynHoGSiMvoiC28O/qDa1QXp0ZMtROy5Fn9ZK+WfUnxc7
+ LVSMbKMc8pZ45vowO8EMpWvJN7BhIuJ/sAUYxRRNa049L8CRgoQoNUQIXB4H/lhUhnSQNHVoSv
+ mmk=
 X-IronPort-AV: E=Sophos;i="5.75,360,1589212800"; 
-   d="scan'208";a="251923197"
+   d="scan'208";a="251923186"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 17 Jul 2020 07:41:15 +0800
-IronPort-SDR: Vof4SdbcI7igjszK2/KduYZArNzwUGMxnepnJhD2NVi5K2073tELMQXJ+e7NZKNiGLrO8gcQr6
- 7MuDg14CqF9SMMMItJr0X2WkITXUNZ5to=
+  by ob1.hgst.iphmx.com with ESMTP; 17 Jul 2020 07:41:12 +0800
+IronPort-SDR: Liner50EOfzMCfDauaVqS+LtS1USImzG17ygi0nCB7H+zerUnOw3tm6oUtnUU/lsdHbF/2lGyD
+ li60ZYIjb5tWi5yPE2P4g6SYJhdZEq46o=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 16:29:38 -0700
-IronPort-SDR: 1UshUQNcXTNsprKeRtIsDqnTeMiI0w4SfIFZKKNnMH/qjkqzAg8SSedlw515LvZ0cVKy0u6QxP
- uEX1mYyKMT7g==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 16:29:36 -0700
+IronPort-SDR: 2hT8GNbz2MtsskMAQMxU6lttS0NTqNVxNsn5ZJD2clmQGd0fWs1xQw22jaruo3+STJ4pgyDaD0
+ otrAU2Kc14/Q==
 WDCIronportException: Internal
 Received: from phd004806.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.54])
-  by uls-op-cesaip02.wdc.com with ESMTP; 16 Jul 2020 16:41:14 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 16 Jul 2020 16:41:12 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>,
@@ -70,12 +70,10 @@ Cc:     Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>,
         Will Deacon <will@kernel.org>, Zong Li <zong.li@sifive.com>,
         Heinrich Schuchardt <xypron.glpk@gmx.de>,
         linux-arm-kernel@lists.infradead.org
-Subject: [RFT PATCH v3 2/9] RISC-V: Add early ioremap support
-Date:   Thu, 16 Jul 2020 16:40:57 -0700
-Message-Id: <20200716234104.29049-3-atish.patra@wdc.com>
+Subject: [RFT PATCH v3 0/9] Add UEFI support for RISC-V
+Date:   Thu, 16 Jul 2020 16:40:55 -0700
+Message-Id: <20200716234104.29049-1-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200716234104.29049-1-atish.patra@wdc.com>
-References: <20200716234104.29049-1-atish.patra@wdc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,141 +81,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UEFI uses early IO or memory mappings for runtime services before
-normal ioremap() is usable. Add the necessary fixmap bindings and
-pmd mappings for generic ioremap support to work.
+This series adds UEFI support for RISC-V.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/Kconfig              |  1 +
- arch/riscv/include/asm/Kbuild   |  1 +
- arch/riscv/include/asm/fixmap.h | 13 +++++++++++++
- arch/riscv/include/asm/io.h     |  1 +
- arch/riscv/kernel/setup.c       |  1 +
- arch/riscv/mm/init.c            | 33 +++++++++++++++++++++++++++++++++
- 6 files changed, 50 insertions(+)
+Linux kernel: 5.8-rc5 + "mm & exception handing fixes" series
+U-Boot: master
+OpenSBI: master
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 3230c1d48562..e6c1c98a53fb 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -34,6 +34,7 @@ config RISCV
- 	select GENERIC_ARCH_TOPOLOGY if SMP
- 	select GENERIC_ATOMIC64 if !64BIT
- 	select GENERIC_CLOCKEVENTS
-+	select GENERIC_EARLY_IOREMAP
- 	select GENERIC_GETTIMEOFDAY if HAVE_GENERIC_VDSO
- 	select GENERIC_IOREMAP
- 	select GENERIC_IRQ_MULTI_HANDLER
-diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-index 3d9410bb4de0..59dd7be55005 100644
---- a/arch/riscv/include/asm/Kbuild
-+++ b/arch/riscv/include/asm/Kbuild
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+generic-y += early_ioremap.h
- generic-y += extable.h
- generic-y += flat.h
- generic-y += kvm_para.h
-diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
-index 11613f38228a..54cbf07fb4e9 100644
---- a/arch/riscv/include/asm/fixmap.h
-+++ b/arch/riscv/include/asm/fixmap.h
-@@ -27,6 +27,19 @@ enum fixed_addresses {
- 	FIX_TEXT_POKE1,
- 	FIX_TEXT_POKE0,
- 	FIX_EARLYCON_MEM_BASE,
-+
-+	__end_of_permanent_fixed_addresses,
-+	/*
-+	 * Temporary boot-time mappings, used by early_ioremap(),
-+	 * before ioremap() is functional.
-+	 */
-+#define NR_FIX_BTMAPS		(SZ_256K / PAGE_SIZE)
-+#define FIX_BTMAPS_SLOTS	7
-+#define TOTAL_FIX_BTMAPS	(NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
-+
-+	FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
-+	FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
-+
- 	__end_of_fixed_addresses
- };
- 
-diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
-index 3835c3295dc5..c025a746a148 100644
---- a/arch/riscv/include/asm/io.h
-+++ b/arch/riscv/include/asm/io.h
-@@ -14,6 +14,7 @@
- #include <linux/types.h>
- #include <linux/pgtable.h>
- #include <asm/mmiowb.h>
-+#include <asm/early_ioremap.h>
- 
- /*
-  * MMIO access functions are separated out to break dependency cycles
-diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-index 8519a6d29857..1244b433fe7c 100644
---- a/arch/riscv/kernel/setup.c
-+++ b/arch/riscv/kernel/setup.c
-@@ -72,6 +72,7 @@ void __init setup_arch(char **cmdline_p)
- 
- 	*cmdline_p = boot_command_line;
- 
-+	early_ioremap_setup();
- 	parse_early_param();
- 
- 	setup_bootmem();
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 5e9328fa635b..62c90161765f 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -401,6 +401,9 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
- 	uintptr_t load_pa = (uintptr_t)(&_start);
- 	uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
- 	uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
-+#ifndef __PAGETABLE_PMD_FOLDED
-+	pmd_t fix_bmap_spmd, fix_bmap_epmd;
-+#endif
- 
- 	va_pa_offset = PAGE_OFFSET - load_pa;
- 	pfn_base = PFN_DOWN(load_pa);
-@@ -451,6 +454,36 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
- 	dtb_size = fdt_totalsize((void *)dtb_pa);
- 	dtb_size = (dtb_size > DTB_EARLY_SIZE) ? DTB_EARLY_SIZE : dtb_size;
- 	memcpy((void *)pa, (void *)dtb_pa, dtb_size);
-+
-+	/*
-+	 * Bootime fixmap only can handle PMD_SIZE mapping. Thus, boot-ioremap
-+	 * range can not span multiple pmds.
-+	 */
-+	BUILD_BUG_ON((__fix_to_virt(FIX_BTMAP_BEGIN) >> PMD_SHIFT)
-+		     != (__fix_to_virt(FIX_BTMAP_END) >> PMD_SHIFT));
-+
-+#ifndef __PAGETABLE_PMD_FOLDED
-+	/*
-+	 * Early ioremap fixmap is already created as it lies within first 2MB
-+	 * of fixmap region. We always map PMD_SIZE. Thus, both FIX_BTMAP_END
-+	 * FIX_BTMAP_BEGIN should lie in the same pmd. Verify that and warn
-+	 * the user if not.
-+	 */
-+	fix_bmap_spmd = fixmap_pmd[pmd_index(__fix_to_virt(FIX_BTMAP_BEGIN))];
-+	fix_bmap_epmd = fixmap_pmd[pmd_index(__fix_to_virt(FIX_BTMAP_END))];
-+	if (pmd_val(fix_bmap_spmd) != pmd_val(fix_bmap_epmd)) {
-+		WARN_ON(1);
-+		pr_warn("fixmap btmap start [%08lx] != end [%08lx]\n",
-+			pmd_val(fix_bmap_spmd), pmd_val(fix_bmap_epmd));
-+		pr_warn("fix_to_virt(FIX_BTMAP_BEGIN): %08lx\n",
-+			fix_to_virt(FIX_BTMAP_BEGIN));
-+		pr_warn("fix_to_virt(FIX_BTMAP_END):   %08lx\n",
-+			fix_to_virt(FIX_BTMAP_END));
-+
-+		pr_warn("FIX_BTMAP_END:       %d\n", FIX_BTMAP_END);
-+		pr_warn("FIX_BTMAP_BEGIN:     %d\n", FIX_BTMAP_BEGIN);
-+	}
-+#endif
- }
- 
- static void __init setup_vm_final(void)
--- 
+This series depends on earlier mm fixes series
+
+http://lists.infradead.org/pipermail/linux-riscv/2020-July/001208.html
+
+Patch 1-3 are generic riscv feature addition required for UEFI support.
+Patch 4-7 adds the efi stub support for RISC-V which was reviewed few months back.
+https://www.spinics.net/lists/linux-efi/msg19144.html
+Patch 8 just renames arm-init code so that it can be used across different
+architectures. Patch 11 adds the runtime services for RISC-V.
+
+The working set of patches can also be found in following git repo.
+https://github.com/atishp04/linux/tree/uefi_riscv_5.9_v3
+
+The patches have been verified on Qemu using bootefi command in U-Boot for both
+RV32 and RV64.
+
+For RV32, maximum allocated memory should be 1G as RISC-V kernel can not map
+beyond 1G of physical memory for RV32.
+
+EDK2 can boot quite far into Linux with current series. Currently, we are seeing
+some traps from drivers (spi/network). At first glance, they don't seem to be
+caused by efi. I thought it is better to get some early feedback on the series
+while EDK2 issue is being debugged.
+
+Runtime services have been verified with fwts. Here is the snippet of the result.
+
+***********************************************************************
+This test run on 16/07/20 at 17:54:53 on host Linux fedora-riscv
+5.8.0-rc5-00015-g5e61441080fd-dirty #938 SMP Thu Jul 16 14:50:11 PDT 2020
+riscv64.
+
+Command: "fwts uefirtvariable".
+Running tests: uefirtvariable.
+
+uefirtvariable: UEFI Runtime service variable interface tests.
+Test 1 of 9: Test UEFI RT service get variable interface.
+SKIPPED: Test 1, Skipping test, SetVariable runtime service is not supported on
+this platform.
+
+Test 2 of 9: Test UEFI RT service get next variable name interface.
+The runtime service GetNextVariableName interface function test.
+SKIPPED: Test 2, Skipping test, SetVariable runtime service is not supported on
+this platform.
+
+...
+
+Test 4 of 9: Test UEFI RT service query variable info interface.
+SKIPPED: Test 4, Not support the QueryVariableInfo UEFI runtime interface:
+cannot test.
+
+ADVICE: Firmware also needs to check if the revision of system table is correct
+or not. Linux kernel returns EFI_UNSUPPORTED as well, if the FirmwareRevision of
+system table is less than EFI_2_00_SYSTEM_TABLE_REVISION.
+
+...
+***********************************************************************
+
+Currently, U-Boot EFI implementation returns EFI_UNSUPPORTED for set_variable
+service. That's why all tests have been skipped but I manually verified the value
+returned from U-Boot not kernel :).
+
+Changes from v2->v3:
+1. Fixed few bugs in run time services page table mapping.
+2. Dropped patch 1 as it is already taken into efi-tree.
+3. Sent few generic mmu fixes as a separate series to ease the merge conflicts.
+
+Changes from v1->v2:
+1. Removed patch 1 as it is already taken into efi-tree.
+2. Fixed compilation issues with patch 9.
+3. Moved few function prototype declaration to header file to keep kbuild happy.
+
+Changes from previous version:
+1. Added full ioremap support.
+2. Added efi runtime services support.
+3. Fixes mm issues
+
+Anup Patel (1):
+RISC-V: Move DT mapping outof fixmap
+
+Atish Patra (8):
+RISC-V: Add early ioremap support
+RISC-V: Implement late mapping page table allocation functions
+include: pe.h: Add RISC-V related PE definition
+RISC-V: Add PE/COFF header for EFI stub
+RISC-V: Add EFI stub support.
+efi: Rename arm-init to efi-init common for all arch
+RISC-V: Add EFI runtime services
+RISC-V: Add page table dump support for uefi
+
+arch/riscv/Kconfig                            |  25 +++
+arch/riscv/Makefile                           |   1 +
+arch/riscv/configs/defconfig                  |   1 +
+arch/riscv/include/asm/Kbuild                 |   1 +
+arch/riscv/include/asm/efi.h                  |  56 +++++++
+arch/riscv/include/asm/fixmap.h               |  16 +-
+arch/riscv/include/asm/io.h                   |   1 +
+arch/riscv/include/asm/mmu.h                  |   2 +
+arch/riscv/include/asm/pgtable.h              |   4 +
+arch/riscv/include/asm/sections.h             |  13 ++
+arch/riscv/kernel/Makefile                    |   5 +
+arch/riscv/kernel/efi-header.S                | 104 +++++++++++++
+arch/riscv/kernel/efi.c                       | 105 +++++++++++++
+arch/riscv/kernel/head.S                      |  17 ++-
+arch/riscv/kernel/head.h                      |   2 -
+arch/riscv/kernel/image-vars.h                |  51 +++++++
+arch/riscv/kernel/setup.c                     |  16 +-
+arch/riscv/kernel/vmlinux.lds.S               |  22 ++-
+arch/riscv/mm/init.c                          | 100 ++++++++----
+arch/riscv/mm/ptdump.c                        |  48 +++++-
+drivers/firmware/efi/Kconfig                  |   3 +-
+drivers/firmware/efi/Makefile                 |   4 +-
+.../firmware/efi/{arm-init.c => efi-init.c}   |   0
+drivers/firmware/efi/libstub/Makefile         |  10 ++
+drivers/firmware/efi/libstub/efi-stub.c       |  11 +-
+drivers/firmware/efi/libstub/riscv-stub.c     | 110 ++++++++++++++
+drivers/firmware/efi/riscv-runtime.c          | 143 ++++++++++++++++++
+include/linux/pe.h                            |   3 +
+28 files changed, 823 insertions(+), 51 deletions(-)
+create mode 100644 arch/riscv/include/asm/efi.h
+create mode 100644 arch/riscv/include/asm/sections.h
+create mode 100644 arch/riscv/kernel/efi-header.S
+create mode 100644 arch/riscv/kernel/efi.c
+create mode 100644 arch/riscv/kernel/image-vars.h
+rename drivers/firmware/efi/{arm-init.c => efi-init.c} (100%)
+create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+create mode 100644 drivers/firmware/efi/riscv-runtime.c
+
+--
 2.24.0
 
