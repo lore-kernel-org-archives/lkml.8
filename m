@@ -2,243 +2,101 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C73C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95526C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABCD2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:24:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+DIx6Sl"
+	by mail.kernel.org (Postfix) with ESMTP id 6E60E2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594880654;
+	bh=Z/nrTcXcFk5J/58Hd9SKJQ2QPGf+Bc9TRddt07uYXJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZnFAVsABcksZRUx+lCYTDSJWhSNtXuIG3zjV9vREHoWkUAfQn8F69qMVoljIRF7tn
+	 +RU1zKpxpPCCktvauvkLFMub40vfKGr3/IrSZlpFyhHMcYdlhLPfz86RUEgKWXTyJk
+	 hHtLcq3z2MOuJpvqJID9jeTvbrf+RoDj7CLWI2ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgGPGYI (ORCPT
+        id S1728084AbgGPGYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 02:24:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbgGPGYH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 02:24:07 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1AFBC061755;
-        Wed, 15 Jul 2020 23:24:07 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 207so3209699pfu.3;
-        Wed, 15 Jul 2020 23:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=RVf+nZWX+91+dteQBQwe8rFE2LN3RLK87/mLuBjVmYA=;
-        b=h+DIx6SlQ0p4epVcvakt+XdBEBG3eS28pIKn606BO8yd7Zf3gaG7TIZIP6D6CITxNW
-         3ixOcXQyCSmk5dgjJaFUoANu+qwViGTvLKshSHcjlw9C4DnQ/NCC+ixJTuJcpRMd76WY
-         jPmHRpPFqYkQyEQtGsuut74SBBrwrtQ0MyrLGwyFxhjajMVbEbbqVHlAMWk0xIeYGyco
-         i68M4maXzFL+UgAGOodxywfrETXmGFXhFQtyFnx18+BFXWb0eRB0VowWj/mzESgpAHqn
-         eGqbDY6ytIPzCsJeLmLfNy/vfc5JbgY4gaqMraLit2KMa2RTlYi6HS+3n3X5ngF+cZgQ
-         3pog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=RVf+nZWX+91+dteQBQwe8rFE2LN3RLK87/mLuBjVmYA=;
-        b=VOFzlH/kCR5bhg+ilncUvPfhEHXReKmp7u85zMqG6mvsT3gAcD/e9c3JVaiRZrysFg
-         od+PjkVUXAiDLwUfl30ridOKI2vTeb+ufTpnnO9LJtMsFTN9uFNjk1t3S7ZR8Ypub4rX
-         Uzyiy+B+6D1kZTY2hgLuPZyuj/U64p2YZuRqyYUWVQ4tPajNhJ1C1HGiw/S6Hcj0lbOk
-         AQXkfzLCD5WTvFH94J3gCsxQfqoeMlzo296dhGWTo60Ltt9xugKSjN0fTew/Q1MXdw2Q
-         ERPom/m9OcjZ+tJIaBY2rDGktv3ErccFZeATnf3ePdLTXKoQkZpAzq+tLvpwMj/DM3FT
-         fIIA==
-X-Gm-Message-State: AOAM533swyzsKPWCMVCZ4jsSWsr6NRu0fPeQVukfzEtaWQz+OFsSAwPx
-        M+w5iKpKSliam3R/BroySMc=
-X-Google-Smtp-Source: ABdhPJy8SHnN4hG7z//QwWsCRWGE/2K8Qc7x+LUk6kXbTBodNFFWLKqzBou2ptxC0O2bMDD7+PITgg==
-X-Received: by 2002:a63:1a08:: with SMTP id a8mr2973419pga.39.1594880647192;
-        Wed, 15 Jul 2020 23:24:07 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id q24sm3859410pgg.3.2020.07.15.23.24.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 23:24:06 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 16:24:01 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: KCSAN: data-race in generic_file_buffered_read /
- generic_file_buffered_read
-To:     Dave Chinner <david@fromorbit.com>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     akpm@linux-foundation.org, Marco Elver <elver@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        syzbot <syzbot+0f1e470df6a4316e0a11@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com, Will Deacon <will@kernel.org>
-References: <0000000000004a4d6505aa7c688a@google.com>
-        <20200715152912.GA2209203@elver.google.com>
-        <20200715163256.GB1167@sol.localdomain>
-        <20200715234203.GK5369@dread.disaster.area>
-        <20200716030357.GE1167@sol.localdomain>
-In-Reply-To: <20200716030357.GE1167@sol.localdomain>
+        Thu, 16 Jul 2020 02:24:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbgGPGYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 02:24:11 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4611A206F5;
+        Thu, 16 Jul 2020 06:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594880651;
+        bh=Z/nrTcXcFk5J/58Hd9SKJQ2QPGf+Bc9TRddt07uYXJ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J1+Y5vDv98bZYgYKLHiON0mpd/bJAW/JRJIdHK5gRELyyKKz6ZDiJO0BDj9Ejrlvv
+         KX36RQTyBVP96DWYJTp/OHW4rg6XkM0uK+fOJScU6N06KiSXEMrxtEUtO/oILiqfOn
+         IVWiQoPGzHyRam56Su9cKc1ueWxKpPCrlEz6ZxRY=
+Date:   Thu, 16 Jul 2020 11:54:06 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: linux-next: Tree for Jul 15
+ (drivers/phy/allwinner/phy-sun4i-usb.c)
+Message-ID: <20200716062406.GG55478@vkoul-mobl>
+References: <20200715180551.64d8d21e@canb.auug.org.au>
+ <edd798bb-ee51-bb99-b885-682489e7fda5@infradead.org>
 MIME-Version: 1.0
-Message-Id: <1594880070.49b50i0a1p.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <edd798bb-ee51-bb99-b885-682489e7fda5@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Eric Biggers's message of July 16, 2020 1:03 pm:
-> On Thu, Jul 16, 2020 at 09:42:03AM +1000, Dave Chinner wrote:
->> On Wed, Jul 15, 2020 at 09:32:56AM -0700, Eric Biggers wrote:
->> > [+Cc linux-fsdevel]
->> >=20
->> > On Wed, Jul 15, 2020 at 05:29:12PM +0200, 'Marco Elver' via syzkaller-=
-bugs wrote:
->> > > On Wed, Jul 15, 2020 at 08:16AM -0700, syzbot wrote:
->> > > > Hello,
->> > > >=20
->> > > > syzbot found the following issue on:
->> > > >=20
->> > > > HEAD commit:    e9919e11 Merge branch 'for-linus' of git://git.ker=
-nel.org/..
->> > > > git tree:       upstream
->> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D1217a8=
-3b100000
->> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D570eb5=
-30a65cd98e
->> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D0f1e470d=
-f6a4316e0a11
->> > > > compiler:       clang version 11.0.0 (https://github.com/llvm/llvm=
--project.git ca2dcbd030eadbf0aa9b660efe864ff08af6e18b)
->> > > >=20
->> > > > Unfortunately, I don't have any reproducer for this issue yet.
->> > > >=20
->> > > > IMPORTANT: if you fix the issue, please add the following tag to t=
-he commit:
->> > > > Reported-by: syzbot+0f1e470df6a4316e0a11@syzkaller.appspotmail.com
->> > > >=20
->> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> > > > BUG: KCSAN: data-race in generic_file_buffered_read / generic_file=
-_buffered_read
->> > >=20
->> > > Our guess is that this is either misuse of an API from userspace, or=
- a
->> > > bug. Can someone clarify?
->> > >=20
->> > > Below are the snippets of code around these accesses.
->> >=20
->> > Concurrent reads on the same file descriptor are allowed.  Not with sy=
-s_read(),
->> > as that implicitly uses the file position.  But it's allowed with sys_=
-pread(),
->> > and also with sys_sendfile() which is the case syzbot is reporting her=
-e.
->>=20
->> Concurrent read()s are fine, they'll just read from the same offset.
->>=20
->=20
-> Actually the VFS serializes concurrent read()'s on the same fd, at least =
-for
-> regular files.
+On 15-07-20, 08:18, Randy Dunlap wrote:
+> On 7/15/20 1:05 AM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20200714:
+> > 
+> 
+> on x86_64:
+> # CONFIG_GPIOLIB is not set
+> 
+> ../drivers/phy/allwinner/phy-sun4i-usb.c: In function ‘sun4i_usb_phy0_get_id_det’:
+> ../drivers/phy/allwinner/phy-sun4i-usb.c:367:11: error: implicit declaration of function ‘gpiod_get_value_cansleep’; did you mean ‘gpio_get_value_cansleep’? [-Werror=implicit-function-declaration]
+>     return gpiod_get_value_cansleep(data->id_det_gpio);
+>            ^~~~~~~~~~~~~~~~~~~~~~~~
+>            gpio_get_value_cansleep
+>   CC      fs/bad_inode.o
+> ../drivers/phy/allwinner/phy-sun4i-usb.c: In function ‘sun4i_usb_phy_probe’:
+> ../drivers/phy/allwinner/phy-sun4i-usb.c:707:22: error: implicit declaration of function ‘devm_gpiod_get_optional’; did you mean ‘devm_clk_get_optional’? [-Werror=implicit-function-declaration]
+>   data->id_det_gpio = devm_gpiod_get_optional(dev, "usb0_id_det",
+>                       ^~~~~~~~~~~~~~~~~~~~~~~
+>                       devm_clk_get_optional
+> ../drivers/phy/allwinner/phy-sun4i-usb.c:708:11: error: ‘GPIOD_IN’ undeclared (first use in this function); did you mean ‘GPIOF_IN’?
+>            GPIOD_IN);
+>            ^~~~~~~~
+>            GPIOF_IN
+> ../drivers/phy/allwinner/phy-sun4i-usb.c:708:11: note: each undeclared identifier is reported only once for each function it appears in
+> ../drivers/phy/allwinner/phy-sun4i-usb.c:815:21: error: implicit declaration of function ‘gpiod_to_irq’; did you mean ‘gpio_to_irq’? [-Werror=implicit-function-declaration]
+>   data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
+>                      ^~~~~~~~~~~~
+>                      gpio_to_irq
+> 
+> 
+> Full randconfig file is attached.
 
-Hmm, where?
+Thanks Randy for the report, it is fixed by adding the right gpio
+header, sending a patch now
 
-> Anyway, doesn't matter since we can consider pread() instead.
->=20
->>=20
->> >=20
->> > >=20
->> > > > write to 0xffff8880968747b0 of 8 bytes by task 6336 on cpu 0:
->> > > >  generic_file_buffered_read+0x18be/0x19e0 mm/filemap.c:2246
->> > >=20
->> > > 	...
->> > > 	would_block:
->> > > 		error =3D -EAGAIN;
->> > > 	out:
->> > > 		ra->prev_pos =3D prev_index;
->> > > 		ra->prev_pos <<=3D PAGE_SHIFT;
->> > > 2246)		ra->prev_pos |=3D prev_offset;
->> > >=20
->> > > 		*ppos =3D ((loff_t)index << PAGE_SHIFT) + offset;
->> > > 		file_accessed(filp);
->> > > 		return written ? written : error;
->> > > 	}
->> > > 	EXPORT_SYMBOL_GPL(generic_file_buffered_read);
->> > > 	...
->> >=20
->> > Well, it's a data race.  Each open file descriptor has just one readah=
-ead state
->> > (struct file_ra_state), and concurrent reads of the same file descript=
-or
->> > use/change that readahead state without any locking.
->> >=20
->> > Presumably this has traditionally been considered okay, since readahea=
-d is
->> > "only" for performance and doesn't affect correctness.  And for perfor=
-mance
->> > reasons, we want to avoid locking during file reads.
->> >=20
->> > So we may just need to annotate all access to file_ra_state with
->> > READ_ONCE() and WRITE_ONCE()...
->>=20
->> Please, no. Can we stop making the code hard to read, more difficult
->> to maintain and preventing the compiler from optimising it by doing
->> stupid "turn off naive static checker warnings" stuff like this?
->>=20
->> If the code is fine with races, then -leave it alone-. If it's not
->> fine with a data race, then please go and work out the correct
->> ordering and place well documented barriers and/or release/acquire
->> ordering semantics in the code so that we do not need to hide data
->> races behind a compiler optimisation defeating macro....
->>=20
->> Yes, I know data_race() exists to tell the tooling that it should
->> ignore data races in the expression, but that makes just as much
->> mess of the code as READ_ONCE/WRITE_ONCE being spewed everywhere
->> indiscriminately because <some tool said we need to do that>.
->>=20
->=20
-> Data races are undefined behavior, so it's never guaranteed "fine".
-
-Is this a new requirement for the kernel? Even code which is purely an=20
-optimisation (e.g. a readahead heuristic) can never be guaranteed to
-be fine for a data race? As in, the compiler might be free to start
-scribbling on memory because of undefined behaviour?
-
-What we used to be able to do is assume that the variable might take on=20
-one or other value at any time its used (or even see split between the
-two if the thing wasn't naturally aligned for example), but that was=20
-quite well "defined". So we could in fact guarantee that it would be=20
-fine.
-
-> We can only
-> attempt to conclude that it's fine "in practice" and is too difficult to =
-fix,
-> and therefore doesn't meet the bar to be fixed (for now).
->=20
-> Of course, in most cases the preferred solution for data races is to intr=
-oduce
-> proper synchronization.  As I said, I'm not sure that's feasible here.  M=
-emory
-> barriers aren't the issue here; we'd need *locking*, which would mean con=
-current
-> readers would start contending for the lock.  Other suggestions appreciat=
-ed...
-
-
- 		ra->prev_pos =3D prev_index;
- 		ra->prev_pos <<=3D PAGE_SHIFT;
- 2246)		ra->prev_pos |=3D prev_offset;
-
-
-In this case we can do better I guess, in case some compiler decides to=20
-store a half-done calculation there because it ran out of registers.
-
-WRITE_ONCE(ra->prev_pos, ((loff_t)prev_index << PAGE_SHIFT) | prev_offset);
-
-As Dave said, adding WRITE_ONCE to the individual accesses would be=20
-stupid because it does nothing to solve the actual race and makes it=20
-harder to read in more than one way.
-
-Thanks,
-Nick
+-- 
+~Vinod
