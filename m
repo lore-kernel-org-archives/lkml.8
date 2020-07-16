@@ -2,134 +2,223 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B063C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C93FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 575D920775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E83C204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KXtFgSRW"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="SzLH2bWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgGPFQJ (ORCPT
+        id S1726394AbgGPFS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46864 "EHLO
+        Thu, 16 Jul 2020 01:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgGPFQI (ORCPT
+        with ESMTP id S1725268AbgGPFS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:16:08 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F37C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:16:08 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id z5so4261223pgb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:16:08 -0700 (PDT)
+        Thu, 16 Jul 2020 01:18:26 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD49C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:18:26 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u185so3149709pfu.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:18:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y82s5J6jGeE+1WkQgClg6fF8GkRM6k30eJBmLEIoHho=;
-        b=KXtFgSRWIDabNM0L7WxgGCj81mvHpXozzo3Lh5uiL5segDJXmzAmhO7LtFilDnCiFV
-         VCb6APzS/iKl7Iz/JPtBo2M3G4M/mYH3mdSZ0qc9XFLlHw3/VV52KYOQ1XgdjMFp872x
-         8yupOmZqRwAp9T9ZcV0YIa9B48kZCg+cq0Yu8=
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=pjSAQ6Btld2fycHWHEXEy5l6TD0W6bB4dFccT/gpVM8=;
+        b=SzLH2bWvof9kr76xot8dGve40BlKMean/0Ynh3Mixvp/iYGI6jslyiT1H/1n9Qj1ow
+         Mh6ujatjCTcxc2s25k7iA9sn8U89yBeRY8ebObRWZj6HYuZXFeSDTBb/EWPHPkSP4FNU
+         WwDuuMXK/rQCsP66Mjz/JMKuDuyf2EqCTf0wV7Jeao4eNmnGi3HcAtNuOo1DPvCl3PrS
+         G8xS6Xv4Ca2XuthzckdOpVp0+F0+/78sRIME7/YVN8R9H8xTFBhlymC5jiziD9Jh1/PT
+         1dEIfLgzq81IlVYg4rVZj6jYicZCgwuZlDfimKz4575Fr0aZwG6NbpNsQCvhpVa8sGpY
+         J2Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y82s5J6jGeE+1WkQgClg6fF8GkRM6k30eJBmLEIoHho=;
-        b=bTCSKYNDqxjUmmszg5O7fhyPZ5GWb3tr1v5p8iDFu365BFFGvn3kKW1ZKR57CzyrVz
-         xZzI1FZ5nWgKdDAaX0qM7oB0m97C9BmOfXxblcDWL82H/XLHn9H6pZAr0/ddgefwj9lK
-         bJtlGdZUtebvUsi/OKQw6Ii23YnCGzzZTNsWMFrGsZhz4yDeQxbxc+WwLP2w7QSfmbRa
-         UFukCcuW5zwL3/ugbGce7bhJeY0rhIZogWUZ2QpkbvoE39qjaJ6pzdEoVq8BKRJuXDHm
-         OKCBbRSuLM6EXghNb0Jzp/koZNgH3Rkrhglw4mpZRjkLoDzm3wBZyqn8zxc97NqMeGOk
-         nwlg==
-X-Gm-Message-State: AOAM533cyA7pE56GLTN089SfILqmfy+0CQYkkM9pqEAbBJJ28cCWuyGk
-        FdkKbhcu1bwhIWC4xKaHrGUfIQ==
-X-Google-Smtp-Source: ABdhPJwXILHXfYYnoTMFXqMHeqxiwrG/soe4t9GpW7yqRWRGtYHxu1CHGk67bfLwW5pMqKEWrUB+YQ==
-X-Received: by 2002:a05:6a00:14ce:: with SMTP id w14mr2279149pfu.121.1594876568096;
-        Wed, 15 Jul 2020 22:16:08 -0700 (PDT)
-Received: from bhanumaiya-glaptop.hsd1.ca.comcast.net ([2601:646:9500:590:250:b6ff:fe8e:b459])
-        by smtp.gmail.com with ESMTPSA id r8sm3493401pfh.29.2020.07.15.22.16.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 22:16:07 -0700 (PDT)
-From:   Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-X-Google-Original-From: Bhanu Prakash Maiya <bhanumaiya@google.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Eric Peers <epeers@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.Kernel.org
-Subject: [PATCH v3 2/2] dt-bindings: mfd: Add DT compatible string "google,cros_ec_uart"
-Date:   Wed, 15 Jul 2020 22:16:04 -0700
-Message-Id: <20200715221150.v3.2.I113cdbaf66d48b37ac0faefb9b845480d122f3b9@changeid>
-X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=pjSAQ6Btld2fycHWHEXEy5l6TD0W6bB4dFccT/gpVM8=;
+        b=t7hOAiIEHvg1aboTusjWQN1xO3ZFv0WlEQ+QnBrsDglJU8Yn6HWaaxXP7isFI8AgYl
+         I/xSmurHZAqF7+7r6HvVYFFM2EeIEzPv3AYaWyQ7I6OS1ybqJNSx+KE+GEJfWhZ3Otmf
+         OQu2hbbLkQOK3BCR5O+K8qCiayHBlKfaEVZVfMLhmvG1PgIX4yaYnHFLS0hXc0pnc1YS
+         mksIPReTa2Sy9r6oLJ5H7cp7RDg2qiWA9K+MMGcAJbbTO6EKkUqesJ1roNGV/ww+1YxV
+         gKAZh+gTlSuIcqgcBEJ7uJqSXhWccRO+jKxPp7nfKqvT+dPiqrMP3futXKid5w3gjmnv
+         kRWg==
+X-Gm-Message-State: AOAM53159Ko2D9+qOgGJ6PeswaVuvEs/TavlhOyYkuSj9YjJp92L8Ueb
+        +zaurbJjNBX4FbZ/5bYz0WWB9g==
+X-Google-Smtp-Source: ABdhPJz36lMtXy7jtJjFqq3zOAV60PvUS/Hlk91z+f9BEuTeTezdLYpRcGCyT7+UAXDv2D+6odC4ig==
+X-Received: by 2002:a63:444b:: with SMTP id t11mr2886208pgk.134.1594876706172;
+        Wed, 15 Jul 2020 22:18:26 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:c8f2:5437:b9af:674c? ([2601:646:c200:1ef2:c8f2:5437:b9af:674c])
+        by smtp.gmail.com with ESMTPSA id k7sm3623730pgh.46.2020.07.15.22.18.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 22:18:25 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
+Date:   Wed, 15 Jul 2020 22:18:20 -0700
+Message-Id: <EFAD6E2F-EC08-4EB3-9ECC-2A963C023FC5@amacapital.net>
+References: <1594868476.6k5kvx8684.astroid@bobo.none>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
+In-Reply-To: <1594868476.6k5kvx8684.astroid@bobo.none>
+To:     Nicholas Piggin <npiggin@gmail.com>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
 
-Add DT compatible string in
-Documentation/devicetree/bindings/mfd/cros_ec.txt
 
-Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
----
+> On Jul 15, 2020, at 9:15 PM, Nicholas Piggin <npiggin@gmail.com> wrote:
+>=20
+> =EF=BB=BFExcerpts from Mathieu Desnoyers's message of July 14, 2020 12:13 a=
+m:
+>> ----- On Jul 13, 2020, at 9:47 AM, Nicholas Piggin npiggin@gmail.com wrot=
+e:
+>>=20
+>>> Excerpts from Nicholas Piggin's message of July 13, 2020 2:45 pm:
+>>>> Excerpts from Andy Lutomirski's message of July 11, 2020 3:04 am:
+>>>>> Also, as it stands, I can easily see in_irq() ceasing to promise to
+>>>>> serialize.  There are older kernels for which it does not promise to
+>>>>> serialize.  And I have plans to make it stop serializing in the
+>>>>> nearish future.
+>>>>=20
+>>>> You mean x86's return from interrupt? Sounds fun... you'll konw where t=
+o
+>>>> update the membarrier sync code, at least :)
+>>>=20
+>>> Oh, I should actually say Mathieu recently clarified a return from
+>>> interrupt doesn't fundamentally need to serialize in order to support
+>>> membarrier sync core.
+>>=20
+>> Clarification to your statement:
+>>=20
+>> Return from interrupt to kernel code does not need to be context serializ=
+ing
+>> as long as kernel serializes before returning to user-space.
+>>=20
+>> However, return from interrupt to user-space needs to be context serializ=
+ing.
+>=20
+> Hmm, I'm not sure it's enough even with the sync in the exit_lazy_tlb
+> in the right places.
+>=20
+> A kernel thread does a use_mm, then it blocks and the user process with
+> the same mm runs on that CPU, and then it calls into the kernel, blocks,
+> the kernel thread runs again, another CPU issues a membarrier which does
+> not IPI this one because it's running a kthread, and then the kthread
+> switches back to the user process (still without having unused the mm),
+> and then the user process returns from syscall without having done a=20
+> core synchronising instruction.
+>=20
+> The cause of the problem is you want to avoid IPI'ing kthreads. Why?
+> I'm guessing it really only matters as an optimisation in case of idle
+> threads. Idle thread is easy (well, easier) because it won't use_mm, so=20=
 
-Changes in v3:
-- Rebased changes on google,cros-ec.yaml
+> you could check for rq->curr =3D=3D rq->idle in your loop (in a suitable=20=
 
-Changes in v2:
-- No change
+> sched accessor function).
+>=20
+> But... I'm not really liking this subtlety in the scheduler for all this=20=
 
- Documentation/devicetree/bindings/mfd/google,cros-ec.yaml | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> (the scheduler still needs the barriers when switching out of idle).
+>=20
+> Can it be improved somehow? Let me forget x86 core sync problem for now
+> (that _may_ be a bit harder), and step back and look at what we're doing.
+> The memory barrier case would actually suffer from the same problem as
+> core sync, because in the same situation it has no implicit mmdrop in
+> the scheduler switch code either.
+>=20
+> So what are we doing with membarrier? We want any activity caused by the=20=
 
-diff --git a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-index 6a7279a85ec1c..552d1c9bf3de4 100644
---- a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-+++ b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-@@ -10,11 +10,12 @@ maintainers:
-   - Benson Leung <bleung@chromium.org>
-   - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-   - Guenter Roeck <groeck@chromium.org>
-+  - Bhanu Prakash Maiya <bhanumaiya@chromium.org>
- 
- description:
-   Google's ChromeOS EC is a microcontroller which talks to the AP and
-   implements various functions such as keyboard and battery charging.
--  The EC can be connected through various interfaces (I2C, SPI, and others)
-+  The EC can be connected through various interfaces (I2C, SPI, UART and others)
-   and the compatible string specifies which interface is being used.
- 
- properties:
-@@ -29,6 +30,9 @@ properties:
-       - description:
-           For implementations of the EC is connected through RPMSG.
-         const: google,cros-ec-rpmsg
-+      - description:
-+          For implementations of the EC is connected through UART.
-+        const: google,cros-ec-uart
- 
-   google,cros-ec-spi-pre-delay:
-     description:
--- 
-2.26.2
+> set of CPUs/threads specified that can be observed by this thread before=20=
 
+> calling membarrier is appropriately fenced from activity that can be=20
+> observed to happen after the call returns.
+>=20
+> CPU0                     CPU1
+>                         1. user stuff
+> a. membarrier()          2. enter kernel
+> b. read rq->curr         3. rq->curr switched to kthread
+> c. is kthread, skip IPI  4. switch_to kthread
+> d. return to user        5. rq->curr switched to user thread
+>                 6. switch_to user thread
+>                 7. exit kernel
+>                         8. more user stuff
+>=20
+> As far as I can see, the problem is CPU1 might reorder step 5 and step
+> 8, so you have mmdrop of lazy mm be a mb after step 6.
+>=20
+> But why? The membarrier call only cares that there is a full barrier
+> between 1 and 8, right? Which it will get from the previous context
+> switch to the kthread.
+>=20
+> I must say the memory barrier comments in membarrier could be improved
+> a bit (unless I'm missing where the main comment is). It's fine to know
+> what barriers pair with one another, but we need to know which exact
+> memory accesses it is ordering
+>=20
+>       /*
+>         * Matches memory barriers around rq->curr modification in
+>         * scheduler.
+>         */
+>=20
+> Sure, but it doesn't say what else is being ordered. I think it's just
+> the user memory accesses, but would be nice to make that a bit more
+> explicit. If we had such comments then we might know this case is safe.
+>=20
+> I think the funny powerpc barrier is a similar case of this. If we
+> ever see remote_rq->curr->flags & PF_KTHREAD, then we _know_ that
+> CPU has or will have issued a memory barrier between running user
+> code.
+>=20
+> So AFAIKS all this membarrier stuff in kernel/sched/core.c could
+> just go away. Except x86 because thread switch doesn't imply core
+> sync, so CPU1 between 1 and 8 may never issue a core sync instruction
+> the same way a context switch must be a full mb.
+>=20
+> Before getting to x86 -- Am I right, or way off track here?
+
+I find it hard to believe that this is x86 only. Why would thread switch imp=
+ly core sync on any architecture?  Is x86 unique in having a stupid expensiv=
+e core sync that is heavier than smp_mb()?
+
+But I=E2=80=99m wondering if all this deferred sync stuff is wrong. In the b=
+rave new world of io_uring and such, perhaps kernel access matter too.  Heck=
+, even:
+
+int a[2];
+
+Thread A:
+a[0] =3D 1;
+a[1] =3D 2:
+
+Thread B:
+
+write(fd, a, sizeof(a));
+
+Doesn=E2=80=99t do what thread A is expecting.  Admittedly this particular e=
+xample is nonsense, but maybe there are sensible cases that matter to someon=
+e.
+
+=E2=80=94Andy
+
+>=20
+> Thanks,
+> Nick
