@@ -2,168 +2,171 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BBEC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F64C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9833620657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF9F20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S6DDIKAe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiKx9Fwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgGPRXq (ORCPT
+        id S1728947AbgGPRYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:23:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46474 "EHLO
+        Thu, 16 Jul 2020 13:24:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbgGPRXp (ORCPT
+        with ESMTP id S1725867AbgGPRYh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:23:45 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DBF5C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:23:45 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id ga4so7397876ejb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:23:45 -0700 (PDT)
+        Thu, 16 Jul 2020 13:24:37 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5453C061755;
+        Thu, 16 Jul 2020 10:24:36 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id x9so8831234ljc.5;
+        Thu, 16 Jul 2020 10:24:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ap6sCeX+vfsgknYFWUWzqHRMYIsUrhYyQY0OJzIHClo=;
-        b=S6DDIKAesPw5Cjx89b0HuzwbTsFk9QhmWPt5VzTZ6wA2Uh4QVf36cFYxTJql64zLQA
-         FLaSC6H2+WAaj2PpaonR0HyxRuPDL0NnUTJEY6UiUZ714K0v+omvP7NnEiex0K8R8B13
-         F2CaY9/LU+DAdSIHZe1+/K45Rg3SIpYjxFlwNXp8wBNjT02Z3Gqhr19q4ptq39uYL196
-         uE9UCQkcTzrI/LgOHoEeGt/diY69YXNked59X49Dh9ODuonOtSNYY/1TwCgELzM5YgwB
-         wm64dM1NMTBfZJnZE0T/apcsaKb5ybLGpLp4bCw3RTjsNIpQrIzA07yUMfyVIlYTqTJ+
-         ZfMQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hjVlWdeLydlGM9Tsn7DxLyu36+NhHY2Z/yvVPpckruQ=;
+        b=FiKx9Fwj7zyC3kMQCecAVNhoRN34gTx+1k82pLWEC5BcPLZvzz3vFofaxHQuZn0Jqd
+         3dn2K47xydzifkXtMsae/32FQS82VcY9AZcz/5ixGN7CgIMQBufG3AnlFiFlhiM+/VjX
+         CfxvV3ZMuLPmxD9lWyy9FsnSnKjrFMlxD3amNehDYulF1hLHTvnNX3oOOw4mHyJLJWJn
+         tbBEo8CKRKqdwBknVZgMZ6GXVMZnv5p9ALwSh390MypgUST8afd8hRM4KV3juasyfaCG
+         67zmPwybGzA4Kv2ggn0ZUFf4wTK1NQ9L4cJ0QnPx6PeJa5hF9hiAbyXyhv5MLXzd6pVF
+         wg+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ap6sCeX+vfsgknYFWUWzqHRMYIsUrhYyQY0OJzIHClo=;
-        b=ViPSoOHEyJ4LiVvzDprKk9Qi2sJ8rDj6imlHhBv/oQi71GcsnybT9b1Nf62wJSQcNp
-         MtygoRataY0yGi6hMmt2Bn3x8dD+7oCeGKRBlPyRd1kciA0QGAdqIDZLp9+5sUT0Rw8P
-         PPrIwlcvVy8wlAM1Dy/Ges9QptQ/W1YIhZ4wVH0R5vqjzAfNnPLLk7zxzdeVIzpNICHB
-         n5XbYUX2c71UyC8iyGhSBKGxIbwSP9BA34UqwujS5tVlKtELe+It9OOnsNzJ51oHXV7Z
-         snBJpzVzy2OqkhnPxg1OXBXa/t4NPM8Vn9QyeX/wyLtgBtWrHKtQxucQsP7ksmCEHSQi
-         ubYg==
-X-Gm-Message-State: AOAM5333i7gxUixzq0xmydQmasAxUVe5VkwHj7D9G/jopnr2gxD5rrBs
-        GGekn3Ws4kuivGbKbMtNWEwIgN3KSs64QpIQcRNFGYnkKy8=
-X-Google-Smtp-Source: ABdhPJx3Pr28goyATfKkhOboW9Yf3AuRpjqoPz5JRPqzOhfVY8Y15cuRcXN2WVSUOIPVUxZ8eX4WUlS+upYmdNP/ZEU=
-X-Received: by 2002:a17:906:29d8:: with SMTP id y24mr4685468eje.212.1594920223732;
- Thu, 16 Jul 2020 10:23:43 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hjVlWdeLydlGM9Tsn7DxLyu36+NhHY2Z/yvVPpckruQ=;
+        b=cr7uZRD/QpSiYpCl4hLfikb7sQocj/BAWDBmGX9IcDIgJS7GCKTPXstKxJPsyqrgbN
+         ZGDdeitEHmEQ67xn56ZjocwEablCE4YvnBwoMSV9pkCa1F9dTEsY0fK9Cnbu2cWInGGs
+         b+77zOyqUDbHEEPQBExFEMyVng98rSWGpjPXQBJKU2cqr7t+grPb45EnHRnWFbmKscH1
+         gsAuEll+JfkFuifmAd2PT2hA6Ldwf4eEZovID5h8sL0VdUgBOpp73X1yY2FSqT7c0O5V
+         zDmSfj4PxtjMimiosIJWYvDJfKew0w4q4gzUbnniLtT7UoFGyJfukZjGEY9i7Q/lGwIC
+         w0yw==
+X-Gm-Message-State: AOAM531Umyp+2juVwew2xI6yiVAJRXT9PXywZ/z6IEZxNvz3C/Wn8fAv
+        07cMSSkhy0RU1f5rng5krl8=
+X-Google-Smtp-Source: ABdhPJxWX0RDd8+gr3FZ2UQP1i3XK53rFDnArCj6U8QciBVaSnm+3qrqPz/ZL4wTBZqMD/vPldibxg==
+X-Received: by 2002:a2e:8085:: with SMTP id i5mr2631573ljg.97.1594920275133;
+        Thu, 16 Jul 2020 10:24:35 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
+        by smtp.googlemail.com with ESMTPSA id y18sm1160541ljn.62.2020.07.16.10.24.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 10:24:34 -0700 (PDT)
+Subject: Re: [PATCH v2 1/9] dt-bindings: power: supply: Add device-tree
+ binding for Summit SMB3xx
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Heidelberg <david@ixit.cz>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>
+References: <20200607144113.10202-1-digetx@gmail.com>
+ <20200607144113.10202-2-digetx@gmail.com> <20200713233959.GA928559@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8427d000-f803-6f17-3f87-fae17aceb24a@gmail.com>
+Date:   Thu, 16 Jul 2020 20:24:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200716170914.3623060-1-yuhsuan@chromium.org>
-In-Reply-To: <20200716170914.3623060-1-yuhsuan@chromium.org>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Thu, 16 Jul 2020 10:23:32 -0700
-Message-ID: <CABXOdTffo_PoFytXTR0DthRgxrp9SLkTrg2Wp6dMDXXj060KFw@mail.gmail.com>
-Subject: Re: [PATCH v2] ASoC: cros_ec_codec: Reset I2S RX when probing
-To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Benson Leung <bleung@chromium.org>,
-        ALSA development <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200713233959.GA928559@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 10:09 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> wrote:
->
-> It is not guaranteed that I2S RX is disabled when the kernel booting.
-> For example, if the kernel crashes while it is enabled, it will keep
-> enabled until the next time EC reboots. Reset I2S RX when probing to
-> fix this issue.
->
-> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> ---
->  drivers/platform/chrome/cros_ec_proto.c        | 7 ++++++-
->  include/linux/platform_data/cros_ec_commands.h | 1 +
->  sound/soc/codecs/cros_ec_codec.c               | 9 +++++++++
->  3 files changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index 3e745e0fe092c..2c60690d7147c 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -572,7 +572,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
->                 return -ENOTSUPP;
->         } else if (msg->result != EC_RES_SUCCESS) {
->                 dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
-> -               return -EPROTO;
-> +               switch (msg->result) {
-> +               case EC_RES_INVALID_PARAM:
-> +                       return -EINVAL;
+14.07.2020 02:39, Rob Herring пишет:
+> On Sun, Jun 07, 2020 at 05:41:05PM +0300, Dmitry Osipenko wrote:
+>> From: David Heidelberg <david@ixit.cz>
+>>
+>> Summit SMB3xx series is a Programmable Switching Li+ Battery Charger.
+>> This patch adds device-tree binding for Summit SMB345, SMB347 and SMB358
+>> chargers.
+>>
+>> Signed-off-by: David Heidelberg <david@ixit.cz>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  .../power/supply/summit,smb347-charger.yaml   | 165 ++++++++++++++++++
+>>  .../dt-bindings/power/summit,smb347-charger.h |  19 ++
+>>  2 files changed, 184 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+>>  create mode 100644 include/dt-bindings/power/summit,smb347-charger.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml b/Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+>> new file mode 100644
+>> index 000000000000..eea0a6398c95
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+>> @@ -0,0 +1,165 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/power/supply/summit,smb347-charger.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Battery charger driver for SMB345, SMB347 and SMB358
+>> +
+>> +maintainers:
+>> +  - David Heidelberg <david@ixit.cz>
+>> +  - Dmitry Osipenko <digetx@gmail.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - summit,smb345
+>> +      - summit,smb347
+>> +      - summit,smb358
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  monitored-battery:
+>> +    description: phandle to the battery node
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +
+>> +  summit,enable-usb-charging:
+>> +    type: boolean
+>> +    description: Enable charging through USB.
+>> +
+>> +  summit,enable-otg-charging:
+>> +    type: boolean
+>> +    description: Provide power for USB OTG
+>> +
+>> +  summit,enable-mains-charging:
+>> +    type: boolean
+>> +    description: Enable charging through mains
+>> +
+>> +  summit,enable-charge-control:
+>> +    description: Enable charging control
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +      - enum:
+>> +          - 0 # SMB3XX_CHG_ENABLE_SW SW (I2C interface)
+>> +          - 1 # SMB3XX_CHG_ENABLE_PIN_ACTIVE_LOW Pin control (Active Low)
+>> +          - 2 # SMB3XX_CHG_ENABLE_PIN_ACTIVE_HIGH Pin control (Active High)
+>> +
+>> +  summit,fast-voltage-threshold-microvolt:
+>> +    description: Voltage threshold to transit to fast charge mode (in uV)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> Anything with a standard unit suffix already has a type, so drop.
 
-As we have learned, this may impact other callers of
-cros_ec_cmd_xfer_status() which only accept -EPROTO as error return
-value. In addition to that, the code is odd:
-
-    if (msg->result == EC_RES_INVALID_VERSION) {
-        ...
-    } else if (msg->result != EC_RES_SUCCESS) {
-        switch (msg->result) {
-        ....
-        }
-    }
-
-I really dislike the notion of changing error return values of
-cros_ec_cmd_xfer_status() one by one. That can only cause ongoing
-trouble with callers expecting specific error return codes (as we have
-already seen).
-
-Guenter
-
-> +               default:
-> +                       return -EPROTO;
-> +               }
->         }
->
->         return ret;
-> diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-> index 69210881ebac8..11ce917ca924c 100644
-> --- a/include/linux/platform_data/cros_ec_commands.h
-> +++ b/include/linux/platform_data/cros_ec_commands.h
-> @@ -4598,6 +4598,7 @@ enum ec_codec_i2s_rx_subcmd {
->         EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH = 0x2,
->         EC_CODEC_I2S_RX_SET_DAIFMT = 0x3,
->         EC_CODEC_I2S_RX_SET_BCLK = 0x4,
-> +       EC_CODEC_I2S_RX_RESET = 0x5,
->         EC_CODEC_I2S_RX_SUBCMD_COUNT,
->  };
->
-> diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
-> index f23956cf4ed84..b5ff30b7f1aa8 100644
-> --- a/sound/soc/codecs/cros_ec_codec.c
-> +++ b/sound/soc/codecs/cros_ec_codec.c
-> @@ -1034,6 +1034,15 @@ static int cros_ec_codec_platform_probe(struct platform_device *pdev)
->         }
->         priv->ec_capabilities = r.capabilities;
->
-> +       /* Reset EC codec I2S RX. */
-> +       p.cmd = EC_CODEC_I2S_RX_RESET;
-> +       ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
-> +                                  (uint8_t *)&p, sizeof(p), NULL, 0);
-> +       if (ret == -EINVAL)
-> +               dev_info(dev, "Missing reset command. Please update your EC firmware.\n");
-> +       else if (ret)
-> +               dev_err(dev, "failed to EC_CODEC_I2S_RESET: %d\n", ret);
-> +
->         platform_set_drvdata(pdev, priv);
->
->         ret = devm_snd_soc_register_component(dev, &i2s_rx_component_driver,
-> --
-> 2.27.0.389.gc38d7665816-goog
->
+I'll correct it in the next revision, thanks!
