@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44256C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF37C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDA820760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F90207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="apvwltjk"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="K5UOFpKg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbgGPL4W (ORCPT
+        id S1728668AbgGPL4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:56:22 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:17732 "EHLO
+        Thu, 16 Jul 2020 07:56:31 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:59210 "EHLO
         mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728596AbgGPL4P (ORCPT
+        by vger.kernel.org with ESMTP id S1728655AbgGPL4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:56:15 -0400
+        Thu, 16 Jul 2020 07:56:24 -0400
 Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GBpRim032120;
-        Thu, 16 Jul 2020 04:56:13 -0700
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GBp6Mp032017;
+        Thu, 16 Jul 2020 04:56:22 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=pfpt0818;
- bh=jobk3xeLzTHzvJN0Y5cg0OyORp8n4gGX83l30lQJ68I=;
- b=apvwltjkkkx7cLbXR33cxzp/ce7rkRkO9Sy7Z7ZD4AxcNenBjcq2mh0IqeEPKig3/OGF
- 2Jk/HJ4bYsha+F+f8lb81/FO5Nd+S2tAjuoiPyeyyl44MnTpxKDF3tVe03kMlxgWPz+f
- 1tYAR6ZXoyzEAM9ff2ItoWceH0NSirAbwX9Dzq+MhOlVBhJ6Q9sPxWwbGDt1osNHc6M6
- 7JpkfkXlEvBG9SfmPnj5Tf3+myF0jQTMqTgCg4HmyRHVBbyRn6cI3F2N3/76sJZV+QKA
- nl8V6YxlLyLXHgv/vVq6NIabWW2vsU7ltpaCfAS+rDKizoE+OTX5fSzzlhL7kac8l7LW CQ== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 32ap7v81r4-1
+ bh=pQ404B8L4MyjD+j2c6PxO4O97MfuQmisnaLW5tx1GA0=;
+ b=K5UOFpKgT/9/a9eWIbtVQfeHR9N0OAQ4bwEI6p4TvrmmY5UQo7weY6/VwSp3rcR+QnWu
+ +cQI5z1vvFa3BhgokWBS173gxaIslxEz8HE+maZr5p++ZRgaNo9nhWC0cqHCWJHTwEpm
+ 33SuSEaLZc5Gk1Oqid9tdwtC5/DPusgtrjHVPCHcRixAfeSUCSWoBbtDl/qv4M7HukuS
+ V7Uvijr+cMGI9AJDnGOg9pByET7UbUB3BBFb7Dt6hBztwbiBIJ7uR8LLcoXCMONojs6l
+ VK6mPXZ8OX9C5S0HQqHklpftKwqz/B/MYnvntrfb78nGuMmrJnIVSenAwGS3yThgoBDj bA== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 32ap7v81s0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 04:56:13 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 16 Jul
- 2020 04:56:11 -0700
+        Thu, 16 Jul 2020 04:56:22 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 16 Jul
+ 2020 04:56:21 -0700
 Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
  (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 16 Jul 2020 04:56:12 -0700
+ Transport; Thu, 16 Jul 2020 04:56:21 -0700
 Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 335F33F7040;
-        Thu, 16 Jul 2020 04:56:07 -0700 (PDT)
+        by maili.marvell.com (Postfix) with ESMTP id 495433F703F;
+        Thu, 16 Jul 2020 04:56:17 -0700 (PDT)
 From:   Alexander Lobakin <alobakin@marvell.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -61,9 +61,9 @@ CC:     Alexander Lobakin <alobakin@marvell.com>,
         <GR-everest-linux-l2@marvell.com>,
         <QLogic-Storage-Upstream@cavium.com>, <netdev@vger.kernel.org>,
         <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 08/13] qede: introduce support for FEC control
-Date:   Thu, 16 Jul 2020 14:54:41 +0300
-Message-ID: <20200716115446.994-9-alobakin@marvell.com>
+Subject: [PATCH net-next 10/13] qed: add support for new port modes
+Date:   Thu, 16 Jul 2020 14:54:43 +0300
+Message-ID: <20200716115446.994-11-alobakin@marvell.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200716115446.994-1-alobakin@marvell.com>
 References: <20200716115446.994-1-alobakin@marvell.com>
@@ -77,108 +77,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Ethtool callbacks for querying and setting FEC parameters if it's
-supported by the underlying qed module and MFW version running on the
-device.
+These ports ship on new boards revisions and are supported by newer
+firmware versions.
 
 Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
 Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 ---
- .../net/ethernet/qlogic/qede/qede_ethtool.c   | 74 +++++++++++++++++++
- 1 file changed, 74 insertions(+)
+ drivers/net/ethernet/qlogic/qed/qed.h     |  5 +++++
+ drivers/net/ethernet/qlogic/qed/qed_dev.c | 15 +++++++++++++++
+ drivers/net/ethernet/qlogic/qed/qed_hsi.h |  5 +++++
+ 3 files changed, 25 insertions(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-index f5851a6ae729..12ec80d9247c 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-@@ -1861,6 +1861,78 @@ static int qede_set_eee(struct net_device *dev, struct ethtool_eee *edata)
- 	return 0;
- }
+diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
+index 6a1d12da7910..63fcbd5a295a 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed.h
++++ b/drivers/net/ethernet/qlogic/qed/qed.h
+@@ -257,6 +257,11 @@ enum QED_PORT_MODE {
+ 	QED_PORT_MODE_DE_1X25G,
+ 	QED_PORT_MODE_DE_4X25G,
+ 	QED_PORT_MODE_DE_2X10G,
++	QED_PORT_MODE_DE_2X50G_R1,
++	QED_PORT_MODE_DE_4X50G_R1,
++	QED_PORT_MODE_DE_1X100G_R2,
++	QED_PORT_MODE_DE_2X100G_R2,
++	QED_PORT_MODE_DE_1X100G_R4,
+ };
  
-+static u32 qede_link_to_ethtool_fec(u32 link_fec)
-+{
-+	u32 eth_fec = 0;
-+
-+	if (link_fec & QED_FEC_MODE_NONE)
-+		eth_fec |= ETHTOOL_FEC_OFF;
-+	if (link_fec & QED_FEC_MODE_FIRECODE)
-+		eth_fec |= ETHTOOL_FEC_BASER;
-+	if (link_fec & QED_FEC_MODE_RS)
-+		eth_fec |= ETHTOOL_FEC_RS;
-+	if (link_fec & QED_FEC_MODE_AUTO)
-+		eth_fec |= ETHTOOL_FEC_AUTO;
-+	if (link_fec & QED_FEC_MODE_UNSUPPORTED)
-+		eth_fec |= ETHTOOL_FEC_NONE;
-+
-+	return eth_fec;
-+}
-+
-+static u32 qede_ethtool_to_link_fec(u32 eth_fec)
-+{
-+	u32 link_fec = 0;
-+
-+	if (eth_fec & ETHTOOL_FEC_OFF)
-+		link_fec |= QED_FEC_MODE_NONE;
-+	if (eth_fec & ETHTOOL_FEC_BASER)
-+		link_fec |= QED_FEC_MODE_FIRECODE;
-+	if (eth_fec & ETHTOOL_FEC_RS)
-+		link_fec |= QED_FEC_MODE_RS;
-+	if (eth_fec & ETHTOOL_FEC_AUTO)
-+		link_fec |= QED_FEC_MODE_AUTO;
-+	if (eth_fec & ETHTOOL_FEC_NONE)
-+		link_fec |= QED_FEC_MODE_UNSUPPORTED;
-+
-+	return link_fec;
-+}
-+
-+static int qede_get_fecparam(struct net_device *dev,
-+			     struct ethtool_fecparam *fecparam)
-+{
-+	struct qede_dev *edev = netdev_priv(dev);
-+	struct qed_link_output curr_link;
-+
-+	memset(&curr_link, 0, sizeof(curr_link));
-+	edev->ops->common->get_link(edev->cdev, &curr_link);
-+
-+	fecparam->active_fec = qede_link_to_ethtool_fec(curr_link.active_fec);
-+	fecparam->fec = qede_link_to_ethtool_fec(curr_link.sup_fec);
-+
-+	return 0;
-+}
-+
-+static int qede_set_fecparam(struct net_device *dev,
-+			     struct ethtool_fecparam *fecparam)
-+{
-+	struct qede_dev *edev = netdev_priv(dev);
-+	struct qed_link_params params;
-+
-+	if (!edev->ops || !edev->ops->common->can_link_change(edev->cdev)) {
-+		DP_INFO(edev, "Link settings are not allowed to be changed\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	memset(&params, 0, sizeof(params));
-+	params.override_flags |= QED_LINK_OVERRIDE_FEC_CONFIG;
-+	params.fec = qede_ethtool_to_link_fec(fecparam->fec);
-+	params.link_up = true;
-+
-+	edev->ops->common->set_link(edev->cdev, &params);
-+
-+	return 0;
-+}
-+
- static int qede_get_module_info(struct net_device *dev,
- 				struct ethtool_modinfo *modinfo)
- {
-@@ -2097,6 +2169,8 @@ static const struct ethtool_ops qede_ethtool_ops = {
- 	.get_module_eeprom		= qede_get_module_eeprom,
- 	.get_eee			= qede_get_eee,
- 	.set_eee			= qede_set_eee,
-+	.get_fecparam			= qede_get_fecparam,
-+	.set_fecparam			= qede_set_fecparam,
- 	.get_tunable			= qede_get_tunable,
- 	.set_tunable			= qede_set_tunable,
- 	.flash_device			= qede_flash_device,
+ enum qed_dev_cap {
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+index d929556247a5..4bad836d0f74 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -4026,6 +4026,21 @@ static int qed_hw_get_nvm_info(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
+ 	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G:
+ 		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_4X25G;
+ 		break;
++	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X50G_R1:
++		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_2X50G_R1;
++		break;
++	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_4X50G_R1:
++		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_4X50G_R1;
++		break;
++	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R2:
++		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_1X100G_R2;
++		break;
++	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X100G_R2:
++		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_2X100G_R2;
++		break;
++	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R4:
++		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_1X100G_R4;
++		break;
+ 	default:
+ 		DP_NOTICE(p_hwfn, "Unknown port mode in 0x%08x\n", core_cfg);
+ 		break;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_hsi.h b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
+index a4a845579fd2..debc55923251 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_hsi.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
+@@ -13015,6 +13015,11 @@ struct nvm_cfg1_glob {
+ #define NVM_CFG1_GLOB_NETWORK_PORT_MODE_1X25G			0xd
+ #define NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G			0xe
+ #define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X10G			0xf
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X50G_R1		0x11
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_4X50G_R1		0x12
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R2		0x13
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X100G_R2		0x14
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R4		0x15
+ 
+ 	u32							e_lane_cfg1;
+ 	u32							e_lane_cfg2;
 -- 
 2.25.1
 
