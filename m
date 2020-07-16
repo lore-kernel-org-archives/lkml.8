@@ -2,160 +2,167 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF1EC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D94C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D387B207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686A7207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="swyc6466"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TBuQZ+bi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgGPTDo (ORCPT
+        id S1729530AbgGPTE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728163AbgGPTDm (ORCPT
+        Thu, 16 Jul 2020 15:04:29 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:40318 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728163AbgGPTE1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:03:42 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D3F3C061755;
-        Thu, 16 Jul 2020 12:03:42 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s9so9493111ljm.11;
-        Thu, 16 Jul 2020 12:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uQLm+yqvyyrDlHJaC2rIkXacLA9eYNZLnOlnoh9hxck=;
-        b=swyc6466rHmiDhvBnx48LzOoyQSQ/+ijym4BrC1MzTTp9UR080ptucGzJBlzQD7zAQ
-         9C1M49zcNPC5lGoWvuznezl471FpNOkC2wxDEZ0Z8PM1c3lQjN2RqGdB5QZJ9JtZXZke
-         KCHnxANlf43CEghmN5IJKaY1KpoUmAQqhHsPm4b6vJMwxF5PZwODhGuul4K7lMBxc4HB
-         i6lDT6IwXZrQgzQjNx47XJ65N2di6cEvwy/2JaeNVSxOsn6N35MsIeX6N2C2/S2AsomF
-         TSo3tXPu7kosAPJ7Yx+W2VPhMBzMojFWELPapQUQVDOxeRw7ibjKvud7cX5/IDyv5Zmn
-         CZFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uQLm+yqvyyrDlHJaC2rIkXacLA9eYNZLnOlnoh9hxck=;
-        b=NGYjYNYGSFshE92aJZcZEwL3evbiTwthSbBezdYuE6Vl0PipZky7kEOhxiB5PE+Wwz
-         MWyXqiqejPD6nYjtV/p/q6s2enh1xYBF0coIoB9q0yw7Xp67Z/+zacRK4ba8AN+OQpfR
-         FGs5Ydgc/jpDHXYMrhtjCUf8NF85uHm0XLFn5ERc3jAurbWUkq8D5n2Psrzg4/vMxlJa
-         +9p8IuNVTw2xzRXeuPx6HWQCxtd6UhxgzS/58VLM+v1ksB5vEdnZSQ2R55Iz62NZBjl4
-         wTPfHIOzArzJ1R2rOowBElBjkCzZJk/P9Gwc6GyvE5MPO6FBAgSICSQHTnmIVuiDPKtr
-         fQMg==
-X-Gm-Message-State: AOAM530NxEmJmoHhCYwmeZ6lWd8bUwtUh9Ghvc/QzN+FS4Cs6mOT/X7t
-        fczgdYHFskiOXMZsgI3Om+c=
-X-Google-Smtp-Source: ABdhPJz/unK1D8S/ze0y2ZvvoDv+FobpH/NjduzAbTJs6a5h1a1rn/Gt8fbpYXHeaOhK9lV/IE6QDw==
-X-Received: by 2002:a2e:90cc:: with SMTP id o12mr2794823ljg.231.1594926220802;
-        Thu, 16 Jul 2020 12:03:40 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id j17sm1351027lfk.31.2020.07.16.12.03.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 12:03:37 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Thu, 16 Jul 2020 21:03:35 +0200
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
- allocator
-Message-ID: <20200716190335.GA584@pc636>
-References: <20200715183537.4010-1-urezki@gmail.com>
- <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
- <CAEXW_YRoTvQfqqcM9fi+MkMxCPEaoJh4zHRM3qNYkv=-nAVuBQ@mail.gmail.com>
- <20200716091913.GA28595@pc636>
- <20200716133647.GA242690@google.com>
- <20200716143714.GA30965@pc636>
- <20200716182707.GA552227@google.com>
+        Thu, 16 Jul 2020 15:04:27 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GIvvdX093788;
+        Thu, 16 Jul 2020 19:04:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=S9AUiDC5UbBVMWJx0Ds+Dd7RmziEgB45+Kho6l5plJ0=;
+ b=TBuQZ+bibLwWnupgZh4L92p/mQ+Nc+oyUWq/OIC3C8KsQUQbxx4oqkXx2tlEjddRkx/I
+ yBJHeg0YYuMnPVGwxs1lwBisIvVfM/33QTO80aKa+Y8KXf5yON+sglSnuKiZZXMiPLW1
+ gRUMfCPalx+1rnJC1mb/edzNIgoE0UJQF2s1gCl8hgq8tZpHPQvHpnzsw4xhUs+ZLcxB
+ phGLP5+MDNXUmkWVR0YGpF/Q64J/0B1ChXg0w2TsZXXd8n6kGL6mpAc9ZvHL5aPpK7oj
+ q5JH30AwlQVRog+6bA2UFhmNsNTbSNWCi0sbl82u+I/ApEqlWwEj7vaVtVWS/RX0cFO6 6A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 327s65skdf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jul 2020 19:04:14 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GIvnw2064117;
+        Thu, 16 Jul 2020 19:04:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 32akr3wys4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 19:04:13 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06GJ4AgS010488;
+        Thu, 16 Jul 2020 19:04:10 GMT
+Received: from [10.175.173.87] (/10.175.173.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Jul 2020 12:04:10 -0700
+Subject: Re: [PATCH v2 22/22] device-dax: Introduce 'mapping' devices
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159457128462.754248.10443613927921016089.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <7ecd1b82-06ab-be49-4b92-ac42caab146c@oracle.com>
+ <CAPcyv4hFS7JS9s7cUY=2Ru2kUTRsesxwX1PGnnc_tudJjoDUGw@mail.gmail.com>
+From:   Joao Martins <joao.m.martins@oracle.com>
+Message-ID: <34b93713-6c45-4a0f-085b-289ba2ad6ce0@oracle.com>
+Date:   Thu, 16 Jul 2020 20:04:05 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716182707.GA552227@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPcyv4hFS7JS9s7cUY=2Ru2kUTRsesxwX1PGnnc_tudJjoDUGw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 phishscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=-1000 spamscore=100 mlxscore=100 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 adultscore=0 malwarescore=0
+ phishscore=0 mlxscore=100 priorityscore=1501 lowpriorityscore=0
+ spamscore=100 clxscore=1015 bulkscore=0 mlxlogscore=-1000 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 02:27:07PM -0400, Joel Fernandes wrote:
-> On Thu, Jul 16, 2020 at 04:37:14PM +0200, Uladzislau Rezki wrote:
-> > On Thu, Jul 16, 2020 at 09:36:47AM -0400, Joel Fernandes wrote:
-> > > On Thu, Jul 16, 2020 at 11:19:13AM +0200, Uladzislau Rezki wrote:
-> > > > On Wed, Jul 15, 2020 at 07:13:33PM -0400, Joel Fernandes wrote:
-> > > > > On Wed, Jul 15, 2020 at 2:56 PM Sebastian Andrzej Siewior
-> > > > > <bigeasy@linutronix.de> wrote:
-> > > > > >
-> > > > > > On 2020-07-15 20:35:37 [+0200], Uladzislau Rezki (Sony) wrote:
-> > > > > > > @@ -3306,6 +3307,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-> > > > > > >                       if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> > > > > > >                               return false;
-> > > > > > >
-> > > > > > > +                     preempt_disable();
-> > > > > > > +                     krc_this_cpu_unlock(*krcp, *flags);
-> > > > > >
-> > > > > > Now you enter memory allocator with disabled preemption. This isn't any
-> > > > > > better but we don't have a warning for this yet.
-> > > > > > What happened to the part where I asked for a spinlock_t?
-> > > > > 
-> > > > > Ulad,
-> > > > > Wouldn't the replacing of preempt_disable() with migrate_disable()
-> > > > > above resolve Sebastian's issue?
-> > > > >
-> > > > This for regular kernel only. That means that migrate_disable() is
-> > > > equal to preempt_disable(). So, no difference.
-> > > 
-> > > But this will force preempt_disable() context into the low-level page
-> > > allocator on -RT kernels which I believe is not what Sebastian wants. The
-> > > whole reason why the spinlock vs raw-spinlock ordering matters is, because on
-> > > RT, the spinlock is sleeping. So if you have:
-> > > 
-> > > raw_spin_lock(..);
-> > > spin_lock(..);   <-- can sleep on RT, so Sleep while atomic (SWA) violation.
-> > > 
-> > > That's the main reason you are dropping the lock before calling the
-> > > allocator.
-> > > 
-> > No. Please read the commit message of this patch. This is for regular kernel.
+On 7/16/20 5:00 PM, Dan Williams wrote:
+> On Thu, Jul 16, 2020 at 6:19 AM Joao Martins <joao.m.martins@oracle.com> wrote:
+>> On 7/12/20 5:28 PM, Dan Williams wrote:
+>>> In support of interrogating the physical address layout of a device with
+>>> dis-contiguous ranges, introduce a sysfs directory with 'start', 'end',
+>>> and 'page_offset' attributes. The alternative is trying to parse
+>>> /proc/iomem, and that file will not reflect the extent layout until the
+>>> device is enabled.
+>>>
+>>> Cc: Vishal Verma <vishal.l.verma@intel.com>
+>>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>>> ---
+>>>  drivers/dax/bus.c         |  191 +++++++++++++++++++++++++++++++++++++++++++++
+>>>  drivers/dax/dax-private.h |   14 +++
+>>>  2 files changed, 203 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+>>> index f342e36c69a1..8b6c4ddc5f42 100644
+>>> --- a/drivers/dax/bus.c
+>>> +++ b/drivers/dax/bus.c
+>>> @@ -579,6 +579,167 @@ struct dax_region *alloc_dax_region(struct device *parent, int region_id,
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(alloc_dax_region);
+>>>
+>>> +static void dax_mapping_release(struct device *dev)
+>>> +{
+>>> +     struct dax_mapping *mapping = to_dax_mapping(dev);
+>>> +     struct dev_dax *dev_dax = to_dev_dax(dev->parent);
+>>> +
+>>> +     ida_free(&dev_dax->ida, mapping->id);
+>>> +     kfree(mapping);
+>>> +}
+>>> +
+>>> +static void unregister_dax_mapping(void *data)
+>>> +{
+>>> +     struct device *dev = data;
+>>> +     struct dax_mapping *mapping = to_dax_mapping(dev);
+>>> +     struct dev_dax *dev_dax = to_dev_dax(dev->parent);
+>>> +     struct dax_region *dax_region = dev_dax->region;
+>>> +
+>>> +     dev_dbg(dev, "%s\n", __func__);
+>>> +
+>>> +     device_lock_assert(dax_region->dev);
+>>> +
+>>> +     dev_dax->ranges[mapping->range_id].mapping = NULL;
+>>> +     mapping->range_id = -1;
+>>> +
+>>> +     device_del(dev);
+>>> +     put_device(dev);
+>>> +}
+>>> +
+>>> +static struct dev_dax_range *get_dax_range(struct device *dev)
+>>> +{
+>>> +     struct dax_mapping *mapping = to_dax_mapping(dev);
+>>> +     struct dev_dax *dev_dax = to_dev_dax(dev->parent);
+>>> +     struct dax_region *dax_region = dev_dax->region;
+>>> +
+>>> +     device_lock(dax_region->dev);
+>>> +     if (mapping->range_id < 1) {
+>>             ^^^^^^^^^^^^^^^^^^^^^ it's 'mapping->range_id < 0'
+>>
+>> Otherwise 'mapping0' sysfs entries won't work.
+>> Disabled ranges use id -1.
 > 
-> Wait, so what is the hesitation to put migrate_disable() here? It is even
-> further documentation (annotation) that the goal here is to stay on the same
-> CPU - as you indicated in later emails.
+> Whoops, yes. Needs a unit test.
 > 
-Actually preempt_disable() does the same for !RT. I agree that
-migrate_disable() annotation looks better from the point you
-mentioned.
+If it helps, this particular patch for daxctl:
 
-> And the documentation aspect is also something Sebastian brought. A plain
-> preempt_disable() is frowned up if there are alternative API that document
-> the usage.
-> 
-> > You did a patch:
-> > 
-> > <snip>
-> >    if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> >        return false;
-> > <snip>
-> 
-> I know, that's what we're discussing.
-> 
-> So again, why the hatred for migrate_disable() ? :)
-> 
-Let's do migrate_disable(), i do not mind :)
+https://lore.kernel.org/linux-nvdimm/20200716184707.23018-7-joao.m.martins@oracle.com/
 
---
-Vlad Rezki
+May help in the immediate term: if it's broken no mappings are listed.
+
+But yeah, a unit test in 'test/daxctl-create.sh' should be added.
+
+	Joao
