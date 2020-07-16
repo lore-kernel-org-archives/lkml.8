@@ -2,103 +2,106 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B718C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E1BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4577F207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 235D8207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:25:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fKlGp8tN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LjQmSvLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgGPUZX (ORCPT
+        id S1726205AbgGPUZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:25:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46308 "EHLO
+        Thu, 16 Jul 2020 16:25:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgGPUZW (ORCPT
+        with ESMTP id S1726069AbgGPUZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:25:22 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5285BC061755;
-        Thu, 16 Jul 2020 13:25:22 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id d17so9810950ljl.3;
-        Thu, 16 Jul 2020 13:25:22 -0700 (PDT)
+        Thu, 16 Jul 2020 16:25:46 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49FA2C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:25:46 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 207so4228616pfu.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:25:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2B3j92dSMko8J2wSzj/MTkQ80Lgndi5SU2LXd/AvSxg=;
-        b=fKlGp8tNNQTRc2pZ/k7DJXl/e+y+EMOltfn0ctkc5TBjudSyx4+OmmzC1cPseIz5TZ
-         EhZ7SkVqtunfTCqDyTjnpz6enopRHyyFyicsv7j+SU1XozXwrLzP+j84rkTbX/9c5yag
-         rydqve0KDjL7dKEwcDpd7oSgHp+Ato4HPEAvlKdEJp63yTjr7a1wUlMCNrz5gRc/dz4x
-         2INFC8HTbOhvfnn7RMjv05K2XU/hrDQnPf1WHFo3IUn+hoRW3w23q+wrNabjbG+6zZ/H
-         SjLTz7a4dTsXazlzCfKd8IPqfa0/ZL/rt7Nt/RE3iqc6VFScfw5RosF/CBvwsshburFx
-         7zig==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hA+Aqo4SV3ko2kO8EuK2W/Tvr+vtNwBN3+1D4FXT5iI=;
+        b=LjQmSvLJxhYwI0Uux7CkRfdDlLxJHThvP2ZmnUcX0HKl0LYtyj4F5cXRL7xqnFAJRv
+         ELf6wnYFK3WPSx0yRsuvoVqq6x+YbYPCrfsKm9+nPf2JALM0X8q3PtOjmASBTTGpLXLG
+         OgKrZ4p1AN7EzbMN8TB4ug/wl3tl/t2nhtzOg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2B3j92dSMko8J2wSzj/MTkQ80Lgndi5SU2LXd/AvSxg=;
-        b=HXcHexAI6XI+zJ5SeO782Wwr1vCJ2LnwgfuEpwlubaEHYNQgmHzSYj14C0xRWNCvGN
-         L0GxIcohiFiZKyCjY8wkAlvkXkAAljhUCLBcXH8rTiAHzRyOsdyEjR8KriEwsBCrcgfx
-         JDWcKRH1EDkNAJ2fndmW1r/Oha+h1ZbsoASn7UquqilekY3qMAkAyX7Cc8bbqzYeIE4C
-         OuzwjKxgNVcG4RUGK8FMu0ybQSChSFGlv6Ay9aFuREPfEoHPmPyIWve7xaXRx6i5dEe6
-         Y2N2KYhq0LvSz1LHUwW55fL9CT5sClakkXeNDRrozp01vneisoyABE3UA3M8PiUpPBfd
-         f9cA==
-X-Gm-Message-State: AOAM530B2Ii4eybm7t8mhOLY6KoMC9gL/UjwYv3AVl6dCwylaRuJ7zLz
-        4Ot9MNfWYI1Dn71l547hTB8ixMj+
-X-Google-Smtp-Source: ABdhPJyy6GDksC2tHtwyAvGIf4mNUlDUF9P1X/kNsZoQJmE7dlwHaYHrNOQbrgaWGK4EiTSpdMRW7A==
-X-Received: by 2002:a2e:92d7:: with SMTP id k23mr2566872ljh.117.1594931120478;
-        Thu, 16 Jul 2020 13:25:20 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
-        by smtp.googlemail.com with ESMTPSA id j26sm1396678lfm.11.2020.07.16.13.25.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 13:25:19 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 04/18] i2c: tegra: Remove NULL pointer check before
- clk_enable/disable/prepare/unprepare
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-5-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <16e08405-8b71-e427-e675-6499e012a5b6@gmail.com>
-Date:   Thu, 16 Jul 2020 23:25:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hA+Aqo4SV3ko2kO8EuK2W/Tvr+vtNwBN3+1D4FXT5iI=;
+        b=MP4npI+JTjJUgEeoStVtvG9exAeMjKahpsM8I8XHWteMo29G0D1fW3qusfx7eOKdTb
+         hDoGqLrzz8eWDcdaNpXn+rWilJTJdVFIPwnZbd+TV/b8XmHqejUX8YteDTNZN10Vutp2
+         shG7i9hF5aOK7RVuxGpJ0L8e0FU8hAcAvnzqz5JhYWTQUqNVf1Hb1f0vfKNCZW4vU+Se
+         ckhqYMDrJ8lk5qkxqQTi081SfRZPgxhMJC+C5H9noswDavTyIUHrjBx93FEx/cmCTIbC
+         lCfP0jnJuTIKo79NrPCwtx4oga9UcEGeSaqMZzgz6QfFVUkggnT/KORqkfADUawhstZ5
+         TiXA==
+X-Gm-Message-State: AOAM531UZtinH7c0gHhO52vHaKpQdWgDlQXRVKtXqspB3vXDDtvKHfHk
+        y0IUZ1/2iQLXRGPdJqQOvJV87A==
+X-Google-Smtp-Source: ABdhPJzluoB8Hr1x2E3MstyVdN1H30YSZ/nI6IrWid+cCKeHVafzMiYGYyTlGMFOxVnCzxBRlnzUmA==
+X-Received: by 2002:aa7:9ec5:: with SMTP id r5mr4848033pfq.86.1594931145764;
+        Thu, 16 Jul 2020 13:25:45 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t126sm5576396pfd.214.2020.07.16.13.25.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 13:25:44 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 13:25:43 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        gofmanp@gmail.com, linux-api@vger.kernel.org, x86@kernel.org,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org, jannh@google.com
+Subject: Re: [PATCH v4 0/2] Syscall User Redirection
+Message-ID: <202007161324.E75E01B@keescook>
+References: <20200716193141.4068476-1-krisman@collabora.com>
+ <202007161300.7452A2C5@keescook>
+ <20200716202234.wryj7pj7zmwcrxxx@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <1594786855-26506-5-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716202234.wryj7pj7zmwcrxxx@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.07.2020 07:20, Sowjanya Komatineni пишет:
-> clk_enable, clk_disable, clk_prepare, and clk_unprepare APIs have
-> implementation for checking clk pointer not NULL and clock consumers
-> can safely call these APIs without NULL pointer check.
+On Thu, Jul 16, 2020 at 10:22:34PM +0200, Christian Brauner wrote:
+> On Thu, Jul 16, 2020 at 01:04:38PM -0700, Kees Cook wrote:
+> > On Thu, Jul 16, 2020 at 03:31:39PM -0400, Gabriel Krisman Bertazi wrote:
+> > > This is v4 of Syscall User Redirection.  The implementation itself is
+> > > not modified from v3, it only applies the latest round of reviews to the
+> > > selftests.
+> > > 
+> > > __NR_syscalls is not really exported in header files other than
+> > > asm-generic for every architecture, so it felt safer to optionally
+> > > expose it with a fallback to a high value.
+> > > 
+> > > Also, I didn't expose tests for PR_GET as that is not currently
+> > > implemented.  If possible, I'd have it supported by a future patchset,
+> > > since it is not immediately necessary to support this feature.
+> > 
+> > Thanks! That all looks good to me.
 > 
-> So, this patch cleans up Tegra i2c driver to remove explicit checks
-> before these APIs.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
+> Don't have any problem with this but did this ever get exposure on
+> linux-api? This is the first time I see this pop up.
 
-Thanks!
+I thought I'd added it to CC in the past, but that might have been other
+recent unrelated threads. Does this need a full repost there too, you
+think?
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+-- 
+Kees Cook
