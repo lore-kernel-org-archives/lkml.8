@@ -2,133 +2,122 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C795C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98120C43457
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F01052065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="A9q2xqO9"
+	by mail.kernel.org (Postfix) with ESMTP id 7BC2B2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgGPNF6 (ORCPT
+        id S1728821AbgGPNGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:05:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728767AbgGPNFy (ORCPT
+        Thu, 16 Jul 2020 09:06:22 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:33107 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728087AbgGPNGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:05:54 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF412C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:05:54 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z3so3649965pfn.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jGzmIzqJnm7CKiLoQ8H6AcVjxIg7aO11yFeUG1Srnrs=;
-        b=A9q2xqO9qU7vO2PYAJ7sDGqDrFpOQhpO18YI1qzAdojQMgDPA9vvbwy6Dr+qGyMlCt
-         0hu0x4+MjSDu59Y1L4wyeRpS1SBGMk/weFFlmPqqkWNwkD+jMvYZP1yfV7b/5+7XWHaV
-         cXMf2/u/3oSKMUlCX4vV2knvHwlk/NIvsKJonyc9mbygZbI1RX6+2ut3TJxs8vm1MT7O
-         6OqsthAU2ZM5XML9B4JgoAmxMBS8EqYWHIAtatLVxwCfrq752o0gpHG/Xv2wptWcFf4F
-         0nTOxf1XAJQALDR0EOPkwADZwKZA9JIxftA8904XOF/qPSngheKnxRmZL8dZmy/1v0HU
-         jV9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jGzmIzqJnm7CKiLoQ8H6AcVjxIg7aO11yFeUG1Srnrs=;
-        b=SoaOS5Kkqjur0OfH3YNAecpBG4PYEzJyEWc4oyGsJSY2og6ZCKvnCl9y1rRLdEHrbc
-         NZ9cM+Z0KthWnYFgfThCTmEe9VGmUCq4pk0i4yBV0/muugBjonQue+U2D81qSaox4X3C
-         7/jvJLPOd3EUZMaaYfjxV2ChIqaDenuDIqV1YusKxT7cSr3pUyfbVsiXFf7lbQuTLDPz
-         vnFCosxQPvf11GK2wb6MMZdis/Bx8K36/cZLTVGsdGbFv53DWVBmcO85bgTIHIS8URrd
-         8HgvDjLEwzbrEC20aI/Uyt2mrUsgwRxapJbhFoI4JuoZy9HQXJrkszHiHLVN/papjStd
-         ApqQ==
-X-Gm-Message-State: AOAM530WWvFlX98XiOVh7X0gQqGY8aE+xRYi9uhaplL+muO4J8ABDeF4
-        7K1MW32LmLH/EZcRX05ntV/nwQ==
-X-Google-Smtp-Source: ABdhPJwGEOBlmUcQ6k6tnLCKBcSWT/f0cdQf1kOitNTShXHuFHrwdKJCFKyv96KFR+kV2UBc8bbkWA==
-X-Received: by 2002:a63:4a4c:: with SMTP id j12mr4317304pgl.115.1594904754427;
-        Thu, 16 Jul 2020 06:05:54 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id c134sm4770203pfc.115.2020.07.16.06.05.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 06:05:53 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>, Pekka Enberg <penberg@kernel.org>
-Subject: [PATCH v2 2/2] riscv: Fix build warning for mm/pageattr
-Date:   Thu, 16 Jul 2020 21:05:46 +0800
-Message-Id: <8691a6a78271c748a2f75f1430b36f304551838d.1594886530.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1594886530.git.zong.li@sifive.com>
-References: <cover.1594886530.git.zong.li@sifive.com>
+        Thu, 16 Jul 2020 09:06:21 -0400
+Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MwQGj-1koIlq14Rp-00sR1K for <linux-kernel@vger.kernel.org>; Thu, 16 Jul
+ 2020 15:06:19 +0200
+Received: by mail-qv1-f42.google.com with SMTP id p7so2639156qvl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:06:19 -0700 (PDT)
+X-Gm-Message-State: AOAM533u8poQ9nQGDrVokh3JhVyiwbZStt251J/Ycrd8vQuLYkV9d78Y
+        EUrVoreBJDSH3b3LFueyKj7+ffQLpFucCQECrgM=
+X-Google-Smtp-Source: ABdhPJxNeCsNSf0Q6nH5Bu1+2ccIGi3fJ3q5Aaw5a35m7D7la4pI0jBb24AUhcQ+TrmiFxWfKsLX5fT0btz4Ib/UIvg=
+X-Received: by 2002:ad4:4c09:: with SMTP id bz9mr3944948qvb.210.1594904778075;
+ Thu, 16 Jul 2020 06:06:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
+ <20200712123151.GB25970@localhost> <20200712193944.GA81641@localhost>
+In-Reply-To: <20200712193944.GA81641@localhost>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 Jul 2020 15:06:01 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a20UQvQO0U=p1kBEUvRdwm8VFBa31aCe7C70hwTzcu_yw@mail.gmail.com>
+Message-ID: <CAK8P3a20UQvQO0U=p1kBEUvRdwm8VFBa31aCe7C70hwTzcu_yw@mail.gmail.com>
+Subject: Re: Linux kernel in-tree Rust support
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     Adrian Bunk <bunk@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        alex.gaynor@gmail.com, geofft@ldpreload.com, jbaublitz@redhat.com,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:AEcPFNHArkNcZZ0+ETR/vEnUCCOZxPeq7Rlim5BeET1reyAB6aV
+ kn0pu/q2ZptSBdJ7iU/G1Bk5LWLe14MkG5V9s08nSThzyBiDAssBvXcU4zQN5aHLlzoJsRF
+ NGPtP5/z2VeyWdmYMnnxywY6HbDJIAybpjlKeGsb+baTeYCaGWyKTWpFjUFnXBwVO39j4a0
+ P9zjM8XBJVI1jlpC4EZdA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ArF/SCQ3AgM=:m4+RoHOJemSVIw7aAMkQeG
+ vB13xxXqcH7urL0nkWEh/60qYAVYLqK1zUVl20mNfjiMid4YlCFbFSKFGa7xLU4ASIpiZR72g
+ JNP8AoD6231oGB8zLkgcETzv803mNP36Rwgh7nQGtvO0jq3wSOv3xVZQ2LmeryEDzf0le/V0y
+ rpl0BAwyvc0vB6OT+pMo0FPYL2wgR7qZqZ4p81ju7QEju189a1OayhTs2MUhVlt71OqPf1TSy
+ LB8Q5h/l79bYPOtwXkouNCigb8MswLAtAIiiO/3hnDzbttdYsTisIt3Mz5pl2CAwMGKPgiI0m
+ Qb2myXNO8E+csgO0NGePJQ6kfvGd5G/ko9P7MUGRN9xSybGTVcsSXLxKVXq1hMlyLDSQDK3HB
+ +OY1CSQh879JQOD/+hTuDlUSn5FAJ7Xnyd/Vbg2HwnFeea3cOSkp929x88TwHoyrCXBakxb98
+ /aY1cxBiQvCjbd9ZEL7vQSSFD44WTuFa6qH/Mb1jIWmjT5Hftd0rtPY4By9gDXA46vuYrJq5f
+ nFLxkGxMbgJPpPhlDFDlW0Tu66VVeLTo+wK4ivsozwdw+PnNLiQ84dXIcmdmxcJv02UQ33nWj
+ 5A6BY8TJ3CEyNm4xRohobM2X7im/20vVI+d85i6J3Hk7VcJjNeTFvZ8zjE6OIIpoc7mWCpVt+
+ cs3muzdFHBKGkNeR1d01/Utm6UBgMzhjYnMpKjyeAqKnbiiVSohXQhkf+uosCwC1hxwdmIKrW
+ Vkyy0uFjcoz4tePUy8LD72c3jhbm8WeX7Znk6a31yTWkx9U0g2t8a1XC+fkj+Blc3/ARsPY/V
+ qm+6w601s44fAAs4a360SlsIr5+A3lGRdVLVtEJByKFGr0n90uQTcSNwSHOXSrswzNTFXqt
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add header for missing prototype. Also, static keyword should be at
-beginning of declaration.
+On Sun, Jul 12, 2020 at 9:39 PM Josh Triplett <josh@joshtriplett.org> wrote:
+> On Sun, Jul 12, 2020 at 03:31:51PM +0300, Adrian Bunk wrote:
+> >
+> > As an example:
+> > Ubuntu LTS releases upgrade to a new Rust version every 1-2 months.
+> > Ubuntu 16.04 started with Rust 1.7.0 and is now at Rust 1.41.0.
+> >
+> > It would not sound good to me if security updates of distribution
+> > kernels might additionally end up using a different version of the
+> > Rust compiler - the toolchain for the kernel should be stable.
+> >
+> > Would Rust usage in the kernel require distributions to ship
+> > a "Rust for Firefox" and a "Rust for the kernel"?
+>
+> Rust has hard stability guarantees when upgrading from one stable
+> version to the next. If code compiles with a given stable version of
+> Rust, it'll compile with a newer stable version of Rust. Given that, a
+> stable distribution will just need a single sufficiently up-to-date Rust
+> that meets the minimum version requirements of both Firefox and Linux.
+>
+> (That would not apply if the kernel used nightly Rust, since
+> nightly-only features are allowed to change before becoming stable;
+> that's one reason why we should use stable Rust, and try to get Firefox
+> to stick to stable Rust.)
 
-The warning messages as follows (with W=1 build):
+I would expect we'd want a fairly tight coupling between kernel
+releases and minimum rust releases at first. Whatever is the latest
+stable rust version during the kernel's merge window might be
+assumed to be the minimum version for the life of that kernel, but
+an LTS release would not suddenly start relying on features
+from a newer compiler (thought it might warn about known bugs).
 
-arch/riscv/mm/pageattr.c:130:5:
-warning: no previous prototype for 'set_memory_ro' [-Wmissing-prototypes]
+This might mean that linux-next requires a beta version of rust, if
+the release is expected before the merge window and it contains
+an important change. Staying with fairly recent versions of clang
+certainly helped in getting clang and the kernel to co-evolve and
+get to the point we are now in using it as an alternative to gcc.
 
-arch/riscv/mm/pageattr.c:136:5:
-warning: no previous prototype for 'set_memory_rw' [-Wmissing-prototypes]
+While Linux used to build with 12 year old compilers (4.1 until
+2018), we now require a 6 year old gcc (4.9) or 1 year old
+clang/llvm. I don't know whether these will fully converge over
+time but it seems sensible that the minimum rust frontend version
+we require for a new kernel release would eventually also fall
+in that range, requiring a compiler that is no more than a few
+years old, but not requiring the latest stable release.
 
-arch/riscv/mm/pageattr.c:142:5:
-warning: no previous prototype for 'set_memory_x' [-Wmissing-prototypes]
-
-arch/riscv/mm/pageattr.c:147:5:
-warning: no previous prototype for 'set_memory_nx' [-Wmissing-prototypes]
-
-arch/riscv/mm/pageattr.c:152:5:
-warning: no previous prototype for 'set_direct_map_invalid_noflush' [-Wmissing-prototypes]
-
-arch/riscv/mm/pageattr.c:169:5:
-warning: no previous prototype for 'set_direct_map_default_noflush' [-Wmissing-prototypes]
-
-arch/riscv/mm/pageattr.c:97:1:
-warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
-
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Reviewed-by: Pekka Enberg <penberg@kernel.org>
----
- arch/riscv/mm/pageattr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-index 289a9a5ea5b5..19fecb362d81 100644
---- a/arch/riscv/mm/pageattr.c
-+++ b/arch/riscv/mm/pageattr.c
-@@ -7,6 +7,7 @@
- #include <linux/pgtable.h>
- #include <asm/tlbflush.h>
- #include <asm/bitops.h>
-+#include <asm/set_memory.h>
- 
- struct pageattr_masks {
- 	pgprot_t set_mask;
-@@ -94,7 +95,7 @@ static int pageattr_pte_hole(unsigned long addr, unsigned long next,
- 	return 0;
- }
- 
--const static struct mm_walk_ops pageattr_ops = {
-+static const struct mm_walk_ops pageattr_ops = {
- 	.pgd_entry = pageattr_pgd_entry,
- 	.p4d_entry = pageattr_p4d_entry,
- 	.pud_entry = pageattr_pud_entry,
--- 
-2.27.0
-
+      Arnd
