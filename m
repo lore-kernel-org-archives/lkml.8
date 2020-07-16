@@ -2,109 +2,101 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45428C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD38C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28B6B20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125382065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:05:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Z3YpDI8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgGPNE3 (ORCPT
+        id S1728552AbgGPNFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:04:29 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40934 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728119AbgGPNE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:04:29 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id F3C45DF5121E4CB53979;
-        Thu, 16 Jul 2020 21:04:24 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.91) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 16 Jul 2020
- 21:04:08 +0800
-Subject: Re: [PATCH -next] scsi: hisi_sas: Convert to DEFINE_SHOW_ATTRIBUTE
-To:     John Garry <john.garry@huawei.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-References: <20200716084714.7872-1-miaoqinglang@huawei.com>
- <801e6d49-9bd5-8079-bb83-9f67591a9158@huawei.com>
-From:   miaoqinglang <miaoqinglang@huawei.com>
-Message-ID: <98e26dfe-b6f9-5730-097e-95ff2db5c987@huawei.com>
-Date:   Thu, 16 Jul 2020 21:04:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 16 Jul 2020 09:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728237AbgGPNFv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 09:05:51 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C173C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:05:51 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u5so3656203pfn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:05:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MHe4h5tXPNZHs87zVRoJ5H1MBCfFmTXIJuQzb/CTGuc=;
+        b=Z3YpDI8xL98JLZJH9yVrpL7//a1wAQAdhcDOchyJO6Kq5DeVT3kv/JUvnoCy3SOGE+
+         EOdqTWprjhYeoCedKBw7VLDXvMGA79WxdZVhOmXT0I6bctYg7ejnGIs0jm1PgeabTw7H
+         xjm2+kTIUV7P1JrwJoBEPT/l4qnf8EGE3Jm/JDN3WXzAc2yS7ou8nUSulYEM3gKx3TiW
+         tK2burAVyccTy7qFpcCzu8K7t+aVMZeVYDfrCutPhLRbbqqbr4pWFUwyxati0UUgFFuj
+         PWeT2N8xFwypdvPHh34XmwVeBzwhXnIuShzMXZpttyYmzjXSgTVEDs8dtZ9oOWuzIljg
+         Fs+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MHe4h5tXPNZHs87zVRoJ5H1MBCfFmTXIJuQzb/CTGuc=;
+        b=iTqeGLCEFJM1L9u1x+g5yNfi2N5eu+gCyCxSFbIEFkqDGyaK+7wJtp7dfbyVpgOubl
+         Zdr20znD62DGOkiZM6ixOyNHU2wpNMt/T2WqfGAwhFSxZrCRtY21EYEs0GZXfy3s32WC
+         IVnWeNE2rnaaRpeWp8TjXYHanP3tr9iEhjbFtl9vgGM5geMsykfBdUPpp0+2Ib1LPDFL
+         B0gquipHoBrkPlEI436bAZwlxmDZ3YndRKnWKj7ZMSI5C1SoMJWdUSAIC/R/DAg3gBjI
+         U2jDXdkRyJ/z4bAP3cjObWFcQOeL7S/7n5Hgz6ptQGdjCVnH5hxRMGtmGWmX6KxoNeMV
+         OYtw==
+X-Gm-Message-State: AOAM530bNCuh8kKpTF9R7jd1Y3m9HOLykmaOCSyviBzKKywFDaV3cGIk
+        eYJo6xwC4t9KpGTFwDjkQZ44kg==
+X-Google-Smtp-Source: ABdhPJx3LQGxUAT58kn+mBWd710J1coFKijbw42x0J/6OYn3EfVPcgv0cOrwVGj7YyiOkTcHGtuCkA==
+X-Received: by 2002:a63:3d01:: with SMTP id k1mr4025292pga.71.1594904750647;
+        Thu, 16 Jul 2020 06:05:50 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id c134sm4770203pfc.115.2020.07.16.06.05.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 06:05:49 -0700 (PDT)
+From:   Zong Li <zong.li@sifive.com>
+To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH v2 0/2] Fix some build warnings when W=1
+Date:   Thu, 16 Jul 2020 21:05:44 +0800
+Message-Id: <cover.1594886530.git.zong.li@sifive.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <801e6d49-9bd5-8079-bb83-9f67591a9158@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.91]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+These patches fix some build warnings when W=1, the most of warnings are
+missing prototype as follows:
 
-在 2020/7/16 17:25, John Garry 写道:
-> On 16/07/2020 09:47, Qinglang Miao wrote:
->
-> Not sure why you cc Greg, but SCSI maintainers should have been - 
-> James and Martin
->
->> From: Yongqiang Liu <liuyongqiang13@huawei.com>
->>
->> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
->>
->> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
->
-> The sender is not the author, so your signed-off-by should also be 
-> here (after sign off from Yongqiang Liu)
->
-Sorry for not knowing this rule, I will send a new patch later on if you 
-don't mind.
->> ---
->>   drivers/scsi/hisi_sas/hisi_sas_main.c | 137 ++------------------------
->>   1 file changed, 10 insertions(+), 127 deletions(-)
->>
->> diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c 
->> b/drivers/scsi/hisi_sas/hisi_sas_main.c
->> index 852d2620e..f50b0c78f 100644
->> --- a/drivers/scsi/hisi_sas/hisi_sas_main.c
->> +++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
->> @@ -2870,19 +2870,7 @@ static int hisi_sas_debugfs_global_show(struct 
->> seq_file *s, void *p)
->>       return 0;
->>   }
->>   -static int hisi_sas_debugfs_global_open(struct inode *inode, 
->> struct file *filp)
->> -{
->> -    return single_open(filp, hisi_sas_debugfs_global_show,
->> -               inode->i_private);
->> -}
->> -
->> -static const struct file_operations hisi_sas_debugfs_global_fops = {
->> -    .open = hisi_sas_debugfs_global_open,
->> -    .read_iter = seq_read_iter,
->> -    .llseek = seq_lseek,
->> -    .release = single_release,
->> -    .owner = THIS_MODULE,
->> -};
->> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_global);
->
-> I couldn't see an equivalent for file_operations which have a read and 
-> write method, and the driver has a few of those.
-Yes, you're right. There's no equivalence when drivers have read and  
-write method. So the file_operations we cleaned up are those without  
-write method, like hisi_sas_debugfs_global_fops.
->
-> Thanks
-> .
-Thanks
-  .
+arch/riscv/mm/init.c:520:13: warning: no previous prototype for 'resource_init' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:130:5: warning: no previous prototype for 'set_memory_ro' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:136:5: warning: no previous prototype for 'set_memory_rw' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:142:5: warning: no previous prototype for 'set_memory_x' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:147:5: warning: no previous prototype for 'set_memory_nx' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:152:5: warning: no previous prototype for 'set_direct_map_invalid_noflush' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:169:5: warning: no previous prototype for 'set_direct_map_default_noflush' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:97:1: warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
+
+Changed in v2:
+ - Modify the patch description
+
+Zong Li (2):
+  riscv: Fix build warning for mm/init
+  riscv: Fix build warning for mm/pageattr
+
+ arch/riscv/mm/init.c     | 2 +-
+ arch/riscv/mm/pageattr.c | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+-- 
+2.27.0
 
