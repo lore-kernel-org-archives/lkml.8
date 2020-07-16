@@ -2,118 +2,138 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AF0C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9892065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25192065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:37:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsolWBi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgGPOgB (ORCPT
+        id S1728552AbgGPOhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:36:01 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36118 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgGPOf7 (ORCPT
+        Thu, 16 Jul 2020 10:37:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgGPOhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:35:59 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 72so4366454otc.3;
-        Thu, 16 Jul 2020 07:35:58 -0700 (PDT)
+        Thu, 16 Jul 2020 10:37:19 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE30C061755;
+        Thu, 16 Jul 2020 07:37:19 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id y13so3390238lfe.9;
+        Thu, 16 Jul 2020 07:37:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kcj5G59GOTPUhqEln7W+1LEARocoTm+rR4NtydTtguo=;
+        b=fsolWBi7fEMSttVRztN88vZvdXxpApiO8nGZnGfXBYuEqQm02/VSbeTmuDVv7DvsAF
+         zqUaYfoMi4yCccLUSyZU1zXDHArDXbTwrgozKCgZ2Do4Q4i8AKm6uIQhjIc6WNA4pgXE
+         4YAKBoHU+7Nq4gKyyIlwrhS64PiKsEmaVRAc6bfeFnRPVFKLH8blfsCtNFgf9mfi+Wf+
+         YpfzD33ZXXbBkM0bgmbTRmtnCTbsVViWzb17iKY92lDfvXqaZoi4/g8bh2K6wGsei3Fb
+         tu1sexbPoEq/Z2ajTY8Q7OM3XZpYMl3L9y1zSlzKDmU1Ql481NARoEKwDqspLwAKIOVn
+         iTwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Om5ovYOp4gfyp5+GPEwFq1WDhAkoasPOOhUu6A2+EGM=;
-        b=YGkwf9INfe8LFvaiNYT5SW4/YwcbzsGzj8AuZMXhCPcjP5dP9rpwWKu7HWL2aJMH90
-         +jmLGzMsVyo36e4eZcXLacZvj8MmQw8iW2RvMCCpi4x+JXwZbMfdeHW4yOQhIT7FEk3U
-         XtHNORbMLKA48Pu9h1qzUABWBR7w+J9x3w7LVDwuZC4NU9zuGGKZrCo5c/457RkUxoOS
-         buiTFL3oACpUgCQipsntkXLKo4fSVg4lgV4VUdeANWwDm4pJvaRmeCwT2H3NdFH9eIta
-         FBL42azScK+i9YJGG9h+jSb7KLlbOSNhRXz9p/y4EIKqxz3BCIjnw2SaEFXGsXDNtH9g
-         sEEA==
-X-Gm-Message-State: AOAM531gkwyB2jIZVVgzEmccSrxkI0prj3vpcRtAvZrhg7QBAof/AkMr
-        /MwIU04qThNdCmm2tp1IAyQxMfaJdekDzGlpBINC0tBN6WQ=
-X-Google-Smtp-Source: ABdhPJxtRx2txfS+cy94gEtgtG6BjqkgmfEqBFVpYhM4W9ZfKCiNCNqGTnSLQFDTleYE74Mj0krYjex9oCEdOIXEDXU=
-X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr4750027otp.250.1594910158295;
- Thu, 16 Jul 2020 07:35:58 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kcj5G59GOTPUhqEln7W+1LEARocoTm+rR4NtydTtguo=;
+        b=oluKmLkXk+duqSPIJJ8++CZpoiA2RggMxDW57JCID+QVka+8kwCDJloFotaQUJV/1s
+         XlC8FvtwKvhxw5MIu7S+j9eeC6qFZBELdreTTAf4mSVKAEviW+0tznJ0pHJbnlvOZoLw
+         Vr6kOZltBfcuMW1zhbeuTFuS2k2dxJmK4r4HF1Hj3Dl4pRsQWw27I94i/cLg0C2kfX4S
+         5RH4xHiAi1vDAPMPwmkR/V7obbyqQtyIgcDfrPIGA7YJDq27U8T5uqHDYuUkb9vGtBnl
+         K5rNU2OeT0OTCCFQHb0NSF8aJxrEj0AXXG8EST/jaHNHlkx9MeB7gxzvm8PBmgqsdx6C
+         UPOA==
+X-Gm-Message-State: AOAM532tWtlzDJf/HYfpsKtaXI87Lm5rtSqrSyVrEa9iHMbN01DE1UMk
+        9NKqtZO+iDoXAVV59FpkbQQ=
+X-Google-Smtp-Source: ABdhPJx4BQ3PHoFUdHg7Bvc8rgLUE3SYrUvOnJNTSabEq9+6seSXFnJKIWATP+/bQpICka1dYxxfow==
+X-Received: by 2002:a19:43:: with SMTP id 64mr2244338lfa.72.1594910237254;
+        Thu, 16 Jul 2020 07:37:17 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id s62sm1078206lja.100.2020.07.16.07.37.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 07:37:16 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Thu, 16 Jul 2020 16:37:14 +0200
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
+ allocator
+Message-ID: <20200716143714.GA30965@pc636>
+References: <20200715183537.4010-1-urezki@gmail.com>
+ <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
+ <CAEXW_YRoTvQfqqcM9fi+MkMxCPEaoJh4zHRM3qNYkv=-nAVuBQ@mail.gmail.com>
+ <20200716091913.GA28595@pc636>
+ <20200716133647.GA242690@google.com>
 MIME-Version: 1.0
-References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594811350-14066-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594811350-14066-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 Jul 2020 16:35:46 +0200
-Message-ID: <CAMuHMdXLMwDNp=cAmFbv-+uwKLBL7na5yDdyoePuoGOi8L9yFQ@mail.gmail.com>
-Subject: Re: [PATCH 19/20] dt-bindings: can: rcar_canfd: Document r8a774e1 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-can@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716133647.GA242690@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Thu, Jul 16, 2020 at 09:36:47AM -0400, Joel Fernandes wrote:
+> On Thu, Jul 16, 2020 at 11:19:13AM +0200, Uladzislau Rezki wrote:
+> > On Wed, Jul 15, 2020 at 07:13:33PM -0400, Joel Fernandes wrote:
+> > > On Wed, Jul 15, 2020 at 2:56 PM Sebastian Andrzej Siewior
+> > > <bigeasy@linutronix.de> wrote:
+> > > >
+> > > > On 2020-07-15 20:35:37 [+0200], Uladzislau Rezki (Sony) wrote:
+> > > > > @@ -3306,6 +3307,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+> > > > >                       if (IS_ENABLED(CONFIG_PREEMPT_RT))
+> > > > >                               return false;
+> > > > >
+> > > > > +                     preempt_disable();
+> > > > > +                     krc_this_cpu_unlock(*krcp, *flags);
+> > > >
+> > > > Now you enter memory allocator with disabled preemption. This isn't any
+> > > > better but we don't have a warning for this yet.
+> > > > What happened to the part where I asked for a spinlock_t?
+> > > 
+> > > Ulad,
+> > > Wouldn't the replacing of preempt_disable() with migrate_disable()
+> > > above resolve Sebastian's issue?
+> > >
+> > This for regular kernel only. That means that migrate_disable() is
+> > equal to preempt_disable(). So, no difference.
+> 
+> But this will force preempt_disable() context into the low-level page
+> allocator on -RT kernels which I believe is not what Sebastian wants. The
+> whole reason why the spinlock vs raw-spinlock ordering matters is, because on
+> RT, the spinlock is sleeping. So if you have:
+> 
+> raw_spin_lock(..);
+> spin_lock(..);   <-- can sleep on RT, so Sleep while atomic (SWA) violation.
+> 
+> That's the main reason you are dropping the lock before calling the
+> allocator.
+> 
+No. Please read the commit message of this patch. This is for regular kernel.
 
-On Wed, Jul 15, 2020 at 1:11 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document the support for rcar_canfd on R8A774E1 SoC devices.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+You did a patch:
 
-Thanks for your patch!
+<snip>
+   if (IS_ENABLED(CONFIG_PREEMPT_RT))
+       return false;
+<snip>
 
-> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> @@ -7,6 +7,7 @@ Required properties:
->    - "renesas,r8a774a1-canfd" for R8A774A1 (RZ/G2M) compatible controller.
->    - "renesas,r8a774b1-canfd" for R8A774B1 (RZ/G2N) compatible controller.
->    - "renesas,r8a774c0-canfd" for R8A774C0 (RZ/G2E) compatible controller.
-> +  - "renesas,r8a774e1-canfd" for R8A774E1 (RZ/G2H) compatible controller.
->    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
->    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
->    - "renesas,r8a77965-canfd" for R8A77965 (R-Car M3-N) compatible controller.
-
-Please also add R8A774E1 to the list of SoCs that can use the CANFD clock.
-
-With that fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Vlad Rezki
