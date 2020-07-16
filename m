@@ -2,119 +2,95 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE62C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A345C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1164A20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D02D2064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594888282;
+	bh=GzFI9I6+K4axw7cYstVenNEukmi1BijumC9HWik5Nfs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JjfDgPG0knuPOmp4VJCHlA7wnpLxgqwl1q4lEtYzfU28jXMyPViGpM6T3uP3shI4z
+	 pCZfcW/p6cubqk7QigKjP9t0kDHtue1aPDPS2RbhylOoIAF7PmQxEPdOY7en1dt/Rh
+	 8Kcz+HhexU5dGIhwtbGX3vImPyRXaYtYFweSAknA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgGPIbL (ORCPT
+        id S1727919AbgGPIbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:31:11 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37060 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgGPIbI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:31:08 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2A7671C0BDE; Thu, 16 Jul 2020 10:31:05 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 10:31:04 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, robh@kernel.org, marek.behun@nic.cz,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v30 05/16] leds: multicolor: Introduce a multicolor class
- definition
-Message-ID: <20200716083104.GA30361@amd>
-References: <20200713154544.1683-1-dmurphy@ti.com>
- <20200713154544.1683-6-dmurphy@ti.com>
+        Thu, 16 Jul 2020 04:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727883AbgGPIbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:31:19 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ED4E20771;
+        Thu, 16 Jul 2020 08:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594888279;
+        bh=GzFI9I6+K4axw7cYstVenNEukmi1BijumC9HWik5Nfs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nssIDpoby9zjwgo2NHCCkUxkO0RftC4dVhWeH1CB87j44KdTcJSh/p1tMb92MZSvs
+         Hvi6fiAAMeD15leFU8RYmO9qWsLyvl6cVGjCzXKGGkxag3Ov4braMP9TiCoz25Cr/f
+         +syHFqNoXkdJ9xT+L3sPUtsYFfDX1T4LVQK7hR+0=
+Received: by pali.im (Postfix)
+        id C8D14E7A; Thu, 16 Jul 2020 10:31:16 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 10:31:16 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] power: fix duplicated words in bq2415x_charger.h
+Message-ID: <20200716083116.oqio4clyotjqy5vw@pali>
+References: <74a380ee-d0a7-a58b-5740-6f1049d05d76@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200713154544.1683-6-dmurphy@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <74a380ee-d0a7-a58b-5740-6f1049d05d76@infradead.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wednesday 15 July 2020 18:30:01 Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Drop the doubled word "for".
+> Change "It it" to "If it".
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Pali Rohár <pali@kernel.org>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-pm@vger.kernel.org
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks!
 
-Hi!
+Acked-by: Pali Rohár <pali@kernel.org>
 
-First, let's substitute multi.color -> multicolor globally,
-LEDS_CLASS_MULTI_COLOR is most visible example of this. Please also
-decide whether it is MultiColor or multicolor, and make it consistent.
-
-> Introduce a multicolor class that groups colored LEDs
-> within a LED node.
->=20
-> The multi color class groups monochrome LEDs and allows controlling two
-
-For example here. Plus, the LEDs are not neccessarily monochrome, we
-support white LEDs, too. Let's use "simple LEDs"?
-
-> aspects of the final combined color: hue and lightness. The former is
-> controlled via the intensity file and the latter is controlled
-> via brightness file.
-
-> +	depends on LEDS_CLASS
-> +	help
-> +	  This option enables the multicolor LED sysfs class in /sys/class/leds.
-> +	  It wraps LED class and adds multicolor LED specific sysfs attributes
-> +	  and kernel internal API to it. You'll need this to provide support
-> +	  for multicolor LEDs that are grouped together. This class is not
-> +	  intended for single color LEDs. It can be built as a module.
-
-"single color" -> "simple"?
-
-> +	/* account for the new line at the end of the buffer */
-> +	offset++;
-> +	if (offset < size) {
-> +		ret =3D -EINVAL;
-> +		goto err_out;
-> +	}
-
-"new line" -> "newline", and actually check that character you are
-skipping is newline. Someone could put '%' in there...
-
-> +		if (i < mcled_cdev->num_colors - 1)
-> +			len +=3D sprintf(buf + len, " ");
-> +	len +=3D sprintf(buf + len, "\n");
-
-Using sprintf for single character has... quite a lot of
-overhead. Something like buf[len++] =3D '\n' would be
-simpler/shorter/better. Please fix all relevant places.
-
-Note I already applied patches 1-4.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8QEEgACgkQMOfwapXb+vLCTACff5DIlTEKpnar18gbrYa/V9pA
-+DEAnRF2FZd5xx4tNyqdWG9UCEZzwJhe
-=HdIg
------END PGP SIGNATURE-----
-
---vtzGhvizbBRQ85DL--
+> ---
+>  include/linux/power/bq2415x_charger.h |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> --- linux-next-20200714.orig/include/linux/power/bq2415x_charger.h
+> +++ linux-next-20200714/include/linux/power/bq2415x_charger.h
+> @@ -14,8 +14,8 @@
+>   * value is -1 then default chip value (specified in datasheet) will be
+>   * used.
+>   *
+> - * Value resistor_sense is needed for for configuring charge and
+> - * termination current. It it is less or equal to zero, configuring charge
+> + * Value resistor_sense is needed for configuring charge and
+> + * termination current. If it is less or equal to zero, configuring charge
+>   * and termination current will not be possible.
+>   *
+>   * For automode support is needed to provide name of power supply device
+> 
