@@ -2,89 +2,132 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC41C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35004C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0302065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD1620760
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCv/Msoh"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="lUDpaAUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgGPNHb (ORCPT
+        id S1728237AbgGPNNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34914 "EHLO
+        Thu, 16 Jul 2020 09:13:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbgGPNH3 (ORCPT
+        with ESMTP id S1726537AbgGPNNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:07:29 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 793C4C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:07:29 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id ed14so2647903qvb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:07:29 -0700 (PDT)
+        Thu, 16 Jul 2020 09:13:19 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0D69C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:13:18 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f7so7048018wrw.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:13:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yTCgb6pNfriHa7QdwxnKN0JEx+SnNfgA6oWTF7AfWbo=;
-        b=cCv/Msoh8UW7Bm1Ew8GT4XIMHQ5AJwvGTe8s9LT94fF+PJeTQgsP+v5v1GAmtbExv4
-         AZSIzhBLiBCorjt2hS6uoOZf3czaI3ZFMgL0smOQJjeSTYT/fXqHwrKG7qIY1e+MVnF1
-         pdhbZMbDN4UFVQ7ArTXFQ1Wj7wV9UKXSdeZrHyxP6hN+L11P7Ft/kzJocP8n4wn9TRDl
-         UR5G/QfuxcTytcAFVRnxVNxv8I13sJI6+uh+bcHqlhKRRdjngerDzHOHo5qC/55+MmTF
-         Fcw0EL5Pk2ZUydhrgaAjpwPsvCd18e8CY8m0lkfnhfJaYQeKi8qj3zqARNnlmdcy5qDt
-         yW4g==
+        bh=s9u0OaI73oXhhsb+oeV3fiveuxa7GdvhC13FjWGvhnU=;
+        b=lUDpaAUiBGrLCQlRiX+SgWv6HzFUpZjxg8IbVIxQAjEem/sOgyzudjH1Ew2udNkvnz
+         CZQSIxD0QpP+GxU65RWUZKiEl0ZDuVnwaLPZPBDrX5kZkpcmDn8l/GDC7vsLr1ZCUryT
+         4vJH83uX+Essxes/0nPXT4VXyiKkziIPkQLw6/kBXq/75Z8wp1rTV9Uryv4E2RCddiz8
+         UQwqwUHWPADle7ZRaPjCIafb33zMWegcMSWgTAtWGaMuLFtJNkrInhBMHuM7UYV/8zJo
+         +x9vGTpqvugEAC74jtG6zR8B3/mqj8+TiAyjE3pwPzLa5VMPohnn2OePR443sucX3oBx
+         KihA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yTCgb6pNfriHa7QdwxnKN0JEx+SnNfgA6oWTF7AfWbo=;
-        b=GmjjPdyfoOi3legAGj2uEckX+NGSO/T+eX4RSpmOEmKRYvkeOI6yQ9bc4nyjsCo93V
-         ST9MZYGm6Bh6J25Grcb6y88wRKMOopeAfHh83KUfwxlStYOyhhsOJGZy1dRCdyLwqjQm
-         rM+xH1IjBcKconT+QtGcGvOPjaGeZqUdalXg/LfTm/aTj63jh8rJyiNpKos2Va7SneE6
-         K7VzHPM5AaknAIjo/7IgEMHPQ8vzuRoRmxxbSEGT6a8Jbx7qNmT0crAzZRLhwC2OJWzD
-         uwRcNem7KmF2oNRnvDG7v5q++w4uB8duCKb77jMLPLsfcqNC4W3Yz1F6rXN2s20YsNbm
-         6whQ==
-X-Gm-Message-State: AOAM533h1SSV7vOjnSvL5pvhqXkNaF1RY5IpzcFAd4NIQZlwUvT3E3gm
-        hRcWxUlXKQC0+Fbbly/Xy4ezjszTTc5S1FYx508=
-X-Google-Smtp-Source: ABdhPJzn1A/7btlIYG1X8bKeCTor+oIvCx7P+mI1jm4vqroo6Gd9feuKoyUcA12m6b+vBd3k4GzVkMJZVa3kylzK+iM=
-X-Received: by 2002:ad4:4cc3:: with SMTP id i3mr4073553qvz.114.1594904848734;
- Thu, 16 Jul 2020 06:07:28 -0700 (PDT)
+        bh=s9u0OaI73oXhhsb+oeV3fiveuxa7GdvhC13FjWGvhnU=;
+        b=fe7ueV6QssadOfbg6m3xuSFxGVH1PxvWoA63w5ltRAmL0nk1CZCI7hpDxXmEVDjHUF
+         vTheYNdRc24i6yFIVwgqnVg6T1ZBMVAlFr1zGoR/NTUmq4eQey79C57dAvyW/8j0N/Z1
+         ElUDYntJ2j3nZegZp8PkGhLolv4w61OaLk+GETr4T1kBnxyDERsvVg/aox0w+666b0RX
+         1cWqXEFiq2xOGfYgTUenZZwzQu6rCIw8jhJWQZaGUV9hhzE7R1FGDjQV3caLq90AkyOy
+         ECrC2TcIdmZmyjHtG+GxksrAE8MZ0hIgYqvxi5cjijL/8bbswJkfGwF1jliRUlts9Zf8
+         zCSw==
+X-Gm-Message-State: AOAM5316ENDpBTgD0BU47+id34IDsdVltaEnpcBElAuNhydJ7d4ckMkp
+        wxvU1u4dUOClSNjqKrBB07NOIcFlparo2aK3Acn3cA==
+X-Google-Smtp-Source: ABdhPJyNrDd++3iRKErtZgLSEvCnoA9VLxRwm6VVLX4CuD9FS6IlrIlhxCvro2daVx57TMR+P//3sqVgv/nFdgNLLZg=
+X-Received: by 2002:adf:ff87:: with SMTP id j7mr5358437wrr.128.1594905197215;
+ Thu, 16 Jul 2020 06:13:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1594886530.git.zong.li@sifive.com> <628efa24c79a493e39ce6ef13017ae52eaf13388.1594886530.git.zong.li@sifive.com>
-In-Reply-To: <628efa24c79a493e39ce6ef13017ae52eaf13388.1594886530.git.zong.li@sifive.com>
-From:   Pekka Enberg <penberg@gmail.com>
-Date:   Thu, 16 Jul 2020 16:07:12 +0300
-Message-ID: <CAOJsxLHrOjaUVUASz067_VX8tYV2DZgR6pvK4V07+ZvhSophPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] riscv: Fix build warning for mm/init
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+References: <1594874393-23620-1-git-send-email-bmeng.cn@gmail.com>
+In-Reply-To: <1594874393-23620-1-git-send-email-bmeng.cn@gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 16 Jul 2020 18:43:03 +0530
+Message-ID: <CAAhSdy0==OEUUs6-+0g=kogqm2J=64XFiacNL7HdgZwyS-3hWA@mail.gmail.com>
+Subject: Re: [PATCH] riscv: Add SiFive drivers to rv32_defconfig
+To:     Bin Meng <bmeng.cn@gmail.com>
+Cc:     Alistair Francis <alistair.francis@wdc.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
         linux-riscv <linux-riscv@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Bin Meng <bin.meng@windriver.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 4:06 PM Zong Li <zong.li@sifive.com> wrote:
+On Thu, Jul 16, 2020 at 10:10 AM Bin Meng <bmeng.cn@gmail.com> wrote:
 >
-> Add static keyword for resource_init, this function is only used in this
-> object file.
+> From: Bin Meng <bin.meng@windriver.com>
 >
-> The warning message as follow (with W=1 build):
+> This adds SiFive drivers to rv32_defconfig, to keep in sync with the
+> 64-bit config. This is useful when testing 32-bit kernel with QEMU
+> 'sifive_u' 32-bit machine.
 >
-> arch/riscv/mm/init.c:520:13:
-> warning: no previous prototype for 'resource_init' [-Wmissing-prototypes]
+> Signed-off-by: Bin Meng <bin.meng@windriver.com>
+> ---
 >
-> Signed-off-by: Zong Li <zong.li@sifive.com>
+>  arch/riscv/configs/rv32_defconfig | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
+> index 05bbf52..8759501 100644
+> --- a/arch/riscv/configs/rv32_defconfig
+> +++ b/arch/riscv/configs/rv32_defconfig
+> @@ -14,6 +14,7 @@ CONFIG_CHECKPOINT_RESTORE=y
+>  CONFIG_BLK_DEV_INITRD=y
+>  CONFIG_EXPERT=y
+>  CONFIG_BPF_SYSCALL=y
+> +CONFIG_SOC_SIFIVE=y
+>  CONFIG_SOC_VIRT=y
+>  CONFIG_ARCH_RV32I=y
+>  CONFIG_SMP=y
+> @@ -61,6 +62,8 @@ CONFIG_HVC_RISCV_SBI=y
+>  CONFIG_VIRTIO_CONSOLE=y
+>  CONFIG_HW_RANDOM=y
+>  CONFIG_HW_RANDOM_VIRTIO=y
+> +CONFIG_SPI=y
+> +CONFIG_SPI_SIFIVE=y
+>  # CONFIG_PTP_1588_CLOCK is not set
+>  CONFIG_POWER_RESET=y
+>  CONFIG_DRM=y
+> @@ -76,6 +79,8 @@ CONFIG_USB_OHCI_HCD=y
+>  CONFIG_USB_OHCI_HCD_PLATFORM=y
+>  CONFIG_USB_STORAGE=y
+>  CONFIG_USB_UAS=y
+> +CONFIG_MMC=y
+> +CONFIG_MMC_SPI=y
+>  CONFIG_RTC_CLASS=y
+>  CONFIG_VIRTIO_PCI=y
+>  CONFIG_VIRTIO_BALLOON=y
+> --
+> 2.7.4
+>
 
-Reviewed-by: Pekka Enberg <penberg@kernel.org>
+Looks good to me.
 
-- Pekka
+Reviewed-by: Anup Patel <anup@brainfault.org>
+
+Regards,
+Anup
