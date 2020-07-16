@@ -2,223 +2,118 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C93FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B16C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E83C204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795B02067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:23:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="SzLH2bWv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OstnAz+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbgGPFS1 (ORCPT
+        id S1726027AbgGPFW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:18:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
+        Thu, 16 Jul 2020 01:22:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgGPFS0 (ORCPT
+        with ESMTP id S1725270AbgGPFW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:18:26 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD49C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:18:26 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u185so3149709pfu.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:18:26 -0700 (PDT)
+        Thu, 16 Jul 2020 01:22:58 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A62CC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:22:58 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d4so4263797pgk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 22:22:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=pjSAQ6Btld2fycHWHEXEy5l6TD0W6bB4dFccT/gpVM8=;
-        b=SzLH2bWvof9kr76xot8dGve40BlKMean/0Ynh3Mixvp/iYGI6jslyiT1H/1n9Qj1ow
-         Mh6ujatjCTcxc2s25k7iA9sn8U89yBeRY8ebObRWZj6HYuZXFeSDTBb/EWPHPkSP4FNU
-         WwDuuMXK/rQCsP66Mjz/JMKuDuyf2EqCTf0wV7Jeao4eNmnGi3HcAtNuOo1DPvCl3PrS
-         G8xS6Xv4Ca2XuthzckdOpVp0+F0+/78sRIME7/YVN8R9H8xTFBhlymC5jiziD9Jh1/PT
-         1dEIfLgzq81IlVYg4rVZj6jYicZCgwuZlDfimKz4575Fr0aZwG6NbpNsQCvhpVa8sGpY
-         J2Cg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aw4OnsBnQ1ZIF1KX9lKuewx7m/jmsDZj2NNKkOvAmmo=;
+        b=OstnAz+kmVxmVY/pV/REV0jbtqLRwPw8QmSZNb7DyqWS5efrtsTr5dXHD1jMz94Kzy
+         7feHtFTcHS4mdfpN1EEfwwzm81QIHzCk/SE52lfYe5kLAoU/EM/Sx5LiupOUsvAeX31F
+         fxhfzpYagDFZNVe767d03rY6Mk3BzieN8OOgtC1PrLymM0JXNh+VRjInChygocN2gUSO
+         JJSZn6Fzz0Pl2jKhTiELdjXrnGtSMRYOL76tYeBa2zWuwvuSDfSoHoT9DC7NVDqqg1E0
+         NQD4Z21GCwjV1GHJc7w76zxZBEVgGCa3+cMLSJpcaUPTwPQf3TmyHsO1bzk6zHPJN74Y
+         ebxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=pjSAQ6Btld2fycHWHEXEy5l6TD0W6bB4dFccT/gpVM8=;
-        b=t7hOAiIEHvg1aboTusjWQN1xO3ZFv0WlEQ+QnBrsDglJU8Yn6HWaaxXP7isFI8AgYl
-         I/xSmurHZAqF7+7r6HvVYFFM2EeIEzPv3AYaWyQ7I6OS1ybqJNSx+KE+GEJfWhZ3Otmf
-         OQu2hbbLkQOK3BCR5O+K8qCiayHBlKfaEVZVfMLhmvG1PgIX4yaYnHFLS0hXc0pnc1YS
-         mksIPReTa2Sy9r6oLJ5H7cp7RDg2qiWA9K+MMGcAJbbTO6EKkUqesJ1roNGV/ww+1YxV
-         gKAZh+gTlSuIcqgcBEJ7uJqSXhWccRO+jKxPp7nfKqvT+dPiqrMP3futXKid5w3gjmnv
-         kRWg==
-X-Gm-Message-State: AOAM53159Ko2D9+qOgGJ6PeswaVuvEs/TavlhOyYkuSj9YjJp92L8Ueb
-        +zaurbJjNBX4FbZ/5bYz0WWB9g==
-X-Google-Smtp-Source: ABdhPJz36lMtXy7jtJjFqq3zOAV60PvUS/Hlk91z+f9BEuTeTezdLYpRcGCyT7+UAXDv2D+6odC4ig==
-X-Received: by 2002:a63:444b:: with SMTP id t11mr2886208pgk.134.1594876706172;
-        Wed, 15 Jul 2020 22:18:26 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:c8f2:5437:b9af:674c? ([2601:646:c200:1ef2:c8f2:5437:b9af:674c])
-        by smtp.gmail.com with ESMTPSA id k7sm3623730pgh.46.2020.07.15.22.18.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 22:18:25 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
-Date:   Wed, 15 Jul 2020 22:18:20 -0700
-Message-Id: <EFAD6E2F-EC08-4EB3-9ECC-2A963C023FC5@amacapital.net>
-References: <1594868476.6k5kvx8684.astroid@bobo.none>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
-In-Reply-To: <1594868476.6k5kvx8684.astroid@bobo.none>
-To:     Nicholas Piggin <npiggin@gmail.com>
-X-Mailer: iPhone Mail (17F80)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aw4OnsBnQ1ZIF1KX9lKuewx7m/jmsDZj2NNKkOvAmmo=;
+        b=OHTZoXLYo8Nl6bXs8VcVMnat1sqVOktsV0OezTHLBpnLFz1ld7F8Y1x098kMGQB2op
+         fCnRmEkjgTmU90gwXQVURyIPesBO38fWeJ3oYBXKE0HWl4rc+Q7Y6EmB/id0A0Cc0gS+
+         xcRrH9WNRZawwZ3KRQRWTsQF+2xaZC4bVc/KD/JUqHqtEZrfl5o5bbHBpuFh/XrvlBr7
+         wZCHU8c6fc+M84IP59hTkfgDCEzvcKLmvTWHprVO0qfDnyadQOHFwEd0Xqxjx+zs94sh
+         O8+t2jksZA4dKKRCntbNKrHqA2GTL5fgbYftKiiP3kvY++/UD87zhUfSItwIclE6pHhA
+         zHRw==
+X-Gm-Message-State: AOAM532dtYPLJv2pAlQ2g+Cp4/9lFy6i8oUNqvjLX9tPM7CKWhjfsQmm
+        0l+U+tJngSEn0K0Fwme1mblqhA==
+X-Google-Smtp-Source: ABdhPJxNS3pgzDl97JFTDGbzH4ABBUnQVIs7N/AYeuFcDWEnn+XYab5nOhXpMtE23d76Im8PSkpEig==
+X-Received: by 2002:a63:84c3:: with SMTP id k186mr2705193pgd.394.1594876977998;
+        Wed, 15 Jul 2020 22:22:57 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id d18sm3584122pjz.11.2020.07.15.22.22.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jul 2020 22:22:57 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 13:22:59 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        John Ogness <jogness@linutronix.de>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] time/sched_clock: Use raw_read_seqcount_latch()
+Message-ID: <20200716052259.GA4660@leoy-ThinkPad-X240s>
+References: <20200715095220.GH10769@hirez.programming.kicks-ass.net>
+ <20200715115901.515956-1-a.darwish@linutronix.de>
+ <20200715152926.GA16686@leoy-ThinkPad-X240s>
+ <20200715155850.GL10769@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715155850.GL10769@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Peter, Ahemd,
 
+On Wed, Jul 15, 2020 at 05:58:50PM +0200, Peter Zijlstra wrote:
 
-> On Jul 15, 2020, at 9:15 PM, Nicholas Piggin <npiggin@gmail.com> wrote:
->=20
-> =EF=BB=BFExcerpts from Mathieu Desnoyers's message of July 14, 2020 12:13 a=
-m:
->> ----- On Jul 13, 2020, at 9:47 AM, Nicholas Piggin npiggin@gmail.com wrot=
-e:
->>=20
->>> Excerpts from Nicholas Piggin's message of July 13, 2020 2:45 pm:
->>>> Excerpts from Andy Lutomirski's message of July 11, 2020 3:04 am:
->>>>> Also, as it stands, I can easily see in_irq() ceasing to promise to
->>>>> serialize.  There are older kernels for which it does not promise to
->>>>> serialize.  And I have plans to make it stop serializing in the
->>>>> nearish future.
->>>>=20
->>>> You mean x86's return from interrupt? Sounds fun... you'll konw where t=
-o
->>>> update the membarrier sync code, at least :)
->>>=20
->>> Oh, I should actually say Mathieu recently clarified a return from
->>> interrupt doesn't fundamentally need to serialize in order to support
->>> membarrier sync core.
->>=20
->> Clarification to your statement:
->>=20
->> Return from interrupt to kernel code does not need to be context serializ=
-ing
->> as long as kernel serializes before returning to user-space.
->>=20
->> However, return from interrupt to user-space needs to be context serializ=
-ing.
->=20
-> Hmm, I'm not sure it's enough even with the sync in the exit_lazy_tlb
-> in the right places.
->=20
-> A kernel thread does a use_mm, then it blocks and the user process with
-> the same mm runs on that CPU, and then it calls into the kernel, blocks,
-> the kernel thread runs again, another CPU issues a membarrier which does
-> not IPI this one because it's running a kthread, and then the kthread
-> switches back to the user process (still without having unused the mm),
-> and then the user process returns from syscall without having done a=20
-> core synchronising instruction.
->=20
-> The cause of the problem is you want to avoid IPI'ing kthreads. Why?
-> I'm guessing it really only matters as an optimisation in case of idle
-> threads. Idle thread is easy (well, easier) because it won't use_mm, so=20=
+[...]
 
-> you could check for rq->curr =3D=3D rq->idle in your loop (in a suitable=20=
+> > > diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+> > > index fa3f800d7d76..ea007928d681 100644
+> > > --- a/kernel/time/sched_clock.c
+> > > +++ b/kernel/time/sched_clock.c
+> > > @@ -100,7 +100,7 @@ unsigned long long notrace sched_clock(void)
+> > >  	struct clock_read_data *rd;
+> > > 
+> > >  	do {
+> > > -		seq = raw_read_seqcount(&cd.seq);
+> > > +		seq = raw_read_seqcount_latch(&cd.seq);
+> > 
+> > Understand this is doing the same thing with __ktime_get_fast_ns() and
+> > I saw Peter acked to make change for this.
+> > 
+> > Just want to confirm, since this patch introduces conflict with the
+> > patch set "arm64: perf: Proper cap_user_time* support" [1], I should
+> > rebase the patch set on top of this patch, right?
+> 
+> Or rebase this patch on top of yours and include it, either way.
 
-> sched accessor function).
->=20
-> But... I'm not really liking this subtlety in the scheduler for all this=20=
+Have rebased this patch and included it in the patch set v3 for
+"arm64: perf: Proper cap_user_time* support" [1].
 
-> (the scheduler still needs the barriers when switching out of idle).
->=20
-> Can it be improved somehow? Let me forget x86 core sync problem for now
-> (that _may_ be a bit harder), and step back and look at what we're doing.
-> The memory barrier case would actually suffer from the same problem as
-> core sync, because in the same situation it has no implicit mmdrop in
-> the scheduler switch code either.
->=20
-> So what are we doing with membarrier? We want any activity caused by the=20=
+Thanks!
+Leo
 
-> set of CPUs/threads specified that can be observed by this thread before=20=
-
-> calling membarrier is appropriately fenced from activity that can be=20
-> observed to happen after the call returns.
->=20
-> CPU0                     CPU1
->                         1. user stuff
-> a. membarrier()          2. enter kernel
-> b. read rq->curr         3. rq->curr switched to kthread
-> c. is kthread, skip IPI  4. switch_to kthread
-> d. return to user        5. rq->curr switched to user thread
->                 6. switch_to user thread
->                 7. exit kernel
->                         8. more user stuff
->=20
-> As far as I can see, the problem is CPU1 might reorder step 5 and step
-> 8, so you have mmdrop of lazy mm be a mb after step 6.
->=20
-> But why? The membarrier call only cares that there is a full barrier
-> between 1 and 8, right? Which it will get from the previous context
-> switch to the kthread.
->=20
-> I must say the memory barrier comments in membarrier could be improved
-> a bit (unless I'm missing where the main comment is). It's fine to know
-> what barriers pair with one another, but we need to know which exact
-> memory accesses it is ordering
->=20
->       /*
->         * Matches memory barriers around rq->curr modification in
->         * scheduler.
->         */
->=20
-> Sure, but it doesn't say what else is being ordered. I think it's just
-> the user memory accesses, but would be nice to make that a bit more
-> explicit. If we had such comments then we might know this case is safe.
->=20
-> I think the funny powerpc barrier is a similar case of this. If we
-> ever see remote_rq->curr->flags & PF_KTHREAD, then we _know_ that
-> CPU has or will have issued a memory barrier between running user
-> code.
->=20
-> So AFAIKS all this membarrier stuff in kernel/sched/core.c could
-> just go away. Except x86 because thread switch doesn't imply core
-> sync, so CPU1 between 1 and 8 may never issue a core sync instruction
-> the same way a context switch must be a full mb.
->=20
-> Before getting to x86 -- Am I right, or way off track here?
-
-I find it hard to believe that this is x86 only. Why would thread switch imp=
-ly core sync on any architecture?  Is x86 unique in having a stupid expensiv=
-e core sync that is heavier than smp_mb()?
-
-But I=E2=80=99m wondering if all this deferred sync stuff is wrong. In the b=
-rave new world of io_uring and such, perhaps kernel access matter too.  Heck=
-, even:
-
-int a[2];
-
-Thread A:
-a[0] =3D 1;
-a[1] =3D 2:
-
-Thread B:
-
-write(fd, a, sizeof(a));
-
-Doesn=E2=80=99t do what thread A is expecting.  Admittedly this particular e=
-xample is nonsense, but maybe there are sensible cases that matter to someon=
-e.
-
-=E2=80=94Andy
-
->=20
-> Thanks,
-> Nick
+[1] https://lore.kernel.org/linux-arm-kernel/20200716051130.4359-3-leo.yan@linaro.org/T/#u
