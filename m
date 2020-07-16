@@ -2,146 +2,249 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC990C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA750204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:09:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ScABqrn1"
+	by mail.kernel.org (Postfix) with ESMTP id C421F2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594919427;
+	bh=j6kpk2g2tI37ixMcAFS4b2eXAS3B2LSFqvWtCJFWW08=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=HZLddnIawUoO1pSS90KzSEBmPP2StuaFP8h/lv2dB+qlCRD77ASiE6D0Cf6yEgaB1
+	 cvs1dBCuM7q9S4ju8ZyUEkf4rC1lvJlojqzvtUTsADO0QsRpNkenyXgJatbaHU/XKt
+	 hURi5lvNWhMG4OqBNg2MKelYdkSLYCT9yiZRDS2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbgGPRJ0 (ORCPT
+        id S1728728AbgGPRK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:09:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44284 "EHLO
+        Thu, 16 Jul 2020 13:10:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgGPRJZ (ORCPT
+        with ESMTP id S1727844AbgGPRK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:09:25 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CBB4C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:09:25 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so5158293pgb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:09:25 -0700 (PDT)
+        Thu, 16 Jul 2020 13:10:26 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1A5C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:10:25 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g37so4773293otb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+YUV7baZS3QMy6H9iHTF1vq422tSxwwdhocsQIIKpJ8=;
-        b=ScABqrn1IiApBTOd3uwWZ9zcKyBA/0MYgYViGsTpujPuZnW3GdtFtgxyBI5AFAzYl3
-         fUrxQg8yGnew+6F9JimmYfj2uOabAogHKPhV3U7stmqIjUvfIAn3FmaffVO5I3+Cc4Bc
-         vhXwlBO1ze/qqLGqmg/EgekmFJZAfA2nMSGkk=
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=74VCADifLAjW5QPg1wIiKFbTZE5Zk+0UxL1G9qiWDfU=;
+        b=ATLY3ADcfNMXjwxTz5e/3qQ/hjPPxzPinh3EbuXsvn07xGcW/3W5O22FyyqYP+GEfn
+         ZGHbXAseThuZQfmOpBANR07eo0wZrprTqC/UAFg4zXcWMDoy4xMX6brLRi9wSMc0JNoy
+         zbmXnRJFwCuMBF9gUZb+e7STiNbM/6whKcu8E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=+YUV7baZS3QMy6H9iHTF1vq422tSxwwdhocsQIIKpJ8=;
-        b=JHZWFN3V/2OWidMSCTsbFNvkcw37T+LHK9HfSunz4T07yxOKChTEdBYCW7EETH7wqA
-         gS3EWeu9WFhTNjnAeGtQ3KI9MA63/GKZ3j/lORzuAjblswsJZvGHLMQNBXaUhUQyYqW5
-         ip5h75b8m1E+CuV4dqE6SQAvLaT5iX659hTxzyf7TkSV6Jww74XmibtXEqiunVG30fb3
-         B//j5/xIwuec6VEiP4rvPR4abAhp74HBYwbImz2GHqeot66x2h/YyOF618gEhqqGo586
-         NFqYWuvBDGC3X/uylTf6DtVn05E1pyNTmDAVQo8Xx8MFyqE5V595FfofTrhla7BmlXUR
-         NfRA==
-X-Gm-Message-State: AOAM530erqVNQ+h/ppThRzFt/VUDIyGoaNPkJHW577TrwKkvc0YeOYGe
-        XGFSHKvL/qkSfdBh7qnVbVkWop2XP0XupQ==
-X-Google-Smtp-Source: ABdhPJwER+Qj87J/ACr8CCYXvpcmu4jIfvu9bYRFuYv8jUqPfgcWzZLmxBY+kzYo551VD6jFfDqMQQ==
-X-Received: by 2002:a63:cb03:: with SMTP id p3mr5023403pgg.444.1594919364719;
-        Thu, 16 Jul 2020 10:09:24 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:725a:fff:fe46:44eb])
-        by smtp.gmail.com with ESMTPSA id c71sm651622pje.32.2020.07.16.10.09.20
+        bh=74VCADifLAjW5QPg1wIiKFbTZE5Zk+0UxL1G9qiWDfU=;
+        b=P2BrEggJtgTVe2UoE6bsUeFOfykVcCFyhpY079o1UKaGoNbMEAY8gYD6qn9H0BngNt
+         IGixoF2YAbS9lGwT5jLMg2EtyuxkrcjZZtQblMwNEBiGcGu1JuZu18Q3O3UG15fsVEb+
+         zsekDWXYOfHuC+fsG82jNKTPirehpJYsmYbgOgqHFxilVpwPqHo6u75HSHK0hDlYG6O6
+         nW7d5V/VcHIsjjDHL5EKphgPJ+7gyh/xsux7PzZwnxfeMa7WXF2T+KAfq2KDgfgTm7VG
+         HCMQUYTkmGMTsD7EDP3Ov6zp1XmtpHz8ciBU0lIjxqvzVMVjz9sfgUVWzprQzi++kplJ
+         yzTQ==
+X-Gm-Message-State: AOAM530nDl6gzIfMMqnOrjynhzWTs6Qab1QMCVYlr+ePvSTNgl9PG/JS
+        LfzxozlxnOw0a+seralhARoO8Q==
+X-Google-Smtp-Source: ABdhPJzuDxQBmf0/WSARbFEvj0I0lNmxbC39konR22yd2dlhEBWFopRh0Q6fzhuY1pxfLBYQGaW8dQ==
+X-Received: by 2002:a9d:6b92:: with SMTP id b18mr5184027otq.367.1594919424977;
+        Thu, 16 Jul 2020 10:10:24 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id t10sm1268907otd.78.2020.07.16.10.10.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 10:09:22 -0700 (PDT)
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Tzung-Bi Shih <tzungbi@google.com>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Benson Leung <bleung@chromium.org>,
-        alsa-devel@alsa-project.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Subject: [PATCH v2] ASoC: cros_ec_codec: Reset I2S RX when probing
-Date:   Fri, 17 Jul 2020 01:09:14 +0800
-Message-Id: <20200716170914.3623060-1-yuhsuan@chromium.org>
-X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+        Thu, 16 Jul 2020 10:10:24 -0700 (PDT)
+Subject: Re: [PATCH] cpupower: Provide offline CPU information for cpuidle-set
+ and cpufreq-set options
+To:     latha@linux.vnet.ibm.com, trenn@suse.com, shuah@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200713075647.70036-1-latha@linux.vnet.ibm.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <839adf7f-8875-47c5-0126-038e69e638ac@linuxfoundation.org>
+Date:   Thu, 16 Jul 2020 11:10:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713075647.70036-1-latha@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not guaranteed that I2S RX is disabled when the kernel booting.
-For example, if the kernel crashes while it is enabled, it will keep
-enabled until the next time EC reboots. Reset I2S RX when probing to
-fix this issue.
+On 7/13/20 1:56 AM, latha@linux.vnet.ibm.com wrote:
+> From: Brahadambal Srinivasan <latha@linux.vnet.ibm.com>
+> 
+> When a user tries to modify cpuidle or cpufreq properties on offline
+> CPUs, the tool returns success (exit status 0) but also does not provide
+> any warning message regarding offline cpus that may have been specified
+> but left unchanged. In case of all or a few CPUs being offline, it can be
+> difficult to keep track of which CPUs didn't get the new frequency or idle
+> state set. Silent failures are difficult to keep track of when there are a
+> huge number of CPUs on which the action is performed.
+> 
+> This patch adds an additional message if the user attempts to modify
+> offline cpus.
+> 
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
----
- drivers/platform/chrome/cros_ec_proto.c        | 7 ++++++-
- include/linux/platform_data/cros_ec_commands.h | 1 +
- sound/soc/codecs/cros_ec_codec.c               | 9 +++++++++
- 3 files changed, 16 insertions(+), 1 deletion(-)
+The idea is good. A few comments below on implementing it with
+duplicated code in cmd_freq_set() and cmd_idle_set().
 
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index 3e745e0fe092c..2c60690d7147c 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -572,7 +572,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
- 		return -ENOTSUPP;
- 	} else if (msg->result != EC_RES_SUCCESS) {
- 		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
--		return -EPROTO;
-+		switch (msg->result) {
-+		case EC_RES_INVALID_PARAM:
-+			return -EINVAL;
-+		default:
-+			return -EPROTO;
-+		}
- 	}
- 
- 	return ret;
-diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-index 69210881ebac8..11ce917ca924c 100644
---- a/include/linux/platform_data/cros_ec_commands.h
-+++ b/include/linux/platform_data/cros_ec_commands.h
-@@ -4598,6 +4598,7 @@ enum ec_codec_i2s_rx_subcmd {
- 	EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH = 0x2,
- 	EC_CODEC_I2S_RX_SET_DAIFMT = 0x3,
- 	EC_CODEC_I2S_RX_SET_BCLK = 0x4,
-+	EC_CODEC_I2S_RX_RESET = 0x5,
- 	EC_CODEC_I2S_RX_SUBCMD_COUNT,
- };
- 
-diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
-index f23956cf4ed84..b5ff30b7f1aa8 100644
---- a/sound/soc/codecs/cros_ec_codec.c
-+++ b/sound/soc/codecs/cros_ec_codec.c
-@@ -1034,6 +1034,15 @@ static int cros_ec_codec_platform_probe(struct platform_device *pdev)
- 	}
- 	priv->ec_capabilities = r.capabilities;
- 
-+	/* Reset EC codec I2S RX. */
-+	p.cmd = EC_CODEC_I2S_RX_RESET;
-+	ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
-+				   (uint8_t *)&p, sizeof(p), NULL, 0);
-+	if (ret == -EINVAL)
-+		dev_info(dev, "Missing reset command. Please update your EC firmware.\n");
-+	else if (ret)
-+		dev_err(dev, "failed to EC_CODEC_I2S_RESET: %d\n", ret);
-+
- 	platform_set_drvdata(pdev, priv);
- 
- 	ret = devm_snd_soc_register_component(dev, &i2s_rx_component_driver,
--- 
-2.27.0.389.gc38d7665816-goog
+Please eliminate code duplication as much as possible. Handling
+offline_cpus alloc/free similar to cpus_chosen will reduce some
+duplication.
 
+> Reported-by: Pavithra R. Prakash <pavrampu@in.ibm.com>
+> Signed-off-by: Brahadambal Srinivasan <latha@linux.vnet.ibm.com>
+> ---
+>   tools/power/cpupower/utils/cpufreq-set.c | 24 ++++++++++++++++++++++--
+>   tools/power/cpupower/utils/cpuidle-set.c | 21 ++++++++++++++++++++-
+>   2 files changed, 42 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
+> index 6ed82fba5aaa..87031120582a 100644
+> --- a/tools/power/cpupower/utils/cpufreq-set.c
+> +++ b/tools/power/cpupower/utils/cpufreq-set.c
+> @@ -195,10 +195,14 @@ int cmd_freq_set(int argc, char **argv)
+>   	extern int optind, opterr, optopt;
+>   	int ret = 0, cont = 1;
+>   	int double_parm = 0, related = 0, policychange = 0;
+> +	int str_len = 0;
+>   	unsigned long freq = 0;
+>   	char gov[20];
+> +	char *offline_cpus_str = NULL;
+>   	unsigned int cpu;
+>   
+> +	struct bitmask *offline_cpus = NULL;
+> +
+>   	struct cpufreq_policy new_pol = {
+>   		.min = 0,
+>   		.max = 0,
+> @@ -311,14 +315,21 @@ int cmd_freq_set(int argc, char **argv)
+>   		}
+>   	}
+>   
+> +	offline_cpus = bitmask_alloc(sysconf(_SC_NPROCESSORS_CONF));
+> +	str_len = sysconf(_SC_NPROCESSORS_CONF) * 5;
+> +	offline_cpus_str = malloc(sizeof(char) * str_len);
+>   
+
+Allocate once when cpus_chosen is allocated.
+
+>   	/* loop over CPUs */
+>   	for (cpu = bitmask_first(cpus_chosen);
+>   	     cpu <= bitmask_last(cpus_chosen); cpu++) {
+>   
+> -		if (!bitmask_isbitset(cpus_chosen, cpu) ||
+> -		    cpupower_is_cpu_online(cpu) != 1)
+> +		if (!bitmask_isbitset(cpus_chosen, cpu))
+> +			continue;
+> +
+> +		if (cpupower_is_cpu_online(cpu) != 1) {
+> +			bitmask_setbit(offline_cpus, cpu);
+>   			continue;
+> +		}
+>   
+>   		printf(_("Setting cpu: %d\n"), cpu);
+>   		ret = do_one_cpu(cpu, &new_pol, freq, policychange);
+> @@ -328,5 +339,14 @@ int cmd_freq_set(int argc, char **argv)
+>   		}
+>   	}
+>   
+> +	if (!bitmask_isallclear(offline_cpus)) {
+> +		bitmask_displaylist(offline_cpus_str, str_len, offline_cpus);
+> +		printf(_("Following CPUs are offline:\n%s\n"),
+> +			 offline_cpus_str);
+> +		printf(_("cpupower set operation was not performed on them\n"));
+> +	}
+
+Make the printing common for cmd_idle_set() and cmd_freq_set().
+Make this generic to be able to print online and offline cpus.
+
+> +	free(offline_cpus_str);
+> +	bitmask_free(offline_cpus);
+
+Free these from main()
+
+> +
+>   	return 0;
+>   }
+> diff --git a/tools/power/cpupower/utils/cpuidle-set.c b/tools/power/cpupower/utils/cpuidle-set.c
+> index 569f268f4c7f..adf6543fd3d6 100644
+> --- a/tools/power/cpupower/utils/cpuidle-set.c
+> +++ b/tools/power/cpupower/utils/cpuidle-set.c
+> @@ -27,9 +27,12 @@ int cmd_idle_set(int argc, char **argv)
+>   	extern char *optarg;
+>   	extern int optind, opterr, optopt;
+>   	int ret = 0, cont = 1, param = 0, disabled;
+> +	int str_len = 0;
+>   	unsigned long long latency = 0, state_latency;
+>   	unsigned int cpu = 0, idlestate = 0, idlestates = 0;
+>   	char *endptr;
+> +	char *offline_cpus_str = NULL;
+> +	struct bitmask *offline_cpus = NULL;
+>   
+>   	do {
+>   		ret = getopt_long(argc, argv, "d:e:ED:", info_opts, NULL);
+> @@ -99,14 +102,20 @@ int cmd_idle_set(int argc, char **argv)
+>   	if (bitmask_isallclear(cpus_chosen))
+>   		bitmask_setall(cpus_chosen);
+>   
+> +	offline_cpus = bitmask_alloc(sysconf(_SC_NPROCESSORS_CONF));
+> +	str_len = sysconf(_SC_NPROCESSORS_CONF) * 5;
+> +	offline_cpus_str = (void *)malloc(sizeof(char) * str_len);
+> +
+
+Same comment as before.
+
+>   	for (cpu = bitmask_first(cpus_chosen);
+>   	     cpu <= bitmask_last(cpus_chosen); cpu++) {
+>   
+>   		if (!bitmask_isbitset(cpus_chosen, cpu))
+>   			continue;
+>   
+> -		if (cpupower_is_cpu_online(cpu) != 1)
+> +		if (cpupower_is_cpu_online(cpu) != 1) {
+> +			bitmask_setbit(offline_cpus, cpu);
+>   			continue;
+> +		}
+>   
+>   		idlestates = cpuidle_state_count(cpu);
+>   		if (idlestates <= 0)
+> @@ -181,5 +190,15 @@ int cmd_idle_set(int argc, char **argv)
+>   			break;
+>   		}
+>   	}
+> +
+> +	if (!bitmask_isallclear(offline_cpus)) {
+> +		bitmask_displaylist(offline_cpus_str, str_len, offline_cpus);
+> +		printf(_("Following CPUs are offline:\n%s\n"),
+> +			 offline_cpus_str);
+> +		printf(_("CPU idle operation was not performed on them\n"));
+> +	}
+
+Same comment as before.
+
+> +	free(offline_cpus_str);
+> +	bitmask_free(offline_cpus);
+> +
+
+Same comment as before.
+>   	return EXIT_SUCCESS;
+>   }
+> 
+
+thanks,
+-- Shuah
