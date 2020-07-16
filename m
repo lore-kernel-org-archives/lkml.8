@@ -2,138 +2,96 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E00C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018EEC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7512320663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cXE2TeIt"
+	by mail.kernel.org (Postfix) with ESMTP id D6B702071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594870273;
+	bh=ikmPWI8MAxfltvRswHekPbDid18TOw8D1FrTV++qoHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vSV3868fUHuBbEQD/UvPbQIM1AIjqdB9ajDzrcRllqVGOOuLSjdr0kGOsrqwG5BSW
+	 +YlmQ6A8KgNkT+XI/Gl7cYoDPVZ/uCXaGetLoCskal0rtQNE+QcR/WFRcu4QMQ3C84
+	 AUb8EOzm1QBfThKMnmuBS7i03RRWCmChRzVLRABg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgGPDag (ORCPT
+        id S1728146AbgGPDau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgGPDaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 23:30:35 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F00C061755;
-        Wed, 15 Jul 2020 20:30:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=aD++24wBmVuc2EotWw1YQ1q68FR+577+Zt1OtHbnPF0=; b=cXE2TeItmlXQARqBs2DUWaNIp0
-        6wBQCYB1RKIOFrBosBUFM6IN0gZ186A3iZhorlNLxt+W7L+3eBrpU/a7O6NS9qLtWs9slSYRlVbdI
-        tNcYeXyu4sTxRNBUQJBNlbHUdvzqGPEM09/a3BQKydA/cqssMETV/+6w5wS1rZK+Si3QnoRjruhXK
-        jXyQQjRiqYBJNr9W9gzX/5+BF9OpDOSDbWHYIo/6B7nBMycQIbPoQmBTbhtzHPIa5rPks+DTKfMeI
-        l+K2Boh2B0QJ21W22w30ffc0ZwPs06qY3z/lMpgJhXrSKCaMunlZuQ1rDBQQ0aheDguwOg8iZuVIk
-        mNnC6qDQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvubN-0008De-Vq; Thu, 16 Jul 2020 03:30:30 +0000
-Subject: Re: [PATCH 2/2] debugfs: Add access restriction option
-To:     Peter Enderborg <peter.enderborg@sony.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20200617133738.6631-1-peter.enderborg@sony.com>
- <20200715152529.11223-1-peter.enderborg@sony.com>
- <20200715152529.11223-3-peter.enderborg@sony.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b453a7d9-6620-2a28-205e-1a11bbcb5abd@infradead.org>
-Date:   Wed, 15 Jul 2020 20:30:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 15 Jul 2020 23:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbgGPDau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 23:30:50 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9433220663;
+        Thu, 16 Jul 2020 03:30:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594870250;
+        bh=ikmPWI8MAxfltvRswHekPbDid18TOw8D1FrTV++qoHM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ftG/dT0uCBDXZCXsbDz6ZLWmgFVO5Hfu9oCpJ2P2Hj7t/8PO1Ihi5lbTIw/yHzMhN
+         Cx7YZn51zJpKNDe8bRLO52+Ejg07its1yEMp+il9Z4IInXDhsqoPlOQVrN1Slv3jfX
+         u5zEiFR3ssQIcAWgDq8v4Kj4oD4wtwQMDxncESco=
+Date:   Wed, 15 Jul 2020 20:30:48 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com,
+        maco@android.com, joel@joelfernandes.org, christian@brauner.io,
+        hridya@google.com, mhocko@kernel.org, hdanton@sina.com,
+        devel@driverdev.osuosl.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH 1/1] staging: android: ashmem: Fix lockdep warning for
+ write operation
+Message-ID: <20200716033048.GG1167@sol.localdomain>
+References: <20200716024527.4009170-1-surenb@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200715152529.11223-3-peter.enderborg@sony.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716024527.4009170-1-surenb@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jul 15, 2020 at 07:45:27PM -0700, Suren Baghdasaryan wrote:
+> syzbot report [1] describes a deadlock when write operation against an
+> ashmem fd executed at the time when ashmem is shrinking its cache results
+> in the following lock sequence:
+> 
+> Possible unsafe locking scenario:
+> 
+>         CPU0                    CPU1
+>         ----                    ----
+>    lock(fs_reclaim);
+>                                 lock(&sb->s_type->i_mutex_key#13);
+>                                 lock(fs_reclaim);
+>    lock(&sb->s_type->i_mutex_key#13);
+> 
+> kswapd takes fs_reclaim and then inode_lock while generic_perform_write
+> takes inode_lock and then fs_reclaim. However ashmem does not support
+> writing into backing shmem with a write syscall. The only way to change
+> its content is to mmap it and operate on mapped memory. Therefore the race
+> that lockdep is warning about is not valid. Resolve this by introducing a
+> separate lockdep class for the backing shmem inodes.
+> 
+> [1]: https://lkml.kernel.org/lkml/0000000000000b5f9d059aa2037f@google.com/
+> 
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 
-On 7/15/20 8:25 AM, Peter Enderborg wrote:
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 9ad9210d70a1..aec81f38bfce 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -476,6 +476,38 @@ config DEBUG_FS
->  
->  	  If unsure, say N.
->  
-> +choice
-> +	prompt "Debugfs default access"
-> +	depends on DEBUG_FS
-> +	default DEBUG_FS_ALLOW_ALL
-> +	help
-> +	  This select the default access restricions for debugfs.
+Please add proper tags:
 
-	       selects                   restrictions
-                 
-> +	  It can be overridden with kernel command line option
-> +	  debugfs=[on,no-mount,off] The restrictions apply for API access
-
-	                      ,off]. The
-
-> +	  and filesystem registration. .
-> +
-> +config DEBUG_FS_ALLOW_ALL
-> +       bool "Access normal"
-> +       help
-> +	  No restrictions applies. Both API and filesystem registration
-
-	                  apply.
-
-> +	  is on. This is the normal default operation.
-> +
-> +config DEBUG_FS_DISALLOW_MOUNT
-> +       bool "Do not register debugfs as filesystem"
-> +       help
-> +	 The API is open but filesystem not loaded. Client can still do
-> +	 their work and readed with debug tools that does not need
-
-	            and read                    that do not need
-
-> +	 debugfs filesystem.
-> +
-> +config DEBUG_FS_ALLOW_NONE
-> +       bool "No access"
-> +       help
-> +	  Access is off. Clients get EPERM when trying to create nodes in
-
-	                             -EPERM
-
-> +	  debugfs tree and debugfs is not registred as an filesystem.
-
-	                                  registered as a filesystem.
+Reported-by: syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com
+Fixes: ...
+Cc: stable@vger.kernel.org
 
 
-> +	  Client can then back-off or continue without debugfs access.
-> +
-> +endchoice
+The Reported-by tag to use was given in the original syzbot report.
 
-
-Also, in many places in this Kconfig file, the indentation needs to be
-fixed.  Some lines use spaces instead of one tab for indentation.
-Help text (under "help") should be indented with one tab + 2 spaces.
-
-
--- 
-~Randy
-
+- Eric
