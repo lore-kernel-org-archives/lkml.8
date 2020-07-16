@@ -2,151 +2,303 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74794C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8842C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45C222067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8274F2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:05:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ftQOUQs5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fHBUTi0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgGPSFP (ORCPT
+        id S1729418AbgGPSFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:05:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30714 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728837AbgGPSFO (ORCPT
+        Thu, 16 Jul 2020 14:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728975AbgGPSFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:05:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594922712;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bid2o9xhItv8ji/omqfjaS5XC1iUfTcX7qDylksvkag=;
-        b=ftQOUQs5M7bf5HDPv5kkva6f/FIHXxXCFVTCyA1WE07HGq6xBnIkt+zAP8I0edD+mGCrU4
-        SeaxIlPXV2VZPIOChGK2vpU4b37SP+RmNUq3UXPkGM1hKNb/3Zy4o+rA7ntMHbj8H4VI/L
-        vIukWfK+Scgb6gU5H5vXMZsgI13p9cI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-493-pKAFVRVJPHa_-99xo-LAlQ-1; Thu, 16 Jul 2020 14:05:08 -0400
-X-MC-Unique: pKAFVRVJPHa_-99xo-LAlQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C72D88014D4;
-        Thu, 16 Jul 2020 18:05:06 +0000 (UTC)
-Received: from starship (unknown [10.35.206.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A29F761982;
-        Thu, 16 Jul 2020 18:05:04 +0000 (UTC)
-Message-ID: <616736b7d9433625a429bc37f0c5120115d02f44.camel@redhat.com>
-Subject: Re: Commit 'Bluetooth: Consolidate encryption handling in
- hci_encrypt_cfm' broke my JBL TUNE500BT headphones
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luiz Augusto Von Dentz <luiz.von.dentz@intel.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
-Date:   Thu, 16 Jul 2020 21:05:03 +0300
-In-Reply-To: <CABBYNZ+YOJQi9a=pU2cc9czH1VoL04SdaXfnDksakCCfxx-skA@mail.gmail.com>
-References: <3635193ecd8c6034731387404825e998df2fd788.camel@redhat.com>
-         <CABBYNZ+YOJQi9a=pU2cc9czH1VoL04SdaXfnDksakCCfxx-skA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Thu, 16 Jul 2020 14:05:50 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B458C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 11:05:50 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id j186so3490762vsd.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 11:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6LJXcaiErt+0IC9WAhFqF+PgHD+Xfmr3j77sKRGuw00=;
+        b=fHBUTi0o7R2ZDnjv7Bf840urtxXMHNAU19jmAKkxEYrc6Pk78KckWPlezDehMCs/1Q
+         hxxgx33laG/g8T4dGc3fZblx3pRHNmBqLsxNbFwE/ZExYBRbTifNAI03v5WghgHjWt30
+         Hxtcg186Z3dmy5Srwbn3Z6rUdC3iK3KE0li2s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6LJXcaiErt+0IC9WAhFqF+PgHD+Xfmr3j77sKRGuw00=;
+        b=p20ZMB2wlrqNdKvZOq23grmATLWvf+dzlPaj6K2eQsaoUYzSYZvSHoUfi8UGp6RSee
+         7pO4fxGCLl7mmRYdEk/mmolaojbwmI+fqG13m4l503LC9mwkfKupg7M561uOXaH4l1M5
+         MSHMf8lgsl92mtNnnpGxHAMF0/voeq1M8+ucDv8HYU+RQU2nRQs243F1l6/5ArMwXxGE
+         CtJDfQZl0mDak1VGcUV6ZHHSf1Fkv4Ope7gTazBl43ByYl+QaFAqhKJv+kwGpZy8+Ypx
+         YDUsrdv3Okthg9qXjDusSUoFaJxjwtM+zxJJcoktqI53Atvb0nuSsAVGDnKXEQx6xsjJ
+         c2kw==
+X-Gm-Message-State: AOAM531Ne1dcF6owRbmQnOzRklIsrc42KHUXV03GrTPbVMSuUBcpMLAY
+        1lhs0lJPpvddjZ3wjhoV1NiIr9JB0vQ=
+X-Google-Smtp-Source: ABdhPJw87V5CCY6CNHvEKBgT5t7yUL4sNJEMFeQNWv+DGuFQpfrMLzHUvv4+dFJGgj/H7/XwZcf5Sg==
+X-Received: by 2002:a67:7fd5:: with SMTP id a204mr4164494vsd.97.1594922748831;
+        Thu, 16 Jul 2020 11:05:48 -0700 (PDT)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id v9sm668536vsi.4.2020.07.16.11.05.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 11:05:47 -0700 (PDT)
+Received: by mail-ua1-f43.google.com with SMTP id b24so2057847uak.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 11:05:46 -0700 (PDT)
+X-Received: by 2002:ab0:486d:: with SMTP id c42mr4460815uad.64.1594922746099;
+ Thu, 16 Jul 2020 11:05:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200716061445.628709-1-cychiang@chromium.org>
+In-Reply-To: <20200716061445.628709-1-cychiang@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 16 Jul 2020 11:05:34 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U6oStCh3kyoM-jLEsRrYgnKvUNiQFOqxXm409gDUhcGA@mail.gmail.com>
+Message-ID: <CAD=FV=U6oStCh3kyoM-jLEsRrYgnKvUNiQFOqxXm409gDUhcGA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add lpass cpu node for I2S driver
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Ajit Pandey <ajitp@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-16 at 09:16 -0700, Luiz Augusto von Dentz wrote:
-> Hi Maxim,
-> 
-> On Thu, Jul 16, 2020 at 1:29 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
-> > Hi,
-> > 
-> > Few days ago I bisected a recent regression in the 5.8 kernel:
-> > 
-> > git bisect start
-> > # good: [3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162] Linux 5.7
-> > git bisect good 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
-> > # bad: [dcde237b9b0eb1d19306e6f48c0a4e058907619f] Merge tag 'perf-tools-fixes-2020-07-07' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux
-> > git bisect bad dcde237b9b0eb1d19306e6f48c0a4e058907619f
-> > # bad: [a0a4d17e02a80a74a63c7cbb7bc8cea2f0b7d8b1] Merge branch 'pcmcia-next' of git://git.kernel.org/pub/scm/linux/kernel/git/brodo/linux
-> > git bisect bad a0a4d17e02a80a74a63c7cbb7bc8cea2f0b7d8b1
-> > # good: [09587a09ada2ed7c39aedfa2681152b5ac5641ee] arm64: mm: use ARCH_HAS_DEBUG_WX instead of arch defined
-> > git bisect good 09587a09ada2ed7c39aedfa2681152b5ac5641ee
-> > # good: [3248044ecf9f91900be5678919966715f1fb8834] Merge tag 'wireless-drivers-next-2020-05-25' of git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next
-> > git bisect good 3248044ecf9f91900be5678919966715f1fb8834
-> > # bad: [cb8e59cc87201af93dfbb6c3dccc8fcad72a09c2] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
-> > git bisect bad cb8e59cc87201af93dfbb6c3dccc8fcad72a09c2
-> > # bad: [b8215dce7dfd817ca38807f55165bf502146cd68] selftests/bpf, flow_dissector: Close TAP device FD after the test
-> > git bisect bad b8215dce7dfd817ca38807f55165bf502146cd68
-> > # good: [b8ded9de8db34dd209a3dece94cf54fc414e78f7] net/smc: pre-fetch send buffer outside of send_lock
-> > git bisect good b8ded9de8db34dd209a3dece94cf54fc414e78f7
-> > # good: [1079a34c56c535c3e27df8def0d3c5069d2de129] Merge tag 'mac80211-next-for-davem-2020-05-31' of git://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211-next
-> > git bisect good 1079a34c56c535c3e27df8def0d3c5069d2de129
-> > # bad: [f395b69f40f580491ef56f2395a98e3189baa53c] dpaa2-eth: Add PFC support through DCB ops
-> > git bisect bad f395b69f40f580491ef56f2395a98e3189baa53c
-> > # bad: [a74d19ba7c41b6c1e424ef4fb7d4600f43ff75e5] net: fec: disable correct clk in the err path of fec_enet_clk_enable
-> > git bisect bad a74d19ba7c41b6c1e424ef4fb7d4600f43ff75e5
-> > # bad: [dafe2078a75af1abe4780313ef8dd8491ba8598f] ipv4: nexthop: Fix deadcode issue by performing a proper NULL check
-> > git bisect bad dafe2078a75af1abe4780313ef8dd8491ba8598f
-> > # bad: [feac90d756c03b03b83fabe83571bd88ecc96b78] Bluetooth: hci_qca: Fix suspend/resume functionality failure
-> > git bisect bad feac90d756c03b03b83fabe83571bd88ecc96b78
-> > # good: [a228f7a410290d836f3a9f9b1ed5aef1aab25cc7] Bluetooth: hci_qca: Enable WBS support for wcn3991
-> > git bisect good a228f7a410290d836f3a9f9b1ed5aef1aab25cc7
-> > # bad: [755dfcbca83710fa967d0efa7c5bb601f871a747] Bluetooth: Fix assuming EIR flags can result in SSP authentication
-> > git bisect bad 755dfcbca83710fa967d0efa7c5bb601f871a747
-> > # bad: [3ca44c16b0dcc764b641ee4ac226909f5c421aa3] Bluetooth: Consolidate encryption handling in hci_encrypt_cfm
-> > git bisect bad 3ca44c16b0dcc764b641ee4ac226909f5c421aa3
-> > # first bad commit: [3ca44c16b0dcc764b641ee4ac226909f5c421aa3] Bluetooth: Consolidate encryption handling in hci_encrypt_cfm
-> 
-> We just merged a fix for that:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git/commit/?id=339ddaa626995bc6218972ca241471f3717cc5f4
+Hi,
 
-Perfect. I tested the fix and it works well.
-Do you plan to send this for inclusion to 5.8 kernel?
+On Wed, Jul 15, 2020 at 11:14 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
+>
+> From: Ajit Pandey <ajitp@codeaurora.org>
+>
+> Add the I2S controller node to sc7180 dtsi.
+> Add pinmux for pirmary and secondary I2S.
 
-Best regards,
-	Maxim Levitsky
+s/pirmary/primary
+
+>
+> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
+> This patch depends on these patch series so it is not ready to be merged now.
+> - clk: qcom: Support for Low Power Audio Clocks on SC7180 https://patchwork.kernel.org/cover/11664273/
+> - arm64: dts: qcom: sc7180: Add LPASS clock controller nodes https://patchwork.kernel.org/patch/11664303/
+> - ASoC: qcom: Add support for SC7180 lpass variant https://patchwork.kernel.org/cover/11650649/
+
+Thanks for pointing out the dependencies!
 
 
-> 
-> > The sympthoms are that I am unable to pair the headphones, and even if I use an older kernel
-> > to pair them, and then switch to the new kernel, the connection is established only sometimes.
-> > 
-> > Without this commit, I can pair the headphones 100% of the time.
-> > 
-> > I am not familiar with bluetooth debugging but I am willing to provide
-> > any logs, do tests and try patches.
-> > 
-> > I am running fedora 32 on the affected system which has built-in intel wireless/bluetooth card,
-> > 
-> > PCI (wifi) part:
-> > 47:00.0 Network controller: Intel Corporation Wi-Fi 6 AX200 (rev 1a)
-> > 
-> > USB (bluetooth) parrt:
-> > Bus 011 Device 004: ID 8087:0029 Intel Corp.
-> > 
-> > My .config attached (custom built kernel)
-> > 
-> > Best regards,
-> >         Maxim Levitsky
-> > 
-> 
-> 
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 132 +++++++++++++++++++++++++++
+>  1 file changed, 132 insertions(+)
+
+My review is a bit rote since I don't actually know anything about
+audio.  This is mostly just a dt-hygiene review.
 
 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 6eb14b6a47f5..2fe3bd89f950 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -511,6 +511,34 @@ qusb2p_hstx_trim: hstx-trim-primary@25b {
+>                         };
+>                 };
+>
+> +               lpass_cpu: lpass {
+
+Missing unit address and also sorted incorrectly.  Nodes should be
+sorted by unit address.
+
+
+> +                       compatible = "qcom,lpass-cpu-sc7180";
+
+Is there a pin config that generally makes sense for all boards?  If
+so, you can add it here so it doesn't need to be added to all
+sub-boards.
+
+
+> +                       reg = <0 0x62F00000 0 0x29000>;
+
+nit: lower case hex for reg address, so 62f not 62F.
+
+
+> +                       reg-names = "lpass-lpaif";
+> +
+> +                       iommus = <&apps_smmu 0x1020 0>;
+> +
+> +                       power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
+> +
+> +                       status = "disabled";
+> +
+> +                       clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
+> +                                <&lpasscc LPASS_AUDIO_CORE_CORE_CLK>,
+> +                                <&lpasscc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
+> +                                <&lpasscc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
+> +                                <&lpasscc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
+> +                                <&lpasscc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
+> +
+> +                       clock-names = "noc", "audio-core", "mclk0", "sysnoc_mport",
+> +                                     "pri_ibit", "sec_ibit";
+> +
+> +                       #sound-dai-cells = <1>;
+> +
+> +                       interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
+
+First entry of interrupts should be GIC_SPI, which is what 0 is referring to.
+
+
+> +                       interrupt-names = "lpass-irq-lpaif";
+> +               };
+
+Bindings claim you're supposed to have:
+
+#address-cells = <1>;
+#size-cells = <0>;
+
+Do you not need them for some reason?
+
+
+>                 sdhc_1: sdhci@7c4000 {
+>                         compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+>                         reg = <0 0x7c4000 0 0x1000>,
+> @@ -1357,6 +1385,110 @@ pinmux {
+>                                 };
+>                         };
+>
+> +                       sec_mi2s_active: sec-mi2s-active {
+> +                               pinmux {
+> +                                       pins = "gpio49";
+> +                                       function = "mi2s_1";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio49";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       sec_mi2s_ws_active: sec-mi2s-ws-active {
+> +                               pinmux {
+> +                                       pins = "gpio50";
+> +                                       function = "mi2s_1";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio50";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       sec_mi2s_dout_active: sec-mi2s-dout-active {
+> +                               pinmux {
+> +                                       pins = "gpio51";
+> +                                       function = "mi2s_1";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio51";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       pri_mi2s_active: pri-mi2s-active {
+> +                               pinmux {
+> +                                       pins = "gpio53";
+> +                                       function = "mi2s_0";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio53";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       pri_mi2s_ws_active: pri-mi2s-ws-active {
+> +                               pinmux {
+> +                                       pins = "gpio54";
+> +                                       function = "mi2s_0";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio54";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       pri_mi2s_dout_active: pri-mi2s-dout-active {
+> +                               pinmux {
+> +                                       pins = "gpio55";
+> +                                       function = "mi2s_0";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio55";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       pri_mi2s_din_active: pri-mi2s-din-active {
+> +                               pinmux {
+> +                                       pins = "gpio56";
+> +                                       function = "mi2s_0";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio56";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+
+Can you group together any of the configs?  See, for instance,
+"qup_spi0_default" where we configure 4 pins together.  Then you don't
+need so many separate nodes to add.
+
+Also: pinconf is nearly always done in board files unless you truly
+have a reason to believe that it would be the same for every board.
+
+
+> +                       pri_mi2s_mclk_active: pri-mi2s-mclk-active {
+> +                               pinmux {
+> +                                       pins = "gpio57";
+> +                                       function = "lpass_ext";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio57";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+>                         sdc1_on: sdc1-on {
+>                                 pinconf-clk {
+>                                         pins = "sdc1_clk";
+
+-Doug
