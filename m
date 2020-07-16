@@ -2,192 +2,184 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158E1C433EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1CBC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFF6D20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFAD12076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:57:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="HvZDSrOg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgGPL5Y (ORCPT
+        id S1728796AbgGPL5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:57:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45238 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728541AbgGPL4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:56:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 11194AEB1;
-        Thu, 16 Jul 2020 11:56:18 +0000 (UTC)
-Date:   Thu, 16 Jul 2020 13:56:13 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Mark Brown <broonie@kernel.org>
-cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
-In-Reply-To: <20200715202821.12220-4-broonie@kernel.org>
-Message-ID: <alpine.LSU.2.21.2007161342290.3958@pobox.suse.cz>
-References: <20200715202821.12220-1-broonie@kernel.org> <20200715202821.12220-4-broonie@kernel.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 16 Jul 2020 07:57:32 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:48348 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728412AbgGPLz6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 07:55:58 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GBp6Mo032017;
+        Thu, 16 Jul 2020 04:55:56 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=VayE/f20mjuKduSHythXIwBfh/PAx7jFdoQFzfHzo3A=;
+ b=HvZDSrOgcvGcTU5l+8LmYit+zfFaKUWkNZdANhhL/VSUkwFEu/FivcpBjDUg7Vg9Bo4A
+ IbFmftI+ysBex7IYEeHSP4V5p08hgyU4FpmriSuITY7M3H0ZjNR4QY7I67AlxBJg51ln
+ JHV67jTw+3nfN252atqpyO0sfzHOLRAlQCpX9T3hpwKlYLY1mLgj6RcZPABnielFfo41
+ 30ChZyPm9qteVoXBHRdMceSiXFVkjE7yux0VeOSUdeLQN8tSXYmmzimAHYw1DccnyCyZ
+ DsyPgCW8dd2hbDaeGJwPjgcxm7IPsANnFMdbFiXFOtDyxibdUBFBzJTyB/a98gOQcGbS Zg== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 32ap7v81pv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 04:55:56 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 16 Jul
+ 2020 04:55:55 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 16 Jul
+ 2020 04:55:54 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 16 Jul 2020 04:55:54 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id 394023F703F;
+        Thu, 16 Jul 2020 04:55:49 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        <GR-everest-linux-l2@marvell.com>,
+        <QLogic-Storage-Upstream@cavium.com>, <netdev@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next 04/13] qed: use transceiver data to fill link partner's advertising speeds
+Date:   Thu, 16 Jul 2020 14:54:37 +0300
+Message-ID: <20200716115446.994-5-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200716115446.994-1-alobakin@marvell.com>
+References: <20200716115446.994-1-alobakin@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_05:2020-07-16,2020-07-16 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Currently qed driver does not take into consideration transceiver's
+capabilities when generating link partner's speed advertisement. This
+leads to e.g. incorrect ethtool link info on 10GbaseT modules.
+Use transceiver info not only for advertisement and support arrays, but
+also for link partner's abilities to fix it.
 
-On Wed, 15 Jul 2020, Mark Brown wrote:
+Misc: fix a couple of comments nearby.
 
-> Historically architectures have had duplicated code in their stack trace
-> implementations for filtering what gets traced. In order to avoid this
-> duplication some generic code has been provided using a new interface
-> arch_stack_walk(), enabled by selecting ARCH_STACKWALK in Kconfig, which
-> factors all this out into the generic stack trace code. Convert arm64
-> to use this common infrastructure.
-> 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  arch/arm64/Kconfig             |  1 +
->  arch/arm64/kernel/stacktrace.c | 79 ++++------------------------------
->  2 files changed, 9 insertions(+), 71 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 5d4f02b3dfe9..6ed4b6c6df95 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -29,6 +29,7 @@ config ARM64
->  	select ARCH_HAS_SETUP_DMA_OPS
->  	select ARCH_HAS_SET_DIRECT_MAP
->  	select ARCH_HAS_SET_MEMORY
-> +	select ARCH_STACKWALK
->  	select ARCH_HAS_STRICT_KERNEL_RWX
->  	select ARCH_HAS_STRICT_MODULE_RWX
->  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
-> diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-> index 743cf11fbfca..a33fba048954 100644
-> --- a/arch/arm64/kernel/stacktrace.c
-> +++ b/arch/arm64/kernel/stacktrace.c
-> @@ -133,82 +133,19 @@ void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
->  NOKPROBE_SYMBOL(walk_stackframe);
->  
->  #ifdef CONFIG_STACKTRACE
-> -struct stack_trace_data {
-> -	struct stack_trace *trace;
-> -	unsigned int no_sched_functions;
-> -	unsigned int skip;
-> -};
->  
-> -static bool save_trace(void *d, unsigned long addr)
-> +void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
-> +		     struct task_struct *task, struct pt_regs *regs)
->  {
-> -	struct stack_trace_data *data = d;
-> -	struct stack_trace *trace = data->trace;
-> -
-> -	if (data->no_sched_functions && in_sched_functions(addr))
-> -		return false;
-> -	if (data->skip) {
-> -		data->skip--;
-> -		return false;
-> -	}
-> -
-> -	trace->entries[trace->nr_entries++] = addr;
-> -
-> -	return trace->nr_entries >= trace->max_entries;
-> -}
-> -
-> -void save_stack_trace_regs(struct pt_regs *regs, struct stack_trace *trace)
-> -{
-> -	struct stack_trace_data data;
-> -	struct stackframe frame;
-> -
-> -	data.trace = trace;
-> -	data.skip = trace->skip;
-> -	data.no_sched_functions = 0;
-> -
-> -	start_backtrace(&frame, regs->regs[29], regs->pc);
-> -	walk_stackframe(current, &frame, save_trace, &data);
-> -}
-> -EXPORT_SYMBOL_GPL(save_stack_trace_regs);
-> -
-> -static noinline void __save_stack_trace(struct task_struct *tsk,
-> -	struct stack_trace *trace, unsigned int nosched)
-> -{
-> -	struct stack_trace_data data;
->  	struct stackframe frame;
->  
-> -	if (!try_get_task_stack(tsk))
-> -		return;
-> +	if (regs)
-> +		start_backtrace(&frame, regs->regs[29], regs->pc);
-> +	else
-> +		start_backtrace(&frame, thread_saved_fp(task),
-> +				thread_saved_pc(task));
->  
-> -	data.trace = trace;
-> -	data.skip = trace->skip;
-> -	data.no_sched_functions = nosched;
-> -
-> -	if (tsk != current) {
-> -		start_backtrace(&frame, thread_saved_fp(tsk),
-> -				thread_saved_pc(tsk));
-> -	} else {
-> -		/* We don't want this function nor the caller */
-> -		data.skip += 2;
-> -		start_backtrace(&frame,
-> -				(unsigned long)__builtin_frame_address(0),
-> -				(unsigned long)__save_stack_trace);
-> -	}
-> -
-> -	walk_stackframe(tsk, &frame, save_trace, &data);
-> -
-> -	put_task_stack(tsk);
-> -}
-> -
-> -void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
-> -{
-> -	__save_stack_trace(tsk, trace, 1);
-> -}
-> -EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
-> -
-> -void save_stack_trace(struct stack_trace *trace)
-> -{
-> -	__save_stack_trace(current, trace, 0);
-> +	walk_stackframe(task, &frame, consume_entry, cookie);
->  }
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+---
+ drivers/net/ethernet/qlogic/qed/qed_main.c | 49 +++++++++++++---------
+ 1 file changed, 29 insertions(+), 20 deletions(-)
 
-just an idea for further improvement (and it might be a matter of taste). 
-Wouldn't it be slightly better to do one more step and define "struct 
-unwind_state" instead of "struct stackframe" and also some iterator for 
-the unwinding and use that right in new arch_stack_walk() instead of 
-walk_stackframe()? I mean, take the unbounded loop, "inline" it to 
-arch_stack_walk() and replace the loop with the iterator. The body of the 
-iterator would call to unwind_frame() and consume_entry() and that's it. 
-It would make arm64 implementation very similar to x86 and s390 and thus 
-easier to follow when one switches between architectures all the time.
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
+index 9df27c3f5cab..1639210044a7 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_main.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+@@ -1870,6 +1870,27 @@ static void qed_fill_link_capability(struct qed_hwfn *hwfn,
+ 	}
+ }
+ 
++static void qed_lp_caps_to_speed_mask(u32 caps, u32 *speed_mask)
++{
++	*speed_mask = 0;
++
++	if (caps &
++	    (QED_LINK_PARTNER_SPEED_1G_FD | QED_LINK_PARTNER_SPEED_1G_HD))
++		*speed_mask |= NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_1G;
++	if (caps & QED_LINK_PARTNER_SPEED_10G)
++		*speed_mask |= NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_10G;
++	if (caps & QED_LINK_PARTNER_SPEED_20G)
++		*speed_mask |= NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_20G;
++	if (caps & QED_LINK_PARTNER_SPEED_25G)
++		*speed_mask |= NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_25G;
++	if (caps & QED_LINK_PARTNER_SPEED_40G)
++		*speed_mask |= NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_40G;
++	if (caps & QED_LINK_PARTNER_SPEED_50G)
++		*speed_mask |= NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_50G;
++	if (caps & QED_LINK_PARTNER_SPEED_100G)
++		*speed_mask |= NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_BB_100G;
++}
++
+ static void qed_fill_link(struct qed_hwfn *hwfn,
+ 			  struct qed_ptt *ptt,
+ 			  struct qed_link_output *if_link)
+@@ -1877,7 +1898,7 @@ static void qed_fill_link(struct qed_hwfn *hwfn,
+ 	struct qed_mcp_link_capabilities link_caps;
+ 	struct qed_mcp_link_params params;
+ 	struct qed_mcp_link_state link;
+-	u32 media_type;
++	u32 media_type, speed_mask;
+ 
+ 	memset(if_link, 0, sizeof(*if_link));
+ 
+@@ -1908,13 +1929,18 @@ static void qed_fill_link(struct qed_hwfn *hwfn,
+ 	else
+ 		__clear_bit(QED_LM_Autoneg, if_link->advertised_caps);
+ 
+-	/* Fill link advertised capability*/
++	/* Fill link advertised capability */
+ 	qed_fill_link_capability(hwfn, ptt, params.speed.advertised_speeds,
+ 				 if_link->advertised_caps);
+-	/* Fill link supported capability*/
++
++	/* Fill link supported capability */
+ 	qed_fill_link_capability(hwfn, ptt, link_caps.speed_capabilities,
+ 				 if_link->supported_caps);
+ 
++	/* Fill partner advertised capability */
++	qed_lp_caps_to_speed_mask(link.partner_adv_speed, &speed_mask);
++	qed_fill_link_capability(hwfn, ptt, speed_mask, if_link->lp_caps);
++
+ 	if (link.link_up)
+ 		if_link->speed = link.speed;
+ 
+@@ -1932,23 +1958,6 @@ static void qed_fill_link(struct qed_hwfn *hwfn,
+ 	if (params.pause.forced_tx)
+ 		if_link->pause_config |= QED_LINK_PAUSE_TX_ENABLE;
+ 
+-	/* Link partner capabilities */
+-
+-	if (link.partner_adv_speed & QED_LINK_PARTNER_SPEED_1G_FD)
+-		__set_bit(QED_LM_1000baseT_Full, if_link->lp_caps);
+-	if (link.partner_adv_speed & QED_LINK_PARTNER_SPEED_10G)
+-		__set_bit(QED_LM_10000baseKR_Full, if_link->lp_caps);
+-	if (link.partner_adv_speed & QED_LINK_PARTNER_SPEED_20G)
+-		__set_bit(QED_LM_20000baseKR2_Full, if_link->lp_caps);
+-	if (link.partner_adv_speed & QED_LINK_PARTNER_SPEED_25G)
+-		__set_bit(QED_LM_25000baseKR_Full, if_link->lp_caps);
+-	if (link.partner_adv_speed & QED_LINK_PARTNER_SPEED_40G)
+-		__set_bit(QED_LM_40000baseLR4_Full, if_link->lp_caps);
+-	if (link.partner_adv_speed & QED_LINK_PARTNER_SPEED_50G)
+-		__set_bit(QED_LM_50000baseKR2_Full, if_link->lp_caps);
+-	if (link.partner_adv_speed & QED_LINK_PARTNER_SPEED_100G)
+-		__set_bit(QED_LM_100000baseKR4_Full, if_link->lp_caps);
+-
+ 	if (link.an_complete)
+ 		__set_bit(QED_LM_Autoneg, if_link->lp_caps);
+ 	if (link.partner_adv_pause)
+-- 
+2.25.1
 
-Tangential to this patch, but another idea for improvement is in 
-unwind_frame(). If I am not missing something, everything in 
-CONFIG_FUNCTION_GRAPH_TRACER could be replaced by a simple call to 
-ftrace_graph_ret_addr(). Again see for example unwind_next_frame() in
-arch/s390/kernel/unwind_bc.c (x86 has it too).
-
-Regards
-Miroslav
