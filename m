@@ -2,114 +2,376 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2452CC433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5789AC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F38712074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:32:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qhkyJ6FK"
+	by mail.kernel.org (Postfix) with ESMTP id 344BF2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbgGPTcZ (ORCPT
+        id S1729723AbgGPTcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:32:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38104 "EHLO
+        Thu, 16 Jul 2020 15:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729376AbgGPTcY (ORCPT
+        with ESMTP id S1729376AbgGPTcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:32:24 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C684CC061755;
-        Thu, 16 Jul 2020 12:32:23 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id g20so5621199edm.4;
-        Thu, 16 Jul 2020 12:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Er29iuItgybp037jv9kMz4TXZ3T9JN/1wmnIzHGCcJY=;
-        b=qhkyJ6FK0Xl4wfWxID9ZGqoG1uEOS27tzc2LQi40P5VfNsimjcF09y75b1Ue5NBVEP
-         rt2u26m+Lm9cGs9krQqAp2wY4zOxZXI9HapMaEERG4uBzEGAtncO3lmJEEubNJu4Y3yH
-         naSlufnOgutcP61Y9bZsB6RFX6D3ukm2jnRc9Gi5IAgiFqO+PVWlYIEt/8+KM9NMyKVb
-         6jrpw79OHfoxmiQ6N45bzqavSzThUkUV0owpZ74fIvPkvrnrlItx2rzkHhJZWjdBx7LD
-         qYYMsQUJyW5CtCQnuNKSot0ya0XuxlLHQzDAiNHxdBDXBnbfbszGfYkVpBcUIvXFqlIk
-         JBmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Er29iuItgybp037jv9kMz4TXZ3T9JN/1wmnIzHGCcJY=;
-        b=k86y7vJSm/IL0YYi6zWn5XejN7EM69FLQRU+8GhjSBSM60rJ4JwO0DNQDaiG8SHp8O
-         0pQ424Sf9y5f9TYfJ4Q/zDSAT6YvWndnHETyUaQpMa6BP9WJKbYBp0ncIaExbtFSGVYy
-         wvX3Zouwkptc0rg0KC4YjkW28Fp4E3IpPPAFMx5H9TOxWbFp9/Cy9mW9EnNMJd+PM0s3
-         9Tzn2ONpqhAEIiF5eVl4fDE8Dq/7Ke+VkpYPkxBlAY5AIS5NW2tUahJBHDnJLUt/KaHw
-         XhDslodD5bQvK9eymTEbaxZY6syMVytBocpN1cJyWHaJQsYNg37Evon6hC7jJhQbRQvg
-         dMZw==
-X-Gm-Message-State: AOAM533jq3PcUtH6ENm7GdjvKpeqxuRFZ81SR4hhvmGXrlg2j0NMYjhU
-        481RrWFxL8bju7HqohnHaz4I6U0HEyGspkLzybA=
-X-Google-Smtp-Source: ABdhPJyQeQgkp5aENNOH3sMYdibgQSrdgRTanWuqo6EmsTYow4zD5OiS0EvIETdAm+f0iA6LxJBG84ybjiFQA21OjEg=
-X-Received: by 2002:a05:6402:17f6:: with SMTP id t22mr6089512edy.141.1594927942421;
- Thu, 16 Jul 2020 12:32:22 -0700 (PDT)
+        Thu, 16 Jul 2020 15:32:00 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 765E2C061755;
+        Thu, 16 Jul 2020 12:32:00 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id C8AC22A1A03
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
+        willy@infradead.org, luto@kernel.org, gofmanp@gmail.com,
+        keescook@chromium.org, linux-kselftest@vger.kernel.org,
+        shuah@kernel.org, Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: [PATCH v4 2/2] selftests: Add kselftest for syscall user dispatch
+Date:   Thu, 16 Jul 2020 15:31:41 -0400
+Message-Id: <20200716193141.4068476-3-krisman@collabora.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200716193141.4068476-1-krisman@collabora.com>
+References: <20200716193141.4068476-1-krisman@collabora.com>
 MIME-Version: 1.0
-References: <20200716172611.5349-1-bruno.thomsen@gmail.com>
- <20200716172611.5349-2-bruno.thomsen@gmail.com> <CAOMZO5B7cJmF4e78xbErzBHfMw4MuF09eXti4xAUFcKOGKXqNw@mail.gmail.com>
-In-Reply-To: <CAOMZO5B7cJmF4e78xbErzBHfMw4MuF09eXti4xAUFcKOGKXqNw@mail.gmail.com>
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-Date:   Thu, 16 Jul 2020 21:32:06 +0200
-Message-ID: <CAH+2xPCa2GNgtJ_5hr3dcaXzA+EB4JLfCsqDJQQY4pbxuw-4JQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: imx7: add support for kamstrup flex concentrator
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Bruno Thomsen <bth@kamstrup.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabio,
+Implement functionality tests for syscall user dispatch.  In order to
+make the test portable, refrain from open coding syscall dispatchers and
+calculating glibc memory ranges.
 
-Den tor. 16. jul. 2020 kl. 20.01 skrev Fabio Estevam <festevam@gmail.com>:
-> On Thu, Jul 16, 2020 at 2:26 PM Bruno Thomsen <bruno.thomsen@gmail.com> wrote:
->
-> > Limitations: Ethernet PHY type auto detection does not
-> > work when using reset-{assert-us,deassert-us,gpios}
-> > properties so it's using a fixed PHY type ID for now. Auto
-> > detection worked when using the deprecated FEC properties
-> > phy-reset-{gpios,duration,post-delay}.
->
-> I think we need to understand this better. Why does it fail?
+changes since v3:
+  - Sort entry in Makefile
+  - Add SPDX header
+  - Use __NR_syscalls if available
 
-Yes, we need to locate the root cause.
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+---
+ tools/testing/selftests/Makefile              |   1 +
+ .../syscall_user_dispatch/.gitignore          |   2 +
+ .../selftests/syscall_user_dispatch/Makefile  |   9 +
+ .../selftests/syscall_user_dispatch/config    |   1 +
+ .../syscall_user_dispatch.c                   | 256 ++++++++++++++++++
+ 5 files changed, 269 insertions(+)
+ create mode 100644 tools/testing/selftests/syscall_user_dispatch/.gitignore
+ create mode 100644 tools/testing/selftests/syscall_user_dispatch/Makefile
+ create mode 100644 tools/testing/selftests/syscall_user_dispatch/config
+ create mode 100644 tools/testing/selftests/syscall_user_dispatch/syscall_user_dispatch.c
 
-> I gave a test on an imx6q-sabresd and the Ethernet PHY (AR8031) could
-> be properly detected using reset-{assert-us,deassert-us,gpios}
-> properties inside the mdio node.
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 1195bd85af38..07a3c682f1e4 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -53,6 +53,7 @@ TARGETS += sparc64
+ TARGETS += splice
+ TARGETS += static_keys
+ TARGETS += sync
++TARGETS += syscall_user_dispatch
+ TARGETS += sysctl
+ TARGETS += timens
+ ifneq (1, $(quicktest))
+diff --git a/tools/testing/selftests/syscall_user_dispatch/.gitignore b/tools/testing/selftests/syscall_user_dispatch/.gitignore
+new file mode 100644
+index 000000000000..637f08107add
+--- /dev/null
++++ b/tools/testing/selftests/syscall_user_dispatch/.gitignore
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++syscall_user_dispatch
+diff --git a/tools/testing/selftests/syscall_user_dispatch/Makefile b/tools/testing/selftests/syscall_user_dispatch/Makefile
+new file mode 100644
+index 000000000000..eeb07a791057
+--- /dev/null
++++ b/tools/testing/selftests/syscall_user_dispatch/Makefile
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0
++top_srcdir = ../../../..
++INSTALL_HDR_PATH = $(top_srcdir)/usr
++LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
++
++CFLAGS += -Wall -I$(LINUX_HDR_PATH)
++
++TEST_GEN_PROGS := syscall_user_dispatch
++include ../lib.mk
+diff --git a/tools/testing/selftests/syscall_user_dispatch/config b/tools/testing/selftests/syscall_user_dispatch/config
+new file mode 100644
+index 000000000000..22c4dfe167ca
+--- /dev/null
++++ b/tools/testing/selftests/syscall_user_dispatch/config
+@@ -0,0 +1 @@
++CONFIG_SYSCALL_USER_DISPATCH=y
+diff --git a/tools/testing/selftests/syscall_user_dispatch/syscall_user_dispatch.c b/tools/testing/selftests/syscall_user_dispatch/syscall_user_dispatch.c
+new file mode 100644
+index 000000000000..ed783fc447a2
+--- /dev/null
++++ b/tools/testing/selftests/syscall_user_dispatch/syscall_user_dispatch.c
+@@ -0,0 +1,256 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020 Collabora Ltd.
++ *
++ * Test code for syscall user dispatch
++ */
++
++#define _GNU_SOURCE
++#include <sys/prctl.h>
++#include <sys/sysinfo.h>
++#include <sys/syscall.h>
++#include <signal.h>
++
++#include <asm/unistd.h>
++#include "../kselftest_harness.h"
++
++#ifndef PR_SET_SYSCALL_USER_DISPATCH
++# define PR_SET_SYSCALL_USER_DISPATCH	59
++# define PR_SYS_DISPATCH_OFF	0
++# define PR_SYS_DISPATCH_ON	1
++#endif
++
++#ifndef SYS_USER_DISPATCH
++# define SYS_USER_DISPATCH	2
++#endif
++
++#ifdef __NR_syscalls
++# define MAGIC_SYSCALL_1 (__NR_syscalls + 1) /* Bad Linux syscall number */
++#else
++# define MAGIC_SYSCALL_1 (0xff00)  /* Bad Linux syscall number */
++#endif
++
++#define SYSCALL_DISPATCH_ON(x) ((x) = 1)
++#define SYSCALL_DISPATCH_OFF(x) ((x) = 0)
++
++/* Test Summary:
++ *
++ * - dispatch_trigger_sigsys: Verify if PR_SET_SYSCALL_USER_DISPATCH is
++ *   able to trigger SIGSYS on a syscall.
++ *
++ * - bad_selector: Test that a bad selector value triggers SIGSEGV.
++ *
++ * - bad_prctl_param: Test that the API correctly rejects invalid
++ *   parameters on prctl
++ *
++ * - dispatch_and_return: Test that a syscall is selectively dispatched
++ *   to userspace depending on the value of selector.
++ *
++ * - disable_dispatch: Test that the PR_SYS_DISPATCH_OFF correctly
++ *   disables the dispatcher
++ *
++ * - direct_dispatch_range: Test that a syscall within the allowed range
++ *   can bypass the dispatcher.
++ */
++
++TEST_SIGNAL(dispatch_trigger_sigsys, SIGSYS)
++{
++	char sel = 0;
++	struct sysinfo info;
++	int ret;
++
++	ret = sysinfo(&info);
++	ASSERT_EQ(0, ret);
++
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &sel);
++	ASSERT_EQ(0, ret) {
++		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
++	}
++
++	SYSCALL_DISPATCH_ON(sel);
++
++	sysinfo(&info);
++
++	EXPECT_FALSE(true) {
++		TH_LOG("Unreachable!");
++	}
++}
++
++TEST_SIGNAL(bad_selector, SIGSEGV)
++{
++	char sel = -1;
++	long ret;
++
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &sel);
++	ASSERT_EQ(0, ret) {
++		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
++	}
++	EXPECT_FALSE(true) {
++		TH_LOG("Unreachable!");
++	}
++}
++
++TEST(bad_prctl_param)
++{
++	char sel = 0;
++	int op;
++
++	/* Invalid op */
++	op = -1;
++	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0, 0, &sel);
++	ASSERT_EQ(EINVAL, errno);
++
++	/* PR_SYS_DISPATCH_OFF */
++	op = PR_SYS_DISPATCH_OFF;
++
++	/* start_addr != 0 */
++	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x1, 0xff, 0);
++	EXPECT_EQ(EINVAL, errno);
++
++	/* end_addr != 0 */
++	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0xff, 0);
++	EXPECT_EQ(EINVAL, errno);
++
++	/* sel != NULL */
++	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0x0, &sel);
++	EXPECT_EQ(EINVAL, errno);
++
++	/* Valid parameter */
++	errno = 0;
++	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0x0, 0x0);
++	EXPECT_EQ(0, errno);
++
++	/* PR_SYS_DISPATCH_ON */
++	op = PR_SYS_DISPATCH_ON;
++
++	/* start_addr > end_addr */
++	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x1, 0x0, &sel);
++	EXPECT_EQ(EINVAL, errno);
++
++	/* Invalid selector */
++	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0x1, (void *) -1);
++	ASSERT_EQ(EFAULT, errno);
++}
++
++/*
++ * Use global selector for handle_sigsys tests, to avoid passing
++ * selector to signal handler
++ */
++char glob_sel;
++int nr_syscalls_emulated;
++int si_code;
++
++static void handle_sigsys(int sig, siginfo_t *info, void *ucontext)
++{
++	si_code = info->si_code;
++
++	if (info->si_syscall == MAGIC_SYSCALL_1)
++		nr_syscalls_emulated++;
++
++	/* In preparation for sigreturn. */
++	SYSCALL_DISPATCH_OFF(glob_sel);
++}
++
++TEST(dispatch_and_return)
++{
++	long ret;
++	struct sigaction act;
++	sigset_t mask;
++
++	glob_sel = 0;
++	nr_syscalls_emulated = 0;
++	si_code = 0;
++
++	memset(&act, 0, sizeof(act));
++	sigemptyset(&mask);
++
++	act.sa_sigaction = handle_sigsys;
++	act.sa_flags = SA_SIGINFO;
++	act.sa_mask = mask;
++
++	ret = sigaction(SIGSYS, &act, NULL);
++	ASSERT_EQ(0, ret);
++
++	/* Make sure selector is good prior to prctl. */
++	SYSCALL_DISPATCH_OFF(glob_sel);
++
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &glob_sel);
++	ASSERT_EQ(0, ret) {
++		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
++	}
++
++	/* MAGIC_SYSCALL_1 doesn't exist. */
++	SYSCALL_DISPATCH_OFF(glob_sel);
++	ret = syscall(MAGIC_SYSCALL_1);
++	EXPECT_EQ(-1, ret) {
++		TH_LOG("Dispatch triggered unexpectedly");
++	}
++
++	/* MAGIC_SYSCALL_1 should be emulated. */
++	nr_syscalls_emulated = 0;
++	SYSCALL_DISPATCH_ON(glob_sel);
++
++	ret = syscall(MAGIC_SYSCALL_1);
++	EXPECT_EQ(MAGIC_SYSCALL_1, ret) {
++		TH_LOG("Failed to intercept syscall");
++	}
++	EXPECT_EQ(1, nr_syscalls_emulated) {
++		TH_LOG("Failed to emulate syscall");
++	}
++	ASSERT_EQ(SYS_USER_DISPATCH, si_code) {
++		TH_LOG("Bad si_code in SIGSYS");
++	}
++}
++
++TEST(disable_dispatch)
++{
++	int ret;
++	struct sysinfo info;
++	char sel = 0;
++
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &sel);
++	ASSERT_EQ(0, ret) {
++		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
++	}
++
++	/* MAGIC_SYSCALL_1 doesn't exist. */
++	SYSCALL_DISPATCH_OFF(glob_sel);
++
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_OFF, 0, 0, 0);
++	EXPECT_EQ(0, ret) {
++		TH_LOG("Failed to unset syscall user dispatch");
++	}
++
++	/* Shouldn't have any effect... */
++	SYSCALL_DISPATCH_ON(glob_sel);
++
++	ret = syscall(__NR_sysinfo, &info);
++	EXPECT_EQ(0, ret) {
++		TH_LOG("Dispatch triggered unexpectedly");
++	}
++}
++
++TEST(direct_dispatch_range)
++{
++	int ret = 0;
++	struct sysinfo info;
++	char sel = 0;
++
++	/*
++	 * Instead of calculating libc addresses; allow the entire
++	 * memory map and lock the selector.
++	 */
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, -1L, &sel);
++	ASSERT_EQ(0, ret) {
++		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
++	}
++
++	SYSCALL_DISPATCH_ON(sel);
++
++	ret = sysinfo(&info);
++	ASSERT_EQ(0, ret) {
++		TH_LOG("Dispatch triggered unexpectedly");
++	}
++}
++
++TEST_HARNESS_MAIN
+-- 
+2.27.0
 
-Okay, thanks.
-
-> Is this a Micrel KSZ8081 specific issue?
-
-Maybe, I'm actually beginning to suspect that the issue might be related
-to polling vs interrupt mode. As all partially related examples I have seen
-uses interrupt mode and I have only configured poll mode. But the hardware
-does have the interrupt signal connected to the imx7.
-
-> Please report this issue to the Ethernet PHY folks.
-
-I'm going to send an Ethernet PHY mail tomorrow with the details I know
-at the moment. Just wanted to get an updated version of the device tree
-out in case of any other issues not related to the PHY part.
-
-/Bruno
