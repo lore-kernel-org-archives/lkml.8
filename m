@@ -2,139 +2,107 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53424C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76291C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29B2E2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:26:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ckUVbs1S"
+	by mail.kernel.org (Postfix) with ESMTP id 531F32074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgGPS0p (ORCPT
+        id S1729387AbgGPS03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:26:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgGPS0o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:26:44 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A9E3C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 11:26:44 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id o1so4238517plk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 11:26:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u7RPi0dZoxrinhSex63VGQU/jKFhdDJaMRbmZIfUlH4=;
-        b=ckUVbs1SYKKOQol/tE9tRtc5oeTZih4Ff7NQoYGxW6jbLLmwjnSe47n+jGbAGH33+4
-         mLqUdJ5ThOXmrJD+8wOd8bzXrL7Ws0PPETbndzpliyoDhBC/g/QxB6PtAVy21rUR6HJP
-         bsqEE74MRfeGMbMd8xduK2QqKHILoswzoxGtQy/TN6q8mzqPrr/Ei1kza0bAlAeuajm9
-         nPz+jgnAYVIBol7r7YAFKi86TwacSkjbN+fhwVDNSg2r2Gq6WgnxpNyLx1JoeAhMwEdd
-         PR+K/ce/b4OY1w8P3z3h4IS8DN82o/18LJbH11Z2h87JJ31AJZlzCID2c/N6A0VUsVy9
-         1LFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u7RPi0dZoxrinhSex63VGQU/jKFhdDJaMRbmZIfUlH4=;
-        b=jQ7ns0UIxVK0ABB096hwIzs3S93MgioS3IxxSA6Nx3Ctlg2G2pofHxcW0lT139/1md
-         EHHsH+pboFn8qqOl8n1hojBtjE6hKAsMpmPz8vWkYRFQi1fyqT2E3xxJXIlHFELYbSdC
-         qYv5LuA++RdLWHDszZLC9WhjXZYkp0WlWO1udJwj99p1IwRERgT9bAhAHfSI00+47qo1
-         7GQNyrvAkpWIdU8K9kCDTOX2BLFuvP1ZEz2UCtzdXVSuoS4W20E2zv1XN+KD5mQSAaWR
-         Z/h7PU+OTF/2pB/jZuc2enquCuA3qeeVbsDs6FPms5cFKYrdCpjSGyk/diOpp39BL2sz
-         3y+A==
-X-Gm-Message-State: AOAM5312MYqAWuPYmmPdLTg1h852MaQNkrbZ7cPayb2hxUzu27vaViyz
-        +HZpqMsHQf0ksOlRHaBv094EFRn/8otaCcHdPvo3zw==
-X-Google-Smtp-Source: ABdhPJzphgbYsjBbvOEjKOBoX4CycazX4k0q+zhWxgzOW4hYyQqYRt/zeen1wGSQbjTtoL2K8TJtDSD4hUyptEaPCfs=
-X-Received: by 2002:a17:90b:3683:: with SMTP id mj3mr6164614pjb.91.1594924003399;
- Thu, 16 Jul 2020 11:26:43 -0700 (PDT)
+        Thu, 16 Jul 2020 14:26:29 -0400
+Received: from mga11.intel.com ([192.55.52.93]:18196 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726986AbgGPS03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 14:26:29 -0400
+IronPort-SDR: qGvNqRlJQCls0Rg38nwEwwzu2z3yh+E6zvWHGaKQvJ0q5Z32KSBoJZTXjQazdcX5AMvNXTIIkM
+ JpIJnIIOr42g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="147461501"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="147461501"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 11:26:27 -0700
+IronPort-SDR: sNRhZZDdubKD2nsinea1jGjgLKdT7PBFxrDpzy+PP6d03Qh4m/FY1Nwk7Bje2doLA36MTzxcdz
+ iN8ZJTJhzuNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="361119837"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 16 Jul 2020 11:26:24 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jw8aO-002CtJ-Lv; Thu, 16 Jul 2020 21:26:24 +0300
+Date:   Thu, 16 Jul 2020 21:26:24 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Wolfram Sang <wsa@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH V1 2/2] i2c: iproc: add slave pec support
+Message-ID: <20200716182624.GT3703480@smile.fi.intel.com>
+References: <20200716080836.2279-1-rayagonda.kokatanur@broadcom.com>
+ <20200716080836.2279-3-rayagonda.kokatanur@broadcom.com>
+ <CAHp75VeXBCqEhfna2mQaHv7bZKOrj+A6KkbCrMAfM=X9+boDjA@mail.gmail.com>
+ <CAHO=5PEMou=a7Kqc=_ZJ8V9FQ=dHA0cJkkojdq91NBsO1Dp3TQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200716050846.2047110-1-saravanak@google.com>
- <CGME20200716053024eucas1p1fc9f469ce40472554cf377e4cd12e1d2@eucas1p1.samsung.com>
- <e3f4469e-8467-1736-8a39-6539b9f542af@roeck-us.net> <99bf8e73-1daa-34b8-ca7e-093a44fdba9b@samsung.com>
-In-Reply-To: <99bf8e73-1daa-34b8-ca7e-093a44fdba9b@samsung.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 16 Jul 2020 11:26:07 -0700
-Message-ID: <CAGETcx9cLdhSWb9zVRrOrqAA2kN+9i3YcuNGmSHVjW3CNZdJhA@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Fix scheduling while atomic warnings
- during device link deletion
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHO=5PEMou=a7Kqc=_ZJ8V9FQ=dHA0cJkkojdq91NBsO1Dp3TQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:48 PM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
->
-> Hi
->
-> On 16.07.2020 07:30, Guenter Roeck wrote:
-> > On 7/15/20 10:08 PM, Saravana Kannan wrote:
-> >> Marek and Guenter reported that commit 287905e68dd2 ("driver core:
-> >> Expose device link details in sysfs") caused sleeping/scheduling while
-> >> atomic warnings.
-> >>
-> >> BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
-> >> in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 12, name: kworker/0:1
-> >> 2 locks held by kworker/0:1/12:
-> >>    #0: ee8074a8 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x174/0x7dc
-> >>    #1: ee921f20 ((work_completion)(&sdp->work)){+.+.}-{0:0}, at: process_one_work+0x174/0x7dc
-> >> Preemption disabled at:
-> >> [<c01b10f0>] srcu_invoke_callbacks+0xc0/0x154
-> >> ----- 8< ----- SNIP
-> >> [<c064590c>] (device_del) from [<c0645c9c>] (device_unregister+0x24/0x64)
-> >> [<c0645c9c>] (device_unregister) from [<c01b10fc>] (srcu_invoke_callbacks+0xcc/0x154)
-> >> [<c01b10fc>] (srcu_invoke_callbacks) from [<c01493c4>] (process_one_work+0x234/0x7dc)
-> >> [<c01493c4>] (process_one_work) from [<c01499b0>] (worker_thread+0x44/0x51c)
-> >> [<c01499b0>] (worker_thread) from [<c0150bf4>] (kthread+0x158/0x1a0)
-> >> [<c0150bf4>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
-> >> Exception stack(0xee921fb0 to 0xee921ff8)
-> >>
-> >> This was caused by the device link device being released in the context
-> >> of srcu_invoke_callbacks().  There is no need to wait till the RCU
-> >> callback to release the device link device.  So release the device
-> >> earlier and revert the RCU callback code to what it was before
-> >> commit 287905e68dd2 ("driver core: Expose device link details in sysfs")
-> >>
-> >> Fixes: 287905e68dd2 ("driver core: Expose device link details in sysfs")
-> >> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> >> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >> ---
-> >> Marek and Guenter,
-> >>
-> >> It haven't had a chance to test this yet. Can one of you please test it
-> >> and confirm it fixes the issue?
-> >>
-> > With this patch applied, the original warning is gone, but I get lots
-> > of other warnings.
-> >
-> > WARNING: CPU: 0 PID: 1 at drivers/base/core.c:1790 device_release+0x94/0xa4^M
-> > Device 'regulators:regulator@0:50038000.ethernet' does not have a release() function, it is broken and must be fixed.
-> >
-> > WARNING: CPU: 0 PID: 1 at drivers/base/core.c:1790 device_release+0x94/0xa4
-> > Device '53f9c000.gpio:50038000.ethernet' does not have a release() function, it is broken and must be fixed.
-> >
-> > WARNING: CPU: 0 PID: 1 at drivers/base/core.c:1790 device_release+0x94/0xa4^M
-> > Device '50030000.tscadc:50030400.tcq' does not have a release() function, it is broken and must be fixed.
->
-> I confirm that I also get such warnings for every platform device in the
-> system with this patch applied to linux next-20200715:
+On Thu, Jul 16, 2020 at 10:49:14PM +0530, Rayagonda Kokatanur wrote:
+> On Thu, Jul 16, 2020 at 3:44 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Thu, Jul 16, 2020 at 11:14 AM Rayagonda Kokatanur
+> > <rayagonda.kokatanur@broadcom.com> wrote:
 
-Sigh... I should refrain from late night coding. I'll send a fix in a few hours.
+...
+> > > -#define S_RX_PEC_ERR_SHIFT           29
+> > > +#define S_RX_PEC_ERR_SHIFT           28
 
--Saravana
+> > This needs to be explained in the commit message, in particular why
+> > this change makes no regression.
+> 
+> I didn't get what do you mean by "no regression", please elaborate.
+
+The definition above has been changed. The point is you have to point out in
+the commit message why it's okay and makes no regression.
+For example, "..._SHIFT is changed to ... according to documentation. Since
+there was no user of it no regression will be made." Provide proper text, b/c
+I have no idea what is exactly the reason of the change and if it's indeed used
+to have no users.
+
+...
+
+> > > +                               ret = bcm_iproc_smbus_check_slave_pec(iproc_i2c,
+> > > +                                                                     val);
+> >
+> > One line looks better.
+> 
+> Yes, but to have 80 char per line, I have to do this.
+
+We have more, but even if you stick with 80 the above is harder to get than if it is one line.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
