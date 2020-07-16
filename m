@@ -2,164 +2,187 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA1EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53760C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2419E20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B962076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:19:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ChXd0Ebn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgGPDRz (ORCPT
+        id S1728144AbgGPDTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:17:55 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8148 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbgGPDRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 23:17:03 -0400
-IronPort-SDR: 21+yi4nCdZLwI0xWpKZXKrd/3PnERlK3UF7ynDZ3wxXZ7TDOmz6dfSTX7NQ5zBKMEEuL7kqmgX
- HClmlru12oLg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="210844846"
-X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="210844846"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 20:17:01 -0700
-IronPort-SDR: nps9WVQV5xIg+UyKTTq75xibVbW6wJLd+so25eSlMl5Dk9ZxhFhb1GkAHWInAVezz8HbE65Kkg
- lAXGE6/1rYSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="360910429"
-Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by orsmga001.jf.intel.com with ESMTP; 15 Jul 2020 20:16:59 -0700
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        jmattson@google.com
-Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [RESEND v13 03/11] KVM: VMX: Set guest CET MSRs per KVM and host configuration
-Date:   Thu, 16 Jul 2020 11:16:19 +0800
-Message-Id: <20200716031627.11492-4-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200716031627.11492-1-weijiang.yang@intel.com>
-References: <20200716031627.11492-1-weijiang.yang@intel.com>
+        Wed, 15 Jul 2020 23:19:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728054AbgGPDTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 23:19:21 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 719BFC061755;
+        Wed, 15 Jul 2020 20:19:21 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id c16so4517845ioi.9;
+        Wed, 15 Jul 2020 20:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hnZOL6HRqScQnYHTHjj8Lsq7JLhMkooWzCSxNal6lJg=;
+        b=ChXd0EbnTGIYNSJ4QMMTQkoXexH8r/VaQw4m2Uo3H4eoG69eUJKMaoi6tbBn0zMzev
+         mYLkKxah5c18A8N2icjH3YYRg1IKfLwoRc3uDjfMuhdIl0/DbKTkKB0KGHzRE0hvEVNQ
+         3JoU9S2ibRhJlcaORQIU/9xthgJHkzV3Fqby19y0MWafr2+GMkK/ly63JljsUFyX9lfr
+         NlKnqmySE+Zzsmaw5QMuKJHcDGPzW4/YWVNq/7LMZz+tRyZghq6WEx8PvTUtsefLcNTR
+         QuUbpdYfg3WEoLViEchqhOIKxK1EKmLzCRg9TPbAMQVGpzHuxtlwzylTI21tmesdCODX
+         NfSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hnZOL6HRqScQnYHTHjj8Lsq7JLhMkooWzCSxNal6lJg=;
+        b=DuoNAlyIxy7/l9twMha8/yXk2iRxrekQcHE1BsLA4zJ3Y/T3lXxfvSMCL1H/3bIqvj
+         fus9Uxwuwtnol/VUFrlqJXt8xTUhPVp2n/rhUgISZHQ5FG2/ZYTbbKNSy8a4ni4lTnrq
+         CauKmF6dihd2rOC3f5uiRTSrd3GoKAZ2gHSepusuUcS6YRjm4v1s8+Ehzvuo4JZEP6ga
+         7PLZ+rkvBiNJ4vaIlLFfZ1prVS9CwgbCWcPfQYYOmpJDcz+m2xw7gpfMnIJOYZkCezLp
+         vaLyF+H+eclqlmXMzt9b9aLeO3l+rAVe+jkodrJRU1DemA/Pt5/fdr6wD+5ME0Y92/qH
+         iSXQ==
+X-Gm-Message-State: AOAM531cuC/3wlpUgJjMstbeXoD732dXX4T+49zoXrHi6sw3MeLlZDR3
+        JT2fXKa4JisRFakaWgxSHAQjDiWIPyRgm12kDcA=
+X-Google-Smtp-Source: ABdhPJykR1pPQktU6DP4xptM8uEyTeohejJ218u/CEGWCWchdeOMVNbjY5zKD2r8UwquIQt7p4UfGUYGyWe20LRC7kg=
+X-Received: by 2002:a02:a797:: with SMTP id e23mr2800056jaj.81.1594869560712;
+ Wed, 15 Jul 2020 20:19:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585649077-10896-1-git-send-email-laoar.shao@gmail.com> <CALvZod6Yn=_fYEM+xN3a+4W2e5CCLkvMXZg_txD3j+dZieX-CQ@mail.gmail.com>
+In-Reply-To: <CALvZod6Yn=_fYEM+xN3a+4W2e5CCLkvMXZg_txD3j+dZieX-CQ@mail.gmail.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 16 Jul 2020 11:18:44 +0800
+Message-ID: <CALOAHbB_Koc8MTCqEg5Ev8mccqCGrBvPieCg+aeogn2PDuKFeg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] psi: enhance psi with the help of ebpf
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CET MSRs pass through guest directly to enhance performance. CET runtime
-control settings are stored in MSR_IA32_{U,S}_CET, Shadow Stack Pointer(SSP)
-are stored in MSR_IA32_PL{0,1,2,3}_SSP, SSP table base address is stored in
-MSR_IA32_INT_SSP_TAB, these MSRs are defined in kernel and re-used here.
+On Thu, Jul 16, 2020 at 12:36 AM Shakeel Butt <shakeelb@google.com> wrote:
+>
+> Hi Yafang,
+>
+> On Tue, Mar 31, 2020 at 3:05 AM Yafang Shao <laoar.shao@gmail.com> wrote:
+> >
+> > PSI gives us a powerful way to anaylze memory pressure issue, but we can
+> > make it more powerful with the help of tracepoint, kprobe, ebpf and etc.
+> > Especially with ebpf we can flexiblely get more details of the memory
+> > pressure.
+> >
+> > In orderc to achieve this goal, a new parameter is added into
+> > psi_memstall_{enter, leave}, which indicates the specific type of a
+> > memstall. There're totally ten memstalls by now,
+> >         MEMSTALL_KSWAPD
+> >         MEMSTALL_RECLAIM_DIRECT
+> >         MEMSTALL_RECLAIM_MEMCG
+> >         MEMSTALL_RECLAIM_HIGH
+> >         MEMSTALL_KCOMPACTD
+> >         MEMSTALL_COMPACT
+> >         MEMSTALL_WORKINGSET_REFAULT
+> >         MEMSTALL_WORKINGSET_THRASH
+> >         MEMSTALL_MEMDELAY
+> >         MEMSTALL_SWAPIO
+> > With the help of kprobe or tracepoint to trace this newly added agument we
+> > can know which type of memstall it is and then do corresponding
+> > improvement. I can also help us to analyze the latency spike caused by
+> > memory pressure.
+> >
+> > But note that we can't use it to build memory pressure for a specific type
+> > of memstall, e.g. memcg pressure, compaction pressure and etc, because it
+> > doesn't implement various types of task->in_memstall, e.g.
+> > task->in_memcgstall, task->in_compactionstall and etc.
+> >
+> > Although there're already some tracepoints can help us to achieve this
+> > goal, e.g.
+> >         vmscan:mm_vmscan_kswapd_{wake, sleep}
+> >         vmscan:mm_vmscan_direct_reclaim_{begin, end}
+> >         vmscan:mm_vmscan_memcg_reclaim_{begin, end}
+> >         /* no tracepoint for memcg high reclaim*/
+> >         compcation:mm_compaction_kcompactd_{wake, sleep}
+> >         compcation:mm_compaction_begin_{begin, end}
+> >         /* no tracepoint for workingset refault */
+> >         /* no tracepoint for workingset thrashing */
+> >         /* no tracepoint for use memdelay */
+> >         /* no tracepoint for swapio */
+> > but psi_memstall_{enter, leave} gives us a unified entrance for all
+> > types of memstall and we don't need to add many begin and end tracepoints
+> > that hasn't been implemented yet.
+> >
+> > Patch #2 gives us an example of how to use it with ebpf. With the help of
+> > ebpf we can trace a specific task, application, container and etc. It also
+> > can help us to analyze the spread of latencies and whether they were
+> > clustered at a point of time or spread out over long periods of time.
+> >
+> > To summarize, with the pressure data in /proc/pressure/memroy we know that
+> > the system is under memory pressure, and then with the newly added tracing
+> > facility in this patchset we can get the reason of this memory pressure,
+> > and then thinks about how to make the change.
+> > The workflow can be illustrated as bellow.
+> >
+> >                    REASON         ACTION
+> >                  | compcation   | improve compcation    |
+> >                  | vmscan       | improve vmscan        |
+> > Memory pressure -| workingset   | improve workingset    |
+> >                  | etc          | ...                   |
+> >
+>
+> I have not looked at the patch series in detail but I wanted to get
+> your thoughts if it is possible to achieve what I am trying to do with
+> this patch series.
+>
+> At the moment I am only interested in global reclaim and I wanted to
+> enable alerts like "alert if there is process stuck in global reclaim
+> for x seconds in last y seconds window" or "alert if all the processes
+> are stuck in global reclaim for some z seconds".
+>
+> I see that using this series I can identify global reclaim but I am
+> wondering if alert or notifications are possible. Android is using psi
+> monitors for such alerts but it does not use cgroups, so, most of the
+> memstalls are related to global reclaim stall. For cgroup environment,
+> do we need for add support to psi monitor similar to this patch
+> series?
+>
 
-MSR_IA32_U_CET and MSR_IA32_PL3_SSP are used for user-mode protection,the MSR
-contents are switched between threads during scheduling, it makes sense to pass
-through them so that the guest kernel can use xsaves/xrstors to operate them
-efficiently. Other MSRs are used for non-user mode protection. See SDM for detailed
-info.
+Hi Shakeel,
 
-The difference between CET VMCS fields and CET MSRs is that,the former are used
-during VMEnter/VMExit, whereas the latter are used for CET state storage between
-task/thread scheduling.
+We use the PSI tracepoints in our kernel to analyze the individual
+latency caused by memory pressure, but the PSI tracepoints are
+implemented with a new version as bellow:
+    trace_psi_memstall_enter(_RET_IP_);
+    trace_psi_memstall_leave(_RET_IP_);
+And then using the _RET_IP_ to identify the specific PSI type.
 
-Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
----
- arch/x86/kvm/vmx/vmx.c | 46 ++++++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/x86.c     |  3 +++
- 2 files changed, 49 insertions(+)
+If the _RET_IP_ is at try_to_free_mem_cgroup_pages(), then it means
+the pressure caused by the memory cgroup, IOW, the limit of memcg is
+reached and it has to do memcg reclaim. Otherwise we can consider it
+as global memory pressure.
+try_to_free_mem_cgroup_pages
+    psi_memstall_enter
+        if (static_branch_likely(&psi_disabled))
+            return;
+        *flags = current->in_memstall;
+         if (*flags)
+             return;
+         trace_psi_memstall_enter(_RET_IP_);  <<<<< memcg pressure
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 13745f2a5ecd..a9f135c52cbc 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3126,6 +3126,13 @@ void vmx_load_mmu_pgd(struct kvm_vcpu *vcpu, unsigned long pgd)
- 		vmcs_writel(GUEST_CR3, guest_cr3);
- }
- 
-+static bool is_cet_state_supported(struct kvm_vcpu *vcpu, u32 xss_states)
-+{
-+	return ((supported_xss & xss_states) &&
-+		(guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-+		guest_cpuid_has(vcpu, X86_FEATURE_IBT)));
-+}
-+
- int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -7230,6 +7237,42 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
- 		vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
- }
- 
-+static void vmx_update_intercept_for_cet_msr(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-+	bool incpt;
-+
-+	incpt = !is_cet_state_supported(vcpu, XFEATURE_MASK_CET_USER);
-+	/*
-+	 * U_CET is required for USER CET, and U_CET, PL3_SPP are bound as
-+	 * one component and controlled by IA32_XSS[bit 11].
-+	 */
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW,
-+				  incpt);
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW,
-+				  incpt);
-+
-+	incpt = !is_cet_state_supported(vcpu, XFEATURE_MASK_CET_KERNEL);
-+	/*
-+	 * S_CET is required for KERNEL CET, and PL0_SSP ... PL2_SSP are
-+	 * bound as one component and controlled by IA32_XSS[bit 12].
-+	 */
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW,
-+				  incpt);
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW,
-+				  incpt);
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW,
-+				  incpt);
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW,
-+				  incpt);
-+
-+	incpt |= !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK);
-+	/* SSP_TAB is only available for KERNEL SHSTK.*/
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB, MSR_TYPE_RW,
-+				  incpt);
-+}
-+
- static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -7268,6 +7311,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- 			vmx_set_guest_msr(vmx, msr, enabled ? 0 : TSX_CTRL_RTM_DISABLE);
- 		}
- 	}
-+
-+	if (supported_xss & (XFEATURE_MASK_CET_KERNEL | XFEATURE_MASK_CET_USER))
-+		vmx_update_intercept_for_cet_msr(vcpu);
- }
- 
- static __init void vmx_set_cpu_caps(void)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 88c593f83b28..ea8a9dc9fbad 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -184,6 +184,9 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
- 				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
- 				| XFEATURE_MASK_PKRU)
- 
-+#define KVM_SUPPORTED_XSS       (XFEATURE_MASK_CET_USER | \
-+				 XFEATURE_MASK_CET_KERNEL)
-+
- u64 __read_mostly host_efer;
- EXPORT_SYMBOL_GPL(host_efer);
- 
+
 -- 
-2.17.2
-
+Thanks
+Yafang
