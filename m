@@ -2,113 +2,124 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE8BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C73C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D809520870
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:36:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1hf64CMC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mVln4EgB"
+	by mail.kernel.org (Postfix) with ESMTP id 5F22F2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594913795;
+	bh=TXWQ7PJ4FaO3GvnSM/6Ywjc/SETPXxQPqMa7IlASHw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N9WLfIFApSOmBT6TSrG10pboAQCloVRCJbdpZdSIXr9WjWX43MYfEtsKtNI7m6wQM
+	 lSQ9CklSt2iWEqaAyqauvEWlGZbJCFs5thOe/QnqeWVeEj324sSiBgaQ7GzuqI8W/Q
+	 m0OF63iIvG3zs7X+ORNqckLmR4PiAgXe40zcjMuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgGPPgm (ORCPT
+        id S1729052AbgGPPgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:36:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34056 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728774AbgGPPgl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:36:41 -0400
-Date:   Thu, 16 Jul 2020 17:36:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594913800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7Znin1qZ+GVKKZWfo8pTR1eebjm4kkJGTUgY2Ff7zFs=;
-        b=1hf64CMCc0Fj0miZJXm5fWlr1x+X4rZ0/8IKFuL23AY19Kkitfbe5vN/cU0LDo5C+vAexw
-        KyRrXl1xcF4oOre+ooBVnfK0hmqYVQJiDWQypcBauUFPgJe3+6xrQdd1l5h17ZF+AbdIeJ
-        WfEw/YRuoQqwRne91sT6xtmjDuxrwkuIpTUGQP1n0i6quu9BmuM8eJy2JB5X4Ot0oCQZfJ
-        ZzM/YkNZ2cOSq/gIjkcKtupxrDIueUCTVKq6pX9roQqm8ZzdEAbo1skjYotJMLzpSl69h/
-        GFN4xb1E7v+/nnbWXCQUAGlloxxRLsLrrKRAof/k//8bSnXcTWsw54kcRSLwHQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594913800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7Znin1qZ+GVKKZWfo8pTR1eebjm4kkJGTUgY2Ff7zFs=;
-        b=mVln4EgByMSCBqxuFMb+Cgh62v5trn1mfRNiJ5PRxrPIdAwcYPe6VY8njXiz9FDZuvohUy
-        PHqWcj7Y0XUj+7CQ==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
- allocator
-Message-ID: <20200716153638.gfh6dzp2h35ygfaa@linutronix.de>
-References: <20200715183537.4010-1-urezki@gmail.com>
- <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
- <20200715190243.GA26735@pc636>
- <20200715193250.axntj7jdt6bw52dr@linutronix.de>
- <20200715221449.GJ9247@paulmck-ThinkPad-P72>
- <20200716141421.fzwf4tedr6rixd6d@linutronix.de>
- <20200716152027.GQ9247@paulmck-ThinkPad-P72>
+        Thu, 16 Jul 2020 11:36:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729008AbgGPPgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:36:33 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B4E62076A;
+        Thu, 16 Jul 2020 15:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594913792;
+        bh=TXWQ7PJ4FaO3GvnSM/6Ywjc/SETPXxQPqMa7IlASHw8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hp2R5CmNy++pACit8wvHR6pZ//aK/fdFMkyktXRfWOV3uNMem15k/ttJIpmJrCx9S
+         C02ZBq4MY98OAELZwxgA2qHVe4p0jOxFRDZN70z36H8pAu/pRU3A3CRAgPglpy4PBk
+         iWYhSLyWRNLh6gBiDPxGbnYrEfvXruGHSRKV+CXs=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 73612403C7; Thu, 16 Jul 2020 12:36:30 -0300 (-03)
+Date:   Thu, 16 Jul 2020 12:36:30 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/17] perf ftrace: add option -t/--tid to filter by
+ thread id
+Message-ID: <20200716153630.GD374956@kernel.org>
+References: <20200711124035.6513-1-changbin.du@gmail.com>
+ <20200711124035.6513-4-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716152027.GQ9247@paulmck-ThinkPad-P72>
+In-Reply-To: <20200711124035.6513-4-changbin.du@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-16 08:20:27 [-0700], Paul E. McKenney wrote:
-> You lost me on this one.  I am instead concerned that something like this
-> might be needed on short notice:
+Em Sat, Jul 11, 2020 at 08:40:21PM +0800, Changbin Du escreveu:
+> This allows us to trace single thread instead of the whole process.
 > 
-> 	raw_spin_lock(&some_lock);
-> 	kfree_rcu(some_pointer, some_field_offset);
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  tools/perf/Documentation/perf-ftrace.txt | 4 ++++
+>  tools/perf/builtin-ftrace.c              | 2 ++
+>  2 files changed, 6 insertions(+)
 > 
-> In contrast, single-argument kfree_rcu() cannot be invoked from any
-> environment where synchronize_rcu() cannot be invoked.
+> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> index d79560dea19f..e204bf6d50d8 100644
+> --- a/tools/perf/Documentation/perf-ftrace.txt
+> +++ b/tools/perf/Documentation/perf-ftrace.txt
+> @@ -38,6 +38,10 @@ OPTIONS
+>  --pid=::
+>  	Trace on existing process id (comma separated list).
+>  
+> +-t::
+> +--tid=::
+> +	Trace on existing thread id (comma separated list).
+> +
 
-I see. We don't have any kfree() in that context as far as I remember.
-We had a few cases in "resize" where you allocate memory, copy content
-and free old memory while under the lock but they are gone.
 
-> > > Yes, dropping to a plain spinlock would be simple in the here and now,
-> > > but experience indicates that it is only a matter of time, and that when
-> > > that time comes it will come as an emergency.
-> > 
-> > Hmmm.
+Humm, I just  tried:
+
+[root@five ~]# yes > /dev/null &
+[1] 18265
+[root@five ~]# perf ftrace --tid 18265
+^C[root@five ~]#
+
+After waiting for a while, nothing, what am I doing wrong?
+
+- Arnaldo
+
+
+>  -a::
+>  --all-cpus::
+>  	Force system-wide collection.  Scripts run without a <command>
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 244cc8e6bd60..1188b82c6541 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -515,6 +515,8 @@ int cmd_ftrace(int argc, const char **argv)
+>  		    "Show available functions to filter"),
+>  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
+>  		   "trace on existing process id"),
+> +	OPT_STRING('t', "tid", &ftrace.target.tid, "tid",
+> +		   "trace on existing thread id (exclusive to --pid)"),
+>  	OPT_INCR('v', "verbose", &verbose,
+>  		 "be more verbose"),
+>  	OPT_BOOLEAN('a', "all-cpus", &ftrace.target.system_wide,
+> -- 
+> 2.25.1
 > 
-> I point out the call_rcu() experience.
-> 
-> > > One approach would be to replace the "IS_ENABLED(CONFIG_PREEMPT_RT)"
-> > > with some sort of check for being in a context where spinlock acquisition
-> > > is not legal.  What could be done along those lines?
-> > 
-> > I would rethink the whole concept how this is implemented now and give
-> > it another try. The code does not look pretty and is looking
-> > complicated. The RT covering of this part then just added a simple
-> > return because nothing else seemed to be possible. This patch here
-> > looks like another duct tape attempt to avoid a warning.
-> 
-> In addition to the possibility of invocation from BH?
 
-Invocation from BH should be possible because network would probably be
-the first user. I don't remember anything wrong with BH if I remember
-correctly.
+-- 
 
-> 							Thanx, Paul
-
-Sebastian
+- Arnaldo
