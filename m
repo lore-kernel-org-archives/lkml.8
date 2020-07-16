@@ -2,347 +2,602 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A66CC433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36201C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7512071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104492071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbgGPRij (ORCPT
+        id S1728867AbgGPRl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:38:39 -0400
-Received: from mga17.intel.com ([192.55.52.151]:8961 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728402AbgGPRij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:38:39 -0400
-IronPort-SDR: 6CkuUBcQfzN0E6KDlCc5iI6lgFGGawrq253DIeJPs/5L00gQFHi773oF2ZLJwqr3m8Qopk6O8u
- EHlP94Nb4P8g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129532090"
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="129532090"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 10:38:36 -0700
-IronPort-SDR: YDRUuERxVNSyk1doULQTKuDaV+UvquAPe0631hrANGzqWu7D/U7FXpaPVVzRQogpgw43RbLzA5
- 6wY3QizvvHmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="325207812"
-Received: from unknown (HELO linuxpc.iind.intel.com) ([10.223.107.108])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Jul 2020 10:38:32 -0700
-From:   Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-To:     rjw@rjwysocki.net, rui.zhang@intel.com,
-        srinivas.pandruvada@linux.intel.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     andriy.shevchenko@intel.com, sumeet.r.pawnikar@intel.com
-Subject: [PATCH v3] powercap: Add Power Limit4 support
-Date:   Thu, 16 Jul 2020 23:14:55 +0530
-Message-Id: <1594921495-519-1-git-send-email-sumeet.r.pawnikar@intel.com>
-X-Mailer: git-send-email 1.7.9.5
+        Thu, 16 Jul 2020 13:41:27 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:43296 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728385AbgGPRl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:41:27 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 44A5920039;
+        Thu, 16 Jul 2020 19:41:20 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 19:41:18 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 09/12] drm/ingenic: Add support for OSD mode
+Message-ID: <20200716174118.GB2235355@ravnborg.org>
+References: <20200716163846.174790-1-paul@crapouillou.net>
+ <20200716163846.174790-9-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716163846.174790-9-paul@crapouillou.net>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8
+        a=7ZqDmCQ5pYAlb7f_WvIA:9 a=V4AImkEgxDfFZ9j0:21 a=beNfZJ9CnbTgBxgd:21
+        a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modern Intel Mobile platforms support power limit4 (PL4), which is
-the SoC package level maximum power limit (in Watts). It can be used
-to preemptively limits potential SoC power to prevent power spikes
-from tripping the power adapter and battery over-current protection.
-This patch enables this feature by exposing package level peak power
-capping control to userspace via RAPL sysfs interface. With this,
-application like DTPF can modify PL4 power limit, the similar way
-of other package power limit (PL1).
-As this feature is not tested on previous generations, here it is
-enabled only for the platform that has been verified to work,
-for safety concerns.
+On Thu, Jul 16, 2020 at 06:38:43PM +0200, Paul Cercueil wrote:
+> All Ingenic SoCs starting from the JZ4725B support OSD mode.
+> 
+> In this mode, two separate planes can be used. They can have different
+> positions and sizes, and one can be overlayed on top of the other.
+> 
+> v2: Use fallthrough; instead of /* fall-through */
+> 
+> v3: - Add custom atomic_tail function to handle case where HW gives no
+>       VBLANK
+>     - Use regmap_set_bits() / regmap_clear_bits() when possible
+>     - Use dma_hwdesc_f{0,1} fields in priv structure instead of array
+>     - Use dmam_alloc_coherent() instead of dma_alloc_coherent()
+>     - Use more meaningful 0xf0 / 0xf1 values as DMA descriptors IDs
+>     - Add a bit more code comments
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-Co-developed-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Reviewed-and-tested-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
-Changes in v3:
- - Addressed review comments from Srinivas.
+Indent is wrong for ingenic_drm_plane_enable().
+One space too much on second line.
+With this fixed:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-Changes in v2:
- - Addressed review comments from Rafael.
- - Made the commit message more clearer.
- - Updated powercap documentation.
----
- Documentation/power/powercap/powercap.rst |   15 +++++---
- drivers/powercap/intel_rapl_common.c      |   54 +++++++++++++++++++++++++++--
- drivers/powercap/intel_rapl_msr.c         |   15 ++++++++
- include/linux/intel_rapl.h                |    5 ++-
- 4 files changed, 81 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/power/powercap/powercap.rst b/Documentation/power/powercap/powercap.rst
-index 7ae3b44c7624..e75d12596dac 100644
---- a/Documentation/power/powercap/powercap.rst
-+++ b/Documentation/power/powercap/powercap.rst
-@@ -167,11 +167,13 @@ For example::
- package-0
- ---------
- 
--The Intel RAPL technology allows two constraints, short term and long term,
--with two different time windows to be applied to each power zone.  Thus for
--each zone there are 2 attributes representing the constraint names, 2 power
--limits and 2 attributes representing the sizes of the time windows. Such that,
--constraint_j_* attributes correspond to the jth constraint (j = 0,1).
-+Depending on different power zones, the Intel RAPL technology allows
-+one or multiple constraints like short term, long term and peak power,
-+with different time windows to be applied to each power zone.
-+All the zones contain attributes representing the constraint names,
-+power limits and the sizes of the time windows. Note that time window
-+is not applicable to peak power. Here, constraint_j_* attributes
-+correspond to the jth constraint (j = 0,1,2).
- 
- For example::
- 
-@@ -181,6 +183,9 @@ For example::
- 	constraint_1_name
- 	constraint_1_power_limit_uw
- 	constraint_1_time_window_us
-+	constraint_2_name
-+	constraint_2_power_limit_uw
-+	constraint_2_time_window_us
- 
- Power Zone Attributes
- =====================
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
-index 61a63a16b5e7..a8bcc58d61f0 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -39,6 +39,8 @@
- #define POWER_HIGH_LOCK         BIT_ULL(63)
- #define POWER_LOW_LOCK          BIT(31)
- 
-+#define POWER_LIMIT4_MASK		0x1FFF
-+
- #define TIME_WINDOW1_MASK       (0x7FULL<<17)
- #define TIME_WINDOW2_MASK       (0x7FULL<<49)
- 
-@@ -82,6 +84,7 @@ enum unit_type {
- 
- static const char pl1_name[] = "long_term";
- static const char pl2_name[] = "short_term";
-+static const char pl4_name[] = "peak_power";
- 
- #define power_zone_to_rapl_domain(_zone) \
- 	container_of(_zone, struct rapl_domain, power_zone)
-@@ -337,6 +340,9 @@ static int set_power_limit(struct powercap_zone *power_zone, int cid,
- 	case PL2_ENABLE:
- 		rapl_write_data_raw(rd, POWER_LIMIT2, power_limit);
- 		break;
-+	case PL4_ENABLE:
-+		rapl_write_data_raw(rd, POWER_LIMIT4, power_limit);
-+		break;
- 	default:
- 		ret = -EINVAL;
- 	}
-@@ -371,6 +377,9 @@ static int get_current_power_limit(struct powercap_zone *power_zone, int cid,
- 	case PL2_ENABLE:
- 		prim = POWER_LIMIT2;
- 		break;
-+	case PL4_ENABLE:
-+		prim = POWER_LIMIT4;
-+		break;
- 	default:
- 		put_online_cpus();
- 		return -EINVAL;
-@@ -440,6 +449,13 @@ static int get_time_window(struct powercap_zone *power_zone, int cid,
- 	case PL2_ENABLE:
- 		ret = rapl_read_data_raw(rd, TIME_WINDOW2, true, &val);
- 		break;
-+	case PL4_ENABLE:
-+		/*
-+		 * Time window parameter is not applicable for PL4 entry
-+		 * so assigining '0' as default value.
-+		 */
-+		val = 0;
-+		break;
- 	default:
- 		put_online_cpus();
- 		return -EINVAL;
-@@ -483,6 +499,9 @@ static int get_max_power(struct powercap_zone *power_zone, int id, u64 *data)
- 	case PL2_ENABLE:
- 		prim = MAX_POWER;
- 		break;
-+	case PL4_ENABLE:
-+		prim = MAX_POWER;
-+		break;
- 	default:
- 		put_online_cpus();
- 		return -EINVAL;
-@@ -492,6 +511,10 @@ static int get_max_power(struct powercap_zone *power_zone, int id, u64 *data)
- 	else
- 		*data = val;
- 
-+	/* As a generalization rule, PL4 would be around two times PL2. */
-+	if (rd->rpl[id].prim_id == PL4_ENABLE)
-+		*data = *data * 2;
-+
- 	put_online_cpus();
- 
- 	return ret;
-@@ -524,12 +547,22 @@ static void rapl_init_domains(struct rapl_package *rp)
- 		rd->id = i;
- 		rd->rpl[0].prim_id = PL1_ENABLE;
- 		rd->rpl[0].name = pl1_name;
--		/* some domain may support two power limits */
--		if (rp->priv->limits[i] == 2) {
-+
-+		/*
-+		 * The PL2 power domain is applicable for limits two
-+		 * and limits three
-+		 */
-+		if (rp->priv->limits[i] >= 2) {
- 			rd->rpl[1].prim_id = PL2_ENABLE;
- 			rd->rpl[1].name = pl2_name;
- 		}
- 
-+		/* Enable PL4 domain if the total power limits are three */
-+		if (rp->priv->limits[i] == 3) {
-+			rd->rpl[2].prim_id = PL4_ENABLE;
-+			rd->rpl[2].name = pl4_name;
-+		}
-+
- 		for (j = 0; j < RAPL_DOMAIN_REG_MAX; j++)
- 			rd->regs[j] = rp->priv->regs[i][j];
- 
-@@ -587,6 +620,8 @@ static u64 rapl_unit_xlate(struct rapl_domain *rd, enum unit_type type,
- 			    RAPL_DOMAIN_REG_LIMIT, POWER_UNIT, 0),
- 	PRIMITIVE_INFO_INIT(POWER_LIMIT2, POWER_LIMIT2_MASK, 32,
- 			    RAPL_DOMAIN_REG_LIMIT, POWER_UNIT, 0),
-+	PRIMITIVE_INFO_INIT(POWER_LIMIT4, POWER_LIMIT4_MASK, 0,
-+				RAPL_DOMAIN_REG_PL4, POWER_UNIT, 0),
- 	PRIMITIVE_INFO_INIT(FW_LOCK, POWER_LOW_LOCK, 31,
- 			    RAPL_DOMAIN_REG_LIMIT, ARBITRARY_UNIT, 0),
- 	PRIMITIVE_INFO_INIT(PL1_ENABLE, POWER_LIMIT1_ENABLE, 15,
-@@ -597,6 +632,8 @@ static u64 rapl_unit_xlate(struct rapl_domain *rd, enum unit_type type,
- 			    RAPL_DOMAIN_REG_LIMIT, ARBITRARY_UNIT, 0),
- 	PRIMITIVE_INFO_INIT(PL2_CLAMP, POWER_LIMIT2_CLAMP, 48,
- 			    RAPL_DOMAIN_REG_LIMIT, ARBITRARY_UNIT, 0),
-+	PRIMITIVE_INFO_INIT(PL4_ENABLE, POWER_LIMIT4_MASK, 0,
-+				RAPL_DOMAIN_REG_PL4, ARBITRARY_UNIT, 0),
- 	PRIMITIVE_INFO_INIT(TIME_WINDOW1, TIME_WINDOW1_MASK, 17,
- 			    RAPL_DOMAIN_REG_LIMIT, TIME_UNIT, 0),
- 	PRIMITIVE_INFO_INIT(TIME_WINDOW2, TIME_WINDOW2_MASK, 49,
-@@ -1252,6 +1289,7 @@ void rapl_remove_package(struct rapl_package *rp)
- 		if (find_nr_power_limit(rd) > 1) {
- 			rapl_write_data_raw(rd, PL2_ENABLE, 0);
- 			rapl_write_data_raw(rd, PL2_CLAMP, 0);
-+			rapl_write_data_raw(rd, PL4_ENABLE, 0);
- 		}
- 		if (rd->id == RAPL_DOMAIN_PACKAGE) {
- 			rd_package = rd;
-@@ -1360,6 +1398,13 @@ static void power_limit_state_save(void)
- 				if (ret)
- 					rd->rpl[i].last_power_limit = 0;
- 				break;
-+			case PL4_ENABLE:
-+				ret = rapl_read_data_raw(rd,
-+						 POWER_LIMIT4, true,
-+						 &rd->rpl[i].last_power_limit);
-+				if (ret)
-+					rd->rpl[i].last_power_limit = 0;
-+				break;
- 			}
- 		}
- 	}
-@@ -1390,6 +1435,11 @@ static void power_limit_state_restore(void)
- 					rapl_write_data_raw(rd, POWER_LIMIT2,
- 					    rd->rpl[i].last_power_limit);
- 				break;
-+			case PL4_ENABLE:
-+				if (rd->rpl[i].last_power_limit)
-+					rapl_write_data_raw(rd, POWER_LIMIT4,
-+					    rd->rpl[i].last_power_limit);
-+				break;
- 			}
- 		}
- 	}
-diff --git a/drivers/powercap/intel_rapl_msr.c b/drivers/powercap/intel_rapl_msr.c
-index d5487965bdfe..d2a2627507a9 100644
---- a/drivers/powercap/intel_rapl_msr.c
-+++ b/drivers/powercap/intel_rapl_msr.c
-@@ -28,6 +28,7 @@
- 
- /* Local defines */
- #define MSR_PLATFORM_POWER_LIMIT	0x0000065C
-+#define MSR_VR_CURRENT_CONFIG		0x00000601
- 
- /* private data for RAPL MSR Interface */
- static struct rapl_if_priv rapl_msr_priv = {
-@@ -123,13 +124,27 @@ static int rapl_msr_write_raw(int cpu, struct reg_action *ra)
- 	return ra->err;
- }
- 
-+/* List of verified CPUs. */
-+static const struct x86_cpu_id pl4_support_ids[] = {
-+	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_TIGERLAKE_L, X86_FEATURE_ANY },
-+	{}
-+};
-+
- static int rapl_msr_probe(struct platform_device *pdev)
- {
-+	const struct x86_cpu_id *id = x86_match_cpu(pl4_support_ids);
- 	int ret;
- 
- 	rapl_msr_priv.read_raw = rapl_msr_read_raw;
- 	rapl_msr_priv.write_raw = rapl_msr_write_raw;
- 
-+	if (id) {
-+		rapl_msr_priv.limits[RAPL_DOMAIN_PACKAGE] = 3;
-+		rapl_msr_priv.regs[RAPL_DOMAIN_PACKAGE][RAPL_DOMAIN_REG_PL4] =
-+			MSR_VR_CURRENT_CONFIG;
-+		pr_info("PL4 support detected.\n");
-+	}
-+
- 	rapl_msr_priv.control_type = powercap_register_control_type(NULL, "intel-rapl", NULL);
- 	if (IS_ERR(rapl_msr_priv.control_type)) {
- 		pr_debug("failed to register powercap control_type.\n");
-diff --git a/include/linux/intel_rapl.h b/include/linux/intel_rapl.h
-index efb3ce892c20..3582176a1eca 100644
---- a/include/linux/intel_rapl.h
-+++ b/include/linux/intel_rapl.h
-@@ -29,6 +29,7 @@ enum rapl_domain_reg_id {
- 	RAPL_DOMAIN_REG_PERF,
- 	RAPL_DOMAIN_REG_POLICY,
- 	RAPL_DOMAIN_REG_INFO,
-+	RAPL_DOMAIN_REG_PL4,
- 	RAPL_DOMAIN_REG_MAX,
- };
- 
-@@ -38,12 +39,14 @@ enum rapl_primitives {
- 	ENERGY_COUNTER,
- 	POWER_LIMIT1,
- 	POWER_LIMIT2,
-+	POWER_LIMIT4,
- 	FW_LOCK,
- 
- 	PL1_ENABLE,		/* power limit 1, aka long term */
- 	PL1_CLAMP,		/* allow frequency to go below OS request */
- 	PL2_ENABLE,		/* power limit 2, aka short term, instantaneous */
- 	PL2_CLAMP,
-+	PL4_ENABLE,		/* power limit 4, aka max peak power */
- 
- 	TIME_WINDOW1,		/* long term */
- 	TIME_WINDOW2,		/* short term */
-@@ -65,7 +68,7 @@ struct rapl_domain_data {
- 	unsigned long timestamp;
- };
- 
--#define NR_POWER_LIMITS (2)
-+#define NR_POWER_LIMITS (3)
- struct rapl_power_limit {
- 	struct powercap_zone_constraint *constraint;
- 	int prim_id;		/* primitive ID used to enable */
--- 
-1.7.9.5
-
+> ---
+>  drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 303 ++++++++++++++++++----
+>  drivers/gpu/drm/ingenic/ingenic-drm.h     |  35 +++
+>  2 files changed, 288 insertions(+), 50 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+> index 9cc785776594..e922b910ad39 100644
+> --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+> +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+> @@ -43,12 +43,18 @@ struct ingenic_dma_hwdesc {
+>  
+>  struct jz_soc_info {
+>  	bool needs_dev_clk;
+> +	bool has_osd;
+>  	unsigned int max_width, max_height;
+>  };
+>  
+>  struct ingenic_drm {
+>  	struct drm_device drm;
+> -	struct drm_plane primary;
+> +	/*
+> +	 * f1 (aka. foreground1) is our primary plane, on top of which
+> +	 * f0 (aka. foreground0) can be overlayed. Z-order is fixed in
+> +	 * hardware and cannot be changed.
+> +	 */
+> +	struct drm_plane f0, f1;
+>  	struct drm_crtc crtc;
+>  	struct drm_encoder encoder;
+>  
+> @@ -57,10 +63,11 @@ struct ingenic_drm {
+>  	struct clk *lcd_clk, *pix_clk;
+>  	const struct jz_soc_info *soc_info;
+>  
+> -	struct ingenic_dma_hwdesc *dma_hwdesc;
+> -	dma_addr_t dma_hwdesc_phys;
+> +	struct ingenic_dma_hwdesc *dma_hwdesc_f0, *dma_hwdesc_f1;
+> +	dma_addr_t dma_hwdesc_phys_f0, dma_hwdesc_phys_f1;
+>  
+>  	bool panel_is_sharp;
+> +	bool no_vblank;
+>  };
+>  
+>  static const u32 ingenic_drm_primary_formats[] = {
+> @@ -90,7 +97,7 @@ static const struct regmap_config ingenic_drm_regmap_config = {
+>  	.val_bits = 32,
+>  	.reg_stride = 4,
+>  
+> -	.max_register = JZ_REG_LCD_CMD1,
+> +	.max_register = JZ_REG_LCD_SIZE1,
+>  	.writeable_reg = ingenic_drm_writeable_reg,
+>  };
+>  
+> @@ -110,11 +117,6 @@ drm_encoder_get_priv(struct drm_encoder *encoder)
+>  	return container_of(encoder, struct ingenic_drm, encoder);
+>  }
+>  
+> -static inline struct ingenic_drm *drm_plane_get_priv(struct drm_plane *plane)
+> -{
+> -	return container_of(plane, struct ingenic_drm, primary);
+> -}
+> -
+>  static void ingenic_drm_crtc_atomic_enable(struct drm_crtc *crtc,
+>  					   struct drm_crtc_state *state)
+>  {
+> @@ -185,34 +187,16 @@ static void ingenic_drm_crtc_update_timings(struct ingenic_drm *priv,
+>  		regmap_write(priv->map, JZ_REG_LCD_SPL, hpe << 16 | (hpe + 1));
+>  		regmap_write(priv->map, JZ_REG_LCD_REV, mode->htotal << 16);
+>  	}
+> -}
+> -
+> -static void ingenic_drm_crtc_update_ctrl(struct ingenic_drm *priv,
+> -					 const struct drm_format_info *finfo)
+> -{
+> -	unsigned int ctrl = JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16;
+> -
+> -	switch (finfo->format) {
+> -	case DRM_FORMAT_XRGB1555:
+> -		ctrl |= JZ_LCD_CTRL_RGB555;
+> -		/* fall-through */
+> -	case DRM_FORMAT_RGB565:
+> -		ctrl |= JZ_LCD_CTRL_BPP_15_16;
+> -		break;
+> -	case DRM_FORMAT_XRGB8888:
+> -		ctrl |= JZ_LCD_CTRL_BPP_18_24;
+> -		break;
+> -	}
+>  
+> -	regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
+> -			   JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16 |
+> -			   JZ_LCD_CTRL_BPP_MASK, ctrl);
+> +	regmap_set_bits(priv->map, JZ_REG_LCD_CTRL,
+> +			JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16);
+>  }
+>  
+>  static int ingenic_drm_crtc_atomic_check(struct drm_crtc *crtc,
+>  					 struct drm_crtc_state *state)
+>  {
+>  	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
+> +	struct drm_plane_state *f1_state, *f0_state;
+>  	long rate;
+>  
+>  	if (!drm_atomic_crtc_needs_modeset(state))
+> @@ -227,6 +211,14 @@ static int ingenic_drm_crtc_atomic_check(struct drm_crtc *crtc,
+>  	if (rate < 0)
+>  		return rate;
+>  
+> +	if (priv->soc_info->has_osd) {
+> +		f1_state = drm_atomic_get_plane_state(state->state, &priv->f1);
+> +		f0_state = drm_atomic_get_plane_state(state->state, &priv->f0);
+> +
+> +		/* If all the planes are disabled, we won't get a VBLANK IRQ */
+> +		priv->no_vblank = !f1_state->fb && !f0_state->fb;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -236,14 +228,9 @@ static void ingenic_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+>  	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
+>  	struct drm_crtc_state *state = crtc->state;
+>  	struct drm_pending_vblank_event *event = state->event;
+> -	struct drm_framebuffer *drm_fb = crtc->primary->state->fb;
+> -	const struct drm_format_info *finfo;
+>  
+>  	if (drm_atomic_crtc_needs_modeset(state)) {
+> -		finfo = drm_format_info(drm_fb->format->format);
+> -
+>  		ingenic_drm_crtc_update_timings(priv, &state->mode);
+> -		ingenic_drm_crtc_update_ctrl(priv, finfo);
+>  
+>  		clk_set_rate(priv->pix_clk, state->adjusted_mode.clock * 1000);
+>  	}
+> @@ -260,11 +247,152 @@ static void ingenic_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+>  	}
+>  }
+>  
+> +static int ingenic_drm_plane_atomic_check(struct drm_plane *plane,
+> +					  struct drm_plane_state *state)
+> +{
+> +	struct ingenic_drm *priv = drm_device_get_priv(plane->dev);
+> +	struct drm_crtc_state *crtc_state;
+> +	struct drm_crtc *crtc = state->crtc ?: plane->state->crtc;
+> +	int ret;
+> +
+> +	if (!crtc)
+> +		return 0;
+> +
+> +	crtc_state = drm_atomic_get_existing_crtc_state(state->state, crtc);
+> +	if (WARN_ON(!crtc_state))
+> +		return -EINVAL;
+> +
+> +	ret = drm_atomic_helper_check_plane_state(state, crtc_state,
+> +						  DRM_PLANE_HELPER_NO_SCALING,
+> +						  DRM_PLANE_HELPER_NO_SCALING,
+> +						  priv->soc_info->has_osd,
+> +						  true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * If OSD is not available, check that the width/height match.
+> +	 * Note that state->src_* are in 16.16 fixed-point format.
+> +	 */
+> +	if (!priv->soc_info->has_osd &&
+> +	    (state->src_x != 0 ||
+> +	     (state->src_w >> 16) != state->crtc_w ||
+> +	     (state->src_h >> 16) != state->crtc_h))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Require full modeset if enabling or disabling a plane, or changing
+> +	 * its position, size or depth.
+> +	 */
+> +	if (priv->soc_info->has_osd &&
+> +	    (!plane->state->fb || !state->fb ||
+> +	     plane->state->crtc_x != state->crtc_x ||
+> +	     plane->state->crtc_y != state->crtc_y ||
+> +	     plane->state->crtc_w != state->crtc_w ||
+> +	     plane->state->crtc_h != state->crtc_h ||
+> +	     plane->state->fb->format->format != state->fb->format->format))
+> +		crtc_state->mode_changed = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static void ingenic_drm_plane_enable(struct ingenic_drm *priv,
+> +				      struct drm_plane *plane)
+> +{
+> +	unsigned int en_bit;
+> +
+> +	if (priv->soc_info->has_osd) {
+> +		if (plane->type == DRM_PLANE_TYPE_PRIMARY)
+> +			en_bit = JZ_LCD_OSDC_F1EN;
+> +		else
+> +			en_bit = JZ_LCD_OSDC_F0EN;
+> +
+> +		regmap_set_bits(priv->map, JZ_REG_LCD_OSDC, en_bit);
+> +	}
+> +}
+> +
+> +static void ingenic_drm_plane_atomic_disable(struct drm_plane *plane,
+> +					     struct drm_plane_state *old_state)
+> +{
+> +	struct ingenic_drm *priv = drm_device_get_priv(plane->dev);
+> +	unsigned int en_bit;
+> +
+> +	if (priv->soc_info->has_osd) {
+> +		if (plane->type == DRM_PLANE_TYPE_PRIMARY)
+> +			en_bit = JZ_LCD_OSDC_F1EN;
+> +		else
+> +			en_bit = JZ_LCD_OSDC_F0EN;
+> +
+> +		regmap_clear_bits(priv->map, JZ_REG_LCD_OSDC, en_bit);
+> +	}
+> +}
+> +
+> +static void ingenic_drm_plane_config(struct ingenic_drm *priv,
+> +				     struct drm_plane *plane, u32 fourcc)
+> +{
+> +	struct drm_plane_state *state = plane->state;
+> +	unsigned int xy_reg, size_reg;
+> +	unsigned int ctrl = 0;
+> +
+> +	ingenic_drm_plane_enable(priv, plane);
+> +
+> +	if (priv->soc_info->has_osd &&
+> +	    plane->type == DRM_PLANE_TYPE_PRIMARY) {
+> +		switch (fourcc) {
+> +		case DRM_FORMAT_XRGB1555:
+> +			ctrl |= JZ_LCD_OSDCTRL_RGB555;
+> +			fallthrough;
+> +		case DRM_FORMAT_RGB565:
+> +			ctrl |= JZ_LCD_OSDCTRL_BPP_15_16;
+> +			break;
+> +		case DRM_FORMAT_XRGB8888:
+> +			ctrl |= JZ_LCD_OSDCTRL_BPP_18_24;
+> +			break;
+> +		}
+> +
+> +		regmap_update_bits(priv->map, JZ_REG_LCD_OSDCTRL,
+> +				   JZ_LCD_OSDCTRL_BPP_MASK, ctrl);
+> +	} else {
+> +		switch (fourcc) {
+> +		case DRM_FORMAT_XRGB1555:
+> +			ctrl |= JZ_LCD_CTRL_RGB555;
+> +			fallthrough;
+> +		case DRM_FORMAT_RGB565:
+> +			ctrl |= JZ_LCD_CTRL_BPP_15_16;
+> +			break;
+> +		case DRM_FORMAT_XRGB8888:
+> +			ctrl |= JZ_LCD_CTRL_BPP_18_24;
+> +			break;
+> +		}
+> +
+> +		regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
+> +				   JZ_LCD_CTRL_BPP_MASK, ctrl);
+> +	}
+> +
+> +	if (priv->soc_info->has_osd) {
+> +		if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
+> +			xy_reg = JZ_REG_LCD_XYP1;
+> +			size_reg = JZ_REG_LCD_SIZE1;
+> +		} else {
+> +			xy_reg = JZ_REG_LCD_XYP0;
+> +			size_reg = JZ_REG_LCD_SIZE0;
+> +		}
+> +
+> +		regmap_write(priv->map, xy_reg,
+> +			     state->crtc_x << JZ_LCD_XYP01_XPOS_LSB |
+> +			     state->crtc_y << JZ_LCD_XYP01_YPOS_LSB);
+> +		regmap_write(priv->map, size_reg,
+> +			     state->crtc_w << JZ_LCD_SIZE01_WIDTH_LSB |
+> +			     state->crtc_h << JZ_LCD_SIZE01_HEIGHT_LSB);
+> +	}
+> +}
+> +
+>  static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
+>  					    struct drm_plane_state *oldstate)
+>  {
+> -	struct ingenic_drm *priv = drm_plane_get_priv(plane);
+> +	struct ingenic_drm *priv = drm_device_get_priv(plane->dev);
+>  	struct drm_plane_state *state = plane->state;
+> +	struct ingenic_dma_hwdesc *hwdesc;
+>  	unsigned int width, height, cpp;
+>  	dma_addr_t addr;
+>  
+> @@ -274,9 +402,17 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
+>  		height = state->src_h >> 16;
+>  		cpp = state->fb->format->cpp[0];
+>  
+> -		priv->dma_hwdesc->addr = addr;
+> -		priv->dma_hwdesc->cmd = width * height * cpp / 4;
+> -		priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
+> +		if (priv->soc_info->has_osd && plane->type == DRM_PLANE_TYPE_OVERLAY)
+> +			hwdesc = priv->dma_hwdesc_f0;
+> +		else
+> +			hwdesc = priv->dma_hwdesc_f1;
+> +
+> +		hwdesc->addr = addr;
+> +		hwdesc->cmd = JZ_LCD_CMD_EOF_IRQ | (width * height * cpp / 4);
+> +
+> +		if (drm_atomic_crtc_needs_modeset(state->crtc->state))
+> +			ingenic_drm_plane_config(priv, plane,
+> +						 state->fb->format->format);
+>  	}
+>  }
+>  
+> @@ -360,6 +496,29 @@ static int ingenic_drm_encoder_atomic_check(struct drm_encoder *encoder,
+>  	}
+>  }
+>  
+> +static void ingenic_drm_atomic_helper_commit_tail(struct drm_atomic_state *old_state)
+> +{
+> +	/*
+> +	 * Just your regular drm_atomic_helper_commit_tail(), but only calls
+> +	 * drm_atomic_helper_wait_for_vblanks() if priv->no_vblank.
+> +	 */
+> +	struct drm_device *dev = old_state->dev;
+> +	struct ingenic_drm *priv = drm_device_get_priv(dev);
+> +
+> +	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+> +
+> +	drm_atomic_helper_commit_planes(dev, old_state, 0);
+> +
+> +	drm_atomic_helper_commit_modeset_enables(dev, old_state);
+> +
+> +	drm_atomic_helper_commit_hw_done(old_state);
+> +
+> +	if (!priv->no_vblank)
+> +		drm_atomic_helper_wait_for_vblanks(dev, old_state);
+> +
+> +	drm_atomic_helper_cleanup_planes(dev, old_state);
+> +}
+> +
+>  static irqreturn_t ingenic_drm_irq_handler(int irq, void *arg)
+>  {
+>  	struct ingenic_drm *priv = drm_device_get_priv(arg);
+> @@ -437,6 +596,8 @@ static const struct drm_crtc_funcs ingenic_drm_crtc_funcs = {
+>  
+>  static const struct drm_plane_helper_funcs ingenic_drm_plane_helper_funcs = {
+>  	.atomic_update		= ingenic_drm_plane_atomic_update,
+> +	.atomic_check		= ingenic_drm_plane_atomic_check,
+> +	.atomic_disable		= ingenic_drm_plane_atomic_disable,
+>  	.prepare_fb		= drm_gem_fb_prepare_fb,
+>  };
+>  
+> @@ -459,6 +620,10 @@ static const struct drm_mode_config_funcs ingenic_drm_mode_config_funcs = {
+>  	.atomic_commit		= drm_atomic_helper_commit,
+>  };
+>  
+> +static struct drm_mode_config_helper_funcs ingenic_drm_mode_config_helpers = {
+> +	.atomic_commit_tail = ingenic_drm_atomic_helper_commit_tail,
+> +};
+> +
+>  static int ingenic_drm_probe(struct platform_device *pdev)
+>  {
+>  	const struct jz_soc_info *soc_info;
+> @@ -498,6 +663,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
+>  	drm->mode_config.max_width = soc_info->max_width;
+>  	drm->mode_config.max_height = 4095;
+>  	drm->mode_config.funcs = &ingenic_drm_mode_config_funcs;
+> +	drm->mode_config.helper_private = &ingenic_drm_mode_config_helpers;
+>  
+>  	base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(base)) {
+> @@ -541,19 +707,31 @@ static int ingenic_drm_probe(struct platform_device *pdev)
+>  		bridge = devm_drm_panel_bridge_add_typed(dev, panel,
+>  							 DRM_MODE_CONNECTOR_DPI);
+>  
+> -	priv->dma_hwdesc = dmam_alloc_coherent(dev, sizeof(*priv->dma_hwdesc),
+> -					       &priv->dma_hwdesc_phys,
+> -					       GFP_KERNEL);
+> -	if (!priv->dma_hwdesc)
+> +	priv->dma_hwdesc_f1 = dmam_alloc_coherent(dev, sizeof(*priv->dma_hwdesc_f1),
+> +						  &priv->dma_hwdesc_phys_f1,
+> +						  GFP_KERNEL);
+> +	if (!priv->dma_hwdesc_f1)
+>  		return -ENOMEM;
+>  
+> -	priv->dma_hwdesc->next = priv->dma_hwdesc_phys;
+> -	priv->dma_hwdesc->id = 0xdeafbead;
+> +	priv->dma_hwdesc_f1->next = priv->dma_hwdesc_phys_f1;
+> +	priv->dma_hwdesc_f1->id = 0xf1;
+>  
+> -	drm_plane_helper_add(&priv->primary, &ingenic_drm_plane_helper_funcs);
+> +	if (priv->soc_info->has_osd) {
+> +		priv->dma_hwdesc_f0 = dmam_alloc_coherent(dev,
+> +							  sizeof(*priv->dma_hwdesc_f0),
+> +							  &priv->dma_hwdesc_phys_f0,
+> +							  GFP_KERNEL);
+> +		if (!priv->dma_hwdesc_f0)
+> +			return -ENOMEM;
+>  
+> -	ret = drm_universal_plane_init(drm, &priv->primary,
+> -				       0, &ingenic_drm_primary_plane_funcs,
+> +		priv->dma_hwdesc_f0->next = priv->dma_hwdesc_phys_f0;
+> +		priv->dma_hwdesc_f0->id = 0xf0;
+> +	}
+> +
+> +	drm_plane_helper_add(&priv->f1, &ingenic_drm_plane_helper_funcs);
+> +
+> +	ret = drm_universal_plane_init(drm, &priv->f1, 1,
+> +				       &ingenic_drm_primary_plane_funcs,
+>  				       ingenic_drm_primary_formats,
+>  				       ARRAY_SIZE(ingenic_drm_primary_formats),
+>  				       NULL, DRM_PLANE_TYPE_PRIMARY, NULL);
+> @@ -564,13 +742,30 @@ static int ingenic_drm_probe(struct platform_device *pdev)
+>  
+>  	drm_crtc_helper_add(&priv->crtc, &ingenic_drm_crtc_helper_funcs);
+>  
+> -	ret = drm_crtc_init_with_planes(drm, &priv->crtc, &priv->primary,
+> +	ret = drm_crtc_init_with_planes(drm, &priv->crtc, &priv->f1,
+>  					NULL, &ingenic_drm_crtc_funcs, NULL);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to init CRTC: %i\n", ret);
+>  		return ret;
+>  	}
+>  
+> +	if (soc_info->has_osd) {
+> +		drm_plane_helper_add(&priv->f0,
+> +				     &ingenic_drm_plane_helper_funcs);
+> +
+> +		ret = drm_universal_plane_init(drm, &priv->f0, 1,
+> +					       &ingenic_drm_primary_plane_funcs,
+> +					       ingenic_drm_primary_formats,
+> +					       ARRAY_SIZE(ingenic_drm_primary_formats),
+> +					       NULL, DRM_PLANE_TYPE_OVERLAY,
+> +					       NULL);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to register overlay plane: %i\n",
+> +				ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	priv->encoder.possible_crtcs = 1;
+>  
+>  	drm_encoder_helper_add(&priv->encoder,
+> @@ -632,7 +827,12 @@ static int ingenic_drm_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/* Set address of our DMA descriptor chain */
+> -	regmap_write(priv->map, JZ_REG_LCD_DA0, priv->dma_hwdesc_phys);
+> +	regmap_write(priv->map, JZ_REG_LCD_DA0, priv->dma_hwdesc_phys_f0);
+> +	regmap_write(priv->map, JZ_REG_LCD_DA1, priv->dma_hwdesc_phys_f1);
+> +
+> +	/* Enable OSD if available */
+> +	if (soc_info->has_osd)
+> +		regmap_write(priv->map, JZ_REG_LCD_OSDC, JZ_LCD_OSDC_OSDEN);
+>  
+>  	ret = drm_dev_register(drm, 0);
+>  	if (ret) {
+> @@ -668,18 +868,21 @@ static int ingenic_drm_remove(struct platform_device *pdev)
+>  
+>  static const struct jz_soc_info jz4740_soc_info = {
+>  	.needs_dev_clk = true,
+> +	.has_osd = false,
+>  	.max_width = 800,
+>  	.max_height = 600,
+>  };
+>  
+>  static const struct jz_soc_info jz4725b_soc_info = {
+>  	.needs_dev_clk = false,
+> +	.has_osd = true,
+>  	.max_width = 800,
+>  	.max_height = 600,
+>  };
+>  
+>  static const struct jz_soc_info jz4770_soc_info = {
+>  	.needs_dev_clk = false,
+> +	.has_osd = true,
+>  	.max_width = 1280,
+>  	.max_height = 720,
+>  };
+> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.h b/drivers/gpu/drm/ingenic/ingenic-drm.h
+> index cb578cff7bb1..d0b827a9fe83 100644
+> --- a/drivers/gpu/drm/ingenic/ingenic-drm.h
+> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.h
+> @@ -30,6 +30,18 @@
+>  #define JZ_REG_LCD_SA1				0x54
+>  #define JZ_REG_LCD_FID1				0x58
+>  #define JZ_REG_LCD_CMD1				0x5C
+> +#define JZ_REG_LCD_OSDC				0x100
+> +#define JZ_REG_LCD_OSDCTRL			0x104
+> +#define JZ_REG_LCD_OSDS				0x108
+> +#define JZ_REG_LCD_BGC				0x10c
+> +#define JZ_REG_LCD_KEY0				0x110
+> +#define JZ_REG_LCD_KEY1				0x114
+> +#define JZ_REG_LCD_ALPHA			0x118
+> +#define JZ_REG_LCD_IPUR				0x11c
+> +#define JZ_REG_LCD_XYP0				0x120
+> +#define JZ_REG_LCD_XYP1				0x124
+> +#define JZ_REG_LCD_SIZE0			0x128
+> +#define JZ_REG_LCD_SIZE1			0x12c
+>  
+>  #define JZ_LCD_CFG_SLCD				BIT(31)
+>  #define JZ_LCD_CFG_PS_DISABLE			BIT(23)
+> @@ -123,4 +135,27 @@
+>  #define JZ_LCD_STATE_SOF_IRQ			BIT(4)
+>  #define JZ_LCD_STATE_DISABLED			BIT(0)
+>  
+> +#define JZ_LCD_OSDC_OSDEN			BIT(0)
+> +#define JZ_LCD_OSDC_F0EN			BIT(3)
+> +#define JZ_LCD_OSDC_F1EN			BIT(4)
+> +
+> +#define JZ_LCD_OSDCTRL_IPU			BIT(15)
+> +#define JZ_LCD_OSDCTRL_RGB555			BIT(4)
+> +#define JZ_LCD_OSDCTRL_CHANGE			BIT(3)
+> +#define JZ_LCD_OSDCTRL_BPP_15_16		0x4
+> +#define JZ_LCD_OSDCTRL_BPP_18_24		0x5
+> +#define JZ_LCD_OSDCTRL_BPP_30			0x7
+> +#define JZ_LCD_OSDCTRL_BPP_MASK			(JZ_LCD_OSDCTRL_RGB555 | 0x7)
+> +
+> +#define JZ_LCD_OSDS_READY			BIT(0)
+> +
+> +#define JZ_LCD_IPUR_IPUREN			BIT(31)
+> +#define JZ_LCD_IPUR_IPUR_LSB			0
+> +
+> +#define JZ_LCD_XYP01_XPOS_LSB			0
+> +#define JZ_LCD_XYP01_YPOS_LSB			16
+> +
+> +#define JZ_LCD_SIZE01_WIDTH_LSB			0
+> +#define JZ_LCD_SIZE01_HEIGHT_LSB		16
+> +
+>  #endif /* DRIVERS_GPU_DRM_INGENIC_INGENIC_DRM_H */
+> -- 
+> 2.27.0
