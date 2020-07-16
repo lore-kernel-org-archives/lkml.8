@@ -2,84 +2,121 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54B9C433EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8418DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F94C20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBB120842
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:55:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="bIjjhfvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgGPLyz (ORCPT
+        id S1728445AbgGPLzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:54:55 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:40092 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727081AbgGPLyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:54:55 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jw2TR-0008Nc-DU; Thu, 16 Jul 2020 21:54:50 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Jul 2020 21:54:49 +1000
-Date:   Thu, 16 Jul 2020 21:54:49 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Uros Bizjak <ubizjak@gmail.com>
-Cc:     linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] crypto/x86: Remove include/asm/inst.h
-Message-ID: <20200716115449.GF31166@gondor.apana.org.au>
-References: <20200709150857.4304-1-ubizjak@gmail.com>
+        Thu, 16 Jul 2020 07:55:32 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:12046 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726855AbgGPLzc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 07:55:32 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GBpRlH032117;
+        Thu, 16 Jul 2020 04:55:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=pfpt0818; bh=zkt6g5gh0HiU+37ddd5luZcJaLMS2v4jLyGRzTgIdxM=;
+ b=bIjjhfvXHAo9Kn8xq0u406VOi4wT20XYSLf8219VXy05vXMA6BlOcRF0jTZ6MC8Og8AS
+ vLVHjynOUSXdzUY0tqcuJsrwPRCMaERH4skGbfjX+12cKKp8SkRd/rgP6wR1I074pby4
+ 97y7BzgXzGlnvAF7LVwofv5tY5CIgJmd6WepVsdcZBS7u0DElK2weCSn8kaKIIfPKstE
+ +ObanoeecywXnRjMrTzJTsGOVPwnV7MW3zl0MYxvmhg9Btsa1bnOiKLYp2CSuzsvsS+h
+ AhLt/9Kni/u3qZNyXhCZNMSKFnoif5SJvmr7XsUehnegxJpcQMw6iIaBuWAFgZeOoNQT wA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 32ap7v81nf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 04:55:29 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 16 Jul
+ 2020 04:55:28 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 16 Jul
+ 2020 04:55:27 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 16 Jul 2020 04:55:27 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id A3EB53F703F;
+        Thu, 16 Jul 2020 04:55:22 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        <GR-everest-linux-l2@marvell.com>,
+        <QLogic-Storage-Upstream@cavium.com>, <netdev@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next 00/13] qed/qede: add support for new operating modes
+Date:   Thu, 16 Jul 2020 14:54:33 +0300
+Message-ID: <20200716115446.994-1-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709150857.4304-1-ubizjak@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_05:2020-07-16,2020-07-16 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 05:08:57PM +0200, Uros Bizjak wrote:
-> Current minimum required version of binutils is 2.23,
-> which supports PSHUFB, PCLMULQDQ, PEXTRD, AESKEYGENASSIST,
-> AESIMC, AESENC, AESENCLAST, AESDEC, AESDECLAST and MOVQ
-> instruction mnemonics.
-> 
-> Substitute macros from include/asm/inst.h with a proper
-> instruction mnemonics in various assmbly files from
-> x86/crypto directory, and remove now unneeded file.
-> 
-> The patch was tested by calculating and comparing sha256sum
-> hashes of stripped object files before and after the patch,
-> to be sure that executable code didn't change.
-> 
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> CC: Herbert Xu <herbert@gondor.apana.org.au>
-> CC: "David S. Miller" <davem@davemloft.net>
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: Ingo Molnar <mingo@redhat.com>
-> CC: Borislav Petkov <bp@alien8.de>
-> CC: "H. Peter Anvin" <hpa@zytor.com>
-> ---
->  arch/x86/crypto/aes_ctrby8_avx-x86_64.S   |   1 -
->  arch/x86/crypto/aesni-intel_asm.S         | 733 +++++++++++-----------
->  arch/x86/crypto/aesni-intel_avx-x86_64.S  |   1 -
->  arch/x86/crypto/crc32-pclmul_asm.S        |  47 +-
->  arch/x86/crypto/crc32c-pcl-intel-asm_64.S |   5 +-
->  arch/x86/crypto/ghash-clmulni-intel_asm.S |  17 +-
->  arch/x86/include/asm/inst.h               | 311 ---------
->  7 files changed, 399 insertions(+), 716 deletions(-)
->  delete mode 100644 arch/x86/include/asm/inst.h
+This series covers the support for the following:
+ - new port modes;
+ - loopback modes, previously missing;
+ - new speed/link modes;
+ - several FEC modes;
+ - multi-rate transceivers;
 
-Patch applied.  Thanks.
+and also cleans up and optimizes several related parts of code.
+
+Alexander Lobakin (13):
+  qed: convert link mode from u32 to bitmap
+  qed: reformat public_port::transceiver_data a bit
+  qed: add support for multi-rate transceivers
+  qed: use transceiver data to fill link partner's advertising speeds
+  qed: reformat several structures a bit
+  qed: add support for Forward Error Correction
+  qede: format qede{,_vf}_ethtool_ops
+  qede: introduce support for FEC control
+  qed: reformat several structures a bit
+  qed: add support for new port modes
+  qed: add missing loopback modes
+  qed: populate supported link modes maps on module init
+  qed/qede: add support for the extended speed and FEC modes
+
+ drivers/net/ethernet/qlogic/qed/qed.h         |  68 +-
+ drivers/net/ethernet/qlogic/qed/qed_dev.c     | 161 +++-
+ drivers/net/ethernet/qlogic/qed/qed_hsi.h     | 786 ++++++++++--------
+ drivers/net/ethernet/qlogic/qed/qed_main.c    | 757 +++++++++++++----
+ drivers/net/ethernet/qlogic/qed/qed_mcp.c     | 126 ++-
+ drivers/net/ethernet/qlogic/qed/qed_mcp.h     | 146 ++--
+ .../net/ethernet/qlogic/qede/qede_ethtool.c   | 468 ++++++-----
+ drivers/scsi/qedf/qedf_main.c                 |  77 +-
+ include/linux/qed/qed_if.h                    | 185 +++--
+ 9 files changed, 1863 insertions(+), 911 deletions(-)
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+Dave, patch #0001 affects qedf under scsi tree, but could you take it
+through yours? It will break incremental buildability and bisecting
+otherwise. Thanks.
+
+-- 
+2.25.1
+
