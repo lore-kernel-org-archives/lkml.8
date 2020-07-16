@@ -2,112 +2,192 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FD2C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECB8D2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265AF20775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 04:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QBJJ0mwc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQAGzKs4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgGPEEJ (ORCPT
+        id S1725948AbgGPEPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 00:04:09 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:46431 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725268AbgGPEEJ (ORCPT
+        Thu, 16 Jul 2020 00:15:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgGPEPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 00:04:09 -0400
-X-UUID: ba749623530a4c2381c526515e220a1a-20200716
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=62ZGypyhLbFv7qQkPl4Eyj0oI3ptJBAGbtdl2xMz2ik=;
-        b=QBJJ0mwcI1a1/t7cjMQ7OKSGAblX+rPAgzGvgwGSkT21UE4wSOybWJPyOq8G5R1+PEgq9KU4RfSjiBfhsBgMoGb7fIneMqOdDdsEfB6SJ51QJtFZ2EVn4zbRbXpOG8ZutBSHJGEjypLItGQjIDoXTbyX1ihUub5Vv776AEJP87o=;
-X-UUID: ba749623530a4c2381c526515e220a1a-20200716
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 222755371; Thu, 16 Jul 2020 12:04:05 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 16 Jul 2020 12:04:01 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 16 Jul 2020 12:04:01 +0800
-Message-ID: <1594872242.11090.8.camel@mtkswgap22>
-Subject: Re: [PATCH v8 6/7] arm64: dts: add dts nodes for MT6779
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen Boyd" <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Date:   Thu, 16 Jul 2020 12:04:02 +0800
-In-Reply-To: <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
-References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
-         <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
-         <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 16 Jul 2020 00:15:10 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903B1C061755;
+        Wed, 15 Jul 2020 21:15:09 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a6so5497927wrm.4;
+        Wed, 15 Jul 2020 21:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=/3B9A674EQfjQa8s5j2tFu+PNv0/P6AJozav9RBzKBs=;
+        b=jQAGzKs40+u5PfuX4oC97UuJZrMs4G6Aq6m+2YC+TGqpgpTzShrfzi12bv1RXsMI7J
+         1Om7DcMpi2okDxe33FH2+wQgNuwie8n39E9qq+kR7bvyZg3ku9eFeBBrPCLSgBL2ZVLA
+         JoMWOpT9lZ5O/zAQu/FRvhcP28sSLrGaUv9ajEX1ZH+NakX7on24mq99R+WaMQ3ChQ4G
+         l8y7DIs8EdMUX7lh8khpaiy6TgzpvK0LWbpeOLeBWwVtCjAdo4iuRQiLIop6owvFwcI4
+         b0mLYecXgTQBcstsrz/QN80nX3y54h9coJr39Dg0XtiHOThblyJZnohqYClM4HVwjntl
+         +YQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=/3B9A674EQfjQa8s5j2tFu+PNv0/P6AJozav9RBzKBs=;
+        b=MdsuqJ9LvYvZxvTfZdq351keDrADfm3dOXtzrhnIAWpimzgDmJ/bf+tuOIdIyyX8wn
+         wzio5cxOYbsFNn0vcLTGtMQMY54qpdTsdo9R76k+bzrGhAWO8MWlNgucaw32ypJS7c2T
+         pszBC5zWqoJJG5DQkTxZdIeV/Q71rh+bhV8oiuneQbyFvEzE5zaKTn1YrP691xMxxdDH
+         y6L/eg7RKWEND5YmdpeXDMXWjmeoGIdzcHsD6Ohjvgd0D1/WU8xTdiOvoUQZQgoVPohr
+         RLBIubN3FNf/eRh+p8fEQ7d5MQe+Gv9z4oWTCOekZof5x3dJc+CNwNb2xm3gTKNJ6XUo
+         zv3g==
+X-Gm-Message-State: AOAM530rBaXvKoKNiPMbzDkdq8QMeK88OAWRlP7IFIuYpJWKmVEV7jz6
+        wXazPvSO21VhzR8W2r+VtiM=
+X-Google-Smtp-Source: ABdhPJxZLZohu0lb79Fzv4Qv7qvyRt8Xt9bGz8aNabW4ubonLDft59n3+6lq6IRt8CxL9c1y7gJAdw==
+X-Received: by 2002:adf:c142:: with SMTP id w2mr2802839wre.337.1594872908107;
+        Wed, 15 Jul 2020 21:15:08 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id x18sm6694844wrq.13.2020.07.15.21.15.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 21:15:07 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 14:15:00 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
+References: <20200710015646.2020871-1-npiggin@gmail.com>
+        <20200710015646.2020871-5-npiggin@gmail.com>
+        <CALCETrVqHDLo09HcaoeOoAVK8w+cNWkSNTLkDDU=evUhaXkyhQ@mail.gmail.com>
+        <1594613902.1wzayj0p15.astroid@bobo.none>
+        <1594647408.wmrazhwjzb.astroid@bobo.none>
+        <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com>
+In-Reply-To: <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 267C81200BBF5CE7F5838CC7DAED8F81F4DD194442EADB67FA1A52BED7ABC1472000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Message-Id: <1594868476.6k5kvx8684.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA3LTE0IGF0IDIwOjE0ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiANCj4gT24gMTQvMDcvMjAyMCAxMToyMCwgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiB0aGlz
-IGFkZHMgaW5pdGlhbCBNVDY3NzkgZHRzIHNldHRpbmdzIGZvciBib2FyZCBzdXBwb3J0LA0KPiA+
-IGluY2x1ZGluZyBjcHUsIGdpYywgdGltZXIsIGNjZiwgcGluY3RybCwgdWFydCwgc3lzaXJxLi4u
-ZXRjLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEhhbmtzIENoZW4gPGhhbmtzLmNoZW5AbWVk
-aWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9N
-YWtlZmlsZSAgICAgICB8ICAgMSArDQo+ID4gICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
-L210Njc3OS1ldmIuZHRzIHwgIDMxICsrKw0KPiA+ICAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRp
-YXRlay9tdDY3NzkuZHRzaSAgICB8IDI3MSArKysrKysrKysrKysrKysrKysrKw0KPiA+ICAgMyBm
-aWxlcyBjaGFuZ2VkLCAzMDMgaW5zZXJ0aW9ucygrKQ0KPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LWV2Yi5kdHMNCj4gPiAgIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS5kdHNpDQo+
-ID4gDQo+IFsuLi5dDQo+ID4gKw0KPiA+ICsJCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KPiA+
-ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS11YXJ0IiwNCj4gPiArCQkJCSAgICAg
-Im1lZGlhdGVrLG10NjU3Ny11YXJ0IjsNCj4gPiArCQkJcmVnID0gPDAgMHgxMTAwMjAwMCAwIDB4
-NDAwPjsNCj4gPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDExNSBJUlFfVFlQRV9MRVZFTF9M
-T1c+Ow0KPiA+ICsJCQljbG9ja3MgPSA8JmNsazI2bT4sIDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJB
-X1VBUlQwPjsNCj4gPiArCQkJY2xvY2stbmFtZXMgPSAiYmF1ZCIsICJidXMiOw0KPiA+ICsJCQlz
-dGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXVhcnQxOiBzZXJp
-YWxAMTEwMDMwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS11YXJ0
-IiwNCj4gPiArCQkJCSAgICAgIm1lZGlhdGVrLG10NjU3Ny11YXJ0IjsNCj4gPiArCQkJcmVnID0g
-PDAgMHgxMTAwMzAwMCAwIDB4NDAwPjsNCj4gPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDEx
-NiBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsJCQljbG9ja3MgPSA8JmNsazI2bT4sIDwmaW5m
-cmFjZmdfYW8gQ0xLX0lORlJBX1VBUlQxPjsNCj4gPiArCQkJY2xvY2stbmFtZXMgPSAiYmF1ZCIs
-ICJidXMiOw0KPiA+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJCX07DQo+ID4gKw0K
-PiA+ICsJCXVhcnQyOiBzZXJpYWxAMTEwMDQwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1l
-ZGlhdGVrLG10Njc3OS11YXJ0IiwNCj4gPiArCQkJCSAgICAgIm1lZGlhdGVrLG10NjU3Ny11YXJ0
-IjsNCj4gPiArCQkJcmVnID0gPDAgMHgxMTAwNDAwMCAwIDB4NDAwPjsNCj4gPiArCQkJaW50ZXJy
-dXB0cyA9IDxHSUNfU1BJIDExNyBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsJCQljbG9ja3Mg
-PSA8JmNsazI2bT4sIDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJBX1VBUlQyPjsNCj4gPiArCQkJY2xv
-Y2stbmFtZXMgPSAiYmF1ZCIsICJidXMiOw0KPiA+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0K
-PiA+ICsJCX07DQo+IA0KPiBEZXZpY2V0cmVlIGRlc2NyaWJlcyB0aGUgSFcgd2UgaGF2ZS4gQXMg
-ZmFyIGFzIEkga25vdywgd2UgaGF2ZSA0IFVBUlRzIG9uIA0KPiBNVDY3NzkuIFNvIHdlIHNob3Vs
-ZCBsaXN0IHRoZW0gYWxsIGhlcmUuDQo+IA0KDQpBY3R1YWxseSwgV2UgaGF2ZSBvbmx5IDMgVUFS
-VHMgSFcgb24gTVQ2Nzc5LCBidXQgaGF2ZSA0IFVBUlQgY2xrIGluDQpoZWFkZXIgZmlsZSBvZiBj
-bGsuDQpDTEtfSU5GUkFfVUFSVDMgaXMgYSBkdW1teSBjbGsgaW50ZXJmYWNlLCBpdCBoYXMgbm8g
-ZWZmZWN0IG9uIHRoZQ0Kb3BlcmF0aW9uIG9mIHRoZSByZWFkL3dyaXRlIGluc3RydWN0aW9uLg0K
-DQpJZiB5b3UgdGhpbmsgaXQgaXMgbm90IGdvb2QsIEkgY2FuIHJlbW92ZSBpdCBpbiB0aGUgaGVh
-ZGVyIGZpbGUgb2YgY2xrLg0KDQpUaGFua3MNCg0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KDQo=
+Excerpts from Mathieu Desnoyers's message of July 14, 2020 12:13 am:
+> ----- On Jul 13, 2020, at 9:47 AM, Nicholas Piggin npiggin@gmail.com wrot=
+e:
+>=20
+>> Excerpts from Nicholas Piggin's message of July 13, 2020 2:45 pm:
+>>> Excerpts from Andy Lutomirski's message of July 11, 2020 3:04 am:
+>>>> Also, as it stands, I can easily see in_irq() ceasing to promise to
+>>>> serialize.  There are older kernels for which it does not promise to
+>>>> serialize.  And I have plans to make it stop serializing in the
+>>>> nearish future.
+>>>=20
+>>> You mean x86's return from interrupt? Sounds fun... you'll konw where t=
+o
+>>> update the membarrier sync code, at least :)
+>>=20
+>> Oh, I should actually say Mathieu recently clarified a return from
+>> interrupt doesn't fundamentally need to serialize in order to support
+>> membarrier sync core.
+>=20
+> Clarification to your statement:
+>=20
+> Return from interrupt to kernel code does not need to be context serializ=
+ing
+> as long as kernel serializes before returning to user-space.
+>=20
+> However, return from interrupt to user-space needs to be context serializ=
+ing.
 
+Hmm, I'm not sure it's enough even with the sync in the exit_lazy_tlb
+in the right places.
+
+A kernel thread does a use_mm, then it blocks and the user process with
+the same mm runs on that CPU, and then it calls into the kernel, blocks,
+the kernel thread runs again, another CPU issues a membarrier which does
+not IPI this one because it's running a kthread, and then the kthread
+switches back to the user process (still without having unused the mm),
+and then the user process returns from syscall without having done a=20
+core synchronising instruction.
+
+The cause of the problem is you want to avoid IPI'ing kthreads. Why?
+I'm guessing it really only matters as an optimisation in case of idle
+threads. Idle thread is easy (well, easier) because it won't use_mm, so=20
+you could check for rq->curr =3D=3D rq->idle in your loop (in a suitable=20
+sched accessor function).
+
+But... I'm not really liking this subtlety in the scheduler for all this=20
+(the scheduler still needs the barriers when switching out of idle).
+
+Can it be improved somehow? Let me forget x86 core sync problem for now
+(that _may_ be a bit harder), and step back and look at what we're doing.
+The memory barrier case would actually suffer from the same problem as
+core sync, because in the same situation it has no implicit mmdrop in
+the scheduler switch code either.
+
+So what are we doing with membarrier? We want any activity caused by the=20
+set of CPUs/threads specified that can be observed by this thread before=20
+calling membarrier is appropriately fenced from activity that can be=20
+observed to happen after the call returns.
+
+CPU0                     CPU1
+                         1. user stuff
+a. membarrier()          2. enter kernel
+b. read rq->curr         3. rq->curr switched to kthread
+c. is kthread, skip IPI  4. switch_to kthread
+d. return to user        5. rq->curr switched to user thread
+		         6. switch_to user thread
+		         7. exit kernel
+                         8. more user stuff
+
+As far as I can see, the problem is CPU1 might reorder step 5 and step
+8, so you have mmdrop of lazy mm be a mb after step 6.
+
+But why? The membarrier call only cares that there is a full barrier
+between 1 and 8, right? Which it will get from the previous context
+switch to the kthread.
+
+I must say the memory barrier comments in membarrier could be improved
+a bit (unless I'm missing where the main comment is). It's fine to know
+what barriers pair with one another, but we need to know which exact
+memory accesses it is ordering
+
+       /*
+         * Matches memory barriers around rq->curr modification in
+         * scheduler.
+         */
+
+Sure, but it doesn't say what else is being ordered. I think it's just
+the user memory accesses, but would be nice to make that a bit more
+explicit. If we had such comments then we might know this case is safe.
+
+I think the funny powerpc barrier is a similar case of this. If we
+ever see remote_rq->curr->flags & PF_KTHREAD, then we _know_ that
+CPU has or will have issued a memory barrier between running user
+code.
+
+So AFAIKS all this membarrier stuff in kernel/sched/core.c could
+just go away. Except x86 because thread switch doesn't imply core
+sync, so CPU1 between 1 and 8 may never issue a core sync instruction
+the same way a context switch must be a full mb.
+
+Before getting to x86 -- Am I right, or way off track here?=20
+
+Thanks,
+Nick
