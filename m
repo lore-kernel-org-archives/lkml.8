@@ -2,239 +2,220 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE62C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D83AC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8F402078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D6D20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 01:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgGPBtc (ORCPT
+        id S1727930AbgGPByg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 21:49:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29154 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726785AbgGPBtc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 21:49:32 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06G1WUhP039843;
-        Wed, 15 Jul 2020 21:49:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32a45ayy2v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 21:49:23 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06G1X6We041902;
-        Wed, 15 Jul 2020 21:49:23 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32a45ayy2j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 21:49:23 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06G1Zcr0009949;
-        Thu, 16 Jul 2020 01:49:22 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma04dal.us.ibm.com with ESMTP id 327529pfc5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 01:49:22 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06G1nLls14484156
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 01:49:21 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A3AFD112064;
-        Thu, 16 Jul 2020 01:49:21 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCC50112061;
-        Thu, 16 Jul 2020 01:49:16 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.73.114])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Jul 2020 01:49:16 +0000 (GMT)
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466085652.24747.2414199807974963385.stgit@hbathini.in.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v3 02/12] powerpc/kexec_file: mark PPC64 specific code
-In-reply-to: <159466085652.24747.2414199807974963385.stgit@hbathini.in.ibm.com>
-Date:   Wed, 15 Jul 2020 22:49:12 -0300
-Message-ID: <87v9io8c13.fsf@morokweng.localdomain>
+        Wed, 15 Jul 2020 21:54:36 -0400
+Received: from mga18.intel.com ([134.134.136.126]:35107 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726785AbgGPByf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 21:54:35 -0400
+IronPort-SDR: g+ii3VX9Tcjl3/7n8T6lc8fphK3PATEqvnP93KXQmn/ym4/FqqC/2JEgCHiQ1q2yftSYlS97zK
+ H2v0uQpEymbA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="136754852"
+X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
+   d="scan'208";a="136754852"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 18:54:33 -0700
+IronPort-SDR: c0QziT+Lm32KtxXwFlbpFjvkgJPqFMIx3dEZubyI2aVkNQlI8FLx4lxEa1PfjL7cVNDWNhbZ5O
+ baLPXY0uUEig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
+   d="scan'208";a="270436087"
+Received: from iwenhuan-mobl.amr.corp.intel.com (HELO [10.254.112.107]) ([10.254.112.107])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Jul 2020 18:54:33 -0700
+Subject: Re: [PATCH v2 1/2] PCI/ERR: Fix fatal error recovery for non-hotplug
+ capable devices
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+References: <20200714230803.GA92891@bjorn-Precision-5520>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <f15ffcb5-58f4-e7b7-a182-e4814bad102f@linux.intel.com>
+Date:   Wed, 15 Jul 2020 18:54:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-15_12:2020-07-15,2020-07-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160005
+In-Reply-To: <20200714230803.GA92891@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-I didn't forget about this patch. I just wanted to see more of the
-changes before comenting on it.
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
+On 7/14/20 4:08 PM, Bjorn Helgaas wrote:
+> On Thu, Jun 04, 2020 at 02:50:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> Fatal (DPC) error recovery is currently broken for non-hotplug
+>> capable devices. With current implementation, after successful
+>> fatal error recovery, non-hotplug capable device state won't be
+>> restored properly. You can find related issues in following links.
+>>
+>> https://lkml.org/lkml/2020/5/27/290
+>> https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+>> https://lkml.org/lkml/2020/3/28/328
+> 
+> Can you please convert these all to lore.kernel.org links?  lkml.org
+> is not quite as useful or reliable.
+Ok. I will fix it in next version.
+https://lore.kernel.org/linux-pci/20200527083130.4137-1-
+Zhiqiang.Hou@nxp.com/
+https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+https://lore.kernel.org/linux-
+pci/0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com/
+> 
+>> Current fatal error recovery implementation relies on hotplug handler
+>> for detaching/re-enumerating the affected devices/drivers on DLLSC
+>> state changes.
+> 
+> Can you remind us exactly how this relies on hotplug?  I know it
+> *does*, but I can't remember how.  It would sure be nice if we could
+> decouple this from pciehp somehow.
+In case of platform that supports PCIe native hotplug, once the fatal
+error disables the link, we will get DLLSC state change interrupt. On
+DLLSC_DOWN event pciehp driver will remove the affected device and
+detach the driver.
 
-> Some of the kexec_file_load code isn't PPC64 specific. Move PPC64
-> specific code from kexec/file_load.c to kexec/file_load_64.c. Also,
-> rename purgatory/trampoline.S to purgatory/trampoline_64.S in the
-> same spirit.
+For platforms that does not support PCIe hotplug, currently the fatal
+error recovery is broken. After reset and recovery, the device config
+space is not restored properly. And we expect call to ->slot_reset()
+fixes this issue.
+> 
+>> So when dealing with non-hotplug capable devices,
+>> recovery code does not restore the state of the affected devices
+>> correctly. Correct implementation should call report_slot_reset()
+>> function after resetting the link to restore the state of the
+>> device/driver.
+> 
+> We don't restore the state correctly.  What does this look like to the
+> user?  Does the device not work?
+Device will not be accessible. AFAIK, doing IO should fail.
+> 
+>> So use PCI_ERS_RESULT_NEED_RESET as error status for successful
+>> reset_link() operation and use PCI_ERS_RESULT_DISCONNECT for failure
+>> case. PCI_ERS_RESULT_NEED_RESET error state will ensure slot_reset()
+>> is called after reset link operation which will also fix the above
+>> mentioned issue.
+> 
+> I think PCI_ERS_RESULT_NEED_RESET results in calling driver
+> ->slot_reset() callbacks, right?  Where does the state restoration
+> happen?
+For fatal errors, since the reset is not triggered by OS, we cannot save
+the state of the device before resetting the device. So we assume state
+restoration is drivers responsibility and expect drivers to restore the
+state in ->slot_reset() call back. But I am not sure whether this is
+work for all devices (since this is driver dependent).
+For non-fatal errors, slot_reset or bus_reset function will handle the
+store/restore of device config space.
+> 
+> No, I guess it must be something in the hotplug driver that restores
+> the state, because you said devices below hotplug-capable ports work
+> correctly, but others don't.
+For hotplug capable devices, driver is removed and reattached (on DLLSC
+state change). So state initialization happens during re-enumeration.
 
-There's only a 64 bit implementation of kexec_file_load() so this is a
-somewhat theoretical exercise, but there's no harm in getting the code
-organized, so:
+> 
+>> [original patch is from jay.vosburgh@canonical.com]
+>> [original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
+>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/pci/pcie/err.c | 24 ++++++++++++++++++++++--
+>>   1 file changed, 22 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index 14bb8f54723e..5fe8561c7185 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -165,8 +165,28 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>   	pci_dbg(dev, "broadcast error_detected message\n");
+>>   	if (state == pci_channel_io_frozen) {
+>>   		pci_walk_bus(bus, report_frozen_detected, &status);
+>> -		status = reset_link(dev);
+>> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+>> +		/*
+>> +		 * After resetting the link using reset_link() call, the
+>> +		 * possible value of error status is either
+>> +		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
+>> +		 * PCI_ERS_RESULT_NEED_RESET (success case).
+>> +		 * So ignore the return value of report_error_detected()
+>> +		 * call for fatal errors. Instead use
+>> +		 * PCI_ERS_RESULT_NEED_RESET as initial status value.
+>> +		 *
+>> +		 * Ignoring the status return value of report_error_detected()
+>> +		 * call will also help in case of EDR mode based error
+>> +		 * recovery. In EDR mode AER and DPC Capabilities are owned by
+>> +		 * firmware and hence report_error_detected() call will possibly
+>> +		 * return PCI_ERS_RESULT_NO_AER_DRIVER. So if we don't ignore
+>> +		 * the return value of report_error_detected() then
+>> +		 * pcie_do_recovery() would report incorrect status after
+>> +		 * successful recovery. Ignoring PCI_ERS_RESULT_NO_AER_DRIVER
+>> +		 * in non EDR case should not have any functional impact.
+> 
+> I can't make sense out of the comment.  We already ignore the "status"
+> from pci_walk_bus(bus, report_frozen_detected, &status).
+Yes, but I am trying to explain why we ignore the status.
+> 
+> No idea what to make of the second paragraph.  If we make the commit
+> log make sense, maybe some summary of that would be useful here.
+Following are more details related to second part of comment. Let me
+know if it does not makes sense.
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+In case of EDR mode, pcie_do_recovery() will be triggered by
+edr_handle_event(), and AER and DPC capabilities controls are also owned
+by firmware. If DPC and AER capabilities are owned by firmware then AER
+and DPC PCIe service drivers will not be enumerated and hence
+report_frozen_detected() can return PCI_ERS_RESULT_NO_AER_DRIVER as
+status. If the report_error_detected() returns
+PCI_ERS_RESULT_NO_AER_DRIVER then as per current pcie_do_recovery()
+implementation, recovery will be reported as failure.
 
-I have just one question below.
+So ignoring the status of report_error_detected() helps the case of 
+recovery triggered by EDR driver.
+> 
+> I think this code is equivalent and makes the patch much clearer:
+Ok. I will change to this logic in next version.
+> 
+>    status = reset_link(dev);
+>    if (status == PCI_ERS_RESULT_RECOVERED) {
+>      status = PCI_ERS_RESULT_NEED_RESET;
+>    } else {
+>      status = PCI_ERS_RESULT_DISCONNECT;
+>      goto failed;
+>    }
 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
-> ---
->
-> v2 -> v3:
-> * Unchanged. Added Tested-by tag from Pingfan.
->
-> v1 -> v2:
-> * No changes.
->
->
->  arch/powerpc/include/asm/kexec.h       |   11 +++
->  arch/powerpc/kexec/Makefile            |    2 -
->  arch/powerpc/kexec/elf_64.c            |    7 +-
->  arch/powerpc/kexec/file_load.c         |   37 ++--------
->  arch/powerpc/kexec/file_load_64.c      |  108 ++++++++++++++++++++++++++++++
->  arch/powerpc/purgatory/Makefile        |    4 +
->  arch/powerpc/purgatory/trampoline.S    |  117 --------------------------------
->  arch/powerpc/purgatory/trampoline_64.S |  117 ++++++++++++++++++++++++++++++++
->  8 files changed, 248 insertions(+), 155 deletions(-)
->  create mode 100644 arch/powerpc/kexec/file_load_64.c
->  delete mode 100644 arch/powerpc/purgatory/trampoline.S
->  create mode 100644 arch/powerpc/purgatory/trampoline_64.S
+> 
+>> +		 */
+>> +		status = PCI_ERS_RESULT_NEED_RESET;
+>> +		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
+>> +			status = PCI_ERS_RESULT_DISCONNECT;
+>>   			pci_warn(dev, "link reset failed\n");
+>>   			goto failed;
+>>   		}
+>> -- 
+>> 2.17.1
+>>
 
-<snip>
-
-> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-> new file mode 100644
-> index 0000000..e6bff960
-> --- /dev/null
-> +++ b/arch/powerpc/kexec/file_load_64.c
-> @@ -0,0 +1,108 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * ppc64 code to implement the kexec_file_load syscall
-> + *
-> + * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
-> + * Copyright (C) 2004  IBM Corp.
-> + * Copyright (C) 2004,2005  Milton D Miller II, IBM Corporation
-> + * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
-> + * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
-> + * Copyright (C) 2020  IBM Corporation
-> + *
-> + * Based on kexec-tools' kexec-ppc64.c, kexec-elf-rel-ppc64.c, fs2dt.c.
-> + * Heavily modified for the kernel by
-> + * Hari Bathini <hbathini@linux.ibm.com>.
-> + */
-> +
-> +#include <linux/kexec.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/libfdt.h>
-> +
-> +const struct kexec_file_ops * const kexec_file_loaders[] = {
-> +	&kexec_elf64_ops,
-> +	NULL
-> +};
-> +
-> +/**
-> + * setup_purgatory_ppc64 - initialize PPC64 specific purgatory's global
-> + *                         variables and call setup_purgatory() to initialize
-> + *                         common global variable.
-> + * @image:                 kexec image.
-> + * @slave_code:            Slave code for the purgatory.
-> + * @fdt:                   Flattened device tree for the next kernel.
-> + * @kernel_load_addr:      Address where the kernel is loaded.
-> + * @fdt_load_addr:         Address where the flattened device tree is loaded.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
-> +			  const void *fdt, unsigned long kernel_load_addr,
-> +			  unsigned long fdt_load_addr)
-> +{
-> +	int ret;
-> +
-> +	ret = setup_purgatory(image, slave_code, fdt, kernel_load_addr,
-> +			      fdt_load_addr);
-> +	if (ret)
-> +		pr_err("Failed to setup purgatory symbols");
-> +	return ret;
-> +}
-> +
-> +/**
-> + * setup_new_fdt_ppc64 - Update the flattend device-tree of the kernel
-> + *                       being loaded.
-> + * @image:               kexec image being loaded.
-> + * @fdt:                 Flattened device tree for the next kernel.
-> + * @initrd_load_addr:    Address where the next initrd will be loaded.
-> + * @initrd_len:          Size of the next initrd, or 0 if there will be none.
-> + * @cmdline:             Command line for the next kernel, or NULL if there will
-> + *                       be none.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
-> +			unsigned long initrd_load_addr,
-> +			unsigned long initrd_len, const char *cmdline)
-> +{
-> +	int chosen_node, ret;
-> +
-> +	/* Remove memory reservation for the current device tree. */
-> +	ret = delete_fdt_mem_rsv(fdt, __pa(initial_boot_params),
-> +				 fdt_totalsize(initial_boot_params));
-> +	if (ret == 0)
-> +		pr_debug("Removed old device tree reservation.\n");
-> +	else if (ret != -ENOENT) {
-> +		pr_err("Failed to remove old device-tree reservation.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len,
-> +			    cmdline, &chosen_node);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", NULL, 0);
-> +	if (ret)
-> +		pr_err("Failed to update device-tree with linux,booted-from-kexec\n");
-> +
-> +	return ret;
-> +}
-
-For setup_purgatory_ppc64() you start with an empty function and build
-from there, but for setup_new_fdt_ppc64() you moved some code here. Is
-the code above 64 bit specific?
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
