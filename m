@@ -2,348 +2,603 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B235C20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9920020739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:58:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AaTJyHJQ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="NC053MFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgGPL6j (ORCPT
+        id S1728295AbgGPL6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:58:39 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:46008 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbgGPL6i (ORCPT
+        Thu, 16 Jul 2020 07:58:50 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:36346 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726239AbgGPL6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:58:38 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200716115836euoutp01e2eb5fe07d074874bac89043c06a0f9f~iOcBKnV9V2534025340euoutp01O
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 11:58:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200716115836euoutp01e2eb5fe07d074874bac89043c06a0f9f~iOcBKnV9V2534025340euoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594900716;
-        bh=vtx3jeBSZlkSSE4CJuzfTrNlTUg36EUyD3G4y4muTe8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=AaTJyHJQW2ofA4QbDc6V/lCCUPtbJYZBjuATPdYAkWxO8c4ZfNe79UDOf9XpvT7uG
-         fxjttRBsZVM4sxYx8yj35nRtYvQNBY8eh/OaUXG1hCqzZqLg8FMYrggvMvrJoqgrKN
-         sHFkDZoJITtlk1aUT1l1K8EHgs1a+NZpsa4Ox5co=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200716115835eucas1p2243942f608670002fb43b0d2d513988f~iOcA9N5py0372703727eucas1p2C;
-        Thu, 16 Jul 2020 11:58:35 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id FD.7C.06318.BE0401F5; Thu, 16
-        Jul 2020 12:58:35 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200716115835eucas1p10870e0f4058f8f3fee0e13eb76aaee66~iOcAMA5oe0970809708eucas1p1U;
-        Thu, 16 Jul 2020 11:58:35 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200716115835eusmtrp2d90da11c2ad9eb66f15db8ddec2f96a0~iOcALaCV11205812058eusmtrp2U;
-        Thu, 16 Jul 2020 11:58:35 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-59-5f1040ebe23d
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 57.C5.06017.AE0401F5; Thu, 16
-        Jul 2020 12:58:34 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200716115834eusmtip2f562092237cfa95a0d4f328a9481f700~iOb-xFRrG2935029350eusmtip2f;
-        Thu, 16 Jul 2020 11:58:34 +0000 (GMT)
-Subject: Re: [PATCH] usb: dwc2: Fix error path in gadget registration
-To:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <3bfb9bf3-3139-6447-fe0b-25473dabb0a0@samsung.com>
-Date:   Thu, 16 Jul 2020 13:58:36 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Thu, 16 Jul 2020 07:58:49 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GBpq82032279;
+        Thu, 16 Jul 2020 04:56:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=GDkgAycHawdal4HkUZCR1F4nwFy1AEsP63YxzfFdHsg=;
+ b=NC053MFG6LaNPp0V3C7GrTrOvxiFA//9Vw6wbjtcuwxGgMcAdsp9+MyjOQCbTyVh1bxO
+ gOsrWZP/xig7gvLDXEXv9TJT8wR/1vM6/oIPP58cIvzi7PV6/665x/uJ5nCxFikrlzSr
+ A8e7JKWTEhUjlAcwBbaWWXatwr4DeYwEUCPCof3RCa1DP1bUf7ikTZiOggq1Df42Xmj0
+ CnVyFLVVtAXDV80wshzWaAMcAdqqd5Eh1+rjwIV+IpkIFyxupR1FDzcVCvSGIXYZQd4M
+ wqpnbn3246lhc41IYog3gki2prB4dkGY+2XH+jVpmJg7DdMFmJW8oUh+iZxvCwhROlgX hA== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 32ap7v81rk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 04:56:18 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 16 Jul
+ 2020 04:56:16 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 16 Jul 2020 04:56:17 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id C1F423F703F;
+        Thu, 16 Jul 2020 04:56:12 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        <GR-everest-linux-l2@marvell.com>,
+        <QLogic-Storage-Upstream@cavium.com>, <netdev@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next 09/13] qed: reformat several structures a bit
+Date:   Thu, 16 Jul 2020 14:54:42 +0300
+Message-ID: <20200716115446.994-10-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200716115446.994-1-alobakin@marvell.com>
+References: <20200716115446.994-1-alobakin@marvell.com>
 MIME-Version: 1.0
-In-Reply-To: <13bfcc28-17d6-f399-2617-2edfb0cb8819@synopsys.com>
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7djP87qvHQTiDXpvGFpsnLGe1eJY2xN2
-        i+bF69ksLu+aw2axaFkrs8W7KbeZHdg8Nq3qZPPYP3cNu0ffllWMHlv2f2b0+LxJLoA1issm
-        JTUnsyy1SN8ugSvj1Yz3LAW/QiuWfOpnbWC869XFyMkhIWAi0bJtBVsXIxeHkMAKRokVr3cw
-        QjhfGCUOTdzBCuF8ZpSYuWECC0zLpnU/oVqWM0ps+vqEBcJ5zyhxd/ZMVpAqYQFXiX2vXrOB
-        2CIChRIv3h4HK2IWOMsocbNrOxNIgk3AUKLrbRdYEa+AncSCg7vAbBYBVYmONf/B1okKxEms
-        fwlRzysgKHFy5hOwOKeAg8Sfu2fB6pkF5CWat85mhrDFJW49mc8EskxCYBW7RM/3j0ANHECO
-        i8Td3awQLwhLvDq+hR3ClpH4vxOmvplR4uG5tewQTg+jxOWmGYwQVdYSd879YgMZxCygKbF+
-        lz5E2FGi/8k3Roj5fBI33gpC3MAnMWnbdGaIMK9ER5sQRLWaxKzj6+DWHrxwiXkCo9IsJJ/N
-        QvLNLCTfzELYu4CRZRWjeGppcW56arFxXmq5XnFibnFpXrpecn7uJkZg8jn97/jXHYz7/iQd
-        YhTgYFTi4a34zRcvxJpYVlyZe4hRgoNZSYTX6ezpOCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8
-        xotexgoJpCeWpGanphakFsFkmTg4pRoYd0ce0hac1ly41mf/+SMMWzWXqZpuOXT08pJvMX26
-        WUc9jDJrfJjD+Oc+1GpjXVrgPm/tVDOe/2sXFz81ORw0e+OxrT9nMO169CexMIzrafZ6QbU5
-        jEWTDfP7bm10TKtoP697JReYjB6zSuWcS359YPuTC30Jd1Yrqpe8mig/mX3Nu+Mx198HKbEU
-        ZyQaajEXFScCAFSG9IE6AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsVy+t/xe7qvHATiDTZctLHYOGM9q8Wxtifs
-        Fs2L17NZXN41h81i0bJWZot3U24zO7B5bFrVyeaxf+4ado++LasYPbbs/8zo8XmTXABrlJ5N
-        UX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7GqxnvWQp+
-        hVYs+dTP2sB416uLkZNDQsBEYtO6n2xdjFwcQgJLGSXaT61ngkjISJyc1sAKYQtL/LnWxQZi
-        Cwm8ZZSYMjMJxBYWcJXY9+o1WFxEoFBiZfdFsEHMAucZJaYf+cgIMXUTk8TV7/vZQarYBAwl
-        ut5CTOIVsJNYcHAXmM0ioCrRseY/C4gtKhAnsXzLfHaIGkGJkzOfgMU5BRwk/tw9C1bPLGAm
-        MW/zQ2YIW16ieetsKFtc4taT+UwTGIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbSK07M
-        LS7NS9dLzs/dxAiMtm3Hfm7Zwdj1LvgQowAHoxIPr8JPvngh1sSy4srcQ4wSHMxKIrxOZ0/H
-        CfGmJFZWpRblxxeV5qQWH2I0BXpuIrOUaHI+MBHklcQbmhqaW1gamhubG5tZKInzdggcjBES
-        SE8sSc1OTS1ILYLpY+LglGpgVIpev1Iny0Y8m3XvS8ntV5bIemSIWV2u7DM6eGTLs18fd0Z1
-        z5Y12/1VQzhQwb3uotPlzQf6+Xg5mH/9dO+b4Cy65Q0PwzLdTa9dvaKZE2/xH9r+4D0zc47u
-        4sweF76DSjrKyqIFzfmZ67aLuEZmcj2Xt+E475hSmJujtmTmgZX2U2fYtJopsRRnJBpqMRcV
-        JwIAMzPxnswCAAA=
-X-CMS-MailID: 20200716115835eucas1p10870e0f4058f8f3fee0e13eb76aaee66
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200714084807eucas1p1f6e680d162573c6a0660037172a65805
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200714084807eucas1p1f6e680d162573c6a0660037172a65805
-References: <CGME20200714084807eucas1p1f6e680d162573c6a0660037172a65805@eucas1p1.samsung.com>
-        <20200714084800.11340-1-m.szyprowski@samsung.com>
-        <40bfbfd6-6516-5995-8250-c8e3df16e11e@synopsys.com>
-        <ad121efc-44a2-143a-84d3-afb0db03419f@samsung.com>
-        <13bfcc28-17d6-f399-2617-2edfb0cb8819@synopsys.com>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_05:2020-07-16,2020-07-16 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Minas,
+Reformat a few nvm_cfg* structures (and partly qed_dev) prior to adding
+new fields and definitions.
 
-On 15.07.2020 15:54, Minas Harutyunyan wrote:
-> On 7/15/2020 12:42 PM, Marek Szyprowski wrote:
->> On 14.07.2020 14:32, Minas Harutyunyan wrote:
->>> On 7/14/2020 12:48 PM, Marek Szyprowski wrote:
->>>> When gadget registration fails, one should not call usb_del_gadget_udc().
->>>> Ensure this by setting gadget->udc to NULL. Also in case of a failure
->>> I was able to reproduce issue. I'm Ok with this fix.
->>>
->>>> there is no need to disable low-level hardware, so return immiedetly
->>>> instead of jumping to error_init label.
->>>>
->>> Why do you think that disable low-level hardware not required which was
->>> enabled before? Also for some platforms required to call
->>> regulator_disable() which was enabled earlier in probe function.
->>> So, I suggest to keep jump to error_init label.
->> If I keep the jump to error_init label, then there is unbalanced call to
->> dwc2_lowlevel_hw_disable(). usb_add_gadget_udc() can fail in 2 places:
->> on gadget->bind() or during udc_start(). In the first case, the HW was
->> not yet enabled, so there is no need to disable it. In the latter one,
->> the error might be returned only from the dwc2_lowlevel_hw_enable(), so
->> again there is no need to call dwc2_lowlevel_hw_disable().
->>
->> If I keep the "goto error_init;" line, I get the following errors:
->>
->> dwc2 12480000.hsotg: dwc2_check_params: Invalid parameter besl=1
->> dwc2 12480000.hsotg: dwc2_check_params: Invalid parameter
->> g_np_tx_fifo_size=1024
->> dwc2 12480000.hsotg: EPs: 16, dedicated fifos, 7808 entries in SPRAM
->> Mass Storage Function, version: 2009/09/11
->> LUN: removable file: (no medium)
->> no file given for LUN0
->> g_mass_storage 12480000.hsotg: failed to start g_mass_storage: -22
->> ------------[ cut here ]------------
->> WARNING: CPU: 3 PID: 49 at drivers/clk/clk.c:958
->> clk_core_disable+0x1e4/0x314
->> usb_device already disabled
->> Modules linked in:
->> CPU: 3 PID: 49 Comm: kworker/3:1 Not tainted
->> 5.8.0-rc5-next-20200714-00003-g105f360ba595-dirty #8758
->> Hardware name: Samsung Exynos (Flattened Device Tree)
->> Workqueue: events deferred_probe_work_func
->> [<c011184c>] (unwind_backtrace) from [<c010d250>] (show_stack+0x10/0x14)
->> [<c010d250>] (show_stack) from [<c051b8fc>] (dump_stack+0xbc/0xe8)
->> [<c051b8fc>] (dump_stack) from [<c0126ed8>] (__warn+0xf0/0x108)
->> [<c0126ed8>] (__warn) from [<c0126f64>] (warn_slowpath_fmt+0x74/0xb8)
->> [<c0126f64>] (warn_slowpath_fmt) from [<c056c338>]
->> (clk_core_disable+0x1e4/0x314)
->> [<c056c338>] (clk_core_disable) from [<c056c480>]
->> (clk_core_disable_lock+0x18/0x24)
->> [<c056c480>] (clk_core_disable_lock) from [<c073f9d4>]
->> (__dwc2_lowlevel_hw_disable+0x3c/0xa0)
->> [<c073f9d4>] (__dwc2_lowlevel_hw_disable) from [<c0740188>]
->> (dwc2_driver_probe+0x2d4/0x6ac)
->> [<c0740188>] (dwc2_driver_probe) from [<c0653640>]
->> (platform_drv_probe+0x6c/0xa4)
->> [<c0653640>] (platform_drv_probe) from [<c0650bdc>]
->> (really_probe+0x200/0x4fc)
->> [<c0650bdc>] (really_probe) from [<c0651040>]
->> (driver_probe_device+0x78/0x1fc)
->> [<c0651040>] (driver_probe_device) from [<c064ea78>]
->> (bus_for_each_drv+0x74/0xb8)
->> [<c064ea78>] (bus_for_each_drv) from [<c065093c>]
->> (__device_attach+0xd4/0x16c)
->> [<c065093c>] (__device_attach) from [<c064fa3c>]
->> (bus_probe_device+0x88/0x90)
->> [<c064fa3c>] (bus_probe_device) from [<c064ff54>]
->> (deferred_probe_work_func+0x3c/0xd0)
->> [<c064ff54>] (deferred_probe_work_func) from [<c0148a5c>]
->> (process_one_work+0x234/0x7dc)
->> [<c0148a5c>] (process_one_work) from [<c0149048>] (worker_thread+0x44/0x51c)
->> [<c0149048>] (worker_thread) from [<c015039c>] (kthread+0x158/0x1a0)
->> [<c015039c>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
->> Exception stack(0xee923fb0 to 0xee923ff8)
->> ...
->> irq event stamp: 36966
->> hardirqs last  enabled at (36965): [<c02b92d8>] kfree+0x1a4/0x3f0
->> hardirqs last disabled at (36966): [<c0569edc>] clk_enable_lock+0x14/0x134
->> softirqs last  enabled at (36814): [<c010174c>] __do_softirq+0x50c/0x608
->> softirqs last disabled at (36803): [<c0130218>] irq_exit+0x168/0x16c
->> ---[ end trace f55f4b28f3080c12 ]---
->> ------------[ cut here ]------------
->> WARNING: CPU: 3 PID: 49 at drivers/clk/clk.c:817
->> clk_core_unprepare+0x33c/0x470
->> usb_device already unprepared
->> Modules linked in:
->> CPU: 3 PID: 49 Comm: kworker/3:1 Tainted: G        W
->> 5.8.0-rc5-next-20200714-00003-g105f360ba595-dirty #8758
->> Hardware name: Samsung Exynos (Flattened Device Tree)
->> Workqueue: events deferred_probe_work_func
->> [<c011184c>] (unwind_backtrace) from [<c010d250>] (show_stack+0x10/0x14)
->> [<c010d250>] (show_stack) from [<c051b8fc>] (dump_stack+0xbc/0xe8)
->> [<c051b8fc>] (dump_stack) from [<c0126ed8>] (__warn+0xf0/0x108)
->> [<c0126ed8>] (__warn) from [<c0126f64>] (warn_slowpath_fmt+0x74/0xb8)
->> [<c0126f64>] (warn_slowpath_fmt) from [<c056dcb8>]
->> (clk_core_unprepare+0x33c/0x470)
->> [<c056dcb8>] (clk_core_unprepare) from [<c056de10>]
->> (clk_unprepare+0x24/0x2c)
->> [<c056de10>] (clk_unprepare) from [<c073f9dc>]
->> (__dwc2_lowlevel_hw_disable+0x44/0xa0)
->> [<c073f9dc>] (__dwc2_lowlevel_hw_disable) from [<c0740188>]
->> (dwc2_driver_probe+0x2d4/0x6ac)
->> [<c0740188>] (dwc2_driver_probe) from [<c0653640>]
->> (platform_drv_probe+0x6c/0xa4)
->> [<c0653640>] (platform_drv_probe) from [<c0650bdc>]
->> (really_probe+0x200/0x4fc)
->> [<c0650bdc>] (really_probe) from [<c0651040>]
->> (driver_probe_device+0x78/0x1fc)
->> [<c0651040>] (driver_probe_device) from [<c064ea78>]
->> (bus_for_each_drv+0x74/0xb8)
->> [<c064ea78>] (bus_for_each_drv) from [<c065093c>]
->> (__device_attach+0xd4/0x16c)
->> [<c065093c>] (__device_attach) from [<c064fa3c>]
->> (bus_probe_device+0x88/0x90)
->> [<c064fa3c>] (bus_probe_device) from [<c064ff54>]
->> (deferred_probe_work_func+0x3c/0xd0)
->> [<c064ff54>] (deferred_probe_work_func) from [<c0148a5c>]
->> (process_one_work+0x234/0x7dc)
->> [<c0148a5c>] (process_one_work) from [<c0149048>] (worker_thread+0x44/0x51c)
->> [<c0149048>] (worker_thread) from [<c015039c>] (kthread+0x158/0x1a0)
->> [<c015039c>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
->> Exception stack(0xee923fb0 to 0xee923ff8)
->> ...
->> irq event stamp: 37073
->> hardirqs last  enabled at (37081): [<c019d624>] console_unlock+0x430/0x6cc
->> hardirqs last disabled at (37108): [<c019d348>] console_unlock+0x154/0x6cc
->> softirqs last  enabled at (37124): [<c010174c>] __do_softirq+0x50c/0x608
->> softirqs last disabled at (37135): [<c0130218>] irq_exit+0x168/0x16c
->> ---[ end trace f55f4b28f3080c13 ]---
->> ------------[ cut here ]------------
->> WARNING: CPU: 3 PID: 49 at drivers/regulator/core.c:2603
->> _regulator_disable+0x180/0x1d8
->> unbalanced disables for VUOTG_3.0V
->> Modules linked in:
->> CPU: 3 PID: 49 Comm: kworker/3:1 Tainted: G        W
->> 5.8.0-rc5-next-20200714-00003-g105f360ba595-dirty #8758
->> Hardware name: Samsung Exynos (Flattened Device Tree)
->> Workqueue: events deferred_probe_work_func
->> [<c011184c>] (unwind_backtrace) from [<c010d250>] (show_stack+0x10/0x14)
->> [<c010d250>] (show_stack) from [<c051b8fc>] (dump_stack+0xbc/0xe8)
->> [<c051b8fc>] (dump_stack) from [<c0126ed8>] (__warn+0xf0/0x108)
->> [<c0126ed8>] (__warn) from [<c0126f64>] (warn_slowpath_fmt+0x74/0xb8)
->> [<c0126f64>] (warn_slowpath_fmt) from [<c0585e78>]
->> (_regulator_disable+0x180/0x1d8)
->> [<c0585e78>] (_regulator_disable) from [<c0585f04>]
->> (regulator_disable+0x34/0xe0)
->> [<c0585f04>] (regulator_disable) from [<c0587ef8>]
->> (regulator_bulk_disable+0x28/0xb0)
->> [<c0587ef8>] (regulator_bulk_disable) from [<c0740188>]
->> (dwc2_driver_probe+0x2d4/0x6ac)
->> [<c0740188>] (dwc2_driver_probe) from [<c0653640>]
->> (platform_drv_probe+0x6c/0xa4)
->> [<c0653640>] (platform_drv_probe) from [<c0650bdc>]
->> (really_probe+0x200/0x4fc)
->> [<c0650bdc>] (really_probe) from [<c0651040>]
->> (driver_probe_device+0x78/0x1fc)
->> [<c0651040>] (driver_probe_device) from [<c064ea78>]
->> (bus_for_each_drv+0x74/0xb8)
->> [<c064ea78>] (bus_for_each_drv) from [<c065093c>]
->> (__device_attach+0xd4/0x16c)
->> [<c065093c>] (__device_attach) from [<c064fa3c>]
->> (bus_probe_device+0x88/0x90)
->> [<c064fa3c>] (bus_probe_device) from [<c064ff54>]
->> (deferred_probe_work_func+0x3c/0xd0)
->> [<c064ff54>] (deferred_probe_work_func) from [<c0148a5c>]
->> (process_one_work+0x234/0x7dc)
->> [<c0148a5c>] (process_one_work) from [<c0149048>] (worker_thread+0x44/0x51c)
->> [<c0149048>] (worker_thread) from [<c015039c>] (kthread+0x158/0x1a0)
->> [<c015039c>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
->> Exception stack(0xee923fb0 to 0xee923ff8)
->> ...
->> irq event stamp: 37243
->> hardirqs last  enabled at (37251): [<c019d624>] console_unlock+0x430/0x6cc
->> hardirqs last disabled at (37274): [<c0ac0790>] __schedule+0xd8/0x860
->> softirqs last  enabled at (37270): [<c010174c>] __do_softirq+0x50c/0x608
->> softirqs last disabled at (37291): [<c0130218>] irq_exit+0x168/0x16c
->> ---[ end trace f55f4b28f3080c14 ]---
->> Failed to disable vusb_a: -5
->> dwc2: probe of 12480000.hsotg failed with error -22
->> 8<--- cut here ---
->> Unable to handle kernel NULL pointer dereference at virtual address 00000004
->> pgd = (ptrval)
->> [00000004] *pgd=00000000
->> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
->> Modules linked in:
->> CPU: 3 PID: 87 Comm: kworker/3:2 Tainted: G        W
->> 5.8.0-rc5-next-20200714-00003-g105f360ba595-dirty #8758
->> Hardware name: Samsung Exynos (Flattened Device Tree)
->> Workqueue:  0x0 (rcu_gp)
->> PC is at process_one_work+0x44/0x7dc
->> LR is at 0xedc226d0
->> ...
->> Process kworker/3:2 (pid: 87, stack limit = 0x(ptrval))
->> Stack: (0xeda03f00 to 0xeda04000)
->> ...
->> [<c014886c>] (process_one_work) from [<c0149048>] (worker_thread+0x44/0x51c)
->> [<c0149048>] (worker_thread) from [<c015039c>] (kthread+0x158/0x1a0)
->> [<c015039c>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
->> Exception stack(0xeda03fb0 to 0xeda03ff8)
->> ...
->> ---[ end trace f55f4b28f3080c15 ]---
->> note: kworker/3:2[87] exited with preempt_count 1
->>
->> Best regards
->>
-> I guess you build driver in (hsotg->dr_mode == USB_DR_MODE_PERIPHERAL)
-> and this is why call of dwc2_lowlevel_hw_disable() at 'error:' label
-> create issue. Could you please test on your setup follow implementation:
-> ...
-> error:
-> 	if (hsotg->dr_mode != USB_DR_MODE_PERIPHERAL)
-> 		dwc2_lowlevel_hw_disable(hsotg);
-> 	return retval;
-> }
-> ...
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+---
+ drivers/net/ethernet/qlogic/qed/qed.h     |  62 ++--
+ drivers/net/ethernet/qlogic/qed/qed_hsi.h | 345 +++++++++++-----------
+ drivers/net/ethernet/qlogic/qed/qed_mcp.h |  12 +-
+ 3 files changed, 213 insertions(+), 206 deletions(-)
 
-Right, this will work. However, I would also change the order of 
-operations - disabling usb33d regulator should be done after disabling 
-lowlevel hardware to properly pair with the enable operations.
-
-While playing with this I've also found an issue in UDC core:
-
-https://lore.kernel.org/linux-usb/20200716115525.27519-1-m.szyprowski@samsung.com/T/#u
-
-Best regards
+diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
+index ced805399e4f..6a1d12da7910 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed.h
++++ b/drivers/net/ethernet/qlogic/qed/qed.h
+@@ -715,41 +715,41 @@ struct qed_dbg_feature {
+ };
+ 
+ struct qed_dev {
+-	u32	dp_module;
+-	u8	dp_level;
+-	char	name[NAME_SIZE];
+-
+-	enum	qed_dev_type type;
+-/* Translate type/revision combo into the proper conditions */
+-#define QED_IS_BB(dev)  ((dev)->type == QED_DEV_TYPE_BB)
+-#define QED_IS_BB_B0(dev)       (QED_IS_BB(dev) && \
+-				 CHIP_REV_IS_B0(dev))
+-#define QED_IS_AH(dev)  ((dev)->type == QED_DEV_TYPE_AH)
+-#define QED_IS_K2(dev)  QED_IS_AH(dev)
+-
+-	u16	vendor_id;
+-	u16	device_id;
+-#define QED_DEV_ID_MASK		0xff00
+-#define QED_DEV_ID_MASK_BB	0x1600
+-#define QED_DEV_ID_MASK_AH	0x8000
+-#define QED_IS_E4(dev)  (QED_IS_BB(dev) || QED_IS_AH(dev))
+-
+-	u16	chip_num;
+-#define CHIP_NUM_MASK                   0xffff
+-#define CHIP_NUM_SHIFT                  16
+-
+-	u16	chip_rev;
+-#define CHIP_REV_MASK                   0xf
+-#define CHIP_REV_SHIFT                  12
+-#define CHIP_REV_IS_B0(_cdev)   ((_cdev)->chip_rev == 1)
++	u32				dp_module;
++	u8				dp_level;
++	char				name[NAME_SIZE];
++
++	enum qed_dev_type		type;
++	/* Translate type/revision combo into the proper conditions */
++#define QED_IS_BB(dev)			((dev)->type == QED_DEV_TYPE_BB)
++#define QED_IS_BB_B0(dev)		(QED_IS_BB(dev) && CHIP_REV_IS_B0(dev))
++#define QED_IS_AH(dev)			((dev)->type == QED_DEV_TYPE_AH)
++#define QED_IS_K2(dev)			QED_IS_AH(dev)
++#define QED_IS_E4(dev)			(QED_IS_BB(dev) || QED_IS_AH(dev))
++
++	u16				vendor_id;
++
++	u16				device_id;
++#define QED_DEV_ID_MASK			0xff00
++#define QED_DEV_ID_MASK_BB		0x1600
++#define QED_DEV_ID_MASK_AH		0x8000
++
++	u16				chip_num;
++#define CHIP_NUM_MASK			0xffff
++#define CHIP_NUM_SHIFT			16
++
++	u16				chip_rev;
++#define CHIP_REV_MASK			0xf
++#define CHIP_REV_SHIFT			12
++#define CHIP_REV_IS_B0(_cdev)		((_cdev)->chip_rev == 1)
+ 
+ 	u16				chip_metal;
+-#define CHIP_METAL_MASK                 0xff
+-#define CHIP_METAL_SHIFT                4
++#define CHIP_METAL_MASK			0xff
++#define CHIP_METAL_SHIFT		4
+ 
+ 	u16				chip_bond_id;
+-#define CHIP_BOND_ID_MASK               0xf
+-#define CHIP_BOND_ID_SHIFT              0
++#define CHIP_BOND_ID_MASK		0xf
++#define CHIP_BOND_ID_SHIFT		0
+ 
+ 	u8				num_engines;
+ 	u8				num_ports;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_hsi.h b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
+index 7c1d4efffbff..a4a845579fd2 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_hsi.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
+@@ -12532,67 +12532,67 @@ struct public_drv_mb {
+ #define DRV_MB_PARAM_SET_LED_MODE_ON		0x1
+ #define DRV_MB_PARAM_SET_LED_MODE_OFF		0x2
+ 
+-#define DRV_MB_PARAM_TRANSCEIVER_PORT_OFFSET		0
+-#define DRV_MB_PARAM_TRANSCEIVER_PORT_MASK		0x00000003
+-#define DRV_MB_PARAM_TRANSCEIVER_SIZE_OFFSET		2
+-#define DRV_MB_PARAM_TRANSCEIVER_SIZE_MASK		0x000000FC
+-#define DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_OFFSET	8
+-#define DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_MASK	0x0000FF00
+-#define DRV_MB_PARAM_TRANSCEIVER_OFFSET_OFFSET		16
+-#define DRV_MB_PARAM_TRANSCEIVER_OFFSET_MASK		0xFFFF0000
++#define DRV_MB_PARAM_TRANSCEIVER_PORT_OFFSET			0
++#define DRV_MB_PARAM_TRANSCEIVER_PORT_MASK			0x00000003
++#define DRV_MB_PARAM_TRANSCEIVER_SIZE_OFFSET			2
++#define DRV_MB_PARAM_TRANSCEIVER_SIZE_MASK			0x000000fc
++#define DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_OFFSET		8
++#define DRV_MB_PARAM_TRANSCEIVER_I2C_ADDRESS_MASK		0x0000ff00
++#define DRV_MB_PARAM_TRANSCEIVER_OFFSET_OFFSET			16
++#define DRV_MB_PARAM_TRANSCEIVER_OFFSET_MASK			0xffff0000
+ 
+ 	/* Resource Allocation params - Driver version support */
+-#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_MASK	0xFFFF0000
+-#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_SHIFT	16
+-#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_MASK	0x0000FFFF
+-#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_SHIFT	0
+-
+-#define DRV_MB_PARAM_BIST_REGISTER_TEST		1
+-#define DRV_MB_PARAM_BIST_CLOCK_TEST		2
+-#define DRV_MB_PARAM_BIST_NVM_TEST_NUM_IMAGES	3
+-#define DRV_MB_PARAM_BIST_NVM_TEST_IMAGE_BY_INDEX	4
+-
+-#define DRV_MB_PARAM_BIST_RC_UNKNOWN		0
+-#define DRV_MB_PARAM_BIST_RC_PASSED		1
+-#define DRV_MB_PARAM_BIST_RC_FAILED		2
+-#define DRV_MB_PARAM_BIST_RC_INVALID_PARAMETER	3
+-
+-#define DRV_MB_PARAM_BIST_TEST_INDEX_SHIFT	0
+-#define DRV_MB_PARAM_BIST_TEST_INDEX_MASK	0x000000FF
+-#define DRV_MB_PARAM_BIST_TEST_IMAGE_INDEX_SHIFT	8
+-#define DRV_MB_PARAM_BIST_TEST_IMAGE_INDEX_MASK		0x0000FF00
+-
+-#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_MASK		0x0000FFFF
+-#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_OFFSET	0
+-#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_EEE		0x00000002
+-#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_FEC_CONTROL	0x00000004
+-#define DRV_MB_PARAM_FEATURE_SUPPORT_FUNC_VLINK		0x00010000
++#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_MASK		0xffff0000
++#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_SHIFT		16
++#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_MASK		0x0000ffff
++#define DRV_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_SHIFT		0
++
++#define DRV_MB_PARAM_BIST_REGISTER_TEST				1
++#define DRV_MB_PARAM_BIST_CLOCK_TEST				2
++#define DRV_MB_PARAM_BIST_NVM_TEST_NUM_IMAGES			3
++#define DRV_MB_PARAM_BIST_NVM_TEST_IMAGE_BY_INDEX		4
++
++#define DRV_MB_PARAM_BIST_RC_UNKNOWN				0
++#define DRV_MB_PARAM_BIST_RC_PASSED				1
++#define DRV_MB_PARAM_BIST_RC_FAILED				2
++#define DRV_MB_PARAM_BIST_RC_INVALID_PARAMETER			3
++
++#define DRV_MB_PARAM_BIST_TEST_INDEX_SHIFT			0
++#define DRV_MB_PARAM_BIST_TEST_INDEX_MASK			0x000000ff
++#define DRV_MB_PARAM_BIST_TEST_IMAGE_INDEX_SHIFT		8
++#define DRV_MB_PARAM_BIST_TEST_IMAGE_INDEX_MASK			0x0000ff00
++
++#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_MASK			0x0000ffff
++#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_OFFSET		0
++#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_EEE			0x00000002
++#define DRV_MB_PARAM_FEATURE_SUPPORT_PORT_FEC_CONTROL		0x00000004
++#define DRV_MB_PARAM_FEATURE_SUPPORT_FUNC_VLINK			0x00010000
+ 
+ /* DRV_MSG_CODE_DEBUG_DATA_SEND parameters */
+-#define DRV_MSG_CODE_DEBUG_DATA_SEND_SIZE_OFFSET	0
+-#define DRV_MSG_CODE_DEBUG_DATA_SEND_SIZE_MASK		0xFF
++#define DRV_MSG_CODE_DEBUG_DATA_SEND_SIZE_OFFSET		0
++#define DRV_MSG_CODE_DEBUG_DATA_SEND_SIZE_MASK			0xff
+ 
+ /* Driver attributes params */
+-#define DRV_MB_PARAM_ATTRIBUTE_KEY_OFFSET		0
+-#define DRV_MB_PARAM_ATTRIBUTE_KEY_MASK			0x00FFFFFF
+-#define DRV_MB_PARAM_ATTRIBUTE_CMD_OFFSET		24
+-#define DRV_MB_PARAM_ATTRIBUTE_CMD_MASK			0xFF000000
+-
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_OFFSET		0
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_SHIFT		0
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_MASK		0x0000FFFF
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ALL_SHIFT		16
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ALL_MASK		0x00010000
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_INIT_SHIFT		17
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_INIT_MASK		0x00020000
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_COMMIT_SHIFT	18
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_COMMIT_MASK		0x00040000
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_FREE_SHIFT		19
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_FREE_MASK		0x00080000
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_SEL_SHIFT	20
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_SEL_MASK	0x00100000
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_ID_SHIFT	24
+-#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_ID_MASK	0x0f000000
++#define DRV_MB_PARAM_ATTRIBUTE_KEY_OFFSET			0
++#define DRV_MB_PARAM_ATTRIBUTE_KEY_MASK				0x00ffffff
++#define DRV_MB_PARAM_ATTRIBUTE_CMD_OFFSET			24
++#define DRV_MB_PARAM_ATTRIBUTE_CMD_MASK				0xff000000
++
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_OFFSET			0
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_SHIFT			0
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ID_MASK			0x0000ffff
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ALL_SHIFT			16
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ALL_MASK			0x00010000
++#define DRV_MB_PARAM_NVM_CFG_OPTION_INIT_SHIFT			17
++#define DRV_MB_PARAM_NVM_CFG_OPTION_INIT_MASK			0x00020000
++#define DRV_MB_PARAM_NVM_CFG_OPTION_COMMIT_SHIFT		18
++#define DRV_MB_PARAM_NVM_CFG_OPTION_COMMIT_MASK			0x00040000
++#define DRV_MB_PARAM_NVM_CFG_OPTION_FREE_SHIFT			19
++#define DRV_MB_PARAM_NVM_CFG_OPTION_FREE_MASK			0x00080000
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_SEL_SHIFT		20
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_SEL_MASK		0x00100000
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_ID_SHIFT		24
++#define DRV_MB_PARAM_NVM_CFG_OPTION_ENTITY_ID_MASK		0x0f000000
+ 
+ 	u32 fw_mb_header;
+ #define FW_MSG_CODE_MASK			0xffff0000
+@@ -12639,56 +12639,56 @@ struct public_drv_mb {
+ 
+ #define FW_MSG_CODE_MDUMP_INVALID_CMD		0x00030000
+ 
+-	u32						fw_mb_param;
+-#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_MASK	0xffff0000
+-#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_SHIFT	16
+-#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_MASK	0x0000ffff
+-#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_SHIFT	0
++	u32							fw_mb_param;
++#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_MASK		0xffff0000
++#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MAJOR_SHIFT		16
++#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_MASK		0x0000ffff
++#define FW_MB_PARAM_RESOURCE_ALLOC_VERSION_MINOR_SHIFT		0
+ 
+ 	/* Get PF RDMA protocol command response */
+-#define FW_MB_PARAM_GET_PF_RDMA_NONE			0x0
+-#define FW_MB_PARAM_GET_PF_RDMA_ROCE			0x1
+-#define FW_MB_PARAM_GET_PF_RDMA_IWARP			0x2
+-#define FW_MB_PARAM_GET_PF_RDMA_BOTH			0x3
++#define FW_MB_PARAM_GET_PF_RDMA_NONE				0x0
++#define FW_MB_PARAM_GET_PF_RDMA_ROCE				0x1
++#define FW_MB_PARAM_GET_PF_RDMA_IWARP				0x2
++#define FW_MB_PARAM_GET_PF_RDMA_BOTH				0x3
+ 
+ 	/* Get MFW feature support response */
+-#define FW_MB_PARAM_FEATURE_SUPPORT_SMARTLINQ		0x00000001
+-#define FW_MB_PARAM_FEATURE_SUPPORT_EEE			0x00000002
+-#define FW_MB_PARAM_FEATURE_SUPPORT_FEC_CONTROL		0x00000020
+-#define FW_MB_PARAM_FEATURE_SUPPORT_VLINK		0x00010000
++#define FW_MB_PARAM_FEATURE_SUPPORT_SMARTLINQ			BIT(0)
++#define FW_MB_PARAM_FEATURE_SUPPORT_EEE				BIT(1)
++#define FW_MB_PARAM_FEATURE_SUPPORT_FEC_CONTROL			BIT(5)
++#define FW_MB_PARAM_FEATURE_SUPPORT_VLINK			BIT(16)
+ 
+-#define FW_MB_PARAM_LOAD_DONE_DID_EFUSE_ERROR		BIT(0)
++#define FW_MB_PARAM_LOAD_DONE_DID_EFUSE_ERROR			BIT(0)
+ 
+-#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALID_MASK	0x00000001
+-#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALID_SHIFT	0
+-#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALUE_MASK	0x00000002
+-#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALUE_SHIFT	1
+-#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALID_MASK		0x00000004
+-#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALID_SHIFT	2
+-#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALUE_MASK		0x00000008
+-#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALUE_SHIFT	3
++#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALID_MASK		0x00000001
++#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALID_SHIFT		0
++#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALUE_MASK		0x00000002
++#define FW_MB_PARAM_ENG_CFG_FIR_AFFIN_VALUE_SHIFT		1
++#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALID_MASK			0x00000004
++#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALID_SHIFT		2
++#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALUE_MASK			0x00000008
++#define FW_MB_PARAM_ENG_CFG_L2_AFFIN_VALUE_SHIFT		3
+ 
+-#define FW_MB_PARAM_PPFID_BITMAP_MASK			0xff
+-#define FW_MB_PARAM_PPFID_BITMAP_SHIFT			0
++#define FW_MB_PARAM_PPFID_BITMAP_MASK				0xff
++#define FW_MB_PARAM_PPFID_BITMAP_SHIFT				0
+ 
+-	u32						drv_pulse_mb;
+-#define DRV_PULSE_SEQ_MASK				0x00007fff
+-#define DRV_PULSE_SYSTEM_TIME_MASK			0xffff0000
+-#define DRV_PULSE_ALWAYS_ALIVE				0x00008000
++	u32							drv_pulse_mb;
++#define DRV_PULSE_SEQ_MASK					0x00007fff
++#define DRV_PULSE_SYSTEM_TIME_MASK				0xffff0000
++#define DRV_PULSE_ALWAYS_ALIVE					0x00008000
+ 
+-	u32						mcp_pulse_mb;
+-#define MCP_PULSE_SEQ_MASK				0x00007fff
+-#define MCP_PULSE_ALWAYS_ALIVE				0x00008000
+-#define MCP_EVENT_MASK					0xffff0000
+-#define MCP_EVENT_OTHER_DRIVER_RESET_REQ		0x00010000
++	u32							mcp_pulse_mb;
++#define MCP_PULSE_SEQ_MASK					0x00007fff
++#define MCP_PULSE_ALWAYS_ALIVE					0x00008000
++#define MCP_EVENT_MASK						0xffff0000
++#define MCP_EVENT_OTHER_DRIVER_RESET_REQ			0x00010000
+ 
+-	union drv_union_data				union_data;
++	union drv_union_data					union_data;
+ };
+ 
+-#define FW_MB_PARAM_NVM_PUT_FILE_REQ_OFFSET_MASK	0x00ffffff
+-#define FW_MB_PARAM_NVM_PUT_FILE_REQ_OFFSET_SHIFT	0
+-#define FW_MB_PARAM_NVM_PUT_FILE_REQ_SIZE_MASK		0xff000000
+-#define FW_MB_PARAM_NVM_PUT_FILE_REQ_SIZE_SHIFT		24
++#define FW_MB_PARAM_NVM_PUT_FILE_REQ_OFFSET_MASK		0x00ffffff
++#define FW_MB_PARAM_NVM_PUT_FILE_REQ_OFFSET_SHIFT		0
++#define FW_MB_PARAM_NVM_PUT_FILE_REQ_SIZE_MASK			0xff000000
++#define FW_MB_PARAM_NVM_PUT_FILE_REQ_SIZE_SHIFT			24
+ 
+ enum MFW_DRV_MSG_TYPE {
+ 	MFW_DRV_MSG_LINK_CHANGE,
+@@ -12975,86 +12975,93 @@ enum tlvs {
+ };
+ 
+ struct nvm_cfg_mac_address {
+-	u32 mac_addr_hi;
+-#define NVM_CFG_MAC_ADDRESS_HI_MASK	0x0000FFFF
+-#define NVM_CFG_MAC_ADDRESS_HI_OFFSET	0
+-	u32 mac_addr_lo;
++	u32							mac_addr_hi;
++#define NVM_CFG_MAC_ADDRESS_HI_MASK				0x0000ffff
++#define NVM_CFG_MAC_ADDRESS_HI_OFFSET				0
++
++	u32							mac_addr_lo;
+ };
+ 
+ struct nvm_cfg1_glob {
+-	u32 generic_cont0;
+-#define NVM_CFG1_GLOB_MF_MODE_MASK		0x00000FF0
+-#define NVM_CFG1_GLOB_MF_MODE_OFFSET		4
+-#define NVM_CFG1_GLOB_MF_MODE_MF_ALLOWED	0x0
+-#define NVM_CFG1_GLOB_MF_MODE_DEFAULT		0x1
+-#define NVM_CFG1_GLOB_MF_MODE_SPIO4		0x2
+-#define NVM_CFG1_GLOB_MF_MODE_NPAR1_0		0x3
+-#define NVM_CFG1_GLOB_MF_MODE_NPAR1_5		0x4
+-#define NVM_CFG1_GLOB_MF_MODE_NPAR2_0		0x5
+-#define NVM_CFG1_GLOB_MF_MODE_BD		0x6
+-#define NVM_CFG1_GLOB_MF_MODE_UFP		0x7
+-	u32 engineering_change[3];
+-	u32 manufacturing_id;
+-	u32 serial_number[4];
+-	u32 pcie_cfg;
+-	u32 mgmt_traffic;
+-	u32 core_cfg;
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_MASK		0x000000FF
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_OFFSET		0
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_2X40G	0x0
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X50G		0x1
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_1X100G	0x2
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X10G_F		0x3
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_4X10G_E	0x4
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_4X20G	0x5
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_1X40G		0xB
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X25G		0xC
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_1X25G		0xD
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G		0xE
+-#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X10G		0xF
+-
+-	u32 e_lane_cfg1;
+-	u32 e_lane_cfg2;
+-	u32 f_lane_cfg1;
+-	u32 f_lane_cfg2;
+-	u32 mps10_preemphasis;
+-	u32 mps10_driver_current;
+-	u32 mps25_preemphasis;
+-	u32 mps25_driver_current;
+-	u32 pci_id;
+-	u32 pci_subsys_id;
+-	u32 bar;
+-	u32 mps10_txfir_main;
+-	u32 mps10_txfir_post;
+-	u32 mps25_txfir_main;
+-	u32 mps25_txfir_post;
+-	u32 manufacture_ver;
+-	u32 manufacture_time;
+-	u32 led_global_settings;
+-	u32 generic_cont1;
+-	u32 mbi_version;
+-#define NVM_CFG1_GLOB_MBI_VERSION_0_MASK		0x000000FF
+-#define NVM_CFG1_GLOB_MBI_VERSION_0_OFFSET		0
+-#define NVM_CFG1_GLOB_MBI_VERSION_1_MASK		0x0000FF00
+-#define NVM_CFG1_GLOB_MBI_VERSION_1_OFFSET		8
+-#define NVM_CFG1_GLOB_MBI_VERSION_2_MASK		0x00FF0000
+-#define NVM_CFG1_GLOB_MBI_VERSION_2_OFFSET		16
+-	u32 mbi_date;
+-	u32 misc_sig;
+-	u32 device_capabilities;
+-#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ETHERNET	0x1
+-#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_FCOE		0x2
+-#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ISCSI		0x4
+-#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ROCE		0x8
+-	u32 power_dissipated;
+-	u32 power_consumed;
+-	u32 efi_version;
+-	u32 multi_network_modes_capability;
+-	u32 reserved[41];
++	u32							generic_cont0;
++#define NVM_CFG1_GLOB_MF_MODE_MASK				0x00000ff0
++#define NVM_CFG1_GLOB_MF_MODE_OFFSET				4
++#define NVM_CFG1_GLOB_MF_MODE_MF_ALLOWED			0x0
++#define NVM_CFG1_GLOB_MF_MODE_DEFAULT				0x1
++#define NVM_CFG1_GLOB_MF_MODE_SPIO4				0x2
++#define NVM_CFG1_GLOB_MF_MODE_NPAR1_0				0x3
++#define NVM_CFG1_GLOB_MF_MODE_NPAR1_5				0x4
++#define NVM_CFG1_GLOB_MF_MODE_NPAR2_0				0x5
++#define NVM_CFG1_GLOB_MF_MODE_BD				0x6
++#define NVM_CFG1_GLOB_MF_MODE_UFP				0x7
++
++	u32							engineering_change[3];
++	u32							manufacturing_id;
++	u32							serial_number[4];
++	u32							pcie_cfg;
++	u32							mgmt_traffic;
++
++	u32							core_cfg;
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_MASK			0x000000ff
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_OFFSET			0
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_2X40G		0x0
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X50G			0x1
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_1X100G		0x2
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X10G_F			0x3
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_4X10G_E		0x4
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_BB_4X20G		0x5
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_1X40G			0xb
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X25G			0xc
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_1X25G			0xd
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G			0xe
++#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X10G			0xf
++
++	u32							e_lane_cfg1;
++	u32							e_lane_cfg2;
++	u32							f_lane_cfg1;
++	u32							f_lane_cfg2;
++	u32							mps10_preemphasis;
++	u32							mps10_driver_current;
++	u32							mps25_preemphasis;
++	u32							mps25_driver_current;
++	u32							pci_id;
++	u32							pci_subsys_id;
++	u32							bar;
++	u32							mps10_txfir_main;
++	u32							mps10_txfir_post;
++	u32							mps25_txfir_main;
++	u32							mps25_txfir_post;
++	u32							manufacture_ver;
++	u32							manufacture_time;
++	u32							led_global_settings;
++	u32							generic_cont1;
++
++	u32							mbi_version;
++#define NVM_CFG1_GLOB_MBI_VERSION_0_MASK			0x000000ff
++#define NVM_CFG1_GLOB_MBI_VERSION_0_OFFSET			0
++#define NVM_CFG1_GLOB_MBI_VERSION_1_MASK			0x0000ff00
++#define NVM_CFG1_GLOB_MBI_VERSION_1_OFFSET			8
++#define NVM_CFG1_GLOB_MBI_VERSION_2_MASK			0x00ff0000
++#define NVM_CFG1_GLOB_MBI_VERSION_2_OFFSET			16
++
++	u32							mbi_date;
++	u32							misc_sig;
++
++	u32							device_capabilities;
++#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ETHERNET		0x1
++#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_FCOE			0x2
++#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ISCSI			0x4
++#define NVM_CFG1_GLOB_DEVICE_CAPABILITIES_ROCE			0x8
++
++	u32							power_dissipated;
++	u32							power_consumed;
++	u32							efi_version;
++	u32							multi_net_modes_cap;
++	u32							reserved[41];
+ };
+ 
+ struct nvm_cfg1_path {
+-	u32 reserved[30];
++	u32							reserved[30];
+ };
+ 
+ struct nvm_cfg1_port {
+@@ -13082,7 +13089,7 @@ struct nvm_cfg1_port {
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_OFFSET		0
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_1G		0x1
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_10G		0x2
+-#define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_20G             0x4
++#define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_20G		0x4
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_25G		0x8
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_40G		0x10
+ #define NVM_CFG1_PORT_DRV_SPEED_CAPABILITY_MASK_50G		0x20
+@@ -13094,7 +13101,7 @@ struct nvm_cfg1_port {
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_AUTONEG			0x0
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_1G				0x1
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_10G			0x2
+-#define NVM_CFG1_PORT_DRV_LINK_SPEED_20G                        0x3
++#define NVM_CFG1_PORT_DRV_LINK_SPEED_20G			0x3
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_25G			0x4
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_40G			0x5
+ #define NVM_CFG1_PORT_DRV_LINK_SPEED_50G			0x6
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.h b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
+index 5e50405854e6..ea956c43e596 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_mcp.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
+@@ -16,15 +16,15 @@
+ #include "qed_dev_api.h"
+ 
+ struct qed_mcp_link_speed_params {
+-	bool    autoneg;
+-	u32     advertised_speeds;      /* bitmask of DRV_SPEED_CAPABILITY */
+-	u32     forced_speed;	   /* In Mb/s */
++	bool					autoneg;
++	u32					advertised_speeds;
++	u32					forced_speed;	   /* In Mb/s */
+ };
+ 
+ struct qed_mcp_link_pause_params {
+-	bool    autoneg;
+-	bool    forced_rx;
+-	bool    forced_tx;
++	bool					autoneg;
++	bool					forced_rx;
++	bool					forced_tx;
+ };
+ 
+ enum qed_mcp_eee_mode {
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.25.1
 
