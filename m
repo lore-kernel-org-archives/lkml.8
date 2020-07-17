@@ -3,115 +3,162 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27508C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA497C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFDD42076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595012552;
-	bh=hY/IiQZ62oMR2cm1BWXEte+UuNUso2tLkvY01Z3Z7so=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=URp9aNcBFvnpV3xLPe5/iNVWxWSGIOsnjw1Vbr/1xAuKNntaMBUUmO3bO0lYJ5Phx
-	 DVce09XjFg2r0q00IweDnCZth+2sLfvTj+JYFfYUnUGVb9Q3wAiQNmLxyWvaPsecAh
-	 Mz4HiFSmWYh1N55dF5uQv6aw+7uJyzJfp5jMGBCE=
+	by mail.kernel.org (Postfix) with ESMTP id B67722074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:04:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ANuGBtdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgGQTCa (ORCPT
+        id S1728298AbgGQTEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:02:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgGQTCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:02:30 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66DDE20775;
-        Fri, 17 Jul 2020 19:02:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595012549;
-        bh=hY/IiQZ62oMR2cm1BWXEte+UuNUso2tLkvY01Z3Z7so=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QNwhBCWxtuvTLRSbhixHCBlp73msYY5d2rOsE+qi+9d+WJgBkiDpqBUsQNPg4hTr+
-         mHTMZHwMy/c1hncyNQVipPgFrbmRlFfqK0GiZOCEybSU6XSQTum/kgvhljsXbv0/Im
-         hvjLnb9qvM6T3djT7shhwgAP2Pq0/27HXSUi0QtM=
-Received: by mail-oi1-f170.google.com with SMTP id t4so8832941oij.9;
-        Fri, 17 Jul 2020 12:02:29 -0700 (PDT)
-X-Gm-Message-State: AOAM530Z1EQqa2V5907KbvYFF6G0rAuklBX5F7MqFlTWRnrQBWWFhgAv
-        +G9kaKZhfFvr892kNK9g9IbGw0YJ2P0ru/p6MA==
-X-Google-Smtp-Source: ABdhPJzZY8yy3yKxPk7vB1ABc8/WFSudqSAMcFCsEUF38xcGMuBxhU8wPz3U67XIH6o54FVkR0PRKLPNGbkhbV3VBOE=
-X-Received: by 2002:aca:30d2:: with SMTP id w201mr8975582oiw.147.1595012548740;
- Fri, 17 Jul 2020 12:02:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200715221150.v3.2.I113cdbaf66d48b37ac0faefb9b845480d122f3b9@changeid>
- <20200716191318.GA2683551@bogus> <3995892c-340c-3419-3c2d-934a3067f51b@collabora.com>
-In-Reply-To: <3995892c-340c-3419-3c2d-934a3067f51b@collabora.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 17 Jul 2020 13:02:17 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Xr5m4pxqbeEt+Zwb1GCWPKN1KBmdVtyKAmVFiLf=r1A@mail.gmail.com>
-Message-ID: <CAL_Jsq+Xr5m4pxqbeEt+Zwb1GCWPKN1KBmdVtyKAmVFiLf=r1A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: mfd: Add DT compatible string "google,cros_ec_uart"
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Eric Peers <epeers@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Fri, 17 Jul 2020 15:04:16 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52768 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727821AbgGQTEP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 15:04:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595012654;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VKQ3UPhST3OvzdKUW3dae3IGuD+EOft4yvMH2GzGai4=;
+        b=ANuGBtdKw2VZjmvzvIePyyMeK/+DxxVu7KPI4ecH/ygLCOUkB5XgfXa0y7Dr2O4UAeJYo9
+        qLAaXnQvqvqS/R/uYUlYHmsW61AdLc9mACN/UNtpVCmR13HeipREUa7BsivQDGpvL3BRUV
+        /zPKCSG7G6nNSMy9jAc3I7el4butJD8=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-179-iH3o28nQMJWax7GB-1EH9g-1; Fri, 17 Jul 2020 15:04:13 -0400
+X-MC-Unique: iH3o28nQMJWax7GB-1EH9g-1
+Received: by mail-qk1-f197.google.com with SMTP id u186so6673736qka.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 12:04:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=VKQ3UPhST3OvzdKUW3dae3IGuD+EOft4yvMH2GzGai4=;
+        b=A5Imb77u+0+DWFYtinoNIEk7TDNtfQrqpl73H30PT1AfrgYEmO3HupdMQOrObxPbWy
+         C/fQGW062gmqyltkIS8ayOD6F3VIbhm4nbhgJtlGI2u6uS1P4iKyZFHTWze55UH0baHm
+         LiUEUbTkE1GHhVK+MmzX1RJFHuXgL5qU5rBIKj0TBc1oNZXl70y6L2QRMT/ttZ+HGK7E
+         tHkq9Xp20E6tcP5xtEJxHB5mrkKZrxyAs6THPu3z92HmsldZ0ZqV4FLhiwDkbWndzMi8
+         455LmTaCeujFl1KeHAYdmYBU6MY6b2UZ+lv7IBlSCxzUVJZhiK0CFKBWguH8M0uPTKJs
+         xdng==
+X-Gm-Message-State: AOAM531496tzPGc9A6aguRLTz87tzn5kJmnAlyCCnnh6szmR7eDz7mcF
+        xdBbPsGpzUTKAg9z5K+bp9DMBe1oXzP8OIPfp5ZCFNJ6DcwciG57WcM3NLpdy6hLaPKbZPA7tS5
+        paQVht+gFY+oQFZjkXhN4zrDe
+X-Received: by 2002:a37:a046:: with SMTP id j67mr9892605qke.395.1595012652218;
+        Fri, 17 Jul 2020 12:04:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwgtOiKIUn5ao5bCnaTTskTcrkgF6EP4gHfCCcCRRv0vg7ItdvSMNS0FlNgUH04ZXSmho073g==
+X-Received: by 2002:a37:a046:: with SMTP id j67mr9892576qke.395.1595012651933;
+        Fri, 17 Jul 2020 12:04:11 -0700 (PDT)
+Received: from Whitewolf.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
+        by smtp.gmail.com with ESMTPSA id e9sm11311764qtq.70.2020.07.17.12.04.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 12:04:11 -0700 (PDT)
+Message-ID: <ec6623032131fc3e656713b8ec644cdff89a8066.camel@redhat.com>
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+From:   Lyude Paul <lyude@redhat.com>
+Reply-To: lyude@redhat.com
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Karol Herbst <kherbst@redhat.com>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Date:   Fri, 17 Jul 2020 15:04:10 -0400
+In-Reply-To: <20200716235440.GA675421@bjorn-Precision-5520>
+References: <20200716235440.GA675421@bjorn-Precision-5520>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 3:53 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Rob,
->
-> On 16/7/20 21:13, Rob Herring wrote:
-> > On Wed, Jul 15, 2020 at 10:16:04PM -0700, Bhanu Prakash Maiya wrote:
-> >> From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-> >>
-> >> Add DT compatible string in
-> >> Documentation/devicetree/bindings/mfd/cros_ec.txt
-> >
-> > Need to update this.
-> >
-> > With that,
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> >
->
-> So this is an ACPI-only driver that is instantiated by using the Device Tree
-> namespace link in ACPI. I am not sure how to deal with this, but I suspect we
-> need a proper OF binding definition before accept it.
+On Thu, 2020-07-16 at 18:54 -0500, Bjorn Helgaas wrote:
+> [+cc Sasha -- stable kernel regression]
+> [+cc Patrick, Kai-Heng, LKML]
+> 
+> On Fri, Jul 17, 2020 at 12:10:39AM +0200, Karol Herbst wrote:
+> > On Tue, Jul 7, 2020 at 9:30 PM Karol Herbst <kherbst@redhat.com> wrote:
+> > > Hi everybody,
+> > > 
+> > > with the mentioned commit Nouveau isn't able to load firmware onto the
+> > > GPU on one of my systems here. Even though the issue doesn't always
+> > > happen I am quite confident this is the commit breaking it.
+> > > 
+> > > I am still digging into the issue and trying to figure out what
+> > > exactly breaks, but it shows up in different ways. Either we are not
+> > > able to boot the engines on the GPU or the GPU becomes unresponsive.
+> > > Btw, this is also a system where our runtime power management issue
+> > > shows up, so maybe there is indeed something funky with the bridge
+> > > controller.
+> > > 
+> > > Just pinging you in case you have an idea on how this could break Nouveau
+> > > 
+> > > most of the times it shows up like this:
+> > > nouveau 0000:01:00.0: acr: AHESASC binary failed
+> > > 
+> > > Sometimes it works at boot and fails at runtime resuming with random
+> > > faults. So I will be investigating a bit more, but yeah... I am super
+> > > sure the commit triggered this issue, no idea if it actually causes
+> > > it.
+> > 
+> > so yeah.. I reverted that locally and never ran into issues again.
+> > Still valid on latest 5.7. So can we get this reverted or properly
+> > fixed? This breaks runtime pm for us on at least some hardware.
+> 
+> Yeah, that stinks.  We had another similar report from Patrick:
+> 
+>   
+> https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
+> 
+> Apparently the problem is ec411e02b7a2 ("PCI/PM: Assume ports without
+> DLL Link Active train links in 100 ms"), which Patrick found was
+> backported to v5.4.49 as 828b192c57e8, and you found was backported to
+> v5.7.6 as afaff825e3a4.
+> 
+> Oddly, Patrick reported that v5.7.7 worked correctly, even though it
+> still contains afaff825e3a4.
+> 
+> I guess in the absence of any other clues we'll have to revert it.
+> I hate to do that because that means we'll have slow resume of
+> Thunderbolt-connected devices again, but that's better than having
+> GPUs completely broken.
+> 
+> Could you and Patrick open bugzilla.kernel.org reports, attach dmesg
+> logs and "sudo lspci -vv" output, and add the URLs to Kai-Heng's
+> original report at https://bugzilla.kernel.org/show_bug.cgi?id=206837
+> and to this thread?
+> 
+> There must be a way to fix the slow resume problem without breaking
+> the GPUs.
 
-In that case, NAK because I have no bandwidth or desire for ACPI
-stuff. The DT bindings in ACPI concept is flawed.
+Isn't it possible to tell whether a PCI device is connected through thunderbolt
+or not? We could probably get away with just defaulting to 100ms for thunderbolt
+devices without DLL Link Active specified, and then default to the old delay
+value for non-thunderbolt devices.
 
-> The driver gets at least the baudrate and the flowcontrol from ACPI resources,
-> so I'm wondering if we should also add the properties in the device-tree
-> description (although we're not able to really test because there is not OF
-> hardware that supports it yet). Or is fine to just accept the compatible for now
-> and we can do this later when we have the possibility to test with OF-based
-> hardware.
+> 
+> Bjorn
+> 
 
-That's all defined by the serial device binding already, so it doesn't
-really matter here.
-
-You can keep my R-by, but don't send me more ACPI crap.
-
-Rob
