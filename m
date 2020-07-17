@@ -2,115 +2,137 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DEBC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44140C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6E12071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B02920734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:32:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NAYUD0tR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgGQIcP convert rfc822-to-8bit (ORCPT
+        id S1726512AbgGQIcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:32:15 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:55719 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726798AbgGQIcN (ORCPT
+        Fri, 17 Jul 2020 04:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbgGQIcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:32:13 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-30-vOfOUf7XOJW9yv-pErlP7A-1; Fri, 17 Jul 2020 09:32:08 +0100
-X-MC-Unique: vOfOUf7XOJW9yv-pErlP7A-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 17 Jul 2020 09:32:07 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 17 Jul 2020 09:32:07 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'js1304@gmail.com'" <js1304@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-team@lge.com" <kernel-team@lge.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Naoya Horiguchi" <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 1/4] mm/page_alloc: fix non cma alloc context
-Thread-Topic: [PATCH 1/4] mm/page_alloc: fix non cma alloc context
-Thread-Index: AQHWWmWbQrqMs3IygU6Uq8saGSVLGakLcr1w
-Date:   Fri, 17 Jul 2020 08:32:07 +0000
-Message-ID: <be55deff4ef1453983522d247bd36110@AcuMS.aculab.com>
-References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
-In-Reply-To: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 17 Jul 2020 04:32:05 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8523FC061755;
+        Fri, 17 Jul 2020 01:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=aFEt+zFPrqVQGAdO3RJf1KxQLYdEhDO70E3sDQSJR2I=; b=NAYUD0tRwLcD1cWPXKXDszQUPy
+        mQzEmJYNmsTd4lPHX0AEaiE3az4Ot3sQ1ZvLDIGE13hX9Jds8cRERVdr2DZSyWJCpE2VqUEPt5ZYc
+        UjvbCMB4kO2sPJdqTsOkgLUOWdAj27RrCTe3SXW5tLnHhIl8mollSFClH0NO7VHqMdTGAGGAocUrH
+        2ogmG9mWgV1L/V+N84VlhdwEt8XBL7mlLDgkK1KYxpvPnnf8ru+JrOz6xl85frfohw2XVDowK+lgc
+        vdjzRVIpa0KpwRU73+hsFhpGtg1CnBKfr0INMSg3CozV6pnzHBI4oK/qNaYP9/i6oBIS69HJA2ptL
+        S2yGqBiw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwLmQ-0004NK-L1; Fri, 17 Jul 2020 08:31:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A33083003D8;
+        Fri, 17 Jul 2020 10:31:40 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9580929CF6F49; Fri, 17 Jul 2020 10:31:40 +0200 (CEST)
+Date:   Fri, 17 Jul 2020 10:31:40 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     ira.weiny@intel.com
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 04/17] x86/pks: Preserve the PKRS MSR on context
+ switch
+Message-ID: <20200717083140.GW10769@hirez.programming.kicks-ass.net>
+References: <20200717072056.73134-1-ira.weiny@intel.com>
+ <20200717072056.73134-5-ira.weiny@intel.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717072056.73134-5-ira.weiny@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: js1304@gmail.com
-> Sent: 15 July 2020 06:05
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> Currently, preventing cma area in page allocation is implemented by using
-> current_gfp_context(). However, there are two problems of this
-> implementation.
-...
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 6416d08..cd53894 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-...
-> @@ -3693,6 +3691,16 @@ alloc_flags_nofragment(struct zone *zone, gfp_t gfp_mask)
->  	return alloc_flags;
+On Fri, Jul 17, 2020 at 12:20:43AM -0700, ira.weiny@intel.com wrote:
+
+> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+> index f362ce0d5ac0..d69250a7c1bf 100644
+> --- a/arch/x86/kernel/process.c
+> +++ b/arch/x86/kernel/process.c
+> @@ -42,6 +42,7 @@
+>  #include <asm/spec-ctrl.h>
+>  #include <asm/io_bitmap.h>
+>  #include <asm/proto.h>
+> +#include <asm/pkeys_internal.h>
+>  
+>  #include "process.h"
+>  
+> @@ -184,6 +185,36 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
+>  	return ret;
 >  }
-> 
-> +static inline void current_alloc_flags(gfp_t gfp_mask,
-> +				unsigned int *alloc_flags)
+>  
+> +/*
+> + * NOTE: We wrap pks_init_task() and pks_sched_in() with
+> + * CONFIG_ARCH_HAS_SUPERVISOR_PKEYS because using IS_ENABLED() fails
+> + * due to the lack of task_struct->saved_pkrs in this configuration.
+> + * Furthermore, we place them here because of the complexity introduced by
+> + * header conflicts introduced to get the task_struct definition in the pkeys
+> + * headers.
+> + */
+
+I don't see anything much useful in that comment.
+
+> +#ifdef CONFIG_ARCH_HAS_SUPERVISOR_PKEYS
+> +DECLARE_PER_CPU(u32, pkrs_cache);
+> +static inline void pks_init_task(struct task_struct *tsk)
 > +{
-> +	unsigned int pflags = READ_ONCE(current->flags);
-> +
-> +	if (!(pflags & PF_MEMALLOC_NOCMA) &&
-> +		gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
-> +		*alloc_flags |= ALLOC_CMA;
+> +	/* New tasks get the most restrictive PKRS value */
+> +	tsk->thread.saved_pkrs = INIT_PKRS_VALUE;
 > +}
+> +static inline void pks_sched_in(void)
+> +{
+> +	u64 current_pkrs = current->thread.saved_pkrs;
 > +
+> +	/* Only update the MSR when current's pkrs is different from the MSR. */
+> +	if (this_cpu_read(pkrs_cache) == current_pkrs)
+> +		return;
+> +
+> +	write_pkrs(current_pkrs);
 
-I'd guess this would be easier to understand and probably generate
-better code if renamed and used as:
-	alloc_flags |= can_alloc_cma(gpf_mask);
+Should we write that like:
 
-Given it is a 'static inline' the compiler might end up
-generating the same code.
-If you needed to clear a flag doing:
-	alloc_flags = current_alloc_flags(gpf_mask, alloc_flags);
-is much better for non-inlined function.
+	/*
+	 * PKRS is only temporarily changed during specific code paths.
+	 * Only a preemption during these windows away from the default
+	 * value would require updating the MSR.
+	 */
+	if (unlikely(this_cpu_read(pkrs_cache) != current_pkrs))
+		write_pkrs(current_pkrs);
 
-	David
+?
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+> +}
+> +#else
+> +static inline void pks_init_task(struct task_struct *tsk) { }
+> +static inline void pks_sched_in(void) { }
+> +#endif
