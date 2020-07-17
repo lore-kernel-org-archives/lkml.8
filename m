@@ -2,210 +2,221 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36740C433F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8779BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9F62076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="RMkmFv5W";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="wpP55YFn"
+	by mail.kernel.org (Postfix) with ESMTP id 5F29220704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgGQHwJ (ORCPT
+        id S1728030AbgGQHyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:52:09 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:21827 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgGQHwH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:52:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594972327; x=1626508327;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=Bu7QYu+rmbl1BgD5j/YqNPU0EHoH6IymWIqTKqf27Og=;
-  b=RMkmFv5WCvESxacGeFO1PsgIKiyTF3tVVAR5U7KRzTiRabzab9MXCM4U
-   6YchKX3poR+gShkOLkmfGMMxYLQ2lPVBAfW77Tan2kB5bNXQil+4LR79o
-   86jM3ErKkaHWEnkyfte2u/rjnWG75JPBcNL/RLuzFhGVXtRo1L29FFSOx
-   nnnbgUSPJj7ndMpX9Y6ox+81KJCYqqMvjJMiFE9B5m3apy1KV7aSqXCKm
-   pJsXCpxJcH4MP3kXFjUpEGuJFnX5KrGyhLFuxR2dVUxlJtBq6b9k8TOwt
-   P5GV8SI5aFIvqzyyS5cKYyGIKP7FRDHYWklR7lUyTExB9zvXtTHG/tmP4
-   A==;
-IronPort-SDR: T1QGqHF4k/xqLHKuZfwrbMdigQRuNEUFm9pjEc2RGBWhI++KdfLYgzzt6jxPQPhhnienkzVtar
- zUOOyPT1O87JxC/jXP4PfqvzRtxa5kxTr5LQgXxjkQZmlWg3uxUUUKy5+7ZYUBTdAaSkb6MbsD
- ueGULnbsq3MmxiM2cN+U4H7o4BTLX6ZdCPfMYBbmhdhbfjZFrhfMd7NHYdg8apxiJeGdvRPGVE
- X0rprCaVyfCTFwM9fNla1y38JYLNn9HOy88yMHkTB8UuGe9PJPW64BI//v8543T+K1X3y8UUoW
- igQ=
-X-IronPort-AV: E=Sophos;i="5.75,362,1589212800"; 
-   d="scan'208";a="142816170"
-Received: from mail-mw2nam10lp2109.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.109])
-  by ob1.hgst.iphmx.com with ESMTP; 17 Jul 2020 15:52:06 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k9pYgdRP8rHpaaGyGvdFLOqJbANxQ8eDm0qkODgdPTpnz9RrqP3rJFYLA0qIXErJzhB9RZxtLXpDQnsuKukspiJNt5U2Ui6MNkz6gxQraj1Zp+LdHHUnOQCZU4apZmNkcIOY3xHJNg4vTim3G9j2M5xE9Z6TZBOof6YDSlZFagMgxMYm1XSH5QNdjkC0FtLvS5V82+iwGVsxnGt4WFAhMxbcXIlenFqmKtNCm+dDueal8EgcwuRx5UK6k1xr/aOKpMN/HAjyQrGY8LdOVUsHIY2DX1NdTBXhR34zH9XPcCRlZawOFvm47+zwOfoz7MlpLCN4bdD+/E8HE5L+jaZOWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FZYtCM7MSi4vbD+2NG5qAzPEcrA1EbyRdRBLFvNpzSU=;
- b=WvTQ4vz9fXa/r578taKXI4Fxqp/cvAu0pAirC3uy3BtXRWveSclM1o6RFVQU2RVEtJXOYonme8WpYW+EPWHUsEuRx4sz2mmw942VRNIEMrkFgs+z8a+/oLEoblE8UGwPjqxPlzT/8hY736WFuE8LGq6VaOiHR48r5QpHkzHHtKCCUphKzL6arBUgU7Z+uESvGYKEzbIaD9m6oZsPoZ01wgUIvzCXOVpEHQt1BcpWT4GB5UskP3epAiSlE2HfEmMraGY1vBUBki0YjxF2qn7GgwKkU2gaDkyWf6WT52pE4MxAt0JjP8WPrO/vqU826M5NDO/8vGNjyqORjduTm6Ujug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FZYtCM7MSi4vbD+2NG5qAzPEcrA1EbyRdRBLFvNpzSU=;
- b=wpP55YFnzcwz+ZWRxXo/u36fiR4JLSyvaPNJueyRB+EIYr0/1cgSiXwZXgbkwrh1lyyHiBFvRdKgpTOFYpk9iz0UvI+Cwx1rPjm37LJqwhJTptC5x++kT/rqSRXGKHPC0pzAG/2/oBiEaums3qiJK9Ir8z1FSNGBzE3jwroKUTk=
-Authentication-Results: dabbelt.com; dkim=none (message not signed)
- header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
- by DM6PR04MB6331.namprd04.prod.outlook.com (2603:10b6:5:1e5::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Fri, 17 Jul
- 2020 07:52:04 +0000
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::e0a4:aa82:1847:dea5]) by DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::e0a4:aa82:1847:dea5%7]) with mapi id 15.20.3174.026; Fri, 17 Jul 2020
- 07:52:04 +0000
-From:   Anup Patel <anup.patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Anup Patel <anup.patel@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Emil Renner Berhing <kernel@esmil.dk>
-Subject: [PATCH v4 4/4] dt-bindings: timer: Add CLINT bindings
-Date:   Fri, 17 Jul 2020 13:21:01 +0530
-Message-Id: <20200717075101.263332-5-anup.patel@wdc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717075101.263332-1-anup.patel@wdc.com>
-References: <20200717075101.263332-1-anup.patel@wdc.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BM1PR0101CA0026.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:1a::12) To DM6PR04MB6201.namprd04.prod.outlook.com
- (2603:10b6:5:127::32)
+        Fri, 17 Jul 2020 03:54:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41244 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbgGQHyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:54:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 2CC93AB55;
+        Fri, 17 Jul 2020 07:54:15 +0000 (UTC)
+Subject: Re: [PATCH] media: atomisp: fix NULL pointer dereference
+To:     mchehab+huawei@kernel.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200716115122.15909-1-jslaby@suse.cz>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c391a531-b55c-a868-60c7-b59a69de47f7@suse.cz>
+Date:   Fri, 17 Jul 2020 09:54:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from wdc.com (103.56.182.72) by BM1PR0101CA0026.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Fri, 17 Jul 2020 07:51:59 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [103.56.182.72]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a83df653-b0ea-4381-f098-08d82a264c17
-X-MS-TrafficTypeDiagnostic: DM6PR04MB6331:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR04MB63312B31968FB7C34829D1C88D7C0@DM6PR04MB6331.namprd04.prod.outlook.com>
-WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DV8+NwErdPAU8P4F2p75LFe1JGqXgw9dA75CroVU5xcvc0jhyFW8UVD95RvEPdG8/GQIs9l9fFP/7GMOR+KQ+Ps6c7EY1KBcpKGahSxmuldxFXaFzqj+M/jMmn8jcwZ8HSG1qdCuAdvasKhPpRXXSd4ssGPxw3+uXSndCFKWdMzAa2oUWw5TytadTuDd0WMTYanEFMhw8B9Y0dSy+W9mQUarEfUX1EWsObH8cq2nz7on0ZUgf54fNf1LyIxcA314wX36cq6BvXr9lDGrkrLZ7uByrTG1PLViU+YEHUH0WiEuxrsHpJbf/btchLOvgG50AdAD3OZZ+o2HlMk/CUIgwDevEdHN6E6wbys/XPgwddtTzzPWfI/1mJbq7VInyhzbnORdsq56AlbQWyUfubh/62/9q26r6b5KIN855L2SIG7q3RuzFP2rZLGFf6+KfZmye3RjaH/idFdlx7GXngB9jg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(346002)(39860400002)(136003)(8886007)(8936002)(66946007)(83380400001)(66476007)(66556008)(1076003)(4326008)(5660300002)(86362001)(36756003)(44832011)(316002)(186003)(110136005)(7416002)(54906003)(478600001)(2616005)(956004)(8676002)(6666004)(26005)(7696005)(55016002)(966005)(16526019)(52116002)(2906002)(473944003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: DRkZ5OZafN0iBLARkxijwWT2nNbOAeG4L1K4FxFUqMSq38QezBlS3c8fc/MJGXoJGBrNcMDOcC4NemMSm3iSjc8nvhnhYRt77VlGWHqC02W+SGvbUwZEwfhYM/Ihq1n8IEBNXGrKdrqfbChpubnaQxTiqNkBlM6oFoncVA4S2QR6m/AldN96CuSMnALCa6rtaQzwEoIg7mVKDdx6sWR1YH4b+KoUkBBPUdNkwkAtPZCzApTlr+Nw8hDnGO8QxWaP9WxaEh0bpBHXinPx4QMCScUv37GqCMw7uRgsyLGRnIrV2ubw3MyiI7gM5+0afe5vUJnP1E0O4f+DuajRY76qMj2bMBrUp9eiWX+SoqS9yzbS5Tp+cQ4n2DfoVmcaSMaDX+Yy0sHZ1mhUvcOrDxrHOrucNvKQVZjrZ0WyO1/RkBlzR8VseNhnncmKtYuJDqnQ+/ulYmXjYGNS8ayyFSoS5tsmV70l+KMiMfS3b9kMSIs=
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a83df653-b0ea-4381-f098-08d82a264c17
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR04MB6201.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2020 07:52:04.8175
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5gglcPLq040YOHC+tmvoT6Uo6iLU708MHzB6qOs3pQKbx3p0Sj76sZgh1tSHbhniAyi+mk87QX/5yuXmutAwfw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6331
+In-Reply-To: <20200716115122.15909-1-jslaby@suse.cz>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We add DT bindings documentation for CLINT device.
+On 16. 07. 20, 13:51, Jiri Slaby wrote:
+> I am currently seeing:
+> BUG: kernel NULL pointer dereference, address: 0000000000000002
+> ...
+> Hardware name: UMAX VisionBook 10Wi Pro/CQM1018CWP, BIOS CQ1018.007 09/22/2016
+> RIP: 0010:gmin_subdev_add.cold+0x303/0x312 [atomisp_gmin_platform]
+> ...
+> Call Trace:
+>  gmin_camera_platform_data+0x2f/0x60 [atomisp_gmin_platform]
+>  ov2680_probe+0x7f/0x2b0 [atomisp_ov2680]
+>  i2c_device_probe+0x95/0x290
+> 
+> power can be NULL and that is properly handled earlier in this function.
+> Even i2c address is set there. So this is a duplicated assignment which
+> can cause the bug above. Remove it.
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Tested-by: Emil Renner Berhing <kernel@esmil.dk>
----
- .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
+BTW, the camera still doesn't work, but the kernel no longer crashes:
 
-diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-new file mode 100644
-index 000000000000..8ad115611860
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: SiFive Core Local Interruptor
-+
-+maintainers:
-+  - Palmer Dabbelt <palmer@dabbelt.com>
-+  - Anup Patel <anup.patel@wdc.com>
-+
-+description:
-+  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
-+  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
-+  interrupts. It directly connects to the timer and inter-processor interrupt
-+  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
-+  interrupt controller is the parent interrupt controller for CLINT device.
-+  The clock frequency of CLINT is specified via "timebase-frequency" DT
-+  property of "/cpus" DT node. The "timebase-frequency" DT property is
-+  described in Documentation/devicetree/bindings/riscv/cpus.yaml
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: sifive,clint0
-+      - const: sifive,fu540-c000-clint
-+
-+    description:
-+      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
-+      Supported compatible strings are -
-+      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
-+      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
-+      CLINT v0 IP block with no chip integration tweaks.
-+      Please refer to sifive-blocks-ip-versioning.txt for details
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts-extended:
-+    minItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts-extended
-+
-+examples:
-+  - |
-+    clint@2000000 {
-+      compatible = "sifive,clint0", "sifive,fu540-c000-clint";
-+      interrupts-extended = <&cpu1intc 3 &cpu1intc 7
-+                             &cpu2intc 3 &cpu2intc 7
-+                             &cpu3intc 3 &cpu3intc 7
-+                             &cpu4intc 3 &cpu4intc 7>;
-+       reg = <0x2000000 0x4000000>;
-+    };
-+...
+> atomisp_ov2680: module is from the staging directory, the quality is unknown, you have been warned.
+> ov2680 i2c-OVTI2680:00: gmin_subdev_add: ACPI detected it on bus ID=CAMB, HID=OVTI2680
+> ov2680 i2c-OVTI2680:00: found 'INT33F4:00' at address 0x34, adapter 6
+> ov2680 i2c-OVTI2680:00: gmin: power management provided via XPower AXP288 PMIC (i2c addr 0x34)
+
+For this CAM, the address is likely OK.
+
+> ov2680 i2c-OVTI2680:00: found _DSM entry for 'CamClk': 1
+> ov2680 i2c-OVTI2680:00: didn't found _DSM entry for 'ClkSrc'
+> ov2680 i2c-OVTI2680:00: Failed to find EFI variable OVTI2680:00_ClkSrc
+> ov2680 i2c-OVTI2680:00: ClkSrc: using default (1)
+> ov2680 i2c-OVTI2680:00: found _DSM entry for 'CsiPort': 0
+> ov2680 i2c-OVTI2680:00: found _DSM entry for 'CsiLanes': 2
+> ov2680 i2c-OVTI2680:00: didn't found _DSM entry for 'eldo1_1p8v'
+> ov2680 i2c-OVTI2680:00: Failed to find EFI variable OVTI2680:00_eldo1_1p8v
+> ov2680 i2c-OVTI2680:00: eldo1_1p8v: using default (22)
+> ov2680 i2c-OVTI2680:00: didn't found _DSM entry for 'eldo1_sel_reg'
+> ov2680 i2c-OVTI2680:00: Failed to find EFI variable OVTI2680:00_eldo1_sel_reg
+> ov2680 i2c-OVTI2680:00: eldo1_sel_reg: using default (25)
+> ov2680 i2c-OVTI2680:00: didn't found _DSM entry for 'eldo1_ctrl_shift'
+> ov2680 i2c-OVTI2680:00: Failed to find EFI variable OVTI2680:00_eldo1_ctrl_shift
+> ov2680 i2c-OVTI2680:00: eldo1_ctrl_shift: using default (0)
+> ov2680 i2c-OVTI2680:00: didn't found _DSM entry for 'eldo2_1p8v'
+> ov2680 i2c-OVTI2680:00: Failed to find EFI variable OVTI2680:00_eldo2_1p8v
+> ov2680 i2c-OVTI2680:00: eldo2_1p8v: using default (22)
+> ov2680 i2c-OVTI2680:00: didn't found _DSM entry for 'eldo2_sel_reg'
+> ov2680 i2c-OVTI2680:00: Failed to find EFI variable OVTI2680:00_eldo2_sel_reg
+> ov2680 i2c-OVTI2680:00: eldo2_sel_reg: using default (26)
+> ov2680 i2c-OVTI2680:00: didn't found _DSM entry for 'eldo2_ctrl_shift'
+> ov2680 i2c-OVTI2680:00: Failed to find EFI variable OVTI2680:00_eldo2_ctrl_shift
+> ov2680 i2c-OVTI2680:00: eldo2_ctrl_shift: using default (1)
+> ov2680 i2c-OVTI2680:00: power_ctrl: off
+> ov2680 i2c-OVTI2680:00: Failed to find EFI gmin variable gmin_V1P8GPIO
+> ov2680 i2c-OVTI2680:00: V1P8GPIO: using default (-1)
+> ov2680 i2c-OVTI2680:00: Failed to find EFI gmin variable gmin_V2P8GPIO
+> ov2680 i2c-OVTI2680:00: V2P8GPIO: using default (-1)
+> ov2680 i2c-OVTI2680:00: power_ctrl: on
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x1a, value: 0x16, mask: 0xff
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x1a, value: 0x02, mask: 0x02
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x19, value: 0x16, mask: 0xff
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x19, value: 0x01, mask: 0x01
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x1a, value: 0x16, mask: 0xff
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x1a, value: 0x00, mask: 0x02
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x28, value: 0x16, mask: 0xff
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x28, value: 0x20, mask: 0x20
+> ov2680 i2c-OVTI2680:00: camera pdata: port: 0 lanes: 2 order: 00000002
+> ov2680 i2c-OVTI2680:00: read error: reg=0x300a: -121
+
+EREMOTEIO. So it shomehow doesn't work.
+
+> ov2680 i2c-OVTI2680:00: sensor_id_high = 0x2
+> ov2680 i2c-OVTI2680:00: ov2680_detect err s_config.
+> ov2680 i2c-OVTI2680:00: power_ctrl: off
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x19, value: 0x16, mask: 0xff
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x19, value: 0x00, mask: 0x01
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x1a, value: 0x16, mask: 0xff
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x1a, value: 0x00, mask: 0x02
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x28, value: 0x16, mask: 0xff
+> ov2680 i2c-OVTI2680:00: I2C write, addr: 0x34, reg: 0x28, value: 0x00, mask: 0x20
+> ov2680 i2c-OVTI2680:00: sensor power-gating failed
+> ov2680 i2c-OVTI2680:00: +++ out free
+
+Another CAM:
+
+> ov2680 i2c-OVTI2680:01: gmin_subdev_add: ACPI detected it on bus ID=CAMC, HID=OVTI2680
+> ov2680 i2c-OVTI2680:01: gmin: power management provided via XPower AXP288 PMIC
+
+now pmic_id is non-zero, so power is not initalized and causes the i2c
+address below to be zero.
+
+So either power should be static in that function or pmic_id should be
+non-global (per device).
+
+> ov2680 i2c-OVTI2680:01: found _DSM entry for 'CamClk': 1
+> ov2680 i2c-OVTI2680:01: didn't found _DSM entry for 'ClkSrc'
+> ov2680 i2c-OVTI2680:01: Failed to find EFI variable OVTI2680:01_ClkSrc
+> ov2680 i2c-OVTI2680:01: ClkSrc: using default (1)
+> ov2680 i2c-OVTI2680:01: found _DSM entry for 'CsiPort': 1
+> ov2680 i2c-OVTI2680:01: found _DSM entry for 'CsiLanes': 1
+> ov2680 i2c-OVTI2680:01: didn't found _DSM entry for 'eldo1_1p8v'
+> ov2680 i2c-OVTI2680:01: Failed to find EFI variable OVTI2680:01_eldo1_1p8v
+> ov2680 i2c-OVTI2680:01: eldo1_1p8v: using default (22)
+> ov2680 i2c-OVTI2680:01: didn't found _DSM entry for 'eldo1_sel_reg'
+> ov2680 i2c-OVTI2680:01: Failed to find EFI variable OVTI2680:01_eldo1_sel_reg
+> ov2680 i2c-OVTI2680:01: eldo1_sel_reg: using default (25)
+> ov2680 i2c-OVTI2680:01: didn't found _DSM entry for 'eldo1_ctrl_shift'
+> ov2680 i2c-OVTI2680:01: Failed to find EFI variable OVTI2680:01_eldo1_ctrl_shift
+> ov2680 i2c-OVTI2680:01: eldo1_ctrl_shift: using default (0)
+> ov2680 i2c-OVTI2680:01: didn't found _DSM entry for 'eldo2_1p8v'
+> ov2680 i2c-OVTI2680:01: Failed to find EFI variable OVTI2680:01_eldo2_1p8v
+> ov2680 i2c-OVTI2680:01: eldo2_1p8v: using default (22)
+> ov2680 i2c-OVTI2680:01: didn't found _DSM entry for 'eldo2_sel_reg'
+> ov2680 i2c-OVTI2680:01: Failed to find EFI variable OVTI2680:01_eldo2_sel_reg
+> ov2680 i2c-OVTI2680:01: eldo2_sel_reg: using default (26)
+> ov2680 i2c-OVTI2680:01: didn't found _DSM entry for 'eldo2_ctrl_shift'
+> ov2680 i2c-OVTI2680:01: Failed to find EFI variable OVTI2680:01_eldo2_ctrl_shift
+> ov2680 i2c-OVTI2680:01: eldo2_ctrl_shift: using default (1)
+> ov2680 i2c-OVTI2680:01: power_ctrl: off
+> ov2680 i2c-OVTI2680:01: power_ctrl: on
+> ov2680 i2c-OVTI2680:01: I2C write, addr: 0x00, reg: 0x1a, value: 0x16, mask: 0xff
+> intel_soc_pmic_exec_mipi_pmic_seq_element: Unexpected i2c-addr: 0x00 (reg-addr 0x1a value 0x16 mask 0xff)
+> ov2680 i2c-OVTI2680:01: I2C write, addr: 0x00, reg: 0x28, value: 0x16, mask: 0xff
+> intel_soc_pmic_exec_mipi_pmic_seq_element: Unexpected i2c-addr: 0x00 (reg-addr 0x28 value 0x16 mask 0xff)
+> ov2680 i2c-OVTI2680:01: I2C write, addr: 0x00, reg: 0x19, value: 0x16, mask: 0xff
+> intel_soc_pmic_exec_mipi_pmic_seq_element: Unexpected i2c-addr: 0x00 (reg-addr 0x19 value 0x16 mask 0xff)
+> ov2680 i2c-OVTI2680:01: I2C write, addr: 0x00, reg: 0x28, value: 0x16, mask: 0xff
+> intel_soc_pmic_exec_mipi_pmic_seq_element: Unexpected i2c-addr: 0x00 (reg-addr 0x28 value 0x16 mask 0xff)
+> ov2680 i2c-OVTI2680:01: power_ctrl: off
+> ov2680 i2c-OVTI2680:01: sensor power-up failed
+> ov2680 i2c-OVTI2680:01: ov2680 power-up err.
+> ov2680 i2c-OVTI2680:01: power_ctrl: off
+> ov2680 i2c-OVTI2680:01: sensor power-gating failed
+> ov2680 i2c-OVTI2680:01: +++ out free
+
+thanks,
 -- 
-2.25.1
-
+js
+suse labs
