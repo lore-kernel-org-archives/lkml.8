@@ -2,396 +2,299 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9016C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B35AD2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2393B2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="GwAXl+Cd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oYu+s4oq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgGQUx2 (ORCPT
+        id S1726763AbgGQUzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:53:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbgGQUx1 (ORCPT
+        Fri, 17 Jul 2020 16:55:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39394 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgGQUzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:53:27 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFFBDC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 13:53:26 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id z63so9998167qkb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 13:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=UNtkkPoCJUt87PCugNPU0gfxkzQuJHMVJsQC+uRJpP0=;
-        b=GwAXl+CdqqbjJ09athoiVNfYyzSxJECfb21r9NRepv3ah78mpPjuxKq3zU9sRg2B1D
-         /T4gK8H/u9pnL4WTgUoiRhNvoVMW54lx53SdloqezuIJUpXs/gl4v1eKP/GrMV1d+04w
-         mOvQDhCZxKQu5KQOYePaFTOhS2nLgIMF2DNffPtNsvp2jlnVMat7PO8jQ8yC9idPznWs
-         P5Q8+Yu84Cz7fEaxS9Bf5EautL5cobOs+GjJA3I9T47AchbFCRsNwuXf6N5BTTRlrWSm
-         LMqDten/yDYxnfaj21gqo5ZeKmO7UwXbkuvumr8vGX1bMtiWnXxydsVUUcmzaFaCjICF
-         bzzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UNtkkPoCJUt87PCugNPU0gfxkzQuJHMVJsQC+uRJpP0=;
-        b=K/nz1xfF02ZUtUv4Dq+0TF2UA6A/6YHHvsqF9d5fDKqtRbnqspDEIdiYnaGRsIqm0Q
-         oo0b8NAYhAYfJklmFgPxYvGwZJEhhISUZ5ZPeNoDmSfzdB9dYPk02kiS+orWS4Q47c0X
-         yvXLFPwhTJ+QO6TQhIqNVTXzzkGX9L5ADlYIEUWeMavmbcRmFY/4lJr3yjKyf1QVySMQ
-         DaVVBzJ2og3S1tI4x+RL05r0zbTJtNQz8QN8zE5NHnjQXKXjwrv3tENj2vy3DlTdfVyG
-         +YE40NNm4o3Qo9quiequAE6gHr51sjUwhNr3XsNDLTFnawZnACGNnGXzgid423NnXybX
-         KR6g==
-X-Gm-Message-State: AOAM530szUUa2rpOrL4tNrEIGBRHwvoDxin/rLmFxjsLY22DibK1ckRb
-        /WEPOy5FvhFe/+aGlJ27pspqJw==
-X-Google-Smtp-Source: ABdhPJyRWb5gghiGIVjheXkck+VZFgE0sTiQFgeiscWtv+AXDiGp1Dv7fHghZ+SDhbqnkkPn/yGanQ==
-X-Received: by 2002:a37:674d:: with SMTP id b74mr2903161qkc.84.1595019205957;
-        Fri, 17 Jul 2020 13:53:25 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id d14sm10576733qkl.9.2020.07.17.13.53.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 13:53:25 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/1] loop: scale loop device by introducing per device lock
-Date:   Fri, 17 Jul 2020 16:53:22 -0400
-Message-Id: <20200717205322.127694-2-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717205322.127694-1-pasha.tatashin@soleen.com>
-References: <20200717205322.127694-1-pasha.tatashin@soleen.com>
+        Fri, 17 Jul 2020 16:55:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HKqYLk077318;
+        Fri, 17 Jul 2020 20:54:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
+ message-id : date : from : to : cc : subject : references : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Ce8mBbGSeLNIbOTJ85IBFw/y0NRxNfTFyX4E650zagA=;
+ b=oYu+s4oqM+9MXi+/fvD2qzVMKbfn/rbPH7USGrarXDeLEwsm8f7X/b6DwfJNSsVlOWYK
+ 1LLrmAEFqmCvxhg1GngMwzWv1+hfrnNKr5Jk+xjQUOQ7UBAMRo8bHBjZsEOnXWkNbxkB
+ 5DDcoC5ZPdFd4+4ua2U375uDA7IZWip5Pzkq5yTejJtIdAUfbfqzmFSKogSoX6jiEcqw
+ audUCKU2a6mxS57kf73P5KmlknIL9XveUir5Z+tPrAhPi2DixhoWmxxoe25v2C75lcVi
+ UBz2H7pKqduxZ8Q7+cnfynh+DvWRk2mZrI6Qdp3oLe9ZPbliEZJSN4+kswJkZP+qMzVT aQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 3274ursfrg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jul 2020 20:54:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HKrlnR061412;
+        Fri, 17 Jul 2020 20:54:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 32bjj9umqg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jul 2020 20:54:42 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06HKsXdM011945;
+        Fri, 17 Jul 2020 20:54:39 GMT
+Received: from localhost (/10.159.159.76) by default (Oracle Beehive Gateway
+ v4.0) with ESMTP ; Fri, 17 Jul 2020 13:53:42 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <20200717205340.GR7625@magnolia>
+Date:   Fri, 17 Jul 2020 13:53:40 -0700 (PDT)
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+References: <20200717044427.68747-1-ebiggers@kernel.org>
+In-Reply-To: <20200717044427.68747-1-ebiggers@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 malwarescore=0 suspectscore=0
+ spamscore=100 adultscore=0 phishscore=0 mlxscore=100 mlxlogscore=-1000
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007170141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 spamscore=100 mlxlogscore=-1000 malwarescore=0
+ mlxscore=100 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007170141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, loop device has only one global lock:
-loop_ctl_mutex.
+On Thu, Jul 16, 2020 at 09:44:27PM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> The "one-time init" pattern is implemented incorrectly in various places
+> in the kernel.  And when people do try to implement it correctly, it is
+> unclear what to use.  Try to give some proper guidance.
+> 
+> This is motivated by the discussion at
+> https://lkml.kernel.org/linux-fsdevel/20200713033330.205104-1-ebiggers@kernel.org/T/#u
+> regarding fixing the initialization of super_block::s_dio_done_wq.
+> 
+> Cc: Akira Yokosawa <akiyks@gmail.com>
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+> Cc: Andrea Parri <parri.andrea@gmail.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Daniel Lustig <dlustig@nvidia.com>
+> Cc: Darrick J. Wong <darrick.wong@oracle.com>
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Jade Alglave <j.alglave@ucl.ac.uk>
+> Cc: Luc Maranget <luc.maranget@inria.fr>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  tools/memory-model/Documentation/recipes.txt | 151 +++++++++++++++++++
+>  1 file changed, 151 insertions(+)
+> 
+> diff --git a/tools/memory-model/Documentation/recipes.txt b/tools/memory-model/Documentation/recipes.txt
+> index 7fe8d7aa3029..04beb06dbfc7 100644
+> --- a/tools/memory-model/Documentation/recipes.txt
+> +++ b/tools/memory-model/Documentation/recipes.txt
+> @@ -519,6 +519,157 @@ CPU1 puts the waiting task to sleep and CPU0 fails to wake it up.
+>  
+>  Note that use of locking can greatly simplify this pattern.
+>  
+> +One-time init
+> +-------------
+> +
+> +The "one-time init" pattern is when multiple tasks can race to
+> +initialize the same data structure(s) on first use.
+> +
+> +In many cases, it's best to just avoid the need for this by simply
+> +initializing the data ahead of time.
+> +
+> +But in cases where the data would often go unused, one-time init can be
+> +appropriate to avoid wasting kernel resources.  It can also be
+> +appropriate if the initialization has other prerequisites which preclude
+> +it being done ahead of time.
+> +
+> +First, consider if your data has (a) global or static scope, (b) can be
+> +initialized from atomic context, and (c) cannot fail to be initialized.
+> +If all of those apply, just use DO_ONCE() from <linux/once.h>:
+> +
+> +	DO_ONCE(func);
+> +
+> +If that doesn't apply, you'll have to implement one-time init yourself.
+> +
+> +The simplest implementation just uses a mutex and an 'inited' flag.
+> +This implementation should be used where feasible:
+> +
+> +	static bool foo_inited;
+> +	static DEFINE_MUTEX(foo_init_mutex);
+> +
+> +	int init_foo_if_needed(void)
+> +	{
+> +		int err = 0;
+> +
+> +		mutex_lock(&foo_init_mutex);
+> +		if (!foo_inited) {
+> +			err = init_foo();
+> +			if (err == 0)
+> +				foo_inited = true;
+> +		}
+> +		mutex_unlock(&foo_init_mutex);
+> +		return err;
+> +	}
+> +
+> +The above example uses static variables, but this solution also works
+> +for initializing something that is part of another data structure.  The
+> +mutex may still be static.
+> +
+> +In where cases where taking the mutex in the "already initialized" case
+> +presents scalability concerns, the implementation can be optimized to
+> +check the 'inited' flag outside the mutex.  Unfortunately, this
+> +optimization is often implemented incorrectly by using a plain load.
+> +That violates the memory model and may result in unpredictable behavior.
+> +
+> +A correct implementation is:
+> +
+> +	static bool foo_inited;
+> +	static DEFINE_MUTEX(foo_init_mutex);
+> +
+> +	int init_foo_if_needed(void)
+> +	{
+> +		int err = 0;
+> +
+> +		/* pairs with smp_store_release() below */
+> +		if (smp_load_acquire(&foo_inited))
+> +			return 0;
+> +
+> +		mutex_lock(&foo_init_mutex);
+> +		if (!foo_inited) {
+> +			err = init_foo();
+> +			if (err == 0) /* pairs with smp_load_acquire() above */
+> +				smp_store_release(&foo_inited, true);
+> +		}
+> +		mutex_unlock(&foo_init_mutex);
+> +		return err;
+> +	}
+> +
+> +If only a single data structure is being initialized, then the pointer
+> +itself can take the place of the 'inited' flag:
+> +
+> +	static struct foo *foo;
+> +	static DEFINE_MUTEX(foo_init_mutex);
+> +
+> +	int init_foo_if_needed(void)
+> +	{
+> +		int err = 0;
+> +
+> +		/* pairs with smp_store_release() below */
+> +		if (smp_load_acquire(&foo))
+> +			return 0;
+> +
+> +		mutex_lock(&foo_init_mutex);
+> +		if (!foo) {
+> +			struct foo *p = alloc_foo();
+> +
+> +			if (p) /* pairs with smp_load_acquire() above */
+> +				smp_store_release(&foo, p);
+> +			else
+> +				err = -ENOMEM;
+> +		}
+> +		mutex_unlock(&foo_init_mutex);
+> +		return err;
+> +	}
+> +
+> +There are also cases in which the smp_load_acquire() can be replaced by
+> +the more lightweight READ_ONCE().  (smp_store_release() is still
+> +required.)  Specifically, if all initialized memory is transitively
+> +reachable from the pointer itself, then there is no control dependency
 
-This becomes hot in scenarios where many loop devices are used.
+I don't quite understand what "transitively reachable from the pointer
+itself" means?  Does that describe the situation where all the objects
+reachable through the object that the global struct foo pointer points
+at are /only/ reachable via that global pointer?
 
-Scale it by introducing per-device lock: lo_mutex that proctests
-field in struct loop_device. Keep loop_ctl_mutex to protect global
-data such as loop_index_idr, loop_lookup, loop_add.
+Aside from that question, I very much like having this recipe in the
+kernel documentation.  Thank you for putting this together!
 
-Lock ordering: loop_ctl_mutex > lo_mutex.
+--D
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- drivers/block/loop.c | 86 ++++++++++++++++++++++++--------------------
- drivers/block/loop.h |  1 +
- 2 files changed, 48 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 475e1a738560..056af3bca6c2 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -706,7 +706,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 	int		error;
- 	bool		partscan;
- 
--	error = mutex_lock_killable(&loop_ctl_mutex);
-+	error = mutex_lock_killable(&lo->lo_mutex);
- 	if (error)
- 		return error;
- 	error = -ENXIO;
-@@ -745,9 +745,9 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 	loop_update_dio(lo);
- 	blk_mq_unfreeze_queue(lo->lo_queue);
- 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN;
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	/*
--	 * We must drop file reference outside of loop_ctl_mutex as dropping
-+	 * We must drop file reference outside of lo_mutex as dropping
- 	 * the file ref can take bd_mutex which creates circular locking
- 	 * dependency.
- 	 */
-@@ -757,7 +757,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 	return 0;
- 
- out_err:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	if (file)
- 		fput(file);
- 	return error;
-@@ -1096,7 +1096,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 		}
- 	}
- 
--	error = mutex_lock_killable(&loop_ctl_mutex);
-+	error = mutex_lock_killable(&lo->lo_mutex);
- 	if (error)
- 		goto out_bdev;
- 
-@@ -1176,7 +1176,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 	 * put /dev/loopXX inode. Later in __loop_clr_fd() we bdput(bdev).
- 	 */
- 	bdgrab(bdev);
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	if (partscan)
- 		loop_reread_partitions(lo, bdev);
- 	if (claimed_bdev)
-@@ -1184,7 +1184,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 	return 0;
- 
- out_unlock:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- out_bdev:
- 	if (claimed_bdev)
- 		bd_abort_claiming(bdev, claimed_bdev, loop_configure);
-@@ -1205,7 +1205,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	bool partscan = false;
- 	int lo_number;
- 
--	mutex_lock(&loop_ctl_mutex);
-+	mutex_lock(&lo->lo_mutex);
- 	if (WARN_ON_ONCE(lo->lo_state != Lo_rundown)) {
- 		err = -ENXIO;
- 		goto out_unlock;
-@@ -1259,7 +1259,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	lo_number = lo->lo_number;
- 	loop_unprepare_queue(lo);
- out_unlock:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	if (partscan) {
- 		/*
- 		 * bd_mutex has been held already in release path, so don't
-@@ -1290,18 +1290,18 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	 * protects us from all the other places trying to change the 'lo'
- 	 * device.
- 	 */
--	mutex_lock(&loop_ctl_mutex);
-+	mutex_lock(&lo->lo_mutex);
- 	lo->lo_flags = 0;
- 	if (!part_shift)
- 		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
- 	lo->lo_state = Lo_unbound;
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 
- 	/*
--	 * Need not hold loop_ctl_mutex to fput backing file.
--	 * Calling fput holding loop_ctl_mutex triggers a circular
-+	 * Need not hold lo_mutex to fput backing file.
-+	 * Calling fput holding lo_mutex triggers a circular
- 	 * lock dependency possibility warning as fput can take
--	 * bd_mutex which is usually taken before loop_ctl_mutex.
-+	 * bd_mutex which is usually taken before lo_mutex.
- 	 */
- 	if (filp)
- 		fput(filp);
-@@ -1312,11 +1312,11 @@ static int loop_clr_fd(struct loop_device *lo)
- {
- 	int err;
- 
--	err = mutex_lock_killable(&loop_ctl_mutex);
-+	err = mutex_lock_killable(&lo->lo_mutex);
- 	if (err)
- 		return err;
- 	if (lo->lo_state != Lo_bound) {
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_mutex);
- 		return -ENXIO;
- 	}
- 	/*
-@@ -1331,11 +1331,11 @@ static int loop_clr_fd(struct loop_device *lo)
- 	 */
- 	if (atomic_read(&lo->lo_refcnt) > 1) {
- 		lo->lo_flags |= LO_FLAGS_AUTOCLEAR;
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_mutex);
- 		return 0;
- 	}
- 	lo->lo_state = Lo_rundown;
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 
- 	return __loop_clr_fd(lo, false);
- }
-@@ -1350,7 +1350,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 	bool partscan = false;
- 	bool size_changed = false;
- 
--	err = mutex_lock_killable(&loop_ctl_mutex);
-+	err = mutex_lock_killable(&lo->lo_mutex);
- 	if (err)
- 		return err;
- 	if (lo->lo_encrypt_key_size &&
-@@ -1417,7 +1417,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		partscan = true;
- 	}
- out_unlock:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	if (partscan)
- 		loop_reread_partitions(lo, bdev);
- 
-@@ -1431,11 +1431,11 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
- 	struct kstat stat;
- 	int ret;
- 
--	ret = mutex_lock_killable(&loop_ctl_mutex);
-+	ret = mutex_lock_killable(&lo->lo_mutex);
- 	if (ret)
- 		return ret;
- 	if (lo->lo_state != Lo_bound) {
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_mutex);
- 		return -ENXIO;
- 	}
- 
-@@ -1454,10 +1454,10 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
- 		       lo->lo_encrypt_key_size);
- 	}
- 
--	/* Drop loop_ctl_mutex while we call into the filesystem. */
-+	/* Drop lo_mutex while we call into the filesystem. */
- 	path = lo->lo_backing_file->f_path;
- 	path_get(&path);
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	ret = vfs_getattr(&path, &stat, STATX_INO, AT_STATX_SYNC_AS_STAT);
- 	if (!ret) {
- 		info->lo_device = huge_encode_dev(stat.dev);
-@@ -1643,7 +1643,7 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
- {
- 	int err;
- 
--	err = mutex_lock_killable(&loop_ctl_mutex);
-+	err = mutex_lock_killable(&lo->lo_mutex);
- 	if (err)
- 		return err;
- 	switch (cmd) {
-@@ -1659,7 +1659,7 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
- 	default:
- 		err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
- 	}
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	return err;
- }
- 
-@@ -1890,22 +1890,23 @@ static int lo_open(struct block_device *bdev, fmode_t mode)
- 		return err;
- 	lo = bdev->bd_disk->private_data;
- 	if (!lo) {
--		err = -ENXIO;
--		goto out;
-+		mutex_unlock(&loop_ctl_mutex);
-+		return -ENXIO;
- 	}
--
--	atomic_inc(&lo->lo_refcnt);
--out:
-+	err = mutex_lock_killable(&lo->lo_mutex);
- 	mutex_unlock(&loop_ctl_mutex);
--	return err;
-+	if (err)
-+		return err;
-+	atomic_inc(&lo->lo_refcnt);
-+	mutex_unlock(&lo->lo_mutex);
-+	return 0;
- }
- 
- static void lo_release(struct gendisk *disk, fmode_t mode)
- {
--	struct loop_device *lo;
-+	struct loop_device *lo = disk->private_data;
- 
--	mutex_lock(&loop_ctl_mutex);
--	lo = disk->private_data;
-+	mutex_lock(&lo->lo_mutex);
- 	if (atomic_dec_return(&lo->lo_refcnt))
- 		goto out_unlock;
- 
-@@ -1913,7 +1914,7 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
- 		if (lo->lo_state != Lo_bound)
- 			goto out_unlock;
- 		lo->lo_state = Lo_rundown;
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_mutex);
- 		/*
- 		 * In autoclear mode, stop the loop thread
- 		 * and remove configuration after last close.
-@@ -1930,7 +1931,7 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
- 	}
- 
- out_unlock:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- }
- 
- static const struct block_device_operations lo_fops = {
-@@ -1969,10 +1970,10 @@ static int unregister_transfer_cb(int id, void *ptr, void *data)
- 	struct loop_device *lo = ptr;
- 	struct loop_func_table *xfer = data;
- 
--	mutex_lock(&loop_ctl_mutex);
-+	mutex_lock(&lo->lo_mutex);
- 	if (lo->lo_encryption == xfer)
- 		loop_release_xfer(lo);
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_mutex);
- 	return 0;
- }
- 
-@@ -2157,6 +2158,7 @@ static int loop_add(struct loop_device **l, int i)
- 		disk->flags |= GENHD_FL_NO_PART_SCAN;
- 	disk->flags |= GENHD_FL_EXT_DEVT;
- 	atomic_set(&lo->lo_refcnt, 0);
-+	mutex_init(&lo->lo_mutex);
- 	lo->lo_number		= i;
- 	spin_lock_init(&lo->lo_lock);
- 	disk->major		= LOOP_MAJOR;
-@@ -2272,15 +2274,21 @@ static long loop_control_ioctl(struct file *file, unsigned int cmd,
- 		ret = loop_lookup(&lo, parm);
- 		if (ret < 0)
- 			break;
-+		ret = mutex_lock_killable(&lo->lo_mutex);
-+		if (ret)
-+			break;
- 		if (lo->lo_state != Lo_unbound) {
- 			ret = -EBUSY;
-+			mutex_unlock(&lo->lo_mutex);
- 			break;
- 		}
- 		if (atomic_read(&lo->lo_refcnt) > 0) {
- 			ret = -EBUSY;
-+			mutex_unlock(&lo->lo_mutex);
- 			break;
- 		}
- 		lo->lo_disk->private_data = NULL;
-+		mutex_unlock(&lo->lo_mutex);
- 		idr_remove(&loop_index_idr, lo->lo_number);
- 		loop_remove(lo);
- 		break;
-diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index af75a5ee4094..a3c04f310672 100644
---- a/drivers/block/loop.h
-+++ b/drivers/block/loop.h
-@@ -62,6 +62,7 @@ struct loop_device {
- 	struct request_queue	*lo_queue;
- 	struct blk_mq_tag_set	tag_set;
- 	struct gendisk		*lo_disk;
-+	struct mutex		lo_mutex;
- };
- 
- struct loop_cmd {
--- 
-2.25.1
-
+> +so the data dependency barrier provided by READ_ONCE() is sufficient.
+> +
+> +However, using the READ_ONCE() optimization is discouraged for
+> +nontrivial data structures, as it can be difficult to determine if there
+> +is a control dependency.  For complex data structures it may depend on
+> +internal implementation details of other kernel subsystems.
+> +
+> +For the single-pointer case, a further optimized implementation
+> +eliminates the mutex and instead uses compare-and-exchange:
+> +
+> +	static struct foo *foo;
+> +
+> +	int init_foo_if_needed(void)
+> +	{
+> +		struct foo *p;
+> +
+> +		/* pairs with successful cmpxchg_release() below */
+> +		if (smp_load_acquire(&foo))
+> +			return 0;
+> +
+> +		p = alloc_foo();
+> +		if (!p)
+> +			return -ENOMEM;
+> +
+> +		/* on success, pairs with smp_load_acquire() above and below */
+> +		if (cmpxchg_release(&foo, NULL, p) != NULL) {
+> +			free_foo(p);
+> +			/* pairs with successful cmpxchg_release() above */
+> +			smp_load_acquire(&foo);
+> +		}
+> +		return 0;
+> +	}
+> +
+> +Note that when the cmpxchg_release() fails due to another task already
+> +having done it, a second smp_load_acquire() is required, since we still
+> +need to acquire the data that the other task released.  You may be
+> +tempted to upgrade cmpxchg_release() to cmpxchg() with the goal of it
+> +acting as both ACQUIRE and RELEASE, but that doesn't work here because
+> +cmpxchg() only guarantees memory ordering if it succeeds.
+> +
+> +Because of the above subtlety, the version with the mutex instead of
+> +cmpxchg_release() should be preferred, except potentially in cases where
+> +it is difficult to provide anything other than a global mutex and where
+> +the one-time data is part of a frequently allocated structure.  In that
+> +case, a global mutex might present scalability concerns.
+>  
+>  Rules of thumb
+>  ==============
+> -- 
+> 2.27.0
+> 
