@@ -2,137 +2,177 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A713C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE91C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CACB206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9558E206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:08:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="J8O1ie20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgGQJIG (ORCPT
+        id S1726256AbgGQJIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:08:06 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:49450 "EHLO huawei.com"
+        Fri, 17 Jul 2020 05:08:02 -0400
+Received: from mail-co1nam11on2081.outbound.protection.outlook.com ([40.107.220.81]:17264
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726037AbgGQJIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:08:05 -0400
-Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id A7392E30ACC198C40E8B;
-        Fri, 17 Jul 2020 17:07:59 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.52]) by
- dggemi404-hub.china.huawei.com ([10.3.17.142]) with mapi id 14.03.0487.000;
- Fri, 17 Jul 2020 17:07:48 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>
-Subject: RE: [PATCH] iommu/arm-smmu-v3: remove the approach of MSI polling
- for CMD SYNC
-Thread-Topic: [PATCH] iommu/arm-smmu-v3: remove the approach of MSI polling
- for CMD SYNC
-Thread-Index: AQHWW8YiwSsIgpwKv0qM0ZdQNf6ByakK8iGAgACG1CA=
-Date:   Fri, 17 Jul 2020 09:07:48 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD25900C6@DGGEMI525-MBS.china.huawei.com>
-References: <20200716230709.32820-1-song.bao.hua@hisilicon.com>
- <35b54698-bd43-a8fc-00db-94ee0dfc789f@arm.com>
-In-Reply-To: <35b54698-bd43-a8fc-00db-94ee0dfc789f@arm.com>
-Accept-Language: en-GB, en-US
+        id S1725950AbgGQJIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:08:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ERazna1vbeM6nNJWh+M2rA/IUQR75e/uwfv4UHSkI6g0cuJxaPJn+GLYe4dBmvrmF1Y/CRUyQ34GmOVpvwvE4xQZnqykejgeorNnqTyFbVqNsp0DKbBmtHV7+WgthGmjaQEu7mClejjMdFxmus+BHS9jiaH4DIh+1L3RKgHamLrKo4aldnGsgEjzax+bbi04H4U1Zisk1Z0mfz3+F1jJZPm0Dn+SLXkZtNTAPfgS+hz2Ot743AUi+bDli94wOZhAukCqF42cRUxAUc63ZiWr12Y7Bukgt4Fzcy7dNTqLN+F75PG73aI2goNUvliswka3s+9Fp+0CKtivZb7a/di+LA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9G8RBIoi+KO5Wtohuuz1YEjANZQasLr63vrMBOOlC1w=;
+ b=Rcx7LMYr10Qst+QrvOjnZPIKEjK6XG6E2poY25CtRv3ojDS2jej8LiAh492xdXcFuWWyS8zB1dnq1jGi+oqSgxxg+5PIB9QvqULVHtj2DMHYBlA82oNCaXugJ9DzZLz0n43LkRQjSUIYrQzXrTKim9N5u1RF1GIq7fNDEFJMCkiehdTyUS12pUcVc/8uPSoWccC2oVGANx80Da3GXIfeBxkZzl2VayQy7oy9B/20RBu/yzb3sLc81DdlKh3xRzMtN1/xkSl8LoRlZ/74vbyNoIo8tYmdDR+MmmRXjHRIMXwaEVDOz+knuQZmZ9+g/U+Gg5Jc7BHtKcFQxgn7sLucgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9G8RBIoi+KO5Wtohuuz1YEjANZQasLr63vrMBOOlC1w=;
+ b=J8O1ie20SwtNdwUeHJhxOEJvQO8wGHW1ldD3gfNhuRRk0m/U2BzBc8weHKYFcVWaj7vqq0GK1BRotPoICNR8eonIF0e0LSlnp5ER/sRZ4QgmrXOyxlW80oeR19cqKphWYcPQbuT6K+Bxs6ul2HOyxHv9tjFO9bCGJTsTZ5p+oSk=
+Received: from DM6PR12MB2619.namprd12.prod.outlook.com (2603:10b6:5:45::18) by
+ DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3174.23; Fri, 17 Jul 2020 09:07:57 +0000
+Received: from DM6PR12MB2619.namprd12.prod.outlook.com
+ ([fe80::c157:8999:dcc3:536f]) by DM6PR12MB2619.namprd12.prod.outlook.com
+ ([fe80::c157:8999:dcc3:536f%3]) with mapi id 15.20.3174.025; Fri, 17 Jul 2020
+ 09:07:57 +0000
+From:   "Quan, Evan" <Evan.Quan@amd.com>
+To:     Qiu Wenbo <qiuwenbo@phytium.com.cn>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+CC:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chen Wandun <chenwandun@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>, yu kuai <yukuai3@huawei.com>,
+        "Huang, JinHuiEric" <JinHuiEric.Huang@amd.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] drm/amd/powerplay: fix a crash when overclocking Vega M
+Thread-Topic: [PATCH] drm/amd/powerplay: fix a crash when overclocking Vega M
+Thread-Index: AQHWXAlk403P8m37e0Sx+6uNQ9W+lakLeyoQ
+Date:   Fri, 17 Jul 2020 09:07:57 +0000
+Message-ID: <DM6PR12MB2619F923B2D2930E3DB71A6DE47C0@DM6PR12MB2619.namprd12.prod.outlook.com>
+References: <20200717070958.41489-1-qiuwenbo@phytium.com.cn>
+In-Reply-To: <20200717070958.41489-1-qiuwenbo@phytium.com.cn>
+Accept-Language: en-US, zh-CN
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.203.111]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+msip_labels: MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ActionId=a04cbc03-2e10-4977-9ceb-3be8afcc5ca2;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ContentBits=0;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Enabled=true;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Method=Standard;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Name=Internal
+ Use Only -
+ Unrestricted;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SetDate=2020-07-17T09:06:56Z;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+authentication-results: phytium.com.cn; dkim=none (message not signed)
+ header.d=none;phytium.com.cn; dmarc=none action=none header.from=amd.com;
+x-originating-ip: [58.247.170.242]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 375e1b5e-b9a9-40d6-b93a-08d82a30e5c8
+x-ms-traffictypediagnostic: DM5PR12MB1163:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR12MB1163F2A7DF2E7569384899F1E47C0@DM5PR12MB1163.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tXJrF0wrA7nOYclTKkNJGBguM5B3T03YHbo2YtKRi5SFzXdjRoeQbN6Xow66rmT9GX78ZaEXw/aEMEtSNwtD5fJTpoZzspv23TZeqLwWNmM3aAz4RUtaINV1WAmZ8wCxxJsJYe4xmWgHFNLYU7Mn7108WyTzUF0LkhPFvmdmwU7NCCUq/Bu91IUtejxOGOPkhZygz0XoABOyeVXfNYmJN937IFYb1btbZcNNKT0h2r/hVdLkAJZNAkoKmx1aIGwTX5kpdkaPy8TEp/STtr4IKfGmoO4CxYVm1pNp9WJ3SqXqjIuhKzVT0m8Cp1rGxQcOloTDnQJdaQRpU25QaKWQ0dYI159L3mLFh+fz5I2fI1bZYzzN7TqgIss2msaFFI5WNPwTaT0+vHkPmh9z2UKYoA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2619.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(366004)(376002)(346002)(110136005)(316002)(66446008)(64756008)(66946007)(478600001)(6506007)(66476007)(76116006)(66556008)(83380400001)(26005)(53546011)(86362001)(2906002)(186003)(7696005)(71200400001)(33656002)(8936002)(55016002)(966005)(8676002)(52536014)(4326008)(45080400002)(54906003)(9686003)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: AsnPvOW0Jt5RINc8ns473BWqoEXUXZvcuUBFvMs3t+C0EdFLidfsosKfpbN7CNbK2gqkJ1YFASxhnYckbhfx0x6QXodq3va0M7kGshCWL/UiEEhM69Sig9aWlFElMZ5SgsJYG8WSyp9edCm526Xkq9xptal3PI6rZ7JAdjqewvTOy7fkrXtytKumNBDOKIMTe0vgQNzUx/XBziXbp0WfJy1N1+az0EKXPW+r9wtbXj+HZo6E4wmtAAx8KlxtEyqvxnUnrzbdWuZDY8RLntUhlu99WPdcATIRRieXdEi+3vUBMVA0f8ms1QUF8cV13Fnv7IhU3LBEGXku3Pzf8Gpgo97FkBhvufurwLbwGAJuyUfl/gUQPE1uVrdkFPdVnmrqiEr20zl/Mm0AVYaM8LjXbTR/Zi8bObWoU6JvQq4M773c5JV7uZOTzZz5bRyOPj3aBvw0lDCrzGFPjPU/IPHb1A8ZncZsVO2SkcCnET62fsx80N+g8dgCJmkrGHkNQ29y
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2619.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 375e1b5e-b9a9-40d6-b93a-08d82a30e5c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 09:07:57.1810
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xwXS7ntrVltgITuFUUKkCV4Gv/BggUE+c+oFj9mm4T7TUyabxgJCtPqY1zLDNmT3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iaW4gTXVycGh5IFtt
-YWlsdG86cm9iaW4ubXVycGh5QGFybS5jb21dDQo+IFNlbnQ6IEZyaWRheSwgSnVseSAxNywgMjAy
-MCA4OjU1IFBNDQo+IFRvOiBTb25nIEJhbyBIdWEgKEJhcnJ5IFNvbmcpIDxzb25nLmJhby5odWFA
-aGlzaWxpY29uLmNvbT47IHdpbGxAa2VybmVsLm9yZzsNCj4gam9yb0A4Ynl0ZXMub3JnDQo+IENj
-OiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBMaW51eGFybSA8bGludXhhcm1AaHVhd2Vp
-LmNvbT47DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgaW9tbXVAbGlz
-dHMubGludXgtZm91bmRhdGlvbi5vcmc7DQo+IFplbmd0YW8gKEIpIDxwcmltZS56ZW5nQGhpc2ls
-aWNvbi5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGlvbW11L2FybS1zbW11LXYzOiByZW1v
-dmUgdGhlIGFwcHJvYWNoIG9mIE1TSQ0KPiBwb2xsaW5nIGZvciBDTUQgU1lOQw0KPiANCj4gT24g
-MjAyMC0wNy0xNyAwMDowNywgQmFycnkgU29uZyB3cm90ZToNCj4gPiBCZWZvcmUgY29tbWl0IDU4
-N2U2YzEwYTdjZSAoImlvbW11L2FybS1zbW11LXYzOiBSZWR1Y2UgY29udGVudGlvbg0KPiBkdXJp
-bmcNCj4gPiBjb21tYW5kLXF1ZXVlIGluc2VydGlvbiIpLCBtc2kgcG9sbGluZyBwZXJoYXBzIHBl
-cmZvcm1lZCBiZXR0ZXIgc2luY2UNCj4gPiBpdCBjb3VsZCBydW4gb3V0c2lkZSB0aGUgc3Bpbl9s
-b2NrX2lycXNhdmUoKSB3aGlsZSB0aGUgY29kZSBwb2xsaW5nIGNvbnMNCj4gPiByZWcgd2FzIHJ1
-bm5pbmcgaW4gdGhlIGxvY2suDQo+ID4NCj4gPiBCdXQgYWZ0ZXIgdGhlIGdyZWF0IHJlb3JnYW5p
-emF0aW9uIG9mIHNtbXUgcXVldWUsIG5laXRoZXIgb2YgdGhlc2UgdHdvDQo+ID4gcG9sbGluZyBt
-ZXRob2RzIGFyZSBydW5uaW5nIGluIGEgc3BpbmxvY2suIEFuZCByZWFsIHRlc3RzIHNob3cgcG9s
-bGluZw0KPiA+IGNvbnMgcmVnIHZpYSBzZXYgbWVhbnMgc21hbGxlciBsYXRlbmN5LiBJdCBpcyBw
-cm9iYWJseSBiZWNhdXNlIHBvbGxpbmcNCj4gPiBieSBtc2kgd2lsbCBhc2sgaGFyZHdhcmUgdG8g
-d3JpdGUgbWVtb3J5IGJ1dCBzZXYgcG9sbGluZyBkZXBlbmRzIG9uIHRoZQ0KPiA+IHVwZGF0ZSBv
-ZiByZWdpc3RlciBvbmx5Lg0KPiA+DQo+ID4gVXNpbmcgMTYgdGhyZWFkcyB0byBydW4gbmV0cGVy
-ZiBvbiBobnMzIDEwMEcgTklDIHdpdGggVURQIHBhY2tldCBzaXplDQo+ID4gaW4gMzI3NjhieXRl
-cyBhbmQgc2V0IGlvbW11IHRvIHN0cmljdCwgVFggdGhyb3VnaHB1dCBjYW4gaW1wcm92ZSBmcm9t
-DQo+ID4gMjUyMjcuNzRNYnBzIHRvIDI3MTQ1LjU5TWJwcyBieSB0aGlzIHBhdGNoLiBJbiB0aGlz
-IGNhc2UsIFNNTVUgaXMgc3VwZXINCj4gPiBidXN5IGFzIGhuczMgc2VuZHMgbWFwL3VubWFwIHJl
-cXVlc3RzIGV4dHJlbWVseSBmcmVxdWVudGx5Lg0KPiANCj4gSG93IG1hbnkgZGlmZmVyZW50IHN5
-c3RlbXMgYW5kIFNNTVUgaW1wbGVtZW50YXRpb25zIGFyZSB0aG9zZSBudW1iZXJzDQo+IHJlcHJl
-c2VudGF0aXZlIG9mPyBHaXZlbiB0aGF0IHdlIG1heSBoYXZlIGNhc2VzIHdoZXJlIHRoZSBTTU1V
-IGNhbiB1c2UNCj4gTVNJcyBidXQgY2FuJ3QgdXNlIFNFViwgc28gd291bGQgaGF2ZSB0byBmYWxs
-IGJhY2sgdG8gaW5lZmZpY2llbnQNCj4gYnVzeS1wb2xsaW5nLCBJJ2QgYmUgd2FyeSBvZiByZW1v
-dmluZyB0aGlzIGVudGlyZWx5LiBBbGxvd2luZyBwYXJ0aWN1bGFyDQo+IHBsYXRmb3JtcyBvciBT
-TU1VIGltcGxlbWVudGF0aW9ucyB0byBzdXBwcmVzcyBNU0kgZnVuY3Rpb25hbGl0eSBpZiB0aGV5
-DQo+IGtub3cgZm9yIHN1cmUgaXQgbWFrZXMgc2Vuc2Ugc2VlbXMgbGlrZSBhIHNhZmVyIGJldC4N
-Cj4gDQpIZWxsbyBSb2JpbiwNCg0KVGhhbmtzIGZvciB0YWtpbmcgYSBsb29rLiBBY3R1YWxseSBJ
-IHdhcyByZWFsbHkgc3RydWdnbGluZyB3aXRoIHRoZSBnb29kIHdheSB0byBtYWtlIGV2ZXJ5IHBs
-YXRmb3JtIGhhcHB5Lg0KQW5kIEkgZG9uJ3QgaGF2ZSBvdGhlciBwbGF0Zm9ybXMgdG8gdGVzdCBh
-bmQgY2hlY2sgaWYgdGhvc2UgcGxhdGZvcm1zIHJ1biBiZXR0ZXIgYnkgc2V2IHBvbGxpbmcuIEV2
-ZW4gdHdvDQpwbGF0Zm9ybXMgaGF2ZSBjb21wbGV0ZWx5IHNhbWUgU01NVSBmZWF0dXJlcywgaXQg
-aXMgc3RpbGwgcG9zc2libGUgdGhleSBiZWhhdmUgZGlmZmVyZW50bHkuDQpTbyBJIHNpbXBseSBz
-ZW50IHRoaXMgcGF0Y2ggdG8gZ2V0IHRoZSBkaXNjdXNzaW9uIHN0YXJ0ZWQgdG8gZ2V0IG9waW5p
-b25zLg0KDQpBdCB0aGUgZmlyc3QgYmVnaW5uaW5nLCBJIHdhbnRlZCB0byBoYXZlIGEgbW9kdWxl
-IHBhcmFtZXRlciBmb3IgdXNlcnMgdG8gZGVjaWRlIGlmIG1zaSBwb2xsaW5nIHNob3VsZCBiZSBk
-aXNhYmxlZC4NCkJ1dCB0aGUgbW9kdWxlIHBhcmFtZXRlciBtaWdodCBiZSB0b3RhbGx5IGlnbm9y
-ZWQgYnkgbGludXggZGlzdHJvLg0KDQotLS0gYS9kcml2ZXJzL2lvbW11L2FybS1zbW11LXYzLmMN
-CisrKyBiL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUtdjMuYw0KQEAgLTQxOCw2ICs0MTgsMTEgQEAg
-bW9kdWxlX3BhcmFtX25hbWVkKGRpc2FibGVfYnlwYXNzLCBkaXNhYmxlX2J5cGFzcywgYm9vbCwg
-U19JUlVHTyk7ICBNT0RVTEVfUEFSTV9ERVNDKGRpc2FibGVfYnlwYXNzLA0KIAkiRGlzYWJsZSBi
-eXBhc3Mgc3RyZWFtcyBzdWNoIHRoYXQgaW5jb21pbmcgdHJhbnNhY3Rpb25zIGZyb20gZGV2aWNl
-cyB0aGF0IGFyZSBub3QgYXR0YWNoZWQgdG8gYW4gaW9tbXUgZG9tYWluIHdpbGwgcmVwb3J0IGFu
-IGFib3J0IGJhY2sgdG8gdGhlIGRldmljZSBhbmQgd2lsbCBub3QgYmUgYWxsb3dlZCB0byBwYXNz
-IHRocm91Z2ggdGhlIFNNTVUuIik7DQogDQorc3RhdGljIGJvb2wgZGlzYWJsZV9tc2lwb2xsaW5n
-ID0gMTsNCittb2R1bGVfcGFyYW1fbmFtZWQoZGlzYWJsZV9tc2lwb2xsaW5nLCBkaXNhYmxlX21z
-aXBvbGxpbmcsIGJvb2wsIA0KK1NfSVJVR08pOyBNT0RVTEVfUEFSTV9ERVNDKGRpc2FibGVfbXNp
-cG9sbGluZywNCisJIkRvbid0IHVzZSBNU0kgdG8gcG9sbCB0aGUgY29tcGxldGlvbiBvZiBDTURf
-U1lOQyBpZiBpdCBpcyBzbG93ZXIgdGhhbiANCitTRVYiKTsNCisNCiBlbnVtIHByaV9yZXNwIHsN
-CiAJUFJJX1JFU1BfREVOWSA9IDAsDQogCVBSSV9SRVNQX0ZBSUwgPSAxLA0KQEAgLTk5Miw3ICs5
-OTcsNyBAQCBzdGF0aWMgdm9pZCBhcm1fc21tdV9jbWRxX2J1aWxkX3N5bmNfY21kKHU2NCAqY21k
-LCBzdHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11LA0KIAkgKiBCZXdhcmUgdGhhdCBIaTE2eHgg
-YWRkcyBhbiBleHRyYSAzMiBiaXRzIG9mIGdvb2RuZXNzIHRvIGl0cyBNU0kNCiAJICogcGF5bG9h
-ZCwgc28gdGhlIHdyaXRlIHdpbGwgemVybyB0aGUgZW50aXJlIGNvbW1hbmQgb24gdGhhdCBwbGF0
-Zm9ybS4NCiAJICovDQotCWlmIChzbW11LT5mZWF0dXJlcyAmIEFSTV9TTU1VX0ZFQVRfTVNJICYm
-DQorCWlmICghZGlzYWJsZV9tc2lwb2xsaW5nICYmIHNtbXUtPmZlYXR1cmVzICYgQVJNX1NNTVVf
-RkVBVF9NU0kgJiYNCiAJICAgIHNtbXUtPmZlYXR1cmVzICYgQVJNX1NNTVVfRkVBVF9DT0hFUkVO
-Q1kpIHsNCiAJCWVudC5zeW5jLm1zaWFkZHIgPSBxLT5iYXNlX2RtYSArIFFfSURYKCZxLT5sbHEs
-IHByb2QpICoNCiAJCQkJICAgcS0+ZW50X2R3b3JkcyAqIDg7DQpAQCAtMTMzMiw3ICsxMzM3LDcg
-QEAgc3RhdGljIGludCBfX2FybV9zbW11X2NtZHFfcG9sbF91bnRpbF9jb25zdW1lZChzdHJ1Y3Qg
-YXJtX3NtbXVfZGV2aWNlICpzbW11LCAgc3RhdGljIGludCBhcm1fc21tdV9jbWRxX3BvbGxfdW50
-aWxfc3luYyhzdHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11LA0KIAkJCQkJIHN0cnVjdCBhcm1f
-c21tdV9sbF9xdWV1ZSAqbGxxKQ0KIHsNCi0JaWYgKHNtbXUtPmZlYXR1cmVzICYgQVJNX1NNTVVf
-RkVBVF9NU0kgJiYNCisJaWYgKCFkaXNhYmxlX21zaXBvbGxpbmcgJiYgc21tdS0+ZmVhdHVyZXMg
-JiBBUk1fU01NVV9GRUFUX01TSSAmJg0KIAkgICAgc21tdS0+ZmVhdHVyZXMgJiBBUk1fU01NVV9G
-RUFUX0NPSEVSRU5DWSkNCiAJCXJldHVybiBfX2FybV9zbW11X2NtZHFfcG9sbF91bnRpbF9tc2ko
-c21tdSwgbGxxKTsNCg0KDQpBbm90aGVyIG9wdGlvbiBpcyB0aGF0IHdlIGRvbid0IHVzZSBtb2R1
-bGUgcGFyYW1ldGVyLCBhbHRlcm5hdGl2ZWx5LCB3ZSBjaGVjayB0aGUgdmVuZG9yL2NoaXAgSUQs
-DQppZiB0aGUgY2hpcCBoYXMgYmV0dGVyIHBlcmZvcm1hbmNlIG9uIHNldiBwb2xsaW5nLCBpdCBt
-YXkgc2V0IGRpc2FibGVfbXNpcG9sbGluZyB0byB0cnVlLg0KDQpZb3UgYXJlIHZlcnkgd2VsY29t
-ZSB0byBnaXZlIHlvdXIgc3VnZ2VzdGlvbnMuDQoNClRoYW5rcw0KQmFycnkNCg==
+[AMD Official Use Only - Internal Distribution Only]
+
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+
+-----Original Message-----
+From: Qiu Wenbo <qiuwenbo@phytium.com.cn>
+Sent: Friday, July 17, 2020 3:10 PM
+To: Quan, Evan <Evan.Quan@amd.com>; amd-gfx@lists.freedesktop.org
+Cc: Qiu Wenbo <qiuwenbo@phytium.com.cn>; Deucher, Alexander <Alexander.Deuc=
+her@amd.com>; Koenig, Christian <Christian.Koenig@amd.com>; Zhou, David(Chu=
+nMing) <David1.Zhou@amd.com>; David Airlie <airlied@linux.ie>; Daniel Vette=
+r <daniel@ffwll.ch>; Chen Wandun <chenwandun@huawei.com>; YueHaibing <yueha=
+ibing@huawei.com>; yu kuai <yukuai3@huawei.com>; Huang, JinHuiEric <JinHuiE=
+ric.Huang@amd.com>; dri-devel@lists.freedesktop.org; linux-kernel@vger.kern=
+el.org
+Subject: [PATCH] drm/amd/powerplay: fix a crash when overclocking Vega M
+
+Avoid kernel crash when vddci_control is SMU7_VOLTAGE_CONTROL_NONE and
+vddci_voltage_table is empty. It has been tested on Intel Hades Canyon
+(i7-8809G).
+
+Bug: https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fbu=
+gzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D208489&amp;data=3D02%7C01%7Cevan.qu=
+an%40amd.com%7Cff6bf841473b46539e1708d82a20723d%7C3dd8961fe4884e608e11a82d9=
+94e183d%7C0%7C0%7C637305666456662890&amp;sdata=3D%2FMXKE9MMkUF2JPR3JiCTNdgA=
+yyRnQXkxpZfS9eTPrW8%3D&amp;reserved=3D0
+Fixes: ac7822b0026f ("drm/amd/powerplay: add smumgr support for VEGAM (v2)"=
+)
+Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
+---
+ drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c b/drivers/=
+gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+index 3da71a088b92..0ecc18b55ffb 100644
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+@@ -644,9 +644,6 @@ static int vegam_get_dependency_volt_by_clk(struct pp_h=
+wmgr *hwmgr,
+
+ /* sclk is bigger than max sclk in the dependence table */
+ *voltage |=3D (dep_table->entries[i - 1].vddc * VOLTAGE_SCALE) << VDDC_SHI=
+FT;
+-vddci =3D phm_find_closest_vddci(&(data->vddci_voltage_table),
+-(dep_table->entries[i - 1].vddc -
+-(uint16_t)VDDC_VDDCI_DELTA));
+
+ if (SMU7_VOLTAGE_CONTROL_NONE =3D=3D data->vddci_control)
+ *voltage |=3D (data->vbios_boot_state.vddci_bootup_value *
+@@ -654,8 +651,13 @@ static int vegam_get_dependency_volt_by_clk(struct pp_=
+hwmgr *hwmgr,
+ else if (dep_table->entries[i - 1].vddci)
+ *voltage |=3D (dep_table->entries[i - 1].vddci *
+ VOLTAGE_SCALE) << VDDC_SHIFT;
+-else
++else {
++vddci =3D phm_find_closest_vddci(&(data->vddci_voltage_table),
++(dep_table->entries[i - 1].vddc -
++(uint16_t)VDDC_VDDCI_DELTA));
++
+ *voltage |=3D (vddci * VOLTAGE_SCALE) << VDDCI_SHIFT;
++}
+
+ if (SMU7_VOLTAGE_CONTROL_NONE =3D=3D data->mvdd_control)
+ *mvdd =3D data->vbios_boot_state.mvdd_bootup_value * VOLTAGE_SCALE;
+--
+2.27.0
+
