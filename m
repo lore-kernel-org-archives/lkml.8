@@ -2,166 +2,98 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C796C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15907C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 238C02076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89872067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/HdDOsh"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="jChLjwCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgGQSBU (ORCPT
+        id S1728030AbgGQSCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:01:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgGQSBT (ORCPT
+        Fri, 17 Jul 2020 14:02:09 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:52952 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726232AbgGQSCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:01:19 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD3CC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:01:19 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id gc15so4292065pjb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VL238xlzE0uThNd8yw3z5huUTHioHBP8n+FhWhde0QQ=;
-        b=R/HdDOsh3SNE89aT+fxmoojuDw1sCd0hX3T4xZhEzvX6qhKsQCOUWq2QqB4wzy6kbv
-         ieX+loghMB4LL4K5thbiV0rXahs4FCPHz115AEXf9uL9pwDzZ8dCb8bGdh5S9L209vI6
-         Vh3pEgtmyuy7VWsheZlEVt+U+izK7omWQyf2hR+mDoLzRLM+3OrouvVqj1lqeLQR3LPL
-         76cHS5mpmyzwNdxqxKN3YBY5iR4ctzoH81J6Jhi6EIUZkX5XPgSYB3faLcodnZpkQtXd
-         hZIpZ9uNmqOZprTml6CmvPZGsVyjrHt4NsWJ5Ukf/WZmyZ8tWbINOnfH/GWcTL+Eo0RW
-         Bb6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VL238xlzE0uThNd8yw3z5huUTHioHBP8n+FhWhde0QQ=;
-        b=ArcVdbiZlCMQzv3iXiFtIaoFQT4iMr/ZxGw6NqjpBM/8RcbAocLzQMxIkvZoBFiaKx
-         /V2vIxTZvQK21unS8M8x4jTol8xmLXHsuDztMKqbR4gIzxG7N6lse/pIwm1TV7M6Bd9x
-         fQg0FDqSIvCQRaWHf/FaGJu6j0vRLSnfmJ0Aw5G948WEfNPo3cv6Ba66pfW/wg6jBWUU
-         JiF9Ta5wBTbFE6NDme2XZzAATaRVxOrhIFL8E8e2ggaNKi56KXrFhruoP7KZY9zRFYiS
-         TeYdjGxG3oPUFBr2mIR5e7eiy2dWE4gqs44xZVrTyevuyXMbJ59ApWttX3JyyRlHU0fN
-         g+LA==
-X-Gm-Message-State: AOAM530EVEBhgqb1aWTHlJHUFOpVGLqVheVnaeRXXGcoLBDWhBxOrOTt
-        oV0RiFhxgJ0fZi5G1hH0fzgNXPE5
-X-Google-Smtp-Source: ABdhPJwQBChusqU0m9hhRZGXsSSAwKKD+iMeLeYTuNQxzKk76Bvli6co32p1Y4fVKVHh1RsYOB7gzw==
-X-Received: by 2002:a17:902:c206:: with SMTP id 6mr8986437pll.30.1595008878209;
-        Fri, 17 Jul 2020 11:01:18 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d65sm8098061pfc.97.2020.07.17.11.01.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 11:01:17 -0700 (PDT)
-Subject: Re: [PATCH] firmware: arm_scmi: Pass shmem address to SMCCC call
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "Paul J. Murphy" <paul.j.murphy@linux.intel.com>,
-        "Paul J. Murphy" <paul.j.murphy@intel.com>,
-        linux-kernel@vger.kernel.org
-References: <20200715165518.57558-1-daniele.alessandrelli@linux.intel.com>
- <5f74221b-aec7-7715-19d1-5cbb406f1bdc@gmail.com>
- <20200717094555.GA24501@bogus>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <dce7c86e-1b3f-f9f9-d872-de84a352346d@gmail.com>
-Date:   Fri, 17 Jul 2020 11:01:09 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Fri, 17 Jul 2020 14:02:09 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HHw42u010563;
+        Fri, 17 Jul 2020 11:02:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=pfpt0818; bh=ogSuBGYi+u47nbiXlf4DsRkCC38ZzT0iyKLh55Qc6t4=;
+ b=jChLjwChfLHkXwG/boCV/44u9iiUp9barFLDYG/xXcdG1R7KMALHJSg/bfjCiC8f2Nhb
+ aSneVThcmybdzrdBhc/hygJzSQ1TMbhNmNlHlWXzwrtWHuvcuX7LNjJWSoNLQcW6EuLd
+ ytwRDVZX7cNdzcPSzoozQ8+6U0MQAGU1MOl4PGsiCWgLm/u1ymEyFIABfbku2me7bl3v
+ JcxkosvVdlBwrWc3zO4uvr8RO422QWYNO1Nm+pYHN34ls1/JJq0qtZV3Ui2YRlx0Jl0f
+ TJZsz6Ys9a3+BTNj9gtpQC/Vp/4yaGQtAHjrtUv2Fu2ibtLFKLoyXpvlCycyklDOfwXf 1g== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 328mmj5hgc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 11:02:05 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 17 Jul
+ 2020 11:02:04 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 17 Jul
+ 2020 11:02:03 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 17 Jul 2020 11:02:03 -0700
+Received: from NN-LT0044.marvell.com (unknown [10.193.54.8])
+        by maili.marvell.com (Postfix) with ESMTP id 042F93F7041;
+        Fri, 17 Jul 2020 11:02:00 -0700 (PDT)
+From:   Mark Starovoytov <mstarovoitov@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Igor Russkikh <irusskikh@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Mark Starovoytov <mstarovoitov@marvell.com>
+Subject: [PATCH net-next 0/2] net: atlantic: add support for FW 4.x
+Date:   Fri, 17 Jul 2020 21:01:45 +0300
+Message-ID: <20200717180147.8854-1-mstarovoitov@marvell.com>
+X-Mailer: git-send-email 2.26.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20200717094555.GA24501@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-17_09:2020-07-17,2020-07-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch set adds support for FW 4.x, which is about to get into the
+production for some products.
+4.x is mostly compatible with 3.x, save for soft reset, which requires
+the acquisition of 2 additional semaphores.
+Other differences (e.g. absence of PTP support) are handled via
+capabilities.
 
+Note: 4.x targets specific products only. 3.x is still the main firmware
+branch, which should be used by most users (at least for now).
 
-On 7/17/2020 2:45 AM, Sudeep Holla wrote:
-> On Wed, Jul 15, 2020 at 03:43:24PM -0700, Florian Fainelli wrote:
->>
->>
->> On 7/15/2020 9:55 AM, Daniele Alessandrelli wrote:
->>> From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
->>>
->>> Currently, when SMC/HVC is used as transport, the base address of the
->>> shared memory used for communication is not passed to the SMCCC call.
->>> This means that such an address must be hard-coded into the bootloader.
->>>
->>> In order to increase flexibility and allow the memory layout to be
->>> changed without modifying the bootloader, this patch adds the shared
->>> memory base address to the a1 argument of the SMCCC call.
->>>
->>> On the Secure Monitor side, the service call implementation can
->>> therefore read the a1 argument in order to know the location of the
->>> shared memory to use. This change is backward compatible to existing
->>> service call implementations as long as they don't check for a1 to be
->>> zero.
->>
->> resource_size_t being defined after phys_addr_t, its size is different
->> between 32-bit, 32-bit with PAE and 64-bit so it would probably make
->> more sense to define an physical address alignment, or maybe an address
->> that is in multiple of 4KBytes so you can address up to 36-bits of
->> physical address even on a 32-bit only system?
->>
-> 
-> Good point, I had forgotten about LPAE. Thanks for pointing it out.
-> 
->> What discovery mechanism does the OS have that the specified address
->> within the SMCCC call has been accepted by the firmware given the return
->> value of that SMCCC call does not appear to be used or checked? Do we
->> just expect a timeout initializing the SCMI subsystem?
->>
-> 
-> Agreed, we need to add the check for proper return value then and
-> definitely document it very clearly as we are trying to standardise
-> a call to vendor SiP FID space of SMCCC.
-> 
->> Given that the kernel must somehow reserve this memory as a shared
->> memory area for obvious reasons, and the trusted firmware must also
->> ensure it treats this memory region with specific permissions in its
->> translation regime, does it really make sense to give that much flexibility?
->>
-> 
-> I expect so and this comes as shmem property from DT already. We are
-> just passing the value obtained from there as is. This is just to help
-> TFA or the firmware to identify the specific channel/shmem as SMC/HVC
-> otherwise has no way to do so.
+Dmitry Bogdanov (1):
+  net: atlantic: add support for FW 4.x
 
-OK, that is fair enough.
+Mark Starovoytov (1):
+  net: atlantic: align return value of ver_match function with function
+    name
 
-> 
->> If your boot loader has FDT patching capability, maybe it can also do a
->> SMC call to provide the address to your trusted firmware, prior to
->> loading the Linux kernel, and then they both agree, prior to boot about
->> the shared memory address?
->>
-> 
-> Yes, but we definitely can't rely on such mechanism in the kernel. It is
-> more a platform choice as they run different bootloaders.
-> 
+ .../aquantia/atlantic/hw_atl/hw_atl_llh.c     | 17 +++++-
+ .../aquantia/atlantic/hw_atl/hw_atl_llh.h     | 10 +++-
+ .../atlantic/hw_atl/hw_atl_llh_internal.h     | 11 +++-
+ .../aquantia/atlantic/hw_atl/hw_atl_utils.c   | 58 +++++++++++++------
+ .../aquantia/atlantic/hw_atl/hw_atl_utils.h   |  2 +-
+ .../aquantia/atlantic/hw_atl2/hw_atl2_utils.c |  3 +-
+ 6 files changed, 70 insertions(+), 31 deletions(-)
 
-That argument can be be used the other way too if this is a platform
-choice, the platform boot loader can ensure that both ends of the SMC
-agree on the shared memory region. I do see an advantage to the approach
-being suggested here that the shared memory does not necessarily need to
-be mapped by the TF prior to Linux booting, but it can be deferred until
-when Linux makes the first SMC call but that may require more complexity
-on the TF side to issue an appropriate MMU update, so maybe from a
-security perspective this is more dangerous..
-
-Alright, I am convinced now this is useful :)
 -- 
-Florian
+2.25.1
+
