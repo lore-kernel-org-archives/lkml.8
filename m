@@ -2,211 +2,184 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B1DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE99EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45E4B206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595002881;
-	bh=7bAMu+D1zihO27beX7hMew2U5gWFnm+GfutUcV82X5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XEd4RNNbZZOsteURe2Y57YpO+q168TwSGkDF3kh1ZWCCY3+Bfat0NtV7jw+SQUKHf
-	 zWvHwoInlbicpN8WTRmv4B8Ne6RJ6yYw+wtv9wjx3DVY/hVZQEVEj3oi58t0int+2e
-	 yJhhGfLwYUkBdF2w7fR3u2QXbak3bDFDcjCwWW0A=
+	by mail.kernel.org (Postfix) with ESMTP id C0C422065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:22:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DfxFj3JO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UV0QsqJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgGQQVT (ORCPT
+        id S1726784AbgGQQWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:21:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgGQQVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:21:19 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AAC12065F;
-        Fri, 17 Jul 2020 16:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595002878;
-        bh=7bAMu+D1zihO27beX7hMew2U5gWFnm+GfutUcV82X5k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OLbDHZBrksefEhcLpDgKCVrwvboT02eS7kdwdrhqaUxabPI1G2iHjRWa08fLU1aap
-         AYiRfImNNOJpLtfSwI5XW88tYh0Cuu/fxwTqukrIzooZBAOpsYfPWLJV+T/cjnmdDk
-         zup3vFYi7KIVGQPkjzeKniHAiwD9AAs0LYpFIiRE=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3C89C40482; Fri, 17 Jul 2020 13:21:16 -0300 (-03)
-Date:   Fri, 17 Jul 2020 13:21:16 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Fri, 17 Jul 2020 12:22:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgGQQWu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:22:50 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE34C0619D2;
+        Fri, 17 Jul 2020 09:22:50 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595002968;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VL5z70c9ivCEdV8jKg+QDjtim4MWFgGLQSfzhEgLqa4=;
+        b=DfxFj3JOgV4P677n+L/c5gnLES+uaqRVgDiXn4Zyua9k+6KCFkhE7/z4MS2WRsstct8xur
+        nZcrlvILdQK2ZAKEujSK+L0npVKy1e/7kIAKwoYjCbIcPFjNnih6kWQ5elx12s7QxdDCjU
+        PkR2xr/sEuc9eJbkHrs1QBVGajuzYT3up1jq1op76OkNoYB4+jnF0ljFojiMCIwnnIL4LN
+        6xTZATNPpKM0Erw/bQvMt94JNWe/l7yFBJ9NdrLsgnSp4/y3cKCfsQXioB630iNrzoEABF
+        eVzL2Vy2QjloV/c2ZBlGxJjKHJARusemqD0C1M6ReMZjLdhsTiolM6QSMBOEDA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595002968;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VL5z70c9ivCEdV8jKg+QDjtim4MWFgGLQSfzhEgLqa4=;
+        b=UV0QsqJXu+FJ1RFv4cdZ1We2LAZTtzHAlTORuWLNQvaypU2QZB7sSYNPBDGjwoP6zoBXn5
+        +ADCc0JiHIgn+RDw==
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Abhishek Bhardwaj <abhishekbh@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        "linux-trace-devel@vger.kernel.org" 
-        <linux-trace-devel@vger.kernel.org>
-Subject: Re: [PATCH v5 02/17] perf ftrace: add option '-F/--funcs' to list
- available functions
-Message-ID: <20200717162116.GB712240@kernel.org>
-References: <20200711124035.6513-1-changbin.du@gmail.com>
- <20200711124035.6513-3-changbin.du@gmail.com>
- <20200717110504.1650fbdc@oasis.local.home>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86 <x86@kernel.org>
+Subject: Re: [PATCH v5] x86/speculation/l1tf: Add KConfig for setting the L1D cache flush mode
+In-Reply-To: <CAD=FV=WCu7o41iyn27vNBWo4f_X_XVy+PPPjBKc+70g5jd5+8w@mail.gmail.com>
+References: <20200708194715.4073300-1-abhishekbh@google.com> <87y2ntotah.fsf@nanos.tec.linutronix.de> <CAD=FV=WCu7o41iyn27vNBWo4f_X_XVy+PPPjBKc+70g5jd5+8w@mail.gmail.com>
+Date:   Fri, 17 Jul 2020 18:22:47 +0200
+Message-ID: <874kq6ru08.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717110504.1650fbdc@oasis.local.home>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jul 17, 2020 at 11:05:04AM -0400, Steven Rostedt escreveu:
-> On Sat, 11 Jul 2020 20:40:20 +0800
-> Changbin Du <changbin.du@gmail.com> wrote:
-> 
-> > This adds an option '-F/--funcs' to list all available functions to trace,
-> > which is read from tracing file 'available_filter_functions'.
-> > 
-> > $ sudo ./perf ftrace -F | head
-> > trace_initcall_finish_cb
-> > initcall_blacklisted
-> > do_one_initcall
-> > do_one_initcall
-> > trace_initcall_start_cb
-> > run_init_process
-> > try_to_run_init_process
-> > match_dev_by_label
-> > match_dev_by_uuid
-> > rootfs_init_fs_context
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > 
-> > ---
-> > v2: option name '-l/--list-functions' -> '-F/--funcs'
-> > ---
-> >  tools/perf/Documentation/perf-ftrace.txt |  4 +++
-> >  tools/perf/builtin-ftrace.c              | 43 ++++++++++++++++++++++++
-> >  2 files changed, 47 insertions(+)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> > index 952e46669168..d79560dea19f 100644
-> > --- a/tools/perf/Documentation/perf-ftrace.txt
-> > +++ b/tools/perf/Documentation/perf-ftrace.txt
-> > @@ -30,6 +30,10 @@ OPTIONS
-> >  --verbose=::
-> >          Verbosity level.
-> >  
-> > +-F::
-> > +--funcs::
-> > +        List all available functions to trace.
-> > +
-> >  -p::
-> >  --pid=::
-> >  	Trace on existing process id (comma separated list).
-> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> > index 5f53da87040d..244cc8e6bd60 100644
-> > --- a/tools/perf/builtin-ftrace.c
-> > +++ b/tools/perf/builtin-ftrace.c
-> > @@ -32,6 +32,7 @@ struct perf_ftrace {
-> >  	struct evlist		*evlist;
-> >  	struct target		target;
-> >  	const char		*tracer;
-> > +	bool			list_avail_functions;
-> >  	struct list_head	filters;
-> >  	struct list_head	notrace;
-> >  	struct list_head	graph_funcs;
-> > @@ -127,6 +128,43 @@ static int append_tracing_file(const char *name, const char *val)
-> >  	return __write_tracing_file(name, val, true);
-> >  }
+Doug,
 
-> > +static int read_tracing_file_to_stdout(const char *name)
-> > +{
- 
-> All this is looking like its duplicating code that we are working on
-> for libtracefs. 
- 
-> Would you like to start contributing to that, and when we get the
-> libtracefs.so packed in distributions, we can easily create the
-> perf ftrace without having to rewrite the wheel 10 times?
+Doug Anderson <dianders@chromium.org> writes:
+> On Thu, Jul 9, 2020 at 3:51 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> TBH, I don't see why this is a good idea.
+>>
+>>  1) I'm not following your argumentation that the command line option is
+>>     a poor Kconfig replacement. The L1TF mode is a boot time (module
+>>     load time) decision and the command line parameter is there to
+>>     override the carefully chosen and sensible default behaviour.
+>
+> When you say that the default behavior is carefully chosen and
+> sensible, are you saying that (in your opinion) there would never be a
+> good reason for someone distributing a kernel to others to change the
+> default?  Certainly I agree that having the kernel command line
+> parameter is nice to allow someone to override whatever the person
+> building the kernel chose, but IMO it's not a good way to change the
+> default built-in to the kernel.
 
-Or we can use as soon as it is available, not preventing 'perf ftrace'
-from having to wait for libtracefs.so?
+The problem is that you have to be careful about what you stick into
+Kconfig. It's L1TF on x86 today and tomorrow it's MDS and whatever and
+then you do the same thing on the other architectures as well. And we
+still need the command line options so that generic builds can be
+customized at boot time.
 
-Duplication is normal at some point, Changbin is moving 'perf ftrace'
-forward, and has been doing this thru several patch series revisions, if
-we continue putting new requirements, it gets tiresome at some point :-\
+> The current plan (as I understand it) is that we'd like to ship
+> Chromebook kernels with this option changed from the default that's
+> there now.  In your opinion, is that a sane thing to do?
 
-- Arnaldo
- 
-> -- Steve
-> 
-> 
-> > +	char buf[4096];
-> > +	char *file;
-> > +	int fd;
-> > +	int ret = -1;
-> > +
-> > +	file = get_tracing_file(name);
-> > +	if (!file) {
-> > +		pr_debug("cannot get tracing file: %s\n", name);
-> > +		return -1;
-> > +	}
-> > +
-> > +	fd = open(file, O_RDONLY);
-> > +	if (fd < 0) {
-> > +		pr_debug("cannot open tracing file: %s: %s\n",
-> > +			 name, str_error_r(errno, buf, sizeof(buf)));
-> > +		goto out;
-> > +	}
-> > +
-> > +	/* read contents to stdout */
-> > +	while (true) {
-> > +		int n = read(fd, buf, sizeof(buf));
-> > +		if (n <= 0)
-> > +			goto out_close;
-> > +		if (fwrite(buf, n, 1, stdout) != 1)
-> > +			goto out_close;
-> > +	}
-> > +	ret = 0;
-> > +
-> > +out_close:
-> > +	close(fd);
-> > +out:
-> > +	put_tracing_file(file);
-> > +	return ret;
-> > +}
-> > +
-> >  static int reset_tracing_cpu(void);
-> >  static void reset_tracing_filters(void);
-> >  
-> > @@ -301,6 +339,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
-> >  	signal(SIGCHLD, sig_handler);
-> >  	signal(SIGPIPE, sig_handler);
-> >  
-> > +	if (ftrace->list_avail_functions)
-> > +		return read_tracing_file_to_stdout("available_filter_functions");
-> > +
-> >  	if (reset_tracing_files(ftrace) < 0) {
-> >  		pr_err("failed to reset ftrace\n");
-> >  		goto out;
-> > @@ -470,6 +511,8 @@ int cmd_ftrace(int argc, const char **argv)
-> >  	const struct option ftrace_options[] = {
-> >  	OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
-> >  		   "tracer to use: function or function_graph (This option is deprecated)"),
-> > +	OPT_BOOLEAN('F', "funcs", &ftrace.list_avail_functions,
-> > +		    "Show available functions to filter"),
-> >  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
-> >  		   "trace on existing process id"),
-> >  	OPT_INCR('v', "verbose", &verbose,
-> 
+If it's sane for you folks, then feel free to do so. Distros & al patch
+the kernel do death anyway, but that does not mean that mainline has to
+have everything these people chose to do.
 
--- 
+>>  2) You can add the desired mode to the compiled in (partial) kernel
+>>     command line today.
+>
+> This might be easier on x86 than it is on ARM.  ARM (and ARM64)
+> kernels only have two modes: kernel provides cmdline and bootloader
+> provides cmdline.  There are out-of-mainline ANDROID patches to
+> address this but nothing in mainline.
+>
+> The patch we're discussing now is x86-only so it's not such a huge
+> deal, but the fact that combining the kernel and bootloader
+> commandline never landed in mainline for arm/arm64 means that this
+> isn't a super common/expected thing to do.
 
-- Arnaldo
+Did you try to get that merged for arm/arm64?
+
+>>  3) Boot loaders are well capable of handling large kernel command lines
+>>     and the extra time spend for reading the parameter does not matter
+>>     at all.
+>
+> Long command lines can still be a bit of a chore for humans to deal
+> with.  Many times I've needed to look at "/proc/cmdline" and make
+> sense of it.  The longer the command line is and the more cruft
+> stuffed into it the more of a chore it is.  Yes, this is just one
+> thing to put in the command line, but if 10 different drivers all have
+> their "one thing" to put there it gets really long.  If 100 different
+> drivers all want their one config option there it gets really really
+> long.
+
+This will not go away when you want to support a gazillion of systems
+which need tweaks left and right due to creative hardware/BIOS with a
+generic kernel. And come on, parsing a long command line is not rocket
+science and it's not something you do every two minutes.
+
+> IMO the command line should be a last resort place to put
+> things and should just contain:
+>
+> 1. Legacy things that _have_ to be in the command line because they've
+> always been there.
+>
+> 2. Things that the bootloader/BIOS needs to communicate to the kernel
+> and has no better way to communicate.
+>
+> 3. Cases where the person running the kernel needs to override a
+> default set by the person compiling the kernel.
+
+Which is the case for a lot of things and it's widely used exactly for
+that reason.
+
+>>  4) It's just a tiny part of the whole speculation maze. If we go there
+>>     for L1TF then we open the flood gates for a gazillion other config
+>>     options.
+>
+> It seems like the only options that we'd need CONFIG option for would
+> be the ones where it would be sane to change the default compiled into
+> the kernel.  Hopefully that's not too many things?
+
+That's what _you_ need. But accepting this we set a precedence and how
+do I argue that L1TF makes sense, but other things not? This stuff is
+horrible enough already, no need to add more ifdefs and options and
+whatever to it.
+
+> Obviously, like many design choices, the above is all subjective.
+> It's really your call and if these arguments don't convince you it
+> sounds like the way forward is just to use "CONFIG_CMDLINE" and take
+> advantage of the fact that on x86 this will get merged with the
+> bootloader's command line.
+
+I rather see the support for command line merging extended to arm/arm64
+because that's of general usefulness beyond the problem at hand.
+
+Thanks,
+
+        tglx
