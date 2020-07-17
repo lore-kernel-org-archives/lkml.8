@@ -2,143 +2,217 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1741CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C050C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB7812070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52CEC2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e99KnuVG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pN/uIpUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgGQOZa (ORCPT
+        id S1726617AbgGQO1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43422 "EHLO
+        Fri, 17 Jul 2020 10:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbgGQOZ3 (ORCPT
+        with ESMTP id S1726201AbgGQO1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:25:29 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F8AC0619D2;
-        Fri, 17 Jul 2020 07:25:29 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id o18so11040743eje.7;
-        Fri, 17 Jul 2020 07:25:29 -0700 (PDT)
+        Fri, 17 Jul 2020 10:27:40 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D76C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:27:40 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id o1so5518799plk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:27:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mUVdR+ZDJVxSmd7ZbQVSsi764XMpQahMmDvfOF22gQY=;
-        b=e99KnuVGCS6dPPckmUblnQ/Eq5Pt0qMRRfY1ARV29XHavDg6gElhKrIaEDpBLGpuds
-         P5FHLwnwgL07Jn0MnjcLpQ9PvpecGEu96QTkn24/clTC27J7zVna4p0PTDdn1Mx8DXhP
-         t0TXqYHl0sfJBoJibUYV3CdQFO+K2xZuud8PpDxPXaY4lLsgUh+oAkCt8nZ++lqC5qps
-         2zNBx4zcV0160Grno+DH4jd12dqPucjjjo2mZzy3TAsCmc0crUPAuT5mzRaDaGdR/ll+
-         2AunOn2TjQGBbiGS8LS4T2yBBEyswfI6F2qVP3yDg1f5QDVWQDLFKLERr+d8NUhqcsTZ
-         El7Q==
+         :content-disposition:in-reply-to;
+        bh=z0oSgdwYRPiokDQMgtgcehr0uyxaEp6VXyiWo3WZ3mk=;
+        b=pN/uIpUQtdL/QX2u1vow40HFw9Jpqi9umoP7RVtwB1HKdKqe3jhXx+rkK1xuLfh/cR
+         Cu8fnM5QSVYf6EBPdO5jUFAyHp2rKjHgvCP4rdYAKzJV0VcXJTL0Dt32kC2cNayLLknn
+         FrzuMFJtWxyOlO770mGdl2mRCv68fzkrepNuJDT5n9uOFS9RhuVg9nTcu+KGx/7Ep1Ai
+         KJf3wznPfnyPgMB1axmu8ZawNzB/p11LRf7dRfouE9mj0DuFGAmBbVjw9nXLR1hGE913
+         C0xfTK7hxBkqNX9QqvTjJjANYnFwvEp7VEw7MXk3w/TQqregR7oUV36F8vOjkuYU41eq
+         T+Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mUVdR+ZDJVxSmd7ZbQVSsi764XMpQahMmDvfOF22gQY=;
-        b=GSgf+iX46pD0y4iEiG3zH9KYe4TM/AUF1LdZNrLB4zoK8Tu7NiITr9Ad0iE29N7slF
-         NfXrlIX6CgWJst3fQGvQTkap8wrmcIC3GhEf3im8rNj5esMtT2MAGMkbsumm8hlcjmxr
-         qJQv4NnSHH/593qKrv0mRNIzbyw1oWTNeee0M3JZjkZZCJoGSnUbLLjfWXk5WzlK/Z3P
-         oz6yZ0pDeuvib2/xdYyjeo90b99LB8MhhzGeuizAqyqV0U4NKxbmXXjQs3u6hqYfd0H2
-         ZLexej7Q+mlwoS1nPw+Xp84FeQsEI3z90CE+1e23aTOzyHvRLvLhIQlsmdVcSv6uSLMX
-         vpZA==
-X-Gm-Message-State: AOAM533ldoEFw7RfENjxrz+Eqhb1uXyuidNAVFt8rsYJ3CPuL1GMSt6g
-        wKR5GOE82MNj18XwhpJBWdc=
-X-Google-Smtp-Source: ABdhPJyu7NsACW41OKjti0Dmecq5SwVTGW26QQC4foUalOjXrZcuCwKG78N9LWqnKSZwGFISKNM07A==
-X-Received: by 2002:a17:906:d286:: with SMTP id ay6mr8804419ejb.400.1594995927698;
-        Fri, 17 Jul 2020 07:25:27 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id p14sm8475984edr.23.2020.07.17.07.25.26
+         :mime-version:content-disposition:in-reply-to;
+        bh=z0oSgdwYRPiokDQMgtgcehr0uyxaEp6VXyiWo3WZ3mk=;
+        b=S0PQFT3iQZ8JqmZGFDSbOqToNTDzR8tcAek74HgfgV6ix4+aUbp/4nq6c1ueEJ/TEK
+         LhNZFGDa6YnQ4OrilQ1z1WuYi7lolm2CXXnilVD68meiB/3RLOAUSGwaYYXw5es29MJX
+         IK55COZjNIR8IgCRO5xUj3SHflxu8G5riMRH/osRlswQ11mgKXNrnUtFILGgRmnb2yPd
+         38bTYVQvPagEVr13fo5us0Nuw+27hw9nhHFcVa2Y4Qggnt+B21Hg3s2aR1utH2q4hIA6
+         h8COMmp2Z10JKJ1Ip4WoblSXhcLUn+6qZDv3d8M5mhmJWqw4JBFm/+Cisxa/jwqaEOcu
+         bXLw==
+X-Gm-Message-State: AOAM532f45UrBwZCcsJjBmLMUyx9ZWrZZjajZPiGH3aEm3leYw8GGRzZ
+        kl6rlPNm34J679JQa5Et7UcGO0D1UzE=
+X-Google-Smtp-Source: ABdhPJz5B2CfEFDNa9gbTWp7S8Dg2/n5apKLILDmg1zlRTRPJhTzN5MIwHKm7ez+TR7YPlo1Frp0hQ==
+X-Received: by 2002:a17:90a:ab96:: with SMTP id n22mr10314994pjq.52.1594996059456;
+        Fri, 17 Jul 2020 07:27:39 -0700 (PDT)
+Received: from mail.google.com ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id a2sm8036656pfg.120.2020.07.17.07.27.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 07:25:26 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 16:25:24 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     miaoqinglang <miaoqinglang@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] gpu: host1x: Convert to DEFINE_SHOW_ATTRIBUTE
-Message-ID: <20200717142524.GA1218823@ulmo>
-References: <20200716090323.13274-1-miaoqinglang@huawei.com>
- <20200716133450.GJ535268@ulmo>
- <5684dcb3-c5a4-96c1-dd96-c44f5a94938f@huawei.com>
+        Fri, 17 Jul 2020 07:27:38 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 22:27:27 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 07/17] perf ftrace: add option '--inherit' to trace
+ children processes
+Message-ID: <20200717142727.qg6pmql73secc5xp@mail.google.com>
+References: <20200711124035.6513-1-changbin.du@gmail.com>
+ <20200711124035.6513-8-changbin.du@gmail.com>
+ <CAM9d7cgBeHW_Ot2nfBAzbV73gNKiOzp7K5KoTO=V4k=MGrZS6Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5684dcb3-c5a4-96c1-dd96-c44f5a94938f@huawei.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <CAM9d7cgBeHW_Ot2nfBAzbV73gNKiOzp7K5KoTO=V4k=MGrZS6Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 13, 2020 at 10:59:56AM +0900, Namhyung Kim wrote:
+> On Sat, Jul 11, 2020 at 9:42 PM Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> > This adds an option '--inherit' to allow us trace children
+> > processes spawned by our target.
+> >
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> >
+> > ---
+> > v2: option name '--trace-children' -> '--inherit'.
+> > ---
+> >  tools/perf/Documentation/perf-ftrace.txt |  3 ++
+> >  tools/perf/builtin-ftrace.c              | 38 ++++++++++++++++++++++++
+> >  2 files changed, 41 insertions(+)
+> >
+> > diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> > index 98fe01d354d1..fd632bd9b2c1 100644
+> > --- a/tools/perf/Documentation/perf-ftrace.txt
+> > +++ b/tools/perf/Documentation/perf-ftrace.txt
+> > @@ -61,6 +61,9 @@ OPTIONS
+> >         Set the size of per-cpu tracing buffer, <size> is expected to
+> >         be a number with appended unit character - B/K/M/G.
+> >
+> > +--inherit::
+> > +       Trace children processes spawned by our target.
+> > +
+> >  -T::
+> >  --trace-funcs=::
+> >         Only trace functions given by the argument.  Multiple functions
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index 887e78b23a82..4efaa7b6a906 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -39,6 +39,7 @@ struct perf_ftrace {
+> >         struct list_head        nograph_funcs;
+> >         int                     graph_depth;
+> >         unsigned long           percpu_buffer_size;
+> > +       bool                    inherit;
+> >  };
+> >
+> >  struct filter_entry {
+> > @@ -177,9 +178,27 @@ static int write_tracing_file_int(const char *name, int value)
+> >         return 0;
+> >  }
+> >
+> > +static int write_tracing_option_file(const char *name, const char *val)
+> > +{
+> > +       char *file;
+> > +       int ret;
+> > +
+> > +       if (asprintf(&file, "options/%s", name) < 0)
+> > +               return -1;
+> > +
+> > +       ret = __write_tracing_file(file, val, false);
+> > +       free(file);
+> > +       return ret;
+> > +}
+> > +
+> >  static int reset_tracing_cpu(void);
+> >  static void reset_tracing_filters(void);
+> >
+> > +static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+> > +{
+> > +       write_tracing_option_file("function-fork", "0");
+> > +}
+> > +
+> >  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+> >  {
+> >         if (write_tracing_file("tracing_on", "0") < 0)
+> > @@ -198,6 +217,7 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+> >                 return -1;
+> >
+> >         reset_tracing_filters();
+> > +       reset_tracing_options(ftrace);
+> >         return 0;
+> >  }
+> >
+> > @@ -336,6 +356,17 @@ static int set_tracing_percpu_buffer_size(struct perf_ftrace *ftrace)
+> >         return 0;
+> >  }
+> >
+> > +static int set_tracing_trace_inherit(struct perf_ftrace *ftrace)
+> > +{
+> > +       if (!ftrace->inherit)
+> > +               return 0;
+> > +
+> > +       if (write_tracing_option_file("function-fork", "1") < 0)
+> > +               return -1;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+> >  {
+> >         char *trace_file;
+> > @@ -405,6 +436,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+> >                 goto out_reset;
+> >         }
+> >
+> > +       if (set_tracing_trace_inherit(ftrace) < 0) {
+> > +               pr_err("failed to set tracing option function-fork\n");
+> > +               goto out_reset;
+> > +       }
+> 
+> Can we have set_tracing_options() here instead to make
+> the __cmd_ftrace() shorter?  It'd set other options added later.
+> It's also symmetric to reset_tracing_options().
+>
+I appended a patch to do this. Thanks for your suggestion.
 
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Thanks
+> Namhyung
+> 
+> > +
+> >         if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
+> >                 pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
+> >                 goto out_reset;
+> > @@ -599,6 +635,8 @@ int cmd_ftrace(int argc, const char **argv)
+> >                     "Max depth for function graph tracer"),
+> >         OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
+> >                      "size of per cpu buffer", parse_buffer_size),
+> > +       OPT_BOOLEAN(0, "inherit", &ftrace.inherit,
+> > +                   "trace children processes"),
+> >         OPT_END()
+> >         };
+> >
+> > --
+> > 2.25.1
+> >
 
-On Fri, Jul 17, 2020 at 09:32:21AM +0800, miaoqinglang wrote:
->=20
-> =E5=9C=A8 2020/7/16 21:34, Thierry Reding =E5=86=99=E9=81=93:
-> > On Thu, Jul 16, 2020 at 05:03:23PM +0800, Qinglang Miao wrote:
-> > > From: Yongqiang Liu <liuyongqiang13@huawei.com>
-> > >=20
-> > > Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
-> > >=20
-> > > Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
-> > > ---
-> > >   drivers/gpu/host1x/debug.c | 28 ++++------------------------
-> > >   1 file changed, 4 insertions(+), 24 deletions(-)
-> > This doesn't apply. Can you please resend, based on something like
-> > linux-next?
-> >=20
-> > Thanks,
-> > Thierry
-> Hi, Thierry
->=20
-> =C2=A0 Sorry I didn't mention it in commit log, but this patch is based on
-> linux-next where commit <4d4901c6d7> has switched over direct=C2=A0 seq_r=
-ead
-> method calls to seq_read_iter, this is why there's conflict in=C2=A0 your=
- apply.
->=20
-> =C2=A0 Do you think I should send a new patch based on 5.8rc?
-
-No need to. I'm about to send out the pull request for v5.9-rc1, so I'll
-just defer this to v5.10 since it doesn't look like it's anything
-urgent.
-
-Thierry
-
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8RtM8ACgkQ3SOs138+
-s6Hj6g/+MgjmNXDQakxoDHLk0m84f7i97cY0lrI0Z0XFp0ZsuZp4VHLS0Rzd2wt8
-3tb6OLbwu6Q456lBZIw/FKa7i4zJ3bRzV1+dnvZaXPWgVUzSRMEgo6AugBNGQqhy
-eQJH+5NfpN75sWFtXjhA/PscNW1v6oR/QkTKa2kcYFtP5xbSWHxVkdRUK/Xl5s15
-TGaYsskrZehPE8k+6xNH6c0RIpt6ERO1NxnjrapApW3w98IYen1X8ONjILhJhjny
-ZjUJN3WbTaZVo7WtxZWG9G5AMR+5LK8qByRzjf1VoWWpFbiuZaPae/ewRFm8CZeg
-jNS3PYpAuSW9Bv0j5o2EEXUK4LV9gAC8ET140dTMmupSLH73Eu1ML7+Lm0TAGkK0
-MPmJ8jLc0TMTERdA2Jt5s5sNZttMjaABxgPvl2igT+2zVA3yzyE1E3EO5qpyVQSF
-R2AWrcyc9gVdyCElBq5Z39td7OkL4ylG/sboo6xxudgW5gcYo2K2w541CEES9TKm
-JWeo5cf8YiBWcoF6ppg+OkTw61NILMjiMopyrd5ZDSOnwAi/oprOyGT7TfQJqazJ
-y78QPzi3GrAzlZzMovNWNw+7MIIuig0tYtxVMz1i5/uBAE89ngZjN+09a4G14q4z
-0giSD+1Iya4q2w/DBhCIwiyhT53pHp76KrCj/+Xy1+8FUVHUprU=
-=J7AY
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
+-- 
+Cheers,
+Changbin Du
