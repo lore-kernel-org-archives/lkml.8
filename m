@@ -2,145 +2,119 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF95C433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E139C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9FF20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:44:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qzxIl9xX"
+	by mail.kernel.org (Postfix) with ESMTP id 09AD92076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:48:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594993715;
+	bh=A/hm+ncUzrilRPL6Iq4RL68tleP0XF+QknAVyixwc1g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=k7RFJutu0nCYRpwWTGHm8TXGY6DiW12B/mcHfqiZfGHa2DINFXqA6BFlURhwAfPzJ
+	 BTP4DHv9DwiIJG9d6F6QsO1R6coB30RxWhgvY77j+pZQM+OHCBZ5yHmvitd7mBdf9k
+	 pB+epztiC5YbK4BBbFvlPrlqhMuEVtOu4oOsCPGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgGQNon (ORCPT
+        id S1726650AbgGQNsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:44:43 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50372 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726848AbgGQNom (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:44:42 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDiYd2116560;
-        Fri, 17 Jul 2020 08:44:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594993474;
-        bh=SMXuWJsxmjPAyDIe0p0NeiPV/Q2TG3sFLtbT/0PqEnY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qzxIl9xXQKM6im7cQ5vM1Tw31Um4DZ0oONxaswNz4lHb/NF4LJGCzeIjw3jwZrxkG
-         LVy7qIxwoLVf3jsOmYtH34ehFpCKH7F1hNaoCzkKD2RL3Wv19gus4cs9rVkFA+NkGG
-         GcINGjzBsnmjVmy7/hVDiRKVOzAFKA9mH7KQ+FaA=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HDiXdP057305
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 08:44:33 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 08:44:33 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 08:44:33 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDiR2r061930;
-        Fri, 17 Jul 2020 08:44:29 -0500
-Subject: Re: [PATCH] arm64: arch_k3: enable chipid driver
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Nishanth Menon <nm@ti.com>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-References: <20200619162527.1226-1-grygorii.strashko@ti.com>
- <4bbdfff6-8fba-0568-b243-5da9ee6e29b6@ti.com>
- <5529a5b2-f929-76fe-d27f-43d3e0432b43@ti.com>
- <cf3aa171-fb75-b118-ea02-eb380b48b0cf@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <00f4fd6e-a21d-6100-ee28-1a31f4e16d1d@ti.com>
-Date:   Fri, 17 Jul 2020 16:44:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <cf3aa171-fb75-b118-ea02-eb380b48b0cf@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 17 Jul 2020 09:48:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbgGQNsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:48:32 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E9E2076A;
+        Fri, 17 Jul 2020 13:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594993712;
+        bh=A/hm+ncUzrilRPL6Iq4RL68tleP0XF+QknAVyixwc1g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CvOlz5oabVzstaOLVZA61byXNbjnvEktZKypAf7I3zp3ssUX3umwgbYI67tlmWbpr
+         26D6NXncecHSsTC2cJ8rycyhNySsKMgBDS+r3DJr201xopxc69WB7rL2dsdtv9wOQP
+         4DdCDro/S8Hbq2zGvJ8lIAccd2ZW/vts0mBz4DzQ=
+Date:   Fri, 17 Jul 2020 22:48:26 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>, sumit.garg@linaro.org,
+        pmladek@suse.com, sergey.senozhatsky@gmail.com, will@kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        patches@linaro.org
+Subject: Re: [PATCH v2 0/3] kgdb: Honour the kprobe blacklist when setting
+ breakpoints
+Message-Id: <20200717224826.80f8353e5dfdfaab22421385@kernel.org>
+In-Reply-To: <20200716151943.2167652-1-daniel.thompson@linaro.org>
+References: <20200716151943.2167652-1-daniel.thompson@linaro.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/2020 13:03, Grygorii Strashko wrote:
-> Hi All,
+Hi Daniel,
+
+On Thu, 16 Jul 2020 16:19:40 +0100
+Daniel Thompson <daniel.thompson@linaro.org> wrote:
+
+> kgdb has traditionally adopted a no safety rails approach to breakpoint
+> placement. If the debugger is commanded to place a breakpoint at an
+> address then it will do so even if that breakpoint results in kgdb
+> becoming inoperable.
 > 
-> On 07/07/2020 10:02, Peter Ujfalusi wrote:
->> On 01/07/2020 13.18, Grygorii Strashko wrote:
->>> On 19/06/2020 19:25, Grygorii Strashko wrote:
->>>> Select TI chip id driver for TI's SoCs based on K3 architecture to
->>>> provide
->>>> this information to user space and Kernel as it is required by other
->>>> drivers to determine SoC revision to function properly.
->>>>
->>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
->>>> ---
->>>>    arch/arm64/Kconfig.platforms | 1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/arm64/Kconfig.platforms 
->>>> b/arch/arm64/Kconfig.platforms
->>>> index 8dd05b2a925c..1d3710e3626a 100644
->>>> --- a/arch/arm64/Kconfig.platforms
->>>> +++ b/arch/arm64/Kconfig.platforms
->>>> @@ -98,6 +98,7 @@ config ARCH_K3
->>>>        select TI_SCI_PROTOCOL
->>>>        select TI_SCI_INTR_IRQCHIP
->>>>        select TI_SCI_INTA_IRQCHIP
->>>> +    select TI_K3_SOCINFO
->>>>        help
->>>>          This enables support for Texas Instruments' K3 multicore SoC
->>>>          architecture.
->>>>
->>>
->>> Are there any comments?
->>
->> Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>
->>> The driver and dt changes were merged [1][2] and for adding new 
->>> am654x SoC
->>> revision SR2.0 we need this driver to be enabled always as other drivers
->>> are
->>> going to use SOC Bus API intensively.
->>>
->>> No dependencies.
->>>
->>> [1]
->>> https://lore.kernel.org/lkml/20200512123449.16517-1-grygorii.strashko@ti.com/ 
->>>
->>>
->>> [2]
->>> https://lore.kernel.org/lkml/20200613164346.28852-1-grygorii.strashko@ti.com/ 
->>>
->>>
+> A stop-the-world debugger with memory peek/poke intrinsically provides
+> its operator with the means to hose their system in all manner of
+> exciting ways (not least because stopping-the-world is already a DoS
+> attack ;-) ). Nevertheless the current no safety rail approach is
+> difficult to defend, especially given kprobes can provide us with plenty
+> of machinery to mark the parts of the kernel where breakpointing is
+> discouraged.
 > 
-> Any chances it can be applied for 5.9?
+> This patchset introduces some safety rails by using the existing kprobes
+> infrastructure and ensures this will be enabled by default on
+> architectures that implement kprobes. At present it does not cover
+> absolutely all locations where breakpoints can cause trouble but it will
+> block off several avenues, including the architecture specific parts
+> that are handled by arch_within_kprobe_blacklist().
 
-Queuing up for 5.9, thanks.
+This series looks good to me.
 
-Sorry there has been some confusion on my behalf regarding the config 
-changes.
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+To fix the build error with ipw2x00 driver, please feel free to
+include my fix patch.
+
+Thank you,
+
+> 
+> 
+> Daniel Thompson (3):
+>   kgdb: Honour the kprobe blocklist when setting breakpoints
+>   kgdb: Use the kprobe blocklist to limit single stepping
+>   kgdb: Add NOKPROBE labels on the trap handler functions
+> 
+>  include/linux/kgdb.h        | 19 +++++++++++++++++++
+>  kernel/debug/debug_core.c   | 25 +++++++++++++++++++++++++
+>  kernel/debug/gdbstub.c      | 10 +++++++++-
+>  kernel/debug/kdb/kdb_bp.c   | 17 +++++++++++------
+>  kernel/debug/kdb/kdb_main.c | 10 ++++++++--
+>  lib/Kconfig.kgdb            | 14 ++++++++++++++
+>  6 files changed, 86 insertions(+), 9 deletions(-)
+> 
+> --
+> 2.25.4
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
