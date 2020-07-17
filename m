@@ -2,107 +2,175 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A06C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AC6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0802070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746832065D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:07:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OBpaSjti";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JMB6S83+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ohShRxZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgGQUAT (ORCPT
+        id S1728304AbgGQUHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:00:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42850 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgGQUAS (ORCPT
+        Fri, 17 Jul 2020 16:07:20 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:57558 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgGQUHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:00:18 -0400
-Date:   Fri, 17 Jul 2020 20:00:14 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595016015;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iqGNrlxmh8sBy0JeDfvSgrqAbY3l+xwBTcymVKXFe3k=;
-        b=OBpaSjti4KgaE6RTX/l2WEWSB+CeYRutjon2tk7rxptZ5hDZG7ihZh8jEnB+70neNFqq+j
-        Wx9RzTyGD12CwfPewfgElYYFZDoCYxprYXc5FGSkR1PGpFPqDIzd4HmXEwLrF3TK07G1jc
-        Zo+s+C1PGDeAxc6RQuAA3gDa2l8qqvWfC/KKS/yVMCw9PjtOcgV1gaj9+LQKKcCqQxAAQr
-        kGuOzD+zsbQtamc2UihJ9oQ5aORBO4Po3xJQ3+jdljwR+ffKiuFekuyAF3X2om6VZTj/5m
-        v9mWfyFCB9ULkpGfO38D/vCywf6/nIvSTvViXwuRhS9f+c9UkamDhlnJjKNeDA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595016015;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iqGNrlxmh8sBy0JeDfvSgrqAbY3l+xwBTcymVKXFe3k=;
-        b=JMB6S83+4SOJRsxZqT183hL7f1m305Gua2FudV/ikzeEiB4li3YF435ajJPhNcVJONbWE4
-        ifTgzz8XNFHijfDw==
-From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] timers: Lower base clock forwarding threshold
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200717140551.29076-13-frederic@kernel.org>
-References: <20200717140551.29076-13-frederic@kernel.org>
+        Fri, 17 Jul 2020 16:07:20 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HJw2mh135643;
+        Fri, 17 Jul 2020 20:06:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=ctTlbJg6ZsvK6tf/ANMaIi1kDEh6xWj554sF+ck6xvA=;
+ b=ohShRxZT1kMFsvCZr7g+i5MCaD5NT7OmprvTKFm8MSTbB0XkjAWeVriSNrqLVTU26Is/
+ Wp1MthGTXlXy6rrlTwTs//erGW9Zj1sIzzQF1IayOlyhImZbLqRJLnxxydzo8RXIO+Fn
+ 9ZHxqZ4fvkKjXosFS/UZsSBsXlSFZ5+DYtLaJNilYSSkRVySUda4zI3o7KyXhljgkyc6
+ hhwm00VZZDs4Wkyp8tI9N60Ae9jAzK0rFLdh2tOkuwAPkKLyZTBtowOQiTqT14s2et7R
+ kt0ogTyJdgDSqs2keHGINrcH3rmNXIzEHaRWigIbdjQdnBChNMZGj78I3YwieyT+frQx ng== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 327s65yjrc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jul 2020 20:06:39 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HK6OT5091616;
+        Fri, 17 Jul 2020 20:06:39 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 32bjj9r9tk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jul 2020 20:06:34 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06HK1MJe004735;
+        Fri, 17 Jul 2020 20:01:22 GMT
+Received: from localhost (/10.175.216.252)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Jul 2020 13:01:22 -0700
+Date:   Fri, 17 Jul 2020 22:01:19 +0200
+From:   Gregory Herrero <gregory.herrero@oracle.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] recordmcount: only record relocation of type
+ R_AARCH64_CALL26 on arm64.
+Message-ID: <20200717200119.GP17377@ltoracle>
+References: <20200717143338.19302-1-gregory.herrero@oracle.com>
+ <20200717133003.025f2096@oasis.local.home>
 MIME-Version: 1.0
-Message-ID: <159501601496.4006.3364928188883956885.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717133003.025f2096@oasis.local.home>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 malwarescore=0 suspectscore=0
+ spamscore=100 adultscore=0 phishscore=0 mlxscore=100 mlxlogscore=-1000
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007170135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 adultscore=0 malwarescore=0
+ phishscore=0 mlxscore=100 priorityscore=1501 lowpriorityscore=0
+ spamscore=100 clxscore=1011 bulkscore=0 mlxlogscore=-1000 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007170135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+On Fri, Jul 17, 2020 at 01:30:03PM -0400, Steven Rostedt wrote:
+> On Fri, 17 Jul 2020 16:33:38 +0200
+> gregory.herrero@oracle.com wrote:
+> 
+> > From: Gregory Herrero <gregory.herrero@oracle.com>
+> > 
+> > Currently, if a section has a relocation to '_mcount' symbol, a new
+> > __mcount_loc entry will be added whatever the relocation type is.
+> > This is problematic when a relocation to '_mcount' is in the middle of a
+> > section and is not a call for ftrace use.
+> > 
+> > Such relocation could be generated with below code for example:
+> >     bool is_mcount(unsigned long addr)
+> >     {
+> >         return (target == (unsigned long) &_mcount);
+> >     }
+> > 
+> > With this snippet of code, ftrace will try to patch the mcount location
+> > generated by this code on module load and fail with:
+> > 
+> >     Call trace:
+> >      ftrace_bug+0xa0/0x28c
+> >      ftrace_process_locs+0x2f4/0x430
+> >      ftrace_module_init+0x30/0x38
+> >      load_module+0x14f0/0x1e78
+> >      __do_sys_finit_module+0x100/0x11c
+> >      __arm64_sys_finit_module+0x28/0x34
+> >      el0_svc_common+0x88/0x194
+> >      el0_svc_handler+0x38/0x8c
+> >      el0_svc+0x8/0xc
+> >     ---[ end trace d828d06b36ad9d59 ]---
+> >     ftrace failed to modify
+> >     [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
+> >      actual:   66:a9:3c:90
+> >     Initializing ftrace call sites
+> >     ftrace record flags: 2000000
+> >      (0)
+> >     expected tramp: ffffa2dc6cf66724
+> > 
+> > So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
+> > recordmcount.
+> > 
+> 
+> I'd rather have this go through the arm64 tree, as they can test it
+> better than I can.
+> 
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> -- Steve
+> 
+Thanks Steve.
+Should I send a V2 to add 'Cc: stable@vger.kernel.org' in the commit
+description or can someone take care of it when adding the commit to
+the tree?
 
-Commit-ID:     36cd28a4cdd05d47ccb62a2d86e8f37839cc879a
-Gitweb:        https://git.kernel.org/tip/36cd28a4cdd05d47ccb62a2d86e8f37839cc879a
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Fri, 17 Jul 2020 16:05:51 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 17 Jul 2020 21:55:25 +02:00
+Thanks,
+Greg
 
-timers: Lower base clock forwarding threshold
-
-There is nothing that prevents from forwarding the base clock if it's one
-jiffy off. The reason for this arbitrary limit of two jiffies is historical
-and does not longer exist.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
-Link: https://lkml.kernel.org/r/20200717140551.29076-13-frederic@kernel.org
-
----
- kernel/time/timer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 8b3fb52..77e21e9 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -894,7 +894,7 @@ static inline void forward_timer_base(struct timer_base *base)
- 	 * Also while executing timers, base->clk is 1 offset ahead
- 	 * of jiffies to avoid endless requeuing to current jffies.
- 	 */
--	if ((long)(jnow - base->clk) < 2)
-+	if ((long)(jnow - base->clk) < 1)
- 		return;
- 
- 	/*
+> 
+> > Fixes: ed60453fa8f8 ("ARM: 6511/1: ftrace: add ARM support for C version of recordmcount")
+> > Signed-off-by: Gregory Herrero <gregory.herrero@oracle.com>
+> > ---
+> >  scripts/recordmcount.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+> > index 7225107a9aaf..e59022b3f125 100644
+> > --- a/scripts/recordmcount.c
+> > +++ b/scripts/recordmcount.c
+> > @@ -434,6 +434,11 @@ static int arm_is_fake_mcount(Elf32_Rel const *rp)
+> >  	return 1;
+> >  }
+> >  
+> > +static int arm64_is_fake_mcount(Elf64_Rel const *rp)
+> > +{
+> > +	return ELF64_R_TYPE(w(rp->r_info)) != R_AARCH64_CALL26;
+> > +}
+> > +
+> >  /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
+> >   * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
+> >   * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
+> > @@ -547,6 +552,7 @@ static int do_file(char const *const fname)
+> >  		make_nop = make_nop_arm64;
+> >  		rel_type_nop = R_AARCH64_NONE;
+> >  		ideal_nop = ideal_nop4_arm64;
+> > +		is_fake_mcount64 = arm64_is_fake_mcount;
+> >  		break;
+> >  	case EM_IA_64:	reltype = R_IA64_IMM64; break;
+> >  	case EM_MIPS:	/* reltype: e_class    */ break;
+> 
