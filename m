@@ -2,119 +2,212 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E139C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90AFC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09AD92076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594993715;
-	bh=A/hm+ncUzrilRPL6Iq4RL68tleP0XF+QknAVyixwc1g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=k7RFJutu0nCYRpwWTGHm8TXGY6DiW12B/mcHfqiZfGHa2DINFXqA6BFlURhwAfPzJ
-	 BTP4DHv9DwiIJG9d6F6QsO1R6coB30RxWhgvY77j+pZQM+OHCBZ5yHmvitd7mBdf9k
-	 pB+epztiC5YbK4BBbFvlPrlqhMuEVtOu4oOsCPGs=
+	by mail.kernel.org (Postfix) with ESMTP id ADC1D20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:50:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VaLmuHUG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgGQNsc (ORCPT
+        id S1726894AbgGQNuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbgGQNsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:48:32 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 17 Jul 2020 09:50:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21564 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726090AbgGQNuK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:50:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594993809;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dcHL5Gwf2cNMmUnAC8MA2309ICcr5tCWf4feov7XWtY=;
+        b=VaLmuHUGvjecndC25aMdExKS+m4ddFwgdImTJjZ909bujK/roGm9hVY5+c+lsLJcvjHYea
+        o6t+FVplT9Lx2qfvvLqCqPHjdkHYNFLrbDnmn4KD7l0U0fczuogwItVVFdWRoPCzLvJZ3/
+        EtvSDhWDoQCgHyqgHVFNDgisqbvDV/E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-445-AjpvzSP6N-mgvvxTIcmhEw-1; Fri, 17 Jul 2020 09:50:06 -0400
+X-MC-Unique: AjpvzSP6N-mgvvxTIcmhEw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07E9E2076A;
-        Fri, 17 Jul 2020 13:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594993712;
-        bh=A/hm+ncUzrilRPL6Iq4RL68tleP0XF+QknAVyixwc1g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CvOlz5oabVzstaOLVZA61byXNbjnvEktZKypAf7I3zp3ssUX3umwgbYI67tlmWbpr
-         26D6NXncecHSsTC2cJ8rycyhNySsKMgBDS+r3DJr201xopxc69WB7rL2dsdtv9wOQP
-         4DdCDro/S8Hbq2zGvJ8lIAccd2ZW/vts0mBz4DzQ=
-Date:   Fri, 17 Jul 2020 22:48:26 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>, sumit.garg@linaro.org,
-        pmladek@suse.com, sergey.senozhatsky@gmail.com, will@kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: Re: [PATCH v2 0/3] kgdb: Honour the kprobe blacklist when setting
- breakpoints
-Message-Id: <20200717224826.80f8353e5dfdfaab22421385@kernel.org>
-In-Reply-To: <20200716151943.2167652-1-daniel.thompson@linaro.org>
-References: <20200716151943.2167652-1-daniel.thompson@linaro.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B73211080;
+        Fri, 17 Jul 2020 13:50:04 +0000 (UTC)
+Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0CCAE78A45;
+        Fri, 17 Jul 2020 13:49:58 +0000 (UTC)
+Subject: Re: [PATCH v5 3/5] iommu/uapi: Use named union for user data
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <1594925117-64892-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1594925117-64892-4-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <6eb6a528-0786-7554-47a6-a50ed2804977@redhat.com>
+Date:   Fri, 17 Jul 2020 15:49:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <1594925117-64892-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Hi Jacob,
 
-On Thu, 16 Jul 2020 16:19:40 +0100
-Daniel Thompson <daniel.thompson@linaro.org> wrote:
-
-> kgdb has traditionally adopted a no safety rails approach to breakpoint
-> placement. If the debugger is commanded to place a breakpoint at an
-> address then it will do so even if that breakpoint results in kgdb
-> becoming inoperable.
+On 7/16/20 8:45 PM, Jacob Pan wrote:
+> IOMMU UAPI data size is filled by the user space which must be validated
+> by ther kernel. To ensure backward compatibility, user data can only be
+s/ther/the
+> extended by either re-purpose padding bytes or extend the variable sized
+> union at the end. No size change is allowed before the union. Therefore,
+> the minimum size is the offset of the union.
 > 
-> A stop-the-world debugger with memory peek/poke intrinsically provides
-> its operator with the means to hose their system in all manner of
-> exciting ways (not least because stopping-the-world is already a DoS
-> attack ;-) ). Nevertheless the current no safety rail approach is
-> difficult to defend, especially given kprobes can provide us with plenty
-> of machinery to mark the parts of the kernel where breakpointing is
-> discouraged.
+> To use offsetof() on the union, we must make it named.
 > 
-> This patchset introduces some safety rails by using the existing kprobes
-> infrastructure and ensures this will be enabled by default on
-> architectures that implement kprobes. At present it does not cover
-> absolutely all locations where breakpoints can cause trouble but it will
-> block off several avenues, including the architecture specific parts
-> that are handled by arch_within_kprobe_blacklist().
+> Link: https://lore.kernel.org/linux-iommu/20200611145518.0c2817d6@x1.home/
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-This series looks good to me.
+Thanks
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-To fix the build error with ipw2x00 driver, please feel free to
-include my fix patch.
-
-Thank you,
-
+Eric
+> ---
+>  drivers/iommu/intel/iommu.c | 24 ++++++++++++------------
+>  drivers/iommu/intel/svm.c   |  2 +-
+>  include/uapi/linux/iommu.h  |  4 ++--
+>  3 files changed, 15 insertions(+), 15 deletions(-)
 > 
-> 
-> Daniel Thompson (3):
->   kgdb: Honour the kprobe blocklist when setting breakpoints
->   kgdb: Use the kprobe blocklist to limit single stepping
->   kgdb: Add NOKPROBE labels on the trap handler functions
-> 
->  include/linux/kgdb.h        | 19 +++++++++++++++++++
->  kernel/debug/debug_core.c   | 25 +++++++++++++++++++++++++
->  kernel/debug/gdbstub.c      | 10 +++++++++-
->  kernel/debug/kdb/kdb_bp.c   | 17 +++++++++++------
->  kernel/debug/kdb/kdb_main.c | 10 ++++++++--
->  lib/Kconfig.kgdb            | 14 ++++++++++++++
->  6 files changed, 86 insertions(+), 9 deletions(-)
-> 
-> --
-> 2.25.4
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 6ad8b6f20235..f3a6ca88cf95 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -5409,8 +5409,8 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  
+>  	/* Size is only valid in address selective invalidation */
+>  	if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
+> -		size = to_vtd_size(inv_info->addr_info.granule_size,
+> -				   inv_info->addr_info.nb_granules);
+> +		size = to_vtd_size(inv_info->granu.addr_info.granule_size,
+> +				   inv_info->granu.addr_info.nb_granules);
+>  
+>  	for_each_set_bit(cache_type,
+>  			 (unsigned long *)&inv_info->cache,
+> @@ -5432,20 +5432,20 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  		 * granularity.
+>  		 */
+>  		if (inv_info->granularity == IOMMU_INV_GRANU_PASID &&
+> -		    (inv_info->pasid_info.flags & IOMMU_INV_PASID_FLAGS_PASID))
+> -			pasid = inv_info->pasid_info.pasid;
+> +		    (inv_info->granu.pasid_info.flags & IOMMU_INV_PASID_FLAGS_PASID))
+> +			pasid = inv_info->granu.pasid_info.pasid;
+>  		else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+> -			 (inv_info->addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
+> -			pasid = inv_info->addr_info.pasid;
+> +			 (inv_info->granu.addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
+> +			pasid = inv_info->granu.addr_info.pasid;
+>  
+>  		switch (BIT(cache_type)) {
+>  		case IOMMU_CACHE_INV_TYPE_IOTLB:
+>  			/* HW will ignore LSB bits based on address mask */
+>  			if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+>  			    size &&
+> -			    (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> +			    (inv_info->granu.addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+>  				WARN_ONCE(1, "Address out of range, 0x%llx, size order %llu\n",
+> -					  inv_info->addr_info.addr, size);
+> +					  inv_info->granu.addr_info.addr, size);
+>  			}
+>  
+>  			/*
+> @@ -5453,9 +5453,9 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  			 * We use npages = -1 to indicate that.
+>  			 */
+>  			qi_flush_piotlb(iommu, did, pasid,
+> -					mm_to_dma_pfn(inv_info->addr_info.addr),
+> +					mm_to_dma_pfn(inv_info->granu.addr_info.addr),
+>  					(granu == QI_GRAN_NONG_PASID) ? -1 : 1 << size,
+> -					inv_info->addr_info.flags & IOMMU_INV_ADDR_FLAGS_LEAF);
+> +					inv_info->granu.addr_info.flags & IOMMU_INV_ADDR_FLAGS_LEAF);
+>  
+>  			if (!info->ats_enabled)
+>  				break;
+> @@ -5476,13 +5476,13 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  				size = 64 - VTD_PAGE_SHIFT;
+>  				addr = 0;
+>  			} else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
+> -				addr = inv_info->addr_info.addr;
+> +				addr = inv_info->granu.addr_info.addr;
+>  
+>  			if (info->ats_enabled)
+>  				qi_flush_dev_iotlb_pasid(iommu, sid,
+>  						info->pfsid, pasid,
+>  						info->ats_qdep,
+> -						inv_info->addr_info.addr,
+> +						inv_info->granu.addr_info.addr,
+>  						size);
+>  			else
+>  				pr_warn_ratelimited("Passdown device IOTLB flush w/o ATS!\n");
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index d386853121a2..713b3a218483 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -338,7 +338,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+>  	spin_lock(&iommu->lock);
+>  	ret = intel_pasid_setup_nested(iommu, dev,
+>  				       (pgd_t *)(uintptr_t)data->gpgd,
+> -				       data->hpasid, &data->vtd, dmar_domain,
+> +				       data->hpasid, &data->vendor.vtd, dmar_domain,
+>  				       data->addr_width);
+>  	spin_unlock(&iommu->lock);
+>  	if (ret) {
+> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> index d5e9014f690e..7c8e075c2b29 100644
+> --- a/include/uapi/linux/iommu.h
+> +++ b/include/uapi/linux/iommu.h
+> @@ -263,7 +263,7 @@ struct iommu_cache_invalidate_info {
+>  	union {
+>  		struct iommu_inv_pasid_info pasid_info;
+>  		struct iommu_inv_addr_info addr_info;
+> -	};
+> +	} granu;
+>  };
+>  
+>  /**
+> @@ -329,7 +329,7 @@ struct iommu_gpasid_bind_data {
+>  	/* Vendor specific data */
+>  	union {
+>  		struct iommu_gpasid_bind_data_vtd vtd;
+> -	};
+> +	} vendor;
+>  };
+>  
+>  #endif /* _UAPI_IOMMU_H */
 > 
 
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
