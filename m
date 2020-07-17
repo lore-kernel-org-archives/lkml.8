@@ -2,103 +2,79 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC1AC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D708C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8725320704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:11:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kDLT6+le"
+	by mail.kernel.org (Postfix) with ESMTP id 1261F20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgGQHLG (ORCPT
+        id S1727869AbgGQHLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:11:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbgGQHLF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:11:05 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75562C08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 00:11:05 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z2so9920589wrp.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 00:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ArTRNnzZs91FkA6/ho6wtwomeiOgsZ04JTylL3kLyNs=;
-        b=kDLT6+leXR3qSGdg6iPjbZzsiQrryZSog3FdKj/+hYTCAgYEN2f+fSZOMcVvcVx8Da
-         NTx74nLGPTS7LDBzlM9nQ6Th0UIw0M0dm6aERDQMNDa/DhTFc1Q/kd4rbIuNzRDr/i7t
-         YF5wf9g3y6l2hc+M67fA1TG5k0mNpQXFuo/QRrOZbK1TCVk3BAUM3COpO1gdIWy2HDnd
-         14sT/3G9ghmBYgX0YQRuq/2hKzVl4PVtucD5NGtVM9HKVY/gQauhpd8bG3waw8hj0InN
-         LPesgOo6D+Jg2dcMBmu2cM2xy3rr+NKIqmUszshPHDmyMQTTYn07O26utsNVTc2T3z6b
-         e3YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ArTRNnzZs91FkA6/ho6wtwomeiOgsZ04JTylL3kLyNs=;
-        b=RBztDhK3vwexzl6Cd0kPxVL/In3gjBtSJfV0fWWwR5hTbGzwCKpCzaJQVoNS/zkBUH
-         /SSG8Kx5px4nJiYxvpwz2LbQ9VuxckuXCpUnccKlUSXhGsuXzWWnOi1m2vg83wkfezFS
-         H0TAkYn51tWBGa087fxYVstEfGeeaQXdjnGceEDneQe4pHOXl18pZyLpggsZZaH7DQD/
-         X3aMBrrAFbU+aiDaVpoiQgPGgikEDMnqZFSsXaEQ2240/Nrccx4oLk1wGYPhomSb0n9k
-         Q6kjgB+pbGBScFSGTy0CEUv2cDVR/EL1+kKbG2ZXxA1afksU+Xwd8QQP/yFrPYjv2NCU
-         fVTw==
-X-Gm-Message-State: AOAM532td8/ST4efFd0x1LmVC5U/uLHm1MPOsxszzLmxhr+eqcmfZtIq
-        9/Vpb+tpasVb+CNTPqpyL/sGNw==
-X-Google-Smtp-Source: ABdhPJy9nuaTBwW1I5JOhKknn3r1C08+e8njv/F7IHQArMz57YQ6EzXop430T9F9pKM1MIEDjgNQ6Q==
-X-Received: by 2002:adf:a34a:: with SMTP id d10mr8846245wrb.59.1594969864077;
-        Fri, 17 Jul 2020 00:11:04 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id d13sm13261001wrn.61.2020.07.17.00.11.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 00:11:03 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 08:11:01 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the mfd tree
-Message-ID: <20200717071101.GC3165313@dell>
-References: <20200717134154.50326d78@canb.auug.org.au>
- <20200717065636.GB3165313@dell>
- <20200717165958.41db203d@canb.auug.org.au>
+        Fri, 17 Jul 2020 03:11:50 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38524 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726101AbgGQHLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:11:50 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5821147154E520CDB9DD;
+        Fri, 17 Jul 2020 15:11:48 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Jul 2020
+ 15:11:37 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <sameo@linux.intel.com>,
+        <cuissard@marvell.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <wanghai38@huawei.com>
+Subject: [PATCH v2] nfc: nci: add missed destroy_workqueue in nci_register_device
+Date:   Fri, 17 Jul 2020 15:10:16 +0800
+Message-ID: <20200717071016.33319-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200717165958.41db203d@canb.auug.org.au>
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020, Stephen Rothwell wrote:
+When nfc_register_device fails in nci_register_device,
+destroy_workqueue() shouled be called to destroy ndev->tx_wq.
 
-> Hi Lee,
-> 
-> On Fri, 17 Jul 2020 07:56:36 +0100 Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > > +static const char *kempld_devs[] = {  
-> > 
-> > Do you mind if I change this to 'kempld_dev_names' and still keep your
-> > SoB?
-> 
-> No worries, I just did a quick hack, so if you neaten it up that would
-> be good.
+Fixes: 3c1c0f5dc80b ("NFC: NCI: Fix nci_register_device init sequence")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+v1->v2:
+ Change the module from "net: cxgb3:" to "nfc: nci:"
+ net/nfc/nci/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Great.  Thanks again.
-
-Applied, thanks.
-
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index 7cd524884304..78ea8c94dcba 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -1228,10 +1228,13 @@ int nci_register_device(struct nci_dev *ndev)
+ 
+ 	rc = nfc_register_device(ndev->nfc_dev);
+ 	if (rc)
+-		goto destroy_rx_wq_exit;
++		goto destroy_tx_wq_exit;
+ 
+ 	goto exit;
+ 
++destroy_tx_wq_exit:
++	destroy_workqueue(ndev->tx_wq);
++
+ destroy_rx_wq_exit:
+ 	destroy_workqueue(ndev->rx_wq);
+ 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
+
