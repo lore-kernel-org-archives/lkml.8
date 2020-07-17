@@ -2,120 +2,125 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82454C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28C6C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB7C2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09C820737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:29:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OXaBMLD1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuyJsg9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgGQH2j (ORCPT
+        id S1727993AbgGQH3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:28:39 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42102 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgGQH2i (ORCPT
+        Fri, 17 Jul 2020 03:29:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbgGQH33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:28:38 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06H7SAT9015699;
-        Fri, 17 Jul 2020 02:28:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594970890;
-        bh=x+gIR4BgrZjaApIDkz1UIty6xRR9m3Z0fmVHijIFdYA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OXaBMLD1OPAXCalEhUW1JeOY6ceqlQ3URxPzRZ9JQdUGH2aaYpzrAkpXXthWgCho2
-         uybx/Bd0nJx+X0Z+JnFDdS/kX+8sZ/Lq2mELAvW3LN3nesjIZYg5cXHaAuW6V68nta
-         cbBbxin+jh3D3MtpaAjbQiC8GxfhcV0cyVtYvo6o=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06H7SAIR096261
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 02:28:10 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 02:28:09 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 02:28:09 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06H7S6nQ042040;
-        Fri, 17 Jul 2020 02:28:07 -0500
-Subject: Re: [PATCH 3/3] arm64: dts: ti: k3-j721e-main: rename smmu node to
- iommu
-To:     Suman Anna <s-anna@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Nishanth Menon <nm@ti.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>
-References: <20200626183532.23436-1-grygorii.strashko@ti.com>
- <88041e5c-b96d-5d92-d951-eb3356a519e2@ti.com>
- <438e0ec4-c6e0-8f9d-1608-b810b30295e0@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <170b8b4b-ab58-21be-9f2b-7de4a418a7a6@ti.com>
-Date:   Fri, 17 Jul 2020 10:28:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 17 Jul 2020 03:29:29 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 929AFC061755;
+        Fri, 17 Jul 2020 00:29:29 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id j10so6925331qtq.11;
+        Fri, 17 Jul 2020 00:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=mLChhkkm0b+TcGslIoNpge2LNzljcXENkja9YaOyDFI=;
+        b=AuyJsg9n5JoeUqrQOWF2aN8tCVUZwOLo+QP4vwtT9hj9S4kfJaQzyi4p175ZcrAaNN
+         bx1vS2zUGYSMMZVsWpCCobmmRuXkoumr/uV8NtivOnRR/QplBVJ9RNSrN4/568qjKEv6
+         8B/5BCMtYwl7pfQoJuH+bf4RY2JKUf2ZbT3qLbaQ+HspqJt/0fZedbTYgDnrGY1qkbB2
+         W4BZ7f/QxhZeN9nYmr3v9x+i4G/WlM69J45HWNLqaFvsDan9LS5mPxKau/JFk36uTTcI
+         c0HjlAp/9+qj8jHjJ3Tm4R30CoImwKLFbKiyX6/1o/0VWNNhGtyV0JMu0XcIMbh95Rqd
+         DXyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mLChhkkm0b+TcGslIoNpge2LNzljcXENkja9YaOyDFI=;
+        b=YA3teFsyq58iLKEN0l1fpR311WsQ998ERlMYpomJkw9xJM86CDSpH6GSbjUehThpsW
+         DjJeGIHfA7ZxXgUfc7q3QbPb51ENaLXdMSJXoVIyqgzz6tKV21BZV4rnvFmPp7kpW8RN
+         /fdWCieGWRo7FpMwcprm2j89WjKB13hv/4X0AMDkSEixxwzoHZeAi1eF1CofjBiOBwr4
+         bwJHK94a/8XT8Scj/YVQ5dtHSlk3kuGNe/FTZTiMGmrdVszz0eTNoVf6m0A7wUk58KkC
+         IUqQUuaD+szNlJBil1oJosmGZ3dlBwo4liJATzpD6YJs/G4hYgtxMdylo7vOMSbmYnJd
+         54sQ==
+X-Gm-Message-State: AOAM531D7yekWcGopmtFbf/UrqpZwhxLqr4iSUfjVtCk3w21fkjGLi6E
+        3BcAdWmwSi6Oi7jauelt0MFNczswY6sLhFKaaWQ=
+X-Google-Smtp-Source: ABdhPJziixgd56ZvRi+F8Kf6fojTvIxqKFNW7APUzyaDkpth0ViJdo7U3bWUx0v9ZVJhf0he4zQc++fiB2R5T/6tFPE=
+X-Received: by 2002:aed:22ef:: with SMTP id q44mr8639180qtc.333.1594970968809;
+ Fri, 17 Jul 2020 00:29:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <438e0ec4-c6e0-8f9d-1608-b810b30295e0@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <332d620b-bfe3-3b69-931b-77e3a74edbfd@suse.cz> <CAAmzW4NbG0fCtU2mV83pRamUeOEqKKxGTpQK2zuDxzmoF2FVrg@mail.gmail.com>
+ <6f18d999-4518-31ce-4cea-9b5b89a577ad@suse.cz>
+In-Reply-To: <6f18d999-4518-31ce-4cea-9b5b89a577ad@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 17 Jul 2020 16:29:17 +0900
+Message-ID: <CAAmzW4MLc8bmkYW1q1fL_WRFQHksX-oy9tS-s9Kb-A=ZEeGETQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] mm/page_alloc: fix non cma alloc context
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/06/2020 21:40, Suman Anna wrote:
-> On 6/26/20 1:36 PM, Grygorii Strashko wrote:
->>
->>
->> On 26/06/2020 21:35, Grygorii Strashko wrote:
->>> Rename smmu node to iommu to fix dtbs_check warning:
->>>   k3-j721e-common-proc-board.dt.yaml: smmu@36600000: $nodename:0: 
->>> 'smmu@36600000' does not match '^iommu@[0-9a-f]*'
->>>
->>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
-> Acked-by: Suman Anna <s-anna@ti.com>
+2020=EB=85=84 7=EC=9B=94 16=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 4:45, V=
+lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On 7/16/20 9:27 AM, Joonsoo Kim wrote:
+> > 2020=EB=85=84 7=EC=9B=94 15=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 5:2=
+4, Vlastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+> >> >  /*
+> >> >   * get_page_from_freelist goes through the zonelist trying to alloc=
+ate
+> >> >   * a page.
+> >> > @@ -3706,6 +3714,8 @@ get_page_from_freelist(gfp_t gfp_mask, unsigne=
+d int order, int alloc_flags,
+> >> >       struct pglist_data *last_pgdat_dirty_limit =3D NULL;
+> >> >       bool no_fallback;
+> >> >
+> >> > +     current_alloc_flags(gfp_mask, &alloc_flags);
+> >>
+> >> I don't see why to move the test here? It will still be executed in th=
+e
+> >> fastpath, if that's what you wanted to avoid.
+> >
+> > I want to execute it on the fastpath, too. Reason that I moved it here
+> > is that alloc_flags could be reset on slowpath. See the code where
+> > __gfp_pfmemalloc_flags() is on. This is the only place that I can apply
+> > this option to all the allocation paths at once.
+>
+> But get_page_from_freelist() might be called multiple times in the slowpa=
+th, and
+> also anyone looking for gfp and alloc flags setup will likely not examine=
+ this
+> function. I don't see a problem in having it in two places that already d=
+eal
+> with alloc_flags setup, as it is now.
 
-Queued up for 5.9, thanks.
+I agree that anyone looking alloc flags will miss that function easily. Oka=
+y.
+I will place it on its original place, although we now need to add one
+more place.
+*Three places* are gfp_to_alloc_flags(), prepare_alloc_pages() and
+__gfp_pfmemalloc_flags().
 
--Tero
-
-> 
->>> ---
->>>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi 
->>> b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->>> index 5d82de4097bb..0ac23c4414a2 100644
->>> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->>> @@ -95,7 +95,7 @@
->>>               interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
->>>           };
->>> -        smmu0: smmu@36600000 {
->>> +        smmu0: iommu@36600000 {
->>>               compatible = "arm,smmu-v3";
->>>               reg = <0x0 0x36600000 0x0 0x100000>;
->>>               interrupt-parent = <&gic500>;
->>>
->>
->> Pls, ignore "3/3" in subj.
->>
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks.
