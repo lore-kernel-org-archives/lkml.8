@@ -2,28 +2,28 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96CCC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D15D420838
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D46620838
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgGQDYc (ORCPT
+        id S1726809AbgGQDYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 23:24:32 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:44686 "EHLO
+        Thu, 16 Jul 2020 23:24:25 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:56944 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbgGQDYY (ORCPT
+        with ESMTP id S1726457AbgGQDYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 23:24:24 -0400
+        Thu, 16 Jul 2020 23:24:23 -0400
 Received: from localhost (unknown [192.168.167.16])
-        by lucky1.263xmail.com (Postfix) with ESMTP id B31C8C5CC6;
-        Fri, 17 Jul 2020 11:24:22 +0800 (CST)
+        by lucky1.263xmail.com (Postfix) with ESMTP id 91512EC55B;
+        Fri, 17 Jul 2020 11:24:21 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
@@ -31,9 +31,9 @@ X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
         by smtp.263.net (postfix) whith ESMTP id P18585T140685189564160S1594956256233933_;
-        Fri, 17 Jul 2020 11:24:23 +0800 (CST)
+        Fri, 17 Jul 2020 11:24:21 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <1c825572ccfb07908e6dac2705c16b0a>
+X-UNIQUE-TAG: <fa8a0861aab45af45bc693bb0d536e4a>
 X-RL-SENDER: jay.xu@rock-chips.com
 X-SENDER: xjq@rock-chips.com
 X-LOGIN-NAME: jay.xu@rock-chips.com
@@ -47,9 +47,9 @@ To:     heiko@sntech.de, linus.walleij@linaro.org
 Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org, kever.yang@rock-chips.com,
         david.wu@rock-chips.com, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 04/13] pinctrl: rockchip: enable gpio pclk for rockchip_gpio_to_irq
-Date:   Fri, 17 Jul 2020 11:24:02 +0800
-Message-Id: <20200717032411.17654-5-jay.xu@rock-chips.com>
+Subject: [PATCH 03/13] pinctrl: rockchip: make driver be tristate module
+Date:   Fri, 17 Jul 2020 11:24:01 +0800
+Message-Id: <20200717032411.17654-4-jay.xu@rock-chips.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200717032411.17654-1-jay.xu@rock-chips.com>
 References: <20200717032411.17654-1-jay.xu@rock-chips.com>
@@ -58,28 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There need to enable pclk_gpio when do irq_create_mapping, since it will
-do access to gpio controller.
+Make pinctrl-rockchip driver to be tristate module, support to build as
+a module, this is useful for GKI.
 
 Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 ---
- drivers/pinctrl/pinctrl-rockchip.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pinctrl/Kconfig            | 2 +-
+ drivers/pinctrl/pinctrl-rockchip.c | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 8828613c4e0e..dd4874e2ac67 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -207,7 +207,7 @@ config PINCTRL_OXNAS
+ 	select MFD_SYSCON
+ 
+ config PINCTRL_ROCKCHIP
+-	bool
++	tristate "Rockchip gpio and pinctrl driver"
+ 	select PINMUX
+ 	select GENERIC_PINCONF
+ 	select GENERIC_IRQ_CHIP
 diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index ec509ef8bd8d..d34fada39227 100644
+index 77c1e6744f6c..ec509ef8bd8d 100644
 --- a/drivers/pinctrl/pinctrl-rockchip.c
 +++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -3155,7 +3155,9 @@ static int rockchip_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 	if (!bank->domain)
- 		return -ENXIO;
+@@ -16,10 +16,12 @@
+  */
  
-+	clk_enable(bank->clk);
- 	virq = irq_create_mapping(bank->domain, offset);
-+	clk_disable(bank->clk);
+ #include <linux/init.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
+ #include <linux/bitops.h>
+ #include <linux/gpio/driver.h>
++#include <linux/of_device.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+ #include <linux/pinctrl/machine.h>
+@@ -4259,6 +4261,7 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+ 		.data = &rk3399_pin_ctrl },
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, rockchip_pinctrl_dt_match);
  
- 	return (virq) ? : -ENXIO;
+ static struct platform_driver rockchip_pinctrl_driver = {
+ 	.probe		= rockchip_pinctrl_probe,
+@@ -4274,3 +4277,7 @@ static int __init rockchip_pinctrl_drv_register(void)
+ 	return platform_driver_register(&rockchip_pinctrl_driver);
  }
+ postcore_initcall(rockchip_pinctrl_drv_register);
++
++MODULE_DESCRIPTION("ROCKCHIP Pin Controller Driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:pinctrl-rockchip");
 -- 
 2.17.1
 
