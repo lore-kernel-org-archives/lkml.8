@@ -2,171 +2,127 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29E2C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAC6C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B063C2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100002074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rz3oI1vx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwxcUmz2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgGQQJ7 (ORCPT
+        id S1727033AbgGQQKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:09:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59566 "EHLO
+        Fri, 17 Jul 2020 12:10:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726256AbgGQQJ6 (ORCPT
+        with ESMTP id S1726322AbgGQQKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:09:58 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA9DC0619D2;
-        Fri, 17 Jul 2020 09:09:58 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id l1so10962841ioh.5;
-        Fri, 17 Jul 2020 09:09:58 -0700 (PDT)
+        Fri, 17 Jul 2020 12:10:53 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F42EC0619D2;
+        Fri, 17 Jul 2020 09:10:53 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z3so5580702pfn.12;
+        Fri, 17 Jul 2020 09:10:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=80duo2UCKGgh3D4vpF1VXWLmX4mSAl0+jky26IF2Kfc=;
-        b=rz3oI1vxyD4wEFspA2IXpcN6RZgCG8ugcDQv4pjD++gEX0xWJzrl7/IvE0B5L4OiMN
-         n3lSLCuMdLZg9h1a9XUA8isyooRlZIp0Oe7D9CgRkEQ0pNf8NqPD1dhRLxBVIonbLTuH
-         rJLeVM/JLCYk8BU7XiOVFLi2U+GNwhp8V6yNnhOXc3KRHH8RRVm7Km3qi4oWqaNlreFc
-         Nf4q/lt8EZ1JBoxQcRv4D75VlGItFhNde8Wi0JR7SvZ8DetJSH5t09MP7u3EKVvDFuVD
-         6jcccRbVO1SvOYnx0WLDxbbiA2hiNAhErX2ZWtnmy4PR+B/1O3fLfgwwJ/2Fk88FyQJ8
-         +Zrw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=THfYUaDXgdHi7xOdNZjiSROuNXEFCr7diXe1yGMo3qI=;
+        b=IwxcUmz2XFrQueIBSjOsg08tB1mxglvkCpvRqLsc8zVpTmX0MgSeQLZGVoWCvszY9r
+         ghCfOwQ2Tvh17dQsQJNySf4oXjUBNU01piFZmcN+sqmN4Rx0O/UQRxOBE+ToMydaSg8T
+         BIIte/MTTsbKtyalTemSj3AHd01h2LhjoGTqkRTa/CgcJ9ng9aDK5KO7Y1IM5G8F7Dzd
+         S3zHJ+Z7gu3xAXUdZXvp1Th+8i3Spp+5CpJvjsmh+q9m5lsZo+mLkvyAUPtR2fUF0a4j
+         LcK5ltSVRr/RPH1UinriTGZaRnjzT+6tF+qnmitM7ska2z0/EatC975z7nOgdlQ6xRZV
+         JE8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=80duo2UCKGgh3D4vpF1VXWLmX4mSAl0+jky26IF2Kfc=;
-        b=iCvbYfnlqB3EmS6i6jUibmQuf0U/FkCOzi7rVLGik9BcIwWfOpq7D8oKftt1QZ9Coj
-         bdsx9jd62rIK1tTngQDxo6foDJ464bZY9hMoRDr9M2TZBVg48v8K5pr1jh9LYdgpkMxS
-         9Y9eXwoqZSTKehBIkBgMsZJqh1oqckh18om4FbyjiV0C+chGKtFT5yZJwQkh5MMpwbGF
-         TUaS3q/clhRSQRofJ5rHYkRVz/PidpFPW4J/QPlQqiXAV5f8pn4GlgqFVrBL7SbCcDMx
-         t7UkYaI+GbhL+OW+BqcguyikWO4r2/VW+1z45t80Akaxe5zxPaHgEzajWylibvHyLPgr
-         idMA==
-X-Gm-Message-State: AOAM533xWUFBbTxaCaARvtBd9xCnPQPRbJMZVD54pBoHTAOiCvPggToS
-        UbsSh7g9Hd2XGkizO5FIdxxHtUNP+pyd4oK9g/s=
-X-Google-Smtp-Source: ABdhPJxAS5zKXGaRqMgoDBx8B5vS6pgJi7+88Y8nU6nWwsBaz2StwBp/+VMGafhOk/5PifpRQsVX2g3wWOuV+jYMgq8=
-X-Received: by 2002:a02:ce9a:: with SMTP id y26mr11930673jaq.121.1595002197726;
- Fri, 17 Jul 2020 09:09:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=THfYUaDXgdHi7xOdNZjiSROuNXEFCr7diXe1yGMo3qI=;
+        b=C9xdJbF5EPf4sHVqNBfyK+2Br84k6t1bFIWKrCrjiL0JOqqfyc1iJgfxdkQsFb4TiH
+         s92xijSwfYNdYKDc0n1qj8lbs57aykuyN/lk5M1WgR/vmyNHDLgbyny32FUlpokKwf5e
+         RC1ucsDcqVwEKTgj7f8VsgrrXSkKjIndDgxot7rLbk51tk5DhhC1qnyTrzBQj1x2HUR3
+         NcQaMoLuyL226S6YqTmM/D+ybyUHtelXpnXMCv1t6fwEv89uEgtpcpCBMT0xQ5MiWymE
+         CbAaiYBKsublfNl9hjMS17Mmo9UBEI0KNDerXVmX583VmfDI7b8vUy+OifXt5fd7rjFF
+         5q5A==
+X-Gm-Message-State: AOAM532l39tra5DsjKep1ievPORszRMNX31kEJgrW4UJ3nMZ8POEck9a
+        pDBdqRoMUypNjAn642+hCt8=
+X-Google-Smtp-Source: ABdhPJwgmrLwESJyWit/vqNOwVQ1MgTrBNf+Wutx7ZIg8OVw/fi5c6NXIUy6mDOfrF36KIScWySKLA==
+X-Received: by 2002:a62:768d:: with SMTP id r135mr9281279pfc.198.1595002253031;
+        Fri, 17 Jul 2020 09:10:53 -0700 (PDT)
+Received: from localhost ([89.208.244.139])
+        by smtp.gmail.com with ESMTPSA id ji2sm3170303pjb.1.2020.07.17.09.10.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Jul 2020 09:10:52 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     corbet@lwn.net, gregkh@linuxfoundation.org, rafael@kernel.org,
+        f.fainelli@gmail.com, heiko@sntech.de, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v4 0/2] drivers: provide devm_platform_request_irq()
+Date:   Sat, 18 Jul 2020 00:10:43 +0800
+Message-Id: <20200717161045.11458-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
- <1594429136-20002-16-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0Ue72SfAmxCS+tay1NjioW9WBOvVgrhwUtVPz2aDCrcHPQ@mail.gmail.com> <e724c44b-4135-3302-16fa-1df624fa81fa@linux.alibaba.com>
-In-Reply-To: <e724c44b-4135-3302-16fa-1df624fa81fa@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 17 Jul 2020 09:09:46 -0700
-Message-ID: <CAKgT0UcbvTid8RqDgsZjewdEo1wTD8BDjPHo59UX9gKQEkZUtA@mail.gmail.com>
-Subject: Re: [PATCH v16 15/22] mm/compaction: do page isolation first in compaction
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 10:10 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
->
-> >> @@ -950,6 +951,21 @@ static bool too_many_isolated(pg_data_t *pgdat)
-> >>                 if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
-> >>                         goto isolate_fail;
-> >>
-> >> +               /*
-> >> +                * Be careful not to clear PageLRU until after we're
-> >> +                * sure the page is not being freed elsewhere -- the
-> >> +                * page release code relies on it.
-> >> +                */
-> >> +               if (unlikely(!get_page_unless_zero(page)))
-> >> +                       goto isolate_fail;
-> >> +
-> >> +               if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
-> >> +                       goto isolate_fail_put;
-> >> +
-> >> +               /* Try isolate the page */
-> >> +               if (!TestClearPageLRU(page))
-> >> +                       goto isolate_fail_put;
-> >> +
-> >>                 /* If we already hold the lock, we can skip some rechecking */
-> >>                 if (!locked) {
-> >>                         locked = compact_lock_irqsave(&pgdat->lru_lock,
-> >
-> > Why not do the __isolate_lru_page_prepare before getting the page?
-> > That way you can avoid performing an extra atomic operation on non-LRU
-> > pages.
-> >
->
-> This change come from Hugh Dickins as mentioned from commit log:
-> >> trylock_page() is not safe to use at this time: its setting PG_locked
-> >> can race with the page being freed or allocated ("Bad page"), and can
-> >> also erase flags being set by one of those "sole owners" of a freshly
-> >> allocated page who use non-atomic __SetPageFlag().
->
-> Hi Hugh,
->
-> would you like to show more details of the bug?
->
-> ...
->
-> >> +                        * sure the page is not being freed elsewhere -- the
-> >> +                        * page release code relies on it.
-> >> +                        */
-> >> +                       if (unlikely(!get_page_unless_zero(page)))
-> >> +                               goto busy;
-> >> +
-> >> +                       if (!TestClearPageLRU(page)) {
-> >> +                               /*
-> >> +                                * This page may in other isolation path,
-> >> +                                * but we still hold lru_lock.
-> >> +                                */
-> >> +                               put_page(page);
-> >> +                               goto busy;
-> >> +                       }
-> >> +
-> >
-> > I wonder if it wouldn't make sense to combine these two atomic ops
-> > with tests and the put_page into a single inline function? Then it
-> > could be possible to just do one check and if succeeds you do the
-> > block of code below, otherwise you just fall-through into the -EBUSY
-> > case.
-> >
->
-> Uh, since get_page changes page->_refcount, TestClearPageLRU changes page->flags,
-> So I don't know how to combine them, could you make it more clear with code?
+It will call devm_request_irq() after platform_get_irq() function
+in many drivers, And sometimes, the error handling of these two functions
+is incorrect in some drivers. So this function is provided to simplify
+the driver.
 
-Actually it is pretty straight forward. Something like this:
-static inline bool get_page_unless_zero_or_nonlru(struct page *page)
-{
-    if (get_page_unless_zero(page)) {
-        if (TestClearPageLRU(page))
-            return true;
-        put_page(page);
-    }
-    return false;
-}
+the first patch will provide devm_platform_request_irq(), and the
+second patch will convert to devm_platform_request_irq() in some
+dirver of i2c bus.
 
-You can then add comments as necessary. The general idea is you are
-having to do this in two different spots anyway so why not combine the
-logic? Although it does assume you can change the ordering of the
-other test above.
+v3 -> v4:
+	- The patch v3 sent on May 27 may be lost somewhere in the
+	  world, so resend it.
+	- add Michal's Acked-by tag in the second patch. and Thanks
+	  for Michal's help.
+
+v2 -> v3:
+	- add devm_platform_request_irq() to devres.rst by Grygorii's
+	  suggestion.
+	- And also Thanks Michal, Wolfram and Linus's review and
+	  comments.
+v1 -> v2:
+	- I give up this series of patches in v1 version. I resend this
+	  patches v2 by that discussion:
+	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+	  The patch content has not changed.
+
+Dejin Zheng (2):
+  drivers: provide devm_platform_request_irq()
+  i2c: busses: convert to devm_platform_request_irq()
+
+ .../driver-api/driver-model/devres.rst        |  1 +
+ drivers/base/platform.c                       | 33 +++++++++++++++++++
+ drivers/i2c/busses/i2c-bcm-kona.c             | 16 ++-------
+ drivers/i2c/busses/i2c-cadence.c              | 10 ++----
+ drivers/i2c/busses/i2c-digicolor.c            | 10 ++----
+ drivers/i2c/busses/i2c-emev2.c                |  5 ++-
+ drivers/i2c/busses/i2c-jz4780.c               |  5 ++-
+ drivers/i2c/busses/i2c-meson.c                | 13 +++-----
+ drivers/i2c/busses/i2c-mxs.c                  |  9 ++---
+ drivers/i2c/busses/i2c-pnx.c                  |  9 ++---
+ drivers/i2c/busses/i2c-rcar.c                 |  9 ++---
+ drivers/i2c/busses/i2c-rk3x.c                 | 14 ++------
+ drivers/i2c/busses/i2c-sirf.c                 | 10 ++----
+ drivers/i2c/busses/i2c-stu300.c               |  4 +--
+ drivers/i2c/busses/i2c-synquacer.c            | 12 ++-----
+ include/linux/platform_device.h               |  4 +++
+ 16 files changed, 73 insertions(+), 91 deletions(-)
+
+-- 
+2.25.0
+
