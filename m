@@ -2,169 +2,213 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC95DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776A0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF7C20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:49:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jGmpJbFe"
+	by mail.kernel.org (Postfix) with ESMTP id 568AA20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:49:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595008165;
+	bh=6czVMdZhaHo+tKToD45mSau37/5Ee2rAARvEgfpux50=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QujXf8fdFgc53PQKVeuvG5tN4nWkThp8flX2HrnkHLrlYcZrkEuayXEth5JFAVhNm
+	 u048bDQrzw5hO6ABo/sFXzKwmLfEDfkmaEHq7woS6r9dayhcuc97XZLtDTH1wRZLJw
+	 sBfLfV7+/UYDvavLRDAshVTwvxehKA8jv6cXf5vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgGQRtQ (ORCPT
+        id S1728047AbgGQRtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:49:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgGQRtQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:49:16 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF6EC0619D4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:49:16 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id n5so7034301pgf.7
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UmBYnpJxLOKWnlQafaq4C6F9spEh+E46qapMdJKdqIk=;
-        b=jGmpJbFeB/mWj5s08JrCEpmPrV70zk0iTrM1SwiDc7+x09ybNxYSjiRZRaCoAi76lN
-         0xgvyFMiLQs/gjLKvXL9xklDnnClPU+OuYnQ7oQhSr3KOT+mv8YST83YVjeNEhJjlN+s
-         vj2un2SxZ6x6CLOG8xk18RT0iCO7YnKwd/D+w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UmBYnpJxLOKWnlQafaq4C6F9spEh+E46qapMdJKdqIk=;
-        b=QUOfsprARUcKH/7NXhisqKhSahbnldGkf7Fn3k2iaP0SSEzqhyPTSIdehlvKreXbHL
-         1GRDXGOUxpRGJsXInSujM9N9F9J60cp5y1Cet+836J1CA1q+lNlTJmkw1ZiddxyAYmzE
-         nCyQA98UJVKusZN9tIpfbwBNGV6YUDP5+pyhE5PQ6zaboooJ74Ponxi9071YH61RAFit
-         bEKe6uUQyRn7VwpWJnh8mvhvNO76JqqZZKoQMtxJDsqUvVZLLa2IUPoehGT5IkfLFNr+
-         UPDCTsx4uB1CeSp0px1GZ7iTidjnVyVZhaHIUC1ZGfbEPlydnPb5Oznlf2RrdhdUe5E1
-         1MWA==
-X-Gm-Message-State: AOAM531Ooqd0A2odvgi46s5Nj+oFBPbZJT8tV7lbk2QxobuM6KjIAgyw
-        5iJB8DB1k9mBuI0B1JWMm6W+tHYPmZg=
-X-Google-Smtp-Source: ABdhPJzpf9/ZajaIEXyFjFi2Ba7LeZk4ZttZruqVO8DSt3fEPjVmPRj3vBVymqSJ3TNgQl5mmN3v+w==
-X-Received: by 2002:a63:8c5d:: with SMTP id q29mr9353865pgn.249.1595008155556;
-        Fri, 17 Jul 2020 10:49:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s30sm8709549pgn.34.2020.07.17.10.49.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 10:49:14 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 10:49:13 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry
- functionality
-Message-ID: <202007171045.FB4A586F1D@keescook>
-References: <20200716182208.180916541@linutronix.de>
- <20200716185424.011950288@linutronix.de>
- <202007161336.B993ED938@keescook>
- <87d04vt98w.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Jul 2020 13:49:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbgGQRtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:49:22 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77EAA2173E;
+        Fri, 17 Jul 2020 17:49:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595008161;
+        bh=6czVMdZhaHo+tKToD45mSau37/5Ee2rAARvEgfpux50=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yhxZkgPa/TfqOP6176TD0H4j5knKc+Ru46LYNv7AfRnabvyYjEz++pYZlTh8evncI
+         HWfQ7eXaGWOKv+9zVEA7vb31QRcs8qj/DMd4cxooUAV0kdus5Ax7PbV1+S78TKK2Go
+         5eqtwQidvEKHV0cjK2vJ/UhPeIXURf04myyR04Do=
+Received: by mail-oi1-f181.google.com with SMTP id 12so8679783oir.4;
+        Fri, 17 Jul 2020 10:49:21 -0700 (PDT)
+X-Gm-Message-State: AOAM531EuWIWz+R9zRujiNd4fTMRg2sDpPlM2E4nfxzMlf+HUrdl8nnj
+        roIVDczu89ufGzz7IDO6BlCMr1xRWUEJZNqvTA==
+X-Google-Smtp-Source: ABdhPJwNhRmnLbtxUv/aDJg/oVt29At2larGRwaEpFyhGA+N34UOSp3eR1o00QSQMJ1CApxxPymPcPTPy2uXJpX31Y0=
+X-Received: by 2002:aca:30d2:: with SMTP id w201mr8720870oiw.147.1595008160791;
+ Fri, 17 Jul 2020 10:49:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d04vt98w.fsf@nanos.tec.linutronix.de>
+References: <20200702191322.2639681-1-helen.koike@collabora.com> <20200702191322.2639681-6-helen.koike@collabora.com>
+In-Reply-To: <20200702191322.2639681-6-helen.koike@collabora.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 17 Jul 2020 11:49:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKHG4HgcpWvh_qnHPAkaGCd7Q8APk2ai_QxjUQhvd5APg@mail.gmail.com>
+Message-ID: <CAL_JsqKHG4HgcpWvh_qnHPAkaGCd7Q8APk2ai_QxjUQhvd5APg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/9] media: staging: rkisp1: remove unecessary clocks
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     devicetree@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mark Rutland <mark.rutland@arm.com>, karthik.poduval@gmail.com,
+        Johan Jonker <jbx6244@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Eddie Cai <eddie.cai.linux@gmail.com>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 11:55:59PM +0200, Thomas Gleixner wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> > On Thu, Jul 16, 2020 at 08:22:09PM +0200, Thomas Gleixner wrote:
-> >> This code is needlessly duplicated and  different in all
-> >> architectures.
-> >> 
-> >> Provide a generic version based on the x86 implementation which has all the
-> >> RCU and instrumentation bits right.
-> >
-> > Ahh! You're reading my mind!
-> 
-> I told you about that plan at the last conference over a beer :)
+On Thu, Jul 2, 2020 at 1:13 PM Helen Koike <helen.koike@collabora.com> wrote:
+>
+> aclk_isp_wrap is a child of aclk_isp, and hclk_isp_wrap is a child of
+> hclk_isp, thus we can remove parents from the list.
 
-Thank you for incepting it in my head, then! ;)
+But it looks like it is the wrap clocks you are removing.
 
-> > [1] https://lore.kernel.org/lkml/20200716193141.4068476-2-krisman@collabora.com/
-> 
-> Saw that fly by. *shudder*
+>
+> Also, for the isp0, we only need the ISP clock, ACLK and HCLK.
+> In the future we'll need a pixel clock for RK3288 and RK3399, and a JPEG
+> clock for RK3288.
+>
+> So with the goal to cleanup the dt-bindings and remove it from staging,
+> simplify clock names to isp, aclk and hclk.
+>
+> For reference, this is the isp clock topology on RK3399:
+>
+>  xin24m
+>     pll_npll
+>        npll
+>           clk_isp1
+>           clk_isp0
+>     pll_cpll
+>        cpll
+>           aclk_isp1
+>              aclk_isp1_noc
+>              hclk_isp1
+>                 aclk_isp1_wrapper
+>                 hclk_isp1_noc
+>           aclk_isp0
+>              hclk_isp1_wrapper
+>              aclk_isp0_wrapper
+>              aclk_isp0_noc
+>              hclk_isp0
+>                 hclk_isp0_wrapper
+>                 hclk_isp0_noc
+>  pclkin_isp1_wrapper
+>
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+>
+> ---
+>
+> Changes in V4:
+> - update binding according to suggestion by Robin Murphy
+> on https://patchwork.kernel.org/patch/11475007/
+>
+> Changes in V3:
+> - this is a new patch in the series
+> ---
+>  .../bindings/media/rockchip-isp1.yaml         | 30 +++++++++----------
+>  drivers/staging/media/rkisp1/rkisp1-dev.c     |  8 ++---
+>  2 files changed, 17 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> index 4d111ef2e89c7..f10c53d008748 100644
+> --- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> @@ -24,20 +24,20 @@ properties:
+>      maxItems: 1
+>
+>    clocks:
+> -    items:
+> -      - description: ISP clock
+> -      - description: ISP AXI clock clock
+> -      - description: ISP AXI clock  wrapper clock
+> -      - description: ISP AHB clock clock
+> -      - description: ISP AHB wrapper clock
 
-Aw, it's nice. Better emulation! :)
+This is the correct way to describe multiple clocks.
 
-> 
-> >> +/*
-> >> + * Define dummy _TIF work flags if not defined by the architecture or for
-> >> + * disabled functionality.
-> >> + */
-> >
-> > When I was thinking about this last week I was pondering having a split
-> > between the arch-agnositc TIF flags and the arch-specific TIF flags, and
-> > that each arch could have a single "there is agnostic work to be done"
-> > TIF in their thread_info, and the agnostic flags could live in
-> > task_struct or something. Anyway, I'll keep reading...
-> 
-> That's going to be nasty. We rather go and expand the TIF storage to
-> 64bit. And then do the following in a generic header:
+> +    maxItems: 5
 
-I though the point was to make the TIF_WORK check as fast as possible,
-even on the 32-bit word systems. I mean it's not a huge performance hit,
-but *shrug*
+Now the 4th and 5th clock are undefined.
 
-> 
-> #ifndef TIF_ARCH_SPECIFIC
-> # define TIF_ARCH_SPECIFIC
-> #endif
-> 
-> enum tif_bits {
-> 	TIF_NEED_RESCHED = 0,
->         TIF_...,
->         TIF_LAST_GENERIC,
->         TIF_ARCH_SPECIFIC,
-> };
->         
-> and in the arch specific one:
-> 
-> #define TIF_ARCH_SPECIFIC	\
-> 	TIF_ARCH_1,             \
->         TIF_ARCH_2,
-> 
-> or something like that.
+> +    minItems: 3
+> +    description:
+> +      ISP clock
+> +      ISP AXI clock
+> +      ISP AHB clock
+>
+>    clock-names:
+> +    maxItems: 5
 
-Okay, yeah, that can work.
+This should not be more than the number of entries in 'items'.
 
-> > There's been some recent confusion over "has the syscall changed,
-> > or did seccomp request it be skipped?" that was explored in arm64[2]
-> > (though I see Will and Keno in CC already). There might need to be a
-> > clearer way to distinguish between "wild userspace issued a -1 syscall"
-> > and "seccomp or ptrace asked for the syscall to be skipped". The
-> > difference is mostly about when ENOSYS gets set, with respect to calls
-> > to syscall_set_return_value(), but if the syscall gets changed, the arch
-> > may need to recheck the value and consider ENOSYS, etc. IIUC, what Will
-> > ended up with[3] was having syscall_trace_enter() return the syscall return
-> > value instead of the new syscall.
-> 
-> I was chatting with Will about that yesterday. IIRC he plans to fix the
-> immediate issue on arm64 first and then move arm64 over to the generic
-> variant. That's the reason why I reshuffled the patch series so the
-> generic parts are first which allows me to provide will a branch with
-> just those. If there are any changes needed we can just feed them back
-> into that branch and fixup the affected architecture trees.
-> 
-> IOW, that should not block progress on this stuff.
-
-Ok, great! I just wanted to make sure that didn't surprise anyone. :)
-
--- 
-Kees Cook
+> +    minItems: 3
+>      items:
+> -      - const: clk_isp
+> -      - const: aclk_isp
+> -      - const: aclk_isp_wrap
+> -      - const: hclk_isp
+> -      - const: hclk_isp_wrap
+> +      - const: isp
+> +      - const: aclk
+> +      - const: hclk
+>
+>    iommus:
+>      maxItems: 1
+> @@ -135,11 +135,9 @@ examples:
+>              reg = <0x0 0xff910000 0x0 0x4000>;
+>              interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+>              clocks = <&cru SCLK_ISP0>,
+> -                     <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+> -                     <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+> -            clock-names = "clk_isp",
+> -                          "aclk_isp", "aclk_isp_wrap",
+> -                          "hclk_isp", "hclk_isp_wrap";
+> +                     <&cru ACLK_ISP0_WRAPPER>,
+> +                     <&cru HCLK_ISP0_WRAPPER>;
+> +            clock-names = "isp", "aclk", "hclk";
+>              iommus = <&isp0_mmu>;
+>              phys = <&dphy>;
+>              phy-names = "dphy";
+> diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
+> index f38801fea10d9..175ac25fe99fa 100644
+> --- a/drivers/staging/media/rkisp1/rkisp1-dev.c
+> +++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
+> @@ -406,11 +406,9 @@ static irqreturn_t rkisp1_isr(int irq, void *ctx)
+>  }
+>
+>  static const char * const rk3399_isp_clks[] = {
+> -       "clk_isp",
+> -       "aclk_isp",
+> -       "hclk_isp",
+> -       "aclk_isp_wrap",
+> -       "hclk_isp_wrap",
+> +       "isp",
+> +       "aclk",
+> +       "hclk",
+>  };
+>
+>  static const struct rkisp1_match_data rk3399_isp_clk_data = {
+> --
+> 2.26.0
+>
