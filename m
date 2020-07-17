@@ -2,57 +2,125 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4115C20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78E820737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:26:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7blFMyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgGQRZj (ORCPT
+        id S1727049AbgGQR0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgGQRZi (ORCPT
+        Fri, 17 Jul 2020 13:26:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58410 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726232AbgGQR0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:25:38 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F43C0619D2;
-        Fri, 17 Jul 2020 10:25:38 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 05CF3135A8FC4;
-        Fri, 17 Jul 2020 10:25:37 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 10:25:37 -0700 (PDT)
-Message-Id: <20200717.102537.1536007719047673454.davem@davemloft.net>
-To:     min.li.xe@renesas.com
-Cc:     richardcochran@gmail.com, corbet@lwn.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH net 1/1] docs: ptp.rst: add support for Renesas (IDT)
- ClockMatrix
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1594746920-28760-1-git-send-email-min.li.xe@renesas.com>
-References: <1594746920-28760-1-git-send-email-min.li.xe@renesas.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jul 2020 10:25:38 -0700 (PDT)
+        Fri, 17 Jul 2020 13:26:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595006796;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RHG39auNHRE1WZtPTrj7HBCLgjL3HfRMERmH4ZoBnBw=;
+        b=W7blFMyO/81VaPmCdFVCHuytUzbnAqP34nr7DEzzPpDeyQHEZlWwn6wsDOp2x0s9VwfCeb
+        OsGbU+wC7qjSPG1wNkXGoibQOpNB4Au83gpb45QKjaP9JC6ATT8rLfYgI1Cct2S06NklDa
+        qYg6+pyXwPfI4Akjvuw9uzLzqpDV9kY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-rN1OUrIHMpWAgGDMvhUJZw-1; Fri, 17 Jul 2020 13:26:32 -0400
+X-MC-Unique: rN1OUrIHMpWAgGDMvhUJZw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A417107ACCA;
+        Fri, 17 Jul 2020 17:26:31 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.194.199])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A934319724;
+        Fri, 17 Jul 2020 17:26:29 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 17 Jul 2020 19:26:31 +0200 (CEST)
+Date:   Fri, 17 Jul 2020 19:26:28 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [patch V2 3/5] posix-cpu-timers: Provide mechanisms to defer
+ timer handling to task_work
+Message-ID: <20200717172627.GC6067@redhat.com>
+References: <20200716201923.228696399@linutronix.de>
+ <20200716202044.734067877@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716202044.734067877@linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogPG1pbi5saS54ZUByZW5lc2FzLmNvbT4NCkRhdGU6IFR1ZSwgMTQgSnVsIDIwMjAgMTM6
-MTU6MjAgLTA0MDANCg0KPiBGcm9tOiBNaW4gTGkgPG1pbi5saS54ZUByZW5lc2FzLmNvbT4NCj4g
-DQo+IEFkZCBiZWxvdyB0byDigJxBbmNpbGxhcnkgY2xvY2sgZmVhdHVyZXPigJ0gc2VjdGlvbg0K
-PiAgIC0gTG93IFBhc3MgRmlsdGVyIChMUEYpIGFjY2VzcyBmcm9tIHVzZXIgc3BhY2UNCj4gDQo+
-IEFkZCBiZWxvdyB0byBsaXN0IG9mIOKAnFN1cHBvcnRlZCBoYXJkd2FyZeKAnSBzZWN0aW9uDQo+
-ICAgKyBSZW5lc2FzIChJRFQpIENsb2NrTWF0cml44oSiDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBN
-aW4gTGkgPG1pbi5saS54ZUByZW5lc2FzLmNvbT4NCg0KQXBwbGllZCwgdGhhbmsgeW91Lg0K
+Looks correct to me, but I forgot everything about posix-timers.c
+
+this obviously means that the expired timer won't fire until the
+task returns to user-mode but probably we don't care.
+
+One cosmetic nit below,
+
+On 07/16, Thomas Gleixner wrote:
+>
+> +#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
+> +void posix_cpu_timers_work(struct callback_head *work);
+> +
+> +static inline void posix_cputimer_init_work(struct posix_cputimers *pct)
+> +{
+> +	pct->task_work.func = posix_cpu_timers_work;
+
+init_task_work() ?
+
+> +}
+> +#else
+> +static inline void posix_cputimer_init_work(struct posix_cputimers *pct) { }
+> +#endif
+> +
+>  static inline void posix_cputimers_init(struct posix_cputimers *pct)
+>  {
+>  	memset(pct, 0, sizeof(*pct));
+>  	pct->bases[0].nextevt = U64_MAX;
+>  	pct->bases[1].nextevt = U64_MAX;
+>  	pct->bases[2].nextevt = U64_MAX;
+> +	posix_cputimer_init_work(pct);
+>  }
+
+And I can't resist. I know this is a common practice, please ignore, but to me
+
+	static inline void posix_cputimers_init(struct posix_cputimers *pct)
+	{
+		memset(pct, 0, sizeof(*pct));
+		pct->bases[0].nextevt = U64_MAX;
+		pct->bases[1].nextevt = U64_MAX;
+		pct->bases[2].nextevt = U64_MAX;
+	#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
+		init_task_work(&pct->task_work, posix_cpu_timers_work);
+	#endif
+	}
+
+looks better than 2 posix_cputimer_init_work() definitions above.
+
+Note also that signal_struct->posix_cputimers.task_work is never used, perhaps
+it would be better to move this task_work into task_struct? This way we do not
+even need to change posix_cputimers_init(), we call simply initialize
+init_task.posix_task_work.
+
+Oleg.
+
