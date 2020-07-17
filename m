@@ -2,163 +2,265 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3B6C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69397C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D21C1208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9BC2176B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:03:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yUWrVUlW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jtmdaz5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgGQNBy (ORCPT
+        id S1726563AbgGQNDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:01:54 -0400
-Received: from mga11.intel.com ([192.55.52.93]:43903 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726238AbgGQNBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:01:54 -0400
-IronPort-SDR: /SDruM/xNgOTViFRGQ3rpuviruMubr8pFEXrDe+i9tv7XkG0XbvlZdbXEuFEp1IKhTh4rb0lm9
- h/BebUjYkRtg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="147565718"
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="147565718"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 06:01:33 -0700
-IronPort-SDR: ihaZa+XVqDsk1YfabBezo3kiOpJjaJ6CvVoAav5RlkSBtYcckQ3+rP8lePcv98qOrdIelOcOJ1
- VOXOIlr6/IFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="430833548"
-Received: from lkp-server02.sh.intel.com (HELO 50058c6ee6fc) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 17 Jul 2020 06:01:32 -0700
-Received: from kbuild by 50058c6ee6fc with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jwPzX-0000JM-Dd; Fri, 17 Jul 2020 13:01:31 +0000
-Date:   Fri, 17 Jul 2020 21:00:22 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/urgent] BUILD SUCCESS
- 01cfcde9c26d8555f0e6e9aea9d6049f87683998
-Message-ID: <5f11a0e6.+Fq/9i2O9SKp71Rx%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 17 Jul 2020 09:03:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbgGQNDJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:03:09 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D94ADC061755;
+        Fri, 17 Jul 2020 06:03:08 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594990987;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=K67oesJG2nf2tuwx/U+5a5ylEwqGnasVmEPnOhGf1MA=;
+        b=yUWrVUlWYt5L6J1zJGlMSoDUEeenk9WdAxLpAQL4rlrkm2ro6YsH/GzL0sy5ne7PhD/poK
+        owreXWjU5n2WFnC8w34NQ1ZCGpSEAFCo14ukpLS9igkhE2F19QIVnJV7m3P37AWdOgJy51
+        poJ3ZrRNygrl4kDVirbpyiO4qEOldOa+DkWBe9wxPRivWj04rKMCwzPLh4xgv/cxDSF87O
+        fjetTkkmQybPvY/KoxLE9XFk4cu7yLOd1WazBNC6nP1WxYMj2m7UfAf4+da2d0OtWEP8f0
+        pfZlY7dyabJE2dl1XVifxvBdtjMcsFH7M57tDWrT30nJ+ilrE/gyBwcvp20cFg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594990987;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=K67oesJG2nf2tuwx/U+5a5ylEwqGnasVmEPnOhGf1MA=;
+        b=Jtmdaz5zQ5M5bd+/nFtueKXuEHZ3fbzSRqIIqDF1d/JPtYIY2chJkpGIEWChjtF/SiTwo/
+        KDLeiBjt/XoTc4Cw==
+To:     Dexuan Cui <decui@microsoft.com>, mingo@redhat.com,
+        rdunlap@infradead.org, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        peterz@infradead.org, allison@lohutok.net,
+        alexios.zavras@intel.com, gregkh@linuxfoundation.org,
+        decui@microsoft.com, namit@vmware.com, mikelley@microsoft.com,
+        longli@microsoft.com
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [RESEND][PATCH v3] x86/apic/flat64: Add back the early_param("apic", parse_apic)
+In-Reply-To: <20200626182106.57219-1-decui@microsoft.com>
+References: <20200626182106.57219-1-decui@microsoft.com>
+Date:   Fri, 17 Jul 2020 15:03:06 +0200
+Message-ID: <87mu3ys391.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  sched/urgent
-branch HEAD: 01cfcde9c26d8555f0e6e9aea9d6049f87683998  sched/fair: handle case of task_h_load() returning 0
+Dexuan Cui <decui@microsoft.com> writes:
 
-elapsed time: 859m
+What has the early param to do with apic/flat64?
 
-configs tested: 92
-configs skipped: 1
+> parse_apic() allows the user to try a different APIC driver than the
+> default one that's automatically chosen. It works for X86-32, but
+> doesn't work for X86-64 because it was removed in 2009 for X86-64 by
+> commit 7b38725318f4 ("x86: remove subarchitecture support code"),
+> whose changelog doesn't explicitly describe the removal for X86-64.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Well, the patches leading to this had the clear intent to simplify the
+whole APIC code and the removal of that command line override was part
+of that cleanup. Up to now nothing needed it at all.
 
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-i386                             allyesconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a001-20200717
-i386                 randconfig-a005-20200717
-i386                 randconfig-a002-20200717
-i386                 randconfig-a006-20200717
-i386                 randconfig-a003-20200717
-i386                 randconfig-a004-20200717
-x86_64               randconfig-a012-20200716
-x86_64               randconfig-a011-20200716
-x86_64               randconfig-a016-20200716
-x86_64               randconfig-a014-20200716
-x86_64               randconfig-a013-20200716
-x86_64               randconfig-a015-20200716
-i386                 randconfig-a016-20200717
-i386                 randconfig-a011-20200717
-i386                 randconfig-a015-20200717
-i386                 randconfig-a012-20200717
-i386                 randconfig-a013-20200717
-i386                 randconfig-a014-20200717
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
+> The patch adds back the functionality for X86-64. The intent is mainly
 
+git grep 'This patch' Documentation/process 
+
+> to work around an APIC emulation bug in Hyper-V in the case of kdump:
+> currently Hyper-V does not honor the disabled state of the local APICs,
+> so all the IOAPIC-based interrupts may not be delivered to the correct
+> virtual CPU, if the logical-mode APIC driver is used (the kdump
+> kernel usually uses the logical-mode APIC driver, since typically
+> only 1 CPU is active). Luckily the kdump issue can be worked around by
+> forcing the kdump kernel to use physical mode, before the fix to Hyper-V
+> becomes widely available.
+
+This is just another proof that virtualization creates more problems
+than it solves.
+
+> The current algorithm of choosing an APIC driver is:
+>
+> 1. The global pointer "struct apic *apic" has a default value, i.e
+> "apic_default" on X86-32, and "apic_flat" on X86-64.
+>
+> 2. If the early_param "apic=" is specified, parse_apic() is called and
+> the pointer "apic" is changed if a matching APIC driver is found.
+>
+> 3. default_acpi_madt_oem_check() calls the acpi_madt_oem_check() method
+> of all APIC drivers, which may override the "apic" pointer.
+>
+> 4. default_setup_apic_routing() may override the "apic" pointer, e.g.
+> by calling the probe() method of all APIC drivers. Note: refer to the
+> order of the APIC drivers specified in arch/x86/kernel/apic/Makefile.
+
+What's the 'current algorithm'? #2 is not in use on 64bit currently.
+
+And looking at 32bit then the above decription is wrong. Once a command
+line parameter is specified and matched then #3 and #4 do not override
+anything. See the probe code in 32 bit.
+
+> On Hyper-V, when a Linux VM has <= 8 virtual CPUs, if we use
+> "apic=physical flat", sending IPIs to multiple vCPUs is still fast because
+> Linux VM uses the para-virtualized IPI hypercalls: see hv_apic_init().
+
+And this is relevant because?
+
+> The patch adds the __init tag for flat_acpi_madt_oem_check() and
+> physflat_acpi_madt_oem_check() to avoid a warning seen with "make W=1":
+> flat_acpi_madt_oem_check() accesses cmdline_apic, which has a __initdata
+> tag.
+
+And both function have pointers stored in the corresponding apic
+structs, i.e. after init these pointers become dangling. No...
+
+Aside of that the only function which accesses cmdline_apic is
+flat_acpi_madt_oem_check() according to the patch below.
+
+> Fixes: 7b38725318f4 ("x86: remove subarchitecture support code")
+
+This fixes tag is blantantly wrong. You want to add:
+
+Fixes: Broken hypervisor
+
+When this mess was removed hyperv still wore diapers.
+
+>  			Format: { quiet (default) | verbose | debug }
+>  			Change the amount of debugging information output
+>  			when initialising the APIC and IO-APIC components.
+> -			For X86-32, this can also be used to specify an APIC
+> -			driver name.
+> +			This can also be used to specify an APIC driver name.
+>  			Format: apic=driver_name
+> -			Examples: apic=bigsmp
+> +			Examples:
+> +			  On X86-32:  apic=bigsmp
+> +			  On X86-64: "apic=physical flat"
+> +			  Note: the available driver names depend on the
+> +			  architecture and the kernel config; the setting may
+> +			  be overridden by the acpi_madt_oem_check() and probe()
+> +			  methods of other APIC drivers.
+
+Which is wrong because that's not true for 32bit.
+
+> @@ -2855,13 +2855,10 @@ static int __init apic_set_verbosity(char *arg)
+>  		apic_verbosity = APIC_DEBUG;
+>  	else if (strcmp("verbose", arg) == 0)
+>  		apic_verbosity = APIC_VERBOSE;
+> -#ifdef CONFIG_X86_64
+> -	else {
+> -		pr_warn("APIC Verbosity level %s not recognised"
+> -			" use apic=verbose or apic=debug\n", arg);
+> -		return -EINVAL;
+> -	}
+> -#endif
+> +
+> +	/* Ignore unrecognized verbosity level setting. */
+> +
+> +	pr_info("APIC Verbosity level is %d\n", apic_verbosity);
+
+We need that printk on every boot because?
+
+>  
+>  	return 0;
+>  }
+> diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
+> index 7862b152a052..da8f3640453f 100644
+> --- a/arch/x86/kernel/apic/apic_flat_64.c
+> +++ b/arch/x86/kernel/apic/apic_flat_64.c
+> @@ -23,9 +23,34 @@ static struct apic apic_flat;
+>  struct apic *apic __ro_after_init = &apic_flat;
+>  EXPORT_SYMBOL_GPL(apic);
+>  
+> -static int flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+> +static int cmdline_apic __initdata;
+> +static int __init parse_apic(char *arg)
+>  {
+> -	return 1;
+> +	struct apic **drv;
+> +
+> +	if (!arg)
+> +		return -EINVAL;
+> +
+> +	for (drv = __apicdrivers; drv < __apicdrivers_end; drv++) {
+> +		if (!strcmp((*drv)->name, arg)) {
+> +			apic = *drv;
+> +			cmdline_apic = 1;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	/* Parsed again by __setup for debug/verbose */
+> +	return 0;
+> +}
+> +early_param("apic", parse_apic);
+
+We surely need yet another copy of the code in probe_32.c
+
+> +static int __init flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+> +{
+> +	if (!cmdline_apic)
+> +		return 1;
+> +
+> +	return apic == &apic_flat;
+
+Comments are overrated...
+
+>  }
+>  
+>  /*
+> @@ -157,7 +182,7 @@ static struct apic apic_flat __ro_after_init = {
+>   * We cannot use logical delivery in this case because the mask
+>   * overflows, so use physical mode.
+>   */
+> -static int physflat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+> +static int __init physflat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+>  {
+
+See above ...
+
+But why do you need all this if it is only relevant for a crash dump
+kernel? Can't this be simply cured by using 'nolapic' on the kernel
+command line?
+
+Even if you must have the local apic for whatever reason in the kdump
+kernel then this can be completely done w/o command line hackery simply
+because its only required for the mshypervers + kdump case.
+
+Thanks,
+
+        tglx
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+--- a/arch/x86/kernel/apic/apic_flat_64.c
++++ b/arch/x86/kernel/apic/apic_flat_64.c
+@@ -176,6 +176,13 @@ static int physflat_acpi_madt_oem_check(
+ 		return 1;
+ 	}
+ #endif
++	/*
++	 * Workaround for a bug in the MS hypervisor which fails to reset
++	 * the APIC properly when a kernel crash jumps into the kdump
++	 * kernel.
++	 */
++	if (hypervisor_is_type(X86_HYPER_MS_HYPERV) && is_kdump_kernel())
++		return 1;
+ 
+ 	return 0;
+ }
