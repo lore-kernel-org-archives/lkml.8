@@ -2,113 +2,119 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E57C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77816C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8120320704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D8620704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8YXBM35"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eYf4efJL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D4hS5as4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgGQUO5 (ORCPT
+        id S1728669AbgGQUPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgGQUO4 (ORCPT
+        Fri, 17 Jul 2020 16:15:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42952 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgGQUPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:14:56 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73AF6C0619D2;
-        Fri, 17 Jul 2020 13:14:56 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q4so14119405lji.2;
-        Fri, 17 Jul 2020 13:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FkWVr5zp5BC/cYtB354fZGgMcjVM5l8oIeKEC5H54O8=;
-        b=I8YXBM35hH1s2nXJoK1+VOFw/G3kED5UoxeMOVdBSMzbYvRoB7xrjgniZ743y/0DQ+
-         gRmPH5NJeSL11Wtixy7LpjSo0ZIrciCdcHCzFQrIoRZ+Ar5hi3sm/MsQlDnZkbuhBS5J
-         /fTcm3QddMcLA2PDJd2Xl96Ss6abAZ6xl1YmTE/v6mBZxGjFRk+ZIQAhRXw/Zr6pxnjD
-         vI6tKr2Buo6KCetCoHP2tAgP5ygefnrUcWxU/pOyBNQ1Jx5v82xD5v0jYRumxJY3ZHns
-         YWpf/QLIJvo7XbebIb16XWOyF8ndcZqbVyoTId5pXJJJx9RQPTQGEZFcoOinCc+/h9ux
-         XHMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FkWVr5zp5BC/cYtB354fZGgMcjVM5l8oIeKEC5H54O8=;
-        b=rbIph5+wmsJW3Judoy462er/si7r0YskiNFaPjWoldC1nwgEbLxuYm3Rt3YUaaDLoo
-         RcQrjQgW9Mn5H7CN6xi2PUqACCFVczNwG2V3eZRebrz9ajsSwYu+hB/9F2ce4IyzRt3G
-         Gdhw4OeGRoDAs9zXymx+BFg7CcVdG60RK6dL81UTCxcsx5kDSLJSv8gA5oYQoFzxNEzV
-         kT/8kTof94vjSEjEjhLFvJhCeCHQVHmc0Miypyy+Axm5DJ1GZ9YI9lKEaCQYR7J3JAq6
-         GYqqpKd69J/xYnhlNzjt6O6rSLgaNIfv9UbtCstFl2PyodJkaCLP4hEa9rEUjqqGud+X
-         ZmWg==
-X-Gm-Message-State: AOAM531iq4S6YlPwocn6JhA5IIohzBVIGlevoXg5+CU9O40EtrYzlAJW
-        T7EnS7nj2RfTzLB/PxedkbOsh9vJ
-X-Google-Smtp-Source: ABdhPJyp3rS1I8TlETFWJxyFclpR+MDYEDvhNGj1hflmucIV1aJFhc+30qRGfh5li8IzI6Q2NqjREg==
-X-Received: by 2002:a05:651c:1a7:: with SMTP id c7mr5485739ljn.345.1595016894667;
-        Fri, 17 Jul 2020 13:14:54 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
-        by smtp.googlemail.com with ESMTPSA id r11sm1823788ljc.66.2020.07.17.13.14.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 13:14:53 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
- tegra_mipi_calibrate and tegra_mipi_wait
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
- <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
- <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
- <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
- <ce0c5ffb-f859-0eab-1ea5-044623dff221@nvidia.com>
- <a2b8169c-c4a3-4862-cd27-8c1a51ddc558@gmail.com>
- <4690e682-8495-2327-87c7-c2f06a7a479d@nvidia.com>
- <66812127-38cf-2af3-51c0-50edbe446e73@nvidia.com>
- <9b4fbf9d-d651-aa35-c0a6-b8f16aeb0900@gmail.com>
- <550f1796-67ca-5856-223d-c68360243954@nvidia.com>
- <ca8f2184-de30-03ec-9caf-e20a22d96a77@nvidia.com>
- <080b30c7-1dce-dd2f-dd96-40f6e25da4d6@gmail.com>
- <b125deab-7900-6266-d405-4d7f029089b4@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ea3d2bb0-bf35-dfdf-ed1f-7656a9558072@gmail.com>
-Date:   Fri, 17 Jul 2020 23:14:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 16:15:36 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595016935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DRr/bKkS7/U/6PsK6K4fGaOQKjxoGqV1/oWizy/cOuM=;
+        b=eYf4efJLxfwui+MVHDpTy8jq6eCnUI4+IQiXhuXrDc4H0ue1Al5tBX1sJ4qLQ4wKQqH1u2
+        956eMEIeLHrk4AfWY5YdKGxN9t86NZq3LOzOQFAsm6RnPo+CGISWOc2KlRkaUn2M/19rH4
+        PYVIYHad73Ryn5glPiK5I8Ua8CBz3nnmTYEgdtkKVwdTzgktOGxwDnX6z7GNL5dRIPnJqy
+        r/HqCXNvaIeqpARi2Kz1dBDslRlnKL4CiEdmkZBbw8zK9Ji5leH8jWEX9kH0weXqiDfItp
+        SSCH6bjrJ4+kfEzJotJE4V3qfD2igHia1mhyVz2S0soBzGh56xAFUglkAE79eA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595016935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DRr/bKkS7/U/6PsK6K4fGaOQKjxoGqV1/oWizy/cOuM=;
+        b=D4hS5as4Ya+T4lxgDZSTebQLTY2wKeMIwZFGGYs735Ikk9vClgh/patDA2HRNIR53PLoWD
+        EXoAABBo5bb3KHCg==
+To:     Muchun Song <songmuchun@bytedance.com>, peterz@infradead.org,
+        mingo@kernel.org, bigeasy@linutronix.de, namit@vmware.com
+Cc:     linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: Re: [PATCH RESEND] smp: Fix a potential usage of stale nr_cpus
+In-Reply-To: <20200716070457.53255-1-songmuchun@bytedance.com>
+References: <20200716070457.53255-1-songmuchun@bytedance.com>
+Date:   Fri, 17 Jul 2020 22:15:34 +0200
+Message-ID: <87k0z1rj89.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <b125deab-7900-6266-d405-4d7f029089b4@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.07.2020 18:41, Sowjanya Komatineni пишет:
-...
->> Also, what about the auto-calibration? Isn't it needed to be enabled for
->> CSI?
-> STARTCAL does one time calibration and with AUTOCAL calibration will be
-> triggered periodically.
-> 
-> For pads PULLUP/PULLDN/TERM impedance calibration, we only need one-time
-> calibration on pads power up.
-> 
-> We always use one time pads calibration for CSI.
+Muchun,
 
-Alright, thank you for the clarification!
+Muchun Song <songmuchun@bytedance.com> writes:
+
+> The get_option() maybe return 0, it means that the nr_cpus is
+> not initialized.
+
+Good catch, but see below.
+
+> Then we will use the stale nr_cpus to initialize
+
+We use nothing. Please describe your changes in technical neutral
+language.
+
+> the nr_cpu_ids. So fix it.
+
+'So fix it.' is not much valuable information. What about:
+
+    Check the return value to prevent this.
+
+Hmm?
+
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+>  kernel/smp.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/kernel/smp.c b/kernel/smp.c
+> index 472c2b274c65..2a9a04acf123 100644
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
+> @@ -634,8 +634,7 @@ static int __init nrcpus(char *str)
+>  {
+>  	int nr_cpus;
+>  
+> -	get_option(&str, &nr_cpus);
+> -	if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+> +	if (get_option(&str, &nr_cpus) && nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+>  		nr_cpu_ids = nr_cpus;
+>  
+>  	return 0;
+
+get_option() can return 0 - 3:
+
+ *      0 - no int in string
+ *      1 - int found, no subsequent comma
+ *      2 - int found including a subsequent comma
+ *      3 - hyphen found to denote a range
+
+For this parameter exists only one valid format: '1 - int found, no comma',
+right?
+
+So why fixing it just half and why returning '0' aka success if the
+parameter is bogus?
+
+Thanks,
+
+        tglx
