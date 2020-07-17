@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E329CC433F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF6FC433FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC79A208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2000C207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:57:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNN5Buzw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o0tjdyq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgGQS5U (ORCPT
+        id S1728550AbgGQS5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:57:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57382 "EHLO
+        Fri, 17 Jul 2020 14:57:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728511AbgGQS5R (ORCPT
+        with ESMTP id S1728270AbgGQS5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:57:17 -0400
+        Fri, 17 Jul 2020 14:57:20 -0400
 Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C1CC0619D2;
-        Fri, 17 Jul 2020 11:57:17 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id u12so8375574qth.12;
-        Fri, 17 Jul 2020 11:57:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8A5C0619D2;
+        Fri, 17 Jul 2020 11:57:20 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id o38so8419252qtf.6;
+        Fri, 17 Jul 2020 11:57:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CguGr4FHVrPkRGsMeKgPvOrZnbuic3mwstdNwyosH2c=;
-        b=SNN5BuzwjfYrZ8GhD3hLMzEHQIGnDjMkQByfOWEyjMYw/u/8x9mS5NlhEQ/WDDPyJA
-         OM3zjjIQKKXfyA8AjA6jP+XZlmwMPIvbIxLaEoPQp9MI3xvor2ORmPbPK8BKLyIt5eGY
-         jLbheyc+Y7RdFsnlLNHtld28tclIsnvK9XBvDKDCUY6Wx084UpMxo2uDC6dQ75fx6kaY
-         Jtig00UhaqwPOMkH7WxEBo0uV5ZA5gVCjx/U72WrDw1Tn916yOuBTmSYDkHBbfO8aArV
-         40+73t2M4ERczxsvQvPTLAhj6UjdPjpRad8XaoLHk4E9/l2iYSk37poaMdCthYEZYQ7p
-         lvDQ==
+        bh=talrzUzXemNzfVBQRxQ9IawBftj9SRWQacOH7U1o/94=;
+        b=o0tjdyq7A9bSupuaW03+irDhYDRjIrlW79f0lwjaaJmR+rfEKPIf3CoT1BmbUhHsA4
+         IFC1y+14CS+dd7i43gk3E32rZXIyLRliqwW7Vp3mqQCiZ4Lopl0yxELTXWdaegQFeONn
+         /r06o1Xdkj0AevY9PXQtqSAtZLC8Z6va+gzVnqlCS40E2XuvRrrIsxOpsDrEkH2wh6Kw
+         YbPC/2IiqOiqPUpMbh0zkkQO/XN/hMWX92tHY2mKtJh6CZzqN+p1hCxw22BZDug5UDkn
+         UiycUmax1APVKLNM1fE0lDnKZUgbV+K234tqcKPh+GhN0oRFBr2MBeT6rf5i6bFNSlKf
+         lBkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CguGr4FHVrPkRGsMeKgPvOrZnbuic3mwstdNwyosH2c=;
-        b=deTHLtU0pe0Cj/fRRhxCT3G/K90Uo7rjPdlu7BdMgaNBgPerM22kkTZAWfWRsILP8I
-         j4CVXicUS9tqq1eMe9g8ALfs2y9W0FhO4akz/CW/Qi9KQFT6OT0OfWJuQ6yf0qziIrht
-         sscmOZN2gFdmqPoqABBKDamoYn73wLqwQJrWHXlDvtfYMX0b7LybVS8fAmXc3BBlrOLL
-         moynE7MUD5HihYPNW8Tizk1zNYNRNX/4ujMFU4/PQ4dEJDGcPqbgpBMzhX6M9kzvVn59
-         Idlj+DmY796d5fl6aD3Exc3pNf4OtoYwO6tu0IJtRlnnvwUUwciy2ZtAOSqMUd8SA4rN
-         gOkg==
-X-Gm-Message-State: AOAM533DCHiSSCpIWiNYwck0Xi5+KTJd3Xe/p3mQjeYZB76t7TBUqGbi
-        xCnkjP449O52YICl6vU28zU=
-X-Google-Smtp-Source: ABdhPJw68litj6byZk1enWWXza6gm7E1mPQ1foBGbeWVLRLSi1P6R9NaFHBhboLNX68RR/3Q4gqXrg==
-X-Received: by 2002:ac8:197b:: with SMTP id g56mr11969284qtk.105.1595012236965;
-        Fri, 17 Jul 2020 11:57:16 -0700 (PDT)
+        bh=talrzUzXemNzfVBQRxQ9IawBftj9SRWQacOH7U1o/94=;
+        b=B9lqj/RKcGgRJsbWRfXb3JDJYCtP+Eic9Q10mgNM1lHdIf3dn1T3u5yG3zsCNTqMLl
+         AbnRWmuIJOvocyoSmYsfwIUTOvsOznbPGYqzVhsrOvjyBrK5elgyI9Egam2HxdoLgJOx
+         4ZhOeho638pv33xPxOlv5uOeZKvSLFV61P7ZP+tkEukfZfFZAfP7W6+658OJLbeYM7SN
+         new7pzNg1xtvOMAbe5DTzCGnPz5CXiiETlYSHsbAcGL/jqMkM6BUIs+5vkdbMBI2FvJY
+         v42zjyGA/MxxZ3Ik5SOoBe9aihWKYlW1Y+IgLiGfKRJOLb7ovLne8PnAu3qZ8JBzgt7R
+         +vFw==
+X-Gm-Message-State: AOAM530m19BbEI5DppCS6UlrjoWaAcgJ68MIp3ZQEo7mO1uNnqXbgrVp
+        3CI+P3MNNaMbSCPCuVs+yp8=
+X-Google-Smtp-Source: ABdhPJwC99c7WJ678epmY+8oPZZ2FWd5hG26sz3LANQrmVyGk15be2lq9rEi6wl2TuG6O30B3sEcBA==
+X-Received: by 2002:ac8:6f26:: with SMTP id i6mr11863228qtv.61.1595012239938;
+        Fri, 17 Jul 2020 11:57:19 -0700 (PDT)
 Received: from localhost.localdomain ([2804:18:7002:653c:f7ea:490a:10b0:ec39])
-        by smtp.gmail.com with ESMTPSA id r6sm11380097qtt.81.2020.07.17.11.57.14
+        by smtp.gmail.com with ESMTPSA id r6sm11380097qtt.81.2020.07.17.11.57.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 11:57:16 -0700 (PDT)
+        Fri, 17 Jul 2020 11:57:19 -0700 (PDT)
 From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 X-Google-Original-From: Daniel W. S. Almeida
 To:     corbet@lwn.net, mchehab@kernel.org
 Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/25] Documentation: rculist.h: fix sphinx warning
-Date:   Fri, 17 Jul 2020 15:56:09 -0300
-Message-Id: <20200717185624.2009393-10-dwlsalmeida@gmail.com>
+Subject: [PATCH 11/25] Documentation: vmalloc.c: fix sphinx warning
+Date:   Fri, 17 Jul 2020 15:56:10 -0300
+Message-Id: <20200717185624.2009393-11-dwlsalmeida@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
 References: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
@@ -82,28 +82,26 @@ From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
 Fix the following warning:
 
-warning: bad line: [@right ][node2 ... ]
-
-This was missing a '*' at the start.
+warning: Excess function parameter 'prot' description in
+'vm_map_ram'
 
 Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 ---
- include/linux/rculist.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/vmalloc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index df587d181844b..7eed65b5f7130 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -512,7 +512,7 @@ static inline void hlist_replace_rcu(struct hlist_node *old,
-  * @right: The hlist head on the right
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 3091c2ca60dfd..957a0be772702 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1862,7 +1862,6 @@ EXPORT_SYMBOL(vm_unmap_ram);
+  * @pages: an array of pointers to the pages to be mapped
+  * @count: number of pages
+  * @node: prefer to allocate data structures on this node
+- * @prot: memory protection to use. PAGE_KERNEL for regular RAM
   *
-  * The lists start out as [@left  ][node1 ... ] and
--                          [@right ][node2 ... ]
-+ *                        [@right ][node2 ... ]
-  * The lists end up as    [@left  ][node2 ... ]
-  *                        [@right ][node1 ... ]
-  */
+  * If you use this function for less than VMAP_MAX_ALLOC pages, it could be
+  * faster than vmap so it's good.  But if you mix long-life and short-life
 -- 
 2.27.0
 
