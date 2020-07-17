@@ -2,177 +2,104 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB91C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65F3C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2895220737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50F920737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EuINBWJb"
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="V08GEdlJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgGQQwC (ORCPT
+        id S1726734AbgGQQyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:52:02 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:50252 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgGQQwB (ORCPT
+        Fri, 17 Jul 2020 12:54:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgGQQyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:52:01 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CDBD820B4909;
-        Fri, 17 Jul 2020 09:51:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CDBD820B4909
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595004720;
-        bh=DvmxoacjIGDf6VIRgClmLxCafLoC/7gOChzuge/MVtY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EuINBWJbNpWg6k/gjnYp/WbOQPAps/m7HqKNWwVayongOuF+/ZK6lRsFNyxP4WMnW
-         AxhowkF5ihAYf8r94NgcDasSd1Qre9U60xxyNphXuXDgFGLf85kOACuulIuJObgGR7
-         tBacQSIoHH/dh22jKXb0kN9fHxCM4xq+Y6EMAWUE=
-Date:   Fri, 17 Jul 2020 11:51:57 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Konsta Karsisto <konsta.karsisto@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v3 08/12] ima: Shallow copy the args_p member of
- ima_rule_entry.lsm elements
-Message-ID: <20200717165157.GL3673@sequoia>
-References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
- <20200709061911.954326-9-tyhicks@linux.microsoft.com>
- <CAAEqDhD-wCGY7ykjSsNgCri4ykWPi9cP3j1zoQPWddB4r92Kqw@mail.gmail.com>
+        Fri, 17 Jul 2020 12:54:12 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC24C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:54:12 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id p20so11540411ejd.13
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S/tcpiEgnv1Vg5/I/OqgwYTF2aG01fzIys/jsiwnsBI=;
+        b=V08GEdlJqw4cSc4CYRXDay4U2O0xjmQgoh0OxThxGSd8zlyBOJCSG0LvDkG+BS5q1U
+         WQv0Rec190mcxfeNnx9LuXQbIcPLoGhH9X8bLpMg7FMUa8CJ4BFRAVr21oo/Ux4WjiXV
+         XQP26ElmfuVKTXFD2k5+sr7XL8I08MHgj8irONWZb+auOwjrSAvavYNSxJaAwRtE+8rV
+         44qJWazIJ97dD/JSmF3tSb5TPixZ3QkjOHRwMoYqP2y9Yrp9oLo51Wc+hHjAOh1KK9S2
+         PQSr2dtMbPXRDKC1aEq87RcfJ3uV/RCo9mYd7hZGPLwFVaPb4Z3ZGA6AC1NARDnv5O43
+         rNGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S/tcpiEgnv1Vg5/I/OqgwYTF2aG01fzIys/jsiwnsBI=;
+        b=dC4JN+HdQyh54gDAjc8JzIGq405aILbDD1RruedGWoTJ9tsgSDPxMfPw7Pl6ZdCqeP
+         oo5YoEj0xptj1sWYBxAkGV3bYCDmkuponeMThwqNus2a5ltZxq9dUjl5BHyoyaoPrKIH
+         AYLW5dL/n/9S9/ApitZsCb5Q3Mj8hWBaDGpBrnW6+EDrMJC0mcM9aaYquaMSBnMJ2Mgt
+         ylWwktIj+3a9hHlbg75e/Y4XMd4UMpu5bPznlve9sdtcRRGRwMAFQbElknq2/Gc/6B2z
+         zDcu9pBCTPMusUGQFWIVAV8PckjNER41YUk0Ag651jt6G839OIBJGDXIFt/a8195KTql
+         c8dA==
+X-Gm-Message-State: AOAM531F2QYICHbeSfz+cp9fms2IEaXVtusdYM6DX2Qlv2K78pULde5c
+        jtRvppr9aE3NWOpLam7nDN8NyhPgVwDec4UANwheyQ==
+X-Google-Smtp-Source: ABdhPJxeMxUiEad3F5pqF1zmMQCX7DX5YW7te/oFGx5apYjlR/tGaK2csLBqusCu4S1I2ioC55TIZ0IM57TEY9PInGA=
+X-Received: by 2002:a17:906:1751:: with SMTP id d17mr9220665eje.140.1595004850955;
+ Fri, 17 Jul 2020 09:54:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAEqDhD-wCGY7ykjSsNgCri4ykWPi9cP3j1zoQPWddB4r92Kqw@mail.gmail.com>
+References: <20200716144927.7193-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20200716144927.7193-1-nsaenzjulienne@suse.de>
+From:   Eric Anholt <eric@anholt.net>
+Date:   Fri, 17 Jul 2020 09:54:00 -0700
+Message-ID: <CADaigPWN9fJS2YB3Ly3bBTj8ur=F8_Li+hBzbDuSN0ig3mOiiA@mail.gmail.com>
+Subject: Re: [PATCH] drm/v3d: Use platform_get_irq_optional() to get optional IRQs
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Dave Emett <david.emett@broadcom.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-17 18:35:03, Konsta Karsisto wrote:
-> Hi,
-> 
-> Found one glitch with this change, see below:
-> 
-> On Thu, Jul 9, 2020 at 9:22 AM Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
-> >
-> > The args_p member is a simple string that is allocated by
-> > ima_rule_init(). Shallow copy it like other non-LSM references in
-> > ima_rule_entry structs.
-> >
-> > There are no longer any necessary error path cleanups to do in
-> > ima_lsm_copy_rule().
-> >
-> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > ---
-> >
-> > * v3
-> >   - No change
-> > * v2
-> >   - Adjusted context to account for ima_lsm_copy_rule() directly calling
-> >     ima_lsm_free_rule() and the lack of explicit reference ownership
-> >     transfers
-> >   - Added comment to ima_lsm_copy_rule() to document the args_p
-> >     reference ownership transfer
-> >
-> >  security/integrity/ima/ima_policy.c | 16 +++++++---------
-> >  1 file changed, 7 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> > index 9842e2e0bc6d..b02e1ffd10c9 100644
-> > --- a/security/integrity/ima/ima_policy.c
-> > +++ b/security/integrity/ima/ima_policy.c
-> > @@ -300,10 +300,13 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
-> >                         continue;
-> >
-> >                 nentry->lsm[i].type = entry->lsm[i].type;
-> > -               nentry->lsm[i].args_p = kstrdup(entry->lsm[i].args_p,
-> > -                                               GFP_KERNEL);
-> > -               if (!nentry->lsm[i].args_p)
-> > -                       goto out_err;
-> > +               nentry->lsm[i].args_p = entry->lsm[i].args_p;
-> > +               /*
-> > +                * Remove the reference from entry so that the associated
-> > +                * memory will not be freed during a later call to
-> > +                * ima_lsm_free_rule(entry).
-> > +                */
-> > +               entry->lsm[i].args_p = NULL;
-> 
-> This assignment necessitates a change in the code below...
-> 
-> >                 security_filter_rule_init(nentry->lsm[i].type,
-> >                                           Audit_equal,
-> > @@ -314,11 +317,6 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
-> >                                 (char *)entry->lsm[i].args_p);
-> 
-> ... you should refer to nentry->lsm[i].args_p here!
-> 
-> Other than that,
-> 
-> Reviewed-by: Konsta Karsisto <konsta.karsisto@gmail.com>
+On Thu, Jul 16, 2020 at 7:51 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Aside from being more correct, the non optional version of the function
+> prints an error when failing to find the IRQ.
+>
+> Fixes: eea9b97b4504 ("drm/v3d: Add support for V3D v4.2")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  drivers/gpu/drm/v3d/v3d_irq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
+> index c88686489b88..0be2eb7876be 100644
+> --- a/drivers/gpu/drm/v3d/v3d_irq.c
+> +++ b/drivers/gpu/drm/v3d/v3d_irq.c
+> @@ -217,7 +217,7 @@ v3d_irq_init(struct v3d_dev *v3d)
+>                 V3D_CORE_WRITE(core, V3D_CTL_INT_CLR, V3D_CORE_IRQS);
+>         V3D_WRITE(V3D_HUB_INT_CLR, V3D_HUB_IRQS);
+>
+> -       irq1 = platform_get_irq(v3d_to_pdev(v3d), 1);
+> +       irq1 = platform_get_irq_optional(v3d_to_pdev(v3d), 1);
+>         if (irq1 == -EPROBE_DEFER)
+>                 return irq1;
+>         if (irq1 > 0) {
+> --
 
-Thank you, Konsta. You're exactly right about the required change.
-Without it, the pr_warn() in the error path will always attempt to print
-a NULL pointer.
-
-Mimi, the following change (along with adding Konsta's Reviewed-by)
-needs to be made to this patch in next-integrity-testing:
-
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index b02e1ffd10c9..330a4e216349 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -314,7 +314,7 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- 					  &nentry->lsm[i].rule);
- 		if (!nentry->lsm[i].rule)
- 			pr_warn("rule for LSM \'%s\' is undefined\n",
--				(char *)entry->lsm[i].args_p);
-+				(char *)nentry->lsm[i].args_p);
- 	}
- 	return nentry;
- }
-
-It will then cause the next patch in the series to not apply but the
-fixup is minor.
-
-Let me know if you are alright with doing these changes yourself or if
-you'd like me to submit a new series revision.
-
-If you do this rebase work in next-integrity-testing yourself, I've
-prepared a copy branch of next-integrity-testing with all of the
-necessary changes for you to compare against:
-
- https://git.kernel.org/pub/scm/linux/kernel/git/tyhicks/linux.git/log/?h=next-integrity-testing-fixup
-
-My apologies for the trouble.
-
-Tyler
-
-> 
-> 
-> Konsta
-> 
-> >         }
-> >         return nentry;
-> > -
-> > -out_err:
-> > -       ima_lsm_free_rule(nentry);
-> > -       kfree(nentry);
-> > -       return NULL;
-> >  }
-> >
-> >  static int ima_lsm_update_rule(struct ima_rule_entry *entry)
-> > --
-> > 2.25.1
-> >
+Reviewed-by: Eric Anholt <eric@anholt.net>
