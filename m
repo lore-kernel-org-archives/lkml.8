@@ -2,68 +2,70 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D13C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D66FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C50392070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487A320684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:51:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgGQJth (ORCPT
+        id S1726422AbgGQJvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:49:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8318 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725864AbgGQJth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:49:37 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 353781F895A657737A23;
-        Fri, 17 Jul 2020 17:49:18 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 17 Jul 2020 17:49:09 +0800
-From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
-To:     <hubcap@omnibond.com>, <martin@omnibond.com>
-CC:     <devel@lists.orangefs.org>, <linux-kernel@vger.kernel.org>,
-        <jingxiangfeng@huawei.com>
-Subject: [PATCH] orangefs: remove unnecessary assignment to variable ret
-Date:   Fri, 17 Jul 2020 17:52:59 +0800
-Message-ID: <20200717095259.111076-1-jingxiangfeng@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 17 Jul 2020 05:51:21 -0400
+Received: from smtprelay0220.hostedemail.com ([216.40.44.220]:36768 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725864AbgGQJvV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:51:21 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 860B4182CF66E;
+        Fri, 17 Jul 2020 09:51:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: star74_1d16f1b26f09
+X-Filterd-Recvd-Size: 1558
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 17 Jul 2020 09:51:19 +0000 (UTC)
+Message-ID: <9bd42f458908eedd810c5e8805f997997763d32a.camel@perches.com>
+Subject: Re: [PATCH 3/3] media: Add support for the AM/FM radio chip KT0913
+ from KT Micro.
+From:   Joe Perches <joe@perches.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Santiago Hormazabal <santiagohssl@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 17 Jul 2020 02:51:18 -0700
+In-Reply-To: <b8cb9dbf-2a81-6a12-c754-e524f42a0574@xs4all.nl>
+References: <20200717004441.116248-1-santiagohssl@gmail.com>
+         <20200717004441.116248-4-santiagohssl@gmail.com>
+         <b8cb9dbf-2a81-6a12-c754-e524f42a0574@xs4all.nl>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable ret is guaranteed to be 0 in this if (). So we can remove
-this assignement.
+On Fri, 2020-07-17 at 11:29 +0200, Hans Verkuil wrote:
+> It's standard linux codingstyle to use lowercase for hex numbers.
+> Can you change that throughout the source for the next version?
 
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
----
- fs/orangefs/orangefs-mod.c | 1 -
- 1 file changed, 1 deletion(-)
+Is there a standard?  It's not in coding-style.rst.
 
-diff --git a/fs/orangefs/orangefs-mod.c b/fs/orangefs/orangefs-mod.c
-index 289b648ae196..74a3d6337ef4 100644
---- a/fs/orangefs/orangefs-mod.c
-+++ b/fs/orangefs/orangefs-mod.c
-@@ -149,7 +149,6 @@ static int __init orangefs_init(void)
- 		pr_info("%s: module version %s loaded\n",
- 			__func__,
- 			ORANGEFS_VERSION);
--		ret = 0;
- 		goto out;
- 	}
- 
--- 
-2.17.1
+While I prefer lowercase too, it seems the kernel has
+only ~2:1 preference for lowercase to uppercase hex.
+
+$ git grep -ohP '\b0[xX][0-9a-f]+\b' | grep [a-f] | wc -l
+1149833
+$ git grep -ohP '\b0[xX][0-9A-F]+\b' | grep [A-F] | wc -l
+575781
+
 
