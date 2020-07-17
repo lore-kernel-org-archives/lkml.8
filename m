@@ -2,161 +2,131 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D94C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0725F20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB1720704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:34:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sP+Iz/bY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgGQEdb (ORCPT
+        id S1726691AbgGQEe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:33:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15488 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725300AbgGQEdb (ORCPT
+        Fri, 17 Jul 2020 00:34:26 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:59642 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725300AbgGQEeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:33:31 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06H4Wj3E053058;
-        Fri, 17 Jul 2020 00:33:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32ax78h6b9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 00:33:24 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06H4X2k6054144;
-        Fri, 17 Jul 2020 00:33:24 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32ax78h6as-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 00:33:24 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06H4Tqg6028658;
-        Fri, 17 Jul 2020 04:33:22 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 327527xeyp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 04:33:22 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06H4Uf0551577236
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 04:30:41 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C94652054;
-        Fri, 17 Jul 2020 04:32:04 +0000 (GMT)
-Received: from [9.102.1.129] (unknown [9.102.1.129])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 275C25204E;
-        Fri, 17 Jul 2020 04:32:00 +0000 (GMT)
-Subject: Re: [PATCH v3 03/12] powerpc/kexec_file: add helper functions for
- getting memory ranges
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Young <dyoung@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
- <159466087136.24747.16494497863685481495.stgit@hbathini.in.ibm.com>
- <874kq98xo4.fsf@morokweng.localdomain>
-From:   Hari Bathini <hbathini@linux.ibm.com>
-Message-ID: <0684ed3d-0dde-8dce-f12c-72ef86bc91f9@linux.ibm.com>
-Date:   Fri, 17 Jul 2020 10:02:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 17 Jul 2020 00:34:25 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D03D320B4909;
+        Thu, 16 Jul 2020 21:34:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D03D320B4909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594960464;
+        bh=Vbn9Ff2ot+XxjEUmgeVaZLB/JNIZwEipBIWmuEA1DTI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sP+Iz/bYoLxwhCHUS6F7OshqABDmuyHBDVOkmmXr7mo/Pp3QjjAcS2QreT2YiJozZ
+         jb/ltXDUi9ubT2wJZ5A2HrlHsC80JN0P/5FpmtJKm8pqF0VBbMLNv45/fEwfKBybf9
+         QD/mWVp8nYB1QOO7aFcxtooi7F5NXZVPkbaeeiX0=
+Date:   Thu, 16 Jul 2020 23:34:21 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        kexec@lists.infradead.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [PATCH v3 00/12] ima: Fix rule parsing bugs and extend
+ KEXEC_CMDLINE rule support
+Message-ID: <20200717043421.GF3673@sequoia>
+References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
+ <1594960293.27397.2.camel@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <874kq98xo4.fsf@morokweng.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_03:2020-07-16,2020-07-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 bulkscore=0
- adultscore=0 spamscore=100 priorityscore=1501 mlxscore=100
- mlxlogscore=-1000 phishscore=0 lowpriorityscore=0 clxscore=1015
- malwarescore=0 suspectscore=0 impostorscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007170033
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594960293.27397.2.camel@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-07-17 00:31:33, Mimi Zohar wrote:
+> On Thu, 2020-07-09 at 01:18 -0500, Tyler Hicks wrote:
+> > This series ultimately extends the supported IMA rule conditionals for
+> > the KEXEC_CMDLINE hook function. As of today, there's an imbalance in
+> > IMA language conditional support for KEXEC_CMDLINE rules in comparison
+> > to KEXEC_KERNEL_CHECK and KEXEC_INITRAMFS_CHECK rules. The KEXEC_CMDLINE
+> > rules do not support *any* conditionals so you cannot have a sequence of
+> > rules like this:
+> > 
+> >  dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
+> >  dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
+> >  dont_measure func=KEXEC_CMDLINE obj_type=foo_t
+> >  measure func=KEXEC_KERNEL_CHECK
+> >  measure func=KEXEC_INITRAMFS_CHECK
+> >  measure func=KEXEC_CMDLINE
+> > 
+> > Instead, KEXEC_CMDLINE rules can only be measured or not measured and
+> > there's no additional flexibility in today's implementation of the
+> > KEXEC_CMDLINE hook function.
+> > 
+> > With this series, the above sequence of rules becomes valid and any
+> > calls to kexec_file_load() with a kernel and initramfs inode type of
+> > foo_t will not be measured (that includes the kernel cmdline buffer)
+> > while all other objects given to a kexec_file_load() syscall will be
+> > measured. There's obviously not an inode directly associated with the
+> > kernel cmdline buffer but this patch series ties the inode based
+> > decision making for KEXEC_CMDLINE to the kernel's inode. I think this
+> > will be intuitive to policy authors.
+> > 
+> > While reading IMA code and preparing to make this change, I realized
+> > that the buffer based hook functions (KEXEC_CMDLINE and KEY_CHECK) are
+> > quite special in comparison to longer standing hook functions. These
+> > buffer based hook functions can only support measure actions and there
+> > are some restrictions on the conditionals that they support. However,
+> > the rule parser isn't enforcing any of those restrictions and IMA policy
+> > authors wouldn't have any immediate way of knowing that the policy that
+> > they wrote is invalid. For example, the sequence of rules above parses
+> > successfully in today's kernel but the
+> > "dont_measure func=KEXEC_CMDLINE ..." rule is incorrectly handled in
+> > ima_match_rules(). The dont_measure rule is *always* considered to be a
+> > match so, surprisingly, no KEXEC_CMDLINE measurements are made.
+> > 
+> > While making the rule parser more strict, I realized that the parser
+> > does not correctly free all of the allocated memory associated with an
+> > ima_rule_entry when going down some error paths. Invalid policy loaded
+> > by the policy administrator could result in small memory leaks.
+> > 
+> > I envision patches 1-7 going to stable. The series is ordered in a way
+> > that has all the fixes up front, followed by cleanups, followed by the
+> > feature patch. The breakdown of patches looks like so:
+> > 
+> >  Memory leak fixes: 1-3
+> >  Parser strictness fixes: 4-7
+> >  Code cleanups made possible by the fixes: 8-11
+> >  Extend KEXEC_CMDLINE rule support: 12
+> 
+> Thanks, Tyler.  This is a really nice patch set.  The patches are now
+> in the "next-integrity-testing" branch.
 
+Thank you for all the helpful review comments. You know where to find me
+if any bugs pop up during testing. :)
 
-On 15/07/20 5:19 am, Thiago Jung Bauermann wrote:
-> 
-> Hello Hari,
-> 
-> Hari Bathini <hbathini@linux.ibm.com> writes:
-> 
->> In kexec case, the kernel to be loaded uses the same memory layout as
->> the running kernel. So, passing on the DT of the running kernel would
->> be good enough.
->>
->> But in case of kdump, different memory ranges are needed to manage
->> loading the kdump kernel, booting into it and exporting the elfcore
->> of the crashing kernel. The ranges are exlude memory ranges, usable
-> 
-> s/exlude/exclude/
-> 
->> memory ranges, reserved memory ranges and crash memory ranges.
->>
->> Exclude memory ranges specify the list of memory ranges to avoid while
->> loading kdump segments. Usable memory ranges list the memory ranges
->> that could be used for booting kdump kernel. Reserved memory ranges
->> list the memory regions for the loading kernel's reserve map. Crash
->> memory ranges list the memory ranges to be exported as the crashing
->> kernel's elfcore.
->>
->> Add helper functions for setting up the above mentioned memory ranges.
->> This helpers facilitate in understanding the subsequent changes better
->> and make it easy to setup the different memory ranges listed above, as
->> and when appropriate.
->>
->> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
->> Tested-by: Pingfan Liu <piliu@redhat.com>
-> 
+Tyler
 
-<snip>
-
->> +/**
->> + * add_reserved_ranges - Adds "/reserved-ranges" regions exported by f/w
->> + *                       to the given memory ranges list.
->> + * @mem_ranges:          Range list to add the memory ranges to.
->> + *
->> + * Returns 0 on success, negative errno on error.
->> + */
->> +int add_reserved_ranges(struct crash_mem **mem_ranges)
->> +{
->> +	int i, len, ret = 0;
->> +	const __be32 *prop;
->> +
->> +	prop = of_get_property(of_root, "reserved-ranges", &len);
->> +	if (!prop)
->> +		return 0;
->> +
->> +	/*
->> +	 * Each reserved range is an (address,size) pair, 2 cells each,
->> +	 * totalling 4 cells per range.
 > 
-> Can you assume that, or do you need to check the #address-cells and
-> #size-cells properties of the root node?
-
-Taken from early_reserve_mem_dt() which did not seem to care.
-Should we be doing any different here?
-
-Thanks
-Hari
+> Mimi
