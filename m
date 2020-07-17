@@ -3,128 +3,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32740C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48779C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F19962080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594975972;
-	bh=eVGjv8woJUWyNNxl+GLmYWkXLWT7ol5zI9Z1lRtZoQ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=z8csTo+hDYxXXTcZP5XwtW1BhSHHWycI/FlfUIQOpfZCmXREZC/CH5o6LwaTrEH3e
-	 PrqcEHyCWIHsTnarH0kAvjjYelx9zMXQSYAnrc51NROO55nrZJ8pcalTbjSixrDC4x
-	 JW8VPFuoCaFLExXefiR7xjAruHJTA+kJ3VjBpSSU=
+	by mail.kernel.org (Postfix) with ESMTP id 1C4F02083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:53:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kgc1xswM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726113AbgGQIwu (ORCPT
+        id S1726333AbgGQIxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:52:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgGQIwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:52:50 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 17 Jul 2020 04:53:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28824 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725864AbgGQIxN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:53:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594975992;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=R2m5yzd2gp9fALP7gnJ+6pZIx19O89rB+rCrvzCd/mU=;
+        b=Kgc1xswMOccevsak3pv32MwU7s48Crc+IEm7PHYCMfrthTQlPHsCM6MmSwRKZr1KbPoMck
+        819sWB5GI7oxDOIHJrjwa98iSZcOOpxP2PaW2BjIqVU6DfF8a2d0x69BC4XKoPoMdiSSnj
+        Tvb2ftq23b8nZCoF09nYra1XQ/un+E4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-D7PoZUfJNUiFr6InOjcSuA-1; Fri, 17 Jul 2020 04:53:10 -0400
+X-MC-Unique: D7PoZUfJNUiFr6InOjcSuA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95E232080D;
-        Fri, 17 Jul 2020 08:52:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594975969;
-        bh=eVGjv8woJUWyNNxl+GLmYWkXLWT7ol5zI9Z1lRtZoQ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Yhwta4gO6ioPIQUHdeAr01Amkbc9Xb+sAP5mloffp4PcnAk082EKbZM+/S48ksUMd
-         6t58i4T/XVg4DbyX2b5P95VzYt5voyc65vPYWtyQjPEfxADDBwoglUuhIFTvAg5/HL
-         N9Q2ZulXXgqCRMV2luecO4Puv+7LdBDkjlQZAKLs=
-Date:   Fri, 17 Jul 2020 17:52:45 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
-Subject: Re: [PATCH v4 3/7] vmalloc: Add text_alloc() and text_free()
-Message-Id: <20200717175245.54758e3954abd1bcccfe5500@kernel.org>
-In-Reply-To: <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
-References: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
-        <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7CDEC102C849;
+        Fri, 17 Jul 2020 08:53:07 +0000 (UTC)
+Received: from krava (unknown [10.40.192.81])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 5C33672AF8;
+        Fri, 17 Jul 2020 08:53:02 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 10:53:01 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
+        anju@linux.vnet.ibm.com, kan.liang@linux.intel.com,
+        nasastry@in.ibm.com
+Subject: Re: [PATCH v3 1/5] perf/pmu-events/jevents: Add enum to store
+ aggregation like PerPkg
+Message-ID: <20200717085301.GB528602@krava>
+References: <20200716094216.1418659-1-kjain@linux.ibm.com>
+ <20200716094216.1418659-2-kjain@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716094216.1418659-2-kjain@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 06:04:17 +0300
-Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-
-> Introduce functions for allocating memory for dynamic trampolines, such
-> as kprobes. An arch can promote the availability of these functions with
-> CONFIG_ARCH_HAS_TEXT_ALLOC. Provide default/fallback implementation
-> wrapping module_alloc() and module_memfree().
-
-Doesn't it depend on CONFIG_MODULE?
-
-Thank you,
-
+On Thu, Jul 16, 2020 at 03:12:12PM +0530, Kajol Jain wrote:
+> Initially, every time we want to add new terms like chip, core thread etc,
+> we need to create corrsponding fields in pmu_events and event struct.
+> This patch adds an enum called 'aggr_mode_class' which store all these
+> aggregation like perpkg/percore. It also adds new field 'aggr_mode'
+> to capture these terms.
+> Now, if user wants to add any new term, they just need to add it in
+> the enum defined.
 > 
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 > ---
->  include/linux/vmalloc.h | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  tools/perf/pmu-events/jevents.c    | 39 +++++++++++++++++++-----------
+>  tools/perf/pmu-events/jevents.h    |  2 +-
+>  tools/perf/pmu-events/pmu-events.h |  6 ++++-
+>  tools/perf/tests/pmu-events.c      |  8 +++---
+>  tools/perf/util/pmu.c              |  6 ++---
+>  5 files changed, 38 insertions(+), 23 deletions(-)
 > 
-> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> index 0221f852a7e1..e981436e30b6 100644
-> --- a/include/linux/vmalloc.h
-> +++ b/include/linux/vmalloc.h
-> @@ -9,6 +9,7 @@
->  #include <asm/page.h>		/* pgprot_t */
->  #include <linux/rbtree.h>
->  #include <linux/overflow.h>
-> +#include <linux/moduleloader.h>
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index fa86c5f997cc..b2f59f0af63d 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -53,6 +53,17 @@
+>  int verbose;
+>  char *prog;
 >  
->  #include <asm/vmalloc.h>
->  
-> @@ -249,4 +250,26 @@ pcpu_free_vm_areas(struct vm_struct **vms, int nr_vms)
->  int register_vmap_purge_notifier(struct notifier_block *nb);
->  int unregister_vmap_purge_notifier(struct notifier_block *nb);
->  
-> +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> +/*
-> + * Allocate memory to be used for dynamic trampoline code.
-> + */
-> +void *text_alloc(unsigned long size);
+> +enum aggr_mode_class {
+> +	PerPkg = 1
+> +};
 > +
-> +/*
-> + * Free memory returned from text_alloc().
-> + */
-> +void text_free(void *region);
-> +#else
-> +static inline void *text_alloc(unsigned long size)
+> +enum aggr_mode_class convert(const char *aggr_mode)
 > +{
-> +	return module_alloc(size);
+> +	if (!strcmp(aggr_mode, "PerPkg"))
+> +		return PerPkg;
+> +	return -1;
 > +}
-> +
-> +static inline void text_free(void *region)
-> +{
-> +	module_memfree(region);
-> +}
-> +#endif
-> +
->  #endif /* _LINUX_VMALLOC_H */
-> -- 
-> 2.25.1
-> 
+
+I just noticed you define aggr_mode_class twice,
+I think we should keep it just in pmu-events.h
+like in change below (compiles for me)
+
+thanks,
+jirka
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+---
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index e1c43f739083..2f48b783a64d 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -49,16 +49,11 @@
+ #include "jsmn.h"
+ #include "json.h"
+ #include "jevents.h"
++#include "pmu-events.h"
+ 
+ int verbose;
+ char *prog;
+ 
+-enum aggr_mode_class {
+-	PerPkg = 1,
+-	PerChip,
+-	PerCore
+-};
+-
+ enum aggr_mode_class convert(const char *aggr_mode)
+ {
+ 	if (!strcmp(aggr_mode, "PerPkg"))
+
