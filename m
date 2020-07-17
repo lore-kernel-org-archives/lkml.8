@@ -2,89 +2,109 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF59C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8AFC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45CBB20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47E4208C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:59:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594987169;
+	bh=IBC0fxfS9D7A/ESzV86wlZOweut+yTh9ShR/uTQtWsM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZyhVh32wDeojekQAtvGbiF+oVHFfwD66cB/X2JP5LIbwDXNOB8QkZX1n7QhNAX4nq
+	 DvaOseICdPuoSwLWYFxVjqHKIBBg4NUacMIz/pkBKZsKM9ZvTlJ8EJjLlPPdRRr9bP
+	 kZ3Tc2x46V1YCnriwq61f8nbfdS2lmHEWt1/IKP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgGQL6L (ORCPT
+        id S1726858AbgGQL72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:58:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:35122 "EHLO foss.arm.com"
+        Fri, 17 Jul 2020 07:59:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgGQL6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:58:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32E7730E;
-        Fri, 17 Jul 2020 04:58:10 -0700 (PDT)
-Received: from [10.57.35.46] (unknown [10.57.35.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 55CBD3F66E;
-        Fri, 17 Jul 2020 04:58:07 -0700 (PDT)
-Subject: Re: [PATCH v10 5/5] iommu/arm-smmu: Add global/context fault
- implementation hooks
-To:     Will Deacon <will@kernel.org>, Krishna Reddy <vdumpa@nvidia.com>
-Cc:     snikam@nvidia.com, devicetree@vger.kernel.org,
-        mperttunen@nvidia.com, praithatha@nvidia.com, bhuntsman@nvidia.com,
-        linux-kernel@vger.kernel.org, jonathanh@nvidia.com,
-        talho@nvidia.com, iommu@lists.linux-foundation.org,
-        robh+dt@kernel.org, nicolinc@nvidia.com,
-        linux-tegra@vger.kernel.org, yhsu@nvidia.com, treding@nvidia.com,
-        linux-arm-kernel@lists.infradead.org, bbiswas@nvidia.com
-References: <20200708050017.31563-1-vdumpa@nvidia.com>
- <20200708050017.31563-6-vdumpa@nvidia.com>
- <20200713134450.GC2739@willie-the-truck>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <616235dc-c290-d5c4-47c2-19402213dc11@arm.com>
-Date:   Fri, 17 Jul 2020 12:58:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725950AbgGQL70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 07:59:26 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C01032065D;
+        Fri, 17 Jul 2020 11:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594987166;
+        bh=IBC0fxfS9D7A/ESzV86wlZOweut+yTh9ShR/uTQtWsM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l3he7Zb25ylwXTM+e0bCR6vU9eGg6EbkNVm+2ZjuZJklUHo0TgJywhDGe6XZm1pB+
+         WWjgpTpBmhJVa9E5E8uFYvmf/cGv3uAUeOHIgU3RcuPY82Yneo4mqNrDBHWDWUxM15
+         DmmiA+K8Q86iYdDD1GMBM4uHo9m9kYvctKGCRmLw=
+Date:   Fri, 17 Jul 2020 12:59:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 14/20] dt-bindings: spi: renesas,sh-msiof: Add r8a774e1
+ support
+Message-ID: <20200717115915.GD4316@sirena.org.uk>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20200713134450.GC2739@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="EP0wieDxd4TSJjHq"
+Content-Disposition: inline
+In-Reply-To: <1594811350-14066-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Cookie: No other warranty expressed or implied.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-13 14:44, Will Deacon wrote:
-> On Tue, Jul 07, 2020 at 10:00:17PM -0700, Krishna Reddy wrote:
->> Add global/context fault hooks to allow vendor specific implementations
->> override default fault interrupt handlers.
->>
->> Update NVIDIA implementation to override the default global/context fault
->> interrupt handlers and handle interrupts across the two ARM MMU-500s that
->> are programmed identically.
->>
->> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
->> ---
->>   drivers/iommu/arm-smmu-nvidia.c | 99 +++++++++++++++++++++++++++++++++
->>   drivers/iommu/arm-smmu.c        | 17 +++++-
->>   drivers/iommu/arm-smmu.h        |  3 +
->>   3 files changed, 117 insertions(+), 2 deletions(-)
-> 
-> Given that faults shouldn't occur during normal operation, is this patch
-> actually necessary?
 
-Indeed they shouldn't, but if something *does* happen to go wrong then I 
-think it's worth having proper handling in place, since the consequences 
-otherwise include a screaming "spurious" fault or just silently losing 
-some transactions and possibly locking up part of the system altogether 
-(depending on HUPCF at least - I recall MMU-500 also behaving funnily 
-WRT TLB maintenance while an IRQ is outstanding, but that was long 
-enough ago that it might have been related to the old CFCFG behaviour).
+--EP0wieDxd4TSJjHq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Until we sort out the reserved memory regions thing (the new IORT spec 
-is due Real Soon Now(TM)...) some systems are going to keep suffering 
-transient context faults during boot - those may make the display 
-unhappy until it gets reset, but we certainly don't want to invite the 
-possibility of them wedging the SMMU itself.
+On Wed, Jul 15, 2020 at 12:09:04PM +0100, Lad Prabhakar wrote:
+> Document RZ/G2H (R8A774E1) SoC bindings.
 
-Robin.
+Please in future could you split things like this up into per subsystem
+serieses?  That's a more normal approach and avoids the huge threads and
+CC lists.
+
+--EP0wieDxd4TSJjHq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8RkpIACgkQJNaLcl1U
+h9C49gf/eW/cjPlYI1cbSfRXBxXem11Bis/Eyf7JldTeF1+MuH3As7rZdLb/Echg
+mYjYxsQ/gYm2DjC32f3rK+qY8Enzqz3k2jl7qJZ8R+pPEtfW9+ZrDHFAUyuE/Bwb
+sG+qKb/lwZ3KgqIO85RfL9b5WGktXWg26M182qVbBIZTGYRysCksSaUN6fxSKfwN
+icZD/vNKlJ9tJcfFxsjKl37Ti8ipK6ht46YI880NPw/lVkl7aFbJOsHY3LHW2JkR
+qTH281KenQZDUUXHaIqusmXvyMhns1zbIhsZxaZ9txJFNZX43TK1krvBVznJYK20
+K3YSdEJoHNWVwjPSdMbWIO1iOR9SSQ==
+=3N6n
+-----END PGP SIGNATURE-----
+
+--EP0wieDxd4TSJjHq--
