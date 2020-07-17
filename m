@@ -2,97 +2,239 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EACC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C81692070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:35:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IfreDYex"
+	by mail.kernel.org (Postfix) with ESMTP id 436E320717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:35:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgGQJe7 (ORCPT
+        id S1726675AbgGQJfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:34:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgGQJe6 (ORCPT
+        Fri, 17 Jul 2020 05:35:24 -0400
+Received: from proxima.lasnet.de ([78.47.171.185]:53924 "EHLO
+        proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgGQJfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:34:58 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD1CC061755
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:34:58 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id i3so7090642qtq.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=oaIzGEEZveiQMSCkbwAGqZZaFN7FoxKI0NJhSLnSxgo=;
-        b=IfreDYexttjDRrewc0RYE9lq7aazBU/R2omgHuWTbaf79JnAfFQZJPOFT5OWCui2P1
-         vDeAgnuWQSC0xrF0Ibvu5pl29Kx9uzh5OIJqiF0TmErFIKu1wYyR1c8uhMd81JENDowh
-         8YIM+mgiveZAk2Y8ZavjEG4/BmTxDsSqZ5z/gNTYjIldbE6RXNY+8kYIm8MVgh4CHbFl
-         RUYnV/igj4RhyBkbS57Nr2G350bnmidKA2MVXcNJUv5A7icxBcZCob40G4v/7CMXCz2G
-         SVMPNIxIsKELIOAijkVhqXUfNAJyGNgETPcGtu1I4702Tghr/8cj7Y5Cgyy9ZkCvPqY+
-         2zEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=oaIzGEEZveiQMSCkbwAGqZZaFN7FoxKI0NJhSLnSxgo=;
-        b=QkXpZOx4N/vGOjdLWUE6YqfHi+n0K0GWl4q6RgFt7vLGr2hj1dII2uzfMPaHwQLHtj
-         sIzcK3xDKwHT4v8eEN2PWGA6QYPROR7lLUClLRWp+Tzky07ZlostEN+KNirRAc1f+9yy
-         6xbrxxRfp8LyTafvret3gqgO35iLwuC9/fEqLsgRtis9QOQy9k4LLK+eukro3EZSYVHd
-         J0XXbkQ8MMK00VSmJyLZNJy9WOSjyvyvBbRnjHAGwmQqUZqEIJtfq7UskZawxdZKjE/c
-         0/DSJ3NaJmkqyopxaDWmQCuWPE4GP7mDcjtx7QgkQN5Ws/KJAqzcDyQJJbujmCFYB9yx
-         YMvQ==
-X-Gm-Message-State: AOAM533ucEuu5ghzcTTVq1TPKs1BfUW1e9hW1VKSlniWvz2ibBim0xCh
-        ekybbzy4tW3r5SCSxGdzxSmg3Hmg8ZhWifuHTZ0VfPI6
-X-Google-Smtp-Source: ABdhPJySCAN0NDoe+64zDko0ftOX/eJD+mZVx8LwI7HLwKZcDOmmqbPwsbkSuD91zaMwzYBOqnpjf0iozCgNXBU2LVk=
-X-Received: by 2002:ac8:1b3b:: with SMTP id y56mr9131471qtj.94.1594978498056;
- Fri, 17 Jul 2020 02:34:58 -0700 (PDT)
+        Fri, 17 Jul 2020 05:35:23 -0400
+X-Greylist: delayed 522 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Jul 2020 05:35:19 EDT
+Received: from localhost.localdomain (p200300e9d737160bc31b0c5d63306033.dip0.t-ipconnect.de [IPv6:2003:e9:d737:160b:c31b:c5d:6330:6033])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: stefan@datenfreihafen.org)
+        by proxima.lasnet.de (Postfix) with ESMTPSA id B77EDC0617;
+        Fri, 17 Jul 2020 11:26:35 +0200 (CEST)
+Subject: Re: [PATCH 05/22] net: remove compat_sock_common_{get,set}sockopt
+To:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Chas Williams <3chas3@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-wpan@vger.kernel.org, mptcp@lists.01.org
+References: <20200717062331.691152-1-hch@lst.de>
+ <20200717062331.691152-6-hch@lst.de>
+From:   Stefan Schmidt <stefan@datenfreihafen.org>
+Message-ID: <52d031f9-70c2-89c1-941f-c8187a6a2b68@datenfreihafen.org>
+Date:   Fri, 17 Jul 2020 11:26:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-From:   lebon zhou <lebon.zhou@gmail.com>
-Date:   Fri, 17 Jul 2020 10:31:54 +0000
-Message-ID: <CAEQHRfB2f4x2r9Sk1+ixAFjUTcFQArv9wtWfjq3igGfUgZBhXw@mail.gmail.com>
-Subject: [PATCH] Fix memory overwriting issue when copy an address to user space
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200717062331.691152-6-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When application provided buffer size less than sockaddr_storage, then
-kernel will overwrite some memory area which may cause memory corruption,
-e.g.: in recvmsg case, let msg_name=malloc(8) and msg_namelen=8, then
-usually application can call recvmsg successful but actually application
-memory get corrupted.
+Hello.
 
-Fix to return EINVAL when application buffer size less than
-sockaddr_storage.
+On 17.07.20 08:23, Christoph Hellwig wrote:
+> Add the compat handling to sock_common_{get,set}sockopt instead,
+> keyed of in_compat_syscall().  This allow to remove the now unused
+> ->compat_{get,set}sockopt methods from struct proto_ops.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   include/linux/net.h      |  6 ------
+>   include/net/sock.h       |  4 ----
+>   net/core/sock.c          | 30 ++++++------------------------
+>   net/dccp/ipv4.c          |  4 ----
+>   net/dccp/ipv6.c          |  2 --
+>   net/ieee802154/socket.c  |  8 --------
+>   net/ipv4/af_inet.c       |  6 ------
+>   net/ipv6/af_inet6.c      |  4 ----
+>   net/ipv6/ipv6_sockglue.c | 12 ++----------
+>   net/ipv6/raw.c           |  2 --
+>   net/l2tp/l2tp_ip.c       |  4 ----
+>   net/l2tp/l2tp_ip6.c      |  2 --
+>   net/mptcp/protocol.c     |  6 ------
+>   net/phonet/socket.c      |  8 --------
+>   net/sctp/ipv6.c          |  2 --
+>   net/sctp/protocol.c      |  4 ----
+>   16 files changed, 8 insertions(+), 96 deletions(-)
+> 
+> diff --git a/include/linux/net.h b/include/linux/net.h
+> index 016a9c5faa3479..858ff1d981540d 100644
+> --- a/include/linux/net.h
+> +++ b/include/linux/net.h
+> @@ -165,12 +165,6 @@ struct proto_ops {
+>   				      int optname, char __user *optval, unsigned int optlen);
+>   	int		(*getsockopt)(struct socket *sock, int level,
+>   				      int optname, char __user *optval, int __user *optlen);
+> -#ifdef CONFIG_COMPAT
+> -	int		(*compat_setsockopt)(struct socket *sock, int level,
+> -				      int optname, char __user *optval, unsigned int optlen);
+> -	int		(*compat_getsockopt)(struct socket *sock, int level,
+> -				      int optname, char __user *optval, int __user *optlen);
+> -#endif
+>   	void		(*show_fdinfo)(struct seq_file *m, struct socket *sock);
+>   	int		(*sendmsg)   (struct socket *sock, struct msghdr *m,
+>   				      size_t total_len);
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index 4bf8841651486d..1fd7cf5fc7516c 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -1744,10 +1744,6 @@ int sock_common_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
+>   			int flags);
+>   int sock_common_setsockopt(struct socket *sock, int level, int optname,
+>   				  char __user *optval, unsigned int optlen);
+> -int compat_sock_common_getsockopt(struct socket *sock, int level,
+> -		int optname, char __user *optval, int __user *optlen);
+> -int compat_sock_common_setsockopt(struct socket *sock, int level,
+> -		int optname, char __user *optval, unsigned int optlen);
+>   
+>   void sk_common_release(struct sock *sk);
+>   
+> diff --git a/net/core/sock.c b/net/core/sock.c
+> index e085df79482520..018404d1762682 100644
+> --- a/net/core/sock.c
+> +++ b/net/core/sock.c
+> @@ -3199,23 +3199,14 @@ int sock_common_getsockopt(struct socket *sock, int level, int optname,
+>   {
+>   	struct sock *sk = sock->sk;
+>   
+> -	return sk->sk_prot->getsockopt(sk, level, optname, optval, optlen);
+> -}
+> -EXPORT_SYMBOL(sock_common_getsockopt);
+> -
+>   #ifdef CONFIG_COMPAT
+> -int compat_sock_common_getsockopt(struct socket *sock, int level, int optname,
+> -				  char __user *optval, int __user *optlen)
+> -{
+> -	struct sock *sk = sock->sk;
+> -
+> -	if (sk->sk_prot->compat_getsockopt != NULL)
+> +	if (in_compat_syscal() && sk->sk_prot->compat_getsockopt)
+>   		return sk->sk_prot->compat_getsockopt(sk, level, optname,
+>   						      optval, optlen);
+> +#endif
+>   	return sk->sk_prot->getsockopt(sk, level, optname, optval, optlen);
+>   }
+> -EXPORT_SYMBOL(compat_sock_common_getsockopt);
+> -#endif
+> +EXPORT_SYMBOL(sock_common_getsockopt);
+>   
+>   int sock_common_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
+>   			int flags)
+> @@ -3240,23 +3231,14 @@ int sock_common_setsockopt(struct socket *sock, int level, int optname,
+>   {
+>   	struct sock *sk = sock->sk;
+>   
+> -	return sk->sk_prot->setsockopt(sk, level, optname, optval, optlen);
+> -}
+> -EXPORT_SYMBOL(sock_common_setsockopt);
+> -
+>   #ifdef CONFIG_COMPAT
+> -int compat_sock_common_setsockopt(struct socket *sock, int level, int optname,
+> -				  char __user *optval, unsigned int optlen)
+> -{
+> -	struct sock *sk = sock->sk;
+> -
+> -	if (sk->sk_prot->compat_setsockopt != NULL)
+> +	if (in_compat_syscall() && sk->sk_prot->compat_setsockopt)
+>   		return sk->sk_prot->compat_setsockopt(sk, level, optname,
+>   						      optval, optlen);
+> +#endif
+>   	return sk->sk_prot->setsockopt(sk, level, optname, optval, optlen);
+>   }
+> -EXPORT_SYMBOL(compat_sock_common_setsockopt);
+> -#endif
+> +EXPORT_SYMBOL(sock_common_setsockopt);
+>   
+>   void sk_common_release(struct sock *sk)
+>   {
+> diff --git a/net/dccp/ipv4.c b/net/dccp/ipv4.c
+> index a7e989919c5307..316cc5ac0da72b 100644
+> --- a/net/dccp/ipv4.c
+> +++ b/net/dccp/ipv4.c
+> @@ -999,10 +999,6 @@ static const struct proto_ops inet_dccp_ops = {
+>   	.recvmsg	   = sock_common_recvmsg,
+>   	.mmap		   = sock_no_mmap,
+>   	.sendpage	   = sock_no_sendpage,
+> -#ifdef CONFIG_COMPAT
+> -	.compat_setsockopt = compat_sock_common_setsockopt,
+> -	.compat_getsockopt = compat_sock_common_getsockopt,
+> -#endif
+>   };
+>   
+>   static struct inet_protosw dccp_v4_protosw = {
+> diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
+> index 650187d688519c..b50f85a72cd5fc 100644
+> --- a/net/dccp/ipv6.c
+> +++ b/net/dccp/ipv6.c
+> @@ -1083,8 +1083,6 @@ static const struct proto_ops inet6_dccp_ops = {
+>   	.sendpage	   = sock_no_sendpage,
+>   #ifdef CONFIG_COMPAT
+>   	.compat_ioctl	   = inet6_compat_ioctl,
+> -	.compat_setsockopt = compat_sock_common_setsockopt,
+> -	.compat_getsockopt = compat_sock_common_getsockopt,
+>   #endif
+>   };
+>   
+> diff --git a/net/ieee802154/socket.c b/net/ieee802154/socket.c
+> index d93d4531aa9bc5..94ae9662133e30 100644
+> --- a/net/ieee802154/socket.c
+> +++ b/net/ieee802154/socket.c
+> @@ -423,10 +423,6 @@ static const struct proto_ops ieee802154_raw_ops = {
+>   	.recvmsg	   = sock_common_recvmsg,
+>   	.mmap		   = sock_no_mmap,
+>   	.sendpage	   = sock_no_sendpage,
+> -#ifdef CONFIG_COMPAT
+> -	.compat_setsockopt = compat_sock_common_setsockopt,
+> -	.compat_getsockopt = compat_sock_common_getsockopt,
+> -#endif
+>   };
+>   
+>   /* DGRAM Sockets (802.15.4 dataframes) */
+> @@ -986,10 +982,6 @@ static const struct proto_ops ieee802154_dgram_ops = {
+>   	.recvmsg	   = sock_common_recvmsg,
+>   	.mmap		   = sock_no_mmap,
+>   	.sendpage	   = sock_no_sendpage,
+> -#ifdef CONFIG_COMPAT
+> -	.compat_setsockopt = compat_sock_common_setsockopt,
+> -	.compat_getsockopt = compat_sock_common_getsockopt,
+> -#endif
 
-Signed-off-by: lebon.zhou <lebon.zhou@gmail.com>
----
- net/socket.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For the ieee802154 part:
 
-diff --git a/net/socket.c b/net/socket.c
-index 976426d03f09..dc32b1b899df 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -229,7 +229,7 @@ static int move_addr_to_user(struct
-sockaddr_storage *kaddr, int klen,
-         return err;
-     if (len > klen)
-         len = klen;
--    if (len < 0)
-+    if (len < 0 || len < klen)
-         return -EINVAL;
-     if (len) {
-         if (audit_sockaddr(klen, kaddr))
--- 
-2.22.0
+Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
+
+regards
+Stefan Schmidt
