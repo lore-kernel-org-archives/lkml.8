@@ -2,154 +2,652 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10636C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E09D220717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A672076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:51:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PYmVXrd4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C9a9lMSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGQQtP (ORCPT
+        id S1726530AbgGQQvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:49:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgGQQtP (ORCPT
+        Fri, 17 Jul 2020 12:51:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45240 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726221AbgGQQvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:49:15 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B98C0619D2;
-        Fri, 17 Jul 2020 09:49:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=u0JM6c08RReApxGswkP2r77YhwJHKkc2EjdJzkbnHXQ=; b=PYmVXrd42CrpgcWrj/QV0Y8W9l
-        Lkohjch9CFGyMhjEMptbgC9m9JrcRkK7fBu48xqCS0dAClLeLwWCRUR1ACgtaRbvRWftg19e0rVi6
-        dEU7TiYrdL2FL57rtThihxKSVgSRJdGNKCumUwKexTHzme02lSzYyA8CiEk1JnDDiUfpD7DgIxMs9
-        nbvHLH62K7v8Ma6ibkurMeO/X71qUFiRz2iY89380cqL4xVd97H9EJPRVzyGZgqjlC+FyAszRrA3U
-        c9rqLZC9E+aOONJ0p4uQk83/2RfXeiA+5wB0OElMbYGHl2fFqmjItphGSTYkHTqluxszY1UpJS/40
-        dN5YQS1Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwTXp-0008Qz-V4; Fri, 17 Jul 2020 16:49:10 +0000
-Subject: Re: linux-next: Tree for Jul 17 (drivers/rtc/rtc-ds1374.o)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Scott Wood <scottwood@freescale.com>
-References: <20200717214036.67fa5379@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d36fac01-2a7b-c3f1-84ef-3a1560d18790@infradead.org>
-Date:   Fri, 17 Jul 2020 09:49:05 -0700
+        Fri, 17 Jul 2020 12:51:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595004699;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EDGHOVH9hRpqpgBeVlpolKSQiGlIX3DAEfNPwy8l+ds=;
+        b=C9a9lMSbdfoS21s9Sljhz8M00pv75eHHOBBX1t0zYlblLRb3STqno7zpUSoM7QPZN15uDY
+        ElwbTH67oddtPTNbaT4k8cgKq+MiX1qkhlf93JIXFfvEO/7SHA0PK173w5jTT+e5lLhxQ5
+        6etkRXN3QwPh4XEA2F65hxSToXRRofo=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-63-VvFXvKkjOH2yNBy-Hfpcgg-1; Fri, 17 Jul 2020 12:51:37 -0400
+X-MC-Unique: VvFXvKkjOH2yNBy-Hfpcgg-1
+Received: by mail-pl1-f197.google.com with SMTP id o10so6908523plk.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:51:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=EDGHOVH9hRpqpgBeVlpolKSQiGlIX3DAEfNPwy8l+ds=;
+        b=rtdF/EDtIEtPD6nXS7/nb2IPX8feHAt5GCTjo8boBmPQ6ifsn/756TSKog+ruZB3vx
+         havrYTYStUyf94TaS+yg+4Ws0QkrHqFs0DvOt5WanXoK/klKQ9S4UsWGPoeYn+TnlqwU
+         eonKG14ZgXa6ReWYWdTsu0h666MMMZEf6LcRR5zo31QZUAbzEL2fIh0mKTEwn9A4+bAz
+         +h9dWiG6fbR0ypEUn8CveXu89Pz7XPraJzCv3oWoigLrmKHiBlrR/KPSAAEgoIO/dNsE
+         O5MR5FYTaaZ0YzSnUJFmtliAYliPdw4BCC0bgz/qaUKXNPSnDUmmHJ1GaAziF2BFo96N
+         /7qA==
+X-Gm-Message-State: AOAM53100ed5Xv0IpkvN9YwaUHY0wQXDfHrmerjcDNzoE7zXCAiaTPeM
+        2yuVa/O29Izvbsl7fDPhcljXGmJmgDwH6/RV+2Yt8BC4VHxrg1Hqmse0sf/jPXEVb6rrA63+dV1
+        PAcLwOteLaZvgNm3J7t8bFVel
+X-Received: by 2002:a17:90b:1296:: with SMTP id fw22mr10925563pjb.20.1595004696646;
+        Fri, 17 Jul 2020 09:51:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzggbymc/rhfGBkznmJntRTp9uu1f1aZuvgHX56kcKp9bftbDZsCKbgqC7BZcboNjtyBGb8jw==
+X-Received: by 2002:a17:90b:1296:: with SMTP id fw22mr10925529pjb.20.1595004696143;
+        Fri, 17 Jul 2020 09:51:36 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id q5sm8367296pfc.130.2020.07.17.09.51.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 09:51:35 -0700 (PDT)
+Subject: Re: [PATCH 1/2] fpga: dfl: map feature mmio resources in their own
+ feature drivers
+To:     Xu Yilun <yilun.xu@intel.com>, mdf@kernel.org,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     lgoncalv@redhat.com, Wu Hao <hao.wu@intel.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        Russ Weight <russell.h.weight@intel.com>
+References: <1594791498-14495-1-git-send-email-yilun.xu@intel.com>
+ <1594791498-14495-2-git-send-email-yilun.xu@intel.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <9cec52cb-13aa-8b99-ef75-22eefa9f1710@redhat.com>
+Date:   Fri, 17 Jul 2020 09:51:34 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200717214036.67fa5379@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <1594791498-14495-2-git-send-email-yilun.xu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/20 4:40 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20200716:
-> 
-> New tree: init
-> Changed tree: dmi (from quilt to git)
-> 
-> My fixes tree contains:
-> 
->   dbf24e30ce2e ("device_cgroup: Fix RCU list debugging warning")
-> 
-> I revreted 3 commits from the powerpc tree due to reported run time
-> problems.
-> 
-> The sound tree gained a semantic conflict against the dma-mapping tree.
-> 
-> The security tree still had its build failure for which I applied a patch.
-> 
-> The tip tree still had one build failure for which I reverted a commit.
-> It also gained a conflict against the crypto tree
-> 
-> The kvm tree gained a conflict and a semantic conflict against the
-> tip tree.
-> 
-> The dmaengine tree gained conflicts against the wireless-drivers-next
-> and Linus' trees.
-> 
-> The pinctrl tree gained a build failure so I used the version from
-> next-20200716.
-> 
-> The set_fs tree gained a conflict against the powerpc tree.
-> 
-> The init tree gained a conflict against the block tre.
-> 
-> The akpm-current tree gained conflicts against the crypto and tip trees.
-> It also gained a build failure for which I applied a patch.
-> 
-> Non-merge commits (relative to Linus' tree): 8001
->  8717 files changed, 441636 insertions(+), 169176 deletions(-)
-> 
-> ----------------------------------------------------------------------------
-> 
-> I have created today's linux-next tree at
-> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
-> are tracking the linux-next tree using git, you should not use "git pull"
-> to do so as that will try to merge the new linux-next release with the
-> old one.  You should use "git fetch" and checkout or reset to the new
-> master.
-> 
-> You can see which trees have been included by looking in the Next/Trees
-> file in the source.  There are also quilt-import.log and merge.log
-> files in the Next directory.  Between each merge, the tree was built
-> with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
-> multi_v7_defconfig for arm and a native build of tools/perf. After
-> the final fixups (if any), I do an x86_64 modules_install followed by
-> builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
-> ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
-> and sparc64 defconfig and htmldocs. And finally, a simple boot test
-> of the powerpc pseries_le_defconfig kernel in qemu (with and without
-> kvm enabled).
-> 
-> Below is a summary of the state of the merge.
-> 
-> I am currently merging 325 trees (counting Linus' and 83 trees of bug
-> fix patches pending for the current merge release).
-> 
-> Stats about the size of the tree over time can be seen at
-> http://neuling.org/linux-next-size.html .
-> 
-> Status of my local build tests will be at
-> http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
-> advice about cross compilers/configs that work, we are always open to add
-> more builds.
-> 
-> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
-> Gortmaker for triage and bug fixes.
-> 
+Mostly little stuff.
 
-on x86_64:
-# CONFIG_WATCHDOG is not set
+Consider refactoring create_feature_instance.
 
-ld: drivers/rtc/rtc-ds1374.o: in function `ds1374_probe':
-rtc-ds1374.c:(.text+0x736): undefined reference to `watchdog_init_timeout'
-ld: rtc-ds1374.c:(.text+0x77e): undefined reference to `devm_watchdog_register_device'
+Tom
+
+> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> index e220bec..22dc025 100644
+> --- a/drivers/fpga/dfl-pci.c
+> +++ b/drivers/fpga/dfl-pci.c
+> @@ -39,6 +39,11 @@ static void __iomem *cci_pci_ioremap_bar(struct pci_dev *pcidev, int bar)
+>  	return pcim_iomap_table(pcidev)[bar];
+>  }
+>  
+> +static void cci_pci_iounmap_bars(struct pci_dev *pcidev, int mapped_bars)
+> +{
+> +	pcim_iounmap_regions(pcidev, mapped_bars);
+> +}
+
+A singleton, called only one place. Consider replacing with a direct call.
 
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> +
+>  static int cci_pci_alloc_irq(struct pci_dev *pcidev)
+>  {
+>  	int ret, nvec = pci_msix_vec_count(pcidev);
+> @@ -123,7 +128,7 @@ static int *cci_pci_create_irq_table(struct pci_dev *pcidev, unsigned int nvec)
+>  static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  {
+>  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+> -	int port_num, bar, i, nvec, ret = 0;
+> +	int port_num, bar, i, nvec, mapped_bars, ret = 0;
+
+Shouldn't mapped_bars be at least unsigned and maybe either uint32_t or uint64_t ?
+
+I see pcim_ioumap_regions has int as parameter. boo
+
+>  	struct dfl_fpga_enum_info *info;
+>  	struct dfl_fpga_cdev *cdev;
+>  	resource_size_t start, len;
+> @@ -163,6 +168,8 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  		goto irq_free_exit;
+>  	}
+>  
+> +	mapped_bars = BIT(0);
+> +
+>  	/*
+>  	 * PF device has FME and Ports/AFUs, and VF device only has one
+>  	 * Port/AFU. Check them and add related "Device Feature List" info
+> @@ -172,7 +179,7 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  		start = pci_resource_start(pcidev, 0);
+>  		len = pci_resource_len(pcidev, 0);
+>  
+> -		dfl_fpga_enum_info_add_dfl(info, start, len, base);
+> +		dfl_fpga_enum_info_add_dfl(info, start, len);
+>  
+>  		/*
+>  		 * find more Device Feature Lists (e.g. Ports) per information
+> @@ -200,22 +207,26 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  			if (!base)
+>  				continue;
+>  
+> +			mapped_bars |= BIT(bar);
+> +
+>  			start = pci_resource_start(pcidev, bar) + offset;
+>  			len = pci_resource_len(pcidev, bar) - offset;
+>  
+> -			dfl_fpga_enum_info_add_dfl(info, start, len,
+> -						   base + offset);
+> +			dfl_fpga_enum_info_add_dfl(info, start, len);
+>  		}
+>  	} else if (dfl_feature_is_port(base)) {
+>  		start = pci_resource_start(pcidev, 0);
+>  		len = pci_resource_len(pcidev, 0);
+>  
+> -		dfl_fpga_enum_info_add_dfl(info, start, len, base);
+> +		dfl_fpga_enum_info_add_dfl(info, start, len);
+>  	} else {
+>  		ret = -ENODEV;
+>  		goto irq_free_exit;
+>  	}
+>  
+> +	/* release I/O mappings for next step enumeration */
+> +	cci_pci_iounmap_bars(pcidev, mapped_bars);
+There is no iounmap_bars in error handling, likely need to add this.
+> +
+>  	/* start enumeration with prepared enumeration information */
+>  	cdev = dfl_fpga_feature_devs_enumerate(info);
+>  	if (IS_ERR(cdev)) {
+> diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+> index 649958a..7dc6411 100644
+> --- a/drivers/fpga/dfl.c
+> +++ b/drivers/fpga/dfl.c
+> @@ -250,6 +250,11 @@ int dfl_fpga_check_port_id(struct platform_device *pdev, void *pport_id)
+>  }
+>  EXPORT_SYMBOL_GPL(dfl_fpga_check_port_id);
+>  
+> +static bool is_header_feature(struct dfl_feature *feature)
+> +{
+> +	return feature->id == FEATURE_ID_FIU_HEADER;
+Could this be a macro ?
+> +}
+> +
+>  /**
+>   * dfl_fpga_dev_feature_uinit - uinit for sub features of dfl feature device
+>   * @pdev: feature device.
+> @@ -273,8 +278,20 @@ static int dfl_feature_instance_init(struct platform_device *pdev,
+>  				     struct dfl_feature *feature,
+>  				     struct dfl_feature_driver *drv)
+>  {
+> +	void __iomem *base;
+>  	int ret = 0;
+>  
+> +	if (!is_header_feature(feature)) {
+> +		base = devm_platform_ioremap_resource(pdev,
+> +						      feature->resource_index);
+> +		if (IS_ERR(base)) {
+> +			dev_err(&pdev->dev, "fail to get iomem resource!\n");
+> +			return PTR_ERR(base);
+> +		}
+> +
+> +		feature->ioaddr = base;
+> +	}
+> +
+>  	if (drv->ops->init) {
+>  		ret = drv->ops->init(pdev, feature);
+>  		if (ret)
+> @@ -427,7 +444,9 @@ EXPORT_SYMBOL_GPL(dfl_fpga_dev_ops_unregister);
+>   * @irq_table: Linux IRQ numbers for all irqs, indexed by local irq index of
+>   *	       this device.
+>   * @feature_dev: current feature device.
+> - * @ioaddr: header register region address of feature device in enumeration.
+> + * @ioaddr: header register region address of current FIU in enumeration.
+> + * @start: register resource start of current FIU.
+> + * @len: max register resource length of current FIU.
+>   * @sub_features: a sub features linked list for feature device in enumeration.
+>   * @feature_num: number of sub features for feature device in enumeration.
+>   */
+> @@ -439,6 +458,9 @@ struct build_feature_devs_info {
+>  
+>  	struct platform_device *feature_dev;
+>  	void __iomem *ioaddr;
+> +	resource_size_t start;
+> +	resource_size_t len;
+> +
+extra whitespace, remove
+>  	struct list_head sub_features;
+>  	int feature_num;
+>  };
+> @@ -484,10 +506,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
+>  	struct dfl_feature_platform_data *pdata;
+>  	struct dfl_feature_info *finfo, *p;
+>  	enum dfl_id_type type;
+> -	int ret, index = 0;
+> -
+> -	if (!fdev)
+> -		return 0;
+> +	int ret, index = 0, res_idx = 0;
+>  
+>  	type = feature_dev_id_type(fdev);
+>  	if (WARN_ON_ONCE(type >= DFL_ID_MAX))
+> @@ -530,16 +549,30 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
+>  
+>  	/* fill features and resource information for feature dev */
+>  	list_for_each_entry_safe(finfo, p, &binfo->sub_features, node) {
+> -		struct dfl_feature *feature = &pdata->features[index];
+> +		struct dfl_feature *feature = &pdata->features[index++];
+>  		struct dfl_feature_irq_ctx *ctx;
+>  		unsigned int i;
+>  
+>  		/* save resource information for each feature */
+>  		feature->dev = fdev;
+>  		feature->id = finfo->fid;
+> -		feature->resource_index = index;
+> -		feature->ioaddr = finfo->ioaddr;
+> -		fdev->resource[index++] = finfo->mmio_res;
+> +
+> +		/*
+> +		 * map header resource for dfl bus device. Don't add header
+> +		 * resource to feature devices, or the resource tree will be
+> +		 * disordered and cause warning on resource release
+> +		 */
+> +		if (is_header_feature(feature)) {
+> +			feature->resource_index = -1;
+> +			feature->ioaddr =
+> +				devm_ioremap_resource(binfo->dev,
+> +						      &finfo->mmio_res);
+> +			if (IS_ERR(feature->ioaddr))
+> +				return PTR_ERR(feature->ioaddr);
+feature->ioaddr is garbage, is this ok ?
+> +		} else {
+> +			feature->resource_index = res_idx;
+> +			fdev->resource[res_idx++] = finfo->mmio_res;
+> +		}
+>  
+>  		if (finfo->nr_irqs) {
+>  			ctx = devm_kcalloc(binfo->dev, finfo->nr_irqs,
+> @@ -582,19 +615,13 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
+>  
+>  static int
+>  build_info_create_dev(struct build_feature_devs_info *binfo,
+> -		      enum dfl_id_type type, void __iomem *ioaddr)
+> +		      enum dfl_id_type type)
+>  {
+>  	struct platform_device *fdev;
+> -	int ret;
+>  
+>  	if (type >= DFL_ID_MAX)
+>  		return -EINVAL;
+>  
+> -	/* we will create a new device, commit current device first */
+> -	ret = build_info_commit_dev(binfo);
+> -	if (ret)
+> -		return ret;
+> -
+>  	/*
+>  	 * we use -ENODEV as the initialization indicator which indicates
+>  	 * whether the id need to be reclaimed
+> @@ -605,7 +632,7 @@ build_info_create_dev(struct build_feature_devs_info *binfo,
+>  
+>  	binfo->feature_dev = fdev;
+>  	binfo->feature_num = 0;
+> -	binfo->ioaddr = ioaddr;
+> +
+>  	INIT_LIST_HEAD(&binfo->sub_features);
+>  
+>  	fdev->id = dfl_id_alloc(type, &fdev->dev);
+> @@ -747,18 +774,17 @@ static int parse_feature_irqs(struct build_feature_devs_info *binfo,
+>   */
+>  static int
+>  create_feature_instance(struct build_feature_devs_info *binfo,
+> -			struct dfl_fpga_enum_dfl *dfl, resource_size_t ofst,
+> -			resource_size_t size, u64 fid)
+> +			resource_size_t ofst, resource_size_t size, u64 fid)
+>  {
+>  	unsigned int irq_base, nr_irqs;
+>  	struct dfl_feature_info *finfo;
+>  	int ret;
+>  
+>  	/* read feature size and id if inputs are invalid */
+> -	size = size ? size : feature_size(dfl->ioaddr + ofst);
+> -	fid = fid ? fid : feature_id(dfl->ioaddr + ofst);
+> +	size = size ? size : feature_size(binfo->ioaddr + ofst);
+> +	fid = fid ? fid : feature_id(binfo->ioaddr + ofst);
+
+This is complicated. based on fiu,afu or private  calling.  Why not have a function ptr
+
+struct build_feature_devs_info {
+
+void (*find_info) (...)
+
+}
+
+find_info_fiu (..) {
+
+size = feature_size(..)
+
+fid = feature_id(..)
+
+}
+
+>  
+> -	if (dfl->len - ofst < size)
+> +	if (binfo->len - ofst < size)
+>  		return -EINVAL;
+>  
+>  	ret = parse_feature_irqs(binfo, ofst, fid, &irq_base, &nr_irqs);
+> @@ -770,12 +796,11 @@ create_feature_instance(struct build_feature_devs_info *binfo,
+>  		return -ENOMEM;
+>  
+>  	finfo->fid = fid;
+> -	finfo->mmio_res.start = dfl->start + ofst;
+> +	finfo->mmio_res.start = binfo->start + ofst;
+>  	finfo->mmio_res.end = finfo->mmio_res.start + size - 1;
+>  	finfo->mmio_res.flags = IORESOURCE_MEM;
+>  	finfo->irq_base = irq_base;
+>  	finfo->nr_irqs = nr_irqs;
+> -	finfo->ioaddr = dfl->ioaddr + ofst;
+>  
+>  	list_add_tail(&finfo->node, &binfo->sub_features);
+>  	binfo->feature_num++;
+> @@ -784,7 +809,6 @@ create_feature_instance(struct build_feature_devs_info *binfo,
+>  }
+>  
+>  static int parse_feature_port_afu(struct build_feature_devs_info *binfo,
+> -				  struct dfl_fpga_enum_dfl *dfl,
+>  				  resource_size_t ofst)
+>  {
+>  	u64 v = readq(binfo->ioaddr + PORT_HDR_CAP);
+> @@ -792,11 +816,10 @@ static int parse_feature_port_afu(struct build_feature_devs_info *binfo,
+>  
+>  	WARN_ON(!size);
+>  
+> -	return create_feature_instance(binfo, dfl, ofst, size, FEATURE_ID_AFU);
+> +	return create_feature_instance(binfo, ofst, size, FEATURE_ID_AFU);
+>  }
+>  
+>  static int parse_feature_afu(struct build_feature_devs_info *binfo,
+> -			     struct dfl_fpga_enum_dfl *dfl,
+>  			     resource_size_t ofst)
+>  {
+>  	if (!binfo->feature_dev) {
+> @@ -806,7 +829,7 @@ static int parse_feature_afu(struct build_feature_devs_info *binfo,
+>  
+>  	switch (feature_dev_id_type(binfo->feature_dev)) {
+>  	case PORT_ID:
+> -		return parse_feature_port_afu(binfo, dfl, ofst);
+> +		return parse_feature_port_afu(binfo, ofst);
+>  	default:
+>  		dev_info(binfo->dev, "AFU belonging to FIU %s is not supported yet.\n",
+>  			 binfo->feature_dev->name);
+> @@ -815,35 +838,91 @@ static int parse_feature_afu(struct build_feature_devs_info *binfo,
+>  	return 0;
+>  }
+>  
+> +static bool is_feature_dev_detected(struct build_feature_devs_info *binfo)
+> +{
+> +	return !!binfo->feature_dev;
+Another macro.
+> +}
+> +
+> +static void dfl_binfo_shift(struct build_feature_devs_info *binfo,
+> +			    resource_size_t ofst)
+shift? where is shifting happening.  A better name would be dfl_binfo_update or dfl_binfo_increment
+> +{
+> +	binfo->start = binfo->start + ofst;
+> +	binfo->len = binfo->len - ofst;
+> +}
+> +
+> +static int dfl_binfo_prepare(struct build_feature_devs_info *binfo,
+> +			     resource_size_t start, resource_size_t len)
+> +{
+> +	struct device *dev = binfo->dev;
+> +	void __iomem *ioaddr;
+> +
+> +	if (!devm_request_mem_region(dev, start, len, dev_name(dev))) {
+> +		dev_err(dev, "request region fail, start:%pa, len:%pa\n",
+> +			&start, &len);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ioaddr = devm_ioremap(dev, start, len);
+> +	if (!ioaddr) {
+> +		dev_err(dev, "ioremap region fail, start:%pa, len:%pa\n",
+> +			&start, &len);
+> +		devm_release_mem_region(dev, start, len);
+> +		return -EFAULT;
+> +	}
+> +
+> +	binfo->start = start;
+> +	binfo->len = len;
+> +	binfo->ioaddr = ioaddr;
+> +
+> +	return 0;
+> +}
+> +
+> +static void dfl_binfo_finish(struct build_feature_devs_info *binfo)
+> +{
+> +	devm_iounmap(binfo->dev, binfo->ioaddr);
+> +	devm_release_mem_region(binfo->dev, binfo->start, binfo->len);
+> +}
+> +
+>  static int parse_feature_fiu(struct build_feature_devs_info *binfo,
+> -			     struct dfl_fpga_enum_dfl *dfl,
+>  			     resource_size_t ofst)
+>  {
+>  	u32 id, offset;
+>  	u64 v;
+>  	int ret = 0;
+>  
+> -	v = readq(dfl->ioaddr + ofst + DFH);
+> +	if (is_feature_dev_detected(binfo)) {
+> +		dfl_binfo_finish(binfo);
+> +
+> +		ret = build_info_commit_dev(binfo);
+> +		if (ret)
+> +			return ret;
+> +
+> +		dfl_binfo_prepare(binfo, binfo->start + ofst,
+> +				  binfo->len - ofst);
+Check status of dfl_binfo_prepare
+> +	} else {
+> +		dfl_binfo_shift(binfo, ofst);
+> +	}
+> +
+> +	v = readq(binfo->ioaddr + DFH);
+>  	id = FIELD_GET(DFH_ID, v);
+>  
+>  	/* create platform device for dfl feature dev */
+> -	ret = build_info_create_dev(binfo, dfh_id_to_type(id),
+> -				    dfl->ioaddr + ofst);
+> +	ret = build_info_create_dev(binfo, dfh_id_to_type(id));
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = create_feature_instance(binfo, dfl, ofst, 0, 0);
+> +	ret = create_feature_instance(binfo, 0, 0, 0);
+>  	if (ret)
+>  		return ret;
+>  	/*
+>  	 * find and parse FIU's child AFU via its NEXT_AFU register.
+>  	 * please note that only Port has valid NEXT_AFU pointer per spec.
+>  	 */
+> -	v = readq(dfl->ioaddr + ofst + NEXT_AFU);
+> +	v = readq(binfo->ioaddr + NEXT_AFU);
+>  
+>  	offset = FIELD_GET(NEXT_AFU_NEXT_DFH_OFST, v);
+>  	if (offset)
+> -		return parse_feature_afu(binfo, dfl, ofst + offset);
+> +		return parse_feature_afu(binfo, offset);
+>  
+>  	dev_dbg(binfo->dev, "No AFUs detected on FIU %d\n", id);
+>  
+> @@ -851,16 +930,15 @@ static int parse_feature_fiu(struct build_feature_devs_info *binfo,
+>  }
+>  
+>  static int parse_feature_private(struct build_feature_devs_info *binfo,
+> -				 struct dfl_fpga_enum_dfl *dfl,
+>  				 resource_size_t ofst)
+>  {
+>  	if (!binfo->feature_dev) {
+>  		dev_err(binfo->dev, "the private feature %llx does not belong to any AFU.\n",
+> -			(unsigned long long)feature_id(dfl->ioaddr + ofst));
+> +			(unsigned long long)feature_id(binfo->ioaddr + ofst));
+>  		return -EINVAL;
+>  	}
+>  
+> -	return create_feature_instance(binfo, dfl, ofst, 0, 0);
+> +	return create_feature_instance(binfo, ofst, 0, 0);
+>  }
+>  
+>  /**
+> @@ -868,24 +946,24 @@ static int parse_feature_private(struct build_feature_devs_info *binfo,
+>   *
+>   * @binfo: build feature devices information.
+>   * @dfl: device feature list to parse
+> - * @ofst: offset to feature header on this device feature list
+> + * @ofst: offset to current FIU header
+>   */
+>  static int parse_feature(struct build_feature_devs_info *binfo,
+> -			 struct dfl_fpga_enum_dfl *dfl, resource_size_t ofst)
+> +			 resource_size_t ofst)
+>  {
+>  	u64 v;
+>  	u32 type;
+>  
+> -	v = readq(dfl->ioaddr + ofst + DFH);
+> +	v = readq(binfo->ioaddr + ofst + DFH);
+>  	type = FIELD_GET(DFH_TYPE, v);
+>  
+>  	switch (type) {
+>  	case DFH_TYPE_AFU:
+> -		return parse_feature_afu(binfo, dfl, ofst);
+> +		return parse_feature_afu(binfo, ofst);
+>  	case DFH_TYPE_PRIVATE:
+> -		return parse_feature_private(binfo, dfl, ofst);
+> +		return parse_feature_private(binfo, ofst);
+>  	case DFH_TYPE_FIU:
+> -		return parse_feature_fiu(binfo, dfl, ofst);
+> +		return parse_feature_fiu(binfo, ofst);
+>  	default:
+>  		dev_info(binfo->dev,
+>  			 "Feature Type %x is not supported.\n", type);
+> @@ -897,12 +975,18 @@ static int parse_feature(struct build_feature_devs_info *binfo,
+>  static int parse_feature_list(struct build_feature_devs_info *binfo,
+>  			      struct dfl_fpga_enum_dfl *dfl)
+>  {
+> -	void __iomem *start = dfl->ioaddr;
+> -	void __iomem *end = dfl->ioaddr + dfl->len;
+> +	resource_size_t start, end;
+>  	int ret = 0;
+>  	u32 ofst = 0;
+>  	u64 v;
+>  
+> +	ret = dfl_binfo_prepare(binfo, dfl->start, dfl->len);
+> +	if (ret)
+> +		return ret;
+> +
+> +	start = dfl->start;
+> +	end = start + dfl->len;
+> +
+>  	/* walk through the device feature list via DFH's next DFH pointer. */
+>  	for (; start < end; start += ofst) {
+>  		if (end - start < DFH_SIZE) {
+> @@ -910,11 +994,11 @@ static int parse_feature_list(struct build_feature_devs_info *binfo,
+>  			return -EINVAL;
+>  		}
+>  
+> -		ret = parse_feature(binfo, dfl, start - dfl->ioaddr);
+> +		ret = parse_feature(binfo, start - binfo->start);
+>  		if (ret)
+>  			return ret;
+>  
+> -		v = readq(start + DFH);
+> +		v = readq(binfo->ioaddr + start - binfo->start + DFH);
+>  		ofst = FIELD_GET(DFH_NEXT_HDR_OFST, v);
+>  
+>  		/* stop parsing if EOL(End of List) is set or offset is 0 */
+> @@ -923,6 +1007,8 @@ static int parse_feature_list(struct build_feature_devs_info *binfo,
+>  	}
+>  
+>  	/* commit current feature device when reach the end of list */
+> +	dfl_binfo_finish(binfo);
+> +
+>  	return build_info_commit_dev(binfo);
+>  }
+>  
+> @@ -976,7 +1062,6 @@ EXPORT_SYMBOL_GPL(dfl_fpga_enum_info_free);
+>   * @info: ptr to dfl_fpga_enum_info
+>   * @start: mmio resource address of the device feature list.
+>   * @len: mmio resource length of the device feature list.
+> - * @ioaddr: mapped mmio resource address of the device feature list.
+>   *
+>   * One FPGA device may have one or more Device Feature Lists (DFLs), use this
+>   * function to add information of each DFL to common data structure for next
+> @@ -985,8 +1070,7 @@ EXPORT_SYMBOL_GPL(dfl_fpga_enum_info_free);
+>   * Return: 0 on success, negative error code otherwise.
+>   */
+>  int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
+> -			       resource_size_t start, resource_size_t len,
+> -			       void __iomem *ioaddr)
+> +			       resource_size_t start, resource_size_t len)
+>  {
+>  	struct dfl_fpga_enum_dfl *dfl;
+>  
+> @@ -996,7 +1080,6 @@ int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
+>  
+>  	dfl->start = start;
+>  	dfl->len = len;
+> -	dfl->ioaddr = ioaddr;
+>  
+>  	list_add_tail(&dfl->node, &info->dfls);
+>  
+> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> index a32dfba..f605c28 100644
+> --- a/drivers/fpga/dfl.h
+> +++ b/drivers/fpga/dfl.h
+> @@ -441,22 +441,18 @@ struct dfl_fpga_enum_info {
+>   *
+>   * @start: base address of this device feature list.
+>   * @len: size of this device feature list.
+> - * @ioaddr: mapped base address of this device feature list.
+>   * @node: node in list of device feature lists.
+>   */
+>  struct dfl_fpga_enum_dfl {
+>  	resource_size_t start;
+>  	resource_size_t len;
+extra white space
+>  
+> -	void __iomem *ioaddr;
+> -
+>  	struct list_head node;
+>  };
+>  
+>  struct dfl_fpga_enum_info *dfl_fpga_enum_info_alloc(struct device *dev);
+>  int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
+> -			       resource_size_t start, resource_size_t len,
+> -			       void __iomem *ioaddr);
+> +			       resource_size_t start, resource_size_t len);
+>  int dfl_fpga_enum_info_add_irq(struct dfl_fpga_enum_info *info,
+>  			       unsigned int nr_irqs, int *irq_table);
+>  void dfl_fpga_enum_info_free(struct dfl_fpga_enum_info *info);
+
