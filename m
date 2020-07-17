@@ -2,239 +2,84 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1D4C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 436E320717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1AC20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGQJfY (ORCPT
+        id S1726715AbgGQJfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:35:24 -0400
-Received: from proxima.lasnet.de ([78.47.171.185]:53924 "EHLO
-        proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgGQJfX (ORCPT
+        Fri, 17 Jul 2020 05:35:37 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:55161 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725932AbgGQJfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:35:23 -0400
-X-Greylist: delayed 522 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Jul 2020 05:35:19 EDT
-Received: from localhost.localdomain (p200300e9d737160bc31b0c5d63306033.dip0.t-ipconnect.de [IPv6:2003:e9:d737:160b:c31b:c5d:6330:6033])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: stefan@datenfreihafen.org)
-        by proxima.lasnet.de (Postfix) with ESMTPSA id B77EDC0617;
-        Fri, 17 Jul 2020 11:26:35 +0200 (CEST)
-Subject: Re: [PATCH 05/22] net: remove compat_sock_common_{get,set}sockopt
-To:     Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Chas Williams <3chas3@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, mptcp@lists.01.org
-References: <20200717062331.691152-1-hch@lst.de>
- <20200717062331.691152-6-hch@lst.de>
-From:   Stefan Schmidt <stefan@datenfreihafen.org>
-Message-ID: <52d031f9-70c2-89c1-941f-c8187a6a2b68@datenfreihafen.org>
-Date:   Fri, 17 Jul 2020 11:26:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 17 Jul 2020 05:35:36 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U3-7-os_1594978521;
+Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0U3-7-os_1594978521)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 17 Jul 2020 17:35:33 +0800
+From:   Shile Zhang <shile.zhang@linux.alibaba.com>
+To:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Jiang Liu <liuj97@gmail.com>
+Subject: [PATCH] virtio_ring: use alloc_pages_node for NUMA-aware allocation
+Date:   Fri, 17 Jul 2020 17:35:04 +0800
+Message-Id: <20200717093504.47794-1-shile.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.0.rc2
 MIME-Version: 1.0
-In-Reply-To: <20200717062331.691152-6-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
+Use alloc_pages_node() allocate memory for vring queue with proper
+NUMA affinity.
 
-On 17.07.20 08:23, Christoph Hellwig wrote:
-> Add the compat handling to sock_common_{get,set}sockopt instead,
-> keyed of in_compat_syscall().  This allow to remove the now unused
-> ->compat_{get,set}sockopt methods from struct proto_ops.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   include/linux/net.h      |  6 ------
->   include/net/sock.h       |  4 ----
->   net/core/sock.c          | 30 ++++++------------------------
->   net/dccp/ipv4.c          |  4 ----
->   net/dccp/ipv6.c          |  2 --
->   net/ieee802154/socket.c  |  8 --------
->   net/ipv4/af_inet.c       |  6 ------
->   net/ipv6/af_inet6.c      |  4 ----
->   net/ipv6/ipv6_sockglue.c | 12 ++----------
->   net/ipv6/raw.c           |  2 --
->   net/l2tp/l2tp_ip.c       |  4 ----
->   net/l2tp/l2tp_ip6.c      |  2 --
->   net/mptcp/protocol.c     |  6 ------
->   net/phonet/socket.c      |  8 --------
->   net/sctp/ipv6.c          |  2 --
->   net/sctp/protocol.c      |  4 ----
->   16 files changed, 8 insertions(+), 96 deletions(-)
-> 
-> diff --git a/include/linux/net.h b/include/linux/net.h
-> index 016a9c5faa3479..858ff1d981540d 100644
-> --- a/include/linux/net.h
-> +++ b/include/linux/net.h
-> @@ -165,12 +165,6 @@ struct proto_ops {
->   				      int optname, char __user *optval, unsigned int optlen);
->   	int		(*getsockopt)(struct socket *sock, int level,
->   				      int optname, char __user *optval, int __user *optlen);
-> -#ifdef CONFIG_COMPAT
-> -	int		(*compat_setsockopt)(struct socket *sock, int level,
-> -				      int optname, char __user *optval, unsigned int optlen);
-> -	int		(*compat_getsockopt)(struct socket *sock, int level,
-> -				      int optname, char __user *optval, int __user *optlen);
-> -#endif
->   	void		(*show_fdinfo)(struct seq_file *m, struct socket *sock);
->   	int		(*sendmsg)   (struct socket *sock, struct msghdr *m,
->   				      size_t total_len);
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> index 4bf8841651486d..1fd7cf5fc7516c 100644
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@ -1744,10 +1744,6 @@ int sock_common_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
->   			int flags);
->   int sock_common_setsockopt(struct socket *sock, int level, int optname,
->   				  char __user *optval, unsigned int optlen);
-> -int compat_sock_common_getsockopt(struct socket *sock, int level,
-> -		int optname, char __user *optval, int __user *optlen);
-> -int compat_sock_common_setsockopt(struct socket *sock, int level,
-> -		int optname, char __user *optval, unsigned int optlen);
->   
->   void sk_common_release(struct sock *sk);
->   
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> index e085df79482520..018404d1762682 100644
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -3199,23 +3199,14 @@ int sock_common_getsockopt(struct socket *sock, int level, int optname,
->   {
->   	struct sock *sk = sock->sk;
->   
-> -	return sk->sk_prot->getsockopt(sk, level, optname, optval, optlen);
-> -}
-> -EXPORT_SYMBOL(sock_common_getsockopt);
-> -
->   #ifdef CONFIG_COMPAT
-> -int compat_sock_common_getsockopt(struct socket *sock, int level, int optname,
-> -				  char __user *optval, int __user *optlen)
-> -{
-> -	struct sock *sk = sock->sk;
-> -
-> -	if (sk->sk_prot->compat_getsockopt != NULL)
-> +	if (in_compat_syscal() && sk->sk_prot->compat_getsockopt)
->   		return sk->sk_prot->compat_getsockopt(sk, level, optname,
->   						      optval, optlen);
-> +#endif
->   	return sk->sk_prot->getsockopt(sk, level, optname, optval, optlen);
->   }
-> -EXPORT_SYMBOL(compat_sock_common_getsockopt);
-> -#endif
-> +EXPORT_SYMBOL(sock_common_getsockopt);
->   
->   int sock_common_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
->   			int flags)
-> @@ -3240,23 +3231,14 @@ int sock_common_setsockopt(struct socket *sock, int level, int optname,
->   {
->   	struct sock *sk = sock->sk;
->   
-> -	return sk->sk_prot->setsockopt(sk, level, optname, optval, optlen);
-> -}
-> -EXPORT_SYMBOL(sock_common_setsockopt);
-> -
->   #ifdef CONFIG_COMPAT
-> -int compat_sock_common_setsockopt(struct socket *sock, int level, int optname,
-> -				  char __user *optval, unsigned int optlen)
-> -{
-> -	struct sock *sk = sock->sk;
-> -
-> -	if (sk->sk_prot->compat_setsockopt != NULL)
-> +	if (in_compat_syscall() && sk->sk_prot->compat_setsockopt)
->   		return sk->sk_prot->compat_setsockopt(sk, level, optname,
->   						      optval, optlen);
-> +#endif
->   	return sk->sk_prot->setsockopt(sk, level, optname, optval, optlen);
->   }
-> -EXPORT_SYMBOL(compat_sock_common_setsockopt);
-> -#endif
-> +EXPORT_SYMBOL(sock_common_setsockopt);
->   
->   void sk_common_release(struct sock *sk)
->   {
-> diff --git a/net/dccp/ipv4.c b/net/dccp/ipv4.c
-> index a7e989919c5307..316cc5ac0da72b 100644
-> --- a/net/dccp/ipv4.c
-> +++ b/net/dccp/ipv4.c
-> @@ -999,10 +999,6 @@ static const struct proto_ops inet_dccp_ops = {
->   	.recvmsg	   = sock_common_recvmsg,
->   	.mmap		   = sock_no_mmap,
->   	.sendpage	   = sock_no_sendpage,
-> -#ifdef CONFIG_COMPAT
-> -	.compat_setsockopt = compat_sock_common_setsockopt,
-> -	.compat_getsockopt = compat_sock_common_getsockopt,
-> -#endif
->   };
->   
->   static struct inet_protosw dccp_v4_protosw = {
-> diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
-> index 650187d688519c..b50f85a72cd5fc 100644
-> --- a/net/dccp/ipv6.c
-> +++ b/net/dccp/ipv6.c
-> @@ -1083,8 +1083,6 @@ static const struct proto_ops inet6_dccp_ops = {
->   	.sendpage	   = sock_no_sendpage,
->   #ifdef CONFIG_COMPAT
->   	.compat_ioctl	   = inet6_compat_ioctl,
-> -	.compat_setsockopt = compat_sock_common_setsockopt,
-> -	.compat_getsockopt = compat_sock_common_getsockopt,
->   #endif
->   };
->   
-> diff --git a/net/ieee802154/socket.c b/net/ieee802154/socket.c
-> index d93d4531aa9bc5..94ae9662133e30 100644
-> --- a/net/ieee802154/socket.c
-> +++ b/net/ieee802154/socket.c
-> @@ -423,10 +423,6 @@ static const struct proto_ops ieee802154_raw_ops = {
->   	.recvmsg	   = sock_common_recvmsg,
->   	.mmap		   = sock_no_mmap,
->   	.sendpage	   = sock_no_sendpage,
-> -#ifdef CONFIG_COMPAT
-> -	.compat_setsockopt = compat_sock_common_setsockopt,
-> -	.compat_getsockopt = compat_sock_common_getsockopt,
-> -#endif
->   };
->   
->   /* DGRAM Sockets (802.15.4 dataframes) */
-> @@ -986,10 +982,6 @@ static const struct proto_ops ieee802154_dgram_ops = {
->   	.recvmsg	   = sock_common_recvmsg,
->   	.mmap		   = sock_no_mmap,
->   	.sendpage	   = sock_no_sendpage,
-> -#ifdef CONFIG_COMPAT
-> -	.compat_setsockopt = compat_sock_common_setsockopt,
-> -	.compat_getsockopt = compat_sock_common_getsockopt,
-> -#endif
+Suggested-by: Jiang Liu <liuj97@gmail.com>
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+---
+ drivers/virtio/virtio_ring.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-For the ieee802154 part:
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 58b96baa8d48..ded82880281a 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -276,9 +276,11 @@ static void *vring_alloc_queue(struct virtio_device *vdev, size_t size,
+ 		return dma_alloc_coherent(vdev->dev.parent, size,
+ 					  dma_handle, flag);
+ 	} else {
+-		void *queue = alloc_pages_exact(PAGE_ALIGN(size), flag);
+-
+-		if (queue) {
++		void *queue = NULL;
++		struct page *page = alloc_pages_node(dev_to_node(&vdev->dev.parent),
++						     flag, get_order(size));
++		if (page) {
++			queue = page_address(page);
+ 			phys_addr_t phys_addr = virt_to_phys(queue);
+ 			*dma_handle = (dma_addr_t)phys_addr;
+ 
+@@ -308,7 +310,7 @@ static void vring_free_queue(struct virtio_device *vdev, size_t size,
+ 	if (vring_use_dma_api(vdev))
+ 		dma_free_coherent(vdev->dev.parent, size, queue, dma_handle);
+ 	else
+-		free_pages_exact(queue, PAGE_ALIGN(size));
++		free_pages((unsigned long)queue, get_order(size));
+ }
+ 
+ /*
+-- 
+2.24.0.rc2
 
-Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
-
-regards
-Stefan Schmidt
