@@ -2,102 +2,109 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC9DC4345C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A741BC43446
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB8C7207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83AA92076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/Y+Gxyh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yNPkHK1z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgGQQ5g (ORCPT
+        id S1728207AbgGQQ5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:57:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38828 "EHLO
+        Fri, 17 Jul 2020 12:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgGQQ5c (ORCPT
+        with ESMTP id S1727101AbgGQQ4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:57:32 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CA61C0619D2;
-        Fri, 17 Jul 2020 09:57:32 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id q17so5695294pls.9;
-        Fri, 17 Jul 2020 09:57:32 -0700 (PDT)
+        Fri, 17 Jul 2020 12:56:12 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 181CDC0619D4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:12 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 17so18214042wmo.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=l8xDxA8kojCoOA0aKOLVl5EuXMDT6t6AAoB6hlYLn4c=;
-        b=W/Y+GxyhjM2mw5UaQFS5Np6o9mOvfHYzIpCF9QAUOtKGHjlByhrh7hqHa1+rWARPcB
-         wZvWtfOY970oJLrVq7++GMfYNCbglgc0uqwvkILMbIRV1ReEhj78KvcNZ5BSR5qi4NYm
-         GWCr4heAT73gHXOi3Qb9NrtvZtc1dH658Z4M2rAr6AK5NLzIX6ECFeDykTU2Pl0bdamv
-         ZGbDivldoTR6xTCEslnjwanx+n3qzVZQdLBAwHfthyvLw4mzL0pccpsRmTpy9URWn+QK
-         HgcdfssxXfWaOzML+LF5qPd+l7b2ExOA57XbcQK0lMbF5qFdftE5o7eOjqi6vKRGkssI
-         j3Mw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=p0oUjKd59zMZaiGxgNRXSn/6+OSkd6Llst+aM8IBTWc=;
+        b=yNPkHK1zRA5ix6G8yWlcUoKNJIibFKAQ4kphl5pebJ5dbhCkkiDDttAbMDpxtPjbOf
+         ANaEw0YL+Z4RRuoY6dGRbsFDJMtrLMEWHjNyhtm72oiR0PLfCa3p/a6awZAV4JepQY8G
+         t38WX2mNBcRNYhoMkmNrlEcNUeX5W3rLp0fRirHfA7d9RaK9OdLglhBvRRq5oRKv5ntJ
+         SUxrPXSBg7BMtMtwuoy6k0UQRoamSfOSNgW229eFCxWEJqh0qnJ0wf8DWlweGjaS8NqT
+         z3MKcL49zcmAVUmHLmpdHY98sz+Vm4GuPO3dlQw7xOMzHSuNAomXLDnptzQSM+jKW3tl
+         zgqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l8xDxA8kojCoOA0aKOLVl5EuXMDT6t6AAoB6hlYLn4c=;
-        b=tM2zLpwmC12wr8joiq0n8lkv63b10U96vWoLHPrX4Xq3+rGaG54KswzrmqlTQA8qFt
-         SWkdJFdDn1fXLO3shJGIj8LWoJ+zbeqhcBRN8SD/gBpxYRQcJuIO+FOtFWlk5uhzKcZc
-         2aprQQUwFCqlZH+kC7YzhFTbbbrOKsrI+d2qQMw6UNylzt4MpkmLDrNLXXN+VZi8mrsS
-         zhOyc5ABiKAH87mvI8EMxOhFbAbtFH3iM3NRsd4vIGjk9pJc3HUMCRypXrzf4/x6jqeW
-         SnbH5bMJWDILPczcpSrkSliATQWWDw0xlhQQGWgxckY1XzkAX3KDv6eXkuNIb65HfY21
-         g1QA==
-X-Gm-Message-State: AOAM533KHsuQYLpxoxWd+48K7IA50343ZqVfTUfJLypQ2ZO+Bgts8sXH
-        HueHwl3iL9E/F+FZhL3///E=
-X-Google-Smtp-Source: ABdhPJwQYmCmnOsUWnCWRIRCLhh5wVUlWnLAiBc9fUebbFncgMYxQYGvGrqUpmhxhoGVv4Le2iYmzw==
-X-Received: by 2002:a17:902:eb54:: with SMTP id i20mr8237614pli.183.1595005052114;
-        Fri, 17 Jul 2020 09:57:32 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 17sm3334257pjl.30.2020.07.17.09.57.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 09:57:31 -0700 (PDT)
-Subject: Re: [PATCH 7/7] usb: bdc: Use devm_clk_get_optional()
-To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Sasi Kumar <sasi.kumar@broadcom.com>
-References: <20200717152307.36705-1-alcooperx@gmail.com>
- <20200717152307.36705-8-alcooperx@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <6b52771f-addb-88b0-fca3-e22c6756c38c@gmail.com>
-Date:   Fri, 17 Jul 2020 09:57:24 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=p0oUjKd59zMZaiGxgNRXSn/6+OSkd6Llst+aM8IBTWc=;
+        b=KHNFZsEi4y+lc5kWryi3N2i8224VHslkijtkrNp4MDp7UvuHY7lYvaWMXxI/bWuTBP
+         J5dMfLsIrs2RWkow223GuQAWxHurAFsl8AZduQRyJZHPwBjiMvDBX0htaWMdgzycyGH4
+         b2nTq/dOBkUyAr7GuuS3/t7hL35EaBfNTuIds+l2TdM/eoxu2P4lJAx6VGuw808WiS5C
+         LDH4n3Czqbc/P+vIjVh+QA/dv1eSOMggSclmxkfBRlOtg/u3lIZE2Epn1soojZ7HW0kX
+         Ah0el+GmLXzbPfKImStjMvF22rd8meBLPO+oK8IRUvrFGR3OhdkZr1uN/ca/PrkOPs1+
+         M64A==
+X-Gm-Message-State: AOAM530iCQNTufxSNWgy19ZWUcWYXhdSG0LoDxV6C5mianKVc09k4mZg
+        iu3fucPAJkK69pwkQufb4Ni87Q==
+X-Google-Smtp-Source: ABdhPJzGx0h8an30IqO75LbxvOE6R1dZce6G1gw/E5yjUFHsKN1Rz4cLrUZ2G69jijBs0tNvFkzJbg==
+X-Received: by 2002:a1c:2602:: with SMTP id m2mr10749472wmm.50.1595004970818;
+        Fri, 17 Jul 2020 09:56:10 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.167.94])
+        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 09:56:10 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: [PATCH 11/30] iio: adc: ad799x: Demote seemingly unintentional kerneldoc header
+Date:   Fri, 17 Jul 2020 17:55:19 +0100
+Message-Id: <20200717165538.3275050-12-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200717165538.3275050-1-lee.jones@linaro.org>
+References: <20200717165538.3275050-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200717152307.36705-8-alcooperx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is the only use of function related kerneldoc in the sourcefile
+and no descriptions are provided.
 
+Fixes the following W=1 kernel build warning(s):
 
-On 7/17/2020 8:23 AM, Al Cooper wrote:
-> From: Florian Fainelli <florian.fainelli@broadcom.com>
-> 
-> The BDC clock is optional and we may get an -EPROBE_DEFER error code
-> which would not be propagated correctly, fix this by using
-> devm_clk_get_optional().
-> 
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+ drivers/iio/adc/ad799x.c:192: warning: Function parameter or member 'irq' not described in 'ad799x_trigger_handler'
+ drivers/iio/adc/ad799x.c:192: warning: Function parameter or member 'p' not described in 'ad799x_trigger_handler'
 
-Since you are carrying this patch on my behalf your Signed-off-by should
-also be present, if you don't mind, I would like my gmail.com address to
-be used here for consistency with all submissions done throughout my
-tenure at broadcom, thanks!
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/iio/adc/ad799x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iio/adc/ad799x.c b/drivers/iio/adc/ad799x.c
+index ef013af1aec07..007ec7ad94752 100644
+--- a/drivers/iio/adc/ad799x.c
++++ b/drivers/iio/adc/ad799x.c
+@@ -182,7 +182,7 @@ static int ad799x_update_config(struct ad799x_state *st, u16 config)
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * ad799x_trigger_handler() bh of trigger launched polling to ring buffer
+  *
+  * Currently there is no option in this driver to disable the saving of
 -- 
-Florian
+2.25.1
+
