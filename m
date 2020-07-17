@@ -2,70 +2,128 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8AEC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9E620704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECD020704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o6zhOep2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgGQGWz (ORCPT
+        id S1726938AbgGQGYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:22:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36444 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726056AbgGQGWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:22:55 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 328F1C9F7C738406320B;
-        Fri, 17 Jul 2020 14:22:49 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Jul 2020
- 14:22:39 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <vishal@chelsio.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-        <jeff@garzik.org>, <divy@chelsio.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <wanghai38@huawei.com>
-Subject: [PATCH] net: cxgb3: add missed destroy_workqueue in cxgb3 probe failure
-Date:   Fri, 17 Jul 2020 14:21:17 +0800
-Message-ID: <20200717062117.8941-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 Jul 2020 02:24:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbgGQGYK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:24:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F00C08C5C0;
+        Thu, 16 Jul 2020 23:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=/E3yYoXC157551h6xowHq2pNR018OFBhJ9Arvav070Y=; b=o6zhOep28KSjcnYm3J9aHcpkgm
+        O2Fcz0+9OvZMn6mbYHPBFH/fhpi9DoauQT0ncpn5viSfaoFF6bLsJITCRXjgfdyqFLmf4LW5Djzbq
+        mVD4a9wW/2LPyab9lB73mzm+FvayvQ+EgI8+vOBPzlrpsBjPVCB3G88FaBPOFgmA9Mu2nVuQYxlZH
+        5LqOFVBqwVr859Q4epbLvsmne1egzV1tTu7+l4QNJED3wUW/yW3Y/QVQJEeAZPJymdlnG4fe6WTAC
+        BSzIX9qF0b7Pb8owGsYurQp2qXY/WMlbn+gcpCALS7U1mCseHNtxJKPafipfiMwCKx140COitXOWS
+        xalq63Mw==;
+Received: from [2001:4bb8:105:4a81:3772:912d:640:e6c6] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwJmk-00051o-Jr; Fri, 17 Jul 2020 06:23:55 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Chas Williams <3chas3@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-wpan@vger.kernel.org, mptcp@lists.01.org
+Subject: [PATCH 03/22] net: streamline __sys_getsockopt
+Date:   Fri, 17 Jul 2020 08:23:12 +0200
+Message-Id: <20200717062331.691152-4-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200717062331.691152-1-hch@lst.de>
+References: <20200717062331.691152-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call destroy_workqueue when cxgb3 probe fails.
-Add the missed calls to fix it.
+Return early when sockfd_lookup_light fails to reduce a level of
+indentation for most of the function body.
 
-Fixes: 4d22de3e6cc4 ("Add support for the latest 1G/10G Chelsio adapter, T3.")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/socket.c | 31 ++++++++++++++-----------------
+ 1 file changed, 14 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-index 42c6e9379882..060d42803240 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-@@ -3407,6 +3407,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- out_disable_device:
- 	pci_disable_device(pdev);
- out:
-+	destroy_workqueue(cxgb3_wq);
+diff --git a/net/socket.c b/net/socket.c
+index 49a6daf0293b83..b79376b17b45b7 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2163,28 +2163,25 @@ static int __sys_getsockopt(int fd, int level, int optname,
+ 	int max_optlen;
+ 
+ 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
+-	if (sock != NULL) {
+-		err = security_socket_getsockopt(sock, level, optname);
+-		if (err)
+-			goto out_put;
++	if (!sock)
++		return err;
+ 
+-		max_optlen = BPF_CGROUP_GETSOCKOPT_MAX_OPTLEN(optlen);
++	err = security_socket_getsockopt(sock, level, optname);
++	if (err)
++		goto out_put;
+ 
+-		if (level == SOL_SOCKET)
+-			err =
+-			    sock_getsockopt(sock, level, optname, optval,
++	max_optlen = BPF_CGROUP_GETSOCKOPT_MAX_OPTLEN(optlen);
++
++	if (level == SOL_SOCKET)
++		err = sock_getsockopt(sock, level, optname, optval, optlen);
++	else
++		err = sock->ops->getsockopt(sock, level, optname, optval,
+ 					    optlen);
+-		else
+-			err =
+-			    sock->ops->getsockopt(sock, level, optname, optval,
+-						  optlen);
+ 
+-		err = BPF_CGROUP_RUN_PROG_GETSOCKOPT(sock->sk, level, optname,
+-						     optval, optlen,
+-						     max_optlen, err);
++	err = BPF_CGROUP_RUN_PROG_GETSOCKOPT(sock->sk, level, optname, optval,
++					     optlen, max_optlen, err);
+ out_put:
+-		fput_light(sock->file, fput_needed);
+-	}
++	fput_light(sock->file, fput_needed);
  	return err;
  }
  
 -- 
-2.17.1
+2.27.0
 
