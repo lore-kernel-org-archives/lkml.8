@@ -2,122 +2,280 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAA8C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09107C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBD22063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4DA020691
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:28:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aUuIOdSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgGQJ1C (ORCPT
+        id S1726559AbgGQJ2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:27:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47960 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbgGQJ1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:27:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id F2BAEB74A;
-        Fri, 17 Jul 2020 09:27:03 +0000 (UTC)
-Subject: Re: [PATCH] media: atomisp: fix NULL pointer dereference
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Fri, 17 Jul 2020 05:28:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgGQJ2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:28:02 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0746C08C5C0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:28:02 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f2so10248128wrp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IDRMoK9XAqR3KP28NyAj73nC8S++fY+3q8RW1Xp505E=;
+        b=aUuIOdSl1Hj52p0XnwvTfGJv9BPtvFdL8zLQrtkTSwIDw2JYb3HK83DDvrMtVnhXDc
+         eIf/lbmn+YLu0T7EVirEA+aGzoUXS9v86RVDH8na4723Hec1IskpkZmj9g3JUVx7lmZc
+         7rx8Is9uwbAulqVYWR8hCQo/QMUrlBHHYy9Vs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=IDRMoK9XAqR3KP28NyAj73nC8S++fY+3q8RW1Xp505E=;
+        b=YAf9FTKm7LkgRmpiMUZsIiwum8jsWzKDtNJ12SnGcGt6yFiX+xO6kduNNFYofSe4Bu
+         t5hYxuCBWY59pNwUMkLbDgun/ImhpHh4rGSa6Ky9nwof9zt/LfpyXW9V66akssLxGtYK
+         Zr3dVQLVCt815UZft7WONJFv9/2i3SSXLgc3tsEmNYFaJ08OK9SlvqQTUWCqnMknHl1x
+         toCfi/ZJE9TAu8evHdHdJ59Bcq8lD3+zmy5z8bfqPnMb4JwrEk6dISYlZmtRUS2M6PhF
+         z2hAIjd/BVgFEXNpY8GGhtNOh7osSFRzrWYSipmENu61a+9D8+wCRKewgYPGWObEKuvA
+         JEcg==
+X-Gm-Message-State: AOAM530onF8KJoKi9eS2p4RcMYrPCcJ0bAQ9wXaotwbMB5UDYGt+hshw
+        R8y91Za7OZZRW/KOEGdP+GYbAQ==
+X-Google-Smtp-Source: ABdhPJw6LBUxHmaeROzirZrFEGpc4HNi8ILpqRqn+Y1tz0WruvUTrSUUco/JdB7EQoAG5E3nVF/cpA==
+X-Received: by 2002:adf:8b5a:: with SMTP id v26mr9226933wra.165.1594978081123;
+        Fri, 17 Jul 2020 02:28:01 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id l8sm13287743wrq.15.2020.07.17.02.27.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 02:28:00 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 11:27:58 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        lukas@mntmn.com,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200716115122.15909-1-jslaby@suse.cz>
- <CAHp75VeqV1Jj3rOxbFCx2DsrH1Y_re03i3ndvXvShi2UG6FGyQ@mail.gmail.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7aba208e-d023-7c94-e41e-7a74c2533d0e@suse.cz>
-Date:   Fri, 17 Jul 2020 11:26:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller
+ Subsystem
+Message-ID: <20200717092758.GR3278063@phenom.ffwll.local>
+Mail-Followup-To: Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, lukas@mntmn.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
+ <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
+ <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
+ <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VeqV1Jj3rOxbFCx2DsrH1Y_re03i3ndvXvShi2UG6FGyQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17. 07. 20, 11:01, Andy Shevchenko wrote:
-> On Thu, Jul 16, 2020 at 2:52 PM Jiri Slaby <jslaby@suse.cz> wrote:
->>
->> I am currently seeing:
->> BUG: kernel NULL pointer dereference, address: 0000000000000002
->> ...
->> Hardware name: UMAX VisionBook 10Wi Pro/CQM1018CWP, BIOS CQ1018.007 09/22/2016
->> RIP: 0010:gmin_subdev_add.cold+0x303/0x312 [atomisp_gmin_platform]
->> ...
->> Call Trace:
->>  gmin_camera_platform_data+0x2f/0x60 [atomisp_gmin_platform]
->>  ov2680_probe+0x7f/0x2b0 [atomisp_ov2680]
->>  i2c_device_probe+0x95/0x290
->>
->> power can be NULL and that is properly handled earlier in this function.
->> Even i2c address is set there. So this is a duplicated assignment which
->> can cause the bug above. Remove it.
+On Fri, Jul 17, 2020 at 11:12:39AM +0200, Lucas Stach wrote:
+> Am Freitag, den 17.07.2020, 10:59 +0200 schrieb Daniel Vetter:
+> > On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+> > > Hi Laurentiu,
+> > > 
+> > > Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
+> > > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > > > 
+> > > > Hi,
+> > > > 
+> > > > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+> > > > includes only graphics plane support (no video planes), no HDR10 capabilities,
+> > > > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
+> > > > 
+> > > > Support for the rest of the features will be added incrementally, in subsequent
+> > > > patches.
+> > > > 
+> > > > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+> > > > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
+> > > 
+> > > I think the series (minus 3/5 and minor correction to the DT binding)
+> > > is fine to go in now. So just some formal questions: are you going to
+> > > maintain this driver in upstream? If so we should add a MAINTAINERS
+> > > entry to that effect. I can offer to act as a reviewer in this case.
+> > > 
+> > > How do you intend to merge this? IMO pushing this through drm-misc
+> > > seems like the right thing to do. If you agree I can help you get this
+> > > applied. If you are going to maintain the driver on your own, I think
+> > > you should then apply for commit rights to drm-misc.
+> > 
+> > drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
+> > should put the entire collective of imx drivers under drm-misc? Or
+> > maybe it's just an oversight that the git repo isn't specified in the
+> > MAINTAINERS entry. Also maybe we should add the pengutronix kernel
+> > team alias there too?
 > 
-> I believe it's fixed in [1].
+> drm/imx was exclusively the IPUv3 up until now, which is in fact
+> maintained outside of drm-misc in its own git tree. This has worked
+> quite well in the past so even though IPUv3 doesn't see a lot of churn
+> these days the motivation to change anything to this workflow is quite
+> low. And yes, the git tree is missing from the MAINTAINERS entry.
 > 
-> [1]: https://git.linuxtv.org/mchehab/experimental.git/log/?h=atomisp_v5
+> For the DCSS driver, if it's going to be maintained by NXP, I figured
+> it might be easier for Laurentiu to push things into drm-misc than set
+> up a separate public git tree. But IMHO that's fully up to him to
+> decide.
 
-It seems so. By:
-commit 219448c9cd4a505b6274d746ca1897af20e6d06a
-Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date:   Fri Jun 26 14:19:21 2020 +0200
+/me puts on maintainer hat
 
-    media: atomisp: Make pointer to PMIC client global
+Much prefer drm-misc over random people playing maintainer and fumbling
+it. I think the reasonable options are either in the current imx tree, or
+drm-misc. Standalone tree for these small drivers just doesn't make much
+sense.
+-Daniel
 
-thanks,
+> 
+> Regards,
+> Lucas
+> 
+> > -Daniel
+> > 
+> > 
+> > > Regards,
+> > > Lucas
+> > > 
+> > > > Thanks,
+> > > > Laurentiu
+> > > > 
+> > > > Changes in v5:
+> > > >  * Rebased to latest;
+> > > >  * Took out component framework support and made it a separate patch so
+> > > >    that people can still test with HDP driver, which makes use of it.
+> > > >    But the idea is to get rid of it once HDP driver's next versions
+> > > >    will remove component framework as well;
+> > > >  * Slight improvement to modesetting: avoid cutting off the pixel clock
+> > > >    if the new mode and the old one are equal. Also, in this case, is
+> > > >    not necessary to wait for DTG to shut off. This would allow to switch
+> > > >    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
+> > > >    from DCSS point of view);
+> > > >  * Do not fire off CTXLD when going to suspend, unless it still has
+> > > >    entries that need to be committed to DCSS;
+> > > >  * Addressed Rob's comments on bindings;
+> > > > 
+> > > > Changes in v4:
+> > > >  * Addressed Lucas and Philipp's comments:
+> > > >    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
+> > > >    * Removed usage of devm_ functions since I'm already doing all the
+> > > >      clean-up in the submodules_deinit();
+> > > >    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
+> > > >    * Removed en_completion variable from dcss_crtc since this was
+> > > >      introduced mainly to avoid vblank timeout warnings which were fixed
+> > > >      by arming the vblank event in flush() instead of begin();
+> > > >    * Removed clks_on and irq_enabled flags since all the calls to
+> > > >      enabling/disabling clocks and interrupts were balanced;
+> > > >    * Removed the custom atomic_commit callback and used the DRM core
+> > > >      helper and, in the process, got rid of a workqueue that wasn't
+> > > >      necessary anymore;
+> > > >    * Fixed some minor DT binding issues flagged by Philipp;
+> > > >    * Some other minor changes suggested by Lucas;
+> > > >  * Removed YUV formats from the supported formats as these cannot work
+> > > >    without the HDR10 module CSCs and LUTs. Will add them back when I
+> > > >    will add support for video planes;
+> > > > 
+> > > > Changes in v3:
+> > > >  * rebased to latest linux-next and made it compile as drmP.h was
+> > > >    removed;
+> > > >  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
+> > > >  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
+> > > >  * fixed a a spurious hang reported by Lukas Hartmann and encountered
+> > > >    by me several times;
+> > > >  * mask DPR and DTG interrupts by default, as they may come enabled from
+> > > >    U-boot;
+> > > > 
+> > > > Changes in v2:
+> > > >  * Removed '0x' in node's unit-address both in DT and yaml;
+> > > >  * Made the address region size lowercase, to be consistent;
+> > > >  * Removed some left-over references to P010;
+> > > >  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+> > > >    issues reported by kbuild for other architectures;
+> > > > 
+> > > > Laurentiu Palcu (5):
+> > > >   drm/imx: compile imx directory by default
+> > > >   drm/imx: Add initial support for DCSS on iMX8MQ
+> > > >   drm/imx/dcss: add component framework functionality
+> > > >   dt-bindings: display: imx: add bindings for DCSS
+> > > >   arm64: dts: imx8mq: add DCSS node
+> > > > 
+> > > >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml |  84 ++
+> > > >  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  23 +
+> > > >  drivers/gpu/drm/Makefile                      |   2 +-
+> > > >  drivers/gpu/drm/imx/Kconfig                   |   2 +
+> > > >  drivers/gpu/drm/imx/Makefile                  |   1 +
+> > > >  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
+> > > >  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
+> > > >  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 314 +++++++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 183 ++++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 185 ++++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  43 +
+> > > >  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
+> > > >  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
+> > > >  20 files changed, 4123 insertions(+), 1 deletion(-)
+> > > >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+> > > > 
+> > > 
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 
+> > 
+> 
+
 -- 
-js
-suse labs
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
