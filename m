@@ -2,236 +2,140 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB17C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9CFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8B420704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D72620704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgGQG7v (ORCPT
+        id S1728069AbgGQG74 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:59:51 -0400
-Received: from mga17.intel.com ([192.55.52.151]:17320 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbgGQG7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:59:50 -0400
-IronPort-SDR: A+IR1kih0wDa3HCcOJKzadX8r85b7nk0/mLO2DXuE/Haf4HRTPDI32P9HnDz2eVQ7YpaG1gqoO
- K2zawTKORwGQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129630715"
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="129630715"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 23:59:49 -0700
-IronPort-SDR: GnPs/Ylni2lzkCyXvsCxlWvF8fPvWMhsb9pTOVFll9cKB4kxpJKfmscoJllM2zwRds/bOMRd4a
- 1L6bUHG5RMsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="318685440"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Jul 2020 23:59:48 -0700
-Received: from [10.249.224.34] (abudanko-mobl.ccr.corp.intel.com [10.249.224.34])
-        by linux.intel.com (Postfix) with ESMTP id A08115801CF;
-        Thu, 16 Jul 2020 23:59:46 -0700 (PDT)
-Subject: [PATCH v12 02/15] tools/libperf: add flags to fdarray fds objects
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <6b7d43ff-0801-d5dd-4e90-fcd86b17c1c8@linux.intel.com>
-Date:   Fri, 17 Jul 2020 09:59:45 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 02:59:56 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:38405 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728044AbgGQG7z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:59:55 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MI5YH-1k29V93IjX-00F9Yk; Fri, 17 Jul 2020 08:59:53 +0200
+Received: by mail-qk1-f181.google.com with SMTP id b185so7926317qkg.1;
+        Thu, 16 Jul 2020 23:59:52 -0700 (PDT)
+X-Gm-Message-State: AOAM5339BGpumRHMtE4Vu6GFpVpzvS32TwfJxX55xkQ9/iQnf3323a9F
+        lT2+WWPG45AVDktawbdnFZdIGGGqJQD1GLShiaQ=
+X-Google-Smtp-Source: ABdhPJwaKBW/RsvnQGEs0QjkcfL9xu0Lwumc0lzuw3nWoyJb9gE4p2b9Go8DMLyImZgf74HP7Hli3/CWm9JHm7vTLMs=
+X-Received: by 2002:a37:b484:: with SMTP id d126mr7553671qkf.394.1594969191432;
+ Thu, 16 Jul 2020 23:59:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200305111047.147355-1-enric.balletbo@collabora.com> <CAFqH_52LhfV9AsnPRZi_ZPsgYX8WrUrKEsV-E7VHOw3ZZtHd-w@mail.gmail.com>
+In-Reply-To: <CAFqH_52LhfV9AsnPRZi_ZPsgYX8WrUrKEsV-E7VHOw3ZZtHd-w@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jul 2020 08:59:35 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0ScHe+ErEZr-x4Sj=3Yz7cppKDcemXemvwXMbPh-RVMQ@mail.gmail.com>
+Message-ID: <CAK8P3a0ScHe+ErEZr-x4Sj=3Yz7cppKDcemXemvwXMbPh-RVMQ@mail.gmail.com>
+Subject: Re: [RESEND RESEND PATCH] arm/arm64: defconfig: Update configs to use
+ the new CROS_EC options
+To:     Enric Balletbo Serra <eballetbo@gmail.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Kukjin Kim <kgene@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Bastien Nocera <hadess@hadess.net>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Maxime Ripard <maxime@cerno.tech>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Olof Johansson <olof@lixom.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:ttxuPKoIw8Qj/U12D5To79v1kGuwCuWEFYDu+t5UtdTsAlF6npY
+ ZAnDbKBOCWbhs7g+WRA1iQIjqsY9ItKEi39dd2WXenx54EpVktL8rmAKD/lnk+0V0951cgE
+ E1C325HxehShg2Qzk2HaT6gPToMZdoLAphQtaV3f92NlIB/DvnqR5djK713Z5C5TpwpBMuC
+ hM6iP1dGXnXbnF8j3qolw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HqEMcult3HQ=:WTzDaHwmunTdpvBqDgJpOu
+ SwJXaa1aOTxeIGnLdmtqbasvhE4rOi69g187hQ5/5E1Mus4JZadwipGxTxhipgMF4q49PVd33
+ xXyFUkN9uRHCcDEI95/FRWoxT6Q65RgrQxxcvg+AG29h4RUzdyu1Z5WpX5bSGug8t8Deooe1Z
+ NwAJhae2uKY3rc37NVFm9g9kkxzbQcpe5CeiR12XEBdJLoUbaSRXjd103X2LOQ3528PW+FLSV
+ dFESDAQyo/irFl11BqfPKY4Q24dpXxsL1nr5IF1QJCrB8jwTGrYKVKxJ3dQDLt5/lw24dRX8k
+ 6aiWIyEddzEyH8xCjFTCRQ2TQyfHSiWhedlRsu5u7iwXgcTSAA/gfpkSSzOmdpzfEms2eOy5F
+ WOvRKucS4lwuQZ+PL/+S3CO9jY/9DASO+raBA5xxfvSyN9GkYP5dbNLj2cnkMOP4s69DXwGPB
+ llZ/mWCyiry7G1u/23rUoGGBkewA7S/4FoY5GxDLljXnXsV3S8SRLLB+TE+CZmxWUKA/9Xdei
+ fohNShfYlkZ53R+i8I+yjqyU87J6RH7BmD6DX3xN2KPlBfc1b1+tO8GAEqoKXZiS5BXNw6qqh
+ OFr3BlsFtznUQb5hGV7AuPTHFtWbGw8ngfkFH+NzzMPH58T4CRBOwa7NKQK4btbfz3/0hYMeD
+ 8efSdgHDrO91I0WzNS547l/eIK0bO9feXXOSqfi9f30Cj5+zzgJwyBh3/UIXfoFjxidfq3et3
+ EWF3aA7rRtF7GDuO9QJOvKskyCBcTOXmZ6pO3+VnEj4/5hIHGXs9VYlVB8aIvRtSjTOCK4Vu9
+ OK0uWfcNA4ddJzW93co9HsKftp4Te+oi2nrMeCMXrP23bYT6wqpBvaq+nm3fDFg7lzNAybz+K
+ SpAkgArz2Uk9Li4XQ3xOc82yDcSYcdys4Y9sJtCtxe6nBow4DHTu32Tr0rHL9NYsbFjfqH+VA
+ F9RGPb2CqLf0of29sMi/uuNvlyBkZ7qu9kaNc6nKNmScqMbOIzVD+
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 15, 2020 at 11:31 PM Enric Balletbo Serra
+<eballetbo@gmail.com> wrote:
+> Missatge de Enric Balletbo i Serra <enric.balletbo@collabora.com> del
+> dia dj., 5 de març 2020 a les 12:11:
+> >
+> > We refactored the CrOS EC drivers moving part of the code from the MFD
+> > subsystem to the platform chrome subsystem. During this change we needed
+> > to rename some config options, so, update the defconfigs accordingly.
+> >
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> > Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> > Acked-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+>
+> A gentle ping. I'd like to land this if is possible because that way I
+> can remove some legacy code in platform/chrome subsystem.
+>
+> Thanks,
+>   Enric
+>
+> > Dear all,
+> >
+> > This is a resend of a resend patch [3]. In some previous discussions
+> > maintainers would prefer to have this merged through the arm-soc tree
+> > but wasn't merged yet and I forget to ping again, hence, sending a new
+> > resend.
 
-Store flags per struct pollfd *entries object in a bitmap of int size.
-Implement fdarray_flag__nonfilterable flag to skip object from counting
-by fdarray__filter(). Fixed fdarray test issue reported by kernel test
-robot.
+I've merged it into the arm/defconfig branch of the soc tree now.
+If you have future platform specific changes to the defconfig files,
+please just add soc@kernel.org to the recipients to get the patch
+into patchwork.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Reported-by: kernel test robot <rong.a.chen@intel.com>
----
- tools/lib/api/fd/array.c                 |  9 +++++++--
- tools/lib/api/fd/array.h                 | 16 ++++++++++++----
- tools/lib/perf/evlist.c                  |  6 +++---
- tools/lib/perf/include/internal/evlist.h |  2 +-
- tools/perf/tests/fdarray.c               |  2 +-
- tools/perf/util/evlist.c                 |  2 +-
- 6 files changed, 25 insertions(+), 12 deletions(-)
-
-diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-index 89f9a2193c2d..01b3b89f9797 100644
---- a/tools/lib/api/fd/array.c
-+++ b/tools/lib/api/fd/array.c
-@@ -8,6 +8,7 @@
- #include <poll.h>
- #include <stdlib.h>
- #include <unistd.h>
-+#include <string.h>
- 
- void fdarray__init(struct fdarray *fda, int nr_autogrow)
- {
-@@ -19,7 +20,7 @@ void fdarray__init(struct fdarray *fda, int nr_autogrow)
- 
- int fdarray__grow(struct fdarray *fda, int nr)
- {
--	void *priv;
-+	struct priv *priv;
- 	int nr_alloc = fda->nr_alloc + nr;
- 	size_t psize = sizeof(fda->priv[0]) * nr_alloc;
- 	size_t size  = sizeof(struct pollfd) * nr_alloc;
-@@ -34,6 +35,9 @@ int fdarray__grow(struct fdarray *fda, int nr)
- 		return -ENOMEM;
- 	}
- 
-+	memset(&entries[fda->nr_alloc], 0, sizeof(struct pollfd) * nr);
-+	memset(&priv[fda->nr_alloc], 0, sizeof(fda->priv[0]) * nr);
-+
- 	fda->nr_alloc = nr_alloc;
- 	fda->entries  = entries;
- 	fda->priv     = priv;
-@@ -69,7 +73,7 @@ void fdarray__delete(struct fdarray *fda)
- 	free(fda);
- }
- 
--int fdarray__add(struct fdarray *fda, int fd, short revents)
-+int fdarray__add(struct fdarray *fda, int fd, short revents, enum fdarray_flags flags)
- {
- 	int pos = fda->nr;
- 
-@@ -79,6 +83,7 @@ int fdarray__add(struct fdarray *fda, int fd, short revents)
- 
- 	fda->entries[fda->nr].fd     = fd;
- 	fda->entries[fda->nr].events = revents;
-+	fda->priv[fda->nr].flags = flags;
- 	fda->nr++;
- 	return pos;
- }
-diff --git a/tools/lib/api/fd/array.h b/tools/lib/api/fd/array.h
-index b39557d1a88f..7fcf21a33c0c 100644
---- a/tools/lib/api/fd/array.h
-+++ b/tools/lib/api/fd/array.h
-@@ -21,19 +21,27 @@ struct fdarray {
- 	int	       nr_alloc;
- 	int	       nr_autogrow;
- 	struct pollfd *entries;
--	union {
--		int    idx;
--		void   *ptr;
-+	struct priv {
-+		union {
-+			int    idx;
-+			void   *ptr;
-+		};
-+		unsigned int flags;
- 	} *priv;
- };
- 
-+enum fdarray_flags {
-+	fdarray_flag__default	    = 0x00000000,
-+	fdarray_flag__nonfilterable = 0x00000001
-+};
-+
- void fdarray__init(struct fdarray *fda, int nr_autogrow);
- void fdarray__exit(struct fdarray *fda);
- 
- struct fdarray *fdarray__new(int nr_alloc, int nr_autogrow);
- void fdarray__delete(struct fdarray *fda);
- 
--int fdarray__add(struct fdarray *fda, int fd, short revents);
-+int fdarray__add(struct fdarray *fda, int fd, short revents, enum fdarray_flags flags);
- int fdarray__poll(struct fdarray *fda, int timeout);
- int fdarray__filter(struct fdarray *fda, short revents,
- 		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 6a875a0f01bb..2208444ecb44 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -305,9 +305,9 @@ int perf_evlist__alloc_pollfd(struct perf_evlist *evlist)
- }
- 
- int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
--			    void *ptr, short revent)
-+			    void *ptr, short revent, enum fdarray_flags flags)
- {
--	int pos = fdarray__add(&evlist->pollfd, fd, revent | POLLERR | POLLHUP);
-+	int pos = fdarray__add(&evlist->pollfd, fd, revent | POLLERR | POLLHUP, flags);
- 
- 	if (pos >= 0) {
- 		evlist->pollfd.priv[pos].ptr = ptr;
-@@ -488,7 +488,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
- 		revent = !overwrite ? POLLIN : 0;
- 
- 		if (!evsel->system_wide &&
--		    perf_evlist__add_pollfd(evlist, fd, map, revent) < 0) {
-+		    perf_evlist__add_pollfd(evlist, fd, map, revent, fdarray_flag__default) < 0) {
- 			perf_mmap__put(map);
- 			return -1;
- 		}
-diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
-index 74dc8c3f0b66..2d0fa02b036f 100644
---- a/tools/lib/perf/include/internal/evlist.h
-+++ b/tools/lib/perf/include/internal/evlist.h
-@@ -45,7 +45,7 @@ struct perf_evlist_mmap_ops {
- 
- int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
- int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
--			    void *ptr, short revent);
-+			    void *ptr, short revent, enum fdarray_flags flags);
- 
- int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 			  struct perf_evlist_mmap_ops *ops,
-diff --git a/tools/perf/tests/fdarray.c b/tools/perf/tests/fdarray.c
-index d0c8a05aab2f..d9eca8e86a6b 100644
---- a/tools/perf/tests/fdarray.c
-+++ b/tools/perf/tests/fdarray.c
-@@ -112,7 +112,7 @@ int test__fdarray__add(struct test *test __maybe_unused, int subtest __maybe_unu
- 	}
- 
- #define FDA_ADD(_idx, _fd, _revents, _nr)				   \
--	if (fdarray__add(fda, _fd, _revents) < 0) {			   \
-+	if (fdarray__add(fda, _fd, _revents, fdarray_flag__default) < 0) { \
- 		pr_debug("\n%d: fdarray__add(fda, %d, %d) failed!",	   \
- 			 __LINE__,_fd, _revents);			   \
- 		goto out_delete;					   \
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 1b884695b4d3..bcbe0cb8482e 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -497,7 +497,7 @@ int perf_evlist__enable_event_idx(struct evlist *evlist,
- 
- int evlist__add_pollfd(struct evlist *evlist, int fd)
- {
--	return perf_evlist__add_pollfd(&evlist->core, fd, NULL, POLLIN);
-+	return perf_evlist__add_pollfd(&evlist->core, fd, NULL, POLLIN, fdarray_flag__default);
- }
- 
- int evlist__filter_pollfd(struct evlist *evlist, short revents_and_mask)
--- 
-2.24.1
-
-
+     Arnd
