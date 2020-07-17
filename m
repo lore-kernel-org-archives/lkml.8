@@ -2,148 +2,152 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5366AC433F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8A8207CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40784204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:20:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oGrAw2FW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+wrzPk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgGQAQk (ORCPT
+        id S1726234AbgGQAUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 20:16:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53914 "EHLO
+        Thu, 16 Jul 2020 20:20:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgGQAQ2 (ORCPT
+        with ESMTP id S1726125AbgGQAUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 20:16:28 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45711C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:28 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id t11so4484353pfq.11
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:28 -0700 (PDT)
+        Thu, 16 Jul 2020 20:20:04 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606F2C061755;
+        Thu, 16 Jul 2020 17:20:04 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id p205so8343637iod.8;
+        Thu, 16 Jul 2020 17:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iuuJuMaKgUlLRcc6gFCZ7HFqvJc6qzprtp/8FUZq9U4=;
-        b=oGrAw2FWu08q1/KU6m+pJhAwavDgdIcPCeC2VO0HBZ36u6jVuMdY/1nf8t3PfztDxd
-         UrUWUVv0AnWLdoKgefsdSYVgpZ4NShv34c7RawVdolP1zjCL4B7AapAXY3oXguBRoRCk
-         PF7+1abGWRfMifqD+JULmyLXmWqVVqxxGalfipSqKUxJKGVGQ7TKDI8yZKyevy5YgWxZ
-         hSf2uxu+JjBVs9go3Z0QmwRI8M8NXaIWEXiYdzEZdGq9x0D7Fe6x5rpTci8Z2TXY5VGF
-         jHPoBeSe8mZhLDOeSB3SGkZLm4ZnuqsBMDyArUSRqy5ww1GBBGt/gDcd4aeLhToTI/hF
-         JDiQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2FerGNFZKniOyRFjaMMBJDlV2XPDBsl8JaLwC0gfi7o=;
+        b=f+wrzPk6yzAFgWypM0ttm/bz88d9IaZzRis5kK0Eg82y3tF0dYe+k5a4N/iohJ+icy
+         fEthlTkf5JQC8a7kxhlUo4255wTDwmqU6lgIMBKiZ9gr4Z2xnWvSV2ERS6YkpEmAdL8I
+         dHDO752UplWksHQed6DBxtBpHktstX55MpMHNGhY/cp+J5vzeLeHCnMvKklU5fS0jt18
+         nPp49+DQKOwQZkz46FVTUGy7h/umw2sj/fjz+agmH43PwHR69CcuAq3sntZ9P2CWgUaX
+         D2XGBWyL3c0BBsyUmhDo/AyYb2Q+jNNwFSpSCOLPTVK7tB4lTPGrkReUPqbMh9SBoUaA
+         /14w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iuuJuMaKgUlLRcc6gFCZ7HFqvJc6qzprtp/8FUZq9U4=;
-        b=alGlveJf7NeBV3RCp/dGafF3RwYYoRX4mVaT9dwdSELOpm87b3c68ndIp8csgxJLif
-         6j18ip/hSzDnMMA6X8/IiumBAGtPb0v+HceMps0/S+NEylPHRlM1Z430BOFrkvCrRxlo
-         vSNXqKR6Zi+AQSN2yog6HlSKJU3ffRf9Htne2O1sz4r3ydJZu7QG5cDjxMO3nQSOq+P8
-         0GRvhXWmaE5JHMna7azpAvj4XFnAaa0guFdfi6s5VRyq4owlaszSk2VA+KIvNW8/xm5w
-         zvyGHR9HzVBRNcuPyGusRMqkEpSnzjlokECwbzb6QnbfGJaDDa22zTLQvOU0A9aW0bNn
-         k3Bg==
-X-Gm-Message-State: AOAM532y8F2ghXNaKLeAZzOLTm6wOIbnQSs6HAXxVb9j+rQ1ur0Vu1xx
-        WDbEi/WHWf9bS3qcvnjKju6IKH6osJU=
-X-Google-Smtp-Source: ABdhPJwSZZ9bKl9IV9ztWA8mR2McxctG8Dmv5bJM8VuXAimbsGQd1EoPEyeJ0iHJ6beRLFNWkuNlnA==
-X-Received: by 2002:a63:1e4d:: with SMTP id p13mr6161160pgm.387.1594944987760;
-        Thu, 16 Jul 2020 17:16:27 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r7sm6211950pgu.51.2020.07.16.17.16.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 17:16:27 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jonathan Marek <jonathan@marek.ca>,
-        linux-arm-msm@vger.kernel.org,
-        John Stultz <john.stultz@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 4/5] iommu/arm-smmu-qcom: Consistently initialize stream mappings
-Date:   Thu, 16 Jul 2020 17:16:18 -0700
-Message-Id: <20200717001619.325317-5-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200717001619.325317-1-bjorn.andersson@linaro.org>
-References: <20200717001619.325317-1-bjorn.andersson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2FerGNFZKniOyRFjaMMBJDlV2XPDBsl8JaLwC0gfi7o=;
+        b=XQ3kwtS8jZAZ9pok03lggWMwcWaC3CszDocQCo9lAeQ3bQRKJ6F3bveNNjM2TR1r5y
+         +jVx1tPd1dSeYKoMKw/c+2ZB4hlM8uQqw3ATnbP5p2ta0sclTWRMyacbnpiV4XFs+F9k
+         wRWFr7E3q+QIHnW9I8YzwEdRfz93Bw2LBS1K903fj4BW0F0HE8TA/MhWnWLmYUZfXSWY
+         lel5sjVZ7CPpEWls5U3WrdNxWcmO+8TA0OJpDrAenSSGLPWcZGoN+6WE7UNe7RBfWH3K
+         XY5wk7T/nPhoZYJjoSlLFbETRZI3FNQgzpKk3hMHJP2Lw1BIpryCMbcPjv8J5AmJdszn
+         GQnA==
+X-Gm-Message-State: AOAM530ABMdvo4iIMkApIfd4C+vhIZYYao6aXEHi0ZNr8gJRGLShRvDF
+        kgG+76kXh+N/wsU2/Z+BWYojKpN8hGIDySXO9vI=
+X-Google-Smtp-Source: ABdhPJzJta5CGSAocN1NwUPeSiy2NdfZZdS1injlrEqZEkECIvwcAMeclHWbF2u2vMwrP7iKeAvo69aMuoNmmRi2bfQ=
+X-Received: by 2002:a5d:9c0e:: with SMTP id 14mr7033701ioe.109.1594945203608;
+ Thu, 16 Jul 2020 17:20:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
+ <20200712131003.23271-2-madhuparnabhowmik10@gmail.com> <20200712160856.GW9247@paulmck-ThinkPad-P72>
+ <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
+In-Reply-To: <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
+From:   Dexuan-Linux Cui <dexuan.linux@gmail.com>
+Date:   Thu, 16 Jul 2020 17:19:52 -0700
+Message-ID: <CAA42JLY2L6xFju_qZsVguGtXvDMqfCKbO_h1K9NJPjmqJEav=Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     madhuparnabhowmik10@gmail.com,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, rcu@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
+        frextrite@gmail.com, lkft-triage@lists.linaro.org,
+        Dexuan Cui <decui@microsoft.com>, juhlee@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Firmware that traps writes to S2CR to translate BYPASS into FAULT also
-ignores writes of type FAULT. As such booting with "disable_bypass" set
-will result in all S2CR registers left as configured by the bootloader.
+On Thu, Jul 16, 2020 at 7:47 AM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> On Sun, 12 Jul 2020 at 21:39, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Sun, Jul 12, 2020 at 06:40:03PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > >
+> > > Use hlist_for_each_entry_srcu() instead of hlist_for_each_entry_rcu()
+> > > as it also checkes if the right lock is held.
+> > > Using hlist_for_each_entry_rcu() with a condition argument will not
+> > > report the cases where a SRCU protected list is traversed using
+> > > rcu_read_lock(). Hence, use hlist_for_each_entry_srcu().
+> > >
+> > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >
+> > I queued both for testing and review, thank you!
+> >
+> > In particular, this one needs an ack by the maintainer.
+> >
+> >                                                         Thanx, Paul
+> >
+> > >  arch/x86/kvm/mmu/page_track.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
+> > > index a7bcde34d1f2..a9cd17625950 100644
+> > > --- a/arch/x86/kvm/mmu/page_track.c
+> > > +++ b/arch/x86/kvm/mmu/page_track.c
+> > > @@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
+> > >               return;
+> > >
+> > >       idx = srcu_read_lock(&head->track_srcu);
+> > > -     hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
+> > > +     hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+> > > +                             srcu_read_lock_held(&head->track_srcu))
+>
+> x86 build failed on linux -next 20200716.
+>
+> arch/x86/kvm/mmu/page_track.c: In function 'kvm_page_track_write':
+> include/linux/rculist.h:727:30: error: left-hand operand of comma
+> expression has no effect [-Werror=unused-value]
+>   for (__list_check_srcu(cond),     \
+>                               ^
+> arch/x86/kvm/mmu/page_track.c:232:2: note: in expansion of macro
+> 'hlist_for_each_entry_srcu'
+>   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+>   ^~~~~~~~~~~~~~~~~~~~~~~~~
+> arch/x86/kvm/mmu/page_track.c: In function 'kvm_page_track_flush_slot':
+> include/linux/rculist.h:727:30: error: left-hand operand of comma
+> expression has no effect [-Werror=unused-value]
+>   for (__list_check_srcu(cond),     \
+>                               ^
+> arch/x86/kvm/mmu/page_track.c:258:2: note: in expansion of macro
+> 'hlist_for_each_entry_srcu'
+>   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+>   ^~~~~~~~~~~~~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> make[3]: *** [arch/x86/kvm/mmu/page_track.o] Error 1
+>
+> build link,
+> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/815/consoleText
+>
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
 
-This has been seen to result in indeterministic results, as these
-mappings might linger and reference context banks that Linux is
-reconfiguring.
+Hi, we're seeing the same building failure with the latest linux-next tree.
 
-Use the fact that BYPASS writes result in FAULT type to force all stream
-mappings to FAULT.
-
-Tested-by: John Stultz <john.stultz@linaro.org>
-Tested-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v1:
-- Fixed subject spelling mistake
-- Picked up tested-by
-
- drivers/iommu/arm-smmu-qcom.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-index d95a5ee8c83c..10eb024981d1 100644
---- a/drivers/iommu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm-smmu-qcom.c
-@@ -27,6 +27,7 @@ static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
- {
- 	unsigned int last_s2cr = ARM_SMMU_GR0_S2CR(smmu->num_mapping_groups - 1);
- 	u32 reg;
-+	int i;
- 
- 	/*
- 	 * With some firmware writes to S2CR of type FAULT are ignored, and
-@@ -37,9 +38,24 @@ static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
- 					    FIELD_PREP(ARM_SMMU_S2CR_CBNDX, 0xff) |
- 					    FIELD_PREP(ARM_SMMU_S2CR_PRIVCFG, S2CR_PRIVCFG_DEFAULT));
- 	reg = arm_smmu_gr0_read(smmu, last_s2cr);
--	if (FIELD_GET(ARM_SMMU_S2CR_TYPE, reg) != S2CR_TYPE_BYPASS)
-+	if (FIELD_GET(ARM_SMMU_S2CR_TYPE, reg) != S2CR_TYPE_BYPASS) {
- 		smmu->qcom_bypass_quirk = true;
- 
-+		/*
-+		 * With firmware ignoring writes of type FAULT, booting the
-+		 * Linux kernel with disable_bypass disabled (i.e. "enable
-+		 * bypass") the initialization during probe will leave mappings
-+		 * in an inconsistent state. Avoid this by configuring all
-+		 * S2CRs to BYPASS.
-+		 */
-+		for (i = 0; i < smmu->num_mapping_groups; i++) {
-+			smmu->s2crs[i].type = S2CR_TYPE_BYPASS;
-+			smmu->s2crs[i].privcfg = S2CR_PRIVCFG_DEFAULT;
-+			smmu->s2crs[i].cbndx = 0xff;
-+			smmu->s2crs[i].count = 0;
-+		}
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.26.2
-
+Thanks,
+Dexuan
