@@ -6,62 +6,71 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECF3C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC802C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED01206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B130206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594990147;
-	bh=5POnxabUMyqHA1KxDC3Te6qQKnu8fFa8/yigj7vMA2A=;
+	s=default; t=1594990152;
+	bh=px+ZOr5vGWOD2WY1nkEe6GE/wiHxQX4NyNmrfPIeG7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O/rhtkAPU6WRrHgFhUwmtWZDbRZ/wPFxB/inWbTrOKSJFC6BKpelsK5c7q2/ARvOg
-	 IEqzgQSe7rm1b6OdZ1TOSaYh5Rbb8emD7wdhTHiUksfc2qwdlIz0X4ICOWTkkq6cE7
-	 LmFB0i+qM4gRQaTS4F2gfjbJf+/GHcSPHkDI6sU8=
+	b=1P4R11Q4HLHagC+zXpFyti9K3mGK2Noa/Z7Kt81V0x2cJyjrRr/WuY3DMALhqXvjZ
+	 FSDRtQXDOu7hk8B3OlfH/RHljN6VY+XHAxwGsYE0iOGTs3Y0rfV27a+eD/Zyt/NqDI
+	 OpqCVa2UL91tDrf6DRNpGLr4zfCOmTYIrTpNARYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgGQMtG (ORCPT
+        id S1726971AbgGQMtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 08:49:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbgGQMs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:48:59 -0400
+        id S1726393AbgGQMs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 08:48:57 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7118B207FB;
-        Fri, 17 Jul 2020 12:48:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C61E8207F5;
+        Fri, 17 Jul 2020 12:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594990139;
-        bh=5POnxabUMyqHA1KxDC3Te6qQKnu8fFa8/yigj7vMA2A=;
+        s=default; t=1594990136;
+        bh=px+ZOr5vGWOD2WY1nkEe6GE/wiHxQX4NyNmrfPIeG7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2uJXQ1KfkRiG4WbZZf4pM/IYginKG2nTtWy/qrZp7ICtuC25ONpKgTlR0nhflNE5t
-         u4nTdxiavRPloJYgVH1tyKiL+mVOXDqf9h5PcQVnPU6JCzvQPhm+Q1mFa8Ey1vj8MU
-         AugpzmI4sHeoRDoyLqhcsAhurpb+Cu5GEF3pqqBM=
+        b=iu1cvXPAlzooZ6RFLUKS78s8jwgqZAVrA9BXFIpWJcw6EZk29M3soHUxoO9YF+xom
+         D1Ol+o6cPd9LLJw7IXEVrnGoJn+zLuPKJoDYv87UVtj66Ld5C2ctFO/x4YfxsH1r75
+         jVHgRBdYRlt/EZ1YztBPKtyHMPJHD7Bcrh4N2rDA=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1jwPnO-00Ccsm-0z; Fri, 17 Jul 2020 13:48:58 +0100
+        id 1jwPnL-00Ccsm-AZ; Fri, 17 Jul 2020 13:48:55 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     Alexandre Torgue <alexandre.torgue@st.com>,
         Jason Cooper <jason@lakedaemon.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, marex@denx.de,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     marex@denx.de, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
-        wanghaibin.wang@huawei.com
-Subject: Re: [PATCH] genirq/irqdomain: Remove redundant NULL pointer check on fwnode
-Date:   Fri, 17 Jul 2020 13:48:49 +0100
-Message-Id: <159499001592.546505.17916680802608483979.b4-ty@kernel.org>
+        Joerg Roedel <joro@8bytes.org>, Andy Gross <agross@kernel.org>,
+        Todd Kjos <tkjos@google.com>, iommu@lists.linux-foundation.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v3 0/3] Allow for qcom-pdc to be loadable as a module
+Date:   Fri, 17 Jul 2020 13:48:45 +0100
+Message-Id: <159499001592.546505.10441967473975319808.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200716083905.287-1-yuzenghui@huawei.com>
-References: <20200716083905.287-1-yuzenghui@huawei.com>
+In-Reply-To: <20200710231824.60699-1-john.stultz@linaro.org>
+References: <20200710231824.60699-1-john.stultz@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, jason@lakedaemon.net, tglx@linutronix.de, yuzenghui@huawei.com, linux-kernel@vger.kernel.org, marex@denx.de, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, wanghaibin.wang@huawei.com
+X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, jason@lakedaemon.net, tglx@linutronix.de, john.stultz@linaro.org, linux-kernel@vger.kernel.org, marex@denx.de, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, joro@8bytes.org, agross@kernel.org, tkjos@google.com, iommu@lists.linux-foundation.org, linus.walleij@linaro.org, gregkh@linuxfoundation.org, mkshah@codeaurora.org, ilina@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, saravanak@google.com
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,14 +78,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 16:39:05 +0800, Zenghui Yu wrote:
-> The is_fwnode_irqchip() helper will check if the fwnode_handle is empty.
-> There is no need to perform a redundant check outside of it.
+On Fri, 10 Jul 2020 23:18:21 +0000, John Stultz wrote:
+> This patch series provides exports and config tweaks to allow
+> the qcom-pdc driver to be able to be configured as a permement
+> modules (particularlly useful for the Android Generic Kernel
+> Image efforts).
+> 
+> This was part of a larger patch series, to enable qcom_scm
+> driver to be a module as well, but I've split it out as there
+> are some outstanding objections I still need to address with
+> the follow-on patches, and wanted to see if progress could be
+> made on this subset of the series in the meantime.
+> 
+> [...]
 
 Applied to irq/irqchip-5.9, thanks!
 
-[1/1] genirq/irqdomain: Remove redundant NULL pointer check on fwnode
-      commit: 47903428b0e9db7a6251aa696fd1b2fc5de98545
+[1/3] irqdomain: Export irq_domain_update_bus_token
+      commit: ce8cefa53c06cd98607125c52c91e74373a893a0
+[2/3] genirq: Export irq_chip_retrigger_hierarchy and irq_chip_set_vcpu_affinity_parent
+      commit: 96703f046c42f8ab15e735953cbfee572c717e2d
+[3/3] irqchip/qcom-pdc: Allow QCOM_PDC to be loadable as a permanent module
+      commit: 5ef7f1bbf9f56c5380c4d876655920cac92008e5
 
 Cheers,
 
