@@ -2,159 +2,116 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE313C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27508C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F70F2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFDD42076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595012552;
+	bh=hY/IiQZ62oMR2cm1BWXEte+UuNUso2tLkvY01Z3Z7so=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=URp9aNcBFvnpV3xLPe5/iNVWxWSGIOsnjw1Vbr/1xAuKNntaMBUUmO3bO0lYJ5Phx
+	 DVce09XjFg2r0q00IweDnCZth+2sLfvTj+JYFfYUnUGVb9Q3wAiQNmLxyWvaPsecAh
+	 Mz4HiFSmWYh1N55dF5uQv6aw+7uJyzJfp5jMGBCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgGQS4S (ORCPT
+        id S1728269AbgGQTCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:56:18 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:34749 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbgGQS4R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:56:17 -0400
-Received: by mail-io1-f70.google.com with SMTP id b133so7109213iof.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:56:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=/eE1uWfIufW8vQMws/6jTiBN48Hy0hA3uku2kspGanw=;
-        b=AXUv4g2TerncNYxSqNk0KOGO4oP98JEg4S00QkzgQD82PzbUVjI+tVWSMFyPxuZDYL
-         RUdIKzjYh9dgIm1SrouknoQHGu+pXAHwTeF+/k3Z55VBLr5w0ubwHQk8w28fgq35VoQH
-         DBCrTMWuXAInx1EEPWKaEVkc8+vTpuWz34MVhg1v33YlKNWIPQzKJAgl/HTJOFqpEsiI
-         AYZ0r5JHtNSIdDSSJtpbpOFJ+yXvKcCej9k+Nv/27KGTAB1HR7xlzknZ2Gihm3APmPQq
-         fk9f3mlKIlhvH2+nn8P5PZWx2BtIxpXtTNUlsPWuCg0UmoHkwDVyJHN/AvJVtmeScQoQ
-         1xMQ==
-X-Gm-Message-State: AOAM532h6yUQEoUI0b5uQow5BCUVri6LWQE2XAppW35cR1ha7JIt+hiW
-        YqQM1GaxcliPo1jbaMFHAF4g/8EMRVLNesDQU7eI0snP4/Q0
-X-Google-Smtp-Source: ABdhPJw1KdtA5u31Fl/CNv94wwk5X2Mpayq9H7dYSjQoKDiYimMRrexaFHuYHOiZGYWJ4jbuCnTIrXYo/uhswzv7ZNO6SlvEqSxj
+        Fri, 17 Jul 2020 15:02:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgGQTCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 15:02:30 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66DDE20775;
+        Fri, 17 Jul 2020 19:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595012549;
+        bh=hY/IiQZ62oMR2cm1BWXEte+UuNUso2tLkvY01Z3Z7so=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QNwhBCWxtuvTLRSbhixHCBlp73msYY5d2rOsE+qi+9d+WJgBkiDpqBUsQNPg4hTr+
+         mHTMZHwMy/c1hncyNQVipPgFrbmRlFfqK0GiZOCEybSU6XSQTum/kgvhljsXbv0/Im
+         hvjLnb9qvM6T3djT7shhwgAP2Pq0/27HXSUi0QtM=
+Received: by mail-oi1-f170.google.com with SMTP id t4so8832941oij.9;
+        Fri, 17 Jul 2020 12:02:29 -0700 (PDT)
+X-Gm-Message-State: AOAM530Z1EQqa2V5907KbvYFF6G0rAuklBX5F7MqFlTWRnrQBWWFhgAv
+        +G9kaKZhfFvr892kNK9g9IbGw0YJ2P0ru/p6MA==
+X-Google-Smtp-Source: ABdhPJzZY8yy3yKxPk7vB1ABc8/WFSudqSAMcFCsEUF38xcGMuBxhU8wPz3U67XIH6o54FVkR0PRKLPNGbkhbV3VBOE=
+X-Received: by 2002:aca:30d2:: with SMTP id w201mr8975582oiw.147.1595012548740;
+ Fri, 17 Jul 2020 12:02:28 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:1bdb:: with SMTP id f88mr11577720ill.233.1595012176420;
- Fri, 17 Jul 2020 11:56:16 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 11:56:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000030271005aaa7b603@google.com>
-Subject: general protection fault in ath9k_hif_usb_rx_cb (2)
-From:   syzbot <syzbot+c6dde1f690b60e0b9fbe@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
-        davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+References: <20200715221150.v3.2.I113cdbaf66d48b37ac0faefb9b845480d122f3b9@changeid>
+ <20200716191318.GA2683551@bogus> <3995892c-340c-3419-3c2d-934a3067f51b@collabora.com>
+In-Reply-To: <3995892c-340c-3419-3c2d-934a3067f51b@collabora.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 17 Jul 2020 13:02:17 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Xr5m4pxqbeEt+Zwb1GCWPKN1KBmdVtyKAmVFiLf=r1A@mail.gmail.com>
+Message-ID: <CAL_Jsq+Xr5m4pxqbeEt+Zwb1GCWPKN1KBmdVtyKAmVFiLf=r1A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: mfd: Add DT compatible string "google,cros_ec_uart"
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Eric Peers <epeers@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Jul 17, 2020 at 3:53 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Rob,
+>
+> On 16/7/20 21:13, Rob Herring wrote:
+> > On Wed, Jul 15, 2020 at 10:16:04PM -0700, Bhanu Prakash Maiya wrote:
+> >> From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+> >>
+> >> Add DT compatible string in
+> >> Documentation/devicetree/bindings/mfd/cros_ec.txt
+> >
+> > Need to update this.
+> >
+> > With that,
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+>
+> So this is an ACPI-only driver that is instantiated by using the Device Tree
+> namespace link in ACPI. I am not sure how to deal with this, but I suspect we
+> need a proper OF binding definition before accept it.
 
-syzbot found the following issue on:
+In that case, NAK because I have no bandwidth or desire for ACPI
+stuff. The DT bindings in ACPI concept is flawed.
 
-HEAD commit:    313da01a usb: misc: sisusbvga: Move static const tables ou..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=14226dd0900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=999be4eb2478ffa5
-dashboard link: https://syzkaller.appspot.com/bug?extid=c6dde1f690b60e0b9fbe
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+> The driver gets at least the baudrate and the flowcontrol from ACPI resources,
+> so I'm wondering if we should also add the properties in the device-tree
+> description (although we're not able to really test because there is not OF
+> hardware that supports it yet). Or is fine to just accept the compatible for now
+> and we can do this later when we have the possibility to test with OF-based
+> hardware.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+That's all defined by the serial device binding already, so it doesn't
+really matter here.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c6dde1f690b60e0b9fbe@syzkaller.appspotmail.com
+You can keep my R-by, but don't send me more ACPI crap.
 
-general protection fault, probably for non-canonical address 0xdffffc00000001f2: 0000 [#1] SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000f90-0x0000000000000f97]
-CPU: 1 PID: 356 Comm: syz-executor.1 Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:627 [inline]
-RIP: 0010:ath9k_hif_usb_rx_cb+0x843/0xf80 drivers/net/wireless/ath/ath9k/hif_usb.c:671
-Code: 00 00 00 49 8d 7f 08 48 89 f8 48 c1 e8 03 80 3c 28 00 0f 85 51 05 00 00 4d 8b 7f 08 49 8d bf 90 0f 00 00 48 89 f8 48 c1 e8 03 <0f> b6 04 28 84 c0 74 08 3c 03 0f 8e 25 05 00 00 48 8b 44 24 30 0f
-RSP: 0018:ffff8881db309920 EFLAGS: 00010002
-RAX: 00000000000001f2 RBX: 0000000000000c05 RCX: ffffc900006a8000
-RDX: 0000000000040000 RSI: ffffffff82e1f88b RDI: 0000000000000f90
-RBP: dffffc0000000000 R08: 0000000000000001 R09: ffff8881c3e144a3
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000c05 R14: ffff8881d9babb40 R15: 0000000000000000
-FS:  0000000002773940(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f052251e740 CR3: 00000001ad63e000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- __usb_hcd_giveback_urb+0x32d/0x560 drivers/usb/core/hcd.c:1650
- usb_hcd_giveback_urb+0x367/0x410 drivers/usb/core/hcd.c:1716
- dummy_timer+0x11f2/0x3240 drivers/usb/gadget/udc/dummy_hcd.c:1967
- call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers.part.0+0x54c/0x9e0 kernel/time/timer.c:1773
- __run_timers kernel/time/timer.c:1745 [inline]
- run_timer_softirq+0x80/0x120 kernel/time/timer.c:1786
- __do_softirq+0x222/0x95b kernel/softirq.c:292
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0xed/0x140 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:387 [inline]
- __irq_exit_rcu kernel/softirq.c:417 [inline]
- irq_exit_rcu+0x150/0x1f0 kernel/softirq.c:429
- sysvec_apic_timer_interrupt+0x49/0xc0 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0x3b/0x40 kernel/locking/spinlock.c:191
-Code: e8 ca b5 76 fb 48 89 ef e8 62 a2 77 fb f6 c7 02 75 11 53 9d e8 16 46 95 fb 65 ff 0d cf 0d 52 7a 5b 5d c3 e8 f7 4b 95 fb 53 9d <eb> ed 0f 1f 00 55 48 89 fd 65 ff 05 b5 0d 52 7a 45 31 c9 41 b8 01
-RSP: 0018:ffff8881ad7b7c30 EFLAGS: 00000292
-RAX: 0000000000243e09 RBX: 0000000000000292 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff85afe139
-RBP: ffff8881d57fd4a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff8881c6e14b00 R14: 0000000000000000 R15: ffff8881c6e14fd8
- do_wait+0x42e/0x9b0 kernel/exit.c:1473
- kernel_wait4+0x14c/0x260 kernel/exit.c:1621
- __do_sys_wait4+0x13f/0x150 kernel/exit.c:1633
- do_syscall_64+0x50/0x90 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x415ffa
-Code: Bad RIP value.
-RSP: 002b:00007ffd2403c368 EFLAGS: 00000246 ORIG_RAX: 000000000000003d
-RAX: ffffffffffffffda RBX: 0000000000023821 RCX: 0000000000415ffa
-RDX: 0000000040000001 RSI: 00007ffd2403c3a0 RDI: ffffffffffffffff
-RBP: 0000000000000060 R08: 0000000000000001 R09: 0000000002773940
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007ffd2403c3a0 R14: 0000000000023821 R15: 00007ffd2403c3b0
-Modules linked in:
----[ end trace 1a7827ecbdcfd2ad ]---
-RIP: 0010:ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:627 [inline]
-RIP: 0010:ath9k_hif_usb_rx_cb+0x843/0xf80 drivers/net/wireless/ath/ath9k/hif_usb.c:671
-Code: 00 00 00 49 8d 7f 08 48 89 f8 48 c1 e8 03 80 3c 28 00 0f 85 51 05 00 00 4d 8b 7f 08 49 8d bf 90 0f 00 00 48 89 f8 48 c1 e8 03 <0f> b6 04 28 84 c0 74 08 3c 03 0f 8e 25 05 00 00 48 8b 44 24 30 0f
-RSP: 0018:ffff8881db309920 EFLAGS: 00010002
-RAX: 00000000000001f2 RBX: 0000000000000c05 RCX: ffffc900006a8000
-RDX: 0000000000040000 RSI: ffffffff82e1f88b RDI: 0000000000000f90
-RBP: dffffc0000000000 R08: 0000000000000001 R09: ffff8881c3e144a3
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000c05 R14: ffff8881d9babb40 R15: 0000000000000000
-FS:  0000000002773940(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f052251e740 CR3: 00000001ad63e000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Rob
