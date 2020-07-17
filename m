@@ -2,137 +2,103 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44140C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B02920734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA42B20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NAYUD0tR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CMZF3sTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgGQIcJ (ORCPT
+        id S1726381AbgGQIdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:32:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgGQIcF (ORCPT
+        Fri, 17 Jul 2020 04:33:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38290 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725970AbgGQIdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:32:05 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8523FC061755;
-        Fri, 17 Jul 2020 01:32:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aFEt+zFPrqVQGAdO3RJf1KxQLYdEhDO70E3sDQSJR2I=; b=NAYUD0tRwLcD1cWPXKXDszQUPy
-        mQzEmJYNmsTd4lPHX0AEaiE3az4Ot3sQ1ZvLDIGE13hX9Jds8cRERVdr2DZSyWJCpE2VqUEPt5ZYc
-        UjvbCMB4kO2sPJdqTsOkgLUOWdAj27RrCTe3SXW5tLnHhIl8mollSFClH0NO7VHqMdTGAGGAocUrH
-        2ogmG9mWgV1L/V+N84VlhdwEt8XBL7mlLDgkK1KYxpvPnnf8ru+JrOz6xl85frfohw2XVDowK+lgc
-        vdjzRVIpa0KpwRU73+hsFhpGtg1CnBKfr0INMSg3CozV6pnzHBI4oK/qNaYP9/i6oBIS69HJA2ptL
-        S2yGqBiw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwLmQ-0004NK-L1; Fri, 17 Jul 2020 08:31:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A33083003D8;
-        Fri, 17 Jul 2020 10:31:40 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9580929CF6F49; Fri, 17 Jul 2020 10:31:40 +0200 (CEST)
-Date:   Fri, 17 Jul 2020 10:31:40 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     ira.weiny@intel.com
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 04/17] x86/pks: Preserve the PKRS MSR on context
- switch
-Message-ID: <20200717083140.GW10769@hirez.programming.kicks-ass.net>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-5-ira.weiny@intel.com>
+        Fri, 17 Jul 2020 04:33:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594974817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=n6HQ4cRfKiCj6MVs/01fSUjQjB0YRcJewpfMhE5xrqw=;
+        b=CMZF3sTpM/qd2EhEroXqzA2yZOcTGEhucw8c4Z95QBO+8fZOCqq4979oPY3+l7c36UC9Hv
+        82GQiJn0HzjGxvLVMoOcvUeyteDOt2xRjOXj+ggMgNDH0/CeiIKlA5OoaoYagBhcozrY2T
+        26P3VR0B97MTynqYPSHrFnG09jlcb6E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-480-sKrxrS3ONJuKpSRaoS_KVQ-1; Fri, 17 Jul 2020 04:33:33 -0400
+X-MC-Unique: sKrxrS3ONJuKpSRaoS_KVQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 619C1800464;
+        Fri, 17 Jul 2020 08:33:31 +0000 (UTC)
+Received: from krava (unknown [10.40.192.81])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 1CC1E10013D7;
+        Fri, 17 Jul 2020 08:33:28 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 10:33:28 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        kan.liang@linux.intel.com, len.brown@intel.com
+Subject: Re: [PATCH 1/3] perf/x86/rapl: Fix missing psys sysfs attributes
+Message-ID: <20200717083328.GA528602@krava>
+References: <20200716151859.6854-1-rui.zhang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717072056.73134-5-ira.weiny@intel.com>
+In-Reply-To: <20200716151859.6854-1-rui.zhang@intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:20:43AM -0700, ira.weiny@intel.com wrote:
+On Thu, Jul 16, 2020 at 11:18:57PM +0800, Zhang Rui wrote:
+> This fixes a problem introduced by
+> commit 5fb5273a905c ("perf/x86/rapl: Use new MSR detection interface")
+> that perf event sysfs attributes for psys RAPL domain are missing.
+> 
+> Fixes: 5fb5273a905c ("perf/x86/rapl: Use new MSR detection interface")
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> Reviewed-by: Len Brown <len.brown@intel.com>
+> ---
+>  arch/x86/events/rapl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> index 0f2bf59f4354..51ff9a3618c9 100644
+> --- a/arch/x86/events/rapl.c
+> +++ b/arch/x86/events/rapl.c
+> @@ -665,7 +665,7 @@ static const struct attribute_group *rapl_attr_update[] = {
+>  	&rapl_events_pkg_group,
+>  	&rapl_events_ram_group,
+>  	&rapl_events_gpu_group,
+> -	&rapl_events_gpu_group,
+> +	&rapl_events_psys_group,
 
-> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-> index f362ce0d5ac0..d69250a7c1bf 100644
-> --- a/arch/x86/kernel/process.c
-> +++ b/arch/x86/kernel/process.c
-> @@ -42,6 +42,7 @@
->  #include <asm/spec-ctrl.h>
->  #include <asm/io_bitmap.h>
->  #include <asm/proto.h>
-> +#include <asm/pkeys_internal.h>
+I did copy & paste but did not change to psys :-\
+
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
+>  	NULL,
+>  };
 >  
->  #include "process.h"
->  
-> @@ -184,6 +185,36 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
->  	return ret;
->  }
->  
-> +/*
-> + * NOTE: We wrap pks_init_task() and pks_sched_in() with
-> + * CONFIG_ARCH_HAS_SUPERVISOR_PKEYS because using IS_ENABLED() fails
-> + * due to the lack of task_struct->saved_pkrs in this configuration.
-> + * Furthermore, we place them here because of the complexity introduced by
-> + * header conflicts introduced to get the task_struct definition in the pkeys
-> + * headers.
-> + */
+> -- 
+> 2.17.1
+> 
 
-I don't see anything much useful in that comment.
-
-> +#ifdef CONFIG_ARCH_HAS_SUPERVISOR_PKEYS
-> +DECLARE_PER_CPU(u32, pkrs_cache);
-> +static inline void pks_init_task(struct task_struct *tsk)
-> +{
-> +	/* New tasks get the most restrictive PKRS value */
-> +	tsk->thread.saved_pkrs = INIT_PKRS_VALUE;
-> +}
-> +static inline void pks_sched_in(void)
-> +{
-> +	u64 current_pkrs = current->thread.saved_pkrs;
-> +
-> +	/* Only update the MSR when current's pkrs is different from the MSR. */
-> +	if (this_cpu_read(pkrs_cache) == current_pkrs)
-> +		return;
-> +
-> +	write_pkrs(current_pkrs);
-
-Should we write that like:
-
-	/*
-	 * PKRS is only temporarily changed during specific code paths.
-	 * Only a preemption during these windows away from the default
-	 * value would require updating the MSR.
-	 */
-	if (unlikely(this_cpu_read(pkrs_cache) != current_pkrs))
-		write_pkrs(current_pkrs);
-
-?
-
-> +}
-> +#else
-> +static inline void pks_init_task(struct task_struct *tsk) { }
-> +static inline void pks_sched_in(void) { }
-> +#endif
