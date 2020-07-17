@@ -2,87 +2,57 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C585C433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF1CD2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4115C20737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgGQRYR (ORCPT
+        id S1727106AbgGQRZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:24:17 -0400
-Received: from mga07.intel.com ([134.134.136.100]:31672 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726359AbgGQRX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:23:58 -0400
-IronPort-SDR: GM9YVYulqGMub1YrIar5cGL9WQX2WsYmeD76xSGjti0ahokVYKd4IADXiS6a4jvQI2Pc6yl+cc
- ItL+xkzntDsg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="214353103"
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="214353103"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 10:23:58 -0700
-IronPort-SDR: oRflC2+CQhvDN04Doxlt2CZ/wgLybqzk4toSuhH3dTRAO8C4Vlc+RElark+rPomHaYfFywIIvI
- zomZjPgwV/6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="282846751"
-Received: from jmharral-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.254.77.39])
-  by orsmga003.jf.intel.com with ESMTP; 17 Jul 2020 10:23:57 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v7 1/5] PCI: Conditionally initialize host bridge native_* members
-Date:   Fri, 17 Jul 2020 10:23:46 -0700
-Message-Id: <30d6bfee24fd71357365965fac869401b2e962f0.1595006564.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1595006564.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1595006564.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Fri, 17 Jul 2020 13:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgGQRZi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:25:38 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F43C0619D2;
+        Fri, 17 Jul 2020 10:25:38 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 05CF3135A8FC4;
+        Fri, 17 Jul 2020 10:25:37 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 10:25:37 -0700 (PDT)
+Message-Id: <20200717.102537.1536007719047673454.davem@davemloft.net>
+To:     min.li.xe@renesas.com
+Cc:     richardcochran@gmail.com, corbet@lwn.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH net 1/1] docs: ptp.rst: add support for Renesas (IDT)
+ ClockMatrix
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1594746920-28760-1-git-send-email-min.li.xe@renesas.com>
+References: <1594746920-28760-1-git-send-email-min.li.xe@renesas.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: base64
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jul 2020 10:25:38 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-If CONFIG_PCIEPORTBUS is not enabled in kernel then initialing
-struct pci_host_bridge PCIe specific native_* members to "1" is
-incorrect. So protect the PCIe specific member initialization
-with CONFIG_PCIEPORTBUS.
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/probe.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2f66988cea25..a94b97564ceb 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -588,12 +588,14 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
- 	 * may implement its own AER handling and use _OSC to prevent the
- 	 * OS from interfering.
- 	 */
-+#ifdef CONFIG_PCIEPORTBUS
- 	bridge->native_aer = 1;
- 	bridge->native_pcie_hotplug = 1;
--	bridge->native_shpc_hotplug = 1;
- 	bridge->native_pme = 1;
- 	bridge->native_ltr = 1;
- 	bridge->native_dpc = 1;
-+#endif
-+	bridge->native_shpc_hotplug = 1;
- 
- 	device_initialize(&bridge->dev);
- }
--- 
-2.17.1
-
+RnJvbTogPG1pbi5saS54ZUByZW5lc2FzLmNvbT4NCkRhdGU6IFR1ZSwgMTQgSnVsIDIwMjAgMTM6
+MTU6MjAgLTA0MDANCg0KPiBGcm9tOiBNaW4gTGkgPG1pbi5saS54ZUByZW5lc2FzLmNvbT4NCj4g
+DQo+IEFkZCBiZWxvdyB0byDigJxBbmNpbGxhcnkgY2xvY2sgZmVhdHVyZXPigJ0gc2VjdGlvbg0K
+PiAgIC0gTG93IFBhc3MgRmlsdGVyIChMUEYpIGFjY2VzcyBmcm9tIHVzZXIgc3BhY2UNCj4gDQo+
+IEFkZCBiZWxvdyB0byBsaXN0IG9mIOKAnFN1cHBvcnRlZCBoYXJkd2FyZeKAnSBzZWN0aW9uDQo+
+ICAgKyBSZW5lc2FzIChJRFQpIENsb2NrTWF0cml44oSiDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBN
+aW4gTGkgPG1pbi5saS54ZUByZW5lc2FzLmNvbT4NCg0KQXBwbGllZCwgdGhhbmsgeW91Lg0K
