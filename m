@@ -2,201 +2,198 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A91C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30473C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 482C020717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013EF20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kL6cSQaA"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YJ+rsBT6";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="QqKhkp/o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgGQRrU (ORCPT
+        id S1726786AbgGQRrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:47:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgGQRrT (ORCPT
+        Fri, 17 Jul 2020 13:47:45 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6170 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726232AbgGQRro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:47:19 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70906C0619D2;
-        Fri, 17 Jul 2020 10:47:19 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id lx13so11765699ejb.4;
-        Fri, 17 Jul 2020 10:47:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MCHMQCyaGiFmiAEOZCGJJ9+ZHHBfKYMD4ndLx0utt+k=;
-        b=kL6cSQaA7ZAVb822SFcAn7jM2Z6R7qPL+QjfpbvzDVzuf+tomRxqOFWAJ20xTDf1tY
-         2rbaQqrOLOC/Bo8gmXu2gTHqxX6Qo4NB57ye5M0qR6u6UtQM5s8N+0UVlh9tLUyFdjL/
-         Eyj8QpTzQ9BBM2QPHD6E8YuSF8JTRCENbiVEYnryF8HkLcdFxrbD313fC06dlQ2mRqAv
-         YMyf04NxtyDacYtALlkVvz5xR1aGACID1vGMZI0WQsm1aXahrqOuctfNzpptlK/1atPw
-         h5zCqVW2HBLNE64+8ZJPcJqL5mjo3EtLkUTKyOAKfciGLTj114RioK73jR5iAjg69Lsb
-         XMdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MCHMQCyaGiFmiAEOZCGJJ9+ZHHBfKYMD4ndLx0utt+k=;
-        b=hWeNo40xfimkQScjsbQcKWfOJWmCiFY3qqPMWI2yWQo4qkl8u30Xp9hpBlg1hc4Pv6
-         bhbph/AobDa3CmSDZMK1njoeI2SYOhHca9/Ur/SfBdARwUqdworZ0OqzscWyxgalyHp9
-         v69c4DaP5nFUzWTQoVw3c3iy9dx39p3rsqnze+vxwVD9oy3GMgkOYmd9NjI6k70yP+SD
-         9Pq8tz8TUJHszKj8PzsqJuBePvH5fOqlJyTtk+RWBBErjsQBys8rCQa09lKE2kI76qvX
-         NCoAYiPQ3WUwtEUwcXI/3DqZS2I3fweHYZ3plbcWiXv/HZO1nGaMjdf6Bn8RjIbWsxJ1
-         ppig==
-X-Gm-Message-State: AOAM531/s+tADcbPsPMX4w7CBL9y7AmDX3NmLjvBtv69e0RfqxWQiwMq
-        TdtOZ+Z8ZH1aXFeyeYTVikDqozaU/1+w1mw1MJI=
-X-Google-Smtp-Source: ABdhPJwtmM5I9XsUxydmrAjDhrNrNvfs/8okO6i9fpHQnBYs8v9G4H73wAYeFtCw/gPwg6HQpmgc6UytC/0WnR2RsRo=
-X-Received: by 2002:a17:906:7c54:: with SMTP id g20mr9931963ejp.460.1595008037981;
- Fri, 17 Jul 2020 10:47:17 -0700 (PDT)
+        Fri, 17 Jul 2020 13:47:44 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 06HHlYcC011245;
+        Fri, 17 Jul 2020 10:47:34 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=ismwuUsenhx6tCs9S3sjoVHVjXmpL8GD2doGKWKGjWY=;
+ b=YJ+rsBT6wY0m8c8H658GEv+K5ieS7MmK5VdOXZmFxKx2jjBeccMkJoIsBoMzoU6Jueq7
+ pJG/XyeKSISmNTEETcJjWaOKFiP5U3l9EZPmYaY9tidSf2w/Ppww/EbC3Y9eEvRbuujz
+ 2MAV8fYFBgENmlm8BIPHvzM9zlhagAlmyuk= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 32arerxctf-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 17 Jul 2020 10:47:34 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 17 Jul 2020 10:47:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JnVs4nkmQl48iIFmXRSR6BGAEB1f7yxO/BlEWv+0POpw/to9BOMjhF56JwaUiwkZclXYy7v0hxP8Abr1E1un4IsiB2CtKyRBDS8QK3gs+P024S/2ON5M09Qq55MM3bZ3Sh0Il6Ot2pxI8P45dEPt4lPPwMFobY4rz1BtMoofx32Exx1gcbDP3YoFPTLsjWM7erh4VGHH/e7eldHMjmux5mnB+RDGGEUV7iXraqPDmiLtSc+v0lH0fY2Yu4HVsO+lkM3OAgQNif+LJkcB0Sz6HlSlhb1fDj60JIrl+zC1KS/ezn6TnoBDBhN+peVo4i2+2JcLK9h5mLsDgnLFDwyEBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ismwuUsenhx6tCs9S3sjoVHVjXmpL8GD2doGKWKGjWY=;
+ b=MC+xg4agbOI9hoO2+mN4ryayqLRH9R8DBDrVDyBbW5lAVIzTdayicLfUkQTEAUOY+/PUgk+kdRlp7MeFvz3E2vuAjUGfpy8zP7+06Ulo4aGhVqTa9YsQQfsrdnvSqCfCpt1y9EzxzrvuX4L2NnQfh1xT//z6SIdAxfsAt333IUDg4h1mfLT9cqHKNuVkCsbGvCU/um5v9lpDTek8oXsbxVXvC4inenGRi9UxmwZh5kwiRU5PTOQhkN/g45qXtD0VwE3iPY7Cz8dbuwnsMNjIm5nz4ogRommQCVyBYrjln9vGz8hw4rpe2wwQUxStTx9u51xwp6ZG6Ymk5Ds1xw151Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ismwuUsenhx6tCs9S3sjoVHVjXmpL8GD2doGKWKGjWY=;
+ b=QqKhkp/ooS/IJrBTQzqSx9al+DXkKeiyczWXVN4azEwnqKhAY5PW7H/RqVqroVV62OLsJw9XPNx+NklR2L6DrSecNgJdOpDlCDzOdzNP6UX2cVJnZppIGnYYslOBtWSjet2AWl4bO4lEIueb0ufhChnEaj5CiU+AmSeYVvwi8a0=
+Authentication-Results: canb.auug.org.au; dkim=none (message not signed)
+ header.d=none;canb.auug.org.au; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB3144.namprd15.prod.outlook.com (2603:10b6:a03:fe::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Fri, 17 Jul
+ 2020 17:47:08 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3195.022; Fri, 17 Jul 2020
+ 17:47:08 +0000
+Date:   Fri, 17 Jul 2020 10:47:05 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20200717174705.GA55916@carbon.DHCP.thefacebook.com>
+References: <20200717203127.00db2444@canb.auug.org.au>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717203127.00db2444@canb.auug.org.au>
+X-ClientProxiedBy: BY5PR13CA0028.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::41) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-References: <1594292674-15632-1-git-send-email-rnayak@codeaurora.org> <1594292674-15632-4-git-send-email-rnayak@codeaurora.org>
-In-Reply-To: <1594292674-15632-4-git-send-email-rnayak@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 17 Jul 2020 10:47:51 -0700
-Message-ID: <CAF6AEGvioVKKSN-UP35OfJcfUXeHy34Y6w2eM_FZU+zpTaRE7A@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Sean Paul <sean@poorly.run>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:bef8) by BY5PR13CA0028.namprd13.prod.outlook.com (2603:10b6:a03:180::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.9 via Frontend Transport; Fri, 17 Jul 2020 17:47:08 +0000
+X-Originating-IP: [2620:10d:c090:400::5:bef8]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8ca2caf9-1504-425c-32df-08d82a796d42
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3144:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3144BA5CA8B7397B8B26298CBE7C0@BYAPR15MB3144.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:586;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kQWk/VVyBWfPoSqn0gUT09Fy/tZrS8+S8RXBIaHnhkxDmp6x45FTbpR51dNTeLH5f2MwGbzYkQ9Ma+xUGNKGgDijfxFEr3VWjKxowEs5xJNETY7EJJZ1mlA2BMC6lbn/If4kiGgcTJTHStNxZYTpX2YeRM9OgrrGKSuiYufkaTcNLDoeZIeGJBYuW3llty9NYllyPPyFTyA5cDdR6hxsbrmbcZX04cKBZjdIpEYe+lfp5YpDkPm4xQgcNkNGpueXKv/EqRtgZj+pp+PWJ2Fp2uocSj6lTrA5TtO6SKKoHzvITeZJe6VFxHbYjBXnnMjyMNeE6uWhxXgZb6VeTBsRmA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(366004)(136003)(39860400002)(396003)(6506007)(86362001)(6666004)(54906003)(110136005)(9686003)(5660300002)(55016002)(83380400001)(8936002)(16526019)(8676002)(2906002)(33656002)(478600001)(186003)(4326008)(66946007)(52116002)(66556008)(316002)(1076003)(66476007)(7696005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: G1QG2W4gZltnulqRcisa0LtFqSH7/IRk2ljY/tlqxaZMl2IzNRYCsg5PAEksEaQYrGgvJU9451iEPtgXioQsTXF1bjOKWVV7+bSefkewHmEUXNYgJWlYawN9dEtQjycJej+PRvoLpww5x3mGqCXo7DkF0lMqYucNObSu61JwswjFoSYApKv3YWHihYxT7GFD6H6cCCbtGnfSYrY6VwOrhxAG6le/douTDYp9d0rHk5qjMw/dkP8piyg7xLn95dgH8qS0XlmqxSH4L61lDvU5bLoOoQoEAw5YFP3VZ6tjLTLoUiwR88QKuFrK4aJ/3RaUJQlLg3H+PPSQM7kYVFe3cwXmUlWJ/2zmB+3FfRjviDlaO5c/+//NnmQU6dInABbcvybZmEBgTQO2t/bqhH6hE+bbiYX2DVplwKoNSvItAloKAnC6JNZhfOzqMBODBvUbgej6KFwPOXq/y/lDALtxqB9R/xBFjTheIuPWsaimKDRczvOuKBxA8z13qdBXqj0GPo3RlMcDp7Zi68hw3MhuJg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ca2caf9-1504-425c-32df-08d82a796d42
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2020 17:47:08.7538
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ji0HF7vllLezDvvFYqGL0offLy8XnbYHrJHdolEhvWVia10eGMZ/7GX0xAXV5FOj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3144
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-17_08:2020-07-17,2020-07-17 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
+ priorityscore=1501 adultscore=0 mlxscore=0 suspectscore=1 malwarescore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007170127
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 4:05 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
-> Add the OPP tables for DSI and MDP based on the perf state/clk
-> requirements, and add the power-domains property to specify the
-> scalable power domain.
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+On Fri, Jul 17, 2020 at 08:31:27PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the akpm-current tree, today's linux-next build (powerpc
+> ppc64_defconfig) produced this warning:
+> 
+> mm/vmstat.c:614: warning: "MAX_THRESHOLD" redefined
+>   614 | #define MAX_THRESHOLD 0
+>       | 
+> mm/vmstat.c:172: note: this is the location of the previous definition
+>   172 | #define MAX_THRESHOLD 125
+>       | 
+> mm/vmstat.c:614: warning: "MAX_THRESHOLD" redefined
+>   614 | #define MAX_THRESHOLD 0
+>       | 
+> mm/vmstat.c:172: note: this is the location of the previous definition
+>   172 | #define MAX_THRESHOLD 125
+>       | 
+> 
+> Introduced by commit
+> 
+>   5f6bac149e10 ("mm: vmstat: fix /proc/sys/vm/stat_refresh generating false warnings")
+> 
+> The preproccesor directives look like this:
+> 
+> #ifdef CONFIG_SMP
+> #define MAX_THRESHOLD 125
+> #ifdef CONFIG_HAVE_CMPXCHG_LOCAL
+> #else
+> #define MAX_THRESHOLD 0
+> 
+> So I guess the second MAX_THRESHOLD was put after the wrong #else?
 
-Tested-by: Rob Clark <robdclark@gmail.com>
+Right, I missed it. Sorry for the inconvenience!
+And thank you for pointing at it!
 
-Bjorn, the two driver patches are queued up in msm-next, I assume
-you'll pickup the two dt patches?
+The following diff fixes it.
 
-BR,
--R
+Andrew, can you, please, squash it into the
+"mm: vmstat: fix /proc/sys/vm/stat_refresh generating false warnings" ?
 
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 59 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index fee50d9..3efdd70 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -3296,6 +3296,35 @@
->                         #power-domain-cells = <1>;
->                 };
->
-> +               dsi_opp_table: dsi-opp-table {
-> +                       compatible = "operating-points-v2";
-> +
-> +                       opp-19200000 {
-> +                               opp-hz = /bits/ 64 <19200000>;
-> +                               required-opps = <&rpmhpd_opp_min_svs>;
-> +                       };
-> +
-> +                       opp-180000000 {
-> +                               opp-hz = /bits/ 64 <180000000>;
-> +                               required-opps = <&rpmhpd_opp_low_svs>;
-> +                       };
-> +
-> +                       opp-275000000 {
-> +                               opp-hz = /bits/ 64 <275000000>;
-> +                               required-opps = <&rpmhpd_opp_svs>;
-> +                       };
-> +
-> +                       opp-328580000 {
-> +                               opp-hz = /bits/ 64 <328580000>;
-> +                               required-opps = <&rpmhpd_opp_svs_l1>;
-> +                       };
-> +
-> +                       opp-358000000 {
-> +                               opp-hz = /bits/ 64 <358000000>;
-> +                               required-opps = <&rpmhpd_opp_nom>;
-> +                       };
-> +               };
-> +
->                 mdss: mdss@ae00000 {
->                         compatible = "qcom,sdm845-mdss";
->                         reg = <0 0x0ae00000 0 0x1000>;
-> @@ -3340,6 +3369,8 @@
->                                                   <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
->                                 assigned-clock-rates = <300000000>,
->                                                        <19200000>;
-> +                               operating-points-v2 = <&mdp_opp_table>;
-> +                               power-domains = <&rpmhpd SDM845_CX>;
->
->                                 interrupt-parent = <&mdss>;
->                                 interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -3364,6 +3395,30 @@
->                                                 };
->                                         };
->                                 };
-> +
-> +                               mdp_opp_table: mdp-opp-table {
-> +                                       compatible = "operating-points-v2";
-> +
-> +                                       opp-19200000 {
-> +                                               opp-hz = /bits/ 64 <19200000>;
-> +                                               required-opps = <&rpmhpd_opp_min_svs>;
-> +                                       };
-> +
-> +                                       opp-171428571 {
-> +                                               opp-hz = /bits/ 64 <171428571>;
-> +                                               required-opps = <&rpmhpd_opp_low_svs>;
-> +                                       };
-> +
-> +                                       opp-344000000 {
-> +                                               opp-hz = /bits/ 64 <344000000>;
-> +                                               required-opps = <&rpmhpd_opp_svs_l1>;
-> +                                       };
-> +
-> +                                       opp-430000000 {
-> +                                               opp-hz = /bits/ 64 <430000000>;
-> +                                               required-opps = <&rpmhpd_opp_nom>;
-> +                                       };
-> +                               };
->                         };
->
->                         dsi0: dsi@ae94000 {
-> @@ -3386,6 +3441,8 @@
->                                               "core",
->                                               "iface",
->                                               "bus";
-> +                               operating-points-v2 = <&dsi_opp_table>;
-> +                               power-domains = <&rpmhpd SDM845_CX>;
->
->                                 phys = <&dsi0_phy>;
->                                 phy-names = "dsi";
-> @@ -3450,6 +3507,8 @@
->                                               "core",
->                                               "iface",
->                                               "bus";
-> +                               operating-points-v2 = <&dsi_opp_table>;
-> +                               power-domains = <&rpmhpd SDM845_CX>;
->
->                                 phys = <&dsi1_phy>;
->                                 phy-names = "dsi";
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+Thank you!
+
+--
+
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 8f0ef8aaf8ee..08e415e0a15d 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -168,9 +168,12 @@ EXPORT_SYMBOL(vm_numa_stat);
+ EXPORT_SYMBOL(vm_node_stat);
+ 
+ #ifdef CONFIG_SMP
+-
+ #define MAX_THRESHOLD 125
++#else
++#define MAX_THRESHOLD 0
++#endif
+ 
++#ifdef CONFIG_SMP
+ int calculate_pressure_threshold(struct zone *zone)
+ {
+ 	int threshold;
+@@ -611,8 +614,6 @@ void dec_node_page_state(struct page *page, enum node_stat_item item)
+ EXPORT_SYMBOL(dec_node_page_state);
+ #else
+ 
+-#define MAX_THRESHOLD 0
+-
+ /*
+  * Use interrupt disable to serialize counter updates
+  */
+-- 
+2.26.2
+
