@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA1BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBBFC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32ED321744
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494E522B4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgGQGae (ORCPT
+        id S1727040AbgGQGan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:30:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:36357 "EHLO mga05.intel.com"
+        Fri, 17 Jul 2020 02:30:43 -0400
+Received: from mga04.intel.com ([192.55.52.120]:63570 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbgGQGad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:30:33 -0400
-IronPort-SDR: eOAgvwNVPU2UIMNm0XUId69rJ032JntmN50i05ReQd4bO1+wxHTbw6AOHEtzdwoKYqrHwWy+R3
- Oy3Dpk/9o9kQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="234396381"
+        id S1726949AbgGQGal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:30:41 -0400
+IronPort-SDR: 1QfXiISSRZzCKSHWET5WG4v7GsfipTNMpwmcMvA1101pAdU1BcizNWVh4gf8yV8rORmBUSQO28
+ Y6JjnFAlIDpQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="147053465"
 X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="234396381"
+   d="scan'208";a="147053465"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 23:30:32 -0700
-IronPort-SDR: Lj4qFW8tzWRNVv9EKIP7QNrp+S18tBsSR7F8uqXKPlwmlGFAQ/An+gHJhAmtvg8u8Q4cDxh/j7
- PmFu08l2J9Kg==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 23:30:40 -0700
+IronPort-SDR: 2lzccdjrqJwl3+HpghMgQuC4H2TQbd386kji92kmKJGHxn393xCdulBriksNZDFa+67tG82MD5
+ sRwusNrmXojA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="325352362"
+   d="scan'208";a="318679974"
 Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Jul 2020 23:30:29 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 16 Jul 2020 23:30:37 -0700
 From:   Dilip Kota <eswara.kota@linux.intel.com>
 To:     broonie@kernel.org, robh@kernel.org, linux-spi@vger.kernel.org,
         devicetree@vger.kernel.org
@@ -43,9 +43,9 @@ Cc:     linux-kernel@vger.kernel.org, daniel.schwierzeck@gmail.com,
         hauke@hauke-m.de, andriy.shevchenko@intel.com,
         cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
         qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v2 2/8] spi: lantiq: Add SMP support
-Date:   Fri, 17 Jul 2020 14:27:51 +0800
-Message-Id: <d6663296b41f102c582fda08e71f62b72ca05d5d.1594957019.git.eswara.kota@linux.intel.com>
+Subject: [PATCH v2 4/8] spi: lantiq: Add support to acknowledge interrupt
+Date:   Fri, 17 Jul 2020 14:27:53 +0800
+Message-Id: <608923b484d9ef239b44bb545c0b79b27030a6ae.1594957019.git.eswara.kota@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
 References: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
@@ -56,63 +56,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Existing driver supports only single core SoC. New multicore platforms uses
-the same driver/IP so SMP support is required. This patch adds multicore
-support in the driver.
+On newer chipsets interrupt need to be acknowledged as they use
+different interrupt controller which does not acknowledge the
+interrupts automatically.
 
 Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
 ---
- drivers/spi/spi-lantiq-ssc.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/spi/spi-lantiq-ssc.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
-index 44600fb71c484..1073a70a4beba 100644
+index 98e1c5d807597..cbe019f995999 100644
 --- a/drivers/spi/spi-lantiq-ssc.c
 +++ b/drivers/spi/spi-lantiq-ssc.c
-@@ -623,7 +623,9 @@ static void rx_request(struct lantiq_ssc_spi *spi)
+@@ -161,6 +161,7 @@ struct lantiq_ssc_hwcfg {
+ 	unsigned int	irnen_t;
+ 	unsigned int	irncr;
+ 	unsigned int	irnicr;
++	bool		irq_ack;
+ };
+ 
+ struct lantiq_ssc_spi {
+@@ -623,9 +624,14 @@ static void rx_request(struct lantiq_ssc_spi *spi)
  static irqreturn_t lantiq_ssc_xmit_interrupt(int irq, void *data)
  {
  	struct lantiq_ssc_spi *spi = data;
-+	unsigned long flags;
++	const struct lantiq_ssc_hwcfg *hwcfg = spi->hwcfg;
++	u32 val = lantiq_ssc_readl(spi, hwcfg->irncr);
+ 	unsigned long flags;
  
-+	spin_lock_irqsave(&spi->lock, flags);
+ 	spin_lock_irqsave(&spi->lock, flags);
++	if (hwcfg->irq_ack)
++		lantiq_ssc_writel(spi, val, hwcfg->irncr);
++
  	if (spi->tx) {
  		if (spi->rx && spi->rx_todo)
  			rx_fifo_read_full_duplex(spi);
-@@ -645,10 +647,12 @@ static irqreturn_t lantiq_ssc_xmit_interrupt(int irq, void *data)
- 		}
- 	}
- 
-+	spin_unlock_irqrestore(&spi->lock, flags);
- 	return IRQ_HANDLED;
- 
- completed:
- 	queue_work(spi->wq, &spi->work);
-+	spin_unlock_irqrestore(&spi->lock, flags);
- 
- 	return IRQ_HANDLED;
- }
-@@ -657,10 +661,12 @@ static irqreturn_t lantiq_ssc_err_interrupt(int irq, void *data)
+@@ -660,13 +666,18 @@ static irqreturn_t lantiq_ssc_xmit_interrupt(int irq, void *data)
+ static irqreturn_t lantiq_ssc_err_interrupt(int irq, void *data)
  {
  	struct lantiq_ssc_spi *spi = data;
++	const struct lantiq_ssc_hwcfg *hwcfg = spi->hwcfg;
  	u32 stat = lantiq_ssc_readl(spi, LTQ_SPI_STAT);
-+	unsigned long flags;
++	u32 val = lantiq_ssc_readl(spi, hwcfg->irncr);
+ 	unsigned long flags;
  
  	if (!(stat & LTQ_SPI_STAT_ERRORS))
  		return IRQ_NONE;
  
-+	spin_lock_irqsave(&spi->lock, flags);
+ 	spin_lock_irqsave(&spi->lock, flags);
++	if (hwcfg->irq_ack)
++		lantiq_ssc_writel(spi, val, hwcfg->irncr);
++
  	if (stat & LTQ_SPI_STAT_RUE)
  		dev_err(spi->dev, "receive underflow error\n");
  	if (stat & LTQ_SPI_STAT_TUE)
-@@ -681,6 +687,7 @@ static irqreturn_t lantiq_ssc_err_interrupt(int irq, void *data)
- 	if (spi->master->cur_msg)
- 		spi->master->cur_msg->status = -EIO;
- 	queue_work(spi->wq, &spi->work);
-+	spin_unlock_irqrestore(&spi->lock, flags);
+@@ -797,6 +808,7 @@ static const struct lantiq_ssc_hwcfg lantiq_ssc_xway = {
+ 	.irnen_t	= LTQ_SPI_IRNEN_T_XWAY,
+ 	.irnicr		= 0xF8,
+ 	.irncr		= 0xFC,
++	.irq_ack	= false,
+ };
  
- 	return IRQ_HANDLED;
- }
+ static const struct lantiq_ssc_hwcfg lantiq_ssc_xrx = {
+@@ -804,6 +816,7 @@ static const struct lantiq_ssc_hwcfg lantiq_ssc_xrx = {
+ 	.irnen_t	= LTQ_SPI_IRNEN_T_XRX,
+ 	.irnicr		= 0xF8,
+ 	.irncr		= 0xFC,
++	.irq_ack	= false,
+ };
+ 
+ static const struct of_device_id lantiq_ssc_match[] = {
 -- 
 2.11.0
 
