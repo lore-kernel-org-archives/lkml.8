@@ -2,212 +2,198 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02820C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B71C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76092070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F203F2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="Ofj8vg7c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAGbZZDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgGQKbl (ORCPT
+        id S1726351AbgGQKc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:31:41 -0400
-Received: from mail-am6eur05on2122.outbound.protection.outlook.com ([40.107.22.122]:21940
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726599AbgGQKbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:31:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fA5aGbs49rCKxK0dYQ+guO0GDuUnWqQcgWAHlK3E5i8kDcSHZ/tM31rR/mFQhT8bKCbNwaKsFLcyx4i7C+TWvGEjLAvLBKdHt6qNLBwMpkJB0/oaDbK9g3a8YKg19+eu5K8yMmdGtg/AwxlpGBEtTpLFSRG5R0XBrP7HuEWgiqeAPxb5t0TUUHrVL1/R9GdLe+B1EmMzpvVpfCDhH2auc/mv8D+C6e2OuAdU6pIi9CJ+wWu25SaT1FxZRBHoIzhgZkc9UtWu7LJ14zvCOLpxm4ovMLDDmHhv0ZsCVL/W2ZBpF8+Xok2t5ApriEpsTNi0VXqq223TFQEnSDP5FjksIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z5gtqm/eQhHpSeZnbW7tSt56P+Kn6c0Rt0ra9UYuY+0=;
- b=ZjhRK1bvPJQhAw9LH2RQXije3/1k4Xh9e3Nw7byKGwfElEXg+AiuSaDcgSbNtmI8elxZeFNBYzUNUNiwFguzETa8NJP76tM/ETMOhmsY6qbULyfZBFd/vu7NbAM8MLb2rHL7YWkZfM7EA/in3qDrro6UCd1Je0M1dva0rxyQm+hudTIsEoLSrLmzaQ+Tg+pA47vuQST/SARKpH2dWFxj1XG1x83/kCkzByNWB0C01ad8nes0ad3mvncBtosqg6yKReaSovWZEQnG9hZM74p1qLuxU8l9JKMmck727r1JFUjIdDXJ2yzanoX0ttxvEbwiaIG8+/FfZVVFAsPG6rt6kA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z5gtqm/eQhHpSeZnbW7tSt56P+Kn6c0Rt0ra9UYuY+0=;
- b=Ofj8vg7cIDCdGJ9Y0BUCypEpPYFVcymUJamDRidFHpj3Oi8Vg9DBfHFXl2pDQ0086POWCwbh6/fXgzo9YSlZxo3xFnuf/oiAApVIE3sGQb88BHIr3xAjcEuLa0GvJhK7IBI5ZHHzNX+ZZYXmelHiZI5szhbf/4z4Id04cWukP4g=
-Authentication-Results: linux-watchdog.org; dkim=none (message not signed)
- header.d=none;linux-watchdog.org; dmarc=none action=none
- header.from=nokia.com;
-Received: from DB7PR07MB5356.eurprd07.prod.outlook.com (2603:10a6:10:70::33)
- by DB7PR07MB4571.eurprd07.prod.outlook.com (2603:10a6:5:32::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.10; Fri, 17 Jul
- 2020 10:31:35 +0000
-Received: from DB7PR07MB5356.eurprd07.prod.outlook.com
- ([fe80::986:d072:defd:74a9]) by DB7PR07MB5356.eurprd07.prod.outlook.com
- ([fe80::986:d072:defd:74a9%6]) with mapi id 15.20.3195.022; Fri, 17 Jul 2020
- 10:31:35 +0000
-From:   Krzysztof Sobota <krzysztof.sobota@nokia.com>
-To:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@roeck-us.net
-Cc:     krzysztof.sobota@nokia.com, alexander.sverdlin@nokia.com
-Subject: [PATCH v4] watchdog: initialize device before misc_register
-Date:   Fri, 17 Jul 2020 12:31:09 +0200
-Message-Id: <20200717103109.14660-1-krzysztof.sobota@nokia.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: HE1PR05CA0372.eurprd05.prod.outlook.com
- (2603:10a6:7:94::31) To DB7PR07MB5356.eurprd07.prod.outlook.com
- (2603:10a6:10:70::33)
+        Fri, 17 Jul 2020 06:32:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgGQKc3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 06:32:29 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F3B6C061755;
+        Fri, 17 Jul 2020 03:32:29 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g67so6481595pgc.8;
+        Fri, 17 Jul 2020 03:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pJ0HDntuXZL6NrQjmeMUXVeNWiNi7MyU+nkvpFL9Mws=;
+        b=OAGbZZDt0oMZ5SAw/4i9XcmiHXQRJb1EnlP02uWCOGz56CsB+z1zvaD/pkyy44NMfA
+         I6WWZQ8t2VWffR8lz71Zb4JhYisU7leLYh0bGxKT9IUCmx9lXr2MXk5mFOybpl9eUPdR
+         rvMdDGHWdtDHUz7UPxm8hHlnjQnyrdAy6hOxaqZ4POYe2126yYRRo0L1Z9pa5FgZgbti
+         39JvZTFOl+9NzDzc1iho5BOgQ4SsWkjUJYgtGsrDg2OZ6x+IfWSWbXCu7kfwODbz6yjR
+         7er8DJC8SdTfe+20utG53Q7oe1q6hesweznuK+zO3dCPXRa1GPhP4ZI6fGwPo3rz67My
+         IcaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pJ0HDntuXZL6NrQjmeMUXVeNWiNi7MyU+nkvpFL9Mws=;
+        b=FIEVbP9Y5io1gYN0C4kpF1JN9K1C1hgp/AaypJKWcrDta3CH/+j8HsKj+xAxEJMFH+
+         x9qsE8u63rNpzSWToDEqC0JpOcKBAu84FBUXITqgtTbWo+ZbNOZqpfr2N+y4ku1O3kYY
+         9V9Wr6Z8UWBCO6q4Ik40kgLQTWrL+sBVHwH5EnNZEsSxfhQ/OV6IqfbYGIIFY0coEi0m
+         6Gru9Bpgx6r9qdAUOdSvsf5wCiwl4X61esgYs9/Zc0ithxxAAGhHnEAP0lotle3CVxWt
+         e1VE/SIgHP956Q4i9AVZNOC/NWmkdN2q9LaQrcWhrmao5lcj822zXYN42UlbWLbBMCRZ
+         Fn6Q==
+X-Gm-Message-State: AOAM53263E0LIYoPzEgx+FyOhQ8jRf9JBsuplztjknFF2fdaHNomlEty
+        XsA6waWRy4j8TzrBFEfQhNjFYP5paVUMVA==
+X-Google-Smtp-Source: ABdhPJxv1RZ+6Ejd082vCPQrB5xh5BqGFyCniX6MhO0VKdjZyAcy1tMk4W5Hors65eSo4mJabaJNBA==
+X-Received: by 2002:a65:6884:: with SMTP id e4mr7712067pgt.283.1594981948161;
+        Fri, 17 Jul 2020 03:32:28 -0700 (PDT)
+Received: from gmail.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id m9sm2491026pjs.18.2020.07.17.03.32.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 03:32:27 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 16:01:05 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v2 4/6] cx88: use generic power management
+Message-ID: <20200717103105.GA452501@gmail.com>
+References: <20200717035608.97254-5-vaibhavgupta40@gmail.com>
+ <202007171515.gDbDZtkQ%lkp@intel.com>
+ <20200717072440.GA217230@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from master-ThinkPad-T470.emea.nsn-net.net (131.228.2.28) by HE1PR05CA0372.eurprd05.prod.outlook.com (2603:10a6:7:94::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Fri, 17 Jul 2020 10:31:33 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [131.228.2.28]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6a65da28-c127-4a26-f775-08d82a3c9445
-X-MS-TrafficTypeDiagnostic: DB7PR07MB4571:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB7PR07MB45714EE939D547EACF475BAD937C0@DB7PR07MB4571.eurprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3YxerYGSF+tFlmi2rIIpvrTSkdQdz7xsHTi1YGBZ1k+eP5lHa+vTvL3TUC8AGkt5iwt3MTONBiamYrlEG6r29uu+2SCdLHglnQHyeRSLtM4A8pKpGNwgl7IrRQ1KEtmOQdJ4gYP25I4p/XdgwxKBgORFBhc6cBoUv02FdahgnIxs2ppumwnNBNrcbxUJRTMhRJFnNqAnb3qlWC23n6VGZLNN/T1EgR/jl9qahCpOIW0T6O5jM98+oC2AGGvNcZGicSelug2/UmNYQ+RGx+7gq9i83PmIuwWbITHvyTdc0q2Nf2RUpa82lXSoPHkBH+10z5/kA/f82Sj6Mc4GLkIuww==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR07MB5356.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(39860400002)(346002)(376002)(6666004)(1076003)(6506007)(83380400001)(186003)(316002)(44832011)(26005)(16526019)(2906002)(2616005)(6486002)(66946007)(66556008)(5660300002)(36756003)(8676002)(478600001)(52116002)(45080400002)(86362001)(4326008)(8936002)(6512007)(66476007)(956004)(107886003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: /xFvCTT4vfP6MJwM+EUESSAwciklpI5RJBpKv2ED5ngtJC7T3gYU4jVBNJdjn3cDV/E5fW23OYuBgFrt7llakPDSdtf2WwqxZl79AE14teDQejbc04NRYoQZqAj4/MsCcBLq8j1FTM8+1GRBgrFX0syLsvGm4q+JJqu36tb3mh6TW6uGM6kVihtpdMkrpXT4ypVUgrA/zhyXaIyUROdz+DM1zEHLQxlRM9WstC4s7P9biIAuH6Lx/Cfxyw0mxCTyzjwbWhH3hM7D2w6WeNDvZSmZyzeZ0DLuqsPssYSQV1XzaR0SLeXc3DbgzAZ3jAWnmPmnwTxcvE5yHAEYDn2pv/fPSLVXnluIf4glYeN+zfDgf9C+Vo7IuEzBKXzKme8qRTSgcU6pVfhtncDLKQhBMtoEBYuBiR3N8y/w3nWE8qJn8uTja4MnWBbI3OU59p6hnYIF56jyQ0s/Zy6+IMMTo2fKsChamTwHbdhZFbKitF8=
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a65da28-c127-4a26-f775-08d82a3c9445
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR07MB5356.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2020 10:31:35.1800
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: U7Vr5ndGnFY96hd/PCx3kVzFEz3v3xYMPTF1Ug7QY8zhiLHsHhQdaht3f+OZS8pF0boDdQb9eNhxtFA2Y+/CZPkJltMcsq0l9gXI0WsbhKY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR07MB4571
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200717072440.GA217230@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When watchdog device is being registered, it calls misc_register that
-makes watchdog available for systemd to open. This is a data race
-scenario, because when device is open it may still have device struct
-not initialized - this in turn causes a crash. This patch moves
-device initialization before misc_register call and it solves the
-problem printed below.
+On Fri, Jul 17, 2020 at 12:54:40PM +0530, Vaibhav Gupta wrote:
+> On Fri, Jul 17, 2020 at 03:14:28PM +0800, kernel test robot wrote:
+> > Hi Vaibhav,
+> > 
+> > Thank you for the patch! Yet something to improve:
+> > 
+> > [auto build test ERROR on linuxtv-media/master]
+> > [also build test ERROR on pci/next v5.8-rc5 next-20200716]
+> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> > And when submitting patch, we suggest to use '--base' as documented in
+> > https://git-scm.com/docs/git-format-patch]
+> > 
+> > url:    https://github.com/0day-ci/linux/commits/Vaibhav-Gupta/pci-use-generic-power-management/20200717-120145
+> > base:   git://linuxtv.org/media_tree.git master
+> > config: s390-allmodconfig (attached as .config)
+> > compiler: s390-linux-gcc (GCC) 9.3.0
+> > reproduce (this is a W=1 build):
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=s390 
+> > 
+> > If you fix the issue, kindly add following tag as appropriate
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > 
+> > All errors (new ones prefixed by >>):
+> > 
+> >    drivers/media/pci/cx88/cx88-video.c: In function 'cx8800_suspend':
+> > >> drivers/media/pci/cx88/cx88-video.c:1564:3: error: implicit declaration of function 'stop_video_dma'; did you mean 'start_video_dma'? [-Werror=implicit-function-declaration]
+> >     1564 |   stop_video_dma(dev);
+> >          |   ^~~~~~~~~~~~~~
+> >          |   start_video_dma
+> >    drivers/media/pci/cx88/cx88-video.c: In function 'cx8800_resume':
+> > >> drivers/media/pci/cx88/cx88-video.c:1600:3: error: implicit declaration of function 'restart_video_queue'; did you mean 'start_video_dma'? [-Werror=implicit-function-declaration]
+> >     1600 |   restart_video_queue(dev, &dev->vidq);
+> >          |   ^~~~~~~~~~~~~~~~~~~
+> >          |   start_video_dma
+> >    cc1: some warnings being treated as errors
+> > 
+> > vim +1564 drivers/media/pci/cx88/cx88-video.c
+> > 
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1553  
+> > 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1554  static int __maybe_unused cx8800_suspend(struct device *dev_d)
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1555  {
+> > 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1556  	struct cx8800_dev *dev = dev_get_drvdata(dev_d);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1557  	struct cx88_core *core = dev->core;
+> > 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1558  	unsigned long flags;
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1559  
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1560  	/* stop video+vbi capture */
+> > 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1561  	spin_lock_irqsave(&dev->slock, flags);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1562  	if (!list_empty(&dev->vidq.active)) {
+> > 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1563  		pr_info("suspend video\n");
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16 @1564  		stop_video_dma(dev);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1565  	}
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1566  	if (!list_empty(&dev->vbiq.active)) {
+> > 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1567  		pr_info("suspend vbi\n");
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1568  		cx8800_stop_vbi_dma(dev);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1569  	}
+> > 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1570  	spin_unlock_irqrestore(&dev->slock, flags);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1571  
+> > 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1572  	if (core->ir)
+> > 92f4fc10d7ba01 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2010-03-31  1573  		cx88_ir_stop(core);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1574  	/* FIXME -- shutdown device */
+> > e52e98a7eccfb0 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2005-09-09  1575  	cx88_shutdown(core);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1576  
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1577  	dev->state.disabled = 1;
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1578  	return 0;
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1579  }
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1580  
+> > 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1581  static int __maybe_unused cx8800_resume(struct device *dev_d)
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1582  {
+> > 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1583  	struct cx8800_dev *dev = dev_get_drvdata(dev_d);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1584  	struct cx88_core *core = dev->core;
+> > 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1585  	unsigned long flags;
+> > 08adb9e20be83b drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2005-09-09  1586  
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1587  	dev->state.disabled = 0;
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1588  
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1589  	/* FIXME: re-initialize hardware */
+> > e52e98a7eccfb0 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2005-09-09  1590  	cx88_reset(core);
+> > 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1591  	if (core->ir)
+> > 92f4fc10d7ba01 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2010-03-31  1592  		cx88_ir_start(core);
+> > 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1593  
+> > 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1594  	cx_set(MO_PCI_INTMSK, core->pci_irqmask);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1595  
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1596  	/* restart video+vbi capture */
+> > 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1597  	spin_lock_irqsave(&dev->slock, flags);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1598  	if (!list_empty(&dev->vidq.active)) {
+> > 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1599  		pr_info("resume video\n");
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16 @1600  		restart_video_queue(dev, &dev->vidq);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1601  	}
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1602  	if (!list_empty(&dev->vbiq.active)) {
+> > 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1603  		pr_info("resume vbi\n");
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1604  		cx8800_restart_vbi_queue(dev, &dev->vbiq);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1605  	}
+> > 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1606  	spin_unlock_irqrestore(&dev->slock, flags);
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1607  
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1608  	return 0;
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1609  }
+> > ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1610  
+> > 
+> > ---
+> > 0-DAY CI Kernel Test Service, Intel Corporation
+> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
+> Got it. Thanks!
+> Fixed in v3.
+> 
+> --Vaibhav Gupta
 
-------------[ cut here ]------------
-WARNING: CPU: 3 PID: 1 at lib/kobject.c:612 kobject_get+0x50/0x54
-kobject: '(null)' ((ptrval)): is not initialized, yet kobject_get() is being called.
-Modules linked in: k2_reset_status(O) davinci_wdt(+) sfn_platform_hwbcn(O) fsmddg_sfn(O) clk_misc_mmap(O) clk_sw_bcn(O) fsp_reset(O) cma_mod(O) slave_sup_notif(O) fpga_master(O) latency(O+) evnotify(O) enable_arm_pmu(O) xge(O) rio_mport_cdev br_netfilter bridge stp llc nvrd_checksum(O) ipv6
-CPU: 3 PID: 1 Comm: systemd Tainted: G           O      4.19.113-g2579778-fsm4_k2 #1
-Hardware name: Keystone
-[<c02126c4>] (unwind_backtrace) from [<c020da94>] (show_stack+0x18/0x1c)
-[<c020da94>] (show_stack) from [<c07f87d8>] (dump_stack+0xb4/0xe8)
-[<c07f87d8>] (dump_stack) from [<c0221f70>] (__warn+0xfc/0x114)
-[<c0221f70>] (__warn) from [<c0221fd8>] (warn_slowpath_fmt+0x50/0x74)
-[<c0221fd8>] (warn_slowpath_fmt) from [<c07fd394>] (kobject_get+0x50/0x54)
-[<c07fd394>] (kobject_get) from [<c0602ce8>] (get_device+0x1c/0x24)
-[<c0602ce8>] (get_device) from [<c06961e0>] (watchdog_open+0x90/0xf0)
-[<c06961e0>] (watchdog_open) from [<c06001dc>] (misc_open+0x130/0x17c)
-[<c06001dc>] (misc_open) from [<c0388228>] (chrdev_open+0xec/0x1a8)
-[<c0388228>] (chrdev_open) from [<c037fa98>] (do_dentry_open+0x204/0x3cc)
-[<c037fa98>] (do_dentry_open) from [<c0391e2c>] (path_openat+0x330/0x1148)
-[<c0391e2c>] (path_openat) from [<c0394518>] (do_filp_open+0x78/0xec)
-[<c0394518>] (do_filp_open) from [<c0381100>] (do_sys_open+0x130/0x1f4)
-[<c0381100>] (do_sys_open) from [<c0201000>] (ret_fast_syscall+0x0/0x28)
-Exception stack(0xd2ceffa8 to 0xd2cefff0)
-ffa0:                   b6f69968 00000000 ffffff9c b6ebd210 000a0001 00000000
-ffc0: b6f69968 00000000 00000000 00000142 fffffffd ffffffff 00b65530 bed7bb78
-ffe0: 00000142 bed7ba70 b6cc2503 b6cc41d6
----[ end trace 7b16eb105513974f ]---
+I fixed the error reported, in this v2 patch-series, by Kbuild and floated v3
+in the mailing list.
+But then I got notification from "[linux-media] Patchwork". It has applied my
+v2 patch series. Please use v3.
 
-------------[ cut here ]------------
-WARNING: CPU: 3 PID: 1 at lib/refcount.c:153 kobject_get+0x24/0x54
-refcount_t: increment on 0; use-after-free.
-Modules linked in: k2_reset_status(O) davinci_wdt(+) sfn_platform_hwbcn(O) fsmddg_sfn(O) clk_misc_mmap(O) clk_sw_bcn(O) fsp_reset(O) cma_mod(O) slave_sup_notif(O) fpga_master(O) latency(O+) evnotify(O) enable_arm_pmu(O) xge(O) rio_mport_cdev br_netfilter bridge stp llc nvrd_checksum(O) ipv6
-CPU: 3 PID: 1 Comm: systemd Tainted: G        W  O      4.19.113-g2579778-fsm4_k2 #1
-Hardware name: Keystone
-[<c02126c4>] (unwind_backtrace) from [<c020da94>] (show_stack+0x18/0x1c)
-[<c020da94>] (show_stack) from [<c07f87d8>] (dump_stack+0xb4/0xe8)
-[<c07f87d8>] (dump_stack) from [<c0221f70>] (__warn+0xfc/0x114)
-[<c0221f70>] (__warn) from [<c0221fd8>] (warn_slowpath_fmt+0x50/0x74)
-[<c0221fd8>] (warn_slowpath_fmt) from [<c07fd368>] (kobject_get+0x24/0x54)
-[<c07fd368>] (kobject_get) from [<c0602ce8>] (get_device+0x1c/0x24)
-[<c0602ce8>] (get_device) from [<c06961e0>] (watchdog_open+0x90/0xf0)
-[<c06961e0>] (watchdog_open) from [<c06001dc>] (misc_open+0x130/0x17c)
-[<c06001dc>] (misc_open) from [<c0388228>] (chrdev_open+0xec/0x1a8)
-[<c0388228>] (chrdev_open) from [<c037fa98>] (do_dentry_open+0x204/0x3cc)
-[<c037fa98>] (do_dentry_open) from [<c0391e2c>] (path_openat+0x330/0x1148)
-[<c0391e2c>] (path_openat) from [<c0394518>] (do_filp_open+0x78/0xec)
-[<c0394518>] (do_filp_open) from [<c0381100>] (do_sys_open+0x130/0x1f4)
-[<c0381100>] (do_sys_open) from [<c0201000>] (ret_fast_syscall+0x0/0x28)
-Exception stack(0xd2ceffa8 to 0xd2cefff0)
-ffa0:                   b6f69968 00000000 ffffff9c b6ebd210 000a0001 00000000
-ffc0: b6f69968 00000000 00000000 00000142 fffffffd ffffffff 00b65530 bed7bb78
-ffe0: 00000142 bed7ba70 b6cc2503 b6cc41d6
----[ end trace 7b16eb1055139750 ]---
-
-Fixes: 72139dfa2464 ("watchdog: Fix the race between the release of watchdog_core_data and cdev")
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: Krzysztof Sobota <krzysztof.sobota@nokia.com>
----
-v1 -> v2
-* removed Change-Id tag
-* added Review-by tag
-v2 -> v3
-* convert spaces to tabs
-* convert (hopefully) mail to plaintext
-v3 -> v4
-* use git send-email to fix style problems
-* rebase on top of master
----
- drivers/watchdog/watchdog_dev.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index 7e4cd34a8c20..b535f5fa279b 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -994,6 +994,15 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
- 	if (IS_ERR_OR_NULL(watchdog_kworker))
- 		return -ENODEV;
- 
-+	device_initialize(&wd_data->dev);
-+	wd_data->dev.devt = MKDEV(MAJOR(watchdog_devt), wdd->id);
-+	wd_data->dev.class = &watchdog_class;
-+	wd_data->dev.parent = wdd->parent;
-+	wd_data->dev.groups = wdd->groups;
-+	wd_data->dev.release = watchdog_core_data_release;
-+	dev_set_drvdata(&wd_data->dev, wdd);
-+	dev_set_name(&wd_data->dev, "watchdog%d", wdd->id);
-+
- 	kthread_init_work(&wd_data->work, watchdog_ping_work);
- 	hrtimer_init(&wd_data->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	wd_data->timer.function = watchdog_timer_expired;
-@@ -1014,15 +1023,6 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
- 		}
- 	}
- 
--	device_initialize(&wd_data->dev);
--	wd_data->dev.devt = MKDEV(MAJOR(watchdog_devt), wdd->id);
--	wd_data->dev.class = &watchdog_class;
--	wd_data->dev.parent = wdd->parent;
--	wd_data->dev.groups = wdd->groups;
--	wd_data->dev.release = watchdog_core_data_release;
--	dev_set_drvdata(&wd_data->dev, wdd);
--	dev_set_name(&wd_data->dev, "watchdog%d", wdd->id);
--
- 	/* Fill in the data structures */
- 	cdev_init(&wd_data->cdev, &watchdog_fops);
- 
--- 
-2.14.0
-
+--Vaibhav Gupta
