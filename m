@@ -2,133 +2,77 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A2DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69F2A2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594966759;
-	bh=OXyJBDXtqGwT4BDStOxuECLiTBRqu25A/zU3+0iQzkU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BPwLxFCTHCPJXBQ99evfUZojCUZyNjlK5L9MBZf6ODc+Vui9kMBrEWdM/AOemQRpc
-	 KUgoCiDqqLZXJjmklypNp6PGxpmOTY1UM3E8k72NhPg99COZI0CLCM2qH8QYfT3Y/q
-	 diBBf/9UcFq2WjAsAlolur/Kx8OG0P5jVFa1OLYw=
+	by mail.kernel.org (Postfix) with ESMTP id 64E5C206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGQGTS (ORCPT
+        id S1726905AbgGQGUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:19:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726113AbgGQGTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:19:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B9EB2071A;
-        Fri, 17 Jul 2020 06:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594966757;
-        bh=OXyJBDXtqGwT4BDStOxuECLiTBRqu25A/zU3+0iQzkU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qVwy0sp9T5j9unToIf/0RjeIhm19kOFbEa0bab+urAyJbH36Bp5I0ChnKDLGqK5i2
-         rvPhGpZqGPSvQ1dfQulUjvTPSoPWOEtyh35VWqOdIuPZVR1JzKvkbaGUf1JGJnINdi
-         XIB1smOwbVvbdM9MX5/VFhJ15HNvdKj7YMjIaZTM=
-Date:   Fri, 17 Jul 2020 08:19:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "pmalani@chromium.org" <pmalani@chromium.org>,
-        "bleung@chromium.org" <bleung@chromium.org>
-Subject: Re: [PATCH 2/2] usb: typec: intel_pmc_mux: Check the port status
- before connect
-Message-ID: <20200717061909.GB3237166@kroah.com>
-References: <20200716003310.26125-1-rajmohan.mani@intel.com>
- <20200716003310.26125-3-rajmohan.mani@intel.com>
- <20200716070508.GB962748@kroah.com>
- <DM6PR11MB39632A8236161E4A27FAB1BBF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
+        Fri, 17 Jul 2020 02:20:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7777 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726056AbgGQGUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:20:38 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 53BCFB837FD50225A511;
+        Fri, 17 Jul 2020 14:20:25 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Jul 2020
+ 14:20:15 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <sameo@linux.intel.com>,
+        <cuissard@marvell.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <wanghai38@huawei.com>
+Subject: [PATCH] net: cxgb3: add missed destroy_workqueue in nci_register_device
+Date:   Fri, 17 Jul 2020 14:18:54 +0800
+Message-ID: <20200717061854.7765-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DM6PR11MB39632A8236161E4A27FAB1BBF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 06:04:51AM +0000, Mani, Rajmohan wrote:
-> Hi Greg,
-> 
-> > -----Original Message-----
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Sent: Thursday, July 16, 2020 12:05 AM
-> > To: Mani, Rajmohan <rajmohan.mani@intel.com>
-> > Cc: Darren Hart <dvhart@infradead.org>; Andy Shevchenko
-> > <andy@infradead.org>; Mika Westerberg
-> > <mika.westerberg@linux.intel.com>; Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com>; Lee Jones <lee.jones@linaro.org>; Ayman
-> > Bagabas <ayman.bagabas@gmail.com>; Masahiro Yamada
-> > <masahiroy@kernel.org>; Joseph, Jithu <jithu.joseph@intel.com>; Blaž
-> > Hrastnik <blaz@mxxn.io>; Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>; linux-kernel@vger.kernel.org;
-> > platform-driver-x86@vger.kernel.org; Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com>; linux-usb@vger.kernel.org;
-> > pmalani@chromium.org; bleung@chromium.org
-> > Subject: Re: [PATCH 2/2] usb: typec: intel_pmc_mux: Check the port status
-> > before connect
-> > 
-> > On Wed, Jul 15, 2020 at 05:33:10PM -0700, Rajmohan Mani wrote:
-> > > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > >
-> > > The PMC microcontroller that we use for configuration, does not supply
-> > > any status information back. For port status we need to talk to
-> > > another controller on the board called IOM (I/O manager).
-> > >
-> > > By checking the port status before configuring the muxes, we can make
-> > > sure that we do not reconfigure the port after bootup when the system
-> > > firmware (for example BIOS) has already configured it.
-> > >
-> > > Using the status information also to check if DisplayPort HPD is still
-> > > asserted when the cable plug is disconnected, and clearing it if it
-> > > is.
-> > >
-> > > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > 
-> > You can't just forward on patches from others without also adding your
-> > signed-off-by to them, right?
-> > 
-> 
-> Sorry I missed this.
-> 
-> > Please fix up this series and try again.
-> > 
-> 
-> Ack. Will fix this with v2.
+When nfc_register_device fails in nci_register_device,
+destroy_workqueue() shouled be called to destroy ndev->tx_wq.
 
-Stop and go talk to the proper people in Intel for how to submit patches
-to the kernel as you are not following the rules they have documented
-for you.
+Fixes: 3c1c0f5dc80b ("NFC: NCI: Fix nci_register_device init sequence")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ net/nfc/nci/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-thanks,
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index 7cd524884304..78ea8c94dcba 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -1228,10 +1228,13 @@ int nci_register_device(struct nci_dev *ndev)
+ 
+ 	rc = nfc_register_device(ndev->nfc_dev);
+ 	if (rc)
+-		goto destroy_rx_wq_exit;
++		goto destroy_tx_wq_exit;
+ 
+ 	goto exit;
+ 
++destroy_tx_wq_exit:
++	destroy_workqueue(ndev->tx_wq);
++
+ destroy_rx_wq_exit:
+ 	destroy_workqueue(ndev->rx_wq);
+ 
+-- 
+2.17.1
 
-greg k-h
