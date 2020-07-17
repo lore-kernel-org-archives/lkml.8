@@ -2,204 +2,121 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B988AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC729C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9150520775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:34:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HHA7xNGE"
+	by mail.kernel.org (Postfix) with ESMTP id C0BD020775
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgGQLeb (ORCPT
+        id S1726855AbgGQLel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:34:31 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33866 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726205AbgGQLe3 (ORCPT
+        Fri, 17 Jul 2020 07:34:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgGQLei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:34:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594985667;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ql4tis1uscIP3qLeTRHhYQZodhivUb4DYruBJ6jvbTs=;
-        b=HHA7xNGEVq9SjOGjTBRVGNgmMpFzH4Oa0ChAv58aLYgjXOwiXBa6sr0o7gwuxn56K57H9e
-        TJ0XBBqacll4wMwjLt+AeJEqG/1kOQZwbFFcIvZrJyhDLRuawZ96m/3CKcR/iLEuiU2ghz
-        2j/cjOdkO40L9CAZq8AWOQaCIhdiD2A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-0O2DYWcYPQe54AGqXQ7A5g-1; Fri, 17 Jul 2020 07:34:26 -0400
-X-MC-Unique: 0O2DYWcYPQe54AGqXQ7A5g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 17 Jul 2020 07:34:38 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B8AC061755
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:34:38 -0700 (PDT)
+Received: from [IPv6:2a01:e35:2fb5:1510:c567:382e:1974:9868] (unknown [IPv6:2a01:e35:2fb5:1510:c567:382e:1974:9868])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1157100A8E8;
-        Fri, 17 Jul 2020 11:34:23 +0000 (UTC)
-Received: from virtlab710.virt.lab.eng.bos.redhat.com (virtlab710.virt.lab.eng.bos.redhat.com [10.19.152.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2CD0619C58;
-        Fri, 17 Jul 2020 11:34:23 +0000 (UTC)
-From:   Cathy Avery <cavery@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com
-Subject: [PATCH kvm-unit-tests v2 1/3] svm: Add ability to execute test via test_run on a vcpu other than vcpu 0
-Date:   Fri, 17 Jul 2020 07:34:20 -0400
-Message-Id: <20200717113422.19575-2-cavery@redhat.com>
-In-Reply-To: <20200717113422.19575-1-cavery@redhat.com>
-References: <20200717113422.19575-1-cavery@redhat.com>
+        (Authenticated sender: aferraris)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9A5AA2A5CBA;
+        Fri, 17 Jul 2020 12:34:36 +0100 (BST)
+Subject: Re: [PATCH v3 0/1] ASoC: fsl_asrc: always select different clocks
+To:     Mark Brown <broonie@kernel.org>
+Cc:     alsa-devel@alsa-project.org, Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20200716232000.GA27246@Asurada-Nvidia>
+ <20200717103857.31877-1-arnaud.ferraris@collabora.com>
+ <20200717112156.GA4316@sirena.org.uk>
+From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Autocrypt: addr=arnaud.ferraris@collabora.com; keydata=
+ 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
+ xZQG6fKWuIur3RI=
+Message-ID: <5bdf1102-e964-3d44-e673-beb23b0dc970@collabora.com>
+Date:   Fri, 17 Jul 2020 13:34:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200717112156.GA4316@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running tests that can result in a vcpu being left in an
-indeterminate state it is useful to be able to run the test on
-a vcpu other than 0. This patch allows test_run to be executed
-on any vcpu indicated by the on_vcpu member of the svm_test struct.
-The initialized state of the vcpu0 registers used to populate the
-vmcb is carried forward to the other vcpus.
+Le 17/07/2020 à 13:21, Mark Brown a écrit :
+> On Fri, Jul 17, 2020 at 12:38:56PM +0200, Arnaud Ferraris wrote:
+>> This patch fixes the automatic clock selection so it always selects
+>> distinct input and output clocks.
+> 
+> Please don't send new patches in reply to old ones, it buries things and
+> makes it hard to keep track of what the current version of a series
+> looks like.  Just send new versions as a completely new thread.
+> 
+> Please don't send cover letters for single patches, if there is anything
+> that needs saying put it in the changelog of the patch or after the ---
+> if it's administrative stuff.  This reduces mail volume and ensures that 
+> any important information is recorded in the changelog rather than being
+> lost. 
+> 
 
-Signed-off-by: Cathy Avery <cavery@redhat.com>
----
- lib/x86/vm.c | 18 ++++++++++++++++++
- lib/x86/vm.h |  7 +++++++
- x86/svm.c    | 24 +++++++++++++++++++++++-
- x86/svm.h    |  2 ++
- 4 files changed, 50 insertions(+), 1 deletion(-)
+Understood, sorry about that. Should I do a "clean" re-send for this one?
 
-diff --git a/lib/x86/vm.c b/lib/x86/vm.c
-index 41d6d96..e223bb4 100644
---- a/lib/x86/vm.c
-+++ b/lib/x86/vm.c
-@@ -2,6 +2,7 @@
- #include "libcflat.h"
- #include "vmalloc.h"
- #include "alloc_page.h"
-+#include "smp.h"
- 
- pteval_t *install_pte(pgd_t *cr3,
- 		      int pte_level,
-@@ -139,9 +140,18 @@ static void setup_mmu_range(pgd_t *cr3, phys_addr_t start, size_t len)
- 	install_pages(cr3, phys, max - phys, (void *)(ulong)phys);
- }
- 
-+static void set_additional_vcpu_vmregs(struct vm_vcpu_info *info)
-+{
-+	write_cr3(info->cr3);
-+	write_cr4(info->cr4);
-+	write_cr0(info->cr0);
-+}
-+
- void *setup_mmu(phys_addr_t end_of_memory)
- {
-     pgd_t *cr3 = alloc_page();
-+    struct vm_vcpu_info info;
-+    int i;
- 
-     memset(cr3, 0, PAGE_SIZE);
- 
-@@ -166,6 +176,14 @@ void *setup_mmu(phys_addr_t end_of_memory)
-     printf("cr0 = %lx\n", read_cr0());
-     printf("cr3 = %lx\n", read_cr3());
-     printf("cr4 = %lx\n", read_cr4());
-+
-+    info.cr3 = read_cr3();
-+    info.cr4 = read_cr4();
-+    info.cr0 = read_cr0();
-+
-+    for (i = 1; i < cpu_count(); i++)
-+        on_cpu(i, (void *)set_additional_vcpu_vmregs, &info);
-+
-     return cr3;
- }
- 
-diff --git a/lib/x86/vm.h b/lib/x86/vm.h
-index 8750a1e..3a1432f 100644
---- a/lib/x86/vm.h
-+++ b/lib/x86/vm.h
-@@ -45,4 +45,11 @@ static inline void *current_page_table(void)
- 
- void split_large_page(unsigned long *ptep, int level);
- void force_4k_page(void *addr);
-+
-+struct vm_vcpu_info {
-+        u64 cr3;
-+        u64 cr4;
-+        u64 cr0;
-+};
-+
- #endif
-diff --git a/x86/svm.c b/x86/svm.c
-index d8c8272..975c477 100644
---- a/x86/svm.c
-+++ b/x86/svm.c
-@@ -275,6 +275,17 @@ static void test_run(struct svm_test *test)
- 	irq_enable();
- 
- 	report(test->succeeded(test), "%s", test->name);
-+
-+        if (test->on_vcpu)
-+	    test->on_vcpu_done = true;
-+}
-+
-+static void set_additional_vpcu_msr(void *msr_efer)
-+{
-+	void *hsave = alloc_page();
-+
-+	wrmsr(MSR_VM_HSAVE_PA, virt_to_phys(hsave));
-+	wrmsr(MSR_EFER, (ulong)msr_efer | EFER_SVME | EFER_NX);
- }
- 
- static void setup_svm(void)
-@@ -294,6 +305,9 @@ static void setup_svm(void)
- 	if (!npt_supported())
- 		return;
- 
-+	for (i = 1; i < cpu_count(); i++)
-+		on_cpu(i, (void *)set_additional_vpcu_msr, (void *)rdmsr(MSR_EFER));
-+
- 	printf("NPT detected - running all tests with NPT enabled\n");
- 
- 	/*
-@@ -396,7 +410,15 @@ int main(int ac, char **av)
- 		if (svm_tests[i].supported && !svm_tests[i].supported())
- 			continue;
- 		if (svm_tests[i].v2 == NULL) {
--			test_run(&svm_tests[i]);
-+			if (svm_tests[i].on_vcpu) {
-+				if (cpu_count() <= svm_tests[i].on_vcpu)
-+					continue;
-+				on_cpu_async(svm_tests[i].on_vcpu, (void *)test_run, &svm_tests[i]);
-+				while (!svm_tests[i].on_vcpu_done)
-+					cpu_relax();
-+			}
-+			else
-+				test_run(&svm_tests[i]);
- 		} else {
- 			vmcb_ident(vmcb);
- 			v2_test = &(svm_tests[i]);
-diff --git a/x86/svm.h b/x86/svm.h
-index f8e7429..1e60d52 100644
---- a/x86/svm.h
-+++ b/x86/svm.h
-@@ -348,6 +348,8 @@ struct svm_test {
- 	ulong scratch;
- 	/* Alternative test interface. */
- 	void (*v2)(void);
-+	int on_vcpu;
-+	bool on_vcpu_done;
- };
- 
- struct regs {
--- 
-2.20.1
-
+Regards,
+Arnaud
