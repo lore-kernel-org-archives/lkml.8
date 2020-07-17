@@ -2,104 +2,190 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F318C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79611C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36DDA20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:39:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Up1N9x1N"
+	by mail.kernel.org (Postfix) with ESMTP id 5B092208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgGQOjB (ORCPT
+        id S1727029AbgGQOkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgGQOi6 (ORCPT
+        Fri, 17 Jul 2020 10:40:19 -0400
+Received: from out28-149.mail.aliyun.com ([115.124.28.149]:40932 "EHLO
+        out28-149.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgGQOkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:38:58 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2CC2C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:58 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id t11so5460387pfq.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nXezF5jJMP/dgjGdNrV9oT3sL6C+VWCPHOSSzy8uOcE=;
-        b=Up1N9x1N91TMncSewDheY6XcgP2CR4ewAHLl1Jp6YOqoR5TMknHIWmEgye4ODBiYFt
-         ycSA1wJGNlP+BxX3y36ajb8ES06dEOnuPfG2twI3Buc54rFoVjbcqOn3DYisAaJTRwSP
-         8CHnCQaUDvfHgFzv6VNjontfp+sMSwVrSISf7OsgJBMKLRu1oZsQQtfMCzk2VQCVWyJw
-         Gg/Rr6bpVo7vBPmM7o6/qGu/G0RToI9eSScblOq2JyB/jEARN6EwO/Z9GvhOXiAOU5bq
-         bem3XdG/qBLvTZ6x0HmFWijdoj6tgn9M101spxJsVll9dIb4EWSYUwTB0Ai4067P0JEJ
-         q5zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nXezF5jJMP/dgjGdNrV9oT3sL6C+VWCPHOSSzy8uOcE=;
-        b=E+J6sCP8PNAKJ4dsEXigrQXOJfDTN5XfGuQ2vQ7DoqtXAiB3ANg6FgbSVNCjdD/dlT
-         7GJbU0b+lNXzNqYm+UHIxekTz50uZK0zbR5RQSU4TznDjPtzvMUihSmDU0hTaX+KFbcx
-         v3gzoiykAi6gT60XoR2nr0sehPSRFpsnFKr2ltx4aGVJLOzZrunPXjaWRKyIDYLPzL46
-         zNYHvQffgW8V2rjfKLh5pFch58oJmPLE1EGV7JIX2g3w14WFzlRYn+PbTw0wtEEpqEzt
-         TrwZqAa/MAdg4+552Z0s8StFIz6tfQy6E7+c0VItNGIPQGxBjy/NwoRUL5tznpjcaUNt
-         625Q==
-X-Gm-Message-State: AOAM531alrA9N0YJbTgpGF2zYgvOE74DReAOdp0KvMcqvlVGMnWtJ3Hv
-        qo/frKmuSW4yEDUBlhsrVUWRu0/edA8=
-X-Google-Smtp-Source: ABdhPJxKtzA/B30/neMItGQK1Aj0I4xGjsZPMeuMaMsTMcSx0+p+FQHhLQqFV0lwev7CEzMwLRvvYw==
-X-Received: by 2002:a63:2146:: with SMTP id s6mr8797077pgm.411.1594996738288;
-        Fri, 17 Jul 2020 07:38:58 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.38.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 07:38:57 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 17/17] perf ftrace: add change log
-Date:   Fri, 17 Jul 2020 22:36:28 +0800
-Message-Id: <20200717143628.47721-18-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717143628.47721-1-changbin.du@gmail.com>
-References: <20200717143628.47721-1-changbin.du@gmail.com>
+        Fri, 17 Jul 2020 10:40:19 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07445006|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0713628-0.00445208-0.924185;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I3R317z_1594996812;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I3R317z_1594996812)
+          by smtp.aliyun-inc.com(10.147.41.121);
+          Fri, 17 Jul 2020 22:40:13 +0800
+Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
+ X1000 OST.
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
+ <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
+ <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
+ <f0dd2ea5-0627-35cf-5a58-aaff0bcb22cd@wanyeetech.com>
+ <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <77c49585-63c2-7784-83cc-bf6151095b69@wanyeetech.com>
+Date:   Fri, 17 Jul 2020 22:40:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
+In-Reply-To: <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a change log after previous enhancements.
+Hi Daniel,
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- tools/perf/builtin-ftrace.c | 1 +
- 1 file changed, 1 insertion(+)
+在 2020/7/17 下午4:02, Daniel Lezcano 写道:
+> On 17/07/2020 08:13, Zhou Yanjie wrote:
+>> Hi Daniel,
+>>
+>> 在 2020/7/17 下午12:20, Daniel Lezcano 写道:
+>>> On 10/07/2020 19:02, 周琰杰 (Zhou Yanjie) wrote:
+>>>> X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
+>>>> OST, it no longer belongs to TCU. This driver will register both a
+>>>> clocksource and a sched_clock to the system.
+>>>>
+>>>> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+>>>> Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+>>>> Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+>>>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>>>> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+>>>> ---
+>>>>
+>>>> Notes:
+>>>>       v1->v2:
+>>>>       Fix compile warnings.
+>>>>       Reported-by: kernel test robot <lkp@intel.com>
+>>>>            v2->v3:
+>>>>       No change.
+>>>>            v3->v4:
+>>>>       1.Rename "ost" to "sysost"
+>>>>       1.Remove unrelated changes.
+>>>>       2.Remove ost_clock_parent enum.
+>>>>       3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
+>>>>       4.Set up independent .recalc_rate/.set_rate for percpu/global
+>>>> timer.
+>>>>       5.No longer call functions in variable declarations.
+>>>>            v4->v5:
+>>>>       Use "of_io_request_and_map()" instead "of_iomap()".
+>>>>       Suggested-by: Paul Cercueil <paul@crapouillou.net>
+>>>>            v5->v6:
+>>>>       No change.
+>>>>
+>>>>    drivers/clocksource/Kconfig          |  11 +
+>>>>    drivers/clocksource/Makefile         |   1 +
+>>>>    drivers/clocksource/ingenic-sysost.c | 539
+>>>> +++++++++++++++++++++++++++++++++++
+>>>>    3 files changed, 551 insertions(+)
+>>>>    create mode 100644 drivers/clocksource/ingenic-sysost.c
+>>>>
+>>>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+>>>> index 91418381fcd4..1bca8b8fb30f 100644
+>>>> --- a/drivers/clocksource/Kconfig
+>>>> +++ b/drivers/clocksource/Kconfig
+>>>> @@ -696,6 +696,17 @@ config INGENIC_TIMER
+>>>>        help
+>>>>          Support for the timer/counter unit of the Ingenic JZ SoCs.
+>>>>    +config INGENIC_SYSOST
+>>>> +    bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+>>> We usually use silent options and let the platform's Kconfig enable it.
+>>> We show up the option only when COMPILE_TEST is enabled.
+>>>
+>>> Is there a reason to do it differently?
+>>
+>> Do you mean
+>>
+>> bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+>>
+>> or
+>>
+>> default MACH_INGENIC ?
+> Both, no default here.
+>
+> eg.
+>
+> bool "Clocksource/timer using the SYSOST in Ingenic X SoCs" if COMPILE_TEST
+>
+> and
+>
+> in arch/mips/Kconfig in the config MACH_INGENIC section :
+>
+> ...
+> select INGENIC_SYSOST
+> ...
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index edf307f7d716..326fd03396d5 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -3,6 +3,7 @@
-  * builtin-ftrace.c
-  *
-  * Copyright (c) 2013  LG Electronics,  Namhyung Kim <namhyung@kernel.org>
-+ * Copyright (c) 2020  Changbin Du <changbin.du@gmail.com>, significant enhancement.
-  */
- 
- #include "builtin.h"
--- 
-2.25.1
 
+Sure, I will do it in the next version.
+
+
+Thanks and best regards!
+
+
+>> This driver has some origins from "INGENIC_TIMER" driver and
+>> "INGENIC_OST" driver.
+>> Early Ingenic processors used TCU (timer/counter unit, has 6 or 8
+>> generic timer channels) to provide clocksource and clockevent (both with
+>> only 16bit precision). This part of the processor can only use
+>> "INGENIC_TIMER" driver.
+>>
+>> Later processors provide an independent 32bit or 64bit timer channel
+>> (still under TCU, known as ost channel, this channel can not generate
+>> interrupt) to provid higher precision clocksource. The "INGENIC_OST"
+>> driver is for this channel. These processors can use "INGENIC_TIMER"
+>> driver, but using "INGENIC_OST" driver to provide higher precision
+>> clocksource would be a better choice (clockevent still needs to be
+>> provided by generic timer channel of TCU, and still 16bit precision).
+>>
+>> And the recent processors provide a SYSOST components, it is independent
+>> from TCU, including a 64bit timer channel for clocksource and a 32bit
+>> timer channel for clockevent. Although these processors can also use
+>> "INGENIC_TIMER" driver, but the better choice is completely independent
+>> use of "INGENIC_SYSOST" driver to provide higher precision clocksource
+>> and clockevent.
+> Ok, the rating should do the job then.
+>
+> Thanks for the explanation.
+>
+>> You may have already noticed that this independent SYSOST component is
+>> like an upgraded and streamlined TCU, which only retains one generic
+>> timer channel that can generate interrupts, upgrade it from 16bit to
+>> 32bit, and then retain the 64bit ost channel. so the driver code and
+>> Kconfig code of this patch is largely referenced
+>> "INGENIC_TIMER" driver and "INGENIC_OST" driver.
+>>
+>> Thanks and best regards!
+>>
+>>>> +    default MACH_INGENIC
+>>>> +    depends on MIPS || COMPILE_TEST
+>>>> +    depends on COMMON_CLK
+>>>> +    select MFD_SYSCON
+>>>> +    select TIMER_OF
+>>>> +    select IRQ_DOMAIN
+>>>> +    help
+>>>> +      Support for the SYSOST of the Ingenic X Series SoCs.
+>>>> +
+>>> [ ... ]
+>>>
+>>>
+>
