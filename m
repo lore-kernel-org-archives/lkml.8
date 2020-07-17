@@ -2,98 +2,137 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81922C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49203C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 662EE2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B9C2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:52:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgGQU4H (ORCPT
+        id S1726569AbgGQUw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:56:07 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:50613
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726393AbgGQU4G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:56:06 -0400
-X-IronPort-AV: E=Sophos;i="5.75,364,1589234400"; 
-   d="scan'208";a="354705512"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 22:56:05 +0200
-Date:   Fri, 17 Jul 2020 22:56:05 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
-Subject: Re: [Cocci] [PATCH v2 1/4] coccinelle: api: extend memdup_user
- transformation with GFP_USER
-In-Reply-To: <20200608150038.223747-2-efremov@linux.com>
-Message-ID: <alpine.DEB.2.22.394.2007172255560.2837@hadrien>
-References: <20200608150038.223747-1-efremov@linux.com> <20200608150038.223747-2-efremov@linux.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Fri, 17 Jul 2020 16:52:57 -0400
+Received: from mga02.intel.com ([134.134.136.20]:46328 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbgGQUw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 16:52:56 -0400
+IronPort-SDR: ccA0VIC++hRfB2yVjVzT0UNATUk+loJD2acJHKdhTFZ4OKGwpEK+F83LJq+fQWDJm9Ked4c9Mb
+ kMNsLfgJyHVg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="137785235"
+X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
+   d="scan'208";a="137785235"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 13:52:55 -0700
+IronPort-SDR: 690U0n6opbZ/Ur7zkVu//anEQ7MRj2sHCRzWpKkvX0jU9VzxrjihvaQr+xK5iBUfhEQqvlrfq5
+ HGUS8jcEky3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
+   d="scan'208";a="326947980"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga007.jf.intel.com with ESMTP; 17 Jul 2020 13:52:55 -0700
+Date:   Fri, 17 Jul 2020 13:52:55 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 02/17] x86/fpu: Refactor
+ arch_set_user_pkey_access() for PKS support
+Message-ID: <20200717205254.GQ3008823@iweiny-DESK2.sc.intel.com>
+References: <20200717072056.73134-1-ira.weiny@intel.com>
+ <20200717072056.73134-3-ira.weiny@intel.com>
+ <20200717085442.GX10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717085442.GX10769@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 17, 2020 at 10:54:42AM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 17, 2020 at 12:20:41AM -0700, ira.weiny@intel.com wrote:
+> > +/*
+> > + * Get a new pkey register value from the user values specified.
+> > + *
+> > + * Kernel users use the same flags as user space:
+> > + *     PKEY_DISABLE_ACCESS
+> > + *     PKEY_DISABLE_WRITE
+> > + */
+> > +u32 get_new_pkr(u32 old_pkr, int pkey, unsigned long init_val)
+> > +{
+> > +	int pkey_shift = (pkey * PKR_BITS_PER_PKEY);
+> > +	u32 new_pkr_bits = 0;
+> > +
+> > +	/* Set the bits we need in the register:  */
+> > +	if (init_val & PKEY_DISABLE_ACCESS)
+> > +		new_pkr_bits |= PKR_AD_BIT;
+> > +	if (init_val & PKEY_DISABLE_WRITE)
+> > +		new_pkr_bits |= PKR_WD_BIT;
+> > +
+> > +	/* Shift the bits in to the correct place: */
+> > +	new_pkr_bits <<= pkey_shift;
+> > +
+> > +	/* Mask off any old bits in place: */
+> > +	old_pkr &= ~((PKR_AD_BIT | PKR_WD_BIT) << pkey_shift);
+> > +
+> > +	/* Return the old part along with the new part: */
+> > +	return old_pkr | new_pkr_bits;
+> > +}
+> 
+> This is unbelievable junk...
+> 
+> How about something like:
+> 
+> u32 update_pkey_reg(u32 pk_reg, int pkey, unsigned int flags)
+> {
+> 	int pkey_shift = pkey * PKR_BITS_PER_PKEY;
+> 
+> 	pk_reg &= ~(((1 << PKR_BITS_PER_PKEY) - 1) << pkey_shift);
+> 
+> 	if (flags & PKEY_DISABLE_ACCESS)
+> 		pk_reg |= PKR_AD_BIT << pkey_shift;
+> 	if (flags & PKEY_DISABLE_WRITE)
+> 		pk_reg |= PKR_WD_BIT << pkey_shift;
+> 
+> 	return pk_reg;
+> }
+> 
+> Then we at least have a little clue wtf the thing does.. Yes I started
+> with a rename and then got annoyed at the implementation too.
+
+On the code I think this is fair.  I've also updated the calling function to be
+a bit cleaner as well.
+
+However, I think the name 'update' is a bit misleading.  Here is the new
+calling code:
+
+...
+        pkru = read_pkru();
+	pkru = update_pkey_reg(pkru, pkey, init_val);
+	write_pkru(pkru);
+...
 
 
-On Mon, 8 Jun 2020, Denis Efremov wrote:
+I think it is odd to have a function called update_pkey_reg() called right
+before a write_pkru().  Can we call this update_pkey_value?  or just 'val'?
+Because write_pkru() actually updates the register.
 
-> Match GFP_USER and optional __GFP_NOWARN allocations with
-> memdup_user.cocci rule.
-> Commit 6c2c97a24f09 ("memdup_user(): switch to GFP_USER") switched
-> memdup_user() from GFP_KERNEL to GFP_USER. In almost all cases it
-> is still a good idea to recommend memdup_user() for GFP_KERNEL
-> allocations. The motivation behind altering memdup_user() to GFP_USER:
-> https://lkml.org/lkml/2018/1/6/333
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+Thanks for the review,
+Ira
 
-Applied.
-
-> ---
->  scripts/coccinelle/api/memdup_user.cocci | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/coccinelle/api/memdup_user.cocci b/scripts/coccinelle/api/memdup_user.cocci
-> index c809ab10bbce..cadcc2e87881 100644
-> --- a/scripts/coccinelle/api/memdup_user.cocci
-> +++ b/scripts/coccinelle/api/memdup_user.cocci
-> @@ -20,7 +20,9 @@ expression from,to,size;
->  identifier l1,l2;
->  @@
->
-> --  to = \(kmalloc\|kzalloc\)(size,GFP_KERNEL);
-> +-  to = \(kmalloc\|kzalloc\)
-> +		(size,\(GFP_KERNEL\|GFP_USER\|
-> +		      \(GFP_KERNEL\|GFP_USER\)|__GFP_NOWARN\));
->  +  to = memdup_user(from,size);
->     if (
->  -      to==NULL
-> @@ -43,7 +45,9 @@ position p;
->  statement S1,S2;
->  @@
->
-> -*  to = \(kmalloc@p\|kzalloc@p\)(size,GFP_KERNEL);
-> +*  to = \(kmalloc@p\|kzalloc@p\)
-> +		(size,\(GFP_KERNEL\|GFP_USER\|
-> +		      \(GFP_KERNEL\|GFP_USER\)|__GFP_NOWARN\));
->     if (to==NULL || ...) S1
->     if (copy_from_user(to, from, size) != 0)
->     S2
-> --
-> 2.26.2
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
