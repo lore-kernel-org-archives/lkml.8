@@ -2,123 +2,139 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D5AC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E54A20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:21:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594992073;
-	bh=7S1J9y8itEN5wvEhbpYW+BZkO1zoG1KjirrP9G0+mZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zq6OzmJub1GCPOcm2vDixU8qfEHuiKXTxNSsYTSI3F2a1CsuEwi+vRyl7s2p+H48R
-	 fpaqmPSeTgpmGvrzlyFovmfY1HYlc62Ho6o5hW5O8xAbjzfs8HNVo2V04ivlAxN6Di
-	 JmDKQQZjFwzkQctwQFIv5FZuZ57VpDHtsuxzw7dI=
+	by mail.kernel.org (Postfix) with ESMTP id 3F4C12076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:20:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xM67Iwmx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgGQNVM (ORCPT
+        id S1726758AbgGQNUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:21:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgGQNVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:21:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DD8F2064B;
-        Fri, 17 Jul 2020 13:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594992071;
-        bh=7S1J9y8itEN5wvEhbpYW+BZkO1zoG1KjirrP9G0+mZY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yQngermH9mwpKC/FUGsAks4v6MfDXijifC+rDmR27Bt6uhDtFOYjJ2KSY5xs7PeLr
-         RfxRmMNyPT6WW1A8tPdegeS76iTpyS6LyOD1PJPCiz7Jnu+WKTl78eVBCrY3ZKe49Z
-         0DU/8yLX/miSAt6IDhdsQd3CEUqZzadR49zfo1Nw=
-Date:   Fri, 17 Jul 2020 15:21:01 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
-Message-ID: <20200717132101.GA2984939@kroah.com>
-References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
- <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
- <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
- <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
- <20200717121436.GA2953399@kroah.com>
- <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
+        Fri, 17 Jul 2020 09:20:46 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59550 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgGQNUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:20:44 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKe6m112037;
+        Fri, 17 Jul 2020 08:20:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594992040;
+        bh=UCZPBWE5BRuKb4cOnM3DUnsgMsEyp2k2nTodxng89BI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=xM67IwmxhtqzMuI0xz5i8N0w+u3W9hmZvBMuF3wt8jF5pocR8hRR237mOd6iYUlsh
+         uP+A23+EfWHsoAthg9fDKqGVGdaYgOgs2V0XYGsOGiqgh+D4RClhLSaEyU8T9LWC78
+         EkPW7JuKc+oFx8d865KpoVa/SUzcycubusaC1hzs=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HDKe9u060974
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jul 2020 08:20:40 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
+ Jul 2020 08:20:40 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 17 Jul 2020 08:20:40 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKdWj107470;
+        Fri, 17 Jul 2020 08:20:40 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <dmaengine@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH next v2 4/6] soc: ti: k3-ringacc: add request pair of rings api.
+Date:   Fri, 17 Jul 2020 16:20:17 +0300
+Message-ID: <20200717132019.20427-5-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200717132019.20427-1-grygorii.strashko@ti.com>
+References: <20200717132019.20427-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 02:27:43PM +0200, Geert Uytterhoeven wrote:
-> Hi Greg,
-> 
-> On Fri, Jul 17, 2020 at 2:14 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > Android is just finally pushing vendors to get their code upstream,
-> > which is a good thing to see.  And building things as a module is an
-> > even better thing as now it is finally allowing arm64 systems to be
-> > built to support more than one specific hardware platform at runtime.
-> 
-> Can you please stop spreading this FUD?
+Add new API k3_ringacc_request_rings_pair() to request pair of rings at
+once, as in the most cases Rings are used with DMA channels, which need to
+request pair of rings - one to feed DMA with descriptors (TX/RX FDQ) and
+one to receive completions (RX/TX CQ). This will allow to simplify Ringacc
+API users.
 
-For many many SoCs today, this is not true.  Their drivers are required
-to be built in and will not work as modules, as we are seeing the
-patches try to fix.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/soc/ti/k3-ringacc.c       | 24 ++++++++++++++++++++++++
+ include/linux/soc/ti/k3-ringacc.h |  4 ++++
+ 2 files changed, 28 insertions(+)
 
-> As I said before, Arm64 kernels have supported more than one specific
-> hardware platform at runtime from the beginning of the arm64 port
-> (assumed the needed platform support has been enabled in the kernel
->  config, of course).
-> Even most arm32 kernels support this, since the introduction of the
-> CONFIG_ARCH_MULTIPLATFORM option.  In fact every recently
-> introduced arm32 platform is usually v7, and must conform to this.
-> The sole exceptions are very old platforms, and the v4/v5/v6/v7 split
-> due to architectural issues (the latter still support clusters of
-> platforms in a single kernel).
+diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
+index 8a8f31d59e24..4cf1150de88e 100644
+--- a/drivers/soc/ti/k3-ringacc.c
++++ b/drivers/soc/ti/k3-ringacc.c
+@@ -322,6 +322,30 @@ struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
+ }
+ EXPORT_SYMBOL_GPL(k3_ringacc_request_ring);
+ 
++int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
++				  int fwd_id, int compl_id,
++				  struct k3_ring **fwd_ring,
++				  struct k3_ring **compl_ring)
++{
++	int ret = 0;
++
++	if (!fwd_ring || !compl_ring)
++		return -EINVAL;
++
++	*fwd_ring = k3_ringacc_request_ring(ringacc, fwd_id, 0);
++	if (!(*fwd_ring))
++		return -ENODEV;
++
++	*compl_ring = k3_ringacc_request_ring(ringacc, compl_id, 0);
++	if (!(*compl_ring)) {
++		k3_ringacc_ring_free(*fwd_ring);
++		ret = -ENODEV;
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_request_rings_pair);
++
+ static void k3_ringacc_ring_reset_sci(struct k3_ring *ring)
+ {
+ 	struct k3_ringacc *ringacc = ring->parent;
+diff --git a/include/linux/soc/ti/k3-ringacc.h b/include/linux/soc/ti/k3-ringacc.h
+index 26f73df0a524..7ac115432fa1 100644
+--- a/include/linux/soc/ti/k3-ringacc.h
++++ b/include/linux/soc/ti/k3-ringacc.h
+@@ -107,6 +107,10 @@ struct k3_ringacc *of_k3_ringacc_get_by_phandle(struct device_node *np,
+ struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
+ 					int id, u32 flags);
+ 
++int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
++				  int fwd_id, int compl_id,
++				  struct k3_ring **fwd_ring,
++				  struct k3_ring **compl_ring);
+ /**
+  * k3_ringacc_ring_reset - ring reset
+  * @ring: pointer on Ring
+-- 
+2.17.1
 
-I think the confusion here is that this really does not work well, if at
-all, on most "high end" SoC chips due to the collection of different
-things all of the vendors ship to their customers.  This is the work
-that is trying to be fixed up here.
-
-And look at the driver core work for many driver subsystems to be fixed
-up just to get a single kernel image to work on multiple platforms.
-Just because older ones did it, doesn't mean it actually works today :)
-
-thanks,
-
-greg k-h
