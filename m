@@ -2,168 +2,94 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1684C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C13DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C86C320775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88B920717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:37:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aN/AQOOm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="asn9ioA0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgGQLee (ORCPT
+        id S1726386AbgGQLh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:34:34 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:41039 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726229AbgGQLe3 (ORCPT
+        Fri, 17 Jul 2020 07:37:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgGQLh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:34:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594985667;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=drwIDnPePb0U+gsjdqJ9mNmNmtntq76LKVrvvY6ldbE=;
-        b=aN/AQOOmkuyp1TR1OrnFvB9Dj1G2hds4HL9DdCWERnNPcQQv+HuzuTIRDnTV1Qi/gvkMs1
-        8qlfACOazHuCthuEyvXkz8ahP3Hz1XiPQqDS7JzIQV9h91Hy/xIg1lCtzOHx5A7CS4hU9G
-        EBN4E/Vya3aOF3AvS5SUujl8/eolsmQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-230-8cB0XYUwPpeEFvsp2Tf_1g-1; Fri, 17 Jul 2020 07:34:26 -0400
-X-MC-Unique: 8cB0XYUwPpeEFvsp2Tf_1g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 410741085;
-        Fri, 17 Jul 2020 11:34:24 +0000 (UTC)
-Received: from virtlab710.virt.lab.eng.bos.redhat.com (virtlab710.virt.lab.eng.bos.redhat.com [10.19.152.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C11B319C58;
-        Fri, 17 Jul 2020 11:34:23 +0000 (UTC)
-From:   Cathy Avery <cavery@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com
-Subject: [PATCH kvm-unit-tests v2 2/3] svm: INIT and STARTUP ipi test
-Date:   Fri, 17 Jul 2020 07:34:21 -0400
-Message-Id: <20200717113422.19575-3-cavery@redhat.com>
-In-Reply-To: <20200717113422.19575-1-cavery@redhat.com>
-References: <20200717113422.19575-1-cavery@redhat.com>
+        Fri, 17 Jul 2020 07:37:28 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E6DC061755
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:37:28 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q7so12257328ljm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:37:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aDY3cD5VVLoGr2KLdiJZxuQ30Iu3LJPhEKN1R3GqVmo=;
+        b=asn9ioA02S/hp62TyD1ARksnk7gDpK6SJ6sMTqPlPbNxQRjDDoVqphes1+jfpwzJJk
+         E7XXm/uuD0GuYO3b+Atck5d8p0AZ6ftU68+1gCFJu/qiqHsE4UDHenSpSsNs4QQcbXZU
+         HbsE+IybJLWnOxZMgDIBG0ZibbpaTpacBkRZK+p4ERnF4rSzclUzeY/MJua6flEsr/sD
+         fyEwWV44BZmI7xKjyx8te5WMNfyD/JqwiZAZOnYh0FLCC4Ks06tubNdefvb55dWL05rA
+         ce4mIqHmJXaWCpo4a0kQPQZr68sOI5aucF6uIKpAjFaWyRYZLXfoaMrUGpb/Vkk7YtV8
+         heTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aDY3cD5VVLoGr2KLdiJZxuQ30Iu3LJPhEKN1R3GqVmo=;
+        b=Y1j1ksRkHetXhs6aTaAc5ljzM//hu/hjZ0Q/6ZJ8McIGvXXfDW17jBBazKmiWV/Yal
+         E4cyIvff/gmwttRj9yl8zj8BmnJIklg9WG30FU9rDWSFfBGDOaaNpVfeOxuEAmhdHCP0
+         KEKk1x6HdNFfIsNkoJ/oda9fopd9PgAoUqjBAI0VGWKxPZ+ezZHwwmM4wiAyZLTBpQfB
+         jgTawB5Mp2NwdHu9es7sQDOneS/33fsqr3AWvnBNOh5lFMyhf3GbbD0FFeSE1v7pTRS+
+         fYkd3rwXubiDiypP8jEofc+aJ2QPDchxOWp5zZPTRvBK9XBwl2ugyo10qwcJiB3hPKrL
+         tcZQ==
+X-Gm-Message-State: AOAM530+J4mTmmXqTnKKDnFI+dTiqwSZ++VZTX2lFwgogi8I/YenDtJH
+        ZlnsdEO/kc0b5t1v8gOFMg3yYpsDDtj0vZIRu/krmA==
+X-Google-Smtp-Source: ABdhPJwB/qaEUBGY9gRDpr0u1bTOhacvPAIMLTaHk5U982m8YxmSZNCmBF/9GWh8Loio1RhjAv/lZQhoaYqxLfNTFA0=
+X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr4631930ljc.286.1594985846763;
+ Fri, 17 Jul 2020 04:37:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200717171634.4b68472c@canb.auug.org.au> <1594976475.4688.2.camel@mtkswgap22>
+In-Reply-To: <1594976475.4688.2.camel@mtkswgap22>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Jul 2020 13:37:16 +0200
+Message-ID: <CACRpkdbDS1_33cjTfnE8MT015r1YLcUOLtiAbvOBg5cUz5if1w@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the pinctrl tree
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Init the vcpu and issue the STARTUP ipi to indicate the vcpu
-should execute its startup routine.
+On Fri, Jul 17, 2020 at 11:01 AM Hanks Chen <hanks.chen@mediatek.com> wrote:
+> On Fri, 2020-07-17 at 17:16 +1000, Stephen Rothwell wrote:
 
-Signed-off-by: Cathy Avery <cavery@redhat.com>
----
- x86/cstart64.S  |  1 +
- x86/svm_tests.c | 57 +++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 58 insertions(+)
+> > Caused by commit
+> >
+> >   e6f744c6ad4f ("pinctrl: mediatek: add pinctrl support for MT6779 SoC")
+> >
+> > Forgot to include module.h (since it is tristate in Kconfig) or init.h?
+> >
+> > I used the pinctrl tree from next-20200716 for today.
+> >
+>
+> My fault, I'll fix it in next version.
+> (Series: Add basic SoC Support for Mediatek MT6779 SoC)
 
-diff --git a/x86/cstart64.S b/x86/cstart64.S
-index 3ae98d3..dfd7320 100644
---- a/x86/cstart64.S
-+++ b/x86/cstart64.S
-@@ -7,6 +7,7 @@
- .globl tss_descr
- .globl gdt64_desc
- .globl online_cpus
-+.globl cpu_online_count
- 
- ipi_vector = 0x20
- 
-diff --git a/x86/svm_tests.c b/x86/svm_tests.c
-index 3b0d019..698eb20 100644
---- a/x86/svm_tests.c
-+++ b/x86/svm_tests.c
-@@ -17,6 +17,8 @@ static void *scratch_page;
- 
- #define LATENCY_RUNS 1000000
- 
-+extern u16 cpu_online_count;
-+
- u64 tsc_start;
- u64 tsc_end;
- 
-@@ -1885,6 +1887,58 @@ static bool reg_corruption_check(struct svm_test *test)
-     return get_test_stage(test) == 1;
- }
- 
-+static void get_tss_entry(void *data)
-+{
-+    struct descriptor_table_ptr gdt;
-+    struct segment_desc64 *gdt_table;
-+    struct segment_desc64 *tss_entry;
-+    u16 tr = 0;
-+
-+    sgdt(&gdt);
-+    tr = str();
-+    gdt_table = (struct segment_desc64 *) gdt.base;
-+    tss_entry = &gdt_table[tr / sizeof(struct segment_desc64)];
-+    *((struct segment_desc64 **)data) = tss_entry;
-+}
-+
-+static int orig_cpu_count;
-+
-+static void init_startup_prepare(struct svm_test *test)
-+{
-+    struct segment_desc64 *tss_entry;
-+    int i;
-+
-+    vmcb_ident(vmcb);
-+
-+    on_cpu(1, get_tss_entry, &tss_entry);
-+
-+    orig_cpu_count = cpu_online_count;
-+
-+    apic_icr_write(APIC_DEST_PHYSICAL | APIC_DM_INIT | APIC_INT_ASSERT,
-+                   id_map[1]);
-+
-+    delay(100000000ULL);
-+
-+    --cpu_online_count;
-+
-+    *(uint64_t *)tss_entry &= ~DESC_BUSY;
-+
-+    apic_icr_write(APIC_DEST_PHYSICAL | APIC_DM_STARTUP, id_map[1]);
-+
-+    for (i = 0; i < 5 && cpu_online_count < orig_cpu_count; i++)
-+       delay(100000000ULL);
-+}
-+
-+static bool init_startup_finished(struct svm_test *test)
-+{
-+    return true;
-+}
-+
-+static bool init_startup_check(struct svm_test *test)
-+{
-+    return cpu_online_count == orig_cpu_count;
-+}
-+
- #define TEST(name) { #name, .v2 = name }
- 
- /*
-@@ -2198,6 +2252,9 @@ struct svm_test svm_tests[] = {
-     { "reg_corruption", default_supported, reg_corruption_prepare,
-       default_prepare_gif_clear, reg_corruption_test,
-       reg_corruption_finished, reg_corruption_check },
-+    { "svm_init_startup_test", smp_supported, init_startup_prepare,
-+      default_prepare_gif_clear, null_test,
-+      init_startup_finished, init_startup_check },
-     TEST(svm_guest_state_test),
-     { NULL, NULL, NULL, NULL, NULL, NULL, NULL }
- };
--- 
-2.20.1
+OK I pulled out all the MTK6779 patches from my tree and wait
+for a new version.
 
+Yours,
+Linus Walleij
