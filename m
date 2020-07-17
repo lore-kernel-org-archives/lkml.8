@@ -2,142 +2,142 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6394BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB2AC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1BC20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2894120734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EjR/7guw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pHFLMjCZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9SuBPK/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgGQLUo (ORCPT
+        id S1726322AbgGQLV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:20:44 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58776 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgGQLUn (ORCPT
+        Fri, 17 Jul 2020 07:21:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40062 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgGQLV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:20:43 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HBKWn3074510;
-        Fri, 17 Jul 2020 06:20:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594984832;
-        bh=jQ4FkbUTphg2qbQHxfvAGsCKM+J0mShGKMimgMEZ+AY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=EjR/7guwsFW5JD94vt1u1nkrlgZDru7UadP6GAzAMM9HiR+B0FIT4NChButETuMi4
-         Nz58IZA/HBBlEsH/R9nn2dClNxKKKihQp1KktS6/eWbVdMN6OZLuQAgX3xeIveCyMf
-         E/OldSg4y2VVAFoR1pYhMkOKXs2eye51RBBxnGy8=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HBKWAu119754
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 06:20:32 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 06:20:31 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 06:20:31 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HBKNWo043822;
-        Fri, 17 Jul 2020 06:20:26 -0500
-Subject: Re: [PATCH 7/7] arm64: defconfig: Enable AM654x SDHCI controller
-To:     Faiz Abbas <faiz_abbas@ti.com>, Arnd Bergmann <arnd@arndb.de>,
-        Sekhar Nori <nsekhar@ti.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        ARM-SoC Maintainers <soc@kernel.org>,
-        Nishanth Menon <nm@ti.com>
-References: <20200619125801.9530-1-faiz_abbas@ti.com>
- <20200619125801.9530-8-faiz_abbas@ti.com>
- <3ed03440-7fbd-6abc-8a15-67e7217e2c3d@ti.com>
- <2e50333c-5387-236f-3fb2-6d8014b224e0@ti.com>
- <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
- <75cd485b-e3eb-19ee-ad1f-84cb04b0c807@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <933d7132-5d9f-89df-8dec-5d9f6d3e0eee@ti.com>
-Date:   Fri, 17 Jul 2020 14:20:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 17 Jul 2020 07:21:58 -0400
+Date:   Fri, 17 Jul 2020 11:21:54 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594984915;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2N7cl9Uv5C2BfTmcs6AcgRYir7yXNppoUxiGa6sKO0s=;
+        b=pHFLMjCZfl8dEb9NJli+wvKsWOyJCm4uv+kwgNehGo494JrWm7LkJaMxkUnkSUcxRmGIIB
+        JFntO7z87LrNyfSAAx8PgSVrOv48yyZPg6ppZfnLm/4CJcvgn6fkBsyzHbd2NfeVC5U+rx
+        zyBCn0jK7Yao+8CfaPF0+0sQtNEFzFpw0gam9UkEkwmEbFbR56JmT0Zc9tc+yJZZ3S00Ou
+        fSmzhH30Yg1TW8xccuf/mFopvSGDpVX5mQHI7mxYzZsW71sk3DTNxuSOQygPNjvkOrmLkB
+        e6j3JQIo7ICRPonWYMYurHcA0CCIwA2Loh8wywrcusMQEhA0dZ3WzaUgOn0QtA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594984915;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2N7cl9Uv5C2BfTmcs6AcgRYir7yXNppoUxiGa6sKO0s=;
+        b=9SuBPK/vnOVHz/2gDXbIDl6CQbKZN0lMQ2VhrQHRA7+m65L5VQJolm6Ok2iM6aV88RZSN/
+        8ui1Oa/N0rtU8sDA==
+From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/fair: handle case of task_h_load() returning 0
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        <stable@vger.kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200710152426.16981-1-vincent.guittot@linaro.org>
+References: <20200710152426.16981-1-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <75cd485b-e3eb-19ee-ad1f-84cb04b0c807@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Message-ID: <159498491467.4006.8575391976004781075.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/07/2020 11:38, Faiz Abbas wrote:
-> Hi,
-> 
-> On 16/07/20 11:58 pm, Arnd Bergmann wrote:
->> On Thu, Jul 16, 2020 at 3:25 PM Sekhar Nori <nsekhar@ti.com> wrote:
->>>
->>> On 7/16/20 5:49 PM, Faiz Abbas wrote:
->>>> Hi,
->>>>
->>>> On 19/06/20 6:28 pm, Faiz Abbas wrote:
->>>>> Enable CONFIG_SDHCI_AM654 to Support AM65x sdhci controller.
->>>>>
->>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>>> ---
->>>>>   arch/arm64/configs/defconfig | 1 +
->>>>>   1 file changed, 1 insertion(+)
->>>>>
->>>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->>>>> index 883e8bace3ed..40dd13e0adc5 100644
->>>>> --- a/arch/arm64/configs/defconfig
->>>>> +++ b/arch/arm64/configs/defconfig
->>>>> @@ -731,6 +731,7 @@ CONFIG_MMC_DW_ROCKCHIP=y
->>>>>   CONFIG_MMC_SUNXI=y
->>>>>   CONFIG_MMC_BCM2835=y
->>>>>   CONFIG_MMC_SDHCI_XENON=y
->>>>> +CONFIG_MMC_SDHCI_AM654=y
->>>>>   CONFIG_MMC_OWL=y
->>>>>   CONFIG_NEW_LEDS=y
->>>>>   CONFIG_LEDS_CLASS=y
->>>>>
->>>>
->>>> Gentle ping. Will, Catalin, can this patch be picked up?
->>>
->>>  From logs, Arnd has been picking up patches for this file. Looping in
->>> Arnd and ARM-SoC team.
->>
->> I tend to ignore individual patches to the defconfig file unless
->> they are sent to:soc@kernel.org. The best way to get them
->> included is to have the platform maintainers pick up the
->> changes and send them that way as a separate pull request
->> at the same time as sending any DT updates.
->>
->> The MAINTAINERS file lists Tero and Nishanth as maintainers
->> for the platform. If they want, I can apply this one directly, but in
->> the future, send it to them.
->>
-> 
-> Thanks for clarifying Arnd. Tero, can you pick this up?
+The following commit has been merged into the sched/urgent branch of tip:
 
-Ok, this topic has been bit unclear for me also, but if you say I can 
-pick the patches myself and send a pull request out, I can do that.
+Commit-ID:     01cfcde9c26d8555f0e6e9aea9d6049f87683998
+Gitweb:        https://git.kernel.org/tip/01cfcde9c26d8555f0e6e9aea9d6049f87683998
+Author:        Vincent Guittot <vincent.guittot@linaro.org>
+AuthorDate:    Fri, 10 Jul 2020 17:24:26 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Thu, 16 Jul 2020 23:19:48 +02:00
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+sched/fair: handle case of task_h_load() returning 0
+
+task_h_load() can return 0 in some situations like running stress-ng
+mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+system. The load balance doesn't handle this correctly because
+env->imbalance never decreases and it will stop pulling tasks only after
+reaching loop_max, which can be equal to the number of running tasks of
+the cfs. Make sure that imbalance will be decreased by at least 1.
+
+misfit task is the other feature that doesn't handle correctly such
+situation although it's probably more difficult to face the problem
+because of the smaller number of CPUs and running tasks on heterogenous
+system.
+
+We can't simply ensure that task_h_load() returns at least one because it
+would imply to handle underflow in other places.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: <stable@vger.kernel.org> # v4.4+
+Link: https://lkml.kernel.org/r/20200710152426.16981-1-vincent.guittot@linaro.org
+---
+ kernel/sched/fair.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 658aa7a..04fa8db 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4039,7 +4039,11 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+ 		return;
+ 	}
+ 
+-	rq->misfit_task_load = task_h_load(p);
++	/*
++	 * Make sure that misfit_task_load will not be null even if
++	 * task_h_load() returns 0.
++	 */
++	rq->misfit_task_load = max_t(unsigned long, task_h_load(p), 1);
+ }
+ 
+ #else /* CONFIG_SMP */
+@@ -7638,7 +7642,14 @@ static int detach_tasks(struct lb_env *env)
+ 
+ 		switch (env->migration_type) {
+ 		case migrate_load:
+-			load = task_h_load(p);
++			/*
++			 * Depending of the number of CPUs and tasks and the
++			 * cgroup hierarchy, task_h_load() can return a null
++			 * value. Make sure that env->imbalance decreases
++			 * otherwise detach_tasks() will stop only after
++			 * detaching up to loop_max tasks.
++			 */
++			load = max_t(unsigned long, task_h_load(p), 1);
+ 
+ 			if (sched_feat(LB_MIN) &&
+ 			    load < 16 && !env->sd->nr_balance_failed)
