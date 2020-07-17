@@ -3,141 +3,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C014BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F59FC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2F620759
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:31:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bKVrJKsO"
+	by mail.kernel.org (Postfix) with ESMTP id 793A72076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595010719;
+	bh=YHFPycUTgsDF1UJGgyC7LWsiRop+4nEUMYmTmNXt6f0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rkvMPSVRDN72QHUzfYsiAcSBP8oL6hZ3fOuMz9qb448HvbZqTE/zmWiT3YD/PIIy3
+	 fNGe7jck+/G1AbwKCuamcqxFZSwy028gvVN3ZSUygi9QYqf1T4faxh48CQZv/ZL7ft
+	 IqE2JUOsW+mEzS/uxNUGsT5vBCxoMG9AUadQjkJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgGQSbL (ORCPT
+        id S1728159AbgGQSb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:31:11 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36654 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgGQSbL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:31:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595010669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=y2xAxagpZEc0mZ8kCd/GscfUspmOueQdt1IrRm5lgEk=;
-        b=bKVrJKsOMgU0xkSaEEVUWh4mW5ZCMQ/sHS4kjrXjPFCU84CZLmDxZzyR8BvtXCYurtuwUg
-        b8T8/RqFCtLKyP+mvDR6W/vWAWePBzBbG4e9PgIyPIlNXxSptUuVp2VYPe65LztD5r9Byl
-        fQIlqkiNdGF8FT3Mqd+QHg57rt185a0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-LNVP4hAMPM2X4PxGAtNubw-1; Fri, 17 Jul 2020 14:31:06 -0400
-X-MC-Unique: LNVP4hAMPM2X4PxGAtNubw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 17 Jul 2020 14:31:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726322AbgGQSb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:31:58 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFE5D8015FB;
-        Fri, 17 Jul 2020 18:31:05 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-118-144.rdu2.redhat.com [10.10.118.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 43CC86FECD;
-        Fri, 17 Jul 2020 18:31:05 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     live-patching@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] Revert "kbuild: use -flive-patching when CONFIG_LIVEPATCH is enabled"
-Date:   Fri, 17 Jul 2020 13:29:48 -0500
-Message-Id: <696262e997359666afa053fe7d1a9fb2bb373964.1595010490.git.jpoimboe@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B7E7E20759;
+        Fri, 17 Jul 2020 18:31:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595010717;
+        bh=YHFPycUTgsDF1UJGgyC7LWsiRop+4nEUMYmTmNXt6f0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uY9z5GFL5wr9rt4JseHttadmmmHwUKrbMZC7HgrilpDBbLcfMJ2gEvc+V/2fDE5eb
+         F5GgYkSlQGORe/913kjxedtpgOCqZlw2b6Kyim2kaNlGn/FNl35LVOk8YiJE7P9a+M
+         pgiizxg6DiK9ve2OxtLVmUGdWpfoYYOSFGSWrsWA=
+Date:   Fri, 17 Jul 2020 11:31:55 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Igor Russkikh <irusskikh@marvell.com>
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Denis Bolotin <dbolotin@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
+        <QLogic-Storage-Upstream@cavium.com>, <netdev@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH net-next 10/13] qed: add support for new port
+ modes
+Message-ID: <20200717113155.1a9234b3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <27939848-7e83-2897-36f9-44f47d1bfb9c@marvell.com>
+References: <20200716115446.994-1-alobakin@marvell.com>
+        <20200716115446.994-11-alobakin@marvell.com>
+        <20200716181853.502dd619@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <27939848-7e83-2897-36f9-44f47d1bfb9c@marvell.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use of the new -flive-patching flag was introduced with the following
-commit:
+On Fri, 17 Jul 2020 13:49:33 +0300 Igor Russkikh wrote:
+> > ----------------------------------------------------------------------
+> > On Thu, 16 Jul 2020 14:54:43 +0300 Alexander Lobakin wrote:  
+> >> These ports ship on new boards revisions and are supported by newer
+> >> firmware versions.
+> >>
+> >> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+> >> Signed-off-by: Igor Russkikh <irusskikh@marvell.com>  
+> > 
+> > What is the driver actually doing with them, tho?
+> > 
+> > Looks like you translate some firmware specific field to a driver
+> > specific field, but I can't figure out what part of the code cares
+> > about hw_info.port_mode  
+> 
+> Hi Jakub,
+> 
+> You are right, this info is never used/reported.
+> 
+> Alexander is extending already existing non used field with new values from
+> our latest hardware revisions.
+> 
+> I thought devlink info could be a good place to output such kind of information.
+> 
+> Thats basically a layout of *Physical* ports on device - quite useful info I
+> think.
+> 
+> Important thing is these ports may not be directly mapped to PCI PFs. So
+> reading `ethtool eth*` may not explain you the real device capabilities.
+> 
+> Do you think it makes sense adding such info to `devlink info` then?
 
-  43bd3a95c98e ("kbuild: use -flive-patching when CONFIG_LIVEPATCH is enabled")
+Devlink port has information about physical port, which don't have to
+map 1:1 to netdevs. It also has lanes and port splitting which you may
+want to report.
 
-This flag has several drawbacks:
 
-- It disables some optimizations, so it can have a negative effect on
-  performance.
+For now please make sure to not include any dead code in your
+submissions (register defines etc. may be okay), perhaps try:
 
-- According to the GCC documentation it's not compatible with LTO, which
-  will become a compatibility issue as LTO support gets upstreamed in
-  the kernel.
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+index d929556247a5..4bad836d0f74 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -4026,6 +4026,21 @@ static int qed_hw_get_nvm_info(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
+ 	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G:
+ 		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_4X25G;
+ 		break;
++	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X50G_R1:
++	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_4X50G_R1:
++	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R2:
++	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X100G_R2:
++	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R4:
++		/* TODO: set port_mode when it's actually used */
++		break;
+ 	default:
+ 		DP_NOTICE(p_hwfn, "Unknown port mode in 0x%08x\n", core_cfg);
+ 		break;
 
-- It was intended to be used for source-based patch generation tooling,
-  as opposed to binary-based patch generation tooling (e.g.,
-  kpatch-build).  It probably should have at least been behind a
-  separate config option so as not to negatively affect other livepatch
-  users.
+And see if it will pass the muster.
 
-- Clang doesn't have the flag, so as far as I can tell, this method of
-  generating patches is incompatible with Clang, which like LTO is
-  becoming more mainstream.
-
-- It breaks GCC's implicit noreturn detection for local functions.  This
-  is the cause of several "unreachable instruction" objtool warnings.
-
-- The broken noreturn detection is an obvious GCC regression, but we
-  haven't yet gotten GCC developers to acknowledge that, which doesn't
-  inspire confidence in their willingness to keep the feature working as
-  optimizations are added or changed going forward.
-
-- While there *is* a distro which relies on this flag for their distro
-  livepatch module builds, there's not a publicly documented way to
-  create safe livepatch modules with it.  Its use seems to be based on
-  tribal knowledge.  It serves no benefit to those who don't know how to
-  use it.
-
-  (In fact, I believe the current livepatch documentation and samples
-  are misleading and dangerous, and should be corrected.  Or at least
-  amended with a disclaimer.  But I don't feel qualified to make such
-  changes.)
-
-Also, we have an idea for using objtool to detect function changes,
-which could potentially obsolete the need for this flag anyway.
-
-At this point the flag has no benefits for upstream which would
-counteract the above drawbacks.  Revert it until it becomes more ready.
-
-This reverts commit 43bd3a95c98e1a86b8b55d97f745c224ecff02b9.
-
-Fixes: 43bd3a95c98e ("kbuild: use -flive-patching when CONFIG_LIVEPATCH is enabled")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
-
-NOTE: I tried to be objective, factual, and thorough, to the best of my
-knowledge.  Any suggestions for corrections to the commit message are
-definitely welcome.
-
- Makefile | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 0b5f8538bde5..3b37d25aa028 100644
---- a/Makefile
-+++ b/Makefile
-@@ -876,10 +876,6 @@ KBUILD_CFLAGS_KERNEL += -ffunction-sections -fdata-sections
- LDFLAGS_vmlinux += --gc-sections
- endif
- 
--ifdef CONFIG_LIVEPATCH
--KBUILD_CFLAGS += $(call cc-option, -flive-patching=inline-clone)
--endif
--
- ifdef CONFIG_SHADOW_CALL_STACK
- CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
- KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
--- 
-2.25.4
-
+Dead code makes it harder to review the patches.
