@@ -2,126 +2,110 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD9AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44966C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1315207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C4920657
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLQpULXQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DoGS1++Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgGQCIu (ORCPT
+        id S1726593AbgGQCNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 22:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42978 "EHLO
+        Thu, 16 Jul 2020 22:13:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgGQCIt (ORCPT
+        with ESMTP id S1726453AbgGQCNQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 22:08:49 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E6D5C061755;
-        Thu, 16 Jul 2020 19:08:49 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ls15so5783325pjb.1;
-        Thu, 16 Jul 2020 19:08:49 -0700 (PDT)
+        Thu, 16 Jul 2020 22:13:16 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF10C061755;
+        Thu, 16 Jul 2020 19:13:16 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id 6so6601462qtt.0;
+        Thu, 16 Jul 2020 19:13:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=tq4m4h2a9TL5pXC8bkU2F7Xjx88fuMptJM1ziSfBc+I=;
-        b=BLQpULXQn6FhYgZQFzAkJicFWxLoYxfuqtJ60XvjaNDS6vqkF5ze/GDUMqVkBKseQC
-         sU38qYidKqz1KNn3eEAMZwok5rgEq1ihUyhx1I9w2hd6xxId57+dDrg9RwtRSZco+uDQ
-         UVbb+WTpPjdURlpaIqX50tjui5RVEo5Pb8MvAGybrjKardQxfoNcZOLDFhqDRcBGBZSN
-         DzGa9+DFFdj1dJrJ5pSijMnmlxl2L6VuV7Dc9FLp54AkXV+jAfElNpGSgJlgCgh0r4rP
-         KS0d+SKSvDU/Mp2ppBB4leWNpVn2lo8V/gmb8Q655HQgOgNbh0wmalDpp8yeB1cHB1yz
-         +beg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=f2JKPdgb/9hZRJjwTB6zOtsvoRSAMGYehX8TUhEKf08=;
+        b=DoGS1++QTCQxT8UzGH2XWCc0c5KPNKxPiUHbvd4xQA0+pBj6FyIc3Gv0VkpDQn477R
+         yVwyybTW4U/i5Gre/Fy0uTTrbcAnGp5iOKXEfu0i0KgRB/lZQiDmc58pru1Y0ZCugL3i
+         YKidi5oZRMCcdCroJo33WZ1+tbZopc+q+imm2IO9puatiFud3MO9P03Pm+zksnM0QJ1a
+         MSu857GYiFqB1da1JPensMjH5VmFeeDAUZa8FfajJpPLAp+U8QSmf6s7ApL5utPJR1Yl
+         PAEUYi10LIUGhOV3vjnGMSz1lZPGwHHjWAJb2aj2mxNnWPJZRhVCbLGAM2Fo4rdbB8et
+         zJ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=tq4m4h2a9TL5pXC8bkU2F7Xjx88fuMptJM1ziSfBc+I=;
-        b=EuOPU23Iexc+T1WOqmho47KOj4RfSipD/zEanW0KUIJNIly35AcQ4oPubK65wx4NRG
-         jtpu+gsk1BIBBAm5YPHIGCW5L6rJzxIa3M9b9ku5VO8i7mPvdj7vC3/Nh5tsIgr1/0Kz
-         JnObqbwmPbOzdfXYaTo4+RpHEd4Pv00X2NdExUNJ4+IUoTz56cXKsYiFS/LzbxDb5u38
-         fpzbyKvXcQJUxh73KjiyMvAmLTfzR2N89w/Y146CxN3CD5A+FVzMFO974qjX/Kp+t1Sb
-         J7V29iH77+7vWUStx6pte0e+pxzH542niHCDX1bkYlYOFgz7XqpZNwVZdWnYFzBhDBWB
-         xuVg==
-X-Gm-Message-State: AOAM5322XuYypL7S0cvu2OOQF8H+QmS9gj33EhttTOHv50Y5ZDUsTLhg
-        QGaq4mxkdRihF+hHZljPyVY=
-X-Google-Smtp-Source: ABdhPJx1xFOvDqifGjgy8vUu0iFeypqKlimb/iCgqrKDVMKGCO8pX4GP2UEyFxYkxqrIJSz9nKQE5A==
-X-Received: by 2002:a17:902:788b:: with SMTP id q11mr6116353pll.216.1594951728753;
-        Thu, 16 Jul 2020 19:08:48 -0700 (PDT)
-Received: from vm_111_229_centos ([203.205.141.39])
-        by smtp.gmail.com with ESMTPSA id r25sm1793183pgv.88.2020.07.16.19.08.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Jul 2020 19:08:47 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 10:08:42 +0800
-From:   YangYuxi <yx.atom1@gmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ebpf: fix parameter naming confusing
-Message-ID: <20200717020842.GA29747@vm_111_229_centos>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=f2JKPdgb/9hZRJjwTB6zOtsvoRSAMGYehX8TUhEKf08=;
+        b=GjWFbsaFIGd6d5mAdqlzq0n8kJzYt71TlHKCyBIL3Kf6TJvLiLp0PN4VQ6xJv7K1q3
+         kG23YmaInaTKfU2GV4iIWY3uE7LAZOfu85VxRINI15XCJ03Vfhfy7gnok/Y/zAPG6nz8
+         fMleQALs27BaYU5584Rc1eqiR61BjCDGtjXxuPGRY+7FtZX9mEJ8H1zmBn9lOllG4pf5
+         gTsfiKkIqNxFTjYlFnDcZ6IM9eeL261Kx3ZZyEcX4T+GDZ7bOSPztKMuIVhFsk+sOqGd
+         hlq7LxqeMz4nLZP804LgU9k/3kkdhGWlYgDDrfHsjI7ihwc1QLCjnQCy8iHPfyvSEsd8
+         dxqw==
+X-Gm-Message-State: AOAM532bseZ8nhzgFTGofAxeBB1Onk/glxgjTuwWk5+Nszad44SA8LM0
+        gn+Cuqfbw3ce+5qXMibEA/g=
+X-Google-Smtp-Source: ABdhPJyQuxSbeRQ5xrb2oQYCV1GZiwZh9H04oau9nwukn5mMhjc8zvSQUrjlAJiDQsjFbJl1+850Uw==
+X-Received: by 2002:ac8:37ac:: with SMTP id d41mr1048402qtc.294.1594951995441;
+        Thu, 16 Jul 2020 19:13:15 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id 19sm8940859qke.44.2020.07.16.19.13.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 19:13:15 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 19:13:13 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] remoteproc: qcom: pil-info: Fix shift overflow
+Message-ID: <20200717021313.GA4098480@ubuntu-n2-xlarge-x86>
+References: <20200716054817.157608-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200716054817.157608-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: YangYuxi <yx.atom1@gmail.com>
----
- kernel/bpf/syscall.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On Wed, Jul 15, 2020 at 10:48:17PM -0700, Bjorn Andersson wrote:
+> On platforms with 32-bit phys_addr_t the shift to get the upper word of
+> the base address of the memory region is invalid. Cast the base to 64
+> bit to resolv this.
+> 
+> Fixes: 549b67da660d ("remoteproc: qcom: Introduce helper to store pil info in IMEM")
+> Reported-by: Lee Jones <lee.jones@linaro.org>
+> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 0fd80ac81f70..300ae16baffc 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1881,13 +1881,13 @@ struct bpf_prog *bpf_prog_inc_not_zero(struct bpf_prog *prog)
- EXPORT_SYMBOL_GPL(bpf_prog_inc_not_zero);
- 
- bool bpf_prog_get_ok(struct bpf_prog *prog,
--			    enum bpf_prog_type *attach_type, bool attach_drv)
-+			    enum bpf_prog_type *prog_type, bool attach_drv)
- {
- 	/* not an attachment, just a refcount inc, always allow */
--	if (!attach_type)
-+	if (!prog_type)
- 		return true;
- 
--	if (prog->type != *attach_type)
-+	if (prog->type != *prog_type)
- 		return false;
- 	if (bpf_prog_is_dev_bound(prog->aux) && !attach_drv)
- 		return false;
-@@ -1895,7 +1895,7 @@ bool bpf_prog_get_ok(struct bpf_prog *prog,
- 	return true;
- }
- 
--static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *attach_type,
-+static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *prog_type,
- 				       bool attach_drv)
- {
- 	struct fd f = fdget(ufd);
-@@ -1904,7 +1904,7 @@ static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *attach_type,
- 	prog = ____bpf_prog_get(f);
- 	if (IS_ERR(prog))
- 		return prog;
--	if (!bpf_prog_get_ok(prog, attach_type, attach_drv)) {
-+	if (!bpf_prog_get_ok(prog, prog_type, attach_drv)) {
- 		prog = ERR_PTR(-EINVAL);
- 		goto out;
- 	}
--- 
-1.8.3.1
+Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
 
+> ---
+>  drivers/remoteproc/qcom_pil_info.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
+> index 0536e3904669..5521c4437ffa 100644
+> --- a/drivers/remoteproc/qcom_pil_info.c
+> +++ b/drivers/remoteproc/qcom_pil_info.c
+> @@ -108,7 +108,7 @@ int qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
+>  found_existing:
+>  	/* Use two writel() as base is only aligned to 4 bytes on odd entries */
+>  	writel(base, entry + PIL_RELOC_NAME_LEN);
+> -	writel(base >> 32, entry + PIL_RELOC_NAME_LEN + 4);
+> +	writel((u64)base >> 32, entry + PIL_RELOC_NAME_LEN + 4);
+>  	writel(size, entry + PIL_RELOC_NAME_LEN + sizeof(__le64));
+>  	mutex_unlock(&pil_reloc_lock);
+>  
+> -- 
+> 2.26.2
+> 
