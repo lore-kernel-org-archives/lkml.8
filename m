@@ -2,231 +2,229 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F31C433F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D3FC433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF3FD20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCdY58WA"
+	by mail.kernel.org (Postfix) with ESMTP id B24EA20737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:39:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594967943;
+	bh=iy1DZFQCrJGzlBsBeuGrWuW3v6t9CvqShv1YmmmbDjo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pf3Wlyq+TNyeCNgumk+wTqQIIgxoKGg2uxexMz3ibjPxnQKmB4AEDyOcXS5ifDpyr
+	 uGgLHWFnpX2SXUibtPjI5DGQzTxoREUx/pIXGio23h01ygYgbnwnlsevkMmaPYR8LF
+	 ZYgCUz3fjanY2WB6N0MdSbdasxhZT02bjUjZHnjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgGQGjG (ORCPT
+        id S1728133AbgGQGjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:39:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgGQGjE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:39:04 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAFBAC061755;
-        Thu, 16 Jul 2020 23:39:03 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t6so6218479pgq.1;
-        Thu, 16 Jul 2020 23:39:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3UmYWRJdZF39qPxiyCNEd3/I71syYWtAye2lr9jTA6I=;
-        b=BCdY58WADm6UpJ5JU0mlK5H55GHa8V31bdBQgGtb7kbn0e8o1/W+3QfucNtBNjveRp
-         DSKQFQfOs2vBGbp2ASOVon7CQG0ksLGwfcZojX15FvAwq13yOsdEuSdkMcyo3hv3w+oP
-         kc9HL5fMgxdFTPMPGBSL2mJQGZgBDygRXU7p5B4ASMbpPWlucpYItkdF7xCv9Ruugxiv
-         lLUX8eAhFVGYzEN5Arj34lCS8KCcihCOIZSBbYaMoE2PLrZL0OxAFlmDNEp9FYHd2gh1
-         rNqV/DB7ytf2DOVbDQh94GlGo86D3wmywofvj6aFujvJlLkKresHOJ5nBS0rw/Wane0h
-         k6yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3UmYWRJdZF39qPxiyCNEd3/I71syYWtAye2lr9jTA6I=;
-        b=B95tpOgytMcdhS06CbmBMoyJuw1xWtV2uu6B5DayZJo2Z3yVLDDTfpprR0nW+D00M5
-         6lrI4UjxUp9y7Wo/FnWAR4mUmrVf36MdDflwAt7D+RaWJ5lDKtkE5sl/E3qCjrn5oYkp
-         x+GsakMvgSjRsmSyCCsng751jivbSqwfJh1Ixspz/5VppWePykTSe+6aBh3pad82BqkS
-         dnbQfNorP1CSllNcYHTYyS1BgPqPN/pQNJ0mI5ScTx6DN5affUwbg2tr/nq4bQ3Th0Q6
-         yZ+SHqAVqZnxKtem4+GJdYjTFJ52xrfIV4YmatfIawnYbsJ2p3T23H5rYRuV3gh4XMJo
-         2urw==
-X-Gm-Message-State: AOAM531OieboY5Ymzie2yVucEDUobZCh8aEG5+49lfSXjz2kaflL7Qvo
-        ofbkfNPt1V4Uwt6avFb5YJ4=
-X-Google-Smtp-Source: ABdhPJxcmmKECoF0TfV4zG0jknFf/N+8haFoRRYUr/nQQejuy0NkIuTPWwREtvU2q5gTVoS9Ku8PJA==
-X-Received: by 2002:a63:8f58:: with SMTP id r24mr7141799pgn.379.1594967943416;
-        Thu, 16 Jul 2020 23:39:03 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id y22sm1683392pjp.41.2020.07.16.23.38.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 23:39:02 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        John Garry <john.garry@huawei.com>,
-        Don Brace <don.brace@microsemi.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com
-Subject: [PATCH v1 15/15] scsi: pmcraid: use generic power management
-Date:   Fri, 17 Jul 2020 12:04:38 +0530
-Message-Id: <20200717063438.175022-16-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200717063438.175022-1-vaibhavgupta40@gmail.com>
-References: <20200717063438.175022-1-vaibhavgupta40@gmail.com>
+        Fri, 17 Jul 2020 02:39:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbgGQGjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:39:01 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98C4320704;
+        Fri, 17 Jul 2020 06:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594967940;
+        bh=iy1DZFQCrJGzlBsBeuGrWuW3v6t9CvqShv1YmmmbDjo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f++Zuql2Q8f8zsq28HU2TE/HhPA56w6V67m7IUed83iv2uyK1BY6faxUb5qtN7+us
+         m+jicM3WRY21YxH2i1FeMrZm6vmH9ihos62p3VBsyPYngdz3opGd1aVzWdDPzs39G1
+         d9BxB2WDggA75ddTuQQc/kXuYp4zoB/SZROL1DmM=
+Date:   Fri, 17 Jul 2020 12:08:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     kishon@ti.com, wsa+renesas@sang-engineering.com,
+        geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] phy: renesas: rcar-gen3-usb2: fix SError happen if
+ DEBUG_SHIRQ is enabled
+Message-ID: <20200717063856.GH82923@vkoul-mobl>
+References: <1594642288-9986-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594642288-9986-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy PM have to manage PCI states and device's PM states
-themselves. They also need to take care of configuration registers.
+hello Yoshihiro,
 
-With improved and powerful support of generic PM, PCI Core takes care of
-above mentioned, device-independent, jobs.
+On 13-07-20, 21:11, Yoshihiro Shimoda wrote:
 
-This driver makes use of PCI helper functions like
-pci_save/restore_state(), pci_enable/disable_device(),
-pci_set_power_state() and to do required operations. In generic mode, they
-are no longer needed.
+Please consider revising patch subject. It tell me you are fixing an
+error but it doesnt tell me what this patch is about :)
 
-Change function parameter in both .suspend() and .resume() to
-"struct device*" type. Use to_pci_dev() to get "struct pci_dev*" variable.
+Perhpas :move irq registration to init" maybe a better title which
+describes the changes this patch brings in
 
-Compile-tested only.
+> If CONFIG_DEBUG_SHIRQ was enabled, r8a77951-salvator-xs could boot
+> correctly. If we appended "earlycon keep_bootcon" to the kernel
+> command like, we could get kernel log like below.
+> 
+>     SError Interrupt on CPU0, code 0xbf000002 -- SError
+>     CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-salvator-x-00505-g6c843129e6faaf01 #785
+>     Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+>     pstate: 60400085 (nZCv daIf +PAN -UAO BTYPE=--)
+>     pc : rcar_gen3_phy_usb2_irq+0x14/0x54
+>     lr : free_irq+0xf4/0x27c
+> 
+> This means free_irq() calls the interrupt handler while PM runtime
+> is not getting if DEBUG_SHIRQ is enabled and rcar_gen3_phy_usb2_probe()
+> failed. To fix the issue, move the irq registration place to
+> rcar_gen3_phy_usb2_init() which is ready to handle the interrupts.
+> 
+> Note that after the commit 549b6b55b005 ("phy: renesas: rcar-gen3-usb2:
+> enable/disable independent irqs") which is merged into v5.2, since this
+> driver creates multiple phy instances, needs to check whether one of
+> phy instances is initialized. However, if we backport this patch to v5.1
+> or less, we don't need to check it because such kernel have single
+> phy instance.
+> 
+> Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fixes: 9f391c574efc ("phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection")
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  Changes from v1:
+>  - Move the irq registration to rcar_gen3_phy_usb2_init() instead of
+>    add a condition into the irq handler.
+>  https://patchwork.kernel.org/patch/11654097/
+> 
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 62 +++++++++++++++++---------------
+>  1 file changed, 34 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> index bfb22f8..6978f86 100644
+> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> @@ -111,6 +111,7 @@ struct rcar_gen3_chan {
+>  	struct work_struct work;
+>  	struct mutex lock;	/* protects rphys[...].powered */
+>  	enum usb_dr_mode dr_mode;
+> +	int irq;
+>  	bool extcon_host;
+>  	bool is_otg_channel;
+>  	bool uses_otg_pins;
+> @@ -389,12 +390,39 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+>  	rcar_gen3_device_recognition(ch);
+>  }
+>  
+> +static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+> +{
+> +	struct rcar_gen3_chan *ch = _ch;
+> +	void __iomem *usb2_base = ch->base;
+> +	u32 status = readl(usb2_base + USB2_OBINTSTA);
+> +	irqreturn_t ret = IRQ_NONE;
+> +
+> +	if (status & USB2_OBINT_BITS) {
+> +		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
+> +		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
+> +		rcar_gen3_device_recognition(ch);
+> +		ret = IRQ_HANDLED;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int rcar_gen3_phy_usb2_init(struct phy *p)
+>  {
+>  	struct rcar_gen3_phy *rphy = phy_get_drvdata(p);
+>  	struct rcar_gen3_chan *channel = rphy->ch;
+>  	void __iomem *usb2_base = channel->base;
+>  	u32 val;
+> +	int ret;
+> +
+> +	if (!rcar_gen3_is_any_rphy_initialized(channel) && channel->irq >= 0) {
+> +		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
+> +		ret = request_irq(channel->irq, rcar_gen3_phy_usb2_irq,
+> +				  IRQF_SHARED, dev_name(channel->dev), channel);
+> +		if (ret < 0)
+> +			dev_err(channel->dev, "No irq handler (%d)\n",
+> +				channel->irq);
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/scsi/pmcraid.c | 42 ++++++++++--------------------------------
- 1 file changed, 10 insertions(+), 32 deletions(-)
+This could be in a single line :)
 
-diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
-index aa9ae2ae8579..e5f2667f745b 100644
---- a/drivers/scsi/pmcraid.c
-+++ b/drivers/scsi/pmcraid.c
-@@ -5237,54 +5237,39 @@ static void pmcraid_remove(struct pci_dev *pdev)
- 	return;
- }
- 
--#ifdef CONFIG_PM
- /**
-  * pmcraid_suspend - driver suspend entry point for power management
-- * @pdev:   PCI device structure
-- * @state:  PCI power state to suspend routine
-+ * @dev:   Device structure
-  *
-  * Return Value - 0 always
-  */
--static int pmcraid_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused pmcraid_suspend(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct pmcraid_instance *pinstance = pci_get_drvdata(pdev);
- 
- 	pmcraid_shutdown(pdev);
- 	pmcraid_disable_interrupts(pinstance, ~0);
- 	pmcraid_kill_tasklets(pinstance);
--	pci_set_drvdata(pinstance->pdev, pinstance);
- 	pmcraid_unregister_interrupt_handler(pinstance);
--	pci_save_state(pdev);
--	pci_disable_device(pdev);
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
- 
- 	return 0;
- }
- 
- /**
-  * pmcraid_resume - driver resume entry point PCI power management
-- * @pdev: PCI device structure
-+ * @dev: Device structure
-  *
-  * Return Value - 0 in case of success. Error code in case of any failure
-  */
--static int pmcraid_resume(struct pci_dev *pdev)
-+static int __maybe_unused pmcraid_resume(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct pmcraid_instance *pinstance = pci_get_drvdata(pdev);
- 	struct Scsi_Host *host = pinstance->host;
- 	int rc;
- 
--	pci_set_power_state(pdev, PCI_D0);
--	pci_enable_wake(pdev, PCI_D0, 0);
--	pci_restore_state(pdev);
--
--	rc = pci_enable_device(pdev);
--
--	if (rc) {
--		dev_err(&pdev->dev, "resume: Enable device failed\n");
--		return rc;
--	}
--
--	pci_set_master(pdev);
-+	device_wakeup_disable(dev);
- 
- 	if (sizeof(dma_addr_t) == 4 ||
- 	    dma_set_mask(&pdev->dev, DMA_BIT_MASK(64)))
-@@ -5337,18 +5322,10 @@ static int pmcraid_resume(struct pci_dev *pdev)
- 	scsi_host_put(host);
- 
- disable_device:
--	pci_disable_device(pdev);
- 
- 	return rc;
- }
- 
--#else
--
--#define pmcraid_suspend NULL
--#define pmcraid_resume  NULL
--
--#endif /* CONFIG_PM */
--
- /**
-  * pmcraid_complete_ioa_reset - Called by either timer or tasklet during
-  *				completion of the ioa reset
-@@ -5836,6 +5813,8 @@ static int pmcraid_probe(struct pci_dev *pdev,
- 	return -ENODEV;
- }
- 
-+static SIMPLE_DEV_PM_OPS(pmcraid_pm_ops, pmcraid_suspend, pmcraid_resume);
-+
- /*
-  * PCI driver structure of pmcraid driver
-  */
-@@ -5844,8 +5823,7 @@ static struct pci_driver pmcraid_driver = {
- 	.id_table = pmcraid_pci_table,
- 	.probe = pmcraid_probe,
- 	.remove = pmcraid_remove,
--	.suspend = pmcraid_suspend,
--	.resume = pmcraid_resume,
-+	.driver.pm = &pmcraid_pm_ops,
- 	.shutdown = pmcraid_shutdown
- };
- 
+Should we continue on error here?
+
+> +	}
+>  
+>  	/* Initialize USB2 part */
+>  	val = readl(usb2_base + USB2_INT_ENABLE);
+> @@ -433,6 +461,9 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
+>  		val &= ~USB2_INT_ENABLE_UCOM_INTEN;
+>  	writel(val, usb2_base + USB2_INT_ENABLE);
+>  
+> +	if (channel->irq >= 0 && !rcar_gen3_is_any_rphy_initialized(channel))
+> +		free_irq(channel->irq, channel);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -503,23 +534,6 @@ static const struct phy_ops rz_g1c_phy_usb2_ops = {
+>  	.owner		= THIS_MODULE,
+>  };
+>  
+> -static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+> -{
+> -	struct rcar_gen3_chan *ch = _ch;
+> -	void __iomem *usb2_base = ch->base;
+> -	u32 status = readl(usb2_base + USB2_OBINTSTA);
+> -	irqreturn_t ret = IRQ_NONE;
+> -
+> -	if (status & USB2_OBINT_BITS) {
+> -		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
+> -		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
+> -		rcar_gen3_device_recognition(ch);
+> -		ret = IRQ_HANDLED;
+> -	}
+> -
+> -	return ret;
+> -}
+> -
+>  static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
+>  	{
+>  		.compatible = "renesas,usb2-phy-r8a77470",
+> @@ -598,7 +612,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+>  	struct phy_provider *provider;
+>  	struct resource *res;
+>  	const struct phy_ops *phy_usb2_ops;
+> -	int irq, ret = 0, i;
+> +	int ret = 0, i;
+>  
+>  	if (!dev->of_node) {
+>  		dev_err(dev, "This driver needs device tree\n");
+> @@ -614,16 +628,8 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+>  	if (IS_ERR(channel->base))
+>  		return PTR_ERR(channel->base);
+>  
+> -	/* call request_irq for OTG */
+> -	irq = platform_get_irq_optional(pdev, 0);
+> -	if (irq >= 0) {
+> -		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
+> -		irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
+> -				       IRQF_SHARED, dev_name(dev), channel);
+> -		if (irq < 0)
+> -			dev_err(dev, "No irq handler (%d)\n", irq);
+> -	}
+> -
+> +	/* get irq number here and request_irq for OTG in phy_init */
+> +	channel->irq = platform_get_irq_optional(pdev, 0);
+>  	channel->dr_mode = rcar_gen3_get_dr_mode(dev->of_node);
+>  	if (channel->dr_mode != USB_DR_MODE_UNKNOWN) {
+>  		int ret;
+> -- 
+> 2.7.4
+
 -- 
-2.27.0
-
+~Vinod
