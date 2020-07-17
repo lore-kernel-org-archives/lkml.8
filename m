@@ -2,161 +2,114 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1187EC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A98AC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D951420672
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:45:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="SNvuhoJT"
+	by mail.kernel.org (Postfix) with ESMTP id 5906F20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:46:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594982761;
+	bh=gzAzZEWZ4zcnTdpvAxvmiBYma0LVGacmwIHpIe9SHpY=;
+	h=To:From:Subject:Date:List-ID:From;
+	b=11JkgpJ2KRhSngW+vXGofeH7GiUm74ZnI5dcNmOvKrd3apYduHcbKLV4HU7XuZc8L
+	 MV/4KNe0IHtanXQhc3Q7SdqAcuCvBV5Grjv1WIh/89CesvHYOkvYyA8vhD86fur2I3
+	 sXRBVMzwfSjvO7kr1Q+RbgC/RxRx0dbj/AIMzHlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgGQKpX (ORCPT
+        id S1726393AbgGQKp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:45:23 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:42116 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725912AbgGQKpW (ORCPT
+        Fri, 17 Jul 2020 06:45:59 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42649 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgGQKp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:45:22 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HAf5HS000706;
-        Fri, 17 Jul 2020 03:45:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=kUUV0lqEb9Xz6K+RwOiQpvVDxu/YkSCqofPspW+1YoY=;
- b=SNvuhoJTEhg9HEnJEQNY54Czw4gqsE8vAPqmFYgEDU4/RCHpjgXS6vtG2qdCVQojVGCR
- aKbI7iXyvDWR+pZtsUL5aNssyCVtK/OR/Wr3phptilEW8C7043wn8SiJ6kNSZQkFBTWE
- XV9rK1BBXS4z+1PHwT/vHAbDKY2TGplo5XwDTh+bWgDMzl3t3XnxuxnVTF6kgpwMW/ZE
- Rb14Hs/PnqetbHJ60fazMYU3R/Vgqi3b9vgcVeqhjx4oFc83Nwu0lEaeavOOjlBWvlKe
- /PZwBI+vv2+b+W1y9Q7TVeDSqbREhuivL5c04Q9fKh1HGjcfSTlW6cs/0ovS7BCX4xi3 aA== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 328mmj43he-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 03:45:17 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 17 Jul
- 2020 03:45:15 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 17 Jul 2020 03:45:15 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 52CE13F703F;
-        Fri, 17 Jul 2020 03:45:11 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "Denis Bolotin" <denis.bolotin@marvell.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        <GR-everest-linux-l2@marvell.com>,
-        <QLogic-Storage-Upstream@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 10/13] qed: add support for new port modes
-Date:   Fri, 17 Jul 2020 13:44:37 +0300
-Message-ID: <20200717104437.523-1-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200716181853.502dd619@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-References: <20200716115446.994-1-alobakin@marvell.com>,
- <20200716181853.502dd619@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Fri, 17 Jul 2020 06:45:58 -0400
+Received: by mail-ed1-f67.google.com with SMTP id z17so7280672edr.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 03:45:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=SxFQKimgxEIwUhPX1Be+/21oiM24B74LtbvuOYqc5O4=;
+        b=bjXBVP/IT3WhspsPbAMh8B+78uryg4w7QK7p3QftyxBmR/rLiVDtP0hdi0176s1Nkc
+         vUvn8t5RLfqOZCa3cjmJHzob0wtZODWCcVuzn3aFQVFK9qG+872440LUguedQ0TykrAS
+         g4ty2r9GKpZUXBgtxeNpDs3+4MHRVylQYTx/5gvSfuDsYIShWdOzA7rtDb41SVsQjFdK
+         WFGDak1FpjAtHEhlG4cuplGtAGMujWm2BiNa2CSoKpqLBgd1yZqfKFaP4WKWxLAM1T0b
+         rlbHRdWFvYqoG3+G4YZ4u0Bc9OuqzI+8vWQRQmL/opwSIPr28ZKq+fycGBG5QQD3rBXW
+         tDpQ==
+X-Gm-Message-State: AOAM530H9LmoONbX84SmhOl/5ySOFPRKBM5dfYtUha82riiGGwMACFnv
+        p7dRv9lcAsBL9IfrXCwf9Vu8UTcu
+X-Google-Smtp-Source: ABdhPJzekm9J6wnDJd9WpB8FzZLRYXO06m0WfBIw2m7eJ8cCfduvSJ3vfJOYaz2lSB/bvpy6b1VASA==
+X-Received: by 2002:a50:f385:: with SMTP id g5mr8260891edm.347.1594982756108;
+        Fri, 17 Jul 2020 03:45:56 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id i2sm8126631edk.30.2020.07.17.03.45.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 03:45:55 -0700 (PDT)
+To:     Oleg Nesterov <oleg@redhat.com>, christian@brauner.io,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Subject: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+Message-ID: <6b253b55-586d-0bc4-9f58-c45c631abc60@kernel.org>
+Date:   Fri, 17 Jul 2020 12:45:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_06:2020-07-17,2020-07-17 signatures=0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
-Date: Thu, 16 Jul 2020 18:18:57 -0700
+Hi,
 
-Hi Jakub,
+the strace testsuite triggers this on 5.8-rc4 and -rc5 both on x86_64
+and i586:
+> kernel BUG at kernel/signal.c:1917!
+> invalid opcode: 0000 [#1] SMP NOPTI 
+> CPU: 7 PID: 18367 Comm: filter-unavaila Not tainted 5.8.0-rc4-3.g2cd7849-default #1 openSUSE Tumbleweed (unreleased)
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
+> RIP: 0010:do_notify_parent+0x239/0x270 
+> Code: d1 e8 41 89 c5 41 83 e5 01 48 8b 95 28 05 00 00 45 31 c0 4c 89 f6 44 89 e7 b9 01 00 00 00 e8 ce f2 ff ff e9 5b ff ff ff 0f 0b <0f> 0b 48 39 bf 50 05 00 00 75 17 48 8b 97 c0 05 00 00 48 8d 87 c0
+> RSP: 0018:ffffa05400f93d00 EFLAGS: 00010002
+> RAX: 0000000000000008 RBX: ffff9024ebb6dd00 RCX: 00000000000102f9
+> RDX: 0000000000000000 RSI: 0000000000000011 RDI: ffff9024ebb6dd00
+> RBP: ffff9024ebb6dd00 R08: 0000000000000000 R09: 000000000000000d
+> R10: 00007f7813000000 R11: ffffc2690721ae80 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000009 R15: 0000000000000000
+> FS:  00007f7812ffc700(0000) GS:ffff902537dc0000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f9c246a4a10 CR3: 00000001eba7c000 CR4: 00000000000406e0
+> Call Trace:
+>  exit_notify+0x1c0/0x1f0 
+>  do_exit+0x234/0x430
+>  do_group_exit+0x33/0xa0 
+>  get_signal+0x171/0x640
+>  do_signal+0x2a/0x1c0
+>  exit_to_usermode_loop+0x89/0x110
+>  __prepare_exit_to_usermode+0x92/0xd0
+>  do_syscall_64+0x59/0xd0 
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x7f78149db992
+> Code: Bad RIP value.
+> RSP: 002b:00007f7812ffbed0 EFLAGS: 00000293 ORIG_RAX: 0000000000000022
+> RAX: fffffffffffffdfe RBX: 0000000000000000 RCX: 00007f78149db992
+> RDX: 0000000000000001 RSI: 0000558a4e07e033 RDI: 0000000000000000
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 00007f7812ffc700
+> R10: 00007f7812ffc9d0 R11: 0000000000000293 R12: 0000000000000000
+> R13: 00007ffe4853b4bf R14: 00007ffe4853b4c0 R15: 00007f7812ffc700
+> Modules linked in: ata_generic ata_piix qemu_fw_cfg e1000 nls_iso8859_1 nls_cp437 vfat fat virtio_blk virtio_mmio xfs btrfs blake2b_generic xor raid6_pq libcrc32c crc32c_intel reiserfs squashfs fuse dm_snapshot dm_bufio dm_crypt dm_mod binfmt_misc loop sg virtio_rng
+> ---[ end trace 364c3385f192fee3 ]---
 
-> On Thu, 16 Jul 2020 14:54:43 +0300 Alexander Lobakin wrote:
->> These ports ship on new boards revisions and are supported by newer
->> firmware versions.
->> 
->> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
->> Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-> 
-> What is the driver actually doing with them, tho?
-> 
-> Looks like you translate some firmware specific field to a driver
-> specific field, but I can't figure out what part of the code cares
-> about hw_info.port_mode
+Any ideas?
 
-You're right, we just check NVM port type for validity and store it
-for the case of future expansions. Is that OK or I should do smth
-with that?
-
->> diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
->> index 6a1d12da7910..63fcbd5a295a 100644
->> --- a/drivers/net/ethernet/qlogic/qed/qed.h
->> +++ b/drivers/net/ethernet/qlogic/qed/qed.h
->> @@ -257,6 +257,11 @@ enum QED_PORT_MODE {
->>  	QED_PORT_MODE_DE_1X25G,
->>  	QED_PORT_MODE_DE_4X25G,
->>  	QED_PORT_MODE_DE_2X10G,
->> +	QED_PORT_MODE_DE_2X50G_R1,
->> +	QED_PORT_MODE_DE_4X50G_R1,
->> +	QED_PORT_MODE_DE_1X100G_R2,
->> +	QED_PORT_MODE_DE_2X100G_R2,
->> +	QED_PORT_MODE_DE_1X100G_R4,
->>  };
->>  
->>  enum qed_dev_cap {
->> diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
->> index d929556247a5..4bad836d0f74 100644
->> --- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
->> +++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
->> @@ -4026,6 +4026,21 @@ static int qed_hw_get_nvm_info(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
->>  	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G:
->>  		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_4X25G;
->>  		break;
->> +	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X50G_R1:
->> +		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_2X50G_R1;
->> +		break;
->> +	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_4X50G_R1:
->> +		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_4X50G_R1;
->> +		break;
->> +	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R2:
->> +		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_1X100G_R2;
->> +		break;
->> +	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X100G_R2:
->> +		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_2X100G_R2;
->> +		break;
->> +	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R4:
->> +		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_1X100G_R4;
->> +		break;
->>  	default:
->>  		DP_NOTICE(p_hwfn, "Unknown port mode in 0x%08x\n", core_cfg);
->>  		break;
->> diff --git a/drivers/net/ethernet/qlogic/qed/qed_hsi.h b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
->> index a4a845579fd2..debc55923251 100644
->> --- a/drivers/net/ethernet/qlogic/qed/qed_hsi.h
->> +++ b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
->> @@ -13015,6 +13015,11 @@ struct nvm_cfg1_glob {
->>  #define NVM_CFG1_GLOB_NETWORK_PORT_MODE_1X25G			0xd
->>  #define NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G			0xe
->>  #define NVM_CFG1_GLOB_NETWORK_PORT_MODE_2X10G			0xf
->> +#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X50G_R1		0x11
->> +#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_4X50G_R1		0x12
->> +#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R2		0x13
->> +#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X100G_R2		0x14
->> +#define NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R4		0x15
->>  
->>  	u32							e_lane_cfg1;
->>  	u32							e_lane_cfg2;
-
-Al
+thanks,
+-- 
+js
+suse labs
