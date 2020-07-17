@@ -2,166 +2,137 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3425EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838CEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 191632065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B482067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgGQRxz (ORCPT
+        id S1726873AbgGQR4T convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:53:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgGQRxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:53:54 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 312902064C;
-        Fri, 17 Jul 2020 17:53:53 +0000 (UTC)
-Date:   Fri, 17 Jul 2020 13:53:51 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 03/17] perf ftrace: add option -t/--tid to filter by
- thread id
-Message-ID: <20200717135351.5fb1ce95@oasis.local.home>
-In-Reply-To: <20200717174053.GE712240@kernel.org>
-References: <20200711124035.6513-1-changbin.du@gmail.com>
-        <20200711124035.6513-4-changbin.du@gmail.com>
-        <20200716153630.GD374956@kernel.org>
-        <20200717132650.i32oovllal22b35i@mail.google.com>
-        <20200717130124.54e85349@oasis.local.home>
-        <20200717174053.GE712240@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 17 Jul 2020 13:56:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42742 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgGQR4S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:56:18 -0400
+Received: from mail-pg1-f198.google.com ([209.85.215.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jwUal-0003bm-Od
+        for linux-kernel@vger.kernel.org; Fri, 17 Jul 2020 17:56:15 +0000
+Received: by mail-pg1-f198.google.com with SMTP id j9so8411358pgm.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:56:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DJeYw43KCdF1n+mtxqHrWGu9uDmkgMx6dDVvN1r/iUI=;
+        b=BMjaUd5kHGrXmTxoOFW8pUVh8aIDk2P50XGhMdCOMcgN6ACjU+9JvCGImvWh2qsgwv
+         F3fhVs1dj5uZUCnRg9eGORD5sCz9KQG/jhinu+X6YKnnG71D6LGLMAuciKacRtotuXZn
+         +t4S3xQ8l2t3jnzR2VLO/hs6287QN7mvQWqZrLBCjt0q5AeNEMS2bPdL+AsyBxjT2ck3
+         8KGAf7dKLbR7y1HUiN7W8+uxFmDdPoRoQsWCt0ou5H4/Zw+x+Ru+pIV9u4Hf9jYm2+im
+         SPRaxb8UG8IBv0L5yy8nPlvPj0tYfXlTV+ClpQ7gxjj6Dj6Bmk1T9H5BrpRxDXgNfCP8
+         Wgtw==
+X-Gm-Message-State: AOAM531lZsGt0TqDbyKwY53KZd2ZYdK02TAbie99qUQEVggAzYMQz2nk
+        Hg2ax8PLKLktTm0nCnCb1X04XD487V8V9mHZTBbsg+UHTITJD8S67J3skhC6uZNpErlTbiJkqWD
+        Z5KC4BXo1Hns43c27RIHlw1OCSjs1Blj6CcT8gg6Jzw==
+X-Received: by 2002:a17:902:a412:: with SMTP id p18mr8397696plq.283.1595008574082;
+        Fri, 17 Jul 2020 10:56:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyfTo9D7lyFkDMei5LDbgFf/qwVM6msV/kFw7ZA8SiHACyAuV9cXxTJL0fSYj34hSeq6uLdww==
+X-Received: by 2002:a17:902:a412:: with SMTP id p18mr8397678plq.283.1595008573667;
+        Fri, 17 Jul 2020 10:56:13 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id b18sm3514062pju.10.2020.07.17.10.56.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jul 2020 10:56:13 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()"
+ breaks NFS Kerberos on upstream stable 5.4.y
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <650B6279-9550-4844-9375-280F11C3DC4B@oracle.com>
+Date:   Sat, 18 Jul 2020 01:56:09 +0800
+Cc:     Pierre Sauter <pierre.sauter@stwm.de>,
+        matthew.ruffell@canonical.com,
+        linux-stable <stable@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-kernel-owner@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <CCF13E29-7B8B-47B3-A8D0-1A6E0E626BA6@canonical.com>
+References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com>
+ <5619613.lOV4Wx5bFT@keks.as.studentenwerk.mhn.de>
+ <0885F62B-F9D2-4248-9313-70DAA1A1DE71@oracle.com>
+ <4546230.GXAFRqVoOG@keks.as.studentenwerk.mhn.de>
+ <650B6279-9550-4844-9375-280F11C3DC4B@oracle.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 14:40:53 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> Say you use:
-> 
-> ^C[root@ssdandy ~]# cyclictest --smp -um -p95
-> # /dev/cpu_dma_latency set to 0us
-> policy: fifo: loadavg: 0.05 0.03 0.06 2/409 29072
-> 
-> T: 0 (29065) P:95 I:1000 C:    518 Min:      2 Act:    2 Avg:    2 Max:       6
-> T: 1 (29066) P:95 I:1500 C:    343 Min:      2 Act:    2 Avg:    2 Max:       5
-> T: 2 (29067) P:95 I:2000 C:    256 Min:      2 Act:    2 Avg:    2 Max:       7
-> T: 3 (29068) P:95 I:2500 C:    203 Min:      2 Act:    2 Avg:    2 Max:       5
-> T: 4 (29069) P:95 I:3000 C:    168 Min:      2 Act:    2 Avg:    3 Max:       6
-> T: 5 (29070) P:95 I:3500 C:    143 Min:      2 Act:    2 Avg:    2 Max:       6
-> T: 6 (29071) P:95 I:4000 C:    124 Min:      2 Act:    2 Avg:    2 Max:       7
-> T: 7 (29072) P:95 I:4500 C:    110 Min:      2 Act:    2 Avg:    2 Max:
-> 
-> Then we do:
-> 
-> # pidof cyclictest
-> 29064
-> #
-> 
-> If we use:
-> 
-> [root@ssdandy ~]# perf record --pid 29064
-> ^C[ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.052 MB perf.data (866 samples) ]
-> 
-> [root@ssdandy ~]# perf report --task
-> #      pid      tid     ppid  comm
->          0        0       -1 |swapper
->      29064    29064       -1 |cyclictest
->      29064    29065       -1 |cyclictest
->      29064    29066       -1 |cyclictest
->      29064    29067       -1 |cyclictest
->      29064    29068       -1 |cyclictest
->      29064    29069       -1 |cyclictest
->      29064    29070       -1 |cyclictest
->      29064    29071       -1 |cyclictest
->      29064    29072       -1 |cyclictest
-> [root@ssdandy ~]#
 
-"ftrace" is inside the kernel. But you could specify all those PIDs in
-the set_ftrace_pid and set_event_pid files, and they will be traced. If
-you want to trace the children of those PIDs, you would need to set the
-options function function-fork and event-fork respectively. And then
-any time a process with a pid in the set_ftrace_pid or set_event_pid
-file forks, its child will also be added to that file and it too will
-be traced. If the fork options are set, then when a task exits, its pid
-will be removed from the file.
+> On Jul 18, 2020, at 01:34, Chuck Lever <chuck.lever@oracle.com> wrote:
+> 
+> 
+> 
+>> On Jul 17, 2020, at 1:29 PM, Pierre Sauter <pierre.sauter@stwm.de> wrote:
+>> 
+>> Hi Chuck,
+>> 
+>> Am Donnerstag, 16. Juli 2020, 21:25:40 CEST schrieb Chuck Lever:
+>>> So this makes me think there's a possibility you are not using upstream
+>>> stable kernels. I can't help if I don't know what source code and commit
+>>> stream you are using. It also makes me question the bisect result.
+>> 
+>> Yes you are right, I was referring to Ubuntu kernels 5.4.0-XX. From the
+>> discussion in the Ubuntu bugtracker I got the impression that Ubuntu kernels
+>> 5.4.0-XX and upstream 5.4.XX are closely related, obviously they are not. The
+>> bisection was done by the original bug reporter and also refers to the Ubuntu
+>> kernel.
+>> 
+>> In the meantime I tested v5.4.51 upstream, which shows no problems. Sorry for
+>> the bother.
+> 
+> Pierre, thanks for confirming!
+> 
+> Kai-Heng suspected an upstream stable commit that is missing in 5.4.0-40,
+> but I don't have any good suggestions.
 
- echo 1 > options/function-fork
- echo 1 > options/event-fork
+Well, Ubuntu's 5.4 kernel is based on upstream stable v5.4, so I asked users to test stable v5.4.51, however the feedback was negative, and that's the reason why I raised the issue here.
+
+Anyway, good to know that it's fixed in upstream stable, everything's good now!
+Thanks for your effort Chuck.
+
+Kai-Heng
 
 
 > 
-> If we are interested only on the thread running on CPU3 we can do:
 > 
-> [root@ssdandy ~]# perf report --task
-> #      pid      tid     ppid  comm
->          0        0       -1 |swapper
->      29064    29064       -1 |cyclictest
->      29064    29068       -1 |cyclictest
-> [root@ssdandy ~]#
+>>>> My krb5 etype is aes256-cts-hmac-sha1-96.
+>>> 
+>>> Thanks! And what is your NFS server and filesystem? It's possible that the
+>>> client is not estimating the size of the reply correctly. Variables include
+>>> the size of file handles, MIC verifiers, and wrap tokens.
+>> 
+>> The server is Debian with v4.19.130 upstream, filesystem ext4.
+>> 
+>>> You might try:
+>>> 
+>>> e8d70b321ecc ("SUNRPC: Fix another issue with MIC buffer space")
+>> 
+>> That one is actually in Ubuntus 5.4.0-40, from looking at the code.
 > 
-> The first 29064 is just to have info on who created 29068, i.e.:
-> 
-> Its just the synthesized info for 29068 creator:
-> 
-> [root@ssdandy ~]# perf report -D | grep -w 29064/29064
-> 0 0x4690 [0x30]: PERF_RECORD_COMM: cyclictest:29064/29064
-> 0 0x46c0 [0x70]: PERF_RECORD_MMAP2 29064/29064: [0x400000(0xa000) @ 0 fd:00 136246288 0]: r-xp /usr/bin/cyclictest
-> 0 0x4730 [0x80]: PERF_RECORD_MMAP2 29064/29064: [0x7f990f505000(0x15000) @ 0 fd:00 201479398 0]: r-xp /usr/lib64/libgcc_s-4.8.5-20150702.so.1
-> 0 0x47b0 [0x70]: PERF_RECORD_MMAP2 29064/29064: [0x7f990f71b000(0x1c3000) @ 0 fd:00 201334455 0]: r-xp /usr/lib64/libc-2.17.so
-> 0 0x4820 [0x78]: PERF_RECORD_MMAP2 29064/29064: [0x7f990fae9000(0xa000) @ 0 fd:00 204604380 0]: r-xp /usr/lib64/libnuma.so.1.0.0
-> 0 0x4898 [0x78]: PERF_RECORD_MMAP2 29064/29064: [0x7f990fcf5000(0x17000) @ 0 fd:00 201335636 0]: r-xp /usr/lib64/libpthread-2.17.so
-> 0 0x4910 [0x78]: PERF_RECORD_MMAP2 29064/29064: [0x7f990ff11000(0x7000) @ 0 fd:00 201335640 0]: r-xp /usr/lib64/librt-2.17.so
-> 0 0x4988 [0x70]: PERF_RECORD_MMAP2 29064/29064: [0x7f9910119000(0x22000) @ 0 fd:00 203595299 0]: r-xp /usr/lib64/ld-2.17.so
-> 0 0x49f8 [0x60]: PERF_RECORD_MMAP2 29064/29064: [0x7fff0b52d000(0x2000) @ 0 00:00 0 0]: r-xp [vdso]
-> 0 0x4a58 [0x68]: PERF_RECORD_MMAP2 29064/29064: [0xffffffffff600000(0x1000) @ 0 00:00 0 0]: r-xp [vsyscall]
-> [root@ssdandy ~]#
-> 
-> No PERF_RECORD_SAMPLEs.
-> 
-> Those are only for:
-> 
-> [root@ssdandy ~]# perf report -D | grep PERF_RECORD_SAMPLE | head -5
-> 147224656598815 0x4ac0 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 1 addr: 0
-> 147224656606270 0x4ae8 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 1 addr: 0
-> 147224656611284 0x4b10 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 5 addr: 0
-> 147224656616225 0x4b38 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 35 addr: 0
-> 147224656621152 0x4b60 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 252 addr: 0
-> [root@ssdandy ~]#
-> 
-> [root@ssdandy ~]# perf report -D | grep PERF_RECORD_SAMPLE | cut -d: -f3 | sort -u
->  29064/29068
+> --
+> Chuck Lever
 
-The above can somewhat be done in trace-cmd, but not fully. But that's
-all userspace commands, nothing with the kernel.
-
-> [root@ssdandy ~]#
-> 
-> Is there a way in ftrace to ask for a pid and its children? Pre-existing
-> and and new ones the --pid specified will create after we start
-> monitoring?
-> 
-
-As described above, yes. :-)
-
--- Steve
