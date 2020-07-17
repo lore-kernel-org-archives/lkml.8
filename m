@@ -2,93 +2,97 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE77C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE172C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1360F20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594987879;
-	bh=SM9pIqkwHsZoqbdzaqeC6yp+KV1bCcBYMudp0X0KOLw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aaEiUoJzO72uypDQv4BEkzZekH6grt14YtyFjWfM7ZiOgvcPV1FNEfD73RgxPaSy7
-	 C9zBPaePUFkX8SjKWQpu/mFHjir910Kssng7V+GM2dhFi1RiKFvyqlOuxlDCbHqvfi
-	 Oo6b0wMTiMoVkEnIhgv2a/7/4ZJ6aCntoaDqM3BI=
+	by mail.kernel.org (Postfix) with ESMTP id 8733220717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:19:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MjrmpHf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgGQMLR (ORCPT
+        id S1726442AbgGQMTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:11:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgGQMLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:11:17 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78ACD20684;
-        Fri, 17 Jul 2020 12:11:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594987877;
-        bh=SM9pIqkwHsZoqbdzaqeC6yp+KV1bCcBYMudp0X0KOLw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uhTW3gqJ5bZvoMfEWzYsddz60gssaUrfoVqBbYH59a9/VtPkqVj/lmn3g+Ym9r6T4
-         ZSlCIDuN2hyUB5UbeZoHYzeEmmAW7VLGEa6mq9cDIxQmVYBGtrdaPkPrCamhqyQ6Qj
-         e9PRRqIrBIDiZTXkklffx4y3U0K39lbgsJcndV4o=
-Date:   Fri, 17 Jul 2020 13:11:05 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        trix@redhat.com, matthew.gerlach@linux.intel.com,
-        russell.h.weight@intel.com, lgoncalv@redhat.com, hao.wu@intel.com
-Subject: Re: [PATCH v2 2/3] regmap: spi-avmm: start with the last SOP on phy
- rx buffer parsing
-Message-ID: <20200717121105.GE4316@sirena.org.uk>
-References: <1594896174-18826-1-git-send-email-yilun.xu@intel.com>
- <1594896174-18826-3-git-send-email-yilun.xu@intel.com>
+        Fri, 17 Jul 2020 08:19:46 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50790 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726113AbgGQMTp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 08:19:45 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HCJfM3094214;
+        Fri, 17 Jul 2020 07:19:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594988381;
+        bh=zxUFAurYBZuCopybPJy1heOrkqjSKewqf4SLYr/5yD0=;
+        h=From:To:CC:Subject:Date;
+        b=MjrmpHf/wJxoWyDYF8L53tUsNvFQhztbQTI0TOeNNdd3WASCWpb+i+o2b5c7q79ZW
+         il7awPzmpZ86+kKIfvrqOsofuR4UHrX/SsilOHCUtUFgU/yxM72dM8aYtXoKaRB2ez
+         Qk44/y8fWI2/0bDhuGbrWM6VFu4+NUHK7jRLIVKg=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HCJf5a009074
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jul 2020 07:19:41 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
+ Jul 2020 07:19:40 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 17 Jul 2020 07:19:40 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HCJd5q077284;
+        Fri, 17 Jul 2020 07:19:40 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] net: ethernet: ti: add NETIF_F_HW_TC hw feature flag for taprio offload
+Date:   Fri, 17 Jul 2020 15:19:32 +0300
+Message-ID: <20200717121932.26649-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="T6xhMxlHU34Bk0ad"
-Content-Disposition: inline
-In-Reply-To: <1594896174-18826-3-git-send-email-yilun.xu@intel.com>
-X-Cookie: No other warranty expressed or implied.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Murali Karicheri <m-karicheri2@ti.com>
 
---T6xhMxlHU34Bk0ad
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Currently drive supports taprio offload which is a tc feature offloaded
+to cpsw hardware. So driver has to set the hw feature flag, NETIF_F_HW_TC
+in the net device to be compliant. This patch adds the flag.
 
-On Thu, Jul 16, 2020 at 06:42:53PM +0800, Xu Yilun wrote:
-> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->=20
-> This patch works around a bug in the SPI Slave to Avalon Master bridge.
-> The SPI slave will send an unexpected extra SOP in the following case.
+Fixes: 8127224c2708 ("ethernet: ti: am65-cpsw-qos: add TAPRIO offload support")
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-This is fixing a bug introduced in patch 1 - just send a version of
-patch 1 that works, don't incrementally fix it.
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+index 1492648247d9..6d778bc3d012 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+@@ -1850,7 +1850,8 @@ static int am65_cpsw_nuss_init_ndev_2g(struct am65_cpsw_common *common)
+ 	port->ndev->max_mtu = AM65_CPSW_MAX_PACKET_SIZE;
+ 	port->ndev->hw_features = NETIF_F_SG |
+ 				  NETIF_F_RXCSUM |
+-				  NETIF_F_HW_CSUM;
++				  NETIF_F_HW_CSUM |
++				  NETIF_F_HW_TC;
+ 	port->ndev->features = port->ndev->hw_features |
+ 			       NETIF_F_HW_VLAN_CTAG_FILTER;
+ 	port->ndev->vlan_features |=  NETIF_F_SG;
+-- 
+2.17.1
 
---T6xhMxlHU34Bk0ad
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8RlVkACgkQJNaLcl1U
-h9D4HAf/fupAOOvRf5rJW5/OHDc8uSimJBvXiLjpkyrkSNoJD7+QVXxBqpMmCRrI
-5a9GByP6pZysHOju1TWkpNDnceLavQJ8ZsCStQlkzm15/PSEJZ+wrGtUtAjY1qGg
-NPhaGLtS0kpS8NswSyDLBfJOOVvsHZEu0dIN3XMW9ZkTXFoM169IrN7irspP2GXV
-WVAMI+onD3jO3DknJpDz5c6FS5cNhRzP8JmgC5VgP71A/VKm4jhJPBzfzB4iFO5r
-LjBp06qwEBRsfAKTwlUMbb05AvI0igFuUsUcSmyhpcUmDw07FJPQdJw+kJvi/OOJ
-bfJPCb9aiJrg2nvIbETllZixdU1X2w==
-=fRvS
------END PGP SIGNATURE-----
-
---T6xhMxlHU34Bk0ad--
