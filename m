@@ -2,158 +2,143 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C667C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1741CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7AC2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB7812070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZCR/VyA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e99KnuVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgGQOX0 (ORCPT
+        id S1726090AbgGQOZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:23:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43108 "EHLO
+        Fri, 17 Jul 2020 10:25:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgGQOXZ (ORCPT
+        with ESMTP id S1726079AbgGQOZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:23:25 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D49C0619D2;
-        Fri, 17 Jul 2020 07:23:25 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a6so11364111wrm.4;
-        Fri, 17 Jul 2020 07:23:25 -0700 (PDT)
+        Fri, 17 Jul 2020 10:25:29 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F8AC0619D2;
+        Fri, 17 Jul 2020 07:25:29 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id o18so11040743eje.7;
+        Fri, 17 Jul 2020 07:25:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lc8p4Vpf/AxGGSchmemrYI/FGyYO3IsS/ingmTKVpbM=;
-        b=mZCR/VyAwlBHBp2pgcDVtSkOjwayVV+Ixu6XXhzqW4YXK9Fa76hMT9WfVWC4bfnokg
-         MYanEA25jtklYEL1C/peJWj5gtglxnsoVpM+hcUpNt10b8AbgUE0omeiMgBf4gJb4cQ/
-         kuUtL2jhNIm55VKtm3e+3MAeXQXCiTYy/2mXT5St8EtUVBICteS2D/+MbLEXDaOYcQ7/
-         2aOcMCRdz8AOZ1syT6I2h867XYc9xjPWDQYUq43RcUfxNf2TuhGlnbezv4zhlIT0jNpj
-         FozpIhQRH+C8rpaa5GHqpvgUQJyDIT3QWUUx4AtnKb9c/7Agc+ORvYCztQNeTfcCQ4V3
-         X0Zw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mUVdR+ZDJVxSmd7ZbQVSsi764XMpQahMmDvfOF22gQY=;
+        b=e99KnuVGCS6dPPckmUblnQ/Eq5Pt0qMRRfY1ARV29XHavDg6gElhKrIaEDpBLGpuds
+         P5FHLwnwgL07Jn0MnjcLpQ9PvpecGEu96QTkn24/clTC27J7zVna4p0PTDdn1Mx8DXhP
+         t0TXqYHl0sfJBoJibUYV3CdQFO+K2xZuud8PpDxPXaY4lLsgUh+oAkCt8nZ++lqC5qps
+         2zNBx4zcV0160Grno+DH4jd12dqPucjjjo2mZzy3TAsCmc0crUPAuT5mzRaDaGdR/ll+
+         2AunOn2TjQGBbiGS8LS4T2yBBEyswfI6F2qVP3yDg1f5QDVWQDLFKLERr+d8NUhqcsTZ
+         El7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lc8p4Vpf/AxGGSchmemrYI/FGyYO3IsS/ingmTKVpbM=;
-        b=cUQo5yfDUh26Yfbq1VeA3vYFckKNW8jL1PbnqXtZXva/A4dwT+Tf61XzMaDoTrYKzb
-         CyknOb7WI/+WMkwyRxXFp+0mesVVNbLAv7G/9t1iLDYSxPuFzBk3UzuFI4pnGLfVyeJP
-         V7naklzLGxGEr+aUruM5AXUVvqblFMlmOmLqVjP1V0X4EmKKWoBOZHZ6aZVzJtu60nz9
-         MoKjlg1rVeJayVDjuosSiI4HFfjXPFxbdt2Y5QPYsVbpWYgU+vwkHV9eV9rDEkIPQ32v
-         CPdOVSZaqpXN9wql6sold3en68/gsH8C3u3NR/AuWD7IhmmNtre2iKmx1P4bh4+MYZAH
-         Xj/A==
-X-Gm-Message-State: AOAM531oaWXM7Uab6dLRb2BbddQpkmYmzjRocS+O5LNPibqh0FNzATHO
-        U8HnWqrAdVR3SQ4gI3ODYv8cWl0bhlyuYFBB5cc=
-X-Google-Smtp-Source: ABdhPJy/AFcSvg8oFSKxaziQaCV8GgIrGcRoLGFP/65n8XwDLqeq/BuQtHYlsx7G29iPkE0/9VhbBlYnxR3kS1pDc4I=
-X-Received: by 2002:adf:ef89:: with SMTP id d9mr11333747wro.124.1594995803831;
- Fri, 17 Jul 2020 07:23:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mUVdR+ZDJVxSmd7ZbQVSsi764XMpQahMmDvfOF22gQY=;
+        b=GSgf+iX46pD0y4iEiG3zH9KYe4TM/AUF1LdZNrLB4zoK8Tu7NiITr9Ad0iE29N7slF
+         NfXrlIX6CgWJst3fQGvQTkap8wrmcIC3GhEf3im8rNj5esMtT2MAGMkbsumm8hlcjmxr
+         qJQv4NnSHH/593qKrv0mRNIzbyw1oWTNeee0M3JZjkZZCJoGSnUbLLjfWXk5WzlK/Z3P
+         oz6yZ0pDeuvib2/xdYyjeo90b99LB8MhhzGeuizAqyqV0U4NKxbmXXjQs3u6hqYfd0H2
+         ZLexej7Q+mlwoS1nPw+Xp84FeQsEI3z90CE+1e23aTOzyHvRLvLhIQlsmdVcSv6uSLMX
+         vpZA==
+X-Gm-Message-State: AOAM533ldoEFw7RfENjxrz+Eqhb1uXyuidNAVFt8rsYJ3CPuL1GMSt6g
+        wKR5GOE82MNj18XwhpJBWdc=
+X-Google-Smtp-Source: ABdhPJyu7NsACW41OKjti0Dmecq5SwVTGW26QQC4foUalOjXrZcuCwKG78N9LWqnKSZwGFISKNM07A==
+X-Received: by 2002:a17:906:d286:: with SMTP id ay6mr8804419ejb.400.1594995927698;
+        Fri, 17 Jul 2020 07:25:27 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id p14sm8475984edr.23.2020.07.17.07.25.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 07:25:26 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 16:25:24 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     miaoqinglang <miaoqinglang@huawei.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] gpu: host1x: Convert to DEFINE_SHOW_ATTRIBUTE
+Message-ID: <20200717142524.GA1218823@ulmo>
+References: <20200716090323.13274-1-miaoqinglang@huawei.com>
+ <20200716133450.GJ535268@ulmo>
+ <5684dcb3-c5a4-96c1-dd96-c44f5a94938f@huawei.com>
 MIME-Version: 1.0
-References: <20200708131405.3346107-1-ming.lei@redhat.com> <20200714003710.GB308476@T590>
-In-Reply-To: <20200714003710.GB308476@T590>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Fri, 17 Jul 2020 22:23:12 +0800
-Message-ID: <CACVXFVNmU5MLO75f5QBpeBtBVqBCJ-oYp9HV_4LBBGZtFS9w_w@mail.gmail.com>
-Subject: Re: [PATCH] scsi: core: run queue in case of IO queueing failure
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Content-Disposition: inline
+In-Reply-To: <5684dcb3-c5a4-96c1-dd96-c44f5a94938f@huawei.com>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 8:38 AM Ming Lei <ming.lei@redhat.com> wrote:
->
-> On Wed, Jul 08, 2020 at 09:14:05PM +0800, Ming Lei wrote:
-> > IO requests may be held in scheduler queue because of resource contention.
-> > However, not like normal completion, when queueing request failed, we don't
-> > ask block layer to queue these requests, so IO hang[1] is caused.
-> >
-> > Fix this issue by run queue when IO request failure happens.
-> >
-> > [1] IO hang log by running heavy IO with removing scsi device
-> >
-> > [   39.054963] scsi 13:0:0:0: rejecting I/O to dead device
-> > [   39.058700] scsi 13:0:0:0: rejecting I/O to dead device
-> > [   39.087855] sd 13:0:0:1: [sdd] Synchronizing SCSI cache
-> > [   39.088909] scsi 13:0:0:1: rejecting I/O to dead device
-> > [   39.095351] scsi 13:0:0:1: rejecting I/O to dead device
-> > [   39.096962] scsi 13:0:0:1: rejecting I/O to dead device
-> > [  247.021859] INFO: task scsi-stress-rem:813 blocked for more than 122 seconds.
-> > [  247.023258]       Not tainted 5.8.0-rc2 #8
-> > [  247.024069] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > [  247.025331] scsi-stress-rem D    0   813    802 0x00004000
-> > [  247.025334] Call Trace:
-> > [  247.025354]  __schedule+0x504/0x55f
-> > [  247.027987]  schedule+0x72/0xa8
-> > [  247.027991]  blk_mq_freeze_queue_wait+0x63/0x8c
-> > [  247.027994]  ? do_wait_intr_irq+0x7a/0x7a
-> > [  247.027996]  blk_cleanup_queue+0x4b/0xc9
-> > [  247.028000]  __scsi_remove_device+0xf6/0x14e
-> > [  247.028002]  scsi_remove_device+0x21/0x2b
-> > [  247.029037]  sdev_store_delete+0x58/0x7c
-> > [  247.029041]  kernfs_fop_write+0x10d/0x14f
-> > [  247.031281]  vfs_write+0xa2/0xdf
-> > [  247.032670]  ksys_write+0x6b/0xb3
-> > [  247.032673]  do_syscall_64+0x56/0x82
-> > [  247.034053]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > [  247.034059] RIP: 0033:0x7f69f39e9008
-> > [  247.036330] Code: Bad RIP value.
-> > [  247.036331] RSP: 002b:00007ffdd8116498 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> > [  247.037613] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f69f39e9008
-> > [  247.039714] RDX: 0000000000000002 RSI: 000055cde92a0ab0 RDI: 0000000000000001
-> > [  247.039715] RBP: 000055cde92a0ab0 R08: 000000000000000a R09: 00007f69f3a79e80
-> > [  247.039716] R10: 000000000000000a R11: 0000000000000246 R12: 00007f69f3abb780
-> > [  247.039717] R13: 0000000000000002 R14: 00007f69f3ab6740 R15: 0000000000000002
-> >
-> > Cc: linux-block@vger.kernel.org
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > ---
-> >  drivers/scsi/scsi_lib.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> > index 534b85e87c80..4d7fab9e8af9 100644
-> > --- a/drivers/scsi/scsi_lib.c
-> > +++ b/drivers/scsi/scsi_lib.c
-> > @@ -1694,6 +1694,16 @@ static blk_status_t scsi_queue_rq(struct blk_mq_hw_ctx *hctx,
-> >                */
-> >               if (req->rq_flags & RQF_DONTPREP)
-> >                       scsi_mq_uninit_cmd(cmd);
-> > +
-> > +             /*
-> > +              * Requests may be held in block layer queue because of
-> > +              * resource contention. We usually run queue in normal
-> > +              * completion for queuing these requests again. Block layer
-> > +              * will finish this failed request simply, run queue in case
-> > +              * of IO queueing failure so that requests can get chance to
-> > +              * be finished.
-> > +              */
-> > +             scsi_run_queue(q);
-> >               break;
-> >       }
-> >       return ret;
->
-> Hello Guys,
->
-> Ping...
 
-Ping again...
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jul 17, 2020 at 09:32:21AM +0800, miaoqinglang wrote:
+>=20
+> =E5=9C=A8 2020/7/16 21:34, Thierry Reding =E5=86=99=E9=81=93:
+> > On Thu, Jul 16, 2020 at 05:03:23PM +0800, Qinglang Miao wrote:
+> > > From: Yongqiang Liu <liuyongqiang13@huawei.com>
+> > >=20
+> > > Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+> > >=20
+> > > Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
+> > > ---
+> > >   drivers/gpu/host1x/debug.c | 28 ++++------------------------
+> > >   1 file changed, 4 insertions(+), 24 deletions(-)
+> > This doesn't apply. Can you please resend, based on something like
+> > linux-next?
+> >=20
+> > Thanks,
+> > Thierry
+> Hi, Thierry
+>=20
+> =C2=A0 Sorry I didn't mention it in commit log, but this patch is based on
+> linux-next where commit <4d4901c6d7> has switched over direct=C2=A0 seq_r=
+ead
+> method calls to seq_read_iter, this is why there's conflict in=C2=A0 your=
+ apply.
+>=20
+> =C2=A0 Do you think I should send a new patch based on 5.8rc?
 
--- 
-Ming Lei
+No need to. I'm about to send out the pull request for v5.9-rc1, so I'll
+just defer this to v5.10 since it doesn't look like it's anything
+urgent.
+
+Thierry
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8RtM8ACgkQ3SOs138+
+s6Hj6g/+MgjmNXDQakxoDHLk0m84f7i97cY0lrI0Z0XFp0ZsuZp4VHLS0Rzd2wt8
+3tb6OLbwu6Q456lBZIw/FKa7i4zJ3bRzV1+dnvZaXPWgVUzSRMEgo6AugBNGQqhy
+eQJH+5NfpN75sWFtXjhA/PscNW1v6oR/QkTKa2kcYFtP5xbSWHxVkdRUK/Xl5s15
+TGaYsskrZehPE8k+6xNH6c0RIpt6ERO1NxnjrapApW3w98IYen1X8ONjILhJhjny
+ZjUJN3WbTaZVo7WtxZWG9G5AMR+5LK8qByRzjf1VoWWpFbiuZaPae/ewRFm8CZeg
+jNS3PYpAuSW9Bv0j5o2EEXUK4LV9gAC8ET140dTMmupSLH73Eu1ML7+Lm0TAGkK0
+MPmJ8jLc0TMTERdA2Jt5s5sNZttMjaABxgPvl2igT+2zVA3yzyE1E3EO5qpyVQSF
+R2AWrcyc9gVdyCElBq5Z39td7OkL4ylG/sboo6xxudgW5gcYo2K2w541CEES9TKm
+JWeo5cf8YiBWcoF6ppg+OkTw61NILMjiMopyrd5ZDSOnwAi/oprOyGT7TfQJqazJ
+y78QPzi3GrAzlZzMovNWNw+7MIIuig0tYtxVMz1i5/uBAE89ngZjN+09a4G14q4z
+0giSD+1Iya4q2w/DBhCIwiyhT53pHp76KrCj/+Xy1+8FUVHUprU=
+=J7AY
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
