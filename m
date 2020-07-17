@@ -2,125 +2,107 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309BDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC756C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2F420684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850A72070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:00:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vBH9iXY1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="mRHQH2YH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgGQJ76 (ORCPT
+        id S1726524AbgGQKAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:59:58 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:21577 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgGQJ75 (ORCPT
+        Fri, 17 Jul 2020 06:00:24 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:30532 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgGQKAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:59:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594979996; x=1626515996;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=9vaHmuMsNN0kIp0YqM12N3y5Zy+mAtWNYvcQ8zisUCM=;
-  b=vBH9iXY1ugHiuN2VMVXO4uF7xlqNvWERnBrc9eWc9g5udeDFHnhT9aON
-   dfGZPwNbYFS5c3Ml9+4aLWJT8HTJ4Y2b6rrw7+dn1wz6hOy4ZPgTwuDSu
-   sTBFDc+x7Hk9U4btwG9CnESa1oZqh8Cul2NaIUbJBKDI5u+Yt+EOV+qsc
-   E=;
-IronPort-SDR: 6PDhm+xE4JDdLX39G/DZKH1Kn+CU+lfhtanLL/IjlririC28jO/snZL2Q7aMTFPxbVd11ZQ3CH
- iRLZFTHsFQXA==
-X-IronPort-AV: E=Sophos;i="5.75,362,1589241600"; 
-   d="scan'208";a="42377858"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 17 Jul 2020 09:59:55 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 52A8CA11D6;
-        Fri, 17 Jul 2020 09:59:45 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 17 Jul 2020 09:59:44 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 17 Jul 2020 09:59:26 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     Mike Rapoport <rppt@kernel.org>, <akpm@linux-foundation.org>,
-        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Re: Re: Re: [PATCH v18 01/14] mm/page_ext: Export lookup_page_ext() to GPL modules
-Date:   Fri, 17 Jul 2020 11:59:10 +0200
-Message-ID: <20200717095910.23550-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200713173805.31923-1-sjpark@amazon.com> (raw)
+        Fri, 17 Jul 2020 06:00:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1594980022; x=1626516022;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=vQ2ImtfRZyj0kAtoB4fUjN5q3ds0AJVtdj0mCNHOPw8=;
+  b=mRHQH2YHwIi17bE30SzNOkO6Osj7dUCH4U+yPwKO/eMlBZOMSL9JNVwY
+   N0fCYE6a54bpv+XVRyEU0NeiIsicZxr32MTsCXYpsSg/GXKmaojC1t7fY
+   2iF9R1+4+vcwsgYkpJkvk+naRjfKY3vIhxJLM+IC3J2yvT1yYQJzLDExG
+   F/wK4M/UfEuT1OgjtmwOKNqvzKg1Kj2hbY0b3lI2qgx89pJWKfjBHAWN0
+   D82izDheKxH1ytFZPUDeh76LPqpQvb/vHoa6Nao4uuDNzbd9sWdd0+Ye6
+   IwRMb56ergYudwaOpT2jxYNcK2mLDyYyBrQLhX4LDy5001wStmlyfZRHy
+   w==;
+IronPort-SDR: A1UpebW7/PWJ6JLdUyFI7rQX4qZyGjpeQD33D4uTqS44rt+BfepdRBh8XUYfACx9EbdKYk/Y2c
+ 3vtsWoYBzuTaJLG220LBxr7568mVNSLKAAraPjR6dR9UzHKO+bADvE6zcXQJC1sakToN62vo5q
+ NgbeiyvBm87JPPUCUxFtmnQ666fS+65aUbaNTcnZkyFIImA4/SOJ6L/1mSip2xCoTzf5QnWozc
+ 5yqm1N8mVC49V27cM5E1vGSCGqeyhffyvKWeGVGUi0dWx+YioAbN0t2lQmmPrhsNCoLxJCcY17
+ udU=
+X-IronPort-AV: E=Sophos;i="5.75,362,1589212800"; 
+   d="scan'208";a="251971917"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 17 Jul 2020 18:00:22 +0800
+IronPort-SDR: f9vfUf2pFQWJ8+lNQ04XXBbuhljU2nuLirptshi7O7+2iWJSHKEb0ZldaqpO5YoQHH4B87NSyj
+ 2aH+BnDRDA07sX6hY9oSpvpmHYthkqk70=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 02:48:11 -0700
+IronPort-SDR: Few0pq9UDnEi1rkPglf8o17OfuANd9zMmPZqD5dk+SyOrI9wD0xwtIiGehCM8iIdlFweLIXJ/l
+ aZH7rRhluDzA==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun52) ([10.149.66.28])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 03:00:21 -0700
+Date:   Fri, 17 Jul 2020 11:00:18 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@wdc.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: Re: [PATCH] MIPS: Prevent READ_IMPLIES_EXEC propagation
+In-Reply-To: <b62c76c5-3548-c3d5-ad3e-5664c463a52f@loongson.cn>
+Message-ID: <alpine.LFD.2.21.2007171044320.24175@redsun52.ssa.fujisawa.hgst.com>
+References: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn> <alpine.LFD.2.21.2007072043250.31807@redsun52.ssa.fujisawa.hgst.com> <b62c76c5-3548-c3d5-ad3e-5664c463a52f@loongson.cn>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D14UWC003.ant.amazon.com (10.43.162.19) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 19:38:05 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+On Wed, 8 Jul 2020, Tiezhu Yang wrote:
 
-> On Mon, 13 Jul 2020 20:19:09 +0300 Mike Rapoport <rppt@kernel.org> wrote:
+> >> In the MIPS architecture, we should clear the security-relevant
+> >> flag READ_IMPLIES_EXEC in the function SET_PERSONALITY2() of the
+> >> file arch/mips/include/asm/elf.h.
+> >>
+> >> Otherwise, with this flag set, PROT_READ implies PROT_EXEC for
+> >> mmap to make memory executable that is not safe, because this
+> >> condition allows an attacker to simply jump to and execute bytes
+> >> that are considered to be just data [1].
+> >   Why isn't the arrangement made with `mips_elf_read_implies_exec'
+> > sufficient?
 > 
-> > On Mon, Jul 13, 2020 at 02:21:43PM +0200, SeongJae Park wrote:
-> > > On Mon, 13 Jul 2020 15:08:42 +0300 Mike Rapoport <rppt@kernel.org> wrote:
-> > > 
-> > > > Hi,
-> > > > 
-> > > > On Mon, Jul 13, 2020 at 10:41:31AM +0200, SeongJae Park wrote:
-> > > > > From: SeongJae Park <sjpark@amazon.de>
-> > > > > 
-> > > > > This commit exports 'lookup_page_ext()' to GPL modules.  It will be used
-> > > > > by DAMON in following commit for the implementation of the region based
-> > > > > sampling.
-> > > > 
-> > > > Maybe I'm missing something, but why is DAMON a module?
-> > > 
-> > > I made it loadable just for easier adoption from downstream kernels.  I could
-> > > drop the module build support if asked.
-> >  
-> > Well, exporting core mm symbols to modules should be considred very
-> > carefully. 
-> 
-> Agreed.  I will drop the module support from the next spin.
-> 
-> > 
-> > Why lookup_page_ext() is required for DAMON? It is not used anywhere in
-> > this patchset.
-> 
-> It's indirectly used.  In the 6th patch, DAMON uses 'set_page_young()' to not
-> interfere with other PTE Accessed bit users.  And, 'set_page_young()' uses
-> 'lookup_page_ext()' if !CONFIG_64BIT.  That's why I exported it.
+> We inherit the READ_IMPLIES_EXEC personality flag across fork().
+> If we do not explicitly clear this flag in SET_PERSONALITY2(),
+> PROT_READ implies PROT_EXEC for mmap to make memory executable
+> even if used with the GCC option "-z noexecstack" when compile.
 
-This also means that it would make no sense if !64BIT && !PAGE_EXTENSION.  In
-the next spin, I will update the DAMON Kconfig to select PAGE_EXTENSION if
-!64BIT, as same to that of IDLE_PAGE_TRACKING.
+ It makes no sense to me to repeat this across all the architectures, and 
+even less so to do it individually one by one as people rediscover this 
+issue.
 
+ Why don't we maintain the flag globally in `fs/binfmt_elf.c' which is 
+where we already set it?  E.g.:
 
-Thanks,
-SeongJae Park
+	SET_PERSONALITY2(*elf_ex, &arch_state);
+	if (elf_read_implies_exec(*elf_ex, executable_stack))
+		current->personality |= READ_IMPLIES_EXEC;
+	else
+		current->personality &= ~READ_IMPLIES_EXEC;
+
+  Maciej
