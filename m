@@ -2,140 +2,115 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BB1C433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5E4C433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8272067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27BA720717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XUArZY1l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew7go265"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgGQNaL (ORCPT
+        id S1726698AbgGQNaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:30:11 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:25836 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbgGQNaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:30:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594992610; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=SpcJU7bfgUisz7PA0By3lJJltu7lpz4rCNZjdk5HjcE=; b=XUArZY1lcu4WBtE1NiVihuE/MRo2A1WSnEQjBTu1h70ki5sqxPFX8ex1WWCiyDk7deSh4oPC
- M9CNIOuv9L6wTAcmRO9haVZv9dXIuLifs2n9OU4Kb7DxAkA9in4IxhmuHSZnYQZ8WMt2CFNx
- 38RFOB/F+d9ow907AwASKPfJNyc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
- 5f11a7e1b35196d59d4ae51d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 13:30:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7BE6CC433AF; Fri, 17 Jul 2020 13:30:09 +0000 (UTC)
-Received: from akhilpo-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A72CC433CB;
-        Fri, 17 Jul 2020 13:30:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A72CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
-        smasetty@codeaurora.org, devicetree@vger.kernel.org,
-        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
-        viresh.kumar@linaro.org, jonathan@marek.ca, robdclark@gmail.com,
-        bjorn.andersson@linaro.org
-Subject: [PATCH v6 4/6] arm64: dts: qcom: SDM845: Enable GPU DDR bw scaling
-Date:   Fri, 17 Jul 2020 18:59:37 +0530
-Message-Id: <1594992579-20662-5-git-send-email-akhilpo@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
-References: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
+        Fri, 17 Jul 2020 09:30:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgGQNaQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:30:16 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297F8C061755;
+        Fri, 17 Jul 2020 06:30:16 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k5so6363083pjg.3;
+        Fri, 17 Jul 2020 06:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KA8+BCThQcJ0LRUas8mEHnLeHf4G0JN/o4kBoJ11ao4=;
+        b=Ew7go265THrXcCo9R7QqWPFNUC6m+Vh6NUeRwvXlPSe0VJZbR9rQfMfYlxSKi6RaRA
+         gVb2Kvq/vbg4rZtdMgU4zzpyoX0eMTJ+JWtKzKZgulGNc9Vxv0CjB63kr8JW2jbPTgaB
+         +5eHRJ6epadXZHiChy1g5fTc8SmbomqyqvoKfAdm94q3xU1OxI1ClfrzRD/54HHA8kZ6
+         A22lh+Sn3ahXiS7Wq0KwYg7RKteQlr2DUvuD4NO6tR4WK/1zt+aQSj08kvrauISzdOhg
+         8ldOhoRF2r3Vcelfcm5j/brDYmiLq52RsoI+ermOb5Tw/N5dNQcBbKMivzNWK8v3qJ6Q
+         3cnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KA8+BCThQcJ0LRUas8mEHnLeHf4G0JN/o4kBoJ11ao4=;
+        b=Qw5LqgaEdivSDDmimTVe1t5FvoxhXOKA5ZxDW1ro1z6s6RP1SoA/78oraHJK4KaFyY
+         evqhqZLtN/qEFCgkReXfCYQXLHqm56VCnS+TVhztaast2Q22fFQb80TDnsXeAMgXSQdb
+         dZcmZvggYrw/YFADrbQ6mrWVYGzisHqJz26uFUez7rcsKm9TTftjQeiskSxPwZGPoNup
+         kVbttvE2WdaoaCnhg+uKhCozsoryx6sH+3Vmd0yp9CJDt9+9gjc8Sgsh+xcgW3p5vp6M
+         8sAYiBrr2oOLqxCt7AUS0K24myb5d+DNe+xXZlQKH1peOXJ7Oq+B74LxBfd5nNbNgYL4
+         Y08Q==
+X-Gm-Message-State: AOAM5309lK3nYTLaKO6N2McMTCpF1UhDz02VcG2hdojFMlOdLvp1IZzA
+        cvHiMrG2yTOglKGlLKm19h0=
+X-Google-Smtp-Source: ABdhPJyTEisx3beIa/u5++UyoSvIIfKcqCyUwaWL1AJo3A+t3cP0eYEO1wwLNqXySkLvcofRnsjoYg==
+X-Received: by 2002:a17:90a:ed87:: with SMTP id k7mr10231962pjy.31.1594992615587;
+        Fri, 17 Jul 2020 06:30:15 -0700 (PDT)
+Received: from localhost ([89.208.244.139])
+        by smtp.gmail.com with ESMTPSA id t20sm7974375pfc.158.2020.07.17.06.30.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Jul 2020 06:30:14 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     m-karicheri2@ti.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v1] PCI: dwc: fix a warning about variable 'res' is uninitialized
+Date:   Fri, 17 Jul 2020 21:30:07 +0800
+Message-Id: <20200717133007.23858-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sharat Masetty <smasetty@codeaurora.org>
+The kernel test robot reported a compile warning,
 
-This patch adds the interconnects property for the gpu node and the
-opp-peak-kBps property to the opps of the gpu opp table. This should
-help enable DDR bandwidth scaling dynamically and proportionally to the
-GPU frequency.
+drivers/pci/controller/dwc/pci-keystone.c:1236:18: warning: variable 'res'
+is uninitialized when used here [-Wuninitialized]
 
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+The commit c59a7d771134b5 ("PCI: dwc: Convert to
+devm_platform_ioremap_resource_byname()") did a wrong conversion for
+keystone driver. the commit use devm_platform_ioremap_resource_byname()
+to replace platform_get_resource_byname() and devm_ioremap_resource().
+but the subsequent code needs to use the variable 'res', which is got by
+platform_get_resource_byname() for resource "app". so revert it.
+
+Fixes: c59a7d771134b5 ("PCI: dwc: Convert to devm_platform_ioremap_resource_byname()")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/pci/controller/dwc/pci-keystone.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8eb5a31..1cd2dae 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3515,42 +3515,52 @@
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 5ffc3b40c4f6..00279002102e 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -1228,8 +1228,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	if (!pci)
+ 		return -ENOMEM;
  
- 			qcom,gmu = <&gmu>;
+-	ks_pcie->va_app_base =
+-		devm_platform_ioremap_resource_byname(pdev, "app");
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
++	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(ks_pcie->va_app_base))
+ 		return PTR_ERR(ks_pcie->va_app_base);
  
-+			interconnects = <&mem_noc MASTER_GFX3D &mem_noc SLAVE_EBI1>;
-+			interconnect-names = "gfx-mem";
-+
- 			gpu_opp_table: opp-table {
- 				compatible = "operating-points-v2";
- 
- 				opp-710000000 {
- 					opp-hz = /bits/ 64 <710000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-+					opp-peak-kBps = <7216000>;
- 				};
- 
- 				opp-675000000 {
- 					opp-hz = /bits/ 64 <675000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+					opp-peak-kBps = <7216000>;
- 				};
- 
- 				opp-596000000 {
- 					opp-hz = /bits/ 64 <596000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+					opp-peak-kBps = <6220000>;
- 				};
- 
- 				opp-520000000 {
- 					opp-hz = /bits/ 64 <520000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+					opp-peak-kBps = <6220000>;
- 				};
- 
- 				opp-414000000 {
- 					opp-hz = /bits/ 64 <414000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+					opp-peak-kBps = <4068000>;
- 				};
- 
- 				opp-342000000 {
- 					opp-hz = /bits/ 64 <342000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+					opp-peak-kBps = <2724000>;
- 				};
- 
- 				opp-257000000 {
- 					opp-hz = /bits/ 64 <257000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+					opp-peak-kBps = <1648000>;
- 				};
- 			};
- 		};
 -- 
-2.7.4
+2.25.0
 
