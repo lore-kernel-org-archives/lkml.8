@@ -2,144 +2,251 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F66EC433FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB6C420704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:03:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZVR12+8A"
+	by mail.kernel.org (Postfix) with ESMTP id 5060920704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgGQRD2 (ORCPT
+        id S1728210AbgGQRB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:03:28 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:58858 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbgGQRD2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:03:28 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HGwCdC051024;
-        Fri, 17 Jul 2020 17:02:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=jYNO0+Oailn1mCGSYSTW+k8UQDhh58KKaKRy8a62Dfg=;
- b=ZVR12+8AQ/+x1jr/t5KkspwgFzKWkQX6qlePTN8IAlMPpZbP8wvJ6K+tz5R4IT5IjiOv
- gMlHief6PEjwOcBy9/FeuPThpFvPQ4C9jXIUbx8HbQbRkbc5VI2+wX5BS89vVfvHgCR0
- yM6K24taG6IuBqKQ3CU7wM1Q6N2d6nz5BgxIZqIhIiT4rvY8DTF4JdZ3n1CX5sizaJ78
- AtREaiO0TAG7qcJiRePk2XtKmWNaGxwD16SFKZAM4oMNAfyQzGrZM4sdiOez/qrugUT/
- MTag2/aUxkKB+ARF1XOb0fPPFtDGFr2UiTdhzEfNEAw1T27sMREkX24i06I3DyKZ4xjy DQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 327s65xqg5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 17:02:27 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HGwtLl003275;
-        Fri, 17 Jul 2020 17:02:26 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 32bf3k4m48-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 17:02:26 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06HH2Kav005669;
-        Fri, 17 Jul 2020 17:02:22 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Jul 2020 10:02:20 -0700
-Subject: Re: [PATCH v3] mm/hugetlb: split hugetlb_cma in nodes with memory
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will@kernel.org>, Roman Gushchin <guro@fb.com>
-Cc:     Barry Song <song.bao.hua@hisilicon.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "H.Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        akpm@linux-foundation.org, Mike Rapoport <rppt@linux.ibm.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200710120950.37716-1-song.bao.hua@hisilicon.com>
- <359ea1d0-b1fd-d09f-d28a-a44655834277@oracle.com>
- <20200715081822.GA5683@willie-the-truck>
- <5724f1f8-63a6-ee0f-018c-06fb259b6290@oracle.com>
- <20200716081243.GA6561@willie-the-truck>
- <a867c7a2-e89b-2015-4895-f30f7aeb07cb@oracle.com>
- <81103d30-f4fd-8807-03f9-d131da5097bd@arm.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <1efdfe52-abdb-3931-742c-70e4a170e403@oracle.com>
-Date:   Fri, 17 Jul 2020 10:02:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 17 Jul 2020 13:01:27 -0400
+Received: from mga04.intel.com ([192.55.52.120]:58926 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728010AbgGQRBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:01:21 -0400
+IronPort-SDR: 89PfmRH4RVk4fG/fExL3vy1+zTaPVQwJN7Cq11u5WDMlAICWRKB6CVxENA8OO8BXY4UHdTRiND
+ EH+55yTKQygA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="147140862"
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="147140862"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 10:01:19 -0700
+IronPort-SDR: WAMcOAZNNxeoO/jWRTcKwIDAi/oBntr2VyGSCK7qxDVIsr7SEY63AmtN7v/zgFYsycubaRV5+S
+ LAd4J/8jxJsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="270862244"
+Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.33.149])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Jul 2020 10:01:14 -0700
+From:   Kristen Carlson Accardi <kristen@linux.intel.com>
+To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Jessica Yu <jeyu@kernel.org>
+Cc:     arjan@linux.intel.com, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v4 10/10] module: Reorder functions
+Date:   Fri, 17 Jul 2020 10:00:07 -0700
+Message-Id: <20200717170008.5949-11-kristen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200717170008.5949-1-kristen@linux.intel.com>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <81103d30-f4fd-8807-03f9-d131da5097bd@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 bulkscore=0 phishscore=0 adultscore=0
- spamscore=100 mlxlogscore=-1000 suspectscore=0 malwarescore=0 mlxscore=100
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007170119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 adultscore=0 malwarescore=0
- phishscore=0 mlxscore=100 priorityscore=1501 lowpriorityscore=0
- spamscore=100 clxscore=1015 bulkscore=0 mlxlogscore=-1000 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007170119
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/20 10:02 PM, Anshuman Khandual wrote:
-> 
-> 
-> On 07/16/2020 11:55 PM, Mike Kravetz wrote:
->> >From 17c8f37afbf42fe7412e6eebb3619c6e0b7e1c3c Mon Sep 17 00:00:00 2001
->> From: Mike Kravetz <mike.kravetz@oracle.com>
->> Date: Tue, 14 Jul 2020 15:54:46 -0700
->> Subject: [PATCH] hugetlb: move cma reservation to code setting up gigantic
->>  hstate
->>
->> Instead of calling hugetlb_cma_reserve() directly from arch specific
->> code, call from hugetlb_add_hstate when adding a gigantic hstate.
->> hugetlb_add_hstate is either called from arch specific huge page setup,
->> or as the result of hugetlb command line processing.  In either case,
->> this is late enough in the init process that all numa memory information
->> should be initialized.  And, it is early enough to still use early
->> memory allocator.
-> 
-> This assumes that hugetlb_add_hstate() is called from the arch code at
-> the right point in time for the generic HugeTLB to do the required CMA
-> reservation which is not ideal. I guess it must have been a reason why
-> CMA reservation should always called by the platform code which knows
-> the boot sequence timing better.
+Introduce a new config option to allow modules to be re-ordered
+by function. This option can be enabled independently of the
+kernel text KASLR or FG_KASLR settings so that it can be used
+by architectures that do not support either of these features.
+This option will be selected by default if CONFIG_FG_KASLR is
+selected.
 
-Actually, the code does not make the assumption that hugetlb_add_hstate
-is called from arch specific huge page setup.  It can even be called later
-at the time of hugetlb command line processing.
+If a module has functions split out into separate text sections
+(i.e. compiled with the -ffunction-sections flag), reorder the
+functions to provide some code diversification to modules.
 
-My 'reasoning' is that gigantic pages can currently be preallocated from
-bootmem/memblock_alloc at the time of command line processing.  Therefore,
-we should be able to reserve bootmem for CMA at the same time.  Is there
-something wrong with this reasoning?  I tested this on x86 by removing the
-call to hugetlb_add_hstate from arch specific code and instead forced the
-call at command line processing time.  The ability to reserve CMA was the
-same.
+Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Tested-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Tested-by: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/Makefile |  5 +++
+ init/Kconfig      | 12 +++++++
+ kernel/kallsyms.c |  2 +-
+ kernel/module.c   | 81 +++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 99 insertions(+), 1 deletion(-)
 
-Yes, the CMA reservation interface says it should be called from arch
-specific code.  However, if we currently depend on the ability to do
-memblock_alloc at hugetlb command line processing time for gigantic page
-preallocation, then I think we can do the CMA reservation here as well.
-
-Thinking about it some more, I suppose there could be some arch code that
-could call hugetlb_add_hstate too early in the boot process.  But, I do
-not think we have an issue with calling it too late.
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 00e378de8bc0..0f2dbc46eb5c 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -51,6 +51,11 @@ ifdef CONFIG_X86_NEED_RELOCS
+         LDFLAGS_vmlinux := --emit-relocs --discard-none
+ endif
+ 
++ifndef CONFIG_FG_KASLR
++	ifdef CONFIG_MODULE_FG_KASLR
++		KBUILD_CFLAGS_MODULE += -ffunction-sections
++	endif
++endif
+ #
+ # Prevent GCC from generating any FP code by mistake.
+ #
+diff --git a/init/Kconfig b/init/Kconfig
+index 82f042a1062f..b4741838da40 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1994,6 +1994,7 @@ config FG_KASLR
+ 	bool "Function Granular Kernel Address Space Layout Randomization"
+ 	depends on $(cc-option, -ffunction-sections)
+ 	depends on ARCH_HAS_FG_KASLR
++	select MODULE_FG_KASLR
+ 	default n
+ 	help
+ 	  This option improves the randomness of the kernel text
+@@ -2278,6 +2279,17 @@ config UNUSED_KSYMS_WHITELIST
+ 	  one per line. The path can be absolute, or relative to the kernel
+ 	  source tree.
+ 
++config MODULE_FG_KASLR
++	depends on $(cc-option, -ffunction-sections)
++	bool "Module Function Granular Layout Randomization"
++	help
++	  This option randomizes the module text section by reordering the text
++	  section by function at module load time. In order to use this
++	  feature, the module must have been compiled with the
++	  -ffunction-sections compiler flag.
++
++	  If unsure, say N.
++
+ endif # MODULES
+ 
+ config MODULES_TREE_LOOKUP
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 45d147f7f10e..e3f7d0fd3270 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -692,7 +692,7 @@ static int __kallsyms_open(struct inode *inode, struct file *file)
+  * When function granular kaslr is enabled, we need to print out the symbols
+  * at random so we don't reveal the new layout.
+  */
+-#if defined(CONFIG_FG_KASLR)
++#if defined(CONFIG_FG_KASLR) || defined(CONFIG_MODULE_FG_KASLR)
+ static int update_random_pos(struct kallsyms_shuffled_iter *s_iter,
+ 			     loff_t pos, loff_t *new_pos)
+ {
+diff --git a/kernel/module.c b/kernel/module.c
+index aa183c9ac0a2..0f4f4e567a42 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -56,6 +56,7 @@
+ #include <linux/bsearch.h>
+ #include <linux/dynamic_debug.h>
+ #include <linux/audit.h>
++#include <linux/random.h>
+ #include <uapi/linux/module.h>
+ #include "module-internal.h"
+ 
+@@ -2391,6 +2392,83 @@ static long get_offset(struct module *mod, unsigned int *size,
+ 	return ret;
+ }
+ 
++/*
++ * shuffle_text_list()
++ * Use a Fisher Yates algorithm to shuffle a list of text sections.
++ */
++static void shuffle_text_list(Elf_Shdr **list, int size)
++{
++	int i;
++	unsigned int j;
++	Elf_Shdr *temp;
++
++	for (i = size - 1; i > 0; i--) {
++		/*
++		 * pick a random index from 0 to i
++		 */
++		get_random_bytes(&j, sizeof(j));
++		j = j % (i + 1);
++
++		temp = list[i];
++		list[i] = list[j];
++		list[j] = temp;
++	}
++}
++
++/*
++ * randomize_text()
++ * Look through the core section looking for executable code sections.
++ * Store sections in an array and then shuffle the sections
++ * to reorder the functions.
++ */
++static void randomize_text(struct module *mod, struct load_info *info)
++{
++	int i;
++	int num_text_sections = 0;
++	Elf_Shdr **text_list;
++	int size = 0;
++	int max_sections = info->hdr->e_shnum;
++	unsigned int sec = find_sec(info, ".text");
++
++	if (sec == 0)
++		return;
++
++	text_list = kmalloc_array(max_sections, sizeof(*text_list), GFP_KERNEL);
++	if (!text_list)
++		return;
++
++	for (i = 0; i < max_sections; i++) {
++		Elf_Shdr *shdr = &info->sechdrs[i];
++		const char *sname = info->secstrings + shdr->sh_name;
++
++		if (!(shdr->sh_flags & SHF_ALLOC) ||
++		    !(shdr->sh_flags & SHF_EXECINSTR) ||
++		    strstarts(sname, ".init"))
++			continue;
++
++		text_list[num_text_sections] = shdr;
++		num_text_sections++;
++	}
++
++	shuffle_text_list(text_list, num_text_sections);
++
++	for (i = 0; i < num_text_sections; i++) {
++		Elf_Shdr *shdr = text_list[i];
++
++		/*
++		 * get_offset has a section index for it's last
++		 * argument, that is only used by arch_mod_section_prepend(),
++		 * which is only defined by parisc. Since this this type
++		 * of randomization isn't supported on parisc, we can
++		 * safely pass in zero as the last argument, as it is
++		 * ignored.
++		 */
++		shdr->sh_entsize = get_offset(mod, &size, shdr, 0);
++	}
++
++	kfree(text_list);
++}
++
+ /* Lay out the SHF_ALLOC sections in a way not dissimilar to how ld
+    might -- code, read-only data, read-write data, small data.  Tally
+    sizes, and place the offsets into sh_entsize fields: high bit means it
+@@ -2481,6 +2559,9 @@ static void layout_sections(struct module *mod, struct load_info *info)
+ 			break;
+ 		}
+ 	}
++
++	if (IS_ENABLED(CONFIG_MODULE_FG_KASLR))
++		randomize_text(mod, info);
+ }
+ 
+ static void set_license(struct module *mod, const char *license)
 -- 
-Mike Kravetz
+2.20.1
+
