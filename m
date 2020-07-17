@@ -2,112 +2,129 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E52DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2760EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07EE52071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C6320704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kh1uw69R"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eUL8MwSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgGQEYM (ORCPT
+        id S1726563AbgGQE0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:24:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35470 "EHLO
+        Fri, 17 Jul 2020 00:26:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbgGQEYL (ORCPT
+        with ESMTP id S1725936AbgGQE0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:24:11 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B8BC061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:24:11 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 18so5972823otv.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:24:11 -0700 (PDT)
+        Fri, 17 Jul 2020 00:26:33 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D9EC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:26:33 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so9576629wrl.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:26:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fYRhNeJyMfpc078wL/j31HurR5nJxYBJf2WPWtqv67M=;
-        b=Kh1uw69RH6AnDF+LGaQL/TlfB/OoFmyUPwbfUkO50aMlcjf5CR/uR2PYWm7tPKN3fV
-         jR7mdlp9am3bRba3SEs4mJ98wUxBm4j2ANKGObN41QYgd+VRpQW4DhrruTPnYQ3z3glV
-         OY5crlzGJJfGYp25p7IlnG4R7X17m+302T7QWNmLhESiLM4WbYkDMX2KCYfgRGhkjRuJ
-         3t0kqv/fHJB1zQf2vfXSNrkDp/YM2LsW2XiRDXXq2zu7YrIoAu+G2Ill1BAKf03VcY/i
-         /5olQ54IGuE99Z71PV7RCYsBFnoPJGHOYD32Q1XVFWl21dG2i54dvNwZZMKgR2jKspFb
-         2S2g==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LoCUtP8byPHdkiL2VvJP/PIMUDoLEvSomGOoDI3TEH0=;
+        b=eUL8MwSUooNOIy0u9skl2Et94Mj8yJVYuS5nVceQJbHXsMvsPHn0KDAuVB15zh0oGw
+         2xt3MzqRtVJEJpZCtg7TtxoScYas+7vKfWz2nHVllEWxogynfT04AK9E3jpffboYshhH
+         irioSZYr4JkX7p8mwgL9IMwfDlkPBF3i1YTQxZEJiWIVnVPz/pnRf0vAm9HLvlPrSR9w
+         6c4Hcqj5kgOxmal0KQP0pDedkmviWlTWTv3wMsVKNhP5mfT5XoWtsu20WpAlkzsEoqsp
+         752Cz6phrviS+klq1GMCG+ykHczCZK1VZnXVC29zsFe43T436Zjnv2lysudyF05nas/2
+         2Szw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fYRhNeJyMfpc078wL/j31HurR5nJxYBJf2WPWtqv67M=;
-        b=WEPL46opaGTw/R4nCiwgj+vZwyFnsAzu3xRnwxETuj+f2GeN6UyJ1lkhMSfJQ/HUIU
-         aoR+yOA95WJ+Ah11kc6x68YFf4RdLe2RWG3IwHT7meN7IhDoAQxQW0X8m9aR16VBorBa
-         j4AZZPz/EUJd2HpyNUWTs4LkOvBg05ZgMp+hKkHgUyb542J5ekx/QvmKxndcUfsD0EOj
-         1FXinJHXP2rvK1usiDNyO8KCVB4zrzfatBfM+LAzPDo0b0B/ZZQ6AqbIka7uAZ/vOXT0
-         jI3dmsZjcrJ2yyMBn749JO7ImBvXeQoD4T4cPfx4AwNZkA9Nt3GGiuGBHr1QlM23hu3s
-         FfXg==
-X-Gm-Message-State: AOAM530CiS2zQ+EdVukJMZyr9xeAeHdsSVql8Kc+mLJVINmPpLpIhl4D
-        x0z+1jNyPcoHnV3UfUd3bwA8C7+5RstPWsWiyZQ=
-X-Google-Smtp-Source: ABdhPJy9Qve7h79FN/Grjt90XmaceRcsY/1aZcCD1+74wKOmBXvf2VJ15Vwm0aB6fQ4xmUck1IdK6oqrCnN+I8ERfv0=
-X-Received: by 2002:a9d:6a12:: with SMTP id g18mr7790181otn.155.1594959850557;
- Thu, 16 Jul 2020 21:24:10 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LoCUtP8byPHdkiL2VvJP/PIMUDoLEvSomGOoDI3TEH0=;
+        b=Z+h8qwdRPyc6trysU8ksOu+exUgDSmqwARPZgBbwDm+4zwsHF9vJcWPbs6mvqBNgeB
+         Lwa3H6iWcprNU+iC6tDNnb4MOP/hxYfwoSm3DvM/ShPos6Y3ZO0EWd7MC+KQD6KFBLM3
+         hcqxTZ+r2D7aAuVBTw7D7/UnnhupZnTYi0/wtL/9zVL/oI1Spkw1ttPS59gCgxWjeoQ5
+         3itOA7mqIsqDNFgAVKGekBMsSw4Pb2oMx5WfO3T70G3gH3cXfH/lBad8Rgc+1f8wyVE7
+         Ab6zr23OFApaUsarSNEAcepNr0cREDNS+isBvGUZ1K9xt6Sd9tvqkFEttmxI4MJxCS4T
+         p3Lg==
+X-Gm-Message-State: AOAM533z/yxF7AeI+P8cv6ri7JVhSSabsZ2Rb9CG+3NLSi3YwbIEK5qe
+        I5dwWwlDwxTKCKHsJoTEIzIENwJyWos=
+X-Google-Smtp-Source: ABdhPJxZRpGSv5FtriBWUwmet70Rne8lc1DFz2TGU/bz/xpz6vX0D33o8sMUKQ35HSmG//ceMjFJ8w==
+X-Received: by 2002:a5d:498f:: with SMTP id r15mr8883201wrq.175.1594959991866;
+        Thu, 16 Jul 2020 21:26:31 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
+        by smtp.googlemail.com with ESMTPSA id 138sm7191805wmb.1.2020.07.16.21.26.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 21:26:31 -0700 (PDT)
+Subject: Re: [PATCH v4 08/16] thermal: sun8i: add TEMP_CALIB_MASK for
+ calibration data in sun50i_h6_ths_calibrate
+To:     Frank Lee <frank@allwinnertech.com>, anarsoul@gmail.com,
+        tiny.windzz@gmail.com, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, mripard@kernel.org, wens@csie.org,
+        linux-pm@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
+References: <cover.1594708863.git.frank@allwinnertech.com>
+ <b8761e036b25f20873534e5f8d10b37b5d2ce72c.1594708864.git.frank@allwinnertech.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <4771acd6-ecd3-b8e1-8605-75d78720b1d3@linaro.org>
+Date:   Fri, 17 Jul 2020 06:26:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com> <20200717040958.70561-5-ravi.bangoria@linux.ibm.com>
-In-Reply-To: <20200717040958.70561-5-ravi.bangoria@linux.ibm.com>
-From:   Jordan Niethe <jniethe5@gmail.com>
-Date:   Fri, 17 Jul 2020 14:23:03 +1000
-Message-ID: <CACzsE9py0x7wFyG-FgjK-cF8L02OQyOKbqDzP6agFt-Dxc4ejg@mail.gmail.com>
-Subject: Re: [PATCH v4 04/10] powerpc/watchpoint: Enable watchpoint
- functionality on power10 guest
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
-        apopple@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b8761e036b25f20873534e5f8d10b37b5d2ce72c.1594708864.git.frank@allwinnertech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 2:10 PM Ravi Bangoria
-<ravi.bangoria@linux.ibm.com> wrote:
->
-> CPU_FTR_DAWR is by default enabled for host via CPU_FTRS_DT_CPU_BASE
-> (controlled by CONFIG_PPC_DT_CPU_FTRS). But cpu-features device-tree
-> node is not PAPR compatible and thus not yet used by kvm or pHyp
-> guests. Enable watchpoint functionality on power10 guest (both kvm
-> and powervm) by adding CPU_FTR_DAWR to CPU_FTRS_POWER10. Note that
-> this change does not enable 2nd DAWR support.
->
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-I ran the ptrace-hwbreak selftest successfully within a power10 kvm guest.
-Tested-by: Jordan Niethe <jniethe5@gmail.com>
+On 14/07/2020 09:13, Frank Lee wrote:
+> From: Yangtao Li <frank@allwinnertech.com>
+> 
+> For sun50i_h6_ths_calibrate(), the data read from nvmem needs a round of
+> calculation. On the other hand, the newer SOC may store other data in
+> the space other than 12bit sensor data. Add mask operation to read data
+> to avoid conversion error.
+> 
+> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
+
+Can you clarify these SoB ?
+
+Frank Lee==Yangtao Li==frank@allwinnertech.com==tiny.windzz@gmail.com ?
+
+
+
 > ---
->  arch/powerpc/include/asm/cputable.h | 2 +-
+>  drivers/thermal/sun8i_thermal.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
-> index bac2252c839e..e506d429b1af 100644
-> --- a/arch/powerpc/include/asm/cputable.h
-> +++ b/arch/powerpc/include/asm/cputable.h
-> @@ -478,7 +478,7 @@ static inline void cpu_feature_keys_init(void) { }
->             CPU_FTR_CFAR | CPU_FTR_HVMODE | CPU_FTR_VMX_COPY | \
->             CPU_FTR_DBELL | CPU_FTR_HAS_PPR | CPU_FTR_ARCH_207S | \
->             CPU_FTR_TM_COMP | CPU_FTR_ARCH_300 | CPU_FTR_PKEY | \
-> -           CPU_FTR_ARCH_31)
-> +           CPU_FTR_ARCH_31 | CPU_FTR_DAWR)
->  #define CPU_FTRS_CELL  (CPU_FTR_LWSYNC | \
->             CPU_FTR_PPCAS_ARCH_V2 | CPU_FTR_CTRL | \
->             CPU_FTR_ALTIVEC_COMP | CPU_FTR_MMCRA | CPU_FTR_SMT | \
-> --
-> 2.26.2
->
+> 
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> index 74d73be16496..f423d44b9290 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -244,7 +244,7 @@ static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
+>  	ft_temp = (caldata[0] & FT_TEMP_MASK) * 100;
+>  
+>  	for (i = 0; i < tmdev->chip->sensor_num; i++) {
+> -		int sensor_reg = caldata[i + 1];
+> +		int sensor_reg = caldata[i + 1] & TEMP_CALIB_MASK;
+>  		int cdata, offset;
+>  		int sensor_temp = tmdev->chip->calc_temp(tmdev, i, sensor_reg);
+>  
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
