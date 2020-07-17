@@ -2,316 +2,189 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63822C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C764C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D15020717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pvOFioq7"
+	by mail.kernel.org (Postfix) with ESMTP id 0F9AA20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594988088;
+	bh=kQgaBPzZfXga09Lqrx8wezDWPrDUuin2mS2Z1Z+whfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EyOHEnE/3+IwO0NS8F5FxVJRQ28VsKq4PB1WZR6+vthmLDWyxfh9I+QAqj1ndz+oS
+	 KRtKYeBkvarcutbHp6VopRNga4zF4m+5MYKNifJhpFm7fRfUQnJPZbxQbrr+Bq3BW8
+	 Vhi7OQydW03/YClcjDLjSwvHH1TcTVK3ptNOnWiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgGQMNw (ORCPT
+        id S1726559AbgGQMOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgGQMNu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:13:50 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E084C08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:13:50 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id d17so12354907ljl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m+566Qxe8xLpZYuIAeEotENLU/owOwRk0Ws9igzBFPE=;
-        b=pvOFioq78vIQofTZ3Xa93xWa53tEpSh8YM1oHHkyoi41CmBpbgxeGQNQAJlaNypsEn
-         8owZRKEZckWPQlJRIjUFnGdFdeHJP9p6Eu4DgwjoPtyD7uhT2vfGfPdQzsMLKzz7Jhkq
-         SiD25NiHeF6nnLVlbTk3jdj4eYtHidkHdTkl5DmmrB2O/LH9Z9w+pwDHxoxGz5Q3FomE
-         Ox80j0lZmKElgdQrm5qtf3fxb+hltd2dFGih6n7jm09PRZYHw+2oTO6ZmocNwDnQ0QTO
-         pqsGTzo+DVVLsL436hSd0k3If7XLY+MZSpvyuQQJE0kRsXsRnGxcmplfn8nPxr7+OT92
-         l0+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m+566Qxe8xLpZYuIAeEotENLU/owOwRk0Ws9igzBFPE=;
-        b=g6CZlqxjRpio10sEfos99PWeTe27aPoyDORKS6RHVmMceMrYq0lEpMj6bgyT3OCoVX
-         8uI6CR5n6vhGsYPmt/cLZbzVuse28mBrM2HRhK43aCxDzrP5hVIQRQvRAs9U/DMx4GTt
-         6vqBu68hLmsIvYPXM6rLNfxMQgxaR6r8vnJZ/bPIuaSFDuwEpJugl50psUm087xS2ExQ
-         Ia3Q9JmfdbUG4veVCrs7sX9H29Us1Dshd2gjknFmFjeewH5YIjgIbk2V7XG0YfPZY8QQ
-         ggotjle7xFpIREsEFh9dz0jqJQF2eSy0yEEizMol1CCFiP0TR9SOWWyBAklCN6d8IZcA
-         OlnQ==
-X-Gm-Message-State: AOAM533jPkjWorFhKbZAgp3G1lWtwXQvyJXEY1Zqbdc2drn7CNpVG+Jr
-        ILdxzVzzjDAuIBpdkBznhGZZ3GvypkUpIl44NzvCQA==
-X-Google-Smtp-Source: ABdhPJxokb53W3kdYSC5RxAZ2T6HvIIzmFF8CcwlR3Fa7w3F7RfWAM1Z8lzyHUJVc6sFmkBg8wERXPKc5p6UmmkVHqM=
-X-Received: by 2002:a05:651c:512:: with SMTP id o18mr4669895ljp.226.1594988028732;
- Fri, 17 Jul 2020 05:13:48 -0700 (PDT)
+        Fri, 17 Jul 2020 08:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726113AbgGQMOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 08:14:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9674D20717;
+        Fri, 17 Jul 2020 12:14:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594988085;
+        bh=kQgaBPzZfXga09Lqrx8wezDWPrDUuin2mS2Z1Z+whfg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p6FRGlORHXpKEYBn0ItKKmJUsOqQE8Fxy+n52tof+J8hS401jHCZT/83Fls1fGYR/
+         FwNotv56Ks6M/2+FbxgGQ+zglvR2J4DqQhefMFE8ndjLGYz8xEy4KZA+dKNbcwMX7q
+         9hsVCffpc26VXWSO9GcSTe9kGWK3rgsLr6D94p1A=
+Date:   Fri, 17 Jul 2020 14:14:36 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+Message-ID: <20200717121436.GA2953399@kroah.com>
+References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
+ <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
+ <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1594707424.git.viresh.kumar@linaro.org> <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
- <20200716115605.GR10769@hirez.programming.kicks-ass.net> <681fb3e8-d645-2558-38de-b39b372499de@arm.com>
- <CAKfTPtA+BPegK2h6PQMFs+p4dpxO+sk1FDQuOfJvSpGCJ-rBrA@mail.gmail.com> <cd0749b3-75a1-3cd2-b6d7-d6e9c08acf75@arm.com>
-In-Reply-To: <cd0749b3-75a1-3cd2-b6d7-d6e9c08acf75@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 17 Jul 2020 14:13:36 +0200
-Message-ID: <CAKfTPtDz1W9i1xET4yvf0pqCEFWx7BxN=Vsn18xCj37XWjsqug@mail.gmail.com>
-Subject: Re: [PATCH 2/2] thermal: cpufreq_cooling: Reuse effective_cpu_util()
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Quentin Perret <qperret@google.com>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 at 12:30, Lukasz Luba <lukasz.luba@arm.com> wrote:
->
->
->
-> On 7/17/20 10:46 AM, Vincent Guittot wrote:
-> > On Thu, 16 Jul 2020 at 16:24, Lukasz Luba <lukasz.luba@arm.com> wrote:
-> >>
-> >> Hi Peter,
-> >>
-> >> Thank you for summarizing this. I've put my comments below.
-> >>
-> >> On 7/16/20 12:56 PM, Peter Zijlstra wrote:
-> >>> On Tue, Jul 14, 2020 at 12:06:53PM +0530, Viresh Kumar wrote:
-> >>>>    /**
-> >>>> + * get_load() - get current load for a cpu
-> >>>>     * @cpufreq_cdev:  &struct cpufreq_cooling_device for this cpu
-> >>>>     * @cpu:   cpu number
-> >>>> + * @cpu_idx:        index of the cpu
-> >>>>     *
-> >>>> + * Return: The current load of cpu @cpu in percentage.
-> >>>>     */
-> >>>>    static u32 get_load(struct cpufreq_cooling_device *cpufreq_cdev, int cpu,
-> >>>>                   int cpu_idx)
-> >>>>    {
-> >>>> +    unsigned long util = cpu_util_cfs(cpu_rq(cpu));
-> >>>> +    unsigned long max = arch_scale_cpu_capacity(cpu);
-> >>>>
-> >>>> +    util = effective_cpu_util(cpu, util, max, ENERGY_UTIL, NULL);
-> >>>> +    return (util * 100) / max;
-> >>>>    }
-> >>>
-> >>> So there's a number of things... let me recap a bunch of things that
-> >>> got mentioned on IRC earlier this week and then continue from there..
-> >>>
-> >>> So IPA* (or any other thermal governor) needs energy estimates for the
-> >>> various managed devices, cpufreq_cooling, being the driver for the CPU
-> >>> device, needs to provide that and in return receives feedback on how
-> >>> much energy it is allowed to consume, cpufreq_cooling then dynamically
-> >>> enables/disables OPP states.
-> >>
-> >> Currently, only IPA uses the power estimation, other governors don't
-> >> use these API functions in cpufreq_cooling.
-> >>
-> >>>
-> >>> There are actually two methods the thermal governor will use:
-> >>> get_real_power() and get_requested_power().
-> >>>
-> >>> The first isn't used anywhere in mainline, but could be implemented on
-> >>> hardware that has energy counters (like say x86 RAPL).
-> >>
-> >> The first is only present as callback for registered devfreq cooling,
-> >> which is registered by devfreq driver. If that driver provides the
-> >> get_real_power(), it will be called from get_requested_power().
-> >> Thus, it's likely that IPA would get real power value from HW.
-> >>
-> >> I was planning to add it also to cpufreq_cooling callbacks years
-> >> ago...
-> >>
-> >>>
-> >>> The second attempts to guesstimate power, and is the subject of this
-> >>> patch.
-> >>>
-> >>> Currently cpufreq_cooling appears to estimate the CPU energy usage by
-> >>> calculating the percentage of idle time using the per-cpu cpustat stuff,
-> >>> which is pretty horrific.
-> >>
-> >> Even worse, it then *samples* the *current* CPU frequency at that
-> >> particular point in time and assumes that when the CPU wasn't idle
-> >> during that period - it had *this* frequency...
+On Fri, Jul 17, 2020 at 02:01:16PM +0200, Linus Walleij wrote:
+> Greg, John,
+> 
+> we need some guidance here. See below.
+> 
+> On Thu, Jul 16, 2020 at 4:38 PM Anson Huang <anson.huang@nxp.com> wrote:
+> > [Me]
+> > > On Wed, Jul 15, 2020 at 4:44 AM Anson Huang <anson.huang@nxp.com>
+> 
+> > > > I tried to replace the subsys_initcall() with
+> > > > module_platform_driver(), but met issue about "
+> > > > register_syscore_ops(&mxc_gpio_syscore_ops);" which is called in
+> > > > gpio_mxc_init() function, this function should be called ONLY once,
+> > > > moving it to .probe function is NOT working, so we may need to keep the
+> > > > gpio_mxc_init(), that is another reason that we may need to keep
+> > > > subsys_initcall()?
+> > >
+> > > This looks a bit dangerous to keep like this while allowing this code to be used
+> > > from a module.
+> > >
+> > > What happens if you insmod and rmmod this a few times, really?
+> > > How is this tested?
+> > >
+> > > This is not really modularized if that isn't working, just that modprobing once
+> > > works isn't real modularization IMO, it seems more like a quick and dirty way
+> > > to get Androids GKI somewhat working with the module while not properly
+> > > making the module a module.
+> > >
+> > > You need input from the driver maintainers on how to handle this.
 > >
-> > So there is 2 problems in the power calculation of cpufreq cooling device :
-> > - How to get an accurate utilization level of the cpu which is what
-> > this patch is trying to fix because using idle time is just wrong
-> > whereas scheduler utilization is frequency invariant
-> > - How to get power estimate from this utilization level. And as you
-> > pointed out, using the current freq which is not accurate.
->
->
->
->
+> > As far as I know, some general/critical modules are NOT supporting rmmod, like
+> > clk, pinctrl, gpio etc., and I am NOT sure whether Android GKI need to support
+> > rmmod for these system-wide-used module, I will ask them for more detail about
+> > this.
 > >
-> >>
-> >>>
-> >>> This patch then attempts to improve upon that by using the scheduler's
-> >>> cpu_util(ENERGY_UTIL) estimate, which is also used to select OPP state
-> >>> and improves upon avg idle. This should be a big improvement as higher
-> >>
-> >> IMHO this patch set doesn't address the real problem: 'sampling
-> >> freq problem' described above. There was no issue with getting idle
-> >> period. The avg freq was the problem, in that period when the
-> >
-> > Not sure that you can say that avg freq is a bigger problem than
-> > getting the load because there is a real issue with tracking idle
-> > period for estimating load because running slower reduces the idle
-> > time and increases artificially the load. That's why we implemented
-> > frequency invariance in PELT.
->
-> If you take a closer look into the code, you see that wrong
-> freq picks the wrong power value from the EM, the line:
-> freq = cpufreq_quick_get(policy->cpu)
-> then check the function cpu_freq_to_power().
-> The power is calculated by:
->   (raw_cpu_power * cpufreq_cdev->last_load) / 100
->
-> The load estimation error is also an issue, but the comprehensive
-> solution should address possibly all existing issues.
->
-> I don't know if you were approached also by the same vendor,
-> complaining on IPA issues. Do you have some requirements? Or deadlines,
-> for which kernel version you have to fix it?
+> > The requirement I received is to support loadable module, but so far no hard requirement
+> > to support module remove for gpio driver, so, is it OK to add it step by step, and this patch
+> > series ONLY to support module build and one time modprobe?
+> 
+> While I am a big fan of the Android GKI initiative this needs to be aligned
+> with the Linux core maintainers, so let's ask Greg. I am also paging
+> John Stultz on this: he is close to this action.
+> 
+> They both know the Android people very well.
+> 
+> So there is a rationale like this going on: in order to achieve GKI goals
+> and have as much as possible of the Linux kernel stashed into loadable
+> kernel modules, it has been elevated to modus operandi amongst
+> the developers pushing this change that it is OK to pile up a load of
+> modules that cannot ever be unloaded.
 
-No, I don't have vendors complaining for IPA.
-This patch is just because there because tracking idle time is known
-to be wrong whereas sched_util gives a better estimation of the
-current/next utilization and as a result a better estimation of the
-power that will be consumed
+Why can't the module be unloaded?  Is it just because they never
+implement the proper "remove all resources allocated" logic in a remove
+function, or something else?
 
-> We can discuss this out offline if you like.
->
-> >
-> > At the opposite when the thermal mitigation happens, the frequency
-> > will be most probably capped by cpu cooling device and will most
-> > probably stay at the capped value
->
-> I don't think that we can rely on such assumption. The whole
+> This is IIUC regardless of whether all consumers of the module are
+> actually gone: it would be OK to say make it impossible to rmmod
+> a clk driver even of zero clocks from that driver is in use. So it is not
+> dependency-graph problem, it is a "load once, never remove" approach.
 
-I'm not sure that it's that bad although I fully agree that it's not
-perfect or maybe good enough.
-The scheduler's utilization is already used to select the cpu
-frequency. In an ideal world, it is not expected to change according
-to current information so using scheduler utilization and current
-freq, which has been also set based on the current knowledge of the
-utilization of the cpu, should not be that bad. More than what
-happened during the last period, we try to estimate what will happen
-during the next one in this case.
+Sounds like a "lazy" approach :)
 
-Trying to track accurately the energy/power consumed over the last
-period (with idle events and freq changes) is not that useful in this
-case and especially because of task migration and other scheduler's
-activities that will make previous period tracking obsolete where
-scheduler utilization takes that into account. Such accurate
-power/energy tracking is useful if you want to cap the power
-consumption of the devices in framework like powercap when HW can't do
-it by itself but in this case you are woring at a different time scale
+> This rationale puts me as subsystem maintainer in an unpleasant spot:
+> it is really hard to tell case-to-case whether that change really is a
+> technical advantage for the kernel per se or whether it is done for the
+> greater ecosystem of Android.
+> 
+> Often I would say it makes it possible to build a smaller kernel vmlinux
+> so OK that is an advantage. On the other hand I have an inkling that I
+> should be pushing developers to make sure that rmmod works.
 
-> cpufreq_get_requested_power() should be changed.
->
-> >
-> >> CPUs were running. The model implemented in alg was also a problem.
-> >>
-> >> The whole period (e.g. CPU freqs which were used or idle state)
-> >>
-> >> ^(CPU freq)
-> >> |
-> >> |                            sampling the current freq
-> >> |                _______        |
-> >> |               |      |        |
-> >> |________       |      |        |
-> >> |       |       |      |        |
-> >> |       | idle  |      |________v________...
-> >> |_ _____|_______|__________________________> (time)
-> >>     start of period               end
-> >>     |<------- (typically 100ms)-->|
-> >>
-> >>
-> >>
-> >>> frequency consumes more energy, but should we not also consider that:
-> >>>
-> >>>        E = C V^2 f
-> >>>
-> >>> The EAS energy model has tables for the OPPs that contain this, but in
-> >>> this case we seem to be assuming a linear enery/frequency curve, which
-> >>> is just not the case.
-> >>
-> >> I am not sure if I got your point. To understand your point better
-> >> I think some drawing would be required. I will skip this patch
-> >> and old mainline code and focus on your proposed solution
-> >> (because this patch set does not address 'sampling freq problem').
-> >>
-> >>>
-> >>> I suppose we could do something like **:
-> >>>
-> >>>        100 * util^3 / max^3
-> >>>
-> >>> which assumes V~f.
-> >>
-> >> In EM we keep power values in the array and these values grow
-> >> exponentially. Each OPP has it corresponding
-> >>
-> >> P_x = C (V_x)^2 f_x    , where x is the OPP id thus corresponding V,f
-> >>
-> >> so we have discrete power values, growing like:
-> >>
-> >> ^(power)
-> >> |
-> >> |
-> >> |                          *
-> >> |
-> >> |
-> >> |                       *
-> >> |                       |
-> >> |                   *   |
-> >> |                       | <----- power estimation function
-> >> |            *          |        should not use linear 'util/max_util'
-> >> |   *                   |        relation here *
-> >> |_______________________|_____________> (freq)
-> >>      opp0     opp1  opp2 opp3 opp4
-> >>
-> >> What is the problem
-> >> First:
-> >> We need to pick the right Power from the array. I would suggest
-> >> to pick the max allowed frequency for that whole period, because
-> >> we don't know if the CPUs were using it (it's likely).
-> >> Second:
-> >> Then we have the utilization, which can be considered as:
-> >> 'idle period & running period with various freq inside', lets
-> >> call it avg performance in that whole period.
-> >> Third:
-> >> Try to estimate the power used in that whole period having
-> >> the avg performance and max performance.
-> >
-> > We already have a function that is doing such kind of computation
-> > based of the utilization of the CPU : em_pd_energy(). And we could
-> > reuse some of this function if not exactly this one
->
-> Yes and I think we should use this information. I am going to
-> talk with Daniel about EM evolution (this is one of the topics
-> from my side). Next, it is going to be a LPC event, where we
-> can also discuss with broader audience.
->
-> Regards,
-> Lukasz
->
+I can see where a number of modules just can not ever be removed because
+of resources and not being able to properly tear down, but that doesn't
+mean that a driver author shouldn't at least try, right?
+
+> As a minimum requirement I would expect this to be marked by
+> 
+> struct device_driver {
+>    (...)
+>     /* This module absolutely cannot be unbound */
+>    .suppress_bind_attrs = true;
+> };
+
+No, that's not what bind/unbind is really for.  That's a per-subsystem
+choice as to if you want to allow devices to be added/removed from
+drivers at runtime.  It has nothing to do with module load/unload.
+
+> So that noone would be able to try to unbind this (could even be an
+> attack vector!)
+> 
+> What is our broader reasoning when it comes to this? (I might have
+> missed some mail thread here.)
+
+Android is just finally pushing vendors to get their code upstream,
+which is a good thing to see.  And building things as a module is an
+even better thing as now it is finally allowing arm64 systems to be
+built to support more than one specific hardware platform at runtime.
+
+So moving drivers to modules is good.  If a module can be removed, even
+better, but developers should not be lazy and just flat out not try at
+all to make their code unloadable if at all possible.
+
+Does that help?
+
+thanks,
+
+greg k-h
