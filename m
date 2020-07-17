@@ -2,39 +2,34 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C48C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7EF20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFEF20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgGQG6d (ORCPT
+        id S1727851AbgGQG7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:58:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41352 "EHLO mx2.suse.de"
+        Fri, 17 Jul 2020 02:59:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41434 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726113AbgGQG6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:58:33 -0400
+        id S1726426AbgGQG7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:59:10 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 50480AD32;
-        Fri, 17 Jul 2020 06:58:36 +0000 (UTC)
-Date:   Fri, 17 Jul 2020 08:58:31 +0200
-Message-ID: <s5hy2nik4q0.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id C738AAD20;
+        Fri, 17 Jul 2020 06:59:11 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 08:59:07 +0200
+Message-ID: <s5hv9imk4p0.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     Kaige Li <likaige@loongson.cn>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH 2/2] ALSA: hda: Add support for Loongson 7A1000 controller
-In-Reply-To: <1594954292-1703-2-git-send-email-likaige@loongson.cn>
-References: <1594954292-1703-1-git-send-email-likaige@loongson.cn>
-        <1594954292-1703-2-git-send-email-likaige@loongson.cn>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.8-rc6
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -45,14 +40,238 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 04:51:32 +0200,
-Kaige Li wrote:
-> 
-> Add the new PCI ID 0x0014 0x7a07 to support Loongson 7A1000 controller.
-> 
-> Signed-off-by: Kaige Li <likaige@loongson.cn>
+Linus,
 
-Applied this one.  Thanks.
+please pull sound fixes for v5.8-rc6 from:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.8-rc6
 
-Takashi
+The topmost commit is 5734e509d5d515c187f642937ef2de1e58d7715d
+
+----------------------------------------------------------------
+
+sound fixes for 5.8-rc6
+
+No surprise here, just a few device-specific small fixes: two fixes
+for USB LINE6 and one for USB-audio drivers wrt syzkaller fuzzer
+issues, while the rest are all HD-audio Realtek quirks.
+
+----------------------------------------------------------------
+
+Armas Spann (1):
+      ALSA: hda/realtek: enable headset mic of ASUS ROG Zephyrus G14(G401) series with ALC289
+
+Jian-Hong Pan (1):
+      ALSA: hda/realtek: Enable headset mic of Acer TravelMate B311R-31 with ALC256
+
+Kailang Yang (3):
+      ALSA: hda/realtek - change to suitable link model for ASUS platform
+      ALSA: hda/realtek - Enable Speaker for ASUS UX533 and UX534
+      ALSA: hda/realtek - Enable Speaker for ASUS UX563
+
+PeiSen Hou (1):
+      ALSA: hda/realtek - fixup for yet another Intel reference board
+
+Takashi Iwai (3):
+      ALSA: line6: Perform sanity check for each URB creation
+      ALSA: line6: Sync the pending work cancel at disconnection
+      ALSA: usb-audio: Fix race against the error recovery URB submission
+
+---
+ sound/pci/hda/patch_realtek.c | 28 ++++++++++++++++++++++++++--
+ sound/usb/line6/capture.c     |  2 ++
+ sound/usb/line6/driver.c      |  2 +-
+ sound/usb/line6/playback.c    |  2 ++
+ sound/usb/midi.c              | 17 ++++++++++++-----
+ 5 files changed, 43 insertions(+), 8 deletions(-)
+
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 194ffa8c66ce..1b06c4261248 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6152,6 +6152,8 @@ enum {
+ 	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
+ 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
+ 	ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE,
++	ALC289_FIXUP_ASUS_G401,
++	ALC256_FIXUP_ACER_MIC_NO_PRESENCE,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7117,7 +7119,7 @@ static const struct hda_fixup alc269_fixups[] = {
+ 			{ }
+ 		},
+ 		.chained = true,
+-		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
++		.chain_id = ALC269_FIXUP_HEADSET_MIC
+ 	},
+ 	[ALC294_FIXUP_ASUS_HEADSET_MIC] = {
+ 		.type = HDA_FIXUP_PINS,
+@@ -7126,7 +7128,7 @@ static const struct hda_fixup alc269_fixups[] = {
+ 			{ }
+ 		},
+ 		.chained = true,
+-		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
++		.chain_id = ALC269_FIXUP_HEADSET_MIC
+ 	},
+ 	[ALC294_FIXUP_ASUS_SPK] = {
+ 		.type = HDA_FIXUP_VERBS,
+@@ -7134,6 +7136,8 @@ static const struct hda_fixup alc269_fixups[] = {
+ 			/* Set EAPD high */
+ 			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x40 },
+ 			{ 0x20, AC_VERB_SET_PROC_COEF, 0x8800 },
++			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x0f },
++			{ 0x20, AC_VERB_SET_PROC_COEF, 0x7774 },
+ 			{ }
+ 		},
+ 		.chained = true,
+@@ -7359,6 +7363,22 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MIC
+ 	},
++	[ALC289_FIXUP_ASUS_G401] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x03a11020 }, /* headset mic with jack detect */
++			{ }
++		},
++	},
++	[ALC256_FIXUP_ACER_MIC_NO_PRESENCE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x02a11120 }, /* use as headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7387,6 +7407,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1025, 0x1308, "Acer Aspire Z24-890", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x132a, "Acer TravelMate B114-21", ALC233_FIXUP_ACER_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1025, 0x1430, "Acer TravelMate B311R-31", ALC256_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
+ 	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_DELL_XPS),
+ 	SND_PCI_QUIRK(0x1028, 0x05bd, "Dell Latitude E6440", ALC292_FIXUP_DELL_E7X),
+@@ -7530,6 +7551,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_DUAL_SPK),
+ 	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x18f1, "Asus FX505DT", ALC256_FIXUP_ASUS_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1043, 0x194e, "ASUS UX563FD", ALC294_FIXUP_ASUS_HPE),
+ 	SND_PCI_QUIRK(0x1043, 0x19ce, "ASUS B9450FA", ALC294_FIXUP_ASUS_HPE),
+ 	SND_PCI_QUIRK(0x1043, 0x19e1, "ASUS UX581LV", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+@@ -7539,6 +7561,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA", ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x1c23, "Asus X55U", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ 	SND_PCI_QUIRK(0x1043, 0x1ccd, "ASUS X555UB", ALC256_FIXUP_ASUS_MIC),
++	SND_PCI_QUIRK(0x1043, 0x1f11, "ASUS Zephyrus G14", ALC289_FIXUP_ASUS_G401),
+ 	SND_PCI_QUIRK(0x1043, 0x3030, "ASUS ZN270IE", ALC256_FIXUP_ASUS_AIO_GPIO2),
+ 	SND_PCI_QUIRK(0x1043, 0x831a, "ASUS P901", ALC269_FIXUP_STEREO_DMIC),
+ 	SND_PCI_QUIRK(0x1043, 0x834a, "ASUS S101", ALC269_FIXUP_STEREO_DMIC),
+@@ -7558,6 +7581,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x10cf, 0x1629, "Lifebook U7x7", ALC255_FIXUP_LIFEBOOK_U7x7_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x10cf, 0x1845, "Lifebook U904", ALC269_FIXUP_LIFEBOOK_EXTMIC),
+ 	SND_PCI_QUIRK(0x10ec, 0x10f2, "Intel Reference board", ALC700_FIXUP_INTEL_REFERENCE),
++	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC225_FIXUP_HEADSET_JACK),
+ 	SND_PCI_QUIRK(0x10f7, 0x8338, "Panasonic CF-SZ6", ALC269_FIXUP_HEADSET_MODE),
+ 	SND_PCI_QUIRK(0x144d, 0xc109, "Samsung Ativ book 9 (NP900X3G)", ALC269_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+diff --git a/sound/usb/line6/capture.c b/sound/usb/line6/capture.c
+index 663d608c4287..970c9bdce0b2 100644
+--- a/sound/usb/line6/capture.c
++++ b/sound/usb/line6/capture.c
+@@ -286,6 +286,8 @@ int line6_create_audio_in_urbs(struct snd_line6_pcm *line6pcm)
+ 		urb->interval = LINE6_ISO_INTERVAL;
+ 		urb->error_count = 0;
+ 		urb->complete = audio_in_callback;
++		if (usb_urb_ep_type_check(urb))
++			return -EINVAL;
+ 	}
+ 
+ 	return 0;
+diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
+index 7629116f570e..2746d9698180 100644
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -840,7 +840,7 @@ void line6_disconnect(struct usb_interface *interface)
+ 	if (WARN_ON(usbdev != line6->usbdev))
+ 		return;
+ 
+-	cancel_delayed_work(&line6->startup_work);
++	cancel_delayed_work_sync(&line6->startup_work);
+ 
+ 	if (line6->urb_listen != NULL)
+ 		line6_stop_listen(line6);
+diff --git a/sound/usb/line6/playback.c b/sound/usb/line6/playback.c
+index 01930ce7bd75..8233c61e23f1 100644
+--- a/sound/usb/line6/playback.c
++++ b/sound/usb/line6/playback.c
+@@ -431,6 +431,8 @@ int line6_create_audio_out_urbs(struct snd_line6_pcm *line6pcm)
+ 		urb->interval = LINE6_ISO_INTERVAL;
+ 		urb->error_count = 0;
+ 		urb->complete = audio_out_callback;
++		if (usb_urb_ep_type_check(urb))
++			return -EINVAL;
+ 	}
+ 
+ 	return 0;
+diff --git a/sound/usb/midi.c b/sound/usb/midi.c
+index 047b90595d65..354f57692938 100644
+--- a/sound/usb/midi.c
++++ b/sound/usb/midi.c
+@@ -1499,6 +1499,8 @@ void snd_usbmidi_disconnect(struct list_head *p)
+ 	spin_unlock_irq(&umidi->disc_lock);
+ 	up_write(&umidi->disc_rwsem);
+ 
++	del_timer_sync(&umidi->error_timer);
++
+ 	for (i = 0; i < MIDI_MAX_ENDPOINTS; ++i) {
+ 		struct snd_usb_midi_endpoint *ep = &umidi->endpoints[i];
+ 		if (ep->out)
+@@ -1525,7 +1527,6 @@ void snd_usbmidi_disconnect(struct list_head *p)
+ 			ep->in = NULL;
+ 		}
+ 	}
+-	del_timer_sync(&umidi->error_timer);
+ }
+ EXPORT_SYMBOL(snd_usbmidi_disconnect);
+ 
+@@ -2301,16 +2302,22 @@ void snd_usbmidi_input_stop(struct list_head *p)
+ }
+ EXPORT_SYMBOL(snd_usbmidi_input_stop);
+ 
+-static void snd_usbmidi_input_start_ep(struct snd_usb_midi_in_endpoint *ep)
++static void snd_usbmidi_input_start_ep(struct snd_usb_midi *umidi,
++				       struct snd_usb_midi_in_endpoint *ep)
+ {
+ 	unsigned int i;
++	unsigned long flags;
+ 
+ 	if (!ep)
+ 		return;
+ 	for (i = 0; i < INPUT_URBS; ++i) {
+ 		struct urb *urb = ep->urbs[i];
+-		urb->dev = ep->umidi->dev;
+-		snd_usbmidi_submit_urb(urb, GFP_KERNEL);
++		spin_lock_irqsave(&umidi->disc_lock, flags);
++		if (!atomic_read(&urb->use_count)) {
++			urb->dev = ep->umidi->dev;
++			snd_usbmidi_submit_urb(urb, GFP_ATOMIC);
++		}
++		spin_unlock_irqrestore(&umidi->disc_lock, flags);
+ 	}
+ }
+ 
+@@ -2326,7 +2333,7 @@ void snd_usbmidi_input_start(struct list_head *p)
+ 	if (umidi->input_running || !umidi->opened[1])
+ 		return;
+ 	for (i = 0; i < MIDI_MAX_ENDPOINTS; ++i)
+-		snd_usbmidi_input_start_ep(umidi->endpoints[i].in);
++		snd_usbmidi_input_start_ep(umidi, umidi->endpoints[i].in);
+ 	umidi->input_running = 1;
+ }
+ EXPORT_SYMBOL(snd_usbmidi_input_start);
