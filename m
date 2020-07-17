@@ -2,265 +2,358 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A82C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849D3C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A82B206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5719220717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595009722;
+	bh=etga1kcOMHqFWeb1YND8jg93xKqiY1c6UgFtugk/erk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jc498QrJewAhSa/9VTUNGpC6H5DuTsouUHaedqIeh0NyQQ9ZAo4ixC2h1c7V9OczD
+	 hl9WO3RUz1hEV8F3JHQLmw/BXb+f48WQNiopQ/ftf9i4V7N2pFvIaZvXB3Zb1SlBY+
+	 xUqb/50cIfAh4JCCEKJrvQDdSMHnIgd6gaYeu/n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgGQSOl (ORCPT
+        id S1727863AbgGQSPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:14:41 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59888 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgGQSOl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:14:41 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id E3F9C2A5DC6
-Subject: Re: [PATCH v4 5/9] media: staging: rkisp1: remove unecessary clocks
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mark Rutland <mark.rutland@arm.com>, karthik.poduval@gmail.com,
-        Johan Jonker <jbx6244@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Eddie Cai <eddie.cai.linux@gmail.com>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20200702191322.2639681-1-helen.koike@collabora.com>
- <20200702191322.2639681-6-helen.koike@collabora.com>
- <CAL_JsqKHG4HgcpWvh_qnHPAkaGCd7Q8APk2ai_QxjUQhvd5APg@mail.gmail.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <822de449-8c01-d790-a9f9-e8b513bd7f87@collabora.com>
-Date:   Fri, 17 Jul 2020 15:14:30 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 17 Jul 2020 14:15:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbgGQSPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:15:21 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74ACD206F4;
+        Fri, 17 Jul 2020 18:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595009720;
+        bh=etga1kcOMHqFWeb1YND8jg93xKqiY1c6UgFtugk/erk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cPjYGdX8Z4a7PZCJCmkomJzf/XKQRpNDKdvpL29AS7RZzq9AHaGPzzaLpnag5BZmR
+         Y3ygkRyFpVZTapNTSGJlan5b+jja5qt3wBTcuCwNl5OFt2ID4Lwdyg95HlyuZ06cwG
+         gE4BIBgEPMzFQ5atcg0lfGNKqJAPsnuuLcUkkDXI=
+Date:   Fri, 17 Jul 2020 19:15:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        trix@redhat.com, matthew.gerlach@linux.intel.com,
+        russell.h.weight@intel.com, lgoncalv@redhat.com, hao.wu@intel.com
+Subject: Re: [PATCH v2 1/3] regmap: add Intel SPI Slave to AVMM Bus Bridge
+ support
+Message-ID: <20200717181508.GA905@sirena.org.uk>
+References: <1594896174-18826-1-git-send-email-yilun.xu@intel.com>
+ <1594896174-18826-2-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKHG4HgcpWvh_qnHPAkaGCd7Q8APk2ai_QxjUQhvd5APg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Content-Disposition: inline
+In-Reply-To: <1594896174-18826-2-git-send-email-yilun.xu@intel.com>
+X-Cookie: Haste makes waste.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
 
-Thanks for your review.
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 7/17/20 2:49 PM, Rob Herring wrote:
-> On Thu, Jul 2, 2020 at 1:13 PM Helen Koike <helen.koike@collabora.com> wrote:
->>
->> aclk_isp_wrap is a child of aclk_isp, and hclk_isp_wrap is a child of
->> hclk_isp, thus we can remove parents from the list.
-> 
-> But it looks like it is the wrap clocks you are removing.
+On Thu, Jul 16, 2020 at 06:42:52PM +0800, Xu Yilun wrote:
 
-From this binding yes, but the idea is to add in the dt wherever clock
-responsible for the full ACLK path for instance.
-In the example below, clock aclk_isp is ACLK_ISP0_WRAPPER.
-Does this make sense?
+> This patch add support for regmap API that is intended to be used by
+> the drivers of some SPI slave chips which integrate the "SPI slave to
+> Avalon Master Bridge" (spi-avmm) IP.
 
-> 
->>
->> Also, for the isp0, we only need the ISP clock, ACLK and HCLK.
->> In the future we'll need a pixel clock for RK3288 and RK3399, and a JPEG
->> clock for RK3288.
->>
->> So with the goal to cleanup the dt-bindings and remove it from staging,
->> simplify clock names to isp, aclk and hclk.
->>
->> For reference, this is the isp clock topology on RK3399:
->>
->>  xin24m
->>     pll_npll
->>        npll
->>           clk_isp1
->>           clk_isp0
->>     pll_cpll
->>        cpll
->>           aclk_isp1
->>              aclk_isp1_noc
->>              hclk_isp1
->>                 aclk_isp1_wrapper
->>                 hclk_isp1_noc
->>           aclk_isp0
->>              hclk_isp1_wrapper
->>              aclk_isp0_wrapper
->>              aclk_isp0_noc
->>              hclk_isp0
->>                 hclk_isp0_wrapper
->>                 hclk_isp0_noc
->>  pclkin_isp1_wrapper
->>
->> Signed-off-by: Helen Koike <helen.koike@collabora.com>
->>
->> ---
->>
->> Changes in V4:
->> - update binding according to suggestion by Robin Murphy
->> on https://patchwork.kernel.org/patch/11475007/
->>
->> Changes in V3:
->> - this is a new patch in the series
->> ---
->>  .../bindings/media/rockchip-isp1.yaml         | 30 +++++++++----------
->>  drivers/staging/media/rkisp1/rkisp1-dev.c     |  8 ++---
->>  2 files changed, 17 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->> index 4d111ef2e89c7..f10c53d008748 100644
->> --- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->> @@ -24,20 +24,20 @@ properties:
->>      maxItems: 1
->>
->>    clocks:
->> -    items:
->> -      - description: ISP clock
->> -      - description: ISP AXI clock clock
->> -      - description: ISP AXI clock  wrapper clock
->> -      - description: ISP AHB clock clock
->> -      - description: ISP AHB wrapper clock
-> 
-> This is the correct way to describe multiple clocks.
+At a very high level this looks far too complicated.  Some of that is
+due to the protocol it's implementing which looks awfully like you've
+got a microcontroller in there trying to proxy a bus of some kind but
+there looks to be a lot of abstraction layers simply within the software
+here which make things hard to follow.  At the very least there doesn't
+seem to be any interaction with this other than proxying stuff.  As
+things stand this would be the largest regmap bus implementation by an
+order of magnitude.
 
-The idea was to prepare for rk3288 and rk3399 isp1, as suggested here https://patchwork.kernel.org/patch/11475007/#23462085
+It is not clear to me that this is really a generic thing that will have
+multiple users and that it shouldn't be implemented as reg_read() and
+reg_write() operations in the driver that uses it.
 
-Or should we do:
+> +config REGMAP_SPI_AVMM
+> +	tristate
+> +	depends on SPI
 
-clocks:
-  oneOf:
-    # rk3288 clocks
-    - items:
-      - description: ISP clock
-      - description: ISP AXI clock
-      - description: ISP AHB clock
-      - description: ISP Pixel clock
-      - description: ISP JPEG source clock
-    # rk3399 isp0 clocks
-    - items:
-      - description: ISP clock
-      - description: ISP AXI clock
-      - description: ISP AHB clock
-    # rk3399 isp1 clocks
-    - items:
-      - description: ISP clock
-      - description: ISP AXI clock
-      - description: ISP AHB clock
-      - description: ISP Pixel clock
+Note that for selected symbols dependencies don't take effect.
 
-?
+> @@ -0,0 +1,932 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for Intel SPI Slave to AVMM Bus Bridge
 
+Please make the entire comment a C++ one so things look omre
+intentional.
 
-> 
->> +    maxItems: 5
-> 
-> Now the 4th and 5th clock are undefined.
-> 
->> +    minItems: 3
->> +    description:
->> +      ISP clock
->> +      ISP AXI clock
->> +      ISP AHB clock
->>
->>    clock-names:
->> +    maxItems: 5
-> 
-> This should not be more than the number of entries in 'items'.
-> 
+> + * Reference Documents could be found at:
+> + * https://www.intel.com/content/www/us/en/programmable/documentation/
+> + * sfo1400787952932.html
 
-If we follow what I wrote above, should we have:
+Please don't corrupt links like this, that makes them harder to use.
 
-    clock-names:
-      oneOf:
-        # rk3288 clocks
-        - items:
-          - const: clk_isp
-          - const: aclk_isp
-          - const: hclk_isp
-          - const: pclk_isp_in
-          - const: sclk_isp_jpe
-        # rk3399 isp0 clocks
-        - items:
-          - const: clk_isp
-          - const: aclk_isp
-          - const: hclk_isp
-        # rk3399 isp1 clocks
-        - items:
-          - const: clk_isp
-          - const: aclk_isp
-          - const: hclk_isp
-          - const: pclk_isp
+> + * The main function of the physical layer is the use of PHY_IDLE (4a). =
+Host
+> + * issues SCLK to query data from slave, but if slave is not ready to su=
+bmit
+> + * data yet, it will repeat PHY_IDLE until data is prepared.
+> + * Because of this special char, it also needs an ESCAPE char (4d), to h=
+elp
+> + * represent data "4a". The escape rule is "4d first, following 4a ^ 20".
+> + * So "4d, 6a" for data "4a", and "4d, 6d" for data "4d".
 
-?
+> + * The packet layer defines the boundary of a whole packet. It defines t=
+he
+> + * Start Of Packet (SOP, 7a) char and End Of Packet (EOP, 7b) char. Plea=
+se
+> + * note that the non-special byte after EOP is the last byte of the pack=
+et.
+> + * The packet layer also defines a Channel char (7c) + Channel number for
+> + * multiple channel transfer. This not currently supported by this drive=
+r. So
+> + * host will always send "7c, 00" when needed, and will drop the packet =
+if
+> + * "7c, non-zero" is received.
+> + * Finally, a packet layer ESCAPE char (7d) is also needed to represent a
+> + * data value that is the same as the special chars. The escape rule is =
+the
+> + * same. The escape rule should be used if the last byte requires it. So=
+ if a
+> + * packet ends up with data 7a, the last bytes should be "7b, 7d, 5a".
 
-Thanks
-Helen
+This comment is not particularly intelligable.  I assume all these
+number/letter combinations are references to something - it'd be good to
+say what.
 
->> +    minItems: 3
->>      items:
->> -      - const: clk_isp
->> -      - const: aclk_isp
->> -      - const: aclk_isp_wrap
->> -      - const: hclk_isp
->> -      - const: hclk_isp_wrap
->> +      - const: isp
->> +      - const: aclk
->> +      - const: hclk
->>
->>    iommus:
->>      maxItems: 1
->> @@ -135,11 +135,9 @@ examples:
->>              reg = <0x0 0xff910000 0x0 0x4000>;
->>              interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
->>              clocks = <&cru SCLK_ISP0>,
->> -                     <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
->> -                     <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
->> -            clock-names = "clk_isp",
->> -                          "aclk_isp", "aclk_isp_wrap",
->> -                          "hclk_isp", "hclk_isp_wrap";
->> +                     <&cru ACLK_ISP0_WRAPPER>,
->> +                     <&cru HCLK_ISP0_WRAPPER>;
->> +            clock-names = "isp", "aclk", "hclk";
->>              iommus = <&isp0_mmu>;
->>              phys = <&dphy>;
->>              phy-names = "dphy";
->> diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
->> index f38801fea10d9..175ac25fe99fa 100644
->> --- a/drivers/staging/media/rkisp1/rkisp1-dev.c
->> +++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
->> @@ -406,11 +406,9 @@ static irqreturn_t rkisp1_isr(int irq, void *ctx)
->>  }
->>
->>  static const char * const rk3399_isp_clks[] = {
->> -       "clk_isp",
->> -       "aclk_isp",
->> -       "hclk_isp",
->> -       "aclk_isp_wrap",
->> -       "hclk_isp_wrap",
->> +       "isp",
->> +       "aclk",
->> +       "hclk",
->>  };
->>
->>  static const struct rkisp1_match_data rk3399_isp_clk_data = {
->> --
->> 2.26.0
->>
+> +/* slave's register addr is 32 bits */
+> +#define REG_SIZE		4UL
+> +/* slave's register value is 32 bits */
+> +#define VAL_SIZE		4UL
+
+These and many of the other constants are liable to conflict with
+something, namespacing would be good.
+
+> +struct trans_header {
+> +	u8 trans_code;
+> +	u8 rsvd;
+> +	__be16 size;
+> +	__be32 addr;
+> +};
+> +
+> +struct trans_response {
+> +	u8 r_trans_code;
+> +	u8 rsvd;
+> +	__be16 size;
+> +};
+
+Do these need to be packed?
+
+> +/* No additional chars are in transaction layer RX, just read out data */
+> +#define TRANS_RX_MAX		(VAL_SIZE * MAX_RX_CNT)
+> +/*
+
+Blank line before the comment.
+
+> +#define TRANS_BUF_SIZE		((TRANS_TX_MAX > TRANS_RX_MAX) ?	\
+> +				 TRANS_TX_MAX : TRANS_RX_MAX)
+
+This could be more simply written using max() couldn't it (which IIRC
+can also be evaluated at compile time)?
+
+> +/* Format a transaction layer byte stream for tx_buf */
+> +static void trans_tx_prepare(bool is_read, u32 reg, u16 count, u32 *wr_v=
+al,
+> +			     char *tx_buf, unsigned int *tx_len)
+> +{
+> +	struct trans_header *header;
+> +	u8 trans_code;
+> +	__le32 *data;
+> +	int i;
+> +
+> +	trans_code =3D is_read ?
+> +			(count =3D=3D 1 ? TRANS_CODE_READ : TRANS_CODE_SEQ_READ) :
+> +			(count =3D=3D 1 ? TRANS_CODE_WRITE : TRANS_CODE_SEQ_WRITE);
+
+Please write this using normal conditional statements for legibility.
+
+> +	header =3D (struct trans_header *)tx_buf;
+
+No need to cast away from char *.
+
+> +/*
+> + * The input is a transaction layer byte stream in rx_buf, the output is=
+ read
+> + * out data.
+> + */
+> +static int trans_rx_parse(bool is_read, char *rx_buf, unsigned int rx_le=
+n,
+> +			  u16 expected_count, u32 *rd_val)
+> +{
+> +	unsigned int expected_len =3D expected_count * VAL_SIZE;
+> +
+> +	if (is_read) {
+> +		if (expected_len !=3D rx_len)
+> +			return -EINVAL;
+> +
+> +		return rd_trans_rx_parse(rx_buf, rx_len, rd_val);
+> +	}
+> +
+> +	return wr_trans_rx_parse(rx_buf, rx_len, expected_len);
+> +}
+
+Please write the is_read check as an if/else, it'd be clearer.
+
+> +/* Packet Layer & Physical Layer */
+> +/* The input is a trans stream in trans_buf, format a phy stream in phy_=
+buf. */
+> +static void pkt_phy_tx_prepare(char *trans_buf, unsigned int trans_len,
+> +			       char *phy_buf, unsigned int *phy_len)
+> +{
+> +	unsigned int i;
+> +	char *b, *p;
+> +
+> +	b =3D trans_buf;
+> +	p =3D phy_buf;
+
+I'm not seeing any bounds checking on the size of an operation in this
+function and I think I'd expect some, similarly for a lot of the other
+I/O operations.
+
+> +	poll_timeout =3D jiffies + SPI_AVMM_XFER_TIMEOUT;
+> +	for (;;) {
+
+Please rewrite this loop so it's clear that it terminates, usually
+that'd mean a do { } while (!timeout) type construction.  The extra
+effort involved in doing one more check after timeout could just as well
+be a slightly longer timeout and it'd be clearer.
+
+> +		/*
+> +		 * We timeout when rx is invalid for some time. But
+> +		 * it is possible we are scheduled out for long time
+> +		 * after a spi_read. So when we are scheduled in, a SW
+> +		 * timeout happens. But actually HW may have worked fine and
+> +		 * has been ready long time ago. So we need to do an extra
+> +		 * read, if we get a valid word we return a valid rx word,
+> +		 * otherwise real a HW issue happens.
+> +		 */
+> +		if (time_after(jiffies, poll_timeout))
+> +			last_try =3D true;
+
+If the system is that heavily loaded I fear there's bigger problems, you
+could also express the timeout in terms of number of times you poll with
+a delay (at the minute this will busy wait which doesn't seem ideal
+either).
+
+> +static void br_tx_prepare(struct spi_avmm_bridge *br, bool is_read, u32 =
+reg,
+> +			  u16 count, u32 *wr_val)
+> +{
+> +	unsigned int tx_len;
+> +
+> +	trans_tx_prepare(is_read, reg, count, wr_val,
+> +			 br->trans_buf, &tx_len);
+> +	pkt_phy_tx_prepare(br->trans_buf, tx_len,
+> +			   br->phy_buf, &tx_len);
+> +	phy_tx_pad(br->word_len, br->phy_buf, tx_len, &tx_len);
+> +
+> +	br->phy_len =3D tx_len;
+> +}
+
+This is the sort of thing I'm looking at when I say this code has too
+many abstraction layers, this function and all of the functions it calls
+have exactly one caller spread out all over the code and I can't help
+but think that some of them could be usefully inlined.  As things stand
+it's really hard to tell what any individual bit of code is supposed to
+be doing or if it's doing it correctly.
+
+> +	ret =3D ret ? : (eop ? 0 : -EINVAL);
+> +	if (ret) {
+> +		dev_err(&br->spi->dev, "%s br txrx err %d\n", __func__, ret);
+> +		print_hex_dump(KERN_DEBUG, "phy rx:", DUMP_PREFIX_OFFSET,
+> +			       16, 1, br->phy_buf, rx_len, true);
+> +	}
+
+Please write normal conditional statements for legibility.
+
+> +
+> +#define do_reg_read(_ctx, _reg, _value, _count) \
+> +	do_reg_access(_ctx, true, _reg, _value, _count)
+> +#define do_reg_write(_ctx, _reg, _value, _count) \
+> +	do_reg_access(_ctx, false, _reg, _value, _count)
+
+Please write these as proper functions so that the compiler can check
+things more thoroughly.
+
+> +static int regmap_spi_avmm_gather_write(void *context,
+> +					const void *reg_buf, size_t reg_len,
+> +					const void *val_buf, size_t val_len)
+> +{
+> +	if (reg_len !=3D REG_SIZE)
+> +		return -EINVAL;
+> +
+> +	return do_reg_write(context, *(u32 *)reg_buf, (u32 *)val_buf,
+> +			    (u16)(val_len / VAL_SIZE));
+> +}
+
+The cast on the length looks worrying... =20
+
+> +	/* Only support BPW =3D=3D 8 or 32 now */
+> +	if (spi->bits_per_word !=3D 8 && spi->bits_per_word !=3D 32)
+> +		return ERR_PTR(-EINVAL);
+
+Most controllers support configurable bits per word (and modes) - you
+shouldn't be rejecting things based on whatever the default happens to
+be.
+
+> +static const struct regmap_bus regmap_spi_avmm_bus =3D {
+> +	.write =3D regmap_spi_avmm_write,
+> +	.gather_write =3D regmap_spi_avmm_gather_write,
+> +	.read =3D regmap_spi_avmm_read,
+> +	.reg_format_endian_default =3D REGMAP_ENDIAN_NATIVE,
+> +	.val_format_endian_default =3D REGMAP_ENDIAN_NATIVE,
+> +	.max_raw_read =3D VAL_SIZE * MAX_RX_CNT,
+> +	.max_raw_write =3D VAL_SIZE * MAX_TX_CNT,
+> +
+> +	.reg_write =3D regmap_spi_avmm_reg_write,
+> +	.reg_read =3D regmap_spi_avmm_reg_read,
+> +
+> +	.free_context =3D spi_avmm_bridge_ctx_free,
+> +};
+
+This seems confused, you shouldn't have both unformatted I/O operations
+and register I/O operations.  Either the hardware implements a byte
+stream and the core will handle formatting register operations into that
+byte stream or the hardware understands registers and values in which
+case there shouldn't be unformatted operations.  A combination of the
+two is not going to work well.
+
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8R6qsACgkQJNaLcl1U
+h9D9qAf/Taay5FL2xygBVg2GO3GH8nROBYczOgibH5Ii+UeF/oZbS42oSFEw8sBY
+n+hEopF4GDn9iPt66Qe4xteY1rnsb8jQ+74wDrlnjpDkaC/jdWGiZSiabezDNIMv
+Kky8tSh50eLLLUEEgLPPBzuJMalkPNIbqSbe2u6BQRGTnr2ptngVOKQJvXEywwng
+chTnXc2FVp8BxcPbHsG/k5OfKCG3CU4IVMMKPDaQVbdPO9jRWK7DUyB/bRD+AFEV
+EW/gCtypoZsfe/3QO6nG0tJeXDnq/ruAiFygR2MfIeHoswIeS+1A7+zecPTJPGmJ
+WASrPCzQB8FXXWHhBGQzBdDoZvPAug==
+=jC7H
+-----END PGP SIGNATURE-----
+
+--r5Pyd7+fXNt84Ff3--
