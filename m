@@ -2,188 +2,345 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6993EC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C34C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4321C2076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C806206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:04:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jjIz257p"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MFEa1TXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgGQSDY (ORCPT
+        id S1728215AbgGQSER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:03:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49052 "EHLO
+        Fri, 17 Jul 2020 14:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbgGQSDV (ORCPT
+        with ESMTP id S1726429AbgGQSEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:03:21 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25987C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:03:21 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id g37so7477842otb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:03:21 -0700 (PDT)
+        Fri, 17 Jul 2020 14:04:16 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97279C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:04:16 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id z15so2801735qki.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:04:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=luRf2VFyr0NmiSmannOi4zh0OF91VllQcnlKgm+zo4g=;
-        b=jjIz257pmSzixZ6M59Q5Resoy9nbHEMelsdZf823TfLrgjwGDb7vB5NY4nFO+Jy0GX
-         L/x5uyqhNZY/xrevkQ6Gi8Z6wemYY3u5ZFBpwds2VtBQZSWHsnKaVSJeQfX+OGdLmd2b
-         ntkea8vhu6+W/wmUWNX6dfLyrhyA0OQedD8hpSVScQeXDHo3hVJBaLXxdEu1Aa41gDMd
-         kbGlLUz00fIq5s4/8MFgPge87CaG9rGYOIrJhMRvj4NMC8XZkf3ggWEjG9GOTAETPl8y
-         ZP3uCrL8eS5qlr416OZtRCscFNc2MOlHNbsYmK+wCGPl2rpG6y9Bgi7ZIm0tLylbrIp5
-         GoqQ==
+         :cc;
+        bh=jT6rzpeEE5qo24AcCOcM6oByRnSEaKB4PNbeCotZ59c=;
+        b=MFEa1TXlROSydlqaUMmmn0e/gd3aRzO9YSBdx2NQCmmwvqKJWI6nkXfoht3xmgAlkf
+         Nu0ONqaQwg0qCmLsX9eqMzHGTcCu5gQZqHrDsvhupqCGleXrGeTNrLBLXv+BPtVg2WwX
+         E2Y2EW/VUVDrQLzUZ8xpHftPsOdmwv1RBnwdU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=luRf2VFyr0NmiSmannOi4zh0OF91VllQcnlKgm+zo4g=;
-        b=VfXY5kwPCp6R3UW6nVWl/wZTkZWxbVZEGkW0Dw/9uEVazTcIHADaWsan8lMhyLWYF3
-         qFZW87NBUXJfsc86a1Mwjqx0+hdpXQEdAwyoo1F0pNoKX8223Y/rS/E+N+e4YaWLCfAa
-         RBYwEM0lKfhQ74siSA1jXPYHEhNCcg0++dBibq6cX/rMECYrLwq/Gt9tHCPyan22D4Zl
-         5fX5000Y4+IyRgGUKLEAiMcHuVEZZ/aNC5PpH4ArDHyDkWhlgOihss+LDcuANvUjOaNO
-         wX+XqHpdVo5htP/NzobI5wZ5VeB/Tmyx8cYOgxGZivB/NJxC4JjPpj7wGpJ4lR4QS6Wq
-         Tv1Q==
-X-Gm-Message-State: AOAM530m8OSNg0sDS6Q3YumbI+AvIT4Ap1IHou4/vEcmo4UfGtYgf0S2
-        7yj73fFtnQMCCdb1sESi3zX2ZfHYffErq6L+2GJ/tg==
-X-Google-Smtp-Source: ABdhPJwedNLKBj6RXcDv8Hg0DZBHMUMYMrjlPDpNs9WB4Wjei18jrgpHUm6nlOR1blpO6b3y7nVRFD2Rqi4OKsKtAP4=
-X-Received: by 2002:a9d:6a11:: with SMTP id g17mr10315659otn.50.1595009000242;
- Fri, 17 Jul 2020 11:03:20 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=jT6rzpeEE5qo24AcCOcM6oByRnSEaKB4PNbeCotZ59c=;
+        b=NsQKou+PAN5Tjh4G6yjGFiqm7qOQxxpLsY4iSNUiNLd2aBTY9M0wFFTyUgXj1DAOsf
+         QfPELVIdj7ZyrRiSWI9Bb0iGxFLopQPNH7H9UB6+5XXh2tWbzL7VUsFCf6Yz33A+iAJa
+         aTAudnSwyyfKI2bOKb+OZMSqPJRCTjsF4sF/5dGD8nq3vjIbD5w+Pko6F1WTf40PR8BK
+         nKwOyPIVC23MVOMUeBjvej9zV5X/ddEOKg1z19AwmrNWxy1mjM0+p+zLgaZrPzhArMQB
+         mgint3GWDdMjqm42apRdDtRDSAF8lzSiNo7yqCCx26AqBL5Iz086F1o9OOWpWFf0bZci
+         jIkg==
+X-Gm-Message-State: AOAM5328yFTNm1s6+Zq7hWSUOdD94slwEJwn+zQqLWzjXyqm7GMSa93z
+        tYPivqo/KJXJ1BuW8LSi2GQ6tPa8zqEx1frftesajg==
+X-Google-Smtp-Source: ABdhPJy4raU1tZqb28ThgVAtPum8IY5fp2bxXKnubFFGzV9D6bOjs35SnNm36hOsnP9S9/hRNF6BpupZqGW3nk7PGi8=
+X-Received: by 2002:a37:9682:: with SMTP id y124mr10089836qkd.442.1595009055606;
+ Fri, 17 Jul 2020 11:04:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
- <20200712131003.23271-2-madhuparnabhowmik10@gmail.com> <20200712160856.GW9247@paulmck-ThinkPad-P72>
- <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
- <CAA42JLY2L6xFju_qZsVguGtXvDMqfCKbO_h1K9NJPjmqJEav=Q@mail.gmail.com> <20200717170747.GW9247@paulmck-ThinkPad-P72>
-In-Reply-To: <20200717170747.GW9247@paulmck-ThinkPad-P72>
-From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date:   Fri, 17 Jul 2020 13:03:09 -0500
-Message-ID: <CAEUSe79Ze92eB2kpTZUYvo357ca0C81BOxK+RCbr9h8C--SpSA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Dexuan-Linux Cui <dexuan.linux@gmail.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        madhuparnabhowmik10@gmail.com,
-        Josh Triplett <josh@joshtriplett.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, rcu@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
-        frextrite@gmail.com, lkft-triage@lists.linaro.org,
-        Dexuan Cui <decui@microsoft.com>, juhlee@microsoft.com
+References: <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
+ <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+ <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
+ <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
+ <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
+ <CACeCKachd34UtiZXY3i8za_ZHG9xtHSiPX55=Ed78n=S15b3Hg@mail.gmail.com> <CACeCKacKBdZ0D0+-QA1SLd3UTX=pGWv9pTfF2oWnstD245kD2A@mail.gmail.com>
+In-Reply-To: <CACeCKacKBdZ0D0+-QA1SLd3UTX=pGWv9pTfF2oWnstD245kD2A@mail.gmail.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Fri, 17 Jul 2020 11:04:04 -0700
+Message-ID: <CACeCKadx4P757i96wX=kY4R6DbtSo6qX0Zny_HrCJvMKLzGO0g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+To:     Rob Herring <robh@kernel.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi Rob,
 
-On Fri, 17 Jul 2020 at 12:07, Paul E. McKenney <paulmck@kernel.org> wrote:
+Just checking in again to see if you have any thoughts about the
+proposal outlined in previous emails in this thread.
+
+Best regards,
+
+On Fri, Jul 10, 2020 at 1:51 AM Prashant Malani <pmalani@chromium.org> wrote:
 >
-> On Thu, Jul 16, 2020 at 05:19:52PM -0700, Dexuan-Linux Cui wrote:
-> > On Thu, Jul 16, 2020 at 7:47 AM Naresh Kamboju
-> > <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > On Sun, 12 Jul 2020 at 21:39, Paul E. McKenney <paulmck@kernel.org> w=
-rote:
-> > > >
-> > > > On Sun, Jul 12, 2020 at 06:40:03PM +0530, madhuparnabhowmik10@gmail=
-.com wrote:
-> > > > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > > > >
-> > > > > Use hlist_for_each_entry_srcu() instead of hlist_for_each_entry_r=
-cu()
-> > > > > as it also checkes if the right lock is held.
-> > > > > Using hlist_for_each_entry_rcu() with a condition argument will n=
-ot
-> > > > > report the cases where a SRCU protected list is traversed using
-> > > > > rcu_read_lock(). Hence, use hlist_for_each_entry_srcu().
-> > > > >
-> > > > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > > >
-> > > > I queued both for testing and review, thank you!
-> > > >
-> > > > In particular, this one needs an ack by the maintainer.
-> > > >
-> > > >                                                         Thanx, Paul
-> > > >
-> > > > >  arch/x86/kvm/mmu/page_track.c | 6 ++++--
-> > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/pag=
-e_track.c
-> > > > > index a7bcde34d1f2..a9cd17625950 100644
-> > > > > --- a/arch/x86/kvm/mmu/page_track.c
-> > > > > +++ b/arch/x86/kvm/mmu/page_track.c
-> > > > > @@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vc=
-pu, gpa_t gpa, const u8 *new,
-> > > > >               return;
-> > > > >
-> > > > >       idx =3D srcu_read_lock(&head->track_srcu);
-> > > > > -     hlist_for_each_entry_rcu(n, &head->track_notifier_list, nod=
-e)
-> > > > > +     hlist_for_each_entry_srcu(n, &head->track_notifier_list, no=
-de,
-> > > > > +                             srcu_read_lock_held(&head->track_sr=
-cu))
-> > >
-> > > x86 build failed on linux -next 20200716.
-> > >
-> > > arch/x86/kvm/mmu/page_track.c: In function 'kvm_page_track_write':
-> > > include/linux/rculist.h:727:30: error: left-hand operand of comma
-> > > expression has no effect [-Werror=3Dunused-value]
-> > >   for (__list_check_srcu(cond),     \
-> > >                               ^
-> > > arch/x86/kvm/mmu/page_track.c:232:2: note: in expansion of macro
-> > > 'hlist_for_each_entry_srcu'
-> > >   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
-> > >   ^~~~~~~~~~~~~~~~~~~~~~~~~
-> > > arch/x86/kvm/mmu/page_track.c: In function 'kvm_page_track_flush_slot=
-':
-> > > include/linux/rculist.h:727:30: error: left-hand operand of comma
-> > > expression has no effect [-Werror=3Dunused-value]
-> > >   for (__list_check_srcu(cond),     \
-> > >                               ^
-> > > arch/x86/kvm/mmu/page_track.c:258:2: note: in expansion of macro
-> > > 'hlist_for_each_entry_srcu'
-> > >   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
-> > >   ^~~~~~~~~~~~~~~~~~~~~~~~~
-> > > cc1: all warnings being treated as errors
-> > > make[3]: *** [arch/x86/kvm/mmu/page_track.o] Error 1
-> > >
-> > > build link,
-> > > https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DIST=
-RO=3Dlkft,MACHINE=3Dintel-corei7-64,label=3Ddocker-lkft/815/consoleText
-> > >
+> Hi Rob,
+>
+> Thought I'd check in again to see if you've had a chance to look at
+> this proposal.
+>
+> Since Type C connector class framework assumes the existing
+> "{mode,orientation,data-role}-switch" bindings for non-DT platforms
+> already, as I see it, we can either:
+>
+> 1. Implement a different handling for DT platforms which utilizes port
+> end-points and update the Type C connector class framework to parse
+> those accordingly; this is what the above proposal suggests. It
+> reserves some end-points for the "switches" that the Type C connector
+> class framework expects and just follows the OF graph till it finds
+> the various switches. Other schemas that use usb-connector.yaml schema
+> can add more end-points as their use case deems needed, as long as
+> they're not the reserved ones.
+>
+> <or>
+>
+> 2. Let various schemas that use usb-connector.schema add their own
+> bindings according to their requirements (in the example of
+> cros-ec-typec, it is adding the "*-switch" nodes directly under each
+> connector instead of using OF graph so that Type C connector class
+> framework can detect the switches, but there other examples for other
+> use cases).
+>
+> I'm fine with either, but since this thread is now nearly 3 months
+> old, it would be nice to arrive at a decision.
+>
+> Best regards,
+>
+> On Mon, Jun 29, 2020 at 1:41 PM Prashant Malani <pmalani@chromium.org> wrote:
 > >
-> > Hi, we're seeing the same building failure with the latest linux-next t=
-ree.
->
-> I am not seeing this here.  Could you please let us know what compiler
-> and command-line options you are using to generate this?
-
-It fails with gcc-8 and gcc-9, but it builds with gcc-10. Quick way to
-reproduce:
-  [host] docker run --rm -it -v /linux:/linux -w /linux
-tuxbuild/build-gcc-9_mips
-  [docker] make ARCH=3Dmips CROSS_COMPILE=3Dmips-linux-gnu- defconfig
-  [docker] make ARCH=3Dmips CROSS_COMPILE=3Dmips-linux-gnu- mm
-
-You can use these other Docker containers: tuxbuild/build-gcc-8_mips
-and tuxbuild/build-gcc-10_mips.
-
-Logs for those builds (and allnoconfig, tinyconfig, with gcc-8, gcc-9
-and gcc-10) can also be found here:
-  https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/643978135
-
-Greetings!
-
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
+> > Hi Rob,
+> >
+> > Just following up on this. Would the below example align better with
+> > OF graph requirements?
+> >
+> > Example begins at <example_start>, but in summary:
+> > - port@1 (Superspeed) of usb-c-connector will have 3 endpoints (0 =
+> > goes to mode switch, 1 = goes to orientation switch, 2 = goes to data
+> > role switch)
+> > - port@2 (SBU) of usb-c-connector will have 2 endpoints (0 = goes to
+> > mode switch, 1 = goes to orientation switch)
+> > -These end points can go through arbitrarily long paths (including
+> > retimers) as long as they end up at the following devices:
+> >     a. device with compatible string "typec-mode-switch" for endpoint 0.
+> >     b. device with compatible string "typec-orientation-switch" for endpoint 1.
+> >     c. device with compatible string "typec-data-role-switch" for endpoint 2.
+> > - Connector class framework will perform the traversal from
+> > usb-c-connector port endpoints to the "*-switch" devices.
+> >
+> > Best regards,
+> >
+> > On Fri, Jun 12, 2020 at 10:34 AM Prashant Malani <pmalani@chromium.org> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > Thanks as always for your help in reviewing this proposal!
+> > >
+> > > Kindly see inline
+> > >
+> > > (Trimming text);
+> > > On Thu, Jun 11, 2020 at 02:00:47PM -0600, Rob Herring wrote:
+> > > > On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
+> > > > >
+> > > > > Hi Rob,
+> > > > >
+> > > > > On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
+> > > > > >
+> > > > > > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
+> > > > >
+> > > > > I think the updated example handles this grouping (port@1 going to a
+> > > > > "SS mux") although as you said it should probably be a group of muxes,
+> > > > > but I think the example illustrates the point. Is that assessment
+> > > > > correct?
+> > > >
+> > > > Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
+> > >
+> > > Ack.
+> > >
+> > > Let's go with "-switch" ? That's what the connector class uses and it
+> > > conveys the meaning (unless that is a reserved keyword in DT).
+> > >
+> > > >
+> > > > > Would this block the addition of the "*-switch" properties? IIUC the
+> > > > > two are related but not dependent on each other.
+> > > > >
+> > > > > The *-switch properties are phandles which the Type C connector class
+> > > > > framework expects (and uses to get handles to those switches).
+> > > > > These would point to the "mux" or "group of mux" abstractions as noted earlier.
+> > > >
+> > > > You don't need them though. Walk the graph. You get the connector
+> > > > port@1 remote endpoint and then get its parent.
+> > > >
+> > >
+> > > I see; would it be something along the lines of this? (DT example
+> > > follows; search for "example_end" to jump to bottom):
+> > >
+> > > <example_start>
+> > >
+> > > connector@0 {
+> > >     compatible = "usb-c-connector";
+> > >     reg = <0>;
+> > >     power-role = "dual";
+> > >     data-role = "dual";
+> > >     try-power-role = "source";
+> > >     ....
+> > >     ports {
+> > >         #address-cells = <1>;
+> > >         #size-cells = <0>;
+> > >
+> > >         port@0 {
+> > >             reg = <0>;
+> > >             usb_con_hs: endpoint {
+> > >                 remote-endpoint = <&foo_usb_hs_controller>;
+> > >             };
+> > >         };
+> > >
+> > >         port@1 {
+> > >             reg = <1>;
+> > >             #address-cells = <1>;
+> > >             #size-cells = <0>;
+> > >
+> > >             usb_con0_ss_mode: endpoint@0 {
+> > >                 reg = <0>
+> > >                 remote-endpoint = <&mode_switch_ss_in>;
+> > >             };
+> > >
+> > >             usb_con0_ss_orientation: endpoint@1 {
+> > >                         reg = <1>
+> > >                         remote-endpoint = <&orientation_switch_ss_in>;
+> > >             };
+> > >
+> > >             usb_con0_ss_data_role: endpoint@2 {
+> > >                         reg = <2>
+> > >                         remote-endpoint = <&data_role_switch_in>;
+> > >             };
+> > >         };
+> > >
+> > >         port@2 {
+> > >             reg = <2>;
+> > >             #address-cells = <1>;
+> > >             #size-cells = <0>;
+> > >             usb_con0_sbu_mode: endpoint@0 {
+> > >                         reg = <0>
+> > >                         remote-endpoint = <&mode_switch_sbu_in>;
+> > >             };
+> > >             usb_con0_sbu_orientation: endpoint@1 {
+> > >                         reg = <1>
+> > >                         remote-endpoint = <&orientation_switch_sbu_in>;
+> > >             };
+> > >         };
+> > >     };
+> > > };
+> > >
+> > > mode_switch {
+> > >     compatible = "typec-mode-switch";
+> > >     mux-controls = <&mode_mux_controller>;
+> > >     mux-control-names = "mode";
+> > >     #address-cells = <1>;
+> > >     #size-cells = <0>;
+> > >
+> > >     port@0 {
+> > >         reg = <0>;
+> > >         mode_switch_ss_in: endpoint {
+> > >             remote-endpoint = <&usb_con0_ss_mode>
+> > >         };
+> > >     };
+> > >
+> > >     port@1 {
+> > >         reg = <1>;
+> > >         mode_switch_out_usb3: endpoint {
+> > >             remote-endpoint = <&usb3_0_ep>
+> > >         };
+> > >     };
+> > >
+> > >     port@2 {
+> > >         reg = <2>;
+> > >         mode_switch_out_dp: endpoint {
+> > >             remote-endpoint = <&dp0_out_ep>
+> > >         };
+> > >     };
+> > >
+> > >     port@3 {
+> > >         reg = <3>;
+> > >         mode_switch_sbu_in: endpoint {
+> > >             remote-endpoint = <&usb_con0_sbu_mode>
+> > >         };
+> > >     };
+> > >     // ... other ports similarly defined.
+> > > };
+> > >
+> > > orientation_switch {
+> > >     compatible = "typec-orientation-switch";
+> > >     mux-controls = <&orientation_mux_controller>;
+> > >     mux-control-names = "orientation";
+> > >     #address-cells = <1>;
+> > >     #size-cells = <0>;
+> > >
+> > >     port@0 {
+> > >         reg = <0>;
+> > >         orientation_switch_ss_in: endpoint {
+> > >             remote-endpoint = <&usb_con0_ss_orientation>
+> > >         };
+> > >     };
+> > >
+> > >     port@1
+> > >         reg = <1>;
+> > >         orientation_switch_sbu_in: endpoint {
+> > >             remote-endpoint = <&usb_con0_sbu_orientation>
+> > >         };
+> > >     };
+> > >     // ... other ports similarly defined.
+> > > };
+> > >
+> > > data_role_switch {
+> > >     compatible = "typec-data-role-switch";
+> > >     mux-controls = <&data_role_switch_controller>;
+> > >     mux-control-names = "data_role";
+> > >
+> > >     port {
+> > >         data_role_switch_in: endpoint {
+> > >             remote-endpoint = <&usb_con0_ss_data_role>
+> > >         };
+> > >     };
+> > > };
+> > >
+> > > <example_end>
+> > >
+> > > Would this be conformant to OF graph and usb-connector bindings
+> > > requirements? We'll certainly send out a format PATCH/RFC series for
+> > > this, but I was hoping to gauge whether we're thinking along the right lines.
+> > >
+> > > So, in effect this would mean:
+> > > - New bindings(and compatible strings) to be added for:
+> > >   typec-{orientation,data-role,mode}-switch.
+> > > - Handling in Type C connector class to parse switches from OF graph.
+> > > - Handling in Type C connector class for distinct switches for port@1
+> > >   (SS lines) and port@2 (SBU lines).
+> > >
+> > > The only thing I'm confused about is how we can define these switch
+> > > remote-endpoint bindings in usb-connector.yaml; the port can have an
+> > > remote-endpoint, but can we specify what the parent of the remote-endpoint
+> > > should have as a compatible string? Or do we not need to?
+> > >
+> > > Best regards,
+> > >
+> > > -Prashant
+> > >
