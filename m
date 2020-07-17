@@ -2,134 +2,114 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F59C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52BBC206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594975585;
-	bh=aSTOwrsf1OoTmGFAxEAYLQB33noREJVm4joxNsHwJJ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PZmK9QssevsuMGFgzgh20dChPi8Wg8Xj4VjBWyHAjMr5kGuiagStzaWZG4W1k3A1D
-	 dA9B2OjDDeWViSfZFxppbiMPXY3N0otQY24Sxxc8avzDI1T9c5wU1V3EBRdmchz7Sx
-	 CFVphdmO3PrRtXBjcFw9c1ht76cJwx5mlv+hfhws=
+	by mail.kernel.org (Postfix) with ESMTP id B10C72070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:50:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oGj7xL9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgGQIqX (ORCPT
+        id S1726071AbgGQIuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:46:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgGQIqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:46:23 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 255BF20691;
-        Fri, 17 Jul 2020 08:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594975583;
-        bh=aSTOwrsf1OoTmGFAxEAYLQB33noREJVm4joxNsHwJJ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lma2rZauHo7sWrCEhYqla+A4EvPfjNNuawxIR/EPmU/HB+K8RnWoxUCr6vhlH5btM
-         vfRPFagdp7H/oMq+T3HQahlsqGgF+x4O/nzO0UEFpEuJPdujSvgMvWTeOGGs/oHXVM
-         ie6AY9FhSgTWvOXLoRMt6rfY2Agi+T8Ch9wyt9f8=
-Date:   Fri, 17 Jul 2020 14:16:18 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     "kishon@ti.com" <kishon@ti.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] phy: renesas: rcar-gen3-usb2: fix SError happen if
- DEBUG_SHIRQ is enabled
-Message-ID: <20200717084618.GM82923@vkoul-mobl>
-References: <1594642288-9986-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20200717063856.GH82923@vkoul-mobl>
- <TY2PR01MB3692ED71A574F16848CD48ECD87C0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+        Fri, 17 Jul 2020 04:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgGQIuM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:50:12 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE595C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:50:11 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k5so5167651plk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A9UVMNFESMGpOpcnnufcmxXWknzXQECyO14zJdWyPEs=;
+        b=oGj7xL9T8DZ4pmVR0GplUhLo+kN4Azi9Zel5uh0iTvBae012kqBudaORY1a8+u1e6C
+         62atl462gdFJpnZQyqYjiqAgGhPqaHUXDjxLKDHlLFq8h/3sGNUfdXbUekii0Ph8OXgO
+         vTb9pezAyP2d+y1m1/fcO0Mxq+iPnFVEHmDKN5dDdvmfRoE8avFPmBXDYAn9tpWZZrnG
+         b7NW4t74h8ljI0q1dPNDXqDIf4RUPIzPCBLP9Cd6BBDickHNQdEue8bv6o3EzHR7FuwA
+         g2CqkXtrhIGe8AFOT/dxaBmLegZvHLhucTaDyYWD8sRx3kvF44ImCKl0+Z2B5zHeQRdr
+         20vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A9UVMNFESMGpOpcnnufcmxXWknzXQECyO14zJdWyPEs=;
+        b=hlONqb1gb7dfcIuDwUzLGzS8YeHn0bxJsIGUMfXP6pEUaxv9yNiR27eT7B5ogCEd5N
+         suDLbkc7HdkSHnYGL+LzJP+FjXyfvQ8EuXIXT8Kjr9WlmdIWaVJN0A1uqN36wr390irR
+         ZBmV1UPkMoUwgTmZ1yASyNINYZrQbITFCI+hk++hWXtY22eFPkaXzwAa5GQ5tErrSiFz
+         aatH1pBBQjaqXQjkI5nSchVz47OO6wWuw0kKsJj6Yv5Zt1+pXKyd8KhvsjhPZ/SWx5QG
+         jPMlQaylY+eSeXvAGOxA87PwOeC+s6iBZVmwir1muab6vTh9PZIO8EK9Lw3DbIaB92L+
+         4Fxg==
+X-Gm-Message-State: AOAM533TJ61JpGsxnDE4ihACk45AQ/DKJa8ux3bjacOy22/NMDcarcxp
+        gAWRN3Xm3mQnZJlbr7sCwVEbJRtS2p794A==
+X-Google-Smtp-Source: ABdhPJz9ouPbblFOc5YYDDnzijV0kOq+DzYZwSpq0mseieFAdz/cz03szfTFsW7evacf8YGrf/Ll9g==
+X-Received: by 2002:a17:902:ed02:: with SMTP id b2mr7002360pld.121.1594975810790;
+        Fri, 17 Jul 2020 01:50:10 -0700 (PDT)
+Received: from debian.flets-east.jp ([2400:2411:502:a100:c84b:19e2:9b53:48bb])
+        by smtp.gmail.com with ESMTPSA id f207sm7309364pfa.107.2020.07.17.01.50.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jul 2020 01:50:09 -0700 (PDT)
+From:   Masahisa Kojima <masahisa.kojima@linaro.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     masahisa.kojima@linaro.org, jarkko.sakkinen@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, ardb@kernel.org,
+        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
+        peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: [PATCH v4 0/2] synquacer: add TPM support
+Date:   Fri, 17 Jul 2020 17:49:30 +0900
+Message-Id: <20200717084932.3449-1-masahisa.kojima@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TY2PR01MB3692ED71A574F16848CD48ECD87C0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-07-20, 08:16, Yoshihiro Shimoda wrote:
-> Hello Vinod,
-> 
-> > From: Vinod Koul, Sent: Friday, July 17, 2020 3:39 PM
-> > 
-> > hello Yoshihiro,
-> > 
-> > On 13-07-20, 21:11, Yoshihiro Shimoda wrote:
-> > 
-> > Please consider revising patch subject. It tell me you are fixing an
-> > error but it doesnt tell me what this patch is about :)
-> > 
-> > Perhpas :move irq registration to init" maybe a better title which
-> > describes the changes this patch brings in
-> 
-> Thank you for your suggestion! I also think your suggestion is better.
-> So, I will fix it.
-> 
-> <snip>
-> > > @@ -389,12 +390,39 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
-> > >  	rcar_gen3_device_recognition(ch);
-> > >  }
-> > >
-> > > +static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
-> > > +{
-> > > +	struct rcar_gen3_chan *ch = _ch;
-> > > +	void __iomem *usb2_base = ch->base;
-> > > +	u32 status = readl(usb2_base + USB2_OBINTSTA);
-> > > +	irqreturn_t ret = IRQ_NONE;
-> > > +
-> > > +	if (status & USB2_OBINT_BITS) {
-> > > +		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
-> > > +		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
-> > > +		rcar_gen3_device_recognition(ch);
-> > > +		ret = IRQ_HANDLED;
-> > > +	}
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > >  static int rcar_gen3_phy_usb2_init(struct phy *p)
-> > >  {
-> > >  	struct rcar_gen3_phy *rphy = phy_get_drvdata(p);
-> > >  	struct rcar_gen3_chan *channel = rphy->ch;
-> > >  	void __iomem *usb2_base = channel->base;
-> > >  	u32 val;
-> > > +	int ret;
-> > > +
-> > > +	if (!rcar_gen3_is_any_rphy_initialized(channel) && channel->irq >= 0) {
-> > > +		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
-> > > +		ret = request_irq(channel->irq, rcar_gen3_phy_usb2_irq,
-> > > +				  IRQF_SHARED, dev_name(channel->dev), channel);
-> > > +		if (ret < 0)
-> > > +			dev_err(channel->dev, "No irq handler (%d)\n",
-> > > +				channel->irq);
-> > 
-> > This could be in a single line :)
-> 
-> Yes. We could be 80 over characters in a line now :)
-> I'll fix it.
-> 
-> > Should we continue on error here?
-> 
-> Hmm, maybe it's better if the request_irq() failed because
-> it can avoid unexpected behaviors. But, original code continued on error.
-> In this case, should I make a separated incremental patch to exit on error?
+This adds support for driving the TPM on Socionext SynQuacer platform
+using the driver for a memory mapped TIS frame.
 
-Yes that would be better :), Always, a patch per change
+v4:
+- add ACPI support
+- modify function and structure name
+
+v3:
+- prepare new module to handle TPM MMIO access on SynQuacer platform
+
+v2:
+- don't use read/write_bytes() to implement read/write16/32 since that uses
+  the wrong address
+
+Cc: jarkko.sakkinen@linux.intel.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: ardb@kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: peterhuewe@gmx.de
+Cc: jgg@ziepe.ca
+
+Masahisa Kojima (2):
+  tpm: tis: add support for MMIO TPM on SynQuacer
+  dt-bindings: Add SynQucer TPM MMIO as a trivial device
+
+ .../devicetree/bindings/trivial-devices.yaml  |   2 +
+ drivers/char/tpm/Kconfig                      |  12 +
+ drivers/char/tpm/Makefile                     |   1 +
+ drivers/char/tpm/tpm_tis_synquacer.c          | 209 ++++++++++++++++++
+ 4 files changed, 224 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
 
 -- 
-~Vinod
+2.20.1
+
