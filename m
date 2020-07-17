@@ -2,125 +2,122 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C47C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D78E820737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9774520704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7blFMyO"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eBRo3SW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgGQR0i (ORCPT
+        id S1726938AbgGQRWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:26:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58410 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726232AbgGQR0i (ORCPT
+        Fri, 17 Jul 2020 13:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgGQRWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:26:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595006796;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RHG39auNHRE1WZtPTrj7HBCLgjL3HfRMERmH4ZoBnBw=;
-        b=W7blFMyO/81VaPmCdFVCHuytUzbnAqP34nr7DEzzPpDeyQHEZlWwn6wsDOp2x0s9VwfCeb
-        OsGbU+wC7qjSPG1wNkXGoibQOpNB4Au83gpb45QKjaP9JC6ATT8rLfYgI1Cct2S06NklDa
-        qYg6+pyXwPfI4Akjvuw9uzLzqpDV9kY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-451-rN1OUrIHMpWAgGDMvhUJZw-1; Fri, 17 Jul 2020 13:26:32 -0400
-X-MC-Unique: rN1OUrIHMpWAgGDMvhUJZw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A417107ACCA;
-        Fri, 17 Jul 2020 17:26:31 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.194.199])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A934319724;
-        Fri, 17 Jul 2020 17:26:29 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 17 Jul 2020 19:26:31 +0200 (CEST)
-Date:   Fri, 17 Jul 2020 19:26:28 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [patch V2 3/5] posix-cpu-timers: Provide mechanisms to defer
- timer handling to task_work
-Message-ID: <20200717172627.GC6067@redhat.com>
-References: <20200716201923.228696399@linutronix.de>
- <20200716202044.734067877@linutronix.de>
+        Fri, 17 Jul 2020 13:22:21 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA4BC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:22:20 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id j18so16087165wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:22:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AoGGlbrqDdPdAt7SZnkfIe6cI/q8MK4oBz8zz9M/acQ=;
+        b=eBRo3SW05EhHdbRiObyZVkdToB+SfnAgfcwfG1UziRDO9imQP66XiFEiflsyu7G768
+         FmF/sg++nQJp84LORbbmQkWzuXcpIJyVD/dBxXCSOTueCiV5pr6ULXJoxaOpjCogUSbo
+         liKDKgBvilIpKfw9Z9uzB7iI6If0J1WJpzaWg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AoGGlbrqDdPdAt7SZnkfIe6cI/q8MK4oBz8zz9M/acQ=;
+        b=hKEH76BbcAYfqyG6DKD5/WmC/X6FZNBojM4k/qsiyI9kDGHfGAB29naX8zkCZnITCg
+         DbiyM9EfdNHt52CLzmQyu+coONsLnYp3R6HUv6lMo5hMFNOPgFb8GyN846nhUY3c5IEB
+         iUlf+Ag7E0qWDXzOt6J7gvD07DNw8J5siwrgdMjv4tdtvHt0LuxVne2S1ZWz3sV6SAJE
+         B4opD+0hQKmBwHZtyGbWZB0e5KykXbP5mZwvaQsysiqfA9AKLX4+Juj5qI+NhpIl8Fzw
+         9DSkRy0pERCO/hvbGm3ttgciRJgQ4iyRVQ1y0xmzs1L/vHsoWDOUDVJXmy9bdKHKQufl
+         xcpQ==
+X-Gm-Message-State: AOAM533fdGDI9L+eak8p0rIXUroKc1TSu3oakdufZgw+Q2TggC2NWSB0
+        wp/Aua6ouD9Ffj4pQrcsZH/E3Q==
+X-Google-Smtp-Source: ABdhPJx5HuoCQvje9YbfNYXj5ZyRp/BF5z5HnFlrq0fsNt7tkJM1VBsvb8LP25MSY4X9JxW4ybylpA==
+X-Received: by 2002:a7b:cb98:: with SMTP id m24mr10210755wmi.98.1595006539117;
+        Fri, 17 Jul 2020 10:22:19 -0700 (PDT)
+Received: from [10.230.182.181] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id g13sm15986896wro.84.2020.07.17.10.22.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 10:22:18 -0700 (PDT)
+Subject: Re: [PATCH] pwm: bcm-iproc: handle clk_get_rate() return
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+References: <20200717170743.25466-1-scott.branden@broadcom.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <94f2aed1-d88d-3ee0-6e57-917f665951f2@broadcom.com>
+Date:   Fri, 17 Jul 2020 10:22:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716202044.734067877@linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200717170743.25466-1-scott.branden@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks correct to me, but I forgot everything about posix-timers.c
 
-this obviously means that the expired timer won't fire until the
-task returns to user-mode but probably we don't care.
 
-One cosmetic nit below,
+On 7/17/2020 10:07 AM, Scott Branden wrote:
+> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> 
+> Handle clk_get_rate() returning <= 0 condition to avoid
+> possible division by zero.
+> 
+> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>  drivers/pwm/pwm-bcm-iproc.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+> index 1f829edd8ee7..72a8607b6c8d 100644
+> --- a/drivers/pwm/pwm-bcm-iproc.c
+> +++ b/drivers/pwm/pwm-bcm-iproc.c
+> @@ -86,6 +86,11 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	u32 value, prescale;
+>  
+>  	rate = clk_get_rate(ip->clk);
+> +	if (rate == 0) {
+> +		state->period = 0;
+> +		state->duty_cycle = 0;
+> +		return;
+> +	}
 
-On 07/16, Thomas Gleixner wrote:
->
-> +#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
-> +void posix_cpu_timers_work(struct callback_head *work);
-> +
-> +static inline void posix_cputimer_init_work(struct posix_cputimers *pct)
-> +{
-> +	pct->task_work.func = posix_cpu_timers_work;
+Based on the pwm core code, 'get_state' expects the following fields to
+be populated: 'polarity', 'enabled', 'period', and 'duty cycle'.
 
-init_task_work() ?
+The above logic will leave 'polarity' and 'enabled' completely
+unpopulated when clock rate is zero.
 
-> +}
-> +#else
-> +static inline void posix_cputimer_init_work(struct posix_cputimers *pct) { }
-> +#endif
-> +
->  static inline void posix_cputimers_init(struct posix_cputimers *pct)
->  {
->  	memset(pct, 0, sizeof(*pct));
->  	pct->bases[0].nextevt = U64_MAX;
->  	pct->bases[1].nextevt = U64_MAX;
->  	pct->bases[2].nextevt = U64_MAX;
-> +	posix_cputimer_init_work(pct);
->  }
-
-And I can't resist. I know this is a common practice, please ignore, but to me
-
-	static inline void posix_cputimers_init(struct posix_cputimers *pct)
-	{
-		memset(pct, 0, sizeof(*pct));
-		pct->bases[0].nextevt = U64_MAX;
-		pct->bases[1].nextevt = U64_MAX;
-		pct->bases[2].nextevt = U64_MAX;
-	#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
-		init_task_work(&pct->task_work, posix_cpu_timers_work);
-	#endif
-	}
-
-looks better than 2 posix_cputimer_init_work() definitions above.
-
-Note also that signal_struct->posix_cputimers.task_work is never used, perhaps
-it would be better to move this task_work into task_struct? This way we do not
-even need to change posix_cputimers_init(), we call simply initialize
-init_task.posix_task_work.
-
-Oleg.
-
+>  
+>  	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
+>  
+> 
