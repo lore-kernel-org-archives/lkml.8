@@ -2,97 +2,97 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373BCC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8498C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153E72071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:00:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Zwx7x4pT"
+	by mail.kernel.org (Postfix) with ESMTP id 87B492071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgGQHAJ (ORCPT
+        id S1726656AbgGQHAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbgGQHAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:00:04 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0266BC061755;
-        Fri, 17 Jul 2020 00:00:03 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B7MSc5mVgz9sRk;
-        Fri, 17 Jul 2020 17:00:00 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594969200;
-        bh=aa+7q6fFRnJhLdYsM+jGqW7dRIQh8zqVIDZr9L6PsGk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Zwx7x4pTNuTdi896VfJHICJk2kU51+O1Ez00i5jW0SBMMEOQKCUCTYz11tfRfDYIP
-         YxeCwaxs0xzWZAdn9Hx6SXj08ukyKgGLh6YRSO1UnaCQw660ewiV24JtKPjRFtTXnG
-         XAuINMfowQOEiSfNDRtK72Qi3EZIOGI/fiCcbYGsYqIKdY30cVgLGkxCkjReIz746Q
-         52PwsYGDbM8WZ9jPjhhK0NS+kwqAcUXBpeonAc+6QCE79HujX+gAgQIavDpgmy9QVk
-         vajoWoUNdFTa1Ku/3n+yVn16NzVxXwRGUC0S33ZnA72CUQMXdGqAUpiRHgmCcqPat1
-         uQbb33QZ2MBMA==
-Date:   Fri, 17 Jul 2020 16:59:58 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the mfd tree
-Message-ID: <20200717165958.41db203d@canb.auug.org.au>
-In-Reply-To: <20200717065636.GB3165313@dell>
-References: <20200717134154.50326d78@canb.auug.org.au>
-        <20200717065636.GB3165313@dell>
+        Fri, 17 Jul 2020 03:00:21 -0400
+Received: from mga09.intel.com ([134.134.136.24]:32068 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726201AbgGQHAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:00:20 -0400
+IronPort-SDR: WfG1cA4qz+B4PF/0Db3of46Men9YP2Y4uDl12UculO5woWH1d7DnAtE4KClSkdaHybDdQQtKtJ
+ n1DvQNvQJFNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="150926874"
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="150926874"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:00:19 -0700
+IronPort-SDR: wuSioCnoWCGde7JobIhlkndenf9keMinGmAjhxVQuUbXwcUaFzVikvqIlvRgKwnUNStwFZL4oJ
+ tet4gaEeJ8iA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="286729909"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 17 Jul 2020 00:00:19 -0700
+Received: from [10.249.224.34] (abudanko-mobl.ccr.corp.intel.com [10.249.224.34])
+        by linux.intel.com (Postfix) with ESMTP id 050CE58066D;
+        Fri, 17 Jul 2020 00:00:16 -0700 (PDT)
+Subject: [PATCH v12 03/15] tools/libperf: avoid counting of nonfilterable
+ fdarray fds
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <b5ab0d2c-b742-0032-e8d3-c8e2eb423c42@linux.intel.com>
+Date:   Fri, 17 Jul 2020 10:00:15 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Pe9qZiNKL0DTedBscdEtsaf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Pe9qZiNKL0DTedBscdEtsaf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Lee,
+Avoid counting of struct pollfd *entries objects with
+fdarray_flag__nonfilterable flag by fdarray__filter().
+Nonfilterable objects are still processed if requested
+revents have been signaled for them.
 
-On Fri, 17 Jul 2020 07:56:36 +0100 Lee Jones <lee.jones@linaro.org> wrote:
->
-> > +static const char *kempld_devs[] =3D { =20
->=20
-> Do you mind if I change this to 'kempld_dev_names' and still keep your
-> SoB?
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/lib/api/fd/array.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-No worries, I just did a quick hack, so if you neaten it up that would
-be good.
+diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+index 01b3b89f9797..5e6cb9debe37 100644
+--- a/tools/lib/api/fd/array.c
++++ b/tools/lib/api/fd/array.c
+@@ -109,7 +109,8 @@ int fdarray__filter(struct fdarray *fda, short revents,
+ 			continue;
+ 		}
+ 
+-		++nr;
++		if (!(fda->priv[fd].flags & fdarray_flag__nonfilterable))
++			++nr;
+ 	}
+ 
+ 	return nr;
+-- 
+2.24.1
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/Pe9qZiNKL0DTedBscdEtsaf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8RTG4ACgkQAVBC80lX
-0GyjeQf8DXznMtSokqP25/rquQh/ZP2J82nLQHSDoXVYqaQqFyKeTFYSX+28Fa7m
-Jvtds+P82ZmeU7E1BbyFG3gm5rI9PDHTIW4GcjW81+MQ0pXj8Sq2M+NesMG31LHr
-gPwxjPbE8ABvBZM7eE3t2QEUplGQrMnrt4EXbe2Xpz66gGHCLLomxiA94FbUagFh
-+iuj0s9zFXKyfp4NcvG9SpIYO+ROw9lNr+/aP7Lo2KEZGiGYNHr6Hox4UFIzNj5V
-vokSywAd5bJfDhtQhpaopHWpJ1BvoAYutVc9e1UV/iZWq+EHbee3pBa6Jw+dHj4q
-y3g/e2K6dcyn3BPU7Yj6uuSGkLiJTg==
-=oFOm
------END PGP SIGNATURE-----
-
---Sig_/Pe9qZiNKL0DTedBscdEtsaf--
