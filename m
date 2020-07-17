@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8242C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D42C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4452076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D061E2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IDpVDRws";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ntrlp5XR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HUF0UuSe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hfE0Hg0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgGQOvT (ORCPT
+        id S1727819AbgGQOvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:51:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41152 "EHLO
+        Fri, 17 Jul 2020 10:51:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41212 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbgGQOvL (ORCPT
+        with ESMTP id S1727045AbgGQOvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:51:11 -0400
-Date:   Fri, 17 Jul 2020 14:51:06 -0000
+        Fri, 17 Jul 2020 10:51:16 -0400
+Date:   Fri, 17 Jul 2020 14:51:13 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594997468;
+        s=2020; t=1594997474;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PQqyKN2xfH3m7OlTlBc/MA5x2Nb6zrzqzw00WX7Wec8=;
-        b=IDpVDRwsmBU/elGGR1+CKDQfF0ALIRWtmBYe8jcpxc9D5qHV3XYzsS0+Cwcggn+5ro8KJn
-        kfChthRlgLJ3YnL7+aJ4kE+smQDOD5Wm7F9WaPSD7Ich7pHbM391RIl770Gpt+dcG3if9F
-        kAMMSHsQf6f106OGcmUCLyubBAWkP75VEzUAcHrZMMDtUkowbGUbVSeZOqZcbBTq3fVZ4z
-        gRO0qU/8yB8AQCgM9QvAOfNu4v3MR6w6Woi+8n6fHwxWvrAYZLMxsUH8VJXzFo3vHlMc9x
-        IRMZxVA8LUKE+XAVs11mX+bFBJR3+ITzEHsluZbvKlDdNoAOiAoopPwA/6WojQ==
+        bh=CfObQ50Werxo2Beh6hgckDzaE7BRIz31Ngyz6fdTMek=;
+        b=HUF0UuSeLYzyIqWKZ83lhSPMf3j0uUyF3xLC7dBUw+4rnz7qh9q9eGd8TPodCbQiuEgpyL
+        Bu7YHQQCRDOR77PIwGSSOj/ZX8RWhiMiu3AFYd0okvI4eEO4QRUc6f1z/zh9MH0k1xmmqb
+        TZwKy7r/WT/cONlkJC0zo7hr2nsG82qstWvtkwcUH9XCUr6R4zrbWYBXPlN4O22iJ16ZGw
+        TEAsERDmHMYjGDGtTS+6ssGM+7ryYIcICl5aDQifIgD5dt/4W8b69FxftAWaadia5lNkB7
+        YZZeEIk+PPV5/SBwrjE9INRjvaKWVdPUnQWCE04Ypjpq2qBa6ASrtp7Ea0gxMQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594997468;
+        s=2020e; t=1594997474;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PQqyKN2xfH3m7OlTlBc/MA5x2Nb6zrzqzw00WX7Wec8=;
-        b=ntrlp5XRbEwE8j0NWzPzqAdY3JHNekeybgnVGTqeKYCbVkNnvTPKdLMdQgijCombrUa26Z
-        2zWNwSs+QIW2L8Dg==
+        bh=CfObQ50Werxo2Beh6hgckDzaE7BRIz31Ngyz6fdTMek=;
+        b=hfE0Hg0zI2JsoWWsSxJA8t9g/tfRvcoP34wkuBRNja1eV+gSu/vuIq+/WoIteSYOegdkwX
+        fmrCSTkkPgMwytDQ==
 From:   "tip-bot2 for steve.wahl@hpe.com" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/platform] x86/efi: Remove unused EFI_UV1_MEMMAP code
+Subject: [tip: x86/platform] x86/platform/uv: Remove support for UV1 platform
+ from uv_time
 Cc:     Steve Wahl <steve.wahl@hpe.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ard Biesheuvel <ardb@kernel.org>, x86 <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200713212956.019149227@hpe.com>
-References: <20200713212956.019149227@hpe.com>
+In-Reply-To: <20200713212954.610885520@hpe.com>
+References: <20200713212954.610885520@hpe.com>
 MIME-Version: 1.0
-Message-ID: <159499746650.4006.15958852805586049775.tip-bot2@tip-bot2>
+Message-ID: <159499747361.4006.10651559471205581924.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -72,76 +72,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/platform branch of tip:
 
-Commit-ID:     3bcf25a40b018e632d70bb866d75746748953fbc
-Gitweb:        https://git.kernel.org/tip/3bcf25a40b018e632d70bb866d75746748953fbc
+Commit-ID:     8b3c9b160648ceb9ec4068080fd055fdc04e35a7
+Gitweb:        https://git.kernel.org/tip/8b3c9b160648ceb9ec4068080fd055fdc04e35a7
 Author:        steve.wahl@hpe.com <steve.wahl@hpe.com>
-AuthorDate:    Mon, 13 Jul 2020 16:30:07 -05:00
+AuthorDate:    Mon, 13 Jul 2020 16:29:55 -05:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 17 Jul 2020 16:47:48 +02:00
+CommitterDate: Fri, 17 Jul 2020 16:47:43 +02:00
 
-x86/efi: Remove unused EFI_UV1_MEMMAP code
+x86/platform/uv: Remove support for UV1 platform from uv_time
 
-With UV1 support removed, EFI_UV1_MEMMAP is no longer used.
+UV1 is not longer supported
 
 Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Link: https://lkml.kernel.org/r/20200713212956.019149227@hpe.com
+Link: https://lkml.kernel.org/r/20200713212954.610885520@hpe.com
 
 ---
- arch/x86/include/asm/efi.h | 20 ++------------------
- 1 file changed, 2 insertions(+), 18 deletions(-)
+ arch/x86/platform/uv/uv_time.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index e7d2ccf..b9c2667 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -22,17 +22,7 @@ extern unsigned long efi_fw_vendor, efi_config_table;
-  *
-  * This is the main reason why we're doing stable VA mappings for RT
-  * services.
-- *
-- * SGI UV1 machines are known to be incompatible with this scheme, so we
-- * provide an opt-out for these machines via a DMI quirk that sets the
-- * attribute below.
-  */
--#define EFI_UV1_MEMMAP         EFI_ARCH_1
--
--static inline bool efi_have_uv1_memmap(void)
--{
--	return IS_ENABLED(CONFIG_X86_UV) && efi_enabled(EFI_UV1_MEMMAP);
--}
+diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
+index 7af31b2..f82a133 100644
+--- a/arch/x86/platform/uv/uv_time.c
++++ b/arch/x86/platform/uv/uv_time.c
+@@ -74,7 +74,6 @@ static void uv_rtc_send_IPI(int cpu)
  
- #define EFI32_LOADER_SIGNATURE	"EL32"
- #define EFI64_LOADER_SIGNATURE	"EL64"
-@@ -122,9 +112,7 @@ struct efi_scratch {
- 	efi_sync_low_kernel_mappings();					\
- 	kernel_fpu_begin();						\
- 	firmware_restrict_branch_speculation_start();			\
--									\
--	if (!efi_have_uv1_memmap())					\
--		efi_switch_mm(&efi_mm);					\
-+	efi_switch_mm(&efi_mm);						\
- })
+ 	apicid = cpu_physical_id(cpu);
+ 	pnode = uv_apicid_to_pnode(apicid);
+-	apicid |= uv_apicid_hibits;
+ 	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
+ 	      (apicid << UVH_IPI_INT_APIC_ID_SHFT) |
+ 	      (X86_PLATFORM_IPI_VECTOR << UVH_IPI_INT_VECTOR_SHFT);
+@@ -85,10 +84,7 @@ static void uv_rtc_send_IPI(int cpu)
+ /* Check for an RTC interrupt pending */
+ static int uv_intr_pending(int pnode)
+ {
+-	if (is_uv1_hub())
+-		return uv_read_global_mmr64(pnode, UVH_EVENT_OCCURRED0) &
+-			UV1H_EVENT_OCCURRED0_RTC1_MASK;
+-	else if (is_uvx_hub())
++	if (is_uvx_hub())
+ 		return uv_read_global_mmr64(pnode, UVXH_EVENT_OCCURRED2) &
+ 			UVXH_EVENT_OCCURRED2_RTC_1_MASK;
+ 	return 0;
+@@ -98,19 +94,15 @@ static int uv_intr_pending(int pnode)
+ static int uv_setup_intr(int cpu, u64 expires)
+ {
+ 	u64 val;
+-	unsigned long apicid = cpu_physical_id(cpu) | uv_apicid_hibits;
++	unsigned long apicid = cpu_physical_id(cpu);
+ 	int pnode = uv_cpu_to_pnode(cpu);
  
- #define arch_efi_call_virt(p, f, args...)				\
-@@ -132,9 +120,7 @@ struct efi_scratch {
+ 	uv_write_global_mmr64(pnode, UVH_RTC1_INT_CONFIG,
+ 		UVH_RTC1_INT_CONFIG_M_MASK);
+ 	uv_write_global_mmr64(pnode, UVH_INT_CMPB, -1L);
  
- #define arch_efi_call_virt_teardown()					\
- ({									\
--	if (!efi_have_uv1_memmap())					\
--		efi_switch_mm(efi_scratch.prev_mm);			\
--									\
-+	efi_switch_mm(efi_scratch.prev_mm);				\
- 	firmware_restrict_branch_speculation_end();			\
- 	kernel_fpu_end();						\
- })
-@@ -176,8 +162,6 @@ extern void efi_delete_dummy_variable(void);
- extern void efi_switch_mm(struct mm_struct *mm);
- extern void efi_recover_from_page_fault(unsigned long phys_addr);
- extern void efi_free_boot_services(void);
--extern pgd_t * __init efi_uv1_memmap_phys_prolog(void);
--extern void __init efi_uv1_memmap_phys_epilog(pgd_t *save_pgd);
+-	if (is_uv1_hub())
+-		uv_write_global_mmr64(pnode, UVH_EVENT_OCCURRED0_ALIAS,
+-				UV1H_EVENT_OCCURRED0_RTC1_MASK);
+-	else
+-		uv_write_global_mmr64(pnode, UVXH_EVENT_OCCURRED2_ALIAS,
+-				UVXH_EVENT_OCCURRED2_RTC_1_MASK);
++	uv_write_global_mmr64(pnode, UVXH_EVENT_OCCURRED2_ALIAS,
++			      UVXH_EVENT_OCCURRED2_RTC_1_MASK);
  
- /* kexec external ABI */
- struct efi_setup_data {
+ 	val = (X86_PLATFORM_IPI_VECTOR << UVH_RTC1_INT_CONFIG_VECTOR_SHFT) |
+ 		((u64)apicid << UVH_RTC1_INT_CONFIG_APIC_ID_SHFT);
