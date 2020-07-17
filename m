@@ -2,137 +2,81 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBAEC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22F5C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 030E5207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:06:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kkj/1INF"
+	by mail.kernel.org (Postfix) with ESMTP id CC54A20684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594980226;
+	bh=AjmrtslKmwX/6PMA4+8pzIsPlXZYlwjTJ2i/lkpv7EI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nhfvfYDRsiJlf1nYvhIpkt/y1O7U4WFW+TZw+vOea6ZCzuGqOhgyXRv+kSBObW9Cf
+	 HG6gTY/RUtX2B+waMXEd7ZTGUxia03cZdlhe/WkqQFkJ6VKV6+f/id3rzMoK5Znsrm
+	 rkH487sGwnZKfmU42sPofixS3JvTUQUG+xeZ5qXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbgGQKGa (ORCPT
+        id S1726104AbgGQKDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgGQKG3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:06:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DBA6C061755;
-        Fri, 17 Jul 2020 03:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=K43ZCjJYMy6klub7Xq9DzX6bYQQEbWnMvoQ9/7nSlAU=; b=kkj/1INFxcsjPmAR7HcjcnkS3F
-        gw7royqUQ/ZjChcF6ex998nRsQtVD8spWkTSkg3erjwYnMG/byuVK5dodJVY+nAW6ZP31fbitrYbx
-        XASLEXixb7B5lLt+39tv+EAuZ75Q+jVs04bCADdjSmLIa6K1FEFih8/mS8J+WCt9OGM/80ogi0xe7
-        Xo8Q2rQXvnhMNB5RooczCx4UaqQye0duLIMEuN1+9eM+0/f9axdcXAkGf9PVove8rnp+8J6aJwjgJ
-        7IATAvjDIyeylA4nJvrm+w5utE1TjSJIxm2ynBiGTatJOtZYYD5WAttk8FyPDpfucP4CDH6R2FbwN
-        13hGovbQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwNFs-0001WA-IX; Fri, 17 Jul 2020 10:06:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Fri, 17 Jul 2020 06:03:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgGQKDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 06:03:44 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CCBFF300446;
-        Fri, 17 Jul 2020 12:06:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B678029CF6F57; Fri, 17 Jul 2020 12:06:10 +0200 (CEST)
-Date:   Fri, 17 Jul 2020 12:06:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     ira.weiny@intel.com
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across
- exceptions
-Message-ID: <20200717100610.GH10769@hirez.programming.kicks-ass.net>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-18-ira.weiny@intel.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 847C12076A;
+        Fri, 17 Jul 2020 10:03:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594980224;
+        bh=AjmrtslKmwX/6PMA4+8pzIsPlXZYlwjTJ2i/lkpv7EI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0HOWqPq7Xb6a4IP4VN2D6+4wU2bfE7MkxqiblCPE/mlCsFKsb1nHocBy0S6ckTenx
+         vjcn55OkAGmZtsR2bQgTQ8loJ3UMMFEBNzJglNPAzMuIwrGvp12AJiLpv2XOpkvd2A
+         10Af/T/FlmIlYB+IMR60aNjx+i8kzW7XFA+Q/SmI=
+Date:   Fri, 17 Jul 2020 11:03:38 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Krishna Reddy <vdumpa@nvidia.com>
+Cc:     joro@8bytes.org, robin.murphy@arm.com, robh+dt@kernel.org,
+        treding@nvidia.com, jonathanh@nvidia.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, yhsu@nvidia.com, snikam@nvidia.com,
+        praithatha@nvidia.com, talho@nvidia.com, bbiswas@nvidia.com,
+        mperttunen@nvidia.com, nicolinc@nvidia.com, bhuntsman@nvidia.com,
+        nicoleotsuka@gmail.com
+Subject: Re: [PATCH v10 0/5] NVIDIA ARM SMMU Implementation
+Message-ID: <20200717100337.GA8673@willie-the-truck>
+References: <20200708050017.31563-1-vdumpa@nvidia.com>
+ <20200713135020.GD2739@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717072056.73134-18-ira.weiny@intel.com>
+In-Reply-To: <20200713135020.GD2739@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:20:56AM -0700, ira.weiny@intel.com wrote:
-> First I'm not sure if adding this state to idtentry_state and having
-> that state copied is the right way to go.  It seems like we should start
-> passing this by reference instead of value.  But for now this works as
-> an RFC.  Comments?
+On Mon, Jul 13, 2020 at 02:50:20PM +0100, Will Deacon wrote:
+> On Tue, Jul 07, 2020 at 10:00:12PM -0700, Krishna Reddy wrote:
+> > Changes in v10:
+> > Perform SMMU base ioremap before calling implementation init.
+> > Check for Global faults across both ARM MMU-500s during global interrupt.
+> > Check for context faults across all contexts of both ARM MMU-500s during context fault interrupt.
+> > Add new DT binding nvidia,smmu-500 for NVIDIA implementation.
+> 
+> Please repost based on my SMMU queue, as this doesn't currently apply.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/updates
 
-As long as you keep sizeof(struct idtentry_state_t) <= sizeof(u64) or
-possibly 2*sizeof(unsigned long), code gen shouldn't be too horrid IIRC.
-You'll have to look at what the compiler makes of it.
+Any update on this, please? It would be a shame to miss 5.9 now that the
+patches look alright.
 
-> Second, I'm not 100% happy with having to save the reference count in
-> the exception handler.  It seems like a very ugly layering violation but
-> I don't see a way around it at the moment.
-
-So I've been struggling with that API, all the way from
-pks_update_protection() to that dev_access_{en,dis}able(). I _really_
-hate it, but I see how you ended up with it.
-
-I wanted to propose something like:
-
-u32 current_pkey_save(int pkey, unsigned flags)
-{
-	u32 *lpkr = get_cpu_ptr(&local_pkr);
-	u32 pkr, saved = *lpkr;
-
-	pkr = update_pkey_reg(saved, pkey, flags);
-	if (pkr != saved)
-		wrpkr(pkr);
-
-	put_cpu_ptr(&local_pkr);
-	return saved;
-}
-
-void current_pkey_restore(u32 pkr)
-{
-	u32 *lpkr = get_cpu_ptr(&local_pkr);
-	if (*lpkr != pkr)
-		wrpkr(pkr);
-	put_cpu_ptr(&local_pkr);
-}
-
-Together with:
-
-void pkey_switch(struct task_struct *prev, struct task_struct *next)
-{
-	prev->pkr = this_cpu_read(local_pkr);
-	if (prev->pkr != next->pkr)
-		wrpkr(next->pkr);
-}
-
-But that's actually hard to frob into the kmap() model :-( The upside is
-that you only have 1 word of state, instead of the 2 you have now.
-
-> Third, this patch has gone through a couple of revisions as I've had
-> crashes which just don't make sense to me.  One particular issue I've
-> had is taking a MCE during memcpy_mcsafe causing my WARN_ON() to fire.
-> The code path was a pmem copy and the ref count should have been
-> elevated due to dev_access_enable() but why was
-> idtentry_enter()->idt_save_pkrs() not called I don't know.
-
-Because MCEs are NMI-like and don't go through the normal interrupt
-path. MCEs are an abomination, please wear all the protective devices
-you can lay hands on when delving into that.
+Will
