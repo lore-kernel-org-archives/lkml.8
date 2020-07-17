@@ -2,129 +2,125 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C1BC433F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F6BC433F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA7A20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A521520737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bDyrWIp/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JoPHqajg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgGQQ4W (ORCPT
+        id S1728116AbgGQQ5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:56:22 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:54418 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727771AbgGQQ4P (ORCPT
+        Fri, 17 Jul 2020 12:57:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbgGQQ4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:56:15 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HGqCCF046351;
-        Fri, 17 Jul 2020 16:56:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=fLmOz9fa5tkZPauy96fKApcAsnRfqNPHJeke51o8554=;
- b=bDyrWIp/MIvJTnKUArQMkGBw2wsmKqli2CkEVRFLjZev3bD+y9zMlP9BYEMj+4b5oiHX
- +HmMNV9gOz8wtsBDB5wDD3i65dL2CnNBZslNTjIst4RN+nhT+AR/Wh/M6PQS92415ZCM
- KXhZ69teIkuQqhMgetUSmcpX2HHA6S599UVCx8Z5ZQebCiQXwymmVqLfd2pRFXlbunSE
- GMdzGAgwKfo6P4wcxdR5aa89KkagMEZSayG9UoOlc8LTn7Rw1FcDIbAkmKiuEpsXWRt+
- nZOjqycFxzPOESvy+UEuC/DjZJzwbktCNBuv85M+9B8xL16PLAnvrEBiigK7Y4Y4iMQ7 Gg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 327s65xpge-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 16:56:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HGsEdZ085892;
-        Fri, 17 Jul 2020 16:56:03 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 32bbk0qsw4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 16:56:03 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06HGu2Cb002404;
-        Fri, 17 Jul 2020 16:56:02 GMT
-Received: from [10.74.105.138] (/10.74.105.138)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Jul 2020 09:56:02 -0700
-Subject: Re: [PATCH next v2 0/6] soc: ti: k3-ringacc: updates
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
+        Fri, 17 Jul 2020 12:56:25 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD97C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:25 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id b6so11857324wrs.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VxERIJkNFUQ5ozpJhehQBvzBnN2ugWiIznLPwHBPnFk=;
+        b=JoPHqajgOW42YICPAe8k9IXDr8Oq0uyPpS778IQ3CfxvDtIbl5D8zR0Df+QDdALhPU
+         por7Z1VCalQYriqoUWjMGqkkEBx9qImCE5FFvIaMi8hJpomwggTqQgOJ19UYPdPO8rBY
+         I5PSktHvzMysiadqwkX2LWNDAzwUcNS7uAwz2NvAxFZ/Iy+S1Ud5WLrixqzfdLf/pbGg
+         yxYjRYaAjHvYP+zH3MJwVQX8O0kle7SSULEcwJKMfkMqnqKsaCZyjvK/G3JNJRGNdFjx
+         zJ/JJ2pXTBy6xWQXBvuRm3uIllaX05mGTqtnfXfw3uviQ82rG8NtpnmP3o0TmmXYzwHb
+         XSQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VxERIJkNFUQ5ozpJhehQBvzBnN2ugWiIznLPwHBPnFk=;
+        b=AT6iaj80ZMAvf+Cah19A/kpqtaVy2SguprPxFF7k67KlierEWG50LXTa1BNmpGjCgQ
+         5biPM+MPLFLlMfSwoAK06F+K9OS506F4TrT4oyxJm9U2NUTZWCYn7swYuDJm+O2k7Gkj
+         QTTOE8o3rozd+wixjPoWK1QEVmhYgNqMKgvW1hvKmOv9xdydtC0uGJiie/jFE1KukIzw
+         M0CC8x8Hc1PWtcnmrVjZ56b98XdUg8rKvvQG2c+gtpHsXayXMa9SCaUWjLwNlHk/1gFK
+         uZhsQ2BhCO+yhY1Cg/SrfWHUuW7Fqq1vIqXOSe8PA+gDcLzQ+h/fte0RNRBwinLFf7lh
+         RNng==
+X-Gm-Message-State: AOAM53227sxsQ/eK70tEwk4Ii8JGplxmRnI62Z5m2tOV+wi29xeviPZC
+        FhVBUUtOW8xImBSJDMz57FzXUA==
+X-Google-Smtp-Source: ABdhPJyoyi3KXxofIeitDa3r5dXgzfyGk9VTWMvKp/iCGqvFymG0cwak1NwrvETpg7f4cCGxPyMThw==
+X-Received: by 2002:adf:dfd1:: with SMTP id q17mr10668408wrn.94.1595004984144;
+        Fri, 17 Jul 2020 09:56:24 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.167.94])
+        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 09:56:23 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        dmaengine@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>
-References: <20200717132019.20427-1-grygorii.strashko@ti.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <1da72ba7-3ef1-9182-d577-c38d24a79296@oracle.com>
-Date:   Fri, 17 Jul 2020 09:55:58 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Pradeep Goudagunta <pgoudagunta@nvidia.com>
+Subject: [PATCH 23/30] iio: adc: palmas_gpadc: Demote non-conforming kerneldoc header
+Date:   Fri, 17 Jul 2020 17:55:31 +0100
+Message-Id: <20200717165538.3275050-24-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200717165538.3275050-1-lee.jones@linaro.org>
+References: <20200717165538.3275050-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200717132019.20427-1-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 suspectscore=0 mlxscore=100
- adultscore=0 spamscore=100 mlxlogscore=-1000 malwarescore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007170118
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 adultscore=0 malwarescore=0
- phishscore=0 mlxscore=100 priorityscore=1501 lowpriorityscore=0
- spamscore=100 clxscore=1011 bulkscore=0 mlxlogscore=-1000 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007170118
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/20 6:20 AM, Grygorii Strashko wrote:
-> Hi Santosh,
-> 
-> This series is a set of non critical  updates for The TI K3 AM654x/J721E
-> Ring Accelerator driver.
->
-Thanks. Will have a look and if all looks good, add it to next.
+Very few of the struct attributes have been documented here.
 
-> Patch 1 - convert bindings to json-schema
-> Patches 2,3,5 - code reworking
-> Patch 4 - adds new API to request pair of rings k3_ringacc_request_rings_pair()
-> Patch 6 - updates K3 UDMA to use new API
-> 
-> Changes in v2:
-> - fixed build warning with patch 6
-> - added "Reviewed-by:" and "Acked-by:" tags.
-> 
-> v1: https://lore.kernel.org/patchwork/cover/1266231/
-> 
-> Grygorii Strashko (4):
->    dt-bindings: soc: ti: k3-ringacc: convert bindings to json-schema
->    soc: ti: k3-ringacc: add ring's flags to dump
->    soc: ti: k3-ringacc: add request pair of rings api.
->    soc: ti: k3-ringacc: separate soc specific initialization
-> 
-> Peter Ujfalusi (2):
->    soc: ti: k3-ringacc: Move state tracking variables under a struct
->    dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair
-> 
->   .../devicetree/bindings/soc/ti/k3-ringacc.txt |  59 ------
->   .../bindings/soc/ti/k3-ringacc.yaml           | 102 +++++++++
->   drivers/dma/ti/k3-udma-glue.c                 |  42 ++--
->   drivers/dma/ti/k3-udma.c                      |  34 +--
->   drivers/soc/ti/k3-ringacc.c                   | 194 ++++++++++++------
->   include/linux/soc/ti/k3-ringacc.h             |   4 +
->   6 files changed, 261 insertions(+), 174 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
->   create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
-> 
+Fixes the following W=1 kernel build warning(s):
+
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'dev' not described in 'palmas_gpadc'
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'palmas' not described in 'palmas_gpadc'
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'irq' not described in 'palmas_gpadc'
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'irq_auto_0' not described in 'palmas_gpadc'
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'irq_auto_1' not described in 'palmas_gpadc'
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'adc_info' not described in 'palmas_gpadc'
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'conv_completion' not described in 'palmas_gpadc'
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'wakeup1_data' not described in 'palmas_gpadc'
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'wakeup2_data' not described in 'palmas_gpadc'
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'wakeup1_enable' not described in 'palmas_gpadc'
+ drivers/iio/adc/palmas_gpadc.c:114: warning: Function parameter or member 'wakeup2_enable' not described in 'palmas_gpadc'
+
+Cc: Pradeep Goudagunta <pgoudagunta@nvidia.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/iio/adc/palmas_gpadc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/iio/adc/palmas_gpadc.c b/drivers/iio/adc/palmas_gpadc.c
+index 46e595eb889fa..81b0a76a767e8 100644
+--- a/drivers/iio/adc/palmas_gpadc.c
++++ b/drivers/iio/adc/palmas_gpadc.c
+@@ -76,7 +76,7 @@ static struct palmas_gpadc_info palmas_gpadc_info[] = {
+ 	PALMAS_ADC_INFO(IN15, 0, 0, 0, 0, INVALID, INVALID, true),
+ };
+ 
+-/**
++/*
+  * struct palmas_gpadc - the palmas_gpadc structure
+  * @ch0_current:	channel 0 current source setting
+  *			0: 0 uA
+@@ -94,7 +94,6 @@ static struct palmas_gpadc_info palmas_gpadc_info[] = {
+  * This is the palmas_gpadc structure to store run-time information
+  * and pointers for this driver instance.
+  */
+-
+ struct palmas_gpadc {
+ 	struct device			*dev;
+ 	struct palmas			*palmas;
+-- 
+2.25.1
+
