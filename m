@@ -2,113 +2,80 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28062C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C86DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C89B20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8213B20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgGQWjp (ORCPT
+        id S1727095AbgGQWkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 18:39:45 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33226 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgGQWjp (ORCPT
+        Fri, 17 Jul 2020 18:40:05 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:51194 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgGQWkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 18:39:45 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id B20D82A01B5
-Subject: Re: [RESEND PATCH 3/4] futex: Remove unused or redundant includes
-To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        peterz@infradead.org
-Cc:     mingo@redhat.com, dvhart@infradead.org, kernel@collabora.com,
-        krisman@collabora.com
-References: <20200702202843.520764-1-andrealmeid@collabora.com>
- <20200702202843.520764-4-andrealmeid@collabora.com>
- <875zalrf03.fsf@nanos.tec.linutronix.de>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <7b7270f6-636a-0b72-8fae-a181d1dfc3e2@collabora.com>
-Date:   Fri, 17 Jul 2020 19:39:37 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 18:40:05 -0400
+Received: by mail-il1-f198.google.com with SMTP id l17so6330358ilj.17
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:40:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=bZyN/zZkAna3AuJV7mJCywjPBma23V/L6XGmPytQX3g=;
+        b=ufSF/DEoadiFJmRuAGKQgEbTwBNj0V1AT7bUamaiCLFdGMBLW+M1rIR8/CZ9JAekp2
+         jlmxnzvSXktYRlNPyxMsae4R0+kI/U1XRj1Z2ci/HR8pmON3HdgEJz8eo+7z96EnfWU7
+         MTsnJ2WJ3euzyDwoeMqVVZO5TjU3dT6IC/MLLlM67em/+w5lzHV73fku6Y4PXXlhFPwn
+         IkUovySBRLVMRjP+fhDLvCdJiJ99VZhY2JZ2o7Vys3Kknq9lLba2IdIgsyShqe3Bm2hz
+         WwtGorqxyWGZom6F7lycunGnG3kBfOERBHpGfAQnzIi7YroGHFLxqVGlqspnuSUMZAS0
+         1oIA==
+X-Gm-Message-State: AOAM53213ndztrCcqsnP5KrtaffESKU6q+5UuBCOkXeRSY4XXgfXufko
+        gtWDLlltAxXmM6IC/wgZm0MbuNWUR9cAeRaTt4NXoLDjvAQY
+X-Google-Smtp-Source: ABdhPJxLi7/gPDf4MlcBV9h1ItF5n6fCkgiWG0/+rbnSHUtonUG5WWXjJHmQs62JK8/EaZk4B+A2cmhJTAcbiYpEg6/zYnrU6Ale
 MIME-Version: 1.0
-In-Reply-To: <875zalrf03.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:dcf:: with SMTP id m15mr13454918jaj.86.1595025604135;
+ Fri, 17 Jul 2020 15:40:04 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 15:40:04 -0700
+In-Reply-To: <000000000000358aec05a9fc8aa8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008ad07505aaaad631@google.com>
+Subject: Re: general protection fault in khugepaged
+From:   syzbot <syzbot+ed318e8b790ca72c5ad0@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org, william.kucharski@oracle.com,
+        yang.shi@linux.alibaba.com, ziy@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/20 6:46 PM, Thomas Gleixner wrote:
-> André Almeida <andrealmeid@collabora.com> writes:
-> 
->> Since 82af7aca ("Removal of FUTEX_FD"), some includes related to file
->> operations aren't needed anymore. More investigation around the includes
->> showed that a lot of includes aren't required for compilation, possible
->> due to redundant includes. Simplify the code by removing unused
->> includes.
->>
->> Signed-off-by: André Almeida <andrealmeid@collabora.com>
->> ---
->> To test this code, I compiled with different configurations (x86_64,
->> i386, with x32 ABI supported enabled/disabled), and ran futex
->> selftests.
-> 
-> I agree fully with the FD related ones, but are you sure that all of the
-> others are included on all architectures magically? x86 is just one
-> piece of the puzzle. We'll see ...
-> 
+syzbot has bisected this issue to:
 
-I just retested compiling tip/locking/core, and it seems something
-changed the last time I wrote the patch. Removing <linux/compat.h> will
-indeed break the compilation now, the patch bellow should fix it. Sorry
-for the noise.
+commit ffe945e633b527d5a4577b42cbadec3c7cbcf096
+Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Date:   Wed Jun 3 23:00:09 2020 +0000
 
--- >8 --
+    khugepaged: do not stop collapse if less than half PTEs are referenced
 
-Subject: [PATCH 1/1] futex: Add compat include
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17356c2f100000
+start commit:   e44f65fd xen-netfront: remove redundant assignment to vari..
+git tree:       net-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=14b56c2f100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b56c2f100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=829871134ca5e230
+dashboard link: https://syzkaller.appspot.com/bug?extid=ed318e8b790ca72c5ad0
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113406a7100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=175597d3100000
 
-Commit 38aa3c15b3a4 removed includes that seemed to be unused.
-However, removing <linux/compat.h> makes the compilation fail if the
-build configuration supports compatibility ABIs. Fix that by
-reinserting the include.
+Reported-by: syzbot+ed318e8b790ca72c5ad0@syzkaller.appspotmail.com
+Fixes: ffe945e633b5 ("khugepaged: do not stop collapse if less than half PTEs are referenced")
 
-Fixes: 38aa3c15b3a4 ("futex: Remove unused or redundant includes")
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
- kernel/futex.c | 1 +
- 1 file changed, 1 insertion(+)
-
-
-=======================================
-
-diff --git a/kernel/futex.c b/kernel/futex.c
-index f483bc52dbac..4616d4ad609d 100644
-
---- a/kernel/futex.c
-
-+++ b/kernel/futex.c
-
-@@ -31,6 +31,7 @@
-
- 31 *  "The futexes are also cursed."
- 32 *  "But they come in a choice of three flavours!"
- 33 */
-+34#include <linux/compat.h>
- 35#include <linux/jhash.h>
- 36#include <linux/pagemap.h>
- 37#include <linux/syscalls.h>
-
--- 
-
-
-
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
