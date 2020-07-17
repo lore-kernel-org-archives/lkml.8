@@ -2,329 +2,115 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C79C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7102071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594966711;
-	bh=7afkmE7uTrunj97qP72j5c9LrWDuyJyNP16IWobdmYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VH4j/yVf3FqCXT9+MJwsdHHeQYHpzsiHBHSzIhpwg3s/TWJhhXsxtsfMgbHkMQtuD
-	 xu3Y650peSfTU37GD6toMcQfrS770uuThoAPH1joZ+/3v3JCx1TF1qxPt20sh4hymO
-	 CTqbJascxDdLdz3syYSHEERSlef2pcyFu3fuPG7g=
+	by mail.kernel.org (Postfix) with ESMTP id C38962071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zqlgc/mm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgGQGSa (ORCPT
+        id S1726851AbgGQGSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:18:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbgGQGS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:18:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A1082071A;
-        Fri, 17 Jul 2020 06:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594966708;
-        bh=7afkmE7uTrunj97qP72j5c9LrWDuyJyNP16IWobdmYU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PGBVoBbPM7Rf2TfQx5i5NS+TFlW5Lz1tUugxyNH/xNyv6I6QrtGjW0kWRDNndwaek
-         EEcvntNxjX3AxYlRVSgVwfqATtnmV4tNtOmRjvTNeDotnp8fqZb91yUsFs5Ni78OmV
-         UEqiDBh0ZKJF9S3z031RB6tH16dVUKXcZ8xkdnJ8=
-Date:   Fri, 17 Jul 2020 08:18:21 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "pmalani@chromium.org" <pmalani@chromium.org>,
-        "bleung@chromium.org" <bleung@chromium.org>
-Subject: Re: [PATCH 1/2] platform/x86: Add Intel Input Output Manager (IOM)
- driver
-Message-ID: <20200717061821.GA3237166@kroah.com>
-References: <20200716003310.26125-1-rajmohan.mani@intel.com>
- <20200716003310.26125-2-rajmohan.mani@intel.com>
- <20200716070950.GC962748@kroah.com>
- <DM6PR11MB39632BD9A5A0DF4A9EAB351CF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
+        Fri, 17 Jul 2020 02:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgGQGSc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:18:32 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99EA7C061755;
+        Thu, 16 Jul 2020 23:18:32 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id x9so5020494plr.2;
+        Thu, 16 Jul 2020 23:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=38x0+yFXgM144DcOh++ohQw3llr/3xl5VFGXiH0Y9VU=;
+        b=Zqlgc/mmZFfGFzf1p7WuYTz8h3f2JG7bboaKxhsEyBHzk+64uhI1ffpjQfQEYbLnyG
+         t27N3ZzeaimzU//a0IFZN7ST4Gtx+ZiWpOjplUfdUdlMvl4FyVgiZRmRwq2pfJKa9nyp
+         EW6t4Oagyju/v3C6bFp0PeMsYlng7XNMwRdK8s7mCJ354rwVXzBqIbM/wbiMnEqaGwFj
+         QIU8CA9SoMlvIDcVYV6aPLtQg2z/rQ5hTo94cUlWwUpjptbx9txpAvBZ0WKcOyRjPM3G
+         7gnSs4VcLNMPX1H8Sop/uqmkTsVWmG0KJjgnGp8Fj/JZd5ivwsvAPy1wOwd5IkTg+/ox
+         fVsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=38x0+yFXgM144DcOh++ohQw3llr/3xl5VFGXiH0Y9VU=;
+        b=M3jp7sidQYMubjj1/4+8fj8+mnnsolwbg5SVS/EpWB9iJzDwE2jwFvIW7D3+McchJH
+         auVo88pBW8FnKAnlsDsOg3WG3qguXh1Y5xCyrDxYG1W9ZKOo5/UVSBQkIyD7WlGV2QOi
+         SCOoNzfcwxEioNedpfCNOgLHeI/H0Vs+ixC3nveeu4PTj45+IMves0fSX34A+8zVGBLo
+         huA6jz3Fl2RstnhPtYVl6Qs4boXVg7VmyETl1yriW0xMHIcrdBqCwCyGbiMCyyK0Me+U
+         57yMJyGfPLxJBCCfgbeXghoXvMhjttEfgri+r6dDx/nh50IXxvE6C1Pyn16Md8Tt30GG
+         YKWw==
+X-Gm-Message-State: AOAM533NVg5sjcyIvXJ6CwxU6O/qaSdu899luLUu6Bt+2P9YYferKa1X
+        glcckv/Asa0kvYQ0xMmQde4=
+X-Google-Smtp-Source: ABdhPJzbxmw+oFVlzhQCGitT+5OUpjyeRTJHXp3qVn7YoBAxqfcN7Pl/dL7BQlZE1t0hhB6ixNHKAQ==
+X-Received: by 2002:a17:90a:70c3:: with SMTP id a3mr8455627pjm.107.1594966712063;
+        Thu, 16 Jul 2020 23:18:32 -0700 (PDT)
+Received: from blackclown ([103.88.82.145])
+        by smtp.gmail.com with ESMTPSA id w71sm6390469pfd.6.2020.07.16.23.18.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Jul 2020 23:18:31 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 11:48:16 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     davem@davemloft.org, kuba@kernel.org
+Cc:     linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: net: decnet: TODO Items
+Message-ID: <20200717061816.GA12159@blackclown>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DM6PR11MB39632BD9A5A0DF4A9EAB351CF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 06:03:55AM +0000, Mani, Rajmohan wrote:
-> Hi Greg,
-> 
-> Thanks for the reviews.
-> 
-> > -----Original Message-----
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Sent: Thursday, July 16, 2020 12:10 AM
-> > To: Mani, Rajmohan <rajmohan.mani@intel.com>
-> > Cc: Darren Hart <dvhart@infradead.org>; Andy Shevchenko
-> > <andy@infradead.org>; Mika Westerberg
-> > <mika.westerberg@linux.intel.com>; Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com>; Lee Jones <lee.jones@linaro.org>; Ayman
-> > Bagabas <ayman.bagabas@gmail.com>; Masahiro Yamada
-> > <masahiroy@kernel.org>; Joseph, Jithu <jithu.joseph@intel.com>; Blaž
-> > Hrastnik <blaz@mxxn.io>; Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>; linux-kernel@vger.kernel.org;
-> > platform-driver-x86@vger.kernel.org; Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com>; linux-usb@vger.kernel.org;
-> > pmalani@chromium.org; bleung@chromium.org
-> > Subject: Re: [PATCH 1/2] platform/x86: Add Intel Input Output Manager (IOM)
-> > driver
-> > 
-> > On Wed, Jul 15, 2020 at 05:33:09PM -0700, Rajmohan Mani wrote:
-> > > Input Output Manager (IOM) is part of the Tiger Lake SoC that
-> > > configures the Type-C Sub System (TCSS). IOM is a micro controller
-> > > that handles Type-C topology, configuration and PM functions of
-> > > various Type-C devices connected on the platform.
-> > >
-> > > This driver helps read relevant information such as Type-C port status
-> > > (whether a device is connected to a Type-C port or not) and the
-> > > activity type on the Type-C ports (such as USB, Display Port,
-> > > Thunderbolt), for consumption by other drivers.
-> > >
-> > > Currently intel_iom_port_status() API is exported by this driver, that
-> > > has information about the Type-C port status and port activity type.
-> > >
-> > > Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
-> > > ---
-> > >  drivers/platform/x86/Kconfig                |  16 +++
-> > >  drivers/platform/x86/Makefile               |   1 +
-> > >  drivers/platform/x86/intel_iom.c            | 133 ++++++++++++++++++++
-> > >  include/linux/platform_data/x86/intel_iom.h |  62 +++++++++
-> > 
-> > Why do you need a .h file for a single .c file that no one else shares this data?
-> > Just put it all in the .c file please.
-> > 
-> 
-> The APIs exported by this driver, are used by the caller (Intel PMC USB mux
-> control driver), hence the need for header file.
-> 
-> > >  4 files changed, 212 insertions(+)
-> > >  create mode 100644 drivers/platform/x86/intel_iom.c  create mode
-> > > 100644 include/linux/platform_data/x86/intel_iom.h
-> > >
-> > > diff --git a/drivers/platform/x86/Kconfig
-> > > b/drivers/platform/x86/Kconfig index 0581a54cf562..271feddb20ef 100644
-> > > --- a/drivers/platform/x86/Kconfig
-> > > +++ b/drivers/platform/x86/Kconfig
-> > > @@ -816,6 +816,22 @@ config INTEL_INT0002_VGPIO
-> > >  	  To compile this driver as a module, choose M here: the module will
-> > >  	  be called intel_int0002_vgpio.
-> > >
-> > > +config INTEL_IOM
-> > > +	tristate "Intel Input Output Manager (IOM) driver"
-> > > +	depends on ACPI && PCI
-> > > +	help
-> > > +	  This driver helps read relevant information such as Type-C port
-> > > +	  status (whether a device is connected to a Type-C port or not)
-> > > +	  and the activity type on the Type-C ports (such as USB, Display
-> > > +	  Port, Thunderbolt), for consumption by other drivers.
-> > > +
-> > > +	  Currently intel_iom_port_status() API is exported by this driver,
-> > > +	  that has information about the Type-C port status and port activity
-> > > +	  type.
-> > > +
-> > > +	  To compile this driver as a module, choose M here: the module will
-> > > +	  be called intel_iom.
-> > > +
-> > >  config INTEL_MENLOW
-> > >  	tristate "Thermal Management driver for Intel menlow platform"
-> > >  	depends on ACPI_THERMAL
-> > > diff --git a/drivers/platform/x86/Makefile
-> > > b/drivers/platform/x86/Makefile index 2b85852a1a87..d71e4620a7c6
-> > > 100644
-> > > --- a/drivers/platform/x86/Makefile
-> > > +++ b/drivers/platform/x86/Makefile
-> > > @@ -76,6 +76,7 @@ intel_cht_int33fe-objs			:=
-> > intel_cht_int33fe_common.o \
-> > >  					   intel_cht_int33fe_microb.o
-> > >  obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
-> > >  obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
-> > > +obj-$(CONFIG_INTEL_IOM)			+= intel_iom.o
-> > >  obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
-> > >  obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
-> > >  obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
-> > > diff --git a/drivers/platform/x86/intel_iom.c
-> > > b/drivers/platform/x86/intel_iom.c
-> > > new file mode 100644
-> > > index 000000000000..ece0fe720b2d
-> > > --- /dev/null
-> > > +++ b/drivers/platform/x86/intel_iom.c
-> > > @@ -0,0 +1,133 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Intel Core SoC Input Output Manager (IOM) driver.
-> > > + *
-> > > + * This driver provides access to the Input Output Manager (IOM)
-> > > +(that
-> > > + * is part of Tiger Lake SoC) registers that can be used to know
-> > > +about
-> > > + * Type-C Sub System related information (such as Type-C port status,
-> > > + * activity type on Type-C ports).
-> > > + *
-> > > + * Copyright (C) 2020, Intel Corporation
-> > > + * Author: Rajmohan Mani <rajmohan.mani@intel.com>  */
-> > > +
-> > > +#include <linux/io.h>
-> > > +#include <linux/mod_devicetable.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_data/x86/intel_iom.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/slab.h>
-> > > +
-> > > +#define IOM_PORT_STATUS_OFFSET				0x560
-> > > +
-> > > +struct intel_iom {
-> > > +	struct device *dev;
-> > > +	void __iomem *regbar;
-> > > +};
-> > > +
-> > > +static struct intel_iom iom_dev;
-> > 
-> > Why just one?  Why is this static?
-> > 
-> 
-> There is just one IOM device in the system.
 
-For today, yes, no need to force yourself to have to change this in the
-future.  Just use a normal per-instance variable instead please, if you
-really need it.
+--+QahgC5+KEYLbs62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > > +
-> > > +	/* Prevent this driver from being unloaded while in use */
-> > > +	if (!try_module_get(dev->driver->owner)) {
-> > 
-> > Why are you poking around in a random device's driver's owner?
-> > 
-> > That's not ok.  And probably totally racy.
-> > 
-> > Handle module reference counts properly, not like this.
-> > 
-> 
-> Ack. Will use THIS_MODULE here.
+Hi Maintainers and Developers,
+	I am interested in the DECnet TODO list.
+I just need a quick response whether they are worth doing or not
+for the amount of development happening in this subsystem is extremely
+low and I can't help but question whether I should indulge in any of
+the listed works or not.
 
-No, that is not the answer, and is always wrong to use :(
+Thanks,
 
-> > And why does it even matter that you incremented the module reference
-> > count?  What is that "protecting" you from?
-> > 
->  
-> To prevent this driver from being unloaded, while it is being used.
+Suraj Upadhyay.
 
-Why does that matter?  Shouldn't normal reference counting and
-dependancies be all that you need?
 
-> > > +		put_device(iom_dev.dev);
-> > > +		return ERR_PTR(-EBUSY);
-> > > +	}
-> > > +
-> > > +	return &iom_dev;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(intel_iom_get);
-> > 
-> > Who calls this function?
-> > 
-> 
-> Intel PMC USB mux control driver, in this case.
-> The callers are expected to call intel_iom_get() before using the
-> intel_iom_port_status(), after which intel_iom_put() can be called
-> to release the IOM device instance.
+--+QahgC5+KEYLbs62
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Why not just have a single call if all this driver does is support one
-thing.  The reference counting shouldn't be needed at all, right?
+-----BEGIN PGP SIGNATURE-----
 
-> > > +/**
-> > > + * intel_iom_put() - Put IOM device instance
-> > > + * @iom: IOM device instance
-> > > + *
-> > > + * This function releases the IOM device instance created using
-> > > + * intel_iom_get() and allows the driver to be unloaded.
-> > > + *
-> > > + * Call intel_iom_put() to release the instance.
-> > > + */
-> > > +void intel_iom_put(struct intel_iom *iom) {
-> > > +	if (!iom)
-> > > +		return;
-> > > +
-> > > +	module_put(iom->dev->driver->owner);
-> > 
-> > And if the device doesn't have a driver?  boom :(
-> > 
-> > Don't do this.
-> > 
-> 
-> Ack. Will use THIS_MODULE here.
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8RQp8ACgkQ+gRsbIfe
+744gVBAAjinwdE0AeQiJVAltYcVkCbywDsdeBERk2RXrhUeFy2Xe25gv0ZpLPNRa
+5SrSw2ZzLHxL+F0ikagLWVZ0oLcGDdcwIX91aCdpQh8ECVnp3Mk/UbFwtybQmqFs
+6QrgBYFylLflyQsQtfDLBEozktYLkFZwMpPbjQ/GG8HZAO5/0nSMfITHC+7fnsHs
+B4XlKeMMZBv69aqCVWitoM2xaF47zlms0oZsrdMvmxpQYPEB1XovLv751j4r/WR+
+uqTMe0XQdnF7tnxala4E1UYCeHgIspcBVAVNPHh/M0SLFhs0RqF2JpmlV3KoOU3q
+d5adZidA+NEjWLFy8QU1DoiDHsorcosxlCj78c4suF8JavaeHZzU+fOtJvDy0pk2
+DDKiADYs2UIOy8GXZ5kXd/lvelbOpl+Huy/DoUbdvMpg2NCGpDK4Y0GJI5kYSClE
+9P6Dw/wN4USnmYVeCUcaccytivliqQ4HskNCNmdWR6InVgGjJWJ3AR5owq6l4WAW
+wViMGGWslhkHfKk8yWVCMWh2ePJiS3Zm7SvAaM8VGPH7cqJsUODPy14wczJeS1I8
+Wj6glPlZMww0LBG+juIZjMMpovtcyCALB+4Cf3HgdaDmZhPnECH+UrzQTv3OeUza
+QkYtkz2cqJApCD2WL8anjgYCsC0MbE1j5Uk4heTa+ZBihof8GgY=
+=Lz2n
+-----END PGP SIGNATURE-----
 
-Again, no, that will be even more incorrect.
-
-> > > +	put_device(iom->dev);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(intel_iom_put);
-> > > +
-> > > +/**
-> > > + * intel_iom_port_status() - Get status bits for the Type-C port
-> > > + * @iom: IOM device instance
-> > > + * @port: Type-C port number
-> > > + * @status: pointer to receive the status bits
-> > > + *
-> > > + * Returns 0 on success, error otherwise.
-> > > + */
-> > > +int intel_iom_port_status(struct intel_iom *iom, u8 port, u32
-> > > +*status) {
-> > > +	void __iomem *reg;
-> > > +
-> > > +	if (!iom)
-> > > +		return -ENODEV;
-> > > +
-> > > +	if (!status || (port > IOM_MAX_PORTS - 1))
-> > > +		return -EINVAL;
-> > > +
-> > > +	reg = iom->regbar + IOM_PORT_STATUS_OFFSET + IOM_REG_LEN *
-> > port;
-> > > +
-> > > +	*status = ioread32(reg);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(intel_iom_port_status);
-> > 
-> > So the whole driver is here just to read, directly from memory, a single
-> > 32 bit value?
-> 
-> Yes.
-
-Ok, then this whole driver could be about 90% smaller and more obvious.
-Don't add the reference counting, the static variables and all the other
-stuff just to get a 32bit number.
-
-As it is, this feels like an excuse to get paid per lines of code :(
-
-greg k-h
+--+QahgC5+KEYLbs62--
