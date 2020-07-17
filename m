@@ -2,121 +2,138 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AE4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429D6C433FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9609E208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B57720704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgGQRAy (ORCPT
+        id S1728285AbgGQRBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:00:54 -0400
-Received: from mga18.intel.com ([134.134.136.126]:1883 "EHLO mga18.intel.com"
+        Fri, 17 Jul 2020 13:01:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726938AbgGQRAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:00:53 -0400
-IronPort-SDR: bTi94862T7nBQMCgUaPxkf7WAddi+kzWSTVh3cEvI2APVZGkqIRmqRoHLYShKdllJBdAE2pOJd
- 1kTHRsvVkkvw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="137102881"
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="137102881"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 10:00:50 -0700
-IronPort-SDR: /V6RtfUS+C686duNWWoKoKTY1Px7zJvGYSGnXaZmHpZxO+uuOWVeof5/iYHkrPO+i1HAgzStE+
- upAd5+rglRDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="270862091"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.33.149])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Jul 2020 10:00:43 -0700
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     arjan@linux.intel.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arch@vger.kernel.org
-Subject: [PATCH v4 05/10] x86: Make sure _etext includes function sections
-Date:   Fri, 17 Jul 2020 10:00:02 -0700
-Message-Id: <20200717170008.5949-6-kristen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200717170008.5949-1-kristen@linux.intel.com>
-References: <20200717170008.5949-1-kristen@linux.intel.com>
+        id S1728183AbgGQRB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:01:28 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBD9E207DD;
+        Fri, 17 Jul 2020 17:01:26 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 13:01:24 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/17] perf ftrace: add option -t/--tid to filter by
+ thread id
+Message-ID: <20200717130124.54e85349@oasis.local.home>
+In-Reply-To: <20200717132650.i32oovllal22b35i@mail.google.com>
+References: <20200711124035.6513-1-changbin.du@gmail.com>
+        <20200711124035.6513-4-changbin.du@gmail.com>
+        <20200716153630.GD374956@kernel.org>
+        <20200717132650.i32oovllal22b35i@mail.google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using -ffunction-sections to place each function in
-it's own text section so it can be randomized at load time, the
-linker considers these .text.* sections "orphaned sections", and
-will place them after the first similar section (.text). In order
-to accurately represent the end of the text section and the
-orphaned sections, _etext must be moved so that it is after both
-.text and .text.* The text size must also be calculated to
-include .text AND .text.*
+On Fri, 17 Jul 2020 21:26:50 +0800
+Changbin Du <changbin.du@gmail.com> wrote:
 
-Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Tested-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/kernel/vmlinux.lds.S     | 17 +++++++++++++++--
- include/asm-generic/vmlinux.lds.h |  2 +-
- 2 files changed, 16 insertions(+), 3 deletions(-)
+> On Thu, Jul 16, 2020 at 12:36:30PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Sat, Jul 11, 2020 at 08:40:21PM +0800, Changbin Du escreveu:  
+> > > This allows us to trace single thread instead of the whole process.
+> > > 
+> > > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > > ---
+> > >  tools/perf/Documentation/perf-ftrace.txt | 4 ++++
+> > >  tools/perf/builtin-ftrace.c              | 2 ++
+> > >  2 files changed, 6 insertions(+)
+> > > 
+> > > diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> > > index d79560dea19f..e204bf6d50d8 100644
+> > > --- a/tools/perf/Documentation/perf-ftrace.txt
+> > > +++ b/tools/perf/Documentation/perf-ftrace.txt
+> > > @@ -38,6 +38,10 @@ OPTIONS
+> > >  --pid=::
+> > >  	Trace on existing process id (comma separated list).
+> > >  
+> > > +-t::
+> > > +--tid=::
+> > > +	Trace on existing thread id (comma separated list).
+> > > +  
+> > 
+> > 
+> > Humm, I just  tried:
+> > 
+> > [root@five ~]# yes > /dev/null &
+> > [1] 18265
+> > [root@five ~]# perf ftrace --tid 18265
+> > ^C[root@five ~]#
+> > 
+> > After waiting for a while, nothing, what am I doing wrong?
+> >  
+> I got it wrong. Currently ftrace only can filter by pid. If the pid is not
+> the main thread it won't work.
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 3bfc8dd8a43d..e8da7eeb4d8d 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -146,9 +146,22 @@ SECTIONS
- #endif
- 	} :text =0xcccc
- 
--	/* End of text section, which should occupy whole number of pages */
--	_etext = .;
-+	/*
-+	 * -ffunction-sections creates .text.* sections, which are considered
-+	 * "orphan sections" and added after the first similar section (.text).
-+	 * Placing this ALIGN statement before _etext causes the address of
-+	 * _etext to be below that of all the .text.* orphaned sections
-+	 */
- 	. = ALIGN(PAGE_SIZE);
-+	_etext = .;
-+
-+	/*
-+	 * the size of the .text section is used to calculate the address
-+	 * range for orc lookups. If we just use SIZEOF(.text), we will
-+	 * miss all the .text.* sections. Calculate the size using _etext
-+	 * and _stext and save the value for later.
-+	 */
-+	text_size = _etext - _stext;
- 
- 	X86_ALIGN_RODATA_BEGIN
- 	RO_DATA(PAGE_SIZE)
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index a5552cf28d5d..34eab6513fdc 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -835,7 +835,7 @@
- 	. = ALIGN(4);							\
- 	.orc_lookup : AT(ADDR(.orc_lookup) - LOAD_OFFSET) {		\
- 		orc_lookup = .;						\
--		. += (((SIZEOF(.text) + LOOKUP_BLOCK_SIZE - 1) /	\
-+		. += (((text_size + LOOKUP_BLOCK_SIZE - 1) /	\
- 			LOOKUP_BLOCK_SIZE) + 1) * 4;			\
- 		orc_lookup_end = .;					\
- 	}
--- 
-2.20.1
+Wait what?
 
+The "pid" for ftrace is really a "task id" which is a thread id.
+
+[root@bxtest ~]# yes > /dev/null &
+[1] 6799
+[root@bxtest ~]# trace-cmd record -e all -P 6799
+Hit Ctrl^C to stop recording
+^CCPU 0: 3573031 events lost
+CPU0 data recorded at offset=0x838000
+    627675136 bytes in size
+CPU1 data recorded at offset=0x25ed1000
+    0 bytes in size
+CPU2 data recorded at offset=0x25ed1000
+    0 bytes in size
+CPU3 data recorded at offset=0x25ed1000
+    0 bytes in size
+CPU4 data recorded at offset=0x25ed1000
+    0 bytes in size
+CPU5 data recorded at offset=0x25ed1000
+    0 bytes in size
+CPU6 data recorded at offset=0x25ed1000
+    0 bytes in size
+CPU7 data recorded at offset=0x25ed1000
+    0 bytes in size
+[root@bxtest ~]# trace-cmd report | head 
+CPU 1 is empty
+CPU 2 is empty
+CPU 3 is empty
+CPU 4 is empty
+CPU 5 is empty
+CPU 6 is empty
+CPU 7 is empty
+cpus=8
+             yes-6799  [000] 67825.580902: sys_exit:             NR 1 = 8192
+             yes-6799  [000] 67825.580903: sys_exit_write:       0x2000
+
+
+What's different about tid vs pid?
+
+-- Steve
+
+
+
+> 
+> So this patch makes no sense. will drop this.
+> 
