@@ -2,132 +2,126 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF49C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD9AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59CD120838
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1315207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Egxk7JOl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLQpULXQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgGQCJD (ORCPT
+        id S1726512AbgGQCIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 22:09:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43012 "EHLO
+        Thu, 16 Jul 2020 22:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgGQCJC (ORCPT
+        with ESMTP id S1726138AbgGQCIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 22:09:02 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95DC2C061755;
-        Thu, 16 Jul 2020 19:09:02 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x9so4768764plr.2;
-        Thu, 16 Jul 2020 19:09:02 -0700 (PDT)
+        Thu, 16 Jul 2020 22:08:49 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E6D5C061755;
+        Thu, 16 Jul 2020 19:08:49 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ls15so5783325pjb.1;
+        Thu, 16 Jul 2020 19:08:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=mQWYymg3Pd104pis2IhNsO9+PGw6QeS8PPO1z8GPhKU=;
-        b=Egxk7JOl9gTuD/ij8L5Z+QdUNjD6rS5I4dbUaFxT9YB/DO6NtUZ4GrFIvtDcgb/UiE
-         1g24XG/sAho5PkdtN6RIHDgPYGqpEQYDKgWhFClzNOrThg1Z680paSueuL1u3kARBAu2
-         fFfhEapKANjqVgXwmBpESUkBuKVEj8U3HabNAyl9ru+Jz6tTiJwAGKbIcmaa/6glLhjW
-         dYOzUVXh/k4GKD8jcN7qGadaW7PkTPBZKMgK0k0Vv4kZbkdGLKUZcUJVlTHVcrbah4Za
-         sXM8RIiEqsYMphf/2hu5z5oKSDn2+cDiA7h/233tUmB47TDl1780Kby+e/NDMRY5Enk9
-         P8fA==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=tq4m4h2a9TL5pXC8bkU2F7Xjx88fuMptJM1ziSfBc+I=;
+        b=BLQpULXQn6FhYgZQFzAkJicFWxLoYxfuqtJ60XvjaNDS6vqkF5ze/GDUMqVkBKseQC
+         sU38qYidKqz1KNn3eEAMZwok5rgEq1ihUyhx1I9w2hd6xxId57+dDrg9RwtRSZco+uDQ
+         UVbb+WTpPjdURlpaIqX50tjui5RVEo5Pb8MvAGybrjKardQxfoNcZOLDFhqDRcBGBZSN
+         DzGa9+DFFdj1dJrJ5pSijMnmlxl2L6VuV7Dc9FLp54AkXV+jAfElNpGSgJlgCgh0r4rP
+         KS0d+SKSvDU/Mp2ppBB4leWNpVn2lo8V/gmb8Q655HQgOgNbh0wmalDpp8yeB1cHB1yz
+         +beg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=mQWYymg3Pd104pis2IhNsO9+PGw6QeS8PPO1z8GPhKU=;
-        b=WlzqIRkRD1or3h0zDNDJf+W4tZxaFM2PYAAknzTWUcd3zGt81byCI9ILJPm9Q3K+hm
-         Igh/HnCBcfw29Lk5rzZxLDhze2AZ1Ailwe6NBzvP+O6UZHlt29HfZacDgvvEeZXlc20G
-         Uft0WSLal67nTgUww7HZPd/ClvrGM3jaap8KHnPB/PviVzePIwbPNBD/R/3YJU2WzvC0
-         jxvfe5D02qME2WWdRtg0k3Bti9xY8F0ORHG0YZuli7mzlgjGqnHK3WiTv42DxTfuEKjm
-         lKn87Y+kAReA2FHOraoD3CQJABGjkaklIRNI+Dtjttt5NWE23/4eFVeCg0SmBqUxwaq0
-         sFMw==
-X-Gm-Message-State: AOAM530K1iXF1kfIH/lQfcrud6iD07eyR0XG/PI7GQvGBCGE7r4DZIXP
-        4uNqOwCnAFPGiLnMJOlz3RfZPf7L
-X-Google-Smtp-Source: ABdhPJzP0xNtaCRHw3hyyHrEYTdSzBXrrQeWoDh62VLKiCP3NT+QW5A1sY59sdtOJ7DJOkumHrhkag==
-X-Received: by 2002:a17:902:c697:: with SMTP id r23mr6151150plx.35.1594951742115;
-        Thu, 16 Jul 2020 19:09:02 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id j17sm5888154pgn.87.2020.07.16.19.09.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 19:09:01 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 12:08:56 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v3 0/3] Off-load TLB invalidations to host for !GTSE
-To:     Bharata B Rao <bharata@linux.ibm.com>, Qian Cai <cai@lca.pw>
-Cc:     aneesh.kumar@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        mpe@ellerman.id.au, sfr@canb.auug.org.au
-References: <20200703053608.12884-1-bharata@linux.ibm.com>
-        <20200716172713.GA4565@lca.pw>
-In-Reply-To: <20200716172713.GA4565@lca.pw>
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=tq4m4h2a9TL5pXC8bkU2F7Xjx88fuMptJM1ziSfBc+I=;
+        b=EuOPU23Iexc+T1WOqmho47KOj4RfSipD/zEanW0KUIJNIly35AcQ4oPubK65wx4NRG
+         jtpu+gsk1BIBBAm5YPHIGCW5L6rJzxIa3M9b9ku5VO8i7mPvdj7vC3/Nh5tsIgr1/0Kz
+         JnObqbwmPbOzdfXYaTo4+RpHEd4Pv00X2NdExUNJ4+IUoTz56cXKsYiFS/LzbxDb5u38
+         fpzbyKvXcQJUxh73KjiyMvAmLTfzR2N89w/Y146CxN3CD5A+FVzMFO974qjX/Kp+t1Sb
+         J7V29iH77+7vWUStx6pte0e+pxzH542niHCDX1bkYlYOFgz7XqpZNwVZdWnYFzBhDBWB
+         xuVg==
+X-Gm-Message-State: AOAM5322XuYypL7S0cvu2OOQF8H+QmS9gj33EhttTOHv50Y5ZDUsTLhg
+        QGaq4mxkdRihF+hHZljPyVY=
+X-Google-Smtp-Source: ABdhPJx1xFOvDqifGjgy8vUu0iFeypqKlimb/iCgqrKDVMKGCO8pX4GP2UEyFxYkxqrIJSz9nKQE5A==
+X-Received: by 2002:a17:902:788b:: with SMTP id q11mr6116353pll.216.1594951728753;
+        Thu, 16 Jul 2020 19:08:48 -0700 (PDT)
+Received: from vm_111_229_centos ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id r25sm1793183pgv.88.2020.07.16.19.08.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Jul 2020 19:08:47 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 10:08:42 +0800
+From:   YangYuxi <yx.atom1@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ebpf: fix parameter naming confusing
+Message-ID: <20200717020842.GA29747@vm_111_229_centos>
 MIME-Version: 1.0
-Message-Id: <1594950229.jn9ipe6td1.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Qian Cai's message of July 17, 2020 3:27 am:
-> On Fri, Jul 03, 2020 at 11:06:05AM +0530, Bharata B Rao wrote:
->> Hypervisor may choose not to enable Guest Translation Shootdown Enable
->> (GTSE) option for the guest. When GTSE isn't ON, the guest OS isn't
->> permitted to use instructions like tblie and tlbsync directly, but is
->> expected to make hypervisor calls to get the TLB flushed.
->>=20
->> This series enables the TLB flush routines in the radix code to
->> off-load TLB flushing to hypervisor via the newly proposed hcall
->> H_RPT_INVALIDATE.=20
->>=20
->> To easily check the availability of GTSE, it is made an MMU feature.
->> The OV5 handling and H_REGISTER_PROC_TBL hcall are changed to
->> handle GTSE as an optionally available feature and to not assume GTSE
->> when radix support is available.
->>=20
->> The actual hcall implementation for KVM isn't included in this
->> patchset and will be posted separately.
->>=20
->> Changes in v3
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> - Fixed a bug in the hcall wrapper code where we were missing setting
->>   H_RPTI_TYPE_NESTED while retrying the failed flush request with
->>   a full flush for the nested case.
->> - s/psize_to_h_rpti/psize_to_rpti_pgsize
->>=20
->> v2: https://lore.kernel.org/linuxppc-dev/20200626131000.5207-1-bharata@l=
-inux.ibm.com/T/#t
->>=20
->> Bharata B Rao (2):
->>   powerpc/mm: Enable radix GTSE only if supported.
->>   powerpc/pseries: H_REGISTER_PROC_TBL should ask for GTSE only if
->>     enabled
->>=20
->> Nicholas Piggin (1):
->>   powerpc/mm/book3s64/radix: Off-load TLB invalidations to host when
->>     !GTSE
->=20
-> Reverting the whole series fixed random memory corruptions during boot on
-> POWER9 PowerNV systems below.
+Signed-off-by: YangYuxi <yx.atom1@gmail.com>
+---
+ kernel/bpf/syscall.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-If I s/mmu_has_feature(MMU_FTR_GTSE)/(1)/g in radix_tlb.c, then the .o
-disasm is the same as reverting my patch.
-
-Feature bits not being set right? PowerNV should be pretty simple, seems
-to do the same as FTR_TYPE_RADIX.
-
-So... test being done before static keys are set up? Shouldn't be. Must
-be something obvious I just can't see it.
-
-Thanks,
-Nick
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 0fd80ac81f70..300ae16baffc 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1881,13 +1881,13 @@ struct bpf_prog *bpf_prog_inc_not_zero(struct bpf_prog *prog)
+ EXPORT_SYMBOL_GPL(bpf_prog_inc_not_zero);
+ 
+ bool bpf_prog_get_ok(struct bpf_prog *prog,
+-			    enum bpf_prog_type *attach_type, bool attach_drv)
++			    enum bpf_prog_type *prog_type, bool attach_drv)
+ {
+ 	/* not an attachment, just a refcount inc, always allow */
+-	if (!attach_type)
++	if (!prog_type)
+ 		return true;
+ 
+-	if (prog->type != *attach_type)
++	if (prog->type != *prog_type)
+ 		return false;
+ 	if (bpf_prog_is_dev_bound(prog->aux) && !attach_drv)
+ 		return false;
+@@ -1895,7 +1895,7 @@ bool bpf_prog_get_ok(struct bpf_prog *prog,
+ 	return true;
+ }
+ 
+-static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *attach_type,
++static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *prog_type,
+ 				       bool attach_drv)
+ {
+ 	struct fd f = fdget(ufd);
+@@ -1904,7 +1904,7 @@ static struct bpf_prog *__bpf_prog_get(u32 ufd, enum bpf_prog_type *attach_type,
+ 	prog = ____bpf_prog_get(f);
+ 	if (IS_ERR(prog))
+ 		return prog;
+-	if (!bpf_prog_get_ok(prog, attach_type, attach_drv)) {
++	if (!bpf_prog_get_ok(prog, prog_type, attach_drv)) {
+ 		prog = ERR_PTR(-EINVAL);
+ 		goto out;
+ 	}
+-- 
+1.8.3.1
 
