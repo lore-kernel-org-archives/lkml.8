@@ -2,143 +2,217 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F3EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98760C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C28C206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595001547;
-	bh=96HqE9DoPXDog7gYWuAkDp8aupsEHF0zpvpihqEoVEE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=tbKEZ4RKXml1yG4LXSgxGV/G8UffgC9/ygGObWRxtXPcnmHstHIAd9FSBCbJBTyWk
-	 naxif4uLzJgow5Tr8eF0YL6te0AiN5pOP291KMNXbsfg3gKqrRuWCwnJmHMKlZfzgi
-	 OpYS0SRyKpYuS305dYeQX5OTFJdgDvB/eQBc/RJs=
+	by mail.kernel.org (Postfix) with ESMTP id 6F870204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pt9jOmq5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="03cW4ele"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgGQP7G (ORCPT
+        id S1726873AbgGQQAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:59:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbgGQP7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 11:59:06 -0400
-Received: from [192.168.1.30] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5D13204EA;
-        Fri, 17 Jul 2020 15:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595001545;
-        bh=96HqE9DoPXDog7gYWuAkDp8aupsEHF0zpvpihqEoVEE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=zQXwVgzOZlh95kljqcBrN8UsXPsOH9yj4zuIIPaFwfSJpi3r0pyOO4C1Hss+KF1bP
-         tlXVtmv+5kyYJuY9p5skQUKhCmDXpZ9aHkpkqorOpNgklW+WRuvJtsHn6+WFipatqy
-         yVYy2mWXOdm9mPN4dZtHiNYLTlhkPYVVXmiz0lXM=
-Subject: Re: linux-next: Fixes tags need some work in the arm-soc-fixes tree
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Olof Johansson <olof@lixom.net>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-References: <20200714075729.68b92239@canb.auug.org.au>
- <1381a6c0-22fe-a175-f649-ea49da3451da@kernel.org>
- <CAK8P3a06bHeOqkQPG3Ap4hu4yFU-LA3L-5nwqk+7VGhSrKO_ng@mail.gmail.com>
- <3761e5c8-3ba4-2925-9f3a-2d98dd1e46e2@kernel.org>
- <CAK8P3a3YXWx5PhnZzsX_fYD0FC92XAn=2gr_3MA8dJ=zSpToBw@mail.gmail.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <2aa2b6dd-5d78-cf7a-6a7f-bc07dc1fef43@kernel.org>
-Date:   Fri, 17 Jul 2020 10:59:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 12:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgGQQAG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:00:06 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8341FC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:00:06 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595001603;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zzvJduESG71leNpuprS+WOQimkS8tJotSJUZ4FgDv74=;
+        b=Pt9jOmq5ExXSqGlkFzHTQErKR0xsRL6t4cAywgJsCx5iVWr+yOEEX7p4xO38U/fIkdTuC7
+        /lMBvhRk90TPBTo6HYCKFWClqMKT425tN3er680DVBLLk+K9g0K5TxiwxmHbBpEo0m03I0
+        9aoPHvlhODskjHrH/VHruJJ0zziExMwj+DEWU3OfvnWL27YH89e2AVQllmcGrCN0K0ceMM
+        nqZVN9AfY7VfDVpFzj1mK/FlwsZC4Tm/KBPPyHEyPP4iA93b8l0/RGyTCzHaAhuWqwe+qI
+        LVJ3660GtRk+1a0hB0p95GTNwMsXwvhoalnlZ+ImgIBxtefRq2mPH0pq6q/Utg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595001603;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zzvJduESG71leNpuprS+WOQimkS8tJotSJUZ4FgDv74=;
+        b=03cW4eleU+YLKC/yzkUSSRX0uecOZ2bicPWKgGC4yqlpmknQ9NDokj1e6zWGis/colRvrj
+        2QqaM61qU+4uDdDQ==
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Ben Herrenschmidt <benh@amazon.com>,
+        Ali Saidi <alisaidi@amazon.com>, Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH V2] genirq/affinity: Handle affinity setting on inactive interrupts correctly
+In-Reply-To: <87k0z2s2q3.fsf@nanos.tec.linutronix.de>
+References: <87k0z2s2q3.fsf@nanos.tec.linutronix.de>
+Date:   Fri, 17 Jul 2020 18:00:02 +0200
+Message-ID: <877dv2rv25.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3YXWx5PhnZzsX_fYD0FC92XAn=2gr_3MA8dJ=zSpToBw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Setting interrupt affinity on inactive interrupts is inconsistent when
+hierarchical irq domains are enabled. The core code should just store the
+affinity and not call into the irq chip driver for inactive interrupts
+because the chip drivers may not be in a state to handle such requests.
 
+X86 has a hacky workaround for that but all other irq chips have not which
+causes problems e.g. on GIC V3 ITS.
 
-On 7/17/20 10:46 AM, Arnd Bergmann wrote:
-> On Fri, Jul 17, 2020 at 5:36 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
->> On 7/16/20 3:10 PM, Arnd Bergmann wrote:
->>> On Wed, Jul 15, 2020 at 9:14 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
->>>>
->>>> -----BEGIN PGP SIGNED MESSAGE-----
->>>> Hash: SHA512
->>>>
->>>> Hi,
->>>>
->>>> I apologize for this! I have an updated branch that fixes these tags.
->>>> Let me know if I need to respin the pull request.
->>>
->>> I've recreated the branch from scratch now (this was one of only
->>> two pull requests I got anyway), it should be fine now.
->>>
->>
->> Thank you!
-> 
-> I was about to send off the pull request to Linus now, but I now saw
-> that the tag I pulled was not updated and still has the broken lines.
-> 
-> Could you make sure you upload a new tag and send the pull
-> request for that so I can pull it once more?
-> 
+Instead of adding more ugly hacks all over the place, solve the problem in
+the core code. If the affinity is set on an inactive interrupt then:
 
-I just sent you an updated pull request for the tag
-socfpga_fixes_for_v5.8_v2.
+    - Store it in the irq descriptors affinity mask
+    - Update the effective affinity to reflect that so user space has
+      a consistent view
+    - Don't call into the irq chip driver
 
-Thanks,
-Dinh
+This is the core equivalent of the X86 workaround and works correctly
+because the affinity setting is established in the irq chip when the
+interrupt is activated later on.
+
+Note, that this is only effective when hierarchical irq domains are enabled
+by the architecture. Doing it unconditionally would break legacy irq chip
+implementations.
+
+For hierarchial irq domains this works correctly as none of the drivers can
+have a dependency on affinity setting in inactive state by design.
+
+Remove the X86 workaround as it is not longer required.
+
+Fixes: 02edee152d6e ("x86/apic/vector: Ignore set_affinity call for inactive interrupts")
+Reported-by: Ali Saidi <alisaidi@amazon.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200529015501.15771-1-alisaidi@amazon.com
+---
+V2: Fix the fallout for CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK=n (0day)
+---
+ arch/x86/kernel/apic/vector.c |   22 +++++-----------------
+ kernel/irq/manage.c           |   37 +++++++++++++++++++++++++++++++++++--
+ 2 files changed, 40 insertions(+), 19 deletions(-)
+
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -446,12 +446,10 @@ static int x86_vector_activate(struct ir
+ 	trace_vector_activate(irqd->irq, apicd->is_managed,
+ 			      apicd->can_reserve, reserve);
+ 
+-	/* Nothing to do for fixed assigned vectors */
+-	if (!apicd->can_reserve && !apicd->is_managed)
+-		return 0;
+-
+ 	raw_spin_lock_irqsave(&vector_lock, flags);
+-	if (reserve || irqd_is_managed_and_shutdown(irqd))
++	if (!apicd->can_reserve && !apicd->is_managed)
++		assign_irq_vector_any_locked(irqd);
++	else if (reserve || irqd_is_managed_and_shutdown(irqd))
+ 		vector_assign_managed_shutdown(irqd);
+ 	else if (apicd->is_managed)
+ 		ret = activate_managed(irqd);
+@@ -775,20 +773,10 @@ void lapic_offline(void)
+ static int apic_set_affinity(struct irq_data *irqd,
+ 			     const struct cpumask *dest, bool force)
+ {
+-	struct apic_chip_data *apicd = apic_chip_data(irqd);
+ 	int err;
+ 
+-	/*
+-	 * Core code can call here for inactive interrupts. For inactive
+-	 * interrupts which use managed or reservation mode there is no
+-	 * point in going through the vector assignment right now as the
+-	 * activation will assign a vector which fits the destination
+-	 * cpumask. Let the core code store the destination mask and be
+-	 * done with it.
+-	 */
+-	if (!irqd_is_activated(irqd) &&
+-	    (apicd->is_managed || apicd->can_reserve))
+-		return IRQ_SET_MASK_OK;
++	if (WARN_ON_ONCE(!irqd_is_activated(irqd)))
++		return -EIO;
+ 
+ 	raw_spin_lock(&vector_lock);
+ 	cpumask_and(vector_searchmask, dest, cpu_online_mask);
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -195,9 +195,9 @@ void irq_set_thread_affinity(struct irq_
+ 			set_bit(IRQTF_AFFINITY, &action->thread_flags);
+ }
+ 
++#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+ static void irq_validate_effective_affinity(struct irq_data *data)
+ {
+-#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+ 	const struct cpumask *m = irq_data_get_effective_affinity_mask(data);
+ 	struct irq_chip *chip = irq_data_get_irq_chip(data);
+ 
+@@ -205,9 +205,19 @@ static void irq_validate_effective_affin
+ 		return;
+ 	pr_warn_once("irq_chip %s did not update eff. affinity mask of irq %u\n",
+ 		     chip->name, data->irq);
+-#endif
+ }
+ 
++static inline void irq_init_effective_affinity(struct irq_data *data,
++					       const struct cpumask *mask)
++{
++	cpumask_copy(irq_data_get_effective_affinity_mask(data), mask);
++}
++#else
++static inline void irq_validate_effective_affinity(struct irq_data *data) { }
++static inline void irq_init_effective_affinity(struct irq_data *data,
++					       const struct cpumask *mask) { }
++#endif
++
+ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+ 			bool force)
+ {
+@@ -304,6 +314,26 @@ static int irq_try_set_affinity(struct i
+ 	return ret;
+ }
+ 
++static bool irq_set_affinity_deactivated(struct irq_data *data,
++					 const struct cpumask *mask, bool force)
++{
++	struct irq_desc *desc = irq_data_to_desc(data);
++
++	/*
++	 * If the interrupt is not yet activated, just store the affinity
++	 * mask and do not call the chip driver at all. On activation the
++	 * driver has to make sure anyway that the interrupt is in a
++	 * useable state so startup works.
++	 */
++	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) || irqd_is_activated(data))
++		return false;
++
++	cpumask_copy(desc->irq_common_data.affinity, mask);
++	irq_init_effective_affinity(data, mask);
++	irqd_set(data, IRQD_AFFINITY_SET);
++	return true;
++}
++
+ int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
+ 			    bool force)
+ {
+@@ -314,6 +344,9 @@ int irq_set_affinity_locked(struct irq_d
+ 	if (!chip || !chip->irq_set_affinity)
+ 		return -EINVAL;
+ 
++	if (irq_set_affinity_deactivated(data, mask, force))
++		return 0;
++
+ 	if (irq_can_move_pcntxt(data) && !irqd_is_setaffinity_pending(data)) {
+ 		ret = irq_try_set_affinity(data, mask, force);
+ 	} else {
