@@ -2,91 +2,129 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77472C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0DCC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E02F20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 495BC20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:56:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NViLlxEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgGQH4L (ORCPT
+        id S1728125AbgGQH4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:56:11 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2494 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726105AbgGQH4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:56:11 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 5B32DF424CF03846E4F6;
-        Fri, 17 Jul 2020 08:56:09 +0100 (IST)
-Received: from [127.0.0.1] (10.210.167.164) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 17 Jul
- 2020 08:56:08 +0100
-Subject: Re: [PATCH] [SCSI] libsas: add missing newline when printing 'enable'
- by sysfs
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <guohanjun@huawei.com>
-References: <1594971374-40210-1-git-send-email-wangxiongfeng2@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <648c18d0-cc0a-f444-e774-e0938f697e90@huawei.com>
-Date:   Fri, 17 Jul 2020 08:54:19 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 17 Jul 2020 03:56:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgGQH4V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:56:21 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6644CC08C5C0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 00:56:21 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f139so15876660wmf.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 00:56:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=o5nIopuM74BtlFzAImb/PK0gyySVM6KhH9dqp/om8uc=;
+        b=NViLlxEklhp1mf7knnPOTkE3tfi428+VHQSNEDbHSufq2Kp0CtIaRQ6KLH/dp/bthm
+         5KB6kGNDHPBndZPUjVblnnJCuGZf5aRnunRSI+4jjCviFmVd6OCmsbIxO8Wz1lZ4gMV7
+         mo8OG0Z+4l6xUg1vCqprcFAf6fROOuI+9MeoYuRD66Zof1qzxtVhyLLPtpXozMRZImi0
+         6aaE1etFK/dZtL8XBO/+qgJzFimkfgrPuVuxMGKHD65yVqrQKijg49ibw7kavHy5IL9O
+         JgrA2mSWlNt4z3w2tSzq6FlYyJf+N6qAGTmHUAZa6sNoUVkmaml6SBt0+qk4VI6uX7KD
+         kt+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o5nIopuM74BtlFzAImb/PK0gyySVM6KhH9dqp/om8uc=;
+        b=Poh0YFRJ1F/Bpc1pQ48SjtPtepQe8uCWX42CqmjYK8NbESR6QCt1K+63RfEki/4fX4
+         NH+hKGTm7E69OqmRswgi9nrxTflt4kTfY04zzxcCeaJWCrunvb3NDeEjA2uYaVyTpDFc
+         xwLdVD/n5OtxX7Mpx8GMNHiP9dnwnV1ml1EvEcSpc8sz7bampyrLku1F6SvM7Z61/pU5
+         2DvX6UP7uIl0af8/Z6MopOpziDFfGG62UdiDnz13XARLo2FkEz9T4sxOKWy4gdSTYtcB
+         G3r/HKsnGP1rhenRyVe/G7E9yp/ZclaaVQSr97SM6nKQ9PLbeF/t9C9mJhbDFSxJ1OJx
+         Sfog==
+X-Gm-Message-State: AOAM530cNBV+TkpO+mk2+T3Fv6HZHqttHll1HfrZIcp7CL7i9KYFBJny
+        fz/L0uxnTbrz5+s3wCu/4L/o3w==
+X-Google-Smtp-Source: ABdhPJyQffzOr3evg0fAENlwAmDQoBs8yLbdDfhUB2Pv/w4X9/+ZCM+homnG3Ny/Q26Zm37J79d9mw==
+X-Received: by 2002:a1c:9e84:: with SMTP id h126mr7660444wme.61.1594972579968;
+        Fri, 17 Jul 2020 00:56:19 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
+        by smtp.googlemail.com with ESMTPSA id q7sm12848370wrs.27.2020.07.17.00.56.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 00:56:19 -0700 (PDT)
+Subject: Re: [PATCH v4 08/16] thermal: sun8i: add TEMP_CALIB_MASK for
+ calibration data in sun50i_h6_ths_calibrate
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Frank Lee <frank@allwinnertech.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
+        liyong@allwinnertech.com
+References: <cover.1594708863.git.frank@allwinnertech.com>
+ <b8761e036b25f20873534e5f8d10b37b5d2ce72c.1594708864.git.frank@allwinnertech.com>
+ <4771acd6-ecd3-b8e1-8605-75d78720b1d3@linaro.org>
+ <CAEExFWv9_1kec_b+t+nnvT3cziXzmVa8GzJT3pQAZiCf4KA0ig@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <836e1b23-1c75-57fe-6e45-f7141272071c@linaro.org>
+Date:   Fri, 17 Jul 2020 09:56:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1594971374-40210-1-git-send-email-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAEExFWv9_1kec_b+t+nnvT3cziXzmVa8GzJT3pQAZiCf4KA0ig@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.167.164]
-X-ClientProxiedBy: lhreml741-chm.china.huawei.com (10.201.108.191) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/07/2020 08:36, Xiongfeng Wang wrote:
-
-Hi,
-
-I think "scsi: scsi_transport_sas: " would be a better subject prefix, 
-as this is not libsas code.
-
-> When I cat sysfs file 'enable' below 'sas_phy', it displays as follows.
-> It's better to add a newline for easy reading.
+On 17/07/2020 09:35, Frank Lee wrote:
+> On Fri, Jul 17, 2020 at 12:26 PM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>>
+>> On 14/07/2020 09:13, Frank Lee wrote:
+>>> From: Yangtao Li <frank@allwinnertech.com>
+>>>
+>>> For sun50i_h6_ths_calibrate(), the data read from nvmem needs a round of
+>>> calculation. On the other hand, the newer SOC may store other data in
+>>> the space other than 12bit sensor data. Add mask operation to read data
+>>> to avoid conversion error.
+>>>
+>>> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+>>> Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
+>>
+>> Can you clarify these SoB ?
 > 
-> [root@localhost ~]# cat /sys/devices/pci0000:00/0000:00:0d.0/0000:0f:00.0/host3/phy-3:2/sas_phy/phy-3:2/enable
-> 1[root@localhost ~]#
+> Previously I used 'Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>',
+> maybe this should be removed directly?
 > 
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-
-Apart from above,
-Reviewed-by: John Garry <john.garry@huawei.com>
-
-> ---
->   drivers/scsi/scsi_transport_sas.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> Frank Lee==Yangtao Li==frank@allwinnertech.com==tiny.windzz@gmail.com ?
+>>
 > 
-> diff --git a/drivers/scsi/scsi_transport_sas.c b/drivers/scsi/scsi_transport_sas.c
-> index 182fd25..e443dee 100644
-> --- a/drivers/scsi/scsi_transport_sas.c
-> +++ b/drivers/scsi/scsi_transport_sas.c
-> @@ -563,7 +563,7 @@ static ssize_t do_sas_phy_enable(struct device *dev,
->   {
->   	struct sas_phy *phy = transport_class_to_phy(dev);
->   
-> -	return snprintf(buf, 20, "%d", phy->enabled);
-> +	return snprintf(buf, 20, "%d\n", phy->enabled);
->   }
->   
->   static DEVICE_ATTR(enable, S_IRUGO | S_IWUSR, show_sas_phy_enable,
-> 
+> Yeah.
 
+You are not supposed to add reviewed-by yourself. Please remove it.
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
