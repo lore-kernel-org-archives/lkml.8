@@ -2,114 +2,94 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1341C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93866C433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0EED22B4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594994798;
-	bh=df75s59VuqNLWmyo7tnNgvL4VZ8Ta+kcRoAI89Me1GA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mDIzrAGYdPbUqnIdmGRwCldfQQUrNnu02R1rl7LSvrftyx2586DPHlpH7/Pnzg0b1
-	 kv5wlU722lp17PE9GlatrB4zqjaz3U8I2NNMBRh+YepERYBLhfMBqP4BkENROuPv27
-	 /dKRnxNZG9o3QTVHWh7VzahAo7f0NKX6SM74rf3w=
+	by mail.kernel.org (Postfix) with ESMTP id 6F7A322B49
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="qxLVFWXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgGQOGI (ORCPT
+        id S1727950AbgGQOGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:06:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726635AbgGQOGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:06:07 -0400
-Received: from lenoir.home (lfbn-ncy-1-317-216.w83-196.abo.wanadoo.fr [83.196.152.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 991CB22CAD;
-        Fri, 17 Jul 2020 14:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594994766;
-        bh=df75s59VuqNLWmyo7tnNgvL4VZ8Ta+kcRoAI89Me1GA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sur81/pxe8ikD5KcU1OejVnr4dLsYD3fu7zJRkrqDsuVkxteXy8u7LmF8L3LJUx7h
-         Vh9uI0yaVm4JkcAafDxCo1cEo9XkpbW6XEZyOZ+FE32QN4mBKU7XMDF16f/t2JgnJk
-         s+lKDyMxV6BdBtGoIHZUpPDX9UgvJNmOhZLj4vM0=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 06/12] timer: Optimize _next_timer_interrupt() level iteration
-Date:   Fri, 17 Jul 2020 16:05:45 +0200
-Message-Id: <20200717140551.29076-7-frederic@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200717140551.29076-1-frederic@kernel.org>
-References: <20200717140551.29076-1-frederic@kernel.org>
+        Fri, 17 Jul 2020 10:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727932AbgGQOGm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:06:42 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A19DAC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:06:42 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id u12so7629640qth.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=n79cHK14c7WjGW54arM/ZzG9LDrpbEmQtp+ZnZq2Zbs=;
+        b=qxLVFWXSBzVOgf0tOJdWkvaseXUBniTV5HupaHUiI4U2q4+aKRnmX/dWQymX2rzAta
+         nmX64UvqolTMSaA6zGeFgV62hyOFfo+CUdQH907lPcyzIfdf4W/6vSzpjr8KMiYL12A8
+         0XIkhTLOFVpsLJlzvXMV8fFPmDcgKCPmOo1+z6QpFOw871JW6iZxC2Z/l6zrFDLf4SYx
+         wUr6ze4nrOSNMemZ+zk+W4LXhsmVkSb/D7dg7nxa1kJXm/dRWzdT7zlKJ7Jr88xgw66R
+         uV/BW3GSzlEydiJagiv4eWwsaaMnW2OaFNdIq9YE7cVOG6yHtiZgFOqFDJmb6likQmW5
+         445A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=n79cHK14c7WjGW54arM/ZzG9LDrpbEmQtp+ZnZq2Zbs=;
+        b=rky/W6GbbCEpPpdy63Wq9w1vyr1dp5+/+rUJp1CjGEjwfJe9Ogu0dnz+h7IllGMIQ4
+         nWZOB4RYj0a6rhncWMSou7nv7Qtc1KEhCkCHVMW6DqfcGS/J1D7F9P+Q6rrZ/8M16c1p
+         fydf7wz/pb6q9Xw0FmN8xt9MbAUJOaVp8lmqCa7QjSqxYUlsae6FOkIbA1iLxyXus+58
+         wP/YtpuQq5Uhe3lm+pLH0YYoMDJHOpjZJGcTjm1ZLia7jZpm8aLEGo8tQdZRu1iv6CaV
+         tOsPReW7AOD3P61JGDPyq4Bn/O0WbkpganhKnxn2TtxsiGScUEgzJbtcjIWENpIWkj/t
+         LtJg==
+X-Gm-Message-State: AOAM533Jey8Qg2o+vwF36fvBqYMdWK/9b9Y6EjjGSX2sMbPQVL0bnoKq
+        2XZU3Lgn7fQxXNtuC2GTw3HolQ==
+X-Google-Smtp-Source: ABdhPJx3MCZgwWOSpwWP7h0UDqwBEhWJ0YHnBmdUpDipf7AvrZ/96DipyQUxQJD1KzzlUfi8TGV0hw==
+X-Received: by 2002:aed:2e07:: with SMTP id j7mr10972924qtd.338.1594994801450;
+        Fri, 17 Jul 2020 07:06:41 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:be7d])
+        by smtp.gmail.com with ESMTPSA id 15sm9849064qkm.93.2020.07.17.07.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 07:06:40 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 10:05:47 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH v6 5/6] mm/swap: implement workingset detection for
+ anonymous LRU
+Message-ID: <20200717140547.GB265107@cmpxchg.org>
+References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592371583-30672-6-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592371583-30672-6-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a level has a timer that expires before we reach the next level,
-there is no need to iterate further.
+On Wed, Jun 17, 2020 at 02:26:22PM +0900, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> This patch implements workingset detection for anonymous LRU.
+> All the infrastructure is implemented by the previous patches so this patch
+> just activates the workingset detection by installing/retrieving
+> the shadow entry.
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-The next level is reached when the 3 lower bits of the current level are
-cleared. If the next event happens before/during that, the next levels
-won't give us an earlier expiration.
-
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Juri Lelli <juri.lelli@redhat.com>
----
- kernel/time/timer.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index af1c08b0b168..9abc41715fd2 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -1526,6 +1526,7 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
- 	clk = base->clk;
- 	for (lvl = 0; lvl < LVL_DEPTH; lvl++, offset += LVL_SIZE) {
- 		int pos = next_pending_bucket(base, offset, clk & LVL_MASK);
-+		unsigned long lvl_clk = clk & LVL_CLK_MASK;
- 
- 		if (pos >= 0) {
- 			unsigned long tmp = clk + (unsigned long) pos;
-@@ -1533,6 +1534,13 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
- 			tmp <<= LVL_SHIFT(lvl);
- 			if (time_before(tmp, next))
- 				next = tmp;
-+
-+			/*
-+			 * If the next expiration happens before we reach
-+			 * the next level, no need to check further.
-+			 */
-+			if (pos <= ((LVL_CLK_DIV - lvl_clk) & LVL_CLK_MASK))
-+				break;
- 		}
- 		/*
- 		 * Clock for the next level. If the current level clock lower
-@@ -1570,7 +1578,7 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
- 		 * So the simple check whether the lower bits of the current
- 		 * level are 0 or not is sufficient for all cases.
- 		 */
--		adj = clk & LVL_CLK_MASK ? 1 : 0;
-+		adj = lvl_clk ? 1 : 0;
- 		clk >>= LVL_CLK_SHIFT;
- 		clk += adj;
- 	}
--- 
-2.26.2
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
