@@ -2,83 +2,70 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70A5C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F6BC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9E520684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6056A2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgGQTtp (ORCPT
+        id S1728486AbgGQTu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37336 "EHLO
+        Fri, 17 Jul 2020 15:50:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbgGQTtp (ORCPT
+        with ESMTP id S1728022AbgGQTu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:49:45 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BD85C0619D2;
-        Fri, 17 Jul 2020 12:49:45 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 81B8A11E45928;
-        Fri, 17 Jul 2020 12:49:44 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 12:49:43 -0700 (PDT)
-Message-Id: <20200717.124943.1418473237939036327.davem@davemloft.net>
-To:     paolo.pisati@canonical.com
-Cc:     kuba@kernel.org, shuah@kernel.org, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] selftests: net: ip_defrag: modprobe missing
- nf_defrag_ipv6 support
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200716155114.72625-1-paolo.pisati@canonical.com>
-References: <20200716155114.72625-1-paolo.pisati@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jul 2020 12:49:44 -0700 (PDT)
+        Fri, 17 Jul 2020 15:50:29 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09671C0619D2;
+        Fri, 17 Jul 2020 12:50:29 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 28211728;
+        Fri, 17 Jul 2020 19:50:28 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 13:50:27 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>, mchehab@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/25] Documentation: watch_queue.rst: fix sphinx
+ warnings
+Message-ID: <20200717135027.15d8bdb4@lwn.net>
+In-Reply-To: <cf5f2227-c473-442b-7ad4-5ca3718a6672@infradead.org>
+References: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
+        <20200717185624.2009393-13-dwlsalmeida@gmail.com>
+        <cf5f2227-c473-442b-7ad4-5ca3718a6672@infradead.org>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Pisati <paolo.pisati@canonical.com>
-Date: Thu, 16 Jul 2020 17:51:14 +0200
+On Fri, 17 Jul 2020 12:42:52 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> Fix ip_defrag.sh when CONFIG_NF_DEFRAG_IPV6=m:
+> > -  * ``int remove_watch_from_object(struct watch_list *wlist,
+> > -				   struct watch_queue *wqueue,
+> > -				   u64 id, false);``
+> > +  * ``int remove_watch_from_object(struct watch_list *wlist,``
+> > +				 ``struct watch_queue *wqueue,``
+> > +				 ``u64 id, false);``
+> >  
+> >      Remove a watch from a watch list, where the watch must match the specified
+> >      watch queue (``wqueue``) and object identifier (``id``).  A notification
+> >   
 > 
-> $ sudo ./ip_defrag.sh
-> + set -e
-> + mktemp -u XXXXXX
-> + readonly NETNS=ns-rGlXcw
-> + trap cleanup EXIT
-> + setup
-> + ip netns add ns-rGlXcw
-> + ip -netns ns-rGlXcw link set lo up
-> + ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_high_thresh=9000000
-> + ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_low_thresh=7000000
-> + ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_time=1
-> + ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_high_thresh=9000000
-> + ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_low_thresh=7000000
-> + ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_time=1
-> + ip netns exec ns-rGlXcw sysctl -w net.netfilter.nf_conntrack_frag6_high_thresh=9000000
-> + cleanup
-> + ip netns del ns-rGlXcw
-> 
-> $ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
-> ls: cannot access '/proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh': No such file or directory
-> 
-> $ sudo modprobe nf_defrag_ipv6
-> $ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
-> -rw-r--r-- 1 root root 0 Jul 14 12:34 /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
-> 
-> Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+> Wow. If that's what it takes, well, OK, but it's sad IMHO.
 
-Applied, thanks.
+It seems like it might be better to remove the quoting altogether?  Either
+that or just make a literal block.
+
+jon
