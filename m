@@ -2,94 +2,144 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BF5C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5386AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8361220717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:37:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595003860;
-	bh=M25Ak9N76phcop4nhODTZl3XiQ185fxbNFqhkP2BzEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JkT+NNwQ620LHU2c1DZNxBN/2mxFdYGShR0JzP+uoz9f67JyE57RSO17Ec+gU5wi9
-	 WAiBVycw2svidwshzCJA3cuVeLRmcoryojdypxfDyWlX6O3jVORdWZahYyHgCwkfD+
-	 4gcjIe+BomLu/t7sA66/bcgiIwnwBH7ZjoCwPlFg=
+	by mail.kernel.org (Postfix) with ESMTP id 2E4DE2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:42:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VV3akQYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgGQQhj (ORCPT
+        id S1726359AbgGQQmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbgGQQhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:37:38 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21CD82065E;
-        Fri, 17 Jul 2020 16:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595003858;
-        bh=M25Ak9N76phcop4nhODTZl3XiQ185fxbNFqhkP2BzEY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HIp4AhYWiZvZ/Qp3qSrnCMw/TkCl8xK5ItR/6BKz679cx4oX7KrYURkHbVfVGh351
-         gZ66kZtAVEl+drvVMDwMGmLjsywAp3uDegetLMjbo/6HelDcQQ2tqEwnQeUxjxE81i
-         T6A5L4L2sdJ/nquBjEU94ToXDVSVVW8W0/L8/xJQ=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 79BA640482; Fri, 17 Jul 2020 13:37:35 -0300 (-03)
-Date:   Fri, 17 Jul 2020 13:37:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        "linux-trace-devel@vger.kernel.org" 
-        <linux-trace-devel@vger.kernel.org>
-Subject: Re: [PATCH v5 02/17] perf ftrace: add option '-F/--funcs' to list
- available functions
-Message-ID: <20200717163735.GC712240@kernel.org>
-References: <20200711124035.6513-1-changbin.du@gmail.com>
- <20200711124035.6513-3-changbin.du@gmail.com>
- <20200717110504.1650fbdc@oasis.local.home>
- <20200717162116.GB712240@kernel.org>
- <20200717122740.59186df2@oasis.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717122740.59186df2@oasis.local.home>
-X-Url:  http://acmel.wordpress.com
+        Fri, 17 Jul 2020 12:42:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbgGQQma (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:42:30 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8953EC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:42:28 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id j18so15886145wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=+3rxnetOPA9YeqWq4tADlvynk7eUReArYRmyXTONGkI=;
+        b=VV3akQYOc7tirLe5YfeKr+2LvlfDrzSZOXmAQ6ZPLWiskx350quVklFgQg0yJQkTYa
+         eS6EeYav3uMhjFijSpqhTEPwEuX0ujOTKH6b8/dMoxs0MnRXqtq9aCb8Jpu5DQzHRspq
+         OGOGm2ggyX0OpAm71tGlpf+ZJpzM5Rqk68pv9hB8KFxXXXW1mrUVJyb8CwfEEsvOY0NR
+         rOpFbW8mxW1B3EzOxyUXGWKqUGw7iLtFBtTDsykH8CJ56lkvXhGIXZM+E7/KUsRww/Pr
+         k9TOAU8+1ydhyIl8VlQIEBcRFyOT9LC5ToM626vYpnDUE5fRw5IwLhNpcUyfkU7jPNJV
+         FFZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+3rxnetOPA9YeqWq4tADlvynk7eUReArYRmyXTONGkI=;
+        b=FUy+PA3z5GxDJBnDdEQWozcpIq8r6mgIge5bftCc130DYZ7c0eG+ogYIlJZ/KcsG7E
+         ILxr6dzgb/4PL/WZAaB1OYH7dPvH8yFi88ZdYNSVVrBy16OTID+3QXD1GFwyUN4ifMrZ
+         r7eY89WEWn7jQ6llvb7USZVLoUEcPp4mqjrj899nDdoWZWx+4kBZTRwhtL+yHTBEHF7b
+         zEOYeAAxofIzpXhHhYMssye8Eyal2YYOhNuEaDr/EhvJe4RbXKyqq7kVMb03GgtgFTMa
+         WIOejv+nJPZqGFglomMM6y6l98pIdQTMt+r8MMWC6c/r1Si87PDYgdcEO7H7AXB7e+CR
+         YFaA==
+X-Gm-Message-State: AOAM533jlXNBkkC5PlddfbSYeNcIRNHdt68ihiKkAWSXehYlOjPTJXQc
+        fjefGD3IIOCSXkU6oVzNo+a6xw==
+X-Google-Smtp-Source: ABdhPJz6ibl3EXJPZE9ZoeRR4tBj19Pijs9Q+8UEKUdJsN/HGgnGq9Ng0zgSSx9CCXPYISOa2oVzBA==
+X-Received: by 2002:a1c:4183:: with SMTP id o125mr10113012wma.101.1595004145968;
+        Fri, 17 Jul 2020 09:42:25 -0700 (PDT)
+Received: from localhost.localdomain (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
+        by smtp.gmail.com with ESMTPSA id q5sm15312610wrp.60.2020.07.17.09.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 09:42:25 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        m.szyprowski@samsung.com, amit.kucheria@linaro.org
+Subject: [PATCH 1/2] thermal: netlink: Improve the initcall ordering
+Date:   Fri, 17 Jul 2020 18:42:16 +0200
+Message-Id: <20200717164217.18819-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jul 17, 2020 at 12:27:40PM -0400, Steven Rostedt escreveu:
-> On Fri, 17 Jul 2020 13:21:16 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > Would you like to start contributing to that, and when we get the
-> > > libtracefs.so packed in distributions, we can easily create the
-> > > perf ftrace without having to rewrite the wheel 10 times?  
+The initcalls like to play joke. In our case, the thermal-netlink
+initcall is called after the thermal-core initcall but this one sends
+a notification before the former is initialzed. No issue was spotted,
+but it could lead to a memory corruption, so instead of relying on the
+core_initcall for the thermal-netlink, let's initialize directly from
+the thermal-core init routine, so we have full control of the init
+ordering.
 
-> > Or we can use as soon as it is available, not preventing 'perf ftrace'
-> > from having to wait for libtracefs.so?
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/thermal/thermal_core.c    | 4 ++++
+ drivers/thermal/thermal_netlink.c | 3 +--
+ drivers/thermal/thermal_netlink.h | 6 ++++++
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
-> > Duplication is normal at some point, Changbin is moving 'perf ftrace'
-> > forward, and has been doing this thru several patch series revisions, if
-> > we continue putting new requirements, it gets tiresome at some point :-\
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 25ef29123f72..c2e7d7aaa354 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -1581,6 +1581,10 @@ static int __init thermal_init(void)
+ {
+ 	int result;
  
-> We're finally at the point to move libtracefs.so and libtraceevent.so
-> into their own repository.
++	result = thermal_netlink_init();
++	if (result)
++		goto error;
++
+ 	mutex_init(&poweroff_lock);
+ 	result = thermal_register_governors();
+ 	if (result)
+diff --git a/drivers/thermal/thermal_netlink.c b/drivers/thermal/thermal_netlink.c
+index dd0a3b889674..42eace7401da 100644
+--- a/drivers/thermal/thermal_netlink.c
++++ b/drivers/thermal/thermal_netlink.c
+@@ -641,8 +641,7 @@ static struct genl_family thermal_gnl_family __ro_after_init = {
+ 	.n_mcgrps	= ARRAY_SIZE(thermal_genl_mcgrps),
+ };
  
-> My fear is that the two will become incompatible, and forked forever.
+-static int __init thermal_netlink_init(void)
++int __init thermal_netlink_init(void)
+ {
+ 	return genl_register_family(&thermal_gnl_family);
+ }
+-core_initcall(thermal_netlink_init);
+diff --git a/drivers/thermal/thermal_netlink.h b/drivers/thermal/thermal_netlink.h
+index 0ec28d105da5..828d1dddfa98 100644
+--- a/drivers/thermal/thermal_netlink.h
++++ b/drivers/thermal/thermal_netlink.h
+@@ -6,6 +6,7 @@
+ 
+ /* Netlink notification function */
+ #ifdef CONFIG_THERMAL_NETLINK
++int __init thermal_netlink_init(void);
+ int thermal_notify_tz_create(int tz_id, const char *name);
+ int thermal_notify_tz_delete(int tz_id);
+ int thermal_notify_tz_enable(int tz_id);
+@@ -23,6 +24,11 @@ int thermal_notify_cdev_delete(int cdev_id);
+ int thermal_notify_tz_gov_change(int tz_id, const char *name);
+ int thermal_genl_sampling_temp(int id, int temp);
+ #else
++static inline int thermal_netlink_init(void)
++{
++	return 0;
++}
++
+ static inline int thermal_notify_tz_create(int tz_id, const char *name)
+ {
+ 	return 0;
+-- 
+2.17.1
 
-I don't share this fear, and since libtracefs is not generally
-available, this will make perf progress to be slowed down, so its better
-to merge what he has so far, after some review issues that surfaced are
-solved, and when a better way of achieving that is available, consider
-using it.
-
-- Arnaldo
