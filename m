@@ -2,190 +2,111 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79611C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 050AFC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B092208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0E0208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgGQOkT (ORCPT
+        id S1727085AbgGQOlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:40:19 -0400
-Received: from out28-149.mail.aliyun.com ([115.124.28.149]:40932 "EHLO
-        out28-149.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgGQOkT (ORCPT
+        Fri, 17 Jul 2020 10:41:00 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:51721 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgGQOk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:40:19 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07445006|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0713628-0.00445208-0.924185;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I3R317z_1594996812;
-Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I3R317z_1594996812)
-          by smtp.aliyun-inc.com(10.147.41.121);
-          Fri, 17 Jul 2020 22:40:13 +0800
-Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
- X1000 OST.
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
- <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
- <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
- <f0dd2ea5-0627-35cf-5a58-aaff0bcb22cd@wanyeetech.com>
- <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <77c49585-63c2-7784-83cc-bf6151095b69@wanyeetech.com>
-Date:   Fri, 17 Jul 2020 22:40:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Fri, 17 Jul 2020 10:40:59 -0400
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MmlbE-1kfvQq0NU6-00jon7 for <linux-kernel@vger.kernel.org>; Fri, 17 Jul
+ 2020 16:40:58 +0200
+Received: by mail-qk1-f182.google.com with SMTP id b4so8918378qkn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:40:57 -0700 (PDT)
+X-Gm-Message-State: AOAM531NlNprPR37VEVuovgsBIYHdKec0J3ZyaHuQxisdN97wzGQ/FDG
+        J+zSN3lwRTFFcgLZGldopN+oM90FcEEVZ57gRQg=
+X-Google-Smtp-Source: ABdhPJxIcF8vwnp0qlWkBZ2jacN8S+e8ZPeTj18xeEiqZH6jYoetb6kHP1NbTFSYs+6r9g0cHu9TmhJ++ld0ikNWcvo=
+X-Received: by 2002:a37:385:: with SMTP id 127mr1501317qkd.3.1594996856943;
+ Fri, 17 Jul 2020 07:40:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200716223627.253936-1-daniel.gutson@eclypsium.com> <20200717062841.GA3238569@kroah.com>
+In-Reply-To: <20200717062841.GA3238569@kroah.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jul 2020 16:40:40 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1yy7YyeJH5k40yAXb23y9siBnfuqixb76t3BK9Xh=uXQ@mail.gmail.com>
+Message-ID: <CAK8P3a1yy7YyeJH5k40yAXb23y9siBnfuqixb76t3BK9Xh=uXQ@mail.gmail.com>
+Subject: Re: [PATCH] [PATCH] Firmware security information in SYSFS
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Daniel Gutson <daniel.gutson@eclypsium.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:jmBE62IGclXB5niXcc5j3HwVyA0Ygawm+0CTDTm+b/DcRL/2HZC
+ PTx6xLD+KZjGzfRIE70+JBS42t2yKnKk/avo08NmWVCs6XqOBLLdT3YLXcQS+F2m7ktLxas
+ l6/zHyDlhPpjYj2zht0IoUPY1ijoaUwcuMvSuCqwcSvb5g+ks1Wsk2uhPj/1AXkjYxMICeJ
+ JTlD5Q7x/qOf4VtfbFpkw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l6e3i/+zxio=:y1bg0rJYMvqub2Qs0cH8um
+ VBMZ3FzeJ4EjPV0KjwSe22WfNlc8VWPhI2LCgqwP4yVFCuscdmNN65uQgJPoIYAYHbKPqLhI4
+ 2SxWfYAaGDfBUc9mwBrcZY0dTd3LPeh4RTYB+YtYLYnPhGNlsZS2NaPt4ei3mZQKPJ6vWu/aF
+ yYMnewC1qhv65xRa0BPE6zl4q1BzsQVNsoT7s90AtE3CHUV0+zsN5BUuzv8XwyOjkWQD/0Ewb
+ Rph5zRmgW0qBRxQUhr5OWOnsGW1aibuGCS9McMrWtZiOUBie1QonFEc0j5O+WHB32pHW3CAqO
+ hH0PM828zC+ueXE94zg5UuSJywMftm0e3uYpjdGQichkU56hgwPVzH3RIT+ZklWwzThB3roZ/
+ o7k/9+cRahyNaF7YoySHRRmYrmm0OZKKjGjH3a8DbW/uk+p55suQbp61bt1cYjle84TaPkoPQ
+ GczUc0kZk6wqwqQMSynP056qcmRF/JlyZ0USEtIDHa0Kqas2PITHypvZi9IfhcSsvDUUgf87X
+ tDn9+PbNM5pcC7EEY8IjBfvuYOWtj/dSHILL9fdN8sGPBJrA4RB1K8ojl/aNjC2aE3y27+uMY
+ T3RsQpFW+bt5q+i2CS0L03qpYBb1iTI2YRhwEs0roi1F9GlkvRdvLBx10buGJriw2NkZ3mPS/
+ uPsUy3DHYqCD5RM/8qCDaa41cMRjDH0lYJOMIGhfS/zeDYWfa+l/nwzzbujySGKUD536wmMp+
+ oiurU5+8Cq6DjBduECBCaSH+xLMlwPvY2D/DWVNTIFBCmSSvemZQK24ocJZOnfChafE7LXflY
+ 9uXqmG8LAbLFoS0DBaNgMuWu86MFoMi8VXe+mNIa/7xEJWInWegg6yBli7QS/zu/ofBHujWjb
+ LKSTcSY9d30CQZYUB+oYqsDWejAEFmIzYqteJ2NqimKVVaFE4RPy2HWWvOZE9XRaxOZD56U0g
+ KR4ZL1F3jHLYorJmefPUltR2ajbkOXCclnHXTR4hSXfDi2PXShgzU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Fri, Jul 17, 2020 at 8:28 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jul 16, 2020 at 07:36:27PM -0300, Daniel Gutson wrote:
+> > +What:                /sys/kernel/firmware-security/bioswe
+>
+> Ick, I stopped reading right here.
+>
+> No, this is not where this belongs.
+>
+> We already have /sys/firmware/, right?  And firmware-specific
+> subdirectories below that.
+>
+> We also have /sys/devices/system/ and I think that would be a much
+> better place for this, as it is easier to work with a real 'struct
+> device' than a "raw" kobject any day.  Bonus is you get full support of
+> userspace libraries when you do that, unlike when dealing with kobjects.
+>
+> Also, this really is a _SPECIFIC_ type of firmware that supports these
+> features, right?  Why not call that out too?  This is not generic by any
+> means.
 
-在 2020/7/17 下午4:02, Daniel Lezcano 写道:
-> On 17/07/2020 08:13, Zhou Yanjie wrote:
->> Hi Daniel,
->>
->> 在 2020/7/17 下午12:20, Daniel Lezcano 写道:
->>> On 10/07/2020 19:02, 周琰杰 (Zhou Yanjie) wrote:
->>>> X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
->>>> OST, it no longer belongs to TCU. This driver will register both a
->>>> clocksource and a sched_clock to the system.
->>>>
->>>> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
->>>> Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->>>> Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->>>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->>>> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
->>>> ---
->>>>
->>>> Notes:
->>>>       v1->v2:
->>>>       Fix compile warnings.
->>>>       Reported-by: kernel test robot <lkp@intel.com>
->>>>            v2->v3:
->>>>       No change.
->>>>            v3->v4:
->>>>       1.Rename "ost" to "sysost"
->>>>       1.Remove unrelated changes.
->>>>       2.Remove ost_clock_parent enum.
->>>>       3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
->>>>       4.Set up independent .recalc_rate/.set_rate for percpu/global
->>>> timer.
->>>>       5.No longer call functions in variable declarations.
->>>>            v4->v5:
->>>>       Use "of_io_request_and_map()" instead "of_iomap()".
->>>>       Suggested-by: Paul Cercueil <paul@crapouillou.net>
->>>>            v5->v6:
->>>>       No change.
->>>>
->>>>    drivers/clocksource/Kconfig          |  11 +
->>>>    drivers/clocksource/Makefile         |   1 +
->>>>    drivers/clocksource/ingenic-sysost.c | 539
->>>> +++++++++++++++++++++++++++++++++++
->>>>    3 files changed, 551 insertions(+)
->>>>    create mode 100644 drivers/clocksource/ingenic-sysost.c
->>>>
->>>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->>>> index 91418381fcd4..1bca8b8fb30f 100644
->>>> --- a/drivers/clocksource/Kconfig
->>>> +++ b/drivers/clocksource/Kconfig
->>>> @@ -696,6 +696,17 @@ config INGENIC_TIMER
->>>>        help
->>>>          Support for the timer/counter unit of the Ingenic JZ SoCs.
->>>>    +config INGENIC_SYSOST
->>>> +    bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
->>> We usually use silent options and let the platform's Kconfig enable it.
->>> We show up the option only when COMPILE_TEST is enabled.
->>>
->>> Is there a reason to do it differently?
->>
->> Do you mean
->>
->> bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
->>
->> or
->>
->> default MACH_INGENIC ?
-> Both, no default here.
->
-> eg.
->
-> bool "Clocksource/timer using the SYSOST in Ingenic X SoCs" if COMPILE_TEST
->
-> and
->
-> in arch/mips/Kconfig in the config MACH_INGENIC section :
->
-> ...
-> select INGENIC_SYSOST
-> ...
+As I suggested in my previous review, I wouldn't worry too much about
+the user interface at the start, but instead first work out how the hardware
+support fits in with the existing drivers and once that looks fine decide
+on how to export it to user space.
 
+I agree the  /sys/kernel/firmware-security/bioswe sounds like the wrong
+place, but I'm not sure if adding any other new directory in sysfs is
+much better. I think the most promising would be to have it on the
+sysfs directory for the device it refers to, but let's first see how the
+information gets into the kernel.
 
-Sure, I will do it in the next version.
-
-
-Thanks and best regards!
-
-
->> This driver has some origins from "INGENIC_TIMER" driver and
->> "INGENIC_OST" driver.
->> Early Ingenic processors used TCU (timer/counter unit, has 6 or 8
->> generic timer channels) to provide clocksource and clockevent (both with
->> only 16bit precision). This part of the processor can only use
->> "INGENIC_TIMER" driver.
->>
->> Later processors provide an independent 32bit or 64bit timer channel
->> (still under TCU, known as ost channel, this channel can not generate
->> interrupt) to provid higher precision clocksource. The "INGENIC_OST"
->> driver is for this channel. These processors can use "INGENIC_TIMER"
->> driver, but using "INGENIC_OST" driver to provide higher precision
->> clocksource would be a better choice (clockevent still needs to be
->> provided by generic timer channel of TCU, and still 16bit precision).
->>
->> And the recent processors provide a SYSOST components, it is independent
->> from TCU, including a 64bit timer channel for clocksource and a 32bit
->> timer channel for clockevent. Although these processors can also use
->> "INGENIC_TIMER" driver, but the better choice is completely independent
->> use of "INGENIC_SYSOST" driver to provide higher precision clocksource
->> and clockevent.
-> Ok, the rating should do the job then.
->
-> Thanks for the explanation.
->
->> You may have already noticed that this independent SYSOST component is
->> like an upgraded and streamlined TCU, which only retains one generic
->> timer channel that can generate interrupts, upgrade it from 16bit to
->> 32bit, and then retain the 64bit ost channel. so the driver code and
->> Kconfig code of this patch is largely referenced
->> "INGENIC_TIMER" driver and "INGENIC_OST" driver.
->>
->> Thanks and best regards!
->>
->>>> +    default MACH_INGENIC
->>>> +    depends on MIPS || COMPILE_TEST
->>>> +    depends on COMMON_CLK
->>>> +    select MFD_SYSCON
->>>> +    select TIMER_OF
->>>> +    select IRQ_DOMAIN
->>>> +    help
->>>> +      Support for the SYSOST of the Ingenic X Series SoCs.
->>>> +
->>> [ ... ]
->>>
->>>
->
+     Arnd
