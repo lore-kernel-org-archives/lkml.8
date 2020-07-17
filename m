@@ -2,109 +2,102 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1A4C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC9DC4345C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E042721702
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8C7207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZJrx999g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/Y+Gxyh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgGQQ4Q (ORCPT
+        id S1728198AbgGQQ5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:56:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38532 "EHLO
+        Fri, 17 Jul 2020 12:57:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbgGQQ4K (ORCPT
+        with ESMTP id S1727787AbgGQQ5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:56:10 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3980C0619D4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:09 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a6so7558846wmm.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:09 -0700 (PDT)
+        Fri, 17 Jul 2020 12:57:32 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CA61C0619D2;
+        Fri, 17 Jul 2020 09:57:32 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id q17so5695294pls.9;
+        Fri, 17 Jul 2020 09:57:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aaAEngpMWZcocEAV7ao9KvOaMLVn8ta5ctXWHocndM4=;
-        b=ZJrx999gJcsSLac1AZ9jE6z8jV20FHjvtuuZDeNZG7HmMiRiV1M2DywOLcnLAFsliW
-         fG+mlXYbAxvnbjjZkWjHuF9BYWR/7wF3kKCap0LZMvllWDGAhHjxxvxOQKqYEr+llUqA
-         NGjfzKwMotju6ppU4nTnZ0p+f8xe6VW8fbuxm+mu0xl9f6Y6LXu2vNQ5CnT2vFx49svh
-         vUd1XaBFV/TrXYr+xcMOpmBojGd8ANfmaU/xCxHv9xNfL+9mlNYne7VyXjDAYOWM1sI6
-         ZG5W9UHH+n2yJf3nXLdLpAC6rmDWlUr25+GdyIS40DPqFWAP68ByyY2LCuBjhNWmyPk1
-         0V3A==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=l8xDxA8kojCoOA0aKOLVl5EuXMDT6t6AAoB6hlYLn4c=;
+        b=W/Y+GxyhjM2mw5UaQFS5Np6o9mOvfHYzIpCF9QAUOtKGHjlByhrh7hqHa1+rWARPcB
+         wZvWtfOY970oJLrVq7++GMfYNCbglgc0uqwvkILMbIRV1ReEhj78KvcNZ5BSR5qi4NYm
+         GWCr4heAT73gHXOi3Qb9NrtvZtc1dH658Z4M2rAr6AK5NLzIX6ECFeDykTU2Pl0bdamv
+         ZGbDivldoTR6xTCEslnjwanx+n3qzVZQdLBAwHfthyvLw4mzL0pccpsRmTpy9URWn+QK
+         HgcdfssxXfWaOzML+LF5qPd+l7b2ExOA57XbcQK0lMbF5qFdftE5o7eOjqi6vKRGkssI
+         j3Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aaAEngpMWZcocEAV7ao9KvOaMLVn8ta5ctXWHocndM4=;
-        b=mE2VJ/9E1xlqN2oDDLD1KreDEB0U3IeWO4oua5iuhSCAM5/qzjbcZuaoR/rtpHbY0F
-         SSLjZQiB/tWZXoJo6nrWpzrsFnQ+zyLOOw4T9H6Ys0bDB8kPeP7uY4vO8NJeCRmR20h2
-         BcDBrG8N60/LasyfEtJfAhBAf/xWyS9kcmLyMveoGkm65FYUwBrYUuTmdJzp9WJBYR6z
-         +tcF6x/fu8KiIjc+k/NVofLGY5hr5U/DJ9gNPECfbAbFH+F5QGHHsaZWunzG6+dkqx6s
-         lD+3PHd+viRgx0AQ06cj/lQpSNmcAo2xUexgO28PeZtFQI2//tjmeeu0+2nb6k5IWleN
-         f3zQ==
-X-Gm-Message-State: AOAM532XEJYOoT7XX9VbxImYqmxqHAFKwQrZGHA8KXr0UaZOmG5cGlMP
-        nCsuaY0nATYO+C4bg2ZKSayRSA==
-X-Google-Smtp-Source: ABdhPJwurLCgsUKBH4m6dcESQTptlhoR0rEHbjcOfc+k2e9gB4ZDfT9hTuuRh6BlyqKKP1waMkjOXA==
-X-Received: by 2002:a7b:cb92:: with SMTP id m18mr9877767wmi.94.1595004968669;
-        Fri, 17 Jul 2020 09:56:08 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 09:56:08 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Crt Mori <cmo@melexis.com>
-Subject: [PATCH 09/30] iio: temperature: mlx90632: Function parameter descriptions must match exactly
-Date:   Fri, 17 Jul 2020 17:55:17 +0100
-Message-Id: <20200717165538.3275050-10-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717165538.3275050-1-lee.jones@linaro.org>
-References: <20200717165538.3275050-1-lee.jones@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=l8xDxA8kojCoOA0aKOLVl5EuXMDT6t6AAoB6hlYLn4c=;
+        b=tM2zLpwmC12wr8joiq0n8lkv63b10U96vWoLHPrX4Xq3+rGaG54KswzrmqlTQA8qFt
+         SWkdJFdDn1fXLO3shJGIj8LWoJ+zbeqhcBRN8SD/gBpxYRQcJuIO+FOtFWlk5uhzKcZc
+         2aprQQUwFCqlZH+kC7YzhFTbbbrOKsrI+d2qQMw6UNylzt4MpkmLDrNLXXN+VZi8mrsS
+         zhOyc5ABiKAH87mvI8EMxOhFbAbtFH3iM3NRsd4vIGjk9pJc3HUMCRypXrzf4/x6jqeW
+         SnbH5bMJWDILPczcpSrkSliATQWWDw0xlhQQGWgxckY1XzkAX3KDv6eXkuNIb65HfY21
+         g1QA==
+X-Gm-Message-State: AOAM533KHsuQYLpxoxWd+48K7IA50343ZqVfTUfJLypQ2ZO+Bgts8sXH
+        HueHwl3iL9E/F+FZhL3///E=
+X-Google-Smtp-Source: ABdhPJwQYmCmnOsUWnCWRIRCLhh5wVUlWnLAiBc9fUebbFncgMYxQYGvGrqUpmhxhoGVv4Le2iYmzw==
+X-Received: by 2002:a17:902:eb54:: with SMTP id i20mr8237614pli.183.1595005052114;
+        Fri, 17 Jul 2020 09:57:32 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 17sm3334257pjl.30.2020.07.17.09.57.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 09:57:31 -0700 (PDT)
+Subject: Re: [PATCH 7/7] usb: bdc: Use devm_clk_get_optional()
+To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Sasi Kumar <sasi.kumar@broadcom.com>
+References: <20200717152307.36705-1-alcooperx@gmail.com>
+ <20200717152307.36705-8-alcooperx@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <6b52771f-addb-88b0-fca3-e22c6756c38c@gmail.com>
+Date:   Fri, 17 Jul 2020 09:57:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200717152307.36705-8-alcooperx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'*'s are not welcome in kerneldoc parameter names.
 
-Fixes the following W=1 kernel build warning(s):
 
- drivers/iio/temperature/mlx90632.c:175: warning: Function parameter or member 'data' not described in 'mlx90632_perform_measurement'
+On 7/17/2020 8:23 AM, Al Cooper wrote:
+> From: Florian Fainelli <florian.fainelli@broadcom.com>
+> 
+> The BDC clock is optional and we may get an -EPROBE_DEFER error code
+> which would not be propagated correctly, fix this by using
+> devm_clk_get_optional().
+> 
+> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
-Cc: Crt Mori <cmo@melexis.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/iio/temperature/mlx90632.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
-index eaca6ba068646..b9a8089be3f63 100644
---- a/drivers/iio/temperature/mlx90632.c
-+++ b/drivers/iio/temperature/mlx90632.c
-@@ -164,8 +164,8 @@ static s32 mlx90632_pwr_continuous(struct regmap *regmap)
- }
- 
- /**
-- * mlx90632_perform_measurement - Trigger and retrieve current measurement cycle
-- * @*data: pointer to mlx90632_data object containing regmap information
-+ * mlx90632_perform_measurement() - Trigger and retrieve current measurement cycle
-+ * @data: pointer to mlx90632_data object containing regmap information
-  *
-  * Perform a measurement and return latest measurement cycle position reported
-  * by sensor. This is a blocking function for 500ms, as that is default sensor
+Since you are carrying this patch on my behalf your Signed-off-by should
+also be present, if you don't mind, I would like my gmail.com address to
+be used here for consistency with all submissions done throughout my
+tenure at broadcom, thanks!
 -- 
-2.25.1
-
+Florian
