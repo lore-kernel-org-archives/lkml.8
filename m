@@ -2,137 +2,87 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49203C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBEAC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31B9C2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 212862070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:00:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="AwxyDNiB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgGQUw5 (ORCPT
+        id S1726715AbgGQVAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:52:57 -0400
-Received: from mga02.intel.com ([134.134.136.20]:46328 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbgGQUw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:52:56 -0400
-IronPort-SDR: ccA0VIC++hRfB2yVjVzT0UNATUk+loJD2acJHKdhTFZ4OKGwpEK+F83LJq+fQWDJm9Ked4c9Mb
- kMNsLfgJyHVg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="137785235"
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="137785235"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 13:52:55 -0700
-IronPort-SDR: 690U0n6opbZ/Ur7zkVu//anEQ7MRj2sHCRzWpKkvX0jU9VzxrjihvaQr+xK5iBUfhEQqvlrfq5
- HGUS8jcEky3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="326947980"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga007.jf.intel.com with ESMTP; 17 Jul 2020 13:52:55 -0700
-Date:   Fri, 17 Jul 2020 13:52:55 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 02/17] x86/fpu: Refactor
- arch_set_user_pkey_access() for PKS support
-Message-ID: <20200717205254.GQ3008823@iweiny-DESK2.sc.intel.com>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-3-ira.weiny@intel.com>
- <20200717085442.GX10769@hirez.programming.kicks-ass.net>
+        Fri, 17 Jul 2020 17:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgGQVAV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 17:00:21 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64FBBC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 14:00:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qYoU5Y/zLsrXkJq9U4RfXTDC4zNRBe8Z7Hb20eSgPnQ=; b=AwxyDNiB6H5WBPPp7/Avl8CTcU
+        fnaotue3qZeyoXrwpReCXm0S5MGXyUmikphXpWA5uyoO/14KCjV3vuTZo5IaeaCwIwZiyMUGkUQuP
+        WPgZr5wDxXYpyQZypc//Zbds8CGN0KiyfNSg5yRc8HlBaG5oieq5Ug80BmQ+liokmM1g=;
+Received: from p200300ccff0b8f001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0b:8f00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jwXSs-0007vJ-32; Fri, 17 Jul 2020 23:00:18 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jwXSr-000788-KQ; Fri, 17 Jul 2020 23:00:17 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org, phh@phh.me,
+        stefan@agner.ch, b.galvani@gmail.com
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH] mfd: rn5t618: Fix caching of battery related registers
+Date:   Fri, 17 Jul 2020 23:00:02 +0200
+Message-Id: <20200717210002.27366-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717085442.GX10769@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:54:42AM +0200, Peter Zijlstra wrote:
-> On Fri, Jul 17, 2020 at 12:20:41AM -0700, ira.weiny@intel.com wrote:
-> > +/*
-> > + * Get a new pkey register value from the user values specified.
-> > + *
-> > + * Kernel users use the same flags as user space:
-> > + *     PKEY_DISABLE_ACCESS
-> > + *     PKEY_DISABLE_WRITE
-> > + */
-> > +u32 get_new_pkr(u32 old_pkr, int pkey, unsigned long init_val)
-> > +{
-> > +	int pkey_shift = (pkey * PKR_BITS_PER_PKEY);
-> > +	u32 new_pkr_bits = 0;
-> > +
-> > +	/* Set the bits we need in the register:  */
-> > +	if (init_val & PKEY_DISABLE_ACCESS)
-> > +		new_pkr_bits |= PKR_AD_BIT;
-> > +	if (init_val & PKEY_DISABLE_WRITE)
-> > +		new_pkr_bits |= PKR_WD_BIT;
-> > +
-> > +	/* Shift the bits in to the correct place: */
-> > +	new_pkr_bits <<= pkey_shift;
-> > +
-> > +	/* Mask off any old bits in place: */
-> > +	old_pkr &= ~((PKR_AD_BIT | PKR_WD_BIT) << pkey_shift);
-> > +
-> > +	/* Return the old part along with the new part: */
-> > +	return old_pkr | new_pkr_bits;
-> > +}
-> 
-> This is unbelievable junk...
-> 
-> How about something like:
-> 
-> u32 update_pkey_reg(u32 pk_reg, int pkey, unsigned int flags)
-> {
-> 	int pkey_shift = pkey * PKR_BITS_PER_PKEY;
-> 
-> 	pk_reg &= ~(((1 << PKR_BITS_PER_PKEY) - 1) << pkey_shift);
-> 
-> 	if (flags & PKEY_DISABLE_ACCESS)
-> 		pk_reg |= PKR_AD_BIT << pkey_shift;
-> 	if (flags & PKEY_DISABLE_WRITE)
-> 		pk_reg |= PKR_WD_BIT << pkey_shift;
-> 
-> 	return pk_reg;
-> }
-> 
-> Then we at least have a little clue wtf the thing does.. Yes I started
-> with a rename and then got annoyed at the implementation too.
+Battery status changes dynamically, so the corresponding registers
+need to be considered volatile. Affected registers are:
+- fuel gauge
+- battery status
+- battery interrupt
 
-On the code I think this is fair.  I've also updated the calling function to be
-a bit cleaner as well.
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ drivers/mfd/rn5t618.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-However, I think the name 'update' is a bit misleading.  Here is the new
-calling code:
-
-...
-        pkru = read_pkru();
-	pkru = update_pkey_reg(pkru, pkey, init_val);
-	write_pkru(pkru);
-...
-
-
-I think it is odd to have a function called update_pkey_reg() called right
-before a write_pkru().  Can we call this update_pkey_value?  or just 'val'?
-Because write_pkru() actually updates the register.
-
-Thanks for the review,
-Ira
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+index 232de50562f9..55c47e555dd8 100644
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -44,6 +44,9 @@ static bool rn5t618_volatile_reg(struct device *dev, unsigned int reg)
+ 	case RN5T618_INTMON:
+ 	case RN5T618_RTC_CTRL1 ... RN5T618_RTC_CTRL2:
+ 	case RN5T618_RTC_SECONDS ... RN5T618_RTC_YEAR:
++	case RN5T618_CHGSTATE:
++	case RN5T618_CHGCTRL_IRR ... RN5T618_CHGERR_MONI:
++	case RN5T618_CONTROL ... RN5T618_CC_AVEREG0:
+ 		return true;
+ 	default:
+ 		return false;
+-- 
+2.20.1
 
