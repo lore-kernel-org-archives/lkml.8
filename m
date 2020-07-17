@@ -2,171 +2,117 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569AFC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C59702070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:29:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i8ziOaEV"
+	by mail.kernel.org (Postfix) with ESMTP id 3C2B12070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgGQK3B (ORCPT
+        id S1726238AbgGQK2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:29:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57118 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725864AbgGQK3B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:29:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594981739;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hsLQzqU/DSHbl54CuoL1GP4Qg8GB7o5Im2iyC5P3/Y0=;
-        b=i8ziOaEVdUBhR4OMZJPUr8DzJlkbjrSYuSB0B+Byifln+0o1JtXRLC1rbpFSnEHA5ED2v3
-        RNOTPEqG6IjRFsOHQCuWKu8GwPXnCyNThnxCIH0kiiPjScOYi6wUUYu2Uy2KA7LkezctYI
-        +W8v7Pc/O8zeRhvf3MYzXYvcB+kK5t8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-5-8xMqunhAM1yEke4WMmg9cA-1; Fri, 17 Jul 2020 06:28:57 -0400
-X-MC-Unique: 8xMqunhAM1yEke4WMmg9cA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D02B380BCAD;
-        Fri, 17 Jul 2020 10:28:54 +0000 (UTC)
-Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 851855C1BB;
-        Fri, 17 Jul 2020 10:28:44 +0000 (UTC)
-Subject: Re: [PATCH v5 03/15] iommu/smmu: Report empty domain nesting info
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     "Liu, Yi L" <yi.l.liu@intel.com>, Will Deacon <will@kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "stefanha@gmail.com" <stefanha@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
- <1594552870-55687-4-git-send-email-yi.l.liu@intel.com>
- <20200713131454.GA2739@willie-the-truck>
- <CY4PR11MB1432226D0A52D099249E95A0C3610@CY4PR11MB1432.namprd11.prod.outlook.com>
- <20200716153959.GA447208@myrica>
- <f3779a69-0295-d668-5f2f-746b6ff2bdce@redhat.com>
- <20200717090900.GC4850@myrica>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <74ea9416-6bcf-1e71-33f9-b61d7d853be1@redhat.com>
-Date:   Fri, 17 Jul 2020 12:28:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 17 Jul 2020 06:28:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:50922 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgGQK2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 06:28:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A68A1D6E;
+        Fri, 17 Jul 2020 03:28:49 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56D223F66E;
+        Fri, 17 Jul 2020 03:28:48 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 11:28:42 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v3] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for
+ bridge_class_quirk()
+Message-ID: <20200717102842.GA4353@e121166-lin.cambridge.arm.com>
+References: <1594865946-15188-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-In-Reply-To: <20200717090900.GC4850@myrica>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594865946-15188-1-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
+On Thu, Jul 16, 2020 at 10:19:06AM +0800, Tiezhu Yang wrote:
+> According to the datasheet of Loongson LS7A bridge chip, the old version
+> of Loongson LS7A PCIE port has a hardware bug about PCI class. As far as
+> I know, the latest version has already fixed this bug.
 
-On 7/17/20 11:09 AM, Jean-Philippe Brucker wrote:
-> On Thu, Jul 16, 2020 at 10:38:17PM +0200, Auger Eric wrote:
->> Hi Jean,
->>
->> On 7/16/20 5:39 PM, Jean-Philippe Brucker wrote:
->>> On Tue, Jul 14, 2020 at 10:12:49AM +0000, Liu, Yi L wrote:
->>>>> Have you verified that this doesn't break the existing usage of
->>>>> DOMAIN_ATTR_NESTING in drivers/vfio/vfio_iommu_type1.c?
->>>>
->>>> I didn't have ARM machine on my hand. But I contacted with Jean
->>>> Philippe, he confirmed no compiling issue. I didn't see any code
->>>> getting DOMAIN_ATTR_NESTING attr in current drivers/vfio/vfio_iommu_type1.c.
->>>> What I'm adding is to call iommu_domai_get_attr(, DOMAIN_ATTR_NESTIN)
->>>> and won't fail if the iommu_domai_get_attr() returns 0. This patch
->>>> returns an empty nesting info for DOMAIN_ATTR_NESTIN and return
->>>> value is 0 if no error. So I guess it won't fail nesting for ARM.
->>>
->>> I confirm that this series doesn't break the current support for
->>> VFIO_IOMMU_TYPE1_NESTING with an SMMUv3. That said...
->>>
->>> If the SMMU does not support stage-2 then there is a change in behavior
->>> (untested): after the domain is silently switched to stage-1 by the SMMU
->>> driver, VFIO will now query nesting info and obtain -ENODEV. Instead of
->>> succeding as before, the VFIO ioctl will now fail. I believe that's a fix
->>> rather than a regression, it should have been like this since the
->>> beginning. No known userspace has been using VFIO_IOMMU_TYPE1_NESTING so
->>> far, so I don't think it should be a concern.
->> But as Yi mentioned ealier, in the current vfio code there is no
->> DOMAIN_ATTR_NESTING query yet.
-> 
-> That's why something that would have succeeded before will now fail:
-> Before this series, if user asked for a VFIO_IOMMU_TYPE1_NESTING, it would
-> have succeeded even if the SMMU didn't support stage-2, as the driver
-> would have silently fallen back on stage-1 mappings (which work exactly
-> the same as stage-2-only since there was no nesting supported). After the
-> series, we do check for DOMAIN_ATTR_NESTING so if user asks for
-> VFIO_IOMMU_TYPE1_NESTING and the SMMU doesn't support stage-2, the ioctl
-> fails.
-OK I now understand what you meant. Yes this actual change is brought by
-the next patch, ie.
-[PATCH v5 04/15] vfio/type1: Report iommu nesting info to userspace
+Please define the bug and how are you fixing it, that's it.
 
-Thanks
+> In order to maintain downward compatibility, use DECLARE_PCI_FIXUP_EARLY
+> instead of DECLARE_PCI_FIXUP_HEADER for bridge_class_quirk() to fix it as
+> early as possible.
+> 
+> Otherwise, in the function pci_setup_device(), the related code about
+> "dev->class" such as "class = dev->class >> 8;" and "dev->transparent
+> = ((dev->class & 0xff) == 1);" maybe get wrong value due to without
+> EARLY fixup.
+> 
+> By the way, we can see that the PCI class fixup of other controllers are
+> all EARLY fixups:
+> 
+> [root@linux linux.git]# grep -rn -A 3 "PCI_CLASS_BRIDGE_PCI << 8" drivers/pci/controller/ | grep EARLY
+> drivers/pci/controller/pcie-tango.c-327-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SIGMA, 0x0024, tango_fixup_class);
+> drivers/pci/controller/pcie-tango.c-328-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SIGMA, 0x0028, tango_fixup_class);
+> drivers/pci/controller/pci-tegra.c-775-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_fixup_class);
+> drivers/pci/controller/pci-tegra.c-776-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
+> drivers/pci/controller/dwc/pcie-qcom.c-1442-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+> drivers/pci/controller/dwc/pcie-qcom.c-1443-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+> drivers/pci/controller/pcie-iproc-bcma.c-23-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x8011, bcma_pcie2_fixup_class);
+> drivers/pci/controller/pcie-iproc-bcma.c-24-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x8012, bcma_pcie2_fixup_class);
 
-Eric
-> 
-> I believe it's a good fix and completely harmless, but wanted to make sure
-> no one objects because it's an ABI change.
-> 
-> Thanks,
-> Jean
-> 
->> In my SMMUV3 nested stage series, I added
->> such a query in vfio-pci.c to detect if I need to expose a fault region
->> but I already test both the returned value and the output arg. So to me
->> there is no issue with that change.
->>>
->>> And if userspace queries the nesting properties using the new ABI
->>> introduced in this patchset, it will obtain an empty struct. I think
->>> that's acceptable, but it may be better to avoid adding the nesting cap if
->>> @format is 0?
->> agreed
->>
->> Thanks
->>
->> Eric
->>>
->>> Thanks,
->>> Jean
->>>
->>>>
->>>> @Eric, how about your opinion? your dual-stage vSMMU support may
->>>> also share the vfio_iommu_type1.c code.
->>>>
->>>> Regards,
->>>> Yi Liu
->>>>
->>>>> Will
->>>
->>
-> 
+This is irrelevant information, please remove it.
 
+Thanks,
+Lorenzo
+
+> Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+> 
+> v2: Modify the patch subject used with lower case "loongson"
+> 
+> v3: Update the commit message
+> 
+>  drivers/pci/controller/pci-loongson.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> index 459009c..58b862a 100644
+> --- a/drivers/pci/controller/pci-loongson.c
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
+>  {
+>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>  }
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>  			DEV_PCIE_PORT_0, bridge_class_quirk);
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>  			DEV_PCIE_PORT_1, bridge_class_quirk);
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>  			DEV_PCIE_PORT_2, bridge_class_quirk);
+>  
+>  static void system_bus_quirk(struct pci_dev *pdev)
+> -- 
+> 2.1.0
+> 
