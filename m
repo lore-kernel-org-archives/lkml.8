@@ -2,170 +2,296 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F6FC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B16C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416432076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837192076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:02:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdnZHm8b"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YooeeixG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgGQPCE (ORCPT
+        id S1726852AbgGQPCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:02:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49164 "EHLO
+        Fri, 17 Jul 2020 11:02:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgGQPCD (ORCPT
+        with ESMTP id S1726401AbgGQPCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jul 2020 11:02:03 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE457C0619D2;
-        Fri, 17 Jul 2020 08:02:02 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id j11so13037913ljo.7;
-        Fri, 17 Jul 2020 08:02:02 -0700 (PDT)
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8373CC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 08:02:03 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id o184so5020977vsc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 08:02:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Vj0THxkooDRCDITDoMqnCXMjOzpdY/9P9Eqdw05OK34=;
-        b=hdnZHm8bQ27NGLjoAEe+1uO25eN/PNI7VSElQYNWPhPlc8jPq4tKeRf4fNyFn8ZDvx
-         9/dx2ZJ96awCrq88v0nhlSjzj493SBM8KPyQgrP2/XfmDO9okpVXwx2YH3qZSS0CmzRe
-         tl963gqGdzJkYkrLYHInABOyoHwyJb4atjwysl6/N0lcud2YhH75l3pNrGsI/EnT/E4j
-         qKGf0aPyM4H0/wg27JAL2Od2WUbyof85heAsQkJvR0/NTqvLZYcS0+9JEtqPaTm0HOqx
-         mzdyLQt/vg07TTg/5V1r9AjpqbxbLzEso6X7s1019Gy+uO23Xr4NBtsmrqB0AxGFh02y
-         mFLw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Aj8c3ItAShnnsLNIQ3E8MXZ0tu8sMgycVZ8H2IhzgY=;
+        b=YooeeixG0/jkhNIRHh3/Ok41dsT/OX3z2lbp1dsvYYWgOvjgGAeQzWt4/nwPKnz3Mv
+         uXq028FmcWMT8/xVvpnT5J5b/dVVSVDK5eofaCaIcodv7fnB3wrg/uKVe0+25lcrLv/3
+         WamTri+dPxncC4RrX/4vmXrs97xe8dnN1V6/E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vj0THxkooDRCDITDoMqnCXMjOzpdY/9P9Eqdw05OK34=;
-        b=CTFINH1aaDXoInauwWRcbomWWXGJYp1/nodLxQWn+dmDHMwpXeAoojeX6xfHlSq21N
-         HRivBtGblY6wsLquw+kO8cvXB1oz/s1220Ik+sJnUUbmTNF2P9xnPU9lmN/YNavVPcJy
-         XM8F/xSRVoQU/YTx7zTHsUqLq0VcX/akCyB+sugfjPnqVUI6E6nPnjmThuzL2Vb4E7qY
-         Hr3QllMAwUdwp8VoAGSBOUCUZlW5m++U+7yzERukMcYViFXBeEwCNQ3ohICgxRVMe8ut
-         r+pfz4AczHZFRKlQ89hpxUqky9tmCtIAOggHlcmsp/z96TLxmMgQygUvSdU/ADFDdI3k
-         Fl/g==
-X-Gm-Message-State: AOAM533lHpP7kd0gUwkjnM8+47TNjmiWRAFxL5zBQ9kR/2IiSAMAZVNn
-        8IxDeYnV/cTq3jWmJ3/PdsCyAe7X
-X-Google-Smtp-Source: ABdhPJyQ+WCihOlXt8PupgeNCC7ANZ6gdFcfhNDBl4mxjPolZLOSXDJiSWkHQhdjI0Pmd2yZHYxryg==
-X-Received: by 2002:a2e:8758:: with SMTP id q24mr4389912ljj.109.1594998120753;
-        Fri, 17 Jul 2020 08:02:00 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
-        by smtp.googlemail.com with ESMTPSA id u7sm2281772lfi.45.2020.07.17.08.01.59
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Aj8c3ItAShnnsLNIQ3E8MXZ0tu8sMgycVZ8H2IhzgY=;
+        b=qM/o6alGjJnTr72o7RIEbUaxi8IoR8eJCa3k2uRsq1xJVKkrLiGo8pTotICLOdk2Cl
+         TrSJYas2Sg8yTFUYxfrBR6/wES9UOGJV3Y8KihghhrTgWlXEDXcDYzZOVRwUdupkgb+/
+         XFh3AWeNDRc+W6yi33PrXC5C7SA1hT7Vh+BFNTm7tbgX5gydSFRPm2vRGbmgdgTH/F7Q
+         Wi0mVXLW96Wc7JgvQ7sVHgGhzDUyWwUYRovA0XzhwUyw51L5yLaLp42jPy1cCd61JoFM
+         MOBxKYdzP89N4sTyS1jtCH9un8kQq0iyostgpEJU7BGvDIicqf2fkyq/CA74XB3vEYdK
+         WwqQ==
+X-Gm-Message-State: AOAM530I5MES24QHKkCHSANCFNacO9DI/KqyEN1Capt37hnSs+EpwbFJ
+        1IgfRprSyWB1+Vjpr2uXyJ6EAWf/qts=
+X-Google-Smtp-Source: ABdhPJy7O+bw4zKk010n6WGdPbRnF9nzJI0NB9TjS0Y5WCQzF5oX9slC0bFwwjQttMMpqxOrO1GE0A==
+X-Received: by 2002:a67:fe8e:: with SMTP id b14mr7884909vsr.133.1594998122196;
+        Fri, 17 Jul 2020 08:02:02 -0700 (PDT)
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
+        by smtp.gmail.com with ESMTPSA id v63sm1325867vkf.45.2020.07.17.08.02.00
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 08:01:59 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
- tegra_mipi_calibrate and tegra_mipi_wait
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
- <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
- <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
- <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
- <ce0c5ffb-f859-0eab-1ea5-044623dff221@nvidia.com>
- <a2b8169c-c4a3-4862-cd27-8c1a51ddc558@gmail.com>
- <4690e682-8495-2327-87c7-c2f06a7a479d@nvidia.com>
- <66812127-38cf-2af3-51c0-50edbe446e73@nvidia.com>
- <9b4fbf9d-d651-aa35-c0a6-b8f16aeb0900@gmail.com>
- <550f1796-67ca-5856-223d-c68360243954@nvidia.com>
- <ca8f2184-de30-03ec-9caf-e20a22d96a77@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <080b30c7-1dce-dd2f-dd96-40f6e25da4d6@gmail.com>
-Date:   Fri, 17 Jul 2020 18:01:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 08:02:01 -0700 (PDT)
+Received: by mail-vk1-f172.google.com with SMTP id q85so2179618vke.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 08:02:00 -0700 (PDT)
+X-Received: by 2002:a1f:3d4a:: with SMTP id k71mr7624402vka.65.1594998119832;
+ Fri, 17 Jul 2020 08:01:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ca8f2184-de30-03ec-9caf-e20a22d96a77@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200717120207.3471030-1-cychiang@chromium.org>
+In-Reply-To: <20200717120207.3471030-1-cychiang@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 17 Jul 2020 08:01:48 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XFayyvT-b9C3f4pXNkboH7kb7ikyi9qJxmNvowOfkjqQ@mail.gmail.com>
+Message-ID: <CAD=FV=XFayyvT-b9C3f4pXNkboH7kb7ikyi9qJxmNvowOfkjqQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ASoC: qcom: dt-bindings: Add sc7180 machine bindings
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.07.2020 07:46, Sowjanya Komatineni пишет:
-...
-> Looks like sequence posted in TRM need to be updated clearly for proper
-> MIPI CAL start and wait.
-> 
-> Correct steps should be like below
-> 
-> 1. Set up CSI registers for use case such as number of lanes, virtual 
-> channel, etc.
-> 2. Initialize and power up CSI CIL interface
-> 3. Program MIPI CAL bias pads, cal configs, cal control registers and
-> enable calibration start
-> 4. Power up camera through the I2C interface and start sensor streaming
-> through the I2C
-> 
-> Note: All sensors might not leave pads in LP-11 state as sensor may be
-> power down when not in use.
-> 
-> So start streaming prior to checking for calibration done status as
-> LP-11 -> HS transition happens during sensor stream and calibration
-> logic can apply results to pads and update done status,
-> 
-> 5. Wait for done signal from calibration logic
-> 
-> 6. perform frame capture thru VI
-> 7. Frame done, CSI goes back to stop state, LP11
-> 
-> Will work internally to correct sequence in TRM ...
+Hi,
 
-Will be nice to have an updated TRM, thank you!
+On Fri, Jul 17, 2020 at 5:02 AM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
+>
+> Add devicetree bindings documentation file for sc7180 sound card.
+>
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
+>  .../bindings/sound/qcom,sc7180.yaml           | 123 ++++++++++++++++++
+>  1 file changed, 123 insertions(+)
 
-Also, what about the auto-calibration? Isn't it needed to be enabled for
-CSI?
-
-> In mipi driver will update as below to have mipi clk enabled till
-> calibration status check is done.
-> 
-> Always tegra_mipi_wait() followes tegra_mipi_calibrate() in both DSI and
-> CSI. So below sequence should work good.
-> 
-> tegra_mipi_calibrate()
-> 
-> - clk_enable mipi cal
-> - program mipi cal registers (bias pads cfgs, mipi cal ctrl and trigger
-> calibration start)
-> 
-> tegra_mipi_wait()
-> - read mipi cal status and wait for active and done bits
-> - clk_disable mipi cal
+A bit of a mechanical review since my audio knowledge is not strong.
 
 
-Maybe then it should be better to rename the functions like this:
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> new file mode 100644
+> index 000000000000..d60d2880d991
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> @@ -0,0 +1,123 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
+> +
+> +maintainers:
+> +  - Rohit kumar <rohitkr@codeaurora.org>
+> +  - Cheng-Yi Chiang <cychiang@chromium.org>
+> +
+> +description: |
+> +  This binding describes the SC7180 sound card, which uses LPASS for audio.
 
-tegra_mipi_calibrate() -> tegra_mipi_start_calibration()
-tegra_mipi_wait()      -> tegra_mipi_finish_calibration().
-
-and there also should be tegra_mipi_cancel_calibration().
+nit: you don't need the pipe at the end of the "description" line.
+That means that newlines are important and you don't need it.
 
 
-Example:
+> +definitions:
 
-	tegra_mipi_start_calibration();
-
-	ret = v4l2_subdev_call(subdev, video, s_stream, on);
-	if (ret < 0) {
-		tegra_mipi_cancel_calibration();
-		goto err;
-	}
-
-	tegra_mipi_finish_calibration();
+I haven't yet seen much yaml using definitions like this.  It feels
+like overkill for some of these properties, especially ones that are
+only ever used once in the "properties:" section and are/or are really
+simple.
 
 
+> +  link-name:
+> +    description: Indicates dai-link name and PCM stream name.
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    maxItems: 1
+> +
+> +  dai:
+> +    type: object
+> +    properties:
+> +      sound-dai:
+> +        maxItems: 1
+> +        $ref: /schemas/types.yaml#/definitions/phandle-array
+> +        description: phandle array of the codec or CPU DAI
+> +
+> +    required:
+> +      - sound-dai
+> +
+> +  unidirectional:
+> +    description: Specify direction of unidirectional dai link.
+> +                 0 for playback only. 1 for capture only.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+
+So if the property isn't there then it's _not_ unidirectional and if
+it is there then this specifies the direction, right?  I almost wonder
+if this should just be two boolean properties, like:
+
+playback-only;
+capture-only;
+
+...but I guess I'd leave it to Rob and/or Mark to say what they liked
+better.  In any case if you keep it how you have it then you should
+use yaml to force it to be either 0 or 1 if present.
+
+
+> +
+> +properties:
+> +  compatible:
+> +    contains:
+> +      enum:
+> +        - qcom,sc7180-sndcard
+
+Just:
+
+properties:
+  compatible:
+    const: qcom,sc7180-sndcard
+
+
+
+> +  audio-routing:
+> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> +    description: |-
+> +      A list of the connections between audio components. Each entry is a
+> +      pair of strings, the first being the connection's sink, the second
+> +      being the connection's source.
+
+You don't need the "|-" after the "description:".  That says newlines
+are important but strip the newline from the end.
+
+
+> +  model:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    description: User specified audio sound card name
+> +
+> +patternProperties:
+> +  "^dai-link-[0-9]+$":
+> +    description: |
+> +      Each subnode represents a dai link. Subnodes of each dai links would be
+> +      cpu/codec dais.
+
+From looking at "simple-card.yaml", I'm gonna guess that instead of
+encoding the link number in the name of the node that you should
+actually use a unit address and a reg in the subnodes.
+
+...also, again your description doesn't need the "|" at the end.
+Maybe <https://yaml-multiline.info/> will be useful to you?
+
+
+> +    type: object
+> +
+> +    properties:
+> +      link-name:
+> +        $ref: "#/definitions/link-name"
+> +
+> +      unidirectional:
+> +        $ref: "#/definitions/unidirectional"
+> +
+> +      cpu:
+> +        $ref: "#/definitions/dai"
+> +
+> +      codec:
+> +        $ref: "#/definitions/dai"
+> +
+> +    required:
+> +      - link-name
+> +      - cpu
+> +      - codec
+> +
+> +    additionalProperties: false
+> +
+> +examples:
+> +
+> +  - |
+> +    snd {
+
+Can you use the full node name "sound" here?
+
+
+> +        compatible = "qcom,sc7180-sndcard";
+> +        model = "sc7180-snd-card";
+> +
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&sec_mi2s_active &sec_mi2s_dout_active
+> +                     &sec_mi2s_ws_active &pri_mi2s_active
+> +                     &pri_mi2s_dout_active &pri_mi2s_ws_active
+> +                     &pri_mi2s_din_active &pri_mi2s_mclk_active>;
+
+I think pinctrl is usually not in the dt examples.
+
+...also, shouldn't the mi2s pinctrl be in the i2s nodes, not in the
+overall sound node?
+
+
+> +        audio-routing =
+> +                    "Headphone Jack", "HPOL",
+> +                    "Headphone Jack", "HPOR";
+> +
+> +        dai-link-0 {
+> +            link-name = "MultiMedia0";
+> +            cpu {
+> +                sound-dai = <&lpass_cpu 0>;
+> +            };
+> +
+> +            codec {
+> +                sound-dai = <&alc5682 0>;
+> +            };
+> +        };
+> +
+> +        dai-link-1 {
+> +            link-name = "MultiMedia1";
+> +            unidirectional = <0>;
+> +            cpu {
+> +                sound-dai = <&lpass_cpu 1>;
+> +            };
+> +
+> +            codec {
+> +                sound-dai = <&max98357a>;
+> +            };
+> +        };
+> +    };
+> --
+> 2.28.0.rc0.105.gf9edc3c819-goog
+>
