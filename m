@@ -2,126 +2,99 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7129BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300E7C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3D320704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595017584;
-	bh=/hYopkLccKkwFpSirohLu9rK4PERmsXifMkvfY8na74=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=CqT0AOPCQcSUyq8gAVvSkLZsslQibAWPWqAnY8XcQIcMGeHrFd5e2Z19Wtwy45KjJ
-	 gf12UoX9pRzkzOTyU+XsbZByGYd/SNW3mUsy67X83O+X5OF4UASG5J+T/hIbGulNgE
-	 8+UUnS714stfAjC+HO3ckzSv+KOkQIzlqV9x1uM8=
+	by mail.kernel.org (Postfix) with ESMTP id 065172076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:26:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xRW7s1sy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pVZfdBBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgGQU0X (ORCPT
+        id S1728772AbgGQU01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbgGQU0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:26:22 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C36A20684;
-        Fri, 17 Jul 2020 20:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595017582;
-        bh=/hYopkLccKkwFpSirohLu9rK4PERmsXifMkvfY8na74=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=s3QH/t9ocNHEPH2/jvWRB8qEQKIK64CQ+GlRWp8yjZLbWaD3J5hfVQ80kDY7xshpH
-         xeiUCkt/Irn0dwJ5rev9qj5TqMu055YbwJsqTl3kaW+lblQMHHzeP7vMEYgEstIATL
-         o2+gGzz8bNJr4YllTtvOL6MhViMZk5u3gpLyaYYU=
-Date:   Fri, 17 Jul 2020 15:26:20 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
+        Fri, 17 Jul 2020 16:26:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43006 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgGQU00 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 16:26:26 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595017584;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0bppecjFSahPLDC635ng21DpoqWWJcOKp7vehslPAzE=;
+        b=xRW7s1sy+3Vg7McJip0MwxtT0Bfu65EjlzhApk6BtwIacjqN6ZddZnezAgoB4akZcGxpIc
+        M+WRLziRYuGbYFYGc1FzX2svyxQSWkn89ReWi6epb+WKOPYYAyuscscf4EWs6P4AQ16SOy
+        84erYEJY6n9pdIhAeerWPusbZuE0FSUhpHko9X3XJTz4buya44QhZOG7pPYK/0yT6BnsB2
+        MXDrwwXudIehPSPy73wE2BN/FD2JjTtctYbyR0vX0OeGr9LHEJDEhzQvyt39Focs6kNHll
+        yAVR6vgdq4pbko73mBnEQKYTN9HoQ/vU0yHYag9FXHxiCyWv9m9CjcS53DZ6qg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595017584;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0bppecjFSahPLDC635ng21DpoqWWJcOKp7vehslPAzE=;
+        b=pVZfdBBMvBG2kABvohPsK4S3d/OmKp7nvYcPLT8meov0WCZ84fSdAhvFfnnLD5CCz7kkmB
+        lpsIPkzhIBu0gECw==
+To:     Qinglang Miao <miaoqinglang@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 11/22] pci: lto: fix PREL32 relocations
-Message-ID: <20200717202620.GA768846@bjorn-Precision-5520>
+        Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>
+Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH -next] debugobjects: Convert to DEFINE_SHOW_ATTRIBUTE
+In-Reply-To: <20200716084747.8034-1-miaoqinglang@huawei.com>
+References: <20200716084747.8034-1-miaoqinglang@huawei.com>
+Date:   Fri, 17 Jul 2020 22:26:24 +0200
+Message-ID: <87h7u5riq7.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624203200.78870-12-samitolvanen@google.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OK by me, but please update the subject to match convention:
-
-  PCI: Fix PREL32 relocations for LTO
-
-and include a hint in the commit log about what LTO is.  At least
-expand the initialism once.  Googling for "LTO" isn't very useful.
-
-  With Clang's Link Time Optimization (LTO), the compiler ... ?
-
-On Wed, Jun 24, 2020 at 01:31:49PM -0700, Sami Tolvanen wrote:
-> With LTO, the compiler can rename static functions to avoid global
-> naming collisions. As PCI fixup functions are typically static,
-> renaming can break references to them in inline assembly. This
-> change adds a global stub to DECLARE_PCI_FIXUP_SECTION to fix the
-> issue when PREL32 relocations are used.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
+Qinglang Miao <miaoqinglang@huawei.com> writes:
+> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+>
+> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 > ---
->  include/linux/pci.h | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index c79d83304e52..1e65e16f165a 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1909,19 +1909,24 @@ enum pci_fixup_pass {
->  };
+>  lib/debugobjects.c | 12 +-----------
+>  1 file changed, 1 insertion(+), 11 deletions(-)
+>
+> diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+> index 5d2bbfc55..916a5c492 100644
+> --- a/lib/debugobjects.c
+> +++ b/lib/debugobjects.c
+> @@ -1023,17 +1023,7 @@ static int debug_stats_show(struct seq_file *m, void *v)
+>  	return 0;
+>  }
 >  
->  #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
-> -#define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
-> -				    class_shift, hook)			\
-> -	__ADDRESSABLE(hook)						\
-> +#define ___DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
-> +				    class_shift, hook, stub)		\
-> +	void stub(struct pci_dev *dev) { hook(dev); }			\
->  	asm(".section "	#sec ", \"a\"				\n"	\
->  	    ".balign	16					\n"	\
->  	    ".short "	#vendor ", " #device "			\n"	\
->  	    ".long "	#class ", " #class_shift "		\n"	\
-> -	    ".long "	#hook " - .				\n"	\
-> +	    ".long "	#stub " - .				\n"	\
->  	    ".previous						\n");
-> +
-> +#define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
-> +				  class_shift, hook, stub)		\
-> +	___DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
-> +				  class_shift, hook, stub)
->  #define DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
->  				  class_shift, hook)			\
->  	__DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
-> -				  class_shift, hook)
-> +				  class_shift, hook, __UNIQUE_ID(hook))
->  #else
->  /* Anonymous variables would be nice... */
->  #define DECLARE_PCI_FIXUP_SECTION(section, name, vendor, device, class,	\
-> -- 
-> 2.27.0.212.ge8ba1cc988-goog
-> 
+> -static int debug_stats_open(struct inode *inode, struct file *filp)
+> -{
+> -	return single_open(filp, debug_stats_show, NULL);
+> -}
+> -
+> -static const struct file_operations debug_stats_fops = {
+> -	.open		= debug_stats_open,
+> -	.read_iter		= seq_read_iter,
+
+This does not apply against mainline, so I assume this malformatted
+thing comes from Christophs seq_read_iter changes in -next.
+
+The seq_read_iter here makes no sense whatsoever if the same thing can
+be achieved by using
+
+> +DEFINE_SHOW_ATTRIBUTE(debug_stats);
+
+and fixing it at the generic level.
+
+Thanks,
+
+        tglx
