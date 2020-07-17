@@ -3,92 +3,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5172EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A52C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 210232076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:42:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595007765;
-	bh=5QieGgazv24uxo8nfYhggh5x6thKh4BOctE0GCVxO54=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uxASdneCO/Xmph+EjhZZzE0l9/4mZVRcg/6dTNsdBfU2Pt+I4bCz8XtPOE70ODeUI
-	 PThGJOWXwzywXMk/qrMZpSV30ODFbvjchbXLBI71fwgyTTjuCCo6vqx4QI2d/ZB84m
-	 kC4ZsxgFLLchNug6gW3Kb4Z8Aoxaa5GkggUvUY3Y=
+	by mail.kernel.org (Postfix) with ESMTP id 95ED92083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:43:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TkI+hwhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgGQRmo (ORCPT
+        id S1728048AbgGQRnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:42:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgGQRmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:42:43 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEF46208DB;
-        Fri, 17 Jul 2020 17:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595007763;
-        bh=5QieGgazv24uxo8nfYhggh5x6thKh4BOctE0GCVxO54=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VnyyToPD2QmRCixgUxL7ZYeX4s31cJ7DgdiKq6YL0qwpngL+5VBaOtAFGPrkrSCmE
-         1r3ehfgmYDRsoVWXdZ7Svif77TJMU8nBg5rNb777Ik3GrQIrgq55lJ+2Y6xKUkf5AC
-         d62j6Nd/yc50//qZ8aMdwDI3Ld28wM8+WaArqz7o=
-Received: by mail-ot1-f54.google.com with SMTP id c25so7450036otf.7;
-        Fri, 17 Jul 2020 10:42:42 -0700 (PDT)
-X-Gm-Message-State: AOAM53014OrQHvt18BNKp9/svvNP5OmBZW85xHixFD0I8pDqtI/PoUnJ
-        /DklmBepkSNW8+WKZRB7MoWwpEkBNNXpNGb7Dw==
-X-Google-Smtp-Source: ABdhPJzD3YUc/7CeZQ+EaWXw6Qv+Go+VXgLHLQ/PJovsvgRkjaTGFOIray60Uq73A/E9jWweZDFCEtTGocFzvzdEEgg=
-X-Received: by 2002:a9d:4002:: with SMTP id m2mr9888236ote.129.1595007762224;
- Fri, 17 Jul 2020 10:42:42 -0700 (PDT)
+        Fri, 17 Jul 2020 13:43:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgGQRnP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:43:15 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06563C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:14 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc9so6888461pjb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wV1gvV23mO4MSWHgMeM+r7999nuQAFQGTkfq3zyvhrU=;
+        b=TkI+hwhyWG7WZvnJTwRRMikLIXphh/PU89bCIE8P6SFs0SaHpCf4VAcMkSYIWejrmC
+         UHjYj/pWqealOdMvuvGnbGyDGiR092Y/coL6eRwohd6FSkw/1x0lTSsWwdlxAmTbJF9z
+         MG+bnlBW3Pz3hPqkiZYjpkgP2T6E3WFs4nd00=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wV1gvV23mO4MSWHgMeM+r7999nuQAFQGTkfq3zyvhrU=;
+        b=c5Prjf+GBUIbV+MP9+R41TMnOr4KXK0dfVGWaYs5nCknQyyriT8R8BNDTKnGmvCXoq
+         jsFgvN2vlLcSrs+eLmhqdD+jqvAStDm29xAAyuFkhprKq+nBzzT2TI2Jr0pvObjcprDN
+         JwfBBAMhnjjRGXuWfD+8BIDpqPusS9nlGz/XjdtTRq9DXzJ/4/ik6PIqhfF0iXSUUgES
+         lA+bFPuq6t8Ad5tyRdaiKbkn8Iq0KsEOcrw/bBgObiPXGwArzirlgTmIwgze16Y86lM4
+         374LlMiObX4VseFwkM2jrHoCtKATbXm7GurLkYysEuoLytob31/2KuJePBbeGkeo75LD
+         kGEg==
+X-Gm-Message-State: AOAM5318nF2cPt7a8eeFdXKaDDUEpfE+zFMN9JclYMS73sB5yuTcEETw
+        vRq4ZSwb9yXExZBV8AChuxZGfQ==
+X-Google-Smtp-Source: ABdhPJxKZBG7RqgWoCxDb3CWPD97sCGFFzSrqXIIWjriKiDJA4WPNj/7bJe6bdbUYimvfgj8GzzH+g==
+X-Received: by 2002:a17:90b:1386:: with SMTP id hr6mr10767858pjb.93.1595007794310;
+        Fri, 17 Jul 2020 10:43:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 21sm8245611pfu.124.2020.07.17.10.43.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 10:43:13 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        James Morris <jmorris@namei.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/13] Introduce partial kernel_read_file() support
+Date:   Fri, 17 Jul 2020 10:42:55 -0700
+Message-Id: <20200717174309.1164575-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200702191322.2639681-1-helen.koike@collabora.com> <20200702191322.2639681-2-helen.koike@collabora.com>
-In-Reply-To: <20200702191322.2639681-2-helen.koike@collabora.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 17 Jul 2020 11:42:30 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKLFanS_Vhsbxt5mibxCimDGoa=ShyjR0Qt9YPeazOmTg@mail.gmail.com>
-Message-ID: <CAL_JsqKLFanS_Vhsbxt5mibxCimDGoa=ShyjR0Qt9YPeazOmTg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/9] media: staging: dt-bindings: rkisp1: add missing
- required nodes
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     devicetree@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mark Rutland <mark.rutland@arm.com>, karthik.poduval@gmail.com,
-        Johan Jonker <jbx6244@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Eddie Cai <eddie.cai.linux@gmail.com>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 1:13 PM Helen Koike <helen.koike@collabora.com> wrote:
->
-> Add missing required nodes in json-schema yaml file for
-> Rockchip ISP1 dt-bindings.
->
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> ---
->
-> Changes in v2:
-> - New patch in the series
-> ---
->  .../devicetree/bindings/media/rockchip-isp1.yaml          | 8 ++++++++
->  1 file changed, 8 insertions(+)
+Hi,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Here's my attempt at clearing the path to partial read support in
+kernel_read_file(), which fixes a number of issues along the way. I'm
+still fighting with the firmware test suite (it doesn't seem to pass
+for me even in stock v5.7... ?) But I don't want to block Scott's work[1]
+any this week, so here's the series as it is currently.
+
+The primary difference to Scott's approach is to avoid adding a new set of
+functions and just adapt the existing APIs to deal with "offset". Also,
+the fixes for the enum are first in the series so they can be backported
+without the header file relocation.
+
+I'll keep poking at the firmware tests...
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/202007161415.10D015477@keescook/
+
+Kees Cook (12):
+  firmware_loader: EFI firmware loader must handle pre-allocated buffer
+  fs/kernel_read_file: Remove FIRMWARE_PREALLOC_BUFFER enum
+  fs/kernel_read_file: Remove FIRMWARE_EFI_EMBEDDED enum
+  fs/kernel_read_file: Split into separate source file
+  fs/kernel_read_file: Remove redundant size argument
+  fs/kernel_read_file: Switch buffer size arg to size_t
+  fs/kernel_read_file: Add file_size output argument
+  LSM: Introduce kernel_post_load_data() hook
+  firmware_loader: Use security_post_load_data()
+  module: Call security_kernel_post_load_data()
+  LSM: Add "contents" flag to kernel_read_file hook
+  fs/kernel_file_read: Add "offset" arg for partial reads
+
+Scott Branden (1):
+  fs/kernel_read_file: Split into separate include file
+
+ drivers/base/firmware_loader/fallback.c       |   8 +-
+ .../base/firmware_loader/fallback_platform.c  |  12 +-
+ drivers/base/firmware_loader/main.c           |  13 +-
+ fs/Makefile                                   |   3 +-
+ fs/exec.c                                     | 132 +-----------
+ fs/kernel_read_file.c                         | 189 ++++++++++++++++++
+ include/linux/fs.h                            |  39 ----
+ include/linux/ima.h                           |  19 +-
+ include/linux/kernel_read_file.h              |  55 +++++
+ include/linux/lsm_hook_defs.h                 |   6 +-
+ include/linux/lsm_hooks.h                     |  12 ++
+ include/linux/security.h                      |  19 +-
+ kernel/kexec.c                                |   2 +-
+ kernel/kexec_file.c                           |  18 +-
+ kernel/module.c                               |  24 ++-
+ security/integrity/digsig.c                   |   8 +-
+ security/integrity/ima/ima_fs.c               |   9 +-
+ security/integrity/ima/ima_main.c             |  58 ++++--
+ security/integrity/ima/ima_policy.c           |   1 +
+ security/loadpin/loadpin.c                    |  17 +-
+ security/security.c                           |  26 ++-
+ security/selinux/hooks.c                      |   8 +-
+ 22 files changed, 432 insertions(+), 246 deletions(-)
+ create mode 100644 fs/kernel_read_file.c
+ create mode 100644 include/linux/kernel_read_file.h
+
+-- 
+2.25.1
+
