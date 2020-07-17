@@ -2,185 +2,175 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6B8C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB26C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9FD72083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:39:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="gD8pz+Gv"
+	by mail.kernel.org (Postfix) with ESMTP id AFFCC2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGQPjK (ORCPT
+        id S1727910AbgGQPj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:39:10 -0400
-Received: from mail.efficios.com ([167.114.26.124]:49040 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbgGQPjK (ORCPT
+        Fri, 17 Jul 2020 11:39:58 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:56013 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbgGQPj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 11:39:10 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id F35F82C8A1F;
-        Fri, 17 Jul 2020 11:39:08 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 61XC0oH3775c; Fri, 17 Jul 2020 11:39:08 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 8E5782C88A5;
-        Fri, 17 Jul 2020 11:39:08 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 8E5782C88A5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1595000348;
-        bh=KcymKk7xqqEPTpGeFV6WmpL2INb7TpCCRlY0uv4IIl4=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=gD8pz+GvRrmmamH69LfCRwyu3TOcDwjt7ajYq/DR8gSrVpZSqFY17J1vy3Bh0F/8o
-         sS+G2QDxdzLVS4FjsBBvzriLqSB9ObKBgBBTiZZWeXVi3Sa/o+As9jaFmI/GVdYDUY
-         jsph8cMcJzSZJN43LfMCqyyC+vIW7szdYu4WHYYdi+qhStvM4wOCChUxo23TbDMAwq
-         /dfs5RVE/EMR05TtOaZFpJJ2ooWlzmv/eH6xsIHsMssnxIA6Gs9BKU0/TuaZO6Cpbb
-         ddCLfgNCHwhu4ikCvGtM27lhk7soeCBycFCh62abkSHoULSYmrO0MEjkEYaC3YOu/6
-         vKl66KONA+byg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id VWAgzG4ZGvtm; Fri, 17 Jul 2020 11:39:08 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 7B3A92C88A4;
-        Fri, 17 Jul 2020 11:39:08 -0400 (EDT)
-Date:   Fri, 17 Jul 2020 11:39:08 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, paulmck <paulmck@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
-Message-ID: <1697220787.18880.1595000348405.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200717145102.GC1147780@rowland.harvard.edu>
-References: <20200710015646.2020871-1-npiggin@gmail.com> <1594873644.viept6os6j.astroid@bobo.none> <1494299304.15894.1594914382695.JavaMail.zimbra@efficios.com> <1370747990.15974.1594915396143.JavaMail.zimbra@efficios.com> <595582123.17106.1594925921537.JavaMail.zimbra@efficios.com> <20200716212416.GA1126458@rowland.harvard.edu> <1770378591.18523.1594993165391.JavaMail.zimbra@efficios.com> <20200717145102.GC1147780@rowland.harvard.edu>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
+        Fri, 17 Jul 2020 11:39:57 -0400
+Received: from mail-qv1-f48.google.com ([209.85.219.48]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MQMqN-1k9KcV3CDJ-00MMtU for <linux-kernel@vger.kernel.org>; Fri, 17 Jul
+ 2020 17:39:54 +0200
+Received: by mail-qv1-f48.google.com with SMTP id e3so4398539qvo.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 08:39:54 -0700 (PDT)
+X-Gm-Message-State: AOAM533wCfrLJfS4zBVaTv5Ot90hMRQqPkz2e8zoHVGnyq+9lqFhwMzH
+        havjYJQ6v0r6h71OF8KnHbagxSeFEvve9bzZ1J0=
+X-Google-Smtp-Source: ABdhPJxRrNbbdhfqUDbrX5F9rMm9sYu2zby6QL6ExVOp71ClC5e17qHLUP8RHGENBQtdadkjz1skp5j4QtDNlvN8KXg=
+X-Received: by 2002:ad4:4c09:: with SMTP id bz9mr9104679qvb.210.1595000393645;
+ Fri, 17 Jul 2020 08:39:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
-Thread-Index: mVSzzDyP2RjmLYTpgzYa2Ixemz2qhA==
+References: <20200716223627.253936-1-daniel.gutson@eclypsium.com>
+ <CAK8P3a2miOXUESw+ayiEzAZ07NcieztVMEY31wUgrkD2tBAtDg@mail.gmail.com> <CAFmMkTG3rMtmNxYf0jXgGN7zJgK2U8Ogtrd4yH0Ee1rC7pf9Mg@mail.gmail.com>
+In-Reply-To: <CAFmMkTG3rMtmNxYf0jXgGN7zJgK2U8Ogtrd4yH0Ee1rC7pf9Mg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jul 2020 17:39:37 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a384fKBEYU22UDOyr2vpdo+A+keoF_4jhcevG-w9rvtdw@mail.gmail.com>
+Message-ID: <CAK8P3a384fKBEYU22UDOyr2vpdo+A+keoF_4jhcevG-w9rvtdw@mail.gmail.com>
+Subject: Re: [PATCH] [PATCH] Firmware security information in SYSFS
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:lEtYPZyCryh1w3i15heFhslpyk/raxlGvX8tDy6460B1MpXhVOz
+ gbArQy0pzmfza3Ee/PTGfXORdgb+82dmN4cgsWGTsdd3IN5LVQbL+DDVQc15oJpaBQRio3r
+ xZip3CCn4Rbdsm9ArtzK4MleMq8Arna6OpRx3fWXPIChDpanw0KCCjecIKMaY4iZ6CkxCtb
+ UE+ZBC5AXIpL8lsOqWCQw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:U5YyfqHBaGU=:5+wIljemyFgpA0f3gTNjmZ
+ kWmqb0kfhWJI1ORdASzEKUxxXrujOCBECwoZ3978Vh/k32RDD2nivbmWqh1y3dLEx3+gWVk61
+ mqj24Zd/knr0rJhrsM8ZxAIzYg+Qic8ICqaCTQ0dnAjlrViefqEFBpFUG8AAI/w1SWbNiyLVW
+ yjykEF3nXn6iOf8QedIKLdo0yYuaCyf7GEt35AgYdZBJJjwHfYN+2ov8FmDFVNdUlphOmpe57
+ MuJ0KBDNmK4R8dDPzekBe0Or555ikAWyS6KJ1K5ZCU2ROMKpNqB2bCyHjE+B278fg8M9Mssj4
+ ZjPqkutVhq5rh4gx1IOm5KKRl/QAtcO8Kg7oQsMglWqeUohl8SDQqVjThCZ+30K/C5jMhfmnj
+ ZuBCP7YxNCqVVa9v5LyhVu9NIjiRMuOaG868ORt3JQoUAW5PjPbPljTabwSlbxvz7Ob9Qvjua
+ u9cqovYNx9hUo4H/AfntUDFdGpCPSQTBu6fUoB2aXJebvvYY9xSvQMrQt9WJZmC1je5blBnzf
+ LO7d+uG5XPmMzhIoQNPfSA7F/a2pZpUruXawSO/emA5yTJX3fQ6BcLsV96QJ2U4c0uNDXV4yg
+ 9mZEzg4+thj3mCg0CUXwf2BBp5+OFxGzGynzNL7pMf0JJjOpzZM9um2sqh8KZW7Ac+iWcqj6m
+ 5ncgdb+HQWwmNk9LYDkqrDpXRrsCGdvjG15h6DdawGrym2Tn9fDeHKjmBvfPhhxjMNBr5YDTS
+ kXr1GoxazK8OjJXUO0Hl/RovndM6Pb9aqZYgDl8NG6ezUXR/RUTf3bE7Zf5K2JuHNMwvMCs/+
+ 6lHj4j0FeleG3bBc5Qy8KShy+sHJeKR8aTgI4CgE/WD9Zr6PFDsHE/AnprExlMS+YFW5VXkXQ
+ /Y+hCjpnYdQMyOluNcdAt4i+6XB5Zp1DWtGHirAN83etleKhwc82OT+JEM5ELpCcoamnvzsX4
+ hULAMmYPRiiwoHnSeoUb/lJXsu4s/hTnBYeMR3PrWc0LgaD5hQ/gy
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 17, 2020, at 10:51 AM, Alan Stern stern@rowland.harvard.edu wrote:
+On Fri, Jul 17, 2020 at 5:21 PM Daniel Gutson <daniel@eclypsium.com> wrote:
+> On Fri, Jul 17, 2020 at 11:48 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Fri, Jul 17, 2020 at 12:36 AM Daniel Gutson <daniel.gutson@eclypsium.com> wrote:
+>> >
+>>
+>> > +static ssize_t internal_callback(struct kobject *kobj,
+>> > +                                struct kobj_attribute *attr, char *buf)
+>> > +{
+>> > +       struct firmware_security_data *fwsd =
+>> > +               container_of(attr, struct firmware_security_data, kobj_attr);
+>> > +       return fwsd->callback(buf, fwsd->private_data);
+>> > +}
+>> > +
+>> > +int register_firmware_security_data_callback(
+>> > +       const char *name, ssize_t (*callback)(char *buf, void *private_data),
+>> > +       void *private_data)
+>>
+>> Why do you have a callback interface here?
+>
+>
+> Because that was what I understood from you :) and it made sense for me.
+> Callbacks depend on the DID, so it can't be static. The returned value is dynamic too.
+> The callback idea here is like the show() callback of the kobjects.
+>
+>>
+>> I would have expected
+>> all the data to be static during the kernel run time, so just passing the
+>> information here would make it much simpler.
+>
+>
+> What information are you referring to?
+> Please give me more details about your idea because using a callback is the only solution I can think about.
 
-> On Fri, Jul 17, 2020 at 09:39:25AM -0400, Mathieu Desnoyers wrote:
->> ----- On Jul 16, 2020, at 5:24 PM, Alan Stern stern@rowland.harvard.edu wrote:
->> 
->> > On Thu, Jul 16, 2020 at 02:58:41PM -0400, Mathieu Desnoyers wrote:
->> >> ----- On Jul 16, 2020, at 12:03 PM, Mathieu Desnoyers
->> >> mathieu.desnoyers@efficios.com wrote:
->> >> 
->> >> > ----- On Jul 16, 2020, at 11:46 AM, Mathieu Desnoyers
->> >> > mathieu.desnoyers@efficios.com wrote:
->> >> > 
->> >> >> ----- On Jul 16, 2020, at 12:42 AM, Nicholas Piggin npiggin@gmail.com wrote:
->> >> >>> I should be more complete here, especially since I was complaining
->> >> >>> about unclear barrier comment :)
->> >> >>> 
->> >> >>> 
->> >> >>> CPU0                     CPU1
->> >> >>> a. user stuff            1. user stuff
->> >> >>> b. membarrier()          2. enter kernel
->> >> >>> c. smp_mb()              3. smp_mb__after_spinlock(); // in __schedule
->> >> >>> d. read rq->curr         4. rq->curr switched to kthread
->> >> >>> e. is kthread, skip IPI  5. switch_to kthread
->> >> >>> f. return to user        6. rq->curr switched to user thread
->> >> >>> g. user stuff            7. switch_to user thread
->> >> >>>                         8. exit kernel
->> >> >>>                         9. more user stuff
-> 
-> ...
-> 
->> >> Requiring a memory barrier between update of rq->curr (back to current process's
->> >> thread) and following user-space memory accesses does not seem to guarantee
->> >> anything more than what the initial barrier at the beginning of __schedule
->> >> already
->> >> provides, because the guarantees are only about accesses to user-space memory.
-> 
-> ...
-> 
->> > Is it correct to say that the switch_to operations in 5 and 7 include
->> > memory barriers?  If they do, then skipping the IPI should be okay.
->> > 
->> > The reason is as follows: The guarantee you need to enforce is that
->> > anything written by CPU0 before the membarrier() will be visible to CPU1
->> > after it returns to user mode.  Let's say that a writes to X and 9
->> > reads from X.
->> > 
->> > Then we have an instance of the Store Buffer pattern:
->> > 
->> >	CPU0			CPU1
->> >	a. Write X		6. Write rq->curr for user thread
->> >	c. smp_mb()		7. switch_to memory barrier
->> >	d. Read rq->curr	9. Read X
->> > 
->> > In this pattern, the memory barriers make it impossible for both reads
->> > to miss their corresponding writes.  Since d does fail to read 6 (it
->> > sees the earlier value stored by 4), 9 must read a.
->> > 
->> > The other guarantee you need is that g on CPU0 will observe anything
->> > written by CPU1 in 1.  This is easier to see, using the fact that 3 is a
->> > memory barrier and d reads from 4.
->> 
->> Right, and Nick's reply involving pairs of loads/stores on each side
->> clarifies the situation even further.
-> 
-> The key part of my reply was the question: "Is it correct to say that
-> the switch_to operations in 5 and 7 include memory barriers?"  From the
-> text quoted above and from Nick's reply, it seems clear that they do
-> not.
+I still don't understand what the values are that you export. Can
+you try to describe better what you are actually exporting to user
+space, and how they change at runtime?
 
-I remember that switch_mm implies it, but not switch_to.
+My impression was that the state of the registers you read would
+be the same if you read them multiple times, at least until you
+reboot and the firmware has a chance to change them.
 
-The scenario that triggered this discussion is when the scheduler does a
-lazy tlb entry/exit, which is basically switch from a user task to
-a kernel thread without changing the mm, and usually switching back afterwards.
-This optimization means the rq->curr mm temporarily differs, which prevent
-IPIs from being sent by membarrier, but without involving a switch_mm.
-This requires explicit memory barriers either on entry/exit of lazy tlb
-mode, or explicit barriers in the scheduler for those special-cases.
+>> > @@ -76,7 +119,7 @@ static const struct pci_device_id intel_spi_pci_ids[] = {
+>> >         { PCI_VDEVICE(INTEL, 0xa224), (unsigned long)&bxt_info },
+>> >         { PCI_VDEVICE(INTEL, 0xa324), (unsigned long)&cnl_info },
+>> >         { PCI_VDEVICE(INTEL, 0xa3a4), (unsigned long)&bxt_info },
+>> > -       { },
+>> > +       {},
+>> >  };
+>> ...
+>> >  #include "intel-spi.h"
+>> >
+>> > @@ -48,17 +49,17 @@
+>> >
+>> >  #define FADDR                          0x08
+>> >  #define DLOCK                          0x0c
+>> > -#define FDATA(n)                       (0x10 + ((n) * 4))
+>> > +#define FDATA(n)                       (0x10 + ((n)*4))
+>> >
+>> >  #define FRACC                          0x50
+>> >
+>> > -#define FREG(n)                                (0x54 + ((n) * 4))
+>> > +#define FREG(n)                                (0x54 + ((n)*4))
+>> >  #define FREG_BASE_MASK                 0x3fff
+>> >  #define FREG_LIMIT_SHIFT               16
+>> >  #define FREG_LIMIT_MASK                        (0x03fff << FREG_LIMIT_SHIFT)
+>> >
+>>
+>> Accidental whitespace change, please skip these changes?
+>
+>
+> This came from clang-format, I thought it was a requirement so I left this
+> fixed. Should I revert the changes from clang-format?
 
-> I agree with Nick: A memory barrier is needed somewhere between the
-> assignment at 6 and the return to user mode at 8.  Otherwise you end up
-> with the Store Buffer pattern having a memory barrier on only one side,
-> and it is well known that this arrangement does not guarantee any
-> ordering.
+Yes, you should ensure that newly added code does not introduce
+incorrect whitespace, but never mix cosmetic changes to existing
+code with newly added functionality.
 
-Yes, I see this now. I'm still trying to wrap my head around why the memory
-barrier at the end of membarrier() needs to be paired with a scheduler
-barrier though.
+>> > @@ -161,7 +164,8 @@ struct intel_spi {
+>> >
+>> >  static bool writeable;
+>> >  module_param(writeable, bool, 0);
+>> > -MODULE_PARM_DESC(writeable, "Enable write access to SPI flash chip (default=0)");
+>> > +MODULE_PARM_DESC(writeable,
+>> > +                "Enable write access to SPI flash chip (default=0)");
+>> >
+>> >  static void intel_spi_dump_regs(struct intel_spi *ispi)
+>> >  {
+>>
+>> This looks like a useful change, but it should be a separate patch.
+>
+>
+> More clang-format.
 
-> One thing I don't understand about all this: Any context switch has to
-> include a memory barrier somewhere, but both you and Nick seem to be
-> saying that steps 6 and 7 don't include (or don't need) any memory
-> barriers.  What am I missing?
+Ah, I had misread the change, thinking that you added the description, but
+you really only change the whitespace, and in fact make it worse. ;-)
 
-All context switch have the smp_mb__before_spinlock at the beginning of
-__schedule(), which I suspect is what you refer to. However this barrier
-is before the store to rq->curr, not after.
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+       Arnd
