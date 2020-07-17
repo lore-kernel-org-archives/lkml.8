@@ -4,186 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D954BC43459
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1ABC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2EC8208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D38208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgGQRAt (ORCPT
+        id S1728059AbgGQRAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:00:49 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38516 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726938AbgGQRAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:00:46 -0400
-IronPort-SDR: ThkC0W66uHL9/qZLRfwIrLqWjoJahS5GhssQW77ZJ4wUlzXjG7vh4qEBUqubs9HkbjHsxAgw1k
- NpVDehrW9mTw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="129202492"
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="129202492"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 10:00:44 -0700
-IronPort-SDR: 48hV9N2ZV95iTOqnJkajWh5Yu8b7gpJwIBPXkRuLfGJbaTivBdVrhxWZzfhRqAVR2PA/jZy9q0
- EfTGxeH1E6VA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="270862022"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.33.149])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Jul 2020 10:00:37 -0700
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     arjan@linux.intel.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH v4 04/10] x86: Makefile: Add build and config option for CONFIG_FG_KASLR
-Date:   Fri, 17 Jul 2020 10:00:01 -0700
-Message-Id: <20200717170008.5949-5-kristen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200717170008.5949-1-kristen@linux.intel.com>
-References: <20200717170008.5949-1-kristen@linux.intel.com>
+        Fri, 17 Jul 2020 13:00:48 -0400
+Received: from out28-124.mail.aliyun.com ([115.124.28.124]:54634 "EHLO
+        out28-124.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727810AbgGQRAp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:00:45 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07466951|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0939416-0.000470004-0.905588;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I3U5VZp_1595005212;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I3U5VZp_1595005212)
+          by smtp.aliyun-inc.com(10.147.41.121);
+          Sat, 18 Jul 2020 01:00:22 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     daniel.lezcano@linaro.org, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tglx@linutronix.de,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
+Subject: [PATCH v7 4/5] MIPS: X1000: Use SYSOST instead of TCU to provide clocksource.
+Date:   Sat, 18 Jul 2020 00:59:46 +0800
+Message-Id: <20200717165947.56158-5-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200717165947.56158-1-zhouyanjie@wanyeetech.com>
+References: <20200717165947.56158-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow user to select CONFIG_FG_KASLR if dependencies are met. Change
-the make file to build with -ffunction-sections if CONFIG_FG_KASLR.
+Before this series of patches, X1000 used TCU to provide
+clocksource and clockevent, but because the timer of TCU
+is only 16 bits, so the timing length is only 16 bits. In
+actual use, it is easy to cause some problems such as data
+loss during data transmission. The SYSOST driver is provided
+in this series of patches, which can provide 32bit timing
+length, so use SYSOST instead of TCU to provide clocksource
+and clockevent to solve the aforementioned problems.
 
-While the only architecture that supports CONFIG_FG_KASLR does not
-currently enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION, make sure these
-2 features play nicely together for the future by ensuring that if
-CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is selected when used with
-CONFIG_FG_KASLR the function sections will not be consolidated back
-into .text. Thanks to Kees Cook for the dead code elimination changes.
-
-Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Tony Luck <tony.luck@intel.com>
+Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- Makefile                          |  6 +++++-
- arch/x86/Kconfig                  |  4 ++++
- include/asm-generic/vmlinux.lds.h | 16 ++++++++++++++--
- init/Kconfig                      | 14 ++++++++++++++
- 4 files changed, 37 insertions(+), 3 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 0b5f8538bde5..66427b12de53 100644
---- a/Makefile
-+++ b/Makefile
-@@ -872,7 +872,7 @@ KBUILD_CFLAGS += $(call cc-option, -fno-inline-functions-called-once)
- endif
+Notes:
+    v7:
+    New patch.
+
+ arch/mips/boot/dts/ingenic/cu1000-neo.dts |  9 +++------
+ arch/mips/boot/dts/ingenic/x1000.dtsi     | 16 ++++++++++++++++
+ 2 files changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/arch/mips/boot/dts/ingenic/cu1000-neo.dts b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+index 22a1066d637b..9418dbeccfa6 100644
+--- a/arch/mips/boot/dts/ingenic/cu1000-neo.dts
++++ b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+@@ -3,7 +3,7 @@
  
- ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
--KBUILD_CFLAGS_KERNEL += -ffunction-sections -fdata-sections
-+KBUILD_CFLAGS_KERNEL += -fdata-sections
- LDFLAGS_vmlinux += --gc-sections
- endif
+ #include "x1000.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/clock/ingenic,tcu.h>
++#include <dt-bindings/clock/ingenic,sysost.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
  
-@@ -880,6 +880,10 @@ ifdef CONFIG_LIVEPATCH
- KBUILD_CFLAGS += $(call cc-option, -flive-patching=inline-clone)
- endif
+ / {
+@@ -43,13 +43,10 @@
+ 	clock-frequency = <24000000>;
+ };
  
-+ifneq ($(CONFIG_LD_DEAD_CODE_DATA_ELIMINATION)$(CONFIG_FG_KASLR),)
-+KBUILD_CFLAGS += -ffunction-sections
-+endif
+-&tcu {
++&ost {
+ 	/* 1500 kHz for the system timer and clocksource */
+-	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
++	assigned-clocks = <&ost OST_CLK_PERCPU_TIMER>, <&ost OST_CLK_GLOBAL_TIMER>;
+ 	assigned-clock-rates = <1500000>, <1500000>;
+-
+-	/* Use channel #0 for the system timer channel #2 for the clocksource */
+-	ingenic,pwm-channels-mask = <0xfa>;
+ };
+ 
+ &uart2 {
+diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+index 9de9e7c2d523..bf7951dc89ef 100644
+--- a/arch/mips/boot/dts/ingenic/x1000.dtsi
++++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+@@ -47,6 +47,22 @@
+ 		clock-names = "ext", "rtc";
+ 	};
+ 
++	ost: timer@12000000 {
++		compatible = "ingenic,x1000-ost";
++		reg = <0x12000000 0x1000>;
 +
- ifdef CONFIG_SHADOW_CALL_STACK
- CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
- KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 883da0abf779..e7a2db3e270d 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -372,6 +372,10 @@ config CC_HAS_SANE_STACKPROTECTOR
- 	   We have to make sure stack protector is unconditionally disabled if
- 	   the compiler produces broken code.
- 
-+config ARCH_HAS_FG_KASLR
-+	def_bool y
-+	depends on RANDOMIZE_BASE && X86_64
++		#clock-cells = <1>;
 +
- menu "Processor type and features"
- 
- config ZONE_DMA
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index db600ef218d7..a5552cf28d5d 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -93,14 +93,12 @@
-  * sections to be brought in with rodata.
-  */
- #ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
--#define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
- #define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX*
- #define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]*
- #define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]*
- #define BSS_MAIN .bss .bss.[0-9a-zA-Z_]*
- #define SBSS_MAIN .sbss .sbss.[0-9a-zA-Z_]*
- #else
--#define TEXT_MAIN .text
- #define DATA_MAIN .data
- #define SDATA_MAIN .sdata
- #define RODATA_MAIN .rodata
-@@ -108,6 +106,20 @@
- #define SBSS_MAIN .sbss
- #endif
- 
-+/*
-+ * Both LD_DEAD_CODE_DATA_ELIMINATION and CONFIG_FG_KASLR options enable
-+ * -ffunction-sections, which produces separately named .text sections. In
-+ * the case of CONFIG_FG_KASLR, they need to stay distict so they can be
-+ * separately randomized. Without CONFIG_FG_KASLR, the separate .text
-+ * sections can be collected back into a common section, which makes the
-+ * resulting image slightly smaller
-+ */
-+#if defined(CONFIG_LD_DEAD_CODE_DATA_ELIMINATION) && !defined(CONFIG_FG_KASLR)
-+#define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
-+#else
-+#define TEXT_MAIN .text
-+#endif
++		clocks = <&cgu X1000_CLK_OST>;
++		clock-names = "ost";
 +
- /*
-  * Align to a 32 byte boundary equal to the
-  * alignment gcc 4.5 uses for a struct
-diff --git a/init/Kconfig b/init/Kconfig
-index 0498af567f70..82f042a1062f 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1990,6 +1990,20 @@ config PROFILING
- config TRACEPOINTS
- 	bool
- 
-+config FG_KASLR
-+	bool "Function Granular Kernel Address Space Layout Randomization"
-+	depends on $(cc-option, -ffunction-sections)
-+	depends on ARCH_HAS_FG_KASLR
-+	default n
-+	help
-+	  This option improves the randomness of the kernel text
-+	  over basic Kernel Address Space Layout Randomization (KASLR)
-+	  by reordering the kernel text at boot time. This feature
-+	  uses information generated at compile time to re-layout the
-+	  kernel text section at boot time at function level granularity.
++		interrupt-controller;
++		#interrupt-cells = <1>;
 +
-+	  If unsure, say N.
++		interrupt-parent = <&cpuintc>;
++		interrupts = <3>;
++	};
 +
- endmenu		# General setup
- 
- source "arch/Kconfig"
+ 	tcu: timer@10002000 {
+ 		compatible = "ingenic,x1000-tcu", "simple-mfd";
+ 		reg = <0x10002000 0x1000>;
 -- 
-2.20.1
+2.11.0
 
