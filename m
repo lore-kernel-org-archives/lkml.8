@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD296C433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F65BC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1F9E20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E6F820737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:06:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgGQIGH (ORCPT
+        id S1728329AbgGQIGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:06:07 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8312 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726198AbgGQIGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:06:07 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DD773C5387197067B19F;
-        Fri, 17 Jul 2020 16:06:04 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 17 Jul 2020 16:05:56 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <guohanjun@huawei.com>, <wangxiongfeng2@huawei.com>
-Subject: [PATCH] PCI/ASPM: add missing newline when printing parameter 'policy' by sysfs
-Date:   Fri, 17 Jul 2020 15:59:25 +0800
-Message-ID: <1594972765-10404-1-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Fri, 17 Jul 2020 04:06:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50076 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726198AbgGQIF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:05:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4059CAFF1;
+        Fri, 17 Jul 2020 08:06:03 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     corbet@lwn.net
+Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH] media: atomisp: do not free kmalloc memory by vfree
+Date:   Fri, 17 Jul 2020 10:05:58 +0200
+Message-Id: <20200717080558.24829-1-jslaby@suse.cz>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <b7636799383bfb85c59d27e140a3c0e56d4af87d.camel@perches.com>
+References: <b7636799383bfb85c59d27e140a3c0e56d4af87d.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I cat ASPM parameter 'policy' by sysfs, it displays as follows.
-It's better to add a newline for easy reading.
+fw_minibuffer[i].buffer is allocated by kmalloc in sh_css_load_blob_info
+and by vmalloc in setup_binary. So use kvfree to decide which of those
+allocators to use for freeing.
 
-[root@localhost ~]# cat /sys/module/pcie_aspm/parameters/policy
-[default] performance powersave powersupersave [root@localhost ~]#
+Also remove the useless cast.
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/media/atomisp/pci/sh_css_firmware.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index b17e5ff..253c30c 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1182,6 +1182,7 @@ static int pcie_aspm_get_policy(char *buffer, const struct kernel_param *kp)
- 			cnt += sprintf(buffer + cnt, "[%s] ", policy_str[i]);
- 		else
- 			cnt += sprintf(buffer + cnt, "%s ", policy_str[i]);
-+	cnt += sprintf(buffer + cnt, "\n");
- 	return cnt;
- }
- 
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+index d4ab15b6d1ac..d0011b1d97ed 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
++++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+@@ -358,7 +358,7 @@ void sh_css_unload_firmware(void)
+ 			if (fw_minibuffer[i].name)
+ 				kfree((void *)fw_minibuffer[i].name);
+ 			if (fw_minibuffer[i].buffer)
+-				vfree((void *)fw_minibuffer[i].buffer);
++				kvfree(fw_minibuffer[i].buffer);
+ 		}
+ 		kfree(fw_minibuffer);
+ 		fw_minibuffer = NULL;
 -- 
-1.7.12.4
+2.27.0
 
