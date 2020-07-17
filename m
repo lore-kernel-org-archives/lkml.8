@@ -6,40 +6,38 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F6BC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEE2C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6056A2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628322076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbgGQTu3 (ORCPT
+        id S1728535AbgGQTvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:50:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbgGQTu3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:50:29 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09671C0619D2;
-        Fri, 17 Jul 2020 12:50:29 -0700 (PDT)
+        Fri, 17 Jul 2020 15:51:17 -0400
+Received: from ms.lwn.net ([45.79.88.28]:36972 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728202AbgGQTvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 15:51:16 -0400
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 28211728;
-        Fri, 17 Jul 2020 19:50:28 +0000 (UTC)
-Date:   Fri, 17 Jul 2020 13:50:27 -0600
+        by ms.lwn.net (Postfix) with ESMTPSA id 8DAA3537;
+        Fri, 17 Jul 2020 19:51:16 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 13:51:15 -0600
 From:   Jonathan Corbet <corbet@lwn.net>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>, mchehab@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/25] Documentation: watch_queue.rst: fix sphinx
- warnings
-Message-ID: <20200717135027.15d8bdb4@lwn.net>
-In-Reply-To: <cf5f2227-c473-442b-7ad4-5ca3718a6672@infradead.org>
+To:     Daniel Lima de Almeida <dwlsalmeida@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 08/25] Documentation: events/block.h: fix sphinx warning
+Message-ID: <20200717135115.4bd4b051@lwn.net>
+In-Reply-To: <RO1PR80MB35622AF97F6C440884FF4B46A07C0@RO1PR80MB3562.lamprd80.prod.outlook.com>
 References: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
-        <20200717185624.2009393-13-dwlsalmeida@gmail.com>
-        <cf5f2227-c473-442b-7ad4-5ca3718a6672@infradead.org>
+        <20200717185624.2009393-8-dwlsalmeida@gmail.com>
+        <7424fc52-9b37-1b66-ca7f-4e95d35d880c@infradead.org>
+        <RO1PR80MB35622AF97F6C440884FF4B46A07C0@RO1PR80MB3562.lamprd80.prod.outlook.com>
 Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -49,23 +47,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 12:42:52 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
+On Fri, 17 Jul 2020 19:44:58 +0000
+Daniel Lima de Almeida <dwlsalmeida@gmail.com> wrote:
 
-> > -  * ``int remove_watch_from_object(struct watch_list *wlist,
-> > -				   struct watch_queue *wqueue,
-> > -				   u64 id, false);``
-> > +  * ``int remove_watch_from_object(struct watch_list *wlist,``
-> > +				 ``struct watch_queue *wqueue,``
-> > +				 ``u64 id, false);``
-> >  
-> >      Remove a watch from a watch list, where the watch must match the specified
-> >      watch queue (``wqueue``) and object identifier (``id``).  A notification
-> >   
-> 
-> Wow. If that's what it takes, well, OK, but it's sad IMHO.
+> I was working on top of 'docs_next' if I recall correctly. Any suggestions?
 
-It seems like it might be better to remove the quoting altogether?  Either
-that or just make a literal block.
+Always look at linux-next to see what's going on.
+
+Since most of those patches are not appropriate for docs-next, I don't
+have them, but you should always see the current state of affairs in
+linux-next.
 
 jon
