@@ -6,162 +6,187 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DCFC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE46C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D500020734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA10220734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="1MgR/8V8"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="oGIDAZ6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgGQNhi (ORCPT
+        id S1726742AbgGQNjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:37:38 -0400
-Received: from cmta20.telus.net ([209.171.16.93]:59241 "EHLO cmta20.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgGQNhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:37:37 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id wQYOju31CljNxwQYPjxByj; Fri, 17 Jul 2020 07:37:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1594993056; bh=MHXW2IkggcW3wyGFCI6PVWf/41xrTYo5/J9/J/sF8i0=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=1MgR/8V8KEFb7XBAbEGVVmYawYE5LVGWAiA9NYtugoJW8xyY9SURGb02IusXo+s4o
-         FEu0b3n6zewUewiyTkbh/Rp6ZCC7XScu42Arze2Ha29s3FFTU7wC8Ab5I8Qqq53Sks
-         o+//CdtcPdoiqQJxPYJcE+DaI0wkSxqLvP9gs+QYTLLuOpe00uvH4BQBdQw8pVEGEc
-         ko14uSLPxfQzjT2Z86CIElh7m8glpROQURE39qVuWPBnhaGcC7BzjRJDlSL0gVMPUQ
-         Kxwpu++5LpU6i+8PNfJVSje/K7a8EeQWOlVaQ1q4Z95/XioU7HPyzKcr/nxsYYJqZZ
-         3qqYoPYbmGCIw==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=Z8aS40ZA c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=aatUQebYAAAA:8
- a=QyXUC8HyAAAA:8 a=gu6fZOg2AAAA:8 a=TWNXCyI2drZUM-DjKuIA:9 a=QEXdDO2ut3YA:10
- a=-FEs8UIgK8oA:10 a=NWVoK91CQyQA:10 a=7715FyvI7WU-l6oqrZBK:22
- a=2RSlZUUhi9gRBrsHwhhZ:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rafael@kernel.org>
-Cc:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        "'Linux Documentation'" <linux-doc@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>
-References: <3955470.QvD6XneCf3@kreacher> <000f01d65ae8$0c607990$25216cb0$@net> <CAJZ5v0jGbfqfqqoPLjneFD5HLb20Yv9p25juNTzaumL70iFogg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jGbfqfqqoPLjneFD5HLb20Yv9p25juNTzaumL70iFogg@mail.gmail.com>
-Subject: RE: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Fri, 17 Jul 2020 06:37:32 -0700
-Message-ID: <001201d65c3f$6e2371c0$4a6a5540$@net>
+        Fri, 17 Jul 2020 09:39:33 -0400
+Received: from mail.efficios.com ([167.114.26.124]:49166 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbgGQNj1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:39:27 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 1C9DE29F146;
+        Fri, 17 Jul 2020 09:39:26 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id a15JU_fDvL6I; Fri, 17 Jul 2020 09:39:25 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 97BDF29EF4F;
+        Fri, 17 Jul 2020 09:39:25 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 97BDF29EF4F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594993165;
+        bh=ho3rQgiZeUOl9J/OSDI/gUB2Ws43sIkMwoNwsX55GPA=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=oGIDAZ6EOIzYWMIZ5+6XDCyoz4E4lrtFs31tP5HpcGze+6LjTM3T0kPAIrN4uUg8s
+         7kFHqjKF43K3O5IvtcK87G1flnjoG0QUJ5E86lfx17AqcimzhK6xRNvSwHf+AgIo6A
+         VTQ2wZF3iQG+rAu/otjNMFRnvOVWLBqOaP6fNHHa/9OAbOwjjI41BB7GXPSHiVPrWn
+         CRb7rbHFWfvwQlxcPBfZL8R7AHk3SgfbPk5rGherwvbO252Mrypgj0lzJGyvRht8x0
+         1dkpbYYjyg+w9bVx9a6hbpigNgs9rgFGWum+fLWjUjj1F9F+NksTfndzkaMUql9E1F
+         zM652Us5g+YcQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id HrNAfA0SCl91; Fri, 17 Jul 2020 09:39:25 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 809AA29F380;
+        Fri, 17 Jul 2020 09:39:25 -0400 (EDT)
+Date:   Fri, 17 Jul 2020 09:39:25 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, paulmck <paulmck@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
+Message-ID: <1770378591.18523.1594993165391.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200716212416.GA1126458@rowland.harvard.edu>
+References: <20200710015646.2020871-1-npiggin@gmail.com> <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com> <1594868476.6k5kvx8684.astroid@bobo.none> <1594873644.viept6os6j.astroid@bobo.none> <1494299304.15894.1594914382695.JavaMail.zimbra@efficios.com> <1370747990.15974.1594915396143.JavaMail.zimbra@efficios.com> <595582123.17106.1594925921537.JavaMail.zimbra@efficios.com> <20200716212416.GA1126458@rowland.harvard.edu>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdZbagHesCkVLO4tQcG7gYoT0bjwUwA0cV5w
-X-CMAE-Envelope: MS4wfOK9zJc8oTgw2q9HjxJyxrpliJRW0gTNup0SyBgPhQWTnu8gx/4AE2Ux4uI5fD09J4B26pOiuLd8QhzkXNzl6y5eTBArY0Wrx4xPdbkbtlUe1QatubJ3
- t+vS6i1hK3AGIUzmWBJLKsnBgXKuK6RhAfcdgrtK/kgb0UfE5czIT8xpTbfOipfaaUoQXX9lkBW75ctL3ZfxtdmlnLkYqpF70bkgqmSqmkbQIBqyeuHbD2mH
- TtDWG4NFfaJN5vqbEMi18AS+sBQ3PoCISPjpCrYBaorRzAlMNYp3KQY57FYiY+QfeX/kiCRfDZEZY7wB8dwRaY9fOMMm/LwUF3lzV3+ZceBRPapJ27IKRQTO
- Ih6WPFL9kontzv4pECaV6bYeG61eyrhJX5twcoyRdaAwnDa9Yt530fxyl8VNfKwZHPASNV7LQLBOEO728Nbb5eVhTFcnS2HTxmDcDPo0Sz9tV9g8Lfk=
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
+Thread-Index: e+Q5q0VLw7mhLri8n+Io1sYRjSAWBg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+----- On Jul 16, 2020, at 5:24 PM, Alan Stern stern@rowland.harvard.edu wrote:
 
-Thank you for your reply.
-
-On 2020.07.16 05:08 Rafael J. Wysocki wrote:
-> On Wed, Jul 15, 2020 at 10:39 PM Doug Smythies <dsmythies@telus.net> wrote:
->> On 2020.07.14 11:16 Rafael J. Wysocki wrote:
->> >
->> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> ...
->> > Since the passive mode hasn't worked with HWP at all, and it is not going to
->> > the default for HWP systems anyway, I don't see any drawbacks related to making
->> > this change, so I would consider this as 5.9 material unless there are any
->> > serious objections.
->>
->> Good point.
-
-Actually, for those users that default to passive mode upon boot,
-this would mean they would find themselves using this.
-Also, it isn't obvious, from the typical "what driver and what governor"
-inquiry.
-
->> Some of the tests I do involve labour intensive post processing of data.
->> I want to automate some of that work, and it will take time.
->> We might be into the 5.9-rc series before I have detailed feedback.
->>
->> However, so far:
->>
->> Inverse impulse response test [1]:
->>
->> High level test, i5-9600K, HWP-passive (this patch), ondemand:
->> 3101 tests. 0 failures. (GOOD)
->>
->> From [1], re-stated:
->> > . High level: i5-9600K: 2453 tests, 60 failures, 2.45% fail rate. (HWP-active - powersave)
->> > . Verify acpi-cpufreq/ondemand works fine: i5-9600K: 8975 tests. 0 failures.
->>
->> My version of that cool Alexander named pipe test [2] serialized workflow:
->>
->> HWP-passive (this patch), performance: PASS.
->>
->> From [2], re-stated, and also re-tested.
->> HWP-disabled passive - performance: FAIL.
+> On Thu, Jul 16, 2020 at 02:58:41PM -0400, Mathieu Desnoyers wrote:
+>> ----- On Jul 16, 2020, at 12:03 PM, Mathieu Desnoyers
+>> mathieu.desnoyers@efficios.com wrote:
+>> 
+>> > ----- On Jul 16, 2020, at 11:46 AM, Mathieu Desnoyers
+>> > mathieu.desnoyers@efficios.com wrote:
+>> > 
+>> >> ----- On Jul 16, 2020, at 12:42 AM, Nicholas Piggin npiggin@gmail.com wrote:
+>> >>> I should be more complete here, especially since I was complaining
+>> >>> about unclear barrier comment :)
+>> >>> 
+>> >>> 
+>> >>> CPU0                     CPU1
+>> >>> a. user stuff            1. user stuff
+>> >>> b. membarrier()          2. enter kernel
+>> >>> c. smp_mb()              3. smp_mb__after_spinlock(); // in __schedule
+>> >>> d. read rq->curr         4. rq->curr switched to kthread
+>> >>> e. is kthread, skip IPI  5. switch_to kthread
+>> >>> f. return to user        6. rq->curr switched to user thread
+>> >>> g. user stuff            7. switch_to user thread
+>> >>>                         8. exit kernel
+>> >>>                         9. more user stuff
+>> >>> 
+>> >>> What you're really ordering is a, g vs 1, 9 right?
+>> >>> 
+>> >>> In other words, 9 must see a if it sees g, g must see 1 if it saw 9,
+>> >>> etc.
+>> >>> 
+>> >>> Userspace does not care where the barriers are exactly or what kernel
+>> >>> memory accesses might be being ordered by them, so long as there is a
+>> >>> mb somewhere between a and g, and 1 and 9. Right?
+>> >> 
+>> >> This is correct.
+>> > 
+>> > Actually, sorry, the above is not quite right. It's been a while
+>> > since I looked into the details of membarrier.
+>> > 
+>> > The smp_mb() at the beginning of membarrier() needs to be paired with a
+>> > smp_mb() _after_ rq->curr is switched back to the user thread, so the
+>> > memory barrier is between store to rq->curr and following user-space
+>> > accesses.
+>> > 
+>> > The smp_mb() at the end of membarrier() needs to be paired with the
+>> > smp_mb__after_spinlock() at the beginning of schedule, which is
+>> > between accesses to userspace memory and switching rq->curr to kthread.
+>> > 
+>> > As to *why* this ordering is needed, I'd have to dig through additional
+>> > scenarios from https://lwn.net/Articles/573436/. Or maybe Paul remembers ?
+>> 
+>> Thinking further about this, I'm beginning to consider that maybe we have been
+>> overly cautious by requiring memory barriers before and after store to rq->curr.
+>> 
+>> If CPU0 observes a CPU1's rq->curr->mm which differs from its own process
+>> (current)
+>> while running the membarrier system call, it necessarily means that CPU1 had
+>> to issue smp_mb__after_spinlock when entering the scheduler, between any
+>> user-space
+>> loads/stores and update of rq->curr.
+>> 
+>> Requiring a memory barrier between update of rq->curr (back to current process's
+>> thread) and following user-space memory accesses does not seem to guarantee
+>> anything more than what the initial barrier at the beginning of __schedule
+>> already
+>> provides, because the guarantees are only about accesses to user-space memory.
+>> 
+>> Therefore, with the memory barrier at the beginning of __schedule, just
+>> observing that
+>> CPU1's rq->curr differs from current should guarantee that a memory barrier was
+>> issued
+>> between any sequentially consistent instructions belonging to the current
+>> process on
+>> CPU1.
+>> 
+>> Or am I missing/misremembering an important point here ?
 > 
-> But I'm not quite sure how this is related to this patch?
+> Is it correct to say that the switch_to operations in 5 and 7 include
+> memory barriers?  If they do, then skipping the IPI should be okay.
+> 
+> The reason is as follows: The guarantee you need to enforce is that
+> anything written by CPU0 before the membarrier() will be visible to CPU1
+> after it returns to user mode.  Let's say that a writes to X and 9
+> reads from X.
+> 
+> Then we have an instance of the Store Buffer pattern:
+> 
+>	CPU0			CPU1
+>	a. Write X		6. Write rq->curr for user thread
+>	c. smp_mb()		7. switch_to memory barrier
+>	d. Read rq->curr	9. Read X
+> 
+> In this pattern, the memory barriers make it impossible for both reads
+> to miss their corresponding writes.  Since d does fail to read 6 (it
+> sees the earlier value stored by 4), 9 must read a.
+> 
+> The other guarantee you need is that g on CPU0 will observe anything
+> written by CPU1 in 1.  This is easier to see, using the fact that 3 is a
+> memory barrier and d reads from 4.
 
-It isn't. The point being that it is different.
-But yes, that failure is because of our other discussion [3].
+Right, and Nick's reply involving pairs of loads/stores on each side
+clarifies the situation even further.
 
-> 
-> This test would still fail without the patch if the kernel was started
-> with intel_pstate=passive in the kernel command line, wouldn't it.
+Thanks,
 
-Yes.
+Mathieu
 
-> 
-> > Although, I believe the issue to be EPB management, [3].
-> 
-> Well, that's kind of unexpected.
-> 
-> If this really is the case, then it looks like the effect of the EPB
-> setting on the processor is different depending on whether or not HWP
-> is enabled.
-> 
->> And yes, I did see the reply to [3] that came earlier,
->> And have now re-done the test, with the referenced patch added.
->> It still is FAIL. I reply to the [3] thread, eventually.
->>
->> [1] https://marc.info/?l=linux-pm&m=159354421400342&w=2
->> [2] https://marc.info/?l=linux-pm&m=159155067328641&w=2
->> [3] https://marc.info/?l=linux-pm&m=159438804230744&w=2
->>
->> Kernel:
->>
->> b08284a541ad (HEAD -> k58rc5-doug) cpufreq: intel_pstate: Avoid enabling HWP if EPP is not supported
->> 063fd7ccabfe cpufreq: intel_pstate: Implement passive mode with HWP enabled
->> 730ccf5054e9 cpufreq: intel_pstate: Allow raw energy performance preference value
->> bee36df01c68 cpufreq: intel_pstate: Allow enable/disable energy efficiency
->> 199629d8200e cpufreq: intel_pstate: Fix active mode setting from command line
->> 11ba468877bb (tag: v5.8-rc5, origin/master, origin/HEAD, master) Linux 5.8-rc5
->>
->> Rules for this work:
->>
->> . never use x86_energy_perf_policy.
->> . For HWP disabled: never change from active to passive or via versa, but rather do it via boot.
->> . after boot always check and reset the various power limit log bits that are set.
->> . never compile the kernel (well, until after any tests), which will set those bits again.
->> . never run prime95 high heat torture test, which will set those bits again.
->> . try to never do anything else that will set those bits again.
->>
->> To be clear, I do allow changing governors within the context of the above rules.
-> 
-> Thanks for the feedback!
 
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
