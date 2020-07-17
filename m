@@ -2,80 +2,73 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25247C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD93FC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0372D20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B180420737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgGQIRe (ORCPT
+        id S1728297AbgGQIRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:17:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55866 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726113AbgGQIRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:17:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 68C1AADF0;
-        Fri, 17 Jul 2020 08:17:36 +0000 (UTC)
-Date:   Fri, 17 Jul 2020 10:17:52 +0200
-From:   Cyril Hrubis <chrubis@suse.cz>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jann Horn <jannh@google.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Kerrisk <mtk.manpages@gmail.com>
-Subject: Re: strace of io_uring events?
-Message-ID: <20200717081752.GA23090@yuki.lan>
-References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
- <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net>
- <20200715171130.GG12769@casper.infradead.org>
- <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
- <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
- <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com>
- <202007151511.2AA7718@keescook>
- <20200716131755.l5tsyhupimpinlfi@yavin.dot.cyphar.com>
+        Fri, 17 Jul 2020 04:17:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39488 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726113AbgGQIRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:17:43 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 811CDCCE162726C141B8;
+        Fri, 17 Jul 2020 16:17:39 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Jul 2020
+ 16:17:28 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <perex@perex.cz>, <tiwai@suse.com>, <anarsoul@gmail.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ALSA: line6: Use kmemdup in podhd_set_monitor_level()
+Date:   Fri, 17 Jul 2020 16:17:10 +0800
+Message-ID: <20200717081710.39180-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716131755.l5tsyhupimpinlfi@yavin.dot.cyphar.com>
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-> > - Why aren't the io_uring syscalls in the man-page git? (It seems like
-> >   they're in liburing, but that's should document the _library_ not the
-> >   syscalls, yes?)
-> 
-> I imagine because using the syscall requires specific memory barriers
-> which we probably don't want most C programs to be fiddling with
-> directly. Sort of similar to how iptables doesn't have a syscall-style
-> man page.
+Use kmemdup rather than duplicating its implementation.
 
-Call me old fashioned but I would vote for having all syscalls
-documented in man pages. At least for me it makes my life much easier as
-I do not have to fish for documentation or read library source code when
-debugging. Think of all the poor kernel QA folks that will cry in
-despair when you decided not to submit manual pages.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/usb/line6/podhd.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-There is plenty of stuff documented there that most C programmers
-shouldn't touch, I do not consider this to be a valid excuse.
-
+diff --git a/sound/usb/line6/podhd.c b/sound/usb/line6/podhd.c
+index 1557483ec657..eef45f7fef0d 100644
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -293,12 +293,10 @@ static void podhd_set_monitor_level(struct usb_line6_podhd *podhd, int value)
+ 	};
+ 	unsigned char *buf;
+ 
+-	buf = kmalloc(sizeof(msg), GFP_KERNEL);
++	buf = kmemdup(msg, sizeof(msg), GFP_KERNEL);
+ 	if (!buf)
+ 		return;
+ 
+-	memcpy(buf, msg, sizeof(msg));
+-
+ 	if (value < 0)
+ 		value = 0;
+ 
 -- 
-Cyril Hrubis
-chrubis@suse.cz
+2.17.1
+
+
