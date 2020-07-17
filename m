@@ -2,195 +2,172 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D7A2076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14DF2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jtQUJdXb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zd90PHMh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgGQOcj (ORCPT
+        id S1726710AbgGQOcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:32:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44524 "EHLO
+        Fri, 17 Jul 2020 10:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbgGQOci (ORCPT
+        with ESMTP id S1726079AbgGQOcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:32:38 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6FDC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:32:38 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id lx13so11109892ejb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:32:38 -0700 (PDT)
+        Fri, 17 Jul 2020 10:32:50 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE07BC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:32:49 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e8so6752415pgc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zW8Tx5F9J8OHnFWh/HH8a3bm9XWpmViZ4XegdyqY93E=;
-        b=jtQUJdXblGi/ryS3Z6ju0NFNquil2t7oPz+mOIhqRlB4n+GfCiVVFAt70VBEuVEOem
-         cPhV/I5KS+5BsUt7ORCFroCirTq5B5yUvVKEMue3guU8lcD2N5dTh/MxIJK5U52DB5hW
-         zjsODvitaaWNmUA4vh1bWfvs0gJmBas/XDonDhN9kLnbFY0TwUVVi9Te1XV0iaOVKG/0
-         6qZO9eBqXauhvJS+buYBg6K54EUu7JI19FodzDRNpFYeGhK/SHRQbxxbYaNTvnArQOkW
-         AhD4ngtgayXc8OeJSgQiHBnOGgt6uxlfcTkElwzfr3sm9mr6QnDsxRU/Vif4CImCz5Rw
-         XoAw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G133bjyWU6YxjxNXSltSpNAZBCuWwbhnSWFi85dFkXY=;
+        b=Zd90PHMhnFKyf2vFOT6DHV+FbYypiiQAQ3WBTuZT+v1gVzK43ceEM2mqIgVvhmiHOh
+         k8GvuKxUVbbUGS+v1R3gBoc7HRTbRaryShMtnVcZi3hDTWhgLGKTF58HNGI6bSxJlxWH
+         C2SxITIDFbIetK4gtSZ2Ima7fd4DEUbs9rgOiV+GBZmn9f3i5RurZdCFTFkXvBioi5GI
+         EIFCiLuLWewwPYnSIADQDVWsohx8YdPh5+yNpRUdgR25UzztWriTMkFUQthWjTiMu1j2
+         vkQlggYeqEDrL8aM5vDjK1/vnwRMm9gh2v5P+ypZbWiZ78kSf8qEZLY7IiLEi6LNvlLv
+         PETg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zW8Tx5F9J8OHnFWh/HH8a3bm9XWpmViZ4XegdyqY93E=;
-        b=rlOAPOfZrqY/nMnuqdUCXd8A12WCV60W0bvJed29CeiHLKwLXEXOPlJufLya1JTUku
-         eGbDBLfBUrzv4iG8AtPKJo/AZsA09dunB4POr3njzfhiQYX5uEcpk6rNQ6T3zP8/mF1b
-         j1/KM/052fZvSam6IJi2u3hgzwaGtn5q0p0ZjXir2ucOkE3cw/ruL2IGV+L2OYnwnCZe
-         Pp6oKWaX0UrqfnkWL3zHPp3khwRbp8uNpL+LED44MLIyqF5mG9W2wQDL93HQgsaOIPwW
-         seIpKgkwSSAhdhTI/7K8DUhMH+rgWTdxZvytnccG5Vp72jkSfsQal2uv++qz+bYFjtVQ
-         I/wA==
-X-Gm-Message-State: AOAM530YtOaI7OXyuTSKf4zCEnzePpG+i3zHQ7b/CO6Fldb7F2L8bs+M
-        Gj3Xu9nTp42Eq859nBrSge/TAbkeVNTkknFge1E8SA==
-X-Google-Smtp-Source: ABdhPJz41kh9hSIhYD17HeWveunMqSPLym8stDGAavsGB1Z7MZ1iLP/s0rm/f8zSOq7UO1YjQjTwaiiMKoIgd5jKgiE=
-X-Received: by 2002:a17:907:41dc:: with SMTP id og20mr9208765ejb.183.1594996356749;
- Fri, 17 Jul 2020 07:32:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G133bjyWU6YxjxNXSltSpNAZBCuWwbhnSWFi85dFkXY=;
+        b=Wh6mk/W8k/XCd7amK7ciOA2Qu739Awjtis4n85YdimbQJ8Z6EoV1AHHIJumSuW6RJo
+         Yg+hJE8wHsNhRLW0tmgzo7zuJ305Afh8lxg5scCxM7MVzA7Pc3OaZAg5xtEWNTKB8e3U
+         OzG3JuANn6HMkGvpJlKCbIhZ9hvNUMTLJp8qe8k3Ly6G/gLDyOJHHgv3fy+W61T0bHPq
+         VI1A07oUnefOGemjYnWGPb2bNym7wulDrzab+YJiOxkd8pX79lRPNhx0lBhl1DaDNyQs
+         Yukk7iy6lUXZnt8ykyRvUSzFm2+VbWExzIwFBhwLmZ1AlW9+hnUON3riyOQI7oBkyjVa
+         JI/A==
+X-Gm-Message-State: AOAM530opW9rbikQszvdfGg63GcTwAyVWgu3+3GDZHbosxMnmTdQbX2F
+        1YYEis50RzoDJfwOOZf4Z1E=
+X-Google-Smtp-Source: ABdhPJxZZ/Tpua7pLli6hhHDdUjG1hPssVZ61Wgy0rwOwNxGiUl+r8zIbG718yacabPS0t+Fof/tsQ==
+X-Received: by 2002:aa7:858c:: with SMTP id w12mr8935487pfn.143.1594996369460;
+        Fri, 17 Jul 2020 07:32:49 -0700 (PDT)
+Received: from vultr.guest ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id f29sm8052506pga.59.2020.07.17.07.32.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 07:32:48 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v6 00/17] perf: ftrace enhancement
+Date:   Fri, 17 Jul 2020 22:32:12 +0800
+Message-Id: <20200717143229.47546-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200716170914.3623060-1-yuhsuan@chromium.org>
- <CABXOdTffo_PoFytXTR0DthRgxrp9SLkTrg2Wp6dMDXXj060KFw@mail.gmail.com> <f53d5f7b-6d9a-af68-7a48-fbb411625336@collabora.com>
-In-Reply-To: <f53d5f7b-6d9a-af68-7a48-fbb411625336@collabora.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Fri, 17 Jul 2020 07:32:25 -0700
-Message-ID: <CABXOdTf2x4zK9n0WN2djLxCbfQynF4p5v_opwB-DsEyRnRAd4g@mail.gmail.com>
-Subject: Re: [PATCH v2] ASoC: cros_ec_codec: Reset I2S RX when probing
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Benson Leung <bleung@chromium.org>,
-        ALSA development <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 10:47 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi,
->
-> On 16/7/20 19:23, Guenter Roeck wrote:
-> > On Thu, Jul 16, 2020 at 10:09 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> wrote:
-> >>
-> >> It is not guaranteed that I2S RX is disabled when the kernel booting.
-> >> For example, if the kernel crashes while it is enabled, it will keep
-> >> enabled until the next time EC reboots. Reset I2S RX when probing to
-> >> fix this issue.
-> >>
-> >> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> >> ---
-> >>  drivers/platform/chrome/cros_ec_proto.c        | 7 ++++++-
-> >>  include/linux/platform_data/cros_ec_commands.h | 1 +
-> >>  sound/soc/codecs/cros_ec_codec.c               | 9 +++++++++
-> >>  3 files changed, 16 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> >> index 3e745e0fe092c..2c60690d7147c 100644
-> >> --- a/drivers/platform/chrome/cros_ec_proto.c
-> >> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> >> @@ -572,7 +572,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> >>                 return -ENOTSUPP;
-> >>         } else if (msg->result != EC_RES_SUCCESS) {
-> >>                 dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
-> >> -               return -EPROTO;
-> >> +               switch (msg->result) {
-> >> +               case EC_RES_INVALID_PARAM:
-> >> +                       return -EINVAL;
-> >
-> > As we have learned, this may impact other callers of
-> > cros_ec_cmd_xfer_status() which only accept -EPROTO as error return
-> > value. In addition to that, the code is odd:
-> >
-> >     if (msg->result == EC_RES_INVALID_VERSION) {
-> >         ...
-> >     } else if (msg->result != EC_RES_SUCCESS) {
-> >         switch (msg->result) {
-> >         ....
-> >         }
-> >     }
-> >
->
-> Ack, this is odd.
->
-> > I really dislike the notion of changing error return values of
-> > cros_ec_cmd_xfer_status() one by one. That can only cause ongoing
-> > trouble with callers expecting specific error return codes (as we have
-> > already seen).
-> >
->
-> Hmm, that's a good point. Ok.
->
-> Let's apply the Guenter's patch that maps the errors *and* fix the callers of
-> cros_ec_cmd_xfer_status which only accept -EPROTO (there are few).
->
-> Yu-Hsuan, can you take care of this and send a patch series with all the
-> required patches? If not, I can work on this next week.
->
+The perf has basic kernel ftrace support but lack support of most tracing
+options. This serias is target to enhance the perf ftrace functionality so
+that we can make full use of kernel ftrace with perf.
 
-I can look into it as well. Let me know - I don't want to duplicate work.
+In general, this serias be cataloged into two main changes:
+  1) Improve usability of existing functions. For example, we don't need to type
+     extra option to select the tracer.
+  2) Add new options to support all other ftrace functions.
 
-Guenter
+Here is a glance of all ftrace functions with this serias:
 
-> Thanks,
->   Enric
->
-> > Guenter
-> >
-> >> +               default:
-> >> +                       return -EPROTO;
-> >> +               }
-> >>         }
-> >>
-> >>         return ret;
-> >> diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-> >> index 69210881ebac8..11ce917ca924c 100644
-> >> --- a/include/linux/platform_data/cros_ec_commands.h
-> >> +++ b/include/linux/platform_data/cros_ec_commands.h
-> >> @@ -4598,6 +4598,7 @@ enum ec_codec_i2s_rx_subcmd {
-> >>         EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH = 0x2,
-> >>         EC_CODEC_I2S_RX_SET_DAIFMT = 0x3,
-> >>         EC_CODEC_I2S_RX_SET_BCLK = 0x4,
-> >> +       EC_CODEC_I2S_RX_RESET = 0x5,
-> >>         EC_CODEC_I2S_RX_SUBCMD_COUNT,
-> >>  };
-> >>
-> >> diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
-> >> index f23956cf4ed84..b5ff30b7f1aa8 100644
-> >> --- a/sound/soc/codecs/cros_ec_codec.c
-> >> +++ b/sound/soc/codecs/cros_ec_codec.c
-> >> @@ -1034,6 +1034,15 @@ static int cros_ec_codec_platform_probe(struct platform_device *pdev)
-> >>         }
-> >>         priv->ec_capabilities = r.capabilities;
-> >>
-> >> +       /* Reset EC codec I2S RX. */
-> >> +       p.cmd = EC_CODEC_I2S_RX_RESET;
-> >> +       ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
-> >> +                                  (uint8_t *)&p, sizeof(p), NULL, 0);
-> >> +       if (ret == -EINVAL)
-> >> +               dev_info(dev, "Missing reset command. Please update your EC firmware.\n");
-> >> +       else if (ret)
-> >> +               dev_err(dev, "failed to EC_CODEC_I2S_RESET: %d\n", ret);
-> >> +
-> >>         platform_set_drvdata(pdev, priv);
-> >>
-> >>         ret = devm_snd_soc_register_component(dev, &i2s_rx_component_driver,
-> >> --
-> >> 2.27.0.389.gc38d7665816-goog
-> >>
+$ sudo perf ftrace -h
+
+ Usage: perf ftrace [<options>] [<command>]
+    or: perf ftrace [<options>] -- <command> [<options>]
+
+    -a, --all-cpus        system-wide collection from all CPUs
+    -C, --cpu <cpu>       list of cpus to monitor
+    -D, --delay <n>       ms to wait before starting tracing after program start
+    -F, --funcs           Show available functions to filter
+    -G, --graph-funcs <func>
+                          trace given functions using function_graph tracer
+    -g, --nograph-funcs <func>
+                          Set nograph filter on given functions
+    -m, --buffer-size <size>
+                          size of per cpu buffer
+    -N, --notrace-funcs <func>
+                          do not trace given functions
+    -p, --pid <pid>       trace on existing process id
+    -T, --trace-funcs <func>
+                          trace given functions using function tracer
+    -t, --tracer <tracer>
+                          tracer to use: function or function_graph (This option is deprecated)
+    -v, --verbose         be more verbose
+        --func-opts <options>
+                          function tracer options, available options: call-graph,irq-info
+        --graph-opts <options>
+                          graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>
+        --inherit         trace children processes
+
+v6:
+  o fix return value of read_tracing_file_to_stdout().
+  o make __cmd_ftrace() shorter.
+  o remove option '-t, --tid <tid>'.
+v5:
+  o trivial fixes.
+v4:
+  o add util/parse-sublevel-options.c
+  O remove -D/--graph-depth
+v3:
+  o add --func-opts and --graph-opts to set tracer specific options.
+  o support units as a suffix for option '-m/--buffer-size'.
+v2:
+  o patches for option '-u/--userstacktrace' and '--no-pager' are dropped.
+  o update all related perf documentation.
+  o rename some options. Now all funcgraph tracer options are prefixed with
+    '--graph-', while all function tracer options are prefixed with '--func-'.
+  o mark old options deprecated instead of removing them.
+
+
+Changbin Du (17):
+  perf ftrace: select function/function_graph tracer automatically
+  perf ftrace: add option '-F/--funcs' to list available functions
+  perf ftrace: factor out function write_tracing_file_int()
+  perf ftrace: add option '-m/--buffer-size' to set per-cpu buffer size
+  perf ftrace: show trace column header
+  perf ftrace: add option '--inherit' to trace children processes
+  perf: util: add general function to parse sublevel options
+  perf ftrace: add support for tracing option 'func_stack_trace'
+  perf ftrace: add support for trace option sleep-time
+  perf ftrace: add support for trace option funcgraph-irqs
+  perf ftrace: add support for tracing option 'irq-info'
+  perf ftrace: add option 'verbose' to show more info for graph tracer
+  perf ftrace: add support for trace option tracing_thresh
+  perf: ftrace: allow set graph depth by '--graph-opts'
+  perf ftrace: add option -D/--delay to delay tracing
+  perf: ftrace: Add set_tracing_options() to set all trace options
+  perf ftrace: add change log
+
+ tools/perf/Documentation/perf-config.txt |   5 -
+ tools/perf/Documentation/perf-ftrace.txt |  33 +-
+ tools/perf/builtin-ftrace.c              | 412 +++++++++++++++++++++--
+ tools/perf/util/Build                    |   1 +
+ tools/perf/util/debug.c                  |  61 +---
+ tools/perf/util/parse-sublevel-options.c |  70 ++++
+ tools/perf/util/parse-sublevel-options.h |  11 +
+ 7 files changed, 507 insertions(+), 86 deletions(-)
+ create mode 100644 tools/perf/util/parse-sublevel-options.c
+ create mode 100644 tools/perf/util/parse-sublevel-options.h
+
+-- 
+2.25.1
+
