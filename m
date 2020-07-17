@@ -7,65 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E3FC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389A7C433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2D302083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E7720734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KkJ58wTN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cCC6wwWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgGQNyh (ORCPT
+        id S1727119AbgGQNyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:54:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38650 "EHLO
+        Fri, 17 Jul 2020 09:54:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbgGQNya (ORCPT
+        with ESMTP id S1727032AbgGQNyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:54:30 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BBF1C0619D5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:31 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a6so11236579wrm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:31 -0700 (PDT)
+        Fri, 17 Jul 2020 09:54:37 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887FCC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:37 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 17so17180326wmo.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vKemoWjqR6g96Xgsgirmftjm/E0sdVIsOFgpktr/D0I=;
-        b=KkJ58wTNLjFEfso6eafu7XHSWYDgIT2QpWO7ZoFkscH8T9bz8ZmXHL/FjjlmZ89szi
-         SaFxtVC+zwUMaS9y7ToZr9FGXrgGE9lajWTHriEwPcmteH93rS1qRDvL4YRUgyiwqVjY
-         j2XI/cb69GWiMEVGLVZJpYOnN7mJxmtOVxzdc5xq7P1QqsKa5UyRwAwgxwGNN4SMhZ9c
-         TqcG0zsLXsFS6Z54kAMk4BtYeysJM7Og48NOlrTAwXyP4f1nYDQ2Co2a33Si6aDn5C8r
-         t84r0SBiYXp9Hn5nQINc7//3xnye6zTLmDHLpUWGwXf2nG1a/uQpGh81nFfjKIfX3oCe
-         TMVA==
+        bh=/mBj9pAMuVLonO6aKhrgrEYwyEsNFutXpDwnyRxo/to=;
+        b=cCC6wwWlQpTMveu1qLqD9irne79EY5ETXeh1rAvAAmH+LbiFyUjRk1ScIyrfmwefTv
+         mFH+Dn3v/+xPUHoIWVWnpdkrm8IZAwwrC0nGV6nJHAUPKTjea9YuyLEZQwc1IJAswX6+
+         tCXEHvtE1nHhDMPzh2+JAiQX+k+oxlOF0rSb1BHirgI+fTnJa1Wag/CmnsEhB2k4FQei
+         IuVXnlndn2vb2xncG+l0JMF/aakBraFwN6jUo0NHQUI1LLX0qof6/3e3YtpgKX0gUI4o
+         sBKrEHsK4I3F+qIti6r6RGX+i+V2MWy7R7rwXBmQH2TfDvHmoPTS3FPp8isAlmk2K3fI
+         VMLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vKemoWjqR6g96Xgsgirmftjm/E0sdVIsOFgpktr/D0I=;
-        b=DKd9p0lAtjGMsMsjTevMzO3V8m1ITps1ZuObJJr93zi+QHcweIv7iOXbdQgadMJbmo
-         +sYYGNFVnddvC2wP7RgTo5U64En2p3WgLj0QT0aOFdikDoCKa5L8s0Vhblm/45mT5JU4
-         g7cmAJ4xpanhCpCiVhTbpoIGKNLEyYSnVt2KevaBMyjBVUHNCDkn3TQlsBhz7H+4PsC4
-         v0QG4PxRkrTvVheElVQvvqaEcgmDDZe3zqiZVpqJNRYU82J6BKyH9HrNj/YQi3nQKL+8
-         TG2Ac1+4WzKwgnRU76KEUsjvh1E+Q5E2jNjWbWdDAZFzQHcKCkYEtpf9XW4v4xYOvBzZ
-         gB3g==
-X-Gm-Message-State: AOAM531h7KUSfWcQWRRn/CDfmBpRC/Dto+Al0KCn4aP2E9kgy138bnSQ
-        F+95wRuonpHXLvx9lh11vRkCIA==
-X-Google-Smtp-Source: ABdhPJyScPf7JwQtEZvA5sD1ShLQoa/+KNAe8xTjYnMg0F86HrLTvwwPzQtxX+Mk4a1wGK3SMbuJaQ==
-X-Received: by 2002:adf:e44c:: with SMTP id t12mr11315545wrm.103.1594994069964;
-        Fri, 17 Jul 2020 06:54:29 -0700 (PDT)
+        bh=/mBj9pAMuVLonO6aKhrgrEYwyEsNFutXpDwnyRxo/to=;
+        b=TuIV0YDKCkKq8/Q+XQjulXJZYQfLLKj2zX/cfKlmtPENo5VAeybluqycIOoyLDdpIz
+         WzConJ4/Gi83YQnK/V8qwTqQD5bq4jqeyoJiAZMPYnHQqfEYnhc4/nEi/UPeyaXhY/WZ
+         CDX8m9C7lsVgBPdCCXAnri/naxFh6pvqjfu1KrmeGHaHSVvlIAe6Ez1QvC5oqGQ3BXT5
+         oE3SrqZRzWAB+bgM0SO9rcA31tC/pR1HzBiPg9cymeoQak1vayKtZE5qSJmXi0bv99H1
+         PlZKslucnDypapqAvLKyl0MdlyM8uVNSsKPyygrnmveLkI3WGhR5bSkZwluBGuU9dEwQ
+         AU7Q==
+X-Gm-Message-State: AOAM533/RQN6RCHms3G1OJkOtZKOu2A+w0AgXT9PabBkkkrifPQ0afHC
+        C4+T6+XhtLJ4VPscuc2gUPGKLQ==
+X-Google-Smtp-Source: ABdhPJwcTbAJHeWet+0yZMRNf1B5uWVO3GrnOII6C92tRowqv4TTCeJPT7QC54S41JczZLvDokTPCg==
+X-Received: by 2002:a1c:2d0c:: with SMTP id t12mr9259723wmt.43.1594994076272;
+        Fri, 17 Jul 2020 06:54:36 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id w128sm16118356wmb.19.2020.07.17.06.54.29
+        by smtp.gmail.com with ESMTPSA id w128sm16118356wmb.19.2020.07.17.06.54.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 06:54:29 -0700 (PDT)
+        Fri, 17 Jul 2020 06:54:35 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 03/14] spi: spi-davinci: Fix a few kerneldoc misspellings and API slippages
-Date:   Fri, 17 Jul 2020 14:54:13 +0100
-Message-Id: <20200717135424.2442271-4-lee.jones@linaro.org>
+        linux-spi@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Sureshkumar Relli <nagasure@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH v2 09/14] spi: spi-zynq-qspi: Add description for 2 missing attributes/parameters
+Date:   Fri, 17 Jul 2020 14:54:19 +0100
+Message-Id: <20200717135424.2442271-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717135424.2442271-1-lee.jones@linaro.org>
 References: <20200717135424.2442271-1-lee.jones@linaro.org>
@@ -78,51 +80,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/spi/spi-davinci.c:249: warning: Function parameter or member 'dspi' not described in 'davinci_spi_get_prescale'
- drivers/spi/spi-davinci.c:249: warning: Function parameter or member 'max_speed_hz' not described in 'davinci_spi_get_prescale'
- drivers/spi/spi-davinci.c:249: warning: Excess function parameter 'maxspeed_hz' description in 'davinci_spi_get_prescale'
- drivers/spi/spi-davinci.c:719: warning: Function parameter or member 'data' not described in 'dummy_thread_fn'
- drivers/spi/spi-davinci.c:719: warning: Excess function parameter 'context_data' description in 'dummy_thread_fn'
- drivers/spi/spi-davinci.c:735: warning: Function parameter or member 'data' not described in 'davinci_spi_irq'
- drivers/spi/spi-davinci.c:735: warning: Excess function parameter 'context_data' description in 'davinci_spi_irq'
+ drivers/spi/spi-zynq-qspi.c:143: warning: Function parameter or member 'dev' not described in 'zynq_qspi'
+ drivers/spi/spi-zynq-qspi.c:334: warning: Function parameter or member 'spi' not described in 'zynq_qspi_config_op'
+ drivers/spi/spi-zynq-qspi.c:334: warning: Excess function parameter 'qspi' description in 'zynq_qspi_config_op'
 
+Cc: Sureshkumar Relli <nagasure@xilinx.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Reviewed-by: Michal Simek <michal.simek@xilinx.com>
 ---
- drivers/spi/spi-davinci.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/spi/spi-zynq-qspi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-davinci.c b/drivers/spi/spi-davinci.c
-index f50c0c79cbdfa..818f2b22875d2 100644
---- a/drivers/spi/spi-davinci.c
-+++ b/drivers/spi/spi-davinci.c
-@@ -236,7 +236,8 @@ static void davinci_spi_chipselect(struct spi_device *spi, int value)
+diff --git a/drivers/spi/spi-zynq-qspi.c b/drivers/spi/spi-zynq-qspi.c
+index bbf3d90561f54..5d8a5ee62fa23 100644
+--- a/drivers/spi/spi-zynq-qspi.c
++++ b/drivers/spi/spi-zynq-qspi.c
+@@ -119,6 +119,7 @@
  
  /**
-  * davinci_spi_get_prescale - Calculates the correct prescale value
-- * @maxspeed_hz: the maximum rate the SPI clock can run at
-+ * @dspi: the controller data
-+ * @max_speed_hz: the maximum rate the SPI clock can run at
-  *
-  * This function calculates the prescale value that generates a clock rate
-  * less than or equal to the specified maximum.
-@@ -710,7 +711,7 @@ static int davinci_spi_bufs(struct spi_device *spi, struct spi_transfer *t)
+  * struct zynq_qspi - Defines qspi driver instance
++ * @dev:		Pointer to the this device's information
+  * @regs:		Virtual address of the QSPI controller registers
+  * @refclk:		Pointer to the peripheral clock
+  * @pclk:		Pointer to the APB clock
+@@ -316,7 +317,7 @@ static void zynq_qspi_chipselect(struct spi_device *spi, bool assert)
  /**
-  * dummy_thread_fn - dummy thread function
-  * @irq: IRQ number for this SPI Master
-- * @context_data: structure for SPI Master controller davinci_spi
-+ * @data: structure for SPI Master controller davinci_spi
+  * zynq_qspi_config_op - Configure QSPI controller for specified transfer
+  * @xqspi:	Pointer to the zynq_qspi structure
+- * @qspi:	Pointer to the spi_device structure
++ * @spi:	Pointer to the spi_device structure
   *
-  * This is to satisfy the request_threaded_irq() API so that the irq
-  * handler is called in interrupt context.
-@@ -723,7 +724,7 @@ static irqreturn_t dummy_thread_fn(s32 irq, void *data)
- /**
-  * davinci_spi_irq - Interrupt handler for SPI Master Controller
-  * @irq: IRQ number for this SPI Master
-- * @context_data: structure for SPI Master controller davinci_spi
-+ * @data: structure for SPI Master controller davinci_spi
-  *
-  * ISR will determine that interrupt arrives either for READ or WRITE command.
-  * According to command it will do the appropriate action. It will check
+  * Sets the operational mode of QSPI controller for the next QSPI transfer and
+  * sets the requested clock frequency.
 -- 
 2.25.1
 
