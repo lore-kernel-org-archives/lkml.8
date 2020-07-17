@@ -2,87 +2,148 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B500BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 992B220734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37BF20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:53:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HVSNQOpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgGQGv6 convert rfc822-to-8bit (ORCPT
+        id S1727010AbgGQGxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:51:58 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:40187 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgGQGv5 (ORCPT
+        Fri, 17 Jul 2020 02:53:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgGQGxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:51:57 -0400
-Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
-        by mail.holtmann.org (Postfix) with ESMTPSA id E391ECED0F;
-        Fri, 17 Jul 2020 09:01:54 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [RFC PATCH v1 1/2] Bluetooth: queue ACL packets if no handle is
- found
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CALWDO_Vrn_pXMbkXifKFazha7BYPqLpCthqHOb9ZmVE3wDRMfA@mail.gmail.com>
-Date:   Fri, 17 Jul 2020 08:51:55 +0200
-Cc:     Archie Pusaka <apusaka@google.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <F17D321B-DCD2-4A80-97EE-B4589FBFF406@holtmann.org>
-References: <20200627105437.453053-1-apusaka@google.com>
- <20200627185320.RFC.v1.1.Icea550bb064a24b89f2217cf19e35b4480a31afd@changeid>
- <91CFE951-262A-4E83-8550-25445AE84B5A@holtmann.org>
- <CAJQfnxFSfbUbPLVC-be41TqNXzr_6hLq2z=u521HL+BqxLHn_Q@mail.gmail.com>
- <7BBB55E0-FBD9-40C0-80D9-D5E7FC9F80D2@holtmann.org>
- <CALWDO_Vrn_pXMbkXifKFazha7BYPqLpCthqHOb9ZmVE3wDRMfA@mail.gmail.com>
-To:     Alain Michaud <alainmichaud@google.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 17 Jul 2020 02:53:42 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4A2C061755;
+        Thu, 16 Jul 2020 23:53:41 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B7MKF4Q8Vz9sRN;
+        Fri, 17 Jul 2020 16:53:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594968819;
+        bh=TW11RH4a+EN4x+mZM4SOcko8dhOIwqkcGt1Dnpx8oYA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HVSNQOpLpJwIgiuS61jiO0pV6IbvtgVlvz/39c28XQefQoj1lHloubT8yHiQP4Yyf
+         +uw8sNfuFdx5swECB8zWHXGocWhtH9h4+INLFCNoKX0IoQbyddCSg8jxDRPRLeWEz1
+         7YhsEiOJMV85YoYd8IMvEqfruDfmUwXt7pFF2zrgLtWikfWg9g/GyeVLZXJqQ2TOgu
+         X/ZDeT+3BIkP1nakkpTLv2InLVHyHVT8zGhGM9WgnRrc5VxpmIaTMvuCxsgYFBbWvF
+         bbIEk4GW77C0RQ5mNcwHAPO2THkc4uHRZeUWL1iVnO+vuBL1WpNzY9Sgd8ln45oHJa
+         K1FrQ/WFqtGtQ==
+Date:   Fri, 17 Jul 2020 16:53:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vinod Koul <vkoul@kernel.org>, Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: linux-next: manual merge of the dmaengine tree with the
+ wireless-drivers-next and Linus' trees
+Message-ID: <20200717165336.312dcf09@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/Uf/BJuEv2ixcmi=SB=JFSm5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alain,
+--Sig_/Uf/BJuEv2ixcmi=SB=JFSm5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> >>> There is a possibility that an ACL packet is received before we
-> >>> receive the HCI connect event for the corresponding handle. If this
-> >>> happens, we discard the ACL packet.
-> >>> 
-> >>> Rather than just ignoring them, this patch provides a queue for
-> >>> incoming ACL packet without a handle. The queue is processed when
-> >>> receiving a HCI connection event. If 2 seconds elapsed without
-> >>> receiving the HCI connection event, assume something bad happened
-> >>> and discard the queued packet.
-> >>> 
-> >>> Signed-off-by: Archie Pusaka <apusaka@chromium.org>
-> >>> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> >> 
-> >> so two things up front. I want to hide this behind a HCI_QUIRK_OUT_OF_ORDER_ACL that a transport driver has to set first. Frankly if this kind of out-of-order happens on UART or SDIO transports, then something is obviously going wrong. I have no plan to fix up after a fully serialized transport.
-> >> 
-> >> Secondly, if a transport sets HCI_QUIRK_OUT_OF_ORDER_ACL, then I want this off by default. You can enable it via an experimental setting. The reason here is that we have to make it really hard and fail as often as possible so that hardware manufactures and spec writers realize that something is fundamentally broken here.
-> I don't have any objection to making this explicit enable to non serialized transports.  However, I do wonder what the intention is around making this off by default.  We already know there is a race condition between the interupt and bulk endpoints over USB, so this can and does happen.  Hardware manufaturers can't relly do much about this other than trying to pull the interupt endpoint more often, but that's only a workaround, it can't avoid it all together.
-> 
-> IMO, this seems like a legitimate fix at the host level and I don't see any obvious benefits to hide this fix under an experimental feature and make it more difficult for the customers and system integrators to discover.
+Hi all,
 
-the problem is that this is not a fix. It is papering over a hole and at best a workaround with both eyes closed and hoping for the best. I am not looking forward for the first security researcher to figure out that they have a chance to inject an unencrypted packet since we are waiting 2 seconds for the USB transport to get its act together.
+Today's linux-next merge of the dmaengine tree got a conflict in:
 
-In addition, I think that Luiz attempt to align with the poll intervals inside the USB transport directly is a cleaner and more self-contained approach. It also reduces the window of opportunity for any attacker since we actually align the USB transport specific intervals with each other.
+  MAINTAINERS
 
-Regards
+between commit:
 
-Marcel
+  5625f965d764 ("wilc1000: move wilc driver out of staging")
 
+from the wireless-drivers-next tree, commit:
+
+  6e701c299469 ("MAINTAINERS: merge entries for felix and ocelot drivers")
+
+from Linus' tree and commit:
+
+  c3846c4cce15 ("MAINTAINERS: dmaengine: Microchip: add Tudor Ambarus as co=
+-maintainer")
+
+from the dmaengine tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc MAINTAINERS
+index 07d6eae16e77,9af8f81f726d..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -11399,20 -11364,14 +11401,13 @@@ L:	linux-arm-kernel@lists.infradead.or
+  S:	Supported
+  F:	drivers/usb/gadget/udc/atmel_usba_udc.*
+ =20
+ -MICROSEMI ETHERNET SWITCH DRIVER
+ -M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
+ -M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+ -L:	netdev@vger.kernel.org
+ +MICROCHIP WILC1000 WIFI DRIVER
+ +M:	Ajay Singh <ajay.kathat@microchip.com>
+ +M:	Claudiu Beznea <claudiu.beznea@microchip.com>
+ +L:	linux-wireless@vger.kernel.org
+  S:	Supported
+ -F:	drivers/net/ethernet/mscc/
+ -F:	include/soc/mscc/ocelot*
+ +F:	drivers/net/wireless/microchip/wilc1000/
+ =20
+- MICROCHIP XDMA DRIVER
+- M:	Ludovic Desroches <ludovic.desroches@microchip.com>
+- L:	linux-arm-kernel@lists.infradead.org
+- L:	dmaengine@vger.kernel.org
+- S:	Supported
+- F:	drivers/dma/at_xdmac.c
+-=20
+  MICROSEMI MIPS SOCS
+  M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
+  M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+
+--Sig_/Uf/BJuEv2ixcmi=SB=JFSm5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8RSvAACgkQAVBC80lX
+0GzJ4gf/QE464SKG+82DKbBdRf9XtK6X9hLGlMfWpWIsJWwHhbHrzEPQEs1eTmL/
+T6idIqQ6cfw9gM7TMDaAmZd1h9K1+dZQN1bZ3k2PMn6DfYngEyeCqb3XYDTyw8cu
+kApO94RiZIcipPdrx8pr4DfBEERSdBu8mSevYgxyYAhrNrCjoe/LdWEoBZ/kO+CN
+KxtB9AypNLgtp5fio4UtR8x1tQwo/SoRMLUAYp6zJrQYJ5imDuCBZcefiBvjIohJ
+uARPLWu5lnipjj3HVc+VFgBX2mnb6TjW1Dgllp1BrONTVliAXftUOgYU7vi4s3+D
+RldGA0ZWeu/DLx1ysGcELkoXSmEIPw==
+=0EUF
+-----END PGP SIGNATURE-----
+
+--Sig_/Uf/BJuEv2ixcmi=SB=JFSm5--
