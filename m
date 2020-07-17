@@ -2,144 +2,155 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEF6C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3443DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67B522070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="juOxDc14"
+	by mail.kernel.org (Postfix) with ESMTP id 19A94207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgGQDGJ (ORCPT
+        id S1726593AbgGQDVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 23:06:09 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:22993 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726593AbgGQDGF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 23:06:05 -0400
-X-UUID: a93f6aa0536b4f93be16a4f7b5ac21cd-20200717
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=CSw11oLawBPErUprkvFsJtdwknxu/qYAQm+6ktkLuU0=;
-        b=juOxDc14sJeJsQmiUgBVLaY3jl/kQIf0jd3/AYi/RGQvMYOhGS6e9tS9IVfjK6M78HbXH8hqmlK9XKnSJA7ODklfeOyZB3akFJ+l9ANuNJJn3Z/xYcTK56uWl1PiQq82zF3tvKmAnxSNnxPTKBW1J5Y7KSq2NsPZo0CPBp1Y6bs=;
-X-UUID: a93f6aa0536b4f93be16a4f7b5ac21cd-20200717
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <huihui.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1127657063; Fri, 17 Jul 2020 11:06:02 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 17 Jul 2020 11:05:29 +0800
-Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 17 Jul 2020 11:05:26 +0800
-From:   Huihui Wang <huihui.wang@mediatek.com>
-To:     Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, huihui wang <huihui.wang@mediatek.com>
-Subject: [PATCH v1 2/2] dma: mediatek: dma address bits config with compatible data
-Date:   Fri, 17 Jul 2020 11:02:05 +0800
-Message-ID: <20200717030203.14872-3-huihui.wang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200717030203.14872-1-huihui.wang@mediatek.com>
-References: <20200717030203.14872-1-huihui.wang@mediatek.com>
+        Thu, 16 Jul 2020 23:21:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:47852 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbgGQDVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 23:21:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5723DD6E;
+        Thu, 16 Jul 2020 20:21:53 -0700 (PDT)
+Received: from [192.168.0.129] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0ED73F68F;
+        Thu, 16 Jul 2020 20:21:43 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH V5 1/4] mm/debug_vm_pgtable: Add tests validating arch
+ helpers for core MM features
+To:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, agordeev@linux.ibm.com,
+        Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        christophe.leroy@csgroup.eu, Mike Rapoport <rppt@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, ziy@nvidia.com,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-snps-arc@lists.infradead.org,
+        Vasily Gorbik <gor@linux.ibm.com>, cai@lca.pw,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        gerald.schaefer@de.ibm.com, christophe.leroy@c-s.fr,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+        aneesh.kumar@linux.ibm.com, Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, rppt@kernel.org
+References: <1594610587-4172-1-git-send-email-anshuman.khandual@arm.com>
+ <1594610587-4172-2-git-send-email-anshuman.khandual@arm.com>
+ <2ff756c5-28e2-b64a-3788-260ba30c6409@arm.com>
+Message-ID: <efdd0b57-6515-2ee7-a245-a23be6a1d823@arm.com>
+Date:   Fri, 17 Jul 2020 08:50:35 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 498D7E9EE804C783BF0F34416D3037089D0916A265142A72B1D3420E8F9ACDE72000:8
-Content-Transfer-Encoding: base64
+In-Reply-To: <2ff756c5-28e2-b64a-3788-260ba30c6409@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogaHVpaHVpIHdhbmcgPGh1aWh1aS53YW5nQG1lZGlhdGVrLmNvbT4NCg0KMS5MZWdhY3kg
-aW1wbGVtZW50IG9ubHkgc3VwcG9ydCAzMyBiaXRzIGFkZHJlc3MsDQp3ZSBjaGFuZ2UgdGhlIHNv
-bHV0aW9uIHRvIHN1cHBvcnQgYW55IHdpZHRoIGFkZHJlc3MuDQoNCjIuRE1BIGFkZHJlc3MgYml0
-cyBpcyB2ZXJ5IGRldGFpbCBpbmZvcm1hdGlvbiwNCmFuZCBpdCBpcyBub3QgcHJvcGVyIHRvIGNv
-bmZpZyBpbiBkZXZpY2UgdHJlZS4NClNvIHdlIG1vdmUgaXQgaW50byBtdGtfdWFydF9hcGRtYS5j
-LA0KYW5kIGNvbmZpZyBpdCBieSBjb21wYXRpYmxlIGRhdGEuDQoNClNpZ25lZC1vZmYtYnk6IGh1
-aWh1aSB3YW5nIDxodWlodWkud2FuZ0BtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2RtYS9t
-ZWRpYXRlay9tdGstdWFydC1hcGRtYS5jIHwgNTUgKysrKysrKysrKysrKysrKysrKy0tLS0tLS0t
-DQogMSBmaWxlIGNoYW5nZWQsIDQwIGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQ0KDQpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRrLXVhcnQtYXBkbWEuYyBiL2RyaXZl
-cnMvZG1hL21lZGlhdGVrL210ay11YXJ0LWFwZG1hLmMNCmluZGV4IDI5ZjEyMjNiMjg1YS4uOWMw
-ODBmOTkxN2E3IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRrLXVhcnQtYXBk
-bWEuYw0KKysrIGIvZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRrLXVhcnQtYXBkbWEuYw0KQEAgLTMx
-LDcgKzMxLDYgQEANCiAjZGVmaW5lIFZGRl9FTl9CCQlCSVQoMCkNCiAjZGVmaW5lIFZGRl9TVE9Q
-X0IJCUJJVCgwKQ0KICNkZWZpbmUgVkZGX0ZMVVNIX0IJCUJJVCgwKQ0KLSNkZWZpbmUgVkZGXzRH
-X0VOX0IJCUJJVCgwKQ0KIC8qIHJ4IHZhbGlkIHNpemUgPj0gIHZmZiB0aHJlICovDQogI2RlZmlu
-ZSBWRkZfUlhfSU5UX0VOX0IJCShCSVQoMCkgfCBCSVQoMSkpDQogLyogdHggbGVmdCBzaXplID49
-IHZmZiB0aHJlICovDQpAQCAtNDMsNyArNDIsNyBAQA0KICNkZWZpbmUgVkZGX0VOX0NMUl9CCQkw
-DQogI2RlZmluZSBWRkZfSU5UX0VOX0NMUl9CCTANCiAjZGVmaW5lIFZGRl80R19TVVBQT1JUX0NM
-Ul9CCTANCi0NCisjZGVmaW5lIFZGRl9PUklfQUREUl9CSVRTX05VTSAgICAzMg0KIC8qDQogICog
-aW50ZXJydXB0IHRyaWdnZXIgbGV2ZWwgZm9yIHR4DQogICogaWYgdGhyZXNob2xkIGlzIG4sIG5v
-IHBvbGxpbmcgaXMgcmVxdWlyZWQgdG8gc3RhcnQgdHguDQpAQCAtNzUsMTAgKzc0LDE0IEBADQog
-I2RlZmluZSBWRkZfREVCVUdfU1RBVFVTCTB4NTANCiAjZGVmaW5lIFZGRl80R19TVVBQT1JUCQkw
-eDU0DQogDQorc3RydWN0IG10a191YXJ0X2FwZG1hY29tcCB7DQorCXVuc2lnbmVkIGludCBhZGRy
-X2JpdHM7DQorfTsNCisNCiBzdHJ1Y3QgbXRrX3VhcnRfYXBkbWFkZXYgew0KIAlzdHJ1Y3QgZG1h
-X2RldmljZSBkZGV2Ow0KIAlzdHJ1Y3QgY2xrICpjbGs7DQotCWJvb2wgc3VwcG9ydF8zM2JpdHM7
-DQorCXVuc2lnbmVkIGludCBzdXBwb3J0X2JpdHM7DQogCXVuc2lnbmVkIGludCBkbWFfcmVxdWVz
-dHM7DQogfTsNCiANCkBAIC0xNTIsOCArMTU1LDkgQEAgc3RhdGljIHZvaWQgbXRrX3VhcnRfYXBk
-bWFfc3RhcnRfdHgoc3RydWN0IG10a19jaGFuICpjKQ0KIAkJbXRrX3VhcnRfYXBkbWFfd3JpdGUo
-YywgVkZGX1dQVCwgMCk7DQogCQltdGtfdWFydF9hcGRtYV93cml0ZShjLCBWRkZfSU5UX0ZMQUcs
-IFZGRl9UWF9JTlRfQ0xSX0IpOw0KIA0KLQkJaWYgKG10a2QtPnN1cHBvcnRfMzNiaXRzKQ0KLQkJ
-CW10a191YXJ0X2FwZG1hX3dyaXRlKGMsIFZGRl80R19TVVBQT1JULCBWRkZfNEdfRU5fQik7DQor
-CQlpZiAobXRrZC0+c3VwcG9ydF9iaXRzID4gVkZGX09SSV9BRERSX0JJVFNfTlVNKQ0KKwkJCW10
-a191YXJ0X2FwZG1hX3dyaXRlKGMsIFZGRl80R19TVVBQT1JULA0KKwkJCQkJICAgICB1cHBlcl8z
-Ml9iaXRzKGQtPmFkZHIpKTsNCiAJfQ0KIA0KIAltdGtfdWFydF9hcGRtYV93cml0ZShjLCBWRkZf
-RU4sIFZGRl9FTl9CKTsNCkBAIC0xOTUsOCArMTk5LDkgQEAgc3RhdGljIHZvaWQgbXRrX3VhcnRf
-YXBkbWFfc3RhcnRfcngoc3RydWN0IG10a19jaGFuICpjKQ0KIAkJbXRrX3VhcnRfYXBkbWFfd3Jp
-dGUoYywgVkZGX1JQVCwgMCk7DQogCQltdGtfdWFydF9hcGRtYV93cml0ZShjLCBWRkZfSU5UX0ZM
-QUcsIFZGRl9SWF9JTlRfQ0xSX0IpOw0KIA0KLQkJaWYgKG10a2QtPnN1cHBvcnRfMzNiaXRzKQ0K
-LQkJCW10a191YXJ0X2FwZG1hX3dyaXRlKGMsIFZGRl80R19TVVBQT1JULCBWRkZfNEdfRU5fQik7
-DQorCQlpZiAobXRrZC0+c3VwcG9ydF9iaXRzID4gVkZGX09SSV9BRERSX0JJVFNfTlVNKQ0KKwkJ
-CW10a191YXJ0X2FwZG1hX3dyaXRlKGMsIFZGRl80R19TVVBQT1JULA0KKwkJCQkJICAgICB1cHBl
-cl8zMl9iaXRzKGQtPmFkZHIpKTsNCiAJfQ0KIA0KIAltdGtfdWFydF9hcGRtYV93cml0ZShjLCBW
-RkZfSU5UX0VOLCBWRkZfUlhfSU5UX0VOX0IpOw0KQEAgLTI5Niw3ICszMDEsNyBAQCBzdGF0aWMg
-aW50IG10a191YXJ0X2FwZG1hX2FsbG9jX2NoYW5fcmVzb3VyY2VzKHN0cnVjdCBkbWFfY2hhbiAq
-Y2hhbikNCiAJCXJldHVybiAtRUlOVkFMOw0KIAl9DQogDQotCWlmIChtdGtkLT5zdXBwb3J0XzMz
-Yml0cykNCisJaWYgKG10a2QtPnN1cHBvcnRfYml0cyA+IFZGRl9PUklfQUREUl9CSVRTX05VTSkN
-CiAJCW10a191YXJ0X2FwZG1hX3dyaXRlKGMsIFZGRl80R19TVVBQT1JULCBWRkZfNEdfU1VQUE9S
-VF9DTFJfQik7DQogDQogCXJldHVybiByZXQ7DQpAQCAtNDY1LDggKzQ3MCwxNCBAQCBzdGF0aWMg
-dm9pZCBtdGtfdWFydF9hcGRtYV9mcmVlKHN0cnVjdCBtdGtfdWFydF9hcGRtYWRldiAqbXRrZCkN
-CiAJfQ0KIH0NCiANCitzdGF0aWMgY29uc3Qgc3RydWN0IG10a191YXJ0X2FwZG1hY29tcCBtdDY3
-NzlfY29tcCA9IHsNCisJLmFkZHJfYml0cyA9IDM0DQorfTsNCisNCiBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IG9mX2RldmljZV9pZCBtdGtfdWFydF9hcGRtYV9tYXRjaFtdID0gew0KLQl7IC5jb21wYXRp
-YmxlID0gIm1lZGlhdGVrLG10NjU3Ny11YXJ0LWRtYSIsIH0sDQorCXsgLmNvbXBhdGlibGUgPSAi
-bWVkaWF0ZWssbXQ2NTc3LXVhcnQtZG1hIiwgLmRhdGEgPSBOVUxMfSwNCisJeyAuY29tcGF0aWJs
-ZSA9ICJtZWRpYXRlayxtdDI3MTItdWFydC1kbWEiLCAuZGF0YSA9IE5VTEx9LA0KKwl7IC5jb21w
-YXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS11YXJ0LWRtYSIsIC5kYXRhID0gJm10Njc3OV9jb21w
-fSwNCiAJeyAvKiBzZW50aW5lbCAqLyB9LA0KIH07DQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwg
-bXRrX3VhcnRfYXBkbWFfbWF0Y2gpOw0KQEAgLTQ3NSw5ICs0ODYsMTAgQEAgc3RhdGljIGludCBt
-dGtfdWFydF9hcGRtYV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIHsNCiAJ
-c3RydWN0IGRldmljZV9ub2RlICpucCA9IHBkZXYtPmRldi5vZl9ub2RlOw0KIAlzdHJ1Y3QgbXRr
-X3VhcnRfYXBkbWFkZXYgKm10a2Q7DQotCWludCBiaXRfbWFzayA9IDMyLCByYzsNCisJaW50IHJj
-Ow0KIAlzdHJ1Y3QgbXRrX2NoYW4gKmM7DQogCXVuc2lnbmVkIGludCBpOw0KKwljb25zdCBzdHJ1
-Y3QgbXRrX3VhcnRfYXBkbWFjb21wICpjb21wOw0KIA0KIAltdGtkID0gZGV2bV9remFsbG9jKCZw
-ZGV2LT5kZXYsIHNpemVvZigqbXRrZCksIEdGUF9LRVJORUwpOw0KIAlpZiAoIW10a2QpDQpAQCAt
-NDkwLDEzICs1MDIsMjYgQEAgc3RhdGljIGludCBtdGtfdWFydF9hcGRtYV9wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIAkJcmV0dXJuIHJjOw0KIAl9DQogDQotCWlmIChvZl9w
-cm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJtZWRpYXRlayxkbWEtMzNiaXRzIikpDQotCQltdGtkLT5z
-dXBwb3J0XzMzYml0cyA9IHRydWU7DQorCWNvbXAgPSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEo
-JnBkZXYtPmRldik7DQorCWlmICghY29tcCkgew0KKwkJLypJbiBvcmRlciB0byBjb21wYXRpYWJs
-ZSB3aXRoIGxlZ2FjeSBkZXZpY2UgdHJlZSBmaWxlKi8NCisJCWRldl9pbmZvKCZwZGV2LT5kZXYs
-DQorCQkJICJObyBjb21wYXRpYWJsZSwgdXNpbmcgRFRTIGNvbmZpZ3VyYXRpb25cbiIpOw0KKw0K
-KwkJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChwZGV2LT5kZXYub2Zfbm9kZSwNCisJCQkJCSAg
-Im1lZGlhdGVrLGRtYS0zM2JpdHMiKSkgew0KKwkJCW10a2QtPnN1cHBvcnRfYml0cyA9IDMzOw0K
-KwkJfQ0KKw0KKwl9IGVsc2Ugew0KKwkJbXRrZC0+c3VwcG9ydF9iaXRzID0gY29tcC0+YWRkcl9i
-aXRzOw0KKwl9DQogDQotCWlmIChtdGtkLT5zdXBwb3J0XzMzYml0cykNCi0JCWJpdF9tYXNrID0g
-MzM7DQorCWRldl9pbmZvKCZwZGV2LT5kZXYsDQorCQkgIkRNQSBhZGRyZXNzIGJpdHM6ICVkXG4i
-LCAgbXRrZC0+c3VwcG9ydF9iaXRzKTsNCiANCi0JcmMgPSBkbWFfc2V0X21hc2tfYW5kX2NvaGVy
-ZW50KCZwZGV2LT5kZXYsIERNQV9CSVRfTUFTSyhiaXRfbWFzaykpOw0KKwlyYyA9IGRtYV9zZXRf
-bWFza19hbmRfY29oZXJlbnQoJnBkZXYtPmRldiwNCisJCQkJICAgICAgIERNQV9CSVRfTUFTSyht
-dGtkLT5zdXBwb3J0X2JpdHMpKTsNCiAJaWYgKHJjKQ0KIAkJcmV0dXJuIHJjOw0KIA0KLS0gDQoy
-LjE4LjANCg==
 
+
+On 07/16/2020 07:44 PM, Steven Price wrote:
+> On 13/07/2020 04:23, Anshuman Khandual wrote:
+>> This adds new tests validating arch page table helpers for these following
+>> core memory features. These tests create and test specific mapping types at
+>> various page table levels.
+>>
+>> 1. SPECIAL mapping
+>> 2. PROTNONE mapping
+>> 3. DEVMAP mapping
+>> 4. SOFTDIRTY mapping
+>> 5. SWAP mapping
+>> 6. MIGRATION mapping
+>> 7. HUGETLB mapping
+>> 8. THP mapping
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>> Cc: Vineet Gupta <vgupta@synopsys.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Paul Mackerras <paulus@samba.org>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+>> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+>> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+>> Cc: linux-snps-arc@lists.infradead.org
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linuxppc-dev@lists.ozlabs.org
+>> Cc: linux-s390@vger.kernel.org
+>> Cc: linux-riscv@lists.infradead.org
+>> Cc: x86@kernel.org
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-arch@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Tested-by: Vineet Gupta <vgupta@synopsys.com>    #arc
+>> Reviewed-by: Zi Yan <ziy@nvidia.com>
+>> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   mm/debug_vm_pgtable.c | 302 +++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 301 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+>> index 61ab16fb2e36..2fac47db3eb7 100644
+>> --- a/mm/debug_vm_pgtable.c
+>> +++ b/mm/debug_vm_pgtable.c
+> [...]
+>> +
+>> +static void __init pte_swap_tests(unsigned long pfn, pgprot_t prot)
+>> +{
+>> +    swp_entry_t swp;
+>> +    pte_t pte;
+>> +
+>> +    pte = pfn_pte(pfn, prot);
+>> +    swp = __pte_to_swp_entry(pte);
+> 
+> Minor issue: this doesn't look necessarily valid - there's no reason a normal PTE can be turned into a swp_entry. In practise this is likely to work on all architectures because there's no reason not to use (at least) all the PFN bits for the swap entry, but it doesn't exactly seem correct.
+
+Agreed, that it is a simple test but nonetheless a valid one which
+makes sure that PFN value remained unchanged during pte <---> swp
+conversion.
+
+> 
+> Can we start with a swp_entry_t (from __swp_entry()) and check the round trip of that?
+> 
+> It would also seem sensible to have a check that is_swap_pte(__swp_entry_to_pte(__swp_entry(x,y))) is true.
+
+From past experiences, getting any these new tests involving platform
+helpers, working on all existing enabled archs is neither trivial nor
+going to be quick. Existing tests here are known to succeed in enabled
+platforms. Nonetheless, proposed tests as in the above suggestions do
+make sense but will try to accommodate them in a later patch.
