@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88494C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D906C433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 538CD206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477EA2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XeLQqn05"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wK6JLwdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgGQNUj (ORCPT
+        id S1726803AbgGQNUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:20:39 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56490 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726580AbgGQNUh (ORCPT
+        Fri, 17 Jul 2020 09:20:53 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38258 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgGQNUv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:20:37 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKXsl052617;
-        Fri, 17 Jul 2020 08:20:33 -0500
+        Fri, 17 Jul 2020 09:20:51 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKlXi049213;
+        Fri, 17 Jul 2020 08:20:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594992033;
-        bh=2EiIXb5zilfyGEMEK9FZOAk62YE9dIIHJnevmZ9b4YU=;
+        s=ti-com-17Q1; t=1594992047;
+        bh=xi7PoJKvmM9K20//9jEe2vQosDqzLT+FXgKG56FGF3M=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=XeLQqn05QEYYIVmuFTizVxmSDGN9+tJUT4lFv17xM+ok8sNFOyXscSyR19DKLMWHA
-         siFcEKa9W2WMjfQusZKIUffLTyzaQcVi8KNEdgRKNIdFIOBMo6CDV3eCZRKvx1PrxR
-         /r0yryQPAtoD2wRe0hXjnZQOybKwqTFTE5jtii9k=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKXbC060371;
-        Fri, 17 Jul 2020 08:20:33 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        b=wK6JLwdrAkZq+dwXBDDPgY7YFnrboqXm7gwLw2fmWMEtJ55MAh/0TOloB6zLaoD+J
+         sDghpJqeUdDIbsqsm2aVY6DlthGVQjCc/3hdPORHjXVmCodOJTsQkENsi2/46oAlmf
+         HmHgHt1K8VhKZljylOGt3uD7kwntw3LAtIlQZjn8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HDKlg1018199
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jul 2020 08:20:47 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 08:20:33 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 08:20:47 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 08:20:33 -0500
+ Frontend Transport; Fri, 17 Jul 2020 08:20:47 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKWrh107217;
-        Fri, 17 Jul 2020 08:20:32 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKkOT107722;
+        Fri, 17 Jul 2020 08:20:47 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -57,9 +58,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         <dmaengine@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH next v2 3/6] soc: ti: k3-ringacc: add ring's flags to dump
-Date:   Fri, 17 Jul 2020 16:20:16 +0300
-Message-ID: <20200717132019.20427-4-grygorii.strashko@ti.com>
+Subject: [PATCH next v2 5/6] soc: ti: k3-ringacc: separate soc specific initialization
+Date:   Fri, 17 Jul 2020 16:20:18 +0300
+Message-ID: <20200717132019.20427-6-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200717132019.20427-1-grygorii.strashko@ti.com>
 References: <20200717132019.20427-1-grygorii.strashko@ti.com>
@@ -71,26 +72,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add struct k3_ring *ring->flags to the ring dump.
+Separate SoC specific initialization and and OF mach data in preparation of
+adding support for more K3 SoCs
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/soc/ti/k3-ringacc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/ti/k3-ringacc.c | 70 +++++++++++++++++++++++++++++--------
+ 1 file changed, 55 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-index d2dc9c144a89..8a8f31d59e24 100644
+index 4cf1150de88e..1979479db58d 100644
 --- a/drivers/soc/ti/k3-ringacc.c
 +++ b/drivers/soc/ti/k3-ringacc.c
-@@ -253,6 +253,7 @@ static void k3_ringacc_ring_dump(struct k3_ring *ring)
- 		&ring->ring_mem_dma);
- 	dev_dbg(dev, "dump elmsize %d, size %d, mode %d, proxy_id %d\n",
- 		ring->elm_size, ring->size, ring->mode, ring->proxy_id);
-+	dev_dbg(dev, "dump flags %08X\n", ring->flags);
+@@ -161,6 +161,10 @@ struct k3_ring {
+ 	int		proxy_id;
+ };
  
- 	dev_dbg(dev, "dump ring_rt_regs: db%08x\n", readl(&ring->rt->db));
- 	dev_dbg(dev, "dump occ%08x\n", readl(&ring->rt->occ));
++struct k3_ringacc_ops {
++	int (*init)(struct platform_device *pdev, struct k3_ringacc *ringacc);
++};
++
+ /**
+  * struct k3_ringacc - Rings accelerator descriptor
+  *
+@@ -179,6 +183,7 @@ struct k3_ring {
+  * @tisci: pointer ti-sci handle
+  * @tisci_ring_ops: ti-sci rings ops
+  * @tisci_dev_id: ti-sci device id
++ * @ops: SoC specific ringacc operation
+  */
+ struct k3_ringacc {
+ 	struct device *dev;
+@@ -199,6 +204,8 @@ struct k3_ringacc {
+ 	const struct ti_sci_handle *tisci;
+ 	const struct ti_sci_rm_ringacc_ops *tisci_ring_ops;
+ 	u32 tisci_dev_id;
++
++	const struct k3_ringacc_ops *ops;
+ };
+ 
+ static long k3_ringacc_ring_get_fifo_pos(struct k3_ring *ring)
+@@ -1077,21 +1084,14 @@ static int k3_ringacc_probe_dt(struct k3_ringacc *ringacc)
+ 						 ringacc->rm_gp_range);
+ }
+ 
+-static int k3_ringacc_probe(struct platform_device *pdev)
++static int k3_ringacc_init(struct platform_device *pdev,
++			   struct k3_ringacc *ringacc)
+ {
+-	struct k3_ringacc *ringacc;
+ 	void __iomem *base_fifo, *base_rt;
+ 	struct device *dev = &pdev->dev;
+ 	struct resource *res;
+ 	int ret, i;
+ 
+-	ringacc = devm_kzalloc(dev, sizeof(*ringacc), GFP_KERNEL);
+-	if (!ringacc)
+-		return -ENOMEM;
+-
+-	ringacc->dev = dev;
+-	mutex_init(&ringacc->req_lock);
+-
+ 	dev->msi_domain = of_msi_get_domain(dev, dev->of_node,
+ 					    DOMAIN_BUS_TI_SCI_INTA_MSI);
+ 	if (!dev->msi_domain) {
+@@ -1150,14 +1150,9 @@ static int k3_ringacc_probe(struct platform_device *pdev)
+ 		ringacc->rings[i].ring_id = i;
+ 		ringacc->rings[i].proxy_id = K3_RINGACC_PROXY_NOT_USED;
+ 	}
+-	dev_set_drvdata(dev, ringacc);
+ 
+ 	ringacc->tisci_ring_ops = &ringacc->tisci->ops.rm_ring_ops;
+ 
+-	mutex_lock(&k3_ringacc_list_lock);
+-	list_add_tail(&ringacc->list, &k3_ringacc_list);
+-	mutex_unlock(&k3_ringacc_list_lock);
+-
+ 	dev_info(dev, "Ring Accelerator probed rings:%u, gp-rings[%u,%u] sci-dev-id:%u\n",
+ 		 ringacc->num_rings,
+ 		 ringacc->rm_gp_range->desc[0].start,
+@@ -1167,15 +1162,60 @@ static int k3_ringacc_probe(struct platform_device *pdev)
+ 		 ringacc->dma_ring_reset_quirk ? "enabled" : "disabled");
+ 	dev_info(dev, "RA Proxy rev. %08x, num_proxies:%u\n",
+ 		 readl(&ringacc->proxy_gcfg->revision), ringacc->num_proxies);
++
+ 	return 0;
+ }
+ 
++struct ringacc_match_data {
++	struct k3_ringacc_ops ops;
++};
++
++static struct ringacc_match_data k3_ringacc_data = {
++	.ops = {
++		.init = k3_ringacc_init,
++	},
++};
++
+ /* Match table for of_platform binding */
+ static const struct of_device_id k3_ringacc_of_match[] = {
+-	{ .compatible = "ti,am654-navss-ringacc", },
++	{ .compatible = "ti,am654-navss-ringacc", .data = &k3_ringacc_data, },
+ 	{},
+ };
+ 
++static int k3_ringacc_probe(struct platform_device *pdev)
++{
++	const struct ringacc_match_data *match_data;
++	const struct of_device_id *match;
++	struct device *dev = &pdev->dev;
++	struct k3_ringacc *ringacc;
++	int ret;
++
++	match = of_match_node(k3_ringacc_of_match, dev->of_node);
++	if (!match)
++		return -ENODEV;
++	match_data = match->data;
++
++	ringacc = devm_kzalloc(dev, sizeof(*ringacc), GFP_KERNEL);
++	if (!ringacc)
++		return -ENOMEM;
++
++	ringacc->dev = dev;
++	mutex_init(&ringacc->req_lock);
++	ringacc->ops = &match_data->ops;
++
++	ret = ringacc->ops->init(pdev, ringacc);
++	if (ret)
++		return ret;
++
++	dev_set_drvdata(dev, ringacc);
++
++	mutex_lock(&k3_ringacc_list_lock);
++	list_add_tail(&ringacc->list, &k3_ringacc_list);
++	mutex_unlock(&k3_ringacc_list_lock);
++
++	return 0;
++}
++
+ static struct platform_driver k3_ringacc_driver = {
+ 	.probe		= k3_ringacc_probe,
+ 	.driver		= {
 -- 
 2.17.1
 
