@@ -4,107 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4310C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E857C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7B22074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759A62071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fKHPgO/R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWZ/4jVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgGQHfs (ORCPT
+        id S1728044AbgGQHf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36642 "EHLO
+        Fri, 17 Jul 2020 03:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgGQHfs (ORCPT
+        with ESMTP id S1727989AbgGQHf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:35:48 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6D2C061755;
-        Fri, 17 Jul 2020 00:35:47 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id d16so6901176edz.12;
-        Fri, 17 Jul 2020 00:35:47 -0700 (PDT)
+        Fri, 17 Jul 2020 03:35:57 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C415DC061755;
+        Fri, 17 Jul 2020 00:35:57 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gc15so3813794pjb.0;
+        Fri, 17 Jul 2020 00:35:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6rYK2fP0PxrkgdndFMs+CB5yPwy58yRIUW72EzRYRpM=;
-        b=fKHPgO/RexGvyEJpySfos24rsUVfL9YRkRssjkDn/6i8U0cQynR+belzOptx3qtNFB
-         D5n5GlrYPWeVdIb5XmLE9QHcpOQA8SKVulf1gJev7MvDl8uEWsHyH0FnPKwmNKyPTnPx
-         ClrOn5ns4p5F4G6Gh7RXe2jXGt4eAIRqhQ7NxkWMvK9pZRWvckdVsTyC4w6d44m+vOdw
-         e/WGPHVLjPqxroRjHEB7Q+HpxltGOTYJ1ntNbW9oQ4a5Om/wtMhDQvAB+8T4Cp8WiG6Z
-         UZzVwiN3cW0jH3dIYtWiQZQgypk064gLsU+VAgeu5E+3NdlX32Mj/U7JM8Y2wnUj/CiL
-         ftDw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H6UgjbIQGVN5oFfgxU/CHIEw0G9DHJL+4n0GByCqoKU=;
+        b=ZWZ/4jVtjrKf9R2VXYKIHZ+Pyugf1ECUJzzMztl7ZhJmng7dJMQOjVX0nnY1wEv9Mo
+         sWzRdLBYGlDLQiKNgfip3W8IqglWn5NoB+wjkO8Pv/74UUapkKJcjtP9v86ZTJw6zdpJ
+         //LcgllV8AuvMsLd3OeGTGXQGa1G4S1UyBcQ8U8G7aUTZmNXvsT5xr2LSlckjnzFjp+H
+         R22aDhy8soxWLWgpLfPa66TQrtoPkT+z2jhLlHu+t4J3km5o/306kyBXcdi27dxF8F4l
+         oSbWcUfFNYmED7V9S9guJI7rFmtV88l3xM4eIur+pdmG+fv+Ej0wh3oDqgVlLplIzOXS
+         MFXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6rYK2fP0PxrkgdndFMs+CB5yPwy58yRIUW72EzRYRpM=;
-        b=SQrm3LxnIS2XTF6evnPxeIfYNPCf7Q6vbba8aFt10QaxG4VgIOZD9jQwiGbH2eqMEF
-         JHTuhD9ulm50uPkzeeVA7ByQN2IRSkfiQKu01+7j8iTUaKOQfE3SifP+0ZZNe5vYdlDm
-         loBv5G/a4zgslikd6z5qo3hOlQSM+maub9dntlMU7LzNAdbYUry0fRHq2pHjpoM+S5yJ
-         Gwuv1IoHv+Pnd7TBWU6OGHsqnbtxt7TohGNCYkUseEVNU4X6EawSetUGIV0o7NDusFU1
-         EhyPbrRj6FFIALj+7xyRR3lixenDJ5hmLS3v8tCvShrvdlHy64HBDQla91GLWT7qyIy9
-         vNTQ==
-X-Gm-Message-State: AOAM5321doa+6ubpNcGT+DJ4DvB8fy14OPEN7cnBEo44TnBkvv/j38kI
-        JRYdDjF1fPI+bLTzAU6QGrrjrygEdNOYhBt66Bw=
-X-Google-Smtp-Source: ABdhPJzIc46u2fVJLDQvnexUFBUqZNTcUAMeHjWcSylf7rW5C7OuSBSemBsdJgcqytTBj1vTY/OEC8EkecyJRtfJtUU=
-X-Received: by 2002:a50:a45d:: with SMTP id v29mr7988933edb.284.1594971346164;
- Fri, 17 Jul 2020 00:35:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H6UgjbIQGVN5oFfgxU/CHIEw0G9DHJL+4n0GByCqoKU=;
+        b=eLDxj9BOEN5I6c15ccitjGm5BWoMTvj3+oyam7UaOs2+xkPoOFqyB8+FGSl1YUA9eF
+         a4YY25iLj8yXx4dTi9EUCIZgBG6wfi/THkOMcrM7FK06n51mqD8ubCy5+NUAP+jiDg/0
+         OcgX+f5AN9GHiLauDQNYdfVQ8VpJFJmU95FwHqArLpD+a3wZ906XSiN+P2Ya6XkCdMsh
+         3c7u1qZ1KU5uYCOkgF1EraRr3y8tbXvHraA6aP9D0rpJaF+aF6IOdo7K2+KB/kgJQ4BB
+         lvECij0BJGw5l/pykXrO3TbtPEd7oluYyFe1hr8IBp5e0kg2Mbx+5aUSq1YTSooe68s6
+         tFSw==
+X-Gm-Message-State: AOAM530CWdnRIEyDufVS+fncfYg38Gj8F7aaapNefZeVPRJ3Ua1cVBM2
+        pvQdfAgD9BNbVhaws+KiahJ6Igae0HhvCw==
+X-Google-Smtp-Source: ABdhPJyV8TF/8340VW6zAKsBcjtJyGZUCuLrzgfBjaLKiQqbhUXOWPWT4ov7XWH1kS1rxJD2S5vFug==
+X-Received: by 2002:a17:90a:17e4:: with SMTP id q91mr8464124pja.61.1594971357237;
+        Fri, 17 Jul 2020 00:35:57 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id z25sm6794704pfg.140.2020.07.17.00.35.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 00:35:56 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v3 0/6] [media] pci: use generic power management
+Date:   Fri, 17 Jul 2020 13:04:30 +0530
+Message-Id: <20200717073436.249623-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <cover.1594708863.git.frank@allwinnertech.com> <b8761e036b25f20873534e5f8d10b37b5d2ce72c.1594708864.git.frank@allwinnertech.com>
- <4771acd6-ecd3-b8e1-8605-75d78720b1d3@linaro.org>
-In-Reply-To: <4771acd6-ecd3-b8e1-8605-75d78720b1d3@linaro.org>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Fri, 17 Jul 2020 15:35:35 +0800
-Message-ID: <CAEExFWv9_1kec_b+t+nnvT3cziXzmVa8GzJT3pQAZiCf4KA0ig@mail.gmail.com>
-Subject: Re: [PATCH v4 08/16] thermal: sun8i: add TEMP_CALIB_MASK for
- calibration data in sun50i_h6_ths_calibrate
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Frank Lee <frank@allwinnertech.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
-        liyong@allwinnertech.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:26 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 14/07/2020 09:13, Frank Lee wrote:
-> > From: Yangtao Li <frank@allwinnertech.com>
-> >
-> > For sun50i_h6_ths_calibrate(), the data read from nvmem needs a round of
-> > calculation. On the other hand, the newer SOC may store other data in
-> > the space other than 12bit sensor data. Add mask operation to read data
-> > to avoid conversion error.
-> >
-> > Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> > Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
->
-> Can you clarify these SoB ?
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-Previously I used 'Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>',
-maybe this should be removed directly?
+The purpose of this patch series is to upgrade power management in media
+drivers. This has been done by upgrading .suspend() and .resume() callbacks.
 
->
-> Frank Lee==Yangtao Li==frank@allwinnertech.com==tiny.windzz@gmail.com ?
->
+The upgrade makes sure that the involvement of PCI Core does not change the
+order of operations executed in a driver. Thus, does not change its behavior.
 
-Yeah.
+In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
+helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
+pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
+their job.
 
-Yangtao
+The conversion requires the removal of those function calls, change the
+callbacks' definition accordingly and make use of dev_pm_ops structure.
+
+v2: some changes in v1 might break cx23885 and cx25821.
+v3: kbuild error in v2.
+
+All patches are compile-tested only.
+
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
+
+Vaibhav Gupta (6):
+  sta2x11: use generic power management
+  cx23885: use generic power management
+  cx25821: use generic power management
+  cx88: use generic power management
+  meye: use generic power management
+  tw68: use generic power management
+
+ drivers/media/pci/cx23885/cx23885-core.c |  3 --
+ drivers/media/pci/cx25821/cx25821-core.c |  3 --
+ drivers/media/pci/cx88/cx88-video.c      | 58 ++++++----------------
+ drivers/media/pci/meye/meye.c            | 15 ++----
+ drivers/media/pci/sta2x11/sta2x11_vip.c  | 63 ++++++------------------
+ drivers/media/pci/tw68/tw68-core.c       | 30 +++++------
+ 6 files changed, 46 insertions(+), 126 deletions(-)
+
+-- 
+2.27.0
+
