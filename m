@@ -2,255 +2,146 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B88C433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6ABAC433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21D3A22D08
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:07:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FugniGd0"
+	by mail.kernel.org (Postfix) with ESMTP id 8FCFF22D08
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgGQOHl (ORCPT
+        id S1728112AbgGQOHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:07:41 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:15748 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728024AbgGQOHd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:07:33 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HDwpKW000599;
-        Fri, 17 Jul 2020 16:07:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=UW3rbA8OJgX+g0s4DvALs82Ib6sW0QAompQ4HrbLoA4=;
- b=FugniGd0sXUH9rPLRG4V2d6FLBDARZSG+rKAkvQGvhF/N3T3mwHZSlxU9jlQJybKA18N
- Wsu9a9C9tfNv0UJmmLU3NXGCSzwQPOn5GjX5vRma0kp5tlr/iv1TA7bukI0DXjcJUMoV
- aV57S1KwHTAbDgQLPiWOhOJudu3UpiKM6Xs/GlBrM71domnutXS5JGohinVGsIQkvILB
- gNpncIAmrget5miAAxEXkrcefnVSotAgb/qv0cO5Rpk9ecpi3Zp4NN+KbjZrNA8lYBmh
- xIIDEcAZnVH5vhBPJj3U2G6i7ekL1jrDyLHOj1zHAukAeijKaLNvVbRY9iP7+ulCzykq kg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 327cyvge09-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 16:07:18 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 23DAC10002A;
-        Fri, 17 Jul 2020 16:07:18 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 074102BC7AA;
-        Fri, 17 Jul 2020 16:07:18 +0200 (CEST)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 17 Jul 2020 16:07:17
- +0200
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <marex@denx.de>,
-        <alexandre.torgue@st.com>
-Subject: [PATCH v2] irqchip/stm32-exti: map direct event to irq parent
-Date:   Fri, 17 Jul 2020 16:07:17 +0200
-Message-ID: <20200717140717.29606-1-alexandre.torgue@st.com>
+        Fri, 17 Jul 2020 10:07:53 -0400
+Received: from mga01.intel.com ([192.55.52.88]:11841 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727961AbgGQOHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:07:30 -0400
+IronPort-SDR: vyBZ3kDviRRuF5jpvco7rseKl0r2ChBUoxDPGEh/sGIwpQ3+/aDww2POCEtIOAZZ4gNygrH1YO
+ sAsPCzeJl4yQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="167722826"
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="167722826"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 07:07:29 -0700
+IronPort-SDR: RobGYLJiNl2K7tzjIoMMQyMjaPHO/H1hhH1/E1dyZMN7OXvhHb6f0ZCmVbazqKqKvdWA2Hr3EW
+ 11hb2+3nu9Jw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="460856500"
+Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.65])
+  by orsmga005.jf.intel.com with ESMTP; 17 Jul 2020 07:07:29 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V6 11/14] perf/x86/intel: Disable sample-read the slots and metrics events
+Date:   Fri, 17 Jul 2020 07:05:51 -0700
+Message-Id: <20200717140554.22863-12-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_06:2020-07-17,2020-07-17 signatures=0
+In-Reply-To: <20200717140554.22863-1-kan.liang@linux.intel.com>
+References: <20200717140554.22863-1-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EXTI lines are mainly used to wake-up system from CStop low power mode.
-Currently, if a device wants to use a EXTI (direct) line as wakeup line,
-it has to declare 2 interrupts:
- - one for EXTI used to wake-up system (with dedicated_wake_irq api).
- - one for GIC used to get the wake up reason inside the concerned IP.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-This split is not really needed as each EXTI line is actually "linked " to
-a GIC. So to avoid this useless double interrupt management in each
-wake-up driver, this patch lets the STM32 EXTI driver abstract it by
-mapping each EXTI line to his corresponding GIC.
+Users fail to sample-read the slots and metrics events, e.g.,
+perf record -e '{slots, topdown-retiring}:S'.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+When reading the metrics event, the fixed counter 3 (slots) has to be
+reset, which impacts the sampling of the slots event.
 
+Add a specific validate_group() support to reject the case and error out
+for Ice Lake.
+
+An alternative fix may unconditionally disable slots sampling, but it's
+not a decent fix. Users may want to only sample the slot events
+without the topdown metrics events.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
+ arch/x86/events/core.c       |  4 ++++
+ arch/x86/events/intel/core.c | 20 ++++++++++++++++++++
+ arch/x86/events/perf_event.h |  2 ++
+ 3 files changed, 26 insertions(+)
 
-Changes since v1:
-
- - Fix warning reported by test robot.
-
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index faa8482c8246..732b04a121b6 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -42,6 +42,7 @@ struct stm32_exti_bank {
- struct stm32_desc_irq {
- 	u32 exti;
- 	u32 irq_parent;
-+	struct irq_chip *chip;
- };
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index c25dde095bca..7a4c26b89cbf 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2176,7 +2176,11 @@ static int validate_group(struct perf_event *event)
  
- struct stm32_exti_drv_data {
-@@ -166,27 +167,41 @@ static const struct stm32_exti_bank *stm32mp1_exti_banks[] = {
- 	&stm32mp1_exti_b3,
- };
+ 	fake_cpuc->n_events = 0;
+ 	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL);
++	if (ret)
++		goto out;
  
-+static struct irq_chip stm32_exti_h_chip;
-+static struct irq_chip stm32_exti_h_chip_direct;
-+
- static const struct stm32_desc_irq stm32mp1_desc_irq[] = {
--	{ .exti = 0, .irq_parent = 6 },
--	{ .exti = 1, .irq_parent = 7 },
--	{ .exti = 2, .irq_parent = 8 },
--	{ .exti = 3, .irq_parent = 9 },
--	{ .exti = 4, .irq_parent = 10 },
--	{ .exti = 5, .irq_parent = 23 },
--	{ .exti = 6, .irq_parent = 64 },
--	{ .exti = 7, .irq_parent = 65 },
--	{ .exti = 8, .irq_parent = 66 },
--	{ .exti = 9, .irq_parent = 67 },
--	{ .exti = 10, .irq_parent = 40 },
--	{ .exti = 11, .irq_parent = 42 },
--	{ .exti = 12, .irq_parent = 76 },
--	{ .exti = 13, .irq_parent = 77 },
--	{ .exti = 14, .irq_parent = 121 },
--	{ .exti = 15, .irq_parent = 127 },
--	{ .exti = 16, .irq_parent = 1 },
--	{ .exti = 65, .irq_parent = 144 },
--	{ .exti = 68, .irq_parent = 143 },
--	{ .exti = 73, .irq_parent = 129 },
-+	{ .exti = 0, .irq_parent = 6, .chip = &stm32_exti_h_chip },
-+	{ .exti = 1, .irq_parent = 7, .chip = &stm32_exti_h_chip },
-+	{ .exti = 2, .irq_parent = 8, .chip = &stm32_exti_h_chip },
-+	{ .exti = 3, .irq_parent = 9, .chip = &stm32_exti_h_chip },
-+	{ .exti = 4, .irq_parent = 10, .chip = &stm32_exti_h_chip },
-+	{ .exti = 5, .irq_parent = 23, .chip = &stm32_exti_h_chip },
-+	{ .exti = 6, .irq_parent = 64, .chip = &stm32_exti_h_chip },
-+	{ .exti = 7, .irq_parent = 65, .chip = &stm32_exti_h_chip },
-+	{ .exti = 8, .irq_parent = 66, .chip = &stm32_exti_h_chip },
-+	{ .exti = 9, .irq_parent = 67, .chip = &stm32_exti_h_chip },
-+	{ .exti = 10, .irq_parent = 40, .chip = &stm32_exti_h_chip },
-+	{ .exti = 11, .irq_parent = 42, .chip = &stm32_exti_h_chip },
-+	{ .exti = 12, .irq_parent = 76, .chip = &stm32_exti_h_chip },
-+	{ .exti = 13, .irq_parent = 77, .chip = &stm32_exti_h_chip },
-+	{ .exti = 14, .irq_parent = 121, .chip = &stm32_exti_h_chip },
-+	{ .exti = 15, .irq_parent = 127, .chip = &stm32_exti_h_chip },
-+	{ .exti = 16, .irq_parent = 1, .chip = &stm32_exti_h_chip },
-+	{ .exti = 19, .irq_parent = 3, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 21, .irq_parent = 31, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 22, .irq_parent = 33, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 23, .irq_parent = 72, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 24, .irq_parent = 95, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 25, .irq_parent = 107, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 30, .irq_parent = 52, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 47, .irq_parent = 93, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 54, .irq_parent = 135, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 61, .irq_parent = 100, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 65, .irq_parent = 144, .chip = &stm32_exti_h_chip },
-+	{ .exti = 68, .irq_parent = 143, .chip = &stm32_exti_h_chip },
-+	{ .exti = 70, .irq_parent = 62, .chip = &stm32_exti_h_chip_direct },
-+	{ .exti = 73, .irq_parent = 129, .chip = &stm32_exti_h_chip },
- };
- 
- static const struct stm32_exti_drv_data stm32mp1_drv_data = {
-@@ -196,22 +211,23 @@ static const struct stm32_exti_drv_data stm32mp1_drv_data = {
- 	.irq_nr = ARRAY_SIZE(stm32mp1_desc_irq),
- };
- 
--static int stm32_exti_to_irq(const struct stm32_exti_drv_data *drv_data,
--			     irq_hw_number_t hwirq)
-+static const struct
-+stm32_desc_irq *stm32_exti_get_desc(const struct stm32_exti_drv_data *drv_data,
-+				    irq_hw_number_t hwirq)
- {
--	const struct stm32_desc_irq *desc_irq;
-+	const struct stm32_desc_irq *desc = NULL;
- 	int i;
- 
- 	if (!drv_data->desc_irqs)
--		return -EINVAL;
-+		return NULL;
- 
- 	for (i = 0; i < drv_data->irq_nr; i++) {
--		desc_irq = &drv_data->desc_irqs[i];
--		if (desc_irq->exti == hwirq)
--			return desc_irq->irq_parent;
-+		desc = &drv_data->desc_irqs[i];
-+		if (desc->exti == hwirq)
-+			break;
- 	}
- 
--	return -EINVAL;
-+	return desc;
++	if (x86_pmu.validate_group)
++		ret = x86_pmu.validate_group(fake_cpuc, n);
+ out:
+ 	free_fake_cpuc(fake_cpuc);
+ 	return ret;
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index dd3d9f3f2162..bcd96d7fb6ec 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4576,6 +4576,25 @@ static __init void intel_ht_bug(void)
+ 	x86_pmu.stop_scheduling = intel_stop_scheduling;
  }
  
- static unsigned long stm32_exti_pending(struct irq_chip_generic *gc)
-@@ -628,30 +644,47 @@ static struct irq_chip stm32_exti_h_chip = {
- 	.irq_set_affinity	= IS_ENABLED(CONFIG_SMP) ? stm32_exti_h_set_affinity : NULL,
- };
- 
-+static struct irq_chip stm32_exti_h_chip_direct = {
-+	.name			= "stm32-exti-h-direct",
-+	.irq_eoi		= irq_chip_eoi_parent,
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
-+	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_set_type		= irq_chip_set_type_parent,
-+	.irq_set_wake		= stm32_exti_h_set_wake,
-+	.flags			= IRQCHIP_MASK_ON_SUSPEND,
-+	.irq_set_affinity	= IS_ENABLED(CONFIG_SMP) ? irq_chip_set_affinity_parent : NULL,
-+};
++static int icl_validate_group(struct cpu_hw_events *cpuc, int n)
++{
++	bool has_sampling_slots = false, has_metrics = false;
++	struct perf_event *e;
++	int i;
 +
- static int stm32_exti_h_domain_alloc(struct irq_domain *dm,
- 				     unsigned int virq,
- 				     unsigned int nr_irqs, void *data)
- {
- 	struct stm32_exti_host_data *host_data = dm->host_data;
- 	struct stm32_exti_chip_data *chip_data;
-+	const struct stm32_desc_irq *desc;
- 	struct irq_fwspec *fwspec = data;
- 	struct irq_fwspec p_fwspec;
- 	irq_hw_number_t hwirq;
--	int p_irq, bank;
-+	int bank;
- 
- 	hwirq = fwspec->param[0];
- 	bank  = hwirq / IRQS_PER_BANK;
- 	chip_data = &host_data->chips_data[bank];
- 
--	irq_domain_set_hwirq_and_chip(dm, virq, hwirq,
--				      &stm32_exti_h_chip, chip_data);
- 
--	p_irq = stm32_exti_to_irq(host_data->drv_data, hwirq);
--	if (p_irq >= 0) {
-+	desc = stm32_exti_get_desc(host_data->drv_data, hwirq);
-+	if (!desc)
++	for (i = 0; i < n; i++) {
++		e = cpuc->event_list[i];
++		if (is_slots_event(e) && is_sampling_event(e))
++			has_sampling_slots = true;
++
++		if (is_metric_event(e))
++			has_metrics = true;
++	}
++	if (unlikely(has_sampling_slots && has_metrics))
 +		return -EINVAL;
++	return 0;
++}
 +
-+	irq_domain_set_hwirq_and_chip(dm, virq, hwirq, desc->chip,
-+				      chip_data);
-+	if (desc->irq_parent) {
- 		p_fwspec.fwnode = dm->parent->fwnode;
- 		p_fwspec.param_count = 3;
- 		p_fwspec.param[0] = GIC_SPI;
--		p_fwspec.param[1] = p_irq;
-+		p_fwspec.param[1] = desc->irq_parent;
- 		p_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;
+ EVENT_ATTR_STR(mem-loads,	mem_ld_hsw,	"event=0xcd,umask=0x1,ldlat=3");
+ EVENT_ATTR_STR(mem-stores,	mem_st_hsw,	"event=0xd0,umask=0x82")
  
- 		return irq_domain_alloc_irqs_parent(dm, virq, 1, &p_fwspec);
+@@ -5437,6 +5456,7 @@ __init int intel_pmu_init(void)
+ 		intel_pmu_pebs_data_source_skl(pmem);
+ 		x86_pmu.update_topdown_event = icl_update_topdown_event;
+ 		x86_pmu.set_topdown_event_period = icl_set_topdown_event_period;
++		x86_pmu.validate_group = icl_validate_group;
+ 		pr_cont("Icelake events, ");
+ 		name = "icelake";
+ 		break;
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 8100c21205e8..acd85baeabd8 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -677,6 +677,8 @@ struct x86_pmu {
+ 	int		perfctr_second_write;
+ 	u64		(*limit_period)(struct perf_event *event, u64 l);
+ 
++	int		(*validate_group)(struct cpu_hw_events *cpuc, int n);
++
+ 	/* PMI handler bits */
+ 	unsigned int	late_ack		:1,
+ 			enabled_ack		:1,
 -- 
 2.17.1
 
