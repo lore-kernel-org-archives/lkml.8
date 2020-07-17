@@ -2,88 +2,133 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD60FC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBD9C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7D902074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4BB2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgGQITy (ORCPT
+        id S1728406AbgGQIUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:19:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8314 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726233AbgGQITy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:19:54 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6B4E61E758A4206AE34F;
-        Fri, 17 Jul 2020 16:19:50 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.70) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Fri, 17 Jul 2020 16:19:45 +0800
-From:   Zhang Changzhong <zhangchangzhong@huawei.com>
-To:     <opendmb@gmail.com>, <f.fainelli@gmail.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>
-CC:     <bcm-kernel-feedback-list@broadcom.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net: bcmgenet: fix error returns in bcmgenet_probe()
-Date:   Fri, 17 Jul 2020 16:19:42 +0800
-Message-ID: <1594973982-27988-1-git-send-email-zhangchangzhong@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 17 Jul 2020 04:20:23 -0400
+Received: from emcscan.emc.com.tw ([192.72.220.5]:49906 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgGQIUW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:20:22 -0400
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="36477952"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 17 Jul 2020 16:20:19 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(79124:0:AUTH_RELAY)
+        (envelope-from <jingle.wu@emc.com.tw>); Fri, 17 Jul 2020 16:20:16 +0800 (CST)
+Received: from 192.168.33.11
+        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(2481:1:AUTH_RELAY)
+        (envelope-from <jingle.wu@emc.com.tw>); Fri, 17 Jul 2020 16:20:16 +0800 (CST)
+From:   "jingle" <jingle.wu@emc.com.tw>
+To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
+Cc:     "'linux-kernel'" <linux-kernel@vger.kernel.org>,
+        "'linux-input'" <linux-input@vger.kernel.org>,
+        "'phoenix'" <phoenix@emc.com.tw>,
+        "'josh.chen'" <josh.chen@emc.com.tw>,
+        "'kai.heng.feng'" <kai.heng.feng@canonical.com>
+References: <20200714105641.15151-1-jingle.wu@emc.com.tw> <20200716053912.GB1665100@dtor-ws> <1594880123.69588.jingle.wu@emc.com.tw> <20200717012719.GC1665100@dtor-ws> <20200717061010.GD1665100@dtor-ws>
+In-Reply-To: <20200717061010.GD1665100@dtor-ws>
+Subject: RE: [PATCH 2/2] Input: elan_i2c - Modify the IAP related functio n for page sizes 128, 512 bytes.
+Date:   Fri, 17 Jul 2020 16:20:16 +0800
+Message-ID: <002b01d65c13$1a19f0d0$4e4dd270$@emc.com.tw>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.112.70]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQIjNBmL5Bem/gD5U/Wevzos9rHsvgFMELwpAblpFq8B/K6BpwFpUkutqD5gC9A=
+Content-Language: zh-tw
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYwMTFcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy01N2EwNTFhZC1jODA2LTExZWEtODE5YS1mMDc5NTk2OWU3NWVcYW1lLXRlc3RcNTdhMDUxYWYtYzgwNi0xMWVhLTgxOWEtZjA3OTU5NjllNzVlYm9keS50eHQiIHN6PSIyNTE2IiB0PSIxMzIzOTQ0NzYxNjM4NjA4NzciIGg9IlIyNWphZVB5ZHhSbDdFeUU4N29pcE1PbUt6Yz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: true
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call clk_disable_unprepare() in error path after
-a success calling for clk_prepare_enable().
+Hi Dmitry:
 
-Fix to goto err_clk_disable if clk_prepare_enable() is successful.
+In this "static int elan_i2c_prepare_fw_update(struct i2c_client *client,
+u16 ic_type, u8 iap_version)" function
+If IC is old_pattern, it must be modified to iap_version
+	-> u16 type = pattern >= 0x01 ? ic_type : iap_version;
 
-Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index ee84a26..23df6f2 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -4016,7 +4016,7 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 	if (err)
- 		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
- 	if (err)
--		goto err;
-+		goto err_clk_disable;
- 
- 	/* Mii wait queue */
- 	init_waitqueue_head(&priv->wq);
-@@ -4028,14 +4028,14 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->clk_wol)) {
- 		dev_dbg(&priv->pdev->dev, "failed to get enet-wol clock\n");
- 		err = PTR_ERR(priv->clk_wol);
--		goto err;
-+		goto err_clk_disable;
- 	}
- 
- 	priv->clk_eee = devm_clk_get_optional(&priv->pdev->dev, "enet-eee");
- 	if (IS_ERR(priv->clk_eee)) {
- 		dev_dbg(&priv->pdev->dev, "failed to get enet-eee clock\n");
- 		err = PTR_ERR(priv->clk_eee);
--		goto err;
-+		goto err_clk_disable;
- 	}
- 
- 	/* If this is an internal GPHY, power it on now, before UniMAC is
--- 
-1.8.3.1
+-----Original Message-----
+From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com] 
+Sent: Friday, July 17, 2020 2:10 PM
+To: jingle.wu
+Cc: linux-kernel; linux-input; phoenix; josh.chen; kai.heng.feng
+Subject: Re: [PATCH 2/2] Input: elan_i2c - Modify the IAP related functio n
+for page sizes 128, 512 bytes.
+
+On Thu, Jul 16, 2020 at 06:27:19PM -0700, Dmitry Torokhov wrote:
+> Hi Jingle,
+> 
+> On Thu, Jul 16, 2020 at 02:15:23PM +0800, jingle.wu wrote:
+> > HI Dmitry:
+> > 
+> > Just to confirm, the older devices (I assume that pattern 0 means 
+> > older)  have version command that is numerically higher than the one 
+> > for the  newer (pattern >= 1) devices?
+> > 
+> > >> Yes, Pattern 1, 2 are newer devices.
+> > 
+> > > @@ -324,7 +342,14 @@ static int elan_i2c_get_sm_version(struct
+i2c_client *client,
+> > >  			return error;
+> > >  		}
+> > >  		*version = val[0];
+> > > -		*ic_type = val[1];
+> > > +
+> > > +		error = elan_i2c_read_cmd(client, ETP_I2C_IAP_VERSION_CMD,
+val);
+> > > +		if (error) {
+> > > +			dev_err(&client->dev, "failed to get ic type: %d\n",
+> > > +				error);
+> > > +			return error;
+> > > +		}
+> > 
+> > Could you please tell me why this chunk is needed?
+> > >> Modify the old pattern IC firmware read the correct ic_type.
+> > 
+> > In the elan_i2c_core.c, move this code to elan_i2c_i2c.c. 
+> > static int elan_query_device_info(struct elan_tp_data *data) {
+> > 	.....
+> > 	if (data->pattern == 0x01)
+> > 		ic_type = data->ic_type;
+> > 	else
+> > 		ic_type = data->iap_version;
+> > 	.....
+> > 	return 0;
+> > }
+> 
+> I am concerned that unconditionally substituting iap_version for 
+> ic_type for "pattern 0" devices will break check in
+> elan_check_ASUS_special_fw() as it operates on the ic_type returned by 
+> ETP_I2C_OSM_VERSION_CMD and not iap_version.
+
+I split the firmware handling code into a few patches and uploaded it to a
+new elan-i2c branch:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git elan-i2c
+
+Please take a look and let me know if I messed it up or not. I will be
+looking at the new packet format next.
+
+Thanks.
+
+--
+Dmitry
 
