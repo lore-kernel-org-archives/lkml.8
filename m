@@ -2,269 +2,114 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEF8C433F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9A6C433F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12B7D207EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Adt3o38L"
+	by mail.kernel.org (Postfix) with ESMTP id 217C2207EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595007861;
+	bh=8KhGhYBxnfryGaCJ4USJbgh0ERjIkpbE+Ah2Ia0FzVY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=veStGVg1JaXAdvuQwBTkQgQ+zqkfe6dATQILzDCP/rC7NlV0K+n/cujpkAzQPEC41
+	 9BNY6S68rr0gxmFc8cWCfPs9sFdXylx6Rhw/Mhcyh1Nz1TmXApTcDx1zr9MXuq7836
+	 lx2Hvn48CqYcQiI/dzwgSiA12oobruSQ1ULbmXCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgGQRoO (ORCPT
+        id S1727794AbgGQRoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:44:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgGQRnW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:43:22 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F4DC0619DA
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:22 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k5so5750785plk.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Yoa2gRg9p0BtDZ4KFmWdKCBfsnno2U2zYadIEvnl3rM=;
-        b=Adt3o38LCFQ+j3BqLMHZQYrYU2DhD2CgAuRHj5PmBfJpDO1wNflCDVEBsOIwpNndoE
-         JKdVBNXYjKiJ5fo4J3eyfgtMj3l5w4lJzv81GTI6/LsuuF8CMqpHuucNKwP2C4yUAMxH
-         JNfL+adsL8K5pCeLNR9ZPAbYdyqrXiYk3O7NQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Yoa2gRg9p0BtDZ4KFmWdKCBfsnno2U2zYadIEvnl3rM=;
-        b=HAH+4ZALtjqmIsZBjpmSYB/kMqLM4FAxMJ18jMiOtBuw8FDqyQWvwajBG78fFBrMkN
-         i8CmrDOP2O721HrXpYSv9Jnop6wu6tvhihUYqadcBNJ4B+x5dgJ4tsNRil7k5LoWRZ4Y
-         DruwZX83iW+eoAw1JhVvSRWwS1bLIsQe+NLdnX/5UbtaHPxdYn151V3neOGOcqc9GweE
-         FwW7YnQVwMTFVR6USDrCgSCNcfhf7kSmp2u9eYpFOYDG3QfOUaZl9ehPM3yc5ge5y8Uy
-         YPNdQQQsoZLhdAEdTDV88Sdc/YD4ZoKgjO4ThEz4nW7/tK/QZxIPWqBr76clK/YSP9ly
-         wKYQ==
-X-Gm-Message-State: AOAM532CE0uJrDyRopmmaJbbydcMfPdMEgxtWHMl8hRur9FPM3t7JoUg
-        RBWWNN/ykeredwrPj0m7l72K1w==
-X-Google-Smtp-Source: ABdhPJwFTyE1bihKrjLjzdpHMU598VVm0pKHNWemXoHtPIjEVntHC4jS35stskPf0dKucRXMnvtL2Q==
-X-Received: by 2002:a17:90a:a887:: with SMTP id h7mr11295575pjq.0.1595007801925;
-        Fri, 17 Jul 2020 10:43:21 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m19sm8247431pgd.13.2020.07.17.10.43.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 10:43:17 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        James Morris <jmorris@namei.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jessica Yu <jeyu@kernel.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <stephen.boyd@linaro.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 07/13] fs/kernel_read_file: Switch buffer size arg to size_t
-Date:   Fri, 17 Jul 2020 10:43:02 -0700
-Message-Id: <20200717174309.1164575-8-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717174309.1164575-1-keescook@chromium.org>
-References: <20200717174309.1164575-1-keescook@chromium.org>
+        Fri, 17 Jul 2020 13:44:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728091AbgGQRoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:44:15 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89A6D22B4E;
+        Fri, 17 Jul 2020 17:44:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595007854;
+        bh=8KhGhYBxnfryGaCJ4USJbgh0ERjIkpbE+Ah2Ia0FzVY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=W0nYfbVjzCONNpiGooYEWPPFRXkLlokkcPhl3A1lZqCJ+5OOenlOxseUiU6mMCB/A
+         znN2y7Yk4Pb6bptYEZ5CEyHi/0plSim+pZbDtv7Pp1w2uzJFDz38fLej6XM2nNTPi5
+         6RI7Y2NKe9s7mXZxbDZ655w3wevWqwVCFlCfXq14=
+Received: by mail-ot1-f46.google.com with SMTP id t18so7451299otq.5;
+        Fri, 17 Jul 2020 10:44:14 -0700 (PDT)
+X-Gm-Message-State: AOAM5314oTvqHBMMiHtgGYsaLvgZnSIboHW7R91gY80GST5N1g80yOBp
+        Gf6CZtI9dbPUnejvDefO1ukVwuB5HBdG/VpaWA==
+X-Google-Smtp-Source: ABdhPJzmF19p2CWPSseEsvbYzrAu3m4cEXKROdnW9Mwivlqz1HHyHd8Lvx2gzO5P1fA1g1DlI6dgjzgfnM6jDjbbmBQ=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr9977843ots.192.1595007853870;
+ Fri, 17 Jul 2020 10:44:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200702191322.2639681-1-helen.koike@collabora.com> <20200702191322.2639681-5-helen.koike@collabora.com>
+In-Reply-To: <20200702191322.2639681-5-helen.koike@collabora.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 17 Jul 2020 11:44:02 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLYHY85_JhpGKwTOSP99uCER9VEf-gp3g4nFhN4ktCO3w@mail.gmail.com>
+Message-ID: <CAL_JsqLYHY85_JhpGKwTOSP99uCER9VEf-gp3g4nFhN4ktCO3w@mail.gmail.com>
+Subject: Re: [PATCH v4 4/9] media: staging: dt-bindings: rkisp1: fix "no reg"
+ error in parent node
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     devicetree@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mark Rutland <mark.rutland@arm.com>, karthik.poduval@gmail.com,
+        Johan Jonker <jbx6244@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Eddie Cai <eddie.cai.linux@gmail.com>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for further refactoring of kernel_read_file*(), rename
-the "max_size" argument to the more accurate "buf_size", and correct
-its type to size_t. Add kerndoc to explain the specifics of how the
-arguments will be used. Note that with buf_size now size_t, it can no
-longer be negative (and was never called with a negative value). Adjust
-callers to use it as a "maximum size" when *buf is NULL.
+On Thu, Jul 2, 2020 at 1:13 PM Helen Koike <helen.koike@collabora.com> wrote:
+>
+> Fix the following error found with make ARCH=arm64 dt_binding_check:
+>
+> Documentation/devicetree/bindings/media/rockchip-isp1.example.dts:24.27-101.11:
+> Warning (unit_address_vs_reg): /example-0/parent@0: node has a unit name, but no reg or ranges property
+>
+> Reported-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> ---
+>
+> V3:
+> - this is a new patch in the series
+> ---
+>  .../Documentation/devicetree/bindings/media/rockchip-isp1.yaml   | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> index e5b9c0574e352..4d111ef2e89c7 100644
+> --- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> @@ -126,6 +126,7 @@ examples:
+>      #include <dt-bindings/power/rk3399-power.h>
+>
+>      parent0: parent@0 {
+> +        reg = <0 0>;
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/kernel_read_file.c            | 34 +++++++++++++++++++++++---------
- include/linux/kernel_read_file.h |  8 ++++----
- security/integrity/digsig.c      |  2 +-
- security/integrity/ima/ima_fs.c  |  2 +-
- 4 files changed, 31 insertions(+), 15 deletions(-)
+Just drop the unit-address.
 
-diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
-index dc28a8def597..e21a76001fff 100644
---- a/fs/kernel_read_file.c
-+++ b/fs/kernel_read_file.c
-@@ -5,15 +5,31 @@
- #include <linux/security.h>
- #include <linux/vmalloc.h>
- 
-+/**
-+ * kernel_read_file() - read file contents into a kernel buffer
-+ *
-+ * @file	file to read from
-+ * @buf		pointer to a "void *" buffer for reading into (if
-+ *		*@buf is NULL, a buffer will be allocated, and
-+ *		@buf_size will be ignored)
-+ * @buf_size	size of buf, if already allocated. If @buf not
-+ *		allocated, this is the largest size to allocate.
-+ * @id		the kernel_read_file_id identifying the type of
-+ *		file contents being read (for LSMs to examine)
-+ *
-+ * Returns number of bytes read (no single read will be bigger
-+ * than INT_MAX), or negative on error.
-+ *
-+ */
- int kernel_read_file(struct file *file, void **buf,
--		     loff_t max_size, enum kernel_read_file_id id)
-+		     size_t buf_size, enum kernel_read_file_id id)
- {
- 	loff_t i_size, pos;
- 	ssize_t bytes = 0;
- 	void *allocated = NULL;
- 	int ret;
- 
--	if (!S_ISREG(file_inode(file)->i_mode) || max_size < 0)
-+	if (!S_ISREG(file_inode(file)->i_mode))
- 		return -EINVAL;
- 
- 	ret = deny_write_access(file);
-@@ -29,7 +45,7 @@ int kernel_read_file(struct file *file, void **buf,
- 		ret = -EINVAL;
- 		goto out;
- 	}
--	if (i_size > INT_MAX || (max_size > 0 && i_size > max_size)) {
-+	if (i_size > INT_MAX || i_size > buf_size) {
- 		ret = -EFBIG;
- 		goto out;
- 	}
-@@ -75,7 +91,7 @@ int kernel_read_file(struct file *file, void **buf,
- EXPORT_SYMBOL_GPL(kernel_read_file);
- 
- int kernel_read_file_from_path(const char *path, void **buf,
--			       loff_t max_size, enum kernel_read_file_id id)
-+			       size_t buf_size, enum kernel_read_file_id id)
- {
- 	struct file *file;
- 	int ret;
-@@ -87,14 +103,14 @@ int kernel_read_file_from_path(const char *path, void **buf,
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
- 
--	ret = kernel_read_file(file, buf, max_size, id);
-+	ret = kernel_read_file(file, buf, buf_size, id);
- 	fput(file);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
- 
- int kernel_read_file_from_path_initns(const char *path, void **buf,
--				      loff_t max_size,
-+				      size_t buf_size,
- 				      enum kernel_read_file_id id)
- {
- 	struct file *file;
-@@ -113,13 +129,13 @@ int kernel_read_file_from_path_initns(const char *path, void **buf,
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
- 
--	ret = kernel_read_file(file, buf, max_size, id);
-+	ret = kernel_read_file(file, buf, buf_size, id);
- 	fput(file);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
- 
--int kernel_read_file_from_fd(int fd, void **buf, loff_t max_size,
-+int kernel_read_file_from_fd(int fd, void **buf, size_t buf_size,
- 			     enum kernel_read_file_id id)
- {
- 	struct fd f = fdget(fd);
-@@ -128,7 +144,7 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t max_size,
- 	if (!f.file)
- 		goto out;
- 
--	ret = kernel_read_file(f.file, buf, max_size, id);
-+	ret = kernel_read_file(f.file, buf, buf_size, id);
- out:
- 	fdput(f);
- 	return ret;
-diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
-index 0ca0bdbed1bd..910039e7593e 100644
---- a/include/linux/kernel_read_file.h
-+++ b/include/linux/kernel_read_file.h
-@@ -36,16 +36,16 @@ static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
- }
- 
- int kernel_read_file(struct file *file,
--		     void **buf, loff_t max_size,
-+		     void **buf, size_t buf_size,
- 		     enum kernel_read_file_id id);
- int kernel_read_file_from_path(const char *path,
--			       void **buf, loff_t max_size,
-+			       void **buf, size_t buf_size,
- 			       enum kernel_read_file_id id);
- int kernel_read_file_from_path_initns(const char *path,
--				      void **buf, loff_t max_size,
-+				      void **buf, size_t buf_size,
- 				      enum kernel_read_file_id id);
- int kernel_read_file_from_fd(int fd,
--			     void **buf, loff_t max_size,
-+			     void **buf, size_t buf_size,
- 			     enum kernel_read_file_id id);
- 
- #endif /* _LINUX_KERNEL_READ_FILE_H */
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index 97661ffabc4e..04f779c4f5ed 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -175,7 +175,7 @@ int __init integrity_load_x509(const unsigned int id, const char *path)
- 	int rc;
- 	key_perm_t perm;
- 
--	rc = kernel_read_file_from_path(path, &data, 0,
-+	rc = kernel_read_file_from_path(path, &data, INT_MAX,
- 					READING_X509_CERTIFICATE);
- 	if (rc < 0) {
- 		pr_err("Unable to open file: %s (%d)", path, rc);
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 9ba145d3d6d9..8695170d0e5c 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -284,7 +284,7 @@ static ssize_t ima_read_policy(char *path)
- 	datap = path;
- 	strsep(&datap, "\n");
- 
--	rc = kernel_read_file_from_path(path, &data, 0, READING_POLICY);
-+	rc = kernel_read_file_from_path(path, &data, INT_MAX, READING_POLICY);
- 	if (rc < 0) {
- 		pr_err("Unable to open file: %s (%d)", path, rc);
- 		return rc;
--- 
-2.25.1
-
+>          #address-cells = <2>;
+>          #size-cells = <2>;
+>
+> --
+> 2.26.0
+>
