@@ -2,117 +2,116 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A176FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2520BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADF520734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79E320734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="O5WOxjjg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KC/1RaWP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eOLjwKsu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgGQNkj (ORCPT
+        id S1726335AbgGQNgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:40:39 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41851 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726079AbgGQNkj (ORCPT
+        Fri, 17 Jul 2020 09:36:52 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49488 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgGQNgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:40:39 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 46BA15C00C8;
-        Fri, 17 Jul 2020 09:40:38 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 17 Jul 2020 09:40:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=9wtQGfX5A/sjIQNvHFVuON+pdxE
-        vSOVnkKnj5ek512o=; b=O5WOxjjgZDmMLZ2789x6pZ7/dcQiUZUsvZvAnV8c+mc
-        GprpW4fYTolz4h88yZ+9YVSUYmRu5POOLfHWv5sfq6kcvfielFINiyRtJLFaFqIk
-        E/Kuhel5Y2x2yrKFVWyxjEACJtRf2YEEJQjVqlO2nI3357TTYdZBvyyyuNIa7BPt
-        6xkJP4A4U92g+vYiYC7po2Q6PTzy1dmw/Mi7wF61nZDE9o0l21ZtgDfkeObwtyMN
-        34GVzr+kC4jb1hpY2UO1V8kory71fzqwtM6GySM1t2u4bJXiNafN9mqlpjs3ysGV
-        BovMqSN0gKg/vhtjZwqfoz3JS0FIVh2sflvaPOjd29g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=9wtQGf
-        X5A/sjIQNvHFVuON+pdxEvSOVnkKnj5ek512o=; b=KC/1RaWP38bzljJGlF+A3r
-        JA/vxU4ghkAd5LZN95VquKMlwKNvKYci11ZtJKNN3hHIvpv4uzO5BEiqy/bVpFmu
-        N84664B1ZomVrBdNa2OGK7z4o7SlIXFHWTD587UMd2KFEtn6OEFupkYaKqLSRJ/B
-        aINRWap+JeeXlcziS8PDjVHLbIdzn5Z4AWWJS6XM8Uv1sNtFcYbfjZRduk9Ogq89
-        CTRTTR2ObVj/gtR8DBZkVk18sgbiUFVDsKitjeXITiuwu17Nf/C8fcTfMqpYeJDc
-        Iv3dr2Hbf0ey87hBj1zFMpX4/og4elDajiyJe8zgowerouZTTyobBvJ/UTdPN4UQ
-        ==
-X-ME-Sender: <xms:UqoRX38Pt43dhJWB_YnYYW2dJv7nrwwk_NIlp-mvK6gs9VAhl27fzQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrfeeigdeiiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:UqoRXzvP54E4kf_nGaQJUXN7mHiew2ECM_kuu13hPIlHSqG-Rf-xKQ>
-    <xmx:UqoRX1CWpr_oFRvcx6rCyS8S31bMFG9fJAddohWUw7cbZydKyRc92w>
-    <xmx:UqoRXzdMnXuR3D-Z05YFkq3TAVK_AbLOeCpx-9CS7TmTfUKL3EtB-g>
-    <xmx:VqoRXxomC2n1dDXLyLpTkcc9ADj08l7bXRSoO6w55EaLYC7-c2t7dA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D90FB328005A;
-        Fri, 17 Jul 2020 09:40:33 -0400 (EDT)
-Date:   Fri, 17 Jul 2020 15:40:31 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: sun4i: hdmi: Fix inverted HPD result
-Message-ID: <20200717134031.rymy4ac6lyhme7fb@gilmour.lan>
-References: <20200711011030.21997-1-wens@kernel.org>
+        Fri, 17 Jul 2020 09:36:52 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDafpT114516;
+        Fri, 17 Jul 2020 08:36:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594993002;
+        bh=nX35DTen3KepnW22tRHvoRm3iZKHpTmApYwnPsGvDLg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eOLjwKsuO0vACSIstqm/OpUPdyBH7R3o26NlvnoNGxeYE+Q2p3CfvjJoojhsJijCa
+         kS8hjrNBGT+9e12rnK7RLLXLqRiIX+chbMdgxq3+W/j+PXnRiFATUnvO0XR/bWhI0c
+         TAEzHCyZvqcZ9athU78TV4ZSgxp/pCq+82G0FYsE=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HDafMS083455
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jul 2020 08:36:41 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
+ Jul 2020 08:36:41 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 17 Jul 2020 08:36:41 -0500
+Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDaTLH019020;
+        Fri, 17 Jul 2020 08:36:37 -0500
+Subject: Re: [PATCH 7/7] arm64: defconfig: Enable AM654x SDHCI controller
+To:     Arnd Bergmann <arnd@arndb.de>, Tero Kristo <t-kristo@ti.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        ARM-SoC Maintainers <soc@kernel.org>,
+        Nishanth Menon <nm@ti.com>
+References: <20200619125801.9530-1-faiz_abbas@ti.com>
+ <20200619125801.9530-8-faiz_abbas@ti.com>
+ <3ed03440-7fbd-6abc-8a15-67e7217e2c3d@ti.com>
+ <2e50333c-5387-236f-3fb2-6d8014b224e0@ti.com>
+ <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
+ <75cd485b-e3eb-19ee-ad1f-84cb04b0c807@ti.com>
+ <933d7132-5d9f-89df-8dec-5d9f6d3e0eee@ti.com>
+ <CAK8P3a3Uc1X9PY6OnxbgEyBVY1=sx1drW7JrGzcPv1KrXaK7aQ@mail.gmail.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <f603084a-64bd-bc1b-a516-5c8bdbc99d8b@ti.com>
+Date:   Fri, 17 Jul 2020 19:06:28 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ggg674spti3sbwh2"
-Content-Disposition: inline
-In-Reply-To: <20200711011030.21997-1-wens@kernel.org>
+In-Reply-To: <CAK8P3a3Uc1X9PY6OnxbgEyBVY1=sx1drW7JrGzcPv1KrXaK7aQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tero,
 
---ggg674spti3sbwh2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 17/07/20 6:39 pm, Arnd Bergmann wrote:
+> On Fri, Jul 17, 2020 at 1:20 PM Tero Kristo <t-kristo@ti.com> wrote:
+>> On 17/07/2020 11:38, Faiz Abbas wrote:
+>>> On 16/07/20 11:58 pm, Arnd Bergmann wrote:
+>>>> On Thu, Jul 16, 2020 at 3:25 PM Sekhar Nori <nsekhar@ti.com> wrote:
+>>>> I tend to ignore individual patches to the defconfig file unless
+>>>> they are sent to:soc@kernel.org. The best way to get them
+>>>> included is to have the platform maintainers pick up the
+>>>> changes and send them that way as a separate pull request
+>>>> at the same time as sending any DT updates.
+>>>>
+>>>> The MAINTAINERS file lists Tero and Nishanth as maintainers
+>>>> for the platform. If they want, I can apply this one directly, but in
+>>>> the future, send it to them.
+>>>>
+>>>
+>>> Thanks for clarifying Arnd. Tero, can you pick this up?
+>>
+>> Ok, this topic has been bit unclear for me also, but if you say I can
+>> pick the patches myself and send a pull request out, I can do that.
+> 
 
-On Sat, Jul 11, 2020 at 09:10:30AM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->=20
-> When the extra HPD polling in sun4i_hdmi was removed, the result of
-> HPD was accidentally inverted.
->=20
-> Fix this by inverting the check.
->=20
-> Fixes: bda8eaa6dee7 ("drm: sun4i: hdmi: Remove extra HPD polling")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Patches 1-6 are being merged from mmc tree. You only need to pick up this patch.
 
-Applied, thanks!
-Maxime
-
---ggg674spti3sbwh2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXxGqTwAKCRDj7w1vZxhR
-xWQfAP44Hs2MnWMhQ8CZjUv98v1ax9GAOtgzEyT6dOopNLDF0AD/cVGAXw5sOJJC
-0GStzYXMOUlNMkbemLENX2yRAJcZwwY=
-=JKFg
------END PGP SIGNATURE-----
-
---ggg674spti3sbwh2--
+Thanks,
+Faiz
