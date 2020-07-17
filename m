@@ -2,329 +2,123 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DACEC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C8621744
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:20:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uCCfxM31"
+	by mail.kernel.org (Postfix) with ESMTP id 7E54A20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:21:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594992073;
+	bh=7S1J9y8itEN5wvEhbpYW+BZkO1zoG1KjirrP9G0+mZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zq6OzmJub1GCPOcm2vDixU8qfEHuiKXTxNSsYTSI3F2a1CsuEwi+vRyl7s2p+H48R
+	 fpaqmPSeTgpmGvrzlyFovmfY1HYlc62Ho6o5hW5O8xAbjzfs8HNVo2V04ivlAxN6Di
+	 JmDKQQZjFwzkQctwQFIv5FZuZ57VpDHtsuxzw7dI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgGQNUl (ORCPT
+        id S1726873AbgGQNVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:20:41 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59538 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgGQNUh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:20:37 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKVnt112010;
-        Fri, 17 Jul 2020 08:20:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594992031;
-        bh=g2E9/OtG5pDmr71jvOCfQ5BfNj0uQlsil5jQ6Wu6vv4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uCCfxM31RGjYGPUtXo+o1TAGIbIN2nV4OEHv2GBlXGSGAd+SW5qOFudWjKkI0+++d
-         nYTH57RhvlieYTv8XGb1b6q7yugfgmPWViKiq364v+jBO4TDzcJYGeWWJfV15WLsC7
-         ki6L4LeK9Q3MQxuVft59PlXNPuxeLZyqAH7cQ7hE=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKVaU060314;
-        Fri, 17 Jul 2020 08:20:31 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 08:20:31 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 08:20:31 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKU1t130401;
-        Fri, 17 Jul 2020 08:20:30 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <dmaengine@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH next v2 2/6] soc: ti: k3-ringacc: Move state tracking variables under a struct
-Date:   Fri, 17 Jul 2020 16:20:15 +0300
-Message-ID: <20200717132019.20427-3-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200717132019.20427-1-grygorii.strashko@ti.com>
-References: <20200717132019.20427-1-grygorii.strashko@ti.com>
+        Fri, 17 Jul 2020 09:21:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgGQNVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:21:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DD8F2064B;
+        Fri, 17 Jul 2020 13:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594992071;
+        bh=7S1J9y8itEN5wvEhbpYW+BZkO1zoG1KjirrP9G0+mZY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yQngermH9mwpKC/FUGsAks4v6MfDXijifC+rDmR27Bt6uhDtFOYjJ2KSY5xs7PeLr
+         RfxRmMNyPT6WW1A8tPdegeS76iTpyS6LyOD1PJPCiz7Jnu+WKTl78eVBCrY3ZKe49Z
+         0DU/8yLX/miSAt6IDhdsQd3CEUqZzadR49zfo1Nw=
+Date:   Fri, 17 Jul 2020 15:21:01 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+Message-ID: <20200717132101.GA2984939@kroah.com>
+References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
+ <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
+ <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
+ <20200717121436.GA2953399@kroah.com>
+ <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+On Fri, Jul 17, 2020 at 02:27:43PM +0200, Geert Uytterhoeven wrote:
+> Hi Greg,
+> 
+> On Fri, Jul 17, 2020 at 2:14 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > Android is just finally pushing vendors to get their code upstream,
+> > which is a good thing to see.  And building things as a module is an
+> > even better thing as now it is finally allowing arm64 systems to be
+> > built to support more than one specific hardware platform at runtime.
+> 
+> Can you please stop spreading this FUD?
 
-Move the free, occ, windex and rindex under a struct. We can use memset to
-zero them and it will allow a cleaner way to extend driver functionality in
-the future,
+For many many SoCs today, this is not true.  Their drivers are required
+to be built in and will not work as modules, as we are seeing the
+patches try to fix.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/soc/ti/k3-ringacc.c | 99 +++++++++++++++++++------------------
- 1 file changed, 51 insertions(+), 48 deletions(-)
+> As I said before, Arm64 kernels have supported more than one specific
+> hardware platform at runtime from the beginning of the arm64 port
+> (assumed the needed platform support has been enabled in the kernel
+>  config, of course).
+> Even most arm32 kernels support this, since the introduction of the
+> CONFIG_ARCH_MULTIPLATFORM option.  In fact every recently
+> introduced arm32 platform is usually v7, and must conform to this.
+> The sole exceptions are very old platforms, and the v4/v5/v6/v7 split
+> due to architectural issues (the latter still support clusters of
+> platforms in a single kernel).
 
-diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-index 19156f15af0a..d2dc9c144a89 100644
---- a/drivers/soc/ti/k3-ringacc.c
-+++ b/drivers/soc/ti/k3-ringacc.c
-@@ -108,6 +108,21 @@ struct k3_ring_ops {
- 	int (*pop_head)(struct k3_ring *ring, void *elm);
- };
- 
-+/**
-+ * struct k3_ring_state - Internal state tracking structure
-+ *
-+ * @free: Number of free entries
-+ * @occ: Occupancy
-+ * @windex: Write index
-+ * @rindex: Read index
-+ */
-+struct k3_ring_state {
-+	u32 free;
-+	u32 occ;
-+	u32 windex;
-+	u32 rindex;
-+};
-+
- /**
-  * struct k3_ring - RA Ring descriptor
-  *
-@@ -121,10 +136,6 @@ struct k3_ring_ops {
-  * @elm_size: Size of the ring element
-  * @mode: Ring mode
-  * @flags: flags
-- * @free: Number of free elements
-- * @occ: Ring occupancy
-- * @windex: Write index (only for @K3_RINGACC_RING_MODE_RING)
-- * @rindex: Read index (only for @K3_RINGACC_RING_MODE_RING)
-  * @ring_id: Ring Id
-  * @parent: Pointer on struct @k3_ringacc
-  * @use_count: Use count for shared rings
-@@ -143,10 +154,7 @@ struct k3_ring {
- 	u32		flags;
- #define K3_RING_FLAG_BUSY	BIT(1)
- #define K3_RING_FLAG_SHARED	BIT(2)
--	u32		free;
--	u32		occ;
--	u32		windex;
--	u32		rindex;
-+	struct k3_ring_state state;
- 	u32		ring_id;
- 	struct k3_ringacc	*parent;
- 	u32		use_count;
-@@ -339,10 +347,7 @@ void k3_ringacc_ring_reset(struct k3_ring *ring)
- 	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
- 		return;
- 
--	ring->occ = 0;
--	ring->free = 0;
--	ring->rindex = 0;
--	ring->windex = 0;
-+	memset(&ring->state, 0, sizeof(ring->state));
- 
- 	k3_ringacc_ring_reset_sci(ring);
- }
-@@ -592,10 +597,7 @@ int k3_ringacc_ring_cfg(struct k3_ring *ring, struct k3_ring_cfg *cfg)
- 	ring->size = cfg->size;
- 	ring->elm_size = cfg->elm_size;
- 	ring->mode = cfg->mode;
--	ring->occ = 0;
--	ring->free = 0;
--	ring->rindex = 0;
--	ring->windex = 0;
-+	memset(&ring->state, 0, sizeof(ring->state));
- 
- 	if (ring->proxy_id != K3_RINGACC_PROXY_NOT_USED)
- 		ring->proxy = ringacc->proxy_target_base +
-@@ -666,10 +668,10 @@ u32 k3_ringacc_ring_get_free(struct k3_ring *ring)
- 	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
- 		return -EINVAL;
- 
--	if (!ring->free)
--		ring->free = ring->size - readl(&ring->rt->occ);
-+	if (!ring->state.free)
-+		ring->state.free = ring->size - readl(&ring->rt->occ);
- 
--	return ring->free;
-+	return ring->state.free;
- }
- EXPORT_SYMBOL_GPL(k3_ringacc_ring_get_free);
- 
-@@ -740,7 +742,7 @@ static int k3_ringacc_ring_access_proxy(struct k3_ring *ring, void *elem,
- 			"proxy:memcpy_fromio(x): --> ptr(%p), mode:%d\n", ptr,
- 			access_mode);
- 		memcpy_fromio(elem, ptr, (4 << ring->elm_size));
--		ring->occ--;
-+		ring->state.occ--;
- 		break;
- 	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
- 	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
-@@ -748,14 +750,14 @@ static int k3_ringacc_ring_access_proxy(struct k3_ring *ring, void *elem,
- 			"proxy:memcpy_toio(x): --> ptr(%p), mode:%d\n", ptr,
- 			access_mode);
- 		memcpy_toio(ptr, elem, (4 << ring->elm_size));
--		ring->free--;
-+		ring->state.free--;
- 		break;
- 	default:
- 		return -EINVAL;
- 	}
- 
--	dev_dbg(ring->parent->dev, "proxy: free%d occ%d\n", ring->free,
--		ring->occ);
-+	dev_dbg(ring->parent->dev, "proxy: free%d occ%d\n", ring->state.free,
-+		ring->state.occ);
- 	return 0;
- }
- 
-@@ -810,7 +812,7 @@ static int k3_ringacc_ring_access_io(struct k3_ring *ring, void *elem,
- 			"memcpy_fromio(x): --> ptr(%p), mode:%d\n", ptr,
- 			access_mode);
- 		memcpy_fromio(elem, ptr, (4 << ring->elm_size));
--		ring->occ--;
-+		ring->state.occ--;
- 		break;
- 	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
- 	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
-@@ -818,14 +820,15 @@ static int k3_ringacc_ring_access_io(struct k3_ring *ring, void *elem,
- 			"memcpy_toio(x): --> ptr(%p), mode:%d\n", ptr,
- 			access_mode);
- 		memcpy_toio(ptr, elem, (4 << ring->elm_size));
--		ring->free--;
-+		ring->state.free--;
- 		break;
- 	default:
- 		return -EINVAL;
- 	}
- 
--	dev_dbg(ring->parent->dev, "free%d index%d occ%d index%d\n", ring->free,
--		ring->windex, ring->occ, ring->rindex);
-+	dev_dbg(ring->parent->dev, "free%d index%d occ%d index%d\n",
-+		ring->state.free, ring->state.windex, ring->state.occ,
-+		ring->state.rindex);
- 	return 0;
- }
- 
-@@ -857,16 +860,16 @@ static int k3_ringacc_ring_push_mem(struct k3_ring *ring, void *elem)
- {
- 	void *elem_ptr;
- 
--	elem_ptr = k3_ringacc_get_elm_addr(ring, ring->windex);
-+	elem_ptr = k3_ringacc_get_elm_addr(ring, ring->state.windex);
- 
- 	memcpy(elem_ptr, elem, (4 << ring->elm_size));
- 
--	ring->windex = (ring->windex + 1) % ring->size;
--	ring->free--;
-+	ring->state.windex = (ring->state.windex + 1) % ring->size;
-+	ring->state.free--;
- 	writel(1, &ring->rt->db);
- 
- 	dev_dbg(ring->parent->dev, "ring_push_mem: free%d index%d\n",
--		ring->free, ring->windex);
-+		ring->state.free, ring->state.windex);
- 
- 	return 0;
- }
-@@ -875,16 +878,16 @@ static int k3_ringacc_ring_pop_mem(struct k3_ring *ring, void *elem)
- {
- 	void *elem_ptr;
- 
--	elem_ptr = k3_ringacc_get_elm_addr(ring, ring->rindex);
-+	elem_ptr = k3_ringacc_get_elm_addr(ring, ring->state.rindex);
- 
- 	memcpy(elem, elem_ptr, (4 << ring->elm_size));
- 
--	ring->rindex = (ring->rindex + 1) % ring->size;
--	ring->occ--;
-+	ring->state.rindex = (ring->state.rindex + 1) % ring->size;
-+	ring->state.occ--;
- 	writel(-1, &ring->rt->db);
- 
- 	dev_dbg(ring->parent->dev, "ring_pop_mem: occ%d index%d pos_ptr%p\n",
--		ring->occ, ring->rindex, elem_ptr);
-+		ring->state.occ, ring->state.rindex, elem_ptr);
- 	return 0;
- }
- 
-@@ -895,8 +898,8 @@ int k3_ringacc_ring_push(struct k3_ring *ring, void *elem)
- 	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
- 		return -EINVAL;
- 
--	dev_dbg(ring->parent->dev, "ring_push: free%d index%d\n", ring->free,
--		ring->windex);
-+	dev_dbg(ring->parent->dev, "ring_push: free%d index%d\n",
-+		ring->state.free, ring->state.windex);
- 
- 	if (k3_ringacc_ring_is_full(ring))
- 		return -ENOMEM;
-@@ -916,7 +919,7 @@ int k3_ringacc_ring_push_head(struct k3_ring *ring, void *elem)
- 		return -EINVAL;
- 
- 	dev_dbg(ring->parent->dev, "ring_push_head: free%d index%d\n",
--		ring->free, ring->windex);
-+		ring->state.free, ring->state.windex);
- 
- 	if (k3_ringacc_ring_is_full(ring))
- 		return -ENOMEM;
-@@ -935,13 +938,13 @@ int k3_ringacc_ring_pop(struct k3_ring *ring, void *elem)
- 	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
- 		return -EINVAL;
- 
--	if (!ring->occ)
--		ring->occ = k3_ringacc_ring_get_occ(ring);
-+	if (!ring->state.occ)
-+		ring->state.occ = k3_ringacc_ring_get_occ(ring);
- 
--	dev_dbg(ring->parent->dev, "ring_pop: occ%d index%d\n", ring->occ,
--		ring->rindex);
-+	dev_dbg(ring->parent->dev, "ring_pop: occ%d index%d\n", ring->state.occ,
-+		ring->state.rindex);
- 
--	if (!ring->occ)
-+	if (!ring->state.occ)
- 		return -ENODATA;
- 
- 	if (ring->ops && ring->ops->pop_head)
-@@ -958,13 +961,13 @@ int k3_ringacc_ring_pop_tail(struct k3_ring *ring, void *elem)
- 	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
- 		return -EINVAL;
- 
--	if (!ring->occ)
--		ring->occ = k3_ringacc_ring_get_occ(ring);
-+	if (!ring->state.occ)
-+		ring->state.occ = k3_ringacc_ring_get_occ(ring);
- 
--	dev_dbg(ring->parent->dev, "ring_pop_tail: occ%d index%d\n", ring->occ,
--		ring->rindex);
-+	dev_dbg(ring->parent->dev, "ring_pop_tail: occ%d index%d\n",
-+		ring->state.occ, ring->state.rindex);
- 
--	if (!ring->occ)
-+	if (!ring->state.occ)
- 		return -ENODATA;
- 
- 	if (ring->ops && ring->ops->pop_tail)
--- 
-2.17.1
+I think the confusion here is that this really does not work well, if at
+all, on most "high end" SoC chips due to the collection of different
+things all of the vendors ship to their customers.  This is the work
+that is trying to be fixed up here.
 
+And look at the driver core work for many driver subsystems to be fixed
+up just to get a single kernel image to work on multiple platforms.
+Just because older ones did it, doesn't mean it actually works today :)
+
+thanks,
+
+greg k-h
