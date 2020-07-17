@@ -2,99 +2,92 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC58C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6936C43445
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0536207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:00:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e8KQste/"
+	by mail.kernel.org (Postfix) with ESMTP id 7938D208C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgGQJAH (ORCPT
+        id S1726580AbgGQJE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgGQJAG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:00:06 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 889FBC08C5C0;
-        Fri, 17 Jul 2020 02:00:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8xT/WVtQE2KY4X7YjP79ChPInUPynkTTYKC9pryceZE=; b=e8KQste/jtn3QrtBaetLpn+930
-        lo7u3UpKqeat3xIAKeiubE8XcxBOKlbeGR+zBvDcke8mVhn2ZhXIwz/zwSoruuzYOQQnpdCu9VnX7
-        kPEQ1GdsmNi7kWdwGOU62EL1GI1oq3MhbE3MF5Emma66Ddcf580sU3Uax4jBgNxK6tB5mi9o8UN5l
-        dEky9TUhy29LwKea+f2O3dJtrVwpY6RLv8drTRWYk4uE/aME4kvSRVvTQhQZi19Y+5rjSYthwxVtj
-        3m5koTs+xwLdLDFypF6fAfbSPUXt7HXH9dhFltXANJc09Slkg5B6GcdVs0+Zs1woD4Yqqt0nwQFQf
-        i6xNaS1w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwMDk-0005yy-7T; Fri, 17 Jul 2020 08:59:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D695B304D58;
-        Fri, 17 Jul 2020 10:59:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B702429CF6F79; Fri, 17 Jul 2020 10:59:54 +0200 (CEST)
-Date:   Fri, 17 Jul 2020 10:59:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     ira.weiny@intel.com
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 04/17] x86/pks: Preserve the PKRS MSR on context
- switch
-Message-ID: <20200717085954.GY10769@hirez.programming.kicks-ass.net>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-5-ira.weiny@intel.com>
+        Fri, 17 Jul 2020 05:04:59 -0400
+Received: from mga14.intel.com ([192.55.52.115]:64984 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbgGQJE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:04:58 -0400
+IronPort-SDR: fbk8fznuG35YCLotEVygdYDu9Q/Wjd7PBVQpNCHN8QJoO/0B0H243yYkdmUAyj6Q2XbxDt1EWg
+ PukNIDXSK2Yg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="148719424"
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="148719424"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 02:04:39 -0700
+IronPort-SDR: oxDGWDPvJWNBre7UxazejGNTcp7NVQeVN2tR4A2KrErWJ6rvDc82RqTLUErslqQ9ThFK9ZSBb6
+ IceIci2bcDxQ==
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="460786012"
+Received: from enaessen-mobl1.ger.corp.intel.com (HELO dalessan-mobl1.ir.intel.com) ([10.251.86.9])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 02:04:35 -0700
+From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+List-Id: <soc.lore.kernel.org>
+To:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc:     Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Paul J. Murphy" <paul.j.murphy@intel.com>,
+        "Paul J. Murphy" <paul.j.murphy@linux.intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH v4 1/5] arm64: Add config for Keem Bay SoC
+Date:   Fri, 17 Jul 2020 10:04:10 +0100
+Message-Id: <20200717090414.313530-2-daniele.alessandrelli@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200717090414.313530-1-daniele.alessandrelli@linux.intel.com>
+References: <20200717090414.313530-1-daniele.alessandrelli@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717072056.73134-5-ira.weiny@intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:20:43AM -0700, ira.weiny@intel.com wrote:
-> +/*
-> + * Write the PKey Register Supervisor.  This must be run with preemption
-> + * disabled as it does not guarantee the atomicity of updating the pkrs_cache
-> + * and MSR on its own.
-> + */
-> +void write_pkrs(u32 pkrs_val)
-> +{
-> +	this_cpu_write(pkrs_cache, pkrs_val);
-> +	wrmsrl(MSR_IA32_PKRS, pkrs_val);
-> +}
+From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
 
-Should we write that like:
+Add ARCH_KEEMBAY configuration option to support Intel Movidius SoC
+code-named Keem Bay.
 
-void write_pkrs(u32 pkr)
-{
-	u32 *pkrs = get_cpu_ptr(pkrs_cache);
-	if (*pkrs != pkr) {
-		*pkrs = pkr;
-		wrmsrl(MSR_IA32_PKRS, pkr);
-	}
-	put_cpu_ptrpkrs_cache);
-}
+Reviewed-by: Dinh Nguyen <dinguyen@kernel.org>
+Signed-off-by: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+---
+ arch/arm64/Kconfig.platforms | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-given that we fundamentally need to serialize againt schedule() here.
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 8dd05b2a925c..95c1b9042009 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -121,6 +121,11 @@ config ARCH_HISI
+ 	help
+ 	  This enables support for Hisilicon ARMv8 SoC family
+ 
++config ARCH_KEEMBAY
++	bool "Keem Bay SoC"
++	help
++	  This enables support for Intel Movidius SoC code-named Keem Bay.
++
+ config ARCH_MEDIATEK
+ 	bool "MediaTek SoC Family"
+ 	select ARM_GIC
+-- 
+2.26.2
+
