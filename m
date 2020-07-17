@@ -2,97 +2,98 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EC5C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC40C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E5A2064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459FE2064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:12:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J+54t67z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgGQTL6 (ORCPT
+        id S1728693AbgGQTMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:11:58 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:58900 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbgGQTL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:11:57 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jwVlw-0008Ng-WB; Fri, 17 Jul 2020 21:11:53 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     corbet@lwn.net, gregkh@linuxfoundation.org, rafael@kernel.org,
-        f.fainelli@gmail.com, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 2/2] i2c: busses: convert to devm_platform_request_irq()
-Date:   Fri, 17 Jul 2020 21:11:52 +0200
-Message-ID: <3228833.Xz71LAOI96@diego>
-In-Reply-To: <20200717161158.11516-1-zhengdejin5@gmail.com>
-References: <20200717161158.11516-1-zhengdejin5@gmail.com>
+        Fri, 17 Jul 2020 15:12:06 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6388 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728620AbgGQTL7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 15:11:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f11f7f20000>; Fri, 17 Jul 2020 12:11:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 17 Jul 2020 12:11:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 17 Jul 2020 12:11:58 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Jul
+ 2020 19:11:58 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 17 Jul 2020 19:11:58 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.163.115]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f11f7fd0001>; Fri, 17 Jul 2020 12:11:57 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <luca@lucaceresoli.net>, <leonl@leopardimaging.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 2/3] dt-bindings: media: imx274: Add optional input clock and supplies
+Date:   Fri, 17 Jul 2020 12:15:21 -0700
+Message-ID: <1595013322-15077-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
+References: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595013106; bh=GFC1LF/7lvAW8gpnTVuP0yCQ7aUNS8pw6xjdqQGCq/s=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=J+54t67z4hEeAnjeHc2ks0APmu0OdZJEdPX69TmRi3nt2oU2a+gZqpVQ9s8yzpQfM
+         n4Oiy/ovrAvVEPVQUTDRMKRlrG8OfrijH4f24TUBVcp0gw2nf73UYXfARtSnUDHfP+
+         UvrsYYzkpKzCCxOX573J2JCVVmGMCkclCMX1JGvG5o8R69WTzrCV/MHpUx+/5B2e6R
+         4iwcXFa9/6WWR0jdP3invXNMBF6pEvt4nZix0FM2JAujujuDMHTrh9JeBD8Qbb/2Yf
+         w5eVDxKTrd7JPWPuJzLxAfcPdMrAA5SGFIHJRnffmeGC4Q+Lnt+7WgV/xf+rT6dTC+
+         O/WDy0BfhI35Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 17. Juli 2020, 18:11:58 CEST schrieb Dejin Zheng:
-> Use devm_platform_request_irq() to simplify code, and it contains
-> platform_get_irq() and devm_request_irq().
-> 
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
+This patch adds IMX274 optional external clock input and voltage
+supplies to device tree bindings.
 
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ Documentation/devicetree/bindings/media/i2c/imx274.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Rockchip part (i2c-rk3x):
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-> index 8e3cc85d1921..1f0ac69c5774 100644
-> --- a/drivers/i2c/busses/i2c-rk3x.c
-> +++ b/drivers/i2c/busses/i2c-rk3x.c
-> @@ -1227,7 +1227,6 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
->  	int ret = 0;
->  	int bus_nr;
->  	u32 value;
-> -	int irq;
->  	unsigned long clk_rate;
->  
->  	i2c = devm_kzalloc(&pdev->dev, sizeof(struct rk3x_i2c), GFP_KERNEL);
-> @@ -1289,17 +1288,10 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> -	/* IRQ setup */
-> -	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0)
-> -		return irq;
-> -
-> -	ret = devm_request_irq(&pdev->dev, irq, rk3x_i2c_irq,
-> -			       0, dev_name(&pdev->dev), i2c);
-> -	if (ret < 0) {
-> -		dev_err(&pdev->dev, "cannot request IRQ\n");
-> +	ret = devm_platform_request_irq(pdev, 0, NULL, rk3x_i2c_irq,
-> +					0, dev_name(&pdev->dev), i2c);
-> +	if (ret < 0)
->  		return ret;
-> -	}
->  
->  	platform_set_drvdata(pdev, i2c);
->  
-
-
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+index 80f2e89..0727079 100644
+--- a/Documentation/devicetree/bindings/media/i2c/imx274.txt
++++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+@@ -13,6 +13,11 @@ Required Properties:
+ 
+ Optional Properties:
+ - reset-gpios: Sensor reset GPIO
++- clocks: Reference to the input clock.
++- clock-names: Should be "inck".
++- VANA-supply: Sensor 2.8v analog supply.
++- VDIG-supply: Sensor 1.8v digital core supply.
++- VDDL-supply: Sensor digital IO 1.2v supply.
+ 
+ The imx274 device node should contain one 'port' child node with
+ an 'endpoint' subnode. For further reading on port node refer to
+-- 
+2.7.4
 
