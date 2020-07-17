@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342DAC433F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5366AC433F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7B3207CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8A8207CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HFN+J5la"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oGrAw2FW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgGQAQ3 (ORCPT
+        id S1726626AbgGQAQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 20:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53908 "EHLO
+        Thu, 16 Jul 2020 20:16:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726337AbgGQAQ1 (ORCPT
+        with ESMTP id S1725958AbgGQAQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 20:16:27 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF50C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:26 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id k27so5783122pgm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:26 -0700 (PDT)
+        Thu, 16 Jul 2020 20:16:28 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45711C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:28 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id t11so4484353pfq.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uWqUMnqB20Yorh5LQCiLslCOOm0+DCqawJ+UCE1bquU=;
-        b=HFN+J5lasdtEzt8WaDQDidUq/66N+NwxdcjPVhWpvCd+d0hZ5zNSLuBzBCKO+fjAOK
-         C8nKyAjwFqxuDObJnah2wuyJoJ2ffpvR5fWK8OkvnlSYCccjKz9rrM/TXwPfAQzddKXp
-         JegnspuFxDCFrVLUsvFTDz2sEWZMKfmsZDCWl7v+E+v74347FvLqBFFcl354G2qMbekZ
-         CZw7OAC26K6gtekJV0WnxnzqtDWPvg3aZFxlc3AFEfFeKAnJnR8VesnoH5Ln6MN1a6LP
-         94BkbVX/W5v3NeO0S5E4tZtZFQDXPnct1E0y/1HPGl1JKar2q9ypxL2cnAewiG2S6oco
-         2I/w==
+        bh=iuuJuMaKgUlLRcc6gFCZ7HFqvJc6qzprtp/8FUZq9U4=;
+        b=oGrAw2FWu08q1/KU6m+pJhAwavDgdIcPCeC2VO0HBZ36u6jVuMdY/1nf8t3PfztDxd
+         UrUWUVv0AnWLdoKgefsdSYVgpZ4NShv34c7RawVdolP1zjCL4B7AapAXY3oXguBRoRCk
+         PF7+1abGWRfMifqD+JULmyLXmWqVVqxxGalfipSqKUxJKGVGQ7TKDI8yZKyevy5YgWxZ
+         hSf2uxu+JjBVs9go3Z0QmwRI8M8NXaIWEXiYdzEZdGq9x0D7Fe6x5rpTci8Z2TXY5VGF
+         jHPoBeSe8mZhLDOeSB3SGkZLm4ZnuqsBMDyArUSRqy5ww1GBBGt/gDcd4aeLhToTI/hF
+         JDiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uWqUMnqB20Yorh5LQCiLslCOOm0+DCqawJ+UCE1bquU=;
-        b=ebf31g1/3hCNU+cgTLwaRdEohQjgaS6Oo9EVn7wIdmmU9272v04JyEyMjAg8ShX/AE
-         UFA/uqgzDKn8P12bcJoTaJkR1XtPubX/+28W3j9fCP7j2iP6jMaL4WNL3+JJ4agP+rbK
-         1kdQcaRqfuAfh1WeXM1E0Ef+PCTWg0qEeUUway/6avTWgnuIEFWVkiCq9xY40+8Qhx7P
-         NnEX7SkPl3pBKdSV/tNC+onqma0sE5wg5AHLZbm/0um+hJTNEsuN5X1lz5nbJmSGY+RT
-         zbzdzr0Sf9cpskUzIpfEU2xpzr9pq/SqOcx37QgsPnJ5lCi59G53IMI4X8ZzUIb3PO5e
-         s8TQ==
-X-Gm-Message-State: AOAM531cgS/8zCqdAERQ74UX08www7ksbhcInOPpLuTYkzx8vVCsJRJW
-        7lZyF4gJcJdzJopmrmJkEB0f0Q==
-X-Google-Smtp-Source: ABdhPJzhp8wrF9EsgCUoqrojoUNB4BkSM3/fWxyDMIkhZTNNrxXnc9QP6rLIKqr2mcsWBO8ZpScFnA==
-X-Received: by 2002:a63:140f:: with SMTP id u15mr6116836pgl.94.1594944986245;
-        Thu, 16 Jul 2020 17:16:26 -0700 (PDT)
+        bh=iuuJuMaKgUlLRcc6gFCZ7HFqvJc6qzprtp/8FUZq9U4=;
+        b=alGlveJf7NeBV3RCp/dGafF3RwYYoRX4mVaT9dwdSELOpm87b3c68ndIp8csgxJLif
+         6j18ip/hSzDnMMA6X8/IiumBAGtPb0v+HceMps0/S+NEylPHRlM1Z430BOFrkvCrRxlo
+         vSNXqKR6Zi+AQSN2yog6HlSKJU3ffRf9Htne2O1sz4r3ydJZu7QG5cDjxMO3nQSOq+P8
+         0GRvhXWmaE5JHMna7azpAvj4XFnAaa0guFdfi6s5VRyq4owlaszSk2VA+KIvNW8/xm5w
+         zvyGHR9HzVBRNcuPyGusRMqkEpSnzjlokECwbzb6QnbfGJaDDa22zTLQvOU0A9aW0bNn
+         k3Bg==
+X-Gm-Message-State: AOAM532y8F2ghXNaKLeAZzOLTm6wOIbnQSs6HAXxVb9j+rQ1ur0Vu1xx
+        WDbEi/WHWf9bS3qcvnjKju6IKH6osJU=
+X-Google-Smtp-Source: ABdhPJwSZZ9bKl9IV9ztWA8mR2McxctG8Dmv5bJM8VuXAimbsGQd1EoPEyeJ0iHJ6beRLFNWkuNlnA==
+X-Received: by 2002:a63:1e4d:: with SMTP id p13mr6161160pgm.387.1594944987760;
+        Thu, 16 Jul 2020 17:16:27 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r7sm6211950pgu.51.2020.07.16.17.16.24
+        by smtp.gmail.com with ESMTPSA id r7sm6211950pgu.51.2020.07.16.17.16.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 17:16:25 -0700 (PDT)
+        Thu, 16 Jul 2020 17:16:27 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -70,9 +70,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org,
         John Stultz <john.stultz@linaro.org>,
         Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 3/5] iommu/arm-smmu: Move SMR and S2CR definitions to header file
-Date:   Thu, 16 Jul 2020 17:16:17 -0700
-Message-Id: <20200717001619.325317-4-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 4/5] iommu/arm-smmu-qcom: Consistently initialize stream mappings
+Date:   Thu, 16 Jul 2020 17:16:18 -0700
+Message-Id: <20200717001619.325317-5-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200717001619.325317-1-bjorn.andersson@linaro.org>
 References: <20200717001619.325317-1-bjorn.andersson@linaro.org>
@@ -83,9 +83,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expose the SMR and S2CR structs in the header file, to allow platform
-specific implementations to populate/initialize the smrs and s2cr
-arrays.
+Firmware that traps writes to S2CR to translate BYPASS into FAULT also
+ignores writes of type FAULT. As such booting with "disable_bypass" set
+will result in all S2CR registers left as configured by the bootloader.
+
+This has been seen to result in indeterministic results, as these
+mappings might linger and reference context banks that Linux is
+reconfiguring.
+
+Use the fact that BYPASS writes result in FAULT type to force all stream
+mappings to FAULT.
 
 Tested-by: John Stultz <john.stultz@linaro.org>
 Tested-by: Vinod Koul <vkoul@kernel.org>
@@ -93,66 +100,49 @@ Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
+- Fixed subject spelling mistake
 - Picked up tested-by
 
- drivers/iommu/arm-smmu.c | 14 --------------
- drivers/iommu/arm-smmu.h | 15 +++++++++++++++
- 2 files changed, 15 insertions(+), 14 deletions(-)
+ drivers/iommu/arm-smmu-qcom.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 5d5fe6741ed4..08a650fe02e3 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -68,24 +68,10 @@ module_param(disable_bypass, bool, S_IRUGO);
- MODULE_PARM_DESC(disable_bypass,
- 	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
+diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+index d95a5ee8c83c..10eb024981d1 100644
+--- a/drivers/iommu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm-smmu-qcom.c
+@@ -27,6 +27,7 @@ static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
+ {
+ 	unsigned int last_s2cr = ARM_SMMU_GR0_S2CR(smmu->num_mapping_groups - 1);
+ 	u32 reg;
++	int i;
  
--struct arm_smmu_s2cr {
--	struct iommu_group		*group;
--	int				count;
--	enum arm_smmu_s2cr_type		type;
--	enum arm_smmu_s2cr_privcfg	privcfg;
--	u8				cbndx;
--};
--
- #define s2cr_init_val (struct arm_smmu_s2cr){				\
- 	.type = disable_bypass ? S2CR_TYPE_FAULT : S2CR_TYPE_BYPASS,	\
+ 	/*
+ 	 * With some firmware writes to S2CR of type FAULT are ignored, and
+@@ -37,9 +38,24 @@ static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
+ 					    FIELD_PREP(ARM_SMMU_S2CR_CBNDX, 0xff) |
+ 					    FIELD_PREP(ARM_SMMU_S2CR_PRIVCFG, S2CR_PRIVCFG_DEFAULT));
+ 	reg = arm_smmu_gr0_read(smmu, last_s2cr);
+-	if (FIELD_GET(ARM_SMMU_S2CR_TYPE, reg) != S2CR_TYPE_BYPASS)
++	if (FIELD_GET(ARM_SMMU_S2CR_TYPE, reg) != S2CR_TYPE_BYPASS) {
+ 		smmu->qcom_bypass_quirk = true;
+ 
++		/*
++		 * With firmware ignoring writes of type FAULT, booting the
++		 * Linux kernel with disable_bypass disabled (i.e. "enable
++		 * bypass") the initialization during probe will leave mappings
++		 * in an inconsistent state. Avoid this by configuring all
++		 * S2CRs to BYPASS.
++		 */
++		for (i = 0; i < smmu->num_mapping_groups; i++) {
++			smmu->s2crs[i].type = S2CR_TYPE_BYPASS;
++			smmu->s2crs[i].privcfg = S2CR_PRIVCFG_DEFAULT;
++			smmu->s2crs[i].cbndx = 0xff;
++			smmu->s2crs[i].count = 0;
++		}
++	}
++
+ 	return 0;
  }
- 
--struct arm_smmu_smr {
--	u16				mask;
--	u16				id;
--	bool				valid;
--};
--
- struct arm_smmu_cb {
- 	u64				ttbr[2];
- 	u32				tcr[2];
-diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index a71d193073e4..bcd160d01c53 100644
---- a/drivers/iommu/arm-smmu.h
-+++ b/drivers/iommu/arm-smmu.h
-@@ -251,6 +251,21 @@ enum arm_smmu_implementation {
- 	QCOM_SMMUV2,
- };
- 
-+struct arm_smmu_s2cr {
-+	struct iommu_group		*group;
-+	int				count;
-+	enum arm_smmu_s2cr_type		type;
-+	enum arm_smmu_s2cr_privcfg	privcfg;
-+	u8				cbndx;
-+};
-+
-+struct arm_smmu_smr {
-+	u16				mask;
-+	u16				id;
-+	bool				valid;
-+	bool				pinned;
-+};
-+
- struct arm_smmu_device {
- 	struct device			*dev;
  
 -- 
 2.26.2
