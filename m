@@ -2,107 +2,115 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EC9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47A462074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3852074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:16:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BxQ1adGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgGQCPl (ORCPT
+        id S1726629AbgGQCQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 22:15:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44032 "EHLO
+        Thu, 16 Jul 2020 22:16:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgGQCPl (ORCPT
+        with ESMTP id S1726546AbgGQCQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 22:15:41 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304B4C061755;
-        Thu, 16 Jul 2020 19:15:41 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id EA02B2A292F
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com,
-        Matthew Wilcox <willy@infradead.org>,
-        Paul Gofman <gofmanp@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "open list\:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v4 1/2] kernel: Implement selective syscall userspace redirection
-Organization: Collabora
-References: <20200716193141.4068476-1-krisman@collabora.com>
-        <20200716193141.4068476-2-krisman@collabora.com>
-        <CALCETrWdCN5KsRUkrb8VoYGRBhy71P-MAHGWhuJ5y4Z3vByyvg@mail.gmail.com>
-Date:   Thu, 16 Jul 2020 22:15:35 -0400
-In-Reply-To: <CALCETrWdCN5KsRUkrb8VoYGRBhy71P-MAHGWhuJ5y4Z3vByyvg@mail.gmail.com>
-        (Andy Lutomirski's message of "Thu, 16 Jul 2020 17:20:02 -0700")
-Message-ID: <87wo32j394.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Thu, 16 Jul 2020 22:16:36 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98E8C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 19:16:36 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a23so3036699pfk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 19:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=k/j//DrqA105JQB+yLLyaqJ9jhi6KMPYTBR0gDdzdRY=;
+        b=BxQ1adGxHQqa8k4kj4znuKdnMoztP0XQDdDcHV4CEkMyhF3h7pXPkorgvdhMY/XaKA
+         qhNQwel/88jUrfDLV1O1Gjh9TKHDIg2sLr0VVQJL5Yz5i9GtkVidc+kvuT04wGvl+BEX
+         d/Byyx8aTCy22K51FZxR3bx3d1duO1KC/ZQsf8YSudgLrZIXTwW16/rv3W0vwWpOGYsr
+         I2U69Qm04ugGfqrp6SQPWFrckfqNmRr8jZBk+/2+VgozwGYxfBwWnd18j6QY4B6sTXrA
+         DT1Ej8MN9d8FemaZGFFwEA3ccL5eIC6AsfCKGzJEt9bCO94cRuKMsc3fgxP4hcWdBobN
+         Ndog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k/j//DrqA105JQB+yLLyaqJ9jhi6KMPYTBR0gDdzdRY=;
+        b=jemYEr6K6NxfWXBfXrJjQFGsXivOpqPUT/tpAHUokCdK1uB8ijKkvK89IyNEJINl1r
+         /eyifQGlzfh7C2iXs8ySDweoYdPxiLxcb3lZh4eON3OMZjlQ9aTFiVThr0DtBWJSBCW+
+         tx3IT9vqimYnIq1m1jfCEDBfIfFoslcQ3EY/XdvTLZv4b/71PTLp3U9ojsxc2lf9woOF
+         4xUiMGoFfJEV/CfYI/Onyns9d03PEaoAECfJOx6tAgFSbYAZ95t0szv4MKalyvnbCKar
+         Ap/siK3SxwRkDj5s3IBo2t8s1ZeR5c4BIvxgLKerUDP6tFdyy+PQ6ra4u7hwoMyaJUyz
+         B9OQ==
+X-Gm-Message-State: AOAM531H4ohvSGH34fXnjjmeyMYT2xzgZMsCue0CexZyY+awCTdKjupc
+        DjxWEBRPy0yUQyMd6OhYwEXtRYnWowKcJg==
+X-Google-Smtp-Source: ABdhPJxjT6UxMk4dugu2pkV2kCi5VK/E9SIRHyOkuEc25MvJm3iR7aQyn05v7ts6ekzr7eHuNaO7LQ==
+X-Received: by 2002:a63:b546:: with SMTP id u6mr6507607pgo.381.1594952195776;
+        Thu, 16 Jul 2020 19:16:35 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id bf11sm1082019pjb.48.2020.07.16.19.16.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 19:16:35 -0700 (PDT)
+Subject: Re: [PATCH -next] rsxx: Convert to DEFINE_SHOW_ATTRIBUTE
+To:     miaoqinglang <miaoqinglang@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200716090432.13691-1-miaoqinglang@huawei.com>
+ <e4caa1de-db2c-c2f4-d1e8-fef7073a52ea@kernel.dk>
+ <c19c9e32-4b31-bcf1-df45-a29220e7e6cc@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <87a5f046-e77b-af25-6656-c8b075a16edf@kernel.dk>
+Date:   Thu, 16 Jul 2020 20:16:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <c19c9e32-4b31-bcf1-df45-a29220e7e6cc@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
+On 7/16/20 7:37 PM, miaoqinglang wrote:
+> 
+> 在 2020/7/16 23:45, Jens Axboe 写道:
+>> On 7/16/20 3:04 AM, Qinglang Miao wrote:
+>>> From: Liu Shixin <liushixin2@huawei.com>
+>>>
+>>> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+>> None of these apply against the 5.9 block tree, looks like some
+>> read -> read_iter conversion has happened in another branch that
+>> I'm not privy to.
+> 
+> Hi Jens,
+> 
+>      Sorry I didn't mention it in commit log, but this patch is based  
+> on linux-next where commit <4d4901c6d7> has switched over direct  
+> seq_read method calls to seq_read_iter, this is why there's conflict in  
+> your apply.
+> 
+>      Do you think I should send a new patch based on 5.8rc?
 
-> On Thu, Jul 16, 2020 at 12:31 PM Gabriel Krisman Bertazi
-> <krisman@collabora.com> wrote:
->>
->
-> This is quite nice.  I have a few comments, though:
->
-> You mentioned rt_sigreturn().  Should this automatically exempt the
-> kernel-provided signal restorer on architectures (e.g. x86_32) that
-> provide one?
+That'll just create a needless conflict. But I don't even know what tree
+is carrying the patch that changes it to use seq_read_iter, so hard to
+make other suggestions.
 
-That seems reasonable.  Not sure how easy it is to do it, though.
-
-> The amount of syscall entry wiring that arches need to do is IMO
-> already a bit out of hand.  Should we instead rename TIF_SECCOMP to
-> TIF_SYSCALL_INTERCEPTION and have one generic callback that handles
-> seccomp and this new thing?
-
-Considering the previous suggestion from Kees to hide it inside the
-tracehook and Thomas rework of this path, I'm not sure what is the best
-solution here, but some rework of these flags is due.  Thomas suggested
-expanding these flags to 64 bits and having some arch specific and
-arch-agnostic flags.  With the storage expansion and arch-agnostic flags,
-would this still be desirable?
-
->> +int do_syscall_user_dispatch(struct pt_regs *regs)
->> +{
->> +       struct syscall_user_dispatch *sd = &current->syscall_dispatch;
->> +       unsigned long ip = instruction_pointer(regs);
->> +       char state;
->> +
->> +       if (likely(ip >= sd->dispatcher_start && ip <= sd->dispatcher_end))
->> +               return 0;
->> +
->> +       if (likely(sd->selector)) {
->> +               if (unlikely(__get_user(state, sd->selector)))
->> +                       do_exit(SIGSEGV);
->> +
->> +               if (likely(state == 0))
->> +                       return 0;
->> +
->> +               if (state != 1)
->> +                       do_exit(SIGSEGV);
->
-> This seems a bit extreme and hard to debug if it ever happens.
-
-Makes sense, but I don't see a better way to return the error here.
-Maybe a SIGSYS with a different si_errno?  Alternatively, we could
-revert to the previous behavior of allowing syscalls on state != 0, that
-existed in v1.  What do you think?
+Alternatively, I can hang on to them until the other change hits
+mainline, and then queue them up after that.
 
 -- 
-Gabriel Krisman Bertazi
+Jens Axboe
+
