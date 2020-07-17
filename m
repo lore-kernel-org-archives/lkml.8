@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195EEC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25163C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA30A204EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0398F2076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595001664;
-	bh=PHFcsOvSx0eeMSnfIXvWspi9b5ibhDTxlVNjTZcilaM=;
+	s=default; t=1595001661;
+	bh=rnYHb0s5js4ByiGzI4bA3XnakDr668Pyp1YPTOtvpj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wp2cUyYcvyavUOXve/2as/GPyZqGZ+nxtzfdLoaorarF/gWkCsBq3EY1XEAM66lLJ
-	 zkD3wlcKHDwu84DMGbOgOmL1E9ZexQYXSGj0+PDafPO0OY1tX01cSK/IiZpNgV9xzZ
-	 oYhqj8vdT30KCEn0UUU3UQQ9Q48mzfDV5DA0IxoY=
+	b=KUvnNfuQinC3/UtRrutxf8A9FWW5WMmg4RhCl85v0bCphhi5E3Uyf3WxjdSeD6fhf
+	 Nvexqk+40FIRslbnJ4m8kx1mTAdU/nwlLRTIIlKQDlaRXnyuJHNeifoednxn9T6ra7
+	 W0WyV0nNEbw1SUgvPymaE0XK+4sP/G3o9iRru0MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgGQQBC (ORCPT
+        id S1726984AbgGQQA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:01:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 12:00:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbgGQQBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:01:01 -0400
+        id S1726381AbgGQQA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:00:58 -0400
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.194.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54E2F21741;
-        Fri, 17 Jul 2020 16:01:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D3922074B;
+        Fri, 17 Jul 2020 16:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595001660;
-        bh=PHFcsOvSx0eeMSnfIXvWspi9b5ibhDTxlVNjTZcilaM=;
+        s=default; t=1595001658;
+        bh=rnYHb0s5js4ByiGzI4bA3XnakDr668Pyp1YPTOtvpj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FI+KBFNJvoZrc2MqqB1ASo9dbFdqGwL70n/9fpNpVIeU/t2Fv+bAzy7vaEdocmFPp
-         m5+vAj0SFdMDFc8spft59hG81cUJVM10pta6YG/I8ZbFFVLroqCFqEbtgzQuySKCsy
-         rAzxGtKt60uhm16kPNCq1xUMTnrKRqdt4cSpZfa0=
+        b=XP+NZaUj6lIZ4nobsZ5aoYm9T8hb6JXjDCrmaF9zv1Yhh/EDMXHMc2+a18Ly87rnY
+         hqYI1QAz5hqyhwEqrhF+vJqbNWSL20Ld/ROxwRLWs6VJ/dOydh150ZDrwxZEuN+Qgf
+         SbVaDaXNQeeiJBcC6MU1L+WXVm9h/W77bDBiC4+Y=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 45C965FDC0; Sat, 18 Jul 2020 00:00:55 +0800 (CST)
+        id 1617F5F81B; Sat, 18 Jul 2020 00:00:55 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <mripard@kernel.org>
 Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/8] arm64: dts: allwinner: h5: Add CPU Operating Performance Points table
-Date:   Sat, 18 Jul 2020 00:00:51 +0800
-Message-Id: <20200717160053.31191-7-wens@kernel.org>
+Subject: [PATCH v2 1/8] ARM: dts: sunxi: libretech-all-h3-cc: Add regulator supply to all CPU cores
+Date:   Sat, 18 Jul 2020 00:00:46 +0800
+Message-Id: <20200717160053.31191-2-wens@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200717160053.31191-1-wens@kernel.org>
 References: <20200717160053.31191-1-wens@kernel.org>
@@ -61,117 +61,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-Add an OPP (Operating Performance Points) table for the CPU cores for
-boards to include to DVFS (Dynamic Voltage & Frequency Scaling) on the
-H5. The table originates from Armbian, but the maximum voltage is raised
-slightly to account for boards using slightly higher voltages.
+The device tree currently only assigns the a supply for the first CPU
+core, when in reality the regulator supply is shared by all four cores.
+This might cause an issue if the implementation does not realize the
+sharing of the supply.
 
-The table and tie in to the CPU cores are put in a separate dtsi file
-that board files can include to opt in. Or they can define their own
-tables if the standard one does not fit.
-
-This has been tested on the Libre Computer ALL-H3-CC-H5 and the Bananapi
-M2+ v1.2 H5, both with adequate cooling. The former has a fixed 1.2V
-regulator, while the latter has a GPIO controlled regulator switchable
-between 1.1V and 1.3V.
+Assign the same regulator supply to the remaining CPU cores to address
+this.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
+ arch/arm/boot/dts/sunxi-libretech-all-h3-cc.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Unfortunately I couldn't find the original source and author for the OPP
-table. So for now I put my name on it. If someone wants to claim
-authorship please do so.
-
----
- .../boot/dts/allwinner/sun50i-h5-cpu-opp.dtsi | 79 +++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-cpu-opp.dtsi
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-cpu-opp.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5-cpu-opp.dtsi
-new file mode 100644
-index 000000000000..9d3a9fa78e2e
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-cpu-opp.dtsi
-@@ -0,0 +1,79 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+// Copyright (C) 2020 Chen-Yu Tsai <wens@csie.org>
-+
-+/ {
-+	cpu_opp_table: opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp@408000000 {
-+			opp-hz = /bits/ 64 <408000000>;
-+			opp-microvolt = <1000000 1000000 1310000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp@648000000 {
-+			opp-hz = /bits/ 64 <648000000>;
-+			opp-microvolt = <1040000 1040000 1310000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp@816000000 {
-+			opp-hz = /bits/ 64 <816000000>;
-+			opp-microvolt = <1080000 1080000 1310000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp@912000000 {
-+			opp-hz = /bits/ 64 <912000000>;
-+			opp-microvolt = <1120000 1120000 1310000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp@960000000 {
-+			opp-hz = /bits/ 64 <960000000>;
-+			opp-microvolt = <1160000 1160000 1310000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp@1008000000 {
-+			opp-hz = /bits/ 64 <1008000000>;
-+			opp-microvolt = <1200000 1200000 1310000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp@1056000000 {
-+			opp-hz = /bits/ 64 <1056000000>;
-+			opp-microvolt = <1240000 1240000 1310000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp@1104000000 {
-+			opp-hz = /bits/ 64 <1104000000>;
-+			opp-microvolt = <1260000 1260000 1310000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp@1152000000 {
-+			opp-hz = /bits/ 64 <1152000000>;
-+			opp-microvolt = <1300000 1300000 1310000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+	};
-+};
-+
-+&cpu0 {
-+	operating-points-v2 = <&cpu_opp_table>;
-+};
-+
+diff --git a/arch/arm/boot/dts/sunxi-libretech-all-h3-cc.dtsi b/arch/arm/boot/dts/sunxi-libretech-all-h3-cc.dtsi
+index 19b3b23cfaa8..c44fd726945a 100644
+--- a/arch/arm/boot/dts/sunxi-libretech-all-h3-cc.dtsi
++++ b/arch/arm/boot/dts/sunxi-libretech-all-h3-cc.dtsi
+@@ -128,6 +128,18 @@ &cpu0 {
+ 	cpu-supply = <&reg_vdd_cpux>;
+ };
+ 
 +&cpu1 {
-+	operating-points-v2 = <&cpu_opp_table>;
++	cpu-supply = <&reg_vdd_cpux>;
 +};
 +
 +&cpu2 {
-+	operating-points-v2 = <&cpu_opp_table>;
++	cpu-supply = <&reg_vdd_cpux>;
 +};
 +
 +&cpu3 {
-+	operating-points-v2 = <&cpu_opp_table>;
++	cpu-supply = <&reg_vdd_cpux>;
 +};
++
+ &de {
+ 	status = "okay";
+ };
 -- 
 2.27.0
 
