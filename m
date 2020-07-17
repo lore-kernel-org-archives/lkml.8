@@ -2,106 +2,101 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE16C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B834C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE842065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CCED2076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:23:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b6/KEkti"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7FbqHRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgGQPWR (ORCPT
+        id S1727121AbgGQPXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:22:17 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55300 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgGQPWQ (ORCPT
+        Fri, 17 Jul 2020 11:23:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgGQPXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 11:22:16 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HFM7to083326;
-        Fri, 17 Jul 2020 10:22:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594999327;
-        bh=nWmi1N267mykLXBFK8hhRu1dzohcmL3IImqJTPPwDqQ=;
-        h=From:To:Subject:Date:In-Reply-To:References;
-        b=b6/KEktigmbyOrBsYAT+Ym9uD23cUrq1bqXLF7/OyrXnLlSfA+0dvRchAA/CeorL6
-         49J1uhi465tUnbHO9YWYw4a0l/tLeqfFRipVfgrG193pigQqMPm/DQsxekhAxt5bv9
-         f6xBl8+xitGyZ0JL7PWXsMy+yFpGmmh56kZvEgXY=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HFM757106522;
-        Fri, 17 Jul 2020 10:22:07 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 10:22:06 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 10:22:06 -0500
-Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HFM51Q022443;
-        Fri, 17 Jul 2020 10:22:06 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
-        <vinicius.gomes@intel.com>
-Subject: [net-next iproute2 PATCH v3 2/2] ip: iplink: prp: update man page for new parameter
-Date:   Fri, 17 Jul 2020 11:22:05 -0400
-Message-ID: <20200717152205.826-2-m-karicheri2@ti.com>
+        Fri, 17 Jul 2020 11:23:42 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B602C0619D2;
+        Fri, 17 Jul 2020 08:23:42 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f7so11593987wrw.1;
+        Fri, 17 Jul 2020 08:23:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZQBY6n0XO5q0T2HKwgvRXJzUZ5cOaX1DHTrvKtmcRgQ=;
+        b=O7FbqHRX208RD83qlfBMP1GinwaYuZEtsIXBCf4tqZut/g0O3MqIcstGWS7HVztJFj
+         bVDuEBdLddWBnOIGxTVWebBfaW2K5S94Y6mGyWNgMn1Va1rhUpCuiisBTxL8rD86Jp8J
+         31x5mmglYTwYWkBLkxWTi/dUhkD+B8Gtf97nkJz0eMEK7XCzER26W8QIcC7rzm6rNTIp
+         MXubU+6CDog7LRKlawwuwRQPze2ltd/xFEb2oRWMjrqWC+zhMUQUWdvIU6YUQCmqXqWp
+         1wb5l0VCU0kb+QiWo5VhrB099DiSnpb6nosyuwJq+FpewREc1XLw17lS055LIMUAB/Jp
+         90SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZQBY6n0XO5q0T2HKwgvRXJzUZ5cOaX1DHTrvKtmcRgQ=;
+        b=gneVltab2I5SvbxuO+TIuWNS1e88Ze6vxY5QEz6bJw/P0Rb4x9TtYIMGIVlaELv2TK
+         XTmNS9vdkS56osTyK0U/uwZYu6OV2/vZsEXcU+tK97yEhsTaHNcHGlXVgKCO18b27Srm
+         iNlzdk+uiYpokcN5ICEOGMMnj2d3aYifziAIgB8wlheyky4AHv0jObO7Tc76S6seRCcK
+         b0BilU6yhKLZo1d0qcJcmREZjgbP6dqIJTzd5v8MeNoYk/ha+0J7fUXvQ1eAFP7HvXhf
+         32YcHDdmGIcFJzf+qFSMfInU3BWyUomY/jdBYBKwfu1oi61faNUtA7PbsfN6s6K7R3er
+         D94w==
+X-Gm-Message-State: AOAM5328af2+yFPNx2fuIHKzsQJbSnQMKsAbRmoF7m8t7fs7SIHygUH2
+        O1KDkB2GFDAtc5oVtwDMDq1YvemE
+X-Google-Smtp-Source: ABdhPJxoZJNOFEnGBghehlIALG5iqBCkyyl9S/OuwiXTjIKFCuFmSZtAy9FV6sbNgw7PlNToNAqhXQ==
+X-Received: by 2002:adf:c382:: with SMTP id p2mr10762081wrf.283.1594999420170;
+        Fri, 17 Jul 2020 08:23:40 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id a22sm13431051wmb.4.2020.07.17.08.23.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 08:23:39 -0700 (PDT)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Sasi Kumar <sasi.kumar@broadcom.com>
+Subject: [PATCH 0/7] usb: bdc: Updates and fixes to the USB BDC driver
+Date:   Fri, 17 Jul 2020 11:23:00 -0400
+Message-Id: <20200717152307.36705-1-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200717152205.826-1-m-karicheri2@ti.com>
-References: <20200717152205.826-1-m-karicheri2@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PRP support requires a proto parameter which is 0 for hsr and 1 for
-prp. Default is hsr and is backward compatible.
+Updates and fixes to the Broadcom USB BDC driver.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- dependent on the series "[net-next PATCH v3 0/7] Add PRP driver"
- man/man8/ip-link.8.in | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Al Cooper (4):
+  dt-bindings: usb: bdc: Update compatible strings
+  usb: bdc: Add compatible string for new style USB DT nodes
+  usb: bdc: Adb shows offline after resuming from S2
+  usb: bdc: driver runs out of buffer descriptors on large ADB transfers
 
-diff --git a/man/man8/ip-link.8.in b/man/man8/ip-link.8.in
-index e8a25451f7cd..37d77328a5fc 100644
---- a/man/man8/ip-link.8.in
-+++ b/man/man8/ip-link.8.in
-@@ -1360,7 +1360,8 @@ the following additional arguments are supported:
- .BI slave1 " SLAVE1-IF " slave2 " SLAVE2-IF "
- .RB [ " supervision"
- .IR ADDR-BYTE " ] ["
--.BR version " { " 0 " | " 1 " } ]"
-+.BR version " { " 0 " | " 1 " } ["
-+.BR proto " { " 0 " | " 1 " } ]"
- 
- .in +8
- .sp
-@@ -1381,6 +1382,12 @@ Default option is "0", possible values 0-255.
- - Selects the protocol version of the interface. Default option is "0", which
- corresponds to the 2010 version of the HSR standard. Option "1" activates the
- 2012 version.
-+
-+.BR proto " { " 0 " | " 1 " }"
-+- Selects the protocol at the interface. Default option is "0", which
-+corresponds to the HSR standard. Option "1" activates the Parallel
-+Redundancy Protocol (PRP).
-+.
- .in -8
- 
- .TP
+Danesh Petigara (1):
+  usb: bdc: Halt controller on suspend
+
+Florian Fainelli (1):
+  usb: bdc: Use devm_clk_get_optional()
+
+Sasi Kumar (1):
+  bdc: Fix bug causing crash after multiple disconnects
+
+ .../devicetree/bindings/usb/brcm,bdc.txt      |  4 +--
+ drivers/usb/gadget/udc/bdc/bdc.h              |  2 +-
+ drivers/usb/gadget/udc/bdc/bdc_core.c         | 26 ++++++++++++++-----
+ drivers/usb/gadget/udc/bdc/bdc_ep.c           | 16 +++++++-----
+ 4 files changed, 32 insertions(+), 16 deletions(-)
+
 -- 
 2.17.1
 
