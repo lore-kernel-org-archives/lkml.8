@@ -2,89 +2,77 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F68C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C73D02070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:11:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nPfy4DFa"
+	by mail.kernel.org (Postfix) with ESMTP id 94F0020684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGQJLK (ORCPT
+        id S1726769AbgGQJLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:11:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgGQJLJ (ORCPT
+        Fri, 17 Jul 2020 05:11:14 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:32769 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgGQJLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:11:09 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3613C061755;
-        Fri, 17 Jul 2020 02:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kCkqhMS2HaIZBdmyOa4Dix+KbCHHbKCWd/IyAKtmGXE=; b=nPfy4DFa35G3D2G1doZqmNHJwJ
-        tUvTnThDxFrBli6t//3AlvL1OnexMAZHeX1xiNzjr7G4kWV/83q5na4v+kzWSPt6SkB15lQSbiG++
-        u3ePf4caogtbejjt0TcqywoTD4/87/lAoxutMbavQatxO3/eUSptN77p7dmKFd2BjcVTUsn/OVUiE
-        GXYmZW/Uj9v4UBgHV8wFKtZzxnWbVA4U4doHtI1ZM2Te4InNbDrPNolAHWhlbKtJFMZKGf1Cte4ea
-        Q6twclkcHKVfnlFNbCUIiG06gJs+JdpL9nleh3Iw2Xldn2Yo/qwQXz86EiJMv9q8ViUgqW8O7a+0N
-        ynkrp8CA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwMON-0008S4-94; Fri, 17 Jul 2020 09:10:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B7742305C22;
-        Fri, 17 Jul 2020 11:10:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9C15329CF6F4E; Fri, 17 Jul 2020 11:10:53 +0200 (CEST)
-Date:   Fri, 17 Jul 2020 11:10:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     ira.weiny@intel.com
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 12/17] memremap: Add zone device access protection
-Message-ID: <20200717091053.GZ10769@hirez.programming.kicks-ass.net>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-13-ira.weiny@intel.com>
+        Fri, 17 Jul 2020 05:11:12 -0400
+Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 545E4100016;
+        Fri, 17 Jul 2020 09:11:05 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 11:11:05 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 03/19] clk: at91: clk-sam9x60-pll: fix mul mask
+Message-ID: <20200717091105.GK3428@piout.net>
+References: <1594812267-6697-1-git-send-email-claudiu.beznea@microchip.com>
+ <1594812267-6697-4-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717072056.73134-13-ira.weiny@intel.com>
+In-Reply-To: <1594812267-6697-4-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:20:51AM -0700, ira.weiny@intel.com wrote:
-> +static pgprot_t dev_protection_enable_get(struct dev_pagemap *pgmap, pgprot_t prot)
-> +{
-> +	if (pgmap->flags & PGMAP_PROT_ENABLED && dev_page_pkey != PKEY_INVALID) {
-> +		pgprotval_t val = pgprot_val(prot);
-> +
-> +		static_branch_inc(&dev_protection_static_key);
-> +		prot = __pgprot(val | _PAGE_PKEY(dev_page_pkey));
-> +	}
-> +	return prot;
-> +}
+On 15/07/2020 14:24:11+0300, Claudiu Beznea wrote:
+> According to datasheet mul mask is on bits 31..24.
+> 
+> Fixes: a436c2a447e59 ("clk: at91: add sam9x60 PLL driver")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Every other pgprot modifying function is called pgprot_*(), although I
-suppose we have the exceptions phys_mem_access_prot() and dma_pgprot().
+> ---
+>  drivers/clk/at91/clk-sam9x60-pll.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/at91/clk-sam9x60-pll.c b/drivers/clk/at91/clk-sam9x60-pll.c
+> index e699803986e5..3522eae2edd6 100644
+> --- a/drivers/clk/at91/clk-sam9x60-pll.c
+> +++ b/drivers/clk/at91/clk-sam9x60-pll.c
+> @@ -15,7 +15,7 @@
+>  #include "pmc.h"
+>  
+>  #define	PMC_PLL_CTRL0_DIV_MSK	GENMASK(7, 0)
+> -#define	PMC_PLL_CTRL1_MUL_MSK	GENMASK(30, 24)
+> +#define	PMC_PLL_CTRL1_MUL_MSK	GENMASK(31, 24)
+>  
+>  #define PLL_DIV_MAX		(FIELD_GET(PMC_PLL_CTRL0_DIV_MSK, UINT_MAX) + 1)
+>  #define UPLL_DIV		2
+> -- 
+> 2.7.4
+> 
 
-How about we call this one devm_pgprot() ?
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
