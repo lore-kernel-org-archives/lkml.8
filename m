@@ -3,279 +3,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09107C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72059C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4DA020691
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3A620691
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aUuIOdSl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l0hUQI3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgGQJ2D (ORCPT
+        id S1726411AbgGQJ22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
+        Fri, 17 Jul 2020 05:28:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgGQJ2C (ORCPT
+        with ESMTP id S1726113AbgGQJ21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:28:02 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0746C08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:28:02 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f2so10248128wrp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:28:02 -0700 (PDT)
+        Fri, 17 Jul 2020 05:28:27 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1838C061755
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:28:27 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id m8so3962419qvk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IDRMoK9XAqR3KP28NyAj73nC8S++fY+3q8RW1Xp505E=;
-        b=aUuIOdSl1Hj52p0XnwvTfGJv9BPtvFdL8zLQrtkTSwIDw2JYb3HK83DDvrMtVnhXDc
-         eIf/lbmn+YLu0T7EVirEA+aGzoUXS9v86RVDH8na4723Hec1IskpkZmj9g3JUVx7lmZc
-         7rx8Is9uwbAulqVYWR8hCQo/QMUrlBHHYy9Vs=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=awDCkloG136ngoAY6t6Tgi/O0WGV4S/6eBJN9T7WMEY=;
+        b=l0hUQI3XV0gslNHGSq5AKN6IYRqZfhlv9Nm03N05QQ+9CagB9bvYUo6+GUdgIeKWkf
+         C7qCHNY6iM+yqoIBhtBbvZzbavtMqBtD6rS0j1c1Kk1yvT1ntf2nYTTTIiCCve0lWZYl
+         QaZy/pAvSUTHyT/5AYCUgzw3wY9Th+EtEoWdJb07K9nnWHLLjJPnBPNR+GZzlpvI97/U
+         toPO0env+PKcWHWxDimClWn/PzwqyBuB6mRtz0U2nkQqFExkSrxGRTooBRjRQnNUbTwp
+         b+7INOcRYwdRyt3SRXi4MW82W4CTr7dgjekTASZ4LRliHiQkwkl9dtBXhnMBytzM50AF
+         kSPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=IDRMoK9XAqR3KP28NyAj73nC8S++fY+3q8RW1Xp505E=;
-        b=YAf9FTKm7LkgRmpiMUZsIiwum8jsWzKDtNJ12SnGcGt6yFiX+xO6kduNNFYofSe4Bu
-         t5hYxuCBWY59pNwUMkLbDgun/ImhpHh4rGSa6Ky9nwof9zt/LfpyXW9V66akssLxGtYK
-         Zr3dVQLVCt815UZft7WONJFv9/2i3SSXLgc3tsEmNYFaJ08OK9SlvqQTUWCqnMknHl1x
-         toCfi/ZJE9TAu8evHdHdJ59Bcq8lD3+zmy5z8bfqPnMb4JwrEk6dISYlZmtRUS2M6PhF
-         z2hAIjd/BVgFEXNpY8GGhtNOh7osSFRzrWYSipmENu61a+9D8+wCRKewgYPGWObEKuvA
-         JEcg==
-X-Gm-Message-State: AOAM530onF8KJoKi9eS2p4RcMYrPCcJ0bAQ9wXaotwbMB5UDYGt+hshw
-        R8y91Za7OZZRW/KOEGdP+GYbAQ==
-X-Google-Smtp-Source: ABdhPJw6LBUxHmaeROzirZrFEGpc4HNi8ILpqRqn+Y1tz0WruvUTrSUUco/JdB7EQoAG5E3nVF/cpA==
-X-Received: by 2002:adf:8b5a:: with SMTP id v26mr9226933wra.165.1594978081123;
-        Fri, 17 Jul 2020 02:28:01 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id l8sm13287743wrq.15.2020.07.17.02.27.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 02:28:00 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 11:27:58 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        lukas@mntmn.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller
- Subsystem
-Message-ID: <20200717092758.GR3278063@phenom.ffwll.local>
-Mail-Followup-To: Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, lukas@mntmn.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
- <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
- <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
- <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=awDCkloG136ngoAY6t6Tgi/O0WGV4S/6eBJN9T7WMEY=;
+        b=jJsdquCsmDtbz7B8oFUj82RsmAMC3cdcdob39bUaRxscmt6uJAthagnPkheg59xYvi
+         Y26WnC30eWQZ5x4hZHYh7w085rCsFWCnE5jm6+/1WBtptllyRjAv9OAe3LKG4CUDiM3J
+         s3sD3aUr50uyKaQUYcPHOohS1rdlcRP2MdzX/gY0OuO5IMDiQ01UqZtK1KIsXlOW7Xoi
+         E/0uL42+ZCV+lXbMNAXM5l7KawvBYEaA/m7Ute+RHWru14bOB5LBatH8SMCyMO0mbnT1
+         ydaCF00O3RKGHJvTHM6Gj9PK5RQk5SReAqcts37596dbTCFxiqcxoyxvVJMzuOoWW+5h
+         PwHw==
+X-Gm-Message-State: AOAM530XMXMq3I1WZwHMtNSSnDSE42X7Obc5F6KTqdxu1vAc3WIeUpLq
+        9jmUXX5P+7nNP26qGoWcYFTTSjI1MjFkISr4N57EDOtA
+X-Google-Smtp-Source: ABdhPJzW1Wi2+rlgq8/ZJIdhcEGp++KysgPh+vgxSR17+0KfgljD8vSzD3618McEr63Wkpqk5XipvRvSqPLfQHNMyrI=
+X-Received: by 2002:a0c:a306:: with SMTP id u6mr8198298qvu.88.1594978107071;
+ Fri, 17 Jul 2020 02:28:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
-X-Operating-System: Linux phenom 5.6.0-1-amd64 
+References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1594789529-6206-2-git-send-email-iamjoonsoo.kim@lge.com> <20200715082401.GC5451@dhcp22.suse.cz>
+ <CAAmzW4P+KXn2e1pU+_+Y6NqDt1-081hCyKNsqbiwfF=FADLzxQ@mail.gmail.com> <20200717082643.GC10655@dhcp22.suse.cz>
+In-Reply-To: <20200717082643.GC10655@dhcp22.suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 17 Jul 2020 18:28:16 +0900
+Message-ID: <CAAmzW4N6mQ_9jrUN5NUURpxa7tf4nKwsrgiWe79v0vNJO0_6Xg@mail.gmail.com>
+Subject: Re: [PATCH 2/4] mm/gup: restrict CMA region by using allocation scope API
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 11:12:39AM +0200, Lucas Stach wrote:
-> Am Freitag, den 17.07.2020, 10:59 +0200 schrieb Daniel Vetter:
-> > On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
-> > > Hi Laurentiu,
-> > > 
-> > > Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
-> > > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > > > 
-> > > > Hi,
-> > > > 
-> > > > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> > > > includes only graphics plane support (no video planes), no HDR10 capabilities,
-> > > > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> > > > 
-> > > > Support for the rest of the features will be added incrementally, in subsequent
-> > > > patches.
-> > > > 
-> > > > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> > > > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
-> > > 
-> > > I think the series (minus 3/5 and minor correction to the DT binding)
-> > > is fine to go in now. So just some formal questions: are you going to
-> > > maintain this driver in upstream? If so we should add a MAINTAINERS
-> > > entry to that effect. I can offer to act as a reviewer in this case.
-> > > 
-> > > How do you intend to merge this? IMO pushing this through drm-misc
-> > > seems like the right thing to do. If you agree I can help you get this
-> > > applied. If you are going to maintain the driver on your own, I think
-> > > you should then apply for commit rights to drm-misc.
-> > 
-> > drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
-> > should put the entire collective of imx drivers under drm-misc? Or
-> > maybe it's just an oversight that the git repo isn't specified in the
-> > MAINTAINERS entry. Also maybe we should add the pengutronix kernel
-> > team alias there too?
-> 
-> drm/imx was exclusively the IPUv3 up until now, which is in fact
-> maintained outside of drm-misc in its own git tree. This has worked
-> quite well in the past so even though IPUv3 doesn't see a lot of churn
-> these days the motivation to change anything to this workflow is quite
-> low. And yes, the git tree is missing from the MAINTAINERS entry.
-> 
-> For the DCSS driver, if it's going to be maintained by NXP, I figured
-> it might be easier for Laurentiu to push things into drm-misc than set
-> up a separate public git tree. But IMHO that's fully up to him to
-> decide.
+2020=EB=85=84 7=EC=9B=94 17=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 5:26, M=
+ichal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Fri 17-07-20 16:46:38, Joonsoo Kim wrote:
+> > 2020=EB=85=84 7=EC=9B=94 15=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 5:2=
+4, Michal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+> > >
+> > > On Wed 15-07-20 14:05:27, Joonsoo Kim wrote:
+> > > > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > > >
+> > > > We have well defined scope API to exclude CMA region.
+> > > > Use it rather than manipulating gfp_mask manually. With this change=
+,
+> > > > we can now use __GFP_MOVABLE for gfp_mask and the ZONE_MOVABLE is a=
+lso
+> > > > searched by page allocator. For hugetlb, gfp_mask is redefined sinc=
+e
+> > > > it has a regular allocation mask filter for migration target.
+> > > >
+> > > > Note that this can be considered as a fix for the commit 9a4e9f3b2d=
+73
+> > > > ("mm: update get_user_pages_longterm to migrate pages allocated fro=
+m
+> > > > CMA region"). However, "Fixes" tag isn't added here since it is jus=
+t
+> > > > suboptimal but it doesn't cause any problem.
+> > >
+> > > But it is breaking the contract that the longterm pins never end up i=
+n a
+> > > cma managed memory. So I think Fixes tag is really due. I am not sure
+> > > about stable backport. If the patch was the trivial move of
+> >
+> > Previous implementation is correct since longterm pins never end up in =
+a CMA
+> > managed memory with that implementation. It's just a different and subo=
+ptimal
+> > implementation to exclude the CMA area. This is why I don't add the "Fi=
+xes"A
+> > tag on the patch.
+>
+> But the current implementation calls memalloc_nocma_restore too early so
+> __gu_longterm_locked will migrate pages possibly to CMA ranges as there
+> is no GFP_MOVABLE restriction in place. Or am I missing something?
 
-/me puts on maintainer hat
+IIUC, calling memalloc_nocma_restore() too early doesn't cause the
+actual problem.
 
-Much prefer drm-misc over random people playing maintainer and fumbling
-it. I think the reasonable options are either in the current imx tree, or
-drm-misc. Standalone tree for these small drivers just doesn't make much
-sense.
--Daniel
+Final check is done by check_and_migrate_cma_pages() which is outside of
+scope API. If we find a CMA page in between the gup range here, the page is
+migrated to the migration target page and this target page is allocated by
+new_non_cma_page().
 
-> 
-> Regards,
-> Lucas
-> 
-> > -Daniel
-> > 
-> > 
-> > > Regards,
-> > > Lucas
-> > > 
-> > > > Thanks,
-> > > > Laurentiu
-> > > > 
-> > > > Changes in v5:
-> > > >  * Rebased to latest;
-> > > >  * Took out component framework support and made it a separate patch so
-> > > >    that people can still test with HDP driver, which makes use of it.
-> > > >    But the idea is to get rid of it once HDP driver's next versions
-> > > >    will remove component framework as well;
-> > > >  * Slight improvement to modesetting: avoid cutting off the pixel clock
-> > > >    if the new mode and the old one are equal. Also, in this case, is
-> > > >    not necessary to wait for DTG to shut off. This would allow to switch
-> > > >    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
-> > > >    from DCSS point of view);
-> > > >  * Do not fire off CTXLD when going to suspend, unless it still has
-> > > >    entries that need to be committed to DCSS;
-> > > >  * Addressed Rob's comments on bindings;
-> > > > 
-> > > > Changes in v4:
-> > > >  * Addressed Lucas and Philipp's comments:
-> > > >    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
-> > > >    * Removed usage of devm_ functions since I'm already doing all the
-> > > >      clean-up in the submodules_deinit();
-> > > >    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
-> > > >    * Removed en_completion variable from dcss_crtc since this was
-> > > >      introduced mainly to avoid vblank timeout warnings which were fixed
-> > > >      by arming the vblank event in flush() instead of begin();
-> > > >    * Removed clks_on and irq_enabled flags since all the calls to
-> > > >      enabling/disabling clocks and interrupts were balanced;
-> > > >    * Removed the custom atomic_commit callback and used the DRM core
-> > > >      helper and, in the process, got rid of a workqueue that wasn't
-> > > >      necessary anymore;
-> > > >    * Fixed some minor DT binding issues flagged by Philipp;
-> > > >    * Some other minor changes suggested by Lucas;
-> > > >  * Removed YUV formats from the supported formats as these cannot work
-> > > >    without the HDR10 module CSCs and LUTs. Will add them back when I
-> > > >    will add support for video planes;
-> > > > 
-> > > > Changes in v3:
-> > > >  * rebased to latest linux-next and made it compile as drmP.h was
-> > > >    removed;
-> > > >  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
-> > > >  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
-> > > >  * fixed a a spurious hang reported by Lukas Hartmann and encountered
-> > > >    by me several times;
-> > > >  * mask DPR and DTG interrupts by default, as they may come enabled from
-> > > >    U-boot;
-> > > > 
-> > > > Changes in v2:
-> > > >  * Removed '0x' in node's unit-address both in DT and yaml;
-> > > >  * Made the address region size lowercase, to be consistent;
-> > > >  * Removed some left-over references to P010;
-> > > >  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
-> > > >    issues reported by kbuild for other architectures;
-> > > > 
-> > > > Laurentiu Palcu (5):
-> > > >   drm/imx: compile imx directory by default
-> > > >   drm/imx: Add initial support for DCSS on iMX8MQ
-> > > >   drm/imx/dcss: add component framework functionality
-> > > >   dt-bindings: display: imx: add bindings for DCSS
-> > > >   arm64: dts: imx8mq: add DCSS node
-> > > > 
-> > > >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml |  84 ++
-> > > >  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  23 +
-> > > >  drivers/gpu/drm/Makefile                      |   2 +-
-> > > >  drivers/gpu/drm/imx/Kconfig                   |   2 +
-> > > >  drivers/gpu/drm/imx/Makefile                  |   1 +
-> > > >  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
-> > > >  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
-> > > >  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 314 +++++++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 183 ++++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 185 ++++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  43 +
-> > > >  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
-> > > >  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
-> > > >  20 files changed, 4123 insertions(+), 1 deletion(-)
-> > > >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
-> > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
-> > > > 
-> > > 
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > 
-> > 
-> 
+new_non_cma_page() try to allocate the page without __GFP_MOVABLE so
+returned page will not be CMA area memory. Therefore, even if
+memalloc_nocma_restore() is called early, there is no actual problem.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Thanks.
