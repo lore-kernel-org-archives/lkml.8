@@ -2,345 +2,268 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C34C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C87C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C806206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:04:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MFEa1TXl"
+	by mail.kernel.org (Postfix) with ESMTP id 36C0E2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595009062;
+	bh=1u6Gzdq1LfVvVuz7++DGNuxGmE1RVYr0vhPj47AzA4w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=loz4PHnry0wGEWmcZrfGENZUa0yRsbSHiPw6bsF0d2D7TzJPdYFs8TDLuFp5gJS3f
+	 Q4v0pgcZiQtG5JST+bldLhhNTV9biFkaXGXPeHJS2hPjug5nAqRA6cgVmltysQMu8z
+	 DPaa96Iem/O+mEofY9JOjPHhro6TfmCeAiCexbf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgGQSER (ORCPT
+        id S1728238AbgGQSEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbgGQSEQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:04:16 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97279C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:04:16 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id z15so2801735qki.10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:04:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jT6rzpeEE5qo24AcCOcM6oByRnSEaKB4PNbeCotZ59c=;
-        b=MFEa1TXlROSydlqaUMmmn0e/gd3aRzO9YSBdx2NQCmmwvqKJWI6nkXfoht3xmgAlkf
-         Nu0ONqaQwg0qCmLsX9eqMzHGTcCu5gQZqHrDsvhupqCGleXrGeTNrLBLXv+BPtVg2WwX
-         E2Y2EW/VUVDrQLzUZ8xpHftPsOdmwv1RBnwdU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jT6rzpeEE5qo24AcCOcM6oByRnSEaKB4PNbeCotZ59c=;
-        b=NsQKou+PAN5Tjh4G6yjGFiqm7qOQxxpLsY4iSNUiNLd2aBTY9M0wFFTyUgXj1DAOsf
-         QfPELVIdj7ZyrRiSWI9Bb0iGxFLopQPNH7H9UB6+5XXh2tWbzL7VUsFCf6Yz33A+iAJa
-         aTAudnSwyyfKI2bOKb+OZMSqPJRCTjsF4sF/5dGD8nq3vjIbD5w+Pko6F1WTf40PR8BK
-         nKwOyPIVC23MVOMUeBjvej9zV5X/ddEOKg1z19AwmrNWxy1mjM0+p+zLgaZrPzhArMQB
-         mgint3GWDdMjqm42apRdDtRDSAF8lzSiNo7yqCCx26AqBL5Iz086F1o9OOWpWFf0bZci
-         jIkg==
-X-Gm-Message-State: AOAM5328yFTNm1s6+Zq7hWSUOdD94slwEJwn+zQqLWzjXyqm7GMSa93z
-        tYPivqo/KJXJ1BuW8LSi2GQ6tPa8zqEx1frftesajg==
-X-Google-Smtp-Source: ABdhPJy4raU1tZqb28ThgVAtPum8IY5fp2bxXKnubFFGzV9D6bOjs35SnNm36hOsnP9S9/hRNF6BpupZqGW3nk7PGi8=
-X-Received: by 2002:a37:9682:: with SMTP id y124mr10089836qkd.442.1595009055606;
- Fri, 17 Jul 2020 11:04:15 -0700 (PDT)
+        Fri, 17 Jul 2020 14:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726429AbgGQSES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:04:18 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D432067D;
+        Fri, 17 Jul 2020 18:04:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595009057;
+        bh=1u6Gzdq1LfVvVuz7++DGNuxGmE1RVYr0vhPj47AzA4w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lLmpldaT3Krwi/B69k0Wax4FoSZyUt4kR8FqjyeGbWfiHGJlszM974aXsMC60TbWS
+         4daQ+nwFQt0x6/CvzOb0KNYDHQepW6jZ4WtDhOY1LPXAJLwx3XookA9BL8vFpqxYFK
+         mPsx1ecPmCGKoYiQ4N4Ii+xhSD0pt7fdfVhreLtg=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jwUiV-00Chus-Aj; Fri, 17 Jul 2020 19:04:16 +0100
 MIME-Version: 1.0
-References: <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
- <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
- <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
- <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
- <CACeCKachd34UtiZXY3i8za_ZHG9xtHSiPX55=Ed78n=S15b3Hg@mail.gmail.com> <CACeCKacKBdZ0D0+-QA1SLd3UTX=pGWv9pTfF2oWnstD245kD2A@mail.gmail.com>
-In-Reply-To: <CACeCKacKBdZ0D0+-QA1SLd3UTX=pGWv9pTfF2oWnstD245kD2A@mail.gmail.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Fri, 17 Jul 2020 11:04:04 -0700
-Message-ID: <CACeCKadx4P757i96wX=kY4R6DbtSo6qX0Zny_HrCJvMKLzGO0g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-To:     Rob Herring <robh@kernel.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 17 Jul 2020 19:04:15 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH v2] irqchip: Add IRQCHIP_PLATFORM_DRIVER_BEGIN/END and
+ IRQCHIP_MATCH helper macros
+In-Reply-To: <CAGETcx9Fz96tnYCsgPyLMsALDAa7EcNKSQh9BOeCO2X_5pBm1w@mail.gmail.com>
+References: <20200717024447.3128361-1-saravanak@google.com>
+ <87k0z2xvp6.wl-maz@kernel.org>
+ <CAGETcx9Fz96tnYCsgPyLMsALDAa7EcNKSQh9BOeCO2X_5pBm1w@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <90d5a870c46643f6b4654f9c8cbd7740@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: saravanak@google.com, tglx@linutronix.de, jason@lakedaemon.net, matthias.bgg@gmail.com, john.stultz@linaro.org, cc.hwang@mediatek.com, loda.chou@mediatek.com, hanks.chen@mediatek.com, kernel-team@android.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 2020-07-17 18:50, Saravana Kannan wrote:
+> On Fri, Jul 17, 2020 at 3:49 AM Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> Hi Saravana,
+>> 
+>> Thanks for re-spinning this one.
+>> 
+>> On Fri, 17 Jul 2020 03:44:47 +0100,
+>> Saravana Kannan <saravanak@google.com> wrote:
+>> >
+>> > Compiling an irqchip driver as a platform driver needs to bunch of
+>> > things to be done right:
+>> > - Making sure the parent domain is initialized first
+>> > - Making sure the device can't be unbound from sysfs
+>> > - Disallowing module unload if it's built as a module
+>> > - Finding the parent node
+>> > - Etc.
+>> >
+>> > Instead of trying to make sure all future irqchip platform drivers get
+>> > this right, provide boilerplate macros that take care of all of this.
+>> >
+>> > An example use would look something like this. Where acme_foo_init and
+>> > acme_bar_init are similar to what would be passed to IRQCHIP_DECLARE.
+>> >
+>> > IRQCHIP_PLATFORM_DRIVER_BEGIN
+>> 
+>> I think there is some value in having the BEGIN statement containing
+>> the driver name, see below.
+>> 
+>> > IRQCHIP_MATCH(foo, "acme,foo", acme_foo_init)
+>> > IRQCHIP_MATCH(bar, "acme,bar", acme_bar_init)
+>> > IRQCHIP_PLATFORM_DRIVER_END(acme_irq)
+>> >
+>> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+>> > ---
+>> >  drivers/irqchip/irqchip.c | 22 ++++++++++++++++++++++
+>> >  include/linux/irqchip.h   | 23 +++++++++++++++++++++++
+>> >  2 files changed, 45 insertions(+)
+>> >
+>> > diff --git a/drivers/irqchip/irqchip.c b/drivers/irqchip/irqchip.c
+>> > index 2b35e68bea82..236ea793f01c 100644
+>> > --- a/drivers/irqchip/irqchip.c
+>> > +++ b/drivers/irqchip/irqchip.c
+>> > @@ -10,8 +10,10 @@
+>> >
+>> >  #include <linux/acpi.h>
+>> >  #include <linux/init.h>
+>> > +#include <linux/of_device.h>
+>> >  #include <linux/of_irq.h>
+>> >  #include <linux/irqchip.h>
+>> > +#include <linux/platform_device.h>
+>> >
+>> >  /*
+>> >   * This special of_device_id is the sentinel at the end of the
+>> > @@ -29,3 +31,23 @@ void __init irqchip_init(void)
+>> >       of_irq_init(__irqchip_of_table);
+>> >       acpi_probe_device_table(irqchip);
+>> >  }
+>> > +
+>> > +int platform_irqchip_probe(struct platform_device *pdev)
+>> > +{
+>> > +     struct device_node *np = pdev->dev.of_node;
+>> > +     struct device_node *par_np = of_irq_find_parent(np);
+>> > +     of_irq_init_cb_t irq_init_cb = of_device_get_match_data(&pdev->dev);
+>> > +
+>> > +     if (!irq_init_cb)
+>> > +             return -EINVAL;
+>> > +
+>> > +     if (par_np == np)
+>> > +             par_np = NULL;
+>> > +
+>> > +     /* If there's a parent irqchip, make sure it has been initialized. */
+>> > +     if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
+>> 
+>> There is no guarantee that the calling driver wants BUS_ANY as a token
+>> for its parent. It may work for now, if you only have dependencies to
+>> drivers that only expose a single domain, but that's not a general
+>> purpose check..
+>> 
+>> At least, please add a comment saying that the new driver may want to
+>> check that the irqdomain it depends on may not be available.
+> 
+> This is just checking if the parent interrupt controller has been
+> initialized. It's just saying that if NONE of the parent irq domains
+> have been registered, it's not time for this interrupt controller to
+> initialize. And yes, as you said, the actual init code can do more
+> checks and defer probe too. Maybe I'll just put the 2nd sentence as
+> the comment.
 
-Just checking in again to see if you have any thoughts about the
-proposal outlined in previous emails in this thread.
+Sure, go ahead.
 
-Best regards,
+> 
+>> 
+>> > +             return -EPROBE_DEFER;
+>> > +
+>> > +     return irq_init_cb(np, par_np);
+>> > +}
+>> > +EXPORT_SYMBOL_GPL(platform_irqchip_probe);
+>> > diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
+>> > index 950e4b2458f0..6d5eba7cbbb7 100644
+>> > --- a/include/linux/irqchip.h
+>> > +++ b/include/linux/irqchip.h
+>> > @@ -13,6 +13,7 @@
+>> >
+>> >  #include <linux/acpi.h>
+>> >  #include <linux/of.h>
+>> > +#include <linux/platform_device.h>
+>> >
+>> >  /*
+>> >   * This macro must be used by the different irqchip drivers to declare
+>> > @@ -26,6 +27,28 @@
+>> >   */
+>> >  #define IRQCHIP_DECLARE(name, compat, fn) OF_DECLARE_2(irqchip, name, compat, fn)
+>> >
+>> > +extern int platform_irqchip_probe(struct platform_device *pdev);
+>> > +
+>> > +#define IRQCHIP_PLATFORM_DRIVER_BEGIN \
+>> > +static const struct of_device_id __irqchip_match_table[] = {
+>> 
+>> How about:
+>> 
+>> #define IRQCHIP_PLATFORM_DRIVER_BEGIN(drv_name) \
+>> static const struct of_device_id __irqchip_match_table_##drv_name = {
+>> 
+>> which makes it easier to debug when you want to identify specific
+>> structures in an object (otherwise, they all have the same
+>> name...). it is also much more pleasing aesthetically ;-).
+> 
+> I totally agree. I wanted BEGIN to have the name and END to not have
+> to specify the name. But I couldn't figure out a way to do it. I
+> assumed you wouldn't want the names repeated in both BEGIN and END. If
+> you are okay with that, I prefer your suggestion too.
 
-On Fri, Jul 10, 2020 at 1:51 AM Prashant Malani <pmalani@chromium.org> wrote:
->
-> Hi Rob,
->
-> Thought I'd check in again to see if you've had a chance to look at
-> this proposal.
->
-> Since Type C connector class framework assumes the existing
-> "{mode,orientation,data-role}-switch" bindings for non-DT platforms
-> already, as I see it, we can either:
->
-> 1. Implement a different handling for DT platforms which utilizes port
-> end-points and update the Type C connector class framework to parse
-> those accordingly; this is what the above proposal suggests. It
-> reserves some end-points for the "switches" that the Type C connector
-> class framework expects and just follows the OF graph till it finds
-> the various switches. Other schemas that use usb-connector.yaml schema
-> can add more end-points as their use case deems needed, as long as
-> they're not the reserved ones.
->
-> <or>
->
-> 2. Let various schemas that use usb-connector.schema add their own
-> bindings according to their requirements (in the example of
-> cros-ec-typec, it is adding the "*-switch" nodes directly under each
-> connector instead of using OF graph so that Type C connector class
-> framework can detect the switches, but there other examples for other
-> use cases).
->
-> I'm fine with either, but since this thread is now nearly 3 months
-> old, it would be nice to arrive at a decision.
->
-> Best regards,
->
-> On Mon, Jun 29, 2020 at 1:41 PM Prashant Malani <pmalani@chromium.org> wrote:
-> >
-> > Hi Rob,
-> >
-> > Just following up on this. Would the below example align better with
-> > OF graph requirements?
-> >
-> > Example begins at <example_start>, but in summary:
-> > - port@1 (Superspeed) of usb-c-connector will have 3 endpoints (0 =
-> > goes to mode switch, 1 = goes to orientation switch, 2 = goes to data
-> > role switch)
-> > - port@2 (SBU) of usb-c-connector will have 2 endpoints (0 = goes to
-> > mode switch, 1 = goes to orientation switch)
-> > -These end points can go through arbitrarily long paths (including
-> > retimers) as long as they end up at the following devices:
-> >     a. device with compatible string "typec-mode-switch" for endpoint 0.
-> >     b. device with compatible string "typec-orientation-switch" for endpoint 1.
-> >     c. device with compatible string "typec-data-role-switch" for endpoint 2.
-> > - Connector class framework will perform the traversal from
-> > usb-c-connector port endpoints to the "*-switch" devices.
-> >
-> > Best regards,
-> >
-> > On Fri, Jun 12, 2020 at 10:34 AM Prashant Malani <pmalani@chromium.org> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > Thanks as always for your help in reviewing this proposal!
-> > >
-> > > Kindly see inline
-> > >
-> > > (Trimming text);
-> > > On Thu, Jun 11, 2020 at 02:00:47PM -0600, Rob Herring wrote:
-> > > > On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
-> > > > >
-> > > > > Hi Rob,
-> > > > >
-> > > > > On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
-> > > > > >
-> > > > > > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
-> > > > >
-> > > > > I think the updated example handles this grouping (port@1 going to a
-> > > > > "SS mux") although as you said it should probably be a group of muxes,
-> > > > > but I think the example illustrates the point. Is that assessment
-> > > > > correct?
-> > > >
-> > > > Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
-> > >
-> > > Ack.
-> > >
-> > > Let's go with "-switch" ? That's what the connector class uses and it
-> > > conveys the meaning (unless that is a reserved keyword in DT).
-> > >
-> > > >
-> > > > > Would this block the addition of the "*-switch" properties? IIUC the
-> > > > > two are related but not dependent on each other.
-> > > > >
-> > > > > The *-switch properties are phandles which the Type C connector class
-> > > > > framework expects (and uses to get handles to those switches).
-> > > > > These would point to the "mux" or "group of mux" abstractions as noted earlier.
-> > > >
-> > > > You don't need them though. Walk the graph. You get the connector
-> > > > port@1 remote endpoint and then get its parent.
-> > > >
-> > >
-> > > I see; would it be something along the lines of this? (DT example
-> > > follows; search for "example_end" to jump to bottom):
-> > >
-> > > <example_start>
-> > >
-> > > connector@0 {
-> > >     compatible = "usb-c-connector";
-> > >     reg = <0>;
-> > >     power-role = "dual";
-> > >     data-role = "dual";
-> > >     try-power-role = "source";
-> > >     ....
-> > >     ports {
-> > >         #address-cells = <1>;
-> > >         #size-cells = <0>;
-> > >
-> > >         port@0 {
-> > >             reg = <0>;
-> > >             usb_con_hs: endpoint {
-> > >                 remote-endpoint = <&foo_usb_hs_controller>;
-> > >             };
-> > >         };
-> > >
-> > >         port@1 {
-> > >             reg = <1>;
-> > >             #address-cells = <1>;
-> > >             #size-cells = <0>;
-> > >
-> > >             usb_con0_ss_mode: endpoint@0 {
-> > >                 reg = <0>
-> > >                 remote-endpoint = <&mode_switch_ss_in>;
-> > >             };
-> > >
-> > >             usb_con0_ss_orientation: endpoint@1 {
-> > >                         reg = <1>
-> > >                         remote-endpoint = <&orientation_switch_ss_in>;
-> > >             };
-> > >
-> > >             usb_con0_ss_data_role: endpoint@2 {
-> > >                         reg = <2>
-> > >                         remote-endpoint = <&data_role_switch_in>;
-> > >             };
-> > >         };
-> > >
-> > >         port@2 {
-> > >             reg = <2>;
-> > >             #address-cells = <1>;
-> > >             #size-cells = <0>;
-> > >             usb_con0_sbu_mode: endpoint@0 {
-> > >                         reg = <0>
-> > >                         remote-endpoint = <&mode_switch_sbu_in>;
-> > >             };
-> > >             usb_con0_sbu_orientation: endpoint@1 {
-> > >                         reg = <1>
-> > >                         remote-endpoint = <&orientation_switch_sbu_in>;
-> > >             };
-> > >         };
-> > >     };
-> > > };
-> > >
-> > > mode_switch {
-> > >     compatible = "typec-mode-switch";
-> > >     mux-controls = <&mode_mux_controller>;
-> > >     mux-control-names = "mode";
-> > >     #address-cells = <1>;
-> > >     #size-cells = <0>;
-> > >
-> > >     port@0 {
-> > >         reg = <0>;
-> > >         mode_switch_ss_in: endpoint {
-> > >             remote-endpoint = <&usb_con0_ss_mode>
-> > >         };
-> > >     };
-> > >
-> > >     port@1 {
-> > >         reg = <1>;
-> > >         mode_switch_out_usb3: endpoint {
-> > >             remote-endpoint = <&usb3_0_ep>
-> > >         };
-> > >     };
-> > >
-> > >     port@2 {
-> > >         reg = <2>;
-> > >         mode_switch_out_dp: endpoint {
-> > >             remote-endpoint = <&dp0_out_ep>
-> > >         };
-> > >     };
-> > >
-> > >     port@3 {
-> > >         reg = <3>;
-> > >         mode_switch_sbu_in: endpoint {
-> > >             remote-endpoint = <&usb_con0_sbu_mode>
-> > >         };
-> > >     };
-> > >     // ... other ports similarly defined.
-> > > };
-> > >
-> > > orientation_switch {
-> > >     compatible = "typec-orientation-switch";
-> > >     mux-controls = <&orientation_mux_controller>;
-> > >     mux-control-names = "orientation";
-> > >     #address-cells = <1>;
-> > >     #size-cells = <0>;
-> > >
-> > >     port@0 {
-> > >         reg = <0>;
-> > >         orientation_switch_ss_in: endpoint {
-> > >             remote-endpoint = <&usb_con0_ss_orientation>
-> > >         };
-> > >     };
-> > >
-> > >     port@1
-> > >         reg = <1>;
-> > >         orientation_switch_sbu_in: endpoint {
-> > >             remote-endpoint = <&usb_con0_sbu_orientation>
-> > >         };
-> > >     };
-> > >     // ... other ports similarly defined.
-> > > };
-> > >
-> > > data_role_switch {
-> > >     compatible = "typec-data-role-switch";
-> > >     mux-controls = <&data_role_switch_controller>;
-> > >     mux-control-names = "data_role";
-> > >
-> > >     port {
-> > >         data_role_switch_in: endpoint {
-> > >             remote-endpoint = <&usb_con0_ss_data_role>
-> > >         };
-> > >     };
-> > > };
-> > >
-> > > <example_end>
-> > >
-> > > Would this be conformant to OF graph and usb-connector bindings
-> > > requirements? We'll certainly send out a format PATCH/RFC series for
-> > > this, but I was hoping to gauge whether we're thinking along the right lines.
-> > >
-> > > So, in effect this would mean:
-> > > - New bindings(and compatible strings) to be added for:
-> > >   typec-{orientation,data-role,mode}-switch.
-> > > - Handling in Type C connector class to parse switches from OF graph.
-> > > - Handling in Type C connector class for distinct switches for port@1
-> > >   (SS lines) and port@2 (SBU lines).
-> > >
-> > > The only thing I'm confused about is how we can define these switch
-> > > remote-endpoint bindings in usb-connector.yaml; the port can have an
-> > > remote-endpoint, but can we specify what the parent of the remote-endpoint
-> > > should have as a compatible string? Or do we not need to?
-> > >
-> > > Best regards,
-> > >
-> > > -Prashant
-> > >
+I'm perfectly fine having the name in both the BEGIN and END tags.
+It has a nice LaTeX twist to it ;-).
+
+> 
+>> > +
+>> > +#define IRQCHIP_MATCH(compat, fn) { .compatible = compat, .data = fn },
+>> > +
+>> > +#define IRQCHIP_PLATFORM_DRIVER_END(drv_name)                \
+>> > +     {},                                             \
+>> > +};                                                   \
+>> > +MODULE_DEVICE_TABLE(of, __irqchip_match_table);              \
+>> > +static struct platform_driver drv_name##_driver = {  \
+>> 
+>> const?
+> 
+> Sure.
+> 
+>> > +     .probe  = platform_irqchip_probe,               \
+>> > +     .driver = {                                     \
+>> > +             .name = #drv_name,                      \
+>> > +             .owner = THIS_MODULE,                   \
+>> > +             .of_match_table = __irqchip_match_table,\
+>> > +             .suppress_bind_attrs = true,            \
+>> > +     },                                              \
+>> > +};                                                   \
+>> > +builtin_platform_driver(drv_name##_driver)
+>> > +
+>> >  /*
+>> >   * This macro must be used by the different irqchip drivers to declare
+>> >   * the association between their version and their initialization function.
+>> > --
+>> > 2.28.0.rc0.105.gf9edc3c819-goog
+>> >
+>> >
+>> 
+>> Otherwise looks good. When you respin it, it would be good to also
+>> submit one user of this API by converting an existing driver, as I'd
+>> hate to merge something that has no user.
+> 
+> The only one I know will work is the qcom pdc one from John. So I was
+> hoping John would respin his patch if you accept this one or I was
+> going to redo it after it shows up on linux-next. Maybe MTK can use
+> this too for their other series?
+
+I have queued John's PDC work in irq/irqchip-5.9, which I will get
+into -next over the weekend. Feel free to post a patch reworking
+his last patch, which will give a very nice overview of what we gain.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
