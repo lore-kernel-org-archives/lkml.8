@@ -2,103 +2,74 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA52C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA53C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40C0720829
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:28:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAOHJES7"
+	by mail.kernel.org (Postfix) with ESMTP id A6F12204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgGQL2a (ORCPT
+        id S1726463AbgGQL3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:28:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgGQL23 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:28:29 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A916C061755;
-        Fri, 17 Jul 2020 04:28:29 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id e4so7744246oib.1;
-        Fri, 17 Jul 2020 04:28:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KpZSMSOiIQZq8CyamrA/cFs/7Iv54XIN60oRvTIJGts=;
-        b=mAOHJES7KyL/n8YfSQIN/eN6GDRElqFD2CYG2P86oB8JcK5F2kRKlbYPr7fT8vUqEX
-         BC8d9fVrpxMEr3WiMGGNO7RlaGwSI9WshQ5XR2nj6N1yLc+Fb1QBEqjTtPmG9dRbZioH
-         ukVwLz2yYrGJVcQW5ykOwCPTCOavKzW9x/CQg8fnxp1CzJajCz22M1JwvBMsDplfV0SU
-         xf6rkuQ+pDqjc2xBBCUAJHAys2nT1d3azvN+Hk3kaXvhgkZPvowkFIpXkPrvmOz6vPP2
-         BQRDwlH4nncgUOJGzx7lapoIUux775FqZ1r7Rd3cV+VRwxtsUQLIT4a6B+eW2mpPmiRF
-         pFuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KpZSMSOiIQZq8CyamrA/cFs/7Iv54XIN60oRvTIJGts=;
-        b=NRckfR3MeFA2XMYi33G20YHLWtC0ZZr11ELU16GZQMP7E0Epbu5vMAmVoyCYhcDq36
-         yiD7jLCckp9WILpLJuGlCS8SnXIeZWrEy319SD58Ppqbo3IE2zpB1eZR4kXTrivJZUz/
-         UCHPM2uYM7kfVLDvBtsZXxoF/m6Jfd4EbQ5NqgcA+yxbzKKgEX8MxMptZ/PPfdE8jW/E
-         8KUPoFouZeCaOj8DYkQ/2WZ+kk49PUGIk8cOX6UnnOhstW7zuTcw6S9+kvZOFjZrBOx1
-         Qk5XyZAPYO11CNu3W1yTTj9efoR8OIzjXYuUZXhD4/U+u4OPuoVnpFSyCgcKQzDKnY2b
-         TjVA==
-X-Gm-Message-State: AOAM532wnPq2WOJtcR7OMPkfr/Nb8vLxvs/Tz8cPcguNC7/kxrK/FWay
-        KFtsn08yOkgRRKwZevRw5yxfvswGVxA=
-X-Google-Smtp-Source: ABdhPJzcUa/CENx+1oHYc5uYbc3KX2O8Eu77Ni0ISogLFfB44arhOlnmoUVBafi1uaiFsJdaNO5coA==
-X-Received: by 2002:aca:f05:: with SMTP id 5mr6670289oip.93.1594985308347;
-        Fri, 17 Jul 2020 04:28:28 -0700 (PDT)
-Received: from localhost.localdomain ([170.130.31.90])
-        by smtp.gmail.com with ESMTPSA id g207sm1719358oib.43.2020.07.17.04.28.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 04:28:27 -0700 (PDT)
-From:   Forest Crossman <cyrozap@gmail.com>
-To:     linux-usb@vger.kernel.org
-Cc:     Forest Crossman <cyrozap@gmail.com>, mathias.nyman@intel.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: xhci: Fix ASM2142/ASM3142 DMA addressing
-Date:   Fri, 17 Jul 2020 06:27:34 -0500
-Message-Id: <20200717112734.328432-1-cyrozap@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 17 Jul 2020 07:29:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39156 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725950AbgGQL3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 07:29:20 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5F4B79D3570F161523B9;
+        Fri, 17 Jul 2020 19:29:17 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Jul 2020
+ 19:29:08 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <haren@linux.ibm.com>,
+        <dave.hansen@linux.intel.com>, <npiggin@gmail.com>
+CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] powerpc: Remove unneeded inline functions
+Date:   Fri, 17 Jul 2020 19:27:14 +0800
+Message-ID: <20200717112714.19304-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200715031939.31968-1-yuehaibing@huawei.com>
+References: <20200715031939.31968-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ASM2142/ASM3142 (same PCI IDs) does not support full 64-bit DMA
-addresses, which can cause silent memory corruption or IOMMU errors on
-platforms that use the upper bits. Add the XHCI_NO_64BIT_SUPPORT quirk
-to fix this issue.
+Both of those functions are only called from 64-bit only code, so the
+stubs should not be needed at all.
 
-Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/usb/host/xhci-pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/include/asm/mmu_context.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index ef513c2fb843..9234c82e70e4 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -265,6 +265,9 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
- 			pdev->device == 0x1142)
- 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
-+	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
-+			pdev->device == 0x2142)
-+		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
+index 1a474f6b1992..7f3658a97384 100644
+--- a/arch/powerpc/include/asm/mmu_context.h
++++ b/arch/powerpc/include/asm/mmu_context.h
+@@ -218,8 +218,6 @@ static inline void inc_mm_active_cpus(struct mm_struct *mm) { }
+ static inline void dec_mm_active_cpus(struct mm_struct *mm) { }
+ static inline void mm_context_add_copro(struct mm_struct *mm) { }
+ static inline void mm_context_remove_copro(struct mm_struct *mm) { }
+-static inline void mm_context_add_vas_windows(struct mm_struct *mm) { }
+-static inline void mm_context_remove_vas_windows(struct mm_struct *mm) { }
+ #endif
  
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
- 		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
+ 
 -- 
-2.20.1
+2.17.1
+
 
