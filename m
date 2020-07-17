@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C6EC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97849C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB4120717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7556120768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d20CrNmx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m7fQ2ZJF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbgGQXg3 (ORCPT
+        id S1728368AbgGQXgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 19:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43924 "EHLO
+        Fri, 17 Jul 2020 19:36:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgGQXg3 (ORCPT
+        with ESMTP id S1726634AbgGQXgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 19:36:29 -0400
+        Fri, 17 Jul 2020 19:36:46 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25307C0619D2;
-        Fri, 17 Jul 2020 16:36:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D5CC0619D2;
+        Fri, 17 Jul 2020 16:36:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
         MIME-Version:Date:Message-ID:To:Subject:From:Sender:Reply-To:Cc:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=RTYFbSXiEPN/J9TW3PTyS0OPHb2QtHWE24AA7f709vo=; b=d20CrNmx5ZkAzNyjQAmvYytmzC
-        9zWc2dfHDpWKsnjR712drdtVwukpdzzF5lCeobOFD8IIqLKUW9HSJKyIA1dB3ltdlFrALgqgGwvPt
-        BG17J7V2PP9oORI8UCiteBNKVZ9hXGel/hfb4WjB6gdJxonHpz5+u2rD7WDvbBHV0qa9sBpIlOTav
-        NKCsc7CTyocTgw8CEjM6dYJrcu55vZchmmbVZN/ohch+JPAU5bta6R0kVZ5wH3vBRVpftNPIyYKoe
-        pmol+beRIILiWIoR/0kX6BCYpS8l+3TjJOoByrqpGxz8RpJKkKze4MX611jU5Mkt3ahMjYUBJqkms
-        1PrDuMfw==;
+        bh=mkX/ah17OVLRBacoUS3nKdwkxsYUYiMcrZQmci/tyWQ=; b=m7fQ2ZJFqMp++APxnsBJQ19V8j
+        WfwNMmHWEDN0t9Enf1XfEW9zpX/bIImLlMSh/vmIVQutcRT6SJaptqF2NMHt9tjzyh/MIhbZylH7x
+        4G4CUCh6G0U4ymKImtoCeZDi4KH6fVUQTInt8CmVMDSCBPiMzRZVWujjhor3RkiTzfk0FLrvns1VS
+        dVy7l9TT8nHuwq9zqvKKkWHEwHAJeU/dxEBc+j4KFXJ0EoFJRv1CcBkiLhC9yNvXCkErD5vnuaazg
+        pfJDeugaXsqZmJhaZ4Oq08MDjMVZl18DRMkjDm+xKcmOo4F1RAx8bzJvN4ksVIW/BTbDhy5FUznN/
+        0Uh76lnw==;
 Received: from [2601:1c0:6280:3f0::19c2]
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwZtz-0006WA-1Q; Fri, 17 Jul 2020 23:36:27 +0000
+        id 1jwZuG-0006XN-40; Fri, 17 Jul 2020 23:36:44 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] input: linux/input.h: drop duplicated word in a comment
+Subject: [PATCH] LSM: drop duplicated words in header file comments
 To:     LKML <linux-kernel@vger.kernel.org>,
-        "Dmitry Torokhov <dmitry.torokhov"@gmail.com,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Message-ID: <7c23db8d-5d7e-f738-7c88-4e3a74b3dc79@infradead.org>
-Date:   Fri, 17 Jul 2020 16:36:24 -0700
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Message-ID: <9299abf4-75e3-6d73-a8b8-c2617208a990@infradead.org>
+Date:   Fri, 17 Jul 2020 16:36:40 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
@@ -59,24 +60,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Drop the doubled word "in" in a comment.
+Drop the doubled words "the" and "and" in comments.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: linux-security-module@vger.kernel.org
 ---
- include/uapi/linux/input.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/lsm_hook_defs.h |    2 +-
+ include/linux/lsm_hooks.h     |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- linux-next-20200714.orig/include/uapi/linux/input.h
-+++ linux-next-20200714/include/uapi/linux/input.h
-@@ -84,7 +84,7 @@ struct input_id {
-  * in units per radian.
-  * When INPUT_PROP_ACCELEROMETER is set the resolution changes.
-  * The main axes (ABS_X, ABS_Y, ABS_Z) are then reported in
-- * in units per g (units/g) and in units per degree per second
-+ * units per g (units/g) and in units per degree per second
-  * (units/deg/s) for rotational axes (ABS_RX, ABS_RY, ABS_RZ).
+--- linux-next-20200714.orig/include/linux/lsm_hook_defs.h
++++ linux-next-20200714/include/linux/lsm_hook_defs.h
+@@ -15,7 +15,7 @@
   */
- struct input_absinfo {
+ 
+ /*
+- * The macro LSM_HOOK is used to define the data structures required by the
++ * The macro LSM_HOOK is used to define the data structures required by
+  * the LSM framework using the pattern:
+  *
+  *	LSM_HOOK(<return_type>, <default_value>, <hook_name>, args...)
+--- linux-next-20200714.orig/include/linux/lsm_hooks.h
++++ linux-next-20200714/include/linux/lsm_hooks.h
+@@ -822,7 +822,7 @@
+  *	structure. Note that the security field was not added directly to the
+  *	socket structure, but rather, the socket security information is stored
+  *	in the associated inode.  Typically, the inode alloc_security hook will
+- *	allocate and and attach security information to
++ *	allocate and attach security information to
+  *	SOCK_INODE(sock)->i_security.  This hook may be used to update the
+  *	SOCK_INODE(sock)->i_security field with additional information that
+  *	wasn't available when the inode was allocated.
+
 
