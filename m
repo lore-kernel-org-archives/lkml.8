@@ -7,61 +7,58 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB2AC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0A3C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2894120734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F0B2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pHFLMjCZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9SuBPK/v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HPh7MrXw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9SYZJUm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbgGQLV7 (ORCPT
+        id S1726426AbgGQLWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:21:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40062 "EHLO
+        Fri, 17 Jul 2020 07:22:08 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40072 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgGQLV6 (ORCPT
+        with ESMTP id S1725912AbgGQLWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:21:58 -0400
-Date:   Fri, 17 Jul 2020 11:21:54 -0000
+        Fri, 17 Jul 2020 07:22:07 -0400
+Date:   Fri, 17 Jul 2020 11:22:04 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594984915;
+        s=2020; t=1594984925;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2N7cl9Uv5C2BfTmcs6AcgRYir7yXNppoUxiGa6sKO0s=;
-        b=pHFLMjCZfl8dEb9NJli+wvKsWOyJCm4uv+kwgNehGo494JrWm7LkJaMxkUnkSUcxRmGIIB
-        JFntO7z87LrNyfSAAx8PgSVrOv48yyZPg6ppZfnLm/4CJcvgn6fkBsyzHbd2NfeVC5U+rx
-        zyBCn0jK7Yao+8CfaPF0+0sQtNEFzFpw0gam9UkEkwmEbFbR56JmT0Zc9tc+yJZZ3S00Ou
-        fSmzhH30Yg1TW8xccuf/mFopvSGDpVX5mQHI7mxYzZsW71sk3DTNxuSOQygPNjvkOrmLkB
-        e6j3JQIo7ICRPonWYMYurHcA0CCIwA2Loh8wywrcusMQEhA0dZ3WzaUgOn0QtA==
+        bh=e8s6cNM7MtRlSok9GImSXnEBbHubXILx7M8AacRQ5vs=;
+        b=HPh7MrXw4k+Uo1fnmMy+2X+kRt3R6iC3VROmeHGvq3vniTn98CYphHK99ZTLd+meJRg5CL
+        HxV3of6r8pbnrDw9SWSzruuRvG3wrqzZsxEfQx78/xFKMBO29zjXwLkuqIhlBU2/11/K2E
+        hKQvHn5bM3nBF6oWPJ4TvZJptRbR3E6dy3A92tkCsUcGT7wwDNoe0a02BNc+57xOJgwiy0
+        kzz6XmHnPwegh+vQ2adi9bdyBgs04zINjYjEnd5xAw3FbqqD0KKWzVRnlVfPj35rmSYYQq
+        kr/g/qtRr7gldg42JwRafDjwUsDjODtgYPHJSSBdPHrj/399HY1raA5LkqWc/A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594984915;
+        s=2020e; t=1594984925;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2N7cl9Uv5C2BfTmcs6AcgRYir7yXNppoUxiGa6sKO0s=;
-        b=9SuBPK/vnOVHz/2gDXbIDl6CQbKZN0lMQ2VhrQHRA7+m65L5VQJolm6Ok2iM6aV88RZSN/
-        8ui1Oa/N0rtU8sDA==
-From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
+        bh=e8s6cNM7MtRlSok9GImSXnEBbHubXILx7M8AacRQ5vs=;
+        b=9SYZJUm4Svq6Yc8bDnv7qA4RvuEbj05n5oU38P8SppoIzWwvkAKlQpZsONgmL0FuSheFyS
+        aI78NEQHAieLvABg==
+From:   "tip-bot2 for Alexey Dobriyan" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/fair: handle case of task_h_load() returning 0
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+Subject: [tip: locking/core] rwsem: fix commas in initialisation
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        <stable@vger.kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200710152426.16981-1-vincent.guittot@linaro.org>
-References: <20200710152426.16981-1-vincent.guittot@linaro.org>
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200711145954.GA1178171@localhost.localdomain>
+References: <20200711145954.GA1178171@localhost.localdomain>
 MIME-Version: 1.0
-Message-ID: <159498491467.4006.8575391976004781075.tip-bot2@tip-bot2>
+Message-ID: <159498492487.4006.3074738466487716575.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -71,73 +68,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     01cfcde9c26d8555f0e6e9aea9d6049f87683998
-Gitweb:        https://git.kernel.org/tip/01cfcde9c26d8555f0e6e9aea9d6049f87683998
-Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Fri, 10 Jul 2020 17:24:26 +02:00
+Commit-ID:     a9232dc5607dbada801f2fe83ea307cda762969a
+Gitweb:        https://git.kernel.org/tip/a9232dc5607dbada801f2fe83ea307cda762969a
+Author:        Alexey Dobriyan <adobriyan@gmail.com>
+AuthorDate:    Sat, 11 Jul 2020 17:59:54 +03:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 16 Jul 2020 23:19:48 +02:00
+CommitterDate: Thu, 16 Jul 2020 23:19:51 +02:00
 
-sched/fair: handle case of task_h_load() returning 0
+rwsem: fix commas in initialisation
 
-task_h_load() can return 0 in some situations like running stress-ng
-mmapfork, which forks thousands of threads, in a sched group on a 224 cores
-system. The load balance doesn't handle this correctly because
-env->imbalance never decreases and it will stop pulling tasks only after
-reaching loop_max, which can be equal to the number of running tasks of
-the cfs. Make sure that imbalance will be decreased by at least 1.
+Leading comma prevents arbitrary reordering of initialisation clauses.
+The whole point of C99 initialisation is to allow any such reordering.
 
-misfit task is the other feature that doesn't handle correctly such
-situation although it's probably more difficult to face the problem
-because of the smaller number of CPUs and running tasks on heterogenous
-system.
-
-We can't simply ensure that task_h_load() returns at least one because it
-would imply to handle underflow in other places.
-
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: <stable@vger.kernel.org> # v4.4+
-Link: https://lkml.kernel.org/r/20200710152426.16981-1-vincent.guittot@linaro.org
+Link: https://lkml.kernel.org/r/20200711145954.GA1178171@localhost.localdomain
 ---
- kernel/sched/fair.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ include/linux/rwsem.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 658aa7a..04fa8db 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4039,7 +4039,11 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
- 		return;
- 	}
- 
--	rq->misfit_task_load = task_h_load(p);
-+	/*
-+	 * Make sure that misfit_task_load will not be null even if
-+	 * task_h_load() returns 0.
-+	 */
-+	rq->misfit_task_load = max_t(unsigned long, task_h_load(p), 1);
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index 7e5b2a4..25e3fde 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -60,39 +60,39 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
  }
  
- #else /* CONFIG_SMP */
-@@ -7638,7 +7642,14 @@ static int detach_tasks(struct lb_env *env)
+ #define RWSEM_UNLOCKED_VALUE		0L
+-#define __RWSEM_INIT_COUNT(name)	.count = ATOMIC_LONG_INIT(RWSEM_UNLOCKED_VALUE)
++#define __RWSEM_COUNT_INIT(name)	.count = ATOMIC_LONG_INIT(RWSEM_UNLOCKED_VALUE)
  
- 		switch (env->migration_type) {
- 		case migrate_load:
--			load = task_h_load(p);
-+			/*
-+			 * Depending of the number of CPUs and tasks and the
-+			 * cgroup hierarchy, task_h_load() can return a null
-+			 * value. Make sure that env->imbalance decreases
-+			 * otherwise detach_tasks() will stop only after
-+			 * detaching up to loop_max tasks.
-+			 */
-+			load = max_t(unsigned long, task_h_load(p), 1);
+ /* Common initializer macros and functions */
  
- 			if (sched_feat(LB_MIN) &&
- 			    load < 16 && !env->sd->nr_balance_failed)
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ # define __RWSEM_DEP_MAP_INIT(lockname)			\
+-	, .dep_map = {					\
++	.dep_map = {					\
+ 		.name = #lockname,			\
+ 		.wait_type_inner = LD_WAIT_SLEEP,	\
+-	}
++	},
+ #else
+ # define __RWSEM_DEP_MAP_INIT(lockname)
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_RWSEMS
+-# define __DEBUG_RWSEM_INITIALIZER(lockname) , .magic = &lockname
++# define __RWSEM_DEBUG_INIT(lockname) .magic = &lockname,
+ #else
+-# define __DEBUG_RWSEM_INITIALIZER(lockname)
++# define __RWSEM_DEBUG_INIT(lockname)
+ #endif
+ 
+ #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+-#define __RWSEM_OPT_INIT(lockname) , .osq = OSQ_LOCK_UNLOCKED
++#define __RWSEM_OPT_INIT(lockname) .osq = OSQ_LOCK_UNLOCKED,
+ #else
+ #define __RWSEM_OPT_INIT(lockname)
+ #endif
+ 
+ #define __RWSEM_INITIALIZER(name)				\
+-	{ __RWSEM_INIT_COUNT(name),				\
++	{ __RWSEM_COUNT_INIT(name),				\
+ 	  .owner = ATOMIC_LONG_INIT(0),				\
+-	  .wait_list = LIST_HEAD_INIT((name).wait_list),	\
+-	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock)	\
+ 	  __RWSEM_OPT_INIT(name)				\
+-	  __DEBUG_RWSEM_INITIALIZER(name)			\
++	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock),\
++	  .wait_list = LIST_HEAD_INIT((name).wait_list),	\
++	  __RWSEM_DEBUG_INIT(name)				\
+ 	  __RWSEM_DEP_MAP_INIT(name) }
+ 
+ #define DECLARE_RWSEM(name) \
