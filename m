@@ -2,119 +2,102 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58BCC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09D3A20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9900B20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="diGqESAP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NscaW7BQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgGQQ4M (ORCPT
+        id S1728076AbgGQQ4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:56:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38498 "EHLO
+        Fri, 17 Jul 2020 12:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbgGQQ4E (ORCPT
+        with ESMTP id S1728044AbgGQQ4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:56:04 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD208C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:03 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 22so15959058wmg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:03 -0700 (PDT)
+        Fri, 17 Jul 2020 12:56:36 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3FBC0619D2;
+        Fri, 17 Jul 2020 09:56:36 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z3so5683371pfn.12;
+        Fri, 17 Jul 2020 09:56:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fAAjM1mVIkO+nJSIb50glO5h9HOq0tsEwp52kRso+4M=;
-        b=diGqESAPD2yg592c8LXDZUadk/s4W30i0sy1gOfHfVL8rkg/bSc9SLulra7mzvbh6q
-         tuEL6z3Ah/YSeL14hltOCwWppAmPt9ShSHMKVUYb1l9qxcXUKIq3zTM4yzvIsbo3iu4q
-         Ykl7tRihGTqXOJZh9Cs0qp94pb/2FYwjxDujVZoKALn49L4H3l4V5PCd5jLqVtsS7beD
-         22JzY3Ro0UmLJsBfPgiEIAOxKd3eSn0tZAWAokfmdtwS1UnVx4x70bW1Hh+KxeUgefEx
-         u0NqUPGOR33Su4RnGuvF9P8VjlNBWNlC/ezdUIbKIArdrdAqQTZGQ9DjBwz8xh5LjUs3
-         uwFg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=okTIjusbtU6d1ty8+Q1jI6Vvd0+KoomCNv2GIe8K3wg=;
+        b=NscaW7BQQOr7BMOCAnLQLSNwLqkF8B2HNrvWmpZE/ITy3n4EfawUr4WI0fLpFEE1RS
+         oYe3xSxyr+eLKt7Rq9Psi03Y2CEvAbH0HR18GNjee0ZXn2+pAW3jX5JL9aFTjJvt/fe8
+         X3r91ENB/5D96gGcs4+uL9Q5LrdPfPfa2Z03HkgldEhPOCcsbKEanHKinQHIm+qfQaCo
+         U1ixeioJCWpfp388gn3EOwssOEanepcGgC8K8BrDPHNzwcAcia840EEBhdB3X2W4uAvd
+         a5HX6GbOkStaF4XFbRC9hbyyIjt6W+1eXhOgHudfAjOpQK8YDRG5aTglTILxdZ33r0Yq
+         DzBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fAAjM1mVIkO+nJSIb50glO5h9HOq0tsEwp52kRso+4M=;
-        b=VaOcINZjJVr1AURMCp/ip1/XBX5e8+K5C6qTM+85oaMecbi3IAIXq+o8hTVwOQUo6d
-         aHtak7XIQhVbmEOA3RqGvkXneDPz8tZDvEa5nbLm3Gd0UbDBJov2qjlgpYvJ4Ks0OxGL
-         XDPgN6rNUZebMt0+kBPasNdNj7P5ozX41VURlq42xClBBvrjtsMGKgkbL3bsdXb7Xasy
-         hQ8ypAMwxyzuIhYYgaaP1cme7fPcWweTgAbU6lyR0Sd5EtNMnfgVamTYzL5R5k8XEDJY
-         0DOFieM0+KmOUtU82Q1J5wq/L115le/N5G/t4l1mew6OT3RA/q9BzIj6y97PxMqlx/PR
-         QEEg==
-X-Gm-Message-State: AOAM530npiCA0h6DuLCGQhkvqhJIt6Njq4upVgniaK0cHj+ItuOnd6J3
-        GV7IYhILiX26oo+s9SDwehHmKXG259qYeQ==
-X-Google-Smtp-Source: ABdhPJxBjePr/D/nJshvCMDW+pFxohRxj6BB8ic0aMowVQ5331Lh4fFUBQZq7R8GCcKKIDDyto7/3g==
-X-Received: by 2002:a05:600c:2154:: with SMTP id v20mr10975426wml.185.1595004962476;
-        Fri, 17 Jul 2020 09:56:02 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 09:56:02 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Josef Gajdusek <atx@atx.name>
-Subject: [PATCH 04/30] iio: magnetometer: hmc5843: 'hmc5843_pm_ops' is unused in 1 of 3 files including hmc5843_core.h
-Date:   Fri, 17 Jul 2020 17:55:12 +0100
-Message-Id: <20200717165538.3275050-5-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717165538.3275050-1-lee.jones@linaro.org>
-References: <20200717165538.3275050-1-lee.jones@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=okTIjusbtU6d1ty8+Q1jI6Vvd0+KoomCNv2GIe8K3wg=;
+        b=MbeTop/euqS/E7nAeEitL7obhvpNxvjhTYGo8nmvZkRk2VrzbOWb5XI9AnISg1vkK5
+         IT6xLCJn2vcnSMfMRgyANrW2kesd0GfYkT2l09QoSPK0WLSUC8S7tLcVJ8JGfkQLHdxI
+         Z6BhQBOtd29uaXbQGncmnhY53dHEM6kfW2nY4moBqHDVpPmvF2McVDH/D0l0Gq+tcAOf
+         z11pSrJbraB253ii1B9XX/9rCCfc+onCDCNDwUj140NagpDIdgdHaZKoqcWDRWHCm/Mh
+         MJ1d1/Xw7rEyK9LUZu93VHpLpCRyhiFAuMliC3zY2RhdSJUE/y0+Kkr3VWUoslEV4Wzr
+         a0YQ==
+X-Gm-Message-State: AOAM530TPzAWZQR84fXQKTA7LY54Nfy4ELQB094kPTcPXM5+gQNeEoLv
+        oeWHVAkX05kMkm9i77R6gUE=
+X-Google-Smtp-Source: ABdhPJyfCRD6GZ5W6fCjqhpPZGz0PV8a/OGxBchJVK8AdxzsHrxWd4QpYaAS2isvN5c+QwDLFWEpwg==
+X-Received: by 2002:a65:6416:: with SMTP id a22mr9093578pgv.392.1595004996050;
+        Fri, 17 Jul 2020 09:56:36 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id y63sm7945867pgb.49.2020.07.17.09.56.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 09:56:35 -0700 (PDT)
+Subject: Re: [PATCH 3/7] bdc: Fix bug causing crash after multiple disconnects
+To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Sasi Kumar <sasi.kumar@broadcom.com>, devicetree@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+References: <20200717152307.36705-1-alcooperx@gmail.com>
+ <20200717152307.36705-4-alcooperx@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <0ef07c97-83a2-616e-3d43-46cefa7c95f1@gmail.com>
+Date:   Fri, 17 Jul 2020 09:56:25 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200717152307.36705-4-alcooperx@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We know that it's okay for 'hmc5843_pm_ops' to be unused here.
 
-Fixes the following W=1 kernel build warning(s):
 
- In file included from include/linux/device.h:25,
- from include/linux/iio/iio.h:10,
- from drivers/iio/magnetometer/hmc5843_core.c:16:
- drivers/iio/magnetometer/hmc5843.h:55:26: warning: ‘hmc5843_pm_ops’ defined but not used [-Wunused-const-variable=]
- 55 | static SIMPLE_DEV_PM_OPS(hmc5843_pm_ops,
- | ^~~~~~~~~~~~~~
- include/linux/pm.h:354:25: note: in definition of macro ‘SIMPLE_DEV_PM_OPS’
- 354 | const struct dev_pm_ops name = { | ^~~~
+On 7/17/2020 8:23 AM, Al Cooper wrote:
+> From: Sasi Kumar <sasi.kumar@broadcom.com>
+> 
+> Multiple connects/disconnects can cause a crash on the second
+> disconnect. The driver had a problem where it would try to send
+> endpoint commands after it was disconnected which is not allowed
+> by the hardware. The fix is to only allow the endpoint commands
+> when the endpoint is connected. This will also fix issues that
+> showed up when using configfs to create gadgets.
+> 
+> refs #SWLINUX-5477
 
-Cc: Josef Gajdusek <atx@atx.name>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/iio/magnetometer/hmc5843.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/magnetometer/hmc5843.h b/drivers/iio/magnetometer/hmc5843.h
-index b0dee87a8b20e..3f6c0b6629415 100644
---- a/drivers/iio/magnetometer/hmc5843.h
-+++ b/drivers/iio/magnetometer/hmc5843.h
-@@ -52,9 +52,9 @@ int hmc5843_common_suspend(struct device *dev);
- int hmc5843_common_resume(struct device *dev);
- 
- #ifdef CONFIG_PM_SLEEP
--static SIMPLE_DEV_PM_OPS(hmc5843_pm_ops,
--		hmc5843_common_suspend,
--		hmc5843_common_resume);
-+static __maybe_unused SIMPLE_DEV_PM_OPS(hmc5843_pm_ops,
-+					hmc5843_common_suspend,
-+					hmc5843_common_resume);
- #define HMC5843_PM_OPS (&hmc5843_pm_ops)
- #else
- #define HMC5843_PM_OPS NULL
+This internal reference should be removed and maybe we should be
+providing a Fixes tag as well since this is a bug fix?
 -- 
-2.25.1
-
+Florian
