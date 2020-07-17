@@ -7,34 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D466C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BCFC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2F0207EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C86C2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgGQPsL (ORCPT
+        id S1726794AbgGQPsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:48:11 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:60286 "EHLO inva021.nxp.com"
+        Fri, 17 Jul 2020 11:48:10 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:40588 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbgGQPsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726424AbgGQPsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jul 2020 11:48:09 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E7B47200999;
-        Fri, 17 Jul 2020 17:48:07 +0200 (CEST)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 41EC41A0906;
+        Fri, 17 Jul 2020 17:48:08 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D9F6120097A;
-        Fri, 17 Jul 2020 17:48:07 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3521A1A026D;
+        Fri, 17 Jul 2020 17:48:08 +0200 (CEST)
 Received: from fsr-ub1864-126.ea.freescale.net (fsr-ub1864-126.ea.freescale.net [10.171.82.212])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id A028E20466;
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E581020466;
         Fri, 17 Jul 2020 17:48:07 +0200 (CEST)
 From:   Ioana Ciornei <ioana.ciornei@nxp.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Cc:     laurentiu.tudor@nxp.com, Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 2/3] bus: fsl-mc: use raw spin lock to serialize mc cmds
-Date:   Fri, 17 Jul 2020 18:47:59 +0300
-Message-Id: <20200717154800.17169-3-ioana.ciornei@nxp.com>
+Cc:     laurentiu.tudor@nxp.com, Grigore Popescu <grigore.popescu@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>
+Subject: [PATCH 3/3] bus: fsl-mc: probe the allocatable objects first
+Date:   Fri, 17 Jul 2020 18:48:00 +0300
+Message-Id: <20200717154800.17169-4-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200717154800.17169-1-ioana.ciornei@nxp.com>
 References: <20200717154800.17169-1-ioana.ciornei@nxp.com>
@@ -44,67 +45,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: Grigore Popescu <grigore.popescu@nxp.com>
 
-Replace the spinlock that serializes the MC commands with a raw
-spinlock. This is needed for the RT kernel because there are MC
-commands sent in interrupt context.
+Because the DPNIs are probed before DPMCPs and other objects that need
+to be allocated, messages like "No more resources of type X left" are
+printed by the fsl-mc bus driver. This patch resolves the issue by probing
+the allocatable objects first and then any other object that may use
+them.
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Signed-off-by: Grigore Popescu <grigore.popescu@nxp.com>
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- drivers/bus/fsl-mc/mc-io.c  | 2 +-
- drivers/bus/fsl-mc/mc-sys.c | 4 ++--
- include/linux/fsl/mc.h      | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/bus/fsl-mc/dprc-driver.c | 57 ++++++++++++++++++++++----------
+ 1 file changed, 40 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/bus/fsl-mc/mc-io.c b/drivers/bus/fsl-mc/mc-io.c
-index 6ae48ad80409..a30b53f1d87d 100644
---- a/drivers/bus/fsl-mc/mc-io.c
-+++ b/drivers/bus/fsl-mc/mc-io.c
-@@ -82,7 +82,7 @@ int __must_check fsl_create_mc_io(struct device *dev,
- 	mc_io->portal_phys_addr = mc_portal_phys_addr;
- 	mc_io->portal_size = mc_portal_size;
- 	if (flags & FSL_MC_IO_ATOMIC_CONTEXT_PORTAL)
--		spin_lock_init(&mc_io->spinlock);
-+		raw_spin_lock_init(&mc_io->spinlock);
- 	else
- 		mutex_init(&mc_io->mutex);
+diff --git a/drivers/bus/fsl-mc/dprc-driver.c b/drivers/bus/fsl-mc/dprc-driver.c
+index c8b1c3842c1a..3512d1b95821 100644
+--- a/drivers/bus/fsl-mc/dprc-driver.c
++++ b/drivers/bus/fsl-mc/dprc-driver.c
+@@ -27,7 +27,16 @@ static bool fsl_mc_device_match(struct fsl_mc_device *mc_dev,
+ {
+ 	return mc_dev->obj_desc.id == obj_desc->id &&
+ 	       strcmp(mc_dev->obj_desc.type, obj_desc->type) == 0;
++}
  
-diff --git a/drivers/bus/fsl-mc/mc-sys.c b/drivers/bus/fsl-mc/mc-sys.c
-index 3221a7fbaf0a..85a0225db522 100644
---- a/drivers/bus/fsl-mc/mc-sys.c
-+++ b/drivers/bus/fsl-mc/mc-sys.c
-@@ -251,7 +251,7 @@ int mc_send_command(struct fsl_mc_io *mc_io, struct fsl_mc_command *cmd)
- 		return -EINVAL;
++static bool fsl_mc_obj_desc_is_allocatable(struct fsl_mc_obj_desc *obj)
++{
++	if (strcmp(obj->type, "dpmcp") == 0 ||
++	    strcmp(obj->type, "dpcon") == 0 ||
++	    strcmp(obj->type, "dpbp") == 0)
++		return true;
++	else
++		return false;
+ }
  
- 	if (mc_io->flags & FSL_MC_IO_ATOMIC_CONTEXT_PORTAL)
--		spin_lock_irqsave(&mc_io->spinlock, irq_flags);
-+		raw_spin_lock_irqsave(&mc_io->spinlock, irq_flags);
- 	else
- 		mutex_lock(&mc_io->mutex);
+ static int __fsl_mc_device_remove_if_not_in_mc(struct device *dev, void *data)
+@@ -150,6 +159,27 @@ static void check_plugged_state_change(struct fsl_mc_device *mc_dev,
+ 	}
+ }
  
-@@ -287,7 +287,7 @@ int mc_send_command(struct fsl_mc_io *mc_io, struct fsl_mc_command *cmd)
- 	error = 0;
- common_exit:
- 	if (mc_io->flags & FSL_MC_IO_ATOMIC_CONTEXT_PORTAL)
--		spin_unlock_irqrestore(&mc_io->spinlock, irq_flags);
-+		raw_spin_unlock_irqrestore(&mc_io->spinlock, irq_flags);
- 	else
- 		mutex_unlock(&mc_io->mutex);
++static void fsl_mc_obj_device_add(struct fsl_mc_device *mc_bus_dev,
++				  struct fsl_mc_obj_desc *obj_desc)
++{
++	int error;
++	struct fsl_mc_device *child_dev;
++
++	/*
++	 * Check if device is already known to Linux:
++	 */
++	child_dev = fsl_mc_device_lookup(obj_desc, mc_bus_dev);
++	if (child_dev) {
++		check_plugged_state_change(child_dev, obj_desc);
++		put_device(&child_dev->dev);
++	} else {
++		error = fsl_mc_device_add(obj_desc, NULL, &mc_bus_dev->dev,
++					  &child_dev);
++		if (error < 0)
++			return;
++	}
++}
++
+ /**
+  * dprc_add_new_devices - Adds devices to the logical bus for a DPRC
+  *
+@@ -166,30 +196,23 @@ static void dprc_add_new_devices(struct fsl_mc_device *mc_bus_dev,
+ 				 struct fsl_mc_obj_desc *obj_desc_array,
+ 				 int num_child_objects_in_mc)
+ {
+-	int error;
+ 	int i;
  
-diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
-index cdb03aca2aef..a428c61ead6e 100644
---- a/include/linux/fsl/mc.h
-+++ b/include/linux/fsl/mc.h
-@@ -339,7 +339,7 @@ struct fsl_mc_io {
- 		 * This field is only meaningful if the
- 		 * FSL_MC_IO_ATOMIC_CONTEXT_PORTAL flag is set
- 		 */
--		spinlock_t spinlock;	/* serializes mc_send_command() */
-+		raw_spinlock_t spinlock; /* serializes mc_send_command() */
- 	};
- };
++	/* probe the allocable objects first */
+ 	for (i = 0; i < num_child_objects_in_mc; i++) {
+-		struct fsl_mc_device *child_dev;
+ 		struct fsl_mc_obj_desc *obj_desc = &obj_desc_array[i];
+ 
+-		if (strlen(obj_desc->type) == 0)
+-			continue;
++		if (strlen(obj_desc->type) > 0 &&
++		    fsl_mc_obj_desc_is_allocatable(obj_desc))
++			fsl_mc_obj_device_add(mc_bus_dev, obj_desc);
++	}
+ 
+-		/*
+-		 * Check if device is already known to Linux:
+-		 */
+-		child_dev = fsl_mc_device_lookup(obj_desc, mc_bus_dev);
+-		if (child_dev) {
+-			check_plugged_state_change(child_dev, obj_desc);
+-			put_device(&child_dev->dev);
+-			continue;
+-		}
++	for (i = 0; i < num_child_objects_in_mc; i++) {
++		struct fsl_mc_obj_desc *obj_desc = &obj_desc_array[i];
+ 
+-		error = fsl_mc_device_add(obj_desc, NULL, &mc_bus_dev->dev,
+-					  &child_dev);
+-		if (error < 0)
+-			continue;
++		if (strlen(obj_desc->type) > 0 &&
++		    !fsl_mc_obj_desc_is_allocatable(obj_desc))
++			fsl_mc_obj_device_add(mc_bus_dev, obj_desc);
+ 	}
+ }
  
 -- 
 2.25.1
