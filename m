@@ -2,176 +2,119 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3BCC433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF01C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2B4620704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:02:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EY+FlbF1"
+	by mail.kernel.org (Postfix) with ESMTP id 6F6C020704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgGQICd (ORCPT
+        id S1728284AbgGQICY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:02:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28298 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726855AbgGQICI (ORCPT
+        Fri, 17 Jul 2020 04:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgGQICQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:02:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594972927;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6rcr/B0+uYonvATiDQC4F/S5E0Ijrw2tibP+/iOy0GA=;
-        b=EY+FlbF1QRLuiw6uULNSNW2DT4KSFVmh6Kx9BFLQrKWyc+CFOAD6i9I1pF/0F4LBypBB+R
-        5EU3YHJwM5hbBeX/nVPvTPDo7LGm15SeNY9PbsHKKIo6teRLAEOCKzwXApyg6S1CjOqbfu
-        vMLe8VPjweaaboC9nZu/cDGXlJQfr5Q=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-473-JZJNyjHDOZa5UZF78SW74A-1; Fri, 17 Jul 2020 04:02:03 -0400
-X-MC-Unique: JZJNyjHDOZa5UZF78SW74A-1
-Received: by mail-wr1-f69.google.com with SMTP id j3so8280896wrq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:02:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6rcr/B0+uYonvATiDQC4F/S5E0Ijrw2tibP+/iOy0GA=;
-        b=fYklrreT/Cmct8IG3v2sHjt/rF1i+n/bhy80DMo5xU4zSv60bnWHpz59gSLc5MGl9E
-         eQll6Tj7qeryi3nrjSA9JQ1W0OXF6Fv9TX01p59rjWmzDe0AdQl0GRyuT3OlTGXSeLCS
-         2yfI3780eyZ7cxwYob/aNKpWNL14dsm4vnSUfBqjd/Ph55YrS7Gl1HGhbpt646KpMsB5
-         fgWobD3JG0wUNk6Ncn5nIGJv5Py1xnl7tWoH6/VRc8m1TvjhaIT72KS7A0gk7PHfAa2R
-         keuW6fpcej/SGHACK3r3V0UhZVtsGbUQeav6JoMngB2/BSfUAZmtY20QRiRAIS4ddhV/
-         Lk/w==
-X-Gm-Message-State: AOAM530hfeIH48uBLj9pGrO6uERpKEHObYTmmNzZUc74pAvogwyR+flV
-        8ClY0NUZQ67Ah5PaksyobvaU6fHVIoCb+ig9MQhLqjVwINuS2WpEEu/egJ0ipGvmFJsGD1tTq1O
-        Zg03O7tdKtmI5NdSAz/E6QjOT
-X-Received: by 2002:a05:600c:2483:: with SMTP id 3mr7936044wms.120.1594972922233;
-        Fri, 17 Jul 2020 01:02:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw5lUscsVqkDpbm7EZ6xTIOuN95u1Ppt2CEYvOEPZ/iTjER1w+8Y5Lg8za60AnhINO8FcW2lg==
-X-Received: by 2002:a05:600c:2483:: with SMTP id 3mr7936008wms.120.1594972921869;
-        Fri, 17 Jul 2020 01:02:01 -0700 (PDT)
-Received: from steredhat.lan ([5.180.207.22])
-        by smtp.gmail.com with ESMTPSA id a123sm12380160wmd.28.2020.07.17.01.01.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 01:02:01 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 10:01:57 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: strace of io_uring events?
-Message-ID: <20200717080157.ezxapv7pscbqykhl@steredhat.lan>
-References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
- <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net>
- <20200715171130.GG12769@casper.infradead.org>
- <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
- <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
- <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com>
- <202007151511.2AA7718@keescook>
- <20200716131404.bnzsaarooumrp3kx@steredhat>
- <202007160751.ED56C55@keescook>
+        Fri, 17 Jul 2020 04:02:16 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63496C061755
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:02:16 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1jwLJO-0000MA-Fl; Fri, 17 Jul 2020 10:01:42 +0200
+Received: from [IPv6:2a03:f580:87bc:d400:6150:3c6e:283b:b7f7] (unknown [IPv6:2a03:f580:87bc:d400:6150:3c6e:283b:b7f7])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id AE488532E22;
+        Fri, 17 Jul 2020 08:01:30 +0000 (UTC)
+Subject: Re: [PATCH 22/22] net: make ->{get,set}sockopt in proto_ops optional
+To:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Chas Williams <3chas3@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-wpan@vger.kernel.org, mptcp@lists.01.org
+References: <20200717062331.691152-1-hch@lst.de>
+ <20200717062331.691152-23-hch@lst.de>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <5f88e695-d787-2191-feef-883a067788ed@pengutronix.de>
+Date:   Fri, 17 Jul 2020 10:01:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202007160751.ED56C55@keescook>
+In-Reply-To: <20200717062331.691152-23-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 08:12:35AM -0700, Kees Cook wrote:
-> On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
-> > On Wed, Jul 15, 2020 at 04:07:00PM -0700, Kees Cook wrote:
-> > [...]
-> > 
-> > > Speaking to Stefano's proposal[1]:
-> > > 
-> > > - There appear to be three classes of desired restrictions:
-> > >   - opcodes for io_uring_register() (which can be enforced entirely with
-> > >     seccomp right now).
-> > >   - opcodes from SQEs (this _could_ be intercepted by seccomp, but is
-> > >     not currently written)
-> > >   - opcodes of the types of restrictions to restrict... for making sure
-> > >     things can't be changed after being set? seccomp already enforces
-> > >     that kind of "can only be made stricter"
-> > 
-> > In addition we want to limit the SQEs to use only the registered fd and buffers.
+On 7/17/20 8:23 AM, Christoph Hellwig wrote:
+> Just check for a NULL method instead of wiring up
+> sock_no_{get,set}sockopt.
 > 
-> Hmm, good point. Yeah, since it's an "extra" mapping (ioring file number
-> vs fd number) this doesn't really map well to seccomp. (And frankly,
-> there's some difficulty here mapping many of the ioring-syscalls to
-> seccomp because it's happening "deeper" than the syscall layer (i.e.
-> some of the arguments have already been resolved into kernel object
-> pointers, etc).
-> 
-> > Do you think it's better to have everything in seccomp instead of adding
-> > the restrictions in io_uring (the patch isn't very big)?
-> 
-> I'm still trying to understand how io_uring will be used, and it seems
-> odd to me that it's effectively a seccomp bypass. (Though from what I
-> can tell it is not an LSM bypass, which is good -- though I'm worried
-> there might be some embedded assumptions in LSMs about creds vs current
-> and LSMs may try to reason (or report) on actions with the kthread in
-> mind, but afaict everything important is checked against creds.
-> 
-> > With seccomp, would it be possible to have different restrictions for two
-> > instances of io_uring in the same process?
-> 
-> For me, this is the most compelling reason to have the restrictions NOT
-> implemented via seccomp. Trying to make "which instance" choice in
-> seccomp would be extremely clumsy.
-> 
-> So at this point, I think it makes sense for the restriction series to
-> carry on -- it is io_uring-specific and solves some problems that
-> seccomp is not in good position to reason about.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  net/can/bcm.c               |  2 --
+>  net/core/sock.c             | 14 --------------
 
-Thanks for the feedback, then I'll continue in this direction!
+For the CAN part:
 
-> 
-> All this said, I'd still like a way to apply seccomp to io_uring
-> because it's a rather giant syscall filter bypass mechanism, and gaining
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 
-Agree.
+Marc
 
-> access (IIUC) is possible without actually calling any of the io_uring
-> syscalls. Is that correct? A process would receive an fd (via SCM_RIGHTS,
-> pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to gain
-> access to the SQ and CQ, and off it goes? (The only glitch I see is
-> waking up the worker thread?)
-
-It is true only if the io_uring istance is created with SQPOLL flag (not the
-default behaviour and it requires CAP_SYS_ADMIN). In this case the
-kthread is created and you can also set an higher idle time for it, so
-also the waking up syscall can be avoided.
-
-> 
-> What appears to be the worst bit about adding seccomp to io_uring is the
-> almost complete disassociation of process hierarchy from syscall action.
-> Only a cred is used for io_uring, and seccomp filters are associated with
-> task structs. I'm not sure if there is a way to solve this disconnect
-> without a major internal refactoring of seccomp to attach to creds and
-> then make every filter attachment create a new cred... *head explody*
-> 
-
-Sorry but I don't know seccomp that well :-(
-I'm learning a lot about it these days. I'll keep your concern in mind.
-
-Thanks,
-Stefano
-
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
