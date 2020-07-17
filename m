@@ -2,96 +2,118 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B679C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4773C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40EBB206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:41:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NogMo+o2"
+	by mail.kernel.org (Postfix) with ESMTP id BAA2220768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgGQMlq (ORCPT
+        id S1726619AbgGQMli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:41:46 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53994 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgGQMlp (ORCPT
+        Fri, 17 Jul 2020 08:41:38 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44306 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726113AbgGQMlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:41:45 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HCfcjF100377;
-        Fri, 17 Jul 2020 07:41:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594989699;
-        bh=vj22npkLr4ycyFgGKzlLVt7vMVT8zWr/amI8H6iFZQI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NogMo+o2HUFESCsoW02P3oYMBGyiHhXx6KiFlXK35lo78CA6oTVTAgT3gtcK/GylT
-         SNgoUt8ibP4N2ywHMwhnHKy5sIb0NU1vWM+xa18XnCNvHG+9IV+QRIZ+VRCkSMrvJX
-         Wm4bi60O94NDgqc3oi35+yTTrXvdpS0tMqke2mA0=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HCfcY1091351
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 07:41:38 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 07:41:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 07:41:38 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HCfZup023969;
-        Fri, 17 Jul 2020 07:41:36 -0500
-Subject: Re: [PATCH next 6/6] dmaengine: ti: k3-udma: Switch to
- k3_ringacc_request_rings_pair
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Fri, 17 Jul 2020 08:41:37 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 451B38030802;
+        Fri, 17 Jul 2020 12:41:35 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Yl5UxSieiZz7; Fri, 17 Jul 2020 15:41:34 +0300 (MSK)
+Date:   Fri, 17 Jul 2020 15:41:32 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <dmaengine@vger.kernel.org>
-References: <20200701103030.29684-1-grygorii.strashko@ti.com>
- <20200701103030.29684-7-grygorii.strashko@ti.com>
- <20200702125705.GB273932@vkoul-mobl>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <43ea4163-e477-ba55-9da0-c438fd46833b@ti.com>
-Date:   Fri, 17 Jul 2020 15:41:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+Message-ID: <20200717124132.4zgxkcxnwbppuxm4@mobilestation>
+References: <20200714125753.22466-1-Sergey.Semin@baikalelectronics.ru>
+ <20200714125753.22466-7-Sergey.Semin@baikalelectronics.ru>
+ <53a3785b-2f6f-35de-a5ac-565f059cd1f4@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200702125705.GB273932@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <53a3785b-2f6f-35de-a5ac-565f059cd1f4@linaro.org>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 02/07/2020 15:57, Vinod Koul wrote:
-> On 01-07-20, 13:30, Grygorii Strashko wrote:
->> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>
->> We only request ring pairs via K3 DMA driver, switch to use the new
->> k3_ringacc_request_rings_pair() to simplify the code.
-> 
-> Acked-By: Vinod Koul <vkoul@kernel.org>
+On Fri, Jul 17, 2020 at 06:29:49AM +0200, Daniel Lezcano wrote:
+> On 14/07/2020 14:57, Serge Semin wrote:
+> > Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip, MIPS
+> > GIC timer and MIPS CPS CPUidle drivers.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Acked-by: Marc Zyngier <maz@kernel.org>
 > 
 
-There is build warn with this patch - sending v2.
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
--- 
-Best regards,
-grygorii
+Great! Thanks you very much, @Daniel.
+
+@Thomas (Bogendoerfer), could you please merge the series in through the
+kernel/git/mips/linux.git repository?
+
+-Sergey
+
+> 
+> > ---
+> > 
+> > Changelog v3:
+> > - Keep the files list alphabetically ordered.
+> > - Add Thomas as the co-maintainer of the designated drivers.
+> > ---
+> >  MAINTAINERS | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 2926327e4976..20532e0287d7 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -11278,6 +11278,17 @@ F:	arch/mips/configs/generic/board-boston.config
+> >  F:	drivers/clk/imgtec/clk-boston.c
+> >  F:	include/dt-bindings/clock/boston-clock.h
+> >  
+> > +MIPS CORE DRIVERS
+> > +M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > +M:	Serge Semin <fancer.lancer@gmail.com>
+> > +L:	linux-mips@vger.kernel.org
+> > +S:	Supported
+> > +F:	drivers/bus/mips_cdmm.c
+> > +F:	drivers/clocksource/mips-gic-timer.c
+> > +F:	drivers/cpuidle/cpuidle-cps.c
+> > +F:	drivers/irqchip/irq-mips-cpu.c
+> > +F:	drivers/irqchip/irq-mips-gic.c
+> > +
+> >  MIPS GENERIC PLATFORM
+> >  M:	Paul Burton <paulburton@kernel.org>
+> >  L:	linux-mips@vger.kernel.org
+> > 
+> 
+> 
+> -- 
+> <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
