@@ -2,202 +2,360 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0EFC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512FFC433F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C300220768
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A177207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:04:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rzS9yO9O"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TC0KLPb2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgGQLER (ORCPT
+        id S1726885AbgGQLEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgGQLEK (ORCPT
+        Fri, 17 Jul 2020 07:04:38 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:38982 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726801AbgGQLEh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:04:10 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85470C061755
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:04:10 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id md7so6210041pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+f+w5v82UMrAgd415FBeV/7c6VBfQ5DmfWoo/tiqC+k=;
-        b=rzS9yO9OFZf2npdZKwFi5/ptZCgk+fTk/2xZwkx/M4PskLpHPJgUqMPk6T0wTHEtMQ
-         uMm+uv7CiBo5AYMIVVGzP+8iKBt4ydLtvwBG/EHCuYWjST/BSlP/nY7dzk+4cSZINfIz
-         PrfiZfV8FhhVUGv71ls6Rq/NW8WpwlDcDsVSBBpmOJ/HGERtttgdnFwT1NcQVedclJnT
-         NWl51bi07f0c9zzExyqhMSJg8HbwhlFNuyrw+gvxAwfgL2Yh6jcKO1yqP+Z8Yrf7Ompb
-         8PvODFrBlWs1o/zY6hAIu8pj+M21FQbY5j5a2RtcHNps9uMYWwhRG+VKq9oPhrGMR57Q
-         suCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=+f+w5v82UMrAgd415FBeV/7c6VBfQ5DmfWoo/tiqC+k=;
-        b=LFThqdgzkuxtXac9lxDo34r6sgIS8pCQdM9eDev1vP05YmFgERTZHVY3szuM/rHWhh
-         t2lkr+Gp33Y6UBhyPtn90CZNKvKlK1PRXBQInwv2N7JSKE3X83riTd8p1h54WauRUdAw
-         S+pw2a6LS9u9EVTv0BndepbB3pdbRi8iI1lVtXy6xKAjXZMHiU9ndk46GHGdS6jYG4N1
-         vRgb1lth1yuEc43d6yT10zPJxdjMK1mZzW3k6sDY4Y5YEw1301HBkg6ccs0fcTKwV0Zy
-         gaR/EpnbotEYgvShLNmQtg+NXn5SsCiQZCAs1cdn99vG6aTx3og48J64ICtlS1bjF8sw
-         7gWg==
-X-Gm-Message-State: AOAM531NON4Gx8dnHJU4cqKajMelGg9VAaF0mnGf5gogAhHhnDnqYVsb
-        ILw62iIWPYDyOhih3ZIKrag=
-X-Google-Smtp-Source: ABdhPJwlN8DXzPaNbTZkCBCdCy4L/eUg/CVWDJljBlIU+OGV64KJzmp8YN4B7XhmDFYTiEjtsuYyBQ==
-X-Received: by 2002:a17:90b:4910:: with SMTP id kr16mr9309326pjb.126.1594983850127;
-        Fri, 17 Jul 2020 04:04:10 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:469:ae36:984e:c073:9d0b:7c09])
-        by smtp.gmail.com with ESMTPSA id o26sm7619183pfp.219.2020.07.17.04.04.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Jul 2020 04:04:09 -0700 (PDT)
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-To:     lee.jones@linaro.org, matthias.bgg@gmail.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, benjamin.chao@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: [PATCH v2 5/9] mfd: mt6360: Rename mt6360_pmu_data by mt6360_data
-Date:   Fri, 17 Jul 2020 19:03:27 +0800
-Message-Id: <1594983811-25908-6-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
-References: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
+        Fri, 17 Jul 2020 07:04:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594983875; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=0DmSjSPRq4xd/aP1wnIbOfBMiq8D4Hd2kw25xMXQkrE=;
+ b=TC0KLPb22RQIDuZFyi3MjoFvCFmpW04mEhotrFjbggSVojzG4U3PAm9mTBZv6gT3CgemUCfh
+ Zt7rdh/GvWuQIs4Y0ie9yJ0tkzUD7AoLi6HXfcGwWIhdgqTDSAO+igb3TLxY50yPQ1mMAuNe
+ 2U6UGSGNTR33W5EwvtfmDFnOGjk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
+ 5f118596d3d65084227a09f4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 11:03:50
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A5428C43391; Fri, 17 Jul 2020 11:03:49 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F024C433C9;
+        Fri, 17 Jul 2020 11:03:48 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 17 Jul 2020 16:33:48 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
+        sibis@codearora.org, tsoni@codeaurora.org, psodagud@codeaurora.org,
+        sidgup@codeaurora.org, linux-remoteproc-owner@vger.kernel.org
+Subject: Re: [PATCH v8 4/5] remoteproc: Add inline coredump functionality
+In-Reply-To: <1594938035-7327-5-git-send-email-rishabhb@codeaurora.org>
+References: <1594938035-7327-1-git-send-email-rishabhb@codeaurora.org>
+ <1594938035-7327-5-git-send-email-rishabhb@codeaurora.org>
+Message-ID: <522fc74e07dec26e398f238bd233c778@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gene Chen <gene_chen@richtek.com>
+On 2020-07-17 03:50, Rishabh Bhatnagar wrote:
+> The current coredump implementation uses vmalloc area to copy
+> all the segments. But this might put strain on low memory targets
+> as the firmware size sometimes is in tens of MBs. The situation
+> becomes worse if there are multiple remote processors undergoing
+> recovery at the same time. This patch adds inline coredump
+> functionality that avoids extra memory usage. This requires
+> recovery to be halted until data is read by userspace and free
+> function is called.
+> 
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
 
-Rename mt6360_pmu_data by mt6360_data because of including
-not only PMU part, but also entire MT6360 IC.
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-Signed-off-by: Gene Chen <gene_chen@richtek.com>
----
- drivers/mfd/mt6360-core.c  | 44 ++++++++++++++++++++++----------------------
- include/linux/mfd/mt6360.h |  2 +-
- 2 files changed, 23 insertions(+), 23 deletions(-)
+> Tested-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  drivers/remoteproc/remoteproc_coredump.c | 156 
+> +++++++++++++++++++++++++++----
+>  include/linux/remoteproc.h               |  16 ++++
+>  2 files changed, 154 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_coredump.c
+> b/drivers/remoteproc/remoteproc_coredump.c
+> index 390f563..bb15a29 100644
+> --- a/drivers/remoteproc/remoteproc_coredump.c
+> +++ b/drivers/remoteproc/remoteproc_coredump.c
+> @@ -5,6 +5,7 @@
+>   * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+>   */
+> 
+> +#include <linux/completion.h>
+>  #include <linux/devcoredump.h>
+>  #include <linux/device.h>
+>  #include <linux/kernel.h>
+> @@ -12,6 +13,12 @@
+>  #include "remoteproc_internal.h"
+>  #include "remoteproc_elf_helpers.h"
+> 
+> +struct rproc_coredump_state {
+> +	struct rproc *rproc;
+> +	void *header;
+> +	struct completion dump_done;
+> +};
+> +
+>  /**
+>   * rproc_coredump_cleanup() - clean up dump_segments list
+>   * @rproc: the remote processor handle
+> @@ -115,12 +122,110 @@ int rproc_coredump_set_elf_info(struct rproc
+> *rproc, u8 class, u16 machine)
+>  }
+>  EXPORT_SYMBOL(rproc_coredump_set_elf_info);
+> 
+> +static void rproc_coredump_free(void *data)
+> +{
+> +	struct rproc_coredump_state *dump_state = data;
+> +
+> +	vfree(dump_state->header);
+> +	complete(&dump_state->dump_done);
+> +}
+> +
+> +static void *rproc_coredump_find_segment(loff_t user_offset,
+> +					 struct list_head *segments,
+> +					 size_t *data_left)
+> +{
+> +	struct rproc_dump_segment *segment;
+> +
+> +	list_for_each_entry(segment, segments, node) {
+> +		if (user_offset < segment->size) {
+> +			*data_left = segment->size - user_offset;
+> +			return segment;
+> +		}
+> +		user_offset -= segment->size;
+> +	}
+> +
+> +	*data_left = 0;
+> +	return NULL;
+> +}
+> +
+> +static void rproc_copy_segment(struct rproc *rproc, void *dest,
+> +			       struct rproc_dump_segment *segment,
+> +			       size_t offset, size_t size)
+> +{
+> +	void *ptr;
+> +
+> +	if (segment->dump) {
+> +		segment->dump(rproc, segment, dest, offset, size);
+> +	} else {
+> +		ptr = rproc_da_to_va(rproc, segment->da + offset, size);
+> +		if (!ptr) {
+> +			dev_err(&rproc->dev,
+> +				"invalid copy request for segment %pad with offset %zu and size 
+> %zu)\n",
+> +				&segment->da, offset, size);
+> +			memset(dest, 0xff, size);
+> +		} else {
+> +			memcpy(dest, ptr, size);
+> +		}
+> +	}
+> +}
+> +
+> +static ssize_t rproc_coredump_read(char *buffer, loff_t offset, size_t 
+> count,
+> +				   void *data, size_t header_sz)
+> +{
+> +	size_t seg_data, bytes_left = count;
+> +	ssize_t copy_sz;
+> +	struct rproc_dump_segment *seg;
+> +	struct rproc_coredump_state *dump_state = data;
+> +	struct rproc *rproc = dump_state->rproc;
+> +	void *elfcore = dump_state->header;
+> +
+> +	/* Copy the vmalloc'ed header first. */
+> +	if (offset < header_sz) {
+> +		copy_sz = memory_read_from_buffer(buffer, count, &offset,
+> +						  elfcore, header_sz);
+> +
+> +		return copy_sz;
+> +	}
+> +
+> +	/*
+> +	 * Find out the segment memory chunk to be copied based on offset.
+> +	 * Keep copying data until count bytes are read.
+> +	 */
+> +	while (bytes_left) {
+> +		seg = rproc_coredump_find_segment(offset - header_sz,
+> +						  &rproc->dump_segments,
+> +						  &seg_data);
+> +		/* EOF check */
+> +		if (!seg) {
+> +			dev_info(&rproc->dev, "Ramdump done, %lld bytes read",
+> +				 offset);
+> +			break;
+> +		}
+> +
+> +		copy_sz = min_t(size_t, bytes_left, seg_data);
+> +
+> +		rproc_copy_segment(rproc, buffer, seg, seg->size - seg_data,
+> +				   copy_sz);
+> +
+> +		offset += copy_sz;
+> +		buffer += copy_sz;
+> +		bytes_left -= copy_sz;
+> +	}
+> +
+> +	return count - bytes_left;
+> +}
+> +
+>  /**
+>   * rproc_coredump() - perform coredump
+>   * @rproc:	rproc handle
+>   *
+>   * This function will generate an ELF header for the registered 
+> segments
+> - * and create a devcoredump device associated with rproc.
+> + * and create a devcoredump device associated with rproc. Based on the
+> + * coredump configuration this function will directly copy the 
+> segments
+> + * from device memory to userspace or copy segments from device memory 
+> to
+> + * a separate buffer, which can then be read by userspace.
+> + * The first approach avoids using extra vmalloc memory. But it will 
+> stall
+> + * recovery flow until dump is read by userspace.
+>   */
+>  void rproc_coredump(struct rproc *rproc)
+>  {
+> @@ -130,11 +235,13 @@ void rproc_coredump(struct rproc *rproc)
+>  	size_t data_size;
+>  	size_t offset;
+>  	void *data;
+> -	void *ptr;
+>  	u8 class = rproc->elf_class;
+>  	int phnum = 0;
+> +	struct rproc_coredump_state dump_state;
+> +	enum rproc_dump_mechanism dump_conf = rproc->dump_conf;
+> 
+> -	if (list_empty(&rproc->dump_segments))
+> +	if (list_empty(&rproc->dump_segments) ||
+> +	    dump_conf == RPROC_COREDUMP_DISABLED)
+>  		return;
+> 
+>  	if (class == ELFCLASSNONE) {
+> @@ -144,7 +251,14 @@ void rproc_coredump(struct rproc *rproc)
+> 
+>  	data_size = elf_size_of_hdr(class);
+>  	list_for_each_entry(segment, &rproc->dump_segments, node) {
+> -		data_size += elf_size_of_phdr(class) + segment->size;
+> +		/*
+> +		 * For default configuration buffer includes headers & segments.
+> +		 * For inline dump buffer just includes headers as segments are
+> +		 * directly read from device memory.
+> +		 */
+> +		data_size += elf_size_of_phdr(class);
+> +		if (dump_conf == RPROC_COREDUMP_DEFAULT)
+> +			data_size += segment->size;
+> 
+>  		phnum++;
+>  	}
+> @@ -183,23 +297,29 @@ void rproc_coredump(struct rproc *rproc)
+>  		elf_phdr_set_p_flags(class, phdr, PF_R | PF_W | PF_X);
+>  		elf_phdr_set_p_align(class, phdr, 0);
+> 
+> -		if (segment->dump) {
+> -			segment->dump(rproc, segment, data + offset, 0, segment->size);
+> -		} else {
+> -			ptr = rproc_da_to_va(rproc, segment->da, segment->size);
+> -			if (!ptr) {
+> -				dev_err(&rproc->dev,
+> -					"invalid coredump segment (%pad, %zu)\n",
+> -					&segment->da, segment->size);
+> -				memset(data + offset, 0xff, segment->size);
+> -			} else {
+> -				memcpy(data + offset, ptr, segment->size);
+> -			}
+> -		}
+> +		if (dump_conf == RPROC_COREDUMP_DEFAULT)
+> +			rproc_copy_segment(rproc, data + offset, segment, 0,
+> +					   segment->size);
+> 
+>  		offset += elf_phdr_get_p_filesz(class, phdr);
+>  		phdr += elf_size_of_phdr(class);
+>  	}
+> +	if (dump_conf == RPROC_COREDUMP_DEFAULT) {
+> +		dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
+> +		return;
+> +	}
+> +
+> +	/* Initialize the dump state struct to be used by rproc_coredump_read 
+> */
+> +	dump_state.rproc = rproc;
+> +	dump_state.header = data;
+> +	init_completion(&dump_state.dump_done);
+> +
+> +	dev_coredumpm(&rproc->dev, NULL, &dump_state, data_size, GFP_KERNEL,
+> +		      rproc_coredump_read, rproc_coredump_free);
+> 
+> -	dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
+> +	/*
+> +	 * Wait until the dump is read and free is called. Data is freed
+> +	 * by devcoredump framework automatically after 5 minutes.
+> +	 */
+> +	wait_for_completion(&dump_state.dump_done);
+>  }
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index eb08139..38d037d 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -435,6 +435,20 @@ enum rproc_crash_type {
+>  };
+> 
+>  /**
+> + * enum rproc_dump_mechanism - Coredump options for core
+> + * @RPROC_COREDUMP_DEFAULT:	Copy dump to separate buffer and carry on 
+> with
+> +				recovery
+> + * @RPROC_COREDUMP_INLINE:	Read segments directly from device memory. 
+> Stall
+> +				recovery until all segments are read
+> + * @RPROC_COREDUMP_DISABLED:	Don't perform any dump
+> + */
+> +enum rproc_dump_mechanism {
+> +	RPROC_COREDUMP_DEFAULT,
+> +	RPROC_COREDUMP_INLINE,
+> +	RPROC_COREDUMP_DISABLED,
+> +};
+> +
+> +/**
+>   * struct rproc_dump_segment - segment info from ELF header
+>   * @node:	list node related to the rproc segment list
+>   * @da:		device address of the segment
+> @@ -466,6 +480,7 @@ struct rproc_dump_segment {
+>   * @dev: virtual device for refcounting and common remoteproc behavior
+>   * @power: refcount of users who need this rproc powered up
+>   * @state: state of the device
+> + * @dump_conf: Currently selected coredump configuration
+>   * @lock: lock which protects concurrent manipulations of the rproc
+>   * @dbg_dir: debugfs directory of this rproc device
+>   * @traces: list of trace buffers
+> @@ -499,6 +514,7 @@ struct rproc {
+>  	struct device dev;
+>  	atomic_t power;
+>  	unsigned int state;
+> +	enum rproc_dump_mechanism dump_conf;
+>  	struct mutex lock;
+>  	struct dentry *dbg_dir;
+>  	struct list_head traces;
 
-diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
-index 665e26f..62bae1a 100644
---- a/drivers/mfd/mt6360-core.c
-+++ b/drivers/mfd/mt6360-core.c
-@@ -210,9 +210,9 @@ static const struct regmap_irq mt6360_pmu_irqs[] =  {
- 
- static int mt6360_pmu_handle_post_irq(void *irq_drv_data)
- {
--	struct mt6360_pmu_data *mpd = irq_drv_data;
-+	struct mt6360_data *data = irq_drv_data;
- 
--	return regmap_update_bits(mpd->regmap,
-+	return regmap_update_bits(data->regmap,
- 		MT6360_PMU_IRQ_SET, MT6360_IRQ_RETRIG, MT6360_IRQ_RETRIG);
- }
- 
-@@ -310,61 +310,61 @@ static const unsigned short mt6360_slave_addr[MT6360_SLAVE_MAX] = {
- 
- static int mt6360_pmu_probe(struct i2c_client *client)
- {
--	struct mt6360_pmu_data *mpd;
-+	struct mt6360_data *data;
- 	unsigned int reg_data;
- 	int i, ret;
- 
--	mpd = devm_kzalloc(&client->dev, sizeof(*mpd), GFP_KERNEL);
--	if (!mpd)
-+	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
- 		return -ENOMEM;
- 
--	mpd->dev = &client->dev;
--	i2c_set_clientdata(client, mpd);
-+	data->dev = &client->dev;
-+	i2c_set_clientdata(client, data);
- 
--	mpd->regmap = devm_regmap_init_i2c(client, &mt6360_pmu_regmap_config);
--	if (IS_ERR(mpd->regmap)) {
-+	data->regmap = devm_regmap_init_i2c(client, &mt6360_pmu_regmap_config);
-+	if (IS_ERR(data->regmap)) {
- 		dev_err(&client->dev, "Failed to register regmap\n");
--		return PTR_ERR(mpd->regmap);
-+		return PTR_ERR(data->regmap);
- 	}
- 
--	ret = regmap_read(mpd->regmap, MT6360_PMU_DEV_INFO, &reg_data);
-+	ret = regmap_read(data->regmap, MT6360_PMU_DEV_INFO, &reg_data);
- 	if (ret) {
- 		dev_err(&client->dev, "Device not found\n");
- 		return ret;
- 	}
- 
--	mpd->chip_rev = reg_data & CHIP_REV_MASK;
--	if (mpd->chip_rev != CHIP_VEN_MT6360) {
-+	data->chip_rev = reg_data & CHIP_REV_MASK;
-+	if (data->chip_rev != CHIP_VEN_MT6360) {
- 		dev_err(&client->dev, "Device not supported\n");
- 		return -ENODEV;
- 	}
- 
--	mt6360_pmu_irq_chip.irq_drv_data = mpd;
--	ret = devm_regmap_add_irq_chip(&client->dev, mpd->regmap, client->irq,
-+	mt6360_pmu_irq_chip.irq_drv_data = data;
-+	ret = devm_regmap_add_irq_chip(&client->dev, data->regmap, client->irq,
- 				       IRQF_TRIGGER_FALLING, 0,
--				       &mt6360_pmu_irq_chip, &mpd->irq_data);
-+				       &mt6360_pmu_irq_chip, &data->irq_data);
- 	if (ret) {
- 		dev_err(&client->dev, "Failed to add Regmap IRQ Chip\n");
- 		return ret;
- 	}
- 
--	mpd->i2c[0] = client;
-+	data->i2c[0] = client;
- 	for (i = 1; i < MT6360_SLAVE_MAX; i++) {
--		mpd->i2c[i] = devm_i2c_new_dummy_device(&client->dev,
-+		data->i2c[i] = devm_i2c_new_dummy_device(&client->dev,
- 							client->adapter,
- 							mt6360_slave_addr[i]);
--		if (IS_ERR(mpd->i2c[i])) {
-+		if (IS_ERR(data->i2c[i])) {
- 			dev_err(&client->dev,
- 				"Failed to get new dummy I2C device for address 0x%x",
- 				mt6360_slave_addr[i]);
--			return PTR_ERR(mpd->i2c[i]);
-+			return PTR_ERR(data->i2c[i]);
- 		}
--		i2c_set_clientdata(mpd->i2c[i], mpd);
-+		i2c_set_clientdata(data->i2c[i], data);
- 	}
- 
- 	ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
- 				   mt6360_devs, ARRAY_SIZE(mt6360_devs), NULL,
--				   0, regmap_irq_get_domain(mpd->irq_data));
-+				   0, regmap_irq_get_domain(data->irq_data));
- 	if (ret) {
- 		dev_err(&client->dev,
- 			"Failed to register subordinate devices\n");
-diff --git a/include/linux/mfd/mt6360.h b/include/linux/mfd/mt6360.h
-index 72edf13..fbe106c 100644
---- a/include/linux/mfd/mt6360.h
-+++ b/include/linux/mfd/mt6360.h
-@@ -21,7 +21,7 @@ enum {
- #define MT6360_LDO_SLAVEID	0x64
- #define MT6360_TCPC_SLAVEID	0x4E
- 
--struct mt6360_pmu_data {
-+struct mt6360_data {
- 	struct i2c_client *i2c[MT6360_SLAVE_MAX];
- 	struct device *dev;
- 	struct regmap *regmap;
 -- 
-2.7.4
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
