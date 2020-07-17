@@ -2,172 +2,136 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780E6C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CBCC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAF020737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:13:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sqo0BbhB"
+	by mail.kernel.org (Postfix) with ESMTP id B78582074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:14:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594973650;
+	bh=uZeYMXCJtLGh6KMN2nFStTzc1fx/WG+R0GSYBiVJ8vQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GR/UtKfi6aQJ1RHowmadtcxisa+hmhwr/YsucNnfrA4dJV23FAvkXqigdAPdshX8z
+	 6850TXK67ECU42CfTL3xMmF04vgtXTOu3i6lCu2mQhGmHevMAg5sAWaBrkbRrtOer7
+	 oDjRrPocKrYEW5ofdX7BcGnZS0r0nsO4q72fbwQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgGQINo (ORCPT
+        id S1728183AbgGQIOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:13:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34690 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726201AbgGQINo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:13:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594973622;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4AhK0Zzm0uakjm5OFnnhauntdAQG4ut12mfNiIODHdo=;
-        b=Sqo0BbhBSmOj9HFvnWn8mIsbNWZdfPhmIooyltBHmZ0fwQLPX7H0BH95W/hAH7/bhhXIh6
-        lLo6+kYv53H1ujz3olCxss0XIAkTSTDzh7hnY+836wQ23a6oNYXflwlb3p+WlA6O+PfCQo
-        PVdJUbjl1PCEWuz34AKwpWCcbL0m1rI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-qDc6bktpNXyY2uOE9se7qg-1; Fri, 17 Jul 2020 04:13:40 -0400
-X-MC-Unique: qDc6bktpNXyY2uOE9se7qg-1
-Received: by mail-wm1-f70.google.com with SMTP id c81so7746657wmd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:13:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4AhK0Zzm0uakjm5OFnnhauntdAQG4ut12mfNiIODHdo=;
-        b=ldbnaNAnDg0GFWd55kwkytirM7Pida1Ft6zYWwtuHiQDioFytVQdGlyD7TiKfVcRSH
-         J3mDFxb6EDXuqZIhReU/0I2jmzt6Ve4sGYKcyPGorNhrxGZr6o4fUB2+uEG9DE4c4jNz
-         H+EH/9rabkQ5PcKFbkT/DFlJyW8AJbPQNT+UyvWZZErNQD0ABqj5HYS9aGoMyheaU/sG
-         syWyLgdpAYo4BMnLjbzSgK01LBTcJz5/ZXfwRciOK7vdYFcCLiO3syCLsQy/M0YEAnUo
-         k3SGGeLQ4Op36m/VPWAJ6HJWtzZWUCVCYMYw4caKoMwUFMZLxRvc/9XYCb70CDbJriUA
-         5dUQ==
-X-Gm-Message-State: AOAM5333jbfEpnSUNQTd3IYEeVIfJeJvP+AfOGPeM5CSzXWeJ0nJFLTE
-        u0BXBAsYrrJJUT7pbBvaZsUwtKBPaCOhu5ZLTGxt9+trhNXI2skq/oJzIxdSSGILnCSpd9YJfS4
-        AnrbA6EpBPVF1v8LyLlnOSRiO
-X-Received: by 2002:a1c:9e4c:: with SMTP id h73mr8623608wme.177.1594973619427;
-        Fri, 17 Jul 2020 01:13:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzeW6RsdiE3kyUT5zs2nMNiDhKPd7zXn+E25Grakr6B0wzn0S3WYa0J8I4e51M3iaPMLfxKUA==
-X-Received: by 2002:a1c:9e4c:: with SMTP id h73mr8623586wme.177.1594973619210;
-        Fri, 17 Jul 2020 01:13:39 -0700 (PDT)
-Received: from steredhat.lan ([5.180.207.22])
-        by smtp.gmail.com with ESMTPSA id a4sm14353571wrg.80.2020.07.17.01.13.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 01:13:38 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 10:13:33 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kees Cook <keescook@chromium.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Fri, 17 Jul 2020 04:14:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbgGQIOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:14:08 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F160A2074B;
+        Fri, 17 Jul 2020 08:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594973648;
+        bh=uZeYMXCJtLGh6KMN2nFStTzc1fx/WG+R0GSYBiVJ8vQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=avNKU2emncZKYMwJ/dNul77zD39/U0uTLyZ5KEKPvA/IsNl45CUvnR34pvDfaqc/9
+         rDuKcYcE8DgYtHjAxBxLjRTGccx/i9V4QgFD/OtqJr2xSidQ9iOHT6hURGra9KKYAD
+         PlBv7DKOnhKXTMsEL/+aaPUAsvLKUr6ORCRezq6E=
+Date:   Fri, 17 Jul 2020 13:44:03 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 1/3] io_uring: use an enumeration for
- io_uring_register(2) opcodes
-Message-ID: <20200717081333.6z6rtwx3jtktwdvp@steredhat.lan>
-References: <20200716124833.93667-1-sgarzare@redhat.com>
- <20200716124833.93667-2-sgarzare@redhat.com>
- <ca242a15-576d-4099-a5f8-85c08985e3ff@gmail.com>
- <a2f109b2-adbf-147d-9423-7a1a4bf99967@kernel.dk>
- <20326d79-fb5a-2480-e52a-e154e056171f@gmail.com>
- <76879432-745d-a5ca-b171-b1391b926ea2@kernel.dk>
- <0357e544-d534-06d2-dc61-1169fc172d20@kernel.dk>
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200717081403.GL82923@vkoul-mobl>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+ <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+ <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+ <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
+ <20200710161445.t6eradkgt4terdr3@mobilestation>
+ <20200715111315.GK34333@vkoul-mobl>
+ <20200715170843.w4rwl7zjwfcr7rg2@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0357e544-d534-06d2-dc61-1169fc172d20@kernel.dk>
+In-Reply-To: <20200715170843.w4rwl7zjwfcr7rg2@mobilestation>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 03:20:53PM -0600, Jens Axboe wrote:
-> On 7/16/20 2:51 PM, Jens Axboe wrote:
-> > On 7/16/20 2:47 PM, Pavel Begunkov wrote:
-> >> On 16/07/2020 23:42, Jens Axboe wrote:
-> >>> On 7/16/20 2:16 PM, Pavel Begunkov wrote:
-> >>>> On 16/07/2020 15:48, Stefano Garzarella wrote:
-> >>>>> The enumeration allows us to keep track of the last
-> >>>>> io_uring_register(2) opcode available.
-> >>>>>
-> >>>>> Behaviour and opcodes names don't change.
-> >>>>>
-> >>>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> >>>>> ---
-> >>>>>  include/uapi/linux/io_uring.h | 27 ++++++++++++++++-----------
-> >>>>>  1 file changed, 16 insertions(+), 11 deletions(-)
-> >>>>>
-> >>>>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-> >>>>> index 7843742b8b74..efc50bd0af34 100644
-> >>>>> --- a/include/uapi/linux/io_uring.h
-> >>>>> +++ b/include/uapi/linux/io_uring.h
-> >>>>> @@ -253,17 +253,22 @@ struct io_uring_params {
-> >>>>>  /*
-> >>>>>   * io_uring_register(2) opcodes and arguments
-> >>>>>   */
-> >>>>> -#define IORING_REGISTER_BUFFERS		0
-> >>>>> -#define IORING_UNREGISTER_BUFFERS	1
-> >>>>> -#define IORING_REGISTER_FILES		2
-> >>>>> -#define IORING_UNREGISTER_FILES		3
-> >>>>> -#define IORING_REGISTER_EVENTFD		4
-> >>>>> -#define IORING_UNREGISTER_EVENTFD	5
-> >>>>> -#define IORING_REGISTER_FILES_UPDATE	6
-> >>>>> -#define IORING_REGISTER_EVENTFD_ASYNC	7
-> >>>>> -#define IORING_REGISTER_PROBE		8
-> >>>>> -#define IORING_REGISTER_PERSONALITY	9
-> >>>>> -#define IORING_UNREGISTER_PERSONALITY	10
-> >>>>> +enum {
-> >>>>> +	IORING_REGISTER_BUFFERS,
-> >>>>> +	IORING_UNREGISTER_BUFFERS,
-> >>>>> +	IORING_REGISTER_FILES,
-> >>>>> +	IORING_UNREGISTER_FILES,
-> >>>>> +	IORING_REGISTER_EVENTFD,
-> >>>>> +	IORING_UNREGISTER_EVENTFD,
-> >>>>> +	IORING_REGISTER_FILES_UPDATE,
-> >>>>> +	IORING_REGISTER_EVENTFD_ASYNC,
-> >>>>> +	IORING_REGISTER_PROBE,
-> >>>>> +	IORING_REGISTER_PERSONALITY,
-> >>>>> +	IORING_UNREGISTER_PERSONALITY,
-> >>>>> +
-> >>>>> +	/* this goes last */
-> >>>>> +	IORING_REGISTER_LAST
-> >>>>> +};
-> >>>>
-> >>>> It breaks userspace API. E.g.
-> >>>>
-> >>>> #ifdef IORING_REGISTER_BUFFERS
-> >>>
-> >>> It can, yes, but we have done that in the past. In this one, for
-> >>
-> >> Ok, if nobody on the userspace side cares, then better to do that
-> >> sooner than later.
+On 15-07-20, 20:08, Serge Semin wrote:
+> On Wed, Jul 15, 2020 at 04:43:15PM +0530, Vinod Koul wrote:
+> > On 10-07-20, 19:14, Serge Semin wrote:
+> > > On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
+> > 
+> > > > Since we should be able to handle longer lists and this is kind of a
+> > > > hint for clients that above this number of nents the list will be broken
+> > > > up to smaller 'bursts', which when traversing could cause latency.
+> > > > 
+> > > > sg_chunk_len might be another candidate.
+> > > 
+> > > Ok. We've got four candidates:
+> > > - max_sg_nents_burst
+> > > - max_sg_burst
+> > > - max_sg_chain
+> > > - sg_chunk_len
+> > > 
+> > > @Vinod, @Andy, what do you think?
+> > 
 > 
-> I actually don't think it's a huge issue. Normally if applications
-> do this, it's because they are using it and need it. Ala:
+> > So IIUC your hw supports single sg and in that you would like to publish
+> > the length of each chunk, is that correct?
 > 
-> #ifndef IORING_REGISTER_SOMETHING
-> #define IORING_REGISTER_SOMETHING	fooval
-> #endif
+> No. My DMA engine does support only a single-entry SG-list, but the new DMA
+> {~~slave~~,channel,device,peripheral,...} capability isn't about the length, but
+> is about the maximum number of SG-list entries a DMA engine is able to
+> automatically/"without software help" walk through and execute. In this thread
+> we are debating about that new capability naming.
 > 
-> and that'll still work just fine, even if an identical enum is there.
+> The name suggested in this patch: max_sg_nents. Peter noted (I mostly agree with
+> him), that it might be ambiguous, since from it (without looking into the
+> dma_slave_caps structure comment) a user might think that it's a maximum number of
+> SG-entries, which can be submitted for the DMA engine execution, while in fact it's
+> about the DMA engine capability of automatic/burst/"without software intervention"
+> SG-list entries walking through. (Such information will be helpful to solve a
+> problem discussed in this mailing thread, and described in the cover-letter to
+> this patchset. We also discussed it with you and Andy in the framework of this
+> patchset many times.)
 > 
+> As an alternative Peter suggested: max_sg_nents_burst. I also think it's better
+> than "max_sg_nents" but for me it seems a bit long. max_sg_burst seems better.
+> There is no need in having the "nents" in the name, since SG-list implies a list,
+> which main parameter (if not to say only parameter) is the number of entries.
+> "burst" is pointing out to the automatic/accelerated/"without software intervention"
+> SG-list entries walking through.
+> 
+> On the second thought suggested by me "max_sg_chain" sounds worse than "max_sg_burst",
+> because it also might be perceived as a parameter limiting the number of SG-list
+> entries is able to be submitted for the DMA engine execution, while in fact it
+> describes another matter.
+> 
+> Regarding "sg_chunk_len". I think it's ambiguous too, since the "chunk
+> length" might be referred to both the entries length and to the sub-SG-list
+> length.
+> 
+> So what do you think? What name is better describing the new DMA capability?
 
-Thank you both for the review!
+How about max_nents_per_sg or max_nents_sg to signify that this implies
+max nents for sg not sg entries. IMO Burst/chain are not better than
+max_sg_nents.
 
-Then if you agree, I'll leave this patch as it is by introducing the enum.
-
-Stefano
-
+-- 
+~Vinod
