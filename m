@@ -2,80 +2,116 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C86DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B70DC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8213B20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4097720739
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:40:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GomICRb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgGQWkF (ORCPT
+        id S1727864AbgGQWkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 18:40:05 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:51194 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgGQWkF (ORCPT
+        Fri, 17 Jul 2020 18:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgGQWkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 18:40:05 -0400
-Received: by mail-il1-f198.google.com with SMTP id l17so6330358ilj.17
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:40:04 -0700 (PDT)
+        Fri, 17 Jul 2020 18:40:13 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E7C0C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:40:13 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id j21so3347129ual.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SZyZ467hIccQl/fLPtGOgJ9GVjmNV0nRkM5JSKZ0eUA=;
+        b=GomICRb5nZ9AfMHvPuoZI9Nbna9nrEcMfyotbsXbKTOwiWbdxkGc31o4K3DmBKnVFs
+         USNTnZSIRmtmhCioWNZiPbRNJC4rBkfzRD+++dw3AYRbKw9mQl2l4jech0vRweiL1/bj
+         ck9javutd1dlNYxF5oD3KtwdU5fnN2jzWtBV8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=bZyN/zZkAna3AuJV7mJCywjPBma23V/L6XGmPytQX3g=;
-        b=ufSF/DEoadiFJmRuAGKQgEbTwBNj0V1AT7bUamaiCLFdGMBLW+M1rIR8/CZ9JAekp2
-         jlmxnzvSXktYRlNPyxMsae4R0+kI/U1XRj1Z2ci/HR8pmON3HdgEJz8eo+7z96EnfWU7
-         MTsnJ2WJ3euzyDwoeMqVVZO5TjU3dT6IC/MLLlM67em/+w5lzHV73fku6Y4PXXlhFPwn
-         IkUovySBRLVMRjP+fhDLvCdJiJ99VZhY2JZ2o7Vys3Kknq9lLba2IdIgsyShqe3Bm2hz
-         WwtGorqxyWGZom6F7lycunGnG3kBfOERBHpGfAQnzIi7YroGHFLxqVGlqspnuSUMZAS0
-         1oIA==
-X-Gm-Message-State: AOAM53213ndztrCcqsnP5KrtaffESKU6q+5UuBCOkXeRSY4XXgfXufko
-        gtWDLlltAxXmM6IC/wgZm0MbuNWUR9cAeRaTt4NXoLDjvAQY
-X-Google-Smtp-Source: ABdhPJxLi7/gPDf4MlcBV9h1ItF5n6fCkgiWG0/+rbnSHUtonUG5WWXjJHmQs62JK8/EaZk4B+A2cmhJTAcbiYpEg6/zYnrU6Ale
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SZyZ467hIccQl/fLPtGOgJ9GVjmNV0nRkM5JSKZ0eUA=;
+        b=oGft5hkADvQBCQhfGBDbVVuMU+ZI72urHg6Ma95HTCE1NNAwa88tkibkZJZgB4mSjE
+         nmhGsJb06CVfMUFtSyJF09VL+YeX3TNru3sghYP6b9BJX9/SIJcjCQv5RuY2BlE/3atE
+         bR+YlV1objQfowqLswn2x11BP39vJkHg29vqHcEtn+Cc0zYKkv7B7rih/HzHnTQM04uj
+         VnJLMYUqIEqVkGVSprTC//vy/ujYHvxTM8FZVn2edfsPo1CFidMOUrE224vltjaItG2e
+         ZV4TRdckKUWKHE71OLzKvkknuWa8jDsXkdkJCWx/B+oM2pZp0kNGbgoN8rzyqbTUyngK
+         61Ug==
+X-Gm-Message-State: AOAM530oS+04jfWUsQaYJj4qVEP6aUOAD58E+uC/3QdeuANc2BQPH8my
+        JWV7DIj3th0z74BCmGEOaDeAKehQu8I=
+X-Google-Smtp-Source: ABdhPJzf8Dd34evaijJ4aeCfVBfIXOu3MH9L0f6vkYn4Xib14ux3kxKRdjoJ6vwv4Tjy2PU4N13u3Q==
+X-Received: by 2002:ab0:5ea5:: with SMTP id y37mr8863910uag.71.1595025611352;
+        Fri, 17 Jul 2020 15:40:11 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id f7sm1194431vso.5.2020.07.17.15.40.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 15:40:10 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id n4so3351365uae.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:40:10 -0700 (PDT)
+X-Received: by 2002:ab0:150c:: with SMTP id o12mr9192504uae.90.1595025609920;
+ Fri, 17 Jul 2020 15:40:09 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:dcf:: with SMTP id m15mr13454918jaj.86.1595025604135;
- Fri, 17 Jul 2020 15:40:04 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 15:40:04 -0700
-In-Reply-To: <000000000000358aec05a9fc8aa8@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008ad07505aaaad631@google.com>
-Subject: Re: general protection fault in khugepaged
-From:   syzbot <syzbot+ed318e8b790ca72c5ad0@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org, william.kucharski@oracle.com,
-        yang.shi@linux.alibaba.com, ziy@nvidia.com
+References: <20200716151943.2167652-1-daniel.thompson@linaro.org> <20200716151943.2167652-4-daniel.thompson@linaro.org>
+In-Reply-To: <20200716151943.2167652-4-daniel.thompson@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 17 Jul 2020 15:39:58 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UBMa4pt7Xg2sKXHdjo6tVaQWBQFtT_aoDJ+Xt1HrPD+Q@mail.gmail.com>
+Message-ID: <CAD=FV=UBMa4pt7Xg2sKXHdjo6tVaQWBQFtT_aoDJ+Xt1HrPD+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] kgdb: Add NOKPROBE labels on the trap handler functions
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Patch Tracking <patches@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
+Hi,
 
-commit ffe945e633b527d5a4577b42cbadec3c7cbcf096
-Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Date:   Wed Jun 3 23:00:09 2020 +0000
+On Thu, Jul 16, 2020 at 8:20 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> Currently kgdb honours the kprobe blocklist but doesn't place its own
+> trap handling code on the list. Add labels to discourage attempting to
+> use kgdb to debug itself.
+>
+> These changes do not make it impossible to provoke recursive trapping
+> since they do not cover all the calls that can be made on kgdb's entry
+> logic. However going much further whilst we are sharing the kprobe
+> blocklist risks reducing the capabilities of kprobe and this would be a
+> bad trade off (especially so given kgdb's users are currently conditioned
+> to avoid recursive traps).
+>
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>  kernel/debug/debug_core.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-    khugepaged: do not stop collapse if less than half PTEs are referenced
+I could just be missing something, but...
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17356c2f100000
-start commit:   e44f65fd xen-netfront: remove redundant assignment to vari..
-git tree:       net-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=14b56c2f100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10b56c2f100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=829871134ca5e230
-dashboard link: https://syzkaller.appspot.com/bug?extid=ed318e8b790ca72c5ad0
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113406a7100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=175597d3100000
-
-Reported-by: syzbot+ed318e8b790ca72c5ad0@syzkaller.appspotmail.com
-Fixes: ffe945e633b5 ("khugepaged: do not stop collapse if less than half PTEs are referenced")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+I understand not adding "NOKPROBE_SYMBOL" to generic kernel functions
+that kgdb happens to call, but I'm not quite sure I understand why all
+of the kdb / kgdb code itself shouldn't be in the blocklist.  I
+certainly don't object to the functions you added to the blocklist, I
+guess I'm must trying to understand why it's a bad idea to add more or
+how you came up with the list of functions that you did.
