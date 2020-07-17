@@ -2,201 +2,123 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B53C43467
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AE0C4346D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58DA020768
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC7D20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgGQHVd (ORCPT
+        id S1728264AbgGQHVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:21:33 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20243 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728089AbgGQHVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:21:10 -0400
-IronPort-SDR: 5Oks0gP7u0kjUYrivccwMrN+vatGLG5XAQTcWw6l/kTWSjX3/A1uMaVa8LXssoeIadcK+CzqpR
- MzpyLb7jTypQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129633012"
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="129633012"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:21:09 -0700
-IronPort-SDR: KjLQUr/O/zFt+sHsQ/7MwuDlQjjZsVVHeQXgHyNbnTTErPyyf40DTH77x+nhCzE8WtAOMPIPf5
- bYF7IWgj7SUg==
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="286734931"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:21:08 -0700
-From:   ira.weiny@intel.com
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH RFC V2 13/17] kmap: Add stray write protection for device pages
-Date:   Fri, 17 Jul 2020 00:20:52 -0700
-Message-Id: <20200717072056.73134-14-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
-In-Reply-To: <20200717072056.73134-1-ira.weiny@intel.com>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
+        Fri, 17 Jul 2020 03:21:44 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:18959 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbgGQHVj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:21:39 -0400
+IronPort-SDR: 7LaXq6ihs9ev2HrxcLAVdfggmpJnNuVWLGB/RpKt09UAWQeAakDX6oTlGIcMOWRSZj+fi1Y+vI
+ GdZ1TLY/hvk0/nvxGUzzzlDoc2Ipp5Xn2KMQjd/6mSCLJDvL4QsZwRGOPDPCBVELvsf7iDq+zY
+ u/Sj1ZDcfDtPovQSNjT7mgvo53GhdNw6t783bOatrca+nE6fHOA+TT0g2emzV+B0OBInO+oJda
+ yWUnon6fNON1SBbdys/Xa+iiwrQ9c4eDoIz6B+NGxuIZXcucmTXUB7WxNk0Qp4JdPuUS5qS6Ul
+ L9I=
+X-IronPort-AV: E=Sophos;i="5.75,362,1589270400"; 
+   d="scan'208";a="51006580"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 16 Jul 2020 23:21:38 -0800
+IronPort-SDR: 30y6cLVJUlFgj1xzSnpRyflWc2zU7F73h3pTMum+dRAQLEKdgW1r3qLL/FOt2E+iyPf8h43COL
+ sLaRq4+gZzTZ7gcZywveVT2tktMtlcwTGaOQcVZV4+Ruqwbx6QA5yimTxNButuuK9ocEx9YIB+
+ HN9vXZ3v8YFqYFVnfKkG5FDIuLaAaoaIsQji2C0kl2QJEA7PX7qevd8XWYvbEvafGwIWC2gc3B
+ bDDqkaKdDCdN4WhluZKAj6KtyWeVqNF38X8FZApqRzLajYUnQ/oItP12D/1al9schiuytX7Xo4
+ aCg=
+Subject: Re: [PATCH v11 00/56] atmel_mxt_ts misc
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     <nick@shmanahar.org>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>,
+        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20200508055656.96389-1-jiada_wang@mentor.com>
+ <20200527064307.GK89269@dtor-ws>
+ <2f7964da-0dca-2d13-3559-28b4582a3278@mentor.com>
+ <80fc7a3e-efd5-fab8-8ba8-8aa011944ab1@mentor.com>
+Message-ID: <c0f24b5e-5fa4-d178-2bc4-c39a1d084aef@mentor.com>
+Date:   Fri, 17 Jul 2020 16:21:32 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <80fc7a3e-efd5-fab8-8ba8-8aa011944ab1@mentor.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+Hello All
 
-Device managed pages may have additional protections.  These protections
-need to be removed prior to valid use by kernel users.
+I am thinking it doesn't make sense to keep the series
+with such a big chunk of patches,
+I will divide the series into several small series
 
-Check for special treatment of device managed pages in kmap and take
-action if needed.  We use kmap as an interface for generic kernel code
-because under normal circumstances it would be a bug for general kernel
-code to not use kmap prior to accessing kernel memory.  Therefore, this
-should allow any valid kernel users to seamlessly use these pages
-without issues.
+Thanks,
+Jiada
 
-Because of the critical nature of kmap it must be pointed out that the
-over head on regular DRAM is carefully implemented to be as fast as
-possible.  Furthermore the underlying MSR write required on device pages
-when protected is better than a normal MSR write.
-
-Specifically, WRMSR(MSR_IA32_PKRS) is not serializing but still
-maintains ordering properties similar to WRPKRU.  The current SDM
-section on PKRS needs updating but should be the same as that of WRPKRU.
-So to quote from the WRPKRU text:
-
-	WRPKRU will never execute speculatively. Memory accesses
-	affected by PKRU register will not execute (even speculatively)
-	until all prior executions of WRPKRU have completed execution
-	and updated the PKRU register.
-
-Still this will make accessing pmem more expensive from the kernel but
-the overhead is minimized and many pmem users access this memory through
-user page mappings which are not affected at all.
-
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- include/linux/highmem.h | 32 +++++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index d6e82e3de027..7f809d8d5a94 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -8,6 +8,7 @@
- #include <linux/mm.h>
- #include <linux/uaccess.h>
- #include <linux/hardirq.h>
-+#include <linux/memremap.h>
- 
- #include <asm/cacheflush.h>
- 
-@@ -31,6 +32,20 @@ static inline void invalidate_kernel_vmap_range(void *vaddr, int size)
- 
- #include <asm/kmap_types.h>
- 
-+static inline void enable_access(struct page *page)
-+{
-+	if (!page_is_access_protected(page))
-+		return;
-+	dev_access_enable();
-+}
-+
-+static inline void disable_access(struct page *page)
-+{
-+	if (!page_is_access_protected(page))
-+		return;
-+	dev_access_disable();
-+}
-+
- #ifdef CONFIG_HIGHMEM
- extern void *kmap_atomic_high_prot(struct page *page, pgprot_t prot);
- extern void kunmap_atomic_high(void *kvaddr);
-@@ -55,6 +70,11 @@ static inline void *kmap(struct page *page)
- 	else
- 		addr = kmap_high(page);
- 	kmap_flush_tlb((unsigned long)addr);
-+	/*
-+	 * Even non-highmem pages may have additional access protections which
-+	 * need to be checked and potentially enabled.
-+	 */
-+	enable_access(page);
- 	return addr;
- }
- 
-@@ -63,6 +83,11 @@ void kunmap_high(struct page *page);
- static inline void kunmap(struct page *page)
- {
- 	might_sleep();
-+	/*
-+	 * Even non-highmem pages may have additional access protections which
-+	 * need to be checked and potentially disabled.
-+	 */
-+	disable_access(page);
- 	if (!PageHighMem(page))
- 		return;
- 	kunmap_high(page);
-@@ -85,6 +110,7 @@ static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
- {
- 	preempt_disable();
- 	pagefault_disable();
-+	enable_access(page);
- 	if (!PageHighMem(page))
- 		return page_address(page);
- 	return kmap_atomic_high_prot(page, prot);
-@@ -137,6 +163,7 @@ static inline unsigned long totalhigh_pages(void) { return 0UL; }
- static inline void *kmap(struct page *page)
- {
- 	might_sleep();
-+	enable_access(page);
- 	return page_address(page);
- }
- 
-@@ -146,6 +173,7 @@ static inline void kunmap_high(struct page *page)
- 
- static inline void kunmap(struct page *page)
- {
-+	disable_access(page);
- #ifdef ARCH_HAS_FLUSH_ON_KUNMAP
- 	kunmap_flush_on_unmap(page_address(page));
- #endif
-@@ -155,6 +183,7 @@ static inline void *kmap_atomic(struct page *page)
- {
- 	preempt_disable();
- 	pagefault_disable();
-+	enable_access(page);
- 	return page_address(page);
- }
- #define kmap_atomic_prot(page, prot)	kmap_atomic(page)
-@@ -216,7 +245,8 @@ static inline void kmap_atomic_idx_pop(void)
- #define kunmap_atomic(addr)                                     \
- do {                                                            \
- 	BUILD_BUG_ON(__same_type((addr), struct page *));       \
--	kunmap_atomic_high(addr);                                  \
-+	disable_access(kmap_to_page(addr));                     \
-+	kunmap_atomic_high(addr);                               \
- 	pagefault_enable();                                     \
- 	preempt_enable();                                       \
- } while (0)
--- 
-2.28.0.rc0.12.gb6a658bd00c9
-
+On 2020/07/08 22:05, Wang, Jiada wrote:
+> Hello Dmitry
+> 
+> I am working on refining this series,
+> regarding your comment about drop changes related to
+> upload firmware and config during boot.
+> 
+> I found currently only config is uploaded during every boot.
+> but firmware is only uploaded when userspace asks to do so via
+> sysfs interface.
+> 
+> Could you help to confirm if this is the case?
+> 
+> Thanks,
+> Jiada
+> 
+> On 2020/06/25 22:50, Wang, Jiada wrote:
+>> Hello Dmitry
+>>
+>> sorry for the delay,
+>>
+>> On 2020/05/27 15:43, Dmitry Torokhov wrote:
+>>> Hi Jiada,
+>>>
+>>> On Thu, May 07, 2020 at 10:56:00PM -0700, Jiada Wang wrote:
+>>>> This patch-set forward ports Nick Dyer's work in ndyer/linux github
+>>>> repository as long as some other features and fixes
+>>>
+>>> Sorry for ignoring the series for quite a while. I guess my biggest
+>>> issue with the series is that quite a bit of patches are trying to
+>>> handle the fallout from a very unfortunate design decision in the
+>>> driver: the fact that it attempts to automatically upload firmware and
+>>> config on every boot/probe. This design was done at my urging because I
+>>> did not have access to the technical documentation and did not realize
+>>> that the controller has non-volatile memory for both firmware and
+>>> configuration. We should only attempt to automatically load firmware
+>>> where device does not have non-volatile memory and is unable function
+>>> otherwise, in all other cases we better leave it to userspace to decide
+>>> whether to execute firmware update and when. The kernel should only
+>>> provide facilities so that userspace can initiate firmware update. This
+>>> design has worked well for Chrome OS for many years (it used Atmel
+>>> controllers in several products), and I would like to bring it to the
+>>> mainline.
+>>
+>> I agree with you, I will review the patch-set,
+>> and only pick these not related to firmware/cfg upload
+>>
+>> Thanks,
+>> jiada
+>>>
+>>> Thanks.
+>>>
