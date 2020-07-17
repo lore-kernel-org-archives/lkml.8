@@ -2,157 +2,208 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8080DC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37275C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 602272064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:33:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nNBnvZg9"
+	by mail.kernel.org (Postfix) with ESMTP id ECF2020768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595014502;
+	bh=lt93wsvY+lWqN5f0gfzdD/KXEx7blZ4ENI76shs8i5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M/mA5pMEhrt4dryAKEe19IptLndygP6rsIPHWE3Menn/9fnuTOwQGO7gZdYM9AGaF
+	 LT1tbQWe4xoby1JxJbF5xDDGo11Is6jn100cxBPSXoYu+WADJd1KFDv30yNXPqEq0p
+	 Z26d6fOrrSd/FgLkPnoTLz9v4xBlgGoTSCcX6Gmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgGQTdg (ORCPT
+        id S1728511AbgGQTfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728328AbgGQTdf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:33:35 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4354EC0619D2;
-        Fri, 17 Jul 2020 12:33:35 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so7156321pgb.6;
-        Fri, 17 Jul 2020 12:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=duL6IX1llb3XdntaTNWCnSA0z2uW92ABC9f/xeUasgw=;
-        b=nNBnvZg9rkU+2ervHWthLL2Xa2nApycF/1iDBGJLJL7Bhtc9N9lEdd1nynWg2Blqhv
-         f+OpzSmXl9D5brxNRY0i1vucEyFVdAifMOXxiN+H8NEgH93aESGHRSzH0tXgJj72QQa9
-         tsBiNJbRFsmUdz1Gdhpq4EvhODcQlhnmqJzelsgoPekiQyqmICqJ89+IWVlYCtU91XZA
-         jpMzhbsGuCxlKk36MBYu1V3Vqddc4twP2rYKIdfd0QR8wek0M3Wx1KMn8Q7kVH61XnNh
-         NnzxS1DadOIjOySd6JDjhZ62ruyLM8JN2+jL40eh7iHXB7Fth8g0nq4tEczjlrdnVfPw
-         K7mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=duL6IX1llb3XdntaTNWCnSA0z2uW92ABC9f/xeUasgw=;
-        b=Yxum07UDkjDX4YFIV/yi5OJWKDMfxqKVRhjVFHY49FX7Inp6pn0IxRjyNKXTxzmbiE
-         K91x4N84JrHAHIJeWK9v7HEGKstvi80cDYckdcjtkGzp7fjq0aaHeTuFLjqhQW5FPwnK
-         GKauzjrksj0fVG3THbM+2WheQjjAB6WzpPbbcVgT6QsBowKUHKfoSzpVC7QLbdvlRuCf
-         C48boHgraIKQoAuE9dUJTjcjlgWdCPds12M0mkgLT04qPjdZqg40xo5vD4PtU8CEOLwX
-         6BorGe+UzmVwiveBInxEXqYKUqffSAFGVAaDce32HvcVFi3Y0NWWo1Zdol+X2Qlnff7E
-         lwfQ==
-X-Gm-Message-State: AOAM531dYzc6ftBjMsI35P7wctXiHXOIXSs3Z6xDIoF66KxTgfB++71G
-        8NMzmTkc/8/3NWM2XAE0/CE=
-X-Google-Smtp-Source: ABdhPJxZKtfNREViNM/oa5hJ7AVHGD5KLOnwojnzT8F309zYRGCg/4KYDHJ+3N4SQdAqIau78ZZEPA==
-X-Received: by 2002:a65:67d9:: with SMTP id b25mr10126669pgs.311.1595014414580;
-        Fri, 17 Jul 2020 12:33:34 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p12sm8753495pgk.40.2020.07.17.12.33.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 12:33:33 -0700 (PDT)
-Subject: Re: [PATCH][next] watchdog: scx200_wdt: Use fallthrough
- pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jim Cromie <jim.cromie@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-References: <20200717164059.GA26947@embeddedor>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <3f95aa68-cd5b-2942-5eed-c29494ae8068@roeck-us.net>
-Date:   Fri, 17 Jul 2020 12:33:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 15:35:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727999AbgGQTfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 15:35:00 -0400
+Received: from quaco.ghostprotocols.net (unknown [177.158.142.153])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F21C2064C;
+        Fri, 17 Jul 2020 19:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595014499;
+        bh=lt93wsvY+lWqN5f0gfzdD/KXEx7blZ4ENI76shs8i5Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dtlMSoVc1bR0GEhpjnuCygyo9SPJl6quJq6k4uxFp6YjHZ0hyuX15ZXRM/Ess5iV9
+         IAqpg2rGdGBWXXMpdYpWxupfCEcNAovC/XT8IWWrBG61YY3NPLSgd6P8zTxGFk2YWE
+         zR40hW2RwfVubsPf/5uZb5CjcCFzFu0Kpvu03Rj8=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BE80D40482; Fri, 17 Jul 2020 16:34:55 -0300 (-03)
+Date:   Fri, 17 Jul 2020 16:34:55 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/17] perf ftrace: add option -t/--tid to filter by
+ thread id
+Message-ID: <20200717193455.GD77866@kernel.org>
+References: <20200711124035.6513-1-changbin.du@gmail.com>
+ <20200711124035.6513-4-changbin.du@gmail.com>
+ <20200716153630.GD374956@kernel.org>
+ <20200717132650.i32oovllal22b35i@mail.google.com>
+ <20200717130124.54e85349@oasis.local.home>
+ <20200717174053.GE712240@kernel.org>
+ <20200717135351.5fb1ce95@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20200717164059.GA26947@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717135351.5fb1ce95@oasis.local.home>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/20 9:40 AM, Gustavo A. R. Silva wrote:
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1].
-> 
-> [1] https://www.kernel.org/doc/html/v5.7-rc7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Em Fri, Jul 17, 2020 at 01:53:51PM -0400, Steven Rostedt escreveu:
+> On Fri, 17 Jul 2020 14:40:53 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+ 
+> > Say you use:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> > ^C[root@ssdandy ~]# cyclictest --smp -um -p95
+> > # /dev/cpu_dma_latency set to 0us
+> > policy: fifo: loadavg: 0.05 0.03 0.06 2/409 29072
 
-> ---
->  drivers/watchdog/scx200_wdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/scx200_wdt.c b/drivers/watchdog/scx200_wdt.c
-> index c94098acb78f..7b5e18323f3f 100644
-> --- a/drivers/watchdog/scx200_wdt.c
-> +++ b/drivers/watchdog/scx200_wdt.c
-> @@ -186,7 +186,7 @@ static long scx200_wdt_ioctl(struct file *file, unsigned int cmd,
->  		margin = new_margin;
->  		scx200_wdt_update_margin();
->  		scx200_wdt_ping();
-> -		/* Fall through */
-> +		fallthrough;
->  	case WDIOC_GETTIMEOUT:
->  		if (put_user(margin, p))
->  			return -EFAULT;
-> 
+> > T: 0 (29065) P:95 I:1000 C:    518 Min:      2 Act:    2 Avg:    2 Max:       6
+> > T: 1 (29066) P:95 I:1500 C:    343 Min:      2 Act:    2 Avg:    2 Max:       5
+> > T: 2 (29067) P:95 I:2000 C:    256 Min:      2 Act:    2 Avg:    2 Max:       7
+> > T: 3 (29068) P:95 I:2500 C:    203 Min:      2 Act:    2 Avg:    2 Max:       5
+> > T: 4 (29069) P:95 I:3000 C:    168 Min:      2 Act:    2 Avg:    3 Max:       6
+> > T: 5 (29070) P:95 I:3500 C:    143 Min:      2 Act:    2 Avg:    2 Max:       6
+> > T: 6 (29071) P:95 I:4000 C:    124 Min:      2 Act:    2 Avg:    2 Max:       7
+> > T: 7 (29072) P:95 I:4500 C:    110 Min:      2 Act:    2 Avg:    2 Max:
 
+> > Then we do:
+
+> > # pidof cyclictest
+> > 29064
+> > #
+
+> > If we use:
+
+> > [root@ssdandy ~]# perf record --pid 29064
+> > ^C[ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.052 MB perf.data (866 samples) ]
+
+> > [root@ssdandy ~]# perf report --task
+> > #      pid      tid     ppid  comm
+> >          0        0       -1 |swapper
+> >      29064    29064       -1 |cyclictest
+> >      29064    29065       -1 |cyclictest
+> >      29064    29066       -1 |cyclictest
+> >      29064    29067       -1 |cyclictest
+> >      29064    29068       -1 |cyclictest
+> >      29064    29069       -1 |cyclictest
+> >      29064    29070       -1 |cyclictest
+> >      29064    29071       -1 |cyclictest
+> >      29064    29072       -1 |cyclictest
+> > [root@ssdandy ~]#
+
+> "ftrace" is inside the kernel. But you could specify all those PIDs in
+> the set_ftrace_pid and set_event_pid files, and they will be traced. If
+> you want to trace the children of those PIDs, you would need to set the
+> options function function-fork and event-fork respectively. And then
+> any time a process with a pid in the set_ftrace_pid or set_event_pid
+> file forks, its child will also be added to that file and it too will
+> be traced. If the fork options are set, then when a task exits, its pid
+> will be removed from the file.
+
+>  echo 1 > options/function-fork
+>  echo 1 > options/event-fork
+
+cool, so its possible to have the same sort of behaviour one expects
+using --pid or --tid and --inherit with perf record/trace/top/etc
+
+Its just some confusion about what perf understands by --pid and --tid
+and the jargon used by ftrace, we can make 'perf ftrace' use the knobs
+you mentioned and achieve the expected results as with other perf
+subcommands, good.
+ 
+> > If we are interested only on the thread running on CPU3 we can do:
+> > 
+> > [root@ssdandy ~]# perf report --task
+> > #      pid      tid     ppid  comm
+> >          0        0       -1 |swapper
+> >      29064    29064       -1 |cyclictest
+> >      29064    29068       -1 |cyclictest
+> > [root@ssdandy ~]#
+
+> > The first 29064 is just to have info on who created 29068, i.e.:
+
+> > Its just the synthesized info for 29068 creator:
+
+> > [root@ssdandy ~]# perf report -D | grep -w 29064/29064
+> > 0 0x4690 [0x30]: PERF_RECORD_COMM: cyclictest:29064/29064
+> > 0 0x46c0 [0x70]: PERF_RECORD_MMAP2 29064/29064: [0x400000(0xa000) @ 0 fd:00 136246288 0]: r-xp /usr/bin/cyclictest
+> > 0 0x4730 [0x80]: PERF_RECORD_MMAP2 29064/29064: [0x7f990f505000(0x15000) @ 0 fd:00 201479398 0]: r-xp /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+> > 0 0x47b0 [0x70]: PERF_RECORD_MMAP2 29064/29064: [0x7f990f71b000(0x1c3000) @ 0 fd:00 201334455 0]: r-xp /usr/lib64/libc-2.17.so
+> > 0 0x4820 [0x78]: PERF_RECORD_MMAP2 29064/29064: [0x7f990fae9000(0xa000) @ 0 fd:00 204604380 0]: r-xp /usr/lib64/libnuma.so.1.0.0
+> > 0 0x4898 [0x78]: PERF_RECORD_MMAP2 29064/29064: [0x7f990fcf5000(0x17000) @ 0 fd:00 201335636 0]: r-xp /usr/lib64/libpthread-2.17.so
+> > 0 0x4910 [0x78]: PERF_RECORD_MMAP2 29064/29064: [0x7f990ff11000(0x7000) @ 0 fd:00 201335640 0]: r-xp /usr/lib64/librt-2.17.so
+> > 0 0x4988 [0x70]: PERF_RECORD_MMAP2 29064/29064: [0x7f9910119000(0x22000) @ 0 fd:00 203595299 0]: r-xp /usr/lib64/ld-2.17.so
+> > 0 0x49f8 [0x60]: PERF_RECORD_MMAP2 29064/29064: [0x7fff0b52d000(0x2000) @ 0 00:00 0 0]: r-xp [vdso]
+> > 0 0x4a58 [0x68]: PERF_RECORD_MMAP2 29064/29064: [0xffffffffff600000(0x1000) @ 0 00:00 0 0]: r-xp [vsyscall]
+> > [root@ssdandy ~]#
+
+> > No PERF_RECORD_SAMPLEs.
+
+> > Those are only for:
+
+> > [root@ssdandy ~]# perf report -D | grep PERF_RECORD_SAMPLE | head -5
+> > 147224656598815 0x4ac0 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 1 addr: 0
+> > 147224656606270 0x4ae8 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 1 addr: 0
+> > 147224656611284 0x4b10 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 5 addr: 0
+> > 147224656616225 0x4b38 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 35 addr: 0
+> > 147224656621152 0x4b60 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 252 addr: 0
+> > [root@ssdandy ~]#
+
+> > [root@ssdandy ~]# perf report -D | grep PERF_RECORD_SAMPLE | cut -d: -f3 | sort -u
+> >  29064/29068
+ 
+> The above can somewhat be done in trace-cmd, but not fully. But that's
+> all userspace commands, nothing with the kernel.
+ 
+> > [root@ssdandy ~]#
+
+> > Is there a way in ftrace to ask for a pid and its children? Pre-existing
+> > and and new ones the --pid specified will create after we start
+> > monitoring?
+ 
+> As described above, yes. :-)
+
+Changbin, you can take from here :-)
+
+And to reiterate, for me the value of 'perf ftrace' is to allow people
+used to perf to be able to switch to ftrace quickly, just changing:
+
+   perf record/top/stat/trace/report/script/etc --pid 1234
+
+by:
+
+   perf ftrace --pid 1234
+
+And have the tracefs ftrace knobs set up to have what is expected in
+terms of targets to trace as the other perf tools.
+
+And not just --pid and --tid, but --cgroup, --cpu, etc.
+
+i.e., 'perf ftrace' being _a_ front-end aplication to ftrace.
+
+:-)
+
+- Arnaldo
