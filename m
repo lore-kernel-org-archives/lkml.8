@@ -7,70 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C14C433FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8312AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88EC8207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0B720775
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J3pv3dEp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wQ7Ugx06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgGQQ4Z (ORCPT
+        id S1728054AbgGQQ4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38568 "EHLO
+        Fri, 17 Jul 2020 12:56:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727788AbgGQQ4Q (ORCPT
+        with ESMTP id S1727982AbgGQQ4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:56:16 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECBCC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:15 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o2so18257492wmh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:15 -0700 (PDT)
+        Fri, 17 Jul 2020 12:56:31 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E481C0619D4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:30 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id s10so11836123wrw.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=plt40HpdQkbHvQwXOxo5if7eJzPHGlolB+ggPBJMqPY=;
-        b=J3pv3dEpGgwSpIhA8EtE+KYVOjgrt0YdOk9dunGzbdUkQbLEYxYoGZMXA/1+5Dsf6J
-         LAnr+hUnpEB7AeU8OqxnfF26WEuXm4lWDRmDeoL36lGILsADFMR1IdvzckJY3SYYlldF
-         mibf5B2agpVngiFAxjk+7s7m4/KAg4HlPudlDNLfPq99WLoEt87yffqOweAlSfAS4Lur
-         2FXPzVUcW/EXE7IGVR8sfgl4V7kWJPQDfJfT/YdlIKr2Hc744g9gwCSIJhZqkogyavXZ
-         E2HzHQB5DFaRVAv3VkczC5FPPAZ0IFvDeBTdDxXn+EMXhCNSx8CwhmhfIpZvHttn0fuI
-         m+cw==
+        bh=tTJcvgjzl2WbUv1DoWCwg8M9V9xkPx+Mjqd/3WwERQw=;
+        b=wQ7Ugx06tN6cTgqiNlaXBffnekPJRqU00QjgzCQhxWIuL8gije7a+9CvJopiZdwZ42
+         xmMMHVYjRR60uIgrUXKgsDqI1foEG7CnSP7PS9zLvjjojE/rjZOpW8zzjbcaij+tlV8x
+         T0+OM7uBOO5sfstYeewTYjBpnRLiovsAJX2rfupkih7IJ3CQ2attrMSvO36KpUBPS/6T
+         BieP8fbRrmubmFrQ8inIjB8jD3eMRxeCinYdPucssXC+TdUu7xCR6ZHXdWir6gZ6hgvG
+         MQOacYTHPIh60MZnd0vTVCNrG22ZZvv7f9EdTv4NCCJ/VRlqPjNZPWqESJbKG5FVFZc7
+         0tGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=plt40HpdQkbHvQwXOxo5if7eJzPHGlolB+ggPBJMqPY=;
-        b=PLl1fIZjc2OE5NXOnSheXVNDUn2tLOw8PltNcy7/Pr947dpHPkk977eYpofnARFGVz
-         O/YMsxHC1bT1ez1hE63oyIG4FGw41dWZ4pDNJTmPE82AxfdwEP1Ai4ka3KESvuxQXYLv
-         XPe6UtqqPbSlZvkUm5dkZjrS/WLiMWL/PB4BAUds4miAzRn6lxWgq253b+0aNRPXGnzL
-         QSiM7ofbEDVU/cGaRFFQQKQpm0Qf8Fbi8UeAUpfnpbLX6zJAggFqDX3RIRHqUpFmmBCy
-         sgxzqH51OlTb6nIsAOZ0YMWLzTMDpWRfUGAkDxNzozoWEPNSGExgue/Nxz0ST1AJZ7hQ
-         sZJg==
-X-Gm-Message-State: AOAM533XxYEhd/r0Jb5WZbxivP/4OZtoTl57jZ9mRhfKyE4JfBnbWhFM
-        5u3DGKJH11DsLw/33g4VJqXMMg==
-X-Google-Smtp-Source: ABdhPJyP6B7HseRg5kS7ZkPAzot7yMGjQw7JXKLcdP34P/c6n3iGcQGWvUN176x3H3wgk3Zx9jh1xQ==
-X-Received: by 2002:a1c:8117:: with SMTP id c23mr9735654wmd.157.1595004974509;
-        Fri, 17 Jul 2020 09:56:14 -0700 (PDT)
+        bh=tTJcvgjzl2WbUv1DoWCwg8M9V9xkPx+Mjqd/3WwERQw=;
+        b=C6tBVJ08g+lzlzlyk8esugJOfIU07BKgGdcVBvK2msEMW+qS0t5r5kU+s2DxKKJL4U
+         Cu1ZmFN2ZoOXKzcQI163bo8ux31b3qTcnlDmd8rifuFHfkdbF6Xqgf0+J96bzcPPAh7T
+         VnHjKl0C1h+v+1tKHqZt+tKmhBubWuNgmJEANauewzWRmltJv6JuoCilE17duqYFqMSx
+         KAkFICrcvtSyTuuXYlvxPsgxCTa76wqSEQXNtrtLL07rMlPQT3qKpLlFnSsWZIbGzPBE
+         fk86YHxSas63HwuyYExnzFQNt+i1pt1L3RxXxz5jj/lN+lHAaF/FIbgvzlxeNBBONWQ2
+         XWsA==
+X-Gm-Message-State: AOAM531aSbQ/Ka8P2A6PYtfJq+ijIKiGUxhwl37fuU0M1FSlh4/f0Iy5
+        gqrRXH3vMW4DdM1W+XjwqEfSiw==
+X-Google-Smtp-Source: ABdhPJynhOgEH/VlqaCMSOVSk5ppB3HKEr8nqE5CqXXyCcH8EMQR2+Bp2CW+mJfmtbUrFUJezl8plA==
+X-Received: by 2002:adf:e50a:: with SMTP id j10mr12019425wrm.71.1595004989278;
+        Fri, 17 Jul 2020 09:56:29 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.13
+        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 09:56:13 -0700 (PDT)
+        Fri, 17 Jul 2020 09:56:28 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 14/30] iio: adc: at91-sama5d2_adc: Struct kerneldoc titles need to start with 'struct '
-Date:   Fri, 17 Jul 2020 17:55:22 +0100
-Message-Id: <20200717165538.3275050-15-lee.jones@linaro.org>
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+Subject: [PATCH 28/30] iio: imu: st_lsm6dsx: st_lsm6dsx_shub: Demote obvious misuse of kerneldoc to standard comment blocks
+Date:   Fri, 17 Jul 2020 17:55:36 +0100
+Message-Id: <20200717165538.3275050-29-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717165538.3275050-1-lee.jones@linaro.org>
 References: <20200717165538.3275050-1-lee.jones@linaro.org>
@@ -81,42 +78,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+No attempt has been made to document any of the demoted functions here.
+
 Fixes the following W=1 kernel build warning(s):
 
- drivers/iio/adc/at91-sama5d2_adc.c:360: warning: cannot understand function prototype: 'struct at91_adc_dma '
- drivers/iio/adc/at91-sama5d2_adc.c:379: warning: cannot understand function prototype: 'struct at91_adc_touch '
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:174: warning: Function parameter or member 'hw' not described in 'st_lsm6dsx_shub_read_output'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:174: warning: Function parameter or member 'data' not described in 'st_lsm6dsx_shub_read_output'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:174: warning: Function parameter or member 'len' not described in 'st_lsm6dsx_shub_read_output'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:205: warning: Function parameter or member 'hw' not described in 'st_lsm6dsx_shub_write_reg'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:205: warning: Function parameter or member 'addr' not described in 'st_lsm6dsx_shub_write_reg'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:205: warning: Function parameter or member 'data' not described in 'st_lsm6dsx_shub_write_reg'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:205: warning: Function parameter or member 'len' not described in 'st_lsm6dsx_shub_write_reg'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:285: warning: Function parameter or member 'sensor' not described in 'st_lsm6dsx_shub_read'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:285: warning: Function parameter or member 'addr' not described in 'st_lsm6dsx_shub_read'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:285: warning: Function parameter or member 'data' not described in 'st_lsm6dsx_shub_read'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:285: warning: Function parameter or member 'len' not described in 'st_lsm6dsx_shub_read'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:335: warning: Function parameter or member 'sensor' not described in 'st_lsm6dsx_shub_write'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:335: warning: Function parameter or member 'addr' not described in 'st_lsm6dsx_shub_write'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:335: warning: Function parameter or member 'data' not described in 'st_lsm6dsx_shub_write'
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:335: warning: Function parameter or member 'len' not described in 'st_lsm6dsx_shub_write'
 
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: Eugen Hristev <eugen.hristev@microchip.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/iio/adc/at91-sama5d2_adc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-index 9abbbdcc74200..c7fe749419b28 100644
---- a/drivers/iio/adc/at91-sama5d2_adc.c
-+++ b/drivers/iio/adc/at91-sama5d2_adc.c
-@@ -347,7 +347,7 @@ struct at91_adc_trigger {
- };
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
+index c1f83fe0d8dad..9a14dde4795da 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
+@@ -163,7 +163,7 @@ static void st_lsm6dsx_shub_wait_complete(struct st_lsm6dsx_hw *hw)
+ 	msleep((2000000U / odr) + 1);
+ }
  
- /**
-- * at91_adc_dma - at91-sama5d2 dma information struct
-+ * struct at91_adc_dma - at91-sama5d2 dma information struct
-  * @dma_chan:		the dma channel acquired
-  * @rx_buf:		dma coherent allocated area
-  * @rx_dma_buf:		dma handler for the buffer
-@@ -369,7 +369,7 @@ struct at91_adc_dma {
- };
+-/**
++/*
+  * st_lsm6dsx_shub_read_output - read i2c controller register
+  *
+  * Read st_lsm6dsx i2c controller register
+@@ -195,7 +195,7 @@ st_lsm6dsx_shub_read_output(struct st_lsm6dsx_hw *hw, u8 *data,
+ 	return err;
+ }
  
- /**
-- * at91_adc_touch - at91-sama5d2 touchscreen information struct
-+ * struct at91_adc_touch - at91-sama5d2 touchscreen information struct
-  * @sample_period_val:		the value for periodic trigger interval
-  * @touching:			is the pen touching the screen or not
-  * @x_pos:			temporary placeholder for pressure computation
+-/**
++/*
+  * st_lsm6dsx_shub_write_reg - write i2c controller register
+  *
+  * Write st_lsm6dsx i2c controller register
+@@ -273,7 +273,7 @@ static int st_lsm6dsx_shub_master_enable(struct st_lsm6dsx_sensor *sensor,
+ 	return err;
+ }
+ 
+-/**
++/*
+  * st_lsm6dsx_shub_read - read data from slave device register
+  *
+  * Read data from slave device register. SLV0 is used for
+@@ -323,7 +323,7 @@ st_lsm6dsx_shub_read(struct st_lsm6dsx_sensor *sensor, u8 addr,
+ 					 sizeof(config));
+ }
+ 
+-/**
++/*
+  * st_lsm6dsx_shub_write - write data to slave device register
+  *
+  * Write data from slave device register. SLV0 is used for
 -- 
 2.25.1
 
