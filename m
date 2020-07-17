@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB63C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3D320734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BD520734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:05:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgGQHIb (ORCPT
+        id S1727907AbgGQHFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:08:31 -0400
-Received: from mga02.intel.com ([134.134.136.20]:36926 "EHLO mga02.intel.com"
+        Fri, 17 Jul 2020 03:05:48 -0400
+Received: from mga02.intel.com ([134.134.136.20]:36603 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbgGQHIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:08:30 -0400
-IronPort-SDR: yIc4xkx85TF5KR0K8DfLBF7tNl6w+IUcoFOJ9FDmDzB887CdC0CGWJkVmmPWYbhC6uk7cvlBRM
- f8LqQbfiim7Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="137664825"
+        id S1726113AbgGQHFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:05:48 -0400
+IronPort-SDR: 5rcFcauwoO+TQbu5IaXL+f2Cq/ZsgLPmceJxxvbHLv1o7Yq9nRSZXKdHJorStNBmmN8ombjD/I
+ Kdx7wTibXaUA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="137664578"
 X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="137664825"
+   d="scan'208";a="137664578"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:08:28 -0700
-IronPort-SDR: fhOBdzG86+gARNolwMZFaSNvO6ChWtQP6LEbbUWndAkZevRCJs73gP8ROphpT7NooCtfPZwhvq
- IDpeyNosBRNQ==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:05:45 -0700
+IronPort-SDR: VEVYSUN4O4AxSelQYtT+wWAMNndEZSUJ9TZmgCIbu/BHoae6uDj0FBr5MfWvIKThJCpa5+//qS
+ q4tfqxt8uHAQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="318687860"
+   d="scan'208";a="318687242"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Jul 2020 00:08:28 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 17 Jul 2020 00:05:45 -0700
 Received: from [10.249.224.34] (abudanko-mobl.ccr.corp.intel.com [10.249.224.34])
-        by linux.intel.com (Postfix) with ESMTP id A029058066D;
-        Fri, 17 Jul 2020 00:08:25 -0700 (PDT)
-Subject: [PATCH v12 15/15] perf record: introduce --control fd:ctl-fd[,ack-fd]
+        by linux.intel.com (Postfix) with ESMTP id ACB25580100;
+        Fri, 17 Jul 2020 00:05:42 -0700 (PDT)
+Subject: [PATCH v12 12/15] perf stat: introduce --control fd:ctl-fd[,ack-fd]
  options
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -51,8 +51,8 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <8dc01e1a-3a80-3f67-5385-4bc7112b0dd3@linux.intel.com>
-Date:   Fri, 17 Jul 2020 10:08:23 +0300
+Message-ID: <feabd5cf-0155-fb0a-4587-c71571f2d517@linux.intel.com>
+Date:   Fri, 17 Jul 2020 10:05:41 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
@@ -67,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 Introduce --control fd:ctl-fd[,ack-fd] options to pass open file
-descriptors numbers from command line. Extend perf-record.txt file
+descriptors numbers from command line. Extend perf-stat.txt file
 with --control fd:ctl-fd[,ack-fd] options description. Document
 possible usage model introduced by --control fd:ctl-fd[,ack-fd]
 options by providing example bash shell script.
@@ -76,18 +76,18 @@ Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Documentation/perf-record.txt | 39 ++++++++++++++++++++++++
- tools/perf/builtin-record.c              | 37 ++++++++++++++++++++++
- tools/perf/util/record.h                 |  2 ++
- 3 files changed, 78 insertions(+)
+ tools/perf/Documentation/perf-stat.txt | 39 +++++++++++++++++++++++++
+ tools/perf/builtin-stat.c              | 40 +++++++++++++++++++++++++-
+ tools/perf/util/stat.h                 |  2 ++
+ 3 files changed, 80 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index a84376605805..3f72d8e261f3 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -627,6 +627,45 @@ option. The -e option and this one can be mixed and matched.  Events
- can be grouped using the {} notation.
- endif::HAVE_LIBPFM[]
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 9f32f6cd558d..c9bfefc051fb 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -176,6 +176,45 @@ with it.  --append may be used here.  Examples:
+      3>results  perf stat --log-fd 3          -- $cmd
+      3>>results perf stat --log-fd 3 --append -- $cmd
  
 +--control fd:ctl-fd[,ack-fd]
 +Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
@@ -110,9 +110,9 @@ index a84376605805..3f72d8e261f3 100644
 +mkfifo ${ctl_ack_fifo}
 +exec {ctl_fd_ack}<>${ctl_ack_fifo}
 +
-+perf record -D -1 -e cpu-cycles -a               \
-+            --control fd:${ctl_fd},${ctl_fd_ack} \
-+            -- sleep 30 &
++perf stat -D -1 -e cpu-cycles -a -I 1000       \
++          --control fd:${ctl_fd},${ctl_fd_ack} \
++          -- sleep 30 &
 +perf_pid=$!
 +
 +sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
@@ -128,33 +128,33 @@ index a84376605805..3f72d8e261f3 100644
 +exit $?
 +
 +
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 632e61fe70bd..0718aa71b4ba 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1749,6 +1749,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		perf_evlist__start_workload(rec->evlist);
- 	}
+ --pre::
+ --post::
+ 	Pre and post measurement hooks, e.g.:
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 5280a45af5dc..483a28ef4ec4 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -188,6 +188,8 @@ static struct perf_stat_config stat_config = {
+ 	.metric_only_len	= METRIC_ONLY_LEN,
+ 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
+ 	.big_num		= true,
++	.ctl_fd			= -1,
++	.ctl_fd_ack		= -1
+ };
  
-+	if (evlist__initialize_ctlfd(rec->evlist, opts->ctl_fd, opts->ctl_fd_ack))
-+		goto out_child;
-+
- 	if (opts->initial_delay) {
- 		pr_info(EVLIST_DISABLED_MSG);
- 		if (opts->initial_delay > 0) {
-@@ -1895,6 +1898,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		record__synthesize_workload(rec, true);
+ static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+@@ -867,7 +869,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 		perf_evlist__start_workload(evsel_list);
+ 		enable_counters();
  
- out_child:
-+	evlist__finalize_ctlfd(rec->evlist);
- 	record__mmap_read_all(rec, true);
- 	record__aio_mmap_read_sync(rec);
- 
-@@ -2244,6 +2248,33 @@ static int record__parse_mmap_pages(const struct option *opt,
- 	return ret;
+-		if (interval || timeout)
++		if (interval || timeout || evlist__ctlfd_initialized(evsel_list))
+ 			status = dispatch_events(forks, timeout, interval, &times);
+ 		if (child_pid != -1) {
+ 			if (timeout)
+@@ -1039,6 +1041,33 @@ static int parse_metric_groups(const struct option *opt,
+ 					 &stat_config.metric_events);
  }
  
 +static int parse_control_option(const struct option *opt,
@@ -162,7 +162,7 @@ index 632e61fe70bd..0718aa71b4ba 100644
 +				int unset __maybe_unused)
 +{
 +	char *comma = NULL, *endptr = NULL;
-+	struct record_opts *config = (struct record_opts *)opt->value;
++	struct perf_stat_config *config = (struct perf_stat_config *)opt->value;
 +
 +	if (strncmp(str, "fd:", 3))
 +		return -EINVAL;
@@ -184,42 +184,52 @@ index 632e61fe70bd..0718aa71b4ba 100644
 +	return 0;
 +}
 +
- static void switch_output_size_warn(struct record *rec)
- {
- 	u64 wakeup_size = evlist__mmap_size(rec->opts.mmap_pages);
-@@ -2380,6 +2411,8 @@ static struct record record = {
- 		},
- 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
- 		.nr_threads_synthesize = 1,
-+		.ctl_fd              = -1,
-+		.ctl_fd_ack          = -1,
- 	},
- 	.tool = {
- 		.sample		= process_sample_event,
-@@ -2581,6 +2614,10 @@ static struct option __record_options[] = {
+ static struct option stat_options[] = {
+ 	OPT_BOOLEAN('T', "transaction", &transaction_run,
+ 		    "hardware transaction statistics"),
+@@ -1140,6 +1169,10 @@ static struct option stat_options[] = {
  		"libpfm4 event selector. use 'perf list' to list available events",
  		parse_libpfm_events_option),
  #endif
-+	OPT_CALLBACK(0, "control", &record.opts, "fd:ctl-fd[,ack-fd]",
++	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd]",
 +		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
 +		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
 +		      parse_control_option),
  	OPT_END()
  };
  
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index da138dcb4d34..4cb72a478af1 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -70,6 +70,8 @@ struct record_opts {
- 	int	      mmap_flush;
- 	unsigned int  comp_level;
- 	unsigned int  nr_threads_synthesize;
-+	int	      ctl_fd;
-+	int	      ctl_fd_ack;
+@@ -2309,6 +2342,9 @@ int cmd_stat(int argc, const char **argv)
+ 	signal(SIGALRM, skip_signal);
+ 	signal(SIGABRT, skip_signal);
+ 
++	if (evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack))
++		goto out;
++
+ 	status = 0;
+ 	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
+ 		if (stat_config.run_count != 1 && verbose > 0)
+@@ -2328,6 +2364,8 @@ int cmd_stat(int argc, const char **argv)
+ 	if (!forever && status != -1 && (!interval || stat_config.summary))
+ 		print_counters(NULL, argc, argv);
+ 
++	evlist__finalize_ctlfd(evsel_list);
++
+ 	if (STAT_RECORD) {
+ 		/*
+ 		 * We synthesize the kernel mmap record just so that older tools
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 41d59f192931..f8778cffd941 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -133,6 +133,8 @@ struct perf_stat_config {
+ 	struct perf_cpu_map		*cpus_aggr_map;
+ 	u64			*walltime_run;
+ 	struct rblist		 metric_events;
++	int			 ctl_fd;
++	int			 ctl_fd_ack;
  };
  
- extern const char * const *record_usage;
+ void perf_stat__set_big_num(int set);
 -- 
 2.24.1
 
