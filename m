@@ -2,227 +2,145 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACC9C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8867EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D40220787
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F67B20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:13:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MukQto0j"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WHizPbkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgGQAAc (ORCPT
+        id S1726200AbgGQANo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 20:00:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgGQAAc (ORCPT
+        Thu, 16 Jul 2020 20:13:44 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17694 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgGQANn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 20:00:32 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE68C061755;
-        Thu, 16 Jul 2020 17:00:31 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x72so4486081pfc.6;
-        Thu, 16 Jul 2020 17:00:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=ImNiZtmXUEslFcxDwYTJ2V9XDT5Gl9sBS0NfevXsnnY=;
-        b=MukQto0jRHUB4yiJDf8IKC4tB6sGzWl/LcJo9HLPE/bkd1kmrX9hGCtCDR5//wUoy2
-         vRcf0HCTe9AuTFsgW3Sks6FN5aGElPRZIOw8zuUk+KdKriPEH/mIEVvLQzDLTI15AG0q
-         mFYQfgsopKFs+/ZFPZnfJNgkxGHYsM+PLZvwWWABKgpflzLAFiu2MRs5Z8uU8NxMzvh2
-         3UB2zjBnZojmtCHtXYsU3Tz2RzCim3B2KUS4X3yT+ydnT2ua6/w1qF1NkQDE9qUJC1QM
-         7nbOar1/6Xd4h/Y75r1K8DiEV6G+5kRKWaJxAvD7p+l3JrRTFqnNib5GoeWwmv6z0wCZ
-         G0Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=ImNiZtmXUEslFcxDwYTJ2V9XDT5Gl9sBS0NfevXsnnY=;
-        b=UWQ9qyZYnATA8d0/c5VHfdEbGgcETtsxEHh7CeCrOK7zzqkU1KqM9nFKy7PDepLUWI
-         kXhHuvZYb0mLdt0mf5P4lKHrWzHClZdt7ojwwBZMGeyQPRZnH7osM7JkiqrQkmadK2Rj
-         BNWqsqixOwDLIavD+c4V7GInnlw418eeQrfnMbV6ru/IBaD5a2cQJdNuTbp0th5JlrqM
-         Ubv/MtojKpUi8LEstBkeqal1ZuGpEMVUiMGQE5qLiAcWDOE7bvswzdhNJojrexKaMlE+
-         ek4yQgAesyOf0OR3CWAfMCrK8UshPH4lvQxqCKFt7VmOcXYxBK9tMNB6U/1Pe0CtWGQ/
-         QXdg==
-X-Gm-Message-State: AOAM530vRO9kEk4wF0wLdc+dW6hkQ8u8YX2ZqRL0295AcdEkvXwnROuW
-        KbWr/ux7A1w8TUztP48PpEQ=
-X-Google-Smtp-Source: ABdhPJyxJEjlVUAM1TRDOicDFoR9jUfM3MI04m9Y+hFjm51bezMj4uAtGtwPvuODOW9Kom5yT1vlRw==
-X-Received: by 2002:a65:6710:: with SMTP id u16mr6358665pgf.45.1594944030371;
-        Thu, 16 Jul 2020 17:00:30 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id cl17sm953913pjb.50.2020.07.16.17.00.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 17:00:29 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 10:00:23 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        paulmck <paulmck@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
-References: <20200710015646.2020871-1-npiggin@gmail.com>
-        <1594613902.1wzayj0p15.astroid@bobo.none>
-        <1594647408.wmrazhwjzb.astroid@bobo.none>
-        <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com>
-        <1594868476.6k5kvx8684.astroid@bobo.none>
-        <1594873644.viept6os6j.astroid@bobo.none>
-        <1494299304.15894.1594914382695.JavaMail.zimbra@efficios.com>
-        <1370747990.15974.1594915396143.JavaMail.zimbra@efficios.com>
-        <595582123.17106.1594925921537.JavaMail.zimbra@efficios.com>
-In-Reply-To: <595582123.17106.1594925921537.JavaMail.zimbra@efficios.com>
+        Thu, 16 Jul 2020 20:13:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f10ed2a0000>; Thu, 16 Jul 2020 17:13:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 16 Jul 2020 17:13:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 16 Jul 2020 17:13:42 -0700
+Received: from [10.2.163.115] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Jul
+ 2020 00:13:42 +0000
+Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
+ tegra_mipi_calibrate and tegra_mipi_wait
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+ <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
+ <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
+ <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
+ <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
+ <ce0c5ffb-f859-0eab-1ea5-044623dff221@nvidia.com>
+ <a2b8169c-c4a3-4862-cd27-8c1a51ddc558@gmail.com>
+ <4690e682-8495-2327-87c7-c2f06a7a479d@nvidia.com>
+ <66812127-38cf-2af3-51c0-50edbe446e73@nvidia.com>
+ <9b4fbf9d-d651-aa35-c0a6-b8f16aeb0900@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <550f1796-67ca-5856-223d-c68360243954@nvidia.com>
+Date:   Thu, 16 Jul 2020 17:16:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-Id: <1594942495.8qcz211iwc.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <9b4fbf9d-d651-aa35-c0a6-b8f16aeb0900@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594944810; bh=e7ciQ4M92aTObzkBjwwPlQaDpWhA7HRPJ/6w40ZehNc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=WHizPbkQ+yVcMQTr9kKLr6aNEkD238+xGSp8HgIi2sSnVUg9MxaoGtbDY8fIbNvyS
+         RhV/V/OuY0b+wfxVAH0zmHdnfwRJdKBiyxlHnYtfEEMQTUZSidNuv6x1Ugs8hQcIsq
+         NX1386HljzoK/AfSty9dRp0E9ximbjLg5IIAvkLtAZBjG5Pq2FCbZ8vXWC2raC35yr
+         sFtLuvF22WBtFhabnEl2FgkllXC/VkWdhMi0a+FryT7/YyXG42esC0HIURzHZTLHjB
+         iJT58Xat81wJz70tf0o2AiSKcX0HWgL3tdU15n3KmvQT0FKFiHWFpnLi2gMYF0thIZ
+         q1U02be5hzP1A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Mathieu Desnoyers's message of July 17, 2020 4:58 am:
-> ----- On Jul 16, 2020, at 12:03 PM, Mathieu Desnoyers mathieu.desnoyers@e=
-fficios.com wrote:
->=20
->> ----- On Jul 16, 2020, at 11:46 AM, Mathieu Desnoyers
->> mathieu.desnoyers@efficios.com wrote:
->>=20
->>> ----- On Jul 16, 2020, at 12:42 AM, Nicholas Piggin npiggin@gmail.com w=
-rote:
->>>> I should be more complete here, especially since I was complaining
->>>> about unclear barrier comment :)
->>>>=20
->>>>=20
->>>> CPU0                     CPU1
->>>> a. user stuff            1. user stuff
->>>> b. membarrier()          2. enter kernel
->>>> c. smp_mb()              3. smp_mb__after_spinlock(); // in __schedule
->>>> d. read rq->curr         4. rq->curr switched to kthread
->>>> e. is kthread, skip IPI  5. switch_to kthread
->>>> f. return to user        6. rq->curr switched to user thread
->>>> g. user stuff            7. switch_to user thread
->>>>                         8. exit kernel
->>>>                         9. more user stuff
->>>>=20
->>>> What you're really ordering is a, g vs 1, 9 right?
->>>>=20
->>>> In other words, 9 must see a if it sees g, g must see 1 if it saw 9,
->>>> etc.
->>>>=20
->>>> Userspace does not care where the barriers are exactly or what kernel
->>>> memory accesses might be being ordered by them, so long as there is a
->>>> mb somewhere between a and g, and 1 and 9. Right?
->>>=20
->>> This is correct.
->>=20
->> Actually, sorry, the above is not quite right. It's been a while
->> since I looked into the details of membarrier.
->>=20
->> The smp_mb() at the beginning of membarrier() needs to be paired with a
->> smp_mb() _after_ rq->curr is switched back to the user thread, so the
->> memory barrier is between store to rq->curr and following user-space
->> accesses.
->>=20
->> The smp_mb() at the end of membarrier() needs to be paired with the
->> smp_mb__after_spinlock() at the beginning of schedule, which is
->> between accesses to userspace memory and switching rq->curr to kthread.
->>=20
->> As to *why* this ordering is needed, I'd have to dig through additional
->> scenarios from https://lwn.net/Articles/573436/. Or maybe Paul remembers=
- ?
->=20
-> Thinking further about this, I'm beginning to consider that maybe we have=
- been
-> overly cautious by requiring memory barriers before and after store to rq=
-->curr.
->=20
-> If CPU0 observes a CPU1's rq->curr->mm which differs from its own process=
- (current)
-> while running the membarrier system call, it necessarily means that CPU1 =
-had
-> to issue smp_mb__after_spinlock when entering the scheduler, between any =
-user-space
-> loads/stores and update of rq->curr.
->=20
-> Requiring a memory barrier between update of rq->curr (back to current pr=
-ocess's
-> thread) and following user-space memory accesses does not seem to guarant=
-ee
-> anything more than what the initial barrier at the beginning of __schedul=
-e already
-> provides, because the guarantees are only about accesses to user-space me=
-mory.
->=20
-> Therefore, with the memory barrier at the beginning of __schedule, just o=
-bserving that
-> CPU1's rq->curr differs from current should guarantee that a memory barri=
-er was issued
-> between any sequentially consistent instructions belonging to the current=
- process on
-> CPU1.
->=20
-> Or am I missing/misremembering an important point here ?
 
-I might have mislead you.
+On 7/16/20 4:47 PM, Dmitry Osipenko wrote:
+> 17.07.2020 02:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 7/16/20 4:06 PM, Sowjanya Komatineni wrote:
+>>> On 7/16/20 4:01 PM, Dmitry Osipenko wrote:
+>>>> 17.07.2020 01:49, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> What keeps MIPI clock enabled after completion of the
+>>>>>> tegra_mipi_calibrate() invocation?
+>>>>> MIPI clock is disabled at end of tegra_mipi_calibrate and is re-enabl=
+ed
+>>>>> during tegra_mipi_wait.
+>>>>>
+>>>>> I think I should fix this to keep the clock enabled till calibration
+>>>>> results are latched.
+>>>>>
+>>>>> All consumers of tegra_mipi_calibrate() will call tegra_mipi_wait().
+>>>>>
+>>>>> So will remove clk_disable mipi clk at end of tegra_mipi_calibrate()
+>>>>> and
+>>>>> clk_enable mipi_clk at beginning of tegra_mipi_wait()
+>>>> Isn't it possible to perform the calibration after enabling CSI and
+>>>> before of starting the sensor streaming?
+>>> Currently this is what I am doing. Triggering calibration start during
+>>> CSI receiver being ready and then sensor streaming will happen where
+>>> internal MIPI CAL detects for LP -> HS transition and applies results
+>>> to pads. So checking for calibration results after sensor stream is
+>>> enabled
+>> 1. Calling tegra_mipi_calibrate() during CSI streaming where CSI pads
+>> are enabled and receiver is kept ready
+>>
+>> 2. Start Sensor stream
+>>
+>> 3. Calling tegra_mipi_wait() to check for MIPI Cal status.
+>>
+>> So as mipi cal clk need to be kept enabled till 3rd step, we can enable
+>> clock during tegra_mipi_calibrate() and leave it enabled and disable it
+>> in tegra_mipi_wait after status check.
+>  From TRM:
+>
+> The following sequence is recommended for capturing a single frame:
+>
+> 1. Set up CSI registers for use case such as number of lanes, virtual
+> channel, etc.
+> 2. Initialize and power up CSI interface
+> 3. Wait for initialization time or done signal from calibration logic
+> 4. Power up camera through the I2C interface
+> 5. All CSI data and clock lanes are in stop state, LP11
+> 6. Initiate frame capture through the I2C
+> 7. Frame done, CSI goes back to stop state, LP11
+>
+> Hence, is it really necessary to perform the manual calibration?
 
- CPU0            CPU1
- r1=3Dy            x=3D1
- membarrier()    y=3D1
- r2=3Dx
+done signal from calibration logic will happen only when it sees LP to=20
+HS transition as thats when calibration results are applied to pads and=20
+then done signal is set.
 
-membarrier provides if r1=3D=3D1 then r2=3D=3D1 (right?)
+Also MIPI Pads calibration need to be done on every power off/on. So=20
+need to do calibration and trigger it along with CSI receiver=20
+programming to keep it ready and then need to check/wait for status only=20
+after sensor stream happens as thats where LP->HS transition happen.
 
- CPU0
- r1=3Dy
- membarrier()
-   smp_mb();
-   t =3D cpu_rq(1)->curr;
-   if (t->mm =3D=3D mm)
-     IPI(CPU1);
-   smp_mb()
- r2=3Dx
-
- vs
-
- CPU1
-   ...
-   __schedule()
-     smp_mb__after_spinlock()
-     rq->curr =3D kthread
-   ...
-   __schedule()
-     smp_mb__after_spinlock()
-     rq->curr =3D user thread
- exit kernel
- x=3D1
- y=3D1
-
-Now these last 3 stores are not ordered, so CPU0 might see y=3D=3D1 but
-rq->curr =3D=3D kthread, right? Then it will skip the IPI and stores to x=20
-and y will not be ordered.
-
-So we do need a mb after rq->curr store when mm is switching.
-
-I believe for the global membarrier PF_KTHREAD optimisation, we also=20
-need a barrier when switching from a kernel thread to user, for the
-same reason.
-
-So I think I was wrong to say the barrier is not necessary.
-
-I haven't quite worked out why two mb()s are required in membarrier(),
-but at least that's less of a performance concern.
-
-Thanks,
-Nick
