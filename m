@@ -2,141 +2,151 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F28C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E49C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E808A20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:29:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V0eo/BmT"
+	by mail.kernel.org (Postfix) with ESMTP id 2ACC820704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgGQE3y (ORCPT
+        id S1726633AbgGQEbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:29:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgGQE3x (ORCPT
+        Fri, 17 Jul 2020 00:31:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11628 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725300AbgGQEbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:29:53 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5649C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:29:52 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j4so9565835wrp.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:29:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1tDBsEB/Y/GIBrRp2Nt+MzFeYT1byF7qFbjareBCBb8=;
-        b=V0eo/BmTHHgK+MlrVTN9OKc/H0lfIajVou8J3eEOOCwqBMOECUTa9e8NprwMkAoeIF
-         c4QWTWJFytRLVhS1HGJyQn7Bq7ilD1sQRV9+lE0xozhev03WbAuGqnOED/+wk+hHaLUr
-         //gJmvR8REfhlvfNHblPj9u5xK3eI//Sp2aWIrsw50oklO7+opPpOFTiKm21R5Ki70Tl
-         VrKVComa+BsYwbMH7WxeFjYM57H6L6ygZfEQZ5LEv2y6empJkio+mO+aPZ8hpMvctir6
-         +mVIiEi5oU0Klk6V3dw7EEaBsEo5XyL6DldI22qVjT2rCD7TJFKE7B+e4aFz1VbrBND9
-         h1cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1tDBsEB/Y/GIBrRp2Nt+MzFeYT1byF7qFbjareBCBb8=;
-        b=bq1qKl75tTpLML6NgCnTQ7yaIx+mPoua1e1t0q4unD9P1X4GlYNrPo0D8Em+v81xPm
-         YrhFJDTi+oummSWmANnBOvYBZiClXHTILjxv6/zdDOsVO8kyD13cjoTWt3NQF+IdCDVq
-         qyeGxrvzMsJaCzTxnBpKWXaSqUCHTs63K1VW/f4xGRvxiB7YWCKJ/vHwq5IGETPnPFz2
-         TpKPWLLF0ZYrHu93SPeulG/1EkxoosfcJbzqL7WdkOgNieaBDm4tgSC4p6CDZur5BcM/
-         mqdh5GL0GMIv/RTy/It6Ffm83vH7WdIf1lYNZ5rgFmmpWHhfKKLr0nGPRXBH38cJJz0a
-         qMvQ==
-X-Gm-Message-State: AOAM533B9j0M6xgoY7wPcvVhomovuIuXVzAtOGk2aVyu8sUoAWrtGxng
-        qjbuGFGR0pI6heqzzsd0NnpqSWUtJwM=
-X-Google-Smtp-Source: ABdhPJwABlZse6fgnC9vqzXT9wBMJCvVaIPVCzgJiMranO0cboa0iq7rxUuUl+OShnPM6guwowLlqw==
-X-Received: by 2002:a5d:4c8a:: with SMTP id z10mr8170440wrs.384.1594960191110;
-        Thu, 16 Jul 2020 21:29:51 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
-        by smtp.googlemail.com with ESMTPSA id r28sm12716371wrr.20.2020.07.16.21.29.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 21:29:50 -0700 (PDT)
-Subject: Re: [PATCH v5 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200714125753.22466-1-Sergey.Semin@baikalelectronics.ru>
- <20200714125753.22466-7-Sergey.Semin@baikalelectronics.ru>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <53a3785b-2f6f-35de-a5ac-565f059cd1f4@linaro.org>
-Date:   Fri, 17 Jul 2020 06:29:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200714125753.22466-7-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Fri, 17 Jul 2020 00:31:51 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06H42ODm166954;
+        Fri, 17 Jul 2020 00:31:44 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32792xvu7e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 00:31:44 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06H436Yn168882;
+        Fri, 17 Jul 2020 00:31:44 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32792xvu5c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 00:31:44 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06H4U3D9020944;
+        Fri, 17 Jul 2020 04:31:37 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 329nmyjgaq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 04:31:37 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06H4UCbl64160158
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jul 2020 04:30:12 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9365E4203F;
+        Fri, 17 Jul 2020 04:31:35 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E81342041;
+        Fri, 17 Jul 2020 04:31:34 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.163.162])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 17 Jul 2020 04:31:33 +0000 (GMT)
+Message-ID: <1594960293.27397.2.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 00/12] ima: Fix rule parsing bugs and extend
+ KEXEC_CMDLINE rule support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        kexec@lists.infradead.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Date:   Fri, 17 Jul 2020 00:31:33 -0400
+In-Reply-To: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
+References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 suspectscore=0
+ mlxlogscore=-1000 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ adultscore=0 impostorscore=0 spamscore=100 malwarescore=0 bulkscore=0
+ mlxscore=100 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007170025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/07/2020 14:57, Serge Semin wrote:
-> Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip, MIPS
-> GIC timer and MIPS CPS CPUidle drivers.
+On Thu, 2020-07-09 at 01:18 -0500, Tyler Hicks wrote:
+> This series ultimately extends the supported IMA rule conditionals for
+> the KEXEC_CMDLINE hook function. As of today, there's an imbalance in
+> IMA language conditional support for KEXEC_CMDLINE rules in comparison
+> to KEXEC_KERNEL_CHECK and KEXEC_INITRAMFS_CHECK rules. The KEXEC_CMDLINE
+> rules do not support *any* conditionals so you cannot have a sequence of
+> rules like this:
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Acked-by: Marc Zyngier <maz@kernel.org>
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-> ---
+>  dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
+>  dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
+>  dont_measure func=KEXEC_CMDLINE obj_type=foo_t
+>  measure func=KEXEC_KERNEL_CHECK
+>  measure func=KEXEC_INITRAMFS_CHECK
+>  measure func=KEXEC_CMDLINE
 > 
-> Changelog v3:
-> - Keep the files list alphabetically ordered.
-> - Add Thomas as the co-maintainer of the designated drivers.
-> ---
->  MAINTAINERS | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> Instead, KEXEC_CMDLINE rules can only be measured or not measured and
+> there's no additional flexibility in today's implementation of the
+> KEXEC_CMDLINE hook function.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2926327e4976..20532e0287d7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11278,6 +11278,17 @@ F:	arch/mips/configs/generic/board-boston.config
->  F:	drivers/clk/imgtec/clk-boston.c
->  F:	include/dt-bindings/clock/boston-clock.h
->  
-> +MIPS CORE DRIVERS
-> +M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> +M:	Serge Semin <fancer.lancer@gmail.com>
-> +L:	linux-mips@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/bus/mips_cdmm.c
-> +F:	drivers/clocksource/mips-gic-timer.c
-> +F:	drivers/cpuidle/cpuidle-cps.c
-> +F:	drivers/irqchip/irq-mips-cpu.c
-> +F:	drivers/irqchip/irq-mips-gic.c
-> +
->  MIPS GENERIC PLATFORM
->  M:	Paul Burton <paulburton@kernel.org>
->  L:	linux-mips@vger.kernel.org
+> With this series, the above sequence of rules becomes valid and any
+> calls to kexec_file_load() with a kernel and initramfs inode type of
+> foo_t will not be measured (that includes the kernel cmdline buffer)
+> while all other objects given to a kexec_file_load() syscall will be
+> measured. There's obviously not an inode directly associated with the
+> kernel cmdline buffer but this patch series ties the inode based
+> decision making for KEXEC_CMDLINE to the kernel's inode. I think this
+> will be intuitive to policy authors.
 > 
+> While reading IMA code and preparing to make this change, I realized
+> that the buffer based hook functions (KEXEC_CMDLINE and KEY_CHECK) are
+> quite special in comparison to longer standing hook functions. These
+> buffer based hook functions can only support measure actions and there
+> are some restrictions on the conditionals that they support. However,
+> the rule parser isn't enforcing any of those restrictions and IMA policy
+> authors wouldn't have any immediate way of knowing that the policy that
+> they wrote is invalid. For example, the sequence of rules above parses
+> successfully in today's kernel but the
+> "dont_measure func=KEXEC_CMDLINE ..." rule is incorrectly handled in
+> ima_match_rules(). The dont_measure rule is *always* considered to be a
+> match so, surprisingly, no KEXEC_CMDLINE measurements are made.
+> 
+> While making the rule parser more strict, I realized that the parser
+> does not correctly free all of the allocated memory associated with an
+> ima_rule_entry when going down some error paths. Invalid policy loaded
+> by the policy administrator could result in small memory leaks.
+> 
+> I envision patches 1-7 going to stable. The series is ordered in a way
+> that has all the fixes up front, followed by cleanups, followed by the
+> feature patch. The breakdown of patches looks like so:
+> 
+>  Memory leak fixes: 1-3
+>  Parser strictness fixes: 4-7
+>  Code cleanups made possible by the fixes: 8-11
+>  Extend KEXEC_CMDLINE rule support: 12
 
+Thanks, Tyler.  This is a really nice patch set.  The patches are now
+in the "next-integrity-testing" branch.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Mimi
