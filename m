@@ -2,97 +2,125 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AEDC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D84C206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:05:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o6/UxmOQ"
+	by mail.kernel.org (Postfix) with ESMTP id 1A3E52065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgGQMFo (ORCPT
+        id S1726758AbgGQMBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:05:44 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:20210 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgGQMFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:05:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594987542; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=hPWgjh6Z31+8mVshXFtGOQtuU1a/Lut0EMPEI8zc8j4=; b=o6/UxmOQ6p6mpE1KvcN5GF6f5czE38yknUDBqqZJwVwFgwUlOmJLxS4k7LIBGSmLwUtsMU6u
- BzaNAHtAvV/U3PoVuD00U9ieglQBVMefl0GZVD27fpuKLQ56pSZzXbmAZGMk9ejQ9JnKqqHH
- QPNevdojJt1HVnIGvmt3I/Cvi1M=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5f119414166c1c54948c54e5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 12:05:40
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D8807C43395; Fri, 17 Jul 2020 12:05:39 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22D79C433C6;
-        Fri, 17 Jul 2020 12:05:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22D79C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Wireless <linux-wireless@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: linux-next: manual merge of the dmaengine tree with the wireless-drivers-next and Linus' trees
-References: <20200717165336.312dcf09@canb.auug.org.au>
-Date:   Fri, 17 Jul 2020 15:05:34 +0300
-In-Reply-To: <20200717165336.312dcf09@canb.auug.org.au> (Stephen Rothwell's
-        message of "Fri, 17 Jul 2020 16:53:36 +1000")
-Message-ID: <87tuy673e9.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 17 Jul 2020 08:01:17 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35533 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgGQMBR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 08:01:17 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q4so12350934lji.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:01:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=PIGshzdtQhBbB3HFdyOsLZ2f6sGVhYTv8qekjEAe6Mc=;
+        b=sLrWXzPEA+XEExtbxSUJMt7ddnkXXtuUo8b820AhCfjyaoSIV01qL6yhZbKObDHSu9
+         hjHZOxNoGkfPTQivFvKBBR2kLqHvXHUrpqQNSRtjxCSUfMkSqhQFRp0BZkX8dhtoqlD1
+         RB3rFnEtmyZDfFEeMOINzw0GNQX/Q3UilJ+pHF9D1GkXJ7KZgvJShZmBx9bnSwqesOP4
+         tSNBouob/ZAJxbu+ZhcMBOg9mQ6v5SzhDIFFPbRPab7sIxv7iOx3Cz9e7rhu86wg8zY0
+         oEDIp0RsuEwHUBObXZTrVCVU3A4BJsAUjuTpO75t0HmXEQzjF7KdBIF9FYR6WaQrRDtw
+         pvgA==
+X-Gm-Message-State: AOAM533sbR0HzDeiI3Wftyst7Tz0iGu88oPvNpJQbtmLFd3SRqRLqoWV
+        XkiKJHMKMYNWaFRg5oSCOWk=
+X-Google-Smtp-Source: ABdhPJx5cWTwu0ovlYAo2vYsCOdJcAo2JkYme62hvSjqPX8hUz807Wd9UOs3gSWUes4pRBwREOyggg==
+X-Received: by 2002:a2e:b4d0:: with SMTP id r16mr4552055ljm.332.1594987274724;
+        Fri, 17 Jul 2020 05:01:14 -0700 (PDT)
+Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.gmail.com with ESMTPSA id y21sm1046054lff.34.2020.07.17.05.01.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 05:01:14 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH v2 0/4] Update memdup_user.cocci
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
+References: <20200608150038.223747-1-efremov@linux.com>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Message-ID: <5832f5b1-5f9a-9b52-5edf-249be2860dbd@linux.com>
+Date:   Fri, 17 Jul 2020 15:01:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200608150038.223747-1-efremov@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+Ping?
 
-> Today's linux-next merge of the dmaengine tree got a conflict in:
->
->   MAINTAINERS
->
-> between commit:
->
->   5625f965d764 ("wilc1000: move wilc driver out of staging")
->
-> from the wireless-drivers-next tree, commit:
->
->   6e701c299469 ("MAINTAINERS: merge entries for felix and ocelot drivers")
->
-> from Linus' tree and commit:
->
->   c3846c4cce15 ("MAINTAINERS: dmaengine: Microchip: add Tudor Ambarus
-> as co-maintainer")
->
-> from the dmaengine tree.
-
-I think this is trivial enough that Linus can take care of it without
-any extra actions. Thanks for the report.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+On 6/8/20 6:00 PM, Denis Efremov wrote:
+> Add GFP_USER to the allocation flags and handle vmemdup_user().
+> The third patch supresses memdup_user(), vmemdup_user() functions
+> detection. Last patch is a proof of concept for the rule selfchecking.
+> Gives the ability to detect that an open-coded pattern in a function
+> definition that we search for in the kernel sources changed.
+> 
+> Denis Efremov (4):
+>   coccinelle: api: extend memdup_user transformation with GFP_USER
+>   coccinelle: api: extend memdup_user rule with vmemdup_user()
+>   coccinelle: api: filter out memdup_user definitions
+>   coccinelle: api: add selfcheck for memdup_user rule
+> 
+>  scripts/coccinelle/api/memdup_user.cocci | 106 ++++++++++++++++++++++-
+>  1 file changed, 103 insertions(+), 3 deletions(-)
+> 
