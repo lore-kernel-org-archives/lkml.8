@@ -2,140 +2,177 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB91C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49FC920717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595004459;
-	bh=4BXVUwtR/tkd2z02CT+MvIFZaGvYQkEZE2YjNF5AhjE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=L/VIeMPEUNLTOkxzoQ52Ccblsr6l4ow0mVy1d4JbF5AHV2wScR4y6e76SQ2/tcDGM
-	 gRLcJojKKNWyTS0M6kmIdGaWu52PegJ1tz83nUEcPLR3nAvgPVX8eT6tWskuUnr9j+
-	 o4lVLLylnTLWb7XUDYG5iQLiuK/U4LS/StBzD90g=
+	by mail.kernel.org (Postfix) with ESMTP id 2895220737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:52:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EuINBWJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgGQQri (ORCPT
+        id S1726734AbgGQQwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbgGQQrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:47:37 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CDC220717
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 16:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595004456;
-        bh=4BXVUwtR/tkd2z02CT+MvIFZaGvYQkEZE2YjNF5AhjE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fKmneDpBAiITP5CNK0MU5sUVxFhx7WYh/i+VAwD5D0MAlhGc3diiywNdx5o2yTtW5
-         H+KLhFy3VdMnFpNiHW/jKjEh0atBDcYJOyKo54ET6m8avkAbC/kJ/pDhU6bjFhG2Dz
-         zRoLQFMLgSMhJVFRgmv5YPh33uYSvFZtuULsnZR4=
-Received: by mail-wm1-f43.google.com with SMTP id q15so15928090wmj.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:47:36 -0700 (PDT)
-X-Gm-Message-State: AOAM530orocKbP3UeO3zG55yidWylczxKkAnn8PqbzX+oVZzK12mNP3h
-        RTOONhHu1kzdOl5GTyBydqma3pYY/wbMlLYMHJlR7Q==
-X-Google-Smtp-Source: ABdhPJzXM6ShO9QunQ6h1oW3pXO/VsXg1+/b+5o5yRSKhYi7CtcrXGrAtQNL19genjr5cg0ReKqPfIacxdEL/vO0zWk=
-X-Received: by 2002:a7b:c09a:: with SMTP id r26mr10027972wmh.176.1595004455229;
- Fri, 17 Jul 2020 09:47:35 -0700 (PDT)
+        Fri, 17 Jul 2020 12:52:02 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:50252 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgGQQwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:52:01 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id CDBD820B4909;
+        Fri, 17 Jul 2020 09:51:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CDBD820B4909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595004720;
+        bh=DvmxoacjIGDf6VIRgClmLxCafLoC/7gOChzuge/MVtY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EuINBWJbNpWg6k/gjnYp/WbOQPAps/m7HqKNWwVayongOuF+/ZK6lRsFNyxP4WMnW
+         AxhowkF5ihAYf8r94NgcDasSd1Qre9U60xxyNphXuXDgFGLf85kOACuulIuJObgGR7
+         tBacQSIoHH/dh22jKXb0kN9fHxCM4xq+Y6EMAWUE=
+Date:   Fri, 17 Jul 2020 11:51:57 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Konsta Karsisto <konsta.karsisto@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v3 08/12] ima: Shallow copy the args_p member of
+ ima_rule_entry.lsm elements
+Message-ID: <20200717165157.GL3673@sequoia>
+References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
+ <20200709061911.954326-9-tyhicks@linux.microsoft.com>
+ <CAAEqDhD-wCGY7ykjSsNgCri4ykWPi9cP3j1zoQPWddB4r92Kqw@mail.gmail.com>
 MIME-Version: 1.0
-References: <159423201991.2466245.8461410729774664077.stgit@dwillia2-desk3.amr.corp.intel.com>
- <s5hlfjnzvu7.wl-tiwai@suse.de>
-In-Reply-To: <s5hlfjnzvu7.wl-tiwai@suse.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 17 Jul 2020 09:47:23 -0700
-X-Gmail-Original-Message-ID: <CALCETrWmK-b6apB57mp8oaSRNpcSLdoCFAXEp4EF-9LSUDNFBA@mail.gmail.com>
-Message-ID: <CALCETrWmK-b6apB57mp8oaSRNpcSLdoCFAXEp4EF-9LSUDNFBA@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] [PATCH v3] CodingStyle: Inclusive Terminology
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAEqDhD-wCGY7ykjSsNgCri4ykWPi9cP3j1zoQPWddB4r92Kqw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 1:02 AM Takashi Iwai <tiwai@suse.de> wrote:
->
-> On Wed, 08 Jul 2020 20:14:27 +0200,
-> Dan Williams wrote:
+On 2020-07-17 18:35:03, Konsta Karsisto wrote:
+> Hi,
+> 
+> Found one glitch with this change, see below:
+> 
+> On Thu, Jul 9, 2020 at 9:22 AM Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
 > >
-> > +Recommended replacements for 'blacklist/whitelist' are:
-> > +    'denylist / allowlist'
-> > +    'blocklist / passlist'
->
-> I started looking through the tree now and noticed there are lots of
-> patterns like "whitelisted" or "blacklisted".  How can the words fit
-> for those?  Actually, there are two cases like:
->
-> - Foo is blacklisted
-> - Allow to load the non-whitelisted cards
->
-> Currently I'm replacing the former with "Foo is in denylist", but not
-> sure about the latter case.  I thought Kees mentioned about this, but
-> don't remember the proposal...
+> > The args_p member is a simple string that is allocated by
+> > ima_rule_init(). Shallow copy it like other non-LSM references in
+> > ima_rule_entry structs.
+> >
+> > There are no longer any necessary error path cleanups to do in
+> > ima_lsm_copy_rule().
+> >
+> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > ---
+> >
+> > * v3
+> >   - No change
+> > * v2
+> >   - Adjusted context to account for ima_lsm_copy_rule() directly calling
+> >     ima_lsm_free_rule() and the lack of explicit reference ownership
+> >     transfers
+> >   - Added comment to ima_lsm_copy_rule() to document the args_p
+> >     reference ownership transfer
+> >
+> >  security/integrity/ima/ima_policy.c | 16 +++++++---------
+> >  1 file changed, 7 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> > index 9842e2e0bc6d..b02e1ffd10c9 100644
+> > --- a/security/integrity/ima/ima_policy.c
+> > +++ b/security/integrity/ima/ima_policy.c
+> > @@ -300,10 +300,13 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+> >                         continue;
+> >
+> >                 nentry->lsm[i].type = entry->lsm[i].type;
+> > -               nentry->lsm[i].args_p = kstrdup(entry->lsm[i].args_p,
+> > -                                               GFP_KERNEL);
+> > -               if (!nentry->lsm[i].args_p)
+> > -                       goto out_err;
+> > +               nentry->lsm[i].args_p = entry->lsm[i].args_p;
+> > +               /*
+> > +                * Remove the reference from entry so that the associated
+> > +                * memory will not be freed during a later call to
+> > +                * ima_lsm_free_rule(entry).
+> > +                */
+> > +               entry->lsm[i].args_p = NULL;
+> 
+> This assignment necessitates a change in the code below...
+> 
+> >                 security_filter_rule_init(nentry->lsm[i].type,
+> >                                           Audit_equal,
+> > @@ -314,11 +317,6 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+> >                                 (char *)entry->lsm[i].args_p);
+> 
+> ... you should refer to nentry->lsm[i].args_p here!
+> 
+> Other than that,
+> 
+> Reviewed-by: Konsta Karsisto <konsta.karsisto@gmail.com>
 
-Hmm.  In these cases, we're trying to convey one of two things.  A
-given device/platform/CPU/whatever could be known to be problematic
-and thus disallowed, or we could have a policy that we generally don't
-trust hardware but we have specific reason to believe that this
-particular hardware is okay.  After doing a highly scientific sampling
-of a few cases, some of these are indeed lists and some are not.
+Thank you, Konsta. You're exactly right about the required change.
+Without it, the pr_warn() in the error path will always attempt to print
+a NULL pointer.
 
-If we're going to look for new words for these concepts, perhaps we
-shouldn't focus on the *list* aspect -- after all, that's just a
-rather popular implementation detail, but it's not the core concept
-we're trying to express.  As an example case, we have a horrible
-concept in which some Intel CPUs support a form of memory failure
-recovery, and there is no enumeration mechanism.  Instead, there's a
-list (sigh).  So we could say "your CPU is whitelisted for
-such-and-such," which at least gets the idea across, but saying "your
-CPU is allowlisted for such-and-such" seems like a stretch.  It's not
-that we have a policy to allow things on the list -- it's that we
-think that CPUs not on the list simply don't have the relevant
-capability.
+Mimi, the following change (along with adding Konsta's Reviewed-by)
+needs to be made to this patch in next-integrity-testing:
 
-Here are some brainstormed ideas:
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index b02e1ffd10c9..330a4e216349 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -314,7 +314,7 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+ 					  &nentry->lsm[i].rule);
+ 		if (!nentry->lsm[i].rule)
+ 			pr_warn("rule for LSM \'%s\' is undefined\n",
+-				(char *)entry->lsm[i].args_p);
++				(char *)nentry->lsm[i].args_p);
+ 	}
+ 	return nentry;
+ }
 
- - Such-and-such feature is quirked off.  (Or disabled due to a quirk.)
+It will then cause the next patch in the series to not apply but the
+fixup is minor.
 
- - Your device is not on the known-good list.
+Let me know if you are alright with doing these changes yourself or if
+you'd like me to submit a new series revision.
 
- - Your device is not known-good.  It might work anyway -- to try it,
-set such-and-such option.
+If you do this rebase work in next-integrity-testing yourself, I've
+prepared a copy branch of next-integrity-testing with all of the
+necessary changes for you to compare against:
 
- - Your device is known bad.
+ https://git.kernel.org/pub/scm/linux/kernel/git/tyhicks/linux.git/log/?h=next-integrity-testing-fixup
 
- - Your device is busted and we think you should pressure the
-manufacturer to fix it.
+My apologies for the trouble.
 
- - Your device is too old and no longer supported.
+Tyler
 
- - Seriously, you're trying to use an 80386 on a modern kernel?  No
-thanks.  We think it's neat that you still have one that works,
-though.
-
- - (Specifically for modules and not part of the Linux kernel tree)
-disable_autoload instead of blacklist, perhaps?
-
-Part of my point is that we use blacklist and whitelist to mean
-various things, and I don't think we should try to invent a couple of
-new catch-all terms to replace them.  Perhaps replacing these words
-could be an opportunity to come up with better descriptions at the
-same time.
+> 
+> 
+> Konsta
+> 
+> >         }
+> >         return nentry;
+> > -
+> > -out_err:
+> > -       ima_lsm_free_rule(nentry);
+> > -       kfree(nentry);
+> > -       return NULL;
+> >  }
+> >
+> >  static int ima_lsm_update_rule(struct ima_rule_entry *entry)
+> > --
+> > 2.25.1
+> >
