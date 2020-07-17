@@ -2,94 +2,153 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C450C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC63C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03A432064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7512064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:05:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UMpy7eBg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgGQTFT (ORCPT
+        id S1728493AbgGQTFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:05:19 -0400
-Received: from mga12.intel.com ([192.55.52.136]:51325 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbgGQTFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:05:18 -0400
-IronPort-SDR: cVaUk1zXS58apDjgsT31T/IhXhhTwNngdEjON1A5yTswTV1IzB7Z09gN7jUbsqUn8SxH7lOIxs
- IhpJBGgpvBLQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="129228843"
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="129228843"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 12:05:18 -0700
-IronPort-SDR: 2CCZBrEPmDd8OixQyFIcttfqgROuPVzPBMcZaXZutbkiSiwaYB7hDkhwN+oUyFhxWWw0ZEuI+/
- r0zo+KA/oghg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="318865549"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Jul 2020 12:05:18 -0700
-Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id 2850E580820;
-        Fri, 17 Jul 2020 12:05:18 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
-        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        alexander.h.duyck@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH V4 1/3] PCI: Add defines for Designated Vendor-Specific Extended Capability
-Date:   Fri, 17 Jul 2020 12:06:18 -0700
-Message-Id: <20200717190620.29821-2-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200714062323.19990-1-david.e.box@linux.intel.com>
-References: <20200714062323.19990-1-david.e.box@linux.intel.com>
+        Fri, 17 Jul 2020 15:05:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728451AbgGQTF1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 15:05:27 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1349DC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 12:05:27 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f5so13848633ljj.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 12:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EHhwNWLvCGKwFX6ZeCk25F8g9x2pupMKT7Bn+2O6siI=;
+        b=UMpy7eBg0VQk13Zh0CsA8daqqCqMYLR/yLgZvVSL0lJ8/e5Ix44NjgigL3+q8XJArC
+         +CoZF6icBgyJrPruDpKiDqs3SPz2T9oivrXhdcRHtNzZ1eOY09EfmGogrMEiKoqjN8Tf
+         QfSD4InjPcIuMhztE9TSwtLzGwGlEqO2hK1TlNN3tpgoD/IpL93Q8TOpldntF8RTIa9i
+         C8ukkczG2UxL4WrwjzmXVCfquGoET/KgUjsKal4Q1IavPiGqE2sp7z7Ky8vMrNAWrbHJ
+         dh1pCRPAhK/qgJYywFwZzK5mejpW5pcI+fhWKbs7znm9DT4r7gpOB4C5y4W8oNfI1t7j
+         EZsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EHhwNWLvCGKwFX6ZeCk25F8g9x2pupMKT7Bn+2O6siI=;
+        b=V9A8nk7ziHhKGnTdQNEu4sLZwU4mP64O+fseWMeARCNtK923BorJqOXdZXde0zAMSN
+         8tT7p0vDWSK4udnWK3V8is1yKizjo7IskJSZyYK8K47lXk7077qQ2s89/ZCT0LWDq/wn
+         n+PIdfQeNehxYM0D+8/6JKSj2HxZbmSnfo41dbR8eXRu82Emtb1UFj/S2X/hPp0jE6NS
+         +DunTiwqhhs1Z0BrIkTwZVLpZmjTeUjx2MuZ/pYEw35kBriMK/Si/F3Kg6EJOv5uJzSe
+         pJFlA+2GiHKrerbCC9sq7O4MJiW9NYh5ieRfYMRDC1l6RUTUuFchUCi3VGc9frLVpF8/
+         wnDg==
+X-Gm-Message-State: AOAM532yVStOoNE8Y1+BUuD2FzlWG9clm1qmnpH94szgIK/vOyxaor/R
+        M5EcFnq52O1rg020+4CognfEyiaLE8CPYMymctx65w==
+X-Google-Smtp-Source: ABdhPJzA2lclNj5LaSPAOhsYYmx7y36gm/usqNFraHHlhKV4rNqxpPH0IXWB5YiqK4pOf3QGE+Q7RO/aAlHNo2NWhrU=
+X-Received: by 2002:a2e:9b42:: with SMTP id o2mr4877549ljj.102.1595012725372;
+ Fri, 17 Jul 2020 12:05:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
+ <20200712131003.23271-2-madhuparnabhowmik10@gmail.com> <20200712160856.GW9247@paulmck-ThinkPad-P72>
+ <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
+ <CAA42JLY2L6xFju_qZsVguGtXvDMqfCKbO_h1K9NJPjmqJEav=Q@mail.gmail.com> <20200717170747.GW9247@paulmck-ThinkPad-P72>
+In-Reply-To: <20200717170747.GW9247@paulmck-ThinkPad-P72>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sat, 18 Jul 2020 00:35:12 +0530
+Message-ID: <CA+G9fYvtYr0ri6j-auNOTs98xVj-a1AoZtUfwokwnvuFFWtFdQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        madhuparnabhowmik10@gmail.com
+Cc:     Dexuan-Linux Cui <dexuan.linux@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, rcu@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
+        frextrite@gmail.com, lkft-triage@lists.linaro.org,
+        Dexuan Cui <decui@microsoft.com>, juhlee@microsoft.com,
+        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe Designated Vendor-Specific Extended Capability (DVSEC) and defines
-for the header offsets. Defined in PCIe r5.0, sec 7.9.6.
+Hi Paul,
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- include/uapi/linux/pci_regs.h | 5 +++++
- 1 file changed, 5 insertions(+)
+> I am not seeing this here.
 
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index f9701410d3b5..beafeee39e44 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -720,6 +720,7 @@
- #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
- #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
- #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
-+#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
- #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
- #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
- #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
-@@ -1062,6 +1063,10 @@
- #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
- #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
- 
-+/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
-+#define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
-+#define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-Specific Header2 */
-+
- /* Data Link Feature */
- #define PCI_DLF_CAP		0x04	/* Capabilities Register */
- #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
--- 
-2.20.1
+Do you notice any warnings while building linux next master
+for x86_64 architecture ?
 
+> Could you please let us know what compiler
+> and command-line options you are using to generate this?
+
+We have two build systems one showing it as error and build breaks
+and another one showing it as warning and build pass.
+tool chain: gcc 9.3.0
+build command:
+make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Dx86 HOSTCC=3Dgcc
+CC=3D"sccache gcc" O=3Dbuild
+
+metadata:
+    git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-ne=
+xt.git,
+    target_arch: x86,
+    toolchain: gcc-9,
+    git_short_log: aab7ee9f8ff0 (\Add linux-next specific files for 2020071=
+7\),
+    git_sha: aab7ee9f8ff0110bfcd594b33dc33748dc1baf46,
+    git_describe: next-20200717,
+    kernel_version: 5.8.0-rc5,
+
+warning log,
+--
+make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Dx86 HOSTCC=3Dgcc
+CC=3D"sccache gcc" O=3Dbuild
+#
+In file included from ../include/linux/pid.h:5,
+                 from ../include/linux/sched.h:14,
+                 from ../include/linux/kvm_host.h:12,
+                 from ../arch/x86/kvm/mmu/page_track.c:14:
+../arch/x86/kvm/mmu/page_track.c: In function =E2=80=98kvm_page_track_write=
+=E2=80=99:
+../include/linux/rculist.h:727:30: warning: left-hand operand of comma
+expression has no effect [-Wunused-value]
+  727 |  for (__list_check_srcu(cond),     \
+      |                              ^
+../arch/x86/kvm/mmu/page_track.c:232:2: note: in expansion of macro
+=E2=80=98hlist_for_each_entry_srcu=E2=80=99
+  232 |  hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~
+../arch/x86/kvm/mmu/page_track.c: In function =E2=80=98kvm_page_track_flush=
+_slot=E2=80=99:
+../include/linux/rculist.h:727:30: warning: left-hand operand of comma
+expression has no effect [-Wunused-value]
+  727 |  for (__list_check_srcu(cond),     \
+      |                              ^
+../arch/x86/kvm/mmu/page_track.c:258:2: note: in expansion of macro
+=E2=80=98hlist_for_each_entry_srcu=E2=80=99
+  258 |  hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/kvm/svm/svm.o: warning: objtool: svm_flush_tlb_gva()+0x12:
+call without frame pointer save/setup
+kernel/bpf/core.o: warning: objtool: ___bpf_prog_run.cold()+0x7: call
+without frame pointer save/setup
+
+ref:
+https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/643978120
+
+
+>                                                         Thanx, Paul
+
+- Naresh
