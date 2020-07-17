@@ -2,65 +2,66 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C71C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECF3C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D439C207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED01206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594990136;
-	bh=JicYhAGOKzhPBf+VglJ1C3AyTSIJ0ZQ1V5JPVESHxps=;
+	s=default; t=1594990147;
+	bh=5POnxabUMyqHA1KxDC3Te6qQKnu8fFa8/yigj7vMA2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZWKDdAHqtVHZvTrUdKxsLDNLzWNK467tNobk+28zPopmqWInc7PHHfZFt3u6Woga
-	 hb+3tr3K1d5vaxpgSCCUOEgFjghdqjnuiT+1Ia+cCsCQae2vZyRA3XAMNA0NpK6w8j
-	 w0eK10O/IfnWtHi+G07yHmVzmNdpZ4KK2sWk15s4=
+	b=O/rhtkAPU6WRrHgFhUwmtWZDbRZ/wPFxB/inWbTrOKSJFC6BKpelsK5c7q2/ARvOg
+	 IEqzgQSe7rm1b6OdZ1TOSaYh5Rbb8emD7wdhTHiUksfc2qwdlIz0X4ICOWTkkq6cE7
+	 LmFB0i+qM4gRQaTS4F2gfjbJf+/GHcSPHkDI6sU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgGQMsz (ORCPT
+        id S1726885AbgGQMtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:48:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50288 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 08:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbgGQMsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:48:54 -0400
+        id S1726696AbgGQMs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 08:48:59 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24969206F4;
-        Fri, 17 Jul 2020 12:48:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7118B207FB;
+        Fri, 17 Jul 2020 12:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594990134;
-        bh=JicYhAGOKzhPBf+VglJ1C3AyTSIJ0ZQ1V5JPVESHxps=;
+        s=default; t=1594990139;
+        bh=5POnxabUMyqHA1KxDC3Te6qQKnu8fFa8/yigj7vMA2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Euhq4VpE6K8tsdd/DG+pg9V0RQHPklthe2SDVGgYQHTZi8HrGEcuhs4jCKPDgSI1y
-         6A4KNsIw7xeRnsUKFF2iIhxvjcLhyVcN/ygb8iWgC6lYwblHlZVnsPpDSlZbwthVGk
-         IkYxnoWHUoXyqHlBixnmKoHBRZLLqeRoYSoGR27c=
+        b=2uJXQ1KfkRiG4WbZZf4pM/IYginKG2nTtWy/qrZp7ICtuC25ONpKgTlR0nhflNE5t
+         u4nTdxiavRPloJYgVH1tyKiL+mVOXDqf9h5PcQVnPU6JCzvQPhm+Q1mFa8Ey1vj8MU
+         AugpzmI4sHeoRDoyLqhcsAhurpb+Cu5GEF3pqqBM=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1jwPnI-00Ccsm-Jz; Fri, 17 Jul 2020 13:48:52 +0100
+        id 1jwPnO-00Ccsm-0z; Fri, 17 Jul 2020 13:48:58 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     Alexandre Torgue <alexandre.torgue@st.com>,
         Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>
 Cc:     linux-kernel@vger.kernel.org, marex@denx.de,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [RESEND PATCH] irqchip/stm32-exti: Use the hwspin_lock_timeout_in_atomic() API
-Date:   Fri, 17 Jul 2020 13:48:42 +0100
-Message-Id: <159499001592.546505.1419567168123690034.b4-ty@kernel.org>
+        linux-stm32@st-md-mailman.stormreply.com,
+        wanghaibin.wang@huawei.com
+Subject: Re: [PATCH] genirq/irqdomain: Remove redundant NULL pointer check on fwnode
+Date:   Fri, 17 Jul 2020 13:48:49 +0100
+Message-Id: <159499001592.546505.17916680802608483979.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200706081115.25180-1-alexandre.torgue@st.com>
-References: <20200706081115.25180-1-alexandre.torgue@st.com>
+In-Reply-To: <20200716083905.287-1-yuzenghui@huawei.com>
+References: <20200716083905.287-1-yuzenghui@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, jason@lakedaemon.net, tglx@linutronix.de, linux-kernel@vger.kernel.org, marex@denx.de, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, jason@lakedaemon.net, tglx@linutronix.de, yuzenghui@huawei.com, linux-kernel@vger.kernel.org, marex@denx.de, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, wanghaibin.wang@huawei.com
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,25 +69,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jul 2020 10:11:15 +0200, Alexandre Torgue wrote:
-> Now that the hwspin_lock_timeout_in_atomic() API is available use it.
-> 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> 
-> diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-> index faa8482c8246..c7ab69694931 100644
-> --- a/drivers/irqchip/irq-stm32-exti.c
-> +++ b/drivers/irqchip/irq-stm32-exti.c
-> @@ -25,7 +25,6 @@
->  #define IRQS_PER_BANK 32
-> 
-> [...]
+On Thu, 16 Jul 2020 16:39:05 +0800, Zenghui Yu wrote:
+> The is_fwnode_irqchip() helper will check if the fwnode_handle is empty.
+> There is no need to perform a redundant check outside of it.
 
 Applied to irq/irqchip-5.9, thanks!
 
-[1/1] irqchip/stm32-exti: Use the hwspin_lock_timeout_in_atomic() API
-      commit: e5c19cf32b68d8c59cd3e94e257ab030f07db7d6
+[1/1] genirq/irqdomain: Remove redundant NULL pointer check on fwnode
+      commit: 47903428b0e9db7a6251aa696fd1b2fc5de98545
 
 Cheers,
 
