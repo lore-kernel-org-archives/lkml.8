@@ -2,144 +2,135 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736DAC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB62C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5055420717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:42:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZQ/I44b3"
+	by mail.kernel.org (Postfix) with ESMTP id 025342070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgGQJmY (ORCPT
+        id S1726238AbgGQJpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgGQJmY (ORCPT
+        Fri, 17 Jul 2020 05:45:39 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:41491 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgGQJpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:42:24 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B9EC061755;
-        Fri, 17 Jul 2020 02:42:24 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B7R3x5gyrz9sRR;
-        Fri, 17 Jul 2020 19:42:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594978942;
-        bh=8l+VVRwt/1/X+Sp2SWJCe4e3X9Pf36Mkns2s5phL8CQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZQ/I44b3r/HnlGiaZWF85Zk+6pLHoQ6XZXW1mX1xlqh/a7gxAlPX1L5PAOlsZOycY
-         xTaA2NlqZA8QyUtYGFLm2txataRLxIhAitMu+CsrQBc1QCd2TiT6InEsuCNN/wH8MX
-         fVFBCLhFEUINQMfoj6aAtpaqN5RwJsx9Rcu04e41cQYJWvBO9zSd5wcDe8wekGo8gC
-         x/hkqDFHpavRR7fWTHvDrzOIqDD/aiTi8F5/RMC/Vp3Uv2maRrbRqcbcm0FW0yJ+Lw
-         ILY6UzUg7n1FLK2QwEaDuPE6ac/Y+9YicUKld1y9BFTyNDVJjKi6z9hakIwHsz1W7P
-         qnMqkK33NydLw==
-Date:   Fri, 17 Jul 2020 19:42:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the init tree with the block tree
-Message-ID: <20200717194221.146ab662@canb.auug.org.au>
+        Fri, 17 Jul 2020 05:45:38 -0400
+Received: from mail-lf1-f50.google.com ([209.85.167.50]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MScox-1kOb383cC1-00Sy3v; Fri, 17 Jul 2020 11:45:35 +0200
+Received: by mail-lf1-f50.google.com with SMTP id o4so5683698lfi.7;
+        Fri, 17 Jul 2020 02:45:35 -0700 (PDT)
+X-Gm-Message-State: AOAM533tvq457Cf23uamqChMxdeKLB5VC+83VnKdM/hGLbnEWB8sNSNG
+        5xhAbkD+jG9pM+SkDrPHF9ztHGfzF+nVPurpbj8=
+X-Google-Smtp-Source: ABdhPJyFXFxPBPYqoAj3/EvTaOGJNqDDWY0LUGcDAcRa1UgsHHGCiywONxN/6LjRhwmrijWD/0vh4LSLU+1CUo9SQh4=
+X-Received: by 2002:ac2:51a1:: with SMTP id f1mr4321885lfk.173.1594979135271;
+ Fri, 17 Jul 2020 02:45:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DoOX.LRKhMCrGAH/jmM=5xQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <1594912013-20859-1-git-send-email-Anson.Huang@nxp.com>
+ <c00f8fe3-d12a-0f91-c301-c028e5aa3f25@nxp.com> <DB3PR0402MB3916C9FE00C0F4FC62ACB711F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <5e2af0c3-c832-3978-017e-0b1649aac61c@nxp.com> <DB3PR0402MB3916AAEE01257A7F9A25A657F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <c27109aa-280f-db0d-980b-fbd735bab0a6@nxp.com> <DB3PR0402MB3916A84BEF5EEC327EE35180F57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916A84BEF5EEC327EE35180F57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jul 2020 11:45:18 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a256uR0zZn9ew9UoDqP51MdA4emCfMoZuPW6n9MqD5vPQ@mail.gmail.com>
+Message-ID: <CAK8P3a256uR0zZn9ew9UoDqP51MdA4emCfMoZuPW6n9MqD5vPQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: imx: Support building SCU pinctrl driver as module
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:MMqpq/ueeUL6ndfSlPVSvEbpeh7x6jxWTcgoG2cFbk5ArIe+pIl
+ Bie/CK2fby81Je/1s+rE5ndSo7ACA93wo+vZm0V9/lJq50J1DlXFW0CDZg6J/UMN7y97C45
+ SkJKX5G3jddNM7LLcmfGC0+1oZVoKOqqljApetsWy/u8w8/lPaGGcd3D2cfKdDsij+M2C05
+ g057VNevSkP9MYXihEW5g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SrFhWt74psc=:59DJ4ruSghMgT5hBUKbOcd
+ IJGRXA0ZCBuvurZa3QPluIjRTvk2KZSIL8P8fz9bxq3S51LOpkMuAj0I+yWDIDcBPf11Q6FHx
+ mqWenOq56jtXNHWw1RtIuZ84Zu+QocoKIj5vcI1nGCjDMjUcRkZ9QgCgFcUSmL6oaf1k6a6Yc
+ OJjGdm3j3fmIUCotyH88GRV1Sf7u79xNJCHLrlgL+TqmSAaiepEcgBICN6VqrDOX4uP7xtMS6
+ 3o8nf5WJTfdYL8SogjgdCOuj/M7P8iShBOC1q8/inFj+dANZA0FxevpK0pi9OtXWNkYf+vF3m
+ eHK1MayqcpYqj+WnbcrqMpcNHSJuw0chXVkEXM+nr3D6IxkPtiytlY69lEaP4xhJ01Zw1SKLw
+ YavJiBg8pOG3P12WgF8tQ85irursBCFe5VMqDrA5peg0Mjhn1ZCbtuTG3nZEo43A0VOvWvLIr
+ eIT0PsYCeTnG4gB/oB7nGVzTXgEPC5XBMyqqs+d+/WaRPMgMnkMHtY1aHjV7OVGM9A9VU6Ym+
+ 9QZrKedH8n7XHai+MMJO6lZJqlKSpWKGrh4BDOOgiX11WYkaeQ1WciMRKuzaAOj6/Sno4CjfZ
+ QP7JW/f0V98lnSj8QfxotCZT6b1LuYuyp268tA0dtFCRg74gphzVvKDuolP66rQyH2gjXKYOz
+ N6P/2n5FAs2Hfn2x7s3ZOKpu7TbjkMgt8TW123ZY91W0fC9RhZvRPRRQFpBmDVoOvfMS3vEQG
+ 9kuxttpNQwuFLLIW11HZrimuYZ4QJPGec/F6lSMv9XpF7L3RRh14Y3Z5L13TO5o3/oQuZFxEX
+ wpl+6UxUxxXr784ONYcxNh4oJtyYMuEQSKh3KRILmNBDOXCrGjX+tJTNL1+LnB2/nNN71Lg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DoOX.LRKhMCrGAH/jmM=5xQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jul 17, 2020 at 11:24 AM Anson Huang <anson.huang@nxp.com> wrote:
+> > Subject: Re: [PATCH 1/2] pinctrl: imx: Support building SCU pinctrl driver as module
+> > +MODULE_AUTHOR("Dong Aisheng<aisheng.dong@nxp.com>");
+> > +MODULE_DESCRIPTION("NXP i.MX SCU common pinctrl driver");
+> > +MODULE_LICENSE("GPL v2");
+> >
+> >
+> > This can be in a separate patch.
+>
+> I don't understand, without adding module license, changing the SCU pinctrl driver
+> to "tristate", when building with =M, the build will have warning as below, so I think
+> it does NOT make sense to split it to 2 patches.
+>
+>   CC [M]  drivers/pinctrl/freescale/pinctrl-scu.o
+>   MODPOST Module.symvers
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/pinctrl/freescale/pinctrl-scu.o
+>   LD [M]  drivers/pinctrl/freescale/pinctrl-scu.ko
 
-Hi all,
+I agree it would be clearer to do it as separate patches, but you then
+have to be careful about the order to avoid the problem you mention.
 
-Today's linux-next merge of the init tree got a conflict in:
+A clear indication that it may be sensible to split up the patch is that
+your changelog has a list of five items in it, which are mostly doing
+different things. The ideal way to split up a patch series is to have
+each patch with a changelog that has to explain exactly one thing,
+and makes it obvious how each changed line corresponds to the
+description, but never explain the same thing in more than one patch
+(i.e. you combine patches that do the same thing in multiple files).
 
-  drivers/md/md.c
+In this case, a good split may be:
 
-between commit:
+patch 1:
+   - Use function callbacks for SCU related functions in pinctrl-imx.c
+      in order to support the scenario of PINCTRL_IMX is built in
+      while PINCTRL_IMX_SCU is built as module;
+    - All drivers using SCU pinctrl driver need to initialize the
+      SCU related function callback;
 
-  a564e23f0f99 ("md: switch to ->check_events for media change notification=
-s")
+patch 2:
+    - Export SCU related functions and use "IS_ENABLED" instead of
+      "ifdef" to support SCU pinctrl driver user and itself to be
+      built as module;
+    - Change PINCTR_IMX_SCU to tristate;
+    - Add module author, description and license.
 
-from the block tree and commit:
+and then rewrite the description to not have a bulleted list.
 
-  7e0adbfc20c5 ("md: rewrite md_setup_drive to avoid ioctls")
+That said, I don't think it is critical here, and I would not have
+complained about the version you sent.
 
-from the init tree.
+If you end up changing the patch, I think you can actually drop
+the "#if IS_ENABLED()" check entirely, as the functions are
+now always assumed to be available, and we don't #ifdef
+declarations when there is no #else path otherwise.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/md/md.c
-index 5b6d46741baa,ee622b67424e..000000000000
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@@ -7836,21 -7790,23 +7820,21 @@@ static void md_release(struct gendisk *
-  	mddev_put(mddev);
-  }
- =20
- -static int md_media_changed(struct gendisk *disk)
- -{
- -	struct mddev *mddev =3D disk->private_data;
- -
- -	return mddev->changed;
- -}
- -
- -static int md_revalidate(struct gendisk *disk)
- +static unsigned int md_check_events(struct gendisk *disk, unsigned int cl=
-earing)
-  {
-  	struct mddev *mddev =3D disk->private_data;
- +	unsigned int ret =3D 0;
- =20
- +	if (mddev->changed)
- +		ret =3D DISK_EVENT_MEDIA_CHANGE;
-  	mddev->changed =3D 0;
- -	return 0;
- +	return ret;
-  }
- +
-- static const struct block_device_operations md_fops =3D
-+ const struct block_device_operations md_fops =3D
-  {
-  	.owner		=3D THIS_MODULE,
- +	.submit_bio	=3D md_submit_bio,
-  	.open		=3D md_open,
-  	.release	=3D md_release,
-  	.ioctl		=3D md_ioctl,
-
---Sig_/DoOX.LRKhMCrGAH/jmM=5xQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Rcn0ACgkQAVBC80lX
-0GyTzQf+KOSMeJ4CQ+rp9jlSXmeP4oevbpb2rfGovdW6FF+KRhzgBTJC7Usjfz8S
-Lb3F/8gZ0sif2XQeWBu5SmhWbP9uXm7ZI5EtxjiOdVrKWhtgUUR+W49yIUUgJmXE
-wx6WGmE9/rWBNmTcrwIpwxJ9cN3qhmUd6aQFXWBPkPh6tO0hMXvpHHWDjCXBkIQV
-8kmRxet7gV5ElhNq3EZR0yiAiInWX9dBTAJSzRKgOo2Nuv88AfkomrlNCJq6e/pP
-wnmxu+iFRROl6IhqtHv3esKR+3a+QyDQv55kbbUtHF0hP0BCm8xzNn++12WIHfKq
-skyYmEUl5809e7D4sVkDKukBl+/YSQ==
-=qjJR
------END PGP SIGNATURE-----
-
---Sig_/DoOX.LRKhMCrGAH/jmM=5xQ--
+       Arnd
