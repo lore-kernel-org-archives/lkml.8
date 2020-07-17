@@ -2,131 +2,125 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C74CC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E125BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 372482070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B997920684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQheRHn1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1GK9EL0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgGQJO1 (ORCPT
+        id S1726198AbgGQJRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51866 "EHLO
+        Fri, 17 Jul 2020 05:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgGQJO0 (ORCPT
+        with ESMTP id S1725864AbgGQJRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:14:26 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344FAC061755;
-        Fri, 17 Jul 2020 02:14:26 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 145so8123884qke.9;
-        Fri, 17 Jul 2020 02:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TTah83XUjnFYRYk4+z1WzNDw5yUiECajFe5/YPDgJlc=;
-        b=TQheRHn1cXzAuyeAdVJtG46D6J951Kk4qGPQR2X703/XXvKFQrxQ5YJZpo8d0xYzfA
-         G1Ghdb7LaYEqxJkZO+RLdKrzPdfnQ43SnF9QgXLfe/odBI6RU7CpT7+hAzjoLxDWUJPE
-         taRBvSd/PXI3ypGn1mKESnLFG6nTFmfYRafYZGCGYfYtOVoJjwB9krtehBjwWXbre8m6
-         sEnA90M7w/zCaf3qrS530VXFdciyuBxBx9IXXX17qBpYVAkTaPhQwguTSTWNlAegbnVP
-         x07Hacdjp0FdkYy3TCxXSj+flKd3GJhCX8lWfQolxLCNiKb2+RrMgrnlhTgoomzxCs8O
-         g15w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TTah83XUjnFYRYk4+z1WzNDw5yUiECajFe5/YPDgJlc=;
-        b=mtCC1NoSlW+kpiTDm04oR2aNLvhvvXPYSpcM4FFoGqDAy5ALH5agID/spyx/kUAeo4
-         smTi0k93VoQak074A0+tWWz1SI6E0qkOvq9+/5qvCcptM5epsK6EwO9JQmGbT9F0TYyN
-         wBoQH28MdMEE/GJDcy/dqvW32breZVVOtLXfZjrIf7YoxrYMpMVz2Nz7qHgOxtphpkXo
-         3Px8DFJHNrvRj/06SCnkhKnmLJCciAA9IaL9sDZhM0PxS7syFET0RD4uP7qqvIa805ao
-         OyigYff+WFQn9NPFv744O+dzzOe8y6Toq3H/cgJOhCT7lH5IRDPJ+3TUdKsStR3ow/9Z
-         q2xQ==
-X-Gm-Message-State: AOAM533+ZBHRB29/p96nemEvNGz1ceqwbPDYaaPPkTYH4ezijnI5MUzA
-        kdijLxdx+0yrh/VWqTlhLuzNerSkQRodOCh7udGCoQ==
-X-Google-Smtp-Source: ABdhPJxvM0u07hwrbNojbkX69s729/X1zvnefAfZ7a28oA6/z8xgZwIufAPfsMk3UtbX7ynthXdoomYlrLvjC7Mvhw8=
-X-Received: by 2002:a37:6d2:: with SMTP id 201mr7473861qkg.187.1594977265463;
- Fri, 17 Jul 2020 02:14:25 -0700 (PDT)
+        Fri, 17 Jul 2020 05:17:31 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F9DCC061755;
+        Fri, 17 Jul 2020 02:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pcQ0H1o6p26C2vKLZMF/SJZnMQU+q3kwcSeFrBwvG4U=; b=1GK9EL0Mygx6wkzcHli7MajxZJ
+        9bdhJlSKGlg4PMmK23HdyR74DFHwv0hwspiU36sq/NpoEbxvPgpHX+8UyWNxtplg/0VsSXxHCiPB3
+        vFRbTtyHpuDavKAh5w7zgL1ghadeqPivAdZCXA0naaJhiCuhyiecFBb+pzLL7zWi9zOvxepXMvaQN
+        ntvXivnC5cIE5QyoWA0OpNwPZQrVkbCA07py36E1hxi0uGtUkzP/EmssVu2Q7jz/ZEso4gZGV7W+F
+        m5QxMYoo9/iJWWSIgBtc57v9llapUacsJoD8uETqbubjS8m9fifXpugMechsC7FZGC8PNVM2D9NmB
+        Pjg04+Jw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwMUc-0002bP-4T; Fri, 17 Jul 2020 09:17:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 163AB3003D8;
+        Fri, 17 Jul 2020 11:17:19 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0035129CF6F50; Fri, 17 Jul 2020 11:17:18 +0200 (CEST)
+Date:   Fri, 17 Jul 2020 11:17:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     ira.weiny@intel.com
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 12/17] memremap: Add zone device access protection
+Message-ID: <20200717091718.GA10769@hirez.programming.kicks-ass.net>
+References: <20200717072056.73134-1-ira.weiny@intel.com>
+ <20200717072056.73134-13-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com> <be55deff4ef1453983522d247bd36110@AcuMS.aculab.com>
-In-Reply-To: <be55deff4ef1453983522d247bd36110@AcuMS.aculab.com>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Fri, 17 Jul 2020 18:14:14 +0900
-Message-ID: <CAAmzW4PPoSU6s8SQKRZAgLbfHz6LY5QXPWWjv2+iCM5iM3j51A@mail.gmail.com>
-Subject: Re: [PATCH 1/4] mm/page_alloc: fix non cma alloc context
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-team@lge.com" <kernel-team@lge.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717072056.73134-13-ira.weiny@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 7=EC=9B=94 17=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 5:32, D=
-avid Laight <David.Laight@aculab.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> From: js1304@gmail.com
-> > Sent: 15 July 2020 06:05
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > Currently, preventing cma area in page allocation is implemented by usi=
-ng
-> > current_gfp_context(). However, there are two problems of this
-> > implementation.
-> ...
-> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > index 6416d08..cd53894 100644
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> ...
-> > @@ -3693,6 +3691,16 @@ alloc_flags_nofragment(struct zone *zone, gfp_t =
-gfp_mask)
-> >       return alloc_flags;
-> >  }
-> >
-> > +static inline void current_alloc_flags(gfp_t gfp_mask,
-> > +                             unsigned int *alloc_flags)
-> > +{
-> > +     unsigned int pflags =3D READ_ONCE(current->flags);
-> > +
-> > +     if (!(pflags & PF_MEMALLOC_NOCMA) &&
-> > +             gfp_migratetype(gfp_mask) =3D=3D MIGRATE_MOVABLE)
-> > +             *alloc_flags |=3D ALLOC_CMA;
-> > +}
-> > +
->
-> I'd guess this would be easier to understand and probably generate
-> better code if renamed and used as:
->         alloc_flags |=3D can_alloc_cma(gpf_mask);
->
-> Given it is a 'static inline' the compiler might end up
-> generating the same code.
-> If you needed to clear a flag doing:
->         alloc_flags =3D current_alloc_flags(gpf_mask, alloc_flags);
-> is much better for non-inlined function.
+On Fri, Jul 17, 2020 at 12:20:51AM -0700, ira.weiny@intel.com wrote:
+> +void dev_access_disable(void)
+> +{
+> +	unsigned long flags;
+> +
+> +	if (!static_branch_unlikely(&dev_protection_static_key))
+> +		return;
+> +
+> +	local_irq_save(flags);
+> +	current->dev_page_access_ref--;
+> +	if (current->dev_page_access_ref == 0)
 
-Vlastimil suggested this way and I have agreed with that. Anyway,
-thanks for the suggestion.
+	if (!--current->dev_page_access_ref)
 
-Thanks.
+> +		pks_update_protection(dev_page_pkey, PKEY_DISABLE_ACCESS);
+> +	local_irq_restore(flags);
+> +}
+> +EXPORT_SYMBOL_GPL(dev_access_disable);
+> +
+> +void dev_access_enable(void)
+> +{
+> +	unsigned long flags;
+> +
+> +	if (!static_branch_unlikely(&dev_protection_static_key))
+> +		return;
+> +
+> +	local_irq_save(flags);
+> +	/* 0 clears the PKEY_DISABLE_ACCESS bit, allowing access */
+> +	if (current->dev_page_access_ref == 0)
+> +		pks_update_protection(dev_page_pkey, 0);
+> +	current->dev_page_access_ref++;
+
+	if (!current->dev_page_access_ref++)
+
+> +	local_irq_restore(flags);
+> +}
+> +EXPORT_SYMBOL_GPL(dev_access_enable);
+
+
+Also, you probably want something like:
+
+static __always_inline devm_access_disable(void)
+{
+	if (static_branch_unlikely(&dev_protection_static_key))
+		__devm_access_disable();
+}
+
+static __always_inline devm_access_enable(void)
+{
+	if (static_branch_unlikely(&dev_protection_static_key))
+		__devm_access_enable();
+}
