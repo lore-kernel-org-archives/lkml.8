@@ -2,145 +2,118 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8867EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDAAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F67B20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED8320787
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WHizPbkQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BowF3PwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgGQANo (ORCPT
+        id S1726233AbgGQAQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 20:13:44 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17694 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgGQANn (ORCPT
+        Thu, 16 Jul 2020 20:16:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgGQAQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 20:13:43 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f10ed2a0000>; Thu, 16 Jul 2020 17:13:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 16 Jul 2020 17:13:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 16 Jul 2020 17:13:42 -0700
-Received: from [10.2.163.115] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Jul
- 2020 00:13:42 +0000
-Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
- tegra_mipi_calibrate and tegra_mipi_wait
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
- <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
- <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
- <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
- <ce0c5ffb-f859-0eab-1ea5-044623dff221@nvidia.com>
- <a2b8169c-c4a3-4862-cd27-8c1a51ddc558@gmail.com>
- <4690e682-8495-2327-87c7-c2f06a7a479d@nvidia.com>
- <66812127-38cf-2af3-51c0-50edbe446e73@nvidia.com>
- <9b4fbf9d-d651-aa35-c0a6-b8f16aeb0900@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <550f1796-67ca-5856-223d-c68360243954@nvidia.com>
-Date:   Thu, 16 Jul 2020 17:16:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 20:16:22 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C8CFC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:22 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u5so4497848pfn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sl4GNsmArDLipzZLi4IQVk0TOodt16D37OUgWF5KbPo=;
+        b=BowF3PwOju4VnW5jUNBztNr1QHxUEqy6HgjuXfuKh5dztvWW9CDzCYmzt53X4es9xV
+         RlSOQ69RWaykSCNTQqfIuQTyahoqTJ1Qq+wjNd4t3mq49H33azZSu94Wo3tTp/EzNMSV
+         Y7UAuPuqAEvl7l9bkXQPh6qsQiSrCiD4TjJykBMTSgncyJJM0WV9KQ+tzStfHur3Qed+
+         yW2tN0Ig6kRObfnuHsbUU6oHen8rYu7+FKCPneQuomx9XugKY1Jzu2LOxVUi+TupWX+z
+         MIKZFc9U6nQIH+p0hDJ+v8GeWcFYgfr4eM2FCi1Loloh4liZ0bxGo7kKE1bkyL7CHWQ+
+         kJcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sl4GNsmArDLipzZLi4IQVk0TOodt16D37OUgWF5KbPo=;
+        b=H7tTmXY1lqL0ty/3/GXkAKId4D2YO3i0llUiGP9l8EO5MsvzeVATez1be+bt4SKTLK
+         BZbA5RJuk4f0tD1e54V9ox/q6ER/EoW+Nqb6fIeM4TrOPY9hu1Cfdf61wvZ2B+DYMiGI
+         8gSKZFIPvkMZShY7qoF6w35H14GdPZyCXEWK6h1QATUz6lnNkGZ+Hk9HDyvV46PXYeQA
+         EveUl4OugvS19rQmVHPPLjI65Ayzh7tV0aQPUvKp6DzfH5Ryp14EkdSbwrOhaa4C1M35
+         bnCCi5dqUYVGMJpU4IlKBWKTZXpfYqumawEww2cIXp6vGihyvjDI9yxxV16cBcTCw/OX
+         ZzTA==
+X-Gm-Message-State: AOAM530aMl5SD1dnHo6H3kSyocW0JcEEW7z6lU7WFBWSyvsh8gAMJfLY
+        Di8ZBUcmwr53K6B5tsiaEVxK9g==
+X-Google-Smtp-Source: ABdhPJyyEAViHTA6jZ1fWkKlx3Fq/q+F6yP4gOxKkTTTvDCGA+QkPdiuE8amuhBa7Q2HIfcbSX2LeA==
+X-Received: by 2002:a65:6089:: with SMTP id t9mr6633639pgu.236.1594944981548;
+        Thu, 16 Jul 2020 17:16:21 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id r7sm6211950pgu.51.2020.07.16.17.16.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 17:16:20 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jonathan Marek <jonathan@marek.ca>,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2 0/5] iommu/arm-smmu: Support maintaining bootloader mappings
+Date:   Thu, 16 Jul 2020 17:16:14 -0700
+Message-Id: <20200717001619.325317-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <9b4fbf9d-d651-aa35-c0a6-b8f16aeb0900@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594944810; bh=e7ciQ4M92aTObzkBjwwPlQaDpWhA7HRPJ/6w40ZehNc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=WHizPbkQ+yVcMQTr9kKLr6aNEkD238+xGSp8HgIi2sSnVUg9MxaoGtbDY8fIbNvyS
-         RhV/V/OuY0b+wfxVAH0zmHdnfwRJdKBiyxlHnYtfEEMQTUZSidNuv6x1Ugs8hQcIsq
-         NX1386HljzoK/AfSty9dRp0E9ximbjLg5IIAvkLtAZBjG5Pq2FCbZ8vXWC2raC35yr
-         sFtLuvF22WBtFhabnEl2FgkllXC/VkWdhMi0a+FryT7/YyXG42esC0HIURzHZTLHjB
-         iJT58Xat81wJz70tf0o2AiSKcX0HWgL3tdU15n3KmvQT0FKFiHWFpnLi2gMYF0thIZ
-         q1U02be5hzP1A==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Based on previous attempts and discussions this is the latest attempt at
+inheriting stream mappings set up by the bootloader, for e.g. boot splash or
+efifb.
 
-On 7/16/20 4:47 PM, Dmitry Osipenko wrote:
-> 17.07.2020 02:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 7/16/20 4:06 PM, Sowjanya Komatineni wrote:
->>> On 7/16/20 4:01 PM, Dmitry Osipenko wrote:
->>>> 17.07.2020 01:49, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> What keeps MIPI clock enabled after completion of the
->>>>>> tegra_mipi_calibrate() invocation?
->>>>> MIPI clock is disabled at end of tegra_mipi_calibrate and is re-enabl=
-ed
->>>>> during tegra_mipi_wait.
->>>>>
->>>>> I think I should fix this to keep the clock enabled till calibration
->>>>> results are latched.
->>>>>
->>>>> All consumers of tegra_mipi_calibrate() will call tegra_mipi_wait().
->>>>>
->>>>> So will remove clk_disable mipi clk at end of tegra_mipi_calibrate()
->>>>> and
->>>>> clk_enable mipi_clk at beginning of tegra_mipi_wait()
->>>> Isn't it possible to perform the calibration after enabling CSI and
->>>> before of starting the sensor streaming?
->>> Currently this is what I am doing. Triggering calibration start during
->>> CSI receiver being ready and then sensor streaming will happen where
->>> internal MIPI CAL detects for LP -> HS transition and applies results
->>> to pads. So checking for calibration results after sensor stream is
->>> enabled
->> 1. Calling tegra_mipi_calibrate() during CSI streaming where CSI pads
->> are enabled and receiver is kept ready
->>
->> 2. Start Sensor stream
->>
->> 3. Calling tegra_mipi_wait() to check for MIPI Cal status.
->>
->> So as mipi cal clk need to be kept enabled till 3rd step, we can enable
->> clock during tegra_mipi_calibrate() and leave it enabled and disable it
->> in tegra_mipi_wait after status check.
->  From TRM:
->
-> The following sequence is recommended for capturing a single frame:
->
-> 1. Set up CSI registers for use case such as number of lanes, virtual
-> channel, etc.
-> 2. Initialize and power up CSI interface
-> 3. Wait for initialization time or done signal from calibration logic
-> 4. Power up camera through the I2C interface
-> 5. All CSI data and clock lanes are in stop state, LP11
-> 6. Initiate frame capture through the I2C
-> 7. Frame done, CSI goes back to stop state, LP11
->
-> Hence, is it really necessary to perform the manual calibration?
+The first patch is an implementation of Robin's suggestion that we should just
+mark the relevant stream mappings as BYPASS. Relying on something else to set
+up the stream mappings wanted - e.g. by reading it back in platform specific
+implementation code.
 
-done signal from calibration logic will happen only when it sees LP to=20
-HS transition as thats when calibration results are applied to pads and=20
-then done signal is set.
+The series then tackles the problem seen in most versions of Qualcomm firmware,
+that the hypervisor intercepts BYPASS writes and turn them into FAULTs. It does
+this by allocating context banks for identity domains as well, with translation
+disabled.
 
-Also MIPI Pads calibration need to be done on every power off/on. So=20
-need to do calibration and trigger it along with CSI receiver=20
-programming to keep it ready and then need to check/wait for status only=20
-after sensor stream happens as thats where LP->HS transition happen.
+Lastly it amends the stream mapping initialization code to allocate a specific
+identity domain that is used for any mappings inherited from the bootloader, if
+above Qualcomm quirk is required.
+
+
+The series has been tested and shown to allow booting SDM845, SDM850, SM8150,
+SM8250 with boot splash screen setup by the bootloader. Specifically it also
+allows the Lenovo Yoga C630 to boot with SMMU and efifb enabled.
+
+Bjorn Andersson (5):
+  iommu/arm-smmu: Make all valid stream mappings BYPASS
+  iommu/arm-smmu: Emulate bypass by using context banks
+  iommu/arm-smmu: Move SMR and S2CR definitions to header file
+  iommu/arm-smmu-qcom: Consistently initialize stream mappings
+  iommu/arm-smmu: Setup identity domain for boot mappings
+
+ drivers/iommu/arm-smmu-qcom.c |  48 +++++++++++++
+ drivers/iommu/arm-smmu.c      | 123 +++++++++++++++++++++++++++++-----
+ drivers/iommu/arm-smmu.h      |  21 ++++++
+ 3 files changed, 174 insertions(+), 18 deletions(-)
+
+-- 
+2.26.2
 
