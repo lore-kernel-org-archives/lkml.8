@@ -2,134 +2,123 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA02C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48BBC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 572A720578
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:38:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZQ57yMa5"
+	by mail.kernel.org (Postfix) with ESMTP id 852EB20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgGQIif (ORCPT
+        id S1726675AbgGQIkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:38:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51540 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgGQIie (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:38:34 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06H8cMQc035187;
-        Fri, 17 Jul 2020 03:38:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594975102;
-        bh=nAQCGUqo2TKuVDp/7DUdhh3dhnBqiYgA4vqkgj5+R5s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZQ57yMa5SWa6rSOSG3EGDx1zmXVwOjgdpKBiymfKbamxzRL7uP1f1ySVuzj4fgxPx
-         gJueY0PwRv0BDBbYCKY+588a1oi3Y37T8SeLEaMCZvSECZhYE2eLAKx2D1jJZfgIHX
-         fcxatk2cp6yCy87uEPSQfWqQtwx+4X7NGd/W09ZU=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06H8cMef036562;
-        Fri, 17 Jul 2020 03:38:22 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 03:38:22 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 03:38:22 -0500
-Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06H8cHcm087224;
-        Fri, 17 Jul 2020 03:38:17 -0500
-Subject: Re: [PATCH 7/7] arm64: defconfig: Enable AM654x SDHCI controller
-To:     Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        ARM-SoC Maintainers <soc@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-References: <20200619125801.9530-1-faiz_abbas@ti.com>
- <20200619125801.9530-8-faiz_abbas@ti.com>
- <3ed03440-7fbd-6abc-8a15-67e7217e2c3d@ti.com>
- <2e50333c-5387-236f-3fb2-6d8014b224e0@ti.com>
- <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <75cd485b-e3eb-19ee-ad1f-84cb04b0c807@ti.com>
-Date:   Fri, 17 Jul 2020 14:08:16 +0530
+        Fri, 17 Jul 2020 04:40:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42942 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgGQIkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:40:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E87CEB829;
+        Fri, 17 Jul 2020 08:40:10 +0000 (UTC)
+Subject: Re: [PATCH] media: atomisp: do not free kmalloc memory by vfree
+To:     corbet@lwn.net
+Cc:     linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+References: <b7636799383bfb85c59d27e140a3c0e56d4af87d.camel@perches.com>
+ <20200717080558.24829-1-jslaby@suse.cz>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4e1664f0-8ec1-7427-2bc5-871810a5cc31@suse.cz>
+Date:   Fri, 17 Jul 2020 10:40:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200717080558.24829-1-jslaby@suse.cz>
+Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Sorry Jon, wrong To: field, this was supposed to be addressed to Mauro
+(who is CCed).
 
-On 16/07/20 11:58 pm, Arnd Bergmann wrote:
-> On Thu, Jul 16, 2020 at 3:25 PM Sekhar Nori <nsekhar@ti.com> wrote:
->>
->> On 7/16/20 5:49 PM, Faiz Abbas wrote:
->>> Hi,
->>>
->>> On 19/06/20 6:28 pm, Faiz Abbas wrote:
->>>> Enable CONFIG_SDHCI_AM654 to Support AM65x sdhci controller.
->>>>
->>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>> ---
->>>>  arch/arm64/configs/defconfig | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->>>> index 883e8bace3ed..40dd13e0adc5 100644
->>>> --- a/arch/arm64/configs/defconfig
->>>> +++ b/arch/arm64/configs/defconfig
->>>> @@ -731,6 +731,7 @@ CONFIG_MMC_DW_ROCKCHIP=y
->>>>  CONFIG_MMC_SUNXI=y
->>>>  CONFIG_MMC_BCM2835=y
->>>>  CONFIG_MMC_SDHCI_XENON=y
->>>> +CONFIG_MMC_SDHCI_AM654=y
->>>>  CONFIG_MMC_OWL=y
->>>>  CONFIG_NEW_LEDS=y
->>>>  CONFIG_LEDS_CLASS=y
->>>>
->>>
->>> Gentle ping. Will, Catalin, can this patch be picked up?
->>
->> From logs, Arnd has been picking up patches for this file. Looping in
->> Arnd and ARM-SoC team.
+On 17. 07. 20, 10:05, Jiri Slaby wrote:
+> fw_minibuffer[i].buffer is allocated by kmalloc in sh_css_load_blob_info
+> and by vmalloc in setup_binary. So use kvfree to decide which of those
+> allocators to use for freeing.
 > 
-> I tend to ignore individual patches to the defconfig file unless
-> they are sent to:soc@kernel.org. The best way to get them
-> included is to have the platform maintainers pick up the
-> changes and send them that way as a separate pull request
-> at the same time as sending any DT updates.
+> Also remove the useless cast.
 > 
-> The MAINTAINERS file lists Tero and Nishanth as maintainers
-> for the platform. If they want, I can apply this one directly, but in
-> the future, send it to them.
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  drivers/staging/media/atomisp/pci/sh_css_firmware.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+> index d4ab15b6d1ac..d0011b1d97ed 100644
+> --- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+> +++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+> @@ -358,7 +358,7 @@ void sh_css_unload_firmware(void)
+>  			if (fw_minibuffer[i].name)
+>  				kfree((void *)fw_minibuffer[i].name);
+>  			if (fw_minibuffer[i].buffer)
+> -				vfree((void *)fw_minibuffer[i].buffer);
+> +				kvfree(fw_minibuffer[i].buffer);
+>  		}
+>  		kfree(fw_minibuffer);
+>  		fw_minibuffer = NULL;
 > 
 
-Thanks for clarifying Arnd. Tero, can you pick this up?
 
-Thanks,
-Faiz
+-- 
+js
+suse labs
