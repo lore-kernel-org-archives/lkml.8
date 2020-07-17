@@ -2,172 +2,135 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C899C433FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3C620739
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620AC2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DCCbwIq6"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BALRBWDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgGQW2q (ORCPT
+        id S1726673AbgGQW11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 18:28:46 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:46032 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgGQW2Z (ORCPT
+        Fri, 17 Jul 2020 18:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33294 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgGQW10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 18:28:25 -0400
-Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7C0B720B490A;
-        Fri, 17 Jul 2020 15:28:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7C0B720B490A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595024904;
-        bh=JPlRumbOfvyOco8L8nkT1d2Rp+0/lx8FfGi5jva830E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DCCbwIq6QToosLKT/34ObzUnj4GPjjOKO67Ms012lwH0qYgstUMs+s4mlCfKpXk+L
-         Q/12+DzCBzyfH6ZZma/MSoJi3oWZrQKBCc9K5HA8QpRHEASPXwoAMd0IsKiXoRY3Kf
-         cRnjoU3IlDcUmOFkddOaJ4IE0vecgRhfW40/MyYQ=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com
-Cc:     jmorris@namei.org, linux-integrity@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/5] IMA: Add LSM_STATE func to measure LSM data
-Date:   Fri, 17 Jul 2020 15:28:15 -0700
-Message-Id: <20200717222819.26198-2-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200717222819.26198-1-nramas@linux.microsoft.com>
-References: <20200717222819.26198-1-nramas@linux.microsoft.com>
+        Fri, 17 Jul 2020 18:27:26 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B583C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:27:26 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so12600178wrl.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:27:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EvZfM7tSlBvQupdfYs+4sQhtafmRlnSnH6RQB9/57lE=;
+        b=BALRBWDK3OFtn2VmJ5nZHTR9pM51ksljccFyTBcyyX7bpgsd19EjLqCBWtl9kKUX0Y
+         4w8epWV9R2HFpGWlCx1dzLRDdnLdYREVQM8r6L74qPC44o8FZH2+Bc+XQEumOKfBQ7qB
+         8SffiaN/Prgk7fuWau8BRzfpotRm4p67pf/zw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EvZfM7tSlBvQupdfYs+4sQhtafmRlnSnH6RQB9/57lE=;
+        b=lILoi70H2+2YJvBZNEtgIC4stAG5ccOk9IXpzWRXApMXPpZODmJgb3ar+o2ciKmMl+
+         Z+gyAMOvduTiq4fd2BuAiJsdEsIbpgPc0ANlgDIMqMVlZ2nLH3BMsLx2/AC0Eg/U8y8g
+         XDSeLJMcsNQqGlb/VneJPhIma4n+llSwQ7Nflcx9j5lyCwpdpDtMenubTKAZy1Ud8dXS
+         W1BpSLR3Qmg5RgvqKs4Crmubscm+Qpalk7ca2IKOV9nDy3OEdq2qBMenZlw//4k1pbxC
+         kORMY+QgYBDHPkBVzrWZz2jNrAnOKthIB6rN7E4JHpLTZBtLWBRp6I67+MJY0JXHVOqw
+         3Yow==
+X-Gm-Message-State: AOAM5336JwFhqf3SjjuGJhboNLeXhqaJIS3axMdQRCKg0u32LAx9r0A8
+        IiH+7sQIb5zjmC1bmfFe/aDSarUiBtK7TWh3
+X-Google-Smtp-Source: ABdhPJx0qOnDdZN6gx4AvHIXjO6Am9+EduH4EbfKF2bXMV+Mc2rxaCL6YsZxoJ/EKxkzWy2AC+xdbA==
+X-Received: by 2002:a5d:4b4f:: with SMTP id w15mr11924497wrs.84.1595024844553;
+        Fri, 17 Jul 2020 15:27:24 -0700 (PDT)
+Received: from [10.230.182.181] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id c17sm821888wrc.42.2020.07.17.15.27.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 15:27:23 -0700 (PDT)
+Subject: Re: [PATCH v2] pwm: bcm-iproc: handle clk_get_rate() return
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+References: <20200717182512.26001-1-scott.branden@broadcom.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <c4f5cb1a-c94e-9b05-b8ad-c9eecd7e70e3@broadcom.com>
+Date:   Fri, 17 Jul 2020 15:27:19 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200717182512.26001-1-scott.branden@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Critical data structures of security modules need to be measured to
-enable an attestation service to verify if the policies and
-configuration have been setup correctly and that they haven't been
-tampered with at runtime. A new IMA policy is required for handling
-this measurement.
 
-Define a new IMA policy func namely LSM_STATE to measure data provided
-by security modules. Update ima_match_rules() to check for LSM_STATE
-and ima_parse_rule() to handle LSM_STATE.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
----
- Documentation/ABI/testing/ima_policy |  6 +++++-
- security/integrity/ima/ima.h         |  1 +
- security/integrity/ima/ima_api.c     |  2 +-
- security/integrity/ima/ima_policy.c  | 29 +++++++++++++++++++++++-----
- 4 files changed, 31 insertions(+), 7 deletions(-)
+On 7/17/2020 11:25 AM, Scott Branden wrote:
+> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> 
+> Handle clk_get_rate() returning <= 0 condition to avoid
+> possible division by zero.
+> 
+> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> 
+> ---
+> Changes from v1: ensure  'polarity' and 'enabled' are populated
+> when clk_get_rate is 0.
+> ---
+>  drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+> index 1f829edd8ee7..d392a828fc49 100644
+> --- a/drivers/pwm/pwm-bcm-iproc.c
+> +++ b/drivers/pwm/pwm-bcm-iproc.c
+> @@ -85,8 +85,6 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	u64 tmp, multi, rate;
+>  	u32 value, prescale;
+>  
+> -	rate = clk_get_rate(ip->clk);
+> -
+>  	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
+>  
+>  	if (value & BIT(IPROC_PWM_CTRL_EN_SHIFT(pwm->hwpwm)))
+> @@ -99,6 +97,13 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	else
+>  		state->polarity = PWM_POLARITY_INVERSED;
+>  
+> +	rate = clk_get_rate(ip->clk);
+> +	if (rate == 0) {
+> +		state->period = 0;
+> +		state->duty_cycle = 0;
+> +		return;
+> +	}
+> +
+>  	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+>  	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
+>  	prescale &= IPROC_PWM_PRESCALE_MAX;
+> 
 
-diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-index cd572912c593..355bc3eade33 100644
---- a/Documentation/ABI/testing/ima_policy
-+++ b/Documentation/ABI/testing/ima_policy
-@@ -29,7 +29,7 @@ Description:
- 		base: 	func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
- 				[FIRMWARE_CHECK]
- 				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
--				[KEXEC_CMDLINE] [KEY_CHECK]
-+				[KEXEC_CMDLINE] [KEY_CHECK] [LSM_STATE]
- 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
- 			       [[^]MAY_EXEC]
- 			fsmagic:= hex value
-@@ -125,3 +125,7 @@ Description:
- 		keys added to .builtin_trusted_keys or .ima keyring:
- 
- 			measure func=KEY_CHECK keyrings=.builtin_trusted_keys|.ima
-+
-+		Example of measure rule using LSM_STATE to measure LSM data:
-+
-+			measure func=LSM_STATE
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 4515975cc540..880fda11a61b 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -200,6 +200,7 @@ static inline unsigned int ima_hash_key(u8 *digest)
- 	hook(POLICY_CHECK, policy)			\
- 	hook(KEXEC_CMDLINE, kexec_cmdline)		\
- 	hook(KEY_CHECK, key)				\
-+	hook(LSM_STATE, lsm_state)			\
- 	hook(MAX_CHECK, none)
- 
- #define __ima_hook_enumify(ENUM, str)	ENUM,
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index bf22de8b7ce0..0cebd2404dcf 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -176,7 +176,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
-  *		subj=, obj=, type=, func=, mask=, fsmagic=
-  *	subj,obj, and type: are LSM specific.
-  *	func: FILE_CHECK | BPRM_CHECK | CREDS_CHECK | MMAP_CHECK | MODULE_CHECK
-- *	| KEXEC_CMDLINE | KEY_CHECK
-+ *	| KEXEC_CMDLINE | KEY_CHECK | LSM_STATE
-  *	mask: contains the permission mask
-  *	fsmagic: hex value
-  *
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 66aa3e17a888..fc8457d9242b 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -417,15 +417,31 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
- 			    const char *keyring)
- {
- 	int i;
-+	int funcmatch = 0;
- 
--	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
-+	switch (func) {
-+	case KEXEC_CMDLINE:
-+	case KEY_CHECK:
-+	case LSM_STATE:
- 		if ((rule->flags & IMA_FUNC) && (rule->func == func)) {
- 			if (func == KEY_CHECK)
--				return ima_match_keyring(rule, keyring, cred);
--			return true;
--		}
--		return false;
-+				funcmatch = ima_match_keyring(rule, keyring,
-+							      cred) ? 1 : -1;
-+			else
-+				funcmatch = 1;
-+		} else
-+			funcmatch = -1;
-+
-+		break;
-+
-+	default:
-+		funcmatch = 0;
-+		break;
- 	}
-+
-+	if (funcmatch)
-+		return (funcmatch == 1) ? true : false;
-+
- 	if ((rule->flags & IMA_FUNC) &&
- 	    (rule->func != func && func != POST_SETATTR))
- 		return false;
-@@ -1068,6 +1084,9 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 				entry->func = KEXEC_CMDLINE;
- 			else if (strcmp(args[0].from, "KEY_CHECK") == 0)
- 				entry->func = KEY_CHECK;
-+			else if (strcmp(args[0].from, "LSM_STATE") == 0)
-+				entry->func = LSM_STATE;
-+
- 			else
- 				result = -EINVAL;
- 			if (!result)
--- 
-2.27.0
+This patch looks good to me. Thanks!
+
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
 
