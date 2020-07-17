@@ -2,78 +2,79 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C47C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798C4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9774520704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C4220737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:27:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eBRo3SW0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVZwjpaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgGQRWV (ORCPT
+        id S1727903AbgGQR10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:22:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42632 "EHLO
+        Fri, 17 Jul 2020 13:27:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgGQRWV (ORCPT
+        with ESMTP id S1726668AbgGQR1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:22:21 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA4BC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:22:20 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j18so16087165wmi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:22:20 -0700 (PDT)
+        Fri, 17 Jul 2020 13:27:25 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99941C0619D2;
+        Fri, 17 Jul 2020 10:27:24 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f2so11959893wrp.7;
+        Fri, 17 Jul 2020 10:27:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AoGGlbrqDdPdAt7SZnkfIe6cI/q8MK4oBz8zz9M/acQ=;
-        b=eBRo3SW05EhHdbRiObyZVkdToB+SfnAgfcwfG1UziRDO9imQP66XiFEiflsyu7G768
-         FmF/sg++nQJp84LORbbmQkWzuXcpIJyVD/dBxXCSOTueCiV5pr6ULXJoxaOpjCogUSbo
-         liKDKgBvilIpKfw9Z9uzB7iI6If0J1WJpzaWg=
+        bh=Uv/mehhqSy3DaoKMUHPQC+Xg+wYizrO+P1oEDPd1R5Y=;
+        b=kVZwjpajXWhE3Tq9GOL4jqxnYJRO/FK2GgA1oiuf6uPwe3ilTYUd/lypogr2w1FeTh
+         7CKsOxRqgLV+9kX3EcRSUAt30lIVsC8Q80ilT6qsf/dlwYx6FO0/j571sY+82fx/LrN1
+         mN9i4tfWOkCKpg7CBEhefo/WM8z0K0pOQV4ugNnzGILBtnLPn4/kWKHdxk73vDRTuJiH
+         BIOK/Mtfnjndb2DLRmo8K23JCcDwWm/4u/Wdn95S34wRy/DpoDTle3nRWcglWq+JPLtw
+         nAmHPjjQNRrFDjZPYrs0NWyLbin3Ex8oRhyKG578JBjetfCFHetuWZ7v9cxWcOKXzwk2
+         8aAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=AoGGlbrqDdPdAt7SZnkfIe6cI/q8MK4oBz8zz9M/acQ=;
-        b=hKEH76BbcAYfqyG6DKD5/WmC/X6FZNBojM4k/qsiyI9kDGHfGAB29naX8zkCZnITCg
-         DbiyM9EfdNHt52CLzmQyu+coONsLnYp3R6HUv6lMo5hMFNOPgFb8GyN846nhUY3c5IEB
-         iUlf+Ag7E0qWDXzOt6J7gvD07DNw8J5siwrgdMjv4tdtvHt0LuxVne2S1ZWz3sV6SAJE
-         B4opD+0hQKmBwHZtyGbWZB0e5KykXbP5mZwvaQsysiqfA9AKLX4+Juj5qI+NhpIl8Fzw
-         9DSkRy0pERCO/hvbGm3ttgciRJgQ4iyRVQ1y0xmzs1L/vHsoWDOUDVJXmy9bdKHKQufl
-         xcpQ==
-X-Gm-Message-State: AOAM533fdGDI9L+eak8p0rIXUroKc1TSu3oakdufZgw+Q2TggC2NWSB0
-        wp/Aua6ouD9Ffj4pQrcsZH/E3Q==
-X-Google-Smtp-Source: ABdhPJx5HuoCQvje9YbfNYXj5ZyRp/BF5z5HnFlrq0fsNt7tkJM1VBsvb8LP25MSY4X9JxW4ybylpA==
-X-Received: by 2002:a7b:cb98:: with SMTP id m24mr10210755wmi.98.1595006539117;
-        Fri, 17 Jul 2020 10:22:19 -0700 (PDT)
-Received: from [10.230.182.181] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id g13sm15986896wro.84.2020.07.17.10.22.16
+        bh=Uv/mehhqSy3DaoKMUHPQC+Xg+wYizrO+P1oEDPd1R5Y=;
+        b=hg30df7w1A1OCWOjvBQBlc8Fma1UDkYTKcq2D1cF6ECwOJsKUtjjqIsX+qwP5jpIHi
+         1oH7BMyZtqYPeN1QTw+jeCIv7iLLsN8SvEUbVzHBtJPUPkgDDVpqotzfCrf4feKq1CAN
+         rAsPHWM+ACLLN/WGIYrwJ7daqELO1Q6juqH7bfmwYGB5EZKR2lx6oD0H2V4yQ2tOfVGA
+         Zx2Xjb9WYnx0of3glS2fjSeoY1xn+sCPzuXfhX4NdsBmVdNyMGJqHNw0RDBuKXizMEre
+         ppa92HHA9RD8OFgjZ/HrbyglJ6k3C18pEgvm9ANGxSh6pOEolAmLvVScRGnNVXl2cO/8
+         b66w==
+X-Gm-Message-State: AOAM532uQQeoWOLaFbEO4Xqko8M3fHYpoYFZkBaDY3+9ZyxgaKaj+bNW
+        VjwOmdSBc0yINqivsvJp1neiJ4l3tkQ=
+X-Google-Smtp-Source: ABdhPJzuWUhay96eHMlekR318s1wqVyttXpYIA4Tx9T9DkN1wUZXOq9L0CiquPlDvdCkiIjEj26QoQ==
+X-Received: by 2002:adf:e801:: with SMTP id o1mr11618071wrm.54.1595006843074;
+        Fri, 17 Jul 2020 10:27:23 -0700 (PDT)
+Received: from [10.230.191.242] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 33sm17001764wri.16.2020.07.17.10.27.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 10:22:18 -0700 (PDT)
-Subject: Re: [PATCH] pwm: bcm-iproc: handle clk_get_rate() return
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-References: <20200717170743.25466-1-scott.branden@broadcom.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <94f2aed1-d88d-3ee0-6e57-917f665951f2@broadcom.com>
-Date:   Fri, 17 Jul 2020 10:22:13 -0700
+        Fri, 17 Jul 2020 10:27:22 -0700 (PDT)
+Subject: Re: [PATCH net-next] net: bcmgenet: fix error returns in
+ bcmgenet_probe()
+To:     Zhang Changzhong <zhangchangzhong@huawei.com>,
+        f.fainelli@gmail.com, davem@davemloft.net, kuba@kernel.org
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1594973982-27988-1-git-send-email-zhangchangzhong@huawei.com>
+From:   Doug Berger <opendmb@gmail.com>
+Message-ID: <8bdd1465-fcaf-4946-3ee9-baeec765247d@gmail.com>
+Date:   Fri, 17 Jul 2020 10:30:18 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200717170743.25466-1-scott.branden@broadcom.com>
+In-Reply-To: <1594973982-27988-1-git-send-email-zhangchangzhong@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,42 +83,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/17/2020 10:07 AM, Scott Branden wrote:
-> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+On 7/17/2020 1:19 AM, Zhang Changzhong wrote:
+> The driver forgets to call clk_disable_unprepare() in error path after
+> a success calling for clk_prepare_enable().
 > 
-> Handle clk_get_rate() returning <= 0 condition to avoid
-> possible division by zero.
+> Fix to goto err_clk_disable if clk_prepare_enable() is successful.
 > 
-> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
 > ---
->  drivers/pwm/pwm-bcm-iproc.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/net/ethernet/broadcom/genet/bcmgenet.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-> index 1f829edd8ee7..72a8607b6c8d 100644
-> --- a/drivers/pwm/pwm-bcm-iproc.c
-> +++ b/drivers/pwm/pwm-bcm-iproc.c
-> @@ -86,6 +86,11 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->  	u32 value, prescale;
->  
->  	rate = clk_get_rate(ip->clk);
-> +	if (rate == 0) {
-> +		state->period = 0;
-> +		state->duty_cycle = 0;
-> +		return;
-> +	}
-
-Based on the pwm core code, 'get_state' expects the following fields to
-be populated: 'polarity', 'enabled', 'period', and 'duty cycle'.
-
-The above logic will leave 'polarity' and 'enabled' completely
-unpopulated when clock rate is zero.
+> diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> index ee84a26..23df6f2 100644
+> --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> @@ -4016,7 +4016,7 @@ static int bcmgenet_probe(struct platform_device *pdev)
+>  	if (err)
+>  		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+>  	if (err)
+> -		goto err;
+> +		goto err_clk_disable;
+Please split this clause out as a separate pull-request with this fixes tag:
+Fixes: 99d55638d4b0 ("net: bcmgenet: enable NETIF_F_HIGHDMA flag")
 
 >  
->  	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
+>  	/* Mii wait queue */
+>  	init_waitqueue_head(&priv->wq);
+> @@ -4028,14 +4028,14 @@ static int bcmgenet_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->clk_wol)) {
+>  		dev_dbg(&priv->pdev->dev, "failed to get enet-wol clock\n");
+>  		err = PTR_ERR(priv->clk_wol);
+> -		goto err;
+> +		goto err_clk_disable;
+>  	}
 >  
+>  	priv->clk_eee = devm_clk_get_optional(&priv->pdev->dev, "enet-eee");
+>  	if (IS_ERR(priv->clk_eee)) {
+>  		dev_dbg(&priv->pdev->dev, "failed to get enet-eee clock\n");
+>  		err = PTR_ERR(priv->clk_eee);
+> -		goto err;
+> +		goto err_clk_disable;
+>  	}
+>  
+>  	/* If this is an internal GPHY, power it on now, before UniMAC is
 > 
+Please split these changes into a pull-request with fixes tag:
+Fixes: c80d36ff63a5 ("net: bcmgenet: Use devm_clk_get_optional() to get
+the clocks")
+
+Resubmit the pull-requests with [PATCH net].
+That will make them easier to apply to stable branches.
+
+Otherwise:
+Acked-by: Doug Berger <opendmb@gmail.com>
+
+Thanks!
