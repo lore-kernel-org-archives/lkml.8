@@ -2,195 +2,323 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5327CC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2B2C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23C2B207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D7620B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XeIx9NbO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nj/0lhQd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgGQOiV (ORCPT
+        id S1727898AbgGQOiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45422 "EHLO
+        Fri, 17 Jul 2020 10:38:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgGQOiU (ORCPT
+        with ESMTP id S1727876AbgGQOiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:38:20 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE107C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:20 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u185so5491222pfu.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:20 -0700 (PDT)
+        Fri, 17 Jul 2020 10:38:21 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A43F5C0619D5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:21 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id q17so5473382pfu.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UFP+x3j4+5MaBu1RqkqiwZg2PpWg/cFgrQKA41+DGK0=;
-        b=XeIx9NbO9jcYgTU5r6EJBq2L3JfYGcdydHzE1GB8bgDURUF/rqIjU2RsdktIoFGpbn
-         8CqTWuynKJyHfW7k/ZpIxT61jugBj3H0Xf3jC+zryAJPYiIPdgbu3y5GFDAfUOPS3xD4
-         KNjbpqUq94k+h0+0WweMwOjY7K5rB4foA5JGN/VjbV3wWgMCz8LQ65ZiO2KmGRfkwYfH
-         uspcRh7+2ML56bGAkmS9d5QsEOStMGYP3BF1WYA+0SPqC93Jv7QxZcLax9YRKY9yXNW4
-         811bBXugkZpekrnaPM88aUsRTgNqfxRu9vrovuKoO/J89bI5GXbJGdF7XZ7NQAV2mulD
-         iYFA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v3iUKEbLYWfsczfwrFSZXq+1aNtBq+PmA02aYD040KQ=;
+        b=nj/0lhQdZB3jssibx14fW90ksLOsc0ETd0ln27VnZhe8BaCxQLHYHj/Va1B6xFKU0F
+         abpZLWx7qruA9enT7AsUjJyKw/eUsyLMAK7h13Rl/E7fYYVh/1Ag1uCimI7o2QirXMUg
+         ToLjsM+bYCfhZRcQit2p1j4/ORs5aS0kWD5Jb0/T5eku3gYBZpQ9EIHhs3Up8A7C0G0a
+         JFEoSa4ktgsuaO3TJf7R9Rgrie0JDFvttD7qKqegenhkx8IM4wNy/gEeTsdEbbf4hoQS
+         5CI+sWfscbF6F4Y9vev+WjwMHIoX8eii+7PU01tH9HO/whHemHVai/B2IC/Y50ZTzSEB
+         j+/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UFP+x3j4+5MaBu1RqkqiwZg2PpWg/cFgrQKA41+DGK0=;
-        b=QiClO7jX+V4RU0EFO5gvLicg2U6PZceQ2a6r3brkZtYSNBy6at2lexm3chdwsbuqKZ
-         xsVT8LGcQQ51fHfWG9QsZ79G0NBKaXm+/hb5LNvu9Pq/0Nx5l8WbQduZSB2kZf9TUzAL
-         uLMjBDBJRTqmBrVqNPnZG6W7JxRkbDaockJ12jnVph2l4N59DyrM+SS0mTJDtuIBpefq
-         YQHt/icJt4Jn8fKmd43W5nzeAqHHasrdT4tOeOa4BBGfcFIL2t0yln6SP3sLzpBcIYJS
-         SsH9hENe2OxqTw+WLVce1sA7mEivWfv3uWAsYdS+pjzSkAXneecLRLFiNGmfzeeAJ4oQ
-         ClgA==
-X-Gm-Message-State: AOAM531UOMGkcXjt52rz2J1pa67HVyZGn6iR2uTnvRwe0KjbmYI18wAn
-        uh+aToHsP9voZBEsFCKiHD0=
-X-Google-Smtp-Source: ABdhPJywgGmkNzHC5LKHp2qrRQuRSUWc3lDLWPw3DJs4Ovhu+7VPorSa1Mgn5ELXxJPdFjKwxOcrtw==
-X-Received: by 2002:a63:7c56:: with SMTP id l22mr8688320pgn.127.1594996700308;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v3iUKEbLYWfsczfwrFSZXq+1aNtBq+PmA02aYD040KQ=;
+        b=XZfeYGVvMFtP+ltdEcaN6DEgxZBRg6QM14xB7riKoNYuPFoHGVwPtHbuknKYrlyWm/
+         MxMx7yk7ILS90HBA7wcyxw6kBeRbejxM1Bcn3su2d5F5F6u+TvfDdUBC5OS5buvqlUPL
+         lrsx89dPW0ku1Thguj5Hke/5SByX+vsIBFGtrfYpbtKuh6zjfdRktJEJiTnW9THERslF
+         QxZhap3SZWFzD6pbUAVLLzOWmZXsXTdcje44KpUG+QHRHg7r2cog6o6StSv38fOZRVdF
+         cerywtNfLgoH1fD5axaq6pKImW710gnzs6JlBqWSzB/V/h1WrtsINpMSLz8Bs5Uc0PMg
+         1sGg==
+X-Gm-Message-State: AOAM530xPxIS+wwGnuqXwurAON5mTUDpTlnqh46vSIIsUpWdWaYzOiqE
+        rpzougIKsZACI3H0rgqyL4xR
+X-Google-Smtp-Source: ABdhPJyxwQwgQpL7eEGDuOMnVMDLGfNSdG/typASfyzO5d+e+eGK06cmf4/XSt3z2gT5VWOYUncRGQ==
+X-Received: by 2002:a05:6a00:845:: with SMTP id q5mr8232927pfk.247.1594996700782;
         Fri, 17 Jul 2020 07:38:20 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.38.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+Received: from Mani-XPS-13-9360 ([2409:4072:6382:1ac4:99cf:535d:1e55:97cf])
+        by smtp.gmail.com with ESMTPSA id o42sm3204518pje.10.2020.07.17.07.38.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
         Fri, 17 Jul 2020 07:38:19 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 12/17] perf ftrace: add option 'verbose' to show more info for graph tracer
-Date:   Fri, 17 Jul 2020 22:36:23 +0800
-Message-Id: <20200717143628.47721-13-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717143628.47721-1-changbin.du@gmail.com>
-References: <20200717143628.47721-1-changbin.du@gmail.com>
+Date:   Fri, 17 Jul 2020 20:08:13 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, evgreen@chromium.org,
+        ohad@wizery.com, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 2/3] remoteproc: qcom_q6v5_mss: Add MBA log extraction
+ support
+Message-ID: <20200717143813.GA3301@Mani-XPS-13-9360>
+References: <20200716123630.21892-1-sibis@codeaurora.org>
+ <20200716123630.21892-3-sibis@codeaurora.org>
+ <20200716134316.GI3271@Mani-XPS-13-9360>
+ <4f91a75852104dbeafea3af0c8673505@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4f91a75852104dbeafea3af0c8673505@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes we want ftrace display more and longer information about
-the trace.
+On Thu, Jul 16, 2020 at 08:28:50PM +0530, Sibi Sankar wrote:
+> On 2020-07-16 19:13, Manivannan Sadhasivam wrote:
+> > Hi Sibi,
+> > 
+> > On Thu, Jul 16, 2020 at 06:06:29PM +0530, Sibi Sankar wrote:
+> > > On SC7180 the MBA firmware stores the bootup text logs in a 4K segment
+> > > at the beginning of the MBA region. Add support to extract the logs
+> > > which will be useful to debug mba boot/authentication issues.
+> > > 
+> > > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> > > ---
+> > >  drivers/remoteproc/qcom_q6v5_mss.c | 41
+> > > ++++++++++++++++++++++++++----
+> > >  1 file changed, 36 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
+> > > b/drivers/remoteproc/qcom_q6v5_mss.c
+> > > index 95e21ed607cb9..4ddf084b2c6fc 100644
+> > > --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> > > +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> > > @@ -9,6 +9,7 @@
+> > > 
+> > >  #include <linux/clk.h>
+> > >  #include <linux/delay.h>
+> > > +#include <linux/devcoredump.h>
+> > >  #include <linux/dma-mapping.h>
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/kernel.h>
+> > > @@ -37,6 +38,8 @@
+> > > 
+> > >  #define MPSS_CRASH_REASON_SMEM		421
+> > > 
+> > > +#define MBA_LOG_SIZE			SZ_4K
+> > > +
+> > >  /* RMB Status Register Values */
+> > >  #define RMB_PBL_SUCCESS			0x1
+> > > 
+> > > @@ -139,6 +142,7 @@ struct rproc_hexagon_res {
+> > >  	int version;
+> > >  	bool need_mem_protection;
+> > >  	bool has_alt_reset;
+> > > +	bool has_mba_logs;
+> > >  	bool has_spare_reg;
+> > >  };
+> > > 
+> > > @@ -200,6 +204,7 @@ struct q6v5 {
+> > >  	struct qcom_sysmon *sysmon;
+> > >  	bool need_mem_protection;
+> > >  	bool has_alt_reset;
+> > > +	bool has_mba_logs;
+> > >  	bool has_spare_reg;
+> > >  	int mpss_perm;
+> > >  	int mba_perm;
+> > > @@ -518,6 +523,19 @@ static int q6v5_rmb_mba_wait(struct q6v5
+> > > *qproc, u32 status, int ms)
+> > >  	return val;
+> > >  }
+> > > 
+> > > +static void q6v5_dump_mba_logs(struct q6v5 *qproc)
+> > > +{
+> > > +	struct rproc *rproc = qproc->rproc;
+> > > +	void *data;
+> > > +
+> > > +	data = vmalloc(MBA_LOG_SIZE);
+> > 
+> > Is there any specific reason to use vmalloc for the size of 4K?
+> 
+> data is passed onto dev_coredumpv
+> which takes ownership of the memory
+> and would eventually do a vfree of the
+> data.
+> 
 
-$ sudo perf ftrace -G '*'
- 2)   0.979 us    |  mutex_unlock();
- 2)   1.540 us    |  __fsnotify_parent();
- 2)   0.433 us    |  fsnotify();
+Ah, okay.
 
-$ sudo perf ftrace -G '*' --graph-opts verbose
-14160.770883 |   0)  <...>-47814   |  .... |   1.289 us    |  mutex_unlock();
-14160.770886 |   0)  <...>-47814   |  .... |   1.624 us    |  __fsnotify_parent();
-14160.770887 |   0)  <...>-47814   |  .... |   0.636 us    |  fsnotify();
-14160.770888 |   0)  <...>-47814   |  .... |   0.328 us    |  __sb_end_write();
-14160.770888 |   0)  <...>-47814   |  d... |   0.430 us    |  fpregs_assert_state_consistent();
-14160.770889 |   0)  <...>-47814   |  d... |               |  do_syscall_64() {
-14160.770889 |   0)  <...>-47814   |  .... |               |    __x64_sys_close() {
+Thanks,
+Mani
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- tools/perf/Documentation/perf-ftrace.txt |  1 +
- tools/perf/builtin-ftrace.c              | 29 +++++++++++++++++++++++-
- 2 files changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-index 3ab1fe040994..319ec6375228 100644
---- a/tools/perf/Documentation/perf-ftrace.txt
-+++ b/tools/perf/Documentation/perf-ftrace.txt
-@@ -103,6 +103,7 @@ OPTIONS
- 	List of options allowed to set:
- 	  nosleep-time - Measure on-CPU time only for function_graph tracer.
- 	  noirqs       - Ignore functions that happen inside interrupt.
-+	  verbose      - Show process names, PIDs, timestamps, etc.
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 95d87c5966ad..0d893d97691d 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -45,6 +45,7 @@ struct perf_ftrace {
- 	int			func_irq_info;
- 	int			graph_nosleep_time;
- 	int			graph_noirqs;
-+	int			graph_verbose;
- };
- 
- struct filter_entry {
-@@ -208,6 +209,9 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
- 	write_tracing_option_file("func_stack_trace", "0");
- 	write_tracing_option_file("sleep-time", "1");
- 	write_tracing_option_file("funcgraph-irqs", "1");
-+	write_tracing_option_file("funcgraph-proc", "0");
-+	write_tracing_option_file("funcgraph-abstime", "0");
-+	write_tracing_option_file("latency-format", "0");
- 	write_tracing_option_file("irq-info", "0");
- }
- 
-@@ -423,6 +427,23 @@ static int set_tracing_funcgraph_irqs(struct perf_ftrace *ftrace)
- 	return 0;
- }
- 
-+static int set_tracing_funcgraph_verbose(struct perf_ftrace *ftrace)
-+{
-+	if (!ftrace->graph_verbose)
-+		return 0;
-+
-+	if (write_tracing_option_file("funcgraph-proc", "1") < 0)
-+		return -1;
-+
-+	if (write_tracing_option_file("funcgraph-abstime", "1") < 0)
-+		return -1;
-+
-+	if (write_tracing_option_file("latency-format", "1") < 0)
-+		return -1;
-+
-+	return 0;
-+}
-+
- static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- {
- 	char *trace_file;
-@@ -517,6 +538,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		goto out_reset;
- 	}
- 
-+	if (set_tracing_funcgraph_verbose(ftrace) < 0) {
-+		pr_err("failed to set tracing option funcgraph-proc/funcgraph-abstime\n");
-+		goto out_reset;
-+	}
-+
- 	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
- 		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
- 		goto out_reset;
-@@ -699,6 +725,7 @@ static int parse_graph_tracer_opts(const struct option *opt,
- 	struct sublevel_option graph_tracer_opts[] = {
- 		{ .name = "nosleep-time",	.value_ptr = &ftrace->graph_nosleep_time },
- 		{ .name = "noirqs",		.value_ptr = &ftrace->graph_noirqs },
-+		{ .name = "verbose",		.value_ptr = &ftrace->graph_verbose },
- 		{ .name = NULL, }
- 	};
- 
-@@ -753,7 +780,7 @@ int cmd_ftrace(int argc, const char **argv)
- 	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
- 		    "Max depth for function graph tracer"),
- 	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
--		     "graph tracer options, available options: nosleep-time,noirqs",
-+		     "graph tracer options, available options: nosleep-time,noirqs,verbose",
- 		     parse_graph_tracer_opts),
- 	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
- 		     "size of per cpu buffer", parse_buffer_size),
--- 
-2.25.1
-
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > +	if (!data)
+> > > +		return;
+> > > +
+> > > +	memcpy(data, qproc->mba_region, MBA_LOG_SIZE);
+> > > +	dev_coredumpv(&rproc->dev, data, MBA_LOG_SIZE, GFP_KERNEL);
+> > > +}
+> > > +
+> > >  static int q6v5proc_reset(struct q6v5 *qproc)
+> > >  {
+> > >  	u32 val;
+> > > @@ -838,6 +856,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+> > >  {
+> > >  	int ret;
+> > >  	int xfermemop_ret;
+> > > +	bool mba_load_err = false;
+> > > 
+> > >  	qcom_q6v5_prepare(&qproc->q6v5);
+> > > 
+> > > @@ -931,7 +950,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+> > >  	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
+> > >  	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
+> > >  	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
+> > > -
+> > > +	mba_load_err = true;
+> > >  reclaim_mba:
+> > >  	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm,
+> > > true,
+> > >  						false, qproc->mba_phys,
+> > > @@ -939,6 +958,8 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+> > >  	if (xfermemop_ret) {
+> > >  		dev_err(qproc->dev,
+> > >  			"Failed to reclaim mba buffer, system may become unstable\n");
+> > > +	} else if (qproc->has_mba_logs & mba_load_err) {
+> > > +		q6v5_dump_mba_logs(qproc);
+> > >  	}
+> > > 
+> > >  disable_active_clks:
+> > > @@ -968,7 +989,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+> > >  	return ret;
+> > >  }
+> > > 
+> > > -static void q6v5_mba_reclaim(struct q6v5 *qproc)
+> > > +static void q6v5_mba_reclaim(struct q6v5 *qproc, bool err_path)
+> > >  {
+> > >  	int ret;
+> > >  	u32 val;
+> > > @@ -1006,6 +1027,9 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
+> > >  				      qproc->mba_size);
+> > >  	WARN_ON(ret);
+> > > 
+> > > +	if (qproc->has_mba_logs && err_path && !ret)
+> > > +		q6v5_dump_mba_logs(qproc);
+> > > +
+> > >  	ret = qcom_q6v5_unprepare(&qproc->q6v5);
+> > >  	if (ret) {
+> > >  		q6v5_pds_disable(qproc, qproc->proxy_pds,
+> > > @@ -1255,7 +1279,7 @@ static void qcom_q6v5_dump_segment(struct
+> > > rproc *rproc,
+> > >  						false, true,
+> > >  						qproc->mpss_phys,
+> > >  						qproc->mpss_size);
+> > > -			q6v5_mba_reclaim(qproc);
+> > > +			q6v5_mba_reclaim(qproc, false);
+> > >  		}
+> > >  	}
+> > >  }
+> > > @@ -1297,7 +1321,7 @@ static int q6v5_start(struct rproc *rproc)
+> > >  	return 0;
+> > > 
+> > >  reclaim_mpss:
+> > > -	q6v5_mba_reclaim(qproc);
+> > > +	q6v5_mba_reclaim(qproc, true);
+> > > 
+> > >  	return ret;
+> > >  }
+> > > @@ -1313,7 +1337,7 @@ static int q6v5_stop(struct rproc *rproc)
+> > >  	if (ret == -ETIMEDOUT)
+> > >  		dev_err(qproc->dev, "timed out on wait\n");
+> > > 
+> > > -	q6v5_mba_reclaim(qproc);
+> > > +	q6v5_mba_reclaim(qproc, false);
+> > > 
+> > >  	return 0;
+> > >  }
+> > > @@ -1717,6 +1741,7 @@ static int q6v5_probe(struct platform_device
+> > > *pdev)
+> > > 
+> > >  	qproc->version = desc->version;
+> > >  	qproc->need_mem_protection = desc->need_mem_protection;
+> > > +	qproc->has_mba_logs = desc->has_mba_logs;
+> > > 
+> > >  	ret = qcom_q6v5_init(&qproc->q6v5, pdev, rproc,
+> > > MPSS_CRASH_REASON_SMEM,
+> > >  			     qcom_msa_handover);
+> > > @@ -1808,6 +1833,7 @@ static const struct rproc_hexagon_res
+> > > sc7180_mss = {
+> > >  	},
+> > >  	.need_mem_protection = true,
+> > >  	.has_alt_reset = false,
+> > > +	.has_mba_logs = true,
+> > >  	.has_spare_reg = true,
+> > >  	.version = MSS_SC7180,
+> > >  };
+> > > @@ -1843,6 +1869,7 @@ static const struct rproc_hexagon_res
+> > > sdm845_mss = {
+> > >  	},
+> > >  	.need_mem_protection = true,
+> > >  	.has_alt_reset = true,
+> > > +	.has_mba_logs = true,
+> > >  	.has_spare_reg = false,
+> > >  	.version = MSS_SDM845,
+> > >  };
+> > > @@ -1870,6 +1897,7 @@ static const struct rproc_hexagon_res
+> > > msm8998_mss = {
+> > >  	},
+> > >  	.need_mem_protection = true,
+> > >  	.has_alt_reset = false,
+> > > +	.has_mba_logs = false,
+> > >  	.has_spare_reg = false,
+> > >  	.version = MSS_MSM8998,
+> > >  };
+> > > @@ -1900,6 +1928,7 @@ static const struct rproc_hexagon_res
+> > > msm8996_mss = {
+> > >  	},
+> > >  	.need_mem_protection = true,
+> > >  	.has_alt_reset = false,
+> > > +	.has_mba_logs = false,
+> > >  	.has_spare_reg = false,
+> > >  	.version = MSS_MSM8996,
+> > >  };
+> > > @@ -1933,6 +1962,7 @@ static const struct rproc_hexagon_res
+> > > msm8916_mss = {
+> > >  	},
+> > >  	.need_mem_protection = false,
+> > >  	.has_alt_reset = false,
+> > > +	.has_mba_logs = false,
+> > >  	.has_spare_reg = false,
+> > >  	.version = MSS_MSM8916,
+> > >  };
+> > > @@ -1974,6 +2004,7 @@ static const struct rproc_hexagon_res
+> > > msm8974_mss = {
+> > >  	},
+> > >  	.need_mem_protection = false,
+> > >  	.has_alt_reset = false,
+> > > +	.has_mba_logs = false,
+> > >  	.has_spare_reg = false,
+> > >  	.version = MSS_MSM8974,
+> > >  };
+> > > --
+> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+> > > Forum,
+> > > a Linux Foundation Collaborative Project
+> > > 
+> 
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project.
