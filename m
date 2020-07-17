@@ -2,41 +2,89 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF69C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3ECC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B32EB20684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8B02070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IOBbkr8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbgGQUjy (ORCPT
+        id S1728642AbgGQUjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:39:54 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:16175
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726492AbgGQUjx (ORCPT
+        Fri, 17 Jul 2020 16:39:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgGQUjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jul 2020 16:39:53 -0400
-X-IronPort-AV: E=Sophos;i="5.75,364,1589234400"; 
-   d="scan'208";a="354704933"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 22:39:21 +0200
-Date:   Fri, 17 Jul 2020 22:39:20 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] coccinelle: api: add kzfree script
-In-Reply-To: <20200717115709.543882-1-efremov@linux.com>
-Message-ID: <alpine.DEB.2.22.394.2007172239130.2837@hadrien>
-References: <20200604140805.111613-1-efremov@linux.com> <20200717115709.543882-1-efremov@linux.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B21C1C0619D2;
+        Fri, 17 Jul 2020 13:39:52 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o8so16654556wmh.4;
+        Fri, 17 Jul 2020 13:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IXs/e+IKfCKZYm+1L55kbcN352SX30fVz7ZsKTgLIqA=;
+        b=IOBbkr8s1Tap6+EcIv6TveMxOtoOB0UObaA7D8Pl0QEabLTK23xmX80URa5eh9Tv44
+         ukMZMh7GfXX8n3LQ1nXnv0x4txYCb1kF7u/TO+7p2CJSjvJFoA18pWYNypQwtFogzOBf
+         eWeLYqEY8ypiHKz2LrfH/u9AhqMrO/C7L80YeFyWCr7XvIlHQ8aK4YfIcuQfHwM5iOxs
+         cH0JQwGiIEZfdhGYIb3rVcg66Z0gwy2VqgOkq5O3/ls3Kp+dj2NETAfEUJe33nnhWt31
+         Oa5hrtsE/F6ETc4xkP8MPzNHWUAzlFSjjzAHOjHck2vkHjyVSa/dDRvNFbh2v0yu8ucJ
+         hlKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IXs/e+IKfCKZYm+1L55kbcN352SX30fVz7ZsKTgLIqA=;
+        b=TDXpRLmJMYr3MSgZW/6uoCMdJHuCc95PCB09cDRLZxMlbM5GVS9VwQudwkP7WcH8D+
+         I6mM794ugHl/FT2LRz9VgB52vBKEkuF8FDhN/nzxhH51crf3VbLlLe5bxBX0KR4ScSJE
+         qFYWDoFOEQOUFcZPfxc6gA3gpEKm95eDRdhO5SFcXxNYgMXSvadeoB0Baf4Pm9HGdBcJ
+         /NzdlnBnLSgYNuXCfRo1OAoTul5iYtGil+XG/0o57UnzEHUP7mYuKuvdo55wQHN0T/8R
+         RG99ciWikHWuLYwOatYQAfRjNNBIrBFZqy+FOH/yPL+XGR6DUV1P7DFMz0iRaz5+lLvN
+         tbGg==
+X-Gm-Message-State: AOAM532e436fRZxjLKDIAFH9IYp7rN9OEauulxb7j3g3bT/6W/c8V+ve
+        C6Xwtvu8wan+/AjOoScWhxaV8+9t
+X-Google-Smtp-Source: ABdhPJyQ+VbylVikYdvSPK0ICyJDW93rbVaEdR7v9UhPeMr6bGMjgOTX1SbPO5zy0KboNSOZnh49Ug==
+X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr11287327wmo.72.1595018391143;
+        Fri, 17 Jul 2020 13:39:51 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id c188sm4068569wma.22.2020.07.17.13.39.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 13:39:50 -0700 (PDT)
+Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
+ properties
+To:     Matthew Hagan <mnhagan88@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+ <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+ <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <ac7f5f39-9f83-64c0-d8d5-9ea059619f67@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <b16a6e8d-0799-388c-b98c-fe6e14611d9f@gmail.com>
+Date:   Fri, 17 Jul 2020 13:39:43 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <ac7f5f39-9f83-64c0-d8d5-9ea059619f67@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -44,141 +92,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On Fri, 17 Jul 2020, Denis Efremov wrote:
+On 7/17/2020 1:29 PM, Matthew Hagan wrote:
+> 
+> 
+> On 16/07/2020 23:09, Jakub Kicinski wrote:
+>> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
+>>> Add names and decriptions of additional PORT0_PAD_CTRL properties.
+>>>
+>>> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
+>>>  1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>> index ccbc6d89325d..3d34c4f2e891 100644
+>>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>> @@ -13,6 +13,14 @@ Optional properties:
+>>>  
+>>>  - reset-gpios: GPIO to be used to reset the whole device
+>>>  
+>>> +Optional MAC configuration properties:
+>>> +
+>>> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
+>>
+>> Perhaps we can say a little more here?
+>>
+> From John's patch:
+> "The switch allows us to swap the internal wirering of the two cpu ports.
+> For the HW offloading to work the ethernet MAC conencting to the LAN
+> ports must be wired to cpu port 0. There is HW in the wild that does not
+> fulfill this requirement. On these boards we need to swap the cpu ports."
+> 
+> This option is somewhat linked to instances where both MAC0 and MAC6 are
+> used as CPU ports. I may omit this for now since support for this hasn't
+> been added and MAC0 is hard-coded as the CPU port. The initial intention
+> here was to cover options commonly set by OpenWrt devices, based upon
+> their ar8327-initvals, to allow migration to qca8k.
 
-> Check for memset()/memzero_explicit() followed by kfree()/vfree()/kvfree().
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-
-Applied.
-
-> ---
-> Changes in v2:
->  - memset_explicit() added
->  - kvfree_sensitive() added
->  - forall added to r1
->  - ... between memset and kfree added
-> Changes in v3:
->  - Explicit filter for definitions instead of !(file in "...") conditions
->  - type T added to match casts
->  - memzero_explicit() patterns fixed
->  - additional rule "cond" added to filter false-positives
-> Changes in v4:
->  - memset call fixed in rp_memset
->  - @m added to rp_memset,rp_memzero rules
->
->  scripts/coccinelle/api/kzfree.cocci | 101 ++++++++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
->  create mode 100644 scripts/coccinelle/api/kzfree.cocci
->
-> diff --git a/scripts/coccinelle/api/kzfree.cocci b/scripts/coccinelle/api/kzfree.cocci
-> new file mode 100644
-> index 000000000000..33625bd7cec9
-> --- /dev/null
-> +++ b/scripts/coccinelle/api/kzfree.cocci
-> @@ -0,0 +1,101 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +///
-> +/// Use kzfree, kvfree_sensitive rather than memset or
-> +/// memzero_explicit followed by kfree
-> +///
-> +// Confidence: High
-> +// Copyright: (C) 2020 Denis Efremov ISPRAS
-> +// Options: --no-includes --include-headers
-> +//
-> +// Keywords: kzfree, kvfree_sensitive
-> +//
-> +
-> +virtual context
-> +virtual patch
-> +virtual org
-> +virtual report
-> +
-> +@initialize:python@
-> +@@
-> +# kmalloc_oob_in_memset uses memset to explicitly trigger out-of-bounds access
-> +filter = frozenset(['kmalloc_oob_in_memset', 'kzfree', 'kvfree_sensitive'])
-> +
-> +def relevant(p):
-> +    return not (filter & {el.current_element for el in p})
-> +
-> +@cond@
-> +position ok;
-> +@@
-> +
-> +if (...)
-> +  \(memset@ok\|memzero_explicit@ok\)(...);
-> +
-> +@r depends on !patch forall@
-> +expression E;
-> +position p : script:python() { relevant(p) };
-> +position m != cond.ok;
-> +type T;
-> +@@
-> +
-> +(
-> +* memset@m((T)E, 0, ...);
-> +|
-> +* memzero_explicit@m((T)E, ...);
-> +)
-> +  ... when != E
-> +      when strict
-> +* \(kfree\|vfree\|kvfree\)(E)@p;
-> +
-> +@rp_memzero depends on patch@
-> +expression E, size;
-> +position p : script:python() { relevant(p) };
-> +position m != cond.ok;
-> +type T;
-> +@@
-> +
-> +- memzero_explicit@m((T)E, size);
-> +  ... when != E
-> +      when strict
-> +// TODO: uncomment when kfree_sensitive will be merged.
-> +// Only this case is commented out because developers
-> +// may not like patches like this since kzfree uses memset
-> +// internally (not memzero_explicit).
-> +//(
-> +//- kfree(E)@p;
-> +//+ kfree_sensitive(E);
-> +//|
-> +- \(vfree\|kvfree\)(E)@p;
-> ++ kvfree_sensitive(E, size);
-> +//)
-> +
-> +@rp_memset depends on patch@
-> +expression E, size;
-> +position p : script:python() { relevant(p) };
-> +position m != cond.ok;
-> +type T;
-> +@@
-> +
-> +- memset@m((T)E, 0, size);
-> +  ... when != E
-> +      when strict
-> +(
-> +- kfree(E)@p;
-> ++ kzfree(E);
-> +|
-> +- \(vfree\|kvfree\)(E)@p;
-> ++ kvfree_sensitive(E, size);
-> +)
-> +
-> +@script:python depends on report@
-> +p << r.p;
-> +@@
-> +
-> +coccilib.report.print_report(p[0],
-> +  "WARNING: opportunity for kzfree/kvfree_sensitive")
-> +
-> +@script:python depends on org@
-> +p << r.p;
-> +@@
-> +
-> +coccilib.org.print_todo(p[0],
-> +  "WARNING: opportunity for kzfree/kvfree_sensitive")
-> --
-> 2.26.2
->
->
+If you update the description of the property, I do not see a reason why
+this should not be supported as of today, sooner or later you will need
+it to convert more devices to qca8k as you say.
+-- 
+Florian
