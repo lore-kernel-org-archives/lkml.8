@@ -2,102 +2,96 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F7EC433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE2BC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 273EB207EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BA92067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:31:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JTxVJnfY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="h2H+P9n5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGQNbA (ORCPT
+        id S1727050AbgGQNbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:31:00 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39678 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbgGQNar (ORCPT
+        Fri, 17 Jul 2020 09:31:03 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:47872 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726858AbgGQNbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:30:47 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDUEXW052070;
-        Fri, 17 Jul 2020 08:30:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594992614;
-        bh=i8u41iPJxXK9FTGgItdBbgPW6UUUoKzYd1anGp6xt94=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=JTxVJnfYZWd0xrNzDVBf77IYGMFxJP1VBOxqXCplc8UC4q4haODryGmYjXPqJd2Ki
-         HXkeihj1YUtQPBd3HgWaWdnhmSgRNBTLHG4HuZmGwMaqpj2PcVKd9SsjBIQHGYdFnU
-         vlzHNFDtjxwMQGue34LrFcdO0YdM3waNHiMGakVU=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HDUE8K074823
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 08:30:14 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 08:30:14 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 08:30:14 -0500
-Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDU5Lf051528;
-        Fri, 17 Jul 2020 08:30:13 -0500
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <jan.kiszka@siemens.com>
-Subject: [PATCHv4 4/4] watchdog: rti-wdt: balance pm runtime enable calls
-Date:   Fri, 17 Jul 2020 16:29:58 +0300
-Message-ID: <20200717132958.14304-5-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200717132958.14304-1-t-kristo@ti.com>
-References: <20200717132958.14304-1-t-kristo@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 17 Jul 2020 09:31:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594992660; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=4LXgE/UC9nDaBK7oF+NcTwi3cT/4cGJHu/l0KUMCjTk=; b=h2H+P9n5uG87mN/VrqCMalJHN7AHtihyD7RGW5kExEGtHA2sNAq2N4mqLz49h0+CmKGkZ2YQ
+ +43xlGwjyX0r55yh1r8WkEqgzkaZVhAd2L5cOw7QcA0w7g3ksYaWPKkMJ0Teu81dste+jGwY
+ YeA4Y0aNgMkym9G4sgcD1QIsZTY=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
+ 5f11a7e6c9bd2efa2ef212f1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 13:30:14
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 066FBC433C6; Fri, 17 Jul 2020 13:30:13 +0000 (UTC)
+Received: from akhilpo-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akhilpo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1237DC433AD;
+        Fri, 17 Jul 2020 13:30:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1237DC433AD
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
+From:   Akhil P Oommen <akhilpo@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        smasetty@codeaurora.org, devicetree@vger.kernel.org,
+        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
+        viresh.kumar@linaro.org, jonathan@marek.ca, robdclark@gmail.com,
+        bjorn.andersson@linaro.org
+Subject: [PATCH v6 5/6] arm64: dts: qcom: sc7180: Add interconnects property for GPU
+Date:   Fri, 17 Jul 2020 18:59:38 +0530
+Message-Id: <1594992579-20662-6-git-send-email-akhilpo@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
+References: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PM runtime should be disabled in the fail path of probe and when
-the driver is removed.
+From: Sharat Masetty <smasetty@codeaurora.org>
 
-Fixes: 2d63908bdbfb ("watchdog: Add K3 RTI watchdog support")
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+This patch adds the interconnects property to the GPU node. This enables
+the GPU->DDR path bandwidth voting.
+
+Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
 ---
- drivers/watchdog/rti_wdt.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
-index 7cbdc178ffe8..705e8f7523e8 100644
---- a/drivers/watchdog/rti_wdt.c
-+++ b/drivers/watchdog/rti_wdt.c
-@@ -303,6 +303,7 @@ static int rti_wdt_probe(struct platform_device *pdev)
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 31b9217..80fe54b 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1470,6 +1470,9 @@
+ 			operating-points-v2 = <&gpu_opp_table>;
+ 			qcom,gmu = <&gmu>;
  
- err_iomap:
- 	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
++			interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
++			interconnect-names = "gfx-mem";
++
+ 			gpu_opp_table: opp-table {
+ 				compatible = "operating-points-v2";
  
- 	return ret;
- }
-@@ -313,6 +314,7 @@ static int rti_wdt_remove(struct platform_device *pdev)
- 
- 	watchdog_unregister_device(&wdt->wdd);
- 	pm_runtime_put(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
- 
- 	return 0;
- }
 -- 
-2.17.1
+2.7.4
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
