@@ -2,119 +2,107 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7524AC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 511192070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="DFyrxdct"
+	by mail.kernel.org (Postfix) with ESMTP id 0305520734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:54:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594997699;
+	bh=ekESCmOxSsO99Jgr9mXcv5Rm5ARC6YWFI2L+02tuKtU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C27Yzbl8Bvva9oIrXqQGDywYqqX/YMtXbO3dR5ciA7NhEHx4MopRgt4vZhgOl7K7R
+	 qxhdA8t7HXjIK4LVs6Df8AIun/rUl9ZwJfsR3dHJd/s7ut67iM0oao5J3fs0aFCvAG
+	 h2UbB9nTfNAf75q2z/l7cc8noOGo5S9LUgB7yMVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgGQOx3 (ORCPT
+        id S1726673AbgGQOy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:53:29 -0400
-Received: from smtp102.iad3b.emailsrvr.com ([146.20.161.102]:44644 "EHLO
-        smtp102.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726812AbgGQOxX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:53:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1594997602;
-        bh=41TBdif6gLbsLqcqOknalhHkQbgUsySHykQ3g+6yXxo=;
-        h=From:To:Subject:Date:From;
-        b=DFyrxdctkfp0IY1vzdLKvvL9xebBaF+kEB2EX6LCvmphiEcqvD6qgjJtRQ/KvMmRp
-         8dsL3lBOZKpU2vSuJvmeVxrydXMSsrZ5kgVWOT4yOiRW6rfjMdELYcpmv0+NZolF0k
-         HucS+03tMqnsPYaIW1zRKavyTsV6v+JW12Gt5rLE=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp5.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 8DC724020E;
-        Fri, 17 Jul 2020 10:53:21 -0400 (EDT)
-From:   Ian Abbott <abbotti@mev.co.uk>
-To:     devel@driverdev.osuosl.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH 4/4] staging: comedi: addi_apci_1500: check INSN_CONFIG_DIGITAL_TRIG shift
-Date:   Fri, 17 Jul 2020 15:52:57 +0100
-Message-Id: <20200717145257.112660-5-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200717145257.112660-1-abbotti@mev.co.uk>
-References: <20200717145257.112660-1-abbotti@mev.co.uk>
+        Fri, 17 Jul 2020 10:54:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726233AbgGQOy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:54:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59BAE2070E;
+        Fri, 17 Jul 2020 14:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594997696;
+        bh=ekESCmOxSsO99Jgr9mXcv5Rm5ARC6YWFI2L+02tuKtU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GzsOV7ABb0hP1Foh8qEttWwWQ/tenkJ7GyhQaR69Y02hFYIqSrNt7sEEqkwhVEroF
+         SM+RQUD7gxa41FoAgpsG71eQv9YJ9EHA/lprT3b0SomSeCl2M4TEA5fbwUA3LCTS1z
+         Tr9PV63pPpVPtoQqlw6yGTEZHO1fuLqTSJY6F8IM=
+Date:   Fri, 17 Jul 2020 16:54:48 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Gutson <daniel.gutson@eclypsium.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Subject: Re: [PATCH] [PATCH] Firmware security information in SYSFS
+Message-ID: <20200717145448.GA3008378@kroah.com>
+References: <20200716223627.253936-1-daniel.gutson@eclypsium.com>
+ <20200717062841.GA3238569@kroah.com>
+ <CAK8P3a1yy7YyeJH5k40yAXb23y9siBnfuqixb76t3BK9Xh=uXQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Classification-ID: 3cd28aa4-5d40-4a0c-a681-8cbccbead0a1-5-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1yy7YyeJH5k40yAXb23y9siBnfuqixb76t3BK9Xh=uXQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The `INSN_CONFIG` comedi instruction with sub-instruction code
-`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
-used as a right shift amount for other bitmask values without being
-checked.  Shift amounts greater than or equal to 32 will result in
-undefined behavior.  Add code to deal with this, adjusting the checks
-for invalid channels so that enabled channel bits that would have been
-lost by shifting are also checked for validity.  Only channels 0 to 15
-are valid.
+On Fri, Jul 17, 2020 at 04:40:40PM +0200, Arnd Bergmann wrote:
+> On Fri, Jul 17, 2020 at 8:28 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Jul 16, 2020 at 07:36:27PM -0300, Daniel Gutson wrote:
+> > > +What:                /sys/kernel/firmware-security/bioswe
+> >
+> > Ick, I stopped reading right here.
+> >
+> > No, this is not where this belongs.
+> >
+> > We already have /sys/firmware/, right?  And firmware-specific
+> > subdirectories below that.
+> >
+> > We also have /sys/devices/system/ and I think that would be a much
+> > better place for this, as it is easier to work with a real 'struct
+> > device' than a "raw" kobject any day.  Bonus is you get full support of
+> > userspace libraries when you do that, unlike when dealing with kobjects.
+> >
+> > Also, this really is a _SPECIFIC_ type of firmware that supports these
+> > features, right?  Why not call that out too?  This is not generic by any
+> > means.
+> 
+> As I suggested in my previous review, I wouldn't worry too much about
+> the user interface at the start, but instead first work out how the hardware
+> support fits in with the existing drivers and once that looks fine decide
+> on how to export it to user space.
+> 
+> I agree the  /sys/kernel/firmware-security/bioswe sounds like the wrong
+> place, but I'm not sure if adding any other new directory in sysfs is
+> much better. I think the most promising would be to have it on the
+> sysfs directory for the device it refers to, but let's first see how the
+> information gets into the kernel.
 
-Fixes: a8c66b684efaf ("staging: comedi: addi_apci_1500: rewrite the subdevice support functions")
-Cc: <stable@vger.kernel.org> #4.0+: ef75e14a6c93: staging: comedi: verify array index is correct before using it
-Cc: <stable@vger.kernel.org> #4.0+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
- .../staging/comedi/drivers/addi_apci_1500.c   | 24 +++++++++++++++----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+Yes, the directory for the specific device would probably be best, but
+let's see where that really is :)
 
-diff --git a/drivers/staging/comedi/drivers/addi_apci_1500.c b/drivers/staging/comedi/drivers/addi_apci_1500.c
-index 689acd69a1b9..816dd25b9d0e 100644
---- a/drivers/staging/comedi/drivers/addi_apci_1500.c
-+++ b/drivers/staging/comedi/drivers/addi_apci_1500.c
-@@ -452,13 +452,14 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
- 	struct apci1500_private *devpriv = dev->private;
- 	unsigned int trig = data[1];
- 	unsigned int shift = data[3];
--	unsigned int hi_mask = data[4] << shift;
--	unsigned int lo_mask = data[5] << shift;
--	unsigned int chan_mask = hi_mask | lo_mask;
--	unsigned int old_mask = (1 << shift) - 1;
-+	unsigned int hi_mask;
-+	unsigned int lo_mask;
-+	unsigned int chan_mask;
-+	unsigned int old_mask;
- 	unsigned int pm;
- 	unsigned int pt;
- 	unsigned int pp;
-+	unsigned int invalid_chan;
- 
- 	if (trig > 1) {
- 		dev_dbg(dev->class_dev,
-@@ -466,7 +467,20 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
- 		return -EINVAL;
- 	}
- 
--	if (chan_mask > 0xffff) {
-+	if (shift <= 16) {
-+		hi_mask = data[4] << shift;
-+		lo_mask = data[5] << shift;
-+		old_mask = (1U << shift) - 1;
-+		invalid_chan = (data[4] | data[5]) >> (16 - shift);
-+	} else {
-+		hi_mask = 0;
-+		lo_mask = 0;
-+		old_mask = 0xffff;
-+		invalid_chan = data[4] | data[5];
-+	}
-+	chan_mask = hi_mask | lo_mask;
-+
-+	if (invalid_chan) {
- 		dev_dbg(dev->class_dev, "invalid digital trigger channel\n");
- 		return -EINVAL;
- 	}
--- 
-2.27.0
+thanks,
 
+greg k-h
