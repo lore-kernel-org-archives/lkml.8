@@ -2,139 +2,69 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CF9C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0780320759
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595026753;
-	bh=Si2p19g5Q2ejNUok1Tpdxy2XoGYOEq8JYIYD2SrPf2o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ZqYggGhL3vV7AThDq25fjLazz8janyAXnGCYXo2oup7FlteenuMu0clnmvefe33Ef
-	 px/8uqCHY9GLU5OVrhzcjzE1hEKfTn/GOGBnkbaJtDOB+vaQj9ZpJDu8uR3XRWqYk9
-	 kTafAEBTPxguMy8b0QvbjdRxaOyHD3uYp5z/WPqI=
+	by mail.kernel.org (Postfix) with ESMTP id 283D72070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgGQW7M (ORCPT
+        id S1727840AbgGQXA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 18:59:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgGQW7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 18:59:11 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 807BA2070E;
-        Fri, 17 Jul 2020 22:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595026750;
-        bh=Si2p19g5Q2ejNUok1Tpdxy2XoGYOEq8JYIYD2SrPf2o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Xa78DP6cTPQwIDB+zLOdMNLq6OUmpcDgXzo1DstH7/SEVTcIQwQCOAlIZy0/xo/s8
-         WBsx7J7oBz8CAbGzB8qdJpOvBHGz/VNXFoeGmZq1s19GHQWZ3XrtSI2slMBi3OFVJy
-         qEeUZaUUB6aFmqcwWeU3nuixS2elvzP7gtDjMtfA=
-Date:   Fri, 17 Jul 2020 17:59:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        stable@vger.kernel.org
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-Message-ID: <20200717225909.GA784064@bjorn-Precision-5520>
+        Fri, 17 Jul 2020 19:00:28 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:33499 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgGQXA2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 19:00:28 -0400
+X-Originating-IP: 90.65.108.121
+Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id C0B93FF802;
+        Fri, 17 Jul 2020 23:00:25 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     nicolas.ferre@microchip.com, linux-kernel@vger.kernel.org,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        ludovic.desroches@microchip.com,
+        linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] ARM: at91: Replace HTTP links with HTTPS ones
+Date:   Sat, 18 Jul 2020 01:00:23 +0200
+Message-Id: <159502678064.777887.13839495855154386922.b4-ty@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200713065859.31770-1-grandmaster@al2klimov.de>
+References: <20200713065859.31770-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717144318.GP2722994@sasha-vm>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:43:18AM -0400, Sasha Levin wrote:
-> On Fri, Jul 17, 2020 at 02:43:52AM +0200, Karol Herbst wrote:
-> > On Fri, Jul 17, 2020 at 1:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, Jul 17, 2020 at 12:10:39AM +0200, Karol Herbst wrote:
-> > > > On Tue, Jul 7, 2020 at 9:30 PM Karol Herbst <kherbst@redhat.com> wrote:
-> > > > >
-> > > > > Hi everybody,
-> > > > >
-> > > > > with the mentioned commit Nouveau isn't able to load firmware onto the
-> > > > > GPU on one of my systems here. Even though the issue doesn't always
-> > > > > happen I am quite confident this is the commit breaking it.
-> > > > >
-> > > > > I am still digging into the issue and trying to figure out what
-> > > > > exactly breaks, but it shows up in different ways. Either we are not
-> > > > > able to boot the engines on the GPU or the GPU becomes unresponsive.
-> > > > > Btw, this is also a system where our runtime power management issue
-> > > > > shows up, so maybe there is indeed something funky with the bridge
-> > > > > controller.
-> > > > >
-> > > > > Just pinging you in case you have an idea on how this could break Nouveau
-> > > > >
-> > > > > most of the times it shows up like this:
-> > > > > nouveau 0000:01:00.0: acr: AHESASC binary failed
-> > > > >
-> > > > > Sometimes it works at boot and fails at runtime resuming with random
-> > > > > faults. So I will be investigating a bit more, but yeah... I am super
-> > > > > sure the commit triggered this issue, no idea if it actually causes
-> > > > > it.
-> > > >
-> > > > so yeah.. I reverted that locally and never ran into issues again.
-> > > > Still valid on latest 5.7. So can we get this reverted or properly
-> > > > fixed? This breaks runtime pm for us on at least some hardware.
-> > > 
-> > > Yeah, that stinks.  We had another similar report from Patrick:
-> > > 
-> > >   https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
-> > > 
-> > > Apparently the problem is ec411e02b7a2 ("PCI/PM: Assume ports without
-> > > DLL Link Active train links in 100 ms"), which Patrick found was
-> > > backported to v5.4.49 as 828b192c57e8, and you found was backported to
-> > > v5.7.6 as afaff825e3a4.
-> > > 
-> > > Oddly, Patrick reported that v5.7.7 worked correctly, even though it
-> > > still contains afaff825e3a4.
-> > > 
-> > > I guess in the absence of any other clues we'll have to revert it.
-> > > I hate to do that because that means we'll have slow resume of
-> > > Thunderbolt-connected devices again, but that's better than having
-> > > GPUs completely broken.
-> > > 
-> > > Could you and Patrick open bugzilla.kernel.org reports, attach dmesg
-> > > logs and "sudo lspci -vv" output, and add the URLs to Kai-Heng's
-> > > original report at https://bugzilla.kernel.org/show_bug.cgi?id=206837
-> > > and to this thread?
-> > > 
-> > > There must be a way to fix the slow resume problem without breaking
-> > > the GPUs.
-> > > 
-> > 
-> > I wouldn't be surprised if this is related to the Intel bridge we
-> > check against for Nouveau.. I still have to check on another laptop
-> > with the same bridge our workaround was required as well but wouldn't
-> > be surprised if it shows the same problem. Will get you the
-> > information from both systems tomorrow then.
+On Mon, 13 Jul 2020 08:58:59 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> I take it that ec411e02b7a2 will be reverted upstream?
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 
-Yes, unless we have a better fix soon.  I applied the revert to my
-for-linus branch, so it will appear in -next soon.  I think it's a
-little late to get it in -rc5, so I'll probably ask Linus to pull it
-next week for -rc6.
+Applied, thanks!
 
-Bjorn
+[1/1] ARM: at91: Replace HTTP links with HTTPS ones
+      commit: f3a49f17845d81a032b83ef102fb24ffb2dfb3a0
+
+Best regards,
+-- 
+Alexandre Belloni <alexandre.belloni@bootlin.com>
