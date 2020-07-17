@@ -2,142 +2,157 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E398C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10300C433FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 689DA20759
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:55:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LTF03lW7"
+	by mail.kernel.org (Postfix) with ESMTP id EFD0420759
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGQNzJ (ORCPT
+        id S1727870AbgGQNzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:55:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbgGQNyf (ORCPT
+        Fri, 17 Jul 2020 09:55:11 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:39399 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgGQNzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:54:35 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72FD2C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:35 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f7so11235827wrw.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HtRzZ5KmeCiCWZA3g8vq3ZlMKJB7i9QBYHFK4C8GH0s=;
-        b=LTF03lW7kEJAH5aMocIcsUzVWKAAABsB7rRAQmExZ4VoAYuhMbb4bcfHA0awvwbIDn
-         fSkxCfo/z71K8EDTbTRd1sVt8VejJPdF8NuHRjTZxmZonr2ag+LnYAaMzozlvyj/Cb5E
-         PWgYZBTaStJPspQcjcGfuT8bJBxeDTvRJ0sGTQqibirjPdbO9pmPQ7kUKwHMotEFdyKo
-         MCB7tcYRiYbE8rd+eUj1eVl/BPcWVE6wBcLZhlVqdWLaOOma3YFofkP6BA3dPq9kNNRI
-         8PItgM9yXEDb1k7nXRz+os22F5zYnJ0UhBHCQb8OoWOH804RCJZrIwdQb5vBvWHvE7ZZ
-         xA7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HtRzZ5KmeCiCWZA3g8vq3ZlMKJB7i9QBYHFK4C8GH0s=;
-        b=Uv4/vk7d5uopmFIuY5c57UnFXR0KQPrQguKrGASpvz6muan3f7wwnZig+cbEMSJh9s
-         V94kkmJZ1sSsfPL83x6tdjCBOsm6RGvaOj34Dwy64HC4FFcXJdXw8BH13ji9EouOxY9Z
-         qcAvuLeTMyftvECFJEPaBigoNul6PMhST7Gum10Hg22WPUt3EaG+J3rVzaaPTdzXwqf/
-         F/F76BCMjrd3x3J7fMUypsFoIMDanosQU3+SKKkdWJVNEsmU7Kn+k7L5q+Wj8j04/K+D
-         y5rjvrmpdOYkZdvvW4O3330eA0QRsieV7EHinpWGqhWiNANjN2ne83ca5arPSi9x2bvB
-         4bmQ==
-X-Gm-Message-State: AOAM531FZQYS8O4VvuMbXh9IVXrAvjNrRWRItSPhP1gVHhDplCQ/a5gg
-        V5uqyPaDFXtpxtp9h5EiK6iT4A==
-X-Google-Smtp-Source: ABdhPJyHX3PoYRsGFUxGkeeCqGttR+NzV972E7ncV9J1A49qk+XgxXs6FMRDtU1LSi15aefSC1/YWA==
-X-Received: by 2002:adf:8486:: with SMTP id 6mr1234507wrg.109.1594994074147;
-        Fri, 17 Jul 2020 06:54:34 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id w128sm16118356wmb.19.2020.07.17.06.54.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 06:54:33 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     broonie@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andi Shyti <andi@etezian.org>,
-        Jaswinder Singh <jassi.brar@samsung.com>,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v2 07/14] spi: spi-s3c64xx: Add missing entries for structs 's3c64xx_spi_dma_data' and 's3c64xx_spi_dma_data'
-Date:   Fri, 17 Jul 2020 14:54:17 +0100
-Message-Id: <20200717135424.2442271-8-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717135424.2442271-1-lee.jones@linaro.org>
-References: <20200717135424.2442271-1-lee.jones@linaro.org>
+        Fri, 17 Jul 2020 09:55:08 -0400
+Received: from mail-qv1-f52.google.com ([209.85.219.52]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M27ix-1jyLZL49bF-002Vsh; Fri, 17 Jul 2020 15:55:07 +0200
+Received: by mail-qv1-f52.google.com with SMTP id ed14so4261995qvb.2;
+        Fri, 17 Jul 2020 06:55:06 -0700 (PDT)
+X-Gm-Message-State: AOAM531ODp20DY28PbUj0yWR7rLEccpc5k8Ovz5CcAi35OHgcqR/9gD8
+        Tvvv1Fy9VKCD9+Zbm+HqK4SdN4v/sKAQSLPye4g=
+X-Google-Smtp-Source: ABdhPJx8LtIaLQvziKo3lourUrEUkUS4ZMZUlWIjb/0jYwIJLV5qk1IAswyVggaESYzsgRC5Y1NVn7LRruYETW4HxFQ=
+X-Received: by 2002:a0c:f802:: with SMTP id r2mr9068143qvn.197.1594994105686;
+ Fri, 17 Jul 2020 06:55:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
+ <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
+ <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
+ <20200717121436.GA2953399@kroah.com> <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
+ <20200717132101.GA2984939@kroah.com>
+In-Reply-To: <20200717132101.GA2984939@kroah.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jul 2020 15:54:49 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
+Message-ID: <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>,
+        Olof Johansson <olof@lixom.net>,
+        Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:dEZrwx+hzGiTO58D77scQNmTcn4qBOJ4MxH9Pt6/XGIoFsCYPgx
+ 8+8Z4oqNp0EXx8voOmSwoJLPt4yIRYSbema98zXDcFZfv44gguS59RhHC/ya+BWeCtQf/0a
+ 6JHum5COraJZ+48BGLVoiz/b2W/SxC7DRMhVrgkUlhBIk+XN/0UaZWqxAvsA/jrwJLNNtTu
+ u21KH88s+7Z/WD4Y2NvdQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:T+04+9APdXo=:t1jJfhZF3ic/+H9We7UQqy
+ Qv7PMTQSjEKLQ9zt7L9oPnutUjn92bqyPYD3EGItpRVHV8BuVHnJk+knywJI+DQwsnJNfdqR+
+ 2Dv0/ttH/40MpY8NPGYKnjSPaQG0u7j76oZFyWLM7/hnvdHGyoO1MdD9pbBqYJqsI0nnp50d7
+ ebBD1424kWkXyko5xVMrr3AnUXte7L9sSkXRK8dCbwzz3L0LbIIJYkxRkRkmunJoCI30TQFT5
+ A+zWR8QNISc6+S3ZZyTfjUtDVAEVrKzQ8hxioaARllP+++KZvtrOh3Se8e9qeeHJw/ty/zzsz
+ GAl/UOeq4tnZrX1oTmkQ01n3DyGLnMIyxDr5E5FP/Hm5tL1w0nd6OOrZdQ3V/AOgnUt2OWJET
+ qFZcWSlQIH25VVbNOZFFW63AGwWFtS99F9Pi4M4bzLRPyrLQKzXEdG70CTczsqfb78bfgaGy1
+ 8NyZRAzmU+3RQ+RZB0ygTDXTpDnIFF8SP84dopLVQnaHdWgDtNXXFp9/kiYhZTKo96ejesz9b
+ SBBP5+zY02C4JsITREaZUBzlrl/PZBlu0c0snwmFuhKp82EBuU31MjOm+DM83R9WtidiypJl0
+ EiQKpsb22Oh85iGS1W0nScYAzadPD8Iuk3t9dqRVW/fRkhMsikm/RGMz/Dtj4uah2YqUbmGdd
+ hPUHWRkCkiDqRrHGKjbcwECPRVBt2uPhhKhVb8itKSkJtETIH0Pbqc4M3xGNY/rDw0KCG0z85
+ aERgimF5OMx5YKbWPb9W0KrsL6o4QWZQfOsON0fzXMIRwpZC1/xfqNXByf6dFn3Lvh3IQUqUL
+ tGmDQLPTzk7SlprMXch4LQU+xA5P4k7WHQkR1ShZj4NIoj1Qu4PQvfWen/LoibFmDzeNC7eeI
+ 6ng9/YWmAETYF/rBDMuSWS6vUDmg0C5chGLA2Z84k0OOO7C2a8RXxiBdz1A7vtNkaApNcLATv
+ 3Mjhgmu1DFrzzpQ8gL2dpKCj23Wzf1Qm1t4yyUYoZzLxxXOJ6+NXc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+On Fri, Jul 17, 2020 at 3:21 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Fri, Jul 17, 2020 at 02:27:43PM +0200, Geert Uytterhoeven wrote:
+> > Hi Greg,
+> >
+> > On Fri, Jul 17, 2020 at 2:14 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > Android is just finally pushing vendors to get their code upstream,
+> > > which is a good thing to see.  And building things as a module is an
+> > > even better thing as now it is finally allowing arm64 systems to be
+> > > built to support more than one specific hardware platform at runtime.
+> >
+> > Can you please stop spreading this FUD?
+>
+> For many many SoCs today, this is not true.  Their drivers are required
+> to be built in and will not work as modules, as we are seeing the
+> patches try to fix.
 
- drivers/spi/spi-s3c64xx.c:150: warning: Function parameter or member 'quirks' not described in 's3c64xx_spi_port_config'
- drivers/spi/spi-s3c64xx.c:150: warning: Function parameter or member 'clk_ioclk' not described in 's3c64xx_spi_port_config'
- drivers/spi/spi-s3c64xx.c:189: warning: Function parameter or member 'pdev' not described in 's3c64xx_spi_driver_data'
- drivers/spi/spi-s3c64xx.c:189: warning: Function parameter or member 'rx_dma' not described in 's3c64xx_spi_driver_data'
- drivers/spi/spi-s3c64xx.c:189: warning: Function parameter or member 'tx_dma' not described in 's3c64xx_spi_driver_data'
- drivers/spi/spi-s3c64xx.c:189: warning: Function parameter or member 'port_conf' not described in 's3c64xx_spi_driver_data'
- drivers/spi/spi-s3c64xx.c:189: warning: Function parameter or member 'port_id' not described in 's3c64xx_spi_driver_data'
+There are two different points here:
 
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andi Shyti <andi@etezian.org>
-Cc: Jaswinder Singh <jassi.brar@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/spi/spi-s3c64xx.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+a) having drivers as loadable modules: I think everyone agrees this
+is a good thing in general. Having more of them makes smaller kernels,
+which is good. arm64 is no different from arm32 and powerpc here,
+and probably a bit better than x86, which requires all platform specific
+core code (PC, numachip, UV, ScaleMP, ...) to be built-in.
 
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index cf67ea60dc0ed..924b24441789a 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -130,9 +130,11 @@ struct s3c64xx_spi_dma_data {
-  * @fifo_lvl_mask: Bit-mask for {TX|RX}_FIFO_LVL bits in SPI_STATUS register.
-  * @rx_lvl_offset: Bit offset of RX_FIFO_LVL bits in SPI_STATUS regiter.
-  * @tx_st_done: Bit offset of TX_DONE bit in SPI_STATUS regiter.
-+ * @quirks: Bitmask of known quirks
-  * @high_speed: True, if the controller supports HIGH_SPEED_EN bit.
-  * @clk_from_cmu: True, if the controller does not include a clock mux and
-  *	prescaler unit.
-+ * @clk_ioclk: True if clock is present on this device
-  *
-  * The Samsung s3c64xx SPI controller are used on various Samsung SoC's but
-  * differ in some aspects such as the size of the fifo and spi bus clock
-@@ -154,6 +156,7 @@ struct s3c64xx_spi_port_config {
-  * @clk: Pointer to the spi clock.
-  * @src_clk: Pointer to the clock used to generate SPI signals.
-  * @ioclk: Pointer to the i/o clock between master and slave
-+ * @pdev: Pointer to device's platform device data
-  * @master: Pointer to the SPI Protocol master.
-  * @cntrlr_info: Platform specific data for the controller this driver manages.
-  * @lock: Controller specific lock.
-@@ -166,7 +169,11 @@ struct s3c64xx_spi_port_config {
-  * @xfer_completion: To indicate completion of xfer task.
-  * @cur_mode: Stores the active configuration of the controller.
-  * @cur_bpw: Stores the active bits per word settings.
-- * @cur_speed: Stores the active xfer clock speed.
-+ * @cur_speed: Current clock speed
-+ * @rx_dma: Local receive DMA data (e.g. chan and direction)
-+ * @tx_dma: Local transmit DMA data (e.g. chan and direction)
-+ * @port_conf: Local SPI port configuartion data
-+ * @port_id: Port identification number
-  */
- struct s3c64xx_spi_driver_data {
- 	void __iomem                    *regs;
--- 
-2.25.1
+b) supporting multiple hardware platforms at runtime: this is totally
+unrelated to the platform specific drivers being loadable modules.
+arm64 is a little better here than arm32 and powerpc, which need more
+than one configuration to support all hardware, about the same as
+x86 or s390 and much better than most others that have to chose
+a machine at compile time.
 
+> > As I said before, Arm64 kernels have supported more than one specific
+> > hardware platform at runtime from the beginning of the arm64 port
+> > (assumed the needed platform support has been enabled in the kernel
+> >  config, of course).
+> > Even most arm32 kernels support this, since the introduction of the
+> > CONFIG_ARCH_MULTIPLATFORM option.  In fact every recently
+> > introduced arm32 platform is usually v7, and must conform to this.
+> > The sole exceptions are very old platforms, and the v4/v5/v6/v7 split
+> > due to architectural issues (the latter still support clusters of
+> > platforms in a single kernel).
+>
+> I think the confusion here is that this really does not work well, if at
+> all, on most "high end" SoC chips due to the collection of different
+> things all of the vendors ship to their customers.  This is the work
+> that is trying to be fixed up here.
+>
+> And look at the driver core work for many driver subsystems to be fixed
+> up just to get a single kernel image to work on multiple platforms.
+> Just because older ones did it, doesn't mean it actually works today :)
+
+Can you give a specific example? The only problem I'm aware of for
+those SoCs is drivers being outside of the mainline kernel. Clearly
+having support for loadable modules helps SoC vendors because it
+allows them to support a new platform with an existing binary kernel
+by shipping third-party driver modules, but for stuff that is already
+in mainline, we could in theory support all hardware in a single gigantic
+binary kernel with no support for loadable modules at all.
+
+      Arnd
