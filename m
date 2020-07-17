@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF8CC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D51C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFB32076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D332076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAKFo9wW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrjK4d9F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgGQPXt (ORCPT
+        id S1727812AbgGQPXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:23:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52514 "EHLO
+        Fri, 17 Jul 2020 11:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgGQPXr (ORCPT
+        with ESMTP id S1726071AbgGQPXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 11:23:47 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D3CC0619D2;
-        Fri, 17 Jul 2020 08:23:47 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id f18so11619942wrs.0;
-        Fri, 17 Jul 2020 08:23:47 -0700 (PDT)
+        Fri, 17 Jul 2020 11:23:44 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6E0C0619D2;
+        Fri, 17 Jul 2020 08:23:44 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so11549242wrl.8;
+        Fri, 17 Jul 2020 08:23:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eDUInn53PGUx0+AivLJa/ERiqsHCKn0OmcMLZZkWr94=;
-        b=iAKFo9wWY23qfH4cIb3HsqnAp7+7HOUipi0jN7nDImzSfSiNZkFl9IDdvZ7E1EDpvB
-         v1mg3R+e6SOP7coSLNIKsr/cLI/5zfMm+DAUq6blu/kxPy64ZFicqV/a67QH3EAaR1ZN
-         gm5JEywZfCyL+th4u5w8aFgxVyXmfXWhIcxNZDdnhV1swjNz+R3HQ1ewHf2zELS9asNz
-         +vheSiUb5rw2MMjaQ5zuOx1M56rOLDlX0oN9/rOFXXvrKh5PG++SFNZizb9Vo6DSF1eW
-         ng3bStxj4BNbVpS6hK/Lo6E5la6rHu9swrQbPaJA7HBCziX2l/lyz3Z0SoTGnvrEsRVm
-         fxAQ==
+        bh=bPVCDr4im/hPh3ecaLSwEPVliXPN7RfgtalCBE3XxpQ=;
+        b=mrjK4d9Fyc/X5drHE+cgZxtWRsZpGiWvOpOJt0rQri+PHL+J+HGizUX/AKhn8k+7kt
+         owQytKjnNtItblPZ7LtZJldpht/j/tnzpPnFVXjFe/0WegaiTuw4x84npAx0gIlQr22e
+         U+1MKiBv9ArgH0MJeCoqTxCnOD/+Mzt1vf0RjJMBdd+xrshWvpzh6h/0w/4B5ud+Ek/g
+         tmc4OLtJlII+VbwelIgq2nqhhdOneZNw6yh7eijzaGeLMLbane9kMYprQdfXg3XI0tlF
+         QeGirKB7mk0HdYlPGHkm81ZFe/0bB6qCprPzWp1QimrSThGgogGHd+iAduEqbCia1MJ1
+         D+BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=eDUInn53PGUx0+AivLJa/ERiqsHCKn0OmcMLZZkWr94=;
-        b=auPdYKj5YDrbOLH6sOxZZiUuIZGuESLE+pxr7A5Gqu+RFXb+UOBHQIb6z4+EYhZo4M
-         8pbdq02ZNzcB1b0Qe0oUWD/pUHX7rWz7wTqzXdtvve6cy/TGn7m2ZeIGrbWmBskF39pb
-         uf4RKiD5Kf7Hq0jrBfpI3LkRfZEL0MzGOl8wILPfsqguKikV+t6X/F+qbEJK2B5Aeiva
-         xQrrR2S1iXYA6sKzfjS7Rpwzc6/Um0oUkM/hFmRDQEoqGeADVa8k//Cj7zQExVWYj27P
-         8SgHv6+ZNRxViSvDHy/cZHuqw0Y4ngyxdfgw6hgGdN7ANyuPcU1biBsdm6DxFwvM4RFs
-         qvvA==
-X-Gm-Message-State: AOAM530yVV3EyWm7ebBvbSPeY208QcFDrFp7ycL7A2/eVoaEhY9NAhRL
-        LyxWVVeSKh8pnC0fOdpsfp6S4/Eh
-X-Google-Smtp-Source: ABdhPJwIJwBRgUX4sCFwxhKTnxbnMU4Vfpyi/0Jd5ghS3qrniODyaNYrPiZo5G+XPGaUhcV9xklpFQ==
-X-Received: by 2002:a5d:56d0:: with SMTP id m16mr10478813wrw.194.1594999424545;
-        Fri, 17 Jul 2020 08:23:44 -0700 (PDT)
+        bh=bPVCDr4im/hPh3ecaLSwEPVliXPN7RfgtalCBE3XxpQ=;
+        b=SvAXJQXHI+lFziMO9g0derT8EzTwrHeIU++Y10McbXmTWp5e4bLV06fw2Yyl8eRcQ+
+         tPwOlCCF8kJHN/kyZxgqkXHSAwCYRY2ITm/K7hUhYLJKnZE4/nQxeKkDg/60lqCDHXZ5
+         fdV6Zm26XrjsCYjGrjiH14Zxm/+MvTGCiyCrg0MtLJDMjtgrvkyxrvCBzcy0MNgS/Qp4
+         ciMtaVL6uNOIZPtgAA8OihQmoeRFGiInWIH5n1lWFSEM4cXBZchFko1DyBLar6OoMgsD
+         yZdwoiTDaP6ZTmTvSy2/JWayJZvrFz2Pr5soHSRXPyFbWHeTkc/PFnxTviwA0yjH+fN1
+         9IaQ==
+X-Gm-Message-State: AOAM533iuzfWpFrlm+JCrfj/6zNgiNyeEL/BUlI4TPRyECKiGWhIw7uL
+        ctrfMiRJ2Padm+a7Rzr6ml5+eNSH
+X-Google-Smtp-Source: ABdhPJz6uhtDSvPKuE35q1b3k4iV1HswM0+93tmJfA9hEQi+3tPqTU/S2xLRGYfQTc8WB6uNrPgl1Q==
+X-Received: by 2002:a05:6000:cf:: with SMTP id q15mr11105669wrx.203.1594999422622;
+        Fri, 17 Jul 2020 08:23:42 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id a22sm13431051wmb.4.2020.07.17.08.23.42
+        by smtp.gmail.com with ESMTPSA id a22sm13431051wmb.4.2020.07.17.08.23.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 08:23:44 -0700 (PDT)
+        Fri, 17 Jul 2020 08:23:42 -0700 (PDT)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
@@ -67,9 +67,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Sasi Kumar <sasi.kumar@broadcom.com>
-Subject: [PATCH 2/7] usb: bdc: Add compatible string for new style USB DT nodes
-Date:   Fri, 17 Jul 2020 11:23:02 -0400
-Message-Id: <20200717152307.36705-3-alcooperx@gmail.com>
+Subject: [PATCH 1/7] dt-bindings: usb: bdc: Update compatible strings
+Date:   Fri, 17 Jul 2020 11:23:01 -0400
+Message-Id: <20200717152307.36705-2-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200717152307.36705-1-alcooperx@gmail.com>
 References: <20200717152307.36705-1-alcooperx@gmail.com>
@@ -78,26 +78,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add compatible string for some newer boards that only have this
-as there match sting.
+Remove "brcm,bdc-v0.16" because it was never used on any system.
+Add "brcm,bdc-udc-v3.1" which exists for any STB system with BDC.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- drivers/usb/gadget/udc/bdc/bdc_core.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/usb/brcm,bdc.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index 02a3a774670b..436a734ea0bc 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -629,6 +629,7 @@ static SIMPLE_DEV_PM_OPS(bdc_pm_ops, bdc_suspend,
- 		bdc_resume);
+diff --git a/Documentation/devicetree/bindings/usb/brcm,bdc.txt b/Documentation/devicetree/bindings/usb/brcm,bdc.txt
+index 63e63af3bf59..597f3902d857 100644
+--- a/Documentation/devicetree/bindings/usb/brcm,bdc.txt
++++ b/Documentation/devicetree/bindings/usb/brcm,bdc.txt
+@@ -4,7 +4,7 @@ Broadcom USB Device Controller (BDC)
+ Required properties:
  
- static const struct of_device_id bdc_of_match[] = {
-+	{ .compatible = "brcm,bdc-udc-v2" },
- 	{ .compatible = "brcm,bdc-v0.16" },
- 	{ .compatible = "brcm,bdc" },
- 	{ /* sentinel */ }
+ - compatible: must be one of:
+-                "brcm,bdc-v0.16"
++                "brcm,bdc-udc-v3.1"
+                 "brcm,bdc"
+ - reg: the base register address and length
+ - interrupts: the interrupt line for this controller
+@@ -21,7 +21,7 @@ On Broadcom STB platforms, these properties are required:
+ Example:
+ 
+         bdc@f0b02000 {
+-                compatible = "brcm,bdc-v0.16";
++                compatible = "brcm,bdc-udc-v3.1";
+                 reg = <0xf0b02000 0xfc4>;
+                 interrupts = <0x0 0x60 0x0>;
+                 phys = <&usbphy_0 0x0>;
 -- 
 2.17.1
 
