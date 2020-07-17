@@ -2,104 +2,78 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A57C43445
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D63C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A178220737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:58:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIK+O5YR"
+	by mail.kernel.org (Postfix) with ESMTP id 1091620737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgGQQ6P (ORCPT
+        id S1726893AbgGQRAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:58:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgGQQ6O (ORCPT
+        Fri, 17 Jul 2020 13:00:22 -0400
+Received: from out28-221.mail.aliyun.com ([115.124.28.221]:48346 "EHLO
+        out28-221.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgGQRAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:58:14 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9135C0619D2;
-        Fri, 17 Jul 2020 09:58:13 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u5so5693588pfn.7;
-        Fri, 17 Jul 2020 09:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kTW/vU9qPmPKn2Z7Y8y2u+6RPfS4JOq4IXRD9sDOkEw=;
-        b=LIK+O5YRTH0+YYmEybGySPOV6j9XxXLC2+aJMdoS3bJoRVQRmPZc6Ciuuz5qhYFdaA
-         AloS0c51m8IaynD02KZhF/YxFkcPhhkes7bGhxZIJBUUUOK4IbcRqSkyjdRI7waNnJSu
-         ApaTIgiQXRw6M/HeIC7qk2MBkMWKBz2UvnQwb7ddxeiDi30tAydeg30G/luARMn0Ct23
-         LIKnvppASD4cnGAB32kuzfGPq7byC39/nIC1+oc+Os81eULlOH2vUh21KXAf+UI+HnEL
-         8iPzbQwbrENJ2E4N2fCyTcQAaDOlWBY5cHutIarjA01i2vQGXoRHyk675VKVElJhyRkd
-         3sMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kTW/vU9qPmPKn2Z7Y8y2u+6RPfS4JOq4IXRD9sDOkEw=;
-        b=F/utBM5MkzAYCXNUbPoXdKHrWe63bybyeER2pJ3D+TnlayqxgSGAZF06SG0oJ7VQdP
-         TIc78MNbW75KuJ+F2pA9/VCEnLJxNLzgag8NgomJhViGS0/dHzKVh9f5REOf4YT2wYFt
-         BPbNknoMnnR/F7XA2FHitIgjN7+PhgU9ketYtSAgYhFcnntA+cYNihw81RXv5qQ+PJKh
-         cGnNdrtBrNp5JLW8Uml6GD4P9VQhjMDYY68Bt4e3Qbne2Ioqbyr+3kidrZWduZYFuE0/
-         wRCb1rjsFFmUEuIXwDKZZsbN3V65MzkRDFnoMj/m4zJ073IkYpnuQ77Lvic/Rf81OQMH
-         M1WQ==
-X-Gm-Message-State: AOAM5332ii+T1Kyd8HAtn/Tg7nUJkwhX7nIMjZ1xQxLFOShDHIdEURBb
-        HdE/FiApEOYV7+UpVcK5ZlVGwmfZ
-X-Google-Smtp-Source: ABdhPJwp7YuDLAAWTOjsYPSUf0PF6prjtKgs0M5K4Sme12+cjSJrvh9vOQiH7T7JcxLNJCMirMGGnA==
-X-Received: by 2002:aa7:8f2a:: with SMTP id y10mr8517075pfr.182.1595005093463;
-        Fri, 17 Jul 2020 09:58:13 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id s14sm2475872pjl.14.2020.07.17.09.58.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 09:58:12 -0700 (PDT)
-Subject: Re: [PATCH 5/7] usb: bdc: driver runs out of buffer descriptors on
- large ADB transfers
-To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Sasi Kumar <sasi.kumar@broadcom.com>
-References: <20200717152307.36705-1-alcooperx@gmail.com>
- <20200717152307.36705-6-alcooperx@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <5bc7603c-0e1f-762f-0d67-1c817c03c5ca@gmail.com>
-Date:   Fri, 17 Jul 2020 09:58:05 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Fri, 17 Jul 2020 13:00:21 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1720105|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0127948-0.000455309-0.98675;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I3U5VZp_1595005212;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I3U5VZp_1595005212)
+          by smtp.aliyun-inc.com(10.147.41.121);
+          Sat, 18 Jul 2020 01:00:17 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     daniel.lezcano@linaro.org, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tglx@linutronix.de,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
+Subject: [PATCH v7 0/5] Add support for the OST in Ingenic X1000.
+Date:   Sat, 18 Jul 2020 00:59:42 +0800
+Message-Id: <20200717165947.56158-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200717152307.36705-6-alcooperx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+v6->v7:
+1.Remove "default MACH_INGENIC" and make option silent.
+2.Enable the corresponding driver in the platform's Kconfig.
+3.Update DT of X1000 and X1830, use SYSOST instead of TCU
+  to provide clocksource and clockevent.
 
+周琰杰 (Zhou Yanjie) (5):
+  dt-bindings: timer: Add Ingenic X1000 OST bindings.
+  clocksource: Ingenic: Add support for the Ingenic X1000 OST.
+  MIPS: Ingenic: Let the Kconfig of platform enable the clocksource
+    driver.
+  MIPS: X1000: Use SYSOST instead of TCU to provide clocksource.
+  MIPS: X1830: Use SYSOST instead of TCU to provide clocksource.
 
-On 7/17/2020 8:23 AM, Al Cooper wrote:
-> Version v1.0.40 of the Android host ADB software increased maximum
-> transfer sizes from 256K to 1M. Since the STB ADB gadget driver
-> requests only 16K at a time, the BDC driver ran out of buffer
-> descriptors (BDs) if the queuing happens faster than the incoming
-> 16K transfers. This issue is fixed by doubling the number of BDs
-> that can be queued so that the entire 1M request can be queued
-> without running out of buffers.
-> 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+ .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
+ arch/mips/boot/dts/ingenic/cu1000-neo.dts          |   9 +-
+ arch/mips/boot/dts/ingenic/cu1830-neo.dts          |   9 +-
+ arch/mips/boot/dts/ingenic/x1000.dtsi              |  16 +
+ arch/mips/boot/dts/ingenic/x1830.dtsi              |  16 +
+ arch/mips/jz4740/Kconfig                           |   7 +
+ drivers/clocksource/Kconfig                        |  15 +-
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/ingenic-sysost.c               | 539 +++++++++++++++++++++
+ include/dt-bindings/clock/ingenic,sysost.h         |  12 +
+ 10 files changed, 672 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+ create mode 100644 drivers/clocksource/ingenic-sysost.c
+ create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
 
-You can certainly remove my SoB here, since you are carrying your own
-patch, thanks!
 -- 
-Florian
+2.11.0
+
