@@ -8,68 +8,68 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C0EC433F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0117920775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2511C2076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:24:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mdcOdGCf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q0JS/OC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgGQPXy (ORCPT
+        id S1728017AbgGQPX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:23:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52530 "EHLO
+        Fri, 17 Jul 2020 11:23:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgGQPXw (ORCPT
+        with ESMTP id S1727982AbgGQPX4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 11:23:52 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD269C0619D2;
-        Fri, 17 Jul 2020 08:23:51 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z13so11579033wrw.5;
-        Fri, 17 Jul 2020 08:23:51 -0700 (PDT)
+        Fri, 17 Jul 2020 11:23:56 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16BB5C0619D2;
+        Fri, 17 Jul 2020 08:23:56 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so11549927wrl.8;
+        Fri, 17 Jul 2020 08:23:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Me2WHbUTpgnRM4D8kqx7FmbTflTfMafU7MOjlibIhCA=;
-        b=mdcOdGCftCAR0C1l8D/cd1tWkMlYByjyNrxpQy2kCcTJqYGjZZHJY8Qi716jiVMX7a
-         +PY3w5rcs+7M91IFVWLIqWtGAtxC5aRqAR+aDCmyuf6sXCwKTfaefjlTfeiv68KcMHkp
-         pKOM99e6s7ECI8/wKhamNZYbAgmmRQFpBkRY9zdEPi7dLQpO8MXaXfZp95xqx6Iqu/IP
-         +SM8pGIP33/1LJtPAsL52PyPJLvRm0XkAFup9IKL1rU7uSMg01QEokuTcSUlwZJtHrqn
-         G2dk5kGaY/XT4aZhGvcq2VGprs4V+nSDuVYhUdv0o+2MYQTP8HKMWoDOyttJYyoZCrFv
-         f3Cw==
+        bh=39DVA3zqy37IA1tKd3smKZZk/q+1H0Y80MNeTQy6wDg=;
+        b=q0JS/OC1B255AdaCCWqQNQayVvqv5EUvuPT8M+lfPx36BqKJqgvYV872My5IIL+DUK
+         LjL2zlx5tLK/LAvwMguh9vqy4Ez9gZ8U0/MuEUvVY6Zk6yYF9I288OyGNO45HrW/90ro
+         UvQsfg2DSShKfuUR5iknLsvfL/D7w1jhtr7WMdY6xmU19sm3gv1Bc3Bz+/IFOkB/lkVU
+         7DHa6nqh4Bpg2KzK1E4pBrss2T9V1QNAVQhw24Z+oWwE6HlM5L2ac1injmC0kv5F4K35
+         1xBTwWTHB3Qp0kya1kP65sBDWxunJUyd4awg8Ik0RT2Z3GOU5NLZZRwC8MQRUqC3QZQO
+         49eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Me2WHbUTpgnRM4D8kqx7FmbTflTfMafU7MOjlibIhCA=;
-        b=UlCMELahOS0gkF6l6YBEwLeZ0bckZghX44LlNXeJuj1kc/D5t525AqYB/5RMmLi9or
-         QEagpKui7OLSBkzDSP7YDy5ojwB4CBrR27wBWXHoJwQkYKviEnRfMxD3Eol2aMvvEVtk
-         1ewySBou4HA5f5pI9G6yiOO8B1m8j7bhQy88/9nsMpkT/WEieSbxsEpy19HoqkMbbOrG
-         1embYZhksOuLJzObl9f4zA11ncEYsSaWEFCRTuRYWS59NJqqGIPfwoGuuzayFGBkaYn6
-         bZR2x/Bi3sfuL29x9Gfgi8retIpRTto2Ifuc5+kfLrk2GenkmQJ2ofMHbNpWa2j7PUCk
-         wVhw==
-X-Gm-Message-State: AOAM53248FuJHrYFS6JG1VJ/oG8LoanbAk9CtgUV48zBkgz6jvq+ruyp
-        RXID8rt5gWF8aVPTo/3rgtXM9p8y
-X-Google-Smtp-Source: ABdhPJwQwuHQ0dRfUDPFK85UD+bnKPMNyv73bwn7Ovu78ySabgeDS4V2QzqH3x5xjPBUKxcR1Q/+fA==
-X-Received: by 2002:adf:dc90:: with SMTP id r16mr10921301wrj.264.1594999430177;
-        Fri, 17 Jul 2020 08:23:50 -0700 (PDT)
+        bh=39DVA3zqy37IA1tKd3smKZZk/q+1H0Y80MNeTQy6wDg=;
+        b=I4xxxvZr1xAITL9noG6ERnugHihdy6WGSSJ0aBZeDQn2rGEghJxdAng9h4L/yvLJRR
+         El6C06mwKINKD77Pul/d+NT1cHmoWSxWCwSGFLHDvFmRPZOuH0I5YHxQxC9+ckIlDda/
+         NAs/v43cPIceASrwvESQluPehL3e6dp/7E7BaE8h29q/o4SN/zTO4KrQaVs4JdsYXbd7
+         V/rgT0f75hp8OL9eMMfVnfYG4XDGGxaOpxZS/9P8/tvmmOUafZQ+/P4VMZcLUXOUfpFd
+         N4Zi1PRULh3/iJroEXgVBV1M5ymKUWFt7EvJRcQ2hczcuwrhymZSGuwfR5gxmmierWBF
+         g4JQ==
+X-Gm-Message-State: AOAM531ruGKuJ8d7nNh3Pe6oPgsfbpBzd3bXSKkyTeYtxTr2G+YX+LCj
+        6oqKOFmtG+vNUPNTk8EaEejb829U
+X-Google-Smtp-Source: ABdhPJyDn/SGGx7/ByOEJUVhCesU8Opuj9JlfNcuFNT0Mi1OfvwomuMRL+gAepJHsnl3MtWV4FN12w==
+X-Received: by 2002:adf:db4d:: with SMTP id f13mr10698179wrj.336.1594999434093;
+        Fri, 17 Jul 2020 08:23:54 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id a22sm13431051wmb.4.2020.07.17.08.23.48
+        by smtp.gmail.com with ESMTPSA id a22sm13431051wmb.4.2020.07.17.08.23.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 08:23:49 -0700 (PDT)
+        Fri, 17 Jul 2020 08:23:53 -0700 (PDT)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+Cc:     Florian Fainelli <florian.fainelli@broadcom.com>,
+        Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Sasi Kumar <sasi.kumar@broadcom.com>
-Subject: [PATCH 5/7] usb: bdc: driver runs out of buffer descriptors on large ADB transfers
-Date:   Fri, 17 Jul 2020 11:23:05 -0400
-Message-Id: <20200717152307.36705-6-alcooperx@gmail.com>
+Subject: [PATCH 7/7] usb: bdc: Use devm_clk_get_optional()
+Date:   Fri, 17 Jul 2020 11:23:07 -0400
+Message-Id: <20200717152307.36705-8-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200717152307.36705-1-alcooperx@gmail.com>
 References: <20200717152307.36705-1-alcooperx@gmail.com>
@@ -78,33 +78,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Version v1.0.40 of the Android host ADB software increased maximum
-transfer sizes from 256K to 1M. Since the STB ADB gadget driver
-requests only 16K at a time, the BDC driver ran out of buffer
-descriptors (BDs) if the queuing happens faster than the incoming
-16K transfers. This issue is fixed by doubling the number of BDs
-that can be queued so that the entire 1M request can be queued
-without running out of buffers.
+From: Florian Fainelli <florian.fainelli@broadcom.com>
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
+The BDC clock is optional and we may get an -EPROBE_DEFER error code
+which would not be propagated correctly, fix this by using
+devm_clk_get_optional().
+
 Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- drivers/usb/gadget/udc/bdc/bdc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc.h b/drivers/usb/gadget/udc/bdc/bdc.h
-index 6e1e881dc51e..ac75e25c3b6a 100644
---- a/drivers/usb/gadget/udc/bdc/bdc.h
-+++ b/drivers/usb/gadget/udc/bdc/bdc.h
-@@ -44,7 +44,7 @@
- #define NUM_SR_ENTRIES	64
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index ac989adefe9d..5d8bd9129365 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -497,11 +497,9 @@ static int bdc_probe(struct platform_device *pdev)
  
- /* Num of bds per table */
--#define NUM_BDS_PER_TABLE	32
-+#define NUM_BDS_PER_TABLE	64
+ 	dev_dbg(dev, "%s()\n", __func__);
  
- /* Num of tables in bd list for control,bulk and Int ep */
- #define NUM_TABLES	2
+-	clk = devm_clk_get(dev, "sw_usbd");
+-	if (IS_ERR(clk)) {
+-		dev_info(dev, "Clock not found in Device Tree\n");
+-		clk = NULL;
+-	}
++	clk = devm_clk_get_optional(dev, "sw_usbd");
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
+ 
+ 	ret = clk_prepare_enable(clk);
+ 	if (ret) {
 -- 
 2.17.1
 
