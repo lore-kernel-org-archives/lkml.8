@@ -7,59 +7,62 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE9AF2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4533820717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nB2b3//5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tLN2V/jC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OiofMFDe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="twwaAXMY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgGQUAY (ORCPT
+        id S1728798AbgGQUA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:00:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42858 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbgGQUAT (ORCPT
+        Fri, 17 Jul 2020 16:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbgGQUAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:00:19 -0400
-Date:   Fri, 17 Jul 2020 20:00:15 -0000
+        Fri, 17 Jul 2020 16:00:23 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3390BC0619D5;
+        Fri, 17 Jul 2020 13:00:23 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 20:00:21 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595016016;
+        s=2020; t=1595016021;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=j0H4Km+DI3u2+gfmwd37RZxyPdsmOzVkyKEYDnNutJU=;
-        b=nB2b3//5t2qxNcM0SN38GyqpfF2DI/uBY3lnsKnO8Zlp2s+7VFRR9S60WENFecqdak4wKd
-        CuCHmE0jbSSm5R+c1hC6wj4Or3g7V0SzfncsAlNHV0tmUkrrMl7WLsk3UhPQ0552m+cA3V
-        RDeWnUOtbxMe07oTAM+tu+xvOvWCv6tz6MJcm/Es111Q2+KQX/xMqPDdbwscvwNgdy2tYh
-        +1INYrKPVQy3nDO2MleVzDRb+/PB/LyPfO8PpRkQ3T0RCtt/Kk0x3vT96hIulY0LQuTrCJ
-        7mx4nh7COiy34T5vpc/fzNsDzEGFos3PyOG0pe3L7afw/RCHa5kLQFUSp9FP8Q==
+        bh=cjtzIlht2e8cifhJtagb58N1MpRwjVqYl6gzVBnQQxw=;
+        b=OiofMFDeW2teAk3bAHXbY88yBnfYzwj3W25CN0zBoF1819i/OngFXD15pkebj4q9jk7u4W
+        GCbGJ0os4bJ6G08lusryMKBRykc3rsQDqZisQZ5dvwGI9jBWsojRhQotJgAso2n/hfHn1C
+        cT19qlurrtKwIpCSXpkNnxWHjktpmLhty7z+y5fNU6Y/gv9rpzjhVpcKaMoOTCGk78DAbo
+        ZaZ7GEIk5nFwbTt2sHmMhk/vy3u9/ZeQKVaK53pGtlRkVCBdfvq2EBw0Tx7JdP1T62vXWV
+        AktOY8XsN1a4vJBEImSkXMvAIQfHQ3ZQcuAPWpWBn3Ig5Obx542SL7dFibuOYA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595016016;
+        s=2020e; t=1595016021;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=j0H4Km+DI3u2+gfmwd37RZxyPdsmOzVkyKEYDnNutJU=;
-        b=tLN2V/jCr6PrPhzUJbwGOY3o3oXbTDQ6V6kp66RobOVX4WGlW2VBtrMHUAe1F55g2blaXP
-        8Fb/6LTu7Ll7zpBQ==
+        bh=cjtzIlht2e8cifhJtagb58N1MpRwjVqYl6gzVBnQQxw=;
+        b=twwaAXMYYN1UOAvje7oeRMmA+BIeRh1sk+wlTl3tmJmJ89sMYsJ5l30HHwQhbu4hSuJHju
+        vqtvnMkPpk7yZjDA==
 From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] timers: Remove must_forward_clk
+Subject: [tip: timers/core] timers: Preserve higher bits of expiration on
+ index calculation
 Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>, x86 <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200717140551.29076-12-frederic@kernel.org>
-References: <20200717140551.29076-12-frederic@kernel.org>
+In-Reply-To: <20200717140551.29076-3-frederic@kernel.org>
+References: <20200717140551.29076-3-frederic@kernel.org>
 MIME-Version: 1.0
-Message-ID: <159501601563.4006.11517295879429949452.tip-bot2@tip-bot2>
+Message-ID: <159501602116.4006.6815042885951437361.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -71,89 +74,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     0975fb565b8b8f9e0c96d0de39fcb954833ea5e0
-Gitweb:        https://git.kernel.org/tip/0975fb565b8b8f9e0c96d0de39fcb954833ea5e0
+Commit-ID:     3d2e83a2a6a0657c1cf145fa6ba23620715d6c36
+Gitweb:        https://git.kernel.org/tip/3d2e83a2a6a0657c1cf145fa6ba23620715d6c36
 Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Fri, 17 Jul 2020 16:05:50 +02:00
+AuthorDate:    Fri, 17 Jul 2020 16:05:41 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 17 Jul 2020 21:55:25 +02:00
+CommitterDate: Fri, 17 Jul 2020 21:55:21 +02:00
 
-timers: Remove must_forward_clk
+timers: Preserve higher bits of expiration on index calculation
 
-There is no reason to keep this guard around. The code makes sure that
-base->clk remains sane and won't be forwarded beyond jiffies nor set
-backward.
+The higher bits of the timer expiration are cropped while calling
+calc_index() due to the implicit cast from unsigned long to unsigned int.
+
+This loss shouldn't have consequences on the current code since all the
+computation to calculate the index is done on the lower 32 bits.
+
+However to prepare for returning the actual bucket expiration from
+calc_index() in order to properly fix base->next_expiry updates, the higher
+bits need to be preserved.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
-Link: https://lkml.kernel.org/r/20200717140551.29076-12-frederic@kernel.org
+Link: https://lkml.kernel.org/r/20200717140551.29076-3-frederic@kernel.org
 
 ---
- kernel/time/timer.c | 22 ++++++----------------
- 1 file changed, 6 insertions(+), 16 deletions(-)
+ kernel/time/timer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 4f78a7b..8b3fb52 100644
+index df1ff80..bcdc304 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -205,7 +205,6 @@ struct timer_base {
- 	unsigned long		next_expiry;
- 	unsigned int		cpu;
- 	bool			is_idle;
--	bool			must_forward_clk;
- 	DECLARE_BITMAP(pending_map, WHEEL_SIZE);
- 	struct hlist_head	vectors[WHEEL_SIZE];
- } ____cacheline_aligned;
-@@ -888,12 +887,13 @@ get_target_base(struct timer_base *base, unsigned tflags)
- 
- static inline void forward_timer_base(struct timer_base *base)
+@@ -487,7 +487,7 @@ static inline void timer_set_idx(struct timer_list *timer, unsigned int idx)
+  * Helper function to calculate the array index for a given expiry
+  * time.
+  */
+-static inline unsigned calc_index(unsigned expires, unsigned lvl)
++static inline unsigned calc_index(unsigned long expires, unsigned lvl)
  {
--	unsigned long jnow;
-+	unsigned long jnow = READ_ONCE(jiffies);
- 
--	if (!base->must_forward_clk)
--		return;
--
--	jnow = READ_ONCE(jiffies);
-+	/*
-+	 * No need to forward if we are close enough below jiffies.
-+	 * Also while executing timers, base->clk is 1 offset ahead
-+	 * of jiffies to avoid endless requeuing to current jffies.
-+	 */
- 	if ((long)(jnow - base->clk) < 2)
- 		return;
- 
-@@ -1722,16 +1722,8 @@ static inline void __run_timers(struct timer_base *base)
- 	timer_base_lock_expiry(base);
- 	raw_spin_lock_irq(&base->lock);
- 
--	/*
--	 * timer_base::must_forward_clk must be cleared before running
--	 * timers so that any timer functions that call mod_timer() will
--	 * not try to forward the base.
--	 */
--	base->must_forward_clk = false;
--
- 	while (time_after_eq(jiffies, base->clk) &&
- 	       time_after_eq(jiffies, base->next_expiry)) {
--
- 		levels = collect_expired_timers(base, heads);
- 		base->clk++;
- 		base->next_expiry = __next_timer_interrupt(base);
-@@ -1739,7 +1731,6 @@ static inline void __run_timers(struct timer_base *base)
- 		while (levels--)
- 			expire_timers(base, heads + levels);
- 	}
--	base->must_forward_clk = true;
- 	raw_spin_unlock_irq(&base->lock);
- 	timer_base_unlock_expiry(base);
- }
-@@ -1935,7 +1926,6 @@ int timers_prepare_cpu(unsigned int cpu)
- 		base->clk = jiffies;
- 		base->next_expiry = base->clk + NEXT_TIMER_MAX_DELTA;
- 		base->is_idle = false;
--		base->must_forward_clk = true;
- 	}
- 	return 0;
- }
+ 	expires = (expires + LVL_GRAN(lvl)) >> LVL_SHIFT(lvl);
+ 	return LVL_OFFS(lvl) + (expires & LVL_MASK);
