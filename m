@@ -2,184 +2,157 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A18BC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC973C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4114320704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:28:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cqQG+5HH"
+	by mail.kernel.org (Postfix) with ESMTP id 8663B20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgGQE2H (ORCPT
+        id S1726710AbgGQE3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:28:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725300AbgGQE2G (ORCPT
+        Fri, 17 Jul 2020 00:29:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27504 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725300AbgGQE3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:28:06 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B621C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:28:04 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z15so9578592wrl.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xKiHKtXUo7NkO+4s96RBO3/zYsHU2Z/ckyeyMOpjSSk=;
-        b=cqQG+5HHP8FdB3WQLW9wGhsG7SeC7f21rTf6GbiqGayG4UG+Eb/ZxDPESsqFDBOneb
-         lEHteZt/4j7lwXdMwlfN7AdtgbvYmDW+2kPVuSVJSBxwsTSsgv41w+4VCt/Ceg/Qf3gL
-         goYjFGpMHwtDxONpZtwPovrBtog3pC5e3idIBg5Jp2GzhGV4UpPUHG0HFJ5YNbBobQc0
-         GLdY8dcZdbBInXqVuhNQPCBXdS3js1eFHfC/jjTDmX0aCvGeIxVSGpbiF9R4LQkkHkpM
-         sU/J9G4w5VTmV1l9GuHqO1IwyQNmDi9jCG/Llh8/+vJjwhcTSbA5fECuc1o+BYKL0d5A
-         44bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xKiHKtXUo7NkO+4s96RBO3/zYsHU2Z/ckyeyMOpjSSk=;
-        b=UoZzTv7fN44ojL9GBRNNW/AKdbohLsoViydn4tGwz1uoDVYKPAjkVw2D/lB91YkwPQ
-         QrncuUQ1IuTp8Z0HqIQukz0AvHgrmfg+zBs6+G6lU6ar6OIUcgp6NqLd8Ss9tI8pvzBp
-         v6u2qfsqoBpzmLMbzov5seFtf6HMHPe82Mfgu0tDRy9BxD5+4yqBbria2IrIuzzTr+68
-         JUZScEqZ2dirGyQcThwiE5XWjGUH4JG9JmmpK1QpImKT3BO/abfmFns6/VaayCp33CVf
-         FdWzEVSwD5AhBjxYldwq1QNn8+jTW2ApWA1rtZhTWZv8kQOXkVo9f8wlkQ3c6OooNZpn
-         3Kvw==
-X-Gm-Message-State: AOAM5315VM07PEP4vQpN6E86ttp0VapqiwLoSbfJZHTzaHOY7ipQPUwR
-        Xq8ChPAC+jKEZW6joDKWKZHnKA==
-X-Google-Smtp-Source: ABdhPJz608hYHsiwyB/EN+L+jwqQLZomE0K0feZYaj9wTWfFYhecxH/LFSN0LliZKeegIqo1mKBqpQ==
-X-Received: by 2002:adf:9283:: with SMTP id 3mr8013554wrn.231.1594960083192;
-        Thu, 16 Jul 2020 21:28:03 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
-        by smtp.googlemail.com with ESMTPSA id u186sm11862848wmu.10.2020.07.16.21.28.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 21:28:02 -0700 (PDT)
-Subject: Re: [PATCH v4 00/16] Allwinner A100 Initial support
-To:     Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
-        mripard@kernel.org, wens@csie.org, mturquette@baylibre.com,
-        sboyd@kernel.org, gregory.clement@bootlin.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org,
-        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
-        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, lee.jones@linaro.org,
-        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
-        megous@megous.com, stefan@olimex.com, bage@linutronix.de,
-        devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org
-References: <cover.1594708863.git.frank@allwinnertech.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <ffd5eead-571c-6548-0527-1e685ec869ef@linaro.org>
-Date:   Fri, 17 Jul 2020 06:28:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 00:29:12 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06H41tMv063706;
+        Fri, 17 Jul 2020 00:29:04 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32auquns3f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 00:29:04 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06H42W2f065651;
+        Fri, 17 Jul 2020 00:29:04 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32auquns30-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 00:29:03 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06H4PZed026546;
+        Fri, 17 Jul 2020 04:29:01 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 3274pgx35g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 04:29:01 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06H4SxbV66912320
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jul 2020 04:28:59 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A22A811C050;
+        Fri, 17 Jul 2020 04:28:59 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE9C511C04C;
+        Fri, 17 Jul 2020 04:28:57 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.77.195.220])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 17 Jul 2020 04:28:57 +0000 (GMT)
+Date:   Fri, 17 Jul 2020 09:58:54 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Qian Cai <cai@lca.pw>, aneesh.kumar@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        sfr@canb.auug.org.au
+Subject: Re: [PATCH v3 0/3] Off-load TLB invalidations to host for !GTSE
+Message-ID: <20200717042854.GL7902@in.ibm.com>
+Reply-To: bharata@linux.ibm.com
+References: <20200703053608.12884-1-bharata@linux.ibm.com>
+ <20200716172713.GA4565@lca.pw>
+ <1594950229.jn9ipe6td1.astroid@bobo.none>
+ <1594953143.b8px5ir35m.astroid@bobo.none>
 MIME-Version: 1.0
-In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594953143.b8px5ir35m.astroid@bobo.none>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ adultscore=0 clxscore=1011 phishscore=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=6 priorityscore=1501 mlxscore=0
+ mlxlogscore=933 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007170025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/07/2020 08:55, Frank Lee wrote:
-> From: Yangtao Li <frank@allwinnertech.com>
-
-Do you expect me to pick patches 7,8,9 or ack them ?
-
-> v4:
-> -drop "dt-bindings: pinctrl: sunxi: make gpio banks supplies required"
-> -fix dcdc1 regulator name
-> -get rid of underscore in dts node name
-> -Some trivial things in yaml files
+On Fri, Jul 17, 2020 at 12:44:00PM +1000, Nicholas Piggin wrote:
+> Excerpts from Nicholas Piggin's message of July 17, 2020 12:08 pm:
+> > Excerpts from Qian Cai's message of July 17, 2020 3:27 am:
+> >> On Fri, Jul 03, 2020 at 11:06:05AM +0530, Bharata B Rao wrote:
+> >>> Hypervisor may choose not to enable Guest Translation Shootdown Enable
+> >>> (GTSE) option for the guest. When GTSE isn't ON, the guest OS isn't
+> >>> permitted to use instructions like tblie and tlbsync directly, but is
+> >>> expected to make hypervisor calls to get the TLB flushed.
+> >>> 
+> >>> This series enables the TLB flush routines in the radix code to
+> >>> off-load TLB flushing to hypervisor via the newly proposed hcall
+> >>> H_RPT_INVALIDATE. 
+> >>> 
+> >>> To easily check the availability of GTSE, it is made an MMU feature.
+> >>> The OV5 handling and H_REGISTER_PROC_TBL hcall are changed to
+> >>> handle GTSE as an optionally available feature and to not assume GTSE
+> >>> when radix support is available.
+> >>> 
+> >>> The actual hcall implementation for KVM isn't included in this
+> >>> patchset and will be posted separately.
+> >>> 
+> >>> Changes in v3
+> >>> =============
+> >>> - Fixed a bug in the hcall wrapper code where we were missing setting
+> >>>   H_RPTI_TYPE_NESTED while retrying the failed flush request with
+> >>>   a full flush for the nested case.
+> >>> - s/psize_to_h_rpti/psize_to_rpti_pgsize
+> >>> 
+> >>> v2: https://lore.kernel.org/linuxppc-dev/20200626131000.5207-1-bharata@linux.ibm.com/T/#t
+> >>> 
+> >>> Bharata B Rao (2):
+> >>>   powerpc/mm: Enable radix GTSE only if supported.
+> >>>   powerpc/pseries: H_REGISTER_PROC_TBL should ask for GTSE only if
+> >>>     enabled
+> >>> 
+> >>> Nicholas Piggin (1):
+> >>>   powerpc/mm/book3s64/radix: Off-load TLB invalidations to host when
+> >>>     !GTSE
+> >> 
+> >> Reverting the whole series fixed random memory corruptions during boot on
+> >> POWER9 PowerNV systems below.
+> > 
+> > If I s/mmu_has_feature(MMU_FTR_GTSE)/(1)/g in radix_tlb.c, then the .o
+> > disasm is the same as reverting my patch.
+> > 
+> > Feature bits not being set right? PowerNV should be pretty simple, seems
+> > to do the same as FTR_TYPE_RADIX.
 > 
-> v3:
-> -Add pmu and nmi support
-> -Add read data mask for calibration
-> -Code style
-> -Some trivial things in yaml files
+> Might need this fix
 > 
-> v2:
-> -Some naming consistency
-> -Repair email address
-> -Fix mmc clock
-> -Don't export system clock
-> -Fix checkpatch warning
-> -Drop unneeded pin function, convert to jtag_gpu and i2s_x
+> ---
 > 
-> Yangtao Li (16):
->   dt-bindings: clk: sunxi-ccu: add compatible string for A100 CCU and
->     R-CCU
->   clk: sunxi-ng: add support for the Allwinner A100 CCU
->   dt-bindings: pinctrl: sunxi: Get rid of continual nesting
->   dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
->   pinctrl: sunxi: add support for the Allwinner A100 pin controller
->   dt-bindings: nvmem: SID: add binding for A100's SID controller
->   dt-bindings: thermal: sun8i: Add binding for A100's THS controller
->   thermal: sun8i: add TEMP_CALIB_MASK for calibration data in
->     sun50i_h6_ths_calibrate
->   thermal: sun8i: Add A100's THS controller support
->   mfd: axp20x: Allow the AXP803 to be probed by I2C
->   dt-bindings: irq: sun7i-nmi: fix dt-binding for a80 nmi
->   dt-bindings: irq: sun7i-nmi: Add binding for A100's NMI controller
->   dt-bindings: i2c: mv64xxx: Add compatible for the A100 i2c node.
->   arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
->   dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
->   arm64: allwinner: A100: add support for Allwinner Perf1 board
-> 
->  .../devicetree/bindings/arm/sunxi.yaml        |    5 +
->  .../clock/allwinner,sun4i-a10-ccu.yaml        |    7 +-
->  .../bindings/i2c/marvell,mv64xxx-i2c.yaml     |    3 +
->  .../allwinner,sun7i-a20-sc-nmi.yaml           |    5 +-
->  .../nvmem/allwinner,sun4i-a10-sid.yaml        |   19 +-
->  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  |  139 +-
->  .../thermal/allwinner,sun8i-a83t-ths.yaml     |    6 +-
->  arch/arm64/boot/dts/allwinner/Makefile        |    1 +
->  .../allwinner/sun50i-a100-allwinner-perf1.dts |  180 +++
->  .../arm64/boot/dts/allwinner/sun50i-a100.dtsi |  364 +++++
->  drivers/clk/sunxi-ng/Kconfig                  |   10 +
->  drivers/clk/sunxi-ng/Makefile                 |    2 +
->  drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c      |  214 +++
->  drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h      |   21 +
->  drivers/clk/sunxi-ng/ccu-sun50i-a100.c        | 1276 +++++++++++++++++
->  drivers/clk/sunxi-ng/ccu-sun50i-a100.h        |   56 +
->  drivers/mfd/axp20x-i2c.c                      |    2 +
->  drivers/pinctrl/sunxi/Kconfig                 |   10 +
->  drivers/pinctrl/sunxi/Makefile                |    2 +
->  drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |  105 ++
->  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |  708 +++++++++
->  drivers/thermal/sun8i_thermal.c               |   16 +-
->  include/dt-bindings/clock/sun50i-a100-ccu.h   |  116 ++
->  include/dt-bindings/clock/sun50i-a100-r-ccu.h |   23 +
->  include/dt-bindings/reset/sun50i-a100-ccu.h   |   68 +
->  include/dt-bindings/reset/sun50i-a100-r-ccu.h |   18 +
->  26 files changed, 3308 insertions(+), 68 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.c
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.h
->  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
->  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
->  create mode 100644 include/dt-bindings/clock/sun50i-a100-ccu.h
->  create mode 100644 include/dt-bindings/clock/sun50i-a100-r-ccu.h
->  create mode 100644 include/dt-bindings/reset/sun50i-a100-ccu.h
->  create mode 100644 include/dt-bindings/reset/sun50i-a100-r-ccu.h
-> 
+> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+> index 9cc49f265c86..54c9bcea9d4e 100644
+> --- a/arch/powerpc/kernel/prom.c
+> +++ b/arch/powerpc/kernel/prom.c
+> @@ -163,7 +163,7 @@ static struct ibm_pa_feature {
+>  	{ .pabyte = 0,  .pabit = 6, .cpu_features  = CPU_FTR_NOEXECUTE },
+>  	{ .pabyte = 1,  .pabit = 2, .mmu_features  = MMU_FTR_CI_LARGE_PAGE },
+>  #ifdef CONFIG_PPC_RADIX_MMU
+> -	{ .pabyte = 40, .pabit = 0, .mmu_features  = MMU_FTR_TYPE_RADIX },
+> +	{ .pabyte = 40, .pabit = 0, .mmu_features  = (MMU_FTR_TYPE_RADIX | MMU_FTR_GTSE) },
+>  #endif
+>  	{ .pabyte = 1,  .pabit = 1, .invert = 1, .cpu_features = CPU_FTR_NODSISRALIGN },
+>  	{ .pabyte = 5,  .pabit = 0, .cpu_features  = CPU_FTR_REAL_LE,
 
+Michael - Let me know if this should be folded into 1/3 and the complete
+series resent.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Regards,
+Bharata.
