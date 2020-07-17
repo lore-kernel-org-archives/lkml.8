@@ -2,134 +2,132 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C013C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B40C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA2712070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 511A320759
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHrhcfR8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PpAc1HNY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgGQWHk (ORCPT
+        id S1728042AbgGQWKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 18:07:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58502 "EHLO
+        Fri, 17 Jul 2020 18:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbgGQWHk (ORCPT
+        with ESMTP id S1727840AbgGQWKb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 18:07:40 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A3EC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:07:39 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id q7so14382185ljm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:07:39 -0700 (PDT)
+        Fri, 17 Jul 2020 18:10:31 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C27DC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:10:31 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k71so7144346pje.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 15:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YiQfWs2fx3fTrwDphEBcfgKpdcsXpv0sGShDJM5qgag=;
-        b=CHrhcfR82O/MGzzydIaFdR9XnOY9G0ooAH9zBg5JEOJtXSbYcfVy1RpB7slVor3Iiu
-         aLKxmtIvHuThka5LePJOtibm3JkQ7SFrK2xt0rJRqXYossWIDqy7m8ff2/qbfNOJLgfx
-         /ZEZHLWHLrtdNfOn2Q/H4mIkpcQxS0DlP7SqvLz50PQnc09+Di2nXm3wfHvsSDvzKcLY
-         Uc7ZagUataa9ShXN0qzE/GvRdiLJDVQ+aQAL2a4bwuPz6uXTf7DwQiQXais414y+W7H0
-         /73bLFuexssba5r2xbGNV1L9i0dDvVcOvabsa8t9sSKwUwY1wh+/x8zT2UoaKYAlXVdx
-         vD5w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=kXPLjDrHtFXbNmet3AnHCGh48BJAIHJk8m3fZv071oc=;
+        b=PpAc1HNYIT+QLMKhWHW1jl69NR1BoJnESjDZGrSJSD8rmjkUEt+Wtl439d/aUbqRFQ
+         FQi3HlJUBrRonE9RjdfjP+55VLF3PgOo7bjCzzwuvZNhV9QGuaV3KdgQexhmz0n06eze
+         dLlPv+vO46p4W2lZrmOGc+zuXZml1lcIQ8UeM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YiQfWs2fx3fTrwDphEBcfgKpdcsXpv0sGShDJM5qgag=;
-        b=bkHeuFUu1OZJfojEfWmVv0GZ8wsCEFYML88C+NYzSRAjBUeSDgu1/8x3gN0bZxi54V
-         /+mCxlGqoIRBHNXBTLfzHZPgOah8/zbObQWmZnKh4z3rmlsHkt/yAZnxuI0obwxymJEB
-         B6RKs9MkWPE1Nrne+LEarsY8rsh411vIKtaxTjygvio39zZWmHA5BcUDoI2JMQX3aQee
-         S8vm00FxgEjJZDSyDhLbxqBV82daLlwoUEE6GUFZbhvJw9V6eIlHRUXdCU/0ha0bi4Uw
-         QV09XWJZ7V/VQ6ogamsoHOXmatRwOjN62NJwVwwqAELlMhh5S8EpZSh94frUAYyKLNYp
-         HELw==
-X-Gm-Message-State: AOAM5334aGP6jdNsRBq3FQhAgaAXYx6GMTtLMiKIwpx/VP0d3fZh2hKV
-        hfTpo+IMmX0m6BDzBfMJ3z8=
-X-Google-Smtp-Source: ABdhPJxSd7aw6UiiOYFBx1s0MVsBWBX8RrAXiShaj/TnopGC3um/9qeojJR8yT5azlicgopi6/vKEg==
-X-Received: by 2002:a2e:b702:: with SMTP id j2mr4997586ljo.354.1595023658107;
-        Fri, 17 Jul 2020 15:07:38 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id d22sm1315952lfs.26.2020.07.17.15.07.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=kXPLjDrHtFXbNmet3AnHCGh48BJAIHJk8m3fZv071oc=;
+        b=tl3S1Qnj7qQPQsUgUnw7s06Lvu1LJKVuGXCjNzvgixLFjjNXWrqKSHVn9RMJMdXn0C
+         TPwj7Y6MznmxWuLIigoa09LSVp69TNMyz3P1APE5MnnSFn6rWPNSc8qenuLA7WL5dsOo
+         MwEbObr2m4dNjzj5+HlJhMTab7wOR8NgCnQ3qFjiUkbyniF+2jQIE9WMnevo1DwCG4M9
+         gVreAg2JsUVuQBS3G2ls57cywhwIAMxa4/tkyXXYk1xgvWAYn53mX0entSWhakEi+Y+L
+         d6t1RN9nSpk9Uh9YkhKXwOrmxo0Sq4uXc8MUECIW1EeRDEB9ITZTmcDFJC9wifcPygf7
+         eBjA==
+X-Gm-Message-State: AOAM530rHr75v1n6vqQmYEB5sxMti7PnevLoaC0IFllboYnY0VbzHCso
+        z/PVKI38FfEUJxajlxdzFhhgUQ==
+X-Google-Smtp-Source: ABdhPJxl+/7V6fVqG2R0M/UfwPRNbJnc/viXiuvUuaSeof1VNQLC0wgELrpHCv+61l/+32K9tfMnwA==
+X-Received: by 2002:a17:90a:17e4:: with SMTP id q91mr11673037pja.61.1595023830564;
+        Fri, 17 Jul 2020 15:10:30 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n11sm8353780pgm.1.2020.07.17.15.10.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 15:07:37 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Sat, 18 Jul 2020 00:07:35 +0200
-To:     qianjun.kernel@gmail.com
-Cc:     tglx@linutronix.de, peterz@infradead.org, will@kernel.org,
-        luto@kernel.org, linux-kernel@vger.kernel.org,
-        shaoyafang@didiglobal.com
-Subject: Re: [RFC PATCH 1/1] Softirq:avoid large sched delay from the pending
- softirqs
-Message-ID: <20200717220735.GA5965@pc636>
-References: <1594967873-29522-1-git-send-email-qianjun.kernel@gmail.com>
+        Fri, 17 Jul 2020 15:10:29 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 15:10:28 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        James Morris <jmorris@namei.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/13] Introduce partial kernel_read_file() support
+Message-ID: <202007171506.CCE3902A9@keescook>
+References: <20200717174309.1164575-1-keescook@chromium.org>
+ <8de85fc3-9f31-fc59-abc1-29f43fb90988@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1594967873-29522-1-git-send-email-qianjun.kernel@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8de85fc3-9f31-fc59-abc1-29f43fb90988@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: jun qian <qianjun.kernel@gmail.com>
-> 
-> When get the pending softirqs, it need to process all the pending
-> softirqs in the while loop. If the processing time of each pending
-> softirq is need more than 2 msec in this loop, or one of the softirq
-> will running a long time, according to the original code logic, it
-> will process all the pending softirqs without wakeuping ksoftirqd,
-> which will cause a relatively large scheduling delay on the
-> corresponding CPU, which we do not wish to see. The patch will check
-> the total time to process pending softirq, if the time exceeds 2 ms
-> we need to wakeup the ksofirqd to aviod large sched delay.
-> 
-> Signed-off-by: jun qian <qianjun.kernel@gmail.com>
-> ---
->  kernel/softirq.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/softirq.c b/kernel/softirq.c
-> index c4201b7f..602d9fa 100644
-> --- a/kernel/softirq.c
-> +++ b/kernel/softirq.c
-> @@ -299,6 +299,9 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
->  		}
->  		h++;
->  		pending >>= softirq_bit;
-> +
-> +		if (time_after(jiffies, end) && need_resched())
-> +			break;
->  	}
->  
->  	if (__this_cpu_read(ksoftirqd) == current)
-> 
-I have a small concern about MAX_SOFTIRQ_TIME. The problem is that
-an "end" time is based on jiffies/tick update, so it depends on CONFIG_HZ
-value of your kernel.
+On Fri, Jul 17, 2020 at 12:17:02PM -0700, Scott Branden wrote:
+> Thanks for sending out.  This looks different than your other patch series.
 
-For example if we have CONFIG_HZ=100, msecs_to_jiffies(2) will return 1.
-For HZ=100 one jiffie is 10 milliseconds. So we can not rely on it,
-because of low resolution.
+Yes, it mutated in my head as I considered how all of this should hang
+together, which is why I wanted to get it sent before the weekend. I'm
+still trying to figure out why the fireware testsuite fails for me, etc.
 
-Maybe it make sense to fix it first in order to be at least aligned with
-"2 milliseconds time limit" documentation?
+> We should get the first 5 patches accepted now though as they are
+> simple cleanups and fixes.  That will reduce the number of outstanding
+> patches in the series.
 
-<snip>
- * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
- * but break the loop if need_resched() is set or after 2 ms.
-<snip>
+Agreed. I'd like to get some more eyes on it, but I can get it ready for
+-next.
 
-ktime_get()/ktime_before()...?
+> At first glance the issue with the changes after that is the existing
+> API assumes it has read the whole file and failed if it did not.
+> Now, if the file is larger than the amount requested there is no indication?
 
---
-Vlad Rezki
+The intention is to have old API users unchanged and new users can use
+a pre-allocated buf (with buf_size) along with file_size to examine
+their partial read progress. If I broke the old API, that's a bug and I
+need to fix it, but that's why I wanted to start with the firmware test
+suite (basic things like module loading work fine after this series, but
+I wanted to really exercise the corners that the firmware suite pokes
+at).
+
+-- 
+Kees Cook
