@@ -2,63 +2,63 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A52C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DC9C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95ED92083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CEA207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TkI+hwhy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WxPHrXXF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgGQRnR (ORCPT
+        id S1728133AbgGQRnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:43:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45876 "EHLO
+        Fri, 17 Jul 2020 13:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgGQRnP (ORCPT
+        with ESMTP id S1728027AbgGQRnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:43:15 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06563C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:14 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gc9so6888461pjb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:14 -0700 (PDT)
+        Fri, 17 Jul 2020 13:43:17 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930C7C0619D7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:16 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w2so7021862pgg.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wV1gvV23mO4MSWHgMeM+r7999nuQAFQGTkfq3zyvhrU=;
-        b=TkI+hwhyWG7WZvnJTwRRMikLIXphh/PU89bCIE8P6SFs0SaHpCf4VAcMkSYIWejrmC
-         UHjYj/pWqealOdMvuvGnbGyDGiR092Y/coL6eRwohd6FSkw/1x0lTSsWwdlxAmTbJF9z
-         MG+bnlBW3Pz3hPqkiZYjpkgP2T6E3WFs4nd00=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7gESCYHdeEc18WmSHoFiRlcOM8qkMy02/gtCzbZTAqQ=;
+        b=WxPHrXXFANimi0wbvfcJ6Cfo6RILGM8zrzptr/i4wicbfpzxjVf9s2PSObmLwcn9aq
+         SbUDJlkCbpwtWAmmR9A2NZpribK1YDkwqAQ5TTgN4F0z1JKluyrZrKxbZBHXSmRh0PPQ
+         ei15QxSWG1ELter/xoH0l0moiUBAi1WUPtXtc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wV1gvV23mO4MSWHgMeM+r7999nuQAFQGTkfq3zyvhrU=;
-        b=c5Prjf+GBUIbV+MP9+R41TMnOr4KXK0dfVGWaYs5nCknQyyriT8R8BNDTKnGmvCXoq
-         jsFgvN2vlLcSrs+eLmhqdD+jqvAStDm29xAAyuFkhprKq+nBzzT2TI2Jr0pvObjcprDN
-         JwfBBAMhnjjRGXuWfD+8BIDpqPusS9nlGz/XjdtTRq9DXzJ/4/ik6PIqhfF0iXSUUgES
-         lA+bFPuq6t8Ad5tyRdaiKbkn8Iq0KsEOcrw/bBgObiPXGwArzirlgTmIwgze16Y86lM4
-         374LlMiObX4VseFwkM2jrHoCtKATbXm7GurLkYysEuoLytob31/2KuJePBbeGkeo75LD
-         kGEg==
-X-Gm-Message-State: AOAM5318nF2cPt7a8eeFdXKaDDUEpfE+zFMN9JclYMS73sB5yuTcEETw
-        vRq4ZSwb9yXExZBV8AChuxZGfQ==
-X-Google-Smtp-Source: ABdhPJxKZBG7RqgWoCxDb3CWPD97sCGFFzSrqXIIWjriKiDJA4WPNj/7bJe6bdbUYimvfgj8GzzH+g==
-X-Received: by 2002:a17:90b:1386:: with SMTP id hr6mr10767858pjb.93.1595007794310;
-        Fri, 17 Jul 2020 10:43:14 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7gESCYHdeEc18WmSHoFiRlcOM8qkMy02/gtCzbZTAqQ=;
+        b=J8eaXkGMHrtYxKyDHE8qePi7zEE+Yh6ji4bBiProl4M9xxEjwGAbyLuGvLWN8HfEUe
+         MPu8IBxoNW+Apsx/N3/RSmPVxUiTCAafhFaPNidrG7pgQe6KJ0S8PivlwSXoSEPmE52M
+         ZlNqX8aMJD3awsPlKWz0y+1d0kj0RQzIzyYfIKVY3D0Gcv/X6ApFHD/+kc1iQk3gsA6v
+         q0WjbvU3i/Zu8WJQ8iE1uD5FBbh1j5UUqXxzIDK9kZYWjh+BDlKUTaiiJI3DyFTRadon
+         QLR6UtgzRFLA6C9bj1MCNo2o8Z4x4K59pZ8UxKgD4NqhVsqoZ7XfS2c7bYzhLx3Eu8gp
+         pgBQ==
+X-Gm-Message-State: AOAM532rpEcUGkVOS9+bsNg1DRJUsgvfblOorM0zsFKq4TVsuHaYwf7G
+        V9uydf3Qscn53xM6+aiNoTib9A==
+X-Google-Smtp-Source: ABdhPJysbKI9KHmH4JZipg0ZRO74vc0Q1f/poXmDdT5wVjf46XMdV4SEDnNnhl9+P92e4T6IX1H7yg==
+X-Received: by 2002:a63:338c:: with SMTP id z134mr9360703pgz.245.1595007796077;
+        Fri, 17 Jul 2020 10:43:16 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 21sm8245611pfu.124.2020.07.17.10.43.12
+        by smtp.gmail.com with ESMTPSA id c139sm8072372pfb.65.2020.07.17.10.43.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 17 Jul 2020 10:43:13 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Kees Cook <keescook@chromium.org>,
+Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
         Mimi Zohar <zohar@linux.ibm.com>,
         Matthew Wilcox <willy@infradead.org>,
         James Morris <jmorris@namei.org>,
@@ -88,10 +88,12 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 00/13] Introduce partial kernel_read_file() support
-Date:   Fri, 17 Jul 2020 10:42:55 -0700
-Message-Id: <20200717174309.1164575-1-keescook@chromium.org>
+Subject: [PATCH 03/13] fs/kernel_read_file: Remove FIRMWARE_EFI_EMBEDDED enum
+Date:   Fri, 17 Jul 2020 10:42:58 -0700
+Message-Id: <20200717174309.1164575-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200717174309.1164575-1-keescook@chromium.org>
+References: <20200717174309.1164575-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -99,68 +101,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The "FIRMWARE_EFI_EMBEDDED" enum is a "where", not a "what". It
+should not be distinguished separately from just "FIRMWARE", as this
+confuses the LSMs about what is being loaded. Additionally, there was
+no actual validation of the firmware contents happening.
 
-Here's my attempt at clearing the path to partial read support in
-kernel_read_file(), which fixes a number of issues along the way. I'm
-still fighting with the firmware test suite (it doesn't seem to pass
-for me even in stock v5.7... ?) But I don't want to block Scott's work[1]
-any this week, so here's the series as it is currently.
+Fixes: e4c2c0ff00ec ("firmware: Add new platform fallback mechanism and firmware_request_platform()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+To aid in backporting, this change is made before moving
+kernel_read_file() to separate header/source files.
+---
+ drivers/base/firmware_loader/fallback_platform.c | 2 +-
+ include/linux/fs.h                               | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-The primary difference to Scott's approach is to avoid adding a new set of
-functions and just adapt the existing APIs to deal with "offset". Also,
-the fixes for the enum are first in the series so they can be backported
-without the header file relocation.
-
-I'll keep poking at the firmware tests...
-
--Kees
-
-[1] https://lore.kernel.org/lkml/202007161415.10D015477@keescook/
-
-Kees Cook (12):
-  firmware_loader: EFI firmware loader must handle pre-allocated buffer
-  fs/kernel_read_file: Remove FIRMWARE_PREALLOC_BUFFER enum
-  fs/kernel_read_file: Remove FIRMWARE_EFI_EMBEDDED enum
-  fs/kernel_read_file: Split into separate source file
-  fs/kernel_read_file: Remove redundant size argument
-  fs/kernel_read_file: Switch buffer size arg to size_t
-  fs/kernel_read_file: Add file_size output argument
-  LSM: Introduce kernel_post_load_data() hook
-  firmware_loader: Use security_post_load_data()
-  module: Call security_kernel_post_load_data()
-  LSM: Add "contents" flag to kernel_read_file hook
-  fs/kernel_file_read: Add "offset" arg for partial reads
-
-Scott Branden (1):
-  fs/kernel_read_file: Split into separate include file
-
- drivers/base/firmware_loader/fallback.c       |   8 +-
- .../base/firmware_loader/fallback_platform.c  |  12 +-
- drivers/base/firmware_loader/main.c           |  13 +-
- fs/Makefile                                   |   3 +-
- fs/exec.c                                     | 132 +-----------
- fs/kernel_read_file.c                         | 189 ++++++++++++++++++
- include/linux/fs.h                            |  39 ----
- include/linux/ima.h                           |  19 +-
- include/linux/kernel_read_file.h              |  55 +++++
- include/linux/lsm_hook_defs.h                 |   6 +-
- include/linux/lsm_hooks.h                     |  12 ++
- include/linux/security.h                      |  19 +-
- kernel/kexec.c                                |   2 +-
- kernel/kexec_file.c                           |  18 +-
- kernel/module.c                               |  24 ++-
- security/integrity/digsig.c                   |   8 +-
- security/integrity/ima/ima_fs.c               |   9 +-
- security/integrity/ima/ima_main.c             |  58 ++++--
- security/integrity/ima/ima_policy.c           |   1 +
- security/loadpin/loadpin.c                    |  17 +-
- security/security.c                           |  26 ++-
- security/selinux/hooks.c                      |   8 +-
- 22 files changed, 432 insertions(+), 246 deletions(-)
- create mode 100644 fs/kernel_read_file.c
- create mode 100644 include/linux/kernel_read_file.h
-
+diff --git a/drivers/base/firmware_loader/fallback_platform.c b/drivers/base/firmware_loader/fallback_platform.c
+index 685edb7dd05a..6958ab1a8059 100644
+--- a/drivers/base/firmware_loader/fallback_platform.c
++++ b/drivers/base/firmware_loader/fallback_platform.c
+@@ -17,7 +17,7 @@ int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags)
+ 	if (!(opt_flags & FW_OPT_FALLBACK_PLATFORM))
+ 		return -ENOENT;
+ 
+-	rc = security_kernel_load_data(LOADING_FIRMWARE_EFI_EMBEDDED);
++	rc = security_kernel_load_data(LOADING_FIRMWARE);
+ 	if (rc)
+ 		return rc;
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 95fc775ed937..f50a35d54a61 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2993,11 +2993,10 @@ static inline void i_readcount_inc(struct inode *inode)
+ #endif
+ extern int do_pipe_flags(int *, int);
+ 
+-/* This is a list of *what* is being read, not *how*. */
++/* This is a list of *what* is being read, not *how* nor *where*. */
+ #define __kernel_read_file_id(id) \
+ 	id(UNKNOWN, unknown)		\
+ 	id(FIRMWARE, firmware)		\
+-	id(FIRMWARE_EFI_EMBEDDED, firmware)	\
+ 	id(MODULE, kernel-module)		\
+ 	id(KEXEC_IMAGE, kexec-image)		\
+ 	id(KEXEC_INITRAMFS, kexec-initramfs)	\
 -- 
 2.25.1
 
