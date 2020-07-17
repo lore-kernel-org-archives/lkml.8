@@ -2,138 +2,188 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6993EC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 273D4207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4321C2076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="qXMhP/CX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jjIz257p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgGQSDU (ORCPT
+        id S1728209AbgGQSDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:03:20 -0400
-Received: from mout.web.de ([212.227.15.4]:60709 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgGQSDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:03:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1595008971;
-        bh=BSNq8aZA31B3vbhvCL+iwPYhc8QkoYGsdWQiQLN0cFU=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=qXMhP/CXE41bEi9+qN1grpHlGUS4ZPec+zQq0TT5K19QIbz/66INL9EB+ty5VDhOZ
-         C63zWquT4BhGfBfHzn1PiwIgddqxRs1e5RnjtI6H6LxPaL42wNOuDxOBJjk0pJl2jJ
-         dfJdqNyqkF8uiX9kSZos6OvImS8dmTBEF6kYYPiY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.15.38]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MTOlk-1kQ5qB1aiy-00TlIO; Fri, 17
- Jul 2020 20:02:51 +0200
-Cc:     linux-kernel@vger.kernel.org, Coccinelle <cocci@systeme.lip6.fr>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 1/2] drivers: provide devm_platform_request_irq()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Dejin Zheng <zhengdejin5@gmail.com>,
-        kernel-janitors@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Message-ID: <8c7fd5c5-e877-3cb3-8802-34d1b1eda395@web.de>
-Date:   Fri, 17 Jul 2020 20:02:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 17 Jul 2020 14:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727940AbgGQSDV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:03:21 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25987C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:03:21 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id g37so7477842otb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:03:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=luRf2VFyr0NmiSmannOi4zh0OF91VllQcnlKgm+zo4g=;
+        b=jjIz257pmSzixZ6M59Q5Resoy9nbHEMelsdZf823TfLrgjwGDb7vB5NY4nFO+Jy0GX
+         L/x5uyqhNZY/xrevkQ6Gi8Z6wemYY3u5ZFBpwds2VtBQZSWHsnKaVSJeQfX+OGdLmd2b
+         ntkea8vhu6+W/wmUWNX6dfLyrhyA0OQedD8hpSVScQeXDHo3hVJBaLXxdEu1Aa41gDMd
+         kbGlLUz00fIq5s4/8MFgPge87CaG9rGYOIrJhMRvj4NMC8XZkf3ggWEjG9GOTAETPl8y
+         ZP3uCrL8eS5qlr416OZtRCscFNc2MOlHNbsYmK+wCGPl2rpG6y9Bgi7ZIm0tLylbrIp5
+         GoqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=luRf2VFyr0NmiSmannOi4zh0OF91VllQcnlKgm+zo4g=;
+        b=VfXY5kwPCp6R3UW6nVWl/wZTkZWxbVZEGkW0Dw/9uEVazTcIHADaWsan8lMhyLWYF3
+         qFZW87NBUXJfsc86a1Mwjqx0+hdpXQEdAwyoo1F0pNoKX8223Y/rS/E+N+e4YaWLCfAa
+         RBYwEM0lKfhQ74siSA1jXPYHEhNCcg0++dBibq6cX/rMECYrLwq/Gt9tHCPyan22D4Zl
+         5fX5000Y4+IyRgGUKLEAiMcHuVEZZ/aNC5PpH4ArDHyDkWhlgOihss+LDcuANvUjOaNO
+         wX+XqHpdVo5htP/NzobI5wZ5VeB/Tmyx8cYOgxGZivB/NJxC4JjPpj7wGpJ4lR4QS6Wq
+         Tv1Q==
+X-Gm-Message-State: AOAM530m8OSNg0sDS6Q3YumbI+AvIT4Ap1IHou4/vEcmo4UfGtYgf0S2
+        7yj73fFtnQMCCdb1sESi3zX2ZfHYffErq6L+2GJ/tg==
+X-Google-Smtp-Source: ABdhPJwedNLKBj6RXcDv8Hg0DZBHMUMYMrjlPDpNs9WB4Wjei18jrgpHUm6nlOR1blpO6b3y7nVRFD2Rqi4OKsKtAP4=
+X-Received: by 2002:a9d:6a11:: with SMTP id g17mr10315659otn.50.1595009000242;
+ Fri, 17 Jul 2020 11:03:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:361MQuNF1pOheSjx8PwrSlhrJ+6HrxbJFQrtvBUOxumS+Gr5MMk
- L4vpDjoiUy8yNDbHUFcJaC6OsgBABByFBlfuJ7ZtpRrDS28KHhX9/TddLWEfcrMXTIq4sZV
- Rpx/sTV7kiSgcHYRCca1ZyilyYyieCePZcjzxtfilo/WkCz8y/LWu8cMg5xAEjL1MkpDSQH
- lv0b0XFBHDyaCjh0xDeug==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4naAcjvt9v8=:tmo3Cg2J9kmuJ9M0+RjwTj
- N5OIH+RqUm1UDFq31dOqVHZ99fQ5pEFc2zrvg7sLpoqO8jScg3RpBDGkPJT36VkEznQIbKkcV
- 2qroUGux3FKSm3gaKIv4klh08ajkSEIHObLdwZYMQ73IiMhBLXS43tBUNJgmbqdraUOpt8nTj
- QMdAafcUO93LGVRbko87pz6OpuwzSqppRUBMn3IUqbHlA5u8KXm63JUaBEQlJup+Go0I0eccV
- FO532BueaYKGr/sIbvKP/e/PZM/5av9dAdDC5xp7i1yklzej1s8fiJMiO1dGPd0UKGPNXqPQh
- uEdFlUssKYuIrv593ZKFtUo9YWmzeV2mz5O9FE/UMEGpFD8eFxfpWPBUcY8AYTVCg0LPBCTSb
- 19NtVpAzfc8xU+qRWuz2CqKGuM18TPEmXMeOX0t9NR7IeD7sf4fCyAggtNlBWs5N+uttbXOIm
- 78Zj3ezZslpL1udF3eUGGj/qbu3WjPF3ONaVY2qLKVJFu4MGTUWb3dKQl971+4yQYIJF2Anfu
- bAAQem9KMWTSrmBlYNXSKq+EiVOJZF+EhIa1iPl8/13J6UKsfrQ5FiK6P+4xReIlnNmduPsPE
- 1HqwoPKCvts5okXDDYDkq8PC1ekH0LyakDG6Idhk8amwSg5aDgDbWMfEyCGP8rJcwU+IR/1/l
- qbwC9O7gRQPlHyiEmAe5BVCn7VGjHe+sBFSsR8WKIzQOx+hqmQwZGDItC81wLIsiCV03UKCxb
- iIpa75G6uF4tpQmFH981PSrXObEM/Vf6PkL5BrAM3IOejoar3A35tyH5OOX8pt1IIuBS4O8zJ
- bDat2FNYbh6YOseY9sXhapFbVqOjlCkhS2gdFTbQ3Y8PCioyewX21SagbEoS/h3DPDUapNahX
- XWPZfYd8jznJVW5+bgWo6748XHpPZUMlm4FQEDRIveic6UKghwxO/dA00D74hxJV8Xi0AUIVJ
- MnxSOwWVUgCwLuzlBig7s00/91KRHThjZidMXxkct0JBuvbIPTKSLIWxJEN6LCPMhlpK6bOcX
- p49FanGjLqdNQl0m8zvy8YnGtKort87G846mRADAwzl58+2870re7SJFPuSzQXjCkSHSosxzB
- LB0QgBTZvbn2hAOAxq/Mmhc89IxXiFjt/fhOfuyFwLw946y+Wk7C+fcVOfR/NUQkFhHXfe/F8
- O9hUTTy+nZgTZNi2QMis2WHSwEIx9MyJ+ZViAdJCs6NrLwnAVmObdh5oWppMw3L5tiEpKHEqC
- dH9zxKOwK0hLiJdqBNe98Nil0Wlzsf/EBQqTesw==
+References: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
+ <20200712131003.23271-2-madhuparnabhowmik10@gmail.com> <20200712160856.GW9247@paulmck-ThinkPad-P72>
+ <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
+ <CAA42JLY2L6xFju_qZsVguGtXvDMqfCKbO_h1K9NJPjmqJEav=Q@mail.gmail.com> <20200717170747.GW9247@paulmck-ThinkPad-P72>
+In-Reply-To: <20200717170747.GW9247@paulmck-ThinkPad-P72>
+From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Date:   Fri, 17 Jul 2020 13:03:09 -0500
+Message-ID: <CAEUSe79Ze92eB2kpTZUYvo357ca0C81BOxK+RCbr9h8C--SpSA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Dexuan-Linux Cui <dexuan.linux@gmail.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        madhuparnabhowmik10@gmail.com,
+        Josh Triplett <josh@joshtriplett.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, rcu@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
+        frextrite@gmail.com, lkft-triage@lists.linaro.org,
+        Dexuan Cui <decui@microsoft.com>, juhlee@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> v3 -> v4:
-> 	- The patch v3 sent on May 27 may be lost somewhere in the
-> 	  world, so resend it.
+Hello!
 
-Can previous patch review aspects get any more attention?
+On Fri, 17 Jul 2020 at 12:07, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Thu, Jul 16, 2020 at 05:19:52PM -0700, Dexuan-Linux Cui wrote:
+> > On Thu, Jul 16, 2020 at 7:47 AM Naresh Kamboju
+> > <naresh.kamboju@linaro.org> wrote:
+> > >
+> > > On Sun, 12 Jul 2020 at 21:39, Paul E. McKenney <paulmck@kernel.org> w=
+rote:
+> > > >
+> > > > On Sun, Jul 12, 2020 at 06:40:03PM +0530, madhuparnabhowmik10@gmail=
+.com wrote:
+> > > > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > > > >
+> > > > > Use hlist_for_each_entry_srcu() instead of hlist_for_each_entry_r=
+cu()
+> > > > > as it also checkes if the right lock is held.
+> > > > > Using hlist_for_each_entry_rcu() with a condition argument will n=
+ot
+> > > > > report the cases where a SRCU protected list is traversed using
+> > > > > rcu_read_lock(). Hence, use hlist_for_each_entry_srcu().
+> > > > >
+> > > > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > > >
+> > > > I queued both for testing and review, thank you!
+> > > >
+> > > > In particular, this one needs an ack by the maintainer.
+> > > >
+> > > >                                                         Thanx, Paul
+> > > >
+> > > > >  arch/x86/kvm/mmu/page_track.c | 6 ++++--
+> > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/pag=
+e_track.c
+> > > > > index a7bcde34d1f2..a9cd17625950 100644
+> > > > > --- a/arch/x86/kvm/mmu/page_track.c
+> > > > > +++ b/arch/x86/kvm/mmu/page_track.c
+> > > > > @@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vc=
+pu, gpa_t gpa, const u8 *new,
+> > > > >               return;
+> > > > >
+> > > > >       idx =3D srcu_read_lock(&head->track_srcu);
+> > > > > -     hlist_for_each_entry_rcu(n, &head->track_notifier_list, nod=
+e)
+> > > > > +     hlist_for_each_entry_srcu(n, &head->track_notifier_list, no=
+de,
+> > > > > +                             srcu_read_lock_held(&head->track_sr=
+cu))
+> > >
+> > > x86 build failed on linux -next 20200716.
+> > >
+> > > arch/x86/kvm/mmu/page_track.c: In function 'kvm_page_track_write':
+> > > include/linux/rculist.h:727:30: error: left-hand operand of comma
+> > > expression has no effect [-Werror=3Dunused-value]
+> > >   for (__list_check_srcu(cond),     \
+> > >                               ^
+> > > arch/x86/kvm/mmu/page_track.c:232:2: note: in expansion of macro
+> > > 'hlist_for_each_entry_srcu'
+> > >   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+> > >   ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > > arch/x86/kvm/mmu/page_track.c: In function 'kvm_page_track_flush_slot=
+':
+> > > include/linux/rculist.h:727:30: error: left-hand operand of comma
+> > > expression has no effect [-Werror=3Dunused-value]
+> > >   for (__list_check_srcu(cond),     \
+> > >                               ^
+> > > arch/x86/kvm/mmu/page_track.c:258:2: note: in expansion of macro
+> > > 'hlist_for_each_entry_srcu'
+> > >   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+> > >   ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > > cc1: all warnings being treated as errors
+> > > make[3]: *** [arch/x86/kvm/mmu/page_track.o] Error 1
+> > >
+> > > build link,
+> > > https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DIST=
+RO=3Dlkft,MACHINE=3Dintel-corei7-64,label=3Ddocker-lkft/815/consoleText
+> > >
+> >
+> > Hi, we're seeing the same building failure with the latest linux-next t=
+ree.
+>
+> I am not seeing this here.  Could you please let us know what compiler
+> and command-line options you are using to generate this?
 
-https://lore.kernel.org/cocci/5dad9b19-ceb5-1606-9f62-7626e5677971@web.de/
-https://lkml.org/lkml/2020/5/27/1326
+It fails with gcc-8 and gcc-9, but it builds with gcc-10. Quick way to
+reproduce:
+  [host] docker run --rm -it -v /linux:/linux -w /linux
+tuxbuild/build-gcc-9_mips
+  [docker] make ARCH=3Dmips CROSS_COMPILE=3Dmips-linux-gnu- defconfig
+  [docker] make ARCH=3Dmips CROSS_COMPILE=3Dmips-linux-gnu- mm
 
-Regards,
-Markus
+You can use these other Docker containers: tuxbuild/build-gcc-8_mips
+and tuxbuild/build-gcc-10_mips.
+
+Logs for those builds (and allnoconfig, tinyconfig, with gcc-8, gcc-9
+and gcc-10) can also be found here:
+  https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/643978135
+
+Greetings!
+
+Daniel D=C3=ADaz
+daniel.diaz@linaro.org
