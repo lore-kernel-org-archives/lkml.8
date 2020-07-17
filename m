@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A36C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD65C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4E320768
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1D620768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:14:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mW9BkUrd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FAUumSd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgGQLOs (ORCPT
+        id S1726867AbgGQLO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42196 "EHLO
+        Fri, 17 Jul 2020 07:14:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbgGQLOk (ORCPT
+        with ESMTP id S1726686AbgGQLOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:14:40 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D871BC08C5DB;
-        Fri, 17 Jul 2020 04:14:39 -0700 (PDT)
+        Fri, 17 Jul 2020 07:14:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A46C08C5CE;
+        Fri, 17 Jul 2020 04:14:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=LJ3sw53oU99bJUNlz+ZPKQESK/v2SDXFGx5kri1RxHA=; b=mW9BkUrdORbTIfPggDbuXHG04P
-        vCB4+S08tm1Ocf2AwK2fgRL5Z3xoCetQtur/ZtwHqsPjZyWzsEWXg/Ip+JJ01RKTNXQtvbRs+p4wQ
-        Rtlh3rxfbsLXEdDC4EA+JGYP4+cth5V1pYwo/CUI+uhfMF/FCH+FPxsGHa0Qxv98nUlMB2O5LfeGn
-        76uku3heKukpjwJsmr+QWhayyffHIapPntJuifnOtS8eftI1cLoiD8fwy79B12vBBVdWVK6nwNu9V
-        c3dXF9QSaUXQEzzdrBQNbf7xX4kUygNN/Os21nFZoo+1Bzj9/2pKz1V+KcRM2zJ+FzRpvfRyHdXc7
-        T+DnKayA==;
+        bh=3R2DK7HvOJXWBjGxheTnCh1+oyh0A3xwV1bV88LUreM=; b=FAUumSd9I3/VNHUgNXx4k0r+oK
+        XPsBvhXBs2S9D8KdP1DdzCn+DjvPQ/N53rubfaZdx/Zq28lfMnE4FWFrXxchpt7Fbf1H73vWibr4j
+        kfeW2q7hWNzjn/xQ6xAH8dq5lajcLheqYNu/je7J2zCrVzuEsYRRAFG8On6JhRJVcrbLv0gwFgUug
+        bT0FH7mxmojgXV6jLLYfJmaqGbBGG8nQCUBThUvi3fkTD9RIO3Clg7X9ZI3AaI+BL+SV+CRdZCc+o
+        BsKMmuBNmewZ0MHaEgdFKq/FNkMMPDtazHdq2QEWx7CFn5z/oZZa+NB8HoSkX62V2Q62o6751m0i0
+        7KMjrc4A==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwOJZ-0001Zm-Jw; Fri, 17 Jul 2020 11:14:05 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwOJa-00051T-8Y; Fri, 17 Jul 2020 11:14:06 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 144D5305DD1;
-        Fri, 17 Jul 2020 13:14:02 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 81233306E3A;
+        Fri, 17 Jul 2020 13:14:04 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id AF019203D4091; Fri, 17 Jul 2020 13:14:02 +0200 (CEST)
-Message-ID: <20200717111349.533637732@infradead.org>
+        id D05A1203D4099; Fri, 17 Jul 2020 13:14:02 +0200 (CEST)
+Message-ID: <20200717111349.942447764@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 17 Jul 2020 13:10:08 +0200
+Date:   Fri, 17 Jul 2020 13:10:15 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Will Deacon <will@kernel.org>,
         "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
@@ -68,7 +68,7 @@ Cc:     linux-arch@vger.kernel.org, linux-sh@vger.kernel.org,
         Paul Walmsley <paul.walmsley@sifive.com>,
         John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
         Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2 03/11] sh/tlb: Fix __pmd_free_tlb()
+Subject: [PATCH v2 10/11] riscv/tlb: Fix __p*_free_tlb()
 References: <20200717111005.024867618@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -77,67 +77,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SH violates the freeing order for it's PMD page directories. It's
-__pmd_free_tlb() does not ensure there is a TLB invalidation between
-itself and the eventualy freeing of the page.
+Just like regular pages, page directories need to observe the
+following order:
 
-Further complicating the situation is that SH uses non page based
-allocation for it's PMDs.
+ 1) unhook
+ 2) TLB invalidate
+ 3) free
 
-Use the shiny new HAVE_TABLE_FREE option to enable a custom page table
+to ensure it is safe against concurrent accesses.
+
+Since RISC-V has page based PMDs, no software walkers and IPI based
+TLB invalidation, it can use the simple tlb_remove_page() based
 freeer.
-
-(SuperH uses IPI based TLB invalidation and therefore doesn't need
-HAVE_RCU_TABLE_FREE for its HAVE_FAST_GUP).
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/sh/Kconfig               |    1 +
- arch/sh/include/asm/pgalloc.h |    3 ++-
- arch/sh/mm/pgtable.c          |    6 ++++++
- 3 files changed, 9 insertions(+), 1 deletion(-)
+ arch/riscv/include/asm/pgalloc.h |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -14,6 +14,7 @@ config SUPERH
- 	select HAVE_PERF_EVENTS
- 	select HAVE_DEBUG_BUGVERBOSE
- 	select HAVE_FAST_GUP if MMU
-+	select MMU_GATHER_TABLE_FREE if X2TLB
- 	select ARCH_HAVE_CUSTOM_GPIO_H
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG if (GUSA_RB || CPU_SH4A)
- 	select ARCH_HAS_GCOV_PROFILE_ALL
---- a/arch/sh/include/asm/pgalloc.h
-+++ b/arch/sh/include/asm/pgalloc.h
-@@ -12,7 +12,8 @@ extern void pgd_free(struct mm_struct *m
- extern void pud_populate(struct mm_struct *mm, pud_t *pudp, pmd_t *pmd);
- extern pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address);
- extern void pmd_free(struct mm_struct *mm, pmd_t *pmd);
--#define __pmd_free_tlb(tlb, pmdp, addr)		pmd_free((tlb)->mm, (pmdp))
-+extern void __tlb_remove_table(void *table);
-+#define __pmd_free_tlb(tlb, pmdp, addr)	tlb_remove_table((tlb), (pmdp))
- #endif
- 
- static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd,
---- a/arch/sh/mm/pgtable.c
-+++ b/arch/sh/mm/pgtable.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/mm.h>
- #include <linux/slab.h>
-+#include <asm/pgalloc.h>
- 
- #define PGALLOC_GFP GFP_KERNEL | __GFP_ZERO
- 
-@@ -55,4 +56,9 @@ void pmd_free(struct mm_struct *mm, pmd_
- {
- 	kmem_cache_free(pmd_cachep, pmd);
+--- a/arch/riscv/include/asm/pgalloc.h
++++ b/arch/riscv/include/asm/pgalloc.h
+@@ -73,14 +73,15 @@ static inline void pmd_free(struct mm_st
+ 	free_page((unsigned long)pmd);
  }
-+
-+void __tlb_remove_table(void *table)
-+{
-+	pmd_free(NULL, table);
-+}
- #endif /* PAGETABLE_LEVELS > 2 */
+ 
+-#define __pmd_free_tlb(tlb, pmd, addr)  pmd_free((tlb)->mm, pmd)
++#define __pmd_free_tlb(tlb, pmd, addr)	\
++	tlb_remove_table((tlb), virt_to_page(pmd))
+ 
+ #endif /* __PAGETABLE_PMD_FOLDED */
+ 
+-#define __pte_free_tlb(tlb, pte, buf)   \
+-do {                                    \
+-	pgtable_pte_page_dtor(pte);     \
+-	tlb_remove_page((tlb), pte);    \
++#define __pte_free_tlb(tlb, pte, buf)	\
++do {					\
++	pgtable_pte_page_dtor(pte);	\
++	tlb_remove_table((tlb), (pte));	\
+ } while (0)
+ #endif /* CONFIG_MMU */
+ 
 
 
