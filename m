@@ -2,315 +2,135 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB74CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36FC020684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8535320684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6CIPYc2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BiXgkm8Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbgGQUbB (ORCPT
+        id S1728387AbgGQUi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgGQUbA (ORCPT
+        Fri, 17 Jul 2020 16:38:58 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56768 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgGQUi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:31:00 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9127EC0619D2;
-        Fri, 17 Jul 2020 13:31:00 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id i18so8413620ilk.10;
-        Fri, 17 Jul 2020 13:31:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fa0GcN94SAkMndYvc3rpkB4mYfViww4odBhNhRRf9p4=;
-        b=b6CIPYc2VxBTb04tX/asXA0o9d0VrXp8fIGsmGa87N7hweYpBaZQSSRtQliAvy2SpA
-         x1RVaFTjrFwbtpLQTVaabypRIwb+plt5beFUWUODt1NqHYc+NjmgMyN769sU6E77xUI7
-         Z0mxC1qfRMX8tPq6m4bqljR5bhlcINhTUvT/+8xH0+CuJR3KvUxUld+cUoR+7Wpk4yRr
-         UA1YkYlBLGuCr1sk5f+sEcuoBocb7aA0JsqpZbAb7xosNfdsr0c3UC3/H1TKcaNp6m/I
-         v/bxxezggEE41VMfiDkyDDc499gkYAPpxOz7oGPGSbkSXR3RLPoM3y17FWmnbElWkvwd
-         nqVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fa0GcN94SAkMndYvc3rpkB4mYfViww4odBhNhRRf9p4=;
-        b=EvbrON1M6wkQK3vy7mUAHFumMx3g1uLpsyFYqT+bxrFjNrtZ9snRLqz+NMfokqp8/q
-         C5FN5frkf6sG+jGNDoto1vahcr+3HD1R37XERFsCRYsSw3LwXEQESkA353dlXXfJ/sPa
-         OC9OViAuaaeQx3Fti61nC1JE7xU+VRPcgPUQ6TQc6NewcbXw655rLONvJ1y4VB72ytXt
-         BsX42IwMpUhl63J2Vgm22RLu3GpPKLgFD0mVrt2NtX72NfPWPoY22raGo1wtJGCytIZw
-         bQGjVrg0ChYb7CVjKaYfQN7MdHbcHZ1sj1xSPp6U4Ni/yYelSeJPl9UrsaSRmFVMOcVk
-         VQgA==
-X-Gm-Message-State: AOAM532CgOjpNymoP2Ob3e17r/sacvevnYbhCloab5esPDBAh4JVciSG
-        XMtYg/XBVraemjdpOjE/Q18EKuuTY3iNd256jh8=
-X-Google-Smtp-Source: ABdhPJwa13P8NrbQ/dNqsrcei2jQUP+iK4pzjDOkoi+cVp406kaWYHUtuX9XxJ8BQAYglTHtRZx0XoKXSHpSMbw3sEE=
-X-Received: by 2002:a92:8544:: with SMTP id f65mr11605442ilh.42.1595017859659;
- Fri, 17 Jul 2020 13:30:59 -0700 (PDT)
+        Fri, 17 Jul 2020 16:38:57 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HKXO8D151756;
+        Fri, 17 Jul 2020 20:38:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=VLVPZEMJwQQ0WvBRzyPVCNtnIVB0qvXryFUj1Ha4Tno=;
+ b=BiXgkm8QaDArg06s5nzI7L6kgCR5+25TC5KWESzfPx3PaDuvyyYtpFLGekW9bqJOuPul
+ GhkQhPaX08zPXTN6b/3KqdPaH59xr/pPO8Snyg4Kx3EBr6qmpaiHUbe8Y9dlD50IFfBQ
+ vNj0D5mwhQ0GslbO0OXJthpJ2XIYGznJ7SD1E0VRUP79QNMmyMekMELauk11SFTwwKSu
+ T90ROJq90ClOvreZfTq3qLQ/Zunw10LnTp5eAPgBm5RHFXrzb9jjegI3gk298mSA7pqw
+ k+C7q46wXGBony9uOIBM2yTyOFtsXxjzrGX5CXYqDRHKw9+hLF2wguuO9Yy2g4hgQ4Ku Wg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 3275cmscfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jul 2020 20:38:49 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HKc0Yh124545;
+        Fri, 17 Jul 2020 20:38:48 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 32bj2d2mfa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jul 2020 20:38:48 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06HKciQV018816;
+        Fri, 17 Jul 2020 20:38:44 GMT
+Received: from localhost (/10.159.159.76)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Jul 2020 13:38:44 -0700
+Date:   Fri, 17 Jul 2020 13:38:42 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Dave Chinner <dchinner@redhat.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Brian Foster <bfoster@redhat.com>
+Subject: Re: arch/x86/include/asm/preempt.h:79:9: sparse: sparse: context
+ imbalance in 'xfs_iflush_abort' - wrong count at exit
+Message-ID: <20200717203842.GP7625@magnolia>
+References: <202007131148.9IapVMiV%lkp@intel.com>
 MIME-Version: 1.0
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com> <1594429136-20002-17-git-send-email-alex.shi@linux.alibaba.com>
-In-Reply-To: <1594429136-20002-17-git-send-email-alex.shi@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 17 Jul 2020 13:30:48 -0700
-Message-ID: <CAKgT0Udcry01samXT54RkurNqFKnVmv-686ZFHF+iw4b+12T_A@mail.gmail.com>
-Subject: Re: [PATCH v16 16/22] mm/mlock: reorder isolation sequence during munlock
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202007131148.9IapVMiV%lkp@intel.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ adultscore=0 spamscore=0 bulkscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007170139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007170138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 5:59 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
-> This patch reorder the isolation steps during munlock, move the lru lock
-> to guard each pages, unfold __munlock_isolate_lru_page func, to do the
-> preparation for lru lock change.
->
-> __split_huge_page_refcount doesn't exist, but we still have to guard
-> PageMlocked and PageLRU for tail page in __split_huge_page_tail.
->
-> [lkp@intel.com: found a sleeping function bug ... at mm/rmap.c]
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
+On Mon, Jul 13, 2020 at 11:03:53AM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   11ba468877bb23f28956a35e896356252d63c983
+> commit: 4165994ac9672d91134675caa6de3645a9ace6c8 xfs: factor common AIL item deletion code
+> date:   4 months ago
+> config: i386-randconfig-s001-20200713 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
+> reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.2-37-gc9676a3b-dirty
+>         git checkout 4165994ac9672d91134675caa6de3645a9ace6c8
+>         # save the attached .config to linux build tree
+>         make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=i386 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> 
+> sparse warnings: (new ones prefixed by >>)
+> 
+> >> arch/x86/include/asm/preempt.h:79:9: sparse: sparse: context imbalance in 'xfs_iflush_abort' - wrong count at exit
+
+Um, does this still need attention?
+
+--D
+
+> vim +/xfs_iflush_abort +79 arch/x86/include/asm/preempt.h
+> 
+> c2daa3bed53a81 Peter Zijlstra    2013-08-14  72  
+> c2daa3bed53a81 Peter Zijlstra    2013-08-14  73  /*
+> c2daa3bed53a81 Peter Zijlstra    2013-08-14  74   * The various preempt_count add/sub methods
+> c2daa3bed53a81 Peter Zijlstra    2013-08-14  75   */
+> c2daa3bed53a81 Peter Zijlstra    2013-08-14  76  
+> c2daa3bed53a81 Peter Zijlstra    2013-08-14  77  static __always_inline void __preempt_count_add(int val)
+> c2daa3bed53a81 Peter Zijlstra    2013-08-14  78  {
+> b3ca1c10d7b32f Christoph Lameter 2014-04-07 @79  	raw_cpu_add_4(__preempt_count, val);
+> c2daa3bed53a81 Peter Zijlstra    2013-08-14  80  }
+> c2daa3bed53a81 Peter Zijlstra    2013-08-14  81  
+> 
+> :::::: The code at line 79 was first introduced by commit
+> :::::: b3ca1c10d7b32fdfdfaf5484eda486323f52d9be percpu: add raw_cpu_ops
+> 
+> :::::: TO: Christoph Lameter <cl@linux.com>
+> :::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
+> 
 > ---
->  mm/mlock.c | 93 ++++++++++++++++++++++++++++++++++----------------------------
->  1 file changed, 51 insertions(+), 42 deletions(-)
->
-> diff --git a/mm/mlock.c b/mm/mlock.c
-> index 228ba5a8e0a5..0bdde88b4438 100644
-> --- a/mm/mlock.c
-> +++ b/mm/mlock.c
-> @@ -103,25 +103,6 @@ void mlock_vma_page(struct page *page)
->  }
->
->  /*
-> - * Isolate a page from LRU with optional get_page() pin.
-> - * Assumes lru_lock already held and page already pinned.
-> - */
-> -static bool __munlock_isolate_lru_page(struct page *page, bool getpage)
-> -{
-> -       if (TestClearPageLRU(page)) {
-> -               struct lruvec *lruvec;
-> -
-> -               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> -               if (getpage)
-> -                       get_page(page);
-> -               del_page_from_lru_list(page, lruvec, page_lru(page));
-> -               return true;
-> -       }
-> -
-> -       return false;
-> -}
-> -
-> -/*
->   * Finish munlock after successful page isolation
->   *
->   * Page must be locked. This is a wrapper for try_to_munlock()
-> @@ -181,6 +162,7 @@ static void __munlock_isolation_failed(struct page *page)
->  unsigned int munlock_vma_page(struct page *page)
->  {
->         int nr_pages;
-> +       bool clearlru = false;
->         pg_data_t *pgdat = page_pgdat(page);
->
->         /* For try_to_munlock() and to serialize with page migration */
-> @@ -189,32 +171,42 @@ unsigned int munlock_vma_page(struct page *page)
->         VM_BUG_ON_PAGE(PageTail(page), page);
->
->         /*
-> -        * Serialize with any parallel __split_huge_page_refcount() which
-> +        * Serialize split tail pages in __split_huge_page_tail() which
->          * might otherwise copy PageMlocked to part of the tail pages before
->          * we clear it in the head page. It also stabilizes hpage_nr_pages().
->          */
-> +       get_page(page);
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-I don't think this get_page() call needs to be up here. It could be
-left down before we delete the page from the LRU list as it is really
-needed to take a reference on the page before we call
-__munlock_isolated_page(), or at least that is the way it looks to me.
-By doing that you can avoid a bunch of cleanup in these exception
-cases.
 
-> +       clearlru = TestClearPageLRU(page);
-
-I'm not sure I fully understand the reason for moving this here. By
-clearing this flag before you clear Mlocked does this give you some
-sort of extra protection? I don't see how since Mlocked doesn't
-necessarily imply the page is on LRU.
-
->         spin_lock_irq(&pgdat->lru_lock);
->
->         if (!TestClearPageMlocked(page)) {
-> -               /* Potentially, PTE-mapped THP: do not skip the rest PTEs */
-> -               nr_pages = 1;
-> -               goto unlock_out;
-> +               if (clearlru)
-> +                       SetPageLRU(page);
-> +               /*
-> +                * Potentially, PTE-mapped THP: do not skip the rest PTEs
-> +                * Reuse lock as memory barrier for release_pages racing.
-> +                */
-> +               spin_unlock_irq(&pgdat->lru_lock);
-> +               put_page(page);
-> +               return 0;
->         }
->
->         nr_pages = hpage_nr_pages(page);
->         __mod_zone_page_state(page_zone(page), NR_MLOCK, -nr_pages);
->
-> -       if (__munlock_isolate_lru_page(page, true)) {
-> +       if (clearlru) {
-> +               struct lruvec *lruvec;
-> +
-
-You could just place the get_page() call here.
-
-> +               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> +               del_page_from_lru_list(page, lruvec, page_lru(page));
->                 spin_unlock_irq(&pgdat->lru_lock);
->                 __munlock_isolated_page(page);
-> -               goto out;
-> +       } else {
-> +               spin_unlock_irq(&pgdat->lru_lock);
-> +               put_page(page);
-> +               __munlock_isolation_failed(page);
-
-If you move the get_page() as I suggested above there wouldn't be a
-need for the put_page(). It then becomes possible to simplify the code
-a bit by merging the unlock paths and doing an if/else with the
-__munlock functions like so:
-if (clearlru) {
-    ...
-    del_page_from_lru..
-}
-
-spin_unlock_irq()
-
-if (clearlru)
-    __munlock_isolated_page();
-else
-    __munlock_isolated_failed();
-
->         }
-> -       __munlock_isolation_failed(page);
-> -
-> -unlock_out:
-> -       spin_unlock_irq(&pgdat->lru_lock);
->
-> -out:
->         return nr_pages - 1;
->  }
->
-> @@ -297,34 +289,51 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
->         pagevec_init(&pvec_putback);
->
->         /* Phase 1: page isolation */
-> -       spin_lock_irq(&zone->zone_pgdat->lru_lock);
->         for (i = 0; i < nr; i++) {
->                 struct page *page = pvec->pages[i];
-> +               struct lruvec *lruvec;
-> +               bool clearlru;
->
-> -               if (TestClearPageMlocked(page)) {
-> -                       /*
-> -                        * We already have pin from follow_page_mask()
-> -                        * so we can spare the get_page() here.
-> -                        */
-> -                       if (__munlock_isolate_lru_page(page, false))
-> -                               continue;
-> -                       else
-> -                               __munlock_isolation_failed(page);
-> -               } else {
-> +               clearlru = TestClearPageLRU(page);
-> +               spin_lock_irq(&zone->zone_pgdat->lru_lock);
-
-I still don't see what you are gaining by moving the bit test up to
-this point. Seems like it would be better left below with the lock
-just being used to prevent a possible race while you are pulling the
-page out of the LRU list.
-
-> +
-> +               if (!TestClearPageMlocked(page)) {
->                         delta_munlocked++;
-> +                       if (clearlru)
-> +                               SetPageLRU(page);
-> +                       goto putback;
-> +               }
-> +
-> +               if (!clearlru) {
-> +                       __munlock_isolation_failed(page);
-> +                       goto putback;
->                 }
-
-With the other function you were processing this outside of the lock,
-here you are doing it inside. It would probably make more sense here
-to follow similar logic and take care of the del_page_from_lru_list
-ifr clealru is set, unlock, and then if clearlru is set continue else
-track the isolation failure. That way you can avoid having to use as
-many jump labels.
-
->                 /*
-> +                * Isolate this page.
-> +                * We already have pin from follow_page_mask()
-> +                * so we can spare the get_page() here.
-> +                */
-> +               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> +               del_page_from_lru_list(page, lruvec, page_lru(page));
-> +               spin_unlock_irq(&zone->zone_pgdat->lru_lock);
-> +               continue;
-> +
-> +               /*
->                  * We won't be munlocking this page in the next phase
->                  * but we still need to release the follow_page_mask()
->                  * pin. We cannot do it under lru_lock however. If it's
->                  * the last pin, __page_cache_release() would deadlock.
->                  */
-> +putback:
-> +               spin_unlock_irq(&zone->zone_pgdat->lru_lock);
->                 pagevec_add(&pvec_putback, pvec->pages[i]);
->                 pvec->pages[i] = NULL;
->         }
-> +       /* tempary disable irq, will remove later */
-> +       local_irq_disable();
->         __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
-> -       spin_unlock_irq(&zone->zone_pgdat->lru_lock);
-> +       local_irq_enable();
->
->         /* Now we can release pins of pages that we are not munlocking */
->         pagevec_release(&pvec_putback);
-> --
-> 1.8.3.1
->
->
