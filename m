@@ -2,58 +2,95 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A523C2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9822070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbgGQXB4 (ORCPT
+        id S1726843AbgGQXEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 19:01:56 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37843 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgGQXB4 (ORCPT
+        Fri, 17 Jul 2020 19:04:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgGQXEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 19:01:56 -0400
-X-Originating-IP: 90.65.108.121
-Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id AA4261BF205;
-        Fri, 17 Jul 2020 23:01:53 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     yu kuai <yukuai3@huawei.com>, ludovic.desroches@microchip.com,
-        nicolas.ferre@microchip.com, linux@armlinux.org.uk
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        yi.zhang@huawei.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
-Date:   Sat, 18 Jul 2020 01:00:24 +0200
-Message-Id: <159502678064.777887.12884289483323132020.b4-ty@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200604123301.3905837-1-yukuai3@huawei.com>
-References: <20200604123301.3905837-1-yukuai3@huawei.com>
+        Fri, 17 Jul 2020 19:04:42 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDE4C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 16:04:41 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jwZP9-0006OI-0R; Sat, 18 Jul 2020 01:04:35 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jwZP8-0003RR-07; Sat, 18 Jul 2020 01:04:34 +0200
+Date:   Sat, 18 Jul 2020 01:04:31 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: Re: [PATCH v2] pwm: bcm-iproc: handle clk_get_rate() return
+Message-ID: <20200717230431.4oj44cfnkhkd2o6z@pengutronix.de>
+References: <20200717182512.26001-1-scott.branden@broadcom.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5ahgp5eqlhd5enic"
+Content-Disposition: inline
+In-Reply-To: <20200717182512.26001-1-scott.branden@broadcom.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 20:33:01 +0800, yu kuai wrote:
-> if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
-> a corresponding put_device(). Thus add a jump target to fix the exception
-> handling for this function implementation.
 
-Applied, thanks!
+--5ahgp5eqlhd5enic
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1/1] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
-      commit: f87a4f022c44e5b87e842a9f3e644fba87e8385f
+On Fri, Jul 17, 2020 at 11:25:12AM -0700, Scott Branden wrote:
+> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+>=20
+> Handle clk_get_rate() returning <=3D 0 condition to avoid
+> possible division by zero.
 
-Best regards,
--- 
-Alexandre Belloni <alexandre.belloni@bootlin.com>
+You advertise handling <=3D 0, but in the code only =3D=3D 0 is checked. One
+of the two is wrong ...
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--5ahgp5eqlhd5enic
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8SLnwACgkQwfwUeK3K
+7AmfdwgAk8gWLxkwQKT9ApRiJ25C12PNu+T1nJQzle/itAdvq83W5gP6Lzud1iOh
+a8px2Q5xIP20aHy5Z21OCUOzxqDl7+9o6kczLPLvJesanMC0+DCwBzkyQp/Vs/Kq
+kSX+mdliVsMZGe0YVlXtuFtss1cs04KksXD0Ge1gMlciEXywgPMYhh0edJg53zKT
+9jJ5NtV7tiNKacdSODSfdK6Z8KTTqzK36V+ZFWVzFZkJ9nk1XS7y1rbuC6unlK7O
+2mPfE/QuKuP7tmslau5ejLlBZKoVS3qFeAFMzmaI/3HxMuML87XkMwz8ophU3TLl
+sEZOpcLNEK2sPvO1T0WVo+PBtnEpuQ==
+=6nzc
+-----END PGP SIGNATURE-----
+
+--5ahgp5eqlhd5enic--
