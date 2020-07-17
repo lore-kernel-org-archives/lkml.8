@@ -2,115 +2,152 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5845C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67BFC433E2
 	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C50C520768
+	by mail.kernel.org (Postfix) with ESMTP id A657120759
 	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 22:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595026548;
+	bh=0weQ6vGskysex0rpvIFBX+H/4pwUJ8bSIH5Pw3bN3Eo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YHO5kZ9T9eaWmlIWovE4vk2gDhgsn0TExPJmSK+uV7Bf5EUWuLfL33FiEXiUdZN3I
+	 qSDtZ7HNUHXzwYv8tXAfygIhYjrYhCokn4Q0ABf5RSQkHlBoSzNY6r67WSIy8XYjEL
+	 VFfNHxTt6yw6wmE5ZDSgvggAZZz2uNBDY5dYGLLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgGQWzq (ORCPT
+        id S1726947AbgGQWzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 18:55:46 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:33509 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgGQWzp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 18:55:45 -0400
-X-Originating-IP: 90.65.108.121
-Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 6DEB7E0004;
-        Fri, 17 Jul 2020 22:55:43 +0000 (UTC)
-Date:   Sat, 18 Jul 2020 00:55:42 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     "yukuai (C)" <yukuai3@huawei.com>
-Cc:     linux@armlinux.org.uk, nicolas.ferre@microchip.com,
-        ludovic.desroches@microchip.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com
-Subject: Re: [PATCH] ARM: at91: pm: add missing put_device() call in
- at91_pm_sram_init()
-Message-ID: <20200717225542.GZ3428@piout.net>
-References: <20200604123301.3905837-1-yukuai3@huawei.com>
- <20200702200915.GC6538@piout.net>
- <01fd6279-524e-3cee-4c16-5b748a49d0f0@huawei.com>
+        Fri, 17 Jul 2020 18:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726204AbgGQWzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 18:55:43 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A2F62070E;
+        Fri, 17 Jul 2020 22:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595026542;
+        bh=0weQ6vGskysex0rpvIFBX+H/4pwUJ8bSIH5Pw3bN3Eo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bsGzYCxwM9Cei6eDpgCVIbOsPq8FkK/rZK/ZeuHxXW9z/nE8dRZBpE+ysSo0wktmV
+         H4uFoS21XiQ7Bs+6N35miSh8uqyfqs7dV8pqX6BoT7AZjG7Uyo6YWOwltcEKX6RMkz
+         ViDLQq6IRNBZLJOAP+fD+0Mj8ZDdgK2//EdvJD6Q=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] Revert "PCI/PM: Assume ports without DLL Link Active train links in 100 ms"
+Date:   Fri, 17 Jul 2020 17:55:33 -0500
+Message-Id: <20200717225533.783790-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01fd6279-524e-3cee-4c16-5b748a49d0f0@huawei.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/2020 09:15:20+0800, yukuai (C) wrote:
-> 
-> On 2020/7/3 4:09, Alexandre Belloni wrote:
-> > Hi,
-> > 
-> > On 04/06/2020 20:33:01+0800, yu kuai wrote:
-> > > if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
-> > > a corresponding put_device(). Thus add a jump target to fix the exception
-> > > handling for this function implementation.
-> > > 
-> > > Fixes: d2e467905596 ("ARM: at91: pm: use the mmio-sram pool to access SRAM")
-> > > Signed-off-by: yu kuai <yukuai3@huawei.com>
-> > > ---
-> > >   arch/arm/mach-at91/pm.c | 11 ++++++++---
-> > >   1 file changed, 8 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-> > > index 074bde64064e..2aab043441e8 100644
-> > > --- a/arch/arm/mach-at91/pm.c
-> > > +++ b/arch/arm/mach-at91/pm.c
-> > > @@ -592,13 +592,13 @@ static void __init at91_pm_sram_init(void)
-> > >   	sram_pool = gen_pool_get(&pdev->dev, NULL);
-> > 
-> > Isn't the best solution to simply have put_device hereHi, Alexandre !
-> 
-> I think put_device() is supposed to be called in the exception handling
-> path.
-> 
-> > 
-> > >   	if (!sram_pool) {
-> > >   		pr_warn("%s: sram pool unavailable!\n", __func__);
-> > > -		return;
-> > > +		goto out_put_device;
-> > >   	}
-> > >   	sram_base = gen_pool_alloc(sram_pool, at91_pm_suspend_in_sram_sz);
-> > >   	if (!sram_base) {
-> > >   		pr_warn("%s: unable to alloc sram!\n", __func__);
-> > > -		return;
-> > > +		goto out_put_device;
-> > >   	}
-> > >   	sram_pbase = gen_pool_virt_to_phys(sram_pool, sram_base);
-> > > @@ -606,12 +606,17 @@ static void __init at91_pm_sram_init(void)
-> > >   					at91_pm_suspend_in_sram_sz, false);
-> > >   	if (!at91_suspend_sram_fn) {
-> > >   		pr_warn("SRAM: Could not map\n");
-> > > -		return;
-> > > +		goto out_put_device;
-> > >   	}
-> > >   	/* Copy the pm suspend handler to SRAM */
-> > >   	at91_suspend_sram_fn = fncpy(at91_suspend_sram_fn,
-> > >   			&at91_pm_suspend_in_sram, at91_pm_suspend_in_sram_sz);
-> 
-> If nothing is wrong, maybe put_device shounld't be called?
-> 
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-I don't think this is the case but as the reference implementation
-(imx6) is carrying the patch, I'm going to apply this one.
+This reverts commit ec411e02b7a2e785a4ed9ed283207cd14f48699d.
 
-A better fix would have been to also factorize imx_suspend_alloc_ocram,
-imx6q_suspend_init, socfpga_setup_ocram_self_refresh and
-at91_pm_sram_init as they were all copied from pm-imx6.c
+Patrick reported that this commit broke hybrid graphics on a ThinkPad X1
+Extreme 2nd with Intel UHD Graphics 630 and NVIDIA GeForce GTX 1650 Mobile:
 
+  nouveau 0000:01:00.0: fifo: PBDMA0: 01000000 [] ch 0 [00ff992000 DRM] subc 0 mthd 0008 data 00000000
 
+Karol reported that this commit broke Nouveau firmware loading on a Lenovo
+P1G2 with Intel UHD Graphics 630 and NVIDIA TU117GLM [Quadro T1000 Mobile]:
+
+  nouveau 0000:01:00.0: acr: AHESASC binary failed
+
+In both cases, reverting ec411e02b7a2 solved the problem.  Unfortunately,
+this revert will reintroduce the "Thunderbolt bridges take long time to
+resume from D3cold" problem:
+https://bugzilla.kernel.org/show_bug.cgi?id=206837
+
+Link: https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
+Link: https://lore.kernel.org/r/CACO55tsAEa5GXw5oeJPG=mcn+qxNvspXreJYWDJGZBy5v82JDA@mail.gmail.com
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208597
+Reported-by: Patrick Volkerding <volkerdi@gmail.com>
+Reported-by: Karol Herbst <kherbst@redhat.com>
+Fixes: ec411e02b7a2 ("PCI/PM: Assume ports without DLL Link Active train links in 100 ms")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/pci.c | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce096272f52b..c9338f914a0e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4638,8 +4638,7 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
+  * pcie_wait_for_link_delay - Wait until link is active or inactive
+  * @pdev: Bridge device
+  * @active: waiting for active or inactive?
+- * @delay: Delay to wait after link has become active (in ms). Specify %0
+- *	   for no delay.
++ * @delay: Delay to wait after link has become active (in ms)
+  *
+  * Use this to wait till link becomes active or inactive.
+  */
+@@ -4680,7 +4679,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+ 		msleep(10);
+ 		timeout -= 10;
+ 	}
+-	if (active && ret && delay)
++	if (active && ret)
+ 		msleep(delay);
+ 	else if (ret != active)
+ 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
+@@ -4801,28 +4800,17 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 	if (!pcie_downstream_port(dev))
+ 		return;
+ 
+-	/*
+-	 * Per PCIe r5.0, sec 6.6.1, for downstream ports that support
+-	 * speeds > 5 GT/s, we must wait for link training to complete
+-	 * before the mandatory delay.
+-	 *
+-	 * We can only tell when link training completes via DLL Link
+-	 * Active, which is required for downstream ports that support
+-	 * speeds > 5 GT/s (sec 7.5.3.6).  Unfortunately some common
+-	 * devices do not implement Link Active reporting even when it's
+-	 * required, so we'll check for that directly instead of checking
+-	 * the supported link speed.  We assume devices without Link Active
+-	 * reporting can train in 100 ms regardless of speed.
+-	 */
+-	if (dev->link_active_reporting) {
+-		pci_dbg(dev, "waiting for link to train\n");
+-		if (!pcie_wait_for_link_delay(dev, true, 0)) {
++	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
++		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
++		msleep(delay);
++	} else {
++		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
++			delay);
++		if (!pcie_wait_for_link_delay(dev, true, delay)) {
+ 			/* Did not train, no need to wait any further */
+ 			return;
+ 		}
+ 	}
+-	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
+-	msleep(delay);
+ 
+ 	if (!pci_device_is_present(child)) {
+ 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.25.1
+
