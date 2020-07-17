@@ -2,145 +2,329 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058CFC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E319C2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7102071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594966711;
+	bh=7afkmE7uTrunj97qP72j5c9LrWDuyJyNP16IWobdmYU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VH4j/yVf3FqCXT9+MJwsdHHeQYHpzsiHBHSzIhpwg3s/TWJhhXsxtsfMgbHkMQtuD
+	 xu3Y650peSfTU37GD6toMcQfrS770uuThoAPH1joZ+/3v3JCx1TF1qxPt20sh4hymO
+	 CTqbJascxDdLdz3syYSHEERSlef2pcyFu3fuPG7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgGQGN5 (ORCPT
+        id S1726559AbgGQGSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:13:57 -0400
-Received: from out28-75.mail.aliyun.com ([115.124.28.75]:35910 "EHLO
-        out28-75.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgGQGN5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:13:57 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07956585|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.26011-0.00462829-0.735262;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03278;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I37bnt8_1594966428;
-Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I37bnt8_1594966428)
-          by smtp.aliyun-inc.com(10.147.44.129);
-          Fri, 17 Jul 2020 14:13:49 +0800
-Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
- X1000 OST.
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
- <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
- <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <f0dd2ea5-0627-35cf-5a58-aaff0bcb22cd@wanyeetech.com>
-Date:   Fri, 17 Jul 2020 14:13:47 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Fri, 17 Jul 2020 02:18:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726056AbgGQGS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:18:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A1082071A;
+        Fri, 17 Jul 2020 06:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594966708;
+        bh=7afkmE7uTrunj97qP72j5c9LrWDuyJyNP16IWobdmYU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PGBVoBbPM7Rf2TfQx5i5NS+TFlW5Lz1tUugxyNH/xNyv6I6QrtGjW0kWRDNndwaek
+         EEcvntNxjX3AxYlRVSgVwfqATtnmV4tNtOmRjvTNeDotnp8fqZb91yUsFs5Ni78OmV
+         UEqiDBh0ZKJF9S3z031RB6tH16dVUKXcZ8xkdnJ8=
+Date:   Fri, 17 Jul 2020 08:18:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Mani, Rajmohan" <rajmohan.mani@intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>,
+        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "pmalani@chromium.org" <pmalani@chromium.org>,
+        "bleung@chromium.org" <bleung@chromium.org>
+Subject: Re: [PATCH 1/2] platform/x86: Add Intel Input Output Manager (IOM)
+ driver
+Message-ID: <20200717061821.GA3237166@kroah.com>
+References: <20200716003310.26125-1-rajmohan.mani@intel.com>
+ <20200716003310.26125-2-rajmohan.mani@intel.com>
+ <20200716070950.GC962748@kroah.com>
+ <DM6PR11MB39632BD9A5A0DF4A9EAB351CF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <DM6PR11MB39632BD9A5A0DF4A9EAB351CF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Fri, Jul 17, 2020 at 06:03:55AM +0000, Mani, Rajmohan wrote:
+> Hi Greg,
+> 
+> Thanks for the reviews.
+> 
+> > -----Original Message-----
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Sent: Thursday, July 16, 2020 12:10 AM
+> > To: Mani, Rajmohan <rajmohan.mani@intel.com>
+> > Cc: Darren Hart <dvhart@infradead.org>; Andy Shevchenko
+> > <andy@infradead.org>; Mika Westerberg
+> > <mika.westerberg@linux.intel.com>; Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com>; Lee Jones <lee.jones@linaro.org>; Ayman
+> > Bagabas <ayman.bagabas@gmail.com>; Masahiro Yamada
+> > <masahiroy@kernel.org>; Joseph, Jithu <jithu.joseph@intel.com>; Blaž
+> > Hrastnik <blaz@mxxn.io>; Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com>; linux-kernel@vger.kernel.org;
+> > platform-driver-x86@vger.kernel.org; Heikki Krogerus
+> > <heikki.krogerus@linux.intel.com>; linux-usb@vger.kernel.org;
+> > pmalani@chromium.org; bleung@chromium.org
+> > Subject: Re: [PATCH 1/2] platform/x86: Add Intel Input Output Manager (IOM)
+> > driver
+> > 
+> > On Wed, Jul 15, 2020 at 05:33:09PM -0700, Rajmohan Mani wrote:
+> > > Input Output Manager (IOM) is part of the Tiger Lake SoC that
+> > > configures the Type-C Sub System (TCSS). IOM is a micro controller
+> > > that handles Type-C topology, configuration and PM functions of
+> > > various Type-C devices connected on the platform.
+> > >
+> > > This driver helps read relevant information such as Type-C port status
+> > > (whether a device is connected to a Type-C port or not) and the
+> > > activity type on the Type-C ports (such as USB, Display Port,
+> > > Thunderbolt), for consumption by other drivers.
+> > >
+> > > Currently intel_iom_port_status() API is exported by this driver, that
+> > > has information about the Type-C port status and port activity type.
+> > >
+> > > Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+> > > ---
+> > >  drivers/platform/x86/Kconfig                |  16 +++
+> > >  drivers/platform/x86/Makefile               |   1 +
+> > >  drivers/platform/x86/intel_iom.c            | 133 ++++++++++++++++++++
+> > >  include/linux/platform_data/x86/intel_iom.h |  62 +++++++++
+> > 
+> > Why do you need a .h file for a single .c file that no one else shares this data?
+> > Just put it all in the .c file please.
+> > 
+> 
+> The APIs exported by this driver, are used by the caller (Intel PMC USB mux
+> control driver), hence the need for header file.
+> 
+> > >  4 files changed, 212 insertions(+)
+> > >  create mode 100644 drivers/platform/x86/intel_iom.c  create mode
+> > > 100644 include/linux/platform_data/x86/intel_iom.h
+> > >
+> > > diff --git a/drivers/platform/x86/Kconfig
+> > > b/drivers/platform/x86/Kconfig index 0581a54cf562..271feddb20ef 100644
+> > > --- a/drivers/platform/x86/Kconfig
+> > > +++ b/drivers/platform/x86/Kconfig
+> > > @@ -816,6 +816,22 @@ config INTEL_INT0002_VGPIO
+> > >  	  To compile this driver as a module, choose M here: the module will
+> > >  	  be called intel_int0002_vgpio.
+> > >
+> > > +config INTEL_IOM
+> > > +	tristate "Intel Input Output Manager (IOM) driver"
+> > > +	depends on ACPI && PCI
+> > > +	help
+> > > +	  This driver helps read relevant information such as Type-C port
+> > > +	  status (whether a device is connected to a Type-C port or not)
+> > > +	  and the activity type on the Type-C ports (such as USB, Display
+> > > +	  Port, Thunderbolt), for consumption by other drivers.
+> > > +
+> > > +	  Currently intel_iom_port_status() API is exported by this driver,
+> > > +	  that has information about the Type-C port status and port activity
+> > > +	  type.
+> > > +
+> > > +	  To compile this driver as a module, choose M here: the module will
+> > > +	  be called intel_iom.
+> > > +
+> > >  config INTEL_MENLOW
+> > >  	tristate "Thermal Management driver for Intel menlow platform"
+> > >  	depends on ACPI_THERMAL
+> > > diff --git a/drivers/platform/x86/Makefile
+> > > b/drivers/platform/x86/Makefile index 2b85852a1a87..d71e4620a7c6
+> > > 100644
+> > > --- a/drivers/platform/x86/Makefile
+> > > +++ b/drivers/platform/x86/Makefile
+> > > @@ -76,6 +76,7 @@ intel_cht_int33fe-objs			:=
+> > intel_cht_int33fe_common.o \
+> > >  					   intel_cht_int33fe_microb.o
+> > >  obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
+> > >  obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+> > > +obj-$(CONFIG_INTEL_IOM)			+= intel_iom.o
+> > >  obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
+> > >  obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+> > >  obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
+> > > diff --git a/drivers/platform/x86/intel_iom.c
+> > > b/drivers/platform/x86/intel_iom.c
+> > > new file mode 100644
+> > > index 000000000000..ece0fe720b2d
+> > > --- /dev/null
+> > > +++ b/drivers/platform/x86/intel_iom.c
+> > > @@ -0,0 +1,133 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Intel Core SoC Input Output Manager (IOM) driver.
+> > > + *
+> > > + * This driver provides access to the Input Output Manager (IOM)
+> > > +(that
+> > > + * is part of Tiger Lake SoC) registers that can be used to know
+> > > +about
+> > > + * Type-C Sub System related information (such as Type-C port status,
+> > > + * activity type on Type-C ports).
+> > > + *
+> > > + * Copyright (C) 2020, Intel Corporation
+> > > + * Author: Rajmohan Mani <rajmohan.mani@intel.com>  */
+> > > +
+> > > +#include <linux/io.h>
+> > > +#include <linux/mod_devicetable.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/platform_data/x86/intel_iom.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/slab.h>
+> > > +
+> > > +#define IOM_PORT_STATUS_OFFSET				0x560
+> > > +
+> > > +struct intel_iom {
+> > > +	struct device *dev;
+> > > +	void __iomem *regbar;
+> > > +};
+> > > +
+> > > +static struct intel_iom iom_dev;
+> > 
+> > Why just one?  Why is this static?
+> > 
+> 
+> There is just one IOM device in the system.
 
-在 2020/7/17 下午12:20, Daniel Lezcano 写道:
-> On 10/07/2020 19:02, 周琰杰 (Zhou Yanjie) wrote:
->> X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
->> OST, it no longer belongs to TCU. This driver will register both a
->> clocksource and a sched_clock to the system.
->>
->> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
->> Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->> Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
->> ---
->>
->> Notes:
->>      v1->v2:
->>      Fix compile warnings.
->>      Reported-by: kernel test robot <lkp@intel.com>
->>      
->>      v2->v3:
->>      No change.
->>      
->>      v3->v4:
->>      1.Rename "ost" to "sysost"
->>      1.Remove unrelated changes.
->>      2.Remove ost_clock_parent enum.
->>      3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
->>      4.Set up independent .recalc_rate/.set_rate for percpu/global timer.
->>      5.No longer call functions in variable declarations.
->>      
->>      v4->v5:
->>      Use "of_io_request_and_map()" instead "of_iomap()".
->>      Suggested-by: Paul Cercueil <paul@crapouillou.net>
->>      
->>      v5->v6:
->>      No change.
->>
->>   drivers/clocksource/Kconfig          |  11 +
->>   drivers/clocksource/Makefile         |   1 +
->>   drivers/clocksource/ingenic-sysost.c | 539 +++++++++++++++++++++++++++++++++++
->>   3 files changed, 551 insertions(+)
->>   create mode 100644 drivers/clocksource/ingenic-sysost.c
->>
->> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->> index 91418381fcd4..1bca8b8fb30f 100644
->> --- a/drivers/clocksource/Kconfig
->> +++ b/drivers/clocksource/Kconfig
->> @@ -696,6 +696,17 @@ config INGENIC_TIMER
->>   	help
->>   	  Support for the timer/counter unit of the Ingenic JZ SoCs.
->>   
->> +config INGENIC_SYSOST
->> +	bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
-> We usually use silent options and let the platform's Kconfig enable it.
-> We show up the option only when COMPILE_TEST is enabled.
->
-> Is there a reason to do it differently?
+For today, yes, no need to force yourself to have to change this in the
+future.  Just use a normal per-instance variable instead please, if you
+really need it.
 
+> > > +
+> > > +	/* Prevent this driver from being unloaded while in use */
+> > > +	if (!try_module_get(dev->driver->owner)) {
+> > 
+> > Why are you poking around in a random device's driver's owner?
+> > 
+> > That's not ok.  And probably totally racy.
+> > 
+> > Handle module reference counts properly, not like this.
+> > 
+> 
+> Ack. Will use THIS_MODULE here.
 
-Do you mean
+No, that is not the answer, and is always wrong to use :(
 
-bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+> > And why does it even matter that you incremented the module reference
+> > count?  What is that "protecting" you from?
+> > 
+>  
+> To prevent this driver from being unloaded, while it is being used.
 
-or
+Why does that matter?  Shouldn't normal reference counting and
+dependancies be all that you need?
 
-default MACH_INGENIC ?
+> > > +		put_device(iom_dev.dev);
+> > > +		return ERR_PTR(-EBUSY);
+> > > +	}
+> > > +
+> > > +	return &iom_dev;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(intel_iom_get);
+> > 
+> > Who calls this function?
+> > 
+> 
+> Intel PMC USB mux control driver, in this case.
+> The callers are expected to call intel_iom_get() before using the
+> intel_iom_port_status(), after which intel_iom_put() can be called
+> to release the IOM device instance.
 
-This driver has some origins from "INGENIC_TIMER" driver and "INGENIC_OST" driver.
-Early Ingenic processors used TCU (timer/counter unit, has 6 or 8 generic timer channels) to provide clocksource and clockevent (both with only 16bit precision). This part of the processor can only use "INGENIC_TIMER" driver.
+Why not just have a single call if all this driver does is support one
+thing.  The reference counting shouldn't be needed at all, right?
 
-Later processors provide an independent 32bit or 64bit timer channel (still under TCU, known as ost channel, this channel can not generate interrupt) to provid higher precision clocksource. The "INGENIC_OST" driver is for this channel. These processors can use "INGENIC_TIMER" driver, but using "INGENIC_OST" driver to provide higher precision clocksource would be a better choice (clockevent still needs to be provided by generic timer channel of TCU, and still 16bit precision).
+> > > +/**
+> > > + * intel_iom_put() - Put IOM device instance
+> > > + * @iom: IOM device instance
+> > > + *
+> > > + * This function releases the IOM device instance created using
+> > > + * intel_iom_get() and allows the driver to be unloaded.
+> > > + *
+> > > + * Call intel_iom_put() to release the instance.
+> > > + */
+> > > +void intel_iom_put(struct intel_iom *iom) {
+> > > +	if (!iom)
+> > > +		return;
+> > > +
+> > > +	module_put(iom->dev->driver->owner);
+> > 
+> > And if the device doesn't have a driver?  boom :(
+> > 
+> > Don't do this.
+> > 
+> 
+> Ack. Will use THIS_MODULE here.
 
-And the recent processors provide a SYSOST components, it is independent from TCU, including a 64bit timer channel for clocksource and a 32bit timer channel for clockevent. Although these processors can also use "INGENIC_TIMER" driver, but the better choice is completely independent use of "INGENIC_SYSOST" driver to provide higher precision clocksource and clockevent.
+Again, no, that will be even more incorrect.
 
-You may have already noticed that this independent SYSOST component is like an upgraded and streamlined TCU, which only retains one generic timer channel that can generate interrupts, upgrade it from 16bit to 32bit, and then retain the 64bit ost channel. so the driver code and Kconfig code of this patch is largely referenced
-"INGENIC_TIMER" driver and "INGENIC_OST" driver.
+> > > +	put_device(iom->dev);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(intel_iom_put);
+> > > +
+> > > +/**
+> > > + * intel_iom_port_status() - Get status bits for the Type-C port
+> > > + * @iom: IOM device instance
+> > > + * @port: Type-C port number
+> > > + * @status: pointer to receive the status bits
+> > > + *
+> > > + * Returns 0 on success, error otherwise.
+> > > + */
+> > > +int intel_iom_port_status(struct intel_iom *iom, u8 port, u32
+> > > +*status) {
+> > > +	void __iomem *reg;
+> > > +
+> > > +	if (!iom)
+> > > +		return -ENODEV;
+> > > +
+> > > +	if (!status || (port > IOM_MAX_PORTS - 1))
+> > > +		return -EINVAL;
+> > > +
+> > > +	reg = iom->regbar + IOM_PORT_STATUS_OFFSET + IOM_REG_LEN *
+> > port;
+> > > +
+> > > +	*status = ioread32(reg);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(intel_iom_port_status);
+> > 
+> > So the whole driver is here just to read, directly from memory, a single
+> > 32 bit value?
+> 
+> Yes.
 
-Thanks and best regards!
+Ok, then this whole driver could be about 90% smaller and more obvious.
+Don't add the reference counting, the static variables and all the other
+stuff just to get a 32bit number.
 
->> +	default MACH_INGENIC
->> +	depends on MIPS || COMPILE_TEST
->> +	depends on COMMON_CLK
->> +	select MFD_SYSCON
->> +	select TIMER_OF
->> +	select IRQ_DOMAIN
->> +	help
->> +	  Support for the SYSOST of the Ingenic X Series SoCs.
->> +
-> [ ... ]
->
->
+As it is, this feels like an excuse to get paid per lines of code :(
+
+greg k-h
