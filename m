@@ -4,127 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1ABC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0248EC4345D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1D38208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B23207EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgGQRAs (ORCPT
+        id S1728142AbgGQRA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:00:48 -0400
-Received: from out28-124.mail.aliyun.com ([115.124.28.124]:54634 "EHLO
-        out28-124.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727810AbgGQRAp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:00:45 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07466951|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0939416-0.000470004-0.905588;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I3U5VZp_1595005212;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I3U5VZp_1595005212)
-          by smtp.aliyun-inc.com(10.147.41.121);
-          Sat, 18 Jul 2020 01:00:22 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     daniel.lezcano@linaro.org, tsbogend@alpha.franken.de,
-        robh+dt@kernel.org
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, tglx@linutronix.de,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH v7 4/5] MIPS: X1000: Use SYSOST instead of TCU to provide clocksource.
-Date:   Sat, 18 Jul 2020 00:59:46 +0800
-Message-Id: <20200717165947.56158-5-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200717165947.56158-1-zhouyanjie@wanyeetech.com>
-References: <20200717165947.56158-1-zhouyanjie@wanyeetech.com>
+        Fri, 17 Jul 2020 13:00:56 -0400
+Received: from mga14.intel.com ([192.55.52.115]:45269 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727828AbgGQRAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:00:30 -0400
+IronPort-SDR: vk6RT8B8QoEsYPs1pJMLvz6Ne19FEsqLhkPzjr88Cb08N3l2WIy5Gn4QouD/6qVnewNF3vy9v7
+ NobeiVFU2ilg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="148798229"
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="148798229"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 10:00:28 -0700
+IronPort-SDR: YD8LS8cLsoXNAWwVei30GXmcCE2h7XpytjuYYlCGZNftLJ3LEHvqt3ks4PtvSBIw+y6vWNjsRH
+ TSCZNWQa1wAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="270861825"
+Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.33.149])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Jul 2020 10:00:22 -0700
+From:   Kristen Carlson Accardi <kristen@linux.intel.com>
+To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com,
+        Kristen Carlson Accardi <kristen@linux.intel.com>
+Subject: [PATCH v4 01/10] objtool: Do not assume order of parent/child functions
+Date:   Fri, 17 Jul 2020 09:59:58 -0700
+Message-Id: <20200717170008.5949-2-kristen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200717170008.5949-1-kristen@linux.intel.com>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before this series of patches, X1000 used TCU to provide
-clocksource and clockevent, but because the timer of TCU
-is only 16 bits, so the timing length is only 16 bits. In
-actual use, it is easy to cause some problems such as data
-loss during data transmission. The SYSOST driver is provided
-in this series of patches, which can provide 32bit timing
-length, so use SYSOST instead of TCU to provide clocksource
-and clockevent to solve the aforementioned problems.
+If a .cold function is examined prior to it's parent, the link
+to the parent/child function can be overwritten when the parent
+is examined. Only update pfunc and cfunc if they were previously
+nil to prevent this from happening.
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
+ tools/objtool/elf.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Notes:
-    v7:
-    New patch.
-
- arch/mips/boot/dts/ingenic/cu1000-neo.dts |  9 +++------
- arch/mips/boot/dts/ingenic/x1000.dtsi     | 16 ++++++++++++++++
- 2 files changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/arch/mips/boot/dts/ingenic/cu1000-neo.dts b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
-index 22a1066d637b..9418dbeccfa6 100644
---- a/arch/mips/boot/dts/ingenic/cu1000-neo.dts
-+++ b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
-@@ -3,7 +3,7 @@
- 
- #include "x1000.dtsi"
- #include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/clock/ingenic,tcu.h>
-+#include <dt-bindings/clock/ingenic,sysost.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
-@@ -43,13 +43,10 @@
- 	clock-frequency = <24000000>;
- };
- 
--&tcu {
-+&ost {
- 	/* 1500 kHz for the system timer and clocksource */
--	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
-+	assigned-clocks = <&ost OST_CLK_PERCPU_TIMER>, <&ost OST_CLK_GLOBAL_TIMER>;
- 	assigned-clock-rates = <1500000>, <1500000>;
--
--	/* Use channel #0 for the system timer channel #2 for the clocksource */
--	ingenic,pwm-channels-mask = <0xfa>;
- };
- 
- &uart2 {
-diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
-index 9de9e7c2d523..bf7951dc89ef 100644
---- a/arch/mips/boot/dts/ingenic/x1000.dtsi
-+++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-@@ -47,6 +47,22 @@
- 		clock-names = "ext", "rtc";
- 	};
- 
-+	ost: timer@12000000 {
-+		compatible = "ingenic,x1000-ost";
-+		reg = <0x12000000 0x1000>;
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 26d11d821941..c18f0f216740 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -434,7 +434,13 @@ static int read_symbols(struct elf *elf)
+ 			size_t pnamelen;
+ 			if (sym->type != STT_FUNC)
+ 				continue;
+-			sym->pfunc = sym->cfunc = sym;
 +
-+		#clock-cells = <1>;
++			if (sym->pfunc == NULL)
++				sym->pfunc = sym;
 +
-+		clocks = <&cgu X1000_CLK_OST>;
-+		clock-names = "ost";
++			if (sym->cfunc == NULL)
++				sym->cfunc = sym;
 +
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&cpuintc>;
-+		interrupts = <3>;
-+	};
-+
- 	tcu: timer@10002000 {
- 		compatible = "ingenic,x1000-tcu", "simple-mfd";
- 		reg = <0x10002000 0x1000>;
+ 			coldstr = strstr(sym->name, ".cold");
+ 			if (!coldstr)
+ 				continue;
 -- 
-2.11.0
+2.20.1
 
