@@ -2,171 +2,166 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F09C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3425EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87BD12064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:52:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BxSh5lyJ"
+	by mail.kernel.org (Postfix) with ESMTP id 191632065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgGQRwt (ORCPT
+        id S1726650AbgGQRxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:52:49 -0400
-Received: from mail.efficios.com ([167.114.26.124]:55706 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgGQRws (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:52:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 817512C997D;
-        Fri, 17 Jul 2020 13:52:47 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id sy2IH5AMEi0S; Fri, 17 Jul 2020 13:52:47 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 098BD2C997C;
-        Fri, 17 Jul 2020 13:52:47 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 098BD2C997C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1595008367;
-        bh=4fWMpAwGTjIs1YHFuRjsIAcqCINrApuOxB7mCqdeBnc=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=BxSh5lyJZ96gwEnmA0pVCNFKaUSvh3mbFF5nYNrwNoD3YLC1PNim24YjG7i2REP1q
-         PCIv3oRydbKYQts2sqpnwk4Md/9LVuQsFkUMKcaLBWP1CBte4ivSV/JuAzDhX0xktP
-         u37Ozgu82qPbPy7fULxzzznmmt1yvBa4/EsBhnVtaNidxyQJ1iECc6CjCy4P1zDg2Z
-         Z4U+9+jXodBMD3GqOJyoFrUOlxqcdqOaUyWc176SPKSLtx8D+Tcq9QBzcSacUlC2+3
-         CnC3xdUvw8oLsg8aQWS+61kRPVqpHBcWdsIkt9C35AqDyGcnOIpe9BMFeH30ci6VBC
-         xwD0mGQaCkTAw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id hfAD4r_B6LZl; Fri, 17 Jul 2020 13:52:46 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id EB36D2C9D87;
-        Fri, 17 Jul 2020 13:52:46 -0400 (EDT)
-Date:   Fri, 17 Jul 2020 13:52:46 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, paulmck <paulmck@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
-Message-ID: <2035777331.19291.1595008366858.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200717174400.GA1156312@rowland.harvard.edu>
-References: <20200710015646.2020871-1-npiggin@gmail.com> <20200716212416.GA1126458@rowland.harvard.edu> <1770378591.18523.1594993165391.JavaMail.zimbra@efficios.com> <20200717145102.GC1147780@rowland.harvard.edu> <1697220787.18880.1595000348405.JavaMail.zimbra@efficios.com> <20200717161145.GA1150454@rowland.harvard.edu> <12700909.18968.1595002969773.JavaMail.zimbra@efficios.com> <20200717174400.GA1156312@rowland.harvard.edu>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
+        Fri, 17 Jul 2020 13:53:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726205AbgGQRxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:53:54 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 312902064C;
+        Fri, 17 Jul 2020 17:53:53 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 13:53:51 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/17] perf ftrace: add option -t/--tid to filter by
+ thread id
+Message-ID: <20200717135351.5fb1ce95@oasis.local.home>
+In-Reply-To: <20200717174053.GE712240@kernel.org>
+References: <20200711124035.6513-1-changbin.du@gmail.com>
+        <20200711124035.6513-4-changbin.du@gmail.com>
+        <20200716153630.GD374956@kernel.org>
+        <20200717132650.i32oovllal22b35i@mail.google.com>
+        <20200717130124.54e85349@oasis.local.home>
+        <20200717174053.GE712240@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
-Thread-Index: GWd8J1ng+COq8abrHOCrIFRVXkZ+eQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 17, 2020, at 1:44 PM, Alan Stern stern@rowland.harvard.edu wrote:
+On Fri, 17 Jul 2020 14:40:53 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> On Fri, Jul 17, 2020 at 12:22:49PM -0400, Mathieu Desnoyers wrote:
->> ----- On Jul 17, 2020, at 12:11 PM, Alan Stern stern@rowland.harvard.edu wrote:
->> 
->> >> > I agree with Nick: A memory barrier is needed somewhere between the
->> >> > assignment at 6 and the return to user mode at 8.  Otherwise you end up
->> >> > with the Store Buffer pattern having a memory barrier on only one side,
->> >> > and it is well known that this arrangement does not guarantee any
->> >> > ordering.
->> >> 
->> >> Yes, I see this now. I'm still trying to wrap my head around why the memory
->> >> barrier at the end of membarrier() needs to be paired with a scheduler
->> >> barrier though.
->> > 
->> > The memory barrier at the end of membarrier() on CPU0 is necessary in
->> > order to enforce the guarantee that any writes occurring on CPU1 before
->> > the membarrier() is executed will be visible to any code executing on
->> > CPU0 after the membarrier().  Ignoring the kthread issue, we can have:
->> > 
->> >	CPU0			CPU1
->> >				x = 1
->> >				barrier()
->> >				y = 1
->> >	r2 = y
->> >	membarrier():
->> >	  a: smp_mb()
->> >	  b: send IPI		IPI-induced mb
->> >	  c: smp_mb()
->> >	r1 = x
->> > 
->> > The writes to x and y are unordered by the hardware, so it's possible to
->> > have r2 = 1 even though the write to x doesn't execute until b.  If the
->> > memory barrier at c is omitted then "r1 = x" can be reordered before b
->> > (although not before a), so we get r1 = 0.  This violates the guarantee
->> > that membarrier() is supposed to provide.
->> > 
->> > The timing of the memory barrier at c has to ensure that it executes
->> > after the IPI-induced memory barrier on CPU1.  If it happened before
->> > then we could still end up with r1 = 0.  That's why the pairing matters.
->> > 
->> > I hope this helps your head get properly wrapped.  :-)
->> 
->> It does help a bit! ;-)
->> 
->> This explains this part of the comment near the smp_mb at the end of membarrier:
->> 
->>          * Memory barrier on the caller thread _after_ we finished
->>          * waiting for the last IPI. [...]
->> 
->> However, it does not explain why it needs to be paired with a barrier in the
->> scheduler, clearly for the case where the IPI is skipped. I wonder whether this
->> part
->> of the comment is factually correct:
->> 
->>          * [...] Matches memory barriers around rq->curr modification in scheduler.
+> Say you use:
 > 
-> The reasoning is pretty much the same as above:
+> ^C[root@ssdandy ~]# cyclictest --smp -um -p95
+> # /dev/cpu_dma_latency set to 0us
+> policy: fifo: loadavg: 0.05 0.03 0.06 2/409 29072
 > 
->	CPU0			CPU1
->				x = 1
->				barrier()
->				y = 1
->	r2 = y
->	membarrier():
->	  a: smp_mb()
->				switch to kthread (includes mb)
->	  b: read rq->curr == kthread
->				switch to user (includes mb)
->	  c: smp_mb()
->	r1 = x
+> T: 0 (29065) P:95 I:1000 C:    518 Min:      2 Act:    2 Avg:    2 Max:       6
+> T: 1 (29066) P:95 I:1500 C:    343 Min:      2 Act:    2 Avg:    2 Max:       5
+> T: 2 (29067) P:95 I:2000 C:    256 Min:      2 Act:    2 Avg:    2 Max:       7
+> T: 3 (29068) P:95 I:2500 C:    203 Min:      2 Act:    2 Avg:    2 Max:       5
+> T: 4 (29069) P:95 I:3000 C:    168 Min:      2 Act:    2 Avg:    3 Max:       6
+> T: 5 (29070) P:95 I:3500 C:    143 Min:      2 Act:    2 Avg:    2 Max:       6
+> T: 6 (29071) P:95 I:4000 C:    124 Min:      2 Act:    2 Avg:    2 Max:       7
+> T: 7 (29072) P:95 I:4500 C:    110 Min:      2 Act:    2 Avg:    2 Max:
 > 
-> Once again, it is possible that x = 1 doesn't become visible to CPU0
-> until shortly before b.  But if c is omitted then "r1 = x" can be
-> reordered before b (to any time after a), so we can have r1 = 0.
+> Then we do:
 > 
-> Here the timing requirement is that c executes after the first memory
-> barrier on CPU1 -- which is one of the ones around the rq->curr
-> modification.  (In fact, in this scenario CPU1's switch back to the user
-> process is irrelevant.)
+> # pidof cyclictest
+> 29064
+> #
+> 
+> If we use:
+> 
+> [root@ssdandy ~]# perf record --pid 29064
+> ^C[ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.052 MB perf.data (866 samples) ]
+> 
+> [root@ssdandy ~]# perf report --task
+> #      pid      tid     ppid  comm
+>          0        0       -1 |swapper
+>      29064    29064       -1 |cyclictest
+>      29064    29065       -1 |cyclictest
+>      29064    29066       -1 |cyclictest
+>      29064    29067       -1 |cyclictest
+>      29064    29068       -1 |cyclictest
+>      29064    29069       -1 |cyclictest
+>      29064    29070       -1 |cyclictest
+>      29064    29071       -1 |cyclictest
+>      29064    29072       -1 |cyclictest
+> [root@ssdandy ~]#
 
-That indeed covers the last scenario I was wondering about. Thanks Alan!
+"ftrace" is inside the kernel. But you could specify all those PIDs in
+the set_ftrace_pid and set_event_pid files, and they will be traced. If
+you want to trace the children of those PIDs, you would need to set the
+options function function-fork and event-fork respectively. And then
+any time a process with a pid in the set_ftrace_pid or set_event_pid
+file forks, its child will also be added to that file and it too will
+be traced. If the fork options are set, then when a task exits, its pid
+will be removed from the file.
 
-Mathieu
+ echo 1 > options/function-fork
+ echo 1 > options/event-fork
+
 
 > 
-> Alan Stern
+> If we are interested only on the thread running on CPU3 we can do:
+> 
+> [root@ssdandy ~]# perf report --task
+> #      pid      tid     ppid  comm
+>          0        0       -1 |swapper
+>      29064    29064       -1 |cyclictest
+>      29064    29068       -1 |cyclictest
+> [root@ssdandy ~]#
+> 
+> The first 29064 is just to have info on who created 29068, i.e.:
+> 
+> Its just the synthesized info for 29068 creator:
+> 
+> [root@ssdandy ~]# perf report -D | grep -w 29064/29064
+> 0 0x4690 [0x30]: PERF_RECORD_COMM: cyclictest:29064/29064
+> 0 0x46c0 [0x70]: PERF_RECORD_MMAP2 29064/29064: [0x400000(0xa000) @ 0 fd:00 136246288 0]: r-xp /usr/bin/cyclictest
+> 0 0x4730 [0x80]: PERF_RECORD_MMAP2 29064/29064: [0x7f990f505000(0x15000) @ 0 fd:00 201479398 0]: r-xp /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+> 0 0x47b0 [0x70]: PERF_RECORD_MMAP2 29064/29064: [0x7f990f71b000(0x1c3000) @ 0 fd:00 201334455 0]: r-xp /usr/lib64/libc-2.17.so
+> 0 0x4820 [0x78]: PERF_RECORD_MMAP2 29064/29064: [0x7f990fae9000(0xa000) @ 0 fd:00 204604380 0]: r-xp /usr/lib64/libnuma.so.1.0.0
+> 0 0x4898 [0x78]: PERF_RECORD_MMAP2 29064/29064: [0x7f990fcf5000(0x17000) @ 0 fd:00 201335636 0]: r-xp /usr/lib64/libpthread-2.17.so
+> 0 0x4910 [0x78]: PERF_RECORD_MMAP2 29064/29064: [0x7f990ff11000(0x7000) @ 0 fd:00 201335640 0]: r-xp /usr/lib64/librt-2.17.so
+> 0 0x4988 [0x70]: PERF_RECORD_MMAP2 29064/29064: [0x7f9910119000(0x22000) @ 0 fd:00 203595299 0]: r-xp /usr/lib64/ld-2.17.so
+> 0 0x49f8 [0x60]: PERF_RECORD_MMAP2 29064/29064: [0x7fff0b52d000(0x2000) @ 0 00:00 0 0]: r-xp [vdso]
+> 0 0x4a58 [0x68]: PERF_RECORD_MMAP2 29064/29064: [0xffffffffff600000(0x1000) @ 0 00:00 0 0]: r-xp [vsyscall]
+> [root@ssdandy ~]#
+> 
+> No PERF_RECORD_SAMPLEs.
+> 
+> Those are only for:
+> 
+> [root@ssdandy ~]# perf report -D | grep PERF_RECORD_SAMPLE | head -5
+> 147224656598815 0x4ac0 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 1 addr: 0
+> 147224656606270 0x4ae8 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 1 addr: 0
+> 147224656611284 0x4b10 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 5 addr: 0
+> 147224656616225 0x4b38 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 35 addr: 0
+> 147224656621152 0x4b60 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 29064/29068: 0xffffffffa8e5b568 period: 252 addr: 0
+> [root@ssdandy ~]#
+> 
+> [root@ssdandy ~]# perf report -D | grep PERF_RECORD_SAMPLE | cut -d: -f3 | sort -u
+>  29064/29068
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+The above can somewhat be done in trace-cmd, but not fully. But that's
+all userspace commands, nothing with the kernel.
+
+> [root@ssdandy ~]#
+> 
+> Is there a way in ftrace to ask for a pid and its children? Pre-existing
+> and and new ones the --pid specified will create after we start
+> monitoring?
+> 
+
+As described above, yes. :-)
+
+-- Steve
