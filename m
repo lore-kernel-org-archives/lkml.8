@@ -2,333 +2,339 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A7CC4346F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EEEC2BA4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B927C21744
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA902176B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nof+laVG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZixpRszN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgGQG13 (ORCPT
+        id S1728005AbgGQG1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53900 "EHLO
+        Fri, 17 Jul 2020 02:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbgGQGYK (ORCPT
+        with ESMTP id S1726962AbgGQG1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:24:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BBBC08C5DC;
-        Thu, 16 Jul 2020 23:24:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=WmIks9a/wTCxBPMm3mUIfDve+aMKbFTuVLjUhhuXkXc=; b=nof+laVGHZXP6VygkDkDi1sX2z
-        Mk8QWBGUizyyZ08eiROiRxQMquusa4e6/lJj2qbGiP4AoZGX9IibG3S/FG/NaMX99/JgP0ITNi8sa
-        DkuxO72q+UdcdP1AApoBqnu83WPf3wLeVDxzDPJ/LCqW4IShRc4kh6BFVhiiIOC0OKDXnYCmAWNLt
-        29AF8h6c87CJ0kelQay90KhSZli451wfXXgBVKhGEzQxj3ufGXCo0dlzS4ofOZPMVJVNiI22i0VtT
-        JNJyXNlzEB6kS5PBA5zsLOteduzRmslRru/pM6xkSqZaXbe65M5pwQaq91g7RffKtF+nyl4X994dh
-        dsrkuolQ==;
-Received: from [2001:4bb8:105:4a81:3772:912d:640:e6c6] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwJmm-00051x-2i; Fri, 17 Jul 2020 06:23:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Chas Williams <3chas3@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, mptcp@lists.01.org
-Subject: [PATCH 04/22] net: simplify cBPF setsockopt compat handling
-Date:   Fri, 17 Jul 2020 08:23:13 +0200
-Message-Id: <20200717062331.691152-5-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200717062331.691152-1-hch@lst.de>
-References: <20200717062331.691152-1-hch@lst.de>
+        Fri, 17 Jul 2020 02:27:39 -0400
+Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754E3C061755;
+        Thu, 16 Jul 2020 23:27:39 -0700 (PDT)
+Received: by mail-qv1-xf31.google.com with SMTP id dm12so3821754qvb.9;
+        Thu, 16 Jul 2020 23:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A3qqFF9yd3EKW/+nagLOaGgu79oDzMUA/VxmH16ttug=;
+        b=ZixpRszNUNTbAzJhX/ocpWCSZ9iF+5uvw17oQTar95O/SvFbUASypBidCkEVY9HMLF
+         SwkhIbNuNlOszMxEazsN/bF20wXIYRLh5nkCTA//BjMDxuqAP8oLeiSKFLnfaj4PHWUo
+         jnjLHvlOwajtqkaBjc2ET2Vns9Gm/fgMocFZI7DGd/U3sSqo+fmqVDwMWu1GxqQ+NKew
+         tRDeYwRvL4co/lxvjH/JBzB/4UMCJPi+DcmJe1vgxnmpNtyOFi6XL9WYPW/a0umAKqlq
+         9hSP7eF5XH2TM7zRdeHWoTe+1ASmGZcjkr0HI32/qFbU050sZtA9cxw34YzFDdRDeR/l
+         j2fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A3qqFF9yd3EKW/+nagLOaGgu79oDzMUA/VxmH16ttug=;
+        b=P4gb6TFYFgJFQiXSBe1VydgUSQ1XQ+VlhZmeXUUXsI/xx43d7QxOmtVWpm81ce0oM4
+         ckG77RGv41Zc5Zssuza179KbArAOEprqQw5RULrkj0uRJILAv46uF72imI6hkB8eWhFW
+         f3D9XGH15aCLY3Vo3++2OfzLGSPiX/Zv6QLBSVXftfXyI4ATNRelT0GWEAQc1gNR/uDB
+         vv286sXOTAvbdt329fUPTq2FoBY+rbVQftWYdA0cKxe5gx19Zq2H1rIK4tjVl6l6nBkv
+         eKq+A2+UlwX0JEPR+GBqUV/9g4yC73VP2sdpTDWah7PHKg+uOBLbvgTXCjej/LvCCF1i
+         wqvw==
+X-Gm-Message-State: AOAM533zatl2Ro2odTZdzAhMfCVh53E27YL0F+uPkxPRYJdUYIB1ZC50
+        LeMycu8mFOstm/HD8qlWE3fi3qF34uRVFYOc+EjKGWIX
+X-Google-Smtp-Source: ABdhPJwZWWO4WoZvg8RmUJxWGouo5QxAZHQLboX1iGjpX0vnF24PIbk3GO27rwGBsGCQZvrN9AnVJoO4Auo5M6hOVfQ=
+X-Received: by 2002:a05:6214:1586:: with SMTP id m6mr7428351qvw.171.1594967258230;
+ Thu, 16 Jul 2020 23:27:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200717144656.4bdbf81f@canb.auug.org.au>
+In-Reply-To: <20200717144656.4bdbf81f@canb.auug.org.au>
+From:   Uros Bizjak <ubizjak@gmail.com>
+Date:   Fri, 17 Jul 2020 08:27:27 +0200
+Message-ID: <CAFULd4Ye2d-8BY7aY+_2tYwcXsfSCe3O6aJ4LF0KhvWTjVt0rA@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the tip tree with the crypto tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto List <linux-crypto@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper that copies either a native or compat bpf_fprog from
-userspace after verifying the length, and remove the compat setsockopt
-handlers that now aren't required.
+On Fri, Jul 17, 2020 at 6:47 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the tip tree got a conflict in:
+>
+>   arch/x86/include/asm/inst.h
+>
+> between commit:
+>
+>   d7866e503bdc ("crypto: x86 - Remove include/asm/inst.h")
+>
+> from the crypto tree and commit:
+>
+>   eaad981291ee ("x86/entry/64: Introduce the FIND_PERCPU_BASE macro")
+>
+> from the tip tree.
+>
+> I fixed it up (I brought the file back but removed what the crypto tree
+> no longer needed - see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>
+> I think if the crypto tree brought back this file as well (even without
+> the RDPID macro, it would make this conflict much more manageable.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/filter.h |  4 ++--
- include/net/compat.h   |  1 -
- net/compat.c           | 45 +-----------------------------------------
- net/core/filter.c      | 23 +++++++++++++++++++++
- net/core/sock.c        | 30 ++++++++++------------------
- net/packet/af_packet.c | 33 ++++---------------------------
- 6 files changed, 40 insertions(+), 96 deletions(-)
+I will prepare a v2 that leaves needed part of inst.h.
 
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 0b0144752d780a..4d049c8e1fbeaa 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -502,13 +502,11 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
- 		offsetof(TYPE, MEMBER);						\
- 	})
- 
--#ifdef CONFIG_COMPAT
- /* A struct sock_filter is architecture independent. */
- struct compat_sock_fprog {
- 	u16		len;
- 	compat_uptr_t	filter;	/* struct sock_filter * */
- };
--#endif
- 
- struct sock_fprog_kern {
- 	u16			len;
-@@ -1278,4 +1276,6 @@ struct bpf_sockopt_kern {
- 	s32		retval;
- };
- 
-+int copy_bpf_fprog_from_user(struct sock_fprog *dst, void __user *src, int len);
-+
- #endif /* __LINUX_FILTER_H__ */
-diff --git a/include/net/compat.h b/include/net/compat.h
-index f241666117d88c..745db0d605b62b 100644
---- a/include/net/compat.h
-+++ b/include/net/compat.h
-@@ -61,7 +61,6 @@ int __get_compat_msghdr(struct msghdr *kmsg, struct compat_msghdr __user *umsg,
- 			compat_size_t *len);
- int get_compat_msghdr(struct msghdr *, struct compat_msghdr __user *,
- 		      struct sockaddr __user **, struct iovec **);
--struct sock_fprog __user *get_compat_bpf_fprog(char __user *optval);
- int put_cmsg_compat(struct msghdr*, int, int, int, void *);
- 
- int cmsghdr_from_user_compat_to_kern(struct msghdr *, struct sock *,
-diff --git a/net/compat.c b/net/compat.c
-index 5e3041a2c37d4d..3e6c2c5ff2609c 100644
---- a/net/compat.c
-+++ b/net/compat.c
-@@ -335,49 +335,6 @@ void scm_detach_fds_compat(struct msghdr *kmsg, struct scm_cookie *scm)
- 	__scm_destroy(scm);
- }
- 
--/* allocate a 64-bit sock_fprog on the user stack for duration of syscall. */
--struct sock_fprog __user *get_compat_bpf_fprog(char __user *optval)
--{
--	struct compat_sock_fprog __user *fprog32 = (struct compat_sock_fprog __user *)optval;
--	struct sock_fprog __user *kfprog = compat_alloc_user_space(sizeof(struct sock_fprog));
--	struct compat_sock_fprog f32;
--	struct sock_fprog f;
--
--	if (copy_from_user(&f32, fprog32, sizeof(*fprog32)))
--		return NULL;
--	memset(&f, 0, sizeof(f));
--	f.len = f32.len;
--	f.filter = compat_ptr(f32.filter);
--	if (copy_to_user(kfprog, &f, sizeof(struct sock_fprog)))
--		return NULL;
--
--	return kfprog;
--}
--EXPORT_SYMBOL_GPL(get_compat_bpf_fprog);
--
--static int do_set_attach_filter(struct socket *sock, int level, int optname,
--				char __user *optval, unsigned int optlen)
--{
--	struct sock_fprog __user *kfprog;
--
--	kfprog = get_compat_bpf_fprog(optval);
--	if (!kfprog)
--		return -EFAULT;
--
--	return sock_setsockopt(sock, level, optname, (char __user *)kfprog,
--			      sizeof(struct sock_fprog));
--}
--
--static int compat_sock_setsockopt(struct socket *sock, int level, int optname,
--				char __user *optval, unsigned int optlen)
--{
--	if (optname == SO_ATTACH_FILTER ||
--	    optname == SO_ATTACH_REUSEPORT_CBPF)
--		return do_set_attach_filter(sock, level, optname,
--					    optval, optlen);
--	return sock_setsockopt(sock, level, optname, optval, optlen);
--}
--
- static int __compat_sys_setsockopt(int fd, int level, int optname,
- 				   char __user *optval, unsigned int optlen)
- {
-@@ -396,7 +353,7 @@ static int __compat_sys_setsockopt(int fd, int level, int optname,
- 		}
- 
- 		if (level == SOL_SOCKET)
--			err = compat_sock_setsockopt(sock, level,
-+			err = sock_setsockopt(sock, level,
- 					optname, optval, optlen);
- 		else if (sock->ops->compat_setsockopt)
- 			err = sock->ops->compat_setsockopt(sock, level,
-diff --git a/net/core/filter.c b/net/core/filter.c
-index bdd2382e655d85..2bf6624796d86f 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -77,6 +77,29 @@
- #include <net/transp_v6.h>
- #include <linux/btf_ids.h>
- 
-+int copy_bpf_fprog_from_user(struct sock_fprog *dst, void __user *src, int len)
-+{
-+	if (in_compat_syscall()) {
-+		struct compat_sock_fprog f32;
-+
-+		if (len != sizeof(f32))
-+			return -EINVAL;
-+		if (copy_from_user(&f32, src, sizeof(f32)))
-+			return -EFAULT;
-+		memset(dst, 0, sizeof(*dst));
-+		dst->len = f32.len;
-+		dst->filter = compat_ptr(f32.filter);
-+	} else {
-+		if (len != sizeof(*dst))
-+			return -EINVAL;
-+		if (copy_from_user(dst, src, sizeof(*dst)))
-+			return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(copy_bpf_fprog_from_user);
-+
- /**
-  *	sk_filter_trim_cap - run a packet through a socket filter
-  *	@sk: sock associated with &sk_buff
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 11d6f77dd56207..e085df79482520 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1059,19 +1059,14 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
- 		ret = sock_set_timeout(&sk->sk_sndtimeo, optval, optlen, optname == SO_SNDTIMEO_OLD);
- 		break;
- 
--	case SO_ATTACH_FILTER:
--		ret = -EINVAL;
--		if (optlen == sizeof(struct sock_fprog)) {
--			struct sock_fprog fprog;
--
--			ret = -EFAULT;
--			if (copy_from_user(&fprog, optval, sizeof(fprog)))
--				break;
-+	case SO_ATTACH_FILTER: {
-+		struct sock_fprog fprog;
- 
-+		ret = copy_bpf_fprog_from_user(&fprog, optval, optlen);
-+		if (!ret)
- 			ret = sk_attach_filter(&fprog, sk);
--		}
- 		break;
--
-+	}
- 	case SO_ATTACH_BPF:
- 		ret = -EINVAL;
- 		if (optlen == sizeof(u32)) {
-@@ -1085,19 +1080,14 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
- 		}
- 		break;
- 
--	case SO_ATTACH_REUSEPORT_CBPF:
--		ret = -EINVAL;
--		if (optlen == sizeof(struct sock_fprog)) {
--			struct sock_fprog fprog;
--
--			ret = -EFAULT;
--			if (copy_from_user(&fprog, optval, sizeof(fprog)))
--				break;
-+	case SO_ATTACH_REUSEPORT_CBPF: {
-+		struct sock_fprog fprog;
- 
-+		ret = copy_bpf_fprog_from_user(&fprog, optval, optlen);
-+		if (!ret)
- 			ret = sk_reuseport_attach_filter(&fprog, sk);
--		}
- 		break;
--
-+	}
- 	case SO_ATTACH_REUSEPORT_EBPF:
- 		ret = -EINVAL;
- 		if (optlen == sizeof(u32)) {
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 781fee93b7d5e3..35aee9e980536d 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -1545,10 +1545,10 @@ static int fanout_set_data_cbpf(struct packet_sock *po, char __user *data,
- 
- 	if (sock_flag(&po->sk, SOCK_FILTER_LOCKED))
- 		return -EPERM;
--	if (len != sizeof(fprog))
--		return -EINVAL;
--	if (copy_from_user(&fprog, data, len))
--		return -EFAULT;
-+
-+	ret = copy_bpf_fprog_from_user(&fprog, data, len);
-+	if (ret)
-+		return ret;
- 
- 	ret = bpf_prog_create_from_user(&new, &fprog, NULL, false);
- 	if (ret)
-@@ -4040,28 +4040,6 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
- 	return 0;
- }
- 
--
--#ifdef CONFIG_COMPAT
--static int compat_packet_setsockopt(struct socket *sock, int level, int optname,
--				    char __user *optval, unsigned int optlen)
--{
--	struct packet_sock *po = pkt_sk(sock->sk);
--
--	if (level != SOL_PACKET)
--		return -ENOPROTOOPT;
--
--	if (optname == PACKET_FANOUT_DATA &&
--	    po->fanout && po->fanout->type == PACKET_FANOUT_CBPF) {
--		optval = (char __user *)get_compat_bpf_fprog(optval);
--		if (!optval)
--			return -EFAULT;
--		optlen = sizeof(struct sock_fprog);
--	}
--
--	return packet_setsockopt(sock, level, optname, optval, optlen);
--}
--#endif
--
- static int packet_notifier(struct notifier_block *this,
- 			   unsigned long msg, void *ptr)
- {
-@@ -4549,9 +4527,6 @@ static const struct proto_ops packet_ops = {
- 	.shutdown =	sock_no_shutdown,
- 	.setsockopt =	packet_setsockopt,
- 	.getsockopt =	packet_getsockopt,
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt = compat_packet_setsockopt,
--#endif
- 	.sendmsg =	packet_sendmsg,
- 	.recvmsg =	packet_recvmsg,
- 	.mmap =		packet_mmap,
--- 
-2.27.0
+Uros.
 
+> /* SPDX-License-Identifier: GPL-2.0 */
+> /*
+>  * Generate .byte code for some instructions not supported by old
+>  * binutils.
+>  */
+> #ifndef X86_ASM_INST_H
+> #define X86_ASM_INST_H
+>
+> #ifdef __ASSEMBLY__
+>
+> #define REG_NUM_INVALID         100
+>
+> #define REG_TYPE_R32            0
+> #define REG_TYPE_R64            1
+> #define REG_TYPE_XMM            2
+> #define REG_TYPE_INVALID        100
+>
+>         .macro R32_NUM opd r32
+>         \opd = REG_NUM_INVALID
+>         .ifc \r32,%eax
+>         \opd = 0
+>         .endif
+>         .ifc \r32,%ecx
+>         \opd = 1
+>         .endif
+>         .ifc \r32,%edx
+>         \opd = 2
+>         .endif
+>         .ifc \r32,%ebx
+>         \opd = 3
+>         .endif
+>         .ifc \r32,%esp
+>         \opd = 4
+>         .endif
+>         .ifc \r32,%ebp
+>         \opd = 5
+>         .endif
+>         .ifc \r32,%esi
+>         \opd = 6
+>         .endif
+>         .ifc \r32,%edi
+>         \opd = 7
+>         .endif
+> #ifdef CONFIG_X86_64
+>         .ifc \r32,%r8d
+>         \opd = 8
+>         .endif
+>         .ifc \r32,%r9d
+>         \opd = 9
+>         .endif
+>         .ifc \r32,%r10d
+>         \opd = 10
+>         .endif
+>         .ifc \r32,%r11d
+>         \opd = 11
+>         .endif
+>         .ifc \r32,%r12d
+>         \opd = 12
+>         .endif
+>         .ifc \r32,%r13d
+>         \opd = 13
+>         .endif
+>         .ifc \r32,%r14d
+>         \opd = 14
+>         .endif
+>         .ifc \r32,%r15d
+>         \opd = 15
+>         .endif
+> #endif
+>         .endm
+>
+>         .macro R64_NUM opd r64
+>         \opd = REG_NUM_INVALID
+> #ifdef CONFIG_X86_64
+>         .ifc \r64,%rax
+>         \opd = 0
+>         .endif
+>         .ifc \r64,%rcx
+>         \opd = 1
+>         .endif
+>         .ifc \r64,%rdx
+>         \opd = 2
+>         .endif
+>         .ifc \r64,%rbx
+>         \opd = 3
+>         .endif
+>         .ifc \r64,%rsp
+>         \opd = 4
+>         .endif
+>         .ifc \r64,%rbp
+>         \opd = 5
+>         .endif
+>         .ifc \r64,%rsi
+>         \opd = 6
+>         .endif
+>         .ifc \r64,%rdi
+>         \opd = 7
+>         .endif
+>         .ifc \r64,%r8
+>         \opd = 8
+>         .endif
+>         .ifc \r64,%r9
+>         \opd = 9
+>         .endif
+>         .ifc \r64,%r10
+>         \opd = 10
+>         .endif
+>         .ifc \r64,%r11
+>         \opd = 11
+>         .endif
+>         .ifc \r64,%r12
+>         \opd = 12
+>         .endif
+>         .ifc \r64,%r13
+>         \opd = 13
+>         .endif
+>         .ifc \r64,%r14
+>         \opd = 14
+>         .endif
+>         .ifc \r64,%r15
+>         \opd = 15
+>         .endif
+> #endif
+>         .endm
+>
+>         .macro XMM_NUM opd xmm
+>         \opd = REG_NUM_INVALID
+>         .ifc \xmm,%xmm0
+>         \opd = 0
+>         .endif
+>         .ifc \xmm,%xmm1
+>         \opd = 1
+>         .endif
+>         .ifc \xmm,%xmm2
+>         \opd = 2
+>         .endif
+>         .ifc \xmm,%xmm3
+>         \opd = 3
+>         .endif
+>         .ifc \xmm,%xmm4
+>         \opd = 4
+>         .endif
+>         .ifc \xmm,%xmm5
+>         \opd = 5
+>         .endif
+>         .ifc \xmm,%xmm6
+>         \opd = 6
+>         .endif
+>         .ifc \xmm,%xmm7
+>         \opd = 7
+>         .endif
+>         .ifc \xmm,%xmm8
+>         \opd = 8
+>         .endif
+>         .ifc \xmm,%xmm9
+>         \opd = 9
+>         .endif
+>         .ifc \xmm,%xmm10
+>         \opd = 10
+>         .endif
+>         .ifc \xmm,%xmm11
+>         \opd = 11
+>         .endif
+>         .ifc \xmm,%xmm12
+>         \opd = 12
+>         .endif
+>         .ifc \xmm,%xmm13
+>         \opd = 13
+>         .endif
+>         .ifc \xmm,%xmm14
+>         \opd = 14
+>         .endif
+>         .ifc \xmm,%xmm15
+>         \opd = 15
+>         .endif
+>         .endm
+>
+>         .macro REG_TYPE type reg
+>         R32_NUM reg_type_r32 \reg
+>         R64_NUM reg_type_r64 \reg
+>         XMM_NUM reg_type_xmm \reg
+>         .if reg_type_r64 <> REG_NUM_INVALID
+>         \type = REG_TYPE_R64
+>         .elseif reg_type_r32 <> REG_NUM_INVALID
+>         \type = REG_TYPE_R32
+>         .elseif reg_type_xmm <> REG_NUM_INVALID
+>         \type = REG_TYPE_XMM
+>         .else
+>         \type = REG_TYPE_INVALID
+>         .endif
+>         .endm
+>
+>         .macro PFX_OPD_SIZE
+>         .byte 0x66
+>         .endm
+>
+>         .macro PFX_REX opd1 opd2 W=0
+>         .if ((\opd1 | \opd2) & 8) || \W
+>         .byte 0x40 | ((\opd1 & 8) >> 3) | ((\opd2 & 8) >> 1) | (\W << 3)
+>         .endif
+>         .endm
+>
+>         .macro MODRM mod opd1 opd2
+>         .byte \mod | (\opd1 & 7) | ((\opd2 & 7) << 3)
+>         .endm
+>
+> .macro RDPID opd
+>         REG_TYPE rdpid_opd_type \opd
+>         .if rdpid_opd_type == REG_TYPE_R64
+>         R64_NUM rdpid_opd \opd
+>         .else
+>         R32_NUM rdpid_opd \opd
+>         .endif
+>         .byte 0xf3
+>         .if rdpid_opd > 7
+>         PFX_REX rdpid_opd 0
+>         .endif
+>         .byte 0x0f, 0xc7
+>         MODRM 0xc0 rdpid_opd 0x7
+> .endm
+> #endif
+>
+> #endif
+>
+> --
+> Cheers,
+> Stephen Rothwell
