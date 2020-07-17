@@ -2,340 +2,162 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A88FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3B032071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:47:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iQ2hIQwV"
+	by mail.kernel.org (Postfix) with ESMTP id 2B12A2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594961346;
+	bh=L8lqW9YWkE3hJz0DUPCXPBOUMOfpaEoI1neX+lDtyvg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VdkaECkUlsVGdkhmjP9DIlrZSieZnze8eSLKnN56NVG2HQuI/ov4YR+wSmN3GSZEP
+	 W0m3WYeSI7sQsDMYoSZXioHqlIHQHO8Ob0U3DVsp0E+osMCjXFXEtCn2HjIQzWbQh/
+	 xz6rEMEDhrDRVFxbNDnwITXsaqdk4OXxX0EJIrAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgGQErF (ORCPT
+        id S1726512AbgGQEtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:47:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgGQErF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:47:05 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F70C061755;
-        Thu, 16 Jul 2020 21:47:04 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 17 Jul 2020 00:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbgGQEtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 00:49:04 -0400
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B7JW62mKtz9sRW;
-        Fri, 17 Jul 2020 14:46:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594961221;
-        bh=oWCQWQTnYs63n2+4mU4tRGhEi0v9vBwzy4mhYDlLzps=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iQ2hIQwVLN+ppQzJbVnKC6uriZjC7QqgkxHAEoqIh0fmFFDhbtf7Jb+ol2sUiSifj
-         knTnZj110bd4oQuy/ACTs0Qt1JDInuJ0lSKNj/fh4m5H/YHs1sJpprb/uO37cdQwyT
-         ANJigPuKeyQAC3OaF5ePGeHwV2rd3FEUQbANJ+v0+kyOGsdOkXDEiYNAG5S/hntDs2
-         /Qo2918at39ql2GmR8R6IPX5f1729epafO0mmHPhCX2W+GvbMzu7npU2REoD2Yil+G
-         WW1f1xAvXW5fdHbk64OGwfvguS6S4RlFlUG1VYvBjzE3kEcGP+OhzMrNuhOpdEu4dH
-         jfQeeFS7IwjSQ==
-Date:   Fri, 17 Jul 2020 14:46:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Uros Bizjak <ubizjak@gmail.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: linux-next: manual merge of the tip tree with the crypto tree
-Message-ID: <20200717144656.4bdbf81f@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 56D7D20737
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594961343;
+        bh=L8lqW9YWkE3hJz0DUPCXPBOUMOfpaEoI1neX+lDtyvg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=z+rxNg5B7H9LBiuCEGSsYkwL9ZF4xQttstyNOv5daewr6uRVvV0RTLNULbosy1E9N
+         Vhu5hMpGIe1oZVg3fh4HYZG85X2rKvhv0B8b0BzkagdSZSIQEkWUvdZylWNngfYD+x
+         bcy8bAPyvAY6E0fcQPXj1THHopL4WDv956NUyA3Y=
+Received: by mail-wr1-f48.google.com with SMTP id q5so9624820wru.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:49:03 -0700 (PDT)
+X-Gm-Message-State: AOAM5335TnnZK8j8HTp8z3zRXUfczxgPJkkQ6RdejsfnWvQppV1HlRHP
+        n9Ia2wjaiCVBTgGSJCe0iJdonnZb3rSimt4uQzPIwg==
+X-Google-Smtp-Source: ABdhPJzQESTGfxYiW9og3fovzkL8ddBdcbKVxaRNke/i3V8sGRfmoTqbfEkdzzQ6x54hKLx40ei42WzpRDA0hhz0RHM=
+X-Received: by 2002:adf:f707:: with SMTP id r7mr8291178wrp.70.1594961341827;
+ Thu, 16 Jul 2020 21:49:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qFh0fIP7XemDn+0mQcZbzqg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200716193141.4068476-1-krisman@collabora.com>
+ <20200716193141.4068476-2-krisman@collabora.com> <CALCETrWdCN5KsRUkrb8VoYGRBhy71P-MAHGWhuJ5y4Z3vByyvg@mail.gmail.com>
+ <87wo32j394.fsf@collabora.com>
+In-Reply-To: <87wo32j394.fsf@collabora.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 16 Jul 2020 21:48:50 -0700
+X-Gmail-Original-Message-ID: <CALCETrUOe=a35rb-o44vLOSHmQ45EuommwoL2quowzw3h+J2gg@mail.gmail.com>
+Message-ID: <CALCETrUOe=a35rb-o44vLOSHmQ45EuommwoL2quowzw3h+J2gg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] kernel: Implement selective syscall userspace redirection
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com,
+        Matthew Wilcox <willy@infradead.org>,
+        Paul Gofman <gofmanp@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qFh0fIP7XemDn+0mQcZbzqg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jul 16, 2020 at 7:15 PM Gabriel Krisman Bertazi
+<krisman@collabora.com> wrote:
+>
+> Andy Lutomirski <luto@kernel.org> writes:
+>
+> > On Thu, Jul 16, 2020 at 12:31 PM Gabriel Krisman Bertazi
+> > <krisman@collabora.com> wrote:
+> >>
+> >
+> > This is quite nice.  I have a few comments, though:
+> >
+> > You mentioned rt_sigreturn().  Should this automatically exempt the
+> > kernel-provided signal restorer on architectures (e.g. x86_32) that
+> > provide one?
+>
+> That seems reasonable.  Not sure how easy it is to do it, though.
 
-Hi all,
+For better or for worse, it's currently straightforward because the code is:
 
-Today's linux-next merge of the tip tree got a conflict in:
+__kernel_sigreturn:
+.LSTART_sigreturn:
+        popl %eax               /* XXX does this mean it needs unwind info? */
+        movl $__NR_sigreturn, %eax
+        SYSCALL_ENTER_KERNEL
 
-  arch/x86/include/asm/inst.h
+and SYSCALL_ENTER_KERNEL is hardwired as int $0x80.  (The latter is
+probably my fault, for better or for worse.)  So this would change to:
 
-between commit:
+__vdso32_sigreturn_syscall:
+  SYSCALL_ENTER_KERNEL
 
-  d7866e503bdc ("crypto: x86 - Remove include/asm/inst.h")
+and vdso2c would wire up __vdso32_sigreturn_syscall.  Then there would
+be something like:
 
-from the crypto tree and commit:
+bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs);
 
-  eaad981291ee ("x86/entry/64: Introduce the FIND_PERCPU_BASE macro")
+and that would be that.  Does anyone have an opinion as to whether
+this is a good idea?  Modern glibc shouldn't be using this mechanism,
+I think, but I won't swear to it.
 
-from the tip tree.
+>
+> > The amount of syscall entry wiring that arches need to do is IMO
+> > already a bit out of hand.  Should we instead rename TIF_SECCOMP to
+> > TIF_SYSCALL_INTERCEPTION and have one generic callback that handles
+> > seccomp and this new thing?
+>
+> Considering the previous suggestion from Kees to hide it inside the
+> tracehook and Thomas rework of this path, I'm not sure what is the best
+> solution here, but some rework of these flags is due.  Thomas suggested
+> expanding these flags to 64 bits and having some arch specific and
+> arch-agnostic flags.  With the storage expansion and arch-agnostic flags,
+> would this still be desirable?
 
-I fixed it up (I brought the file back but removed what the crypto tree
-no longer needed - see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+I think it would be desirable to consolidate this to avoid having
+multiple arches need to separately wire up all of these mechanisms.
+I'm not sure that the initial upstream implementation needs this, but
+it might be nice to support this out of the box on all arches with
+seccomp support.
 
-I think if the crypto tree brought back this file as well (even without
-the RDPID macro, it would make this conflict much more manageable.
+>
+> >> +int do_syscall_user_dispatch(struct pt_regs *regs)
+> >> +{
+> >> +       struct syscall_user_dispatch *sd = &current->syscall_dispatch;
+> >> +       unsigned long ip = instruction_pointer(regs);
+> >> +       char state;
+> >> +
+> >> +       if (likely(ip >= sd->dispatcher_start && ip <= sd->dispatcher_end))
+> >> +               return 0;
+> >> +
+> >> +       if (likely(sd->selector)) {
+> >> +               if (unlikely(__get_user(state, sd->selector)))
+> >> +                       do_exit(SIGSEGV);
+> >> +
+> >> +               if (likely(state == 0))
+> >> +                       return 0;
+> >> +
+> >> +               if (state != 1)
+> >> +                       do_exit(SIGSEGV);
+> >
+> > This seems a bit extreme and hard to debug if it ever happens.
+>
+> Makes sense, but I don't see a better way to return the error here.
+> Maybe a SIGSYS with a different si_errno?  Alternatively, we could
+> revert to the previous behavior of allowing syscalls on state != 0, that
+> existed in v1.  What do you think?
+>
 
-/* SPDX-License-Identifier: GPL-2.0 */
-/*
- * Generate .byte code for some instructions not supported by old
- * binutils.
- */
-#ifndef X86_ASM_INST_H
-#define X86_ASM_INST_H
+I don't have a strong opinion.  SIGSYS with different si_errno is
+probably reasonable.
 
-#ifdef __ASSEMBLY__
-
-#define REG_NUM_INVALID		100
-
-#define REG_TYPE_R32		0
-#define REG_TYPE_R64		1
-#define REG_TYPE_XMM		2
-#define REG_TYPE_INVALID	100
-
-	.macro R32_NUM opd r32
-	\opd =3D REG_NUM_INVALID
-	.ifc \r32,%eax
-	\opd =3D 0
-	.endif
-	.ifc \r32,%ecx
-	\opd =3D 1
-	.endif
-	.ifc \r32,%edx
-	\opd =3D 2
-	.endif
-	.ifc \r32,%ebx
-	\opd =3D 3
-	.endif
-	.ifc \r32,%esp
-	\opd =3D 4
-	.endif
-	.ifc \r32,%ebp
-	\opd =3D 5
-	.endif
-	.ifc \r32,%esi
-	\opd =3D 6
-	.endif
-	.ifc \r32,%edi
-	\opd =3D 7
-	.endif
-#ifdef CONFIG_X86_64
-	.ifc \r32,%r8d
-	\opd =3D 8
-	.endif
-	.ifc \r32,%r9d
-	\opd =3D 9
-	.endif
-	.ifc \r32,%r10d
-	\opd =3D 10
-	.endif
-	.ifc \r32,%r11d
-	\opd =3D 11
-	.endif
-	.ifc \r32,%r12d
-	\opd =3D 12
-	.endif
-	.ifc \r32,%r13d
-	\opd =3D 13
-	.endif
-	.ifc \r32,%r14d
-	\opd =3D 14
-	.endif
-	.ifc \r32,%r15d
-	\opd =3D 15
-	.endif
-#endif
-	.endm
-
-	.macro R64_NUM opd r64
-	\opd =3D REG_NUM_INVALID
-#ifdef CONFIG_X86_64
-	.ifc \r64,%rax
-	\opd =3D 0
-	.endif
-	.ifc \r64,%rcx
-	\opd =3D 1
-	.endif
-	.ifc \r64,%rdx
-	\opd =3D 2
-	.endif
-	.ifc \r64,%rbx
-	\opd =3D 3
-	.endif
-	.ifc \r64,%rsp
-	\opd =3D 4
-	.endif
-	.ifc \r64,%rbp
-	\opd =3D 5
-	.endif
-	.ifc \r64,%rsi
-	\opd =3D 6
-	.endif
-	.ifc \r64,%rdi
-	\opd =3D 7
-	.endif
-	.ifc \r64,%r8
-	\opd =3D 8
-	.endif
-	.ifc \r64,%r9
-	\opd =3D 9
-	.endif
-	.ifc \r64,%r10
-	\opd =3D 10
-	.endif
-	.ifc \r64,%r11
-	\opd =3D 11
-	.endif
-	.ifc \r64,%r12
-	\opd =3D 12
-	.endif
-	.ifc \r64,%r13
-	\opd =3D 13
-	.endif
-	.ifc \r64,%r14
-	\opd =3D 14
-	.endif
-	.ifc \r64,%r15
-	\opd =3D 15
-	.endif
-#endif
-	.endm
-
-	.macro XMM_NUM opd xmm
-	\opd =3D REG_NUM_INVALID
-	.ifc \xmm,%xmm0
-	\opd =3D 0
-	.endif
-	.ifc \xmm,%xmm1
-	\opd =3D 1
-	.endif
-	.ifc \xmm,%xmm2
-	\opd =3D 2
-	.endif
-	.ifc \xmm,%xmm3
-	\opd =3D 3
-	.endif
-	.ifc \xmm,%xmm4
-	\opd =3D 4
-	.endif
-	.ifc \xmm,%xmm5
-	\opd =3D 5
-	.endif
-	.ifc \xmm,%xmm6
-	\opd =3D 6
-	.endif
-	.ifc \xmm,%xmm7
-	\opd =3D 7
-	.endif
-	.ifc \xmm,%xmm8
-	\opd =3D 8
-	.endif
-	.ifc \xmm,%xmm9
-	\opd =3D 9
-	.endif
-	.ifc \xmm,%xmm10
-	\opd =3D 10
-	.endif
-	.ifc \xmm,%xmm11
-	\opd =3D 11
-	.endif
-	.ifc \xmm,%xmm12
-	\opd =3D 12
-	.endif
-	.ifc \xmm,%xmm13
-	\opd =3D 13
-	.endif
-	.ifc \xmm,%xmm14
-	\opd =3D 14
-	.endif
-	.ifc \xmm,%xmm15
-	\opd =3D 15
-	.endif
-	.endm
-
-	.macro REG_TYPE type reg
-	R32_NUM reg_type_r32 \reg
-	R64_NUM reg_type_r64 \reg
-	XMM_NUM reg_type_xmm \reg
-	.if reg_type_r64 <> REG_NUM_INVALID
-	\type =3D REG_TYPE_R64
-	.elseif reg_type_r32 <> REG_NUM_INVALID
-	\type =3D REG_TYPE_R32
-	.elseif reg_type_xmm <> REG_NUM_INVALID
-	\type =3D REG_TYPE_XMM
-	.else
-	\type =3D REG_TYPE_INVALID
-	.endif
-	.endm
-
-	.macro PFX_OPD_SIZE
-	.byte 0x66
-	.endm
-
-	.macro PFX_REX opd1 opd2 W=3D0
-	.if ((\opd1 | \opd2) & 8) || \W
-	.byte 0x40 | ((\opd1 & 8) >> 3) | ((\opd2 & 8) >> 1) | (\W << 3)
-	.endif
-	.endm
-
-	.macro MODRM mod opd1 opd2
-	.byte \mod | (\opd1 & 7) | ((\opd2 & 7) << 3)
-	.endm
-
-.macro RDPID opd
-	REG_TYPE rdpid_opd_type \opd
-	.if rdpid_opd_type =3D=3D REG_TYPE_R64
-	R64_NUM rdpid_opd \opd
-	.else
-	R32_NUM rdpid_opd \opd
-	.endif
-	.byte 0xf3
-	.if rdpid_opd > 7
-	PFX_REX rdpid_opd 0
-	.endif
-	.byte 0x0f, 0xc7
-	MODRM 0xc0 rdpid_opd 0x7
-.endm
-#endif
-
-#endif
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/qFh0fIP7XemDn+0mQcZbzqg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8RLUAACgkQAVBC80lX
-0GzX5wf/bMv33RnMLoOXbHMcGzegM54nfMV2XRxB1jQXtVhccQYfPJgPnVxePZvu
-2vsg9kX3IzyMNhH7NTWEEit5TJD7zYtjiOFT3F2GyXUXm2dRSAUrMwhInhp8pMXi
-vmjkNpqtLYTuOd8y5FdxQ63SFTzfrZYx6flm3LqijqhjeEAtPnZf7KXkgNXYc+XM
-X7AGFG5opT2Kj+XmshK+wY6a8rPMMx6ePeuDLcgcEYS4Ptci7w1vWietL4D9+OGZ
-Ap5QEep6IiNPznAme91cjpSbCRHno1U80h/To2mnIeSGZA963zyuiwex19SGh47x
-XxUh2t1mETrz5xEo6wF6+zXnH02Y2g==
-=rH1W
------END PGP SIGNATURE-----
-
---Sig_/qFh0fIP7XemDn+0mQcZbzqg--
+--Andy
