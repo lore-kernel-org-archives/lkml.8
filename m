@@ -2,126 +2,225 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F172CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08EDC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3B1020759
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:24:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LLG+jSbK"
+	by mail.kernel.org (Postfix) with ESMTP id 7FA7E20759
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgGQSYv (ORCPT
+        id S1728054AbgGQSYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:24:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52336 "EHLO
+        Fri, 17 Jul 2020 14:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgGQSYu (ORCPT
+        with ESMTP id S1726104AbgGQSYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:24:50 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF0AAC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:24:50 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x72so5805825pfc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=DDNq82UFJqZNA4W/58Gu3txutqShlfCsws0dFK3kxJE=;
-        b=LLG+jSbKBImbmDFyI1xmUqQ8xLaVWPxVVlBhinJlrp11+Qk9Pz/8Y8lOvrj2H/XFZG
-         lR0bYUIVNJYfGHVeK8GJn4GjqjS3tXTclQ1E2EVjbZ+/80+DnnwH5ga1gRkDGr8PjwLM
-         Psh3JwTCEgHNPQ7Zk0WL9iOaxSbp3q2+AqlBw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=DDNq82UFJqZNA4W/58Gu3txutqShlfCsws0dFK3kxJE=;
-        b=IcwHO1/+12Ft/ojTqjHn5fiTgBysq4dOJ36tfrfI+p9O4R71NjbpJOB6mtcV/l3TWP
-         z/K7OLSAKDzfHBC3YE4dvbPkJNzrXNl2/zKuRYqrkwGKW68vcWnBvzyisfS+6U7ba0tL
-         kKtrZcPR75MILce4SPVDJWGMGrgxP3BW5hlbSxNkbHPmtmzPZnVDYdF+MNv5wqtyEfRk
-         lmcwk1CjNQQDE/Y3KsK7MtdQ4wGwDA6pTN8XFd8YlsZYwvccbH5RkLgxBrRWOeBYMrKX
-         5OJdNK0g1kfRa9eW6dUpTJcUnQZbng2+VnyJt4IgcdoT8Q9jA29eDYSBIghs7uUbBRfH
-         qsQw==
-X-Gm-Message-State: AOAM532yi84QW6n0pUp0X8H+o055BOD1FEkAQo3urcrV8hdhSBh5WCNp
-        RrUI0pVHSyJRjzt6+pqr/cfP9g==
-X-Google-Smtp-Source: ABdhPJzHBxA4qQJdJjyjh4nIIw26BQZ4hlojbOjvE6qAHsf1d8PLr7Qq6XtDzcWP4F9dgCGjxwWCNw==
-X-Received: by 2002:a63:9d87:: with SMTP id i129mr9829976pgd.412.1595010289936;
-        Fri, 17 Jul 2020 11:24:49 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id e18sm8344527pff.37.2020.07.17.11.24.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 11:24:49 -0700 (PDT)
-Subject: Re: [PATCH] pwm: bcm-iproc: handle clk_get_rate() return
-To:     Ray Jui <ray.jui@broadcom.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-References: <20200717170743.25466-1-scott.branden@broadcom.com>
- <94f2aed1-d88d-3ee0-6e57-917f665951f2@broadcom.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <6f9b0a94-6289-990b-84b3-80d70e17d3e2@broadcom.com>
-Date:   Fri, 17 Jul 2020 11:24:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 14:24:55 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFC13C0619D2;
+        Fri, 17 Jul 2020 11:24:54 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 120AEBC070;
+        Fri, 17 Jul 2020 18:24:44 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     rjw@rjwysocki.net, lenb@kernel.org, dan.j.williams@intel.com,
+        vishal.l.verma@intel.com, dave.jiang@intel.com,
+        ira.weiny@intel.com, sakari.ailus@linux.intel.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] ACPI: Replace HTTP links with HTTPS ones
+Date:   Fri, 17 Jul 2020 20:24:36 +0200
+Message-Id: <20200717182436.75214-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <94f2aed1-d88d-3ee0-6e57-917f665951f2@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
+
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-On 2020-07-17 10:22 a.m., Ray Jui wrote:
->
-> On 7/17/2020 10:07 AM, Scott Branden wrote:
->> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
->>
->> Handle clk_get_rate() returning <= 0 condition to avoid
->> possible division by zero.
->>
->> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
->> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
->> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->> ---
->>   drivers/pwm/pwm-bcm-iproc.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
->> index 1f829edd8ee7..72a8607b6c8d 100644
->> --- a/drivers/pwm/pwm-bcm-iproc.c
->> +++ b/drivers/pwm/pwm-bcm-iproc.c
->> @@ -86,6 +86,11 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->>   	u32 value, prescale;
->>   
->>   	rate = clk_get_rate(ip->clk);
->> +	if (rate == 0) {
->> +		state->period = 0;
->> +		state->duty_cycle = 0;
->> +		return;
->> +	}
-I'll move the logic after the polarity and enabled fields are populated.
-> Based on the pwm core code, 'get_state' expects the following fields to
-> be populated: 'polarity', 'enabled', 'period', and 'duty cycle'.
->
-> The above logic will leave 'polarity' and 'enabled' completely
-> unpopulated when clock rate is zero.
->
->>   
->>   	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
->>   
->>
+ .../firmware-guide/acpi/DSD-properties-rules.rst       |  4 ++--
+ .../firmware-guide/acpi/dsd/data-node-references.rst   |  4 ++--
+ Documentation/firmware-guide/acpi/dsd/graph.rst        | 10 +++++-----
+ Documentation/firmware-guide/acpi/dsd/leds.rst         |  6 +++---
+ Documentation/firmware-guide/acpi/lpit.rst             |  2 +-
+ drivers/acpi/Kconfig                                   |  2 +-
+ drivers/acpi/nfit/nfit.h                               |  2 +-
+ 7 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/firmware-guide/acpi/DSD-properties-rules.rst b/Documentation/firmware-guide/acpi/DSD-properties-rules.rst
+index 4306f29b6103..8b2d8d0864c2 100644
+--- a/Documentation/firmware-guide/acpi/DSD-properties-rules.rst
++++ b/Documentation/firmware-guide/acpi/DSD-properties-rules.rst
+@@ -96,5 +96,5 @@ contents.
+ References
+ ==========
+ 
+-.. [1] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
+-.. [2] http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf
++.. [1] https://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
++.. [2] https://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf
+diff --git a/Documentation/firmware-guide/acpi/dsd/data-node-references.rst b/Documentation/firmware-guide/acpi/dsd/data-node-references.rst
+index febccbc5689d..9b17dc77d18c 100644
+--- a/Documentation/firmware-guide/acpi/dsd/data-node-references.rst
++++ b/Documentation/firmware-guide/acpi/dsd/data-node-references.rst
+@@ -85,9 +85,9 @@ References
+ ==========
+ 
+ [1] Hierarchical Data Extension UUID For _DSD.
+-<http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
++<https://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
+ referenced 2018-07-17.
+ 
+ [2] Device Properties UUID For _DSD.
+-<http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
++<https://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
+ referenced 2016-10-04.
+diff --git a/Documentation/firmware-guide/acpi/dsd/graph.rst b/Documentation/firmware-guide/acpi/dsd/graph.rst
+index 1a6ce7afba5e..7072db801aeb 100644
+--- a/Documentation/firmware-guide/acpi/dsd/graph.rst
++++ b/Documentation/firmware-guide/acpi/dsd/graph.rst
+@@ -154,23 +154,23 @@ References
+ ==========
+ 
+ [1] _DSD (Device Specific Data) Implementation Guide.
+-    http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm,
++    https://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm,
+     referenced 2016-10-03.
+ 
+-[2] Devicetree. http://www.devicetree.org, referenced 2016-10-03.
++[2] Devicetree. https://www.devicetree.org, referenced 2016-10-03.
+ 
+ [3] Documentation/devicetree/bindings/graph.txt
+ 
+ [4] Device Properties UUID For _DSD.
+-    http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf,
++    https://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf,
+     referenced 2016-10-04.
+ 
+ [5] Hierarchical Data Extension UUID For _DSD.
+-    http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf,
++    https://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf,
+     referenced 2016-10-04.
+ 
+ [6] Advanced Configuration and Power Interface Specification.
+-    http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf,
++    https://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf,
+     referenced 2016-10-04.
+ 
+ [7] _DSD Device Properties Usage Rules.
+diff --git a/Documentation/firmware-guide/acpi/dsd/leds.rst b/Documentation/firmware-guide/acpi/dsd/leds.rst
+index 946efe2b2936..aba1e9abfeeb 100644
+--- a/Documentation/firmware-guide/acpi/dsd/leds.rst
++++ b/Documentation/firmware-guide/acpi/dsd/leds.rst
+@@ -90,7 +90,7 @@ where
+ References
+ ==========
+ 
+-[1] Device tree. <URL:http://www.devicetree.org>, referenced 2019-02-21.
++[1] Device tree. <URL:https://www.devicetree.org>, referenced 2019-02-21.
+ 
+ [2] Advanced Configuration and Power Interface Specification.
+     <URL:https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf>,
+@@ -101,11 +101,11 @@ References
+ [4] Documentation/devicetree/bindings/media/video-interfaces.txt
+ 
+ [5] Device Properties UUID For _DSD.
+-    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
++    <URL:https://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
+     referenced 2019-02-21.
+ 
+ [6] Hierarchical Data Extension UUID For _DSD.
+-    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
++    <URL:https://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
+     referenced 2019-02-21.
+ 
+ [7] Documentation/firmware-guide/acpi/dsd/data-node-references.rst
+diff --git a/Documentation/firmware-guide/acpi/lpit.rst b/Documentation/firmware-guide/acpi/lpit.rst
+index aca928fab027..37922a903573 100644
+--- a/Documentation/firmware-guide/acpi/lpit.rst
++++ b/Documentation/firmware-guide/acpi/lpit.rst
+@@ -7,7 +7,7 @@ Low Power Idle Table (LPIT)
+ To enumerate platform Low Power Idle states, Intel platforms are using
+ “Low Power Idle Table” (LPIT). More details about this table can be
+ downloaded from:
+-http://www.uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf
++https://www.uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf
+ 
+ Residencies for each low power state can be read via FFH
+ (Function fixed hardware) or a memory mapped interface.
+diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+index ce2730d61a8f..16d7ca99ddbe 100644
+--- a/drivers/acpi/Kconfig
++++ b/drivers/acpi/Kconfig
+@@ -32,7 +32,7 @@ menuconfig ACPI
+ 	  Linux support for ACPI is based on Intel Corporation's ACPI
+ 	  Component Architecture (ACPI CA).  For more information on the
+ 	  ACPI CA, see:
+-	  <http://acpica.org/>
++	  <https://acpica.org/>
+ 
+ 	  ACPI is an open industry specification originally co-developed by
+ 	  Hewlett-Packard, Intel, Microsoft, Phoenix, and Toshiba. Currently,
+diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
+index f5525f8bb770..a303f0123394 100644
+--- a/drivers/acpi/nfit/nfit.h
++++ b/drivers/acpi/nfit/nfit.h
+@@ -16,7 +16,7 @@
+ /* ACPI 6.1 */
+ #define UUID_NFIT_BUS "2f10e7a4-9e91-11e4-89d3-123b93f75cba"
+ 
+-/* http://pmem.io/documents/NVDIMM_DSM_Interface-V1.6.pdf */
++/* https://pmem.io/documents/NVDIMM_DSM_Interface-V1.6.pdf */
+ #define UUID_NFIT_DIMM "4309ac30-0d11-11e4-9191-0800200c9a66"
+ 
+ /* https://github.com/HewlettPackard/hpe-nvm/blob/master/Documentation/ */
+-- 
+2.27.0
 
