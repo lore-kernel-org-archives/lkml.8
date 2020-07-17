@@ -7,27 +7,24 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CD3C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6052C2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E232207EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0VLmZPsc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x3X0MPpy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oURQNVOx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HBTIH0Kp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgGQOv1 (ORCPT
+        id S1727940AbgGQOv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgGQOvP (ORCPT
+        Fri, 17 Jul 2020 10:51:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41198 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbgGQOvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jul 2020 10:51:15 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15103C0619D5;
-        Fri, 17 Jul 2020 07:51:15 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 14:51:13 -0000
+Date:   Fri, 17 Jul 2020 14:51:12 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1594997473;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -35,12 +32,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JDSPqrUuwgZCUHiBTIbD8EFOzSds1/lMW1gkLpW9fWI=;
-        b=0VLmZPscrukyDs9Xzte3TQpSny8hXGssN2URbB5eFnM3aAgAbWzaQho/HMm6h4OVoO1qZe
-        8ppsRiQH2+lboAPyLPczgo6v/+GyPTDq28CaKI36TSRJwM95daLVVLafcaGVo23JwXvsvY
-        FqrntH8AFJB0V1DvSpsDdH5cNNJDNuqwsKqnIop0uxwCg3PfqeYaNwyEhVDlG+IxqldVHk
-        xu/O3wH5NSh8dL5njcgC1I9qAwMKqD5MfZLd/pE7mnYEQ7E/a1pOw0aiGsbiRqNfhFD56h
-        jCRN+WGHynDaxLfqaQyA6IZzQOi5owp6YBw1RlFfi9Up7MvCOvdu9gp9r1ilTg==
+        bh=90H+L1DVSoEMH2lO9cFnEdTeT+n/wa3kBVoP2FSK+Kg=;
+        b=oURQNVOx9fHbfqfeoGEwQASR8WALJS3ZRAMSa/ThKohPw0oDILH57kFJNblGP5rXx94jFw
+        dFmMrzBmdub3pmpV/VdvXrXBcmCwXCW0aOsNjVBMHzQjDxiAnymoDmWzqHyPde3A4fljV+
+        apQ1rqebFseWzmA05qCC2/x8iBuEC9ljiRBJamjC3UbZzZSpDCFr0ZKoIT1UnpVb6zTEco
+        XEPeMZbqEHGtOnxyoWH3e2+Y94o6Syxb/uvcSTJRzHsaI3Qmr0PClMslYq7SRReT7MXc0x
+        pErK4rSGzMBOD0yxflIGawWt8NeAqNb2YoPawwnnudjYNQxJHuOfPBWZpIsdCw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1594997473;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -48,21 +45,21 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JDSPqrUuwgZCUHiBTIbD8EFOzSds1/lMW1gkLpW9fWI=;
-        b=x3X0MPpy942n0hDrFPQI0QnConRQ3HPrv2A2mZRDXWCGvanztOk4RBHZMa6nwZyexCACCw
-        wMEFdtSwSLiJipDg==
+        bh=90H+L1DVSoEMH2lO9cFnEdTeT+n/wa3kBVoP2FSK+Kg=;
+        b=HBTIH0KpeLhPag32t3VTuWOcNZUtSDSFOHZLyBV00j3XRheN1YkxHRHN5KZ8X0qnaqZ4D2
+        dc59OSeiMuS4ZLBQ==
 From:   "tip-bot2 for steve.wahl@hpe.com" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
 Subject: [tip: x86/platform] x86/platform/uv: Remove support for UV1 platform
- from uv_tlb
+ from x2apic_uv_x
 Cc:     Steve Wahl <steve.wahl@hpe.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200713212954.728022415@hpe.com>
-References: <20200713212954.728022415@hpe.com>
+In-Reply-To: <20200713212954.846026992@hpe.com>
+References: <20200713212954.846026992@hpe.com>
 MIME-Version: 1.0
-Message-ID: <159499747301.4006.13733136100327149168.tip-bot2@tip-bot2>
+Message-ID: <159499747243.4006.1630748527581304023.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -75,418 +72,294 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/platform branch of tip:
 
-Commit-ID:     95328de5fc2d0b68555c200da889f5d8889a0f13
-Gitweb:        https://git.kernel.org/tip/95328de5fc2d0b68555c200da889f5d8889a0f13
+Commit-ID:     a6b740f1732c438c177fa33d94407808a0d0aa1d
+Gitweb:        https://git.kernel.org/tip/a6b740f1732c438c177fa33d94407808a0d0aa1d
 Author:        steve.wahl@hpe.com <steve.wahl@hpe.com>
-AuthorDate:    Mon, 13 Jul 2020 16:29:56 -05:00
+AuthorDate:    Mon, 13 Jul 2020 16:29:57 -05:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Fri, 17 Jul 2020 16:47:44 +02:00
 
-x86/platform/uv: Remove support for UV1 platform from uv_tlb
+x86/platform/uv: Remove support for UV1 platform from x2apic_uv_x
 
 UV1 is not longer supported.
 
 Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200713212954.728022415@hpe.com
----
- arch/x86/platform/uv/tlb_uv.c | 239 ++++-----------------------------
- 1 file changed, 32 insertions(+), 207 deletions(-)
+Link: https://lkml.kernel.org/r/20200713212954.846026992@hpe.com
 
-diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
-index 0ac96ca..395073d 100644
---- a/arch/x86/platform/uv/tlb_uv.c
-+++ b/arch/x86/platform/uv/tlb_uv.c
-@@ -23,18 +23,6 @@
+---
+ arch/x86/kernel/apic/x2apic_uv_x.c | 122 +++++-----------------------
+ 1 file changed, 26 insertions(+), 96 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+index 69e70ed..0b6eea3 100644
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -24,8 +24,6 @@
+ #include <asm/uv/uv.h>
+ #include <asm/apic.h>
  
- static struct bau_operations ops __ro_after_init;
+-static DEFINE_PER_CPU(int, x2apic_extra_bits);
+-
+ static enum uv_system_type	uv_system_type;
+ static int			uv_hubbed_system;
+ static int			uv_hubless_system;
+@@ -40,7 +38,7 @@ static u8 oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
+ static struct {
+ 	unsigned int apicid_shift;
+ 	unsigned int apicid_mask;
+-	unsigned int socketid_shift;	/* aka pnode_shift for UV1/2/3 */
++	unsigned int socketid_shift;	/* aka pnode_shift for UV2/3 */
+ 	unsigned int pnode_mask;
+ 	unsigned int gpa_shift;
+ 	unsigned int gnode_shift;
+@@ -48,8 +46,6 @@ static struct {
  
--/* timeouts in nanoseconds (indexed by UVH_AGING_PRESCALE_SEL urgency7 30:28) */
--static const int timeout_base_ns[] = {
--		20,
--		160,
--		1280,
--		10240,
--		81920,
--		655360,
--		5242880,
--		167772160
--};
--
- static int timeout_us;
- static bool nobau = true;
- static int nobau_perm;
-@@ -510,70 +498,6 @@ static inline void end_uvhub_quiesce(struct bau_control *hmaster)
- 	atom_asr(-1, (struct atomic_short *)&hmaster->uvhub_quiesce);
- }
+ static int uv_min_hub_revision_id;
  
--static unsigned long uv1_read_status(unsigned long mmr_offset, int right_shift)
--{
--	unsigned long descriptor_status;
+-unsigned int uv_apicid_hibits;
 -
--	descriptor_status = uv_read_local_mmr(mmr_offset);
--	descriptor_status >>= right_shift;
--	descriptor_status &= UV_ACT_STATUS_MASK;
--	return descriptor_status;
--}
--
--/*
-- * Wait for completion of a broadcast software ack message
-- * return COMPLETE, RETRY(PLUGGED or TIMEOUT) or GIVEUP
-- */
--static int uv1_wait_completion(struct bau_desc *bau_desc,
--				struct bau_control *bcp, long try)
--{
--	unsigned long descriptor_status;
--	cycles_t ttm;
--	u64 mmr_offset = bcp->status_mmr;
--	int right_shift = bcp->status_index;
--	struct ptc_stats *stat = bcp->statp;
--
--	descriptor_status = uv1_read_status(mmr_offset, right_shift);
--	/* spin on the status MMR, waiting for it to go idle */
--	while ((descriptor_status != DS_IDLE)) {
--		/*
--		 * Our software ack messages may be blocked because
--		 * there are no swack resources available.  As long
--		 * as none of them has timed out hardware will NACK
--		 * our message and its state will stay IDLE.
--		 */
--		if (descriptor_status == DS_SOURCE_TIMEOUT) {
--			stat->s_stimeout++;
--			return FLUSH_GIVEUP;
--		} else if (descriptor_status == DS_DESTINATION_TIMEOUT) {
--			stat->s_dtimeout++;
--			ttm = get_cycles();
--
--			/*
--			 * Our retries may be blocked by all destination
--			 * swack resources being consumed, and a timeout
--			 * pending.  In that case hardware returns the
--			 * ERROR that looks like a destination timeout.
--			 */
--			if (cycles_2_us(ttm - bcp->send_message) < timeout_us) {
--				bcp->conseccompletes = 0;
--				return FLUSH_RETRY_PLUGGED;
--			}
--
--			bcp->conseccompletes = 0;
--			return FLUSH_RETRY_TIMEOUT;
--		} else {
--			/*
--			 * descriptor_status is still BUSY
--			 */
--			cpu_relax();
--		}
--		descriptor_status = uv1_read_status(mmr_offset, right_shift);
--	}
--	bcp->conseccompletes++;
--	return FLUSH_COMPLETE;
--}
--
- /*
-  * UV2 could have an extra bit of status in the ACTIVATION_STATUS_2 register.
-  * But not currently used.
-@@ -853,24 +777,6 @@ static void record_send_stats(cycles_t time1, cycles_t time2,
- }
+ static struct apic apic_x2apic_uv_x;
+ static struct uv_hub_info_s uv_hub_info_node0;
  
- /*
-- * Because of a uv1 hardware bug only a limited number of concurrent
-- * requests can be made.
-- */
--static void uv1_throttle(struct bau_control *hmaster, struct ptc_stats *stat)
--{
--	spinlock_t *lock = &hmaster->uvhub_lock;
--	atomic_t *v;
--
--	v = &hmaster->active_descriptor_count;
--	if (!atomic_inc_unless_ge(lock, v, hmaster->max_concurr)) {
--		stat->s_throttles++;
--		do {
--			cpu_relax();
--		} while (!atomic_inc_unless_ge(lock, v, hmaster->max_concurr));
--	}
--}
--
--/*
-  * Handle the completion status of a message send.
-  */
- static void handle_cmplt(int completion_status, struct bau_desc *bau_desc,
-@@ -899,50 +805,30 @@ static int uv_flush_send_and_wait(struct cpumask *flush_mask,
- {
- 	int seq_number = 0;
- 	int completion_stat = 0;
--	int uv1 = 0;
- 	long try = 0;
- 	unsigned long index;
- 	cycles_t time1;
- 	cycles_t time2;
- 	struct ptc_stats *stat = bcp->statp;
- 	struct bau_control *hmaster = bcp->uvhub_master;
--	struct uv1_bau_msg_header *uv1_hdr = NULL;
- 	struct uv2_3_bau_msg_header *uv2_3_hdr = NULL;
- 
--	if (bcp->uvhub_version == UV_BAU_V1) {
--		uv1 = 1;
--		uv1_throttle(hmaster, stat);
--	}
--
- 	while (hmaster->uvhub_quiesce)
- 		cpu_relax();
- 
- 	time1 = get_cycles();
--	if (uv1)
--		uv1_hdr = &bau_desc->header.uv1_hdr;
+@@ -139,12 +135,8 @@ static void __init uv_tsc_check_sync(void)
+ 	/* Accommodate different UV arch BIOSes */
+ 	mmr = uv_early_read_mmr(UVH_TSC_SYNC_MMR);
+ 	mmr_shift =
+-		is_uv1_hub() ? 0 :
+ 		is_uv2_hub() ? UVH_TSC_SYNC_SHIFT_UV2K : UVH_TSC_SYNC_SHIFT;
+-	if (mmr_shift)
+-		sync_state = (mmr >> mmr_shift) & UVH_TSC_SYNC_MASK;
 -	else
--		/* uv2 and uv3 */
--		uv2_3_hdr = &bau_desc->header.uv2_3_hdr;
-+	uv2_3_hdr = &bau_desc->header.uv2_3_hdr;
+-		sync_state = 0;
++	sync_state = (mmr >> mmr_shift) & UVH_TSC_SYNC_MASK;
  
- 	do {
- 		if (try == 0) {
--			if (uv1)
--				uv1_hdr->msg_type = MSG_REGULAR;
--			else
--				uv2_3_hdr->msg_type = MSG_REGULAR;
-+			uv2_3_hdr->msg_type = MSG_REGULAR;
- 			seq_number = bcp->message_number++;
- 		} else {
--			if (uv1)
--				uv1_hdr->msg_type = MSG_RETRY;
--			else
--				uv2_3_hdr->msg_type = MSG_RETRY;
-+			uv2_3_hdr->msg_type = MSG_RETRY;
- 			stat->s_retry_messages++;
- 		}
- 
--		if (uv1)
--			uv1_hdr->sequence = seq_number;
--		else
--			uv2_3_hdr->sequence = seq_number;
-+		uv2_3_hdr->sequence = seq_number;
- 		index = (1UL << AS_PUSH_SHIFT) | bcp->uvhub_cpu;
- 		bcp->send_message = get_cycles();
- 
-@@ -1162,7 +1048,6 @@ const struct cpumask *uv_flush_tlb_others(const struct cpumask *cpumask,
- 		address = TLB_FLUSH_ALL;
- 
- 	switch (bcp->uvhub_version) {
--	case UV_BAU_V1:
- 	case UV_BAU_V2:
- 	case UV_BAU_V3:
- 		bau_desc->payload.uv1_2_3.address = address;
-@@ -1300,7 +1185,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_uv_bau_message)
- 		if (bcp->uvhub_version == UV_BAU_V2)
- 			process_uv2_message(&msgdesc, bcp);
- 		else
--			/* no error workaround for uv1 or uv3 */
-+			/* no error workaround for uv3 */
- 			bau_process_message(&msgdesc, bcp, 1);
- 
- 		msg++;
-@@ -1350,12 +1235,7 @@ static void __init enable_timeouts(void)
- 		mmr_image &= ~((unsigned long)0xf << SOFTACK_PSHIFT);
- 		mmr_image |= (SOFTACK_TIMEOUT_PERIOD << SOFTACK_PSHIFT);
- 		write_mmr_misc_control(pnode, mmr_image);
--		/*
--		 * UV1:
--		 * Subsequent reversals of the timebase bit (3) cause an
--		 * immediate timeout of one or all INTD resources as
--		 * indicated in bits 2:0 (7 causes all of them to timeout).
--		 */
-+
- 		mmr_image |= (1L << SOFTACK_MSHIFT);
- 		if (is_uv2_hub()) {
- 			/* do not touch the legacy mode bit */
-@@ -1711,14 +1591,12 @@ static void activation_descriptor_init(int node, int pnode, int base_pnode)
- {
- 	int i;
- 	int cpu;
--	int uv1 = 0;
- 	unsigned long gpa;
- 	unsigned long m;
- 	unsigned long n;
- 	size_t dsize;
- 	struct bau_desc *bau_desc;
- 	struct bau_desc *bd2;
--	struct uv1_bau_msg_header *uv1_hdr;
- 	struct uv2_3_bau_msg_header *uv2_3_hdr;
- 	struct bau_control *bcp;
- 
-@@ -1733,8 +1611,6 @@ static void activation_descriptor_init(int node, int pnode, int base_pnode)
- 	gpa = uv_gpa(bau_desc);
- 	n = uv_gpa_to_gnode(gpa);
- 	m = ops.bau_gpa_to_offset(gpa);
--	if (is_uv1_hub())
--		uv1 = 1;
- 
- 	/* the 14-bit pnode */
- 	write_mmr_descriptor_base(pnode,
-@@ -1746,37 +1622,15 @@ static void activation_descriptor_init(int node, int pnode, int base_pnode)
- 	 */
- 	for (i = 0, bd2 = bau_desc; i < (ADP_SZ * ITEMS_PER_DESC); i++, bd2++) {
- 		memset(bd2, 0, sizeof(struct bau_desc));
--		if (uv1) {
--			uv1_hdr = &bd2->header.uv1_hdr;
--			uv1_hdr->swack_flag = 1;
--			/*
--			 * The base_dest_nasid set in the message header
--			 * is the nasid of the first uvhub in the partition.
--			 * The bit map will indicate destination pnode numbers
--			 * relative to that base. They may not be consecutive
--			 * if nasid striding is being used.
--			 */
--			uv1_hdr->base_dest_nasid =
--			                          UV_PNODE_TO_NASID(base_pnode);
--			uv1_hdr->dest_subnodeid  = UV_LB_SUBNODEID;
--			uv1_hdr->command         = UV_NET_ENDPOINT_INTD;
--			uv1_hdr->int_both        = 1;
--			/*
--			 * all others need to be set to zero:
--			 *   fairness chaining multilevel count replied_to
--			 */
--		} else {
--			/*
--			 * BIOS uses legacy mode, but uv2 and uv3 hardware always
--			 * uses native mode for selective broadcasts.
--			 */
--			uv2_3_hdr = &bd2->header.uv2_3_hdr;
--			uv2_3_hdr->swack_flag      = 1;
--			uv2_3_hdr->base_dest_nasid =
--			                          UV_PNODE_TO_NASID(base_pnode);
--			uv2_3_hdr->dest_subnodeid  = UV_LB_SUBNODEID;
--			uv2_3_hdr->command         = UV_NET_ENDPOINT_INTD;
--		}
-+		/*
-+		 * BIOS uses legacy mode, but uv2 and uv3 hardware always
-+		 * uses native mode for selective broadcasts.
-+		 */
-+		uv2_3_hdr = &bd2->header.uv2_3_hdr;
-+		uv2_3_hdr->swack_flag      = 1;
-+		uv2_3_hdr->base_dest_nasid = UV_PNODE_TO_NASID(base_pnode);
-+		uv2_3_hdr->dest_subnodeid  = UV_LB_SUBNODEID;
-+		uv2_3_hdr->command         = UV_NET_ENDPOINT_INTD;
- 	}
- 	for_each_present_cpu(cpu) {
- 		if (pnode != uv_blade_to_pnode(uv_cpu_to_blade_id(cpu)))
-@@ -1861,7 +1715,7 @@ static void __init init_uvhub(int uvhub, int vector, int base_pnode)
- 	 * The below initialization can't be in firmware because the
- 	 * messaging IRQ will be determined by the OS.
- 	 */
--	apicid = uvhub_to_first_apicid(uvhub) | uv_apicid_hibits;
-+	apicid = uvhub_to_first_apicid(uvhub);
- 	write_mmr_data_config(pnode, ((apicid << 32) | vector));
+ 	switch (sync_state) {
+ 	case UVH_TSC_SYNC_VALID:
+@@ -223,21 +215,6 @@ static void __init early_get_apic_socketid_shift(void)
+ 	pr_info("UV: socketid_shift:%d pnode_mask:0x%x\n", uv_cpuid.socketid_shift, uv_cpuid.pnode_mask);
  }
  
-@@ -1874,33 +1728,20 @@ static int calculate_destination_timeout(void)
- {
- 	unsigned long mmr_image;
- 	int mult1;
--	int mult2;
--	int index;
- 	int base;
- 	int ret;
--	unsigned long ts_ns;
+-/*
+- * Add an extra bit as dictated by bios to the destination apicid of
+- * interrupts potentially passing through the UV HUB.  This prevents
+- * a deadlock between interrupts and IO port operations.
+- */
+-static void __init uv_set_apicid_hibit(void)
+-{
+-	union uv1h_lb_target_physical_apic_id_mask_u apicid_mask;
 -
 -	if (is_uv1_hub()) {
--		mult1 = SOFTACK_TIMEOUT_PERIOD & BAU_MISC_CONTROL_MULT_MASK;
--		mmr_image = uv_read_local_mmr(UVH_AGING_PRESCALE_SEL);
--		index = (mmr_image >> BAU_URGENCY_7_SHIFT) & BAU_URGENCY_7_MASK;
--		mmr_image = uv_read_local_mmr(UVH_TRANSACTION_TIMEOUT);
--		mult2 = (mmr_image >> BAU_TRANS_SHIFT) & BAU_TRANS_MASK;
--		ts_ns = timeout_base_ns[index];
--		ts_ns *= (mult1 * mult2);
--		ret = ts_ns / 1000;
--	} else {
--		/* same destination timeout for uv2 and uv3 */
--		/* 4 bits  0/1 for 10/80us base, 3 bits of multiplier */
--		mmr_image = uv_read_local_mmr(UVH_LB_BAU_MISC_CONTROL);
--		mmr_image = (mmr_image & UV_SA_MASK) >> UV_SA_SHFT;
--		if (mmr_image & (1L << UV2_ACK_UNITS_SHFT))
--			base = 80;
--		else
--			base = 10;
--		mult1 = mmr_image & UV2_ACK_MASK;
--		ret = mult1 * base;
+-		apicid_mask.v = uv_early_read_mmr(UV1H_LB_TARGET_PHYSICAL_APIC_ID_MASK);
+-		uv_apicid_hibits = apicid_mask.s1.bit_enables & UV_APICID_HIBIT_MASK;
 -	}
-+
-+	/* same destination timeout for uv2 and uv3 */
-+	/* 4 bits  0/1 for 10/80us base, 3 bits of multiplier */
-+	mmr_image = uv_read_local_mmr(UVH_LB_BAU_MISC_CONTROL);
-+	mmr_image = (mmr_image & UV_SA_MASK) >> UV_SA_SHFT;
-+	if (mmr_image & (1L << UV2_ACK_UNITS_SHFT))
-+		base = 80;
-+	else
-+		base = 10;
-+	mult1 = mmr_image & UV2_ACK_MASK;
-+	ret = mult1 * base;
-+
- 	return ret;
- }
- 
-@@ -2039,9 +1880,7 @@ static int scan_sock(struct socket_desc *sdp, struct uvhub_desc *bdp,
- 		bcp->cpus_in_socket = sdp->num_cpus;
- 		bcp->socket_master = *smasterp;
- 		bcp->uvhub = bdp->uvhub;
--		if (is_uv1_hub())
--			bcp->uvhub_version = UV_BAU_V1;
--		else if (is_uv2_hub())
-+		if (is_uv2_hub())
- 			bcp->uvhub_version = UV_BAU_V2;
- 		else if (is_uv3_hub())
- 			bcp->uvhub_version = UV_BAU_V3;
-@@ -2123,7 +1962,7 @@ static int __init init_per_cpu(int nuvhubs, int base_part_pnode)
- 	struct uvhub_desc *uvhub_descs;
- 	unsigned char *uvhub_mask = NULL;
- 
--	if (is_uv3_hub() || is_uv2_hub() || is_uv1_hub())
-+	if (is_uv3_hub() || is_uv2_hub())
- 		timeout_us = calculate_destination_timeout();
- 
- 	uvhub_descs = kcalloc(nuvhubs, sizeof(struct uvhub_desc), GFP_KERNEL);
-@@ -2151,17 +1990,6 @@ fail:
- 	return 1;
- }
- 
--static const struct bau_operations uv1_bau_ops __initconst = {
--	.bau_gpa_to_offset       = uv_gpa_to_offset,
--	.read_l_sw_ack           = read_mmr_sw_ack,
--	.read_g_sw_ack           = read_gmmr_sw_ack,
--	.write_l_sw_ack          = write_mmr_sw_ack,
--	.write_g_sw_ack          = write_gmmr_sw_ack,
--	.write_payload_first     = write_mmr_payload_first,
--	.write_payload_last      = write_mmr_payload_last,
--	.wait_completion	 = uv1_wait_completion,
--};
+-}
 -
- static const struct bau_operations uv2_3_bau_ops __initconst = {
- 	.bau_gpa_to_offset       = uv_gpa_to_offset,
- 	.read_l_sw_ack           = read_mmr_sw_ack,
-@@ -2206,8 +2034,6 @@ static int __init uv_bau_init(void)
- 		ops = uv2_3_bau_ops;
- 	else if (is_uv2_hub())
- 		ops = uv2_3_bau_ops;
--	else if (is_uv1_hub())
--		ops = uv1_bau_ops;
+ static void __init uv_stringify(int len, char *to, char *from)
+ {
+ 	/* Relies on 'to' being NULL chars so result will be NULL terminated */
+@@ -280,36 +257,25 @@ static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
  
- 	nuvhubs = uv_num_possible_blades();
- 	if (nuvhubs < 2) {
-@@ -2228,7 +2054,7 @@ static int __init uv_bau_init(void)
+ 	/*
+ 	 * Determine UV arch type.
+-	 *   SGI:  UV100/1000
+ 	 *   SGI2: UV2000/3000
+ 	 *   SGI3: UV300 (truncated to 4 chars because of different varieties)
+ 	 *   SGI4: UV400 (truncated to 4 chars because of different varieties)
+ 	 */
+-	uv_hub_info->hub_revision =
+-		!strncmp(oem_id, "SGI4", 4) ? UV4_HUB_REVISION_BASE :
+-		!strncmp(oem_id, "SGI3", 4) ? UV3_HUB_REVISION_BASE :
+-		!strcmp(oem_id, "SGI2") ? UV2_HUB_REVISION_BASE :
+-		!strcmp(oem_id, "SGI") ? UV1_HUB_REVISION_BASE : 0;
+-
+-	if (uv_hub_info->hub_revision == 0)
+-		goto badbios;
+-
+-	switch (uv_hub_info->hub_revision) {
+-	case UV4_HUB_REVISION_BASE:
++	if (!strncmp(oem_id, "SGI4", 4)) {
++		uv_hub_info->hub_revision = UV4_HUB_REVISION_BASE;
+ 		uv_hubbed_system = 0x11;
+-		break;
+ 
+-	case UV3_HUB_REVISION_BASE:
++	} else if (!strncmp(oem_id, "SGI3", 4)) {
++		uv_hub_info->hub_revision = UV3_HUB_REVISION_BASE;
+ 		uv_hubbed_system = 0x9;
+-		break;
+ 
+-	case UV2_HUB_REVISION_BASE:
++	} else if (!strcmp(oem_id, "SGI2")) {
++		uv_hub_info->hub_revision = UV2_HUB_REVISION_BASE;
+ 		uv_hubbed_system = 0x5;
+-		break;
+ 
+-	case UV1_HUB_REVISION_BASE:
+-		uv_hubbed_system = 0x3;
+-		break;
++	} else {
++		uv_hub_info->hub_revision = 0;
++		goto badbios;
  	}
  
- 	/* software timeouts are not supported on UV4 */
--	if (is_uv3_hub() || is_uv2_hub() || is_uv1_hub())
-+	if (is_uv3_hub() || is_uv2_hub())
- 		enable_timeouts();
+ 	pnodeid = early_get_pnodeid();
+@@ -323,14 +289,6 @@ static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
+ 		uv_system_type = UV_X2APIC;
+ 		uv_apic = 0;
  
- 	if (init_per_cpu(nuvhubs, uv_base_pnode)) {
-@@ -2251,8 +2077,7 @@ static int __init uv_bau_init(void)
- 			val = 1L << 63;
- 			write_gmmr_activation(pnode, val);
- 			mmr = 1; /* should be 1 to broadcast to both sockets */
--			if (!is_uv1_hub())
--				write_mmr_data_broadcast(pnode, mmr);
-+			write_mmr_data_broadcast(pnode, mmr);
+-	} else if (!strcmp(oem_table_id, "UVH")) {
+-		/* Only UV1 systems: */
+-		uv_system_type = UV_NON_UNIQUE_APIC;
+-		x86_platform.legacy.warm_reset = 0;
+-		__this_cpu_write(x2apic_extra_bits, pnodeid << uvh_apicid.s.pnode_shift);
+-		uv_set_apicid_hibit();
+-		uv_apic = 1;
+-
+ 	} else if (!strcmp(oem_table_id, "UVL")) {
+ 		/* Only used for very small systems:  */
+ 		uv_system_type = UV_LEGACY_APIC;
+@@ -347,7 +305,7 @@ static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
+ 
+ badbios:
+ 	pr_err("UV: OEM_ID:%s OEM_TABLE_ID:%s\n", oem_id, oem_table_id);
+-	pr_err("Current BIOS not supported, update kernel and/or BIOS\n");
++	pr_err("Current UV Type or BIOS not supported\n");
+ 	BUG();
+ }
+ 
+@@ -545,7 +503,6 @@ static int uv_wakeup_secondary(int phys_apicid, unsigned long start_rip)
+ 	int pnode;
+ 
+ 	pnode = uv_apicid_to_pnode(phys_apicid);
+-	phys_apicid |= uv_apicid_hibits;
+ 
+ 	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
+ 	    (phys_apicid << UVH_IPI_INT_APIC_ID_SHFT) |
+@@ -576,7 +533,7 @@ static void uv_send_IPI_one(int cpu, int vector)
+ 		dmode = dest_Fixed;
+ 
+ 	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
+-		((apicid | uv_apicid_hibits) << UVH_IPI_INT_APIC_ID_SHFT) |
++		(apicid << UVH_IPI_INT_APIC_ID_SHFT) |
+ 		(dmode << UVH_IPI_INT_DELIVERY_MODE_SHFT) |
+ 		(vector << UVH_IPI_INT_VECTOR_SHFT);
+ 
+@@ -634,22 +591,16 @@ static void uv_init_apic_ldr(void)
+ 
+ static u32 apic_uv_calc_apicid(unsigned int cpu)
+ {
+-	return apic_default_calc_apicid(cpu) | uv_apicid_hibits;
++	return apic_default_calc_apicid(cpu);
+ }
+ 
+-static unsigned int x2apic_get_apic_id(unsigned long x)
++static unsigned int x2apic_get_apic_id(unsigned long id)
+ {
+-	unsigned int id;
+-
+-	WARN_ON(preemptible() && num_online_cpus() > 1);
+-	id = x | __this_cpu_read(x2apic_extra_bits);
+-
+ 	return id;
+ }
+ 
+ static u32 set_apic_id(unsigned int id)
+ {
+-	/* CHECKME: Do we need to mask out the xapic extra bits? */
+ 	return id;
+ }
+ 
+@@ -721,11 +672,6 @@ static struct apic apic_x2apic_uv_x __ro_after_init = {
+ 	.safe_wait_icr_idle		= native_safe_x2apic_wait_icr_idle,
+ };
+ 
+-static void set_x2apic_extra_bits(int pnode)
+-{
+-	__this_cpu_write(x2apic_extra_bits, pnode << uvh_apicid.s.pnode_shift);
+-}
+-
+ #define	UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_LENGTH	3
+ #define DEST_SHIFT UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_SHFT
+ 
+@@ -920,15 +866,7 @@ static __init void map_mmioh_high(int min_pnode, int max_pnode)
+ 		return;
+ 	}
+ 
+-	if (is_uv1_hub()) {
+-		mmr	= UV1H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR;
+-		shift	= UV1H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_BASE_SHFT;
+-		mmioh.v	= uv_read_local_mmr(mmr);
+-		enable	= !!mmioh.s1.enable;
+-		base	= mmioh.s1.base;
+-		m_io	= mmioh.s1.m_io;
+-		n_io	= mmioh.s1.n_io;
+-	} else if (is_uv2_hub()) {
++	if (is_uv2_hub()) {
+ 		mmr	= UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR;
+ 		shift	= UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_BASE_SHFT;
+ 		mmioh.v	= uv_read_local_mmr(mmr);
+@@ -936,16 +874,15 @@ static __init void map_mmioh_high(int min_pnode, int max_pnode)
+ 		base	= mmioh.s2.base;
+ 		m_io	= mmioh.s2.m_io;
+ 		n_io	= mmioh.s2.n_io;
+-	} else {
+-		return;
+-	}
+ 
+-	if (enable) {
+-		max_pnode &= (1 << n_io) - 1;
+-		pr_info("UV: base:0x%lx shift:%d N_IO:%d M_IO:%d max_pnode:0x%x\n", base, shift, m_io, n_io, max_pnode);
+-		map_high("MMIOH", base, shift, m_io, max_pnode, map_uc);
+-	} else {
+-		pr_info("UV: MMIOH disabled\n");
++		if (enable) {
++			max_pnode &= (1 << n_io) - 1;
++			pr_info("UV: base:0x%lx shift:%d N_IO:%d M_IO:%d max_pnode:0x%x\n",
++				base, shift, m_io, n_io, max_pnode);
++			map_high("MMIOH", base, shift, m_io, max_pnode, map_uc);
++		} else {
++			pr_info("UV: MMIOH disabled\n");
++		}
+ 	}
+ }
+ 
+@@ -1081,9 +1018,6 @@ void uv_cpu_init(void)
+ 		return;
+ 
+ 	uv_hub_info->nr_online_cpus++;
+-
+-	if (get_uv_system_type() == UV_NON_UNIQUE_APIC)
+-		set_x2apic_extra_bits(uv_hub_info->pnode);
+ }
+ 
+ struct mn {
+@@ -1114,9 +1048,6 @@ static void get_mn(struct mn *mnp)
+ 	} else if (is_uv2_hub()) {
+ 		mnp->m_val	= m_n_config.s2.m_skt;
+ 		mnp->n_lshift	= mnp->m_val == 40 ? 40 : 39;
+-	} else if (is_uv1_hub()) {
+-		mnp->m_val	= m_n_config.s1.m_skt;
+-		mnp->n_lshift	= mnp->m_val;
+ 	}
+ 	mnp->m_shift = mnp->m_val ? 64 - mnp->m_val : 0;
+ }
+@@ -1318,7 +1249,7 @@ static void __init build_socket_tables(void)
+ 	size_t bytes;
+ 
+ 	if (!gre) {
+-		if (is_uv1_hub() || is_uv2_hub() || is_uv3_hub()) {
++		if (is_uv2_hub() || is_uv3_hub()) {
+ 			pr_info("UV: No UVsystab socket table, ignoring\n");
+ 			return;
  		}
- 	}
+@@ -1500,8 +1431,7 @@ static void __init uv_system_init_hub(void)
+ 	unsigned short min_pnode = 9999, max_pnode = 0;
+ 	char *hub = is_uv4_hub() ? "UV400" :
+ 		    is_uv3_hub() ? "UV300" :
+-		    is_uv2_hub() ? "UV2000/3000" :
+-		    is_uv1_hub() ? "UV100/1000" : NULL;
++		    is_uv2_hub() ? "UV2000/3000" : NULL;
  
+ 	if (!hub) {
+ 		pr_err("UV: Unknown/unsupported UV hub\n");
