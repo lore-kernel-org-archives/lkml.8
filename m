@@ -7,127 +7,184 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA77C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB09C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0812720717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8885520734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cJAfNtWM"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="RGLNU9z0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgGQNvu (ORCPT
+        id S1726734AbgGQNyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:51:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55667 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726090AbgGQNvt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:51:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594993909;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=m/G4zAIRHoRCp8WOkYaylIh+3if9/OZzz+wlm1M/WWU=;
-        b=cJAfNtWMMTZ39VIAeHRuD2+ZSly+sNuGcZnuqgFKmfEXo78imQxAD7dlIK/liD1TEW3cXH
-        lpyc8mtR4mP/SeN5HesbnPZdbTzS+FdUoLgAAqCSud165EV+zpGFPhpZ7T4MKirGooV6b8
-        tt4gD7l57UcPezf+9/LLyhBNoxRSuVI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227-T7X64FNCNKCzU8gf9rmcIw-1; Fri, 17 Jul 2020 09:51:44 -0400
-X-MC-Unique: T7X64FNCNKCzU8gf9rmcIw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7396F8015CE;
-        Fri, 17 Jul 2020 13:51:42 +0000 (UTC)
-Received: from krava (unknown [10.40.192.81])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6FF90724C2;
-        Fri, 17 Jul 2020 13:51:39 +0000 (UTC)
-Date:   Fri, 17 Jul 2020 15:51:38 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 11/18] perf metric: Add referenced metrics to hash data
-Message-ID: <20200717135138.GD528602@krava>
-References: <20200712132634.138901-1-jolsa@kernel.org>
- <20200712132634.138901-12-jolsa@kernel.org>
- <CAP-5=fW2wknhCEQ8cPtmup6vQgWC45s9a0WJ+NsYt9Uu-Qm3Mw@mail.gmail.com>
- <20200715213609.GV183694@krava>
+        Fri, 17 Jul 2020 09:54:11 -0400
+Received: from mail-eopbgr680091.outbound.protection.outlook.com ([40.107.68.91]:17634
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726090AbgGQNyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:54:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BzBn2y/YyZ0bFVeKs1g59/2ZbKy4NrRmL1bmNzqPtHmgngdxTUfAjc3l/pVavnuv5CmIgOQ0McyVdfefwBqFuLhl8lPXEMvQrVJ6GJ7L5Vhj0I02rtOgtbqY9whixf+ddYB9cLSNGB69L53t/W/XIXFD0AZOi8Ms0TSyYRW6jVv4Cuudp7XkfaDbLaGHjtMSk5EZCvb5FiPeEGi8uv9tJ2BxJWs6qKQl0Q35xf1JY1L0gXCLn2aY3c09Rdj35yw+z9pO7euVLkqPQTAapRf9JLjgHEvoyfBNNVMbMEzqAKW1hf1p6J1l1pL/EWLID0vpU6VxXq77Ix1snDCjqo2HMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qU5AExu0ZkmPYAw5FHsGFdZsAh0SMgiPwXXjd/jpkT8=;
+ b=Mkwgi8jrY5bG2f56zs7n2TLeFnohGBWScgBRzhMzN2OaAWMLEBtMFTxspN+vcWXUi3c35ff54i1skYbuIQs5UtJRta02Mr5Z4Smw4if2Ie3QCR0pjZB1avTw3HlT8Kpflv01oKiumNwoVY9hDqSJSFyudAMxpKcJClGH7N4UBav3U1EG22ONU6FLU8limreauENyqT4yyZxkiPvVKh+zNFgQji/P4Ae0qAvfRl8JpbW056PixODhsUJxWmp67uya05irLHSDZ1nBNR8OpKJD9OTNokTD5LMKXpu1pAEe6hgkpRB0DQAbn2dzNJkAnvp3CAeDIcziV7xIzlSL4UQdNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qU5AExu0ZkmPYAw5FHsGFdZsAh0SMgiPwXXjd/jpkT8=;
+ b=RGLNU9z0TonymMuLZzmXm9Kg10lTXgCTYY84CluM6SaKv+PRg285yIcKeok9Mh2Rn3ExaUXoDCor7YXaNPQgYTFFAMljFg3sgm8b0eJT3cMRJB9Y34VjZuM+jtccjto0eyZ94ad/8Q5jeLwcupf0qiWr3+FcNdXY80cMhhMymW8=
+Received: from SN6PR2101MB1056.namprd21.prod.outlook.com (2603:10b6:805:6::17)
+ by SN6PR2101MB0989.namprd21.prod.outlook.com (2603:10b6:805:4::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.13; Fri, 17 Jul
+ 2020 13:54:07 +0000
+Received: from SN6PR2101MB1056.namprd21.prod.outlook.com
+ ([fe80::bdd6:9c11:7d18:5855]) by SN6PR2101MB1056.namprd21.prod.outlook.com
+ ([fe80::bdd6:9c11:7d18:5855%5]) with mapi id 15.20.3195.018; Fri, 17 Jul 2020
+ 13:54:07 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+CC:     Andres Beltran <t-mabelt@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        Andres Beltran <lkmlabelt@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: RE: [PATCH v4 2/3] scsi: storvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Thread-Topic: [PATCH v4 2/3] scsi: storvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Thread-Index: AQHWTzxT58klv4yPs0iqRD3vnA4qZaj801cAgACgZoCAAAEmAIAOO4oAgAAzdSA=
+Date:   Fri, 17 Jul 2020 13:54:07 +0000
+Message-ID: <SN6PR2101MB1056F67B43877AC7298D2748D77C0@SN6PR2101MB1056.namprd21.prod.outlook.com>
+References: <20200701001221.2540-1-lkmlabelt@gmail.com>
+ <20200701001221.2540-3-lkmlabelt@gmail.com>
+ <20200707234700.GA218@Ryzen-9-3900X.localdomain>
+ <20200708092105.7af7sf2olpaysh33@liuwe-devbox-debian-v2>
+ <20200708092512.muse7szgxyihazvv@liuwe-devbox-debian-v2>
+ <20200717104556.ul5s6hmtlerjpi3g@liuwe-devbox-debian-v2>
+In-Reply-To: <20200717104556.ul5s6hmtlerjpi3g@liuwe-devbox-debian-v2>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-17T13:54:05Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d7dafab7-3fe9-41cb-81f0-36be1a49e843;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: af5e8991-89e6-47af-ff04-08d82a58dfee
+x-ms-traffictypediagnostic: SN6PR2101MB0989:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR2101MB09895DC7C4DC8C6E91306575D77C0@SN6PR2101MB0989.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LBVGokE/q7JXmOyZrht6NtarwwA8L8Wwnv7lPHm4LFptIA9ZKXnibhTdeCzxdKIa1sUcRyhOr+fcMmL/fGZVtpyCPibkczcCARosHNuNN0EPXNcAMVc4LWG130b8XG7c+Rxv5lfHtDynueCFaDH1Qf6zAVvxyj9v5/Q+6P5VND73eKH5zAN0+GJ2Oz4rq5Gw6qEIQnrEqpP3PVLAKh47LknrnihKEel1kej5ZvEWFd81SSk+xCJNRW6hnBcWF3pGhNeyY5AuFhL1EZPY+OqMHpbVtE1okBEaH2wzpyTAjECfifiYpTlMy7qN6n6w0aDAWFRUSLwHk59+crpJ6VpfSY9pYbHNVW+fdJjSO8Ibh7FxUhZ7Ra/KQQkxGkRa0Q/mBoY53ORGvUlAd5D5c3sHww==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1056.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(39860400002)(366004)(346002)(76116006)(8936002)(33656002)(83080400001)(7696005)(9686003)(82950400001)(82960400001)(186003)(5660300002)(71200400001)(10290500003)(54906003)(26005)(8676002)(478600001)(110136005)(8990500004)(86362001)(316002)(66946007)(52536014)(6506007)(55016002)(66446008)(2906002)(966005)(66556008)(83380400001)(66476007)(4326008)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: vvHNdYu1sM4eJgTEOlOo2jkKn1JHIgdF4Eo7dMuu7a0dtgIo7GTpRGR4ft4ouTd3TW8kg1yTMsI9BW2iJOg5dg7cB5TK6XLqG14Kkn+AH0pz8PLgLuYX3Ekmyb0ytS0hcR9p/u6vjO98jcooyFjiifSWrxVlv5IXL9urZnqAJv5GvxmdBAeezmWDvSvmEU5PO/TwgqUh2AnCskqtEuE+xzFM+fmGfQd827HDTI7FyPfqFDw1gVsFd2qJupuXQyrmKolQd3HXIWZGLFnFpuXQyVYZ1NRqEgNILYm9O9bRhGV36vA1Dmjgx/n0AJ+ae7par6E+ds+RPhj4Xcu99/fu6P9aFRinbzpq8vIdHwvvfSVGk7Hulg9nuKsNmplHGl+Br5UMgjZT3Uhu5S/UdggbqxxkX9ErTBh7vuT+M1mlJFUIgNXkQpLmDv3zyH1hQOlkMbw8oHoi1ng2X4ETFA2mciGn1DDnXURN4VVcXQ0f+avzG1lGxEFwgPWscPV38hnp
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715213609.GV183694@krava>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR2101MB1056.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af5e8991-89e6-47af-ff04-08d82a58dfee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 13:54:07.4246
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dt4xGKMb8tEPZEc9JYSI2QcVMxA1aEKmtEmy6+L6FFnxFWrzvyakW+OPwvEVl+KdEsSelTJh3zXAj15bCjgo+vUXRA2Zsh648P9YxjiZiwI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0989
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:36:09PM +0200, Jiri Olsa wrote:
-> On Wed, Jul 15, 2020 at 11:25:14AM -0700, Ian Rogers wrote:
-> > On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> 
-> SNIP
-> 
-> > > +int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
-> > > +{
-> > > +       struct expr_id_data *data_ptr = NULL, *old_data = NULL;
-> > > +       char *old_key = NULL;
-> > > +       char *name;
-> > > +       int ret;
-> > > +
-> > > +       data_ptr = zalloc(sizeof(*data_ptr));
-> > > +       if (!data_ptr)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       name = strdup(ref->metric_name);
-> > > +       if (!name) {
-> > > +               free(data_ptr);
-> > > +               return -ENOMEM;
-> > > +       }
-> > > +
-> > > +       data_ptr->ref.metric_name = ref->metric_name;
-> > > +       data_ptr->ref.metric_expr = ref->metric_expr;
-> > 
-> > Having one owned string and one unowned makes the memory management
-> > here somewhat complicated. Perhaps dupe both?
-> 
-> right, will check on this
+From: Wei Liu <wei.liu@kernel.org>  Sent: Friday, July 17, 2020 3:46 AM
+> On Wed, Jul 08, 2020 at 09:25:12AM +0000, Wei Liu wrote:
+> > On Wed, Jul 08, 2020 at 09:21:05AM +0000, Wei Liu wrote:
+> > [...]
+> > > > If I revert this commit, everything works fine:
+> > > >
+> > > > PS C:\Users\natec> wsl --shutdown
+> > > > PS C:\Users\natec> wsl -d ubuntu -- /bin/bash
+> > > > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ cat /proc/version
+> > > > Linux version 5.8.0-rc4-next-20200707-microsoft-standard+ (nathan@R=
+yzen-9-3900X)
+> (gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.3=
+4) #1 SMP Tue Jul
+> 7 16:35:06 MST 2020
+> > > > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ git -C ~/src/linux-next lo=
+ -2
+> > > > 0ff017dff922 (HEAD -> master) Revert "scsi: storvsc: Use vmbus_requ=
+estor to
+> generate transaction IDs for VMBus hardening"
+> > > > 5b2a702f85b3 (tag: next-20200707, origin/master, origin/HEAD) Add l=
+inux-next specific
+> files for 20200707
+> > > > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$
+> > > >
+> > > > The kernel was built using the following commands:
+> > > >
+> > > > $ mkdir -p out/x86_64
+> > > >
+> > > > $ curl -LSso out/x86_64/.config
+> https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-=
+wsl-4.19.y/Microsoft/config-wsl
+> > > >
+> > > > $ scripts/config --file out/x86_64/.config -d RAID6_PQ_BENCHMARK -e
+> NET_9P_VIRTIO
+> > > >
+> > > > $ make -skj"$(nproc)" O=3Dout/x86_64 olddefconfig bzImage
+> > > >
+> > > > I don't really know how to get more information than this as WSL se=
+ems
+> > > > rather opaque but I am happy to provide any information.
+> > >
+> > > Linux kernel uses Hyper-V's crash reporting facility to spit out
+> > > information when it dies. It is said that you can see that informatio=
+n
+> > > in the "Event Viewer" program.
+> > >
+> > > (I've never tried this though -- not using WSL2)
+> > >
+> >
+> > If this doesn't work, another idea is to install a traditional VM on
+> > Hyper-V and replace the kernel with your own.
+> >
+> > With such setup, you should be able to add an emulated serial port to
+> > the VM and grab more information.
+>=20
+> Hi Nathan, do you need more help on this?
+>=20
+> MSFT is also working on reproducing this internally.
+>=20
+> We're ~2 weeks away from the next merge window so it would be good if we
+> can get to the bottom of this as quickly as possible.
+>=20
 
-actualy, both of them are pointers to const char strings from struct pmu_event,
-so they don't need to be freed
+On the Microsoft side we now have a repro of the problem when running
+in WSLv2.  The symptoms match exactly what Nathan has reported.  We
+will debug it from here.  Thanks for reporting this!
 
-the journey starts at __add_metric function, where we
-get the struct pmu_event pointers:
-
-	ref->metric_name = pe->metric_name;
-	ref->metric_expr = pe->metric_expr;
-
-then it's passed to struct metric_ref in metricgroup__setup_events:
-
-	metric_refs[i].metric_name = ref->metric_name;
-	metric_refs[i].metric_expr = ref->metric_expr;
-
-still 'const char*'.. and ending up as part of the value in
-expr__add_ref function:
-
-	data_ptr->ref.metric_name = ref->metric_name;
-	data_ptr->ref.metric_expr = ref->metric_expr;
-
-I'll put comments in all those places so it's evident that it's intentional
-
-jirka
-
+Michael
