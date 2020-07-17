@@ -2,147 +2,132 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B43C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF49C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87CAF2076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CD120838
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:09:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Egxk7JOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgGQBw0 (ORCPT
+        id S1726580AbgGQCJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 21:52:26 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:38770 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbgGQBwZ (ORCPT
+        Thu, 16 Jul 2020 22:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgGQCJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 21:52:25 -0400
-Received: from localhost (unknown [192.168.167.70])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 5B07CC5C96;
-        Fri, 17 Jul 2020 09:52:22 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P22085T140330059949824S1594950740444703_;
-        Fri, 17 Jul 2020 09:52:21 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <cad690310766119713eafb7a4357bfcc>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     heiko@sntech.de, linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kever.yang@rock-chips.com,
-        david.wu@rock-chips.com, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 05/13] pinctrl: rockchip: create irq mapping in gpio_to_irq
-Date:   Fri, 17 Jul 2020 09:52:19 +0800
-Message-Id: <20200717015219.14047-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200717014908.13914-1-jay.xu@rock-chips.com>
-References: <20200717014908.13914-1-jay.xu@rock-chips.com>
+        Thu, 16 Jul 2020 22:09:02 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95DC2C061755;
+        Thu, 16 Jul 2020 19:09:02 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x9so4768764plr.2;
+        Thu, 16 Jul 2020 19:09:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=mQWYymg3Pd104pis2IhNsO9+PGw6QeS8PPO1z8GPhKU=;
+        b=Egxk7JOl9gTuD/ij8L5Z+QdUNjD6rS5I4dbUaFxT9YB/DO6NtUZ4GrFIvtDcgb/UiE
+         1g24XG/sAho5PkdtN6RIHDgPYGqpEQYDKgWhFClzNOrThg1Z680paSueuL1u3kARBAu2
+         fFfhEapKANjqVgXwmBpESUkBuKVEj8U3HabNAyl9ru+Jz6tTiJwAGKbIcmaa/6glLhjW
+         dYOzUVXh/k4GKD8jcN7qGadaW7PkTPBZKMgK0k0Vv4kZbkdGLKUZcUJVlTHVcrbah4Za
+         sXM8RIiEqsYMphf/2hu5z5oKSDn2+cDiA7h/233tUmB47TDl1780Kby+e/NDMRY5Enk9
+         P8fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=mQWYymg3Pd104pis2IhNsO9+PGw6QeS8PPO1z8GPhKU=;
+        b=WlzqIRkRD1or3h0zDNDJf+W4tZxaFM2PYAAknzTWUcd3zGt81byCI9ILJPm9Q3K+hm
+         Igh/HnCBcfw29Lk5rzZxLDhze2AZ1Ailwe6NBzvP+O6UZHlt29HfZacDgvvEeZXlc20G
+         Uft0WSLal67nTgUww7HZPd/ClvrGM3jaap8KHnPB/PviVzePIwbPNBD/R/3YJU2WzvC0
+         jxvfe5D02qME2WWdRtg0k3Bti9xY8F0ORHG0YZuli7mzlgjGqnHK3WiTv42DxTfuEKjm
+         lKn87Y+kAReA2FHOraoD3CQJABGjkaklIRNI+Dtjttt5NWE23/4eFVeCg0SmBqUxwaq0
+         sFMw==
+X-Gm-Message-State: AOAM530K1iXF1kfIH/lQfcrud6iD07eyR0XG/PI7GQvGBCGE7r4DZIXP
+        4uNqOwCnAFPGiLnMJOlz3RfZPf7L
+X-Google-Smtp-Source: ABdhPJzP0xNtaCRHw3hyyHrEYTdSzBXrrQeWoDh62VLKiCP3NT+QW5A1sY59sdtOJ7DJOkumHrhkag==
+X-Received: by 2002:a17:902:c697:: with SMTP id r23mr6151150plx.35.1594951742115;
+        Thu, 16 Jul 2020 19:09:02 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id j17sm5888154pgn.87.2020.07.16.19.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 19:09:01 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 12:08:56 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v3 0/3] Off-load TLB invalidations to host for !GTSE
+To:     Bharata B Rao <bharata@linux.ibm.com>, Qian Cai <cai@lca.pw>
+Cc:     aneesh.kumar@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        mpe@ellerman.id.au, sfr@canb.auug.org.au
+References: <20200703053608.12884-1-bharata@linux.ibm.com>
+        <20200716172713.GA4565@lca.pw>
+In-Reply-To: <20200716172713.GA4565@lca.pw>
+MIME-Version: 1.0
+Message-Id: <1594950229.jn9ipe6td1.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove totally irq mappings create in probe, the gpio irq mapping will
-be created when do
-    gpio_to_irq ->
-        rockchip_gpio_to_irq ->
-            irq_create_mapping
+Excerpts from Qian Cai's message of July 17, 2020 3:27 am:
+> On Fri, Jul 03, 2020 at 11:06:05AM +0530, Bharata B Rao wrote:
+>> Hypervisor may choose not to enable Guest Translation Shootdown Enable
+>> (GTSE) option for the guest. When GTSE isn't ON, the guest OS isn't
+>> permitted to use instructions like tblie and tlbsync directly, but is
+>> expected to make hypervisor calls to get the TLB flushed.
+>>=20
+>> This series enables the TLB flush routines in the radix code to
+>> off-load TLB flushing to hypervisor via the newly proposed hcall
+>> H_RPT_INVALIDATE.=20
+>>=20
+>> To easily check the availability of GTSE, it is made an MMU feature.
+>> The OV5 handling and H_REGISTER_PROC_TBL hcall are changed to
+>> handle GTSE as an optionally available feature and to not assume GTSE
+>> when radix support is available.
+>>=20
+>> The actual hcall implementation for KVM isn't included in this
+>> patchset and will be posted separately.
+>>=20
+>> Changes in v3
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> - Fixed a bug in the hcall wrapper code where we were missing setting
+>>   H_RPTI_TYPE_NESTED while retrying the failed flush request with
+>>   a full flush for the nested case.
+>> - s/psize_to_h_rpti/psize_to_rpti_pgsize
+>>=20
+>> v2: https://lore.kernel.org/linuxppc-dev/20200626131000.5207-1-bharata@l=
+inux.ibm.com/T/#t
+>>=20
+>> Bharata B Rao (2):
+>>   powerpc/mm: Enable radix GTSE only if supported.
+>>   powerpc/pseries: H_REGISTER_PROC_TBL should ask for GTSE only if
+>>     enabled
+>>=20
+>> Nicholas Piggin (1):
+>>   powerpc/mm/book3s64/radix: Off-load TLB invalidations to host when
+>>     !GTSE
+>=20
+> Reverting the whole series fixed random memory corruptions during boot on
+> POWER9 PowerNV systems below.
 
-This patch can speed up system boot on, also abandon many unused irq
-mappings' create.
+If I s/mmu_has_feature(MMU_FTR_GTSE)/(1)/g in radix_tlb.c, then the .o
+disasm is the same as reverting my patch.
 
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- drivers/pinctrl/pinctrl-rockchip.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+Feature bits not being set right? PowerNV should be pretty simple, seems
+to do the same as FTR_TYPE_RADIX.
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index d34fada39227..1be4627f3877 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -3196,7 +3196,7 @@ static void rockchip_irq_demux(struct irq_desc *desc)
- 
- 		irq = __ffs(pend);
- 		pend &= ~BIT(irq);
--		virq = irq_linear_revmap(bank->domain, irq);
-+		virq = irq_find_mapping(bank->domain, irq);
- 
- 		if (!virq) {
- 			dev_err(bank->drvdata->dev, "unmapped irq %d\n", irq);
-@@ -3375,7 +3375,7 @@ static int rockchip_interrupts_register(struct platform_device *pdev,
- 	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
- 	struct irq_chip_generic *gc;
- 	int ret;
--	int i, j;
-+	int i;
- 
- 	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
- 		if (!bank->valid) {
-@@ -3402,7 +3402,7 @@ static int rockchip_interrupts_register(struct platform_device *pdev,
- 
- 		ret = irq_alloc_domain_generic_chips(bank->domain, 32, 1,
- 					 "rockchip_gpio_irq", handle_level_irq,
--					 clr, 0, IRQ_GC_INIT_MASK_CACHE);
-+					 clr, 0, 0);
- 		if (ret) {
- 			dev_err(&pdev->dev, "could not alloc generic chips for bank %s\n",
- 				bank->name);
-@@ -3411,14 +3411,6 @@ static int rockchip_interrupts_register(struct platform_device *pdev,
- 			continue;
- 		}
- 
--		/*
--		 * Linux assumes that all interrupts start out disabled/masked.
--		 * Our driver only uses the concept of masked and always keeps
--		 * things enabled, so for us that's all masked and all enabled.
--		 */
--		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
--		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
--
- 		gc = irq_get_domain_generic_chip(bank->domain, 0);
- 		gc->reg_base = bank->reg_base;
- 		gc->private = bank;
-@@ -3435,13 +3427,17 @@ static int rockchip_interrupts_register(struct platform_device *pdev,
- 		gc->chip_types[0].chip.irq_set_type = rockchip_irq_set_type;
- 		gc->wake_enabled = IRQ_MSK(bank->nr_pins);
- 
-+		/*
-+		 * Linux assumes that all interrupts start out disabled/masked.
-+		 * Our driver only uses the concept of masked and always keeps
-+		 * things enabled, so for us that's all masked and all enabled.
-+		 */
-+		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
-+		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
-+		gc->mask_cache = 0xffffffff;
-+
- 		irq_set_chained_handler_and_data(bank->irq,
- 						 rockchip_irq_demux, bank);
--
--		/* map the gpio irqs here, when the clock is still running */
--		for (j = 0 ; j < 32 ; j++)
--			irq_create_mapping(bank->domain, j);
--
- 		clk_disable(bank->clk);
- 	}
- 
--- 
-2.17.1
+So... test being done before static keys are set up? Shouldn't be. Must
+be something obvious I just can't see it.
 
-
+Thanks,
+Nick
 
