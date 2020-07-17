@@ -2,71 +2,108 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9171C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995F82071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388CD2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgGQHnB (ORCPT
+        id S1727972AbgGQHoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:43:01 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52032 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726101AbgGQHnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:43:01 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6151D46A4A6BD0A29970;
-        Fri, 17 Jul 2020 15:42:54 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 17 Jul 2020 15:42:46 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <guohanjun@huawei.com>, <wangxiongfeng2@huawei.com>
-Subject: [PATCH] [SCSI] libsas: add missing newline when printing 'enable' by sysfs
-Date:   Fri, 17 Jul 2020 15:36:14 +0800
-Message-ID: <1594971374-40210-1-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Fri, 17 Jul 2020 03:44:15 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:50840 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbgGQHoO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:44:14 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 577D91C0BD4; Fri, 17 Jul 2020 09:44:11 +0200 (CEST)
+Date:   Fri, 17 Jul 2020 09:44:10 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Alexandre Courbot <gnurou@gmail.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH] leds: add NCT6795D driver
+Message-ID: <20200717074410.GA8895@amd>
+References: <20200713134114.137265-1-gnurou@gmail.com>
+ <20200714223344.GA20740@amd>
+ <CAAVeFuKomLcAue9rGXhK3Uc=H+v9ZLBA84Ozr_rZDRQMYeC=dg@mail.gmail.com>
+ <17fe52a2-73ff-b547-8a59-5df009c929c8@gmail.com>
+ <CAAVeFuJQCp7Fpqx3nUHMy29Jw1pLNoQtxRw3qxfEf3YKnrm0fw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
+Content-Disposition: inline
+In-Reply-To: <CAAVeFuJQCp7Fpqx3nUHMy29Jw1pLNoQtxRw3qxfEf3YKnrm0fw@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I cat sysfs file 'enable' below 'sas_phy', it displays as follows.
-It's better to add a newline for easy reading.
 
-[root@localhost ~]# cat /sys/devices/pci0000:00/0000:00:0d.0/0000:0f:00.0/host3/phy-3:2/sas_phy/phy-3:2/enable
-1[root@localhost ~]#
+--jRHKVT23PllUwdXP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
----
- drivers/scsi/scsi_transport_sas.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi!
 
-diff --git a/drivers/scsi/scsi_transport_sas.c b/drivers/scsi/scsi_transport_sas.c
-index 182fd25..e443dee 100644
---- a/drivers/scsi/scsi_transport_sas.c
-+++ b/drivers/scsi/scsi_transport_sas.c
-@@ -563,7 +563,7 @@ static ssize_t do_sas_phy_enable(struct device *dev,
- {
- 	struct sas_phy *phy = transport_class_to_phy(dev);
- 
--	return snprintf(buf, 20, "%d", phy->enabled);
-+	return snprintf(buf, 20, "%d\n", phy->enabled);
- }
- 
- static DEVICE_ATTR(enable, S_IRUGO | S_IWUSR, show_sas_phy_enable,
--- 
-1.7.12.4
+> > >>> Add support for the LED feature of the NCT6795D chip found on some
+> > >>> motherboards, notably MSI ones. The LEDs are typically used using a
+> > >>> RGB connector so this driver creates one LED device for each color
+> > >>> component.
+> > >>
+> > >> Ok, let me take a look. What entries does it present in /sys?
+> > >
+> > > Right now these 3 directories in /sys/class/leds:
+> > >
+> > > nct6795d:blue:
+> > > nct6795d:green:
+> > > nct6795d:red:
+> > >
+> > > with the usual suspects `brightness` and `max_brightness` in each. I
+> > > am not 100% sure I got the names right so please let me know if that
+> > > is not correct.
+> >
+> > You miss LED function, that should be in the second section.
 
+third section?
+
+> The reason for not having a function at the moment is that I took a
+> look at include/dt-bindings/leds/common.h and could not find any
+> function that could reasonably apply. This basically controls a RGB
+> connector on the motherboard which serves no particular function - you
+> can plug a RGB fan or anything else you want and control it in any
+> fashion. Is there a function that applies to this use-case?
+
+This is normally used for motherboard lightning, right? I believe this
+is getting common on gaming boards, and we want common support for
+that.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--jRHKVT23PllUwdXP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8RVsoACgkQMOfwapXb+vIYJQCeNv8XzLypVkfOvVKCaRH1eEgF
+d68AnRg1XriCFpqeZJE1euaJT4p+qWLa
+=G7Tf
+-----END PGP SIGNATURE-----
+
+--jRHKVT23PllUwdXP--
