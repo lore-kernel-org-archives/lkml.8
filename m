@@ -2,85 +2,121 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2485CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA1DC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1751207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4341207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ebVlzjzy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2O8QIoQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgGQJBW (ORCPT
+        id S1726386AbgGQJB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:01:22 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:15559 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725864AbgGQJBV (ORCPT
+        Fri, 17 Jul 2020 05:01:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgGQJBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:01:21 -0400
-X-UUID: a106391d987841c68fe5f09cc4ced914-20200717
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=XHOpy32OtASkNxEPdqs+g9DpCHrfPTsvKN+Adv820uk=;
-        b=ebVlzjzyXSGC8xna720AufTNVaSe+/D75NRHvbsZodZuw/nxfgX4dlkrMO9uHRzw+jz7O9bftF5rv5Y+OCGvrtmslqkBIMs3eQf9MdjbQ0jwdoknb7RiRffRLup/5qFL/6EpbwYS/OhNgkQ5HqXUspME1290jCigxQ3pwq1IaKo=;
-X-UUID: a106391d987841c68fe5f09cc4ced914-20200717
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 474251666; Fri, 17 Jul 2020 17:01:18 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 17 Jul 2020 17:01:13 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 17 Jul 2020 17:01:14 +0800
-Message-ID: <1594976475.4688.2.camel@mtkswgap22>
-Subject: Re: linux-next: build failure after merge of the pinctrl tree
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "Mars Cheng" <mars.cheng@mediatek.com>
-Date:   Fri, 17 Jul 2020 17:01:15 +0800
-In-Reply-To: <20200717171634.4b68472c@canb.auug.org.au>
-References: <20200717171634.4b68472c@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 17 Jul 2020 05:01:25 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3685C061755;
+        Fri, 17 Jul 2020 02:01:25 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x8so5180605plm.10;
+        Fri, 17 Jul 2020 02:01:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HKitXDlmydxI6z4/CnYabITgS4bsdTbz6585MnaltvY=;
+        b=b2O8QIoQic4W5SlcWRjg1H7nUBkNxMl+7QDNcLhjXY131F1HlAENZBz8xvzDCvl1oJ
+         1BuuU1zO9j2G3QXvaf8EQc14TRC39k5q8/UzXyG1N7n6mVEQzPXlciGtzRwlxd2j/xNg
+         A9mRJYvjHo/Y9XJqKU0PcF4xJ7ktjejg2zqqtH/QKwcN1vZZyN/WBhJTw4TP7F4m6oWU
+         xxhrN+YzK1WerBSdt42dMcyR73PSwjFn67CAAENYcFOAhXU/8W+GjmntKvW8ou3K9FML
+         zlfBQj4frWYbVAUwV2SvsiC8r3GpE4SqFY6PogG/+ne8mxSQjGw5ectipb48zx3WUADF
+         b+Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HKitXDlmydxI6z4/CnYabITgS4bsdTbz6585MnaltvY=;
+        b=e+7xr7NADUr7xk/MUEs0KTSwf7H1PYLU8icEXjYRzIKv5Y26bvtZRmIiyCJvThgQC1
+         8nBOKf4Bd9ojM6Rr9Lb0foxF6dcSyrSrtyMEZkZDqbd+Vhr6ROOZ2yrL/t/VeNesqK2O
+         xBkqCHsuAVEWBugu/JFtxtFpXC/Igh88otJ/ZZIGK9CLZxsl3rIY2QLTqnib9K03/8Dp
+         iek+/Jd762/lT4Opxa6yqdFuMKckXai9YsiNt7sFvO/4wis5ErLJQ3uvIPQfjEyuLkqN
+         Oc9XyAscs3qZa+xW8Qv7JyakmOhNH63Bkm/vt4DLL0jxBf7NWuz6PjiTnEx3D9ZscuYO
+         XV1A==
+X-Gm-Message-State: AOAM532gy7AGQ9hWPoSCS3WrKUcImg/uSRHJcs6Ocz4kkbfJMcswuYSt
+        xu2+RIj/LtwpL/j1MluujbC4w5LYa0TtcuSKvbU=
+X-Google-Smtp-Source: ABdhPJyCMCY3NhiXGvxqc2+yg2fZHFBpFAYLZxFj2EQgd+ZUK5lmCJBGrbNFFEemrHRHoDWdoOS+rm8NZ/HPs8uUp4Q=
+X-Received: by 2002:a17:902:8491:: with SMTP id c17mr6791039plo.262.1594976485312;
+ Fri, 17 Jul 2020 02:01:25 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 279F5F33599B3C2B2F768669CC6ED361C28F278600F1A53D70229ACEFB27311A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200716115122.15909-1-jslaby@suse.cz>
+In-Reply-To: <20200716115122.15909-1-jslaby@suse.cz>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 17 Jul 2020 12:01:09 +0300
+Message-ID: <CAHp75VeqV1Jj3rOxbFCx2DsrH1Y_re03i3ndvXvShi2UG6FGyQ@mail.gmail.com>
+Subject: Re: [PATCH] media: atomisp: fix NULL pointer dereference
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA3LTE3IGF0IDE3OjE2ICsxMDAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
-Og0KPiBIaSBhbGwsDQo+IA0KPiBBZnRlciBtZXJnaW5nIHRoZSBwaW5jdHJsIHRyZWUsIHRvZGF5
-J3MgbGludXgtbmV4dCBidWlsZCAoeDg2XzY0DQo+IGFsbG1vZGNvbmZpZykgZmFpbGVkIGxpa2Ug
-dGhpczoNCj4gDQo+IGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10Njc3OS5jOjc4
-MzoxOiB3YXJuaW5nOiBkYXRhIGRlZmluaXRpb24gaGFzIG5vIHR5cGUgb3Igc3RvcmFnZSBjbGFz
-cw0KPiAgIDc4MyB8IGFyY2hfaW5pdGNhbGwobXQ2Nzc5X3BpbmN0cmxfaW5pdCk7DQo+ICAgICAg
-IHwgXn5+fn5+fn5+fn5+fg0KPiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3
-NzkuYzo3ODM6MTogZXJyb3I6IHR5cGUgZGVmYXVsdHMgdG8gJ2ludCcgaW4gZGVjbGFyYXRpb24g
-b2YgJ2FyY2hfaW5pdGNhbGwnIFstV2Vycm9yPWltcGxpY2l0LWludF0NCj4gZHJpdmVycy9waW5j
-dHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2Nzc5LmM6NzgzOjE6IHdhcm5pbmc6IHBhcmFtZXRlciBu
-YW1lcyAod2l0aG91dCB0eXBlcykgaW4gZnVuY3Rpb24gZGVjbGFyYXRpb24NCj4gZHJpdmVycy9w
-aW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2Nzc5LmM6Nzc5OjE5OiB3YXJuaW5nOiAnbXQ2Nzc5
-X3BpbmN0cmxfaW5pdCcgZGVmaW5lZCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWZ1bmN0aW9uXQ0K
-PiAgIDc3OSB8IHN0YXRpYyBpbnQgX19pbml0IG10Njc3OV9waW5jdHJsX2luaXQodm9pZCkNCj4g
-ICAgICAgfCAgICAgICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fn5+DQo+IA0KPiBDYXVz
-ZWQgYnkgY29tbWl0DQo+IA0KPiAgIGU2Zjc0NGM2YWQ0ZiAoInBpbmN0cmw6IG1lZGlhdGVrOiBh
-ZGQgcGluY3RybCBzdXBwb3J0IGZvciBNVDY3NzkgU29DIikNCj4gDQo+IEZvcmdvdCB0byBpbmNs
-dWRlIG1vZHVsZS5oIChzaW5jZSBpdCBpcyB0cmlzdGF0ZSBpbiBLY29uZmlnKSBvciBpbml0Lmg/
-DQo+IA0KPiBJIHVzZWQgdGhlIHBpbmN0cmwgdHJlZSBmcm9tIG5leHQtMjAyMDA3MTYgZm9yIHRv
-ZGF5Lg0KPiANCg0KTXkgZmF1bHQsIEknbGwgZml4IGl0IGluIG5leHQgdmVyc2lvbi4NCihTZXJp
-ZXM6IEFkZCBiYXNpYyBTb0MgU3VwcG9ydCBmb3IgTWVkaWF0ZWsgTVQ2Nzc5IFNvQykNCg0KVGhh
-bmsgeW91IGZvciB5b3VyIG1lc3NhZ2UNCg0KDQpIYW5rcyBDaGVuDQo=
+On Thu, Jul 16, 2020 at 2:52 PM Jiri Slaby <jslaby@suse.cz> wrote:
+>
+> I am currently seeing:
+> BUG: kernel NULL pointer dereference, address: 0000000000000002
+> ...
+> Hardware name: UMAX VisionBook 10Wi Pro/CQM1018CWP, BIOS CQ1018.007 09/22/2016
+> RIP: 0010:gmin_subdev_add.cold+0x303/0x312 [atomisp_gmin_platform]
+> ...
+> Call Trace:
+>  gmin_camera_platform_data+0x2f/0x60 [atomisp_gmin_platform]
+>  ov2680_probe+0x7f/0x2b0 [atomisp_ov2680]
+>  i2c_device_probe+0x95/0x290
+>
+> power can be NULL and that is properly handled earlier in this function.
+> Even i2c address is set there. So this is a duplicated assignment which
+> can cause the bug above. Remove it.
 
+I believe it's fixed in [1].
+
+[1]: https://git.linuxtv.org/mchehab/experimental.git/log/?h=atomisp_v5
+
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> index 1af9da8acf4c..246742f44d84 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> @@ -574,7 +574,6 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
+>                 gmin_subdevs[i].eldo2_ctrl_shift = gmin_get_var_int(dev, false,
+>                                                                     "eldo2_ctrl_shift",
+>                                                                     ELDO2_CTRL_SHIFT);
+> -               gmin_subdevs[i].pwm_i2c_addr = power->addr;
+>                 break;
+>
+>         default:
+> --
+> 2.27.0
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
