@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41969C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B32C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22D902076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 468AC207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOKWHDXy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0j9R+8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgGQS6a (ORCPT
+        id S1728724AbgGQS6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57586 "EHLO
+        Fri, 17 Jul 2020 14:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728674AbgGQS63 (ORCPT
+        with ESMTP id S1728674AbgGQS6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:58:29 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15486C0619D2;
-        Fri, 17 Jul 2020 11:58:29 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id m9so4704459qvx.5;
-        Fri, 17 Jul 2020 11:58:29 -0700 (PDT)
+        Fri, 17 Jul 2020 14:58:32 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42E2EC0619D2;
+        Fri, 17 Jul 2020 11:58:32 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id w34so8452921qte.1;
+        Fri, 17 Jul 2020 11:58:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=407sI7tDkkcS7hnHew6iLrde/ox7y6OHMpz2jDsv8WU=;
-        b=iOKWHDXyUKkbTZEupx4H1TXquLQ+HEDyuPBlq1AlvUzLJamZ8if/SPKc2diyuFFxzP
-         swInkmuncSuqi4pyOrjoNGQP5RIuYRWI6xagSWqra6gaS/323qlDdFjw5I8wK8T3XbVy
-         zw/d/qTpjve5yqqyA2wB5iUHf0XlyU7tOUjGD8MgcTFn06b8/WI0MVV+NZ6YwQP4Kv+H
-         ZMKT9FohOHh63tbOA9WTABerr2kUnBtwKwPc6iUt3HR1A2ojc30Lluv1F9ZHegYjfaOQ
-         RkZ2Z0R5lUW00lrWzkdS9pRN7Wk8OTOd2gfWkHZoQEcPBLeBxYcbOau/y6bGO1TpW7bZ
-         +5zg==
+        bh=iWryTU/P+/m/0oaOtnG0FgkqcG7rUoxiTpusYauQ+wA=;
+        b=R0j9R+8Fs0M99wtEXk0ZlDvAuj67eFbJcuq8CdHEjJBXCqsb5qUlZagNkr1iSS8a7n
+         8fgqrYwV19mP0L8KBYdM4nJmry4+u7zZ4MjTdlpAuYkMgbV59PW1/kvPpUIE5JL6IMNH
+         pRWDjOU/MTtjhcGnQn6xNMr7CD1yGRaVBxNFboOArpcSflA0ZV8oRO4RafzdI0h0ssqr
+         0uxtWETBNJboO8BqSsKzrfYfqCaLogiaY5CSEVd/6HdRjxnD1xqhuC4471pdoC9GX0NN
+         nGmRBQPC0Gi5eamKtUJGSbyMqAV77ixrEN10NE08OyWeh6rBfOvZcsT9EDatZGH5JlNm
+         Cv1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=407sI7tDkkcS7hnHew6iLrde/ox7y6OHMpz2jDsv8WU=;
-        b=s+MIX7vrbWdgXajPUfXodoSVVy+4ywWiKS2aQrZrvbAhLuLcmVupP5Rf4dBj5GXx8W
-         Pfs0Yv1XSz13fR63NZzY8LdRUuj6x+yw1wJU3bzVsr42pgV3zxCMs9zaGEI0eKl+xYWM
-         9bxQKCR/NDIYNqIQkkXqqPP8I1G/sWYLyRVcNupOfzRJDbhw0xVYTXXJVKpmFy3S+Tkm
-         W1Oe2S0JC57GhhyNv+0RANp3wcD5uJRnkMDr5bj9dBlFgNlzk4unqKqKNlNKBk/ZbXuF
-         XB/MQDRV84ySciEEnybawhGq9AuR2WC49I/VIZg59X0h+/VedrKGVyISpbE+TY0kJPv7
-         nR6Q==
-X-Gm-Message-State: AOAM533MsGNCt3GdkLRsuwnertBNyTX3JToLiUBLar5hqRJ67sKaAc2T
-        XDaxZIm5KNy0HRQfkflFA1Q8MiRXQx0=
-X-Google-Smtp-Source: ABdhPJxSrKECrPTW/aFWa490oIZjJRC6pfEGFZQKO5fHJWySRx++ksrSHAfQNTaF4XP1gIfODQy8dg==
-X-Received: by 2002:a05:6214:13b4:: with SMTP id h20mr10312796qvz.248.1595012308289;
-        Fri, 17 Jul 2020 11:58:28 -0700 (PDT)
+        bh=iWryTU/P+/m/0oaOtnG0FgkqcG7rUoxiTpusYauQ+wA=;
+        b=J3MePXeDZU/W8btvRLNahUepYWAcYM3RED2mvDuir8DWPHQreQs8QfbQ1P3hb+Gr4D
+         2nbT9LJV8AT5kKpVgffw7zaWWYBOG0NzRXdDI6zUv+svL1zQt7kbJue97FMgPFwIsHap
+         F1fPJK1NkA3gplBzwmvE58HUnrXGWKN03osVI83vdE7Nk2zFg2GWJB4iaRGQD5Z6lICG
+         fEL/JzHJWmww+JRLJVZjos+0kIY3Lfw2tgS6Ejl+Jr6nVgotb6W0yB2x6HxYyTpK6MJ8
+         D4zpkIAgZRUQwLXKCGPCtu4GSwOMUB/+b15j3ny9nJvloHBkmQjFtFg4OekmiQJ2AgrM
+         dbfA==
+X-Gm-Message-State: AOAM5322kCkjdnWbF8wWAelWDDIdJPwqMB8j5YftiBtHrbh/YqZHnF5w
+        zd16ZvOiiLfh+roeRIhJyes=
+X-Google-Smtp-Source: ABdhPJzHdGQmNDzYs8D4w9VcodsGAEMw2W3aYMqBLe58ETrvC4bQ9k7vIv657uqzKSqls8rblbs7NA==
+X-Received: by 2002:ac8:6d33:: with SMTP id r19mr12507736qtu.167.1595012311498;
+        Fri, 17 Jul 2020 11:58:31 -0700 (PDT)
 Received: from localhost.localdomain ([2804:18:7002:653c:f7ea:490a:10b0:ec39])
-        by smtp.gmail.com with ESMTPSA id r6sm11380097qtt.81.2020.07.17.11.58.25
+        by smtp.gmail.com with ESMTPSA id r6sm11380097qtt.81.2020.07.17.11.58.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 11:58:27 -0700 (PDT)
+        Fri, 17 Jul 2020 11:58:30 -0700 (PDT)
 From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 X-Google-Original-From: Daniel W. S. Almeida
 To:     corbet@lwn.net, mchehab@kernel.org
 Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 22/25] Documentation/bpf/index.rst: fix sphinx warning:
-Date:   Fri, 17 Jul 2020 15:56:21 -0300
-Message-Id: <20200717185624.2009393-22-dwlsalmeida@gmail.com>
+Subject: [PATCH 23/25] Documentation/firmware-guide/acpi/index.rst: fix sphinx warning
+Date:   Fri, 17 Jul 2020 15:56:22 -0300
+Message-Id: <20200717185624.2009393-23-dwlsalmeida@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
 References: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
@@ -80,35 +80,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-Fix the following warning
+Fix the following warning:
 
-Documentation/bpf/ringbuf.rst: WARNING: document isn't
-included in any toctree
+Documentation/firmware-guide/acpi/intel-pmc-mux.rst:
+WARNING: document isn't included in any toctree
 
 Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 ---
- Documentation/bpf/index.rst | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/firmware-guide/acpi/index.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/bpf/index.rst b/Documentation/bpf/index.rst
-index 38b4db8be7a2b..0f60b95e83c40 100644
---- a/Documentation/bpf/index.rst
-+++ b/Documentation/bpf/index.rst
-@@ -58,6 +58,14 @@ Testing and debugging BPF
-    s390
- 
- 
-+Other
-+=====
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   ringbuf
-+
- .. Links:
- .. _Documentation/networking/filter.rst: ../networking/filter.txt
- .. _man-pages: https://www.kernel.org/doc/man-pages/
+diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+index ad3b5afdae77e..f72b5f1769fb2 100644
+--- a/Documentation/firmware-guide/acpi/index.rst
++++ b/Documentation/firmware-guide/acpi/index.rst
+@@ -26,3 +26,4 @@ ACPI Support
+    lpit
+    video_extension
+    extcon-intel-int3496
++   intel-pmc-mux
 -- 
 2.27.0
 
