@@ -2,117 +2,150 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC72DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2EB22076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66FE020717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:11:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zO+rgX64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgGQNJq (ORCPT
+        id S1726401AbgGQNLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:09:46 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:34471 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgGQNJq (ORCPT
+        Fri, 17 Jul 2020 09:11:38 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:48365 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726090AbgGQNLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:09:46 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N9L64-1ksdTn3NFE-015KpQ; Fri, 17 Jul 2020 15:09:44 +0200
-Received: by mail-qk1-f180.google.com with SMTP id k18so8646519qke.4;
-        Fri, 17 Jul 2020 06:09:43 -0700 (PDT)
-X-Gm-Message-State: AOAM533tKii7/GaHJG0kOFfsZT3GGFLHGuw+uD6YhyCdeh5AdICzd280
-        KeVFlzFShr/DT/qxSZQmcN/oCFbxcsFFiXYEbEA=
-X-Google-Smtp-Source: ABdhPJyMn8BMOQetMHxeZULv+RBoPE70laJ0tRwka+aAxlKtKitAI/Tvkp5yakr56ftuXBiqMpwqJcJDKRo8uCRWbEc=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr8777330qkf.394.1594991382483;
- Fri, 17 Jul 2020 06:09:42 -0700 (PDT)
+        Fri, 17 Jul 2020 09:11:37 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HD8FkF006837;
+        Fri, 17 Jul 2020 15:11:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=8nLQ4BLOPtd+RIo+7t6Sr5QwFj1DO7gwx3ZjhqT5Eqc=;
+ b=zO+rgX64ROgs+lF5zjg2Yy02V/SQoYxtoIp9KNdRHL+vlJLK2bREDqeSaIxc1nz+6dUF
+ 0yma/xtUZ1cy2pcsQ1Td/wKo+wOwQsB/3dtQULkNvxCUZHe/58f4setL24egFq5FqvHM
+ PUuzvOhAz9Xoq6hqRZXEVcCvMI5oamvVbtTrTlkku4MavOO0JnBWx97qiz+2OFK/tSaQ
+ 7vDkDme4w6L38O2GI+rNQQb5TXu5G1DXXtxRUET29qSYZPR53aJw4xt2xFfTEJnp49l8
+ o9nXFZI/j30aEHnJDia1y08R5YIWGvS1bAHHJ2CRtfRvUPHhfla1vkvBS7uwdk0KpB3J 9w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 327btt8h2n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 15:11:09 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CCD6A10002A;
+        Fri, 17 Jul 2020 15:11:07 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AF8102B4D2D;
+        Fri, 17 Jul 2020 15:11:07 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 17 Jul
+ 2020 15:11:07 +0200
+Subject: Re: [PATCH] irqchip/stm32-exti: map direct event to irq parent
+To:     Marc Zyngier <maz@kernel.org>
+CC:     kernel test robot <lkp@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>, <kbuild-all@lists.01.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <marex@denx.de>
+References: <20200706081106.25125-1-alexandre.torgue@st.com>
+ <202007081232.bA2RH80f%lkp@intel.com> <87imevemwg.wl-maz@kernel.org>
+ <69fb49b4-6a41-edf4-fea3-3f10934817ca@st.com> <87eepaxqot.wl-maz@kernel.org>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <c95f45ba-5c1f-b252-6779-d3c4e11c4b26@st.com>
+Date:   Fri, 17 Jul 2020 15:11:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200619125801.9530-1-faiz_abbas@ti.com> <20200619125801.9530-8-faiz_abbas@ti.com>
- <3ed03440-7fbd-6abc-8a15-67e7217e2c3d@ti.com> <2e50333c-5387-236f-3fb2-6d8014b224e0@ti.com>
- <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
- <75cd485b-e3eb-19ee-ad1f-84cb04b0c807@ti.com> <933d7132-5d9f-89df-8dec-5d9f6d3e0eee@ti.com>
-In-Reply-To: <933d7132-5d9f-89df-8dec-5d9f6d3e0eee@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 17 Jul 2020 15:09:26 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3Uc1X9PY6OnxbgEyBVY1=sx1drW7JrGzcPv1KrXaK7aQ@mail.gmail.com>
-Message-ID: <CAK8P3a3Uc1X9PY6OnxbgEyBVY1=sx1drW7JrGzcPv1KrXaK7aQ@mail.gmail.com>
-Subject: Re: [PATCH 7/7] arm64: defconfig: Enable AM654x SDHCI controller
-To:     Tero Kristo <t-kristo@ti.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Faiz Abbas <faiz_abbas@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        ARM-SoC Maintainers <soc@kernel.org>,
-        Nishanth Menon <nm@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:HxeDZWRPYSNnOleicueUNPsXJGN0jBATXMNJHugDJH4mbxG/cEE
- FsG9U3xj9n+57beTL/9M1nqP6rA23OqSGtr7RuWX+VoPRcdaDYgS7Lzuyzj4AYRW0tMW9RS
- o0FrlTmcVnAf+44ZmZLXAatdvkLqRFgY7QDQem87lT5zb6xcfATWT2XwZYTG/t8yfvbcX/B
- hjXkPSLGC8k6UsXDxqKCw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:W6iJD+SFmhQ=:RZ4oPMGibGX12/tp4tvEbC
- ajaHDTbrZTHaWRlnS/mtH/z3Jjqp/85/++VoqIFdiZmkJFeOhjF7J0eWSf5cbPg7rw6bd5oav
- YiHdpazogsIiGCg447DjAmk19ydAnEHDqnugX7TC/mzpQ1P9BBe1abH02aPV9lWxL6MgWqXdO
- uguCKYCXjefJZHYXqEraM+uJPlNkrjN/iL+6QDb8Tq3q+1XUAUfcSSSmx0zGhxYyqkAAefflD
- aIoNAgXf/oGTiQZsUAtONhMMv7UhkOCEjJj81UjlwlVC97TTifzvFBwPtZD37QlMyS4asPUus
- tyPUvU/g8lRb7wlUpfqkoWytUXDTh8R28BmH+CcNP1moQWyD23ixcDeWlkTPrHqf8ceetD9FD
- hDrykIKKX/yvvsPJDZJJaqi3fzgfSKioO3ExViOtf6789ze9TWXLZ9H3qGAN1OV+6QUqDGz+l
- 5h4Np0DCT+1xYzxIxljDSAh4FXXM3kK5pVlwHVWjxY+PejQkYfB0ZR65PZTqMq9t1tOoxRn5m
- /6ssjoC2EAa8U0TRXcs1wRGoUmgQMeo6tnGYnMSS2RYebr9FzhXgDHyxknUS66nepgFcPw/SC
- RPyCMVcPAlzbsVkrl+W3qpRihWBQwK8IFbw1wliVe3oPhRPkH7L7uNtu0/A9GWiTkxqvBIW5s
- aVYH7pLo12yDfcwYy/ThknLFmGJUt4eQpxKbkopGo+p4+49L+4+kPlYxW4XNXs9Rt1L70Ogm4
- TEDOHOOceriAYf4UxyaXQi32BnlOdb/+9mBC22LIgcxjX7Qw25pXkUnEy+Iyp/B0LS4XCmcZh
- QP5rnCK9YxT20QwMH5hoQ4mdqCNBtOW4fWKVkXwWrRBLX8hxCMXyxycN4ydUsUVNBN77F7A1m
- 4iPdgCE+7VL0YtCuuT5JEqfCf+3b3BJeOdv+gBaXYC6bZVEhg7rqis8pqkAOorr0hvk+tGuD8
- hXRDFvGAk41Hi3ijP+CffxVngEnDWenk17UDIWWxcSOYw2r10vI49
+In-Reply-To: <87eepaxqot.wl-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-17_06:2020-07-17,2020-07-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 1:20 PM Tero Kristo <t-kristo@ti.com> wrote:
-> On 17/07/2020 11:38, Faiz Abbas wrote:
-> > On 16/07/20 11:58 pm, Arnd Bergmann wrote:
-> >> On Thu, Jul 16, 2020 at 3:25 PM Sekhar Nori <nsekhar@ti.com> wrote:
-> >> I tend to ignore individual patches to the defconfig file unless
-> >> they are sent to:soc@kernel.org. The best way to get them
-> >> included is to have the platform maintainers pick up the
-> >> changes and send them that way as a separate pull request
-> >> at the same time as sending any DT updates.
-> >>
-> >> The MAINTAINERS file lists Tero and Nishanth as maintainers
-> >> for the platform. If they want, I can apply this one directly, but in
-> >> the future, send it to them.
-> >>
-> >
-> > Thanks for clarifying Arnd. Tero, can you pick this up?
->
-> Ok, this topic has been bit unclear for me also, but if you say I can
-> pick the patches myself and send a pull request out, I can do that.
 
-Right. To clarify, the soc tree usually has separate branches for dts
-files, soc specific drivers, defconfig files and 32-bit platform code.
 
-When you pick up patches into your tree, please put them into
-branches that fit into those categories. You can group the patches
-into branches with more fine-grained categories if it makes sense
-(e.g. adding a particularly large driver, adding a new dts files for a
-new soc, or cosmetic cleanups across dts files).
+On 7/17/20 2:37 PM, Marc Zyngier wrote:
+> On Fri, 10 Jul 2020 10:37:47 +0100,
+> Alexandre Torgue <alexandre.torgue@st.com> wrote:
+>>
+>> Hi Marc,
+>>
+>> On 7/10/20 11:31 AM, Marc Zyngier wrote:
+>>> Alexandre,
+>>>
+>>> On Wed, 08 Jul 2020 05:57:24 +0100,
+>>> kernel test robot <lkp@intel.com> wrote:
+>>>>
+>>>> [1  <text/plain; us-ascii (7bit)>]
+>>>> Hi Alexandre,
+>>>>
+>>>> I love your patch! Perhaps something to improve:
+>>>>
+>>>> [auto build test WARNING on stm32/stm32-next]
+>>>> [also build test WARNING on soc/for-next v5.8-rc4 next-20200707]
+>>>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+>>>> And when submitting patch, we suggest to use  as documented in
+>>>> https://git-scm.com/docs/git-format-patch]
+>>>>
+>>>> url:    https://github.com/0day-ci/linux/commits/Alexandre-Torgue/irqchip-stm32-exti-map-direct-event-to-irq-parent/20200706-161327
+>>>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
+>>>> config: arm-randconfig-s031-20200707 (attached as .config)
+>>>> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
+>>>> reproduce:
+>>>>           wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>>>           chmod +x ~/bin/make.cross
+>>>>           # apt-get install sparse
+>>>>           # sparse version: v0.6.2-31-gabbfd661-dirty
+>>>>           # save the attached .config to linux build tree
+>>>>           COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=arm
+>>>>
+>>>> If you fix the issue, kindly add following tag as appropriate
+>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>>
+>>>> All warnings (new ones prefixed by >>):
+>>>>
+>>>>      In file included from include/linux/build_bug.h:5,
+>>>>                       from include/linux/bits.h:23,
+>>>>                       from include/linux/bitops.h:5,
+>>>>                       from drivers/irqchip/irq-stm32-exti.c:8:
+>>>>      drivers/irqchip/irq-stm32-exti.c: In function 'stm32_exti_h_domain_alloc':
+>>>>      drivers/irqchip/irq-stm32-exti.c:683:23: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+>>>>        683 |  if (desc->irq_parent >= 0) {
+>>>>            |                       ^~
+>>>>      include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
+>>>>         58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+>>>>            |                                                    ^~~~
+>>>>>> drivers/irqchip/irq-stm32-exti.c:683:2: note: in expansion of macro 'if'
+>>>>        683 |  if (desc->irq_parent >= 0) {
+>>>
+>>> Do you plan to address this? Looks like an actual bug to me.
+>>
+>> I'll fix it in v2, I was just waiting for other comments before
+>> sending a v2. Do you prefer I send a v2 with this fix, and you'll do
+>> your review on this v2 ?
+> 
+> I'm certainly not going to review something that has such a glaring
+> issue.
 
-If any of the categories only have a couple of patches in them, you
-can decide to forward those as patches to soc@kernel.org, but a
-pull request is always ok as well, even for a one-line patch.
+Ok, I'll then send v2 quickly.
 
-        Arnd
-
-       Arnd
+> 
+> 	M.
+> 
