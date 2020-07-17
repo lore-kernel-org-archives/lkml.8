@@ -4,142 +4,257 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8594C433FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4972720737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDE820737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gaLDHhRp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y7RlUwAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgGQQ5X (ORCPT
+        id S1728157AbgGQQ5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38580 "EHLO
+        Fri, 17 Jul 2020 12:57:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgGQQ4S (ORCPT
+        with ESMTP id S1727854AbgGQQ4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:56:18 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1905FC0619D5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:18 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o8so15944427wmh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:18 -0700 (PDT)
+        Fri, 17 Jul 2020 12:56:20 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9E7C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:20 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j4so11853626wrp.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Rc1gRiFLnICYkzZdrxG6wdBxb95IGqTfJLICTNXyrKU=;
-        b=gaLDHhRpwR3ip7ByImygRyE6T8KMhCeOwINKf9nI53AuRbCKThVlZPnVDsTMqvNHJr
-         6eHtvKSEeHZjAueJq6jCt0C+F6/cIB+tiCdInlV3ZF9xmO3wWYA0yy5/VwsJOPWe2/8q
-         +VfSlqQz/dug0MDcHgCo/egx2F0DXeTGm0/phPlQlUgla81RscMXC/yUh0b7+1im/Y4A
-         7LV1NJT/INVpyBK42/jJ4xS8iUBaMYfzX+LyFdTfCdoFBM/1K26iPwbzAFVnFpJin3l9
-         xYMHogy8enMH8Ek2t1lbTVQxdDlwuYwKO9RREuiWNY0pTU7erHOC062a7K11ocyst6xX
-         3/cw==
+        bh=gU9V9XkM8BF33+dessG5HjZWXsyJ+CY9nfoKsET9XrM=;
+        b=y7RlUwAslcn20lp8Q6SpuGsHWuita63J2y2jjuB8dmc/mBaZ7SlPEDXR7fanf3VyzI
+         1352ALTbrGTho7FXytizcfKFHDcO0FLAlvBNzGeleG9gw0gkAoh96E01Lxa+/j739tl2
+         viGPbwRrL4WROvMh987Sw75+d8S9I/XomS4NeO2SA52GVt8FFh/zR0EFT+BNxgQDxFIo
+         NN/FoAK5coZrft4UlsByb0qsDexRW2md4Ps9aCZnp3gI5VRHW7ABGsHKZH6y7r/FRche
+         8VJYzki7ycyJTl/sQ63y5IqOaM4k6pUDy24kZX972b4M8MCml6LQUsTQXPr/qc7CUDBX
+         Eb9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Rc1gRiFLnICYkzZdrxG6wdBxb95IGqTfJLICTNXyrKU=;
-        b=YHiiwMFhFFcCDMAwOsf31Zdk5q7Zv+OJpfG/OUy1ysqJFYsk4Egxz0d/Ex/zskFQsx
-         IzvJOuQ3E9MBgAOjFnylottBNpncg2oeVYC6puin1EG8sp4+3BuiMARqdcyofe/jVaGH
-         FxOjQ3+hgJa6V54THocEKQD3J1B/eNxo0GDRjRscGYl/gf2RdooBt66HUCSF3I24oEUE
-         anrqonH7eQhS38M1mKb7YmZihlAKd7RB0VzhaVa8F+Aa06G8wauoa8ppwd3HuNG/Uu+r
-         bDO7B62SWuamj5Ry5QdEabhkWrM4PiMYJn9YPEhpqsc/Lk0tBm3NhKHHWEROLaWxXJZm
-         4G/Q==
-X-Gm-Message-State: AOAM532LP0vDvBCK3Nitk/TJM95ns3E8d+RGPYLBlkNWzt/SN25ZqAvr
-        jFnAY9SB3sis+HgfDoc6ii5ZYA==
-X-Google-Smtp-Source: ABdhPJw/s3gzHYxgswWOyt+xbyCAaW5RvtiZ/PHKOLabQjqpNF/+Uib5bhmOWwZTw4eLFK5k75RoBQ==
-X-Received: by 2002:a7b:c313:: with SMTP id k19mr10345994wmj.67.1595004976743;
-        Fri, 17 Jul 2020 09:56:16 -0700 (PDT)
+        bh=gU9V9XkM8BF33+dessG5HjZWXsyJ+CY9nfoKsET9XrM=;
+        b=ZDYZGbjqw7rgYdhKRy2Dvy4xAeMjvoyvFG0Ydosupl+iQy+JYotaBzuJyqol833zBG
+         Ghr4rgFRo5mpX0hJ4wStszAyKXaDOUijntyFct0MWeiEJwRGneO3c3PCfEyqgGGbmpDX
+         NA5ObIkLMU0GNzu41/tLn9LqfqU5jlHlFzVzg1lTwPJqHz0Q9XKx2l75fxfWfHB8yLDh
+         wBpqdx6CzxHvVFK01hBjx4nYXzAS0d5XPajuQ9y/T2NVtuvBz5OKcg84DV34+vQsBzEL
+         0l7FMb49gSmF6dttmsSCh/brK9PxETQZfA4fRr68gFesL/ZyjjlVsIKG2Ole2QB4+TGx
+         xO7g==
+X-Gm-Message-State: AOAM531KlQhc4v42K2zwlYVffZGsP5qWRIEAd8uu7lzp6U1brC89KJrq
+        1YWqjeQI9pGQqnuLvib8VG7cbA==
+X-Google-Smtp-Source: ABdhPJxjeIkO2njxZz5mp9JeV+CXLQhFTO2U0LCW9SQqZCLrasHLZto3lxVp/kjGWy/fZItglO6EnQ==
+X-Received: by 2002:a5d:5441:: with SMTP id w1mr10743231wrv.381.1595004979124;
+        Fri, 17 Jul 2020 09:56:19 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.15
+        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 09:56:16 -0700 (PDT)
+        Fri, 17 Jul 2020 09:56:18 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 16/30] iio: accel: sca3000: Fix 2 misspellings and demote nonconforming kerneldocs
-Date:   Fri, 17 Jul 2020 17:55:24 +0100
-Message-Id: <20200717165538.3275050-17-lee.jones@linaro.org>
+        Rui Miguel Silva <rmfrfs@gmail.com>
+Subject: [PATCH 18/30] iio: gyro: fxas21002c: Move 'fxas21002c_reg_fields' to the only file its used
+Date:   Fri, 17 Jul 2020 17:55:26 +0100
+Message-Id: <20200717165538.3275050-19-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717165538.3275050-1-lee.jones@linaro.org>
 References: <20200717165538.3275050-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+'fxas21002c_reg_fields' is only used in '*core*', meaning that '*i2c*'
+and '*spi*' complain of a defined but not used const variable.  Let's
+move it into the source file.
+
 Fixes the following W=1 kernel build warning(s):
 
- drivers/iio/accel/sca3000.c:210: warning: Function parameter or member 'mot_det_mult_xz' not described in 'sca3000_chip_info'
- drivers/iio/accel/sca3000.c:210: warning: Function parameter or member 'mot_det_mult_y' not described in 'sca3000_chip_info'
- drivers/iio/accel/sca3000.c:871: warning: Function parameter or member 'indio_dev' not described in 'sca3000_read_event_value'
- drivers/iio/accel/sca3000.c:871: warning: Function parameter or member 'chan' not described in 'sca3000_read_event_value'
- drivers/iio/accel/sca3000.c:871: warning: Function parameter or member 'type' not described in 'sca3000_read_event_value'
- drivers/iio/accel/sca3000.c:871: warning: Function parameter or member 'dir' not described in 'sca3000_read_event_value'
- drivers/iio/accel/sca3000.c:871: warning: Function parameter or member 'info' not described in 'sca3000_read_event_value'
- drivers/iio/accel/sca3000.c:871: warning: Function parameter or member 'val' not described in 'sca3000_read_event_value'
- drivers/iio/accel/sca3000.c:871: warning: Function parameter or member 'val2' not described in 'sca3000_read_event_value'
- drivers/iio/accel/sca3000.c:1110: warning: Function parameter or member 'indio_dev' not described in 'sca3000_read_event_config'
- drivers/iio/accel/sca3000.c:1110: warning: Function parameter or member 'chan' not described in 'sca3000_read_event_config'
- drivers/iio/accel/sca3000.c:1110: warning: Function parameter or member 'type' not described in 'sca3000_read_event_config'
- drivers/iio/accel/sca3000.c:1110: warning: Function parameter or member 'dir' not described in 'sca3000_read_event_config'
+ In file included from drivers/iio/gyro/fxas21002c_i2c.c:14:
+ drivers/iio/gyro/fxas21002c.h:79:31: warning: ‘fxas21002c_reg_fields’ defined but not used [-Wunused-const-variable=]
+ 79 | static const struct reg_field fxas21002c_reg_fields[] = {
+ | ^~~~~~~~~~~~~~~~~~~~~
+ In file included from drivers/iio/gyro/fxas21002c_spi.c:14:
+ drivers/iio/gyro/fxas21002c.h:79:31: warning: ‘fxas21002c_reg_fields’ defined but not used [-Wunused-const-variable=]
+ 79 | static const struct reg_field fxas21002c_reg_fields[] = {
+ | ^~~~~~~~~~~~~~~~~~~~~
 
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Rui Miguel Silva <rmfrfs@gmail.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/iio/accel/sca3000.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/iio/gyro/fxas21002c.h      | 66 ------------------------------
+ drivers/iio/gyro/fxas21002c_core.c | 66 ++++++++++++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 66 deletions(-)
 
-diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
-index 6e429072e44a4..3952187166ffa 100644
---- a/drivers/iio/accel/sca3000.c
-+++ b/drivers/iio/accel/sca3000.c
-@@ -186,9 +186,9 @@ struct sca3000_state {
-  * @option_mode_2_freq:		option mode 2 sampling frequency
-  * @option_mode_2_3db_freq:	3db cutoff frequency of the low pass filter for
-  * the second option mode.
-- * @mod_det_mult_xz:		Bit wise multipliers to calculate the threshold
-+ * @mot_det_mult_xz:		Bit wise multipliers to calculate the threshold
-  * for motion detection in the x and z axis.
-- * @mod_det_mult_y:		Bit wise multipliers to calculate the threshold
-+ * @mot_det_mult_y:		Bit wise multipliers to calculate the threshold
-  * for motion detection in the y axis.
-  *
-  * This structure is used to hold information about the functionality of a given
-@@ -859,9 +859,9 @@ static ssize_t sca3000_read_av_freq(struct device *dev,
-  */
- static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(sca3000_read_av_freq);
+diff --git a/drivers/iio/gyro/fxas21002c.h b/drivers/iio/gyro/fxas21002c.h
+index 566d92de26763..c81cecee121cb 100644
+--- a/drivers/iio/gyro/fxas21002c.h
++++ b/drivers/iio/gyro/fxas21002c.h
+@@ -76,72 +76,6 @@ enum fxas21002c_fields {
+ 	F_MAX_FIELDS,
+ };
  
--/**
-+/*
-  * sca3000_read_event_value() - query of a threshold or period
-- **/
-+ */
- static int sca3000_read_event_value(struct iio_dev *indio_dev,
- 				    const struct iio_chan_spec *chan,
- 				    enum iio_event_type type,
-@@ -1100,9 +1100,9 @@ static irqreturn_t sca3000_event_handler(int irq, void *private)
- 	return IRQ_HANDLED;
- }
+-static const struct reg_field fxas21002c_reg_fields[] = {
+-	[F_DR_STATUS]		= REG_FIELD(FXAS21002C_REG_STATUS, 0, 7),
+-	[F_OUT_X_MSB]		= REG_FIELD(FXAS21002C_REG_OUT_X_MSB, 0, 7),
+-	[F_OUT_X_LSB]		= REG_FIELD(FXAS21002C_REG_OUT_X_LSB, 0, 7),
+-	[F_OUT_Y_MSB]		= REG_FIELD(FXAS21002C_REG_OUT_Y_MSB, 0, 7),
+-	[F_OUT_Y_LSB]		= REG_FIELD(FXAS21002C_REG_OUT_Y_LSB, 0, 7),
+-	[F_OUT_Z_MSB]		= REG_FIELD(FXAS21002C_REG_OUT_Z_MSB, 0, 7),
+-	[F_OUT_Z_LSB]		= REG_FIELD(FXAS21002C_REG_OUT_Z_LSB, 0, 7),
+-	[F_ZYX_OW]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 7, 7),
+-	[F_Z_OW]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 6, 6),
+-	[F_Y_OW]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 5, 5),
+-	[F_X_OW]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 4, 4),
+-	[F_ZYX_DR]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 3, 3),
+-	[F_Z_DR]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 2, 2),
+-	[F_Y_DR]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 1, 1),
+-	[F_X_DR]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 0, 0),
+-	[F_OVF]			= REG_FIELD(FXAS21002C_REG_F_STATUS, 7, 7),
+-	[F_WMKF]		= REG_FIELD(FXAS21002C_REG_F_STATUS, 6, 6),
+-	[F_CNT]			= REG_FIELD(FXAS21002C_REG_F_STATUS, 0, 5),
+-	[F_MODE]		= REG_FIELD(FXAS21002C_REG_F_SETUP, 6, 7),
+-	[F_WMRK]		= REG_FIELD(FXAS21002C_REG_F_SETUP, 0, 5),
+-	[F_EVENT]		= REG_FIELD(FXAS21002C_REG_F_EVENT, 5, 5),
+-	[FE_TIME]		= REG_FIELD(FXAS21002C_REG_F_EVENT, 0, 4),
+-	[F_BOOTEND]		= REG_FIELD(FXAS21002C_REG_INT_SRC_FLAG, 3, 3),
+-	[F_SRC_FIFO]		= REG_FIELD(FXAS21002C_REG_INT_SRC_FLAG, 2, 2),
+-	[F_SRC_RT]		= REG_FIELD(FXAS21002C_REG_INT_SRC_FLAG, 1, 1),
+-	[F_SRC_DRDY]		= REG_FIELD(FXAS21002C_REG_INT_SRC_FLAG, 0, 0),
+-	[F_WHO_AM_I]		= REG_FIELD(FXAS21002C_REG_WHO_AM_I, 0, 7),
+-	[F_BW]			= REG_FIELD(FXAS21002C_REG_CTRL0, 6, 7),
+-	[F_SPIW]		= REG_FIELD(FXAS21002C_REG_CTRL0, 5, 5),
+-	[F_SEL]			= REG_FIELD(FXAS21002C_REG_CTRL0, 3, 4),
+-	[F_HPF_EN]		= REG_FIELD(FXAS21002C_REG_CTRL0, 2, 2),
+-	[F_FS]			= REG_FIELD(FXAS21002C_REG_CTRL0, 0, 1),
+-	[F_ELE]			= REG_FIELD(FXAS21002C_REG_RT_CFG, 3, 3),
+-	[F_ZTEFE]		= REG_FIELD(FXAS21002C_REG_RT_CFG, 2, 2),
+-	[F_YTEFE]		= REG_FIELD(FXAS21002C_REG_RT_CFG, 1, 1),
+-	[F_XTEFE]		= REG_FIELD(FXAS21002C_REG_RT_CFG, 0, 0),
+-	[F_EA]			= REG_FIELD(FXAS21002C_REG_RT_SRC, 6, 6),
+-	[F_ZRT]			= REG_FIELD(FXAS21002C_REG_RT_SRC, 5, 5),
+-	[F_ZRT_POL]		= REG_FIELD(FXAS21002C_REG_RT_SRC, 4, 4),
+-	[F_YRT]			= REG_FIELD(FXAS21002C_REG_RT_SRC, 3, 3),
+-	[F_YRT_POL]		= REG_FIELD(FXAS21002C_REG_RT_SRC, 2, 2),
+-	[F_XRT]			= REG_FIELD(FXAS21002C_REG_RT_SRC, 1, 1),
+-	[F_XRT_POL]		= REG_FIELD(FXAS21002C_REG_RT_SRC, 0, 0),
+-	[F_DBCNTM]		= REG_FIELD(FXAS21002C_REG_RT_THS, 7, 7),
+-	[F_THS]			= REG_FIELD(FXAS21002C_REG_RT_SRC, 0, 6),
+-	[F_RT_COUNT]		= REG_FIELD(FXAS21002C_REG_RT_COUNT, 0, 7),
+-	[F_TEMP]		= REG_FIELD(FXAS21002C_REG_TEMP, 0, 7),
+-	[F_RST]			= REG_FIELD(FXAS21002C_REG_CTRL1, 6, 6),
+-	[F_ST]			= REG_FIELD(FXAS21002C_REG_CTRL1, 5, 5),
+-	[F_DR]			= REG_FIELD(FXAS21002C_REG_CTRL1, 2, 4),
+-	[F_ACTIVE]		= REG_FIELD(FXAS21002C_REG_CTRL1, 1, 1),
+-	[F_READY]		= REG_FIELD(FXAS21002C_REG_CTRL1, 0, 0),
+-	[F_INT_CFG_FIFO]	= REG_FIELD(FXAS21002C_REG_CTRL2, 7, 7),
+-	[F_INT_EN_FIFO]		= REG_FIELD(FXAS21002C_REG_CTRL2, 6, 6),
+-	[F_INT_CFG_RT]		= REG_FIELD(FXAS21002C_REG_CTRL2, 5, 5),
+-	[F_INT_EN_RT]		= REG_FIELD(FXAS21002C_REG_CTRL2, 4, 4),
+-	[F_INT_CFG_DRDY]	= REG_FIELD(FXAS21002C_REG_CTRL2, 3, 3),
+-	[F_INT_EN_DRDY]		= REG_FIELD(FXAS21002C_REG_CTRL2, 2, 2),
+-	[F_IPOL]		= REG_FIELD(FXAS21002C_REG_CTRL2, 1, 1),
+-	[F_PP_OD]		= REG_FIELD(FXAS21002C_REG_CTRL2, 0, 0),
+-	[F_WRAPTOONE]		= REG_FIELD(FXAS21002C_REG_CTRL3, 3, 3),
+-	[F_EXTCTRLEN]		= REG_FIELD(FXAS21002C_REG_CTRL3, 2, 2),
+-	[F_FS_DOUBLE]		= REG_FIELD(FXAS21002C_REG_CTRL3, 0, 0),
+-};
+-
+ extern const struct dev_pm_ops fxas21002c_pm_ops;
  
--/**
-+/*
-  * sca3000_read_event_config() what events are enabled
-- **/
-+ */
- static int sca3000_read_event_config(struct iio_dev *indio_dev,
- 				     const struct iio_chan_spec *chan,
- 				     enum iio_event_type type,
+ int fxas21002c_core_probe(struct device *dev, struct regmap *regmap, int irq,
+diff --git a/drivers/iio/gyro/fxas21002c_core.c b/drivers/iio/gyro/fxas21002c_core.c
+index 89d2bb2282eac..f20033afc714c 100644
+--- a/drivers/iio/gyro/fxas21002c_core.c
++++ b/drivers/iio/gyro/fxas21002c_core.c
+@@ -42,6 +42,72 @@ enum fxas21002c_mode_state {
+ 
+ #define FXAS21002C_AXIS_TO_REG(axis) (FXAS21002C_REG_OUT_X_MSB + ((axis) * 2))
+ 
++static const struct reg_field fxas21002c_reg_fields[] = {
++	[F_DR_STATUS]		= REG_FIELD(FXAS21002C_REG_STATUS, 0, 7),
++	[F_OUT_X_MSB]		= REG_FIELD(FXAS21002C_REG_OUT_X_MSB, 0, 7),
++	[F_OUT_X_LSB]		= REG_FIELD(FXAS21002C_REG_OUT_X_LSB, 0, 7),
++	[F_OUT_Y_MSB]		= REG_FIELD(FXAS21002C_REG_OUT_Y_MSB, 0, 7),
++	[F_OUT_Y_LSB]		= REG_FIELD(FXAS21002C_REG_OUT_Y_LSB, 0, 7),
++	[F_OUT_Z_MSB]		= REG_FIELD(FXAS21002C_REG_OUT_Z_MSB, 0, 7),
++	[F_OUT_Z_LSB]		= REG_FIELD(FXAS21002C_REG_OUT_Z_LSB, 0, 7),
++	[F_ZYX_OW]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 7, 7),
++	[F_Z_OW]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 6, 6),
++	[F_Y_OW]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 5, 5),
++	[F_X_OW]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 4, 4),
++	[F_ZYX_DR]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 3, 3),
++	[F_Z_DR]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 2, 2),
++	[F_Y_DR]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 1, 1),
++	[F_X_DR]		= REG_FIELD(FXAS21002C_REG_DR_STATUS, 0, 0),
++	[F_OVF]			= REG_FIELD(FXAS21002C_REG_F_STATUS, 7, 7),
++	[F_WMKF]		= REG_FIELD(FXAS21002C_REG_F_STATUS, 6, 6),
++	[F_CNT]			= REG_FIELD(FXAS21002C_REG_F_STATUS, 0, 5),
++	[F_MODE]		= REG_FIELD(FXAS21002C_REG_F_SETUP, 6, 7),
++	[F_WMRK]		= REG_FIELD(FXAS21002C_REG_F_SETUP, 0, 5),
++	[F_EVENT]		= REG_FIELD(FXAS21002C_REG_F_EVENT, 5, 5),
++	[FE_TIME]		= REG_FIELD(FXAS21002C_REG_F_EVENT, 0, 4),
++	[F_BOOTEND]		= REG_FIELD(FXAS21002C_REG_INT_SRC_FLAG, 3, 3),
++	[F_SRC_FIFO]		= REG_FIELD(FXAS21002C_REG_INT_SRC_FLAG, 2, 2),
++	[F_SRC_RT]		= REG_FIELD(FXAS21002C_REG_INT_SRC_FLAG, 1, 1),
++	[F_SRC_DRDY]		= REG_FIELD(FXAS21002C_REG_INT_SRC_FLAG, 0, 0),
++	[F_WHO_AM_I]		= REG_FIELD(FXAS21002C_REG_WHO_AM_I, 0, 7),
++	[F_BW]			= REG_FIELD(FXAS21002C_REG_CTRL0, 6, 7),
++	[F_SPIW]		= REG_FIELD(FXAS21002C_REG_CTRL0, 5, 5),
++	[F_SEL]			= REG_FIELD(FXAS21002C_REG_CTRL0, 3, 4),
++	[F_HPF_EN]		= REG_FIELD(FXAS21002C_REG_CTRL0, 2, 2),
++	[F_FS]			= REG_FIELD(FXAS21002C_REG_CTRL0, 0, 1),
++	[F_ELE]			= REG_FIELD(FXAS21002C_REG_RT_CFG, 3, 3),
++	[F_ZTEFE]		= REG_FIELD(FXAS21002C_REG_RT_CFG, 2, 2),
++	[F_YTEFE]		= REG_FIELD(FXAS21002C_REG_RT_CFG, 1, 1),
++	[F_XTEFE]		= REG_FIELD(FXAS21002C_REG_RT_CFG, 0, 0),
++	[F_EA]			= REG_FIELD(FXAS21002C_REG_RT_SRC, 6, 6),
++	[F_ZRT]			= REG_FIELD(FXAS21002C_REG_RT_SRC, 5, 5),
++	[F_ZRT_POL]		= REG_FIELD(FXAS21002C_REG_RT_SRC, 4, 4),
++	[F_YRT]			= REG_FIELD(FXAS21002C_REG_RT_SRC, 3, 3),
++	[F_YRT_POL]		= REG_FIELD(FXAS21002C_REG_RT_SRC, 2, 2),
++	[F_XRT]			= REG_FIELD(FXAS21002C_REG_RT_SRC, 1, 1),
++	[F_XRT_POL]		= REG_FIELD(FXAS21002C_REG_RT_SRC, 0, 0),
++	[F_DBCNTM]		= REG_FIELD(FXAS21002C_REG_RT_THS, 7, 7),
++	[F_THS]			= REG_FIELD(FXAS21002C_REG_RT_SRC, 0, 6),
++	[F_RT_COUNT]		= REG_FIELD(FXAS21002C_REG_RT_COUNT, 0, 7),
++	[F_TEMP]		= REG_FIELD(FXAS21002C_REG_TEMP, 0, 7),
++	[F_RST]			= REG_FIELD(FXAS21002C_REG_CTRL1, 6, 6),
++	[F_ST]			= REG_FIELD(FXAS21002C_REG_CTRL1, 5, 5),
++	[F_DR]			= REG_FIELD(FXAS21002C_REG_CTRL1, 2, 4),
++	[F_ACTIVE]		= REG_FIELD(FXAS21002C_REG_CTRL1, 1, 1),
++	[F_READY]		= REG_FIELD(FXAS21002C_REG_CTRL1, 0, 0),
++	[F_INT_CFG_FIFO]	= REG_FIELD(FXAS21002C_REG_CTRL2, 7, 7),
++	[F_INT_EN_FIFO]		= REG_FIELD(FXAS21002C_REG_CTRL2, 6, 6),
++	[F_INT_CFG_RT]		= REG_FIELD(FXAS21002C_REG_CTRL2, 5, 5),
++	[F_INT_EN_RT]		= REG_FIELD(FXAS21002C_REG_CTRL2, 4, 4),
++	[F_INT_CFG_DRDY]	= REG_FIELD(FXAS21002C_REG_CTRL2, 3, 3),
++	[F_INT_EN_DRDY]		= REG_FIELD(FXAS21002C_REG_CTRL2, 2, 2),
++	[F_IPOL]		= REG_FIELD(FXAS21002C_REG_CTRL2, 1, 1),
++	[F_PP_OD]		= REG_FIELD(FXAS21002C_REG_CTRL2, 0, 0),
++	[F_WRAPTOONE]		= REG_FIELD(FXAS21002C_REG_CTRL3, 3, 3),
++	[F_EXTCTRLEN]		= REG_FIELD(FXAS21002C_REG_CTRL3, 2, 2),
++	[F_FS_DOUBLE]		= REG_FIELD(FXAS21002C_REG_CTRL3, 0, 0),
++};
++
+ static const int fxas21002c_odr_values[] = {
+ 	800, 400, 200, 100, 50, 25, 12, 12
+ };
 -- 
 2.25.1
 
