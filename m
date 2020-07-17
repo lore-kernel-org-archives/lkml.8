@@ -2,149 +2,107 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8D9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFABE22CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1122076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594994793;
-	bh=idhd2mun2o3KTZfXKc7yxApyqOFeBVXhlYMrKvNie5U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=omqZqlSpKI8SWaIZtvbzlspaIqjXixGrVYTTGvTK28uXWc6V7+3P7P9T5SzUmGsWu
-	 hsmEnKdRUwR/T0CNpoK7Af5WgOvzlL754QeLVb2nYVH8zkpOWrXZzfhuXeVFasWcrH
-	 EIC8k+kGoCDfwrwg3hBjRsaInlaViq1ij5TnoZkU=
+	s=default; t=1594995235;
+	bh=0vXgDBDYlt7UxEihc32ZQjGeglsTllhEDcIkY6n/ZfU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wc0gFYcHKCjS7OvUCca+YNsav/JQnHW+80Hxko6kXO2C78f1MJBpLj8cAH8PvY7X+
+	 dTHsZtv5VTL//DMGqHmw9BjC/L+1ty25WkkVbXGsgM+jI6C8QeK8U7r067s2fmSTFQ
+	 zIv87mc8dIFqD8WJ1kxToqrw1vKMFdK3NnpD48fE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgGQOGc (ORCPT
+        id S1726629AbgGQONy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54612 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 10:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727876AbgGQOGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:06:30 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1726090AbgGQONx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:13:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22AFE2067D;
-        Fri, 17 Jul 2020 14:06:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E2B320717;
+        Fri, 17 Jul 2020 14:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594994790;
-        bh=idhd2mun2o3KTZfXKc7yxApyqOFeBVXhlYMrKvNie5U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KaQrFt+YhFkTXtEgafkFEb1WYvRfdZ4Kw0ki3VoubVwnrLGVDz8sU/1yskahu7eCy
-         7gQmmSH6lOqgTLjYUK+DloD0v5HMyHQie7V+qLc+Edn8y8RmecTmQSPolQQwRh4bK3
-         IUvtlU6lhpCZpunU3IsRYhQnTKqj0S8gGlEmwpSY=
-Date:   Fri, 17 Jul 2020 23:06:22 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v4 10/75] x86/insn: Add insn_has_rep_prefix() helper
-Message-Id: <20200717230622.5be651b71711368acbfe6bb0@kernel.org>
-In-Reply-To: <20200714120917.11253-11-joro@8bytes.org>
-References: <20200714120917.11253-1-joro@8bytes.org>
-        <20200714120917.11253-11-joro@8bytes.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1594995233;
+        bh=0vXgDBDYlt7UxEihc32ZQjGeglsTllhEDcIkY6n/ZfU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wx38iT7WUFuCSbU+kkpm7v/fkfnbQy9OpadwXgeeR+ZAOQDbAwSWuF7abbH45xRKF
+         gwXVFLOSvsGMkiY6lmwN67BZwbIjM/0Vc+NgIrk/pE947gZ4fiOyziNQ0i7MJwhayh
+         iHVGoKwMXHE+W+/IMFfmncxN0GPDEy95J9Fnk118=
+Date:   Fri, 17 Jul 2020 16:13:44 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>,
+        Olof Johansson <olof@lixom.net>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+Message-ID: <20200717141344.GA2992942@kroah.com>
+References: <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
+ <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
+ <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
+ <20200717121436.GA2953399@kroah.com>
+ <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
+ <20200717132101.GA2984939@kroah.com>
+ <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 14:08:12 +0200
-Joerg Roedel <joro@8bytes.org> wrote:
-
-> From: Joerg Roedel <jroedel@suse.de>
+On Fri, Jul 17, 2020 at 03:54:49PM +0200, Arnd Bergmann wrote:
+> > And look at the driver core work for many driver subsystems to be fixed
+> > up just to get a single kernel image to work on multiple platforms.
+> > Just because older ones did it, doesn't mean it actually works today :)
 > 
-> Add a function to check whether an instruction has a REP prefix.
+> Can you give a specific example? The only problem I'm aware of for
+> those SoCs is drivers being outside of the mainline kernel. Clearly
+> having support for loadable modules helps SoC vendors because it
+> allows them to support a new platform with an existing binary kernel
+> by shipping third-party driver modules, but for stuff that is already
+> in mainline, we could in theory support all hardware in a single gigantic
+> binary kernel with no support for loadable modules at all.
 
-This looks good to me.
+That did not work for many drivers for some reason, look at all the work
+Saravana had to do in the driver core and device tree code for it to
+happen correctly over the past year.
 
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
- 
-Thank you,
+thanks,
 
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/include/asm/insn-eval.h |  1 +
->  arch/x86/lib/insn-eval.c         | 24 ++++++++++++++++++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-> index f748f57f1491..a0f839aa144d 100644
-> --- a/arch/x86/include/asm/insn-eval.h
-> +++ b/arch/x86/include/asm/insn-eval.h
-> @@ -15,6 +15,7 @@
->  #define INSN_CODE_SEG_OPND_SZ(params) (params & 0xf)
->  #define INSN_CODE_SEG_PARAMS(oper_sz, addr_sz) (oper_sz | (addr_sz << 4))
->  
-> +bool insn_has_rep_prefix(struct insn *insn);
->  void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
->  int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
->  int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
-> diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-> index a8ac5c5e94f0..8ed9d645259c 100644
-> --- a/arch/x86/lib/insn-eval.c
-> +++ b/arch/x86/lib/insn-eval.c
-> @@ -53,6 +53,30 @@ static bool is_string_insn(struct insn *insn)
->  	}
->  }
->  
-> +/**
-> + * insn_has_rep_prefix() - Determine if instruction has a REP prefix
-> + * @insn:	Instruction containing the prefix to inspect
-> + *
-> + * Returns:
-> + *
-> + * true if the instruction has a REP prefix, false if not.
-> + */
-> +bool insn_has_rep_prefix(struct insn *insn)
-> +{
-> +	int i;
-> +
-> +	insn_get_prefixes(insn);
-> +
-> +	for (i = 0; i < insn->prefixes.nbytes; i++) {
-> +		insn_byte_t p = insn->prefixes.bytes[i];
-> +
-> +		if (p == 0xf2 || p == 0xf3)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  /**
->   * get_seg_reg_override_idx() - obtain segment register override index
->   * @insn:	Valid instruction with segment override prefixes
-> -- 
-> 2.27.0
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+greg k-h
