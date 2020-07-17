@@ -2,115 +2,268 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5E4C433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02AAC433FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27BA720717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B13D2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew7go265"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="elYuNJ6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgGQNaQ (ORCPT
+        id S1726784AbgGQNad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:30:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgGQNaQ (ORCPT
+        Fri, 17 Jul 2020 09:30:33 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:24604 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726344AbgGQNac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:30:16 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297F8C061755;
-        Fri, 17 Jul 2020 06:30:16 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k5so6363083pjg.3;
-        Fri, 17 Jul 2020 06:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KA8+BCThQcJ0LRUas8mEHnLeHf4G0JN/o4kBoJ11ao4=;
-        b=Ew7go265THrXcCo9R7QqWPFNUC6m+Vh6NUeRwvXlPSe0VJZbR9rQfMfYlxSKi6RaRA
-         gVb2Kvq/vbg4rZtdMgU4zzpyoX0eMTJ+JWtKzKZgulGNc9Vxv0CjB63kr8JW2jbPTgaB
-         +5eHRJ6epadXZHiChy1g5fTc8SmbomqyqvoKfAdm94q3xU1OxI1ClfrzRD/54HHA8kZ6
-         A22lh+Sn3ahXiS7Wq0KwYg7RKteQlr2DUvuD4NO6tR4WK/1zt+aQSj08kvrauISzdOhg
-         8ldOhoRF2r3Vcelfcm5j/brDYmiLq52RsoI+ermOb5Tw/N5dNQcBbKMivzNWK8v3qJ6Q
-         3cnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KA8+BCThQcJ0LRUas8mEHnLeHf4G0JN/o4kBoJ11ao4=;
-        b=Qw5LqgaEdivSDDmimTVe1t5FvoxhXOKA5ZxDW1ro1z6s6RP1SoA/78oraHJK4KaFyY
-         evqhqZLtN/qEFCgkReXfCYQXLHqm56VCnS+TVhztaast2Q22fFQb80TDnsXeAMgXSQdb
-         dZcmZvggYrw/YFADrbQ6mrWVYGzisHqJz26uFUez7rcsKm9TTftjQeiskSxPwZGPoNup
-         kVbttvE2WdaoaCnhg+uKhCozsoryx6sH+3Vmd0yp9CJDt9+9gjc8Sgsh+xcgW3p5vp6M
-         8sAYiBrr2oOLqxCt7AUS0K24myb5d+DNe+xXZlQKH1peOXJ7Oq+B74LxBfd5nNbNgYL4
-         Y08Q==
-X-Gm-Message-State: AOAM5309lK3nYTLaKO6N2McMTCpF1UhDz02VcG2hdojFMlOdLvp1IZzA
-        cvHiMrG2yTOglKGlLKm19h0=
-X-Google-Smtp-Source: ABdhPJyTEisx3beIa/u5++UyoSvIIfKcqCyUwaWL1AJo3A+t3cP0eYEO1wwLNqXySkLvcofRnsjoYg==
-X-Received: by 2002:a17:90a:ed87:: with SMTP id k7mr10231962pjy.31.1594992615587;
-        Fri, 17 Jul 2020 06:30:15 -0700 (PDT)
-Received: from localhost ([89.208.244.139])
-        by smtp.gmail.com with ESMTPSA id t20sm7974375pfc.158.2020.07.17.06.30.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Jul 2020 06:30:14 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     m-karicheri2@ti.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v1] PCI: dwc: fix a warning about variable 'res' is uninitialized
-Date:   Fri, 17 Jul 2020 21:30:07 +0800
-Message-Id: <20200717133007.23858-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 17 Jul 2020 09:30:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594992631; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=EWYW/NS+fcpY2xbip8v2hloAa0bhAsxsf6dtJYGR1Bs=; b=elYuNJ6juyYdpf9u3UNBSVoJ/gP4hEw8TiE+u86P+vBHsX5iAherwMCNUBLBFXnzUtwalURT
+ AVDnCSTyqtvW1lDP2q+bRRX0slsPDHfkIZlWx+YuRZ6EiRU6Ef+Ls4ZlN+SpEbTGd8YiYuqf
+ H2F4X3yQUmamyeMHB5sk6icA+Ts=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f11a7d98e36ecda301630a5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 13:30:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 17F8BC433B6; Fri, 17 Jul 2020 13:30:00 +0000 (UTC)
+Received: from akhilpo-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akhilpo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E3FDAC433AD;
+        Fri, 17 Jul 2020 13:29:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E3FDAC433AD
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
+From:   Akhil P Oommen <akhilpo@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        smasetty@codeaurora.org, devicetree@vger.kernel.org,
+        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
+        viresh.kumar@linaro.org, jonathan@marek.ca, robdclark@gmail.com,
+        bjorn.andersson@linaro.org
+Subject: [PATCH v6 2/6] drm: msm: a6xx: send opp instead of a frequency
+Date:   Fri, 17 Jul 2020 18:59:35 +0530
+Message-Id: <1594992579-20662-3-git-send-email-akhilpo@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
+References: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel test robot reported a compile warning,
+From: Sharat Masetty <smasetty@codeaurora.org>
 
-drivers/pci/controller/dwc/pci-keystone.c:1236:18: warning: variable 'res'
-is uninitialized when used here [-Wuninitialized]
+This patch changes the plumbing to send the devfreq recommended opp rather
+than the frequency. Also consolidate and rearrange the code in a6xx to set
+the GPU frequency and the icc vote in preparation for the upcoming
+changes for GPU->DDR scaling votes.
 
-The commit c59a7d771134b5 ("PCI: dwc: Convert to
-devm_platform_ioremap_resource_byname()") did a wrong conversion for
-keystone driver. the commit use devm_platform_ioremap_resource_byname()
-to replace platform_get_resource_byname() and devm_ioremap_resource().
-but the subsequent code needs to use the variable 'res', which is got by
-platform_get_resource_byname() for resource "app". so revert it.
-
-Fixes: c59a7d771134b5 ("PCI: dwc: Convert to devm_platform_ioremap_resource_byname()")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 89 +++++++++++++++++++----------------
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h |  2 +-
+ drivers/gpu/drm/msm/msm_gpu.c         |  3 +-
+ drivers/gpu/drm/msm/msm_gpu.h         |  3 +-
+ 4 files changed, 52 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 5ffc3b40c4f6..00279002102e 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -1228,8 +1228,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 	if (!pci)
- 		return -ENOMEM;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 21e77d6..856db46 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -103,17 +103,45 @@ bool a6xx_gmu_gx_is_on(struct a6xx_gmu *gmu)
+ 		A6XX_GMU_SPTPRAC_PWR_CLK_STATUS_GX_HM_CLK_OFF));
+ }
  
--	ks_pcie->va_app_base =
--		devm_platform_ioremap_resource_byname(pdev, "app");
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
-+	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(ks_pcie->va_app_base))
- 		return PTR_ERR(ks_pcie->va_app_base);
+-static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
++void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+ {
+-	struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
+-	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
+-	struct msm_gpu *gpu = &adreno_gpu->base;
+-	int ret;
++	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
++	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
++	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
++	u32 perf_index;
++	unsigned long gpu_freq;
++	int ret = 0;
++
++	gpu_freq = dev_pm_opp_get_freq(opp);
++
++	if (gpu_freq == gmu->freq)
++		return;
++
++	for (perf_index = 0; perf_index < gmu->nr_gpu_freqs - 1; perf_index++)
++		if (gpu_freq == gmu->gpu_freqs[perf_index])
++			break;
++
++	gmu->current_perf_index = perf_index;
++	gmu->freq = gmu->gpu_freqs[perf_index];
++
++	/*
++	 * This can get called from devfreq while the hardware is idle. Don't
++	 * bring up the power if it isn't already active
++	 */
++	if (pm_runtime_get_if_in_use(gmu->dev) == 0)
++		return;
++
++	if (!gmu->legacy) {
++		a6xx_hfi_set_freq(gmu, perf_index);
++		icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
++		pm_runtime_put(gmu->dev);
++		return;
++	}
  
+ 	gmu_write(gmu, REG_A6XX_GMU_DCVS_ACK_OPTION, 0);
+ 
+ 	gmu_write(gmu, REG_A6XX_GMU_DCVS_PERF_SETTING,
+-		((3 & 0xf) << 28) | index);
++			((3 & 0xf) << 28) | perf_index);
+ 
+ 	/*
+ 	 * Send an invalid index as a vote for the bus bandwidth and let the
+@@ -134,37 +162,6 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
+ 	 * for now leave it at max so that the performance is nominal.
+ 	 */
+ 	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+-}
+-
+-void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
+-{
+-	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+-	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
+-	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
+-	u32 perf_index = 0;
+-
+-	if (freq == gmu->freq)
+-		return;
+-
+-	for (perf_index = 0; perf_index < gmu->nr_gpu_freqs - 1; perf_index++)
+-		if (freq == gmu->gpu_freqs[perf_index])
+-			break;
+-
+-	gmu->current_perf_index = perf_index;
+-	gmu->freq = gmu->gpu_freqs[perf_index];
+-
+-	/*
+-	 * This can get called from devfreq while the hardware is idle. Don't
+-	 * bring up the power if it isn't already active
+-	 */
+-	if (pm_runtime_get_if_in_use(gmu->dev) == 0)
+-		return;
+-
+-	if (gmu->legacy)
+-		__a6xx_gmu_set_freq(gmu, perf_index);
+-	else
+-		a6xx_hfi_set_freq(gmu, perf_index);
+-
+ 	pm_runtime_put(gmu->dev);
+ }
+ 
+@@ -839,6 +836,19 @@ static void a6xx_gmu_force_off(struct a6xx_gmu *gmu)
+ 	a6xx_gmu_rpmh_off(gmu);
+ }
+ 
++static void a6xx_gmu_set_initial_freq(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
++{
++	struct dev_pm_opp *gpu_opp;
++	unsigned long gpu_freq = gmu->gpu_freqs[gmu->current_perf_index];
++
++	gpu_opp = dev_pm_opp_find_freq_exact(&gpu->pdev->dev, gpu_freq, true);
++	if (IS_ERR_OR_NULL(gpu_opp))
++		return;
++
++	a6xx_gmu_set_freq(gpu, gpu_opp);
++	dev_pm_opp_put(gpu_opp);
++}
++
+ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+ {
+ 	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
+@@ -898,10 +908,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+ 	enable_irq(gmu->hfi_irq);
+ 
+ 	/* Set the GPU to the current freq */
+-	if (gmu->legacy)
+-		__a6xx_gmu_set_freq(gmu, gmu->current_perf_index);
+-	else
+-		a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
++	a6xx_gmu_set_initial_freq(gpu, gmu);
+ 
+ 	/*
+ 	 * "enable" the GX power domain which won't actually do anything but it
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+index 7239b8b..03ba60d 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+@@ -63,7 +63,7 @@ void a6xx_gmu_clear_oob(struct a6xx_gmu *gmu, enum a6xx_gmu_oob_state state);
+ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node);
+ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu);
+ 
+-void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq);
++void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp);
+ unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu);
+ 
+ void a6xx_show(struct msm_gpu *gpu, struct msm_gpu_state *state,
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index a22d306..82eb727 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -13,7 +13,6 @@
+ 
+ #include <generated/utsrelease.h>
+ #include <linux/string_helpers.h>
+-#include <linux/pm_opp.h>
+ #include <linux/devfreq.h>
+ #include <linux/devcoredump.h>
+ #include <linux/sched/task.h>
+@@ -34,7 +33,7 @@ static int msm_devfreq_target(struct device *dev, unsigned long *freq,
+ 		return PTR_ERR(opp);
+ 
+ 	if (gpu->funcs->gpu_set_freq)
+-		gpu->funcs->gpu_set_freq(gpu, (u64)*freq);
++		gpu->funcs->gpu_set_freq(gpu, opp);
+ 	else
+ 		clk_set_rate(gpu->core_clk, *freq);
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index 429cb40..0db117a 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/interconnect.h>
++#include <linux/pm_opp.h>
+ #include <linux/regulator/consumer.h>
+ 
+ #include "msm_drv.h"
+@@ -61,7 +62,7 @@ struct msm_gpu_funcs {
+ 	struct msm_gpu_state *(*gpu_state_get)(struct msm_gpu *gpu);
+ 	int (*gpu_state_put)(struct msm_gpu_state *state);
+ 	unsigned long (*gpu_get_freq)(struct msm_gpu *gpu);
+-	void (*gpu_set_freq)(struct msm_gpu *gpu, unsigned long freq);
++	void (*gpu_set_freq)(struct msm_gpu *gpu, struct dev_pm_opp *opp);
+ 	struct msm_gem_address_space *(*create_address_space)
+ 		(struct msm_gpu *gpu, struct platform_device *pdev);
+ };
 -- 
-2.25.0
+2.7.4
 
