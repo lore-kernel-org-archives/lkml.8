@@ -2,109 +2,177 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AEFC433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2853C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0307B2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E0320739
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:17:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vTt6/yYc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgGQVOY (ORCPT
+        id S1726761AbgGQVRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 17:14:24 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:54132 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgGQVOY (ORCPT
+        Fri, 17 Jul 2020 17:17:08 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:34578 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgGQVRH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 17:14:24 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 81F271C0BD7; Fri, 17 Jul 2020 23:14:21 +0200 (CEST)
-Date:   Fri, 17 Jul 2020 23:14:20 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] memory: Convert to DEFINE_SHOW_ATTRIBUTE
-Message-ID: <20200717211420.GA4140@amd>
-References: <20200716090303.13154-1-miaoqinglang@huawei.com>
+        Fri, 17 Jul 2020 17:17:07 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200717211706euoutp02fab7d1efa300ce9d2a32faee323bb6be~ips7-oDzO1695016950euoutp02l
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 21:17:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200717211706euoutp02fab7d1efa300ce9d2a32faee323bb6be~ips7-oDzO1695016950euoutp02l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595020626;
+        bh=axk5IGxg5wek4PUHhF+mZ0GxOxaDbbeSaF7m89FMM/Y=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=vTt6/yYcpOGISIpIaSKHYxyn4v1TsX6lIxpE3+MmvU7M/o39R4/mrGHi8Qp/KXHWq
+         4RjDRRVmnCR5NLwJI6sBOMVgJ68sQctfSGSdSg8M7eDw2tjXXeBYA548MMqbRtPeMd
+         7max5wOIt1q4jd5XsjS0gIVMW872y/RDLsryD2yA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200717211705eucas1p1d26ce42722ffbd8451137ce3c30ca3b3~ips7ddgjD0501605016eucas1p1I;
+        Fri, 17 Jul 2020 21:17:05 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id B1.72.06456.155121F5; Fri, 17
+        Jul 2020 22:17:05 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200717211704eucas1p2192d6f38ba11691eff214a84cd3d4489~ips61H8xj0259702597eucas1p2U;
+        Fri, 17 Jul 2020 21:17:04 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200717211704eusmtrp1bc3f2dd68a6218ae5e80f4c504a3a939~ips60clzQ3040830408eusmtrp1b;
+        Fri, 17 Jul 2020 21:17:04 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-47-5f121551d02f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 20.26.06314.055121F5; Fri, 17
+        Jul 2020 22:17:04 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200717211704eusmtip25a9e83df205beba37224ad4211f71361~ips6UKHBJ0374603746eusmtip2H;
+        Fri, 17 Jul 2020 21:17:04 +0000 (GMT)
+Subject: Re: [PATCH] net: genetlink: Move initialization to core_initcall
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, davem@davemloft.net
+Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@mellanox.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <d67a4204-49c2-0184-b6fe-44d81dc4c129@samsung.com>
+Date:   Fri, 17 Jul 2020 23:17:04 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
-Content-Disposition: inline
-In-Reply-To: <20200716090303.13154-1-miaoqinglang@huawei.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200715074120.8768-1-daniel.lezcano@linaro.org>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPKsWRmVeSWpSXmKPExsWy7djP87qBokLxBqfniVnM+yxrMed8C4vF
+        nBdlFo9WzGK3uLCtj9Xi8q45bBZfnh9ntji2QMxi1YYuRgdOjy0rbzJ57Jx1l91j8Z6XTB6b
+        VnWyedy5tofN49n0w0weZxYcYff4vEkugCOKyyYlNSezLLVI3y6BK2Ppkd1MBQ8FKhp2/GJp
+        YLzK28XIySEhYCIx9/Ifti5GLg4hgRWMEtt3fGKEcL4wSvSsXg7lfGaUWL/jGDtMy/KGk0wQ
+        ieWMEhM2HmKHcN4zSmxpO87axcjBISzgKfH1rTBIg4iAs8SEK99YQGxmgYVMEn1TwWw2AUOJ
+        rrddbCA2r4CdxIXv78FaWQRUJXbPEgEJiwrESax/uZ0JokRQ4uTMJ2CtnEDly+c0sEGMlJfY
+        /nYOM4QtLnHryXwmiDuvsUv8uBgCYbtITHx6H+p+YYlXx7dA2TISpyf3sICcLyHQzCjx8Nxa
+        dginh1HictMMRogqa4k7536xgRzHLKApsX6XPkTYUWL9/x5mkLCEAJ/EjbeCEDfwSUzaNh0q
+        zCvR0SYEUa0mMev4Ori1By9cYp7AqDQLyWezkHwzC8k3sxD2LmBkWcUonlpanJueWmyYl1qu
+        V5yYW1yal66XnJ+7iRGYrE7/O/5pB+PXS0mHGAU4GJV4eDvWCMYLsSaWFVfmHmKU4GBWEuF1
+        Ons6Tog3JbGyKrUoP76oNCe1+BCjNAeLkjiv8aKXsUIC6YklqdmpqQWpRTBZJg5OqQbGxds6
+        jLUK372Rdjm15Apr1qt7Hdf9vfuk5z57fN3tUovMrCeu7PpOZw3aF/zTf7yW84IZa/DL29I/
+        UnnTfqSsqxP57v96etzEOGk1oceTWMM4vTiTHnWt7w/RT3A/32+ed/9E6na38Lcs9QaCC9eH
+        HP9fXXKI+eyrDbr+Xl7FZ8ufi6TvPp6pxFKckWioxVxUnAgAzNjrqFIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEIsWRmVeSWpSXmKPExsVy+t/xe7oBokLxBns6tCzmfZa1mHO+hcVi
+        zosyi0crZrFbXNjWx2pxedccNosvz48zWxxbIGaxakMXowOnx5aVN5k8ds66y+6xeM9LJo9N
+        qzrZPO5c28Pm8Wz6YSaPMwuOsHt83iQXwBGlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqln
+        aGwea2VkqqRvZ5OSmpNZllqkb5egl7H0yG6mgocCFQ07frE0MF7l7WLk5JAQMJFY3nCSqYuR
+        i0NIYCmjxKGzDWwQCRmJk9MaWCFsYYk/17rYIIreMkrc37aDsYuRg0NYwFPi61thkBoRAWeJ
+        CVe+sYDUMAssZpL4vWw5E0hCSMBW4tW234wgNpuAoUTX2y6wBbwCdhIXvr9nBZnDIqAqsXuW
+        CEhYVCBOYvmW+ewQJYISJ2c+YQGxOYHKl8+BuI1ZwExi3uaHzBC2vMT2t3OgbHGJW0/mM01g
+        FJqFpH0WkpZZSFpmIWlZwMiyilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzA+tx37uXkH46WN
+        wYcYBTgYlXh4O9YIxguxJpYVV+YeYpTgYFYS4XU6ezpOiDclsbIqtSg/vqg0J7X4EKMp0G8T
+        maVEk/OBqSOvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAOjZsfy
+        lEN+6ozKLtfiH0/uLxSbsMt8mzPz1UlsXY4r7CdNvmn+T/5GFv9RaZPPTt9zXHNEc3+tj/7F
+        9/zLD+8O2Q+XxTf0e6llygnX1RRfDNZaXG329uGbKueX2254XzdkPdwrymT5XG/Ou3bF3jCr
+        pzGL5P4FqJd/Wfnk54WcRRdSj0u/u5ukxFKckWioxVxUnAgACZn2luUCAAA=
+X-CMS-MailID: 20200717211704eucas1p2192d6f38ba11691eff214a84cd3d4489
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200717211704eucas1p2192d6f38ba11691eff214a84cd3d4489
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200717211704eucas1p2192d6f38ba11691eff214a84cd3d4489
+References: <20200715074120.8768-1-daniel.lezcano@linaro.org>
+        <CGME20200717211704eucas1p2192d6f38ba11691eff214a84cd3d4489@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 15.07.2020 09:41, Daniel Lezcano wrote:
+> The generic netlink is initialized far after the netlink protocol
+> itself at subsys_initcall. The devlink is initialized at the same
+> level, but after, as shown by a disassembly of the vmlinux:
+>
+> [ ... ]
+> 374 ffff8000115f22c0 <__initcall_devlink_init4>:
+> 375 ffff8000115f22c4 <__initcall_genl_init4>:
+> [ ... ]
+>
+> The function devlink_init() calls genl_register_family() before the
+> generic netlink subsystem is initialized.
+>
+> As the generic netlink initcall level is set since 2005, it seems that
+> was not a problem, but now we have the thermal framework initialized
+> at the core_initcall level which creates the generic netlink family
+> and sends a notification which leads to a subtle memory corruption
+> only detectable when the CONFIG_INIT_ON_ALLOC_DEFAULT_ON option is set
+> with the earlycon at init time.
+>
+> The thermal framework needs to be initialized early in order to begin
+> the mitigation as soon as possible. Moving it to postcore_initcall is
+> acceptable.
+>
+> This patch changes the initialization level for the generic netlink
+> family to the core_initcall and comes after the netlink protocol
+> initialization.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-On Thu 2020-07-16 17:03:03, Qinglang Miao wrote:
-> From: Yongqiang Liu <liuyongqiang13@huawei.com>
->=20
-> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
->=20
-> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
+I confirm, that this change together with the thermal subsystem initcall 
+change fixes the issue observed in linux-next for the last few days.
+
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
 > ---
->  drivers/memory/emif.c               | 22 ++--------------------
->  drivers/memory/tegra/tegra124-emc.c | 14 +-------------
->  2 files changed, 3 insertions(+), 33 deletions(-)
->=20
-> diff --git a/drivers/memory/emif.c b/drivers/memory/emif.c
-> index 58a82eea5..aab8ddad7 100644
-> --- a/drivers/memory/emif.c
-> +++ b/drivers/memory/emif.c
-> @@ -131,16 +131,7 @@ static int emif_regdump_show(struct seq_file *s, voi=
-d *unused)
->  	return 0;
->  }
-> =20
-> -static int emif_regdump_open(struct inode *inode, struct file *file)
-> -{
-> -	return single_open(file, emif_regdump_show, inode->i_private);
-> -}
-> -
-> -static const struct file_operations emif_regdump_fops =3D {
-> -	.open			=3D emif_regdump_open,
-> -	.read_iter			=3D seq_read_iter,
-> -	.release		=3D single_release,
-> -};
-> +DEFINE_SHOW_ATTRIBUTE(emif_regdump);
+>   net/netlink/genetlink.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
+> index 55ee680e9db1..36b8a1909826 100644
+> --- a/net/netlink/genetlink.c
+> +++ b/net/netlink/genetlink.c
+> @@ -1263,7 +1263,7 @@ static int __init genl_init(void)
+>   	panic("GENL: Cannot register controller: %d\n", err);
+>   }
+>   
+> -subsys_initcall(genl_init);
+> +core_initcall(genl_init);
+>   
+>   static int genlmsg_mcast(struct sk_buff *skb, u32 portid, unsigned long group,
+>   			 gfp_t flags)
 
-This is not equivalent (and I guess changelog should mention that).
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-Along with other changes, we get:
-
-        .owner          =3D THIS_MODULE,
-        .llseek         =3D seq_lseek,
-
-=2E Is that okay thing to add?
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8SFKwACgkQMOfwapXb+vKdwgCgjCF3E0BpUkXhEQaCJxb5Tope
-PPUAn0wflSY2RbBWEqdQudvWxNTPIPO4
-=hwT1
------END PGP SIGNATURE-----
-
---2fHTh5uZTiUOsy+g--
