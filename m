@@ -2,107 +2,101 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC756C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9359C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 850A72070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A52E20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:04:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="mRHQH2YH"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wA7Qvoi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgGQKAY (ORCPT
+        id S1726386AbgGQKEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:00:24 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:30532 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgGQKAX (ORCPT
+        Fri, 17 Jul 2020 06:04:31 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:54571 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbgGQKEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:00:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594980022; x=1626516022;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=vQ2ImtfRZyj0kAtoB4fUjN5q3ds0AJVtdj0mCNHOPw8=;
-  b=mRHQH2YHwIi17bE30SzNOkO6Osj7dUCH4U+yPwKO/eMlBZOMSL9JNVwY
-   N0fCYE6a54bpv+XVRyEU0NeiIsicZxr32MTsCXYpsSg/GXKmaojC1t7fY
-   2iF9R1+4+vcwsgYkpJkvk+naRjfKY3vIhxJLM+IC3J2yvT1yYQJzLDExG
-   F/wK4M/UfEuT1OgjtmwOKNqvzKg1Kj2hbY0b3lI2qgx89pJWKfjBHAWN0
-   D82izDheKxH1ytFZPUDeh76LPqpQvb/vHoa6Nao4uuDNzbd9sWdd0+Ye6
-   IwRMb56ergYudwaOpT2jxYNcK2mLDyYyBrQLhX4LDy5001wStmlyfZRHy
-   w==;
-IronPort-SDR: A1UpebW7/PWJ6JLdUyFI7rQX4qZyGjpeQD33D4uTqS44rt+BfepdRBh8XUYfACx9EbdKYk/Y2c
- 3vtsWoYBzuTaJLG220LBxr7568mVNSLKAAraPjR6dR9UzHKO+bADvE6zcXQJC1sakToN62vo5q
- NgbeiyvBm87JPPUCUxFtmnQ666fS+65aUbaNTcnZkyFIImA4/SOJ6L/1mSip2xCoTzf5QnWozc
- 5yqm1N8mVC49V27cM5E1vGSCGqeyhffyvKWeGVGUi0dWx+YioAbN0t2lQmmPrhsNCoLxJCcY17
- udU=
-X-IronPort-AV: E=Sophos;i="5.75,362,1589212800"; 
-   d="scan'208";a="251971917"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 17 Jul 2020 18:00:22 +0800
-IronPort-SDR: f9vfUf2pFQWJ8+lNQ04XXBbuhljU2nuLirptshi7O7+2iWJSHKEb0ZldaqpO5YoQHH4B87NSyj
- 2aH+BnDRDA07sX6hY9oSpvpmHYthkqk70=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 02:48:11 -0700
-IronPort-SDR: Few0pq9UDnEi1rkPglf8o17OfuANd9zMmPZqD5dk+SyOrI9wD0xwtIiGehCM8iIdlFweLIXJ/l
- aZH7rRhluDzA==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 03:00:21 -0700
-Date:   Fri, 17 Jul 2020 11:00:18 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: [PATCH] MIPS: Prevent READ_IMPLIES_EXEC propagation
-In-Reply-To: <b62c76c5-3548-c3d5-ad3e-5664c463a52f@loongson.cn>
-Message-ID: <alpine.LFD.2.21.2007171044320.24175@redsun52.ssa.fujisawa.hgst.com>
-References: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn> <alpine.LFD.2.21.2007072043250.31807@redsun52.ssa.fujisawa.hgst.com> <b62c76c5-3548-c3d5-ad3e-5664c463a52f@loongson.cn>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Fri, 17 Jul 2020 06:04:30 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id wNE8jCJmcNPeYwNEBja7Z4; Fri, 17 Jul 2020 12:04:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1594980268; bh=rrZ6Dtj/k5lf5p9V9FIJUPXXEPZN0uR6pQNpSBVg45Y=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=wA7Qvoi8nWloIJsE98VyNHRVU2WLjBRP/jHSCC0jO2T96QWQZITYYxN/CPjJKlpkW
+         HXOjhp/doImZf0ewWfxWtEXfTT+3LkTliD6T7Yd0FyloZE196LrbZuxrWADb6RJDEY
+         1omqL6l2U5RnwCWoab5GF7nHVP5GKtqacUmMysUa5meYXeQkSn2SR7OSaoSDjCPmT2
+         9aHGTq6HRWQxF8TO1gcbJeRrhkOixGAkEZu2ABpcq0F3XL+d2cJ8vBftC/MKcZmapb
+         XWicqRNsRRa2dGV+xMQg+zkVjRIoLd5r/o2rOYS7Y0YDlvvXsJxFqyVB560CmDuAgc
+         LRgm+DNno2MKw==
+Subject: Re: [PATCH 3/3] media: Add support for the AM/FM radio chip KT0913
+ from KT Micro.
+To:     Joe Perches <joe@perches.com>,
+        Santiago Hormazabal <santiagohssl@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-kernel@vger.kernel.org
+References: <20200717004441.116248-1-santiagohssl@gmail.com>
+ <20200717004441.116248-4-santiagohssl@gmail.com>
+ <b8cb9dbf-2a81-6a12-c754-e524f42a0574@xs4all.nl>
+ <9bd42f458908eedd810c5e8805f997997763d32a.camel@perches.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <234961cc-f783-475c-d3db-69720a7da010@xs4all.nl>
+Date:   Fri, 17 Jul 2020 12:04:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <9bd42f458908eedd810c5e8805f997997763d32a.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJs/gkRtd76okay0EWfgoAD0FciTSEHoyRVPjO3MEwaRjuc8U7lRy9Zt7i+Cjwci9G8RvFYG6RwM8zsP1GIHWBZY2/By70bHpjbCUGIy+/o31u6CmFRe
+ WmkH5Zx+ZkcQnlbUQ82YNl1c6LBA2rOjBNEwsaAsLDLIBRzAVfSuj3Ee68BMD0skFhfVEI2DC3THynN/epxt/u+bz385VgLcGJauk8sTo4PQxGKSRLzTfhUb
+ Bof+Pk5XKAXA+DNLLSlXIo8MGo8e6HlqnxYcP9AHvlbkMm4k8Kb45J09ej96XBhkQCoc0WwOlV8WWjLkDGtogySnARbvg6vp1LiXLREza1JFl8KkrG8oOD6u
+ 0et+8avlUP6mSus8O/GvPzWtTc39QA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020, Tiezhu Yang wrote:
-
-> >> In the MIPS architecture, we should clear the security-relevant
-> >> flag READ_IMPLIES_EXEC in the function SET_PERSONALITY2() of the
-> >> file arch/mips/include/asm/elf.h.
-> >>
-> >> Otherwise, with this flag set, PROT_READ implies PROT_EXEC for
-> >> mmap to make memory executable that is not safe, because this
-> >> condition allows an attacker to simply jump to and execute bytes
-> >> that are considered to be just data [1].
-> >   Why isn't the arrangement made with `mips_elf_read_implies_exec'
-> > sufficient?
+On 17/07/2020 11:51, Joe Perches wrote:
+> On Fri, 2020-07-17 at 11:29 +0200, Hans Verkuil wrote:
+>> It's standard linux codingstyle to use lowercase for hex numbers.
+>> Can you change that throughout the source for the next version?
 > 
-> We inherit the READ_IMPLIES_EXEC personality flag across fork().
-> If we do not explicitly clear this flag in SET_PERSONALITY2(),
-> PROT_READ implies PROT_EXEC for mmap to make memory executable
-> even if used with the GCC option "-z noexecstack" when compile.
+> Is there a standard?  It's not in coding-style.rst.
+> 
+> While I prefer lowercase too, it seems the kernel has
+> only ~2:1 preference for lowercase to uppercase hex.
+> 
+> $ git grep -ohP '\b0[xX][0-9a-f]+\b' | grep [a-f] | wc -l
+> 1149833
+> $ git grep -ohP '\b0[xX][0-9A-F]+\b' | grep [A-F] | wc -l
+> 575781
+> 
+> 
 
- It makes no sense to me to repeat this across all the architectures, and 
-even less so to do it individually one by one as people rediscover this 
-issue.
+Well, it's indeed not a standard for the kernel as a whole, but certainly
+for drivers/media:
 
- Why don't we maintain the flag globally in `fs/binfmt_elf.c' which is 
-where we already set it?  E.g.:
+$ git grep -ohP '\b0[xX][0-9a-f]+\b' drivers/media/ | grep [a-f] | wc -l
+109272
+$ git grep -ohP '\b0[xX][0-9A-F]+\b' drivers/media/ | grep [A-F] | wc -l
+22392
 
-	SET_PERSONALITY2(*elf_ex, &arch_state);
-	if (elf_read_implies_exec(*elf_ex, executable_stack))
-		current->personality |= READ_IMPLIES_EXEC;
-	else
-		current->personality &= ~READ_IMPLIES_EXEC;
+The media subsystem has a 5:1 preference for lowercase. And uppercase is
+mostly found in older drivers.
 
-  Maciej
+Still, I really prefer lowercase over uppercase, especially in new drivers.
+
+Regards,
+
+	Hans
