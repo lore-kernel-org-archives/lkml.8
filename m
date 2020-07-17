@@ -2,136 +2,169 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02262C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71142071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4784D2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgGQIa0 (ORCPT
+        id S1726563AbgGQIcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:30:26 -0400
-Received: from mga05.intel.com ([192.55.52.43]:18659 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgGQIaZ (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:30:25 -0400
-IronPort-SDR: HxekXXhi6DoOlG1zroLV4fsvncdXV2U9p6slQaiTk7lrg3iPyjVW4+JEaCDlUwXDFVqDeFuRXK
- Za0+E4f/zK9g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="234407702"
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="234407702"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 01:30:24 -0700
-IronPort-SDR: w8WkAX0oZ+Gqf+zvSRh0270fwmCdV+UjPlxxsIMM4nsAoB+3EjXO3S/KDWM0zDHgOuvB56mbml
- 5g4UxdXP0PWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="318705545"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Jul 2020 01:30:22 -0700
-Subject: Re: [PATCH] perf evsel: Don't set sample_regs_intr/sample_regs_user
- for dummy event
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        LKML <Linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, kan.liang@intel.com,
-        "Jin, Yao" <yao.jin@intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-References: <20200703004215.24418-1-yao.jin@linux.intel.com>
- <20200703110042.GA3282312@krava>
- <9fa0bd83-b21e-7bc2-af81-799f8e99f73b@linux.intel.com>
- <CAP-5=fUjUc7yAA2wyes+DhMkwP9Mw0Lu5gy=XOnugy=vW1jwoQ@mail.gmail.com>
- <b527838b-42e8-b48a-debc-fd91923150d5@linux.intel.com>
- <deb02b38-49eb-088d-6ebf-b5396e50c725@linux.intel.com>
- <20200717082412.GA522549@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <d6af19b3-a766-0c4a-a9fe-332f4b05aa72@linux.intel.com>
-Date:   Fri, 17 Jul 2020 16:30:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 04:32:05 -0400
+Received: from emcscan.emc.com.tw ([192.72.220.5]:4798 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgGQIcF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:32:05 -0400
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="36478205"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 17 Jul 2020 16:32:02 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(195203:0:AUTH_RELAY)
+        (envelope-from <jingle.wu@emc.com.tw>); Fri, 17 Jul 2020 16:32:01 +0800 (CST)
+Received: from 192.168.33.11
+        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(2484:0:AUTH_RELAY)
+        (envelope-from <jingle.wu@emc.com.tw>); Fri, 17 Jul 2020 16:31:59 +0800 (CST)
+From:   "jingle" <jingle.wu@emc.com.tw>
+To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
+Cc:     "'linux-kernel'" <linux-kernel@vger.kernel.org>,
+        "'linux-input'" <linux-input@vger.kernel.org>,
+        "'phoenix'" <phoenix@emc.com.tw>,
+        "'josh.chen'" <josh.chen@emc.com.tw>,
+        "'kai.heng.feng'" <kai.heng.feng@canonical.com>
+References: <20200714105641.15151-1-jingle.wu@emc.com.tw> <20200716053912.GB1665100@dtor-ws> <1594880123.69588.jingle.wu@emc.com.tw> <20200717012719.GC1665100@dtor-ws> <20200717061010.GD1665100@dtor-ws> 
+In-Reply-To: 
+Subject: RE: [PATCH 2/2] Input: elan_i2c - Modify the IAP related functio n for page sizes 128, 512 bytes.
+Date:   Fri, 17 Jul 2020 16:31:58 +0800
+Message-ID: <002c01d65c14$bccb9c10$3662d430$@emc.com.tw>
 MIME-Version: 1.0
-In-Reply-To: <20200717082412.GA522549@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQIjNBmL5Bem/gD5U/Wevzos9rHsvgFMELwpAblpFq8B/K6BpwFpUkutqD5gC9CAAANZoA==
+Content-Language: zh-tw
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYwMTFcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1mYTU0OTRmZC1jODA3LTExZWEtODE5YS1mMDc5NTk2OWU3NWVcYW1lLXRlc3RcZmE1NDk0ZmYtYzgwNy0xMWVhLTgxOWEtZjA3OTU5NjllNzVlYm9keS50eHQiIHN6PSIzNTY0IiB0PSIxMzIzOTQ0ODMxODg1NTA4NzciIGg9IkpxQjdpaXJjaFZQSDZMUFpUdjhudUFZZ2xvdz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: true
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dmitry:
+
+1. 
+
+In this function elan_get_fwinfo().
+
++static int elan_get_fwinfo(u16 ic_type, u8 iap_version, u8 pattern,
++			   u16 *validpage_count, u32 *signature_address,
++			   u16 *page_size)
+ {
+-	switch (ic_type) {
++	u16 type = pattern >= 0x01 ? ic_type : iap_version;
++
++	switch (type) {
+
+This iap_version in pattern0 is read from this command
+ETP_I2C_IAP_VERSION_CMD_OLD ,it is not from this command
+ETP_I2C_IAP_VERSION.
+So u16 type = pattern >= 0x01 ? ic_type : iap_version; <- wrong
+
+2. In this "static int elan_i2c_prepare_fw_update(struct i2c_client *client,
+u16 ic_type, u8 iap_version)" function.
+The ic is old pattern must be modify correct ic_type. (cmd is
+ETP_I2C_IAP_VERSION)
+
+THANKS
 
 
-On 7/17/2020 4:24 PM, Jiri Olsa wrote:
-> On Fri, Jul 17, 2020 at 11:33:46AM +0800, Jin, Yao wrote:
->> Hi,
->>
->> On 7/6/2020 8:55 AM, Jin, Yao wrote:
->>> Hi Ian,
->>>
->>> On 7/6/2020 8:47 AM, Ian Rogers wrote:
->>>> On Fri, Jul 3, 2020 at 5:31 PM Jin, Yao <yao.jin@linux.intel.com> wrote:
->>>>>
->>>>> Hi Jiri,
->>>>>
->>>>> On 7/3/2020 7:00 PM, Jiri Olsa wrote:
->>>>>> On Fri, Jul 03, 2020 at 08:42:15AM +0800, Jin Yao wrote:
->>>>>>> Since commit 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis"),
->>>>>>> a dummy event is added to capture mmaps.
->>>>>>>
->>>>>>> But if we run perf-record as,
->>>>>>>
->>>>>>>     # perf record -e cycles:p -IXMM0 -a -- sleep 1
->>>>>>>     Error:
->>>>>>>     dummy:HG: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
->>>>>>>
->>>>
->>>> Sorry for the breakage caused by modifying the dummy event. Could we
->>>> add a test to cover the issue? Perhaps in tools/perf/tests/shell/.
->>>> Trying to reproduce with a register on my skylakex on a 5.6.14 kernel
->>>> with:
->>>>
->>>> $ perf record -e cycles:p -IAX -a -- sleep 1
->>>>
->>>> succeeds.
->>>>
->>>> Thanks,
->>>> Ian
->>>>
->>>
->>> -IAX should be no problem. The issue only occurs on the platform with
->>> extended regs supports, such as ICL. So I don't know if it's suitable to
->>> add it to perf test suite.
->>>
->>> Thanks
->>> Jin Yao
->>>
->>
->> Can this fix patch be accepted?
-> 
-> hi,
-> my only concern was that it would conflict with Adrian's patch,
-> other than that:
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-> 
-> thanks,
-> jirka
-> 
+-----Original Message-----
+From: jingle [mailto:jingle.wu@emc.com.tw] 
+Sent: Friday, July 17, 2020 4:20 PM
+To: 'Dmitry Torokhov'
+Cc: 'linux-kernel'; 'linux-input'; 'phoenix'; 'josh.chen'; 'kai.heng.feng'
+Subject: RE: [PATCH 2/2] Input: elan_i2c - Modify the IAP related functio n
+for page sizes 128, 512 bytes.
 
-Thanks Jiri!
+Hi Dmitry:
 
-Adrian's patch has not been merged otherwise I can rebase my patch on top of Adrian's patch.
+In this "static int elan_i2c_prepare_fw_update(struct i2c_client *client,
+u16 ic_type, u8 iap_version)" function If IC is old_pattern, it must be
+modified to iap_version
+	-> u16 type = pattern >= 0x01 ? ic_type : iap_version;
 
 Thanks
-Jin Yao
+
+-----Original Message-----
+From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
+Sent: Friday, July 17, 2020 2:10 PM
+To: jingle.wu
+Cc: linux-kernel; linux-input; phoenix; josh.chen; kai.heng.feng
+Subject: Re: [PATCH 2/2] Input: elan_i2c - Modify the IAP related functio n
+for page sizes 128, 512 bytes.
+
+On Thu, Jul 16, 2020 at 06:27:19PM -0700, Dmitry Torokhov wrote:
+> Hi Jingle,
+> 
+> On Thu, Jul 16, 2020 at 02:15:23PM +0800, jingle.wu wrote:
+> > HI Dmitry:
+> > 
+> > Just to confirm, the older devices (I assume that pattern 0 means
+> > older)  have version command that is numerically higher than the one 
+> > for the  newer (pattern >= 1) devices?
+> > 
+> > >> Yes, Pattern 1, 2 are newer devices.
+> > 
+> > > @@ -324,7 +342,14 @@ static int elan_i2c_get_sm_version(struct
+i2c_client *client,
+> > >  			return error;
+> > >  		}
+> > >  		*version = val[0];
+> > > -		*ic_type = val[1];
+> > > +
+> > > +		error = elan_i2c_read_cmd(client, ETP_I2C_IAP_VERSION_CMD,
+val);
+> > > +		if (error) {
+> > > +			dev_err(&client->dev, "failed to get ic type: %d\n",
+> > > +				error);
+> > > +			return error;
+> > > +		}
+> > 
+> > Could you please tell me why this chunk is needed?
+> > >> Modify the old pattern IC firmware read the correct ic_type.
+> > 
+> > In the elan_i2c_core.c, move this code to elan_i2c_i2c.c. 
+> > static int elan_query_device_info(struct elan_tp_data *data) {
+> > 	.....
+> > 	if (data->pattern == 0x01)
+> > 		ic_type = data->ic_type;
+> > 	else
+> > 		ic_type = data->iap_version;
+> > 	.....
+> > 	return 0;
+> > }
+> 
+> I am concerned that unconditionally substituting iap_version for 
+> ic_type for "pattern 0" devices will break check in
+> elan_check_ASUS_special_fw() as it operates on the ic_type returned by 
+> ETP_I2C_OSM_VERSION_CMD and not iap_version.
+
+I split the firmware handling code into a few patches and uploaded it to a
+new elan-i2c branch:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git elan-i2c
+
+Please take a look and let me know if I messed it up or not. I will be
+looking at the new packet format next.
+
+Thanks.
+
+--
+Dmitry
+
