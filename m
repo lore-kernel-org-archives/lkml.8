@@ -2,160 +2,111 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531EEC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384B0207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74DE2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="PIXLAzYn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgGQPsK (ORCPT
+        id S1726530AbgGQPwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:48:10 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40576 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbgGQPsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 11:48:09 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A2ABC1A09CA;
-        Fri, 17 Jul 2020 17:48:07 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 92B921A026D;
-        Fri, 17 Jul 2020 17:48:07 +0200 (CEST)
-Received: from fsr-ub1864-126.ea.freescale.net (fsr-ub1864-126.ea.freescale.net [10.171.82.212])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 597FF205C8;
-        Fri, 17 Jul 2020 17:48:07 +0200 (CEST)
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Cc:     laurentiu.tudor@nxp.com, Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 1/3] bus: fsl-mc: add missing device types
-Date:   Fri, 17 Jul 2020 18:47:58 +0300
-Message-Id: <20200717154800.17169-2-ioana.ciornei@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200717154800.17169-1-ioana.ciornei@nxp.com>
-References: <20200717154800.17169-1-ioana.ciornei@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 17 Jul 2020 11:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgGQPwP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 11:52:15 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3CE5C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 08:52:15 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id k27so6857450pgm.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 08:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=BIJ0H+rrPt+l6s6jH/5QTDHwke6LDMQjCn4+Qb4EHhs=;
+        b=PIXLAzYnDdFiOJ0IrkQrjfUPsv/WrmGn3ce139GjtgIaMKENpq3XTAD8nSdi6EMMy8
+         JMpBne/E0KyqSmkFCAmglWwFFXpu9/YsVK2eLQRBUVkYh5YmXXYT7f5/1/DEx6A3/qfS
+         jKxbQ1Z4oH/wGujc3Sr7qLeFdjYb4FCylCc53gLOQ5Uai1Bs7GIJ1rLEHlqz1I6LMCp1
+         gVb9Es1YIfcGXxAsmZN+CsGRfsJ77WnpMNg42QzayiOKdIii7RxECqmwgWLPQMCB9/76
+         p9fR2ec/hhwmtjhmQ8eZub+J0qkohwy4QrogNXxDqM7R0toNLOHfmbJ8XsZFhid90+Rp
+         SbvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=BIJ0H+rrPt+l6s6jH/5QTDHwke6LDMQjCn4+Qb4EHhs=;
+        b=lztCwSsWybBaiuqMb+3NIG57yz6jfxBGapxGSjySCM49c1gjCkBaP+AAF/7pKaBCT5
+         LZPYiPVNvYM4HeoNCUV7+prjY404Xsg2Xinaq1R4YNAF+eGseTmu0JG18r9izZKieUYP
+         PGtqDmp2unbPOCdvHq+/Wkket/m+WwasyTRVk5fDqqEFdqWlM0Xl3ouHUclSpamDX9Uz
+         3aN8tdXOv5xIfk/T7F+bK2uv0PI5oEykH6bHa8MhoQ2uw2iRLvWnTYGbJ/KhFxH1bcHP
+         ll9mEvZ6lfNwjbTNIQvBZf0WMMESnq4vMBPoZjVhmgjya2fY4V0hJS/DL9zhT/SHTKH8
+         /KOQ==
+X-Gm-Message-State: AOAM533TC6F+rdjZyqDPCvWeArip68QsdHQNkjAvq0FGzIsTCdekq/Zl
+        o/eBL6GGj7Mt/xQOQd25POqNbj4pvqqILw==
+X-Google-Smtp-Source: ABdhPJyB9GpkAjnOjBaf0gAmE9ZbTIUTjcR1GKAIVvzfUFrAqZke/crwFZ+2HHAtlNTCjjJtNdYz2w==
+X-Received: by 2002:a63:3d85:: with SMTP id k127mr8541126pga.29.1595001135087;
+        Fri, 17 Jul 2020 08:52:15 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id k189sm7988029pfd.175.2020.07.17.08.52.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 08:52:14 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] io_uring fix for 5.8-rc6
+Message-ID: <7dd248d7-330a-cc1b-9ddc-bac57c3581d0@kernel.dk>
+Date:   Fri, 17 Jul 2020 09:52:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MC bus has different types of devices that can be discovered on the
-bus. Add the missing device types.
+Hi Linus,
 
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
----
- drivers/bus/fsl-mc/fsl-mc-bus.c | 30 ++++++++++++++++++++++++++++++
- include/linux/fsl/mc.h          | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+Fix for a case where, with automatic buffer selection, we can leak
+the buffer descriptor for recvmsg.
 
-diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-index 40526da5c6a6..ee1873438e97 100644
---- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-+++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-@@ -201,6 +201,31 @@ struct device_type fsl_mc_bus_dpseci_type = {
- };
- EXPORT_SYMBOL_GPL(fsl_mc_bus_dpseci_type);
- 
-+struct device_type fsl_mc_bus_dpdmux_type = {
-+	.name = "fsl_mc_bus_dpdmux"
-+};
-+EXPORT_SYMBOL_GPL(fsl_mc_bus_dpdmux_type);
-+
-+struct device_type fsl_mc_bus_dpdcei_type = {
-+	.name = "fsl_mc_bus_dpdcei"
-+};
-+EXPORT_SYMBOL_GPL(fsl_mc_bus_dpdcei_type);
-+
-+struct device_type fsl_mc_bus_dpaiop_type = {
-+	.name = "fsl_mc_bus_dpaiop"
-+};
-+EXPORT_SYMBOL_GPL(fsl_mc_bus_dpaiop_type);
-+
-+struct device_type fsl_mc_bus_dpci_type = {
-+	.name = "fsl_mc_bus_dpci"
-+};
-+EXPORT_SYMBOL_GPL(fsl_mc_bus_dpci_type);
-+
-+struct device_type fsl_mc_bus_dpdmai_type = {
-+	.name = "fsl_mc_bus_dpdmai"
-+};
-+EXPORT_SYMBOL_GPL(fsl_mc_bus_dpdmai_type);
-+
- static struct device_type *fsl_mc_get_device_type(const char *type)
- {
- 	static const struct {
-@@ -217,6 +242,11 @@ static struct device_type *fsl_mc_get_device_type(const char *type)
- 		{ &fsl_mc_bus_dpmac_type, "dpmac" },
- 		{ &fsl_mc_bus_dprtc_type, "dprtc" },
- 		{ &fsl_mc_bus_dpseci_type, "dpseci" },
-+		{ &fsl_mc_bus_dpdmux_type, "dpdmux" },
-+		{ &fsl_mc_bus_dpdcei_type, "dpdcei" },
-+		{ &fsl_mc_bus_dpaiop_type, "dpaiop" },
-+		{ &fsl_mc_bus_dpci_type, "dpci" },
-+		{ &fsl_mc_bus_dpdmai_type, "dpdmai" },
- 		{ NULL, NULL }
- 	};
- 	int i;
-diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
-index 2b5f8366dbe1..cdb03aca2aef 100644
---- a/include/linux/fsl/mc.h
-+++ b/include/linux/fsl/mc.h
-@@ -433,6 +433,11 @@ extern struct device_type fsl_mc_bus_dpmcp_type;
- extern struct device_type fsl_mc_bus_dpmac_type;
- extern struct device_type fsl_mc_bus_dprtc_type;
- extern struct device_type fsl_mc_bus_dpseci_type;
-+extern struct device_type fsl_mc_bus_dpdmux_type;
-+extern struct device_type fsl_mc_bus_dpdcei_type;
-+extern struct device_type fsl_mc_bus_dpaiop_type;
-+extern struct device_type fsl_mc_bus_dpci_type;
-+extern struct device_type fsl_mc_bus_dpdmai_type;
- 
- static inline bool is_fsl_mc_bus_dprc(const struct fsl_mc_device *mc_dev)
- {
-@@ -454,6 +459,11 @@ static inline bool is_fsl_mc_bus_dpsw(const struct fsl_mc_device *mc_dev)
- 	return mc_dev->dev.type == &fsl_mc_bus_dpsw_type;
- }
- 
-+static inline bool is_fsl_mc_bus_dpdmux(const struct fsl_mc_device *mc_dev)
-+{
-+	return mc_dev->dev.type == &fsl_mc_bus_dpdmux_type;
-+}
-+
- static inline bool is_fsl_mc_bus_dpbp(const struct fsl_mc_device *mc_dev)
- {
- 	return mc_dev->dev.type == &fsl_mc_bus_dpbp_type;
-@@ -484,6 +494,26 @@ static inline bool is_fsl_mc_bus_dpseci(const struct fsl_mc_device *mc_dev)
- 	return mc_dev->dev.type == &fsl_mc_bus_dpseci_type;
- }
- 
-+static inline bool is_fsl_mc_bus_dpdcei(const struct fsl_mc_device *mc_dev)
-+{
-+	return mc_dev->dev.type == &fsl_mc_bus_dpdcei_type;
-+}
-+
-+static inline bool is_fsl_mc_bus_dpaiop(const struct fsl_mc_device *mc_dev)
-+{
-+	return mc_dev->dev.type == &fsl_mc_bus_dpaiop_type;
-+}
-+
-+static inline bool is_fsl_mc_bus_dpci(const struct fsl_mc_device *mc_dev)
-+{
-+	return mc_dev->dev.type == &fsl_mc_bus_dpci_type;
-+}
-+
-+static inline bool is_fsl_mc_bus_dpdmai(const struct fsl_mc_device *mc_dev)
-+{
-+	return mc_dev->dev.type == &fsl_mc_bus_dpdmai_type;
-+}
-+
- /*
-  * Data Path Buffer Pool (DPBP) API
-  * Contains initialization APIs and runtime control APIs for DPBP
+Please pull!
+
+
+The following changes since commit 16d598030a37853a7a6b4384cad19c9c0af2f021:
+
+  io_uring: fix not initialised work->flags (2020-07-12 09:40:50 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-07-17
+
+for you to fetch changes up to 681fda8d27a66f7e65ff7f2d200d7635e64a8d05:
+
+  io_uring: fix recvmsg memory leak with buffer selection (2020-07-15 13:35:56 -0600)
+
+----------------------------------------------------------------
+io_uring-5.8-2020-07-17
+
+----------------------------------------------------------------
+Pavel Begunkov (1):
+      io_uring: fix recvmsg memory leak with buffer selection
+
+ fs/io_uring.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
 -- 
-2.25.1
+Jens Axboe
 
