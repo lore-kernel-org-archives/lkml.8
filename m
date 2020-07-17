@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F4AC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AF9C433F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D467320737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E84020737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aFcX2soS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ngePkQgp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgGQGYY (ORCPT
+        id S1727869AbgGQGYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
+        Fri, 17 Jul 2020 02:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgGQGYR (ORCPT
+        with ESMTP id S1727814AbgGQGYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:24:17 -0400
+        Fri, 17 Jul 2020 02:24:31 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C1AC08C5C0;
-        Thu, 16 Jul 2020 23:24:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC31C061755;
+        Thu, 16 Jul 2020 23:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=15CB9V7QI/EJP4CEaWkoXbSz4JSBsbnp24tauy2SAlc=; b=aFcX2soSjBmLa8/cRhua5QBWnT
-        7gyYF7oDmYQFLRFdjsrPLADpoApsS91mlCTiDWBDRNpYne4Q4FB9+D+vEGKWN1fkd52ifFfy6y70i
-        QlTP4pYrRVhtkusVcZaJS2BzoSvxYPXODbLDwD+yVF0u35uVyoBPGPUz/+ZRPXy/YWPyi7AOeziTG
-        7YpC4zg3wHYdi9UDxHVd4uXYngadXhSP8kWziNbYQAOp3wIfafvDQhe5UpxM4Cihj6hY6novUL7+a
-        ZABKfMAt5UbDLVDUnDhPHh6vXC0yzJO/s4rgEjJ8e65eXAKEw5RyxAO+pdFtfHGSc/YmBJY0vT/q0
-        6nRGA/Eg==;
+        bh=5UhNspDdIml9tpfUfRWGkC9v9AOZv925n+e1F7He35A=; b=ngePkQgpsw8v14v2e2H1RuLUgP
+        0xqQQ043zu+gtXRpXV0bf1ADe/edoqtXj7z3kKW9mKK+iCMOqbmpx3giNOQFrEznviF1qfzoZwbDo
+        xr7UnllY+pDKH2CH55FbdxZENM4P5ohmSYAJ0fRT7rs+qqeSNBf08yCPD3u4f/qFc5Y9NGvnoQNep
+        Q1DsD4GKGED6DkS1FkzSoMqYpNOH/w2g4VpT16FR3tH0BYHZ8AioctdDH4k7C39SaqLi85vEZptIG
+        vVRFnCSAKWjMPjLVXYuX97UKI3rDl+CoNmVE1f7b4ZTU02I8+ZHtLq4ucRfi35nEz/aA046/AsP0+
+        9sdcqAzw==;
 Received: from [2001:4bb8:105:4a81:3772:912d:640:e6c6] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwJmv-00052k-DO; Fri, 17 Jul 2020 06:24:06 +0000
+        id 1jwJnA-00054z-MC; Fri, 17 Jul 2020 06:24:21 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Alexei Starovoitov <ast@kernel.org>,
@@ -55,9 +55,9 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
         linux-can@vger.kernel.org, dccp@vger.kernel.org,
         linux-wpan@vger.kernel.org, mptcp@lists.01.org
-Subject: [PATCH 07/22] netfilter/arp_tables: clean up compat {get,set}sockopt handling
-Date:   Fri, 17 Jul 2020 08:23:16 +0200
-Message-Id: <20200717062331.691152-8-hch@lst.de>
+Subject: [PATCH 16/22] net/ipv4: factor out mcast join/leave setsockopt helpers
+Date:   Fri, 17 Jul 2020 08:23:25 +0200
+Message-Id: <20200717062331.691152-17-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200717062331.691152-1-hch@lst.de>
 References: <20200717062331.691152-1-hch@lst.de>
@@ -69,189 +69,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the native and compat {get,set}sockopt handlers using
-in_compat_syscall().
+Factor out one helper each for setting the native and compat
+version of the MCAST_MSFILTER option.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- net/ipv4/netfilter/arp_tables.c | 85 ++++++++-------------------------
- 1 file changed, 21 insertions(+), 64 deletions(-)
+ net/ipv4/ip_sockglue.c | 109 +++++++++++++++++++++--------------------
+ 1 file changed, 56 insertions(+), 53 deletions(-)
 
-diff --git a/net/ipv4/netfilter/arp_tables.c b/net/ipv4/netfilter/arp_tables.c
-index b167f4a5b68453..15807fb4a65f3e 100644
---- a/net/ipv4/netfilter/arp_tables.c
-+++ b/net/ipv4/netfilter/arp_tables.c
-@@ -787,8 +787,7 @@ static int compat_table_info(const struct xt_table_info *info,
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index b587dee006f882..73bb88fbe54661 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -806,6 +806,60 @@ static int compat_ip_set_mcast_msfilter(struct sock *sk, void __user *optval,
  }
  #endif
  
--static int get_info(struct net *net, void __user *user,
--		    const int *len, int compat)
-+static int get_info(struct net *net, void __user *user, const int *len)
- {
- 	char name[XT_TABLE_MAXNAMELEN];
- 	struct xt_table *t;
-@@ -802,7 +801,7 @@ static int get_info(struct net *net, void __user *user,
- 
- 	name[XT_TABLE_MAXNAMELEN-1] = '\0';
- #ifdef CONFIG_COMPAT
--	if (compat)
-+	if (in_compat_syscall())
- 		xt_compat_lock(NFPROTO_ARP);
- #endif
- 	t = xt_request_find_table_lock(net, NFPROTO_ARP, name);
-@@ -812,7 +811,7 @@ static int get_info(struct net *net, void __user *user,
- #ifdef CONFIG_COMPAT
- 		struct xt_table_info tmp;
- 
--		if (compat) {
-+		if (in_compat_syscall()) {
- 			ret = compat_table_info(private, &tmp);
- 			xt_compat_flush_offsets(NFPROTO_ARP);
- 			private = &tmp;
-@@ -837,7 +836,7 @@ static int get_info(struct net *net, void __user *user,
- 	} else
- 		ret = PTR_ERR(t);
- #ifdef CONFIG_COMPAT
--	if (compat)
-+	if (in_compat_syscall())
- 		xt_compat_unlock(NFPROTO_ARP);
- #endif
- 	return ret;
-@@ -998,7 +997,7 @@ static int do_replace(struct net *net, const void __user *user,
- }
- 
- static int do_add_counters(struct net *net, const void __user *user,
--			   unsigned int len, int compat)
-+			   unsigned int len)
- {
- 	unsigned int i;
- 	struct xt_counters_info tmp;
-@@ -1009,7 +1008,8 @@ static int do_add_counters(struct net *net, const void __user *user,
- 	struct arpt_entry *iter;
- 	unsigned int addend;
- 
--	paddc = xt_copy_counters_from_user(user, len, &tmp, compat);
-+	paddc = xt_copy_counters_from_user(user, len, &tmp,
-+					   in_compat_syscall());
- 	if (IS_ERR(paddc))
- 		return PTR_ERR(paddc);
- 
-@@ -1294,30 +1294,6 @@ static int compat_do_replace(struct net *net, void __user *user,
- 	return ret;
- }
- 
--static int compat_do_arpt_set_ctl(struct sock *sk, int cmd, void __user *user,
--				  unsigned int len)
--{
--	int ret;
--
--	if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
--		return -EPERM;
--
--	switch (cmd) {
--	case ARPT_SO_SET_REPLACE:
--		ret = compat_do_replace(sock_net(sk), user, len);
--		break;
--
--	case ARPT_SO_SET_ADD_COUNTERS:
--		ret = do_add_counters(sock_net(sk), user, len, 1);
--		break;
--
--	default:
--		ret = -EINVAL;
--	}
--
--	return ret;
--}
--
- static int compat_copy_entry_to_user(struct arpt_entry *e, void __user **dstptr,
- 				     compat_uint_t *size,
- 				     struct xt_counters *counters,
-@@ -1425,29 +1401,6 @@ static int compat_get_entries(struct net *net,
- 	xt_compat_unlock(NFPROTO_ARP);
- 	return ret;
- }
--
--static int do_arpt_get_ctl(struct sock *, int, void __user *, int *);
--
--static int compat_do_arpt_get_ctl(struct sock *sk, int cmd, void __user *user,
--				  int *len)
--{
--	int ret;
--
--	if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
--		return -EPERM;
--
--	switch (cmd) {
--	case ARPT_SO_GET_INFO:
--		ret = get_info(sock_net(sk), user, len, 1);
--		break;
--	case ARPT_SO_GET_ENTRIES:
--		ret = compat_get_entries(sock_net(sk), user, len);
--		break;
--	default:
--		ret = do_arpt_get_ctl(sk, cmd, user, len);
--	}
--	return ret;
--}
- #endif
- 
- static int do_arpt_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
-@@ -1459,11 +1412,16 @@ static int do_arpt_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned
- 
- 	switch (cmd) {
- 	case ARPT_SO_SET_REPLACE:
--		ret = do_replace(sock_net(sk), user, len);
++static int ip_mcast_join_leave(struct sock *sk, int optname,
++		void __user *optval, int optlen)
++{
++	struct ip_mreqn mreq = { };
++	struct sockaddr_in *psin;
++	struct group_req greq;
++
++	if (optlen < sizeof(struct group_req))
++		return -EINVAL;
++	if (copy_from_user(&greq, optval, sizeof(greq)))
++		return -EFAULT;
++
++	psin = (struct sockaddr_in *)&greq.gr_group;
++	if (psin->sin_family != AF_INET)
++		return -EINVAL;
++	mreq.imr_multiaddr = psin->sin_addr;
++	mreq.imr_ifindex = greq.gr_interface;
++	if (optname == MCAST_JOIN_GROUP)
++		return ip_mc_join_group(sk, &mreq);
++	return ip_mc_leave_group(sk, &mreq);
++}
++
 +#ifdef CONFIG_COMPAT
-+		if (in_compat_syscall())
-+			ret = compat_do_replace(sock_net(sk), user, len);
-+		else
++static int compat_ip_mcast_join_leave(struct sock *sk, int optname,
++		void __user *optval, int optlen)
++{
++	struct compat_group_req greq;
++	struct ip_mreqn mreq = { };
++	struct sockaddr_in *psin;
++	int err;
++
++	if (optlen < sizeof(struct compat_group_req))
++		return -EINVAL;
++	if (copy_from_user(&greq, optval, sizeof(greq)))
++		return -EFAULT;
++
++	psin = (struct sockaddr_in *)&greq.gr_group;
++	if (psin->sin_family != AF_INET)
++		return -EINVAL;
++	mreq.imr_multiaddr = psin->sin_addr;
++	mreq.imr_ifindex = greq.gr_interface;
++
++	rtnl_lock();
++	lock_sock(sk);
++	if (optname == MCAST_JOIN_GROUP)
++		err = ip_mc_join_group(sk, &mreq);
++	else
++		err = ip_mc_leave_group(sk, &mreq);
++	release_sock(sk);
++	rtnl_unlock();
++	return err;
++}
 +#endif
-+			ret = do_replace(sock_net(sk), user, len);
++
+ static int do_ip_setsockopt(struct sock *sk, int level,
+ 			    int optname, char __user *optval, unsigned int optlen)
+ {
+@@ -1211,29 +1265,8 @@ static int do_ip_setsockopt(struct sock *sk, int level,
+ 	}
+ 	case MCAST_JOIN_GROUP:
+ 	case MCAST_LEAVE_GROUP:
+-	{
+-		struct group_req greq;
+-		struct sockaddr_in *psin;
+-		struct ip_mreqn mreq;
+-
+-		if (optlen < sizeof(struct group_req))
+-			goto e_inval;
+-		err = -EFAULT;
+-		if (copy_from_user(&greq, optval, sizeof(greq)))
+-			break;
+-		psin = (struct sockaddr_in *)&greq.gr_group;
+-		if (psin->sin_family != AF_INET)
+-			goto e_inval;
+-		memset(&mreq, 0, sizeof(mreq));
+-		mreq.imr_multiaddr = psin->sin_addr;
+-		mreq.imr_ifindex = greq.gr_interface;
+-
+-		if (optname == MCAST_JOIN_GROUP)
+-			err = ip_mc_join_group(sk, &mreq);
+-		else
+-			err = ip_mc_leave_group(sk, &mreq);
++		err = ip_mcast_join_leave(sk, optname, optval, optlen);
  		break;
- 
- 	case ARPT_SO_SET_ADD_COUNTERS:
--		ret = do_add_counters(sock_net(sk), user, len, 0);
-+		ret = do_add_counters(sock_net(sk), user, len);
- 		break;
- 
- 	default:
-@@ -1482,11 +1440,16 @@ static int do_arpt_get_ctl(struct sock *sk, int cmd, void __user *user, int *len
- 
- 	switch (cmd) {
- 	case ARPT_SO_GET_INFO:
--		ret = get_info(sock_net(sk), user, len, 0);
-+		ret = get_info(sock_net(sk), user, len);
- 		break;
- 
- 	case ARPT_SO_GET_ENTRIES:
--		ret = get_entries(sock_net(sk), user, len);
-+#ifdef CONFIG_COMPAT
-+		if (in_compat_syscall())
-+			ret = compat_get_entries(sock_net(sk), user, len);
-+		else
-+#endif
-+			ret = get_entries(sock_net(sk), user, len);
- 		break;
- 
- 	case ARPT_SO_GET_REVISION_TARGET: {
-@@ -1610,15 +1573,9 @@ static struct nf_sockopt_ops arpt_sockopts = {
- 	.set_optmin	= ARPT_BASE_CTL,
- 	.set_optmax	= ARPT_SO_SET_MAX+1,
- 	.set		= do_arpt_set_ctl,
--#ifdef CONFIG_COMPAT
--	.compat_set	= compat_do_arpt_set_ctl,
--#endif
- 	.get_optmin	= ARPT_BASE_CTL,
- 	.get_optmax	= ARPT_SO_GET_MAX+1,
- 	.get		= do_arpt_get_ctl,
--#ifdef CONFIG_COMPAT
--	.compat_get	= compat_do_arpt_get_ctl,
--#endif
- 	.owner		= THIS_MODULE,
- };
- 
+-	}
+ 	case MCAST_JOIN_SOURCE_GROUP:
+ 	case MCAST_LEAVE_SOURCE_GROUP:
+ 	case MCAST_BLOCK_SOURCE:
+@@ -1389,37 +1422,7 @@ int compat_ip_setsockopt(struct sock *sk, int level, int optname,
+ 	switch (optname) {
+ 	case MCAST_JOIN_GROUP:
+ 	case MCAST_LEAVE_GROUP:
+-	{
+-		struct compat_group_req __user *gr32 = (void __user *)optval;
+-		struct group_req greq;
+-		struct sockaddr_in *psin = (struct sockaddr_in *)&greq.gr_group;
+-		struct ip_mreqn mreq;
+-
+-		if (optlen < sizeof(struct compat_group_req))
+-			return -EINVAL;
+-
+-		if (get_user(greq.gr_interface, &gr32->gr_interface) ||
+-		    copy_from_user(&greq.gr_group, &gr32->gr_group,
+-				sizeof(greq.gr_group)))
+-			return -EFAULT;
+-
+-		if (psin->sin_family != AF_INET)
+-			return -EINVAL;
+-
+-		memset(&mreq, 0, sizeof(mreq));
+-		mreq.imr_multiaddr = psin->sin_addr;
+-		mreq.imr_ifindex = greq.gr_interface;
+-
+-		rtnl_lock();
+-		lock_sock(sk);
+-		if (optname == MCAST_JOIN_GROUP)
+-			err = ip_mc_join_group(sk, &mreq);
+-		else
+-			err = ip_mc_leave_group(sk, &mreq);
+-		release_sock(sk);
+-		rtnl_unlock();
+-		return err;
+-	}
++		return compat_ip_mcast_join_leave(sk, optname, optval, optlen);
+ 	case MCAST_JOIN_SOURCE_GROUP:
+ 	case MCAST_LEAVE_SOURCE_GROUP:
+ 	case MCAST_BLOCK_SOURCE:
 -- 
 2.27.0
 
