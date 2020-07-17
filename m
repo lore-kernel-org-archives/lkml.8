@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902D0C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F318C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 634EA21741
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DDA20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:39:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6zjRZq2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Up1N9x1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgGQOiy (ORCPT
+        id S1728005AbgGQOjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:38:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45518 "EHLO
+        Fri, 17 Jul 2020 10:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727932AbgGQOix (ORCPT
+        with ESMTP id S1727955AbgGQOi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:38:53 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28D9DC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:53 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d1so5523223plr.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:53 -0700 (PDT)
+        Fri, 17 Jul 2020 10:38:58 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2CC2C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:58 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t11so5460387pfq.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9i+/+jWHzL4Xcjz4Ie7ZuxiFCfxMRdDSo/Gp7wHU4Uw=;
-        b=e6zjRZq2dbDynVXLfMUA+dlBBXalb615wkpdJ4MNtADhMNjDt//jwZL5o06gce2WEC
-         BMwRTPcHnDFc96i+Zagn9GsUmlVGsc2t+f/m8NU6gWg+0wiXRRuk7+Y2NppWiodY+ks8
-         xRJ2KE5N610eBX6/3Q++RqqC1MeX72fBDbcE8tj8UXUSxIFmm+YH4Zy5QIERtBA8EhXK
-         CdWHkQtGlw3Yu5+mkYNGBktSmdTcagEYnm3TSh/7r4qGArvD6sj56ks2gR9O+pAcNKpf
-         JJY5xwYSRwh6KwHHoLE0+/6p0NjSOc/YFFQv+lVLUYN/MxNMicSM97Vh6WBmpMPm2CHT
-         RvVg==
+        bh=nXezF5jJMP/dgjGdNrV9oT3sL6C+VWCPHOSSzy8uOcE=;
+        b=Up1N9x1N91TMncSewDheY6XcgP2CR4ewAHLl1Jp6YOqoR5TMknHIWmEgye4ODBiYFt
+         ycSA1wJGNlP+BxX3y36ajb8ES06dEOnuPfG2twI3Buc54rFoVjbcqOn3DYisAaJTRwSP
+         8CHnCQaUDvfHgFzv6VNjontfp+sMSwVrSISf7OsgJBMKLRu1oZsQQtfMCzk2VQCVWyJw
+         Gg/Rr6bpVo7vBPmM7o6/qGu/G0RToI9eSScblOq2JyB/jEARN6EwO/Z9GvhOXiAOU5bq
+         bem3XdG/qBLvTZ6x0HmFWijdoj6tgn9M101spxJsVll9dIb4EWSYUwTB0Ai4067P0JEJ
+         q5zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9i+/+jWHzL4Xcjz4Ie7ZuxiFCfxMRdDSo/Gp7wHU4Uw=;
-        b=QCGqnO51Jj2LyYKJutHUkQD1y893gM6PMpPEm5L1H013Nl25pDP6Xtup4kyklF7QWh
-         ggWKjM367OSyGsC74t4lkhwZY0sKDOE1Y0C5imKuqwnGgRtBJWai6FvTzpJcUhqwuIZq
-         9+WqBPPTCjB63RGVGPyi2rlP/ggmxO8pUi+OTanGp4HFEBNwONbRywyyFeh1DvVwnTQY
-         07BeRh57ex5QdVe2sThepCsTAotlLnC7eGSDyA8t+2G5LcmgpNxfKzuugjMR3di/vwh7
-         gZAI0P7tQkYrncLNrvKHA3CDXJMTsw3xZ80UTYNhKelQtpJtKmaJ3lex6l/YXRKDLTBj
-         37VA==
-X-Gm-Message-State: AOAM531OwpqsuY3r/wearh2RafCJMPoEyDuAY6srfyy26mz4pHmd0SG+
-        y5bSqs2WEHY+h4/Z+vQmWhBkafmIk6E=
-X-Google-Smtp-Source: ABdhPJybX4boj+ULupUcN7Sye/rxQwflrAr3jY8aS1sixhPXtlwfzEwNcU+0d6M7WCfh5Va9YCev6g==
-X-Received: by 2002:a17:902:d698:: with SMTP id v24mr7797651ply.163.1594996732711;
-        Fri, 17 Jul 2020 07:38:52 -0700 (PDT)
+        bh=nXezF5jJMP/dgjGdNrV9oT3sL6C+VWCPHOSSzy8uOcE=;
+        b=E+J6sCP8PNAKJ4dsEXigrQXOJfDTN5XfGuQ2vQ7DoqtXAiB3ANg6FgbSVNCjdD/dlT
+         7GJbU0b+lNXzNqYm+UHIxekTz50uZK0zbR5RQSU4TznDjPtzvMUihSmDU0hTaX+KFbcx
+         v3gzoiykAi6gT60XoR2nr0sehPSRFpsnFKr2ltx4aGVJLOzZrunPXjaWRKyIDYLPzL46
+         zNYHvQffgW8V2rjfKLh5pFch58oJmPLE1EGV7JIX2g3w14WFzlRYn+PbTw0wtEEpqEzt
+         TrwZqAa/MAdg4+552Z0s8StFIz6tfQy6E7+c0VItNGIPQGxBjy/NwoRUL5tznpjcaUNt
+         625Q==
+X-Gm-Message-State: AOAM531alrA9N0YJbTgpGF2zYgvOE74DReAOdp0KvMcqvlVGMnWtJ3Hv
+        qo/frKmuSW4yEDUBlhsrVUWRu0/edA8=
+X-Google-Smtp-Source: ABdhPJxKtzA/B30/neMItGQK1Aj0I4xGjsZPMeuMaMsTMcSx0+p+FQHhLQqFV0lwev7CEzMwLRvvYw==
+X-Received: by 2002:a63:2146:: with SMTP id s6mr8797077pgm.411.1594996738288;
+        Fri, 17 Jul 2020 07:38:58 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.38.48
+        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.38.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 07:38:52 -0700 (PDT)
+        Fri, 17 Jul 2020 07:38:57 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 16/17] perf: ftrace: Add set_tracing_options() to set all trace options
-Date:   Fri, 17 Jul 2020 22:36:27 +0800
-Message-Id: <20200717143628.47721-17-changbin.du@gmail.com>
+Subject: [PATCH v6 17/17] perf ftrace: add change log
+Date:   Fri, 17 Jul 2020 22:36:28 +0800
+Message-Id: <20200717143628.47721-18-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717143628.47721-1-changbin.du@gmail.com>
 References: <20200717143628.47721-1-changbin.du@gmail.com>
@@ -81,193 +81,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now the __cmd_ftrace() becomes a bit long. This moves the trace
-option setting code to a separate function set_tracing_options().
+Add a change log after previous enhancements.
 
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- tools/perf/builtin-ftrace.c | 118 +++++++++++++++++++-----------------
- 1 file changed, 63 insertions(+), 55 deletions(-)
+ tools/perf/builtin-ftrace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 64b68331048a..edf307f7d716 100644
+index edf307f7d716..326fd03396d5 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -463,110 +463,118 @@ static int set_tracing_thresh(struct perf_ftrace *ftrace)
- 	return 0;
- }
+@@ -3,6 +3,7 @@
+  * builtin-ftrace.c
+  *
+  * Copyright (c) 2013  LG Electronics,  Namhyung Kim <namhyung@kernel.org>
++ * Copyright (c) 2020  Changbin Du <changbin.du@gmail.com>, significant enhancement.
+  */
  
--static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
-+static int set_tracing_options(struct perf_ftrace *ftrace)
- {
--	char *trace_file;
--	int trace_fd;
--	char buf[4096];
--	struct pollfd pollfd = {
--		.events = POLLIN,
--	};
--
--	if (!(perf_cap__capable(CAP_PERFMON) ||
--	      perf_cap__capable(CAP_SYS_ADMIN))) {
--		pr_err("ftrace only works for %s!\n",
--#ifdef HAVE_LIBCAP_SUPPORT
--		"users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
--#else
--		"root"
--#endif
--		);
--		return -1;
--	}
--
--	signal(SIGINT, sig_handler);
--	signal(SIGUSR1, sig_handler);
--	signal(SIGCHLD, sig_handler);
--	signal(SIGPIPE, sig_handler);
--
--	if (ftrace->list_avail_functions)
--		return read_tracing_file_to_stdout("available_filter_functions");
--
--	if (reset_tracing_files(ftrace) < 0) {
--		pr_err("failed to reset ftrace\n");
--		goto out;
--	}
--
--	/* reset ftrace buffer */
--	if (write_tracing_file("trace", "0") < 0)
--		goto out;
--
--	if (argc && perf_evlist__prepare_workload(ftrace->evlist,
--				&ftrace->target, argv, false,
--				ftrace__workload_exec_failed_signal) < 0) {
--		goto out;
--	}
--
- 	if (set_tracing_pid(ftrace) < 0) {
- 		pr_err("failed to set ftrace pid\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_cpu(ftrace) < 0) {
- 		pr_err("failed to set tracing cpumask\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_func_stack_trace(ftrace) < 0) {
- 		pr_err("failed to set tracing option func_stack_trace\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_func_irqinfo(ftrace) < 0) {
- 		pr_err("failed to set tracing option irq-info\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_filters(ftrace) < 0) {
- 		pr_err("failed to set tracing filters\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_depth(ftrace) < 0) {
- 		pr_err("failed to set graph depth\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_percpu_buffer_size(ftrace) < 0) {
- 		pr_err("failed to set tracing per-cpu buffer size\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_trace_inherit(ftrace) < 0) {
- 		pr_err("failed to set tracing option function-fork\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_sleep_time(ftrace) < 0) {
- 		pr_err("failed to set tracing option sleep-time\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_funcgraph_irqs(ftrace) < 0) {
- 		pr_err("failed to set tracing option funcgraph-irqs\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_funcgraph_verbose(ftrace) < 0) {
- 		pr_err("failed to set tracing option funcgraph-proc/funcgraph-abstime\n");
--		goto out_reset;
-+		return -1;
- 	}
- 
- 	if (set_tracing_thresh(ftrace) < 0) {
- 		pr_err("failed to set tracing thresh\n");
--		goto out_reset;
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
-+{
-+	char *trace_file;
-+	int trace_fd;
-+	char buf[4096];
-+	struct pollfd pollfd = {
-+		.events = POLLIN,
-+	};
-+
-+	if (!(perf_cap__capable(CAP_PERFMON) ||
-+	      perf_cap__capable(CAP_SYS_ADMIN))) {
-+		pr_err("ftrace only works for %s!\n",
-+#ifdef HAVE_LIBCAP_SUPPORT
-+		"users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
-+#else
-+		"root"
-+#endif
-+		);
-+		return -1;
- 	}
- 
-+	signal(SIGINT, sig_handler);
-+	signal(SIGUSR1, sig_handler);
-+	signal(SIGCHLD, sig_handler);
-+	signal(SIGPIPE, sig_handler);
-+
-+	if (ftrace->list_avail_functions)
-+		return read_tracing_file_to_stdout("available_filter_functions");
-+
-+	if (reset_tracing_files(ftrace) < 0) {
-+		pr_err("failed to reset ftrace\n");
-+		goto out;
-+	}
-+
-+	/* reset ftrace buffer */
-+	if (write_tracing_file("trace", "0") < 0)
-+		goto out;
-+
-+	if (argc && perf_evlist__prepare_workload(ftrace->evlist,
-+				&ftrace->target, argv, false,
-+				ftrace__workload_exec_failed_signal) < 0) {
-+		goto out;
-+	}
-+
-+	if (set_tracing_options(ftrace) < 0)
-+		goto out_reset;
-+
- 	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
- 		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
- 		goto out_reset;
+ #include "builtin.h"
 -- 
 2.25.1
 
