@@ -2,224 +2,195 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D59C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7525AC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7F672076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA832176B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="eq8VzSgR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SoSWTAR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgGQC4C (ORCPT
+        id S1726665AbgGQC4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 22:56:02 -0400
-Received: from mail-dm6nam11on2091.outbound.protection.outlook.com ([40.107.223.91]:11406
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726138AbgGQC4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 22:56:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dw7pfi3TE/qQYWWKmOZEjPwwtdTb55JjtXw/Z7mbLM1O/6TFjfXMqwo3T8L+keRApTjXx+02cigAOYvwDFsZF9+myF12fC1oNjqPixTIuFWAOnLAWQ9KgByDzHpZmgW9ePRU98c1efxfweH3Yy9ngMxDUmmB92BfRVaWpvhFW7ky5VjlUo6jNIq1RtjH/XwJuxcOCKAxJt8E5VGY91e0cUYkqf9M8qr2uXBWePYvVlIfj7lFcOacQTXbW8LqNto3l5oHpPl9Gr/34yEr6rmmb3HzJG8Mfu75QnRzC8aZ8uuM5r65RlC44sCoQLYsI3V0vNiEYlmXCVvl4x/j0GSV0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nmpg+JY3kXvwbKSDdltvUbENdrOiuXRFGXUY44RC4SY=;
- b=maYIiN7fm8Z7/d92JO5Bmhr/nJaprdxsAfNicLQO5H9mCmKvlJGl2jom7Uh1J1nJF/lIYd9KjR96Fv7tcVlWhSYdfGcXH3E+cnPtSoSbJ8FAIk1JPtpUrKfZ1O8XZZDDLReyPK1AgwXYVuPVNS1Gz539MZBknHcERM/fXLXy7QUDFcZYNgbQK4FDkJPeISbZtBQIa8Dqj91FSPUmW65umz6JT6jSbzLUxw6FKh1hFRA5B2iHp69lIRkML6oVhqSekSHOEF+FzQSDYNKn+gcmj32JWTWJs8azTRxUj98umCG9lMfZbrQRziUHdOpyTE/jH/mfZtANWS/y1ORnHFmuhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nmpg+JY3kXvwbKSDdltvUbENdrOiuXRFGXUY44RC4SY=;
- b=eq8VzSgRS9/TbEZj57RvQ9OXnZTNJHZEE366Tl30Eoucjrp8QeKdW7+o2l0W6EvRRPK0bqx39S+cbHmlP8SzrdOZfAbXsvOHbOFYzwybHoniLaxQtI14o8E1rrn6avBZ5UoKll9JpEbEs4aYt/X+jYVunDLqGKBq23vLYD8qF0o=
-Authentication-Results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-Received: from DM5PR21MB0794.namprd21.prod.outlook.com (2603:10b6:3:128::10)
- by DM6PR21MB1226.namprd21.prod.outlook.com (2603:10b6:5:168::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.5; Fri, 17 Jul
- 2020 02:55:58 +0000
-Received: from DM5PR21MB0794.namprd21.prod.outlook.com
- ([fe80::117f:a11e:9ab3:fa68]) by DM5PR21MB0794.namprd21.prod.outlook.com
- ([fe80::117f:a11e:9ab3:fa68%14]) with mapi id 15.20.3195.017; Fri, 17 Jul
- 2020 02:55:58 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        decui@microsoft.com, mikelley@microsoft.com
-Cc:     Wei Hu <weh@microsoft.com>
-Subject: [PATCH v2] PCI: hv: Fix a timing issue which causes kdump to fail occasionally
-Date:   Fri, 17 Jul 2020 10:55:28 +0800
-Message-Id: <20200717025528.3093-1-weh@microsoft.com>
-X-Mailer: git-send-email 2.20.1
-Reply-To: weh@microsoft.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SGBP274CA0004.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::16)
- To DM5PR21MB0794.namprd21.prod.outlook.com (2603:10b6:3:128::10)
+        Thu, 16 Jul 2020 22:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbgGQC4E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 22:56:04 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E834CC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 19:56:03 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 1so4671597pfn.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 19:56:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ycpeByrSD5RMyRdQnWJnhFE9I3WTCAfCVd56pWwRo2Y=;
+        b=SoSWTAR3KiMn2Ekxl7uSMerfvwgkPm3vkEWo+GJ1sGrExI6n6+bk7LqAwVV8dqL57e
+         vXaPsLbI71c9U9PvPfnrc99Gk16289V4eqM19I0hyxAK/fY1KIygwfKYsbug9kjWdvpJ
+         G+NOeI+TMBCMz32bwRP88aovy0Pz135eWKBPofhbGNdP+5bJjurnrmdClaNMxHKJBpz7
+         wjdT876Gnccsj1MqHcgKI59UC5TV9TMpq0QOFBtQ8Dsxc0lVX/GyiYeQ7nvxHtBZpZZ7
+         vWADfeQKLDDL7+RzgKwC3TCjywp6rKmxPWoL6C9kXAg1GFZJ3huWdMoqf934y8K4NwA2
+         jFLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ycpeByrSD5RMyRdQnWJnhFE9I3WTCAfCVd56pWwRo2Y=;
+        b=ATa6o4XVKUMrEr9JFxwxQMA3j7XvJ2Dy5dHb+RAb6QYZkNbq7csPHxSewpmz/4TMyl
+         RY5ckEMSjbcNi88s/8VOpwVdG7kkQSUgX8EyAGe5lx39OvJdkw4lVxEw1ADsf+HVuuq+
+         Tqh3CgzMFrFuK6LQh2Y1HbKDKfqkfMxFCSwDyMkOr/kvPaD2DEFbwLt7vS7tYdvxIZQX
+         yOEAEoeyerzQMUCR3p1tgnsY3NxSsx8RSdV2Ss3gSeiUOcKTap8MO2pOIDx7ZI9QgvWJ
+         Cfs6UhwSY/A0HiPXPB/aBP1HoZzPLCe6+Ok4k4Z5BU8Do42WxPGuk0J/GF2/3BZs4ATF
+         1v6w==
+X-Gm-Message-State: AOAM532yl0wnpZzc8eop92/rX9+B3KpNVoxyg1Cc1AOIvSMTlGUxY7xN
+        +hP6nc5iuOU127Ddy4H0rHPTy4LPsWpSbI8kI1Ej2cxA8zQ=
+X-Google-Smtp-Source: ABdhPJzxlbwKW0xJZyoE1jcHXCzjv18wNr9b8lRvvqkLTEXcLUnV2xUMcLcT8FlRoDcERASnQT+eLhFCH9HXvw2R4GM=
+X-Received: by 2002:a62:8c54:: with SMTP id m81mr6042843pfd.215.1594954562969;
+ Thu, 16 Jul 2020 19:56:02 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from weh-g1-u1904d-testwin10.corp.microsoft.com (2404:f801:9000:1a:3aaa:a033:18c:56f5) by SGBP274CA0004.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Fri, 17 Jul 2020 02:55:54 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [2404:f801:9000:1a:3aaa:a033:18c:56f5]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 53019e61-698e-4d1d-1e7e-08d829fcee81
-X-MS-TrafficTypeDiagnostic: DM6PR21MB1226:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR21MB1226CEAA9B6B780ABC909E9CBB7C0@DM6PR21MB1226.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lbJCJPmYTwaQ0Ly+0uMoH2grZgO3AHXcpi0WRY6W/THaZbLPNVeaiJqCgYOs9qXXdYg9xZoB5J31qMB1PvEV/OGXXunDHT5Ndxy76Xd7uEgHyB7YIQBliJkol3oDeWQd9QYY2dnADp7xNlIckK6tIYLhVbEmyn5m69gWXb0Xemzkz/2WzKtFv1LKJbO/pTt5fN6J0Nl5KkAQw5+Mll6xzDBhUzUPnFvzOuSuSnaOWDpC/RnmuMiBNGgMFwcZwW+o65bb5b8Im/LG4PWivJ5YX5BryWCcnsJBQDneFLxuTdZXJVa0tztl/FC2Tb14JTM3aMRawDJFpf3KGo+YkwV4/J3ukY4HAh2aLFCGF7OihslgeuA6IBUtUayncRCUU17k
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR21MB0794.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(136003)(39860400002)(376002)(16526019)(8676002)(478600001)(2616005)(1076003)(5660300002)(66476007)(66946007)(6666004)(4326008)(66556008)(8936002)(52116002)(6636002)(7696005)(6486002)(186003)(316002)(107886003)(36756003)(10290500003)(2906002)(82960400001)(86362001)(82950400001)(83380400001)(3450700001)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: oPtui8H9h5usQJHgwB4PNeta4SKxIV6NWQPRcZSO9u1l545ZTOlQqQNKbgUkYSPdvQM8HgNSv2K7AIMlvvK5/z+/91ZT4ktSQrqeDeFOR+3qz8OFS3ZEr4gnzWpm4XAVvRTo+42kxers/VaZFbstVpr5FAnHT5lZkyQ68YRrtFb/9vuLgGUj+Z7X3xqNgEXdtNo0YW5vZBkDv0fkBpv82TVNTpICLA/fEOUwOk01+5WUXOjK2KGPBIopMGqGvWCUhMmZz109HYBX2Sxb3j7LaWlEB8UkvmBSJ2nE3QUMmIUBZJpRC4RsjSNV1zcH1ZIaVxGfoX/Bad7xM2dcgJgv/zi7tmoZ11mYwk9YxaYpBn8RM1giSuNYCZuxO0wF3A9brktIYzGWMMWbvwS1YCYq1+jVZK3MY5PBW0d47tcU90TRNXVtQit2w5gaWgT8BV8zOlMX6SLyaw9F4FgYtMZhZIZcHMmoy2kvP+HcHx22SA2oo8ZU30a0c6VAphx1QmzpQHmQQjXrxr45vARoeCoam3OZh94eTLiZeEmHwOyuSis=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53019e61-698e-4d1d-1e7e-08d829fcee81
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR21MB0794.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2020 02:55:58.7260
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YEfU2VEsAbtncQvRl96+jKzUh+9xp6BvzCxK+wH9CiUbiSLaXHkpaJ45MEoPQYWraZ2u9DUYTWC2/hCVV/UAsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1226
+References: <20200411045918.179455-1-saravanak@google.com> <86sghas7so.wl-maz@kernel.org>
+ <CALAqxLXkbNh4GVC82SqXNoib+4FQS2Y3XbePyhreJcwWoVEQaw@mail.gmail.com>
+ <CAGETcx92fj-VEjYsYx0E4_TCV8fW1fvvxn_DyV=b4BJ7B5zG2Q@mail.gmail.com>
+ <20200429102832.4eee22b4@why> <CAGETcx_d0aM+MdeOFDaXDnTEs85rVY=H7zvhZf7NNB4w-t_CGg@mail.gmail.com>
+ <5b605bd46d3ef213c7ec82d02967e4bb@kernel.org> <CAGETcx9kYKOEAmLbJzmOucR2Z4qy9PCY2=UCYdYTJWTL=BeZNQ@mail.gmail.com>
+ <d17908a4313ed0f5ccfa8265611738b2@kernel.org>
+In-Reply-To: <d17908a4313ed0f5ccfa8265611738b2@kernel.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 16 Jul 2020 19:55:26 -0700
+Message-ID: <CAGETcx_SYJey=a3T_PtDJ_R2KwV=vEqNMBiKeJT5W382LNb=ew@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] irqchip: Add IRQCHIP_MODULE_BEGIN/END helper macros
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kdump could fail sometime on HyperV guest over Accerlated Network
-interface. This is because the retry in hv_pci_enter_d0() relies on
-an asynchronous host event to arrive guest before calling
-hv_send_resources_allocated(). This fixes the problem by moving retry
-to hv_pci_probe(), removing this dependence and making the calling
-sequence synchronous.
+On Wed, Jun 3, 2020 at 3:12 AM Marc Zyngier <maz@kernel.org> wrote:
+>
+> Hi Saravana,
+>
+> On 2020-05-01 21:23, Saravana Kannan wrote:
+> > On Fri, May 1, 2020 at 1:48 AM Marc Zyngier <maz@kernel.org> wrote:
+> >>
+> >> On 2020-04-29 20:04, Saravana Kannan wrote:
+> >> > On Wed, Apr 29, 2020 at 2:28 AM Marc Zyngier <maz@kernel.org> wrote:
+> >>
+> >> [...]
+> >>
+> >> >> One thing though: this seems to be exclusively DT driven. Have you
+> >> >> looked into how that would look like for other firmware types such as
+> >> >> ACPI?
+> >> >
+> >> > I'm not very familiar with ACPI at all. I've just started to learn
+> >> > about how it works in the past few months poking at code when I have
+> >> > some time. So I haven't tried to get this to work with ACPI nor do I
+> >> > think I'll be able to do that anytime in the near future. I hope that
+> >> > doesn't block this from being used for DT based platforms.
+> >>
+> >> As long as you don't try to modularise a driver that does both DT and
+> >> ACPI, you'll be safe. I'm also actively trying to discourage people
+> >> from inventing custom irqchips on ACPI platforms (the spec almost
+> >> forbids them, but not quite).
+> >>
+> >> >> Another thing is the handling of dependencies. Statically built
+> >> >> irqchips are initialized in the right order based on the topology
+> >> >> described in DT, and are initialized early enough that client devices
+> >> >> will find their irqchip This doesn't work here, obviously.
+> >> >
+> >> > Yeah, I read that code thoroughly :)
+> >> >
+> >> >> How do you
+> >> >> propose we handle these dependencies, both between irqchip drivers and
+> >> >> client drivers?
+> >> >
+> >> > For client drivers, we don't need to do anything. The IRQ apis seem to
+> >> > already handle -EPROBE_DEFER correctly in this case.
+> >> >
+> >> > For irqchip drivers, the easy answer can be: Load the IRQ modules
+> >> > early if you make them modules.
+> >>
+> >> Uhuh. I'm afraid that's not a practical solution. We need to offer the
+> >> same behaviour for both and not rely on the user to understand the
+> >> topology of the SoC.
+> >>
+> >> > But in my case, I've been testing this with fw_devlink=on. The TL;DR
+> >> > of "fw_devlink=on" in this context is that the IRQ devices will get
+> >> > device links created based on "interrupt-parent" property. So, with
+> >> > the magic of device links, these IRQ devices will probe in the right
+> >> > topological order without any wasted deferred probe attempts. For
+> >> > cases without fw_devlink=on, I think I can improve
+> >> > platform_irqchip_probe() in my patch to check if the parent device has
+> >> > probed and defer if it hasn't.
+> >>
+> >> Seems like an interesting option. Two things then:
+> >>
+> >> - Can we enforce the use of fw_devlink for modularized irqchips?
+> >
+> > fw_devlink doesn't have any config and it's a command line option. So
+> > not sure how you can enforce that.
+>
+> By having a config option that forces it on if that option is selected
+> by modular irqchips?
 
-v2: Adding Fixes tag according to Michael Kelley's review comment.
+Hmmm... not a bad idea. I think this could be useful in general. I'll
+look into that separately.
 
-Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
-Signed-off-by: Wei Hu <weh@microsoft.com>
----
- drivers/pci/controller/pci-hyperv.c | 66 ++++++++++++++---------------
- 1 file changed, 32 insertions(+), 34 deletions(-)
+> More importantly, what is the drawback of having
+> fw_devlink on at all times? It definitely looks like the best thing
+> since sliced bread (with cheese), so what is the catch?
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index bf40ff09c99d..738ee30f3334 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2759,10 +2759,8 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
- 	struct pci_bus_d0_entry *d0_entry;
- 	struct hv_pci_compl comp_pkt;
- 	struct pci_packet *pkt;
--	bool retry = true;
- 	int ret;
- 
--enter_d0_retry:
- 	/*
- 	 * Tell the host that the bus is ready to use, and moved into the
- 	 * powered-on state.  This includes telling the host which region
-@@ -2789,38 +2787,6 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
- 	if (ret)
- 		goto exit;
- 
--	/*
--	 * In certain case (Kdump) the pci device of interest was
--	 * not cleanly shut down and resource is still held on host
--	 * side, the host could return invalid device status.
--	 * We need to explicitly request host to release the resource
--	 * and try to enter D0 again.
--	 */
--	if (comp_pkt.completion_status < 0 && retry) {
--		retry = false;
--
--		dev_err(&hdev->device, "Retrying D0 Entry\n");
--
--		/*
--		 * Hv_pci_bus_exit() calls hv_send_resource_released()
--		 * to free up resources of its child devices.
--		 * In the kdump kernel we need to set the
--		 * wslot_res_allocated to 255 so it scans all child
--		 * devices to release resources allocated in the
--		 * normal kernel before panic happened.
--		 */
--		hbus->wslot_res_allocated = 255;
--
--		ret = hv_pci_bus_exit(hdev, true);
--
--		if (ret == 0) {
--			kfree(pkt);
--			goto enter_d0_retry;
--		}
--		dev_err(&hdev->device,
--			"Retrying D0 failed with ret %d\n", ret);
--	}
--
- 	if (comp_pkt.completion_status < 0) {
- 		dev_err(&hdev->device,
- 			"PCI Pass-through VSP failed D0 Entry with status %x\n",
-@@ -3058,6 +3024,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	struct hv_pcibus_device *hbus;
- 	u16 dom_req, dom;
- 	char *name;
-+	bool enter_d0_retry = true;
- 	int ret;
- 
- 	/*
-@@ -3178,11 +3145,42 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	if (ret)
- 		goto free_fwnode;
- 
-+retry:
- 	ret = hv_pci_query_relations(hdev);
- 	if (ret)
- 		goto free_irq_domain;
- 
- 	ret = hv_pci_enter_d0(hdev);
-+	/*
-+	 * In certain case (Kdump) the pci device of interest was
-+	 * not cleanly shut down and resource is still held on host
-+	 * side, the host could return invalid device status.
-+	 * We need to explicitly request host to release the resource
-+	 * and try to enter D0 again.
-+	 * The retry should start from hv_pci_query_relations() call.
-+	 */
-+	if (ret == -EPROTO && enter_d0_retry) {
-+		enter_d0_retry = false;
-+
-+		dev_err(&hdev->device, "Retrying D0 Entry\n");
-+
-+		/*
-+		 * Hv_pci_bus_exit() calls hv_send_resources_released()
-+		 * to free up resources of its child devices.
-+		 * In the kdump kernel we need to set the
-+		 * wslot_res_allocated to 255 so it scans all child
-+		 * devices to release resources allocated in the
-+		 * normal kernel before panic happened.
-+		 */
-+		hbus->wslot_res_allocated = 255;
-+		ret = hv_pci_bus_exit(hdev, true);
-+
-+		if (ret == 0)
-+			goto retry;
-+
-+		dev_err(&hdev->device,
-+			"Retrying D0 failed with ret %d\n", ret);
-+	}
- 	if (ret)
- 		goto free_irq_domain;
- 
--- 
-2.20.1
+Lol, thanks for the compliment :) My goal is to eventually enable it by default.
 
+But there are a few corner cases on some boards where the DT has a
+cycle and if we just blindly create device links for those, some of
+the devices will end up not probing. I've slowly been identifying
+different corner cases and making sure we drop the "bad link" that's
+causing a cycle so that all the devices still probe properly.
+Hopefully I can enable it by default soon.
+
+> >
+> >> - For those irqchips that can be modularized, it is apparent that they
+> >>    should have been written as platform devices the first place. Maybe
+> >>    we should just do that (long term, though).
+> >
+> > I agree. If they can be platform devices, they should be. But when
+> > those platform device drivers are built in, you'll either need:
+> > 1) fw_devlink=on to enforce the topological init order
+>
+> That would have my preference, provided that there is no drawbacks.
+
+Since this can't happen yet I went with option 2.
+
+> > Or
+> > 2) have a generic irqchip probe helper function that ensures that.
+> > My patch with some additional checks added to platform_irqchip_probe()
+> > can provide (2).
+> >
+> > In the short term, my patch series also makes it easier to convert
+> > existing non-platform drivers into platform drivers.
+> >
+> > So if I fix up platform_irqchip_probe() to also do -EPROBE_DEFER to
+> > enforce topology, will that make this patch acceptable?
+>
+> That'd be a lot better. We also need some guards for things that
+> cannot be a driver (primary interrupt controllers don't have a struct
+> device).
+
+Just sent out v2 of this patch.
+https://lore.kernel.org/lkml/20200717024447.3128361-1-saravanak@google.com/T/#u
+
+-Saravana
