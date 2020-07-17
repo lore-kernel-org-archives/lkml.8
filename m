@@ -2,169 +2,206 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C49DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33BE820759
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D3CC2076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:40:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hx2jYpob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgGQSeu (ORCPT
+        id S1728119AbgGQSkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:34:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32560 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726104AbgGQSet (ORCPT
+        Fri, 17 Jul 2020 14:40:43 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49880 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726322AbgGQSkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:34:49 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HIWvmn053972;
-        Fri, 17 Jul 2020 14:34:40 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32autbkkau-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 14:34:39 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06HIYcJf065521;
-        Fri, 17 Jul 2020 14:34:38 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32autbkk9x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 14:34:38 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06HILB7I029041;
-        Fri, 17 Jul 2020 18:34:37 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma05wdc.us.ibm.com with ESMTP id 327529jyyu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 18:34:37 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06HIYahq52036090
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 18:34:36 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 90460AE060;
-        Fri, 17 Jul 2020 18:34:36 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AB42DAE05F;
-        Fri, 17 Jul 2020 18:34:31 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.51.42])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Fri, 17 Jul 2020 18:34:31 +0000 (GMT)
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466085652.24747.2414199807974963385.stgit@hbathini.in.ibm.com> <87v9io8c13.fsf@morokweng.localdomain> <63d551a9-684b-768b-8b0f-2a0da68d7f11@linux.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Young <dyoung@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v3 02/12] powerpc/kexec_file: mark PPC64 specific code
-In-reply-to: <63d551a9-684b-768b-8b0f-2a0da68d7f11@linux.ibm.com>
-Date:   Fri, 17 Jul 2020 15:34:27 -0300
-Message-ID: <87ft9quh1o.fsf@morokweng.localdomain>
+        Fri, 17 Jul 2020 14:40:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595011241;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=loX3iNxnC34Mh5q85vIpxAcyIoCVZ/OKd+6NErIYBZY=;
+        b=Hx2jYpobPHoxgsywJd0cNh+bbJ1Ma4JIoX/84aHm4zBf19luxtb63tLWOymi37Is1ccOBc
+        qqCOCh+B43nasPOq5D0wjP2SLM0SH3oFlrj0A0GZB+21yTAo0iZxjiHvGb4FgiSW9GOdnf
+        6FI/Y5850zpFX1MsqVgQnvsc4IQczWM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-276-9d_YNwHZM0KEqKVjKlTnUQ-1; Fri, 17 Jul 2020 14:40:23 -0400
+X-MC-Unique: 9d_YNwHZM0KEqKVjKlTnUQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 535D5800468;
+        Fri, 17 Jul 2020 18:40:21 +0000 (UTC)
+Received: from localhost (ovpn-116-105.gru2.redhat.com [10.97.116.105])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 83F0760E3E;
+        Fri, 17 Jul 2020 18:40:20 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 15:40:19 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Cc:     zohar@linux.ibm.com, erichte@linux.ibm.com, nayna@linux.ibm.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v6] ima: move APPRAISE_BOOTPARAM dependency on
+ ARCH_POLICY to runtime
+Message-ID: <20200717184019.GI2984@glitch>
+References: <20200713164830.101165-1-bmeneg@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_09:2020-07-17,2020-07-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 spamscore=100
- priorityscore=1501 suspectscore=0 mlxscore=100 phishscore=0 bulkscore=0
- impostorscore=0 mlxlogscore=-1000 clxscore=1015 lowpriorityscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007170129
+In-Reply-To: <20200713164830.101165-1-bmeneg@redhat.com>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xQR6quUbZ63TTuTU"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--xQR6quUbZ63TTuTU
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
+On Mon, Jul 13, 2020 at 01:48:30PM -0300, Bruno Meneguele wrote:
+> The IMA_APPRAISE_BOOTPARAM config allows enabling different "ima_appraise=
+=3D"
+> modes - log, fix, enforce - at run time, but not when IMA architecture
+> specific policies are enabled. =A0This prevents properly labeling the
+> filesystem on systems where secure boot is supported, but not enabled on =
+the
+> platform. =A0Only when secure boot is actually enabled should these IMA
+> appraise modes be disabled.
+>=20
+> This patch removes the compile time dependency and makes it a runtime
+> decision, based on the secure boot state of that platform.
+>=20
+> Test results as follows:
+>=20
+> -> x86-64 with secure boot enabled
+>=20
+> [    0.015637] Kernel command line: <...> ima_policy=3Dappraise_tcb ima_a=
+ppraise=3Dfix
+> [    0.015668] ima: Secure boot enabled: ignoring ima_appraise=3Dfix boot=
+ parameter option
+>=20
+> -> powerpc with secure boot disabled
+>=20
+> [    0.000000] Kernel command line: <...> ima_policy=3Dappraise_tcb ima_a=
+ppraise=3Dfix
+> [    0.000000] Secure boot mode disabled
+>=20
+> -> Running the system without secure boot and with both options set:
+>=20
+> CONFIG_IMA_APPRAISE_BOOTPARAM=3Dy
+> CONFIG_IMA_ARCH_POLICY=3Dy
+>=20
+> Audit prompts "missing-hash" but still allow execution and, consequently,
+> filesystem labeling:
+>=20
+> type=3DINTEGRITY_DATA msg=3Daudit(07/09/2020 12:30:27.778:1691) : pid=3D4=
+976
+> uid=3Droot auid=3Droot ses=3D2
+> subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3Dapprais=
+e_data
+> cause=3Dmissing-hash comm=3Dbash name=3D/usr/bin/evmctl dev=3D"dm-0" ino=
+=3D493150
+> res=3Dno
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
+> Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
+> ---
+> v6:
+>   - explictly print the bootparam being ignored to the user (Mimi)
+> v5:
+>   - add pr_info() to inform user the ima_appraise=3D boot param is being
+> =09ignored due to secure boot enabled (Nayna)
+>   - add some testing results to commit log
+> v4:
+>   - instead of change arch_policy loading code, check secure boot state a=
+t
+> =09"ima_appraise=3D" parameter handler (Mimi)
+> v3:
+>   - extend secure boot arch checker to also consider trusted boot
+>   - enforce IMA appraisal when secure boot is effectively enabled (Nayna)
+>   - fix ima_appraise flag assignment by or'ing it (Mimi)
+> v2:
+>   - pr_info() message prefix correction
+>  security/integrity/ima/Kconfig        | 2 +-
+>  security/integrity/ima/ima_appraise.c | 6 ++++++
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kcon=
+fig
+> index edde88dbe576..62dc11a5af01 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -232,7 +232,7 @@ config IMA_APPRAISE_REQUIRE_POLICY_SIGS
+> =20
+>  config IMA_APPRAISE_BOOTPARAM
+>  =09bool "ima_appraise boot parameter"
+> -=09depends on IMA_APPRAISE && !IMA_ARCH_POLICY
+> +=09depends on IMA_APPRAISE
+>  =09default y
+>  =09help
+>  =09  This option enables the different "ima_appraise=3D" modes
+> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/i=
+ma/ima_appraise.c
+> index a9649b04b9f1..28a59508c6bd 100644
+> --- a/security/integrity/ima/ima_appraise.c
+> +++ b/security/integrity/ima/ima_appraise.c
+> @@ -19,6 +19,12 @@
+>  static int __init default_appraise_setup(char *str)
+>  {
+>  #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
+> +=09if (arch_ima_get_secureboot()) {
+> +=09=09pr_info("Secure boot enabled: ignoring ima_appraise=3D%s boot para=
+meter option",
+> +=09=09=09str);
+> +=09=09return 1;
+> +=09}
+> +
+>  =09if (strncmp(str, "off", 3) =3D=3D 0)
+>  =09=09ima_appraise =3D 0;
+>  =09else if (strncmp(str, "log", 3) =3D=3D 0)
+> --=20
+> 2.26.2
+>=20
 
-> On 16/07/20 7:19 am, Thiago Jung Bauermann wrote:
->> 
->> I didn't forget about this patch. I just wanted to see more of the
->> changes before comenting on it.
->> 
->> Hari Bathini <hbathini@linux.ibm.com> writes:
->> 
->>> Some of the kexec_file_load code isn't PPC64 specific. Move PPC64
->>> specific code from kexec/file_load.c to kexec/file_load_64.c. Also,
->>> rename purgatory/trampoline.S to purgatory/trampoline_64.S in the
->>> same spirit.
->> 
->> There's only a 64 bit implementation of kexec_file_load() so this is a
->> somewhat theoretical exercise, but there's no harm in getting the code
->> organized, so:
->> 
->> Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> 
->> I have just one question below.
->
-> <snip>
->
->>> +/**
->>> + * setup_new_fdt_ppc64 - Update the flattend device-tree of the kernel
->>> + *                       being loaded.
->>> + * @image:               kexec image being loaded.
->>> + * @fdt:                 Flattened device tree for the next kernel.
->>> + * @initrd_load_addr:    Address where the next initrd will be loaded.
->>> + * @initrd_len:          Size of the next initrd, or 0 if there will be none.
->>> + * @cmdline:             Command line for the next kernel, or NULL if there will
->>> + *                       be none.
->>> + *
->>> + * Returns 0 on success, negative errno on error.
->>> + */
->>> +int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
->>> +			unsigned long initrd_load_addr,
->>> +			unsigned long initrd_len, const char *cmdline)
->>> +{
->>> +	int chosen_node, ret;
->>> +
->>> +	/* Remove memory reservation for the current device tree. */
->>> +	ret = delete_fdt_mem_rsv(fdt, __pa(initial_boot_params),
->>> +				 fdt_totalsize(initial_boot_params));
->>> +	if (ret == 0)
->>> +		pr_debug("Removed old device tree reservation.\n");
->>> +	else if (ret != -ENOENT) {
->>> +		pr_err("Failed to remove old device-tree reservation.\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len,
->>> +			    cmdline, &chosen_node);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	ret = fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", NULL, 0);
->>> +	if (ret)
->>> +		pr_err("Failed to update device-tree with linux,booted-from-kexec\n");
->>> +
->>> +	return ret;
->>> +}
->> 
->> For setup_purgatory_ppc64() you start with an empty function and build
->> from there, but for setup_new_fdt_ppc64() you moved some code here. Is
->> the code above 64 bit specific?
->
-> Actually, I was not quiet sure if fdt updates like in patch 6 & patch 9 can be
-> done after setup_ima_buffer() call. If you can confirm, I will move them back
-> to setup_purgatory()
+Ping for review.
 
-Hari and I discussed this off-line and we came to the conclusion that
-theis code can be moved back to setup_new_fdt().
+Many thanks.
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
+
+--xQR6quUbZ63TTuTU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl8R8JMACgkQYdRkFR+R
+okMiPAf+Lawa+3mJ/dDC1Np/eBpA/UCMscxAKYRNlkGVChCpXeeXX1JV4M4CKHzu
+bmfws9NGfx4kw++hn8IeF86ypV3XhdKQyz7zQ6L4Rgmv08a/AE1msMRwwSMky9li
+n/Mh5HcYsfnLmGrLrSYjR/PTNqmz0WPgRCOSpFaTRcqTVKkUMJ8m83cwTe/5Avm9
+SmUyq80QY4AV4bJcedr1U+Ror8it5dHdtgy5bz0TPepRnhk/lE7Ro+mZE0e8N0R+
+3BiyCiYhUMD7E5LODlnMAWvbd/vEf3I0a0rYuQmxcauXs8HVI6j42A9Tmc/7PcDG
+EGRCFOvOOkQz6WddH1svTgptnLyGsA==
+=Ggbe
+-----END PGP SIGNATURE-----
+
+--xQR6quUbZ63TTuTU--
+
