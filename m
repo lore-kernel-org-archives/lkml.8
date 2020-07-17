@@ -2,80 +2,117 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C57C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815EBC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C95F02076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594982633;
-	bh=6I6JgYqOPYPJIJgJ4C1GUEIrc1Hr08T5r1A4SKQv1rk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GTNRrFBEb8snRe7neGuX1+j4yrxB765J8ma69RF7xj6QCcMZ3j8LWstCznnQoPky+
-	 VO/omQHHR24MvrQalxW0xXdoN7SCFyOPzK/ultKYRz/7lDgnF3W+INstyXneIEAT9/
-	 bJ6K5TZLF/zW92rEVi4ik42nlEnxWmbT0dxe6eBM=
+	by mail.kernel.org (Postfix) with ESMTP id 5CA222076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:49:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="RC/p++b7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgGQKnw (ORCPT
+        id S1726334AbgGQKtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:43:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgGQKnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:43:52 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D88B20734;
-        Fri, 17 Jul 2020 10:43:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594982631;
-        bh=6I6JgYqOPYPJIJgJ4C1GUEIrc1Hr08T5r1A4SKQv1rk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dusBU3PFc8tVsUE0EUeaym/bI6vipNHJj51TVdSCmHJIkN0VI0CXXwZWESOFK9CIN
-         b6GjSO5c6l8K5KDc1RjZvrwd//TrVZgjzH4P+ieQXONdX2ft83pROpzcSm9rHhx54f
-         QBXuydbo9fNM0lCjKDRa76at+CDtS7QIaArjBuqo=
-From:   Will Deacon <will@kernel.org>
-To:     mark.rutland@arm.com, Qi Liu <liuqi115@huawei.com>,
-        zhangshaokun@hisilicon.com, john.garry@huawei.com
-Cc:     catalin.marinas@arm.com, kernel-team@android.com,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] drivers/perf: Prevent forced unbinding of PMU drivers
-Date:   Fri, 17 Jul 2020 11:43:42 +0100
-Message-Id: <159497953657.530785.13608435502860855695.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1594975763-32966-1-git-send-email-liuqi115@huawei.com>
-References: <1594975763-32966-1-git-send-email-liuqi115@huawei.com>
+        Fri, 17 Jul 2020 06:49:43 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:13406 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725912AbgGQKtm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 06:49:42 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HAgfch010272;
+        Fri, 17 Jul 2020 03:49:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pfpt0818;
+ bh=LI15vtc1sBeo327JWQg5OChc27nKdjqnS+CvYVaEkSI=;
+ b=RC/p++b7vs/nXZkKXSTqs4tbnWek2/uCjopTPXaUIqUoTA53FqZuxC1ZQfrdOlCQQLJO
+ vo6KuivqdPbfVWmmBB1r2Rk45bHKyVGbN5C++65f4dbvbRE3UN3/3wDzpI3o0LSdCjyT
+ TLQlst4pYryyh7C0CwMHCPUBoNkv0qog9kftWoIK5Y61+WvImWhWs3EL3ZinzYH/2QsJ
+ CgomND5vicxMogd6qyrhI9wNNysNfgGkVhrLZbLQQ87Hla7VR1LEAZz9r6eSyjM4Xvza
+ TSXtJm9siMq4e+oy6EyOKvGRgvLsgXpVA7bw/wQB1cEQNPsG1gGZ2lHycy0p6WiXAiIF yw== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 32ap7vcw11-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 03:49:39 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 17 Jul
+ 2020 03:49:38 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 17 Jul 2020 03:49:38 -0700
+Received: from [10.193.54.28] (NN-LT0019.marvell.com [10.193.54.28])
+        by maili.marvell.com (Postfix) with ESMTP id 8D2FC3F7041;
+        Fri, 17 Jul 2020 03:49:34 -0700 (PDT)
+Subject: Re: [EXT] Re: [PATCH net-next 10/13] qed: add support for new port
+ modes
+To:     Jakub Kicinski <kuba@kernel.org>,
+        Alexander Lobakin <alobakin@marvell.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Denis Bolotin <dbolotin@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
+        <QLogic-Storage-Upstream@cavium.com>, <netdev@vger.kernel.org>
+References: <20200716115446.994-1-alobakin@marvell.com>
+ <20200716115446.994-11-alobakin@marvell.com>
+ <20200716181853.502dd619@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Igor Russkikh <irusskikh@marvell.com>
+Message-ID: <27939848-7e83-2897-36f9-44f47d1bfb9c@marvell.com>
+Date:   Fri, 17 Jul 2020 13:49:33 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200716181853.502dd619@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-17_06:2020-07-17,2020-07-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 16:49:23 +0800, Qi Liu wrote:
-> Forcefully unbinding PMU drivers during perf sampling will lead to
-> a kernel panic, because the perf upper-layer framework call a NULL
-> pointer in this situation.
+
+
+> ----------------------------------------------------------------------
+> On Thu, 16 Jul 2020 14:54:43 +0300 Alexander Lobakin wrote:
+>> These ports ship on new boards revisions and are supported by newer
+>> firmware versions.
+>>
+>> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+>> Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 > 
-> To solve this issue, "suppress_bind_attrs" should be set to true, so
-> that bind/unbind can be disabled via sysfs and prevent unbinding PMU
-> drivers during perf sampling.
+> What is the driver actually doing with them, tho?
+> 
+> Looks like you translate some firmware specific field to a driver
+> specific field, but I can't figure out what part of the code cares
+> about hw_info.port_mode
 
-Applied to arm64 (for-next/fixes), thanks!
+Hi Jakub,
 
-[1/1] drivers/perf: Prevent forced unbinding of PMU drivers
-      https://git.kernel.org/arm64/c/f32ed8eb0e3f
+You are right, this info is never used/reported.
 
-Cheers,
--- 
-Will
+Alexander is extending already existing non used field with new values from
+our latest hardware revisions.
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+I thought devlink info could be a good place to output such kind of information.
+
+Thats basically a layout of *Physical* ports on device - quite useful info I
+think.
+
+Important thing is these ports may not be directly mapped to PCI PFs. So
+reading `ethtool eth*` may not explain you the real device capabilities.
+
+Do you think it makes sense adding such info to `devlink info` then?
+
+Thanks
+  Igor
