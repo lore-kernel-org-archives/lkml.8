@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F39C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1341C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6194207EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0EED22B4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594994772;
-	bh=IH+FDGmDFGcWuRH0MCpBERkFvfGZaOlUTpUIn4sdVQM=;
+	s=default; t=1594994798;
+	bh=df75s59VuqNLWmyo7tnNgvL4VZ8Ta+kcRoAI89Me1GA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=omZrWGZEyZfwCBICPTk539ZL/NeJ6e9qiW4228ZVdpBTIVjTYeBvIJckUGCRLzv/S
-	 9+sSq7BnW4wJTLjFCd4LuvlIv+t8xmgh2nASWf+T2kOgfzLFoxobM6F3wHpwcizM0J
-	 MPYIxHVw/4Zkrow8r1J9GboGDqlvzPq3ZbSxgUtc=
+	b=mDIzrAGYdPbUqnIdmGRwCldfQQUrNnu02R1rl7LSvrftyx2586DPHlpH7/Pnzg0b1
+	 kv5wlU722lp17PE9GlatrB4zqjaz3U8I2NNMBRh+YepERYBLhfMBqP4BkENROuPv27
+	 /dKRnxNZG9o3QTVHWh7VzahAo7f0NKX6SM74rf3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgGQOGL (ORCPT
+        id S1727002AbgGQOGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:06:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54278 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 10:06:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbgGQOGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:06:09 -0400
+        id S1726635AbgGQOGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:06:07 -0400
 Received: from lenoir.home (lfbn-ncy-1-317-216.w83-196.abo.wanadoo.fr [83.196.152.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E2F722B48;
-        Fri, 17 Jul 2020 14:06:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 991CB22CAD;
+        Fri, 17 Jul 2020 14:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594994768;
-        bh=IH+FDGmDFGcWuRH0MCpBERkFvfGZaOlUTpUIn4sdVQM=;
+        s=default; t=1594994766;
+        bh=df75s59VuqNLWmyo7tnNgvL4VZ8Ta+kcRoAI89Me1GA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wip2HdgUmK9CdSvcaZyYu/bDvg5sJO9FZqPkKZSyC0kPKAMI/JXqjKEf4JETRom7L
-         ePBHgbazn6U1wLSeCRoYNpiRNgLo5ao5FrdzGh+RfpL/oPQyqw6Dh67QA1+aVZoBUM
-         GYqHqBAklFNEkqV4rxJTbzRWJlIIRjV321/wQeWM=
+        b=sur81/pxe8ikD5KcU1OejVnr4dLsYD3fu7zJRkrqDsuVkxteXy8u7LmF8L3LJUx7h
+         Vh9uI0yaVm4JkcAafDxCo1cEo9XkpbW6XEZyOZ+FE32QN4mBKU7XMDF16f/t2JgnJk
+         s+lKDyMxV6BdBtGoIHZUpPDX9UgvJNmOhZLj4vM0=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>
@@ -46,9 +46,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Frederic Weisbecker <frederic@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 07/12] timers: Always keep track of next expiry
-Date:   Fri, 17 Jul 2020 16:05:46 +0200
-Message-Id: <20200717140551.29076-8-frederic@kernel.org>
+Subject: [PATCH 06/12] timer: Optimize _next_timer_interrupt() level iteration
+Date:   Fri, 17 Jul 2020 16:05:45 +0200
+Message-Id: <20200717140551.29076-7-frederic@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200717140551.29076-1-frederic@kernel.org>
 References: <20200717140551.29076-1-frederic@kernel.org>
@@ -59,12 +59,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far next expiry was only tracked while the CPU was in nohz_idle mode
-in order to cope with missing ticks that can't increment the base->clk
-periodically anymore.
+If a level has a timer that expires before we reach the next level,
+there is no need to iterate further.
 
-We are going to expand that logic beyond nohz in order to spare timers
-softirqs so do it unconditionally.
+The next level is reached when the 3 lower bits of the current level are
+cleared. If the next event happens before/during that, the next levels
+won't give us an earlier expiration.
 
 Tested-by: Juri Lelli <juri.lelli@redhat.com>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
@@ -72,109 +72,44 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Cc: Juri Lelli <juri.lelli@redhat.com>
 ---
- kernel/time/timer.c | 42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ kernel/time/timer.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 9abc41715fd2..76fd9644638b 100644
+index af1c08b0b168..9abc41715fd2 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -544,8 +544,7 @@ static int calc_wheel_index(unsigned long expires, unsigned long clk,
- }
+@@ -1526,6 +1526,7 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
+ 	clk = base->clk;
+ 	for (lvl = 0; lvl < LVL_DEPTH; lvl++, offset += LVL_SIZE) {
+ 		int pos = next_pending_bucket(base, offset, clk & LVL_MASK);
++		unsigned long lvl_clk = clk & LVL_CLK_MASK;
  
- static void
--trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer,
--		    unsigned long bucket_expiry)
-+trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
- {
- 	if (!is_timers_nohz_active())
- 		return;
-@@ -565,23 +564,8 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer,
- 	 * timer is not deferrable. If the other CPU is on the way to idle
- 	 * then it can't set base->is_idle as we hold the base lock:
- 	 */
--	if (!base->is_idle)
--		return;
--
--	/*
--	 * Check whether this is the new first expiring timer. The
--	 * effective expiry time of the timer is required here
--	 * (bucket_expiry) instead of timer->expires.
--	 */
--	if (time_after_eq(bucket_expiry, base->next_expiry))
--		return;
--
--	/*
--	 * Set the next expiry time and kick the CPU so it can reevaluate the
--	 * wheel:
--	 */
--	base->next_expiry = bucket_expiry;
--	wake_up_nohz_cpu(base->cpu);
-+	if (base->is_idle)
-+		wake_up_nohz_cpu(base->cpu);
- }
- 
- /*
-@@ -592,12 +576,26 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer,
- static void enqueue_timer(struct timer_base *base, struct timer_list *timer,
- 			  unsigned int idx, unsigned long bucket_expiry)
- {
+ 		if (pos >= 0) {
+ 			unsigned long tmp = clk + (unsigned long) pos;
+@@ -1533,6 +1534,13 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
+ 			tmp <<= LVL_SHIFT(lvl);
+ 			if (time_before(tmp, next))
+ 				next = tmp;
 +
- 	hlist_add_head(&timer->entry, base->vectors + idx);
- 	__set_bit(idx, base->pending_map);
- 	timer_set_idx(timer, idx);
- 
- 	trace_timer_start(timer, timer->expires, timer->flags);
--	trigger_dyntick_cpu(base, timer, bucket_expiry);
-+
-+	/*
-+	 * Check whether this is the new first expiring timer. The
-+	 * effective expiry time of the timer is required here
-+	 * (bucket_expiry) instead of timer->expires.
-+	 */
-+	if (time_before(bucket_expiry, base->next_expiry)) {
-+		/*
-+		 * Set the next expiry time and kick the CPU so it
-+		 * can reevaluate the wheel:
-+		 */
-+		base->next_expiry = bucket_expiry;
-+		trigger_dyntick_cpu(base, timer);
-+	}
- }
- 
- static void internal_add_timer(struct timer_base *base, struct timer_list *timer)
-@@ -1493,7 +1491,6 @@ static int __collect_expired_timers(struct timer_base *base,
- 	return levels;
- }
- 
--#ifdef CONFIG_NO_HZ_COMMON
- /*
-  * Find the next pending bucket of a level. Search from level start (@offset)
-  * + @clk upwards and if nothing there, search from start of the level
-@@ -1585,6 +1582,7 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
- 	return next;
- }
- 
-+#ifdef CONFIG_NO_HZ_COMMON
- /*
-  * Check, if the next hrtimer event is before the next timer wheel
-  * event:
-@@ -1790,6 +1788,7 @@ static inline void __run_timers(struct timer_base *base)
- 
- 		levels = collect_expired_timers(base, heads);
- 		base->clk++;
-+		base->next_expiry = __next_timer_interrupt(base);
- 
- 		while (levels--)
- 			expire_timers(base, heads + levels);
-@@ -2042,6 +2041,7 @@ static void __init init_timer_cpu(int cpu)
- 		base->cpu = cpu;
- 		raw_spin_lock_init(&base->lock);
- 		base->clk = jiffies;
-+		base->next_expiry = base->clk + NEXT_TIMER_MAX_DELTA;
- 		timer_base_init_expiry_lock(base);
++			/*
++			 * If the next expiration happens before we reach
++			 * the next level, no need to check further.
++			 */
++			if (pos <= ((LVL_CLK_DIV - lvl_clk) & LVL_CLK_MASK))
++				break;
+ 		}
+ 		/*
+ 		 * Clock for the next level. If the current level clock lower
+@@ -1570,7 +1578,7 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
+ 		 * So the simple check whether the lower bits of the current
+ 		 * level are 0 or not is sufficient for all cases.
+ 		 */
+-		adj = clk & LVL_CLK_MASK ? 1 : 0;
++		adj = lvl_clk ? 1 : 0;
+ 		clk >>= LVL_CLK_SHIFT;
+ 		clk += adj;
  	}
- }
 -- 
 2.26.2
 
