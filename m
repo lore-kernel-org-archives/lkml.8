@@ -2,241 +2,228 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457ADC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC31222BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9FD208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:42:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="BlLIIiW5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgGQOmU (ORCPT
+        id S1726863AbgGQOm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:42:20 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9239 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgGQOmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:42:20 -0400
-IronPort-SDR: tlQ8TSZjoTX6P9fNa/erHDKyu95WXQ6Ras4b8PfLP3+nK1ylAkQAHod8CYR2m16g5GJEcc7iHC
- 9jBe3q302QvQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129680401"
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="129680401"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 07:42:16 -0700
-IronPort-SDR: DBII3F3zmJIXiSQ+6TC0/wqm0d50mN903eGyto/MAemBKdVlN0nZ3lylaKfBBsyI7WPYKHrvbU
- TfMQblqpGSjQ==
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="460866859"
-Received: from enaessen-mobl1.ger.corp.intel.com ([10.251.86.9])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 07:42:13 -0700
-Message-ID: <fead5227d71a47b80ae406e65b8c3a9624ffa640.camel@linux.intel.com>
-Subject: Re: [PATCH] firmware: arm_scmi: Pass shmem address to SMCCC call
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        Fri, 17 Jul 2020 10:42:29 -0400
+Received: from mail-eopbgr60077.outbound.protection.outlook.com ([40.107.6.77]:27969
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726198AbgGQOm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:42:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dCm8gYI4PxwnMw1UJlSmQ65VosZ1vmxHSBtr1DgNm3FoJ9U27oWnlOOVkn0fDP+ELVVTGhy3noptxvLVjU+Hb+KucIEfdB20b7mQfHYXVL5udpTnqWeAfyrMd4oXhIt57CiTloNl/JyWWTvUrhFKe8ekSFnHG567IPpyt7OH7juL+CxSKgXZJuK/HvWU54LUAphoYp2aYwvb93uVpkNOhI7TWWlUW3FBsA4ADKcqBc/yziO5W5pGSOcuGt2DRlmVjavhjKATKslQv8JNU/KMnhcN3wWsVX6AWlP7qqFdKxBuANBHhf8jbZ/3pj/GaN1CU+mPVnWcURnE8ZZKxUIC7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ClX19k+2BxAIACd9hxjSjbQ4Yk9bAKHTBZw8Idcd/pM=;
+ b=Jkm6SlSgaO3m/M7b9aDF2OMqgkYqn/YoBb9z4M2qHpaaCDxhxXjTZHY2OkdYMpA4dZO9UrSjl+cEgCAV9QJ/LZJIuMaW8M622x9/TuN+6u5vNCQontEMpGUdVorOkJnijPWXYHFi3QaqAa+8JEix0uPxsEivwbIIsO/QmHN/io36bX+mO4z3mCrGbMhMvGSp0GJjhb9e+1ecTGEu/rLtQfzHhVk1Xi8AfOGYphAzlJjIRDXscD9AVXkCeJj5DpVUlqKID+8NU6Bocgh0M5JGUuuIeyrmVyfWeBJvhlZ2YqO/nSCSJnFe4pRUqsaArqCcWH/rEqETGXP6wvZKmjrfjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ClX19k+2BxAIACd9hxjSjbQ4Yk9bAKHTBZw8Idcd/pM=;
+ b=BlLIIiW5+152QAlXOAYTF/kuU3gVDMoDp3Ruy+XGVQFnYiroDeoFhkgGY7SlffME56PeX0mBKWW+koZsSc9gbKztHnIZ8ZK+u6JcF5Lqudnf3t1V+pSpUE0dciJSnbXM8iI6WcKRyF0WYkzIKu4MAM8X0imFf6FqHZX7S+IkDcc=
+Authentication-Results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27) by VI1PR04MB6959.eurprd04.prod.outlook.com
+ (2603:10a6:803:139::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Fri, 17 Jul
+ 2020 14:42:23 +0000
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::4c0:79dd:b734:9ea7]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::4c0:79dd:b734:9ea7%5]) with mapi id 15.20.3174.029; Fri, 17 Jul 2020
+ 14:42:23 +0000
+From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "Paul J. Murphy" <paul.j.murphy@linux.intel.com>,
-        "Paul J. Murphy" <paul.j.murphy@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-Date:   Fri, 17 Jul 2020 15:42:09 +0100
-In-Reply-To: <faa53c11-3c72-9b9b-85ad-9d234f373b4d@gmail.com>
-References: <20200715165518.57558-1-daniele.alessandrelli@linux.intel.com>
-         <5f74221b-aec7-7715-19d1-5cbb406f1bdc@gmail.com>
-         <b4d22e4a5154a9ad4c224eb2dfaeb61ed1680834.camel@linux.intel.com>
-         <faa53c11-3c72-9b9b-85ad-9d234f373b4d@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+Cc:     lukas@mntmn.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org,
+        laurentiu.palcu@oss.nxp.com, devicetree@vger.kernel.org
+Subject: [PATCH v6 0/4] Add support for iMX8MQ Display Controller Subsystem
+Date:   Fri, 17 Jul 2020 17:41:25 +0300
+Message-Id: <20200717144132.2206-1-laurentiu.palcu@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset="us-ascii"
+X-ClientProxiedBy: AM4PR05CA0035.eurprd05.prod.outlook.com (2603:10a6:205::48)
+ To VI1PR0402MB3902.eurprd04.prod.outlook.com (2603:10a6:803:22::27)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM4PR05CA0035.eurprd05.prod.outlook.com (2603:10a6:205::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.19 via Frontend Transport; Fri, 17 Jul 2020 14:42:21 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9251bf47-f2f0-42ca-93c9-08d82a5f9db8
+X-MS-TrafficTypeDiagnostic: VI1PR04MB6959:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB69590BB2F5A4285EA528E235BE7C0@VI1PR04MB6959.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qPlhqal1FP5XR6Q/edQp8hz44uFGdR8wbDGad4LBwod+j0CUzqN+FEBewot30SxmI+DQpFdM3DfsTR679rmkMtI4tUBq1mxdki+59AaoYz8SH5ktaPTh2LC3K8zALOzfD7e6TwPjQf2ufax40v6ZxHvUPPw/0Ran5GGr7F6vyLkNF0xGVEELR1Y7CV3mTxiEEbr1cFR70+yzfXF1JZSqFnAfdwrniLoUWxuDYQ7JQOS5EuGkueH5gFtqVtdRB8wd7uLd919H2ts5hGico9BswlEjxPqxiYbHNuLdQVjcXr3WF1G+hIeUAQPWh0SC9rnhVgXv0y4Jk/aRH8Y107Wm474Uz2R0/LvofUbrm2G9lysUQr2H/G1c442QqFczDqGQ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(39860400002)(396003)(346002)(366004)(110136005)(186003)(44832011)(16526019)(1076003)(8936002)(2906002)(6506007)(86362001)(26005)(6486002)(2616005)(5660300002)(66946007)(478600001)(66476007)(66556008)(6512007)(4326008)(316002)(83380400001)(956004)(8676002)(52116002)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: KCA6QW46ZlTFBQDf0Tkqpe8C2dkrGH7/EW7eWpKwpiB4WXFlV5/9RCJj83o+TqdVl3+zhMn3Z+fwVcsKKX9uREy4q1nL/V2Pfq9TNyduL25KkZKZH+4Fm3EbdOXaViqgfAcUPR1M764E9KwRyYclG4YPPPnTfT3QI/4/Y730Tr36aE270oyq+rR1MoFJ6giiFbfDbc5KNn45LMBTxJmxXWk/p4xY2pmWvF1fukNFdQ740lpIZg9CZr3RSDhpykfrh5AX9gQBYXEdKnQo0WxmMTtX7YfjGU7NL0P0hRIxt52bFMQZaLnjVeDG8wfa93k6DzVBUN39mEld2/0929k9x7Tqrrp8L92Y6n4zBBo6ecLEsE3zIQasHtJ5tm17Rl7B1NWpIiFLflRFXWVBoee/Adg9/+ExprrihDeyUVUsCCIcRbaY590sLZXdOIr9279I1DlViUmjQPHWVLmqNhGtZv4Kfc+1lG8E6vWVAOXZZv4=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9251bf47-f2f0-42ca-93c9-08d82a5f9db8
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2020 14:42:23.3261
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L/3NoSdsBCHvl//6CwZVTJb3/O2aH99Fua6CVLOcDSS+HIWCnb2fvTQ7jAk1obfbx8dhNwFrngZQdXqhqlzgrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6959
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-16 at 12:57 -0700, Florian Fainelli wrote:
-> 
-> On 7/16/2020 7:13 AM, Daniele Alessandrelli wrote:
-> > Hi Florian,
-> > 
-> > Thanks for you feedback.
-> > 
-> > On Wed, 2020-07-15 at 15:43 -0700, Florian Fainelli wrote:
-> > > On 7/15/2020 9:55 AM, Daniele Alessandrelli wrote:
-> > > > From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-> > > > 
-> > > > Currently, when SMC/HVC is used as transport, the base address
-> > > > of
-> > > > the
-> > > > shared memory used for communication is not passed to the SMCCC
-> > > > call.
-> > > > This means that such an address must be hard-coded into the
-> > > > bootloader.
-> > > > 
-> > > > In order to increase flexibility and allow the memory layout to
-> > > > be
-> > > > changed without modifying the bootloader, this patch adds the
-> > > > shared
-> > > > memory base address to the a1 argument of the SMCCC call.
-> > > > 
-> > > > On the Secure Monitor side, the service call implementation can
-> > > > therefore read the a1 argument in order to know the location of
-> > > > the
-> > > > shared memory to use. This change is backward compatible to
-> > > > existing
-> > > > service call implementations as long as they don't check for a1
-> > > > to
-> > > > be
-> > > > zero.
-> > > 
-> > > resource_size_t being defined after phys_addr_t, its size is
-> > > different
-> > > between 32-bit, 32-bit with PAE and 64-bit so it would probably
-> > > make
-> > > more sense to define an physical address alignment, or maybe an
-> > > address
-> > > that is in multiple of 4KBytes so you can address up to 36-bits
-> > > of
-> > > physical address even on a 32-bit only system?
-> > 
-> > I see your point. After a quick look, I think that, practically,
-> > the
-> > issue is with ARM32 LPAE addresses, for which phys_addr_t is a u64.
-> > So,
-> > basically, for AArch32 systems with LPAE the 64-bit shmem_paddr
-> > gets
-> > truncated to 32-bit when it's passed to the SMC32/HVC32 call.
-> > 
-> > To solve that, I would prefer splitting the address between two SMC
-> > parameters (a1 = addr_lo, a2 = addr_hi), instead of imposing an
-> > arbitrary alignment. Would that be reasonable?
-> 
-> The low/high part would only be relevant on a 32-bit LPAE platform
-> which
-> is probably a corner case, I would just pass the shmem_paddr / 4096
-> since that is the smallest granule size and alignment possible and it
-> still allows you to map up to 36-bits of physical address, which is
-> the
-> maximum that the long descriptor in LPAE can support. For 64-bit we
-> have
-> no such problems since we have the full register width.
-> 
-> > > What discovery mechanism does the OS have that the specified
-> > > address
-> > > within the SMCCC call has been accepted by the firmware given the
-> > > return
-> > > value of that SMCCC call does not appear to be used or checked?
-> > > Do we
-> > > just expect a timeout initializing the SCMI subsystem?
-> > 
-> > The return code is actually checked at the end of the function:
-> > https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/firmware/arm_scmi/smc.c#L118
-> > 
-> > But in the meantime scmi_rx_callback() has already been called. Not
-> > sure if that's intentional or a possible bug.
-> > 
-> > > Given that the kernel must somehow reserve this memory as a
-> > > shared
-> > > memory area for obvious reasons, and the trusted firmware must
-> > > also
-> > > ensure it treats this memory region with specific permissions in
-> > > its
-> > > translation regime, does it really make sense to give that much
-> > > flexibility?
-> > 
-> > Well, the trusted firmware might reserve a bigger region to be used
-> > for
-> > other service as well. In other words, the MMU of TF-A is not
-> > necessary
-> > specifically set up for this region, but, possibly, for a bigger
-> > general shared region.
-> 
-> But presumably the Linux shared memory area should be mapped in a
-> slightly different way than
-> 
-> > Passing the SCMI shmem to the SMC call allows the shmem to be moved
-> > within such bigger shared memory without modifying the trusted
-> > firmware.
-> > 
-> > > If your boot loader has FDT patching capability, maybe it can
-> > > also do
-> > > a
-> > > SMC call to provide the address to your trusted firmware, prior
-> > > to
-> > > loading the Linux kernel, and then they both agree, prior to boot
-> > > about
-> > > the shared memory address?
-> > 
-> > Yes, that's a possible solution, but it looks more complicated to
-> > me,
-> > since it adds an additional component (the boot loader) to the
-> > equation, while the goal of this patch was to reduce the coupling
-> > between components (namely the DT/kernel and the trusted firmware).
-> > 
-> > I guess my question is: if we fix the handling of LPAE addresses
-> > and
-> > the SMC return code, what is the drawback of having the shmem
-> > address
-> > passed to the SMC?
-> 
-> My only concern is that if somehow Linux gets assigned a shared
-> memory
-> range that is completely outside of what the trusted firmware has
-> already mapped, or is capable of addressing, or any combination
-> thereof,
-> it could be challenging to debug what is going on, especially if
-> INVALID
-> PARAMETER must not be returned (assuming this is to avoid Linux
-> discovering where other shared memory areas pertaining to the
-> firmware
-> reside?).
-> 
-> The other concern I have is that we are not documenting the various
-> SMCCC calling conventions, soon enough it will be come out of
-> control,
-> and we are already allowing people to define their own function IDs
-> and
-> parameters to call into the trusted firmware. This sounds like
-> something
-> that is so basic that it should be standardized from the top, by ARM.
+From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
 
-I agree. Having this standardized by ARM is probably what we really
-need.
+Hi,
 
-> 
-> > Anyway, I should have mentioned this in the commit message (sorry
-> > for
-> > not doing so), but I submitted this patch because initial feedback
-> > from
-> > Sudeep was positive [1]; but if there is no consensus around it I'm
-> > fine with dropping it.
-> > 
-> > [1] https://lore.kernel.org/lkml/20200710075931.GB1189@bogus/
-> 
-> My review is by no means authoritative however in deploying SCMI on
-> our
-> Broadcom STB platforms some experience was gained in the process
-> which
-> is how it piqued my interest. Thanks for providing more background to
-> this patch, this does help.
+This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+includes only graphics plane support (no video planes), no HDR10 capabilities,
+no graphics decompression (only linear, tiled and super-tiled buffers allowed).
 
-Just to clarify, your review is very welcome and much appreciated.
-Indeed, feedback from engineers with previous experience like yours is
-really helpful. With the link above I didn't mean to dismiss your
-feedback, but only to provide some background / context.
+Support for the rest of the features will be added incrementally, in subsequent
+patches.
 
-> 
-> We have opted for a solution where the boot loader knows about all
-> possible reserved regions prior to booting/loading the trusted
-> firmware
-> as well as the kernel, therefore it can pass that information to both
-> and we never really had a situation where the two need to evolve in
-> an
-> uncoordinated way.
+The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
+
+Thanks,
+Laurentiu
+
+Changes in v6:
+ * Addressed Rob's comment and added "additionalProperties: false" at
+   the end of the bindings' properties. However, this change surfaced
+   an issue with the assigned-clock* properties not being documented in
+   the properties section. Added the descriptions and the bindings patch
+   will need another review;
+ * Added an entry for DCSS driver in the MAINTAINERS file;
+ * Removed the component framework patch altogether;
+
+Changes in v5:
+ * Rebased to latest;
+ * Took out component framework support and made it a separate patch so
+   that people can still test with HDP driver, which makes use of it.
+   But the idea is to get rid of it once HDP driver's next versions
+   will remove component framework as well;
+ * Slight improvement to modesetting: avoid cutting off the pixel clock
+   if the new mode and the old one are equal. Also, in this case, is
+   not necessary to wait for DTG to shut off. This would allow to switch
+   from 8b RGB to 12b YUV422, for example, with no interruptions (at least
+   from DCSS point of view);
+ * Do not fire off CTXLD when going to suspend, unless it still has
+   entries that need to be committed to DCSS;
+ * Addressed Rob's comments on bindings;
+
+Changes in v4:
+ * Addressed Lucas and Philipp's comments:
+   * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
+   * Removed usage of devm_ functions since I'm already doing all the
+     clean-up in the submodules_deinit();
+   * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
+   * Removed en_completion variable from dcss_crtc since this was
+     introduced mainly to avoid vblank timeout warnings which were fixed
+     by arming the vblank event in flush() instead of begin();
+   * Removed clks_on and irq_enabled flags since all the calls to
+     enabling/disabling clocks and interrupts were balanced;
+   * Removed the custom atomic_commit callback and used the DRM core
+     helper and, in the process, got rid of a workqueue that wasn't
+     necessary anymore;
+   * Fixed some minor DT binding issues flagged by Philipp;
+   * Some other minor changes suggested by Lucas;
+ * Removed YUV formats from the supported formats as these cannot work
+   without the HDR10 module CSCs and LUTs. Will add them back when I
+   will add support for video planes;
+
+Changes in v3:
+ * rebased to latest linux-next and made it compile as drmP.h was
+   removed;
+ * removed the patch adding the VIDEO2_PLL clock. It's already applied;
+ * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
+ * fixed a a spurious hang reported by Lukas Hartmann and encountered
+   by me several times;
+ * mask DPR and DTG interrupts by default, as they may come enabled from
+   U-boot;
+
+Changes in v2:
+ * Removed '0x' in node's unit-address both in DT and yaml;
+ * Made the address region size lowercase, to be consistent;
+ * Removed some left-over references to P010;
+ * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+   issues reported by kbuild for other architectures;
+
+
+Laurentiu Palcu (4):
+  drm/imx: compile imx directory by default
+  drm/imx: Add initial support for DCSS on iMX8MQ
+  MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
+  dt-bindings: display: imx: add bindings for DCSS
+
+ .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 +++
+ MAINTAINERS                                   |   8 +
+ drivers/gpu/drm/Makefile                      |   2 +-
+ drivers/gpu/drm/imx/Kconfig                   |   2 +
+ drivers/gpu/drm/imx/Makefile                  |   1 +
+ drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
+ drivers/gpu/drm/imx/dcss/Makefile             |   6 +
+ drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
+ drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
+ drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
+ drivers/gpu/drm/imx/dcss/dcss-dev.c           | 314 +++++++
+ drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
+ drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
+ drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
+ drivers/gpu/drm/imx/dcss/dcss-kms.c           | 177 ++++
+ drivers/gpu/drm/imx/dcss/dcss-kms.h           |  43 +
+ drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
+ drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
+ 20 files changed, 4075 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+ create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+ create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+
+-- 
+2.17.1
 
