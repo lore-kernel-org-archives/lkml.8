@@ -2,105 +2,108 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,BODY_SINGLE_WORD,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5815C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B90C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF0222065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="MyJkO4/z"
+	by mail.kernel.org (Postfix) with ESMTP id E1CE32065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgGQMAN (ORCPT
+        id S1726550AbgGQMAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:00:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgGQMAJ (ORCPT
+        Fri, 17 Jul 2020 08:00:41 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:33159 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgGQMAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:00:09 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF2E1C061755;
-        Fri, 17 Jul 2020 05:00:09 -0700 (PDT)
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 322A271D;
-        Fri, 17 Jul 2020 14:00:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594987208;
-        bh=nUPwsA58UbJ23qc/rx1oXrPJ7/DQig2xo7uzTbAjTvk=;
-        h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:From;
-        b=MyJkO4/zN1f/EUWHdu66GC/Im+bNiaFqUbNJ+0GCCqfVc6rtYVe2BjC6Jl+cZj/1l
-         Gcynu08bKSivPFo4b2WAI716dW1dJ/HSFnJS+qbpiBgutY/JLky37uUkStl3z06VfY
-         TkUPPGAVDF5Xxq2hYqBDne6xUrM4GEE/QYcz5xs0=
-Subject: Re: [PATCH 5/5] media/v4l2-subdev.h: drop duplicated word in comment
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-References: <20200714220553.20294-1-rdunlap@infradead.org>
- <20200714220553.20294-5-rdunlap@infradead.org>
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <62f8372d-65d9-f69c-a942-5d9451191863@ideasonboard.com>
-Date:   Fri, 17 Jul 2020 13:00:05 +0100
+        Fri, 17 Jul 2020 08:00:39 -0400
+Received: by mail-lj1-f175.google.com with SMTP id e8so12314843ljb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:00:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ueC5VTlD9srXw3nIH9njJ76Dcn6bg+Ch492X/b41lbA=;
+        b=Y6NrbQjeLIjjLBXJ/ddGm3p4cl8ysjn0JItnQygRoatxvAZHdUBiDvkMLvKhqJ0uHv
+         vvaxZ3JsVziVdJ/0U2zNwvKDTDWg9MMQrCwQ5D3Y88vcpUhilC46Js511/ME3bFaSTJp
+         K4SHkeTr4jKYg/tcjrbpv4UYB0b+qp/+q1jMag95QlXxlY+GW6MoHU7AnYlzXFZDlJlT
+         uslgvjegXQioJvMxZktP8H19Xp3GeFQ9OBFrrYPqobDxd8Gw9xs0exd7GXP9olJl4Kyl
+         E8tbkWGkfdwen1ADtUUpv4eb1WMs0N4ZqXbE1D1LQbI5QDemzeDazAZUNNWna9sPbR5b
+         lg9A==
+X-Gm-Message-State: AOAM532VXa+TJtmUcO7ljc8gkvY1Ht7XuFOPxDyPxzxhJ/pT7pg4HFgO
+        rem5g2FCVgCiUW62tlLzgn0kINIz8gQ=
+X-Google-Smtp-Source: ABdhPJyW542CmHGAv0A+DU5K5ee/9HEiqqBqqk8C2DyyXLmFrAsg0vGQCH9SC9jMXOJUep6uCpocgg==
+X-Received: by 2002:a2e:a173:: with SMTP id u19mr4698932ljl.263.1594987237070;
+        Fri, 17 Jul 2020 05:00:37 -0700 (PDT)
+Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.gmail.com with ESMTPSA id i22sm1612123ljb.19.2020.07.17.05.00.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 05:00:36 -0700 (PDT)
+Subject: Re: [PATCH v2] coccinelle: api: add kvfree script
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
+References: <20200605204237.85055-1-efremov@linux.com>
+ <20200614183632.13236-1-efremov@linux.com>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Message-ID: <f0ba75b4-8a33-dcff-ce0d-94eeda9c4b21@linux.com>
+Date:   Fri, 17 Jul 2020 15:00:35 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200714220553.20294-5-rdunlap@infradead.org>
+In-Reply-To: <20200614183632.13236-1-efremov@linux.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/07/2020 23:05, Randy Dunlap wrote:
-> Delete the doubled words "the" in comments.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: linux-media@vger.kernel.org
-
-I guess the second instance of the word could have also been removed, to
-keep more content on the first line, which fits under 80chars, but I
-don't think it really matters.
-
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-> ---
->  include/media/v4l2-subdev.h |    8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> --- linux-next-20200714.orig/include/media/v4l2-subdev.h
-> +++ linux-next-20200714/include/media/v4l2-subdev.h
-> @@ -566,9 +566,9 @@ struct v4l2_subdev_ir_parameters {
->   *
->   * @rx_read: Reads received codes or pulse width data.
->   *	The semantics are similar to a non-blocking read() call.
-> - * @rx_g_parameters: Get the current operating parameters and state of the
-> + * @rx_g_parameters: Get the current operating parameters and state of
->   *	the IR receiver.
-> - * @rx_s_parameters: Set the current operating parameters and state of the
-> + * @rx_s_parameters: Set the current operating parameters and state of
->   *	the IR receiver.  It is recommended to call
->   *	[rt]x_g_parameters first to fill out the current state, and only change
->   *	the fields that need to be changed.  Upon return, the actual device
-> @@ -582,9 +582,9 @@ struct v4l2_subdev_ir_parameters {
->   *
->   * @tx_write: Writes codes or pulse width data for transmission.
->   *	The semantics are similar to a non-blocking write() call.
-> - * @tx_g_parameters: Get the current operating parameters and state of the
-> + * @tx_g_parameters: Get the current operating parameters and state of
->   *	the IR transmitter.
-> - * @tx_s_parameters: Set the current operating parameters and state of the
-> + * @tx_s_parameters: Set the current operating parameters and state of
->   *	the IR transmitter.  It is recommended to call
->   *	[rt]x_g_parameters first to fill out the current state, and only change
->   *	the fields that need to be changed.  Upon return, the actual device
-> 
-
+Ping?
