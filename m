@@ -2,56 +2,77 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC073C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17221C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2BDB2064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCE02076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:05:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QwAi6Gdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgGQTFa (ORCPT
+        id S1728544AbgGQTF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:05:30 -0400
-Received: from mga17.intel.com ([192.55.52.151]:37485 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbgGQTF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:05:26 -0400
-IronPort-SDR: wvPWu2MD7DN6gxTmAYErQ2iM2f92FTgt/m28nLT+qH448oTd1EyxgteD/AsxUmboX0/se/wJqe
- rURdgcLZYuSA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="129740912"
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="129740912"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 12:05:18 -0700
-IronPort-SDR: VtAJy58cvQu6RLTQ8RLbr9zFhVDyNF56pSqVI9hg1FZVXuqAQDV3Dg3oAGmvH/Qh13qIB57Gzf
- dOYdoZ299lCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="326925969"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 17 Jul 2020 12:05:18 -0700
-Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id 34F16580833;
-        Fri, 17 Jul 2020 12:05:18 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
-        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        alexander.h.duyck@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
-Date:   Fri, 17 Jul 2020 12:06:19 -0700
-Message-Id: <20200717190620.29821-3-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200714062323.19990-1-david.e.box@linux.intel.com>
-References: <20200714062323.19990-1-david.e.box@linux.intel.com>
+        Fri, 17 Jul 2020 15:05:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47754 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727978AbgGQTFz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 15:05:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595012753;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=QA04z49XQxRpsbQtr5ADLmijNDZoNbT33TpqwbOswEA=;
+        b=QwAi6GdhyOKd5pVegToESPBTVpgfeDu0qXJFgurV5v7tw/qFfwZrXt1Dds1xDlVXbKhHVn
+        hEInuVRuMa7fnBd6roCa1JKGvAh99tBzYd9mz4x5FTvByP6h1kcQ+fd2Ux3SdRnh7JY6uL
+        HKcRpC6GMQ9Nml9/MUvk+e1mofF2NjA=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-256-3gQw-uaoM3W0qwUX7qEACw-1; Fri, 17 Jul 2020 15:05:52 -0400
+X-MC-Unique: 3gQw-uaoM3W0qwUX7qEACw-1
+Received: by mail-ej1-f69.google.com with SMTP id h26so6359286ejb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 12:05:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QA04z49XQxRpsbQtr5ADLmijNDZoNbT33TpqwbOswEA=;
+        b=PYg5x/PjZJKTaQg2Fy3sZo8W5P8GLO2m1e4wYUNeXaVTDJc6JxBRayTIKYmvyNKT5n
+         i3NTlpr8sTflQtBVDjbRtOho8f8oBK6rY6/XM5TpfOsPhaArhjJ6s6Ok2EA7n7tbWdEz
+         cmdjxOTMDTonH7M/wR7Hel75skZiHZ4ENcva+x1kNdu7ntcoR+20koLUUuLv9dz8Bnkv
+         /Z5Spuai7NEa/vptY1VxAOg+/qX61DlUc3UT9+PEPLXXv26bJv+VycWs346ZdufXiHtz
+         wVd7tFXEm5TcEcfDIH42X8o+sfVHSimbUS6UvtYelq7a7JL5Vxcwz3T/5qEGN6kI0sST
+         slKA==
+X-Gm-Message-State: AOAM5337P3smJUtQi0zJRzGS0642WkWU3vghREqoCZiBBBJmCtFvkLt/
+        tfJPeLv0lecSVsxNJh2RYHspAmUNMCvXGLZmKCTbWLeMLEirxBVNNDgbyjPHpbL2iFY2os1wr6R
+        UpEOoOc9/PtrrxnGwI9sQtsWy
+X-Received: by 2002:a17:906:a449:: with SMTP id cb9mr9659944ejb.115.1595012750737;
+        Fri, 17 Jul 2020 12:05:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxawMnEihhU00mwwY2KMXzPnp583S5oS9vU4nqqnr6E/4WlXYRDH2z1ZDUEgvDfZKxqw/acwg==
+X-Received: by 2002:a17:906:a449:: with SMTP id cb9mr9659924ejb.115.1595012750517;
+        Fri, 17 Jul 2020 12:05:50 -0700 (PDT)
+Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:482c:9537:40:83ba])
+        by smtp.gmail.com with ESMTPSA id 92sm9030732edg.78.2020.07.17.12.05.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 12:05:49 -0700 (PDT)
+From:   Karol Herbst <kherbst@redhat.com>
+To:     linux-acpi@vger.kernel.org
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lyude Paul <lyude@redhat.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org
+Subject: [PATCH] RFC: ACPI / OSI: remove workarounds for hybrid graphics laptops
+Date:   Fri, 17 Jul 2020 21:05:47 +0200
+Message-Id: <20200717190547.648604-1-kherbst@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,302 +80,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Platform Monitoring Technology (PMT) is an architecture for
-enumerating and accessing hardware monitoring facilities. PMT supports
-multiple types of monitoring capabilities. This driver creates platform
-devices for each type so that they may be managed by capability specific
-drivers (to be introduced). Capabilities are discovered using PCIe DVSEC
-ids. Support is included for the 3 current capability types, Telemetry,
-Watcher, and Crashlog. The features are available on new Intel platforms
-starting from Tiger Lake for which support is added.
+It's hard to figure out what systems are actually affected and right now I
+don't see a good way of removing those...
 
-Also add a quirk mechanism for several early hardware differences and bugs.
-For Tiger Lake, do not support Watcher and Crashlog capabilities since they
-will not be compatible with future product. Also, fix use a quirk to fix
-the discovery table offset.
+But I'd like to see thos getting removed and drivers fixed instead (which
+happened at least for nouveau).
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+And as mentioned before, I prefer people working on fixing issues instead
+of spending time to add firmware level workarounds which are hard to know
+to which systems they apply to, hard to remove and basically a big huge
+pain to work with.
+In the end I have no idea how to even figure out what systems are affected
+and which not by this, so I have no idea how to even verify we can safely
+remove this (which just means those are impossible to remove unless we risk
+breaking systems, which again makes those supper annoying to deal with).
+
+Also from the comments it's hard to get what those bits really do. Are they
+just preventing runtime pm or do the devices are powered down when booting?
+I am sure it's the former, still...
+
+Please, don't do this again.
+
+For now, those workaround prevent power savings on systems those workaround
+applies to, which might be any so those should get removed asap and if
+new issues arrise removing those please do a proper bug report and we can
+look into it and come up with a proper fix (and keep this patch out until
+we resolve all of those).
+
+Signed-off-by: Karol Herbst <kherbst@redhat.com>
+CC: Alex Hung <alex.hung@canonical.com>
+CC: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC: Len Brown <lenb@kernel.org>
+CC: Lyude Paul <lyude@redhat.com>
+CC: linux-kernel@vger.kernel.org
+CC: dri-devel@lists.freedesktop.org
+CC: nouveau@lists.freedesktop.org
 ---
- MAINTAINERS             |   5 +
- drivers/mfd/Kconfig     |  10 ++
- drivers/mfd/Makefile    |   1 +
- drivers/mfd/intel_pmt.c | 215 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 231 insertions(+)
- create mode 100644 drivers/mfd/intel_pmt.c
+ drivers/acpi/osi.c | 24 ------------------------
+ 1 file changed, 24 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b4a43a9e7fbc..2e42bf0c41ab 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8845,6 +8845,11 @@ F:	drivers/mfd/intel_soc_pmic*
- F:	include/linux/mfd/intel_msic.h
- F:	include/linux/mfd/intel_soc_pmic*
+diff --git a/drivers/acpi/osi.c b/drivers/acpi/osi.c
+index 9f68538091384..d4405e1ca9b97 100644
+--- a/drivers/acpi/osi.c
++++ b/drivers/acpi/osi.c
+@@ -44,30 +44,6 @@ osi_setup_entries[OSI_STRING_ENTRIES_MAX] __initdata = {
+ 	{"Processor Device", true},
+ 	{"3.0 _SCP Extensions", true},
+ 	{"Processor Aggregator Device", true},
+-	/*
+-	 * Linux-Dell-Video is used by BIOS to disable RTD3 for NVidia graphics
+-	 * cards as RTD3 is not supported by drivers now.  Systems with NVidia
+-	 * cards will hang without RTD3 disabled.
+-	 *
+-	 * Once NVidia drivers officially support RTD3, this _OSI strings can
+-	 * be removed if both new and old graphics cards are supported.
+-	 */
+-	{"Linux-Dell-Video", true},
+-	/*
+-	 * Linux-Lenovo-NV-HDMI-Audio is used by BIOS to power on NVidia's HDMI
+-	 * audio device which is turned off for power-saving in Windows OS.
+-	 * This power management feature observed on some Lenovo Thinkpad
+-	 * systems which will not be able to output audio via HDMI without
+-	 * a BIOS workaround.
+-	 */
+-	{"Linux-Lenovo-NV-HDMI-Audio", true},
+-	/*
+-	 * Linux-HPI-Hybrid-Graphics is used by BIOS to enable dGPU to
+-	 * output video directly to external monitors on HP Inc. mobile
+-	 * workstations as Nvidia and AMD VGA drivers provide limited
+-	 * hybrid graphics supports.
+-	 */
+-	{"Linux-HPI-Hybrid-Graphics", true},
+ };
  
-+INTEL PMT DRIVER
-+M:	"David E. Box" <david.e.box@linux.intel.com>
-+S:	Maintained
-+F:	drivers/mfd/intel_pmt.c
-+
- INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
- M:	Stanislav Yakovlev <stas.yakovlev@gmail.com>
- L:	linux-wireless@vger.kernel.org
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index a37d7d171382..1a62ce2c68d9 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
- 	  Register and P-unit access. In addition this creates devices
- 	  for iTCO watchdog and telemetry that are part of the PMC.
- 
-+config MFD_INTEL_PMT
-+	tristate "Intel Platform Monitoring Technology support"
-+	depends on PCI
-+	select MFD_CORE
-+	help
-+	  The Intel Platform Monitoring Technology (PMT) is an interface that
-+	  provides access to hardware monitor registers. This driver supports
-+	  Telemetry, Watcher, and Crashlog PMT capabilities/devices for
-+	  platforms starting from Tiger Lake.
-+
- config MFD_IPAQ_MICRO
- 	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
- 	depends on SA1100_H3100 || SA1100_H3600
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 9367a92f795a..1961b4737985 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -216,6 +216,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
- obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
- obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
- obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
-+obj-$(CONFIG_MFD_INTEL_PMT)	+= intel_pmt.o
- obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
- obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
- obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
-new file mode 100644
-index 000000000000..6857eaf4ff86
---- /dev/null
-+++ b/drivers/mfd/intel_pmt.c
-@@ -0,0 +1,215 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Platform Monitoring Technology MFD driver
-+ *
-+ * Copyright (c) 2020, Intel Corporation.
-+ * All Rights Reserved.
-+ *
-+ * Authors: David E. Box <david.e.box@linux.intel.com>
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/mfd/core.h>
-+#include <linux/types.h>
-+
-+/* Intel DVSEC capability vendor space offsets */
-+#define INTEL_DVSEC_ENTRIES		0xA
-+#define INTEL_DVSEC_SIZE		0xB
-+#define INTEL_DVSEC_TABLE		0xC
-+#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
-+#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
-+#define INTEL_DVSEC_ENTRY_SIZE		4
-+
-+/* PMT capabilities */
-+#define DVSEC_INTEL_ID_TELEMETRY	2
-+#define DVSEC_INTEL_ID_WATCHER		3
-+#define DVSEC_INTEL_ID_CRASHLOG		4
-+
-+#define TELEMETRY_DEV_NAME		"pmt_telemetry"
-+#define WATCHER_DEV_NAME		"pmt_watcher"
-+#define CRASHLOG_DEV_NAME		"pmt_crashlog"
-+
-+struct intel_dvsec_header {
-+	u16	length;
-+	u16	id;
-+	u8	num_entries;
-+	u8	entry_size;
-+	u8	tbir;
-+	u32	offset;
-+};
-+
-+enum pmt_quirks {
-+	/* Watcher capability not supported */
-+	PMT_QUIRK_NO_WATCHER	= BIT(0),
-+
-+	/* Crashlog capability not supported */
-+	PMT_QUIRK_NO_CRASHLOG	= BIT(1),
-+
-+	/* Use shift instead of mask to read discovery table offset */
-+	PMT_QUIRK_TABLE_SHIFT	= BIT(2),
-+};
-+
-+struct pmt_platform_info {
-+	unsigned long quirks;
-+};
-+
-+static const struct pmt_platform_info tgl_info = {
-+	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG |
-+		  PMT_QUIRK_TABLE_SHIFT,
-+};
-+
-+static int
-+pmt_add_dev(struct pci_dev *pdev, struct intel_dvsec_header *header,
-+	    struct pmt_platform_info *info)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res, *tmp;
-+	struct mfd_cell *cell;
-+	const char *name;
-+	int count = header->num_entries;
-+	int size = header->entry_size;
-+	int i;
-+
-+	switch (header->id) {
-+	case DVSEC_INTEL_ID_TELEMETRY:
-+		name = TELEMETRY_DEV_NAME;
-+		break;
-+	case DVSEC_INTEL_ID_WATCHER:
-+		if (info->quirks & PMT_QUIRK_NO_WATCHER) {
-+			dev_info(dev, "Watcher not supported\n");
-+			return 0;
-+		}
-+		name = WATCHER_DEV_NAME;
-+		break;
-+	case DVSEC_INTEL_ID_CRASHLOG:
-+		if (info->quirks & PMT_QUIRK_NO_CRASHLOG) {
-+			dev_info(dev, "Crashlog not supported\n");
-+			return 0;
-+		}
-+		name = CRASHLOG_DEV_NAME;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (!header->num_entries || !header->entry_size) {
-+		dev_warn(dev, "Invalid count or size for %s header\n", name);
-+		return -EINVAL;
-+	}
-+
-+	cell = devm_kzalloc(dev, sizeof(*cell), GFP_KERNEL);
-+	if (!cell)
-+		return -ENOMEM;
-+
-+	res = devm_kcalloc(dev, count, sizeof(*res), GFP_KERNEL);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	if (info->quirks & PMT_QUIRK_TABLE_SHIFT)
-+		header->offset >>= 3;
-+
-+	for (i = 0, tmp = res; i < count; i++, tmp++) {
-+		tmp->start = pdev->resource[header->tbir].start +
-+			     header->offset + i * (size << 2);
-+		tmp->end = tmp->start + (size << 2) - 1;
-+		tmp->flags = IORESOURCE_MEM;
-+	}
-+
-+	cell->resources = res;
-+	cell->num_resources = count;
-+	cell->name = name;
-+
-+	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cell, 1, NULL, 0,
-+				    NULL);
-+}
-+
-+static int
-+pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct intel_dvsec_header header;
-+	struct pmt_platform_info *info;
-+	bool found_devices = false;
-+	int ret, pos = 0;
-+	u32 table;
-+	u16 vid;
-+
-+	ret = pcim_enable_device(pdev);
-+	if (ret)
-+		return ret;
-+
-+	info = devm_kmemdup(&pdev->dev, (void *)id->driver_data, sizeof(*info),
-+			    GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-+	while (pos) {
-+		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vid);
-+		if (vid != PCI_VENDOR_ID_INTEL)
-+			continue;
-+
-+		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2,
-+				     &header.id);
-+		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
-+				     &header.num_entries);
-+		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
-+				     &header.entry_size);
-+		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
-+				      &table);
-+
-+		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-+		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-+
-+		ret = pmt_add_dev(pdev, &header, info);
-+		if (ret)
-+			dev_warn(&pdev->dev,
-+				 "Failed to add devices for DVSEC id %d\n",
-+				 header.id);
-+		found_devices = true;
-+
-+		pos = pci_find_next_ext_capability(pdev, pos,
-+						   PCI_EXT_CAP_ID_DVSEC);
-+	}
-+
-+	if (!found_devices) {
-+		dev_err(&pdev->dev, "No supported PMT capabilities found.\n");
-+		return -ENODEV;
-+	}
-+
-+	pm_runtime_put(&pdev->dev);
-+	pm_runtime_allow(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static void pmt_pci_remove(struct pci_dev *pdev)
-+{
-+	pm_runtime_forbid(&pdev->dev);
-+	pm_runtime_get_sync(&pdev->dev);
-+}
-+
-+#define PCI_DEVICE_ID_INTEL_PMT_TGL	0x9a0d
-+
-+static const struct pci_device_id pmt_pci_ids[] = {
-+	{ PCI_DEVICE_DATA(INTEL, PMT_TGL, &tgl_info) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(pci, pmt_pci_ids);
-+
-+static struct pci_driver pmt_pci_driver = {
-+	.name = "intel-pmt",
-+	.id_table = pmt_pci_ids,
-+	.probe = pmt_pci_probe,
-+	.remove = pmt_pci_remove,
-+};
-+module_pci_driver(pmt_pci_driver);
-+
-+MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-+MODULE_DESCRIPTION("Intel Platform Monitoring Technology MFD driver");
-+MODULE_LICENSE("GPL v2");
+ static u32 acpi_osi_handler(acpi_string interface, u32 supported)
 -- 
-2.20.1
+2.26.2
 
