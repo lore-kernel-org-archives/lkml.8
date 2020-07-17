@@ -2,98 +2,250 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C489C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15D8C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6958C20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A2220717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="jwtFCkad"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1X650+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgGQNP3 (ORCPT
+        id S1726821AbgGQNQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:15:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60800 "EHLO
+        Fri, 17 Jul 2020 09:16:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgGQNP2 (ORCPT
+        with ESMTP id S1726530AbgGQNQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:15:28 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E144C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:15:28 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id f16so6346003pjt.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:15:28 -0700 (PDT)
+        Fri, 17 Jul 2020 09:16:49 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFD4C061755;
+        Fri, 17 Jul 2020 06:16:48 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id s10so11005272wrw.12;
+        Fri, 17 Jul 2020 06:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MvzG0g63u+RjIUSmhlF0+sc7v3Sr//DxS4k25XHaOjg=;
-        b=jwtFCkadcjumBubYq6tA4t9/w+3zj256IR/pDHYUPvXdrZTX2YLViuktcSNRrQoZIl
-         rGnp5hBz+0NiFREq5oR4jW1E5V33K406zRZ7ygEOuBaBESfAIWLozM3FOdCA0kUJWlEP
-         kr94vrw1DGEqW9Cbgeda+p9OaF5br0xLxj+mtLKmMBwnky83M20fSx75ape/ZStqVDRK
-         ZwzsDL4sInL8HD9rjuDsrB90qpxYPCTftTyAx4IPlwrbtZgVUZ3yHlKqxsHjKaVMasdu
-         VSd1xmw4ChrdFSlCBS/WkyPOhEkCgYG99V0h8YpNkrx8VIIinwU9WWEIIeW1tXrU4VT5
-         BtZg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vs4AfRAnPExeeuyiR5DGWNr9f7rEdWEHMwAyJzCVFy0=;
+        b=X1X650+/OJIdkuT8tYULqZ7epcSuQNC0aWmohUOFdAm4DabLoremwwlRcdAvIp7CBF
+         Y15XYfiFFoT9lN+Q9SfCFQD3ihAccJLL6cEwDDtoIYKXrq5qS9+jHMSKEN5zLD4BsnTW
+         sap9hRQk9LnKCRkdEi9gmojGpC2CKHl2K/ScY73WUiwn5Mc4UgOPOkObf/xZRyo729Qd
+         efKiBGb+jpdd1TLT8Mi8V2MQwZ2k+oP45ywvsF/mgO/ZgTpqtvGYSQr2llxuqCTKJzLE
+         IZhOAkoFNxait8ho4i4kXhyRGYEvc0V6dErp5mORYaFA44Pp3FX6ug/jn7TYfmsYoQKO
+         XNBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MvzG0g63u+RjIUSmhlF0+sc7v3Sr//DxS4k25XHaOjg=;
-        b=eza7pK0efae7JeY02XF0wwP51pCif7lzLi++kcWRJoYCNbbQzFoFbxCMEylfWmw7rC
-         8lC4kR7Thdt/m5Ipj8Aj1kQiHaIaue+Duef5IAIyxEzkStWJMA7wVbFTEEnVb/w5482m
-         neocPzLV+SFtiG/v1velK2JI2GfV/cz3z11QFICAfaApuX/t5KktF4G1zizFZQywd+iP
-         zBdMal5yRgZfT53ufdAHD1QCMHsRslhjCjxx0zEzj6Gwegwtp4MhQiBIh7PydBe5Fk9C
-         4mKsLnQXQoFRWme35o2FUSiUMi52QpasDbjauTBEj0+ZrQaz5ck5XtXBScBk4rkAfPie
-         CgFA==
-X-Gm-Message-State: AOAM530MZ7pH+Hxcw2+wFpTdyqGA7aqMMb/dNhiL7CRRBFRVW4CaorNT
-        Q1KneRx9wT20ZRqe1+x+D67NFEgxS5u5PQ==
-X-Google-Smtp-Source: ABdhPJz848s1wYRfrcUOiF7H6UR53NUwQSAewWSWcuj6cpWLM4416SVIf723cYNWG1QtP+1aY0N40w==
-X-Received: by 2002:a17:902:ac82:: with SMTP id h2mr7689116plr.300.1594991727927;
-        Fri, 17 Jul 2020 06:15:27 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id ci23sm2872917pjb.29.2020.07.17.06.15.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 06:15:27 -0700 (PDT)
-Subject: Re: [PATCH v3 0/2] two generic block layer fixes for 5.9
-To:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org
-Cc:     martin.petersen@oracle.com, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200717024230.33116-1-colyli@suse.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <679f0d2c-a169-2f71-563b-4d313e57a918@kernel.dk>
-Date:   Fri, 17 Jul 2020 07:15:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vs4AfRAnPExeeuyiR5DGWNr9f7rEdWEHMwAyJzCVFy0=;
+        b=ZWGX8w4NmBbj2N3D7hRkQieGxwhXceWtrH/mutabob9Ki40PpoNBAefd/7mLbLD0oN
+         vg6u7TaNGpAwqLR5BxCFKnY+IW2pJr/seTZDoXsY87WJw/wA0UGgwXK+qJvaA5j73jRy
+         bQsAeoHrW96Ci52C/V1QD0+3q8iWQJ3qoPfm9+uR3LS+M2qC6BKT2te7FHsIEGIK0dy9
+         167KXZzUjNr2FZL2tc4/nMREjY9Kkuz7KjYnIH17iI64X4gY7Jo2/BgB6CR6MIag+Usw
+         lMGk5b/ZfWagXFB7Otl+HrSpUnpM5WD7DBr5rO9jqSl07KWWuFud8QvGxKdATSXsyB9i
+         4pBQ==
+X-Gm-Message-State: AOAM530UTXxz84MOScXw0ldN8KcPXv7FtYZiP5m8HDsNL68IfCz0bbD/
+        FjKBkdj4+2vZefE9LHUEX2MDjgDN
+X-Google-Smtp-Source: ABdhPJyXulweRUs3+pX+8YMzfHldby1Vmk6XsWfpdOE7cWknggpCQHsBXrm55Cf7GiHPKNqz9goA7w==
+X-Received: by 2002:a05:6000:1cf:: with SMTP id t15mr11049470wrx.180.1594991807586;
+        Fri, 17 Jul 2020 06:16:47 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
+        by smtp.googlemail.com with ESMTPSA id y6sm14559922wrr.74.2020.07.17.06.16.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 06:16:47 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v10 2/2] devicetree: bindings: phy: Document ipq806x dwc3 qcom phy
+Date:   Fri, 17 Jul 2020 15:16:32 +0200
+Message-Id: <20200717131635.11076-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200717131635.11076-1-ansuelsmth@gmail.com>
+References: <20200717131635.11076-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200717024230.33116-1-colyli@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/20 8:42 PM, Coly Li wrote:
-> Hi Jens,
-> 
-> These two patches are posted for a while, and have reviewed by several
-> other developers.
-> 
-> Comparing to previous version, now the discard bio alignment patch can
-> correctly handles partition offset as Martin suggested. I verify it
-> with 5.8-rc5 kernel on VMware ESXi 6.5. 
-> 
-> Could you please to take them for Linux v5.9 ?
+Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+inizialize and use usb on ipq806x SoC.
 
-Applied, thanks.
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v7:
+* Drop useless AllOf 
+v6:
+* Add maximum value
+v5:
+* Fix dt_binding_check error
+v4:
+* Add qcom to specific bindings
+v3:
+* Use explicit reg instead of regmap
 
+ .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 55 ++++++++++++++
+ .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 73 +++++++++++++++++++
+ 2 files changed, 128 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+new file mode 100644
+index 000000000000..23887ebe08fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description:
++  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
++  controllers used in ipq806x. Each DWC3 PHY controller should have its
++  own node.
++
++properties:
++  compatible:
++    const: qcom,ipq806x-usb-phy-hs
++
++  "#phy-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: ref
++      - const: xo
++
++required:
++  - compatible
++  - "#phy-cells"
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
++
++    hs_phy_0: phy@110f8800 {
++      compatible = "qcom,ipq806x-usb-phy-hs";
++      reg = <0x110f8800 0x30>;
++      clocks = <&gcc USB30_0_UTMI_CLK>;
++      clock-names = "ref";
++      #phy-cells = <0>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+new file mode 100644
+index 000000000000..fa30c24b4405
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description:
++  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
++  controllers used in ipq806x. Each DWC3 PHY controller should have its
++  own node.
++
++properties:
++  compatible:
++    const: qcom,ipq806x-usb-phy-ss
++
++  "#phy-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: ref
++      - const: xo
++
++  qcom,rx-eq:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Override value for rx_eq.
++    default: 4
++    maximum: 7
++
++  qcom,tx-deamp-3_5db:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Override value for transmit preemphasis.
++    default: 23
++    maximum: 63
++
++  qcom,mpll:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Override value for mpll.
++    default: 0
++    maximum: 7
++
++required:
++  - compatible
++  - "#phy-cells"
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
++
++    ss_phy_0: phy@110f8830 {
++      compatible = "qcom,ipq806x-usb-phy-ss";
++      reg = <0x110f8830 0x30>;
++      clocks = <&gcc USB30_0_MASTER_CLK>;
++      clock-names = "ref";
++      #phy-cells = <0>;
++    };
 -- 
-Jens Axboe
+2.27.0
 
