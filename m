@@ -2,152 +2,102 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D829EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D43C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE9B22067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E226B2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:29:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lnaq3z9k"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tkM8Q4py"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgGQN1C (ORCPT
+        id S1726293AbgGQN3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgGQN1B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:27:01 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19DDAC061755
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:27:01 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id md7so6365511pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:27:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zq4eLLHEPFYePLYsXs6ch0tfK/nwjUC8UEFOw6QoLa4=;
-        b=Lnaq3z9kEZHMV2ApMiDweXrRyPWYk31gywhdPzee8VL9Y1liBih4Qdlsx1mxPcWIo6
-         msRB1swgM/ShishzCGdhje5EFoPZq2aEwMyHoME5q/2aF/2LUVgaMyH1zxpV7anczIVe
-         ffsLlpvh48FxHxgUaCQ0gWER9ya+fyVtXqq2vgbEp5H4fLz65bgzbSutlRqupte0bCN1
-         cwriX2q6wlUg8NzCRvy3SHgAkAVTbzaD+BRmT6Pr0cSpn0WFv6+2Y+VfXeK9Y5QCodQW
-         7sQLVVFXDeAZDj4i8sZa2B/IZZgu4FS1DVOKB7Y0MkKgV698rIJwOT0JrIzQwS8z1ZaT
-         ThVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zq4eLLHEPFYePLYsXs6ch0tfK/nwjUC8UEFOw6QoLa4=;
-        b=t81NLHbLjVa9nP5X6kdSto/YTKXIuHved+9P2WL+Q2ckjYQ/mxb5wChCGWqR9SpeLq
-         P88VL4QGOByJbs4DfnLSGySsJcNdWWAZSQ31A/hG0mg4UvtmQyFK8w6cdrllWk876ikd
-         ZyhblrrEWPglKTYtgivlYJkTuaaSXKp3Z+AGLXlfe/suLPJXtODPYOkAM1cTYXcxhO7J
-         9BFRNy81hnEoqq1FtXXC3tiYJIWiT1j1RcS8sq6hKtAAKUWJKlk/9hRXc3eB6XgMNXrE
-         oCPt4NVvqT2O7VczYhTgyWjZDehLkLvBvd+u8iwnEQ8B9QArRX+B1zilaffLc5C2qZoI
-         JI4A==
-X-Gm-Message-State: AOAM532PnHBG3eWGzgjm3rGBQEs0kepfkR4cNfILufyX41bc9PK1TysW
-        zZRO8trgidrP7HW1SbRICZ4=
-X-Google-Smtp-Source: ABdhPJz+mYdiWoy/UhbS6h4VA5AJY9KMK4o0CTUuYibW3x9Kg9pZURkVluqLVuzmBoFmY82ceB+pkw==
-X-Received: by 2002:a17:902:547:: with SMTP id 65mr7541416plf.191.1594992420594;
-        Fri, 17 Jul 2020 06:27:00 -0700 (PDT)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id d16sm7877616pfo.156.2020.07.17.06.26.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 06:26:59 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 21:26:50 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 03/17] perf ftrace: add option -t/--tid to filter by
- thread id
-Message-ID: <20200717132650.i32oovllal22b35i@mail.google.com>
-References: <20200711124035.6513-1-changbin.du@gmail.com>
- <20200711124035.6513-4-changbin.du@gmail.com>
- <20200716153630.GD374956@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716153630.GD374956@kernel.org>
+        Fri, 17 Jul 2020 09:29:53 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:30134 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgGQN3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:29:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594992591; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=syxYnsEts5Do5jGdb1EtbueYGDiFVWIM3nifipnzhbI=; b=tkM8Q4pyoUG8bzOkAt1kACe3+epjdurhb7dhF8u45PQ0h5WbjqrEOraKsnrdEMmfkrKmEVVx
+ zGnpuhspVtyoeer3VtHLv8jhVTjtjjqPSe4Uc/h1YAji/7bGnY89tfNl6aj+PwaGdUv/Q9Gx
+ NmC0+YwHCL898OMYalLCTxA+Vyc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
+ 5f11a7cf75eeb235f6848dd5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 13:29:51
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7F95AC433C9; Fri, 17 Jul 2020 13:29:50 +0000 (UTC)
+Received: from akhilpo-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akhilpo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D27A9C433C9;
+        Fri, 17 Jul 2020 13:29:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D27A9C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
+From:   Akhil P Oommen <akhilpo@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        smasetty@codeaurora.org, devicetree@vger.kernel.org,
+        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
+        viresh.kumar@linaro.org, jonathan@marek.ca, robdclark@gmail.com,
+        bjorn.andersson@linaro.org
+Subject: [PATCH v6 0/6] Add support for GPU DDR BW scaling
+Date:   Fri, 17 Jul 2020 18:59:33 +0530
+Message-Id: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 12:36:30PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Sat, Jul 11, 2020 at 08:40:21PM +0800, Changbin Du escreveu:
-> > This allows us to trace single thread instead of the whole process.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> >  tools/perf/Documentation/perf-ftrace.txt | 4 ++++
-> >  tools/perf/builtin-ftrace.c              | 2 ++
-> >  2 files changed, 6 insertions(+)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> > index d79560dea19f..e204bf6d50d8 100644
-> > --- a/tools/perf/Documentation/perf-ftrace.txt
-> > +++ b/tools/perf/Documentation/perf-ftrace.txt
-> > @@ -38,6 +38,10 @@ OPTIONS
-> >  --pid=::
-> >  	Trace on existing process id (comma separated list).
-> >  
-> > +-t::
-> > +--tid=::
-> > +	Trace on existing thread id (comma separated list).
-> > +
-> 
-> 
-> Humm, I just  tried:
-> 
-> [root@five ~]# yes > /dev/null &
-> [1] 18265
-> [root@five ~]# perf ftrace --tid 18265
-> ^C[root@five ~]#
-> 
-> After waiting for a while, nothing, what am I doing wrong?
->
-I got it wrong. Currently ftrace only can filter by pid. If the pid is not
-the main thread it won't work.
+This series add support for GPU DDR bandwidth scaling and is based on the
+bindings from Georgi [1]. This is mostly a rebase of Sharat's patches [2] on the
+tip of msm-next branch.
 
-So this patch makes no sense. will drop this.
+[1] https://kernel.googlesource.com/pub/scm/linux/kernel/git/vireshk/pm/+log/opp/linux-next/
+[2] https://patchwork.freedesktop.org/series/75291/
 
-> - Arnaldo
-> 
-> 
-> >  -a::
-> >  --all-cpus::
-> >  	Force system-wide collection.  Scripts run without a <command>
-> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> > index 244cc8e6bd60..1188b82c6541 100644
-> > --- a/tools/perf/builtin-ftrace.c
-> > +++ b/tools/perf/builtin-ftrace.c
-> > @@ -515,6 +515,8 @@ int cmd_ftrace(int argc, const char **argv)
-> >  		    "Show available functions to filter"),
-> >  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
-> >  		   "trace on existing process id"),
-> > +	OPT_STRING('t', "tid", &ftrace.target.tid, "tid",
-> > +		   "trace on existing thread id (exclusive to --pid)"),
-> >  	OPT_INCR('v', "verbose", &verbose,
-> >  		 "be more verbose"),
-> >  	OPT_BOOLEAN('a', "all-cpus", &ftrace.target.system_wide,
-> > -- 
-> > 2.25.1
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+Changes from v5:
+- Added "interconnect-names" property
+
+Changes from v4:
+- Squashed a patch to another one to fix Jonathan's comment
+- Add back the pm_runtime_get_if_in_use() check
+
+Changes from v3:
+- Rebased on top of Jonathan's patch which adds support for changing gpu freq
+through hfi on newer targets
+- As suggested by Rob, left the icc_path intact for pre-a6xx GPUs
+
+Sharat Masetty (6):
+  dt-bindings: drm/msm/gpu: Document gpu opp table
+  drm: msm: a6xx: send opp instead of a frequency
+  drm: msm: a6xx: use dev_pm_opp_set_bw to scale DDR
+  arm64: dts: qcom: SDM845: Enable GPU DDR bw scaling
+  arm64: dts: qcom: sc7180: Add interconnects property for GPU
+  arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU opp
+
+ .../devicetree/bindings/display/msm/gpu.txt        |  28 ++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               |  10 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |  10 ++
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 108 ++++++++++++---------
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h              |   2 +-
+ drivers/gpu/drm/msm/msm_gpu.c                      |   3 +-
+ drivers/gpu/drm/msm/msm_gpu.h                      |   3 +-
+ 7 files changed, 114 insertions(+), 50 deletions(-)
 
 -- 
-Cheers,
-Changbin Du
+2.7.4
+
