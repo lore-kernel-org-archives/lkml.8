@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A010C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1A4C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC7820737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E042721702
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WmxyBLdP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZJrx999g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgGQQ53 (ORCPT
+        id S1727794AbgGQQ4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38570 "EHLO
+        Fri, 17 Jul 2020 12:56:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727815AbgGQQ4R (ORCPT
+        with ESMTP id S1727085AbgGQQ4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:56:17 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A344C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:17 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f18so11931952wrs.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:16 -0700 (PDT)
+        Fri, 17 Jul 2020 12:56:10 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3980C0619D4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:09 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a6so7558846wmm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=u3fyiDGFdlbLNYGeR71nnz3VOwvLrObA2piXc/v38Go=;
-        b=WmxyBLdPFiTMIB9rmrspNDNftuqma7nAEm/9RcMOSzJjAD6D4inZeyskwPmwX//ID1
-         OShWYYXvlSNN4qj0U0acKpFl7lOtvjTsxso+bNYIMiLzRTdfLMGwxcGgpVzjS8IEpKUm
-         Xowpf4oECwAHxwFRyVWwGAevH72O9bR1DZ/huytShBk8GwpB947CDWPSNqFeS4MfQPqM
-         l/hX8yK68gPPR9uQogO9Xow2x3akFFCq42VLZ0RmTJzyYmFkbBd37ORm+y863MZshCgY
-         ZbsAXTLVmyhKDyocDIzGMAUUtGb98XbPdJx3c0uGTY+yRQ2nb+VTKGcX4CQ/AB0ri0xw
-         I3kw==
+        bh=aaAEngpMWZcocEAV7ao9KvOaMLVn8ta5ctXWHocndM4=;
+        b=ZJrx999gJcsSLac1AZ9jE6z8jV20FHjvtuuZDeNZG7HmMiRiV1M2DywOLcnLAFsliW
+         fG+mlXYbAxvnbjjZkWjHuF9BYWR/7wF3kKCap0LZMvllWDGAhHjxxvxOQKqYEr+llUqA
+         NGjfzKwMotju6ppU4nTnZ0p+f8xe6VW8fbuxm+mu0xl9f6Y6LXu2vNQ5CnT2vFx49svh
+         vUd1XaBFV/TrXYr+xcMOpmBojGd8ANfmaU/xCxHv9xNfL+9mlNYne7VyXjDAYOWM1sI6
+         ZG5W9UHH+n2yJf3nXLdLpAC6rmDWlUr25+GdyIS40DPqFWAP68ByyY2LCuBjhNWmyPk1
+         0V3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=u3fyiDGFdlbLNYGeR71nnz3VOwvLrObA2piXc/v38Go=;
-        b=AmPYneOzgSN/PTsTmjd9dEffuk9QX8fgZ/VLQh0SzMRRG+eIjRuW6685yOs6cjqJsj
-         UEZDhZFFHC7vzZ1JFCONvvH0lZxgWdvouzzr95Ku5lkrKJjM0nQ7de/+56OrO83QlPQr
-         0W32y1M4U2G+uP7aUn5aUQdqyxcyCzgIAMCfgJdqKcvPDOz2IxpJmf84McXK/HAsX/qA
-         Iju4tUsttQ6vC+Wr2bioOqocnqItME8YnpRC8X42yS+yNUIU8ZMWBffYncqGy1SNZSMr
-         5AaAB7agGDvQFUmAhmB75AxSm070P6sNtaJNcqQx99GFh/qL94bTaKLNrzaALAe/F1Fb
-         1KRQ==
-X-Gm-Message-State: AOAM532Zt6SlbgzfCrTLxL0g7uh1uZ8O36NwMualq6jhy+7cHu/YuZC3
-        IchCCb+PcqANFS9Wb5M+cIgSaQ==
-X-Google-Smtp-Source: ABdhPJyxGlgmwpdyXgtW7B3rqiCsiz02bfeSDBMqpGeL+5khgX6H2eUvHJBFwak6Kl9QbaLMkwZ5Sg==
-X-Received: by 2002:adf:ef46:: with SMTP id c6mr11237076wrp.34.1595004975766;
-        Fri, 17 Jul 2020 09:56:15 -0700 (PDT)
+        bh=aaAEngpMWZcocEAV7ao9KvOaMLVn8ta5ctXWHocndM4=;
+        b=mE2VJ/9E1xlqN2oDDLD1KreDEB0U3IeWO4oua5iuhSCAM5/qzjbcZuaoR/rtpHbY0F
+         SSLjZQiB/tWZXoJo6nrWpzrsFnQ+zyLOOw4T9H6Ys0bDB8kPeP7uY4vO8NJeCRmR20h2
+         BcDBrG8N60/LasyfEtJfAhBAf/xWyS9kcmLyMveoGkm65FYUwBrYUuTmdJzp9WJBYR6z
+         +tcF6x/fu8KiIjc+k/NVofLGY5hr5U/DJ9gNPECfbAbFH+F5QGHHsaZWunzG6+dkqx6s
+         lD+3PHd+viRgx0AQ06cj/lQpSNmcAo2xUexgO28PeZtFQI2//tjmeeu0+2nb6k5IWleN
+         f3zQ==
+X-Gm-Message-State: AOAM532XEJYOoT7XX9VbxImYqmxqHAFKwQrZGHA8KXr0UaZOmG5cGlMP
+        nCsuaY0nATYO+C4bg2ZKSayRSA==
+X-Google-Smtp-Source: ABdhPJwurLCgsUKBH4m6dcESQTptlhoR0rEHbjcOfc+k2e9gB4ZDfT9hTuuRh6BlyqKKP1waMkjOXA==
+X-Received: by 2002:a7b:cb92:: with SMTP id m18mr9877767wmi.94.1595004968669;
+        Fri, 17 Jul 2020 09:56:08 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.14
+        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 09:56:15 -0700 (PDT)
+        Fri, 17 Jul 2020 09:56:08 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 15/30] iio: adc: cpcap-adc: Demote seemingly unintentional kerneldoc header
-Date:   Fri, 17 Jul 2020 17:55:23 +0100
-Message-Id: <20200717165538.3275050-16-lee.jones@linaro.org>
+        Crt Mori <cmo@melexis.com>
+Subject: [PATCH 09/30] iio: temperature: mlx90632: Function parameter descriptions must match exactly
+Date:   Fri, 17 Jul 2020 17:55:17 +0100
+Message-Id: <20200717165538.3275050-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717165538.3275050-1-lee.jones@linaro.org>
 References: <20200717165538.3275050-1-lee.jones@linaro.org>
@@ -78,78 +78,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-None of the headers demoted here provide any descriptions.
+'*'s are not welcome in kerneldoc parameter names.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/iio/adc/cpcap-adc.c:100: warning: Function parameter or member 'ato_in' not described in 'cpcap_adc_ato'
- drivers/iio/adc/cpcap-adc.c:100: warning: Function parameter or member 'atox_in' not described in 'cpcap_adc_ato'
- drivers/iio/adc/cpcap-adc.c:100: warning: Function parameter or member 'adc_ps_factor_in' not described in 'cpcap_adc_ato'
- drivers/iio/adc/cpcap-adc.c:100: warning: Function parameter or member 'atox_ps_factor_in' not described in 'cpcap_adc_ato'
- drivers/iio/adc/cpcap-adc.c:100: warning: Function parameter or member 'ato_out' not described in 'cpcap_adc_ato'
- drivers/iio/adc/cpcap-adc.c:100: warning: Function parameter or member 'atox_out' not described in 'cpcap_adc_ato'
- drivers/iio/adc/cpcap-adc.c:100: warning: Function parameter or member 'adc_ps_factor_out' not described in 'cpcap_adc_ato'
- drivers/iio/adc/cpcap-adc.c:100: warning: Function parameter or member 'atox_ps_factor_out' not described in 'cpcap_adc_ato'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_AD0' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_BATTP' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_VBUS' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_AD3' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_BPLUS_AD4' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_CHG_ISENSE' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_BATTI' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_USB_ID' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_AD8' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_AD9' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_LICELL' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_HV_BATTP' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_TSX1_AD12' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_TSX2_AD13' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_TSY1_AD14' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_TSY2_AD15' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_BATTP_PI16' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_BATTI_PI17' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:153: warning: Enum value 'CPCAP_ADC_CHANNEL_NUM' not described in enum 'cpcap_adc_channel'
- drivers/iio/adc/cpcap-adc.c:165: warning: Enum value 'CPCAP_ADC_TIMING_IMM' not described in enum 'cpcap_adc_timing'
- drivers/iio/adc/cpcap-adc.c:165: warning: Enum value 'CPCAP_ADC_TIMING_IN' not described in enum 'cpcap_adc_timing'
- drivers/iio/adc/cpcap-adc.c:165: warning: Enum value 'CPCAP_ADC_TIMING_OUT' not described in enum 'cpcap_adc_timing'
+ drivers/iio/temperature/mlx90632.c:175: warning: Function parameter or member 'data' not described in 'mlx90632_perform_measurement'
 
-Cc: Tony Lindgren <tony@atomide.com>
+Cc: Crt Mori <cmo@melexis.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/iio/adc/cpcap-adc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/iio/temperature/mlx90632.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/cpcap-adc.c b/drivers/iio/adc/cpcap-adc.c
-index 5086a337f4c9a..be638fcec03f6 100644
---- a/drivers/iio/adc/cpcap-adc.c
-+++ b/drivers/iio/adc/cpcap-adc.c
-@@ -82,7 +82,7 @@
+diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
+index eaca6ba068646..b9a8089be3f63 100644
+--- a/drivers/iio/temperature/mlx90632.c
++++ b/drivers/iio/temperature/mlx90632.c
+@@ -164,8 +164,8 @@ static s32 mlx90632_pwr_continuous(struct regmap *regmap)
+ }
  
- #define CPCAP_ADC_MAX_RETRIES		5	/* Calibration */
- 
--/**
-+/*
-  * struct cpcap_adc_ato - timing settings for cpcap adc
+ /**
+- * mlx90632_perform_measurement - Trigger and retrieve current measurement cycle
+- * @*data: pointer to mlx90632_data object containing regmap information
++ * mlx90632_perform_measurement() - Trigger and retrieve current measurement cycle
++ * @data: pointer to mlx90632_data object containing regmap information
   *
-  * Unfortunately no cpcap documentation available, please document when
-@@ -121,7 +121,7 @@ struct cpcap_adc {
- 	bool done;
- };
- 
--/**
-+/*
-  * enum cpcap_adc_channel - cpcap adc channels
-  */
- enum cpcap_adc_channel {
-@@ -152,7 +152,7 @@ enum cpcap_adc_channel {
- 	CPCAP_ADC_CHANNEL_NUM,
- };
- 
--/**
-+/*
-  * enum cpcap_adc_timing - cpcap adc timing options
-  *
-  * CPCAP_ADC_TIMING_IMM seems to be immediate with no timings.
+  * Perform a measurement and return latest measurement cycle position reported
+  * by sensor. This is a blocking function for 500ms, as that is default sensor
 -- 
 2.25.1
 
