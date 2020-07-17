@@ -2,77 +2,156 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F68C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F0020684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC72620684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:12:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pN+iEkbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgGQJLO (ORCPT
+        id S1726238AbgGQJM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:11:14 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:32769 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgGQJLM (ORCPT
+        Fri, 17 Jul 2020 05:12:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgGQJM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:11:12 -0400
-Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 545E4100016;
-        Fri, 17 Jul 2020 09:11:05 +0000 (UTC)
-Date:   Fri, 17 Jul 2020 11:11:05 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 03/19] clk: at91: clk-sam9x60-pll: fix mul mask
-Message-ID: <20200717091105.GK3428@piout.net>
-References: <1594812267-6697-1-git-send-email-claudiu.beznea@microchip.com>
- <1594812267-6697-4-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 17 Jul 2020 05:12:27 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BFC6C061755;
+        Fri, 17 Jul 2020 02:12:27 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l23so310459qkk.0;
+        Fri, 17 Jul 2020 02:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GnonKWI30rguXS7h1YA4tqQthfNBF8/h7qxKFP7NCi8=;
+        b=pN+iEkbKtmtWOS1dFVEJxVYGvO6Nv3DJxZ2rcKhy2el36Lo2M2637mw/46dCxCHNIW
+         TPhRPgJUaJND4/d2lfuHCgJawl1BZnE2N/Hczsun4G2e0Skaqa/mO7JtCZBwC3X+Bkwc
+         ivPyM6GgChG/9O464ICajuDpJjM65TvQrjnJygIgXnXmwAWV1rSx8OppUb7pDLkpJKNv
+         kY735v+9f105rpSvNnA/BFNLcwHKI7AVTTQwuAVJB1n5uK1DSGYvwp5W3+oz35VybHDy
+         1eLFZkjaKl4xULjNOzpLVLnpEWaqqQ046yVXcLrJ7pN2O2tkK9gL7jmiGoSs/m65+Y8E
+         es+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GnonKWI30rguXS7h1YA4tqQthfNBF8/h7qxKFP7NCi8=;
+        b=q6m0tJ/r+nZHZVqMJ3fTA53wmUfX6H4iGsvyGHfpECLyTj9o4OZYuvvM+MNU3atZVm
+         HwB3UDxwmxqrBcXnE5I/Eeltxnpx/Pxh3rSTVF9iVtHEhdFj5gkSPd0lwBr6DSugtDP+
+         ApTW7hfIvwxUURYsp2GQJXYb05Y3zo6LE/cotf9o6HplllOpF0JBCLnL2ylYrq/kHuOX
+         KBEQHfOYO6beRxbo/Z+3xp0K+0Ta3uSCZ5H5MJHgtEytdr2zvaMtRpwmFlvWzb/Vjcqn
+         Iu+ZXDXaxJN2VE9PvgfZLXIQFB5H9i7z0mi/U7HG5aqO4TfC8sr1zRi0EOlUAMYTIcJ+
+         9a/w==
+X-Gm-Message-State: AOAM530ghUKdat4AhpPYrZ9oxMrtCmjqBdqxj/vqefOIB4Fz5SYIi8eG
+        Hcy+kWUT2q9KImCniFeRXEa6YjrX5Vt5nSfFVfk=
+X-Google-Smtp-Source: ABdhPJwmbE7fIST0ir+FIiy8ZXFYqX5dhV/83uc8D0YuefqFKwDvOAb6dqbKFeID4IrE+dQsoSmmK/rQBrf4jDDZsyM=
+X-Received: by 2002:a37:a785:: with SMTP id q127mr8092807qke.452.1594977146715;
+ Fri, 17 Jul 2020 02:12:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594812267-6697-4-git-send-email-claudiu.beznea@microchip.com>
+References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <332d620b-bfe3-3b69-931b-77e3a74edbfd@suse.cz> <CAAmzW4NbG0fCtU2mV83pRamUeOEqKKxGTpQK2zuDxzmoF2FVrg@mail.gmail.com>
+ <6f18d999-4518-31ce-4cea-9b5b89a577ad@suse.cz> <CAAmzW4MLc8bmkYW1q1fL_WRFQHksX-oy9tS-s9Kb-A=ZEeGETQ@mail.gmail.com>
+ <5a8b13d5-da40-7b1b-2968-e6701001cc0e@suse.cz> <c2edfd71-eee5-3d73-a9ee-0c384a3440be@suse.cz>
+In-Reply-To: <c2edfd71-eee5-3d73-a9ee-0c384a3440be@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 17 Jul 2020 18:12:15 +0900
+Message-ID: <CAAmzW4PSUsuK4G4mSReksnrj7wq1do=yY=VfvZVMQd-ghwcVKQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] mm/page_alloc: fix non cma alloc context
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/2020 14:24:11+0300, Claudiu Beznea wrote:
-> According to datasheet mul mask is on bits 31..24.
-> 
-> Fixes: a436c2a447e59 ("clk: at91: add sam9x60 PLL driver")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+2020=EB=85=84 7=EC=9B=94 17=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 5:15, V=
+lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On 7/17/20 10:10 AM, Vlastimil Babka wrote:
+> > On 7/17/20 9:29 AM, Joonsoo Kim wrote:
+> >> 2020=EB=85=84 7=EC=9B=94 16=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 4:=
+45, Vlastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+> >>>
+> >>> On 7/16/20 9:27 AM, Joonsoo Kim wrote:
+> >>> > 2020=EB=85=84 7=EC=9B=94 15=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84=
+ 5:24, Vlastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
+=B1:
+> >>> >> >  /*
+> >>> >> >   * get_page_from_freelist goes through the zonelist trying to a=
+llocate
+> >>> >> >   * a page.
+> >>> >> > @@ -3706,6 +3714,8 @@ get_page_from_freelist(gfp_t gfp_mask, uns=
+igned int order, int alloc_flags,
+> >>> >> >       struct pglist_data *last_pgdat_dirty_limit =3D NULL;
+> >>> >> >       bool no_fallback;
+> >>> >> >
+> >>> >> > +     current_alloc_flags(gfp_mask, &alloc_flags);
+> >>> >>
+> >>> >> I don't see why to move the test here? It will still be executed i=
+n the
+> >>> >> fastpath, if that's what you wanted to avoid.
+> >>> >
+> >>> > I want to execute it on the fastpath, too. Reason that I moved it h=
+ere
+> >>> > is that alloc_flags could be reset on slowpath. See the code where
+> >>> > __gfp_pfmemalloc_flags() is on. This is the only place that I can a=
+pply
+> >>> > this option to all the allocation paths at once.
+> >>>
+> >>> But get_page_from_freelist() might be called multiple times in the sl=
+owpath, and
+> >>> also anyone looking for gfp and alloc flags setup will likely not exa=
+mine this
+> >>> function. I don't see a problem in having it in two places that alrea=
+dy deal
+> >>> with alloc_flags setup, as it is now.
+> >>
+> >> I agree that anyone looking alloc flags will miss that function easily=
+. Okay.
+> >> I will place it on its original place, although we now need to add one
+> >> more place.
+> >> *Three places* are gfp_to_alloc_flags(), prepare_alloc_pages() and
+> >> __gfp_pfmemalloc_flags().
+> >
+> > Hm the check below should also work for ALLOC_OOM|ALLOC_NOCMA then.
+> >
+> > /* Avoid allocations with no watermarks from looping endlessly */
+> >    if (tsk_is_oom_victim(current) &&
+> >         (alloc_flags =3D=3D ALLOC_OOM ||
+> >          (gfp_mask & __GFP_NOMEMALLOC)))
+> >             goto nopage;
+> >
+> > Maybe it's simpler to change get_page_from_freelist() then. But documen=
+t well.
+>
+> But then we have e.g. should_reclaim_retry() which calls __zone_watermark=
+_ok()
+> where ALLOC_CMA plays a role too, so that means we should have alloc_mask=
+ set up
+> correctly wrt ALLOC_CMA at the __alloc_pages_slowpath() level...
 
-> ---
->  drivers/clk/at91/clk-sam9x60-pll.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/at91/clk-sam9x60-pll.c b/drivers/clk/at91/clk-sam9x60-pll.c
-> index e699803986e5..3522eae2edd6 100644
-> --- a/drivers/clk/at91/clk-sam9x60-pll.c
-> +++ b/drivers/clk/at91/clk-sam9x60-pll.c
-> @@ -15,7 +15,7 @@
->  #include "pmc.h"
->  
->  #define	PMC_PLL_CTRL0_DIV_MSK	GENMASK(7, 0)
-> -#define	PMC_PLL_CTRL1_MUL_MSK	GENMASK(30, 24)
-> +#define	PMC_PLL_CTRL1_MUL_MSK	GENMASK(31, 24)
->  
->  #define PLL_DIV_MAX		(FIELD_GET(PMC_PLL_CTRL0_DIV_MSK, UINT_MAX) + 1)
->  #define UPLL_DIV		2
-> -- 
-> 2.7.4
-> 
+Good catch! Hmm... Okay. It would be necessarily handled in three places.
+I will fix it on the next version. Anyway, we need some clean-up about
+alloc_flags
+handling since it looks not good for maintenance.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks.
