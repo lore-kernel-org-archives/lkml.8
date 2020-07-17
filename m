@@ -6,179 +6,312 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69656C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63822C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F02A20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D15020717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Uhw94F6O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pvOFioq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgGQMMm (ORCPT
+        id S1726530AbgGQMNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51122 "EHLO
+        Fri, 17 Jul 2020 08:13:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgGQMMl (ORCPT
+        with ESMTP id S1726221AbgGQMNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:12:41 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEF5C08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:12:41 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id a9so1800620oof.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:12:41 -0700 (PDT)
+        Fri, 17 Jul 2020 08:13:50 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E084C08C5C0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:13:50 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id d17so12354907ljl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:13:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mgpqIN79nCOfCVhNvxr/rGM/YK4i7u/VPV1BFAAPJaw=;
-        b=Uhw94F6OVAquHONB+Evcb0benKNMjZ/MuPp98SVYNLV2GJt53ooUMfBAgndPGC/Qm/
-         DGszdD1dYLOu+W8JqPU+WicbVUR7AVolKq+qDk6I1756ULeegD1oTd8rDhgdkhshGo4+
-         I41Om38utJXWyZIpzRceOjNvGEbRcD0t3Ux0g=
+        bh=m+566Qxe8xLpZYuIAeEotENLU/owOwRk0Ws9igzBFPE=;
+        b=pvOFioq78vIQofTZ3Xa93xWa53tEpSh8YM1oHHkyoi41CmBpbgxeGQNQAJlaNypsEn
+         8owZRKEZckWPQlJRIjUFnGdFdeHJP9p6Eu4DgwjoPtyD7uhT2vfGfPdQzsMLKzz7Jhkq
+         SiD25NiHeF6nnLVlbTk3jdj4eYtHidkHdTkl5DmmrB2O/LH9Z9w+pwDHxoxGz5Q3FomE
+         Ox80j0lZmKElgdQrm5qtf3fxb+hltd2dFGih6n7jm09PRZYHw+2oTO6ZmocNwDnQ0QTO
+         pqsGTzo+DVVLsL436hSd0k3If7XLY+MZSpvyuQQJE0kRsXsRnGxcmplfn8nPxr7+OT92
+         l0+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mgpqIN79nCOfCVhNvxr/rGM/YK4i7u/VPV1BFAAPJaw=;
-        b=sr1x8EGx9Q0M0JEVJgi4RlRQojVrD0QTtJ2FYzVDvE4NYsLZ55AURBUpUGIshIjmWW
-         YoNvfPw8enAN8DDgo6ouQrcEV/Ez5q/hDzuTBRwY7E75+DdPNzs5kcZ5ZiWbPyOH0+DF
-         h8fgQ+FZiMEdKIGJ5qpif1uJffFGmHu5LoR/U2kPZ8sxWlKVBbsRapn1hH75ssh7OKQy
-         ZLXYVW3wSKXFRHGlUfJOf9GUVCv9amEcxl2f4Ghwm+q6/dgrvOPlS++dRfCQrbgFLiAr
-         e0B7AzY3eRUnfZ3UpdBiO5pio0vDj2IPWxHtQQhsVkOwJMybuMvnnYfOI6s/fZweO2L3
-         SQuQ==
-X-Gm-Message-State: AOAM531j7YtjmPCEtHOnGocxAaQM3UZSMWh4Y0SQPdI/DRp3s7bvhKtB
-        SEz22PHbU3FKm6biXKjwfNa3ziBKq9dpzxw8fmNAFQ==
-X-Google-Smtp-Source: ABdhPJxPDHhBpPwBRT60SUcGdNpykcqlU/t2dXosfVIoY0zbR9Y3+4Q/RU03XCNfEWTJvup70SmMtilH0FFLnJBsJTs=
-X-Received: by 2002:a4a:b6c5:: with SMTP id w5mr8159004ooo.89.1594987960413;
- Fri, 17 Jul 2020 05:12:40 -0700 (PDT)
+        bh=m+566Qxe8xLpZYuIAeEotENLU/owOwRk0Ws9igzBFPE=;
+        b=g6CZlqxjRpio10sEfos99PWeTe27aPoyDORKS6RHVmMceMrYq0lEpMj6bgyT3OCoVX
+         8uI6CR5n6vhGsYPmt/cLZbzVuse28mBrM2HRhK43aCxDzrP5hVIQRQvRAs9U/DMx4GTt
+         6vqBu68hLmsIvYPXM6rLNfxMQgxaR6r8vnJZ/bPIuaSFDuwEpJugl50psUm087xS2ExQ
+         Ia3Q9JmfdbUG4veVCrs7sX9H29Us1Dshd2gjknFmFjeewH5YIjgIbk2V7XG0YfPZY8QQ
+         ggotjle7xFpIREsEFh9dz0jqJQF2eSy0yEEizMol1CCFiP0TR9SOWWyBAklCN6d8IZcA
+         OlnQ==
+X-Gm-Message-State: AOAM533jPkjWorFhKbZAgp3G1lWtwXQvyJXEY1Zqbdc2drn7CNpVG+Jr
+        ILdxzVzzjDAuIBpdkBznhGZZ3GvypkUpIl44NzvCQA==
+X-Google-Smtp-Source: ABdhPJxokb53W3kdYSC5RxAZ2T6HvIIzmFF8CcwlR3Fa7w3F7RfWAM1Z8lzyHUJVc6sFmkBg8wERXPKc5p6UmmkVHqM=
+X-Received: by 2002:a05:651c:512:: with SMTP id o18mr4669895ljp.226.1594988028732;
+ Fri, 17 Jul 2020 05:13:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
- <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
- <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
- <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
- <20200717092758.GR3278063@phenom.ffwll.local> <20200717094517.layssf75bxe3ijs4@fsr-ub1864-141>
- <c325bee7980feb3564de05a0a6d15c1708e2c7c0.camel@pengutronix.de>
-In-Reply-To: <c325bee7980feb3564de05a0a6d15c1708e2c7c0.camel@pengutronix.de>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 17 Jul 2020 14:12:29 +0200
-Message-ID: <CAKMK7uGQbgB_w3-j1GzZdS0ZcqgQc+LZZxSUbBWeEz_vYf4nJQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller Subsystem
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        lukas@mntmn.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <cover.1594707424.git.viresh.kumar@linaro.org> <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
+ <20200716115605.GR10769@hirez.programming.kicks-ass.net> <681fb3e8-d645-2558-38de-b39b372499de@arm.com>
+ <CAKfTPtA+BPegK2h6PQMFs+p4dpxO+sk1FDQuOfJvSpGCJ-rBrA@mail.gmail.com> <cd0749b3-75a1-3cd2-b6d7-d6e9c08acf75@arm.com>
+In-Reply-To: <cd0749b3-75a1-3cd2-b6d7-d6e9c08acf75@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 17 Jul 2020 14:13:36 +0200
+Message-ID: <CAKfTPtDz1W9i1xET4yvf0pqCEFWx7BxN=Vsn18xCj37XWjsqug@mail.gmail.com>
+Subject: Re: [PATCH 2/2] thermal: cpufreq_cooling: Reuse effective_cpu_util()
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Quentin Perret <qperret@google.com>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:51 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+On Fri, 17 Jul 2020 at 12:30, Lukasz Luba <lukasz.luba@arm.com> wrote:
 >
-> Am Freitag, den 17.07.2020, 12:45 +0300 schrieb Laurentiu Palcu:
-> > Hi Lukas and Daniel,
-> >
-> > On Fri, Jul 17, 2020 at 11:27:58AM +0200, Daniel Vetter wrote:
-> > > On Fri, Jul 17, 2020 at 11:12:39AM +0200, Lucas Stach wrote:
-> > > > Am Freitag, den 17.07.2020, 10:59 +0200 schrieb Daniel Vetter:
-> > > > > On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
-> > > > > > Hi Laurentiu,
-> > > > > >
-> > > > > > Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
-> > > > > > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > > > > > >
-> > > > > > > Hi,
-> > > > > > >
-> > > > > > > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> > > > > > > includes only graphics plane support (no video planes), no HDR10 capabilities,
-> > > > > > > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> > > > > > >
-> > > > > > > Support for the rest of the features will be added incrementally, in subsequent
-> > > > > > > patches.
-> > > > > > >
-> > > > > > > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> > > > > > > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
-> > > > > >
-> > > > > > I think the series (minus 3/5 and minor correction to the DT binding)
-> > > > > > is fine to go in now. So just some formal questions: are you going to
-> > > > > > maintain this driver in upstream? If so we should add a MAINTAINERS
-> > > > > > entry to that effect. I can offer to act as a reviewer in this case.
-> >
-> > I can maintain the DCSS driver, sure, and the more reviewers the better.
-> > Thanks for helping out with this. Should I send a v6 then with a patch
-> > for MAINTAINERS?
-> >
-> > > > > > How do you intend to merge this? IMO pushing this through drm-misc
-> > > > > > seems like the right thing to do. If you agree I can help you get this
-> > > > > > applied. If you are going to maintain the driver on your own, I think
-> > > > > > you should then apply for commit rights to drm-misc.
-> > > > >
-> > > > > drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
-> > > > > should put the entire collective of imx drivers under drm-misc? Or
-> > > > > maybe it's just an oversight that the git repo isn't specified in the
-> > > > > MAINTAINERS entry. Also maybe we should add the pengutronix kernel
-> > > > > team alias there too?
-> > > >
-> > > > drm/imx was exclusively the IPUv3 up until now, which is in fact
-> > > > maintained outside of drm-misc in its own git tree. This has worked
-> > > > quite well in the past so even though IPUv3 doesn't see a lot of churn
-> > > > these days the motivation to change anything to this workflow is quite
-> > > > low. And yes, the git tree is missing from the MAINTAINERS entry.
-> > > >
-> > > > For the DCSS driver, if it's going to be maintained by NXP, I figured
-> > > > it might be easier for Laurentiu to push things into drm-misc than set
-> > > > up a separate public git tree. But IMHO that's fully up to him to
-> > > > decide.
-> > >
-> > > /me puts on maintainer hat
-> > >
-> > > Much prefer drm-misc over random people playing maintainer and fumbling
-> > > it. I think the reasonable options are either in the current imx tree, or
-> > > drm-misc. Standalone tree for these small drivers just doesn't make much
-> > > sense.
-> >
-> > I don't have anything against either method, though I have to agree I
-> > like things to be simple. Going through drm-misc sounds simple enough to me. :)
-> > However, since there is going to be more activity in the DRM IMX area in
-> > the future, reviving the drm/imx tree, and push all IMX related stuff
-> > through drm/imx, could make sense as well.
 >
-> I think drm-misc is the right place then.
 >
-> Please send a v6 with the following changes:
-> - drop the component framework patch
-> - drop the i.MX8MQ DT patch, this should go through Shawn's imx tree
-> after the driver and binding has landed in drm-misc
-> - you can add my Reviewed-by to the whole series or I can add it when
-> applying
-> - add a MAINTAINERS entry, please add me as a reviewer if you don't
-> mind
+> On 7/17/20 10:46 AM, Vincent Guittot wrote:
+> > On Thu, 16 Jul 2020 at 16:24, Lukasz Luba <lukasz.luba@arm.com> wrote:
+> >>
+> >> Hi Peter,
+> >>
+> >> Thank you for summarizing this. I've put my comments below.
+> >>
+> >> On 7/16/20 12:56 PM, Peter Zijlstra wrote:
+> >>> On Tue, Jul 14, 2020 at 12:06:53PM +0530, Viresh Kumar wrote:
+> >>>>    /**
+> >>>> + * get_load() - get current load for a cpu
+> >>>>     * @cpufreq_cdev:  &struct cpufreq_cooling_device for this cpu
+> >>>>     * @cpu:   cpu number
+> >>>> + * @cpu_idx:        index of the cpu
+> >>>>     *
+> >>>> + * Return: The current load of cpu @cpu in percentage.
+> >>>>     */
+> >>>>    static u32 get_load(struct cpufreq_cooling_device *cpufreq_cdev, int cpu,
+> >>>>                   int cpu_idx)
+> >>>>    {
+> >>>> +    unsigned long util = cpu_util_cfs(cpu_rq(cpu));
+> >>>> +    unsigned long max = arch_scale_cpu_capacity(cpu);
+> >>>>
+> >>>> +    util = effective_cpu_util(cpu, util, max, ENERGY_UTIL, NULL);
+> >>>> +    return (util * 100) / max;
+> >>>>    }
+> >>>
+> >>> So there's a number of things... let me recap a bunch of things that
+> >>> got mentioned on IRC earlier this week and then continue from there..
+> >>>
+> >>> So IPA* (or any other thermal governor) needs energy estimates for the
+> >>> various managed devices, cpufreq_cooling, being the driver for the CPU
+> >>> device, needs to provide that and in return receives feedback on how
+> >>> much energy it is allowed to consume, cpufreq_cooling then dynamically
+> >>> enables/disables OPP states.
+> >>
+> >> Currently, only IPA uses the power estimation, other governors don't
+> >> use these API functions in cpufreq_cooling.
+> >>
+> >>>
+> >>> There are actually two methods the thermal governor will use:
+> >>> get_real_power() and get_requested_power().
+> >>>
+> >>> The first isn't used anywhere in mainline, but could be implemented on
+> >>> hardware that has energy counters (like say x86 RAPL).
+> >>
+> >> The first is only present as callback for registered devfreq cooling,
+> >> which is registered by devfreq driver. If that driver provides the
+> >> get_real_power(), it will be called from get_requested_power().
+> >> Thus, it's likely that IPA would get real power value from HW.
+> >>
+> >> I was planning to add it also to cpufreq_cooling callbacks years
+> >> ago...
+> >>
+> >>>
+> >>> The second attempts to guesstimate power, and is the subject of this
+> >>> patch.
+> >>>
+> >>> Currently cpufreq_cooling appears to estimate the CPU energy usage by
+> >>> calculating the percentage of idle time using the per-cpu cpustat stuff,
+> >>> which is pretty horrific.
+> >>
+> >> Even worse, it then *samples* the *current* CPU frequency at that
+> >> particular point in time and assumes that when the CPU wasn't idle
+> >> during that period - it had *this* frequency...
+> >
+> > So there is 2 problems in the power calculation of cpufreq cooling device :
+> > - How to get an accurate utilization level of the cpu which is what
+> > this patch is trying to fix because using idle time is just wrong
+> > whereas scheduler utilization is frequency invariant
+> > - How to get power estimate from this utilization level. And as you
+> > pointed out, using the current freq which is not accurate.
 >
-> I can push this initial series into drm-misc until you've got your own
-> commit rights.
+>
+>
+>
+> >
+> >>
+> >>>
+> >>> This patch then attempts to improve upon that by using the scheduler's
+> >>> cpu_util(ENERGY_UTIL) estimate, which is also used to select OPP state
+> >>> and improves upon avg idle. This should be a big improvement as higher
+> >>
+> >> IMHO this patch set doesn't address the real problem: 'sampling
+> >> freq problem' described above. There was no issue with getting idle
+> >> period. The avg freq was the problem, in that period when the
+> >
+> > Not sure that you can say that avg freq is a bigger problem than
+> > getting the load because there is a real issue with tracking idle
+> > period for estimating load because running slower reduces the idle
+> > time and increases artificially the load. That's why we implemented
+> > frequency invariance in PELT.
+>
+> If you take a closer look into the code, you see that wrong
+> freq picks the wrong power value from the EM, the line:
+> freq = cpufreq_quick_get(policy->cpu)
+> then check the function cpu_freq_to_power().
+> The power is calculated by:
+>   (raw_cpu_power * cpufreq_cdev->last_load) / 100
+>
+> The load estimation error is also an issue, but the comprehensive
+> solution should address possibly all existing issues.
+>
+> I don't know if you were approached also by the same vendor,
+> complaining on IPA issues. Do you have some requirements? Or deadlines,
+> for which kernel version you have to fix it?
 
-For drm-misc howto get started:
+No, I don't have vendors complaining for IPA.
+This patch is just because there because tracking idle time is known
+to be wrong whereas sched_util gives a better estimation of the
+current/next utilization and as a result a better estimation of the
+power that will be consumed
 
-https://drm.pages.freedesktop.org/maintainer-tools/getting-started.html
+> We can discuss this out offline if you like.
+>
+> >
+> > At the opposite when the thermal mitigation happens, the frequency
+> > will be most probably capped by cpu cooling device and will most
+> > probably stay at the capped value
+>
+> I don't think that we can rely on such assumption. The whole
 
-And howto get commit rights:
+I'm not sure that it's that bad although I fully agree that it's not
+perfect or maybe good enough.
+The scheduler's utilization is already used to select the cpu
+frequency. In an ideal world, it is not expected to change according
+to current information so using scheduler utilization and current
+freq, which has been also set based on the current knowledge of the
+utilization of the cpu, should not be that bad. More than what
+happened during the last period, we try to estimate what will happen
+during the next one in this case.
 
-https://drm.pages.freedesktop.org/maintainer-tools/commit-access.html
+Trying to track accurately the energy/power consumed over the last
+period (with idle events and freq changes) is not that useful in this
+case and especially because of task migration and other scheduler's
+activities that will make previous period tracking obsolete where
+scheduler utilization takes that into account. Such accurate
+power/energy tracking is useful if you want to cap the power
+consumption of the devices in framework like powercap when HW can't do
+it by itself but in this case you are woring at a different time scale
 
-Once you have the fd.o bug report to request commit rights pls paste
-it here so we can get the ack from drm-misc maintainers.
-
-Cheers, Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> cpufreq_get_requested_power() should be changed.
+>
+> >
+> >> CPUs were running. The model implemented in alg was also a problem.
+> >>
+> >> The whole period (e.g. CPU freqs which were used or idle state)
+> >>
+> >> ^(CPU freq)
+> >> |
+> >> |                            sampling the current freq
+> >> |                _______        |
+> >> |               |      |        |
+> >> |________       |      |        |
+> >> |       |       |      |        |
+> >> |       | idle  |      |________v________...
+> >> |_ _____|_______|__________________________> (time)
+> >>     start of period               end
+> >>     |<------- (typically 100ms)-->|
+> >>
+> >>
+> >>
+> >>> frequency consumes more energy, but should we not also consider that:
+> >>>
+> >>>        E = C V^2 f
+> >>>
+> >>> The EAS energy model has tables for the OPPs that contain this, but in
+> >>> this case we seem to be assuming a linear enery/frequency curve, which
+> >>> is just not the case.
+> >>
+> >> I am not sure if I got your point. To understand your point better
+> >> I think some drawing would be required. I will skip this patch
+> >> and old mainline code and focus on your proposed solution
+> >> (because this patch set does not address 'sampling freq problem').
+> >>
+> >>>
+> >>> I suppose we could do something like **:
+> >>>
+> >>>        100 * util^3 / max^3
+> >>>
+> >>> which assumes V~f.
+> >>
+> >> In EM we keep power values in the array and these values grow
+> >> exponentially. Each OPP has it corresponding
+> >>
+> >> P_x = C (V_x)^2 f_x    , where x is the OPP id thus corresponding V,f
+> >>
+> >> so we have discrete power values, growing like:
+> >>
+> >> ^(power)
+> >> |
+> >> |
+> >> |                          *
+> >> |
+> >> |
+> >> |                       *
+> >> |                       |
+> >> |                   *   |
+> >> |                       | <----- power estimation function
+> >> |            *          |        should not use linear 'util/max_util'
+> >> |   *                   |        relation here *
+> >> |_______________________|_____________> (freq)
+> >>      opp0     opp1  opp2 opp3 opp4
+> >>
+> >> What is the problem
+> >> First:
+> >> We need to pick the right Power from the array. I would suggest
+> >> to pick the max allowed frequency for that whole period, because
+> >> we don't know if the CPUs were using it (it's likely).
+> >> Second:
+> >> Then we have the utilization, which can be considered as:
+> >> 'idle period & running period with various freq inside', lets
+> >> call it avg performance in that whole period.
+> >> Third:
+> >> Try to estimate the power used in that whole period having
+> >> the avg performance and max performance.
+> >
+> > We already have a function that is doing such kind of computation
+> > based of the utilization of the CPU : em_pd_energy(). And we could
+> > reuse some of this function if not exactly this one
+>
+> Yes and I think we should use this information. I am going to
+> talk with Daniel about EM evolution (this is one of the topics
+> from my side). Next, it is going to be a LPC event, where we
+> can also discuss with broader audience.
+>
+> Regards,
+> Lukasz
+>
