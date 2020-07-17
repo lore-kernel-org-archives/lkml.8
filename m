@@ -2,147 +2,110 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568A3C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97F5C20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:36:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595010974;
-	bh=6IhYIKmVZDeZrypbI87Kz8pgaQhaQha5rJV8Ik5J7bk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OUzI3PEhPv+p3r6cLzP2niS7f9Qt/OoihM4uinEmxZB2xZELVlGpWf1x/uCHKs4wF
-	 06+av8+YyWEDBxApgagA4vL6b1RwbxFY5k1HqbrzIPDC4Rxxmz4XlyLdA8+bqoueEX
-	 4h+QkLKqqWBim9JESL048fn7L17hXU/eamuXnwqg=
+	by mail.kernel.org (Postfix) with ESMTP id 364B22076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QlHU8kpF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Nj+OjvE2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGQSgN (ORCPT
+        id S1727821AbgGQShy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:36:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbgGQSgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:36:13 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38FFD21702;
-        Fri, 17 Jul 2020 18:36:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595010972;
-        bh=6IhYIKmVZDeZrypbI87Kz8pgaQhaQha5rJV8Ik5J7bk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=s6sCGYdNX1R9qYXHHidspLXuFmtNrCsbL2kIbUlxAtc26Ua7C0ChuGqSMrMxcE/Q+
-         6R3kR+qo1eQ0iYYDZl4fMNgTUOl7lQplKoP3nbgBhX//diF+tyyahGvPnveim25CdD
-         lam63/GQ/3vp0/VXdRFp6dtfix15TcFPGvmcIEkQ=
-Received: by mail-ot1-f54.google.com with SMTP id 5so7518586oty.11;
-        Fri, 17 Jul 2020 11:36:12 -0700 (PDT)
-X-Gm-Message-State: AOAM532ccMUB4I4bDaCcANMdFqCID3aqLE4EdwqVDSHuIUfU19qaeaMx
-        wOI+Ng6jQ9/cneSIIK6OwO6loVCxdhtgSQPM6g==
-X-Google-Smtp-Source: ABdhPJwvWVISrMjnm+UoMBRoocoox6vjA7uZZ0i4pJ9VBySQKqf+ek0xvhn+opfsWguYonw/q0Q7Q/bIE/Tx5LV1iO8=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr10161318ots.192.1595010971464;
- Fri, 17 Jul 2020 11:36:11 -0700 (PDT)
+        Fri, 17 Jul 2020 14:37:54 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42418 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgGQShx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:37:53 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595011072;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pcE5z9+Sra7MEy1EdgVToG0hJlja1wBJ+TAiPeOSSYs=;
+        b=QlHU8kpFaNTx/dWooNhid0nWD0bCO28vnptZib5TBUvZwxuTVtrCpouWd0QUT4YFflKiF7
+        QzXYeDPujgZ+fED+d39wSfOyw7o7Jr2hYLuyhudx3Cu4jKB7ptLNrKbxcCapKsVuQvysra
+        ZPXtG+fgITQH29aCjmikLa3fH8shIMpEn7iPC15cqo16fKmAsE4PSP4ZPnFRLVBIJm66x2
+        qk75kHslpy0ixZdIduz/LTjC66oghROvdSABIZNHefB6X/BBq4m1pJLc0fd6hShSYFuxw1
+        PAUoYmg9VHsyU8TPr5DvrMD8m4rndB1h4UOehZOWEBZpJbTwNb9GgZP08LmTwQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595011072;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pcE5z9+Sra7MEy1EdgVToG0hJlja1wBJ+TAiPeOSSYs=;
+        b=Nj+OjvE2IDHvTt1RQZHHg7qh5xNqT8aAXpVLmawpocIAdY3VYmKRqKOwSQsLIBwlXVewRr
+        u+y1Ae2HYyA3j0AQ==
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [patch V2 3/5] posix-cpu-timers: Provide mechanisms to defer timer handling to task_work
+In-Reply-To: <20200716225034.GK5523@worktop.programming.kicks-ass.net>
+References: <20200716201923.228696399@linutronix.de> <20200716202044.734067877@linutronix.de> <20200716225034.GK5523@worktop.programming.kicks-ass.net>
+Date:   Fri, 17 Jul 2020 20:37:51 +0200
+Message-ID: <87wo32q96o.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200707102338.989660-1-yamada.masahiro@socionext.com>
- <20200716230451.GA3041278@bogus> <CAK7LNAQN04i14VwrWspTJ7+Y87rgsopv88Dyv_8+4Hk8Kx0Fdw@mail.gmail.com>
-In-Reply-To: <CAK7LNAQN04i14VwrWspTJ7+Y87rgsopv88Dyv_8+4Hk8Kx0Fdw@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 17 Jul 2020 12:36:00 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKahftcjgtMP9H4NE2df1LxaV+31M8KrmBWCVy05P0hHA@mail.gmail.com>
-Message-ID: <CAL_JsqKahftcjgtMP9H4NE2df1LxaV+31M8KrmBWCVy05P0hHA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: uniphier-thermal: add minItems to socionext,tmod-calibration
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 10:54 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Thu, Jul 16, 2020 at 10:19:26PM +0200, Thomas Gleixner wrote:
 >
-> On Fri, Jul 17, 2020 at 8:09 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Jul 07, 2020 at 07:23:38PM +0900, Masahiro Yamada wrote:
-> > > As the description says, this property contains a pair of calibration
-> > > values. The number of items must be exactly 2.
-> > >
-> > > Add minItems to check a too short property.
-> > >
-> > > While I was here, I also added this property to the example because
-> > > this is the case in the real DT file,
-> > > arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> > >
-> > > Also, fix the interrupt type (edge -> level) to align with the
-> > > real DT.
-> > >
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > ---
-> > >
-> > >  .../bindings/thermal/socionext,uniphier-thermal.yaml          | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> > > index 553c9dcdaeeb..57ffd0c4c474 100644
-> > > --- a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> > > +++ b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> > > @@ -29,6 +29,7 @@ properties:
-> > >
-> > >    socionext,tmod-calibration:
-> > >      $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +    minItems: 2
-> >
-> > The intent was if minItems is not defined, then the default is the same
-> > as maxItems. This is not the default for json-schema, so the tooling is
-> > supposed to add it.
+>> @@ -1096,6 +1099,12 @@ static void __run_posix_cpu_timers(struc
+>>  	check_process_timers(tsk, &firing);
+>>  
+>>  	/*
+>> +	 * Allow new work to be scheduled. The expiry cache
+>> +	 * is up to date.
+>> +	 */
+>> +	posix_cpu_timers_enable_work(tsk);
+>> +
+>> +	/*
+>>  	 * We must release these locks before taking any timer's lock.
+>>  	 * There is a potential race with timer deletion here, as the
+>>  	 * siglock now protects our private firing list.  We have set
 >
+> I think I would feel more comfortable if this was done at the very
+> beginning of that function, possibly even with:
 >
-> This implication is unclear.
+>> +static void __run_posix_cpu_timers(struct task_struct *tsk)
+>> +{
+>> +	struct posix_cputimers *pct = &tsk->posix_cputimers;
+>> +
+>> +	if (!test_and_set_bit(CPUTIMERS_WORK_SCHEDULED, &pct->flags))
+>> +		task_work_add(tsk, &pct->task_work, true);
+>> +}
+>> +
+>> +static inline void posix_cpu_timers_enable_work(struct task_struct *tsk)
+>> +{
+>> +	clear_bit(CPUTIMERS_WORK_SCHEDULED, &tsk->posix_cputimers.flags);
+> 	/*
+> 	 * Ensure we observe everything before a failing test_and_set()
+> 	 * in __run_posix_cpu_timers().
+> 	 */
+> 	smp_mb__after_atomic();
+>> +}
 >
-> maxItems should literally only define the max, and
-> we should stick to json-schema as much as possible, IMHO.
+> Such that when another timer interrupt happens while we run this, we're
+> guaranteed to either see it, or get re-queued and thus re-run the
+> function.
 
-Yes, but we already deviate a bit as the default json-schema behavior
-is a bit different than DT defaults. For example, with just:
+Makes sense.
 
-items:
-  - const: a
-  - const: b
-  - const: c
+Thanks,
 
-All of these pass validation:
-
-[]
-[ a ]
-[ a, b, c, 1, 2, true ]
-
-when we really only want [ a, b, c ] to pass (by default). So we add
-minItems, maxItems, and additionalItems if not specified.
-
-> It would be nice if json-schema had something like:
->
-> numItems: 2
->
-> as a shorthand for
->
-> minItems: 2
-> maxItems: 2
-
-Yes, I've been thinking the same thing. It wouldn't be unprecedented
-as they added 'const' to shorten 'enum: [ one_entry ]'. We can add our
-own keywords too, but I try to avoid that so far. The only ones we
-have are internal to dtschema (typeSize and phandle).
-
-Rob
+        tglx
