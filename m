@@ -2,307 +2,255 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660A7C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B88C433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2B222D07
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D3A22D08
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:07:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FugniGd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgGQOHf (ORCPT
+        id S1728086AbgGQOHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:07:35 -0400
-Received: from mga01.intel.com ([192.55.52.88]:11841 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbgGQOHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:07:34 -0400
-IronPort-SDR: swr7fvG7wN7+gFBo5qhLi4UirgCUX+1/paW7r7u7bFWluGi+57wMTdOoaSO0EMNgQMrVWSb3C1
- 6AqgSXKTWvdg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="167722841"
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="167722841"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 07:07:31 -0700
-IronPort-SDR: wOmLc6V9uE13IbXx5YlhalBLh/yMi8qjxLLa2I89mbioWlUvKeeiq9aO9ABWUDBnriGiP4TL3V
- rW5CdIjmiPpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="460856509"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.65])
-  by orsmga005.jf.intel.com with ESMTP; 17 Jul 2020 07:07:31 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: [PATCH V6 14/14] perf, tools: Add documentation for topdown metrics
-Date:   Fri, 17 Jul 2020 07:05:54 -0700
-Message-Id: <20200717140554.22863-15-kan.liang@linux.intel.com>
+        Fri, 17 Jul 2020 10:07:41 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:15748 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728024AbgGQOHd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:07:33 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HDwpKW000599;
+        Fri, 17 Jul 2020 16:07:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=UW3rbA8OJgX+g0s4DvALs82Ib6sW0QAompQ4HrbLoA4=;
+ b=FugniGd0sXUH9rPLRG4V2d6FLBDARZSG+rKAkvQGvhF/N3T3mwHZSlxU9jlQJybKA18N
+ Wsu9a9C9tfNv0UJmmLU3NXGCSzwQPOn5GjX5vRma0kp5tlr/iv1TA7bukI0DXjcJUMoV
+ aV57S1KwHTAbDgQLPiWOhOJudu3UpiKM6Xs/GlBrM71domnutXS5JGohinVGsIQkvILB
+ gNpncIAmrget5miAAxEXkrcefnVSotAgb/qv0cO5Rpk9ecpi3Zp4NN+KbjZrNA8lYBmh
+ xIIDEcAZnVH5vhBPJj3U2G6i7ekL1jrDyLHOj1zHAukAeijKaLNvVbRY9iP7+ulCzykq kg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 327cyvge09-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 16:07:18 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 23DAC10002A;
+        Fri, 17 Jul 2020 16:07:18 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 074102BC7AA;
+        Fri, 17 Jul 2020 16:07:18 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 17 Jul 2020 16:07:17
+ +0200
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <marex@denx.de>,
+        <alexandre.torgue@st.com>
+Subject: [PATCH v2] irqchip/stm32-exti: map direct event to irq parent
+Date:   Fri, 17 Jul 2020 16:07:17 +0200
+Message-ID: <20200717140717.29606-1-alexandre.torgue@st.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200717140554.22863-1-kan.liang@linux.intel.com>
-References: <20200717140554.22863-1-kan.liang@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-17_06:2020-07-17,2020-07-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+EXTI lines are mainly used to wake-up system from CStop low power mode.
+Currently, if a device wants to use a EXTI (direct) line as wakeup line,
+it has to declare 2 interrupts:
+ - one for EXTI used to wake-up system (with dedicated_wake_irq api).
+ - one for GIC used to get the wake up reason inside the concerned IP.
 
-Add some documentation how to use the topdown metrics in ring 3.
+This split is not really needed as each EXTI line is actually "linked " to
+a GIC. So to avoid this useless double interrupt management in each
+wake-up driver, this patch lets the STM32 EXTI driver abstract it by
+mapping each EXTI line to his corresponding GIC.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+
 ---
- tools/perf/Documentation/topdown.txt | 235 +++++++++++++++++++++++++++
- 1 file changed, 235 insertions(+)
- create mode 100644 tools/perf/Documentation/topdown.txt
 
-diff --git a/tools/perf/Documentation/topdown.txt b/tools/perf/Documentation/topdown.txt
-new file mode 100644
-index 000000000000..e724d2af3b8d
---- /dev/null
-+++ b/tools/perf/Documentation/topdown.txt
-@@ -0,0 +1,235 @@
-+Using TopDown metrics in user space
-+-----------------------------------
+Changes since v1:
+
+ - Fix warning reported by test robot.
+
+diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+index faa8482c8246..732b04a121b6 100644
+--- a/drivers/irqchip/irq-stm32-exti.c
++++ b/drivers/irqchip/irq-stm32-exti.c
+@@ -42,6 +42,7 @@ struct stm32_exti_bank {
+ struct stm32_desc_irq {
+ 	u32 exti;
+ 	u32 irq_parent;
++	struct irq_chip *chip;
+ };
+ 
+ struct stm32_exti_drv_data {
+@@ -166,27 +167,41 @@ static const struct stm32_exti_bank *stm32mp1_exti_banks[] = {
+ 	&stm32mp1_exti_b3,
+ };
+ 
++static struct irq_chip stm32_exti_h_chip;
++static struct irq_chip stm32_exti_h_chip_direct;
 +
-+Intel CPUs (since Sandy Bridge and Silvermont) support a TopDown
-+methology to break down CPU pipeline execution into 4 bottlenecks:
-+frontend bound, backend bound, bad speculation, retiring.
-+
-+For more details on Topdown see [1][5]
-+
-+Traditionally this was implemented by events in generic counters
-+and specific formulas to compute the bottlenecks.
-+
-+perf stat --topdown implements this.
-+
-+Full Top Down includes more levels that can break down the
-+bottlenecks further. This is not directly implemented in perf,
-+but available in other tools that can run on top of perf,
-+such as toplev[2] or vtune[3]
-+
-+New Topdown features in Ice Lake
-+===============================
-+
-+With Ice Lake CPUs the TopDown metrics are directly available as
-+fixed counters and do not require generic counters. This allows
-+to collect TopDown always in addition to other events.
-+
-+% perf stat -a --topdown -I1000
-+#           time             counts unit events
-+     1.000854735     20,097,158,100      slots
-+     1.000854735         79,327,616      topdown-retiring          #      0.4% retiring
-+     1.000854735        157,932,715      topdown-bad-spec          #      0.8% bad speculation
-+     1.000854735         81,610,855      topdown-fe-bound          #      0.4% frontend bound
-+     1.000854735     19,778,286,903      topdown-be-bound          #     98.4% backend bound
-+     2.003623823     20,010,908,365      slots
-+     2.003623823         79,905,340      topdown-retiring          #      0.4% retiring
-+     2.003623823        158,405,024      topdown-bad-spec          #      0.8% bad speculation
-+     2.003623823         87,980,097      topdown-fe-bound          #      0.4% frontend bound
-+     2.003623823     19,684,617,888      topdown-be-bound          #     98.4% backend bound
-+     3.005828889     20,062,101,220      slots
-+     3.005828889         80,077,032      topdown-retiring          #      0.4% retiring
-+     3.005828889        158,682,921      topdown-bad-spec          #      0.8% bad speculation
-+     3.005828889         86,579,604      topdown-fe-bound          #      0.4% frontend bound
-+     3.005828889     19,736,761,649      topdown-be-bound          #     98.4% backend bound
-+...
-+
-+This also enables measuring TopDown per thread/process instead
-+of only per core.
-+
-+Using TopDown through RDPMC in applications on Ice Lake
-+======================================================
-+
-+For more fine grained measurements it can be useful to
-+access the new  directly from user space. This is more complicated,
-+but drastically lowers overhead.
-+
-+On Ice Lake, there is a new fixed counter 3: SLOTS, which reports
-+"pipeline SLOTS" (cycles multiplied by core issue width) and a
-+metric register that reports slots ratios for the different bottleneck
-+categories.
-+
-+The metrics counter is CPU model specific and is not be available
-+on older CPUs.
-+
-+Example code
-+============
-+
-+Library functions to do the functionality described below
-+is also available in libjevents [4]
-+
-+The application opens a perf_event file descriptor
-+and sets up fixed counter 3 (SLOTS) to start and
-+allow user programs to read the performance counters.
-+
-+Fixed counter 3 is mapped to a pseudo event event=0x00, umask=04,
-+so the perf_event_attr structure should be initialized with
-+{ .config = 0x0400, .type = PERF_TYPE_RAW }
-+
-+#include <linux/perf_event.h>
-+#include <sys/syscall.h>
-+#include <unistd.h>
-+
-+/* Provide own perf_event_open stub because glibc doesn't */
-+__attribute__((weak))
-+int perf_event_open(struct perf_event_attr *attr, pid_t pid,
-+		    int cpu, int group_fd, unsigned long flags)
-+{
-+	return syscall(__NR_perf_event_open, attr, pid, cpu, group_fd, flags);
-+}
-+
-+/* open slots counter file descriptor for current task */
-+struct perf_event_attr slots = {
-+	.type = PERF_TYPE_RAW,
-+	.size = sizeof(struct perf_event_attr),
-+	.config = 0x400,
-+	.exclude_kernel = 1,
+ static const struct stm32_desc_irq stm32mp1_desc_irq[] = {
+-	{ .exti = 0, .irq_parent = 6 },
+-	{ .exti = 1, .irq_parent = 7 },
+-	{ .exti = 2, .irq_parent = 8 },
+-	{ .exti = 3, .irq_parent = 9 },
+-	{ .exti = 4, .irq_parent = 10 },
+-	{ .exti = 5, .irq_parent = 23 },
+-	{ .exti = 6, .irq_parent = 64 },
+-	{ .exti = 7, .irq_parent = 65 },
+-	{ .exti = 8, .irq_parent = 66 },
+-	{ .exti = 9, .irq_parent = 67 },
+-	{ .exti = 10, .irq_parent = 40 },
+-	{ .exti = 11, .irq_parent = 42 },
+-	{ .exti = 12, .irq_parent = 76 },
+-	{ .exti = 13, .irq_parent = 77 },
+-	{ .exti = 14, .irq_parent = 121 },
+-	{ .exti = 15, .irq_parent = 127 },
+-	{ .exti = 16, .irq_parent = 1 },
+-	{ .exti = 65, .irq_parent = 144 },
+-	{ .exti = 68, .irq_parent = 143 },
+-	{ .exti = 73, .irq_parent = 129 },
++	{ .exti = 0, .irq_parent = 6, .chip = &stm32_exti_h_chip },
++	{ .exti = 1, .irq_parent = 7, .chip = &stm32_exti_h_chip },
++	{ .exti = 2, .irq_parent = 8, .chip = &stm32_exti_h_chip },
++	{ .exti = 3, .irq_parent = 9, .chip = &stm32_exti_h_chip },
++	{ .exti = 4, .irq_parent = 10, .chip = &stm32_exti_h_chip },
++	{ .exti = 5, .irq_parent = 23, .chip = &stm32_exti_h_chip },
++	{ .exti = 6, .irq_parent = 64, .chip = &stm32_exti_h_chip },
++	{ .exti = 7, .irq_parent = 65, .chip = &stm32_exti_h_chip },
++	{ .exti = 8, .irq_parent = 66, .chip = &stm32_exti_h_chip },
++	{ .exti = 9, .irq_parent = 67, .chip = &stm32_exti_h_chip },
++	{ .exti = 10, .irq_parent = 40, .chip = &stm32_exti_h_chip },
++	{ .exti = 11, .irq_parent = 42, .chip = &stm32_exti_h_chip },
++	{ .exti = 12, .irq_parent = 76, .chip = &stm32_exti_h_chip },
++	{ .exti = 13, .irq_parent = 77, .chip = &stm32_exti_h_chip },
++	{ .exti = 14, .irq_parent = 121, .chip = &stm32_exti_h_chip },
++	{ .exti = 15, .irq_parent = 127, .chip = &stm32_exti_h_chip },
++	{ .exti = 16, .irq_parent = 1, .chip = &stm32_exti_h_chip },
++	{ .exti = 19, .irq_parent = 3, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 21, .irq_parent = 31, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 22, .irq_parent = 33, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 23, .irq_parent = 72, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 24, .irq_parent = 95, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 25, .irq_parent = 107, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 30, .irq_parent = 52, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 47, .irq_parent = 93, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 54, .irq_parent = 135, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 61, .irq_parent = 100, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 65, .irq_parent = 144, .chip = &stm32_exti_h_chip },
++	{ .exti = 68, .irq_parent = 143, .chip = &stm32_exti_h_chip },
++	{ .exti = 70, .irq_parent = 62, .chip = &stm32_exti_h_chip_direct },
++	{ .exti = 73, .irq_parent = 129, .chip = &stm32_exti_h_chip },
+ };
+ 
+ static const struct stm32_exti_drv_data stm32mp1_drv_data = {
+@@ -196,22 +211,23 @@ static const struct stm32_exti_drv_data stm32mp1_drv_data = {
+ 	.irq_nr = ARRAY_SIZE(stm32mp1_desc_irq),
+ };
+ 
+-static int stm32_exti_to_irq(const struct stm32_exti_drv_data *drv_data,
+-			     irq_hw_number_t hwirq)
++static const struct
++stm32_desc_irq *stm32_exti_get_desc(const struct stm32_exti_drv_data *drv_data,
++				    irq_hw_number_t hwirq)
+ {
+-	const struct stm32_desc_irq *desc_irq;
++	const struct stm32_desc_irq *desc = NULL;
+ 	int i;
+ 
+ 	if (!drv_data->desc_irqs)
+-		return -EINVAL;
++		return NULL;
+ 
+ 	for (i = 0; i < drv_data->irq_nr; i++) {
+-		desc_irq = &drv_data->desc_irqs[i];
+-		if (desc_irq->exti == hwirq)
+-			return desc_irq->irq_parent;
++		desc = &drv_data->desc_irqs[i];
++		if (desc->exti == hwirq)
++			break;
+ 	}
+ 
+-	return -EINVAL;
++	return desc;
+ }
+ 
+ static unsigned long stm32_exti_pending(struct irq_chip_generic *gc)
+@@ -628,30 +644,47 @@ static struct irq_chip stm32_exti_h_chip = {
+ 	.irq_set_affinity	= IS_ENABLED(CONFIG_SMP) ? stm32_exti_h_set_affinity : NULL,
+ };
+ 
++static struct irq_chip stm32_exti_h_chip_direct = {
++	.name			= "stm32-exti-h-direct",
++	.irq_eoi		= irq_chip_eoi_parent,
++	.irq_ack		= irq_chip_ack_parent,
++	.irq_mask		= irq_chip_mask_parent,
++	.irq_unmask		= irq_chip_unmask_parent,
++	.irq_retrigger		= irq_chip_retrigger_hierarchy,
++	.irq_set_type		= irq_chip_set_type_parent,
++	.irq_set_wake		= stm32_exti_h_set_wake,
++	.flags			= IRQCHIP_MASK_ON_SUSPEND,
++	.irq_set_affinity	= IS_ENABLED(CONFIG_SMP) ? irq_chip_set_affinity_parent : NULL,
 +};
 +
-+int fd = perf_event_open(&slots, 0, -1, -1, 0);
-+if (fd < 0)
-+	... error ...
+ static int stm32_exti_h_domain_alloc(struct irq_domain *dm,
+ 				     unsigned int virq,
+ 				     unsigned int nr_irqs, void *data)
+ {
+ 	struct stm32_exti_host_data *host_data = dm->host_data;
+ 	struct stm32_exti_chip_data *chip_data;
++	const struct stm32_desc_irq *desc;
+ 	struct irq_fwspec *fwspec = data;
+ 	struct irq_fwspec p_fwspec;
+ 	irq_hw_number_t hwirq;
+-	int p_irq, bank;
++	int bank;
+ 
+ 	hwirq = fwspec->param[0];
+ 	bank  = hwirq / IRQS_PER_BANK;
+ 	chip_data = &host_data->chips_data[bank];
+ 
+-	irq_domain_set_hwirq_and_chip(dm, virq, hwirq,
+-				      &stm32_exti_h_chip, chip_data);
+ 
+-	p_irq = stm32_exti_to_irq(host_data->drv_data, hwirq);
+-	if (p_irq >= 0) {
++	desc = stm32_exti_get_desc(host_data->drv_data, hwirq);
++	if (!desc)
++		return -EINVAL;
 +
-+The RDPMC instruction (or _rdpmc compiler intrinsic) can now be used
-+to read slots and the topdown metrics at different points of the program:
-+
-+#include <stdint.h>
-+#include <x86intrin.h>
-+
-+#define RDPMC_FIXED	(1 << 30)	/* return fixed counters */
-+#define RDPMC_METRIC	(1 << 29)	/* return metric counters */
-+
-+#define FIXED_COUNTER_SLOTS		3
-+#define METRIC_COUNTER_TOPDOWN_L1	0
-+
-+static inline uint64_t read_slots(void)
-+{
-+	return _rdpmc(RDPMC_FIXED | FIXED_COUNTER_SLOTS);
-+}
-+
-+static inline uint64_t read_metrics(void)
-+{
-+	return _rdpmc(RDPMC_METRIC | METRIC_COUNTER_TOPDOWN_L1);
-+}
-+
-+Then the program can be instrumented to read these metrics at different
-+points.
-+
-+It's not a good idea to do this with too short code regions,
-+as the parallelism and overlap in the CPU program execution will
-+cause too much measurement inaccuracy. For example instrumenting
-+individual basic blocks is definitely too fine grained.
-+
-+Decoding metrics values
-+=======================
-+
-+The value reported by read_metrics() contains four 8 bit fields
-+that represent a scaled ratio that represent the Level 1 bottleneck.
-+All four fields add up to 0xff (= 100%)
-+
-+The binary ratios in the metric value can be converted to float ratios:
-+
-+#define GET_METRIC(m, i) (((m) >> (i*8)) & 0xff)
-+
-+#define TOPDOWN_RETIRING(val)	((float)GET_METRIC(val, 0) / 0xff)
-+#define TOPDOWN_BAD_SPEC(val)	((float)GET_METRIC(val, 1) / 0xff)
-+#define TOPDOWN_FE_BOUND(val)	((float)GET_METRIC(val, 2) / 0xff)
-+#define TOPDOWN_BE_BOUND(val)	((float)GET_METRIC(val, 3) / 0xff)
-+
-+and then converted to percent for printing.
-+
-+The ratios in the metric accumulate for the time when the counter
-+is enabled. For measuring programs it is often useful to measure
-+specific sections. For this it is needed to deltas on metrics.
-+
-+This can be done by scaling the metrics with the slots counter
-+read at the same time.
-+
-+Then it's possible to take deltas of these slots counts
-+measured at different points, and determine the metrics
-+for that time period.
-+
-+	slots_a = read_slots();
-+	metric_a = read_metrics();
-+
-+	... larger code region ...
-+
-+	slots_b = read_slots()
-+	metric_b = read_metrics()
-+
-+	# compute scaled metrics for measurement a
-+	retiring_slots_a = GET_METRIC(metric_a, 0) * slots_a
-+	bad_spec_slots_a = GET_METRIC(metric_a, 1) * slots_a
-+	fe_bound_slots_a = GET_METRIC(metric_a, 2) * slots_a
-+	be_bound_slots_a = GET_METRIC(metric_a, 3) * slots_a
-+
-+	# compute delta scaled metrics between b and a
-+	retiring_slots = GET_METRIC(metric_b, 0) * slots_b - retiring_slots_a
-+	bad_spec_slots = GET_METRIC(metric_b, 1) * slots_b - bad_spec_slots_a
-+	fe_bound_slots = GET_METRIC(metric_b, 2) * slots_b - fe_bound_slots_a
-+	be_bound_slots = GET_METRIC(metric_b, 3) * slots_b - be_bound_slots_a
-+
-+Later the individual ratios for the measurement period can be recreated
-+from these counts.
-+
-+	slots_delta = slots_b - slots_a
-+	retiring_ratio = (float)retiring_slots / slots_delta
-+	bad_spec_ratio = (float)bad_spec_slots / slots_delta
-+	fe_bound_ratio = (float)fe_bound_slots / slots_delta
-+	be_bound_ratio = (float)be_bound_slots / slota_delta
-+
-+	printf("Retiring %.2f%% Bad Speculation %.2f%% FE Bound %.2f%% BE Bound %.2f%%\n",
-+		retiring_ratio * 100.,
-+		bad_spec_ratio * 100.,
-+		fe_bound_ratio * 100.,
-+		be_bound_ratio * 100.);
-+
-+Resetting metrics counters
-+==========================
-+
-+Since the individual metrics are only 8bit they lose precision for
-+short regions over time because the number of cycles covered by each
-+fraction bit shrinks. So the counters need to be reset regularly.
-+
-+When using the kernel perf API the kernel resets on every read.
-+So as long as the reading is at reasonable intervals (every few
-+seconds) the precision is good.
-+
-+When using perf stat it is recommended to always use the -I option,
-+with no longer interval than a few seconds
-+
-+	perf stat -I 1000 --topdown ...
-+
-+For user programs using RDPMC directly the counter can
-+be reset explicitly using ioctl:
-+
-+	ioctl(perf_fd, PERF_EVENT_IOC_RESET, 0);
-+
-+This "opens" a new measurement period.
-+
-+A program using RDPMC for TopDown should schedule such a reset
-+regularly, as in every few seconds.
-+
-+Limits on Ice Lake
-+==================
-+
-+All the TopDown events must be in a group with SLOTS events.
-+
-+There is no sampling support for TopDown events.
-+Sampling read SLOTS and TopDown events is forbidden.
-+For example, perf record -e '{slots, topdown-retiring}:S'
-+
-+[1] https://software.intel.com/en-us/top-down-microarchitecture-analysis-method-win
-+[2] https://github.com/andikleen/pmu-tools/wiki/toplev-manual
-+[3] https://software.intel.com/en-us/intel-vtune-amplifier-xe
-+[4] https://github.com/andikleen/pmu-tools/tree/master/jevents
-+[5] https://sites.google.com/site/analysismethods/yasin-pubs
++	irq_domain_set_hwirq_and_chip(dm, virq, hwirq, desc->chip,
++				      chip_data);
++	if (desc->irq_parent) {
+ 		p_fwspec.fwnode = dm->parent->fwnode;
+ 		p_fwspec.param_count = 3;
+ 		p_fwspec.param[0] = GIC_SPI;
+-		p_fwspec.param[1] = p_irq;
++		p_fwspec.param[1] = desc->irq_parent;
+ 		p_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;
+ 
+ 		return irq_domain_alloc_irqs_parent(dm, virq, 1, &p_fwspec);
 -- 
 2.17.1
 
