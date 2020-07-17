@@ -2,136 +2,398 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7BBC43457
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3525C4345C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABAE20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5761207EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vmebw9xz"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sUZRCsmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgGQRol (ORCPT
+        id S1728402AbgGQRoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgGQRnP (ORCPT
+        Fri, 17 Jul 2020 13:44:55 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19537 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgGQRoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:43:15 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 670F9C0619D9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:15 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t15so6754773pjq.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wrxYLXP2oheEEaGsKNp0stRrknyVueRaJu8i8kSptew=;
-        b=Vmebw9xzyFrFLgnwLQyPbu9sUxIvT3iz/LZhlggPZzdK8yi/sNJp1ISZhzAODP/aQq
-         DA1aJsmMOF5WM3+KxOc/jJOdCUMwDEegiUHYTk5QHuuuSDkU5ULxP6uWFu0Zgzte/hrz
-         inlXJ3TzZ7dygl/RRmbqjrIF3idceAZR9MaU4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wrxYLXP2oheEEaGsKNp0stRrknyVueRaJu8i8kSptew=;
-        b=hJS2djZMvAiQY3ePnqqCbmgq+HGhJLGK4xd7Ocx1pfPlCD5KUsldVbLpgjkouNJyW4
-         omzPtWZRpzIT2Jm7SZNsW3YN9JPqLeGrBo+ojMo5QLwb5RLZWVUmh/KGsm3QEAQWImVg
-         T79aRl7AdiOy0qQhM0FxkwFVxLtXugPd2Z+9bTHWiiZWwY3DRUZkWHp7EfDL5clE1KKu
-         ZykfRllXV4e911NMKGyiR86Qe8+P17lALib4+vpIZW/1WxTBrDLpHlf8LtBRnBGO/vEI
-         epb7WIYsluGt2eRAC3N4ryF9scLligftfNwJ5Nzvx8RlB4K3+5WYu+MsFDNQVUKbc1xE
-         ZwCw==
-X-Gm-Message-State: AOAM532ESTZLweNOfB7ZiNCoZaQ2So9lGZsNhKm2yrxoDKdmOoNkV1UD
-        DmPjVdH6bfOQhX1FetNoYLYcpQ==
-X-Google-Smtp-Source: ABdhPJwUg0XMxYDUbRjKGsYc4z6GZTjsdq+bfOADQJjU8WjIWVN4iFhFlTSQL5o2BTwLAVb1iIGijw==
-X-Received: by 2002:a17:90a:9f4a:: with SMTP id q10mr11275946pjv.139.1595007795012;
-        Fri, 17 Jul 2020 10:43:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d9sm8187840pfd.133.2020.07.17.10.43.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 10:43:13 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        James Morris <jmorris@namei.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jessica Yu <jeyu@kernel.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <stephen.boyd@linaro.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 01/13] firmware_loader: EFI firmware loader must handle pre-allocated buffer
-Date:   Fri, 17 Jul 2020 10:42:56 -0700
-Message-Id: <20200717174309.1164575-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717174309.1164575-1-keescook@chromium.org>
-References: <20200717174309.1164575-1-keescook@chromium.org>
+        Fri, 17 Jul 2020 13:44:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f11e3890002>; Fri, 17 Jul 2020 10:44:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 17 Jul 2020 10:44:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 17 Jul 2020 10:44:53 -0700
+Received: from [10.2.163.115] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Jul
+ 2020 17:44:53 +0000
+Subject: Re: [RFC PATCH v3 00/18] Support for Tegra video capture from
+ external sensor
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <robh+dt@kernel.org>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+ <f03bdb89-df7c-e9e8-1512-d57e5d2332bf@xs4all.nl>
+ <d258fb56-14f6-a091-64e9-48294073c696@nvidia.com>
+ <458db01d-3c9c-1aec-0d28-edcbf0265aa4@xs4all.nl>
+ <5694f74a-be8e-7a95-1739-0a5fc9820597@nvidia.com>
+ <9aa8be89-d181-2dca-36ca-ea118bd5b0a7@nvidia.com>
+Message-ID: <2f9ecba7-3d05-8a68-f2ad-546470780642@nvidia.com>
+Date:   Fri, 17 Jul 2020 10:48:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9aa8be89-d181-2dca-36ca-ea118bd5b0a7@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595007881; bh=n6QrGmC9D7cNE9122ABAT4aFauanMqDEWEJPqyLjKu4=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=sUZRCsmLLvZPYWBQGw2ncBUO2lLhMJlz8rSszyC25d054zYlTwsyhP27eHqcRyfYF
+         +3FyKDKt2iQMigW9Y/H1qZGLjJFFiFWj80cGMfpa6tso2Xp40YpIv2vuCzHPlndRnp
+         90CHozDSvF6vD5DTCf6C97sqf9dygW2OQaDPhyliSQGlFpwrgiGPVuoM5EOsk9tYsL
+         DvMjL07bd5oR6jgpn+4a9ale3Icix+TP1JrDlHs1P/xR1NdIHdv1yfhcAJzmbJR63g
+         wiFUsIoINtQfQhFKjkMgg6ZreFU2Se3UFdGsIjjO2MPpLtiBqa5CDU50nmoHGxZR8v
+         dqSsmm7Bciffg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EFI platform firmware fallback would clobber any pre-allocated
-buffers. Instead, correctly refuse to reallocate when too small (as
-already done in the sysfs fallback), or perform allocation normally
-when needed.
 
-Fixes: e4c2c0ff00ec ("firmware: Add new platform fallback mechanism and firm ware_request_platform()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-To aid in backporting, this change is made before moving
-kernel_read_file() to separate header/source files.
----
- drivers/base/firmware_loader/fallback_platform.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On 7/17/20 10:38 AM, Sowjanya Komatineni wrote:
+>
+> On 7/17/20 10:23 AM, Sowjanya Komatineni wrote:
+>>
+>> On 7/17/20 10:08 AM, Hans Verkuil wrote:
+>>> On 17/07/2020 18:34, Sowjanya Komatineni wrote:
+>>>> On 7/17/20 3:54 AM, Hans Verkuil wrote:
+>>>>> Hi Sowjanya,
+>>>>>
+>>>>> On 15/07/2020 06:20, Sowjanya Komatineni wrote:
+>>>>>> This series adds support for video capture from external camera=20
+>>>>>> sensor to
+>>>>>> Tegra video driver.
+>>>>>>
+>>>>>> Jetson TX1 has camera expansion connector and supports custom=20
+>>>>>> camera module
+>>>>>> designed as per TX1 design specification.
+>>>>>>
+>>>>>> This series also enables camera capture support for Jetson Nano=20
+>>>>>> which has
+>>>>>> Raspberry PI camera header.
+>>>>>>
+>>>>>> This series is tested with IMX219 camera sensor.
+>>>>>>
+>>>>>> This series include,
+>>>>>>
+>>>>>> VI I2C related fixes
+>>>>>> - Camera sensor programming happens through VI I2C which is on=20
+>>>>>> host1x bus.
+>>>>>> - These patches includes device tree and I2C driver fixes for VI=20
+>>>>>> I2C.
+>>>>>>
+>>>>>> Tegra video driver updates
+>>>>>> - TPG Vs Non-TPG based on Kconfig
+>>>>>> - Support for external sensor video capture based on device graph=20
+>>>>>> from DT.
+>>>>>> - Support for selection ioctl operations
+>>>>>> - Tegra MIPI CSI pads calibration
+>>>>>> - CSI T-CLK and T-HS settle time computation based on clock rates.
+>>>>>>
+>>>>>> Host1x driver updates
+>>>>>> - Adds API to allow creating mipi device for specific device node.
+>>>>>> - Splits MIPI pads calibrate start and waiting for calibration to=20
+>>>>>> be done.
+>>>>>>
+>>>>>> Device tree updates
+>>>>>> - Adds camera connector 2V8, 1V8, 1V2 regulator supplies to=20
+>>>>>> Jetson TX1 DT.
+>>>>>> - Enabled VI and CSI support in Jetson Nano DT.
+>>>>> I'm doing a bit of stress testing with:
+>>>>>
+>>>>> while true; do v4l2-ctl --stream-mmap --stream-count=3D1; done
+>>>>>
+>>>>> and I see that the imx274 has often streaming failures:
+>>>>>
+>>>>> [=C2=A0 172.025144] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 179.025192] IMX274 8-001a: imx274_write_mbreg : i2c bulk writ=
+e=20
+>>>>> failed, 3132 =3D 870 (2 bytes)
+>>>>> [=C2=A0 179.033575] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 226.525378] IMX274 8-001a: imx274_write_mbreg : i2c bulk writ=
+e=20
+>>>>> failed, 3130 =3D 878 (2 bytes)
+>>>>> [=C2=A0 226.533761] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 227.029325] IMX274 8-001a: imx274_write_mbreg : i2c bulk writ=
+e=20
+>>>>> failed, 30f6 =3D 107 (2 bytes)
+>>>>> [=C2=A0 227.037758] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 247.025218] IMX274 8-001a: imx274_write_mbreg : i2c bulk writ=
+e=20
+>>>>> failed, 30f6 =3D 107 (2 bytes)
+>>>>> [=C2=A0 247.033658] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 293.025517] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 309.024727] IMX274 8-001a: imx274_write_mbreg : i2c bulk writ=
+e=20
+>>>>> failed, 30e0 =3D 0 (2 bytes)
+>>>>> [=C2=A0 309.032969] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 309.529506] IMX274 8-001a: imx274_write_mbreg : i2c bulk writ=
+e=20
+>>>>> failed, 30f8 =3D 11d2 (3 bytes)
+>>>>> [=C2=A0 309.538103] IMX274 8-001a: imx274_set_frame_length error =3D =
+-121
+>>>>> [=C2=A0 309.544102] IMX274 8-001a: imx274_set_frame_interval error =
+=3D -121
+>>>>> [=C2=A0 309.550243] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 314.025561] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 329.025586] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 340.529567] IMX274 8-001a: imx274_write_mbreg : i2c bulk writ=
+e=20
+>>>>> failed, 303a =3D f0c (2 bytes)
+>>>>> [=C2=A0 340.538009] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 347.525627] IMX274 8-001a: imx274_write_mbreg : i2c bulk writ=
+e=20
+>>>>> failed, 30f6 =3D 107 (2 bytes)
+>>>>> [=C2=A0 347.534008] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 365.033640] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 437.525788] IMX274 8-001a: imx274_write_mbreg : i2c bulk writ=
+e=20
+>>>>> failed, 3038 =3D c (2 bytes)
+>>>>> [=C2=A0 437.533997] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 456.029780] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 472.025862] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 498.025861] IMX274 8-001a: s_stream failed
+>>>>> [=C2=A0 500.025905] IMX274 8-001a: s_stream failed
+>>>>>
+>>>>> where v4l2-ctl returns:
+>>>>>
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 VIDIOC_STREAMON returned -1 (Remote I/O e=
+rror)
+>>>>>
+>>>>> I don't see this with the imx219.
+>>>>>
+>>>>> I also see this occasionally:
+>>>>>
+>>>>> [Fri Jul 17 12:51:42 2020] video4linux video1: failed to run=20
+>>>>> capture start kthread: -4
+>>>>>
+>>>>> Something is not stable here.
+>>>>>
+>>>>> Regards,
+>>>>>
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+>>>> Hi Hans,
+>>>>
+>>>> Running the same single frame continuous loop for more than 2 hours=20
+>>>> now
+>>>> and I don't see any failure.
+>>>>
+>>>> Above failure shows i2c bulk writes to IMX274 failure due to which
+>>>> s_stream also failed.
+>>>>
+>>>> Not sure if its due to i2c mux in the path to sensor on your module
+>>>> causing some issue when there is more i2c write traffic as we are=20
+>>>> doing
+>>>> single stream in continuous loop. Also IMX219 does not show on your=20
+>>>> side
+>>>> so something specific to IMX274 setup probably.
+>>> I'll take a closer look next week. Good to know that it works fine=20
+>>> for you.
+>>>
+>>>>
+>>>> Regarding kthread_run failure where kthread_run() returned -EINTR=20
+>>>> during
+>>>> capture start thread, I always see this happen at the point of=20
+>>>> stopping
+>>>> the continuous single stream while loop by pressing ctrl+c after few
+>>>> loops of execution.
+>>> Hmm, if this is normal behavior, then should this message be a debug=20
+>>> message
+>>> only? Or perhaps only show the message if the error code !=3D EINTR.
+>>
+>> I believe its good to still show this as its reported by kthread_run=20
+>> -> kthread_create_on_node.
+>>
+>> But not sure in real usecase we will ever use while true like this=20
+>> and we should use script to also break while loop along with v4l2-ctl=20
+>> termination when ctrl-c terminate request happens.
+>>
+> Hi Hans, As this happens only during this type of case, I can update=20
+> to show message only when error code !=3D EINTR.
+>
+> Thanks
+>
+> Sowjanya
 
-diff --git a/drivers/base/firmware_loader/fallback_platform.c b/drivers/base/firmware_loader/fallback_platform.c
-index cdd2c9a9f38a..685edb7dd05a 100644
---- a/drivers/base/firmware_loader/fallback_platform.c
-+++ b/drivers/base/firmware_loader/fallback_platform.c
-@@ -25,7 +25,10 @@ int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags)
- 	if (rc)
- 		return rc; /* rc == -ENOENT when the fw was not found */
- 
--	fw_priv->data = vmalloc(size);
-+	if (fw_priv->data && size > fw_priv->allocated_size)
-+		return -ENOMEM;
-+	if (!fw_priv->data)
-+		fw_priv->data = vmalloc(size);
- 	if (!fw_priv->data)
- 		return -ENOMEM;
- 
--- 
-2.25.1
 
+Sorry, Was thinking to not mask debug message for -EINTR in case if it=20
+happens in any other valid scenarios. If you still want to mask, will=20
+update in next version.
+
+>
+>>
+>>>
+>>> Regards,
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+>>>
+>>>> while true; do v4l2-ctl --stream-mmap --stream-count=3D1; done
+>>>>
+>>>> when we stop loop with ctrl+c, v4l2-ctl terminates but loop does not
+>>>> terminate immediately and probably SIGKILLed=C2=A0 is seen prior to=20
+>>>> complete.
+>>>>
+>>>> Using below can help to terminate loop as well when we stop ctrl-c and
+>>>> with this I don't see any repro of EINTR error from kthread_run=20
+>>>> when run
+>>>> in infinite loop.
+>>>>
+>>>> while true; do ./v4l2-ctl --stream-mmap --stream-count=3D1 || break;=20
+>>>> done
+>>>>
+>>>>
+>>>>
+>>>>>> Delta between patch versions:
+>>>>>>
+>>>>>> [v3]:=C2=A0=C2=A0=C2=A0 Includes v2 feedback
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Uses separate helper function for retrievi=
+ng remote csi=20
+>>>>>> subdevice
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 and source subdevice.
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Added check for presence of subdevice ops =
+set/get_selection
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- dropped vb2_queue_release from driver and =
+using
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vb2_video_unregister_device instead o=
+f=20
+>>>>>> video_unregister_device.
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- video device register should happen in the=
+ last after all=20
+>>>>>> video
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device related setup is done in the d=
+river. This is being=20
+>>>>>> addressed
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 in below RFC patch. Once proper imple=
+mentation of this is=20
+>>>>>> available
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 will update Tegra video driver to use=
+ split APIs and do all=20
+>>>>>> setup
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 prior to device register. Added this =
+as TODO in the driver.
+>>>>>> https://www.spinics.net/lists/linux-media/msg172761.html
+>>>>>>
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0Note:
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0Patch-0012 has compilation dependency on
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0https://patchwork.kernel.org/patch/11659521/
+>>>>>>
+>>>>>>
+>>>>>> [v2]:=C2=A0=C2=A0=C2=A0 Includes below changes based on v1 feedback
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- dt-binding document and the driver update =
+for device graph=20
+>>>>>> to use
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 separate ports for sink endpoint and =
+source endpoint for csi.
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Use data-lanes endpoint property for csi.
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Update tegra_mipi_request() to take device=
+ node pointer=20
+>>>>>> argument
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rather than adding extra API.
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Remove checking for clk pointer before clk=
+_disable.
+>>>>>>
+>>>>>>
+>>>>>> Sowjanya Komatineni (18):
+>>>>>> =C2=A0=C2=A0=C2=A0 dt-bindings: i2c: tegra: Document Tegra210 VI I2C=
+ clocks and
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains
+>>>>>> =C2=A0=C2=A0=C2=A0 arm64: tegra: Add missing clocks and power-domain=
+s to=20
+>>>>>> Tegra210 VI I2C
+>>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Don't mark VI I2C as IRQ safe runtime=
+ PM
+>>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Remove NULL pointer check before
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_enable/disable/prepare/unprepare
+>>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Fix the error path in tegra_i2c_runti=
+me_resume
+>>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Fix runtime resume to re-init VI I2C
+>>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra2=
+10 vi i2c
+>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Fix channel format alignment
+>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Enable TPG based on kernel co=
+nfig
+>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Update format lookup to offse=
+t based
+>>>>>> =C2=A0=C2=A0=C2=A0 dt-bindings: tegra: Update VI and CSI bindings wi=
+th port info
+>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add support for external sens=
+or capture
+>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add support for selection ioc=
+tl ops
+>>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Update tegra_mipi_request() to=
+ be node based
+>>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Use readl_relaxed_poll_timeout=
+ in=20
+>>>>>> tegra_mipi_wait
+>>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Split tegra_mipi_calibrate and=
+=20
+>>>>>> tegra_mipi_wait
+>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add CSI MIPI pads calibration
+>>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Compute settle times based on=
+ the clock rate
+>>>>>>
+>>>>>> =C2=A0=C2=A0 .../display/tegra/nvidia,tegra20-host1x.txt=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 92 ++-
+>>>>>> =C2=A0=C2=A0 .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt | 19=
+ +-
+>>>>>> =C2=A0=C2=A0 arch/arm64/boot/dts/nvidia/tegra210.dtsi=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 6 +
+>>>>>> =C2=A0=C2=A0 drivers/gpu/drm/tegra/dsi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 9 +-
+>>>>>> =C2=A0=C2=A0 drivers/gpu/host1x/mipi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 37 +-
+>>>>>> =C2=A0=C2=A0 drivers/i2c/busses/i2c-tegra.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 101 +--
+>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/Kconfig=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 7 +
+>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/csi.c=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 247 ++++++-
+>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/csi.h=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 8 +
+>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/tegra210.c=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 25 +-
+>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/vi.c=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 793=20
+>>>>>> +++++++++++++++++++--
+>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/vi.h=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 25 +-
+>>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/video.c=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 23 +-
+>>>>>> =C2=A0=C2=A0 include/linux/host1x.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 +-
+>>>>>> =C2=A0=C2=A0 14 files changed, 1242 insertions(+), 154 deletions(-)
+>>>>>>
