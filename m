@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D5AC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDAAC433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4C12076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9E920775
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:21:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xM67Iwmx"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f+tGfC0v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGQNUq (ORCPT
+        id S1726845AbgGQNVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:20:46 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59550 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgGQNUo (ORCPT
+        Fri, 17 Jul 2020 09:21:06 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56530 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgGQNVD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:20:44 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKe6m112037;
-        Fri, 17 Jul 2020 08:20:40 -0500
+        Fri, 17 Jul 2020 09:21:03 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKtsM052680;
+        Fri, 17 Jul 2020 08:20:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594992040;
-        bh=UCZPBWE5BRuKb4cOnM3DUnsgMsEyp2k2nTodxng89BI=;
+        s=ti-com-17Q1; t=1594992055;
+        bh=eGWgXhUwUeAtpANP9pM9jKJOBsp9KaRGdWRkWGuXPjI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xM67IwmxhtqzMuI0xz5i8N0w+u3W9hmZvBMuF3wt8jF5pocR8hRR237mOd6iYUlsh
-         uP+A23+EfWHsoAthg9fDKqGVGdaYgOgs2V0XYGsOGiqgh+D4RClhLSaEyU8T9LWC78
-         EkPW7JuKc+oFx8d865KpoVa/SUzcycubusaC1hzs=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HDKe9u060974
+        b=f+tGfC0vOdpwXSN/aSL2JaPNHF0GloI+o/IuHETZ+lnF4Zv2eYctDSCmJ/P+VZcEP
+         XLVbsLF5Q6oA2j6a001m5cQc8DuBB6JBzXa2nfca28BBNljOGfyqfI1+/3c8B79ifH
+         QWSGGVIriY2LL/heIizd/JGLD8THqwhOMpR6B30U=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HDKtPs018243
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 08:20:40 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 17 Jul 2020 08:20:55 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 08:20:40 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 08:20:54 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 08:20:40 -0500
+ Frontend Transport; Fri, 17 Jul 2020 08:20:54 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKdWj107470;
-        Fri, 17 Jul 2020 08:20:40 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDKrvc107830;
+        Fri, 17 Jul 2020 08:20:54 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -58,9 +58,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         <dmaengine@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH next v2 4/6] soc: ti: k3-ringacc: add request pair of rings api.
-Date:   Fri, 17 Jul 2020 16:20:17 +0300
-Message-ID: <20200717132019.20427-5-grygorii.strashko@ti.com>
+Subject: [PATCH next v2 6/6] dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair
+Date:   Fri, 17 Jul 2020 16:20:19 +0300
+Message-ID: <20200717132019.20427-7-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200717132019.20427-1-grygorii.strashko@ti.com>
 References: <20200717132019.20427-1-grygorii.strashko@ti.com>
@@ -72,69 +72,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new API k3_ringacc_request_rings_pair() to request pair of rings at
-once, as in the most cases Rings are used with DMA channels, which need to
-request pair of rings - one to feed DMA with descriptors (TX/RX FDQ) and
-one to receive completions (RX/TX CQ). This will allow to simplify Ringacc
-API users.
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
+We only request ring pairs via K3 DMA driver, switch to use the new
+k3_ringacc_request_rings_pair() to simplify the code.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/soc/ti/k3-ringacc.c       | 24 ++++++++++++++++++++++++
- include/linux/soc/ti/k3-ringacc.h |  4 ++++
- 2 files changed, 28 insertions(+)
+ drivers/dma/ti/k3-udma-glue.c | 42 +++++++++++------------------------
+ drivers/dma/ti/k3-udma.c      | 34 +++++++++-------------------
+ 2 files changed, 24 insertions(+), 52 deletions(-)
 
-diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-index 8a8f31d59e24..4cf1150de88e 100644
---- a/drivers/soc/ti/k3-ringacc.c
-+++ b/drivers/soc/ti/k3-ringacc.c
-@@ -322,6 +322,30 @@ struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
- }
- EXPORT_SYMBOL_GPL(k3_ringacc_request_ring);
+diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+index 64c8955e0cf1..c888ae4fec96 100644
+--- a/drivers/dma/ti/k3-udma-glue.c
++++ b/drivers/dma/ti/k3-udma-glue.c
+@@ -271,20 +271,12 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
+ 	atomic_set(&tx_chn->free_pkts, cfg->txcq_cfg.size);
  
-+int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
-+				  int fwd_id, int compl_id,
-+				  struct k3_ring **fwd_ring,
-+				  struct k3_ring **compl_ring)
-+{
-+	int ret = 0;
-+
-+	if (!fwd_ring || !compl_ring)
-+		return -EINVAL;
-+
-+	*fwd_ring = k3_ringacc_request_ring(ringacc, fwd_id, 0);
-+	if (!(*fwd_ring))
-+		return -ENODEV;
-+
-+	*compl_ring = k3_ringacc_request_ring(ringacc, compl_id, 0);
-+	if (!(*compl_ring)) {
-+		k3_ringacc_ring_free(*fwd_ring);
-+		ret = -ENODEV;
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(k3_ringacc_request_rings_pair);
-+
- static void k3_ringacc_ring_reset_sci(struct k3_ring *ring)
- {
- 	struct k3_ringacc *ringacc = ring->parent;
-diff --git a/include/linux/soc/ti/k3-ringacc.h b/include/linux/soc/ti/k3-ringacc.h
-index 26f73df0a524..7ac115432fa1 100644
---- a/include/linux/soc/ti/k3-ringacc.h
-+++ b/include/linux/soc/ti/k3-ringacc.h
-@@ -107,6 +107,10 @@ struct k3_ringacc *of_k3_ringacc_get_by_phandle(struct device_node *np,
- struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
- 					int id, u32 flags);
+ 	/* request and cfg rings */
+-	tx_chn->ringtx = k3_ringacc_request_ring(tx_chn->common.ringacc,
+-						 tx_chn->udma_tchan_id, 0);
+-	if (!tx_chn->ringtx) {
+-		ret = -ENODEV;
+-		dev_err(dev, "Failed to get TX ring %u\n",
+-			tx_chn->udma_tchan_id);
+-		goto err;
+-	}
+-
+-	tx_chn->ringtxcq = k3_ringacc_request_ring(tx_chn->common.ringacc,
+-						   -1, 0);
+-	if (!tx_chn->ringtxcq) {
+-		ret = -ENODEV;
+-		dev_err(dev, "Failed to get TXCQ ring\n");
++	ret =  k3_ringacc_request_rings_pair(tx_chn->common.ringacc,
++					     tx_chn->udma_tchan_id, -1,
++					     &tx_chn->ringtx,
++					     &tx_chn->ringtxcq);
++	if (ret) {
++		dev_err(dev, "Failed to get TX/TXCQ rings %d\n", ret);
+ 		goto err;
+ 	}
  
-+int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
-+				  int fwd_id, int compl_id,
-+				  struct k3_ring **fwd_ring,
-+				  struct k3_ring **compl_ring);
- /**
-  * k3_ringacc_ring_reset - ring reset
-  * @ring: pointer on Ring
+@@ -587,22 +579,16 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 	}
+ 
+ 	/* request and cfg rings */
+-	flow->ringrx = k3_ringacc_request_ring(rx_chn->common.ringacc,
+-					       flow_cfg->ring_rxq_id, 0);
+-	if (!flow->ringrx) {
+-		ret = -ENODEV;
+-		dev_err(dev, "Failed to get RX ring\n");
++	ret =  k3_ringacc_request_rings_pair(rx_chn->common.ringacc,
++					     flow_cfg->ring_rxq_id,
++					     flow_cfg->ring_rxfdq0_id,
++					     &flow->ringrxfdq,
++					     &flow->ringrx);
++	if (ret) {
++		dev_err(dev, "Failed to get RX/RXFDQ rings %d\n", ret);
+ 		goto err_rflow_put;
+ 	}
+ 
+-	flow->ringrxfdq = k3_ringacc_request_ring(rx_chn->common.ringacc,
+-						  flow_cfg->ring_rxfdq0_id, 0);
+-	if (!flow->ringrxfdq) {
+-		ret = -ENODEV;
+-		dev_err(dev, "Failed to get RXFDQ ring\n");
+-		goto err_ringrx_free;
+-	}
+-
+ 	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
+@@ -673,8 +659,6 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 
+ err_ringrxfdq_free:
+ 	k3_ringacc_ring_free(flow->ringrxfdq);
+-
+-err_ringrx_free:
+ 	k3_ringacc_ring_free(flow->ringrx);
+ 
+ err_rflow_put:
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 6c879a734360..49d0d3af6311 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -1418,17 +1418,12 @@ static int udma_alloc_tx_resources(struct udma_chan *uc)
+ 	if (ret)
+ 		return ret;
+ 
+-	uc->tchan->t_ring = k3_ringacc_request_ring(ud->ringacc,
+-						    uc->tchan->id, 0);
+-	if (!uc->tchan->t_ring) {
+-		ret = -EBUSY;
+-		goto err_tx_ring;
+-	}
+-
+-	uc->tchan->tc_ring = k3_ringacc_request_ring(ud->ringacc, -1, 0);
+-	if (!uc->tchan->tc_ring) {
++	ret = k3_ringacc_request_rings_pair(ud->ringacc, uc->tchan->id, -1,
++					    &uc->tchan->t_ring,
++					    &uc->tchan->tc_ring);
++	if (ret) {
+ 		ret = -EBUSY;
+-		goto err_txc_ring;
++		goto err_ring;
+ 	}
+ 
+ 	memset(&ring_cfg, 0, sizeof(ring_cfg));
+@@ -1447,10 +1442,9 @@ static int udma_alloc_tx_resources(struct udma_chan *uc)
+ err_ringcfg:
+ 	k3_ringacc_ring_free(uc->tchan->tc_ring);
+ 	uc->tchan->tc_ring = NULL;
+-err_txc_ring:
+ 	k3_ringacc_ring_free(uc->tchan->t_ring);
+ 	uc->tchan->t_ring = NULL;
+-err_tx_ring:
++err_ring:
+ 	udma_put_tchan(uc);
+ 
+ 	return ret;
+@@ -1499,16 +1493,11 @@ static int udma_alloc_rx_resources(struct udma_chan *uc)
+ 
+ 	rflow = uc->rflow;
+ 	fd_ring_id = ud->tchan_cnt + ud->echan_cnt + uc->rchan->id;
+-	rflow->fd_ring = k3_ringacc_request_ring(ud->ringacc, fd_ring_id, 0);
+-	if (!rflow->fd_ring) {
+-		ret = -EBUSY;
+-		goto err_rx_ring;
+-	}
+-
+-	rflow->r_ring = k3_ringacc_request_ring(ud->ringacc, -1, 0);
+-	if (!rflow->r_ring) {
++	ret = k3_ringacc_request_rings_pair(ud->ringacc, fd_ring_id, -1,
++					    &rflow->fd_ring, &rflow->r_ring);
++	if (ret) {
+ 		ret = -EBUSY;
+-		goto err_rxc_ring;
++		goto err_ring;
+ 	}
+ 
+ 	memset(&ring_cfg, 0, sizeof(ring_cfg));
+@@ -1533,10 +1522,9 @@ static int udma_alloc_rx_resources(struct udma_chan *uc)
+ err_ringcfg:
+ 	k3_ringacc_ring_free(rflow->r_ring);
+ 	rflow->r_ring = NULL;
+-err_rxc_ring:
+ 	k3_ringacc_ring_free(rflow->fd_ring);
+ 	rflow->fd_ring = NULL;
+-err_rx_ring:
++err_ring:
+ 	udma_put_rflow(uc);
+ err_rflow:
+ 	udma_put_rchan(uc);
 -- 
 2.17.1
 
