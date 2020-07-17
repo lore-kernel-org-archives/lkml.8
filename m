@@ -2,167 +2,134 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89668C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4264CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1F6204EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199D2204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiErbZBC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HDUQte1n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGQQCj (ORCPT
+        id S1726938AbgGQQDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbgGQQCi (ORCPT
+        Fri, 17 Jul 2020 12:03:20 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45252 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbgGQQDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:02:38 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86646C0619D2;
-        Fri, 17 Jul 2020 09:02:38 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t6so5612139plo.3;
-        Fri, 17 Jul 2020 09:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kQQY75f1lwYr//B5FuZk+rYcaijF15RsL6V2AzTXG6s=;
-        b=SiErbZBCO4LyV40LgzLyuLsyk3Gy1CIrJI47k1tgmH2nSIij3507i2xnBKBmEP8FUo
-         XLLTBmoJOYxEhzlZOJoRpBKMUWYdF7pVp3BdDz4ZR3CrYybT5pMQyBDBjMnqkok/V13J
-         CYuF/nJmfr/RsIiMBJhAjdVCp6uUBQE3ig39l1d75qj1PV35c9zMh0jQUO28UoDV1mMi
-         yfazmoR+h1b5a0KHFPScXD/nCZRWsEvfBeCp/xKPqS/u1TlX+oteecm2h2TMW6jc11Cm
-         aqXKe59AO4qws7o3LCVWJq1kcVR93s4YVx/1axBDxWNoIR3yLo1ZI15QPUq2gwMANWj8
-         b3Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kQQY75f1lwYr//B5FuZk+rYcaijF15RsL6V2AzTXG6s=;
-        b=AiuzgN+ztnoQzLC7kb8En0AOFwRyY9RzGDsWjY//eEJZHh/0FzY3U1bG888NqP7gZc
-         Y5JOjxT4ETKlKK8qHhRpOPj+E/CuEbUO1hRmSURvnGLfGLwT1kVXZoknYqajbHrovlB4
-         09VaXq4tCYZ75KeeorRwmA5q7O+qdWXnDI1K4jfGzlu2F2LmpLAD09X4Jqqxbl3gTz/s
-         W7zD3qc7a7YN9vcdiJDcuOTdvsgAEbaIaN1tR43A2SU1SiJCsiorbWAcD3OpeCV30ZWj
-         d7xgv2TsPnxhqDLUBAdS+QFNqGwISWOCJ+SMHGyuHbqHBJlPYKw0NGCWCOrDS5MK3Qil
-         +oUQ==
-X-Gm-Message-State: AOAM531VenlouGMNoIrjzLRq94WUCHyBbVUYaJ5sYKMWpCXipqLiJ1pX
-        2QvK6vhHhoeSA/COIuFBqL0=
-X-Google-Smtp-Source: ABdhPJyIKIaBLIJKoCAh+OVZfiRxAQl2eDqu7Wxzg/1MIUQJrfmb5Gqr/gT6KYTgQSt5/1gpdKQLTQ==
-X-Received: by 2002:a17:90b:4ac3:: with SMTP id mh3mr11140785pjb.0.1595001757606;
-        Fri, 17 Jul 2020 09:02:37 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id p10sm7619131pgn.6.2020.07.17.09.02.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 09:02:36 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 09:02:34 -0700
-From:   'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
-To:     jingle <jingle.wu@emc.com.tw>
-Cc:     'linux-kernel' <linux-kernel@vger.kernel.org>,
-        'linux-input' <linux-input@vger.kernel.org>,
-        'phoenix' <phoenix@emc.com.tw>,
-        "'josh.chen'" <josh.chen@emc.com.tw>,
-        "'kai.heng.feng'" <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH 2/2] Input: elan_i2c - Modify the IAP related functio n
- for page sizes 128, 512 bytes.
-Message-ID: <20200717160234.GE1665100@dtor-ws>
-References: <20200714105641.15151-1-jingle.wu@emc.com.tw>
- <20200716053912.GB1665100@dtor-ws>
- <1594880123.69588.jingle.wu@emc.com.tw>
- <20200717012719.GC1665100@dtor-ws>
- <20200717061010.GD1665100@dtor-ws>
- <002c01d65c14$bccb9c10$3662d430$@emc.com.tw>
+        Fri, 17 Jul 2020 12:03:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595001799;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wVF8bAUYLrgDkp60M4t2ODOl5RV7d1A3Rlh0UWxeBxk=;
+        b=HDUQte1nWqth99Z+0PtjSMak1J3NstUUGymLp5Af5d3g5ISv443zZ73tf8OmJzMZsUu8Dl
+        4qOsmDyB9slTz6UIFdVjdvLzQp/qUyRkPMBXhsFf0LUiJ70YLP8sbXNseUHvylG2QMSXYL
+        PtY7c3MpRsk/f1+7NQx4JRsmv+NjnKM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-10-pjsOQGIPMviHaNx6BqsbtQ-1; Fri, 17 Jul 2020 12:03:15 -0400
+X-MC-Unique: pjsOQGIPMviHaNx6BqsbtQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53A6A8015F4;
+        Fri, 17 Jul 2020 16:03:13 +0000 (UTC)
+Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AC72810013D9;
+        Fri, 17 Jul 2020 16:03:07 +0000 (UTC)
+Subject: Re: [PATCH v5 5/5] iommu/vt-d: Check UAPI data processed by IOMMU
+ core
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <1594925117-64892-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1594925117-64892-6-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <603eb61b-3c3b-75c8-cfa3-060053b7966a@redhat.com>
+Date:   Fri, 17 Jul 2020 18:03:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <002c01d65c14$bccb9c10$3662d430$@emc.com.tw>
+In-Reply-To: <1594925117-64892-6-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jingle,
+Hi Jacob,
 
-On Fri, Jul 17, 2020 at 04:31:58PM +0800, jingle wrote:
-> Hi Dmitry:
+On 7/16/20 8:45 PM, Jacob Pan wrote:
+> IOMMU generic layer already does sanity checks UAPI data for version
+> match and argsz range under generic information.
+> Remove the redundant version check from VT-d driver and check for vendor
+> specific data size.
 > 
-> 1. 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+
+Thanks
+
+Eric
+
+> ---
+>  drivers/iommu/intel/iommu.c | 3 +--
+>  drivers/iommu/intel/svm.c   | 7 +++++--
+>  2 files changed, 6 insertions(+), 4 deletions(-)
 > 
-> In this function elan_get_fwinfo().
-> 
-> +static int elan_get_fwinfo(u16 ic_type, u8 iap_version, u8 pattern,
-> +			   u16 *validpage_count, u32 *signature_address,
-> +			   u16 *page_size)
->  {
-> -	switch (ic_type) {
-> +	u16 type = pattern >= 0x01 ? ic_type : iap_version;
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index f3a6ca88cf95..5e80484f0537 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -5383,8 +5383,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  	int ret = 0;
+>  	u64 size = 0;
+>  
+> -	if (!inv_info || !dmar_domain ||
+> -	    inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> +	if (!inv_info || !dmar_domain)
+>  		return -EINVAL;
+>  
+>  	if (!dev || !dev_is_pci(dev))
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index 713b3a218483..55ea11e9c0f5 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -240,8 +240,11 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+>  	if (WARN_ON(!iommu) || !data)
+>  		return -EINVAL;
+>  
+> -	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
+> -	    data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+> +	if (data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+> +		return -EINVAL;
 > +
-> +	switch (type) {
+> +	/* IOMMU core ensures argsz is more than the start of the union */
+> +	if (data->argsz < offsetofend(struct iommu_gpasid_bind_data, vendor.vtd))
+>  		return -EINVAL;
+>  
+>  	if (!dev_is_pci(dev))
 > 
-> This iap_version in pattern0 is read from this command
-> ETP_I2C_IAP_VERSION_CMD_OLD ,it is not from this command
-> ETP_I2C_IAP_VERSION.
-> So u16 type = pattern >= 0x01 ? ic_type : iap_version; <- wrong
-> 
-> 2. In this "static int elan_i2c_prepare_fw_update(struct i2c_client *client,
-> u16 ic_type, u8 iap_version)" function.
-> The ic is old pattern must be modify correct ic_type. (cmd is
-> ETP_I2C_IAP_VERSION)
 
-I see. It looks like there is some confusion on my part between IAP
-version, IC type, and the commands that we want to use. Please let me
-know if I understand this correctly:
-
-- For patterns >=1 (newer)
-  IAP version is retrieved with ETP_I2C_IAP_VERSION_CMD
-  IC type is fetched with ETP_I2C_IC_TYPE_CMD
-  Version comes from ETP_I2C_NSM_VERSION_CMD
-
-- For pattern 0 (old)
-  Before your patches
-    IAP version was using ETP_I2C_IAP_VERSION_CMD (and you are saying
-    it is wrong)
-    Version comes from 1st byte of ETP_I2C_OSM_VERSION_CMD
-    IC type comes from 2nd byte of ETP_I2C_OSM_VERSION_CMD (and you are
-    saying it is some other bit of data - what is it then?)
-
-  After your patches
-    IAP version is retrieved with ETP_I2C_IAP_VERSION_CMD_OLD
-    Version comes from 1st byte of ETP_I2C_OSM_VERSION_CMD
-    IC type is retrieved with ETP_I2C_IAP_VERSION_CMD (should we rename
-    it then?)
-
-So the difference is where the the IC type is coming from for old
-patterns. However, as I mentioned, we have the following body of code:
-
-static int elan_check_ASUS_special_fw(struct elan_tp_data *data)
-{
-	if (data->ic_type == 0x0E) {
-		switch (data->product_id) {
-		case 0x05 ... 0x07:
-		case 0x09:
-		case 0x13:
-			return true;
-		}
-	} else if (data->ic_type == 0x08 && data->product_id == 0x26) {
-		/* ASUS EeeBook X205TA */
-		return true;
-	}
-
-	return false;
-}
-
-And before your patches ic_type here would be the 2nd byte of response
-to ETP_I2C_OSM_VERSION_CMD for older devices and my concern that
-replacing it with data from ETP_I2C_IAP_VERSION_CMD would break these
-checks.
-
-We need to reconcile what we have in this function with what you are
-proposing for firmware update code.
-
-Thanks,
-Dmitry
