@@ -2,197 +2,171 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20317C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29E2C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E46B92070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B063C2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="o5q+AdxP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MEyY+0Sy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rz3oI1vx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgGQQJw (ORCPT
+        id S1726832AbgGQQJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:09:52 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:58985 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726256AbgGQQJw (ORCPT
+        Fri, 17 Jul 2020 12:09:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbgGQQJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:09:52 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 171845C00BC;
-        Fri, 17 Jul 2020 12:09:51 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 17 Jul 2020 12:09:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=pJsIwaT04OvIIHzJFXu1NKs61t7
-        iLA23ExL+YOdLhKo=; b=o5q+AdxPs6086ttvaj0arF2jYvvafA4zUHjNDp9FdAg
-        hTzjB+HhrZUPaBPa+6h9Q6kzAHZeQ2U59TT+libCfaP5h0ijL1U6TEHwN4tKQF1U
-        iyL4pQbBO2cJvAyo7017De9t5yJV7YDUUsmb5IjOSWhCo/XWQS6VdsVe/GpSHke6
-        7rEJHhzPcypOA96yrcO5m8Y+EduEKd84ii6e8J285+PCLqB63KbhUy18K+xiQ9tt
-        2pXCPOIvSy6Ta6hRpoFsR2O/4BUOsBCnv78kh8laVdMFaTO20J5dnW4TFiNsEZi9
-        x5lqwXBO1Fzmuo6O2AKsYGmUSkAcbJJZSfhhJ5YUHhQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=pJsIwa
-        T04OvIIHzJFXu1NKs61t7iLA23ExL+YOdLhKo=; b=MEyY+0SyOLvnFpE/yS3Rgg
-        0bIzq1ACCrWs90g2L0sjwQMcDBQU9CMcLCMzJkaxexqo6E+o1bUZFTRMQ5Uqst3P
-        Chl1HIR8j/eQ3oTqfbcf+yGAhpSrlnLU1n3Arm7LpskRlashL2/7oLmcUkEALhPR
-        XWKpAy2wS00ikdMTaFaNsse2rwl/sw9+tArMG5mXNEhrnkHxK8umFYt/OuRA3M32
-        lu9GXo+pUmbFGZ2xoBfLIIsAeU1IH7OpfkLTECwxao0hmCybBrPpgX7z3Fc/K7sq
-        rWnQN8XXMAMZ344KlSQB5Gygdamhz79Fq5uIRMpGHumly8LdU8Xmz1esDeTwn1Sg
-        ==
-X-ME-Sender: <xms:Ts0RXyXJ1nrb5-x-DgqJAg4zMdK-6tS35qZI5F3JZRyNchtMpbMT6w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrfeejgddtjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:Ts0RX-n-PBLeYwxbAE-7YrNjWATKHkwoXVEsq6vZVqpJM9Q-r-MB0Q>
-    <xmx:Ts0RX2Y3KpX2Ll6sgCLS65OVko_2yOJaw-AqkvOGsVV3flt7w1o6QA>
-    <xmx:Ts0RX5WmqjutkUY26p8DfWQrMRw87PjyamsBXULrTeszFNhDpHqLuQ>
-    <xmx:T80RX2imJr67aCqDgcT-Aryh5dmv3UPw6AgO-L5l1s9aVRROV-9xFQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 287D8328005E;
-        Fri, 17 Jul 2020 12:09:50 -0400 (EDT)
-Date:   Fri, 17 Jul 2020 18:09:49 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     robh+dt@kernel.org, wens@csie.org, tiny.windzz@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: allwinner: Use GPIO bank name macro to
- describe GPIO
-Message-ID: <20200717160949.uqeyhr7trtqhj2nt@gilmour.lan>
-References: <20200715115529.2769-1-frank@allwinnertech.com>
+        Fri, 17 Jul 2020 12:09:58 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA9DC0619D2;
+        Fri, 17 Jul 2020 09:09:58 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id l1so10962841ioh.5;
+        Fri, 17 Jul 2020 09:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=80duo2UCKGgh3D4vpF1VXWLmX4mSAl0+jky26IF2Kfc=;
+        b=rz3oI1vxyD4wEFspA2IXpcN6RZgCG8ugcDQv4pjD++gEX0xWJzrl7/IvE0B5L4OiMN
+         n3lSLCuMdLZg9h1a9XUA8isyooRlZIp0Oe7D9CgRkEQ0pNf8NqPD1dhRLxBVIonbLTuH
+         rJLeVM/JLCYk8BU7XiOVFLi2U+GNwhp8V6yNnhOXc3KRHH8RRVm7Km3qi4oWqaNlreFc
+         Nf4q/lt8EZ1JBoxQcRv4D75VlGItFhNde8Wi0JR7SvZ8DetJSH5t09MP7u3EKVvDFuVD
+         6jcccRbVO1SvOYnx0WLDxbbiA2hiNAhErX2ZWtnmy4PR+B/1O3fLfgwwJ/2Fk88FyQJ8
+         +Zrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=80duo2UCKGgh3D4vpF1VXWLmX4mSAl0+jky26IF2Kfc=;
+        b=iCvbYfnlqB3EmS6i6jUibmQuf0U/FkCOzi7rVLGik9BcIwWfOpq7D8oKftt1QZ9Coj
+         bdsx9jd62rIK1tTngQDxo6foDJ464bZY9hMoRDr9M2TZBVg48v8K5pr1jh9LYdgpkMxS
+         9Y9eXwoqZSTKehBIkBgMsZJqh1oqckh18om4FbyjiV0C+chGKtFT5yZJwQkh5MMpwbGF
+         TUaS3q/clhRSQRofJ5rHYkRVz/PidpFPW4J/QPlQqiXAV5f8pn4GlgqFVrBL7SbCcDMx
+         t7UkYaI+GbhL+OW+BqcguyikWO4r2/VW+1z45t80Akaxe5zxPaHgEzajWylibvHyLPgr
+         idMA==
+X-Gm-Message-State: AOAM533xWUFBbTxaCaARvtBd9xCnPQPRbJMZVD54pBoHTAOiCvPggToS
+        UbsSh7g9Hd2XGkizO5FIdxxHtUNP+pyd4oK9g/s=
+X-Google-Smtp-Source: ABdhPJxAS5zKXGaRqMgoDBx8B5vS6pgJi7+88Y8nU6nWwsBaz2StwBp/+VMGafhOk/5PifpRQsVX2g3wWOuV+jYMgq8=
+X-Received: by 2002:a02:ce9a:: with SMTP id y26mr11930673jaq.121.1595002197726;
+ Fri, 17 Jul 2020 09:09:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lqv7skiuvbslab4p"
-Content-Disposition: inline
-In-Reply-To: <20200715115529.2769-1-frank@allwinnertech.com>
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1594429136-20002-16-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0Ue72SfAmxCS+tay1NjioW9WBOvVgrhwUtVPz2aDCrcHPQ@mail.gmail.com> <e724c44b-4135-3302-16fa-1df624fa81fa@linux.alibaba.com>
+In-Reply-To: <e724c44b-4135-3302-16fa-1df624fa81fa@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 17 Jul 2020 09:09:46 -0700
+Message-ID: <CAKgT0UcbvTid8RqDgsZjewdEo1wTD8BDjPHo59UX9gKQEkZUtA@mail.gmail.com>
+Subject: Re: [PATCH v16 15/22] mm/compaction: do page isolation first in compaction
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 16, 2020 at 10:10 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+>
+> >> @@ -950,6 +951,21 @@ static bool too_many_isolated(pg_data_t *pgdat)
+> >>                 if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
+> >>                         goto isolate_fail;
+> >>
+> >> +               /*
+> >> +                * Be careful not to clear PageLRU until after we're
+> >> +                * sure the page is not being freed elsewhere -- the
+> >> +                * page release code relies on it.
+> >> +                */
+> >> +               if (unlikely(!get_page_unless_zero(page)))
+> >> +                       goto isolate_fail;
+> >> +
+> >> +               if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
+> >> +                       goto isolate_fail_put;
+> >> +
+> >> +               /* Try isolate the page */
+> >> +               if (!TestClearPageLRU(page))
+> >> +                       goto isolate_fail_put;
+> >> +
+> >>                 /* If we already hold the lock, we can skip some rechecking */
+> >>                 if (!locked) {
+> >>                         locked = compact_lock_irqsave(&pgdat->lru_lock,
+> >
+> > Why not do the __isolate_lru_page_prepare before getting the page?
+> > That way you can avoid performing an extra atomic operation on non-LRU
+> > pages.
+> >
+>
+> This change come from Hugh Dickins as mentioned from commit log:
+> >> trylock_page() is not safe to use at this time: its setting PG_locked
+> >> can race with the page being freed or allocated ("Bad page"), and can
+> >> also erase flags being set by one of those "sole owners" of a freshly
+> >> allocated page who use non-atomic __SetPageFlag().
+>
+> Hi Hugh,
+>
+> would you like to show more details of the bug?
+>
+> ...
+>
+> >> +                        * sure the page is not being freed elsewhere -- the
+> >> +                        * page release code relies on it.
+> >> +                        */
+> >> +                       if (unlikely(!get_page_unless_zero(page)))
+> >> +                               goto busy;
+> >> +
+> >> +                       if (!TestClearPageLRU(page)) {
+> >> +                               /*
+> >> +                                * This page may in other isolation path,
+> >> +                                * but we still hold lru_lock.
+> >> +                                */
+> >> +                               put_page(page);
+> >> +                               goto busy;
+> >> +                       }
+> >> +
+> >
+> > I wonder if it wouldn't make sense to combine these two atomic ops
+> > with tests and the put_page into a single inline function? Then it
+> > could be possible to just do one check and if succeeds you do the
+> > block of code below, otherwise you just fall-through into the -EBUSY
+> > case.
+> >
+>
+> Uh, since get_page changes page->_refcount, TestClearPageLRU changes page->flags,
+> So I don't know how to combine them, could you make it more clear with code?
 
---lqv7skiuvbslab4p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Actually it is pretty straight forward. Something like this:
+static inline bool get_page_unless_zero_or_nonlru(struct page *page)
+{
+    if (get_page_unless_zero(page)) {
+        if (TestClearPageLRU(page))
+            return true;
+        put_page(page);
+    }
+    return false;
+}
 
-On Wed, Jul 15, 2020 at 07:55:29PM +0800, Frank Lee wrote:
-> From: Yangtao Li <frank@allwinnertech.com>
->=20
-> Convert gpio.h to sunxi-gpio.h, and convert to use gpio bank name macro.
-> This is done using the following command.
->=20
-> sed -i 's/r_pio 0/r_pio PL/g' arch/arm64/boot/dts/allwinner/*
-> sed -i 's/r_pio 1/r_pio PM/g' arch/arm64/boot/dts/allwinner/*
->=20
-> sed -i 's/\&pio 0/\&pio PA/g' arch/arm64/boot/dts/allwinner/*
-> sed -i 's/\&pio 2/\&pio PC/g' arch/arm64/boot/dts/allwinner/*
-> sed -i 's/\&pio 3/\&pio PD/g' arch/arm64/boot/dts/allwinner/*
-> sed -i 's/\&pio 4/\&pio PE/g' arch/arm64/boot/dts/allwinner/*
-> sed -i 's/\&pio 5/\&pio PF/g' arch/arm64/boot/dts/allwinner/*
-> sed -i 's/\&pio 6/\&pio PG/g' arch/arm64/boot/dts/allwinner/*
-> sed -i 's/\&pio 7/\&pio PH/g' arch/arm64/boot/dts/allwinner/*
->=20
-> sed -i 's/dt-bindings\/gpio\/gpio.h/dt-bindings\/gpio\/sunxi-gpio.h/g' \
-> 	arch/arm64/boot/dts/allwinner/*
->=20
-> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
->=20
-> ---
->  .../allwinner/sun50i-a64-amarula-relic.dts    | 18 ++++++------
->  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 20 ++++++-------
->  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   |  8 +++---
->  .../sun50i-a64-oceanic-5205-5inmfd.dts        |  4 +--
->  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 12 ++++----
->  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 20 ++++++-------
->  .../boot/dts/allwinner/sun50i-a64-pine64.dts  |  4 +--
->  .../dts/allwinner/sun50i-a64-pinebook.dts     | 16 +++++------
->  .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 14 +++++-----
->  .../boot/dts/allwinner/sun50i-a64-pinetab.dts | 28 +++++++++----------
->  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi |  4 +--
->  .../boot/dts/allwinner/sun50i-a64-teres-i.dts | 20 ++++++-------
->  .../sun50i-h5-emlid-neutis-n5-devboard.dts    |  2 +-
->  .../sun50i-h5-libretech-all-h5-cc.dts         |  2 +-
->  .../allwinner/sun50i-h5-nanopi-neo-plus2.dts  | 14 +++++-----
->  .../dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 14 +++++-----
->  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 16 +++++------
->  .../allwinner/sun50i-h5-orangepi-prime.dts    | 18 ++++++------
->  .../sun50i-h5-orangepi-zero-plus.dts          | 13 +++++----
->  .../sun50i-h5-orangepi-zero-plus2.dts         |  6 ++--
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  8 +++---
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 20 ++++++-------
->  .../allwinner/sun50i-h6-orangepi-lite2.dts    |  8 +++---
->  .../allwinner/sun50i-h6-orangepi-one-plus.dts |  2 +-
->  .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 12 ++++----
->  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 16 +++++------
->  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     |  6 ++--
->  27 files changed, 163 insertions(+), 162 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b=
-/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> index c7bd73f35ed8..92f8caecf939 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> @@ -7,7 +7,7 @@
->  #include "sun50i-a64.dtsi"
->  #include "sun50i-a64-cpu-opp.dtsi"
-> =20
-> -#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/gpio/sunxi-gpio.h>
-> =20
->  / {
->  	model =3D "Amarula A64-Relic";
-> @@ -23,8 +23,8 @@ chosen {
-> =20
->  	i2c {
->  		compatible =3D "i2c-gpio";
-> -		sda-gpios =3D <&pio 4 13 GPIO_ACTIVE_HIGH>;
-> -		scl-gpios =3D <&pio 4 12 GPIO_ACTIVE_HIGH>;
-> +		sda-gpios =3D <&pio PE 13 GPIO_ACTIVE_HIGH>;
-> +		scl-gpios =3D <&pio PE 12 GPIO_ACTIVE_HIGH>;
->  		i2c-gpio,delay-us =3D <5>;
->  		#address-cells =3D <1>;
->  		#size-cells =3D <0>;
-> @@ -40,8 +40,8 @@ ov5640: camera@3c {
->  			AVDD-supply =3D <&reg_aldo1>;
->  			DOVDD-supply =3D <&reg_dldo3>;
->  			DVDD-supply =3D <&reg_eldo3>;
-> -			reset-gpios =3D <&pio 4 14 GPIO_ACTIVE_LOW>; /* CSI-RST-R: PE14 */
-> -			powerdown-gpios =3D <&pio 4 15 GPIO_ACTIVE_HIGH>; /* CSI-STBY-R: PE15=
- */
-> +			reset-gpios =3D <&pio PE 14 GPIO_ACTIVE_LOW>; /* CSI-RST-R: PE14 */
-> +			powerdown-gpios =3D <&pio PE 15 GPIO_ACTIVE_HIGH>; /* CSI-STBY-R: PE1=
-5 */
-
-The pin name is fairly obvious now, I guess we can just remove the PE14
-/ PE15 from the comment (and that applies to the other DT as well)
-
-Maxime
-
---lqv7skiuvbslab4p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXxHNTQAKCRDj7w1vZxhR
-xey2AP0RC7QnnC0lMn7UCywJeZ/mw+NkJp23vTbj2AnZn/W+LAD+NqaMO7lB4rZC
-2gTt8Rfe0CYFgcQxUw5uyJs8sT805gs=
-=eE9A
------END PGP SIGNATURE-----
-
---lqv7skiuvbslab4p--
+You can then add comments as necessary. The general idea is you are
+having to do this in two different spots anyway so why not combine the
+logic? Although it does assume you can change the ordering of the
+other test above.
