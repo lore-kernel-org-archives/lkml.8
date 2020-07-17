@@ -2,115 +2,261 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0701DC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A20C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0EB720734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB30204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:26:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UdIeY/UD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3ScILym6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nVbzsZEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgGQLWO (ORCPT
+        id S1726401AbgGQL0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:22:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40090 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgGQLWI (ORCPT
+        Fri, 17 Jul 2020 07:26:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgGQL0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:22:08 -0400
-Date:   Fri, 17 Jul 2020 11:22:05 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594984926;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=idHQYFdvpTfN+lfpXHJSjMEYHdLgakbFkGuD1k5Q+4Y=;
-        b=UdIeY/UD2fyo7vgR15iVMYJHo21y+tjA2y/QLaqCalEsmdy5ZtIW7de9pwUNvhtVmj3qFh
-        Bc2xA99yEmuFRhcrwFBvN4W5UXIVeAfl09WLzVNl6AFTGIx6w4rmyJ2bgyV4nKKzZiN7Tk
-        KUwE97tExwKHyExhxX+peqX3bge/Qsi8OXaoZ9KO+tXMRW5fHMFK4uaE2PGURmu2KqSmbC
-        VO8jclcqVNZE9SsDYjgh3PLshE5EzpZSE3rDNp7cW865mRwLpE+CEycxGl04JuOYnZnQM9
-        rh1cv//6xsRhw4rrV3UfIOUY1yXOQV4iBVR9jIQdCHXnEusIhF5pMAU/7OAaMw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594984926;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=idHQYFdvpTfN+lfpXHJSjMEYHdLgakbFkGuD1k5Q+4Y=;
-        b=3ScILym6/1YlTZ2h9kDhm5zUcqcaF6/R6c04q7cwQlCIDPsZCHJLF/NTRq3+Ks0EXy9g1f
-        dGqD8ZU/8AOv1EBQ==
-From:   "tip-bot2 for Alexander A. Klimov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] docs: locking: Replace HTTP links with HTTPS ones
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200713115728.33905-1-grandmaster@al2klimov.de>
-References: <20200713115728.33905-1-grandmaster@al2klimov.de>
+        Fri, 17 Jul 2020 07:26:43 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D5D7C08C5C0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:26:43 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id s192so2034313vkh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:26:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5E9FxeV8r0Kl53Po7D0HEeofAYDOqosJLkJd0MD2Tk8=;
+        b=nVbzsZEbmCTZXaV8MAK2Ht6VC63/rhQuD/TF1ZrBIFHDIw3D90nYg9iaM4c3FusD8g
+         At6NQM9+nZBOluA4bvaXZufJJcxv7iaCZab5H258ZRcL/IX9Ko1O+B1rGjlHivBQmeTM
+         nutJ2HXsrwg8RL7YCZpmHswJ4ZB/kOm9foPD879qycvpf/VpO/9k61rBIV/6/itIjOwO
+         UdT/3bl7gEb+WEcrBYoRN9QJfcZ189r/yq5i4Tck5xBUTzNN1E3yO+rdjRFoYCt6s42X
+         XlQ8FvTr8SvWcIgKxRmPZDsW6mCPVHWqtK17shVzIqrl4vFaFOkmoknFMT0NR035EaDZ
+         b8tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5E9FxeV8r0Kl53Po7D0HEeofAYDOqosJLkJd0MD2Tk8=;
+        b=WZ3s9GH/XZupa3BifEjkbzogE1YyDxmFxAvjviaBGhSv9QZkYiBxoTrT/SC198Ffrs
+         g2CWj8FTqwP7mIb3koj/eLZVgXTpauK2BjM6Q7jvi+N7uRXwqxziGQO7dPh9itDa3V5z
+         lPtj3cmSvagnFL7XxeZCanbkasTbcMxhKrh2dmbDjlnZZIXvCpwygsODb9tdZ5X8rZid
+         cTCRTkSQPrT85F0MJYCYB6a/6xMXje0XSsagktjM6Y3BVA7NTQulaog0zfA3s9pcDFc7
+         CzHO+7oFU2BEkVRA8x+0dTVHcxNekToxEvAMNGXxE5KiLN3QvTYTaZTRYbcIazRQIHh/
+         aStg==
+X-Gm-Message-State: AOAM530w9Luqcl+GhX7Oe6gVdPw/SgjefUAypTTQmOmP8rIgEdYRO9M9
+        B6jOTIK2TBFQJcfqXR1pMpYIDegF/h8zJLUJgHLMQg==
+X-Google-Smtp-Source: ABdhPJytvrpEpafyX3EjSmJ2gDHSBAaKDmrCpIzufz5I7b/XMY1p4Jiph99BFWgX0W9GbZg07t6c4gVENm8rT4pAT6o=
+X-Received: by 2002:a1f:3f0f:: with SMTP id m15mr6733654vka.53.1594985202239;
+ Fri, 17 Jul 2020 04:26:42 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159498492557.4006.1686830928434874554.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200710110819.28965-1-benchuanggli@gmail.com>
+In-Reply-To: <20200710110819.28965-1-benchuanggli@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 17 Jul 2020 13:26:05 +0200
+Message-ID: <CAPDyKFrvzZSYWkqD_JgZSCmF8p+Bj7JXfdbZ5D=OsszTPsSDdw@mail.gmail.com>
+Subject: Re: [RFC PATCH V3 02/21] mmc: core: UHS-II support, modify power-up sequence
+To:     Ben Chuang <benchuanggli@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        Takahiro Akashi <takahiro.akashi@linaro.org>,
+        greg.tu@genesyslogic.com.tw
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/core branch of tip:
+On Fri, 10 Jul 2020 at 13:07, Ben Chuang <benchuanggli@gmail.com> wrote:
+>
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>
+> According to Fig. 3-35 in "SD Host Controller Simplified Spec. Ver4.20":
+> - Prepare vdd1, vdd2 and ios.timing for using after/in step (2)
+> - chip_select is not used in UHS-II, used to return to the legacy flow
 
-Commit-ID:     482cbb6cc33dca60091048631cd0a8dde72c3da7
-Gitweb:        https://git.kernel.org/tip/482cbb6cc33dca60091048631cd0a8dde72c3da7
-Author:        Alexander A. Klimov <grandmaster@al2klimov.de>
-AuthorDate:    Mon, 13 Jul 2020 13:57:28 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 16 Jul 2020 23:19:51 +02:00
+Thanks for pointing to the spec, but please explain why/what/how for
+the change - as this helps me to review.
 
-docs: locking: Replace HTTP links with HTTPS ones
+I am going to stop commenting on each patch's commit message, beyond
+this patch - as it seems the same comment applies to more patches.
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+>
+> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  drivers/mmc/core/core.c      | 62 ++++++++++++++++++++++++------------
+>  drivers/mmc/core/regulator.c | 14 ++++++++
+>  2 files changed, 56 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> index 8d2b808e9b58..85c83c82ad0c 100644
+> --- a/drivers/mmc/core/core.c
+> +++ b/drivers/mmc/core/core.c
+> @@ -1315,33 +1315,51 @@ void mmc_power_up(struct mmc_host *host, u32 ocr)
+>         if (host->ios.power_mode == MMC_POWER_ON)
+>                 return;
+>
+> -       mmc_pwrseq_pre_power_on(host);
+> +       if (host->flags & MMC_UHS2_SUPPORT) {
+> +               /* TODO: handle 'ocr' parameter */
+> +               host->ios.vdd = fls(host->ocr_avail) - 1;
+> +               host->ios.vdd2 = fls(host->ocr_avail_uhs2) - 1;
+> +               if (mmc_host_is_spi(host))
+> +                       host->ios.chip_select = MMC_CS_HIGH;
+> +               else
+> +                       host->ios.chip_select = MMC_CS_DONTCARE;
+> +               host->ios.timing = MMC_TIMING_UHS2;
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+If I understand correctly, the intent is to always try to initialize
+the UHS-II interface/phy if that is supported. That doesn't seem
+correct to me. What about if the SD card doesn't support UHS-II, then
+we should use the legacy SD interface instead right?
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200713115728.33905-1-grandmaster@al2klimov.de
----
- Documentation/locking/mutex-design.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Or perhaps the MMC_UHS2_SUPPORT bit becomes cleared somewhere in the
+error path when first trying to initialize an UHS-II card, from
+subsequent changes?
 
-diff --git a/Documentation/locking/mutex-design.rst b/Documentation/locking/mutex-design.rst
-index 4d8236b..8f3e9a5 100644
---- a/Documentation/locking/mutex-design.rst
-+++ b/Documentation/locking/mutex-design.rst
-@@ -18,7 +18,7 @@ as an alternative to these. This new data structure provided a number
- of advantages, including simpler interfaces, and at that time smaller
- code (see Disadvantages).
- 
--[1] http://lwn.net/Articles/164802/
-+[1] https://lwn.net/Articles/164802/
- 
- Implementation
- --------------
+So, assuming that is the intent then, I am still not sure about this approach.
+
+What about if we instead always start with legacy SD initialization?
+When we have read the OCR register, via mmc_send_app_op_cond(), we can
+check if the card supports UHS-II by looking at the UHS-II Card Status
+(bit 29).
+
+If it turns out that the card supports UHS-II and the host does as
+well, then we do a mmc_power_off() to completely reset the
+card/host/phy. Then we can call into a UHS-II specific path, that
+tries to power on and initialize things according to the UHS-II spec.
+
+In this way, we are going to prioritize initialization of legacy SD
+cards to remain quick, as we won't try to use UHS-II unless the card
+supports it. Moreover, I get the impression that we can keep the
+existing code more as is - and instead introduce UHS-II specifics in a
+separate path. This also also for UHS-II specific optimizations, I
+think.
+
+> +       } else {
+> +               mmc_pwrseq_pre_power_on(host);
+>
+> -       host->ios.vdd = fls(ocr) - 1;
+> -       host->ios.power_mode = MMC_POWER_UP;
+> -       /* Set initial state and call mmc_set_ios */
+> -       mmc_set_initial_state(host);
+> +               host->ios.vdd = fls(ocr) - 1;
+> +               host->ios.power_mode = MMC_POWER_UP;
+> +               /* Set initial state and call mmc_set_ios */
+> +               mmc_set_initial_state(host);
+>
+> -       mmc_set_initial_signal_voltage(host);
+> +               mmc_set_initial_signal_voltage(host);
+>
+> -       /*
+> -        * This delay should be sufficient to allow the power supply
+> -        * to reach the minimum voltage.
+> -        */
+> -       mmc_delay(host->ios.power_delay_ms);
+> -
+> -       mmc_pwrseq_post_power_on(host);
+> +               /*
+> +                * This delay should be sufficient to allow the power supply
+> +                * to reach the minimum voltage.
+> +                */
+> +               mmc_delay(host->ios.power_delay_ms);
+>
+> +               mmc_pwrseq_post_power_on(host);
+> +       }
+>         host->ios.clock = host->f_init;
+> -
+>         host->ios.power_mode = MMC_POWER_ON;
+> +
+>         mmc_set_ios(host);
+>
+> -       /*
+> -        * This delay must be at least 74 clock sizes, or 1 ms, or the
+> -        * time required to reach a stable voltage.
+> -        */
+> -       mmc_delay(host->ios.power_delay_ms);
+> +       if (host->flags & MMC_UHS2_SUPPORT)
+> +               /*
+> +                * This delay should be sufficient to allow the power supply
+> +                * to reach the minimum voltage.
+> +                */
+> +               /*  TODO: avoid an immediate value */
+> +               mmc_delay(10);
+> +       else
+> +               /*
+> +                * This delay must be at least 74 clock sizes, or 1 ms, or the
+> +                * time required to reach a stable voltage.
+> +                */
+> +               mmc_delay(host->ios.power_delay_ms);
+>  }
+>
+>  void mmc_power_off(struct mmc_host *host)
+> @@ -2307,7 +2325,11 @@ void mmc_start_host(struct mmc_host *host)
+>
+>         if (!(host->caps2 & MMC_CAP2_NO_PRESCAN_POWERUP)) {
+>                 mmc_claim_host(host);
+> -               mmc_power_up(host, host->ocr_avail);
+> +
+> +               /* Power up here will make UHS2 init ugly. */
+> +               if (!(host->caps & MMC_CAP_UHS2))
+> +                       mmc_power_up(host, host->ocr_avail);
+> +
+
+According to my suggestions, then this would not be needed.
+
+>                 mmc_release_host(host);
+>         }
+>
+> diff --git a/drivers/mmc/core/regulator.c b/drivers/mmc/core/regulator.c
+> index 96b1d15045d6..05556225d9ac 100644
+> --- a/drivers/mmc/core/regulator.c
+> +++ b/drivers/mmc/core/regulator.c
+> @@ -247,6 +247,7 @@ int mmc_regulator_get_supply(struct mmc_host *mmc)
+>
+>         mmc->supply.vmmc = devm_regulator_get_optional(dev, "vmmc");
+>         mmc->supply.vqmmc = devm_regulator_get_optional(dev, "vqmmc");
+> +       mmc->supply.vmmc2 = devm_regulator_get_optional(dev, "vmmc2");
+
+Please move the regulator thingy here into a separate patch. Please
+make sure corresponding header file, adding the vmmc2 to it is part of
+that change as well.
+
+>
+>         if (IS_ERR(mmc->supply.vmmc)) {
+>                 if (PTR_ERR(mmc->supply.vmmc) == -EPROBE_DEFER)
+> @@ -266,6 +267,19 @@ int mmc_regulator_get_supply(struct mmc_host *mmc)
+>                 dev_dbg(dev, "No vqmmc regulator found\n");
+>         }
+>
+> +       if (IS_ERR(mmc->supply.vmmc2)) {
+> +               if (PTR_ERR(mmc->supply.vmmc2) == -EPROBE_DEFER)
+> +                       return -EPROBE_DEFER;
+> +               dev_dbg(dev, "No vmmc2 regulator found\n");
+> +       } else {
+> +               ret = mmc_regulator_get_ocrmask(mmc->supply.vmmc2);
+> +               if (ret > 0)
+> +                       mmc->ocr_avail_uhs2 = ret;
+> +               else
+> +                       dev_warn(dev, "Failed getting UHS2 OCR mask: %d\n",
+> +                                ret);
+> +       }
+> +
+>         return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(mmc_regulator_get_supply);
+> --
+> 2.27.0
+>
+
+Kind regards
+Uffe
