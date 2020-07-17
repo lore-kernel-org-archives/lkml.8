@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8057C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F7EC433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83EFA2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273EB207EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ha9xdr5c"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JTxVJnfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgGQNau (ORCPT
+        id S1726891AbgGQNbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:30:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39676 "EHLO
+        Fri, 17 Jul 2020 09:31:00 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39678 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbgGQNas (ORCPT
+        with ESMTP id S1726856AbgGQNar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:30:48 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDUBdD052006;
-        Fri, 17 Jul 2020 08:30:11 -0500
+        Fri, 17 Jul 2020 09:30:47 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDUEXW052070;
+        Fri, 17 Jul 2020 08:30:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594992611;
-        bh=1f8QGphM1gDJrV+uk7tlCewgRrYPd1fn7gpp9JJzAS0=;
+        s=ti-com-17Q1; t=1594992614;
+        bh=i8u41iPJxXK9FTGgItdBbgPW6UUUoKzYd1anGp6xt94=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ha9xdr5caMQ9HSqkgqjaXI0k7GcV8aBYkZVJoojL6WdL76SULLHnqN4n5Cnbu+7UY
-         4MOoHS+0GxySsIzt2rER4QqPCgy0ULc20vce7m80L8iJ3C/fRJotuqmRmiXopISStW
-         h7lgUhYZwakuVgqgfdxwO+LzgMTPky5kVFMnA6BM=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDUBup075551;
-        Fri, 17 Jul 2020 08:30:11 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        b=JTxVJnfYZWd0xrNzDVBf77IYGMFxJP1VBOxqXCplc8UC4q4haODryGmYjXPqJd2Ki
+         HXkeihj1YUtQPBd3HgWaWdnhmSgRNBTLHG4HuZmGwMaqpj2PcVKd9SsjBIQHGYdFnU
+         vlzHNFDtjxwMQGue34LrFcdO0YdM3waNHiMGakVU=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HDUE8K074823
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jul 2020 08:30:14 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 08:30:11 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 08:30:14 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 08:30:11 -0500
+ Frontend Transport; Fri, 17 Jul 2020 08:30:14 -0500
 Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDU5Ld051528;
-        Fri, 17 Jul 2020 08:30:09 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDU5Lf051528;
+        Fri, 17 Jul 2020 08:30:13 -0500
 From:   Tero Kristo <t-kristo@ti.com>
 To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
         <linux-watchdog@vger.kernel.org>
 CC:     <linux-kernel@vger.kernel.org>, <jan.kiszka@siemens.com>
-Subject: [PATCHv4 2/4] watchdog: add support for adjusting last known HW keepalive time
-Date:   Fri, 17 Jul 2020 16:29:56 +0300
-Message-ID: <20200717132958.14304-3-t-kristo@ti.com>
+Subject: [PATCHv4 4/4] watchdog: rti-wdt: balance pm runtime enable calls
+Date:   Fri, 17 Jul 2020 16:29:58 +0300
+Message-ID: <20200717132958.14304-5-t-kristo@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200717132958.14304-1-t-kristo@ti.com>
 References: <20200717132958.14304-1-t-kristo@ti.com>
@@ -65,93 +66,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain watchdogs require the watchdog only to be pinged within a
-specific time window, pinging too early or too late cause the watchdog
-to fire. In cases where this sort of watchdog has been started before
-kernel comes up, we must adjust the watchdog keepalive window to match
-the actually running timer, so add a new driver API for this purpose.
+PM runtime should be disabled in the fail path of probe and when
+the driver is removed.
 
+Fixes: 2d63908bdbfb ("watchdog: Add K3 RTI watchdog support")
 Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 ---
- .../watchdog/watchdog-kernel-api.rst          | 12 ++++++++
- drivers/watchdog/watchdog_dev.c               | 30 +++++++++++++++++++
- include/linux/watchdog.h                      |  2 ++
- 3 files changed, 44 insertions(+)
+ drivers/watchdog/rti_wdt.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/watchdog/watchdog-kernel-api.rst b/Documentation/watchdog/watchdog-kernel-api.rst
-index 068a55ee0d4a..baf44e986b07 100644
---- a/Documentation/watchdog/watchdog-kernel-api.rst
-+++ b/Documentation/watchdog/watchdog-kernel-api.rst
-@@ -336,3 +336,15 @@ an action is taken by a preconfigured pretimeout governor preassigned to
- the watchdog device. If watchdog pretimeout governor framework is not
- enabled, watchdog_notify_pretimeout() prints a notification message to
- the kernel log buffer.
-+
-+To set the last known HW keepalive time for a watchdog, the following function
-+should be used::
-+
-+  int watchdog_set_last_hw_keepalive(struct watchdog_device *wdd,
-+                                     unsigned int last_ping_ms)
-+
-+This function must be called immediately after watchdog registration. It
-+sets the last known hardware heartbeat to have happened last_ping_ms before
-+current time. Calling this is only needed if the watchdog is already running
-+when probe is called, and the watchdog can only be pinged after the
-+min_hw_heartbeat_ms time has passed from the last ping.
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index bc1cfa288553..e74a0c6811b5 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -1138,6 +1138,36 @@ void watchdog_dev_unregister(struct watchdog_device *wdd)
- 	watchdog_cdev_unregister(wdd);
+diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
+index 7cbdc178ffe8..705e8f7523e8 100644
+--- a/drivers/watchdog/rti_wdt.c
++++ b/drivers/watchdog/rti_wdt.c
+@@ -303,6 +303,7 @@ static int rti_wdt_probe(struct platform_device *pdev)
+ 
+ err_iomap:
+ 	pm_runtime_put_sync(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
+ 
+ 	return ret;
  }
+@@ -313,6 +314,7 @@ static int rti_wdt_remove(struct platform_device *pdev)
  
-+/*
-+ *	watchdog_set_last_hw_keepalive: set last HW keepalive time for watchdog
-+ *	@wdd: watchdog device
-+ *	@last_ping_ms: time since last HW heartbeat
-+ *
-+ *	Adjusts the last known HW keepalive time for a watchdog timer.
-+ *	This is needed if the watchdog is already running when the probe
-+ *	function is called, and it can't be pinged immediately. This
-+ *	function must be called immediately after watchdog registration,
-+ *	and min_hw_heartbeat_ms must be set for this to be useful.
-+ */
-+int watchdog_set_last_hw_keepalive(struct watchdog_device *wdd,
-+				   unsigned int last_ping_ms)
-+{
-+	struct watchdog_core_data *wd_data;
-+	ktime_t now;
-+
-+	if (!wdd)
-+		return -EINVAL;
-+
-+	wd_data = wdd->wd_data;
-+
-+	now = ktime_get();
-+
-+	wd_data->last_hw_keepalive = ktime_sub(now, ms_to_ktime(last_ping_ms));
-+
-+	return __watchdog_ping(wdd);
-+}
-+EXPORT_SYMBOL_GPL(watchdog_set_last_hw_keepalive);
-+
- /*
-  *	watchdog_dev_init: init dev part of watchdog core
-  *
-diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
-index 1464ce6ffa31..9b19e6bb68b5 100644
---- a/include/linux/watchdog.h
-+++ b/include/linux/watchdog.h
-@@ -210,6 +210,8 @@ extern int watchdog_init_timeout(struct watchdog_device *wdd,
- extern int watchdog_register_device(struct watchdog_device *);
- extern void watchdog_unregister_device(struct watchdog_device *);
+ 	watchdog_unregister_device(&wdt->wdd);
+ 	pm_runtime_put(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
  
-+int watchdog_set_last_hw_keepalive(struct watchdog_device *, unsigned int);
-+
- /* devres register variant */
- int devm_watchdog_register_device(struct device *dev, struct watchdog_device *);
- 
+ 	return 0;
+ }
 -- 
 2.17.1
 
