@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AFFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A980520734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB092076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ozKK8t4U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y53rjYKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgGQOig (ORCPT
+        id S1727924AbgGQOis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:38:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45470 "EHLO
+        Fri, 17 Jul 2020 10:38:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgGQOif (ORCPT
+        with ESMTP id S1726691AbgGQOis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:38:35 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC53DC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:35 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id mn17so6617029pjb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:35 -0700 (PDT)
+        Fri, 17 Jul 2020 10:38:48 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E326EC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:47 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id w17so5510568ply.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cSLHeLlHnsqkzyv/gBgjnRP/gYQK1GlVe1v627QurAU=;
-        b=ozKK8t4UV+Lc+qIxjiIhK9Lvsh6e6BreYiP2orBO9Xe+amJtoRQjhBNV8Mn8IMc42C
-         9XW10iP3BLLcp7twntyfrQfW9LAq4m4TSk2biWhP9IiXFWMoR0t25fSk4/N82rx48KjL
-         kakXKs62E9z+xFTp3xi81dUtwKXh8zShXUkjr9fd1kuhiqogG7kd0MIMsTV2hCu5DaaJ
-         dwXb+mVMhL9cMOzAQ9NWiRDXuyzyB7Xeq1MPkT414ISKpW8cg+nPJI3yuam/5mxMuVZ0
-         ma4ZLlKKS4IRpGs7grTRbBw2n9Dh7G+Fh4c/nTis79nmBm4+xERRjxesDrY45iG64uvy
-         FvaQ==
+        bh=PGmY2yM7IBrhvEVueqg0kykP3l1lO9dWCgs8ldRYKD4=;
+        b=Y53rjYKfCbke7+OOGEfgyCpR7IIno3OjyAWyQvFlw6zMWg9Z9kbqnfVF6tK9u7x7qB
+         UDzk4Dk7VOOX+equLqUh/9kS3W9P+wNOB1+7o0DLXGfcjM5HcgEvxU+d/+jkk/yugRhC
+         LJzhMKdNMbnzQkmU0CpelzeqnVE8mQuRBjT7ueltjHvCkYcS5tvAZw2TJYoUxtghNC39
+         WzajwDmwOWg+MXsNlqmYiAsMTdQ+PtXGwqe9d69yhOBMWDvQCWBU8QqOJ01EG/uSNPSm
+         NTWw/pXu5JFjv2kGrV6CPQbd2i6ZWUf52YAVTOtx2Iaibr46FjWqTDFCK8FKT+lX6zTD
+         sEDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cSLHeLlHnsqkzyv/gBgjnRP/gYQK1GlVe1v627QurAU=;
-        b=TCWJ3bne4v5ssSAhJlLlKXkenuQrZGGhZL2CO3+Sug3hLFf3PXBCCc0Q/fasI67epQ
-         7k4Oy6ptJ3hLC8sLLciIEU3bztc5D47PQAt9wPBmlhHW523DQECiz6rbdyKLcY/mf2VN
-         LEPpZavcNFAoMRvg9PYhJ8/s9Aw9sMgfaI+SZjO4LQ8VT9HtYw4upeNl5XdiSlJRxkH4
-         67zmJSE1uKLGx2w1qT1aTIoyX3jHcQTBqE0W9hA0c2NBz6AsmGcKsN18twMiyBAZ+Do/
-         pmeDEWx0PGLR4twTKS3VXnzDBiwKZwCnqzzfmcx3YiwURVLAC5wORQVddXmj47VbdmsD
-         2e1g==
-X-Gm-Message-State: AOAM5319Lw8fXmG0tIvtf/j9UrLIR3aBnB9VrMd3LFjw23JfkVt/VpLh
-        y7XSkWADUE38eB1kTjP7w60=
-X-Google-Smtp-Source: ABdhPJxcZBW7rKiOj2dxRYX9OAuBl31zPqRy8oGmP8AWZTTcmNJW05C9yuM/WQLlYBpXe12Tj2K0RQ==
-X-Received: by 2002:a17:902:c082:: with SMTP id j2mr8068663pld.285.1594996715269;
-        Fri, 17 Jul 2020 07:38:35 -0700 (PDT)
+        bh=PGmY2yM7IBrhvEVueqg0kykP3l1lO9dWCgs8ldRYKD4=;
+        b=oFkhzu+2yiufIdwMTpKK1GY9xXEV668h/2cwHPLsIlbLDMPDsY+eBxnGcA5UEgfdl1
+         VXWcSD/hY2x29BjUPNV3pNyb+hFI/z/K/l7tSX61Vbl1monxrh7d/OzxHEE7dtiJAnMr
+         9k4yhdugtRbsiPhLL3TrGpwEq73ZFo00fbpJNjuv0XVmIpjhQ5ZdEnzX2w5p7uCP0rCB
+         FGXG1eVIplfjNQK74Kwi5QcjJs1l1qOuL00aeSFn87gqjR+35e6BI3i8RauRCkjnmz29
+         0n1N9EeJoyBt1HrymwZYir/8x1U3e30hVUg0lc2sxiaIqI3mA5Qwl1VQydoaxX6sUkGh
+         hgtg==
+X-Gm-Message-State: AOAM533cS4rkoagi+FDR2DDnRY1kTsp1mmxcRFeBd1XBLrhyyVys3SAY
+        C7xU8AptLPGibCTMwIVewEo=
+X-Google-Smtp-Source: ABdhPJzhfKm9nQWNAxbSphuEzCQZuJj/j3w0vZZCrT1MAHLJ3PBRxLsDARUtj2kZrAKCUaRmfG81WA==
+X-Received: by 2002:a17:90a:1f81:: with SMTP id x1mr9458446pja.115.1594996727522;
+        Fri, 17 Jul 2020 07:38:47 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.38.28
+        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.38.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 07:38:34 -0700 (PDT)
+        Fri, 17 Jul 2020 07:38:46 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 14/17] perf: ftrace: allow set graph depth by '--graph-opts'
-Date:   Fri, 17 Jul 2020 22:36:25 +0800
-Message-Id: <20200717143628.47721-15-changbin.du@gmail.com>
+Subject: [PATCH v6 15/17] perf ftrace: add option -D/--delay to delay tracing
+Date:   Fri, 17 Jul 2020 22:36:26 +0800
+Message-Id: <20200717143628.47721-16-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717143628.47721-1-changbin.du@gmail.com>
 References: <20200717143628.47721-1-changbin.du@gmail.com>
@@ -81,61 +81,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is to have a consistent view of all graph tracer options.
-The original option '--graph-depth' is marked as deprecated.
+This adds an option '-D/--delay' to allow us to start tracing some
+times later after workload is launched.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- tools/perf/Documentation/perf-ftrace.txt | 5 +----
- tools/perf/builtin-ftrace.c              | 5 ++---
- 2 files changed, 3 insertions(+), 7 deletions(-)
+ tools/perf/Documentation/perf-ftrace.txt |  4 ++++
+ tools/perf/builtin-ftrace.c              | 19 ++++++++++++++++---
+ 2 files changed, 20 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-index 96e5e8d7f65c..6f17939b8789 100644
+index 6f17939b8789..077249c979f2 100644
 --- a/tools/perf/Documentation/perf-ftrace.txt
 +++ b/tools/perf/Documentation/perf-ftrace.txt
-@@ -95,16 +95,13 @@ OPTIONS
- 	This can be used more than once to specify multiple functions.
- 	It will be passed to 'set_graph_notrace' in tracefs.
+@@ -38,6 +38,10 @@ OPTIONS
+ --pid=::
+ 	Trace on existing process id (comma separated list).
  
---D::
----graph-depth=::
--	Set max depth for function graph tracer to follow
--
- --graph-opts::
- 	List of options allowed to set:
- 	  nosleep-time - Measure on-CPU time only for function_graph tracer.
- 	  noirqs       - Ignore functions that happen inside interrupt.
- 	  verbose      - Show process names, PIDs, timestamps, etc.
- 	  thresh=<n>   - Setup trace duration threshold in microseconds.
-+	  depth=<n>    - Set max depth for function graph tracer to follow.
- 
- SEE ALSO
- --------
++-D::
++--delay::
++	Time (ms) to wait before starting tracing after program start.
++
+ -a::
+ --all-cpus::
+ 	Force system-wide collection.  Scripts run without a <command>
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 5d948239bd70..3ddd7568b456 100644
+index 3ddd7568b456..64b68331048a 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -750,6 +750,7 @@ static int parse_graph_tracer_opts(const struct option *opt,
- 		{ .name = "noirqs",		.value_ptr = &ftrace->graph_noirqs },
- 		{ .name = "verbose",		.value_ptr = &ftrace->graph_verbose },
- 		{ .name = "thresh",		.value_ptr = &ftrace->graph_thresh },
-+		{ .name = "depth",		.value_ptr = &ftrace->graph_depth },
- 		{ .name = NULL, }
+@@ -47,6 +47,7 @@ struct perf_ftrace {
+ 	int			graph_noirqs;
+ 	int			graph_verbose;
+ 	int			graph_thresh;
++	unsigned int		initial_delay;
+ };
+ 
+ struct filter_entry {
+@@ -594,13 +595,23 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 	/* display column headers */
+ 	read_tracing_file_to_stdout("trace");
+ 
+-	if (write_tracing_file("tracing_on", "1") < 0) {
+-		pr_err("can't enable tracing\n");
+-		goto out_close_fd;
++	if (!ftrace->initial_delay) {
++		if (write_tracing_file("tracing_on", "1") < 0) {
++			pr_err("can't enable tracing\n");
++			goto out_close_fd;
++		}
+ 	}
+ 
+ 	perf_evlist__start_workload(ftrace->evlist);
+ 
++	if (ftrace->initial_delay) {
++		usleep(ftrace->initial_delay * 1000);
++		if (write_tracing_file("tracing_on", "1") < 0) {
++			pr_err("can't enable tracing\n");
++			goto out_close_fd;
++		}
++	}
++
+ 	while (!done) {
+ 		if (poll(&pollfd, 1, -1) < 0)
+ 			break;
+@@ -809,6 +820,8 @@ int cmd_ftrace(int argc, const char **argv)
+ 		     "size of per cpu buffer", parse_buffer_size),
+ 	OPT_BOOLEAN(0, "inherit", &ftrace.inherit,
+ 		    "trace children processes"),
++	OPT_UINTEGER('D', "delay", &ftrace.initial_delay,
++		     "ms to wait before starting tracing after program start"),
+ 	OPT_END()
  	};
  
-@@ -801,10 +802,8 @@ int cmd_ftrace(int argc, const char **argv)
- 		     parse_filter_func),
- 	OPT_CALLBACK('g', "nograph-funcs", &ftrace.nograph_funcs, "func",
- 		     "Set nograph filter on given functions", parse_filter_func),
--	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
--		    "Max depth for function graph tracer"),
- 	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
--		     "graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>",
-+		     "graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>",
- 		     parse_graph_tracer_opts),
- 	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
- 		     "size of per cpu buffer", parse_buffer_size),
 -- 
 2.25.1
 
