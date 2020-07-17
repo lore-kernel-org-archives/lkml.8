@@ -2,141 +2,315 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F50020684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FC020684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3DfUaLe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6CIPYc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbgGQU35 (ORCPT
+        id S1728824AbgGQUbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:29:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43582 "EHLO
+        Fri, 17 Jul 2020 16:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbgGQU34 (ORCPT
+        with ESMTP id S1726510AbgGQUbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:29:56 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5AEC0619D2;
-        Fri, 17 Jul 2020 13:29:56 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id w3so18915104wmi.4;
-        Fri, 17 Jul 2020 13:29:56 -0700 (PDT)
+        Fri, 17 Jul 2020 16:31:00 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9127EC0619D2;
+        Fri, 17 Jul 2020 13:31:00 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id i18so8413620ilk.10;
+        Fri, 17 Jul 2020 13:31:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PbAhWdHvHt7m/jshBgagWE4qFwSSRbIkuO8Zm6625xg=;
-        b=j3DfUaLet+tHGz5hwEy+Q6N/qNE83K8LycMg9sAkknQavrG97fRmH48OmDkieMMD4j
-         xX0/yFqjEopZOkjggRblpPB467oQ91UurwE2yOG8j9e6EawOy5/dbLx1ZfSZAZtX9V/L
-         Ic58XGDzWmw9D/xMpWPoozjOTN7ff4FqrWfYtXluBDsVO17HXV9eh/pAVdQaeyAZfa9S
-         CNNvw6DwVKrWcovRhY4wRmA4S8sQERVG9k5u00reQ+gJtHZdm+Tun/RGAWsma/vb0yMC
-         XVPhnmOEN2uIy9JzswXwLUcm5kyUsfJdqDZUrbHhcxvaZ8nHa4yWYpk9/y/HZegAv0sn
-         4jzg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fa0GcN94SAkMndYvc3rpkB4mYfViww4odBhNhRRf9p4=;
+        b=b6CIPYc2VxBTb04tX/asXA0o9d0VrXp8fIGsmGa87N7hweYpBaZQSSRtQliAvy2SpA
+         x1RVaFTjrFwbtpLQTVaabypRIwb+plt5beFUWUODt1NqHYc+NjmgMyN769sU6E77xUI7
+         Z0mxC1qfRMX8tPq6m4bqljR5bhlcINhTUvT/+8xH0+CuJR3KvUxUld+cUoR+7Wpk4yRr
+         UA1YkYlBLGuCr1sk5f+sEcuoBocb7aA0JsqpZbAb7xosNfdsr0c3UC3/H1TKcaNp6m/I
+         v/bxxezggEE41VMfiDkyDDc499gkYAPpxOz7oGPGSbkSXR3RLPoM3y17FWmnbElWkvwd
+         nqVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PbAhWdHvHt7m/jshBgagWE4qFwSSRbIkuO8Zm6625xg=;
-        b=LU2L6EUcF+dIVKa+KFasx5+0TpUVR2SMSsQceJ3tA1sCwc3+lcpEVdSnoHmMIdeD+7
-         2suaTPNaucBAlhFGR3IshjsJWrB59pnL9mWKNY6mcsWzBdxpe9szc9Rg8mMGiomPDUNe
-         LPWmLRCFTqxbQzTnb+TYx1NRe52QLFIxsEJSqQ2kOCGdOExIZmdIpFkAigQSZ1awb9vo
-         DbtmQvqZOwpDDB4PISn8YqHCRiQO4ajr3ZJpQVE5JHmI17irSbP5PRQiubX0TVAsOzyw
-         TCPL8JvMCCMJK94mpdQaYTz1BJFHE0vjP7azD//q5mwX819ysoQeq7XRz/+L4O6twQDc
-         lSOA==
-X-Gm-Message-State: AOAM531BBY9t+jrGoOBurEMwS3OAE99Gm3z0l5xQYO1SruVFkGEObrj8
-        Y1CoxgwQ6jARTx6V/pQ0HZquMnXo
-X-Google-Smtp-Source: ABdhPJzkYlnuEDFV3LA4qfCwsWwGo6wVIh3H5YCJznl7WxPJ/vK9QnXRAOkfWdj67bX9Yzp8nmUfzw==
-X-Received: by 2002:a1c:7402:: with SMTP id p2mr11065874wmc.117.1595017794784;
-        Fri, 17 Jul 2020 13:29:54 -0700 (PDT)
-Received: from localhost.localdomain (haganm.plus.com. [212.159.108.31])
-        by smtp.gmail.com with ESMTPSA id t14sm4490141wrv.14.2020.07.17.13.29.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 13:29:54 -0700 (PDT)
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-To:     Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
- <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
- <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Matthew Hagan <mnhagan88@gmail.com>
-Message-ID: <ac7f5f39-9f83-64c0-d8d5-9ea059619f67@gmail.com>
-Date:   Fri, 17 Jul 2020 21:29:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fa0GcN94SAkMndYvc3rpkB4mYfViww4odBhNhRRf9p4=;
+        b=EvbrON1M6wkQK3vy7mUAHFumMx3g1uLpsyFYqT+bxrFjNrtZ9snRLqz+NMfokqp8/q
+         C5FN5frkf6sG+jGNDoto1vahcr+3HD1R37XERFsCRYsSw3LwXEQESkA353dlXXfJ/sPa
+         OC9OViAuaaeQx3Fti61nC1JE7xU+VRPcgPUQ6TQc6NewcbXw655rLONvJ1y4VB72ytXt
+         BsX42IwMpUhl63J2Vgm22RLu3GpPKLgFD0mVrt2NtX72NfPWPoY22raGo1wtJGCytIZw
+         bQGjVrg0ChYb7CVjKaYfQN7MdHbcHZ1sj1xSPp6U4Ni/yYelSeJPl9UrsaSRmFVMOcVk
+         VQgA==
+X-Gm-Message-State: AOAM532CgOjpNymoP2Ob3e17r/sacvevnYbhCloab5esPDBAh4JVciSG
+        XMtYg/XBVraemjdpOjE/Q18EKuuTY3iNd256jh8=
+X-Google-Smtp-Source: ABdhPJwa13P8NrbQ/dNqsrcei2jQUP+iK4pzjDOkoi+cVp406kaWYHUtuX9XxJ8BQAYglTHtRZx0XoKXSHpSMbw3sEE=
+X-Received: by 2002:a92:8544:: with SMTP id f65mr11605442ilh.42.1595017859659;
+ Fri, 17 Jul 2020 13:30:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com> <1594429136-20002-17-git-send-email-alex.shi@linux.alibaba.com>
+In-Reply-To: <1594429136-20002-17-git-send-email-alex.shi@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 17 Jul 2020 13:30:48 -0700
+Message-ID: <CAKgT0Udcry01samXT54RkurNqFKnVmv-686ZFHF+iw4b+12T_A@mail.gmail.com>
+Subject: Re: [PATCH v16 16/22] mm/mlock: reorder isolation sequence during munlock
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 10, 2020 at 5:59 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+> This patch reorder the isolation steps during munlock, move the lru lock
+> to guard each pages, unfold __munlock_isolate_lru_page func, to do the
+> preparation for lru lock change.
+>
+> __split_huge_page_refcount doesn't exist, but we still have to guard
+> PageMlocked and PageLRU for tail page in __split_huge_page_tail.
+>
+> [lkp@intel.com: found a sleeping function bug ... at mm/rmap.c]
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  mm/mlock.c | 93 ++++++++++++++++++++++++++++++++++----------------------------
+>  1 file changed, 51 insertions(+), 42 deletions(-)
+>
+> diff --git a/mm/mlock.c b/mm/mlock.c
+> index 228ba5a8e0a5..0bdde88b4438 100644
+> --- a/mm/mlock.c
+> +++ b/mm/mlock.c
+> @@ -103,25 +103,6 @@ void mlock_vma_page(struct page *page)
+>  }
+>
+>  /*
+> - * Isolate a page from LRU with optional get_page() pin.
+> - * Assumes lru_lock already held and page already pinned.
+> - */
+> -static bool __munlock_isolate_lru_page(struct page *page, bool getpage)
+> -{
+> -       if (TestClearPageLRU(page)) {
+> -               struct lruvec *lruvec;
+> -
+> -               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> -               if (getpage)
+> -                       get_page(page);
+> -               del_page_from_lru_list(page, lruvec, page_lru(page));
+> -               return true;
+> -       }
+> -
+> -       return false;
+> -}
+> -
+> -/*
+>   * Finish munlock after successful page isolation
+>   *
+>   * Page must be locked. This is a wrapper for try_to_munlock()
+> @@ -181,6 +162,7 @@ static void __munlock_isolation_failed(struct page *page)
+>  unsigned int munlock_vma_page(struct page *page)
+>  {
+>         int nr_pages;
+> +       bool clearlru = false;
+>         pg_data_t *pgdat = page_pgdat(page);
+>
+>         /* For try_to_munlock() and to serialize with page migration */
+> @@ -189,32 +171,42 @@ unsigned int munlock_vma_page(struct page *page)
+>         VM_BUG_ON_PAGE(PageTail(page), page);
+>
+>         /*
+> -        * Serialize with any parallel __split_huge_page_refcount() which
+> +        * Serialize split tail pages in __split_huge_page_tail() which
+>          * might otherwise copy PageMlocked to part of the tail pages before
+>          * we clear it in the head page. It also stabilizes hpage_nr_pages().
+>          */
+> +       get_page(page);
 
+I don't think this get_page() call needs to be up here. It could be
+left down before we delete the page from the LRU list as it is really
+needed to take a reference on the page before we call
+__munlock_isolated_page(), or at least that is the way it looks to me.
+By doing that you can avoid a bunch of cleanup in these exception
+cases.
 
-On 16/07/2020 23:09, Jakub Kicinski wrote:
-> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
->> Add names and decriptions of additional PORT0_PAD_CTRL properties.
->>
->> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
->> ---
->>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->> index ccbc6d89325d..3d34c4f2e891 100644
->> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->> @@ -13,6 +13,14 @@ Optional properties:
->>  
->>  - reset-gpios: GPIO to be used to reset the whole device
->>  
->> +Optional MAC configuration properties:
->> +
->> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
-> 
-> Perhaps we can say a little more here?
-> 
-From John's patch:
-"The switch allows us to swap the internal wirering of the two cpu ports.
-For the HW offloading to work the ethernet MAC conencting to the LAN
-ports must be wired to cpu port 0. There is HW in the wild that does not
-fulfill this requirement. On these boards we need to swap the cpu ports."
+> +       clearlru = TestClearPageLRU(page);
 
-This option is somewhat linked to instances where both MAC0 and MAC6 are
-used as CPU ports. I may omit this for now since support for this hasn't
-been added and MAC0 is hard-coded as the CPU port. The initial intention
-here was to cover options commonly set by OpenWrt devices, based upon
-their ar8327-initvals, to allow migration to qca8k.
+I'm not sure I fully understand the reason for moving this here. By
+clearing this flag before you clear Mlocked does this give you some
+sort of extra protection? I don't see how since Mlocked doesn't
+necessarily imply the page is on LRU.
 
+>         spin_lock_irq(&pgdat->lru_lock);
+>
+>         if (!TestClearPageMlocked(page)) {
+> -               /* Potentially, PTE-mapped THP: do not skip the rest PTEs */
+> -               nr_pages = 1;
+> -               goto unlock_out;
+> +               if (clearlru)
+> +                       SetPageLRU(page);
+> +               /*
+> +                * Potentially, PTE-mapped THP: do not skip the rest PTEs
+> +                * Reuse lock as memory barrier for release_pages racing.
+> +                */
+> +               spin_unlock_irq(&pgdat->lru_lock);
+> +               put_page(page);
+> +               return 0;
+>         }
+>
+>         nr_pages = hpage_nr_pages(page);
+>         __mod_zone_page_state(page_zone(page), NR_MLOCK, -nr_pages);
+>
+> -       if (__munlock_isolate_lru_page(page, true)) {
+> +       if (clearlru) {
+> +               struct lruvec *lruvec;
+> +
 
->> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
->> +				falling edge.
->> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
->> +				falling edge.
-> 
-> These are not something that other vendors may implement and therefore
-> something we may want to make generic? Andrew?
-> 
->>  Subnodes:
->>  
->>  The integrated switch subnode should be specified according to the binding
-> 
-Matthew
+You could just place the get_page() call here.
+
+> +               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> +               del_page_from_lru_list(page, lruvec, page_lru(page));
+>                 spin_unlock_irq(&pgdat->lru_lock);
+>                 __munlock_isolated_page(page);
+> -               goto out;
+> +       } else {
+> +               spin_unlock_irq(&pgdat->lru_lock);
+> +               put_page(page);
+> +               __munlock_isolation_failed(page);
+
+If you move the get_page() as I suggested above there wouldn't be a
+need for the put_page(). It then becomes possible to simplify the code
+a bit by merging the unlock paths and doing an if/else with the
+__munlock functions like so:
+if (clearlru) {
+    ...
+    del_page_from_lru..
+}
+
+spin_unlock_irq()
+
+if (clearlru)
+    __munlock_isolated_page();
+else
+    __munlock_isolated_failed();
+
+>         }
+> -       __munlock_isolation_failed(page);
+> -
+> -unlock_out:
+> -       spin_unlock_irq(&pgdat->lru_lock);
+>
+> -out:
+>         return nr_pages - 1;
+>  }
+>
+> @@ -297,34 +289,51 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+>         pagevec_init(&pvec_putback);
+>
+>         /* Phase 1: page isolation */
+> -       spin_lock_irq(&zone->zone_pgdat->lru_lock);
+>         for (i = 0; i < nr; i++) {
+>                 struct page *page = pvec->pages[i];
+> +               struct lruvec *lruvec;
+> +               bool clearlru;
+>
+> -               if (TestClearPageMlocked(page)) {
+> -                       /*
+> -                        * We already have pin from follow_page_mask()
+> -                        * so we can spare the get_page() here.
+> -                        */
+> -                       if (__munlock_isolate_lru_page(page, false))
+> -                               continue;
+> -                       else
+> -                               __munlock_isolation_failed(page);
+> -               } else {
+> +               clearlru = TestClearPageLRU(page);
+> +               spin_lock_irq(&zone->zone_pgdat->lru_lock);
+
+I still don't see what you are gaining by moving the bit test up to
+this point. Seems like it would be better left below with the lock
+just being used to prevent a possible race while you are pulling the
+page out of the LRU list.
+
+> +
+> +               if (!TestClearPageMlocked(page)) {
+>                         delta_munlocked++;
+> +                       if (clearlru)
+> +                               SetPageLRU(page);
+> +                       goto putback;
+> +               }
+> +
+> +               if (!clearlru) {
+> +                       __munlock_isolation_failed(page);
+> +                       goto putback;
+>                 }
+
+With the other function you were processing this outside of the lock,
+here you are doing it inside. It would probably make more sense here
+to follow similar logic and take care of the del_page_from_lru_list
+ifr clealru is set, unlock, and then if clearlru is set continue else
+track the isolation failure. That way you can avoid having to use as
+many jump labels.
+
+>                 /*
+> +                * Isolate this page.
+> +                * We already have pin from follow_page_mask()
+> +                * so we can spare the get_page() here.
+> +                */
+> +               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> +               del_page_from_lru_list(page, lruvec, page_lru(page));
+> +               spin_unlock_irq(&zone->zone_pgdat->lru_lock);
+> +               continue;
+> +
+> +               /*
+>                  * We won't be munlocking this page in the next phase
+>                  * but we still need to release the follow_page_mask()
+>                  * pin. We cannot do it under lru_lock however. If it's
+>                  * the last pin, __page_cache_release() would deadlock.
+>                  */
+> +putback:
+> +               spin_unlock_irq(&zone->zone_pgdat->lru_lock);
+>                 pagevec_add(&pvec_putback, pvec->pages[i]);
+>                 pvec->pages[i] = NULL;
+>         }
+> +       /* tempary disable irq, will remove later */
+> +       local_irq_disable();
+>         __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
+> -       spin_unlock_irq(&zone->zone_pgdat->lru_lock);
+> +       local_irq_enable();
+>
+>         /* Now we can release pins of pages that we are not munlocking */
+>         pagevec_release(&pvec_putback);
+> --
+> 1.8.3.1
+>
+>
