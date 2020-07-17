@@ -2,140 +2,125 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798C4C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90445C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56C4220737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F8EF20737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVZwjpaj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qkRGYkOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgGQR10 (ORCPT
+        id S1727822AbgGQR21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:27:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43418 "EHLO
+        Fri, 17 Jul 2020 13:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbgGQR1Z (ORCPT
+        with ESMTP id S1726463AbgGQR20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:27:25 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99941C0619D2;
-        Fri, 17 Jul 2020 10:27:24 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f2so11959893wrp.7;
-        Fri, 17 Jul 2020 10:27:24 -0700 (PDT)
+        Fri, 17 Jul 2020 13:28:26 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38571C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:28:26 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id ga4so11665367ejb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:28:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Uv/mehhqSy3DaoKMUHPQC+Xg+wYizrO+P1oEDPd1R5Y=;
-        b=kVZwjpajXWhE3Tq9GOL4jqxnYJRO/FK2GgA1oiuf6uPwe3ilTYUd/lypogr2w1FeTh
-         7CKsOxRqgLV+9kX3EcRSUAt30lIVsC8Q80ilT6qsf/dlwYx6FO0/j571sY+82fx/LrN1
-         mN9i4tfWOkCKpg7CBEhefo/WM8z0K0pOQV4ugNnzGILBtnLPn4/kWKHdxk73vDRTuJiH
-         BIOK/Mtfnjndb2DLRmo8K23JCcDwWm/4u/Wdn95S34wRy/DpoDTle3nRWcglWq+JPLtw
-         nAmHPjjQNRrFDjZPYrs0NWyLbin3Ex8oRhyKG578JBjetfCFHetuWZ7v9cxWcOKXzwk2
-         8aAA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7JTqB5slGWNqmPcHQg0gX2jPDhSmZshqLrbRwDwrvQQ=;
+        b=qkRGYkOMW6VaoakdKRVaH5aUrXdmDg5t9er9/Vce66oxkl7UQqyWYOlRwXYeCpY3wW
+         oGZLkqSMQcsYzJrQM1bl4jbPOH2ds+18vciyXIQPsIh7FHOEiWMHb+FbQPOAzmUtYx0d
+         jAFb5ZBiJf1OgEZsVfnTqp9/tGZUXdX3DMpkRciQc7dzdFZjMmS+H+DJQfvlr/CrsaXE
+         bH5rENTcwdmpjUlk5dB0JCsW5u+aaktYFW19sQYPYsWpe/3Pe/7RQhyb4jz0/LEW2lX3
+         sL4OLuZO05Zi99C6TpMJZ+BigM//cBFejkcKoMvjeBR4jPKuIlKROtzMLgdkDvKya0hC
+         pOsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Uv/mehhqSy3DaoKMUHPQC+Xg+wYizrO+P1oEDPd1R5Y=;
-        b=hg30df7w1A1OCWOjvBQBlc8Fma1UDkYTKcq2D1cF6ECwOJsKUtjjqIsX+qwP5jpIHi
-         1oH7BMyZtqYPeN1QTw+jeCIv7iLLsN8SvEUbVzHBtJPUPkgDDVpqotzfCrf4feKq1CAN
-         rAsPHWM+ACLLN/WGIYrwJ7daqELO1Q6juqH7bfmwYGB5EZKR2lx6oD0H2V4yQ2tOfVGA
-         Zx2Xjb9WYnx0of3glS2fjSeoY1xn+sCPzuXfhX4NdsBmVdNyMGJqHNw0RDBuKXizMEre
-         ppa92HHA9RD8OFgjZ/HrbyglJ6k3C18pEgvm9ANGxSh6pOEolAmLvVScRGnNVXl2cO/8
-         b66w==
-X-Gm-Message-State: AOAM532uQQeoWOLaFbEO4Xqko8M3fHYpoYFZkBaDY3+9ZyxgaKaj+bNW
-        VjwOmdSBc0yINqivsvJp1neiJ4l3tkQ=
-X-Google-Smtp-Source: ABdhPJzuWUhay96eHMlekR318s1wqVyttXpYIA4Tx9T9DkN1wUZXOq9L0CiquPlDvdCkiIjEj26QoQ==
-X-Received: by 2002:adf:e801:: with SMTP id o1mr11618071wrm.54.1595006843074;
-        Fri, 17 Jul 2020 10:27:23 -0700 (PDT)
-Received: from [10.230.191.242] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 33sm17001764wri.16.2020.07.17.10.27.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 10:27:22 -0700 (PDT)
-Subject: Re: [PATCH net-next] net: bcmgenet: fix error returns in
- bcmgenet_probe()
-To:     Zhang Changzhong <zhangchangzhong@huawei.com>,
-        f.fainelli@gmail.com, davem@davemloft.net, kuba@kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1594973982-27988-1-git-send-email-zhangchangzhong@huawei.com>
-From:   Doug Berger <opendmb@gmail.com>
-Message-ID: <8bdd1465-fcaf-4946-3ee9-baeec765247d@gmail.com>
-Date:   Fri, 17 Jul 2020 10:30:18 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7JTqB5slGWNqmPcHQg0gX2jPDhSmZshqLrbRwDwrvQQ=;
+        b=MV6HI8bil1N6Rz2Q1VTmEPrdWHfwsDfYnw05Dalhpuw2uT9fw2RNb5zXSRMtLjfX/g
+         3Qm67pfJVb/alf/n10EYEnmvd4c60fQR41tejdo4ZSYgXBlcL91NUFVMIh4drK55tgR0
+         dQwP1TdURYkmoEGbOm0+qYJyO/JzVjg81oVznX5w+tfjHA+hXY2nlqHHefhKoUupTprv
+         IGcRgFMDWcqmgDWft517E3O+nVBrDiwnUN2Fq7rXCaeu9tWw1NH50nfcymkvdNYpiT3J
+         7Zjqr/aNgIs75RHgle+t591N6bG6D5IBX6z98KkXYFQ3TvJh4LmNKuv6J8O23NoNW+cS
+         5k4A==
+X-Gm-Message-State: AOAM530xXhqDXVEKP+UEPBrF6mE6h5VD+SkQWtJ92ZQljqTb8MH067uY
+        6x6QBGL5zopaU0qMooYJxzICijmLi1D0Lz4z3DdC8A==
+X-Google-Smtp-Source: ABdhPJzlaBMxTWwrZe4YERy10lN7ECFDWF6Vu5QVaYVW+Htu2uWuMYN38XkknSqycX+o/PgPMS9zy6pkp2BhDOPkYdc=
+X-Received: by 2002:a17:906:eb93:: with SMTP id mh19mr9298900ejb.552.1595006904583;
+ Fri, 17 Jul 2020 10:28:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1594973982-27988-1-git-send-email-zhangchangzhong@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624203200.78870-5-samitolvanen@google.com> <20200624212737.GV4817@hirez.programming.kicks-ass.net>
+ <20200624214530.GA120457@google.com> <20200625074530.GW4817@hirez.programming.kicks-ass.net>
+ <20200625161503.GB173089@google.com> <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
+ <20200625224042.GA169781@google.com> <20200626112931.GF4817@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200626112931.GF4817@hirez.programming.kicks-ass.net>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Fri, 17 Jul 2020 10:28:13 -0700
+Message-ID: <CABCJKucSM7gqWmUtiBPbr208wB0pc25afJXc6yBQzJDZf4LSWA@mail.gmail.com>
+Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Matt Helsley <mhelsley@vmware.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/2020 1:19 AM, Zhang Changzhong wrote:
-> The driver forgets to call clk_disable_unprepare() in error path after
-> a success calling for clk_prepare_enable().
-> 
-> Fix to goto err_clk_disable if clk_prepare_enable() is successful.
-> 
-> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
-> ---
->  drivers/net/ethernet/broadcom/genet/bcmgenet.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> index ee84a26..23df6f2 100644
-> --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> @@ -4016,7 +4016,7 @@ static int bcmgenet_probe(struct platform_device *pdev)
->  	if (err)
->  		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
->  	if (err)
-> -		goto err;
-> +		goto err_clk_disable;
-Please split this clause out as a separate pull-request with this fixes tag:
-Fixes: 99d55638d4b0 ("net: bcmgenet: enable NETIF_F_HIGHDMA flag")
+On Fri, Jun 26, 2020 at 4:29 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Jun 25, 2020 at 03:40:42PM -0700, Sami Tolvanen wrote:
+>
+> > > Not boot tested, but it generates the required sections and they look
+> > > more or less as expected, ymmv.
+>
+> > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > > index a291823f3f26..189575c12434 100644
+> > > --- a/arch/x86/Kconfig
+> > > +++ b/arch/x86/Kconfig
+> > > @@ -174,7 +174,6 @@ config X86
+> > >     select HAVE_EXIT_THREAD
+> > >     select HAVE_FAST_GUP
+> > >     select HAVE_FENTRY                      if X86_64 || DYNAMIC_FTRACE
+> > > -   select HAVE_FTRACE_MCOUNT_RECORD
+> > >     select HAVE_FUNCTION_GRAPH_TRACER
+> > >     select HAVE_FUNCTION_TRACER
+> > >     select HAVE_GCC_PLUGINS
+> >
+> > This breaks DYNAMIC_FTRACE according to kernel/trace/ftrace.c:
+> >
+> >   #ifndef CONFIG_FTRACE_MCOUNT_RECORD
+> >   # error Dynamic ftrace depends on MCOUNT_RECORD
+> >   #endif
+> >
+> > And the build errors after that seem to confirm this. It looks like we might
+> > need another flag to skip recordmcount.
+>
+> Hurm, Steve, how you want to do that?
 
->  
->  	/* Mii wait queue */
->  	init_waitqueue_head(&priv->wq);
-> @@ -4028,14 +4028,14 @@ static int bcmgenet_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv->clk_wol)) {
->  		dev_dbg(&priv->pdev->dev, "failed to get enet-wol clock\n");
->  		err = PTR_ERR(priv->clk_wol);
-> -		goto err;
-> +		goto err_clk_disable;
->  	}
->  
->  	priv->clk_eee = devm_clk_get_optional(&priv->pdev->dev, "enet-eee");
->  	if (IS_ERR(priv->clk_eee)) {
->  		dev_dbg(&priv->pdev->dev, "failed to get enet-eee clock\n");
->  		err = PTR_ERR(priv->clk_eee);
-> -		goto err;
-> +		goto err_clk_disable;
->  	}
->  
->  	/* If this is an internal GPHY, power it on now, before UniMAC is
-> 
-Please split these changes into a pull-request with fixes tag:
-Fixes: c80d36ff63a5 ("net: bcmgenet: Use devm_clk_get_optional() to get
-the clocks")
+Steven, did you have any thoughts about this? Moving recordmcount to
+an objtool pass that knows about call sites feels like a much cleaner
+solution than annotating kernel code to avoid unwanted relocations.
 
-Resubmit the pull-requests with [PATCH net].
-That will make them easier to apply to stable branches.
-
-Otherwise:
-Acked-by: Doug Berger <opendmb@gmail.com>
-
-Thanks!
+Sami
