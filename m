@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56264C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5A0C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3505A22BEB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0ED822C7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgGQELC (ORCPT
+        id S1727040AbgGQELT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:11:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36304 "EHLO
+        Fri, 17 Jul 2020 00:11:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58888 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725300AbgGQELA (ORCPT
+        by vger.kernel.org with ESMTP id S1725300AbgGQELS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:11:00 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06H42swT178897;
-        Fri, 17 Jul 2020 00:10:43 -0400
+        Fri, 17 Jul 2020 00:11:18 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06H42NdX166935;
+        Fri, 17 Jul 2020 00:10:56 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 329x60bmnq-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32792xvffq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 00:10:43 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06H43Afb180453;
-        Fri, 17 Jul 2020 00:10:42 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 329x60bmn6-1
+        Fri, 17 Jul 2020 00:10:56 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06H42ZGF167347;
+        Fri, 17 Jul 2020 00:10:56 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32792xvfev-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 00:10:42 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06H4AFM3003873;
-        Fri, 17 Jul 2020 04:10:40 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 329nmyjfv7-1
+        Fri, 17 Jul 2020 00:10:56 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06H47F4D008029;
+        Fri, 17 Jul 2020 04:10:53 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 327q2y2u0r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 04:10:40 +0000
+        Fri, 17 Jul 2020 04:10:53 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06H4AbM721758282
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06H4AoB72818538
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 04:10:37 GMT
+        Fri, 17 Jul 2020 04:10:50 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42854AE051;
-        Fri, 17 Jul 2020 04:10:37 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id CB058AE051;
+        Fri, 17 Jul 2020 04:10:50 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A433AE055;
-        Fri, 17 Jul 2020 04:10:33 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C883AAE04D;
+        Fri, 17 Jul 2020 04:10:46 +0000 (GMT)
 Received: from bangoria.ibmuc.com (unknown [9.199.41.4])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 17 Jul 2020 04:10:33 +0000 (GMT)
+        Fri, 17 Jul 2020 04:10:46 +0000 (GMT)
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 To:     mpe@ellerman.id.au, mikey@neuling.org
 Cc:     ravi.bangoria@linux.ibm.com, apopple@linux.ibm.com,
@@ -64,9 +64,9 @@ Cc:     ravi.bangoria@linux.ibm.com, apopple@linux.ibm.com,
         mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
         jniethe5@gmail.com, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 03/10] powerpc/watchpoint: Fix DAWR exception for CACHEOP
-Date:   Fri, 17 Jul 2020 09:39:51 +0530
-Message-Id: <20200717040958.70561-4-ravi.bangoria@linux.ibm.com>
+Subject: [PATCH v4 06/10] powerpc/watchpoint: Set CPU_FTR_DAWR1 based on pa-features bit
+Date:   Fri, 17 Jul 2020 09:39:54 +0530
+Message-Id: <20200717040958.70561-7-ravi.bangoria@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com>
 References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com>
@@ -75,75 +75,40 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 mlxlogscore=-1000
- adultscore=0 impostorscore=0 spamscore=100 malwarescore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 lowpriorityscore=0
- mlxscore=100 suspectscore=0 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007170029
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 suspectscore=0
+ mlxlogscore=-1000 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ adultscore=0 impostorscore=0 spamscore=100 malwarescore=0 bulkscore=0
+ mlxscore=100 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007170025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'ea' returned by analyse_instr() needs to be aligned down to cache
-block size for CACHEOP instructions. analyse_instr() does not set
-size for CACHEOP, thus size also needs to be calculated manually.
+As per the PAPR, bit 0 of byte 64 in pa-features property indicates
+availability of 2nd DAWR registers. i.e. If this bit is set, 2nd
+DAWR is present, otherwise not. Host generally uses "cpu-features",
+which masks "pa-features". But "cpu-features" are still not used for
+guests and thus this change is mostly applicable for guests only.
 
-Fixes: 27985b2a640e ("powerpc/watchpoint: Don't ignore extraneous exceptions blindly")
-Fixes: 74c6881019b7 ("powerpc/watchpoint: Prepare handler to handle more than one watchpoint")
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 ---
- arch/powerpc/kernel/hw_breakpoint.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/prom.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index a971e22aea81..c55e67bab271 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -538,7 +538,12 @@ static bool check_dawrx_constraints(struct pt_regs *regs, int type,
- 	if (OP_IS_LOAD(type) && !(info->type & HW_BRK_TYPE_READ))
- 		return false;
- 
--	if (OP_IS_STORE(type) && !(info->type & HW_BRK_TYPE_WRITE))
-+	/*
-+	 * The Cache Management instructions other than dcbz never
-+	 * cause a match. i.e. if type is CACHEOP, the instruction
-+	 * is dcbz, and dcbz is treated as Store.
-+	 */
-+	if ((OP_IS_STORE(type) || type == CACHEOP) && !(info->type & HW_BRK_TYPE_WRITE))
- 		return false;
- 
- 	if (is_kernel_addr(regs->nip) && !(info->type & HW_BRK_TYPE_KERNEL))
-@@ -601,6 +606,15 @@ static bool check_constraints(struct pt_regs *regs, struct ppc_inst instr,
- 	return false;
- }
- 
-+static int cache_op_size(void)
-+{
-+#ifdef __powerpc64__
-+	return ppc64_caches.l1d.block_size;
-+#else
-+	return L1_CACHE_BYTES;
-+#endif
-+}
+diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+index 9cc49f265c86..c76c09b97bc8 100644
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -175,6 +175,8 @@ static struct ibm_pa_feature {
+ 	 */
+ 	{ .pabyte = 22, .pabit = 0, .cpu_features = CPU_FTR_TM_COMP,
+ 	  .cpu_user_ftrs2 = PPC_FEATURE2_HTM_COMP | PPC_FEATURE2_HTM_NOSC_COMP },
 +
- static void get_instr_detail(struct pt_regs *regs, struct ppc_inst *instr,
- 			     int *type, int *size, unsigned long *ea)
- {
-@@ -616,7 +630,12 @@ static void get_instr_detail(struct pt_regs *regs, struct ppc_inst *instr,
- 	if (!(regs->msr & MSR_64BIT))
- 		*ea &= 0xffffffffUL;
- #endif
-+
- 	*size = GETSIZE(op.type);
-+	if (*type == CACHEOP) {
-+		*size = cache_op_size();
-+		*ea &= ~(*size - 1);
-+	}
- }
++	{ .pabyte = 64, .pabit = 0, .cpu_features = CPU_FTR_DAWR1 },
+ };
  
- static bool is_larx_stcx_instr(int type)
+ static void __init scan_features(unsigned long node, const unsigned char *ftrs,
 -- 
 2.26.2
 
