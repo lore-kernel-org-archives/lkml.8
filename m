@@ -2,83 +2,87 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20887C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAFEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0280920739
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1B720739
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DqM3mLPk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMjzFzVm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgGQTZ3 (ORCPT
+        id S1728565AbgGQT0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:25:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33582 "EHLO
+        Fri, 17 Jul 2020 15:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727999AbgGQTZ3 (ORCPT
+        with ESMTP id S1727999AbgGQT0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:25:29 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2757C0619D2;
-        Fri, 17 Jul 2020 12:25:28 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id e22so8521907edq.8;
-        Fri, 17 Jul 2020 12:25:28 -0700 (PDT)
+        Fri, 17 Jul 2020 15:26:07 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB13C0619D2;
+        Fri, 17 Jul 2020 12:26:06 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f18so12284239wrs.0;
+        Fri, 17 Jul 2020 12:26:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lAfngc36kZYlc4tW+sOkNseftULD6JWmok1LgTejfag=;
-        b=DqM3mLPk7gxNlLdRw61F5StlagNUswLd1ImGkFJ2QkfYISoBndeBOn/+gHX13mNwxG
-         U7SCKf8QfBkiIWpT01Q/DJM1BYyEbgCmmLct/XEk7k3UjFJGIEY4oFaGnP2A4UAy34WP
-         yLr0oSYbV3trnFjp+742iXbXvrAB3AD0R1ktxhbNlkToj4xNoceLM1GzVVChK54XVI3/
-         p0ZTVpU4aF37yT9BCVA7CpmIFwU40K1rIg77nZYJf9BwlzzB80fThnQeIPrNvmgyDlUE
-         pwSC6igKxoiwdG3OP5HGh9mYJX2oyplyyKJ3PdVMLoKRShqxD0YGauPXBPsh1C2/jpHC
-         3MOA==
+        bh=AkK4eyDYfDukVVGQtgB78a5zI96VA608ufKkpODlhC0=;
+        b=fMjzFzVm1SOC5vGih5G//3tySgQLem+30D4ao6tDLAhb1tX1YQWkGlw9X/r0X2DbHs
+         fNDxKs03oWU4VSYYEGt9DlHrweDMGuR7Apnt2al4Zhuu2Uo5eiYk9ITPNQBWYHqEC92s
+         fQnbFXg4yMKnIiiQzm/EAknzsouXtS3jPLt0lKkWPLkudB3rPgaiJ/NdjBgDsqhUMcmp
+         P3QSHNt+YyIN8a0l/zzvlu/we9WyfUTuOjyEMT2tHce7ydUcfMmfjApTu4fGG3dRaIQU
+         nK8ztcvOZqrDbDZ1VCtsXCjugObMoYw79hHv8dibXYPRTCr8+JjFxfEk/Y7afjzuFfAo
+         NsWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=lAfngc36kZYlc4tW+sOkNseftULD6JWmok1LgTejfag=;
-        b=rR3cuJnvCutpa1quWK2Z7gSgEO2SZHxgSYjRI5q8S9d1klQnALmv64bQU3JKxAWhqE
-         EUAEdCIQYBEKjcQavT90J4rR0F2crF3lgY1E5Fp64IfEHwvt3TGlPLR/1unwFB0AWUcy
-         xapyf8LRiaaHF4uJRR22R9XV/QSvh2k7aG0smWI+/b9bNynygvzlPB8tJGWbePi6GdYX
-         JUmOCG0Vn5Y2yfwUdPwIKwpkIPuu0X8EigIMBPwkH/hy3veeX+nmxblQJatfh0aIEwFG
-         f5+kkASRxrtGT2fooqS2y/7PPD0NVBYpzo6W7B0aQunEDssNjm7JX/FSw6TIfFfHMHOT
-         tjXw==
-X-Gm-Message-State: AOAM530J0FNsPAb+9Ms664BdakqiCye2a4i9FcESCKcmqBeJwGZR0g+J
-        RBJhjGtK+JXCDgQrT9vOnkmeWme5
-X-Google-Smtp-Source: ABdhPJzDYzyCYmLv3ddFKR2SPO7z6ZaxytPGCzyFdwoYdldNbaXrjFl7vOAd6HspPuMLJZiWv3xpxA==
-X-Received: by 2002:a05:6402:363:: with SMTP id s3mr10432439edw.238.1595013927437;
-        Fri, 17 Jul 2020 12:25:27 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:d533:5ce9:ffd3:d986? ([2a01:110f:b59:fd00:d533:5ce9:ffd3:d986])
-        by smtp.gmail.com with ESMTPSA id cd11sm8626738ejb.57.2020.07.17.12.25.26
+        bh=AkK4eyDYfDukVVGQtgB78a5zI96VA608ufKkpODlhC0=;
+        b=S7BbXtUNP/NOTCo1vOufAfFr/HiDH4IZeQHPNi5TOwfJ8txuMvaDV6mcVWHMP6BZyM
+         XbA/R5oXIsH/zKtkptXEAg7WdvCknvFBoXBYw6ceKhSLrneAFuRs32hGpOq9dvL0il0G
+         ibCqmaUcs3i0rlEtAiKAv70w9AHobZ/WciYReVEuk935kOVINrQEkJgC+kEO9rmhaNbD
+         KShojIj6EPqhuUQGC9GiIv2KHGdrxjBsH0NwHFDKn5dJyzbG3QJeRkEbB/S+6Wm/TctZ
+         tbZiFOdS4DR0ML4iaoU+25F3FB24bqRhMXaTIHQKiTiw0Med99roGcOGc7f5HNfgCW9o
+         wGOA==
+X-Gm-Message-State: AOAM532Vx94ns8mvNH7azKGCQf7Bm5N2BmDkBTGHlI06SMIdkiUxBzDr
+        8fpvGe4Y+ETvIGRoI7fO4jfkobHT
+X-Google-Smtp-Source: ABdhPJyzzgQauzZrXRLBUtlDbHT36pCVhtn35Z5SW1bVvs345TJZd2iZoA/uNDwvVculMX3hyFJrOQ==
+X-Received: by 2002:adf:ed8c:: with SMTP id c12mr11792085wro.359.1595013965061;
+        Fri, 17 Jul 2020 12:26:05 -0700 (PDT)
+Received: from localhost.localdomain (haganm.plus.com. [212.159.108.31])
+        by smtp.gmail.com with ESMTPSA id g145sm20090812wmg.23.2020.07.17.12.26.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 12:25:26 -0700 (PDT)
-Subject: Re: [PATCH] leds: add NCT6795D driver
-To:     Pavel Machek <pavel@ucw.cz>, Alexandre Courbot <gnurou@gmail.com>
-Cc:     Dan Murphy <dmurphy@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-References: <20200713134114.137265-1-gnurou@gmail.com>
- <20200714223344.GA20740@amd>
- <CAAVeFuKomLcAue9rGXhK3Uc=H+v9ZLBA84Ozr_rZDRQMYeC=dg@mail.gmail.com>
- <17fe52a2-73ff-b547-8a59-5df009c929c8@gmail.com>
- <CAAVeFuJQCp7Fpqx3nUHMy29Jw1pLNoQtxRw3qxfEf3YKnrm0fw@mail.gmail.com>
- <20200717074410.GA8895@amd>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <756fa49f-bf67-0447-cf45-1358b66c40f8@gmail.com>
-Date:   Fri, 17 Jul 2020 21:25:24 +0200
+        Fri, 17 Jul 2020 12:26:04 -0700 (PDT)
+Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
+ properties
+To:     Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+ <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+ <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200716223236.GA1314837@lunn.ch>
+From:   Matthew Hagan <mnhagan88@gmail.com>
+Message-ID: <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
+Date:   Fri, 17 Jul 2020 20:26:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200717074410.GA8895@amd>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <20200716223236.GA1314837@lunn.ch>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,49 +90,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/20 9:44 AM, Pavel Machek wrote:
-> Hi!
-> 
->>>>>> Add support for the LED feature of the NCT6795D chip found on some
->>>>>> motherboards, notably MSI ones. The LEDs are typically used using a
->>>>>> RGB connector so this driver creates one LED device for each color
->>>>>> component.
->>>>>
->>>>> Ok, let me take a look. What entries does it present in /sys?
->>>>
->>>> Right now these 3 directories in /sys/class/leds:
->>>>
->>>> nct6795d:blue:
->>>> nct6795d:green:
->>>> nct6795d:red:
->>>>
->>>> with the usual suspects `brightness` and `max_brightness` in each. I
->>>> am not 100% sure I got the names right so please let me know if that
->>>> is not correct.
+
+
+On 16/07/2020 23:32, Andrew Lunn wrote:
+> On Thu, Jul 16, 2020 at 03:09:25PM -0700, Jakub Kicinski wrote:
+>> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
+>>> Add names and decriptions of additional PORT0_PAD_CTRL properties.
 >>>
->>> You miss LED function, that should be in the second section.
+>>> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
+>>>  1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>> index ccbc6d89325d..3d34c4f2e891 100644
+>>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>> @@ -13,6 +13,14 @@ Optional properties:
+>>>  
+>>>  - reset-gpios: GPIO to be used to reset the whole device
+>>>  
+>>> +Optional MAC configuration properties:
+>>> +
+>>> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
+>>
+>> Perhaps we can say a little more here?
+>>
+>>> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
+>>> +				falling edge.
+>>> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
+>>> +				falling edge.
+>>
+>> These are not something that other vendors may implement and therefore
+>> something we may want to make generic? Andrew?
 > 
-> third section?
-
-Ekhm, right.
-
+> I've never seen any other vendor implement this. Which to me makes me
+> think this is a vendor extension, to Ciscos vendor extension of
+> 1000BaseX.
 > 
->> The reason for not having a function at the moment is that I took a
->> look at include/dt-bindings/leds/common.h and could not find any
->> function that could reasonably apply. This basically controls a RGB
->> connector on the motherboard which serves no particular function - you
->> can plug a RGB fan or anything else you want and control it in any
->> fashion. Is there a function that applies to this use-case?
+> Matthew, do you have a real use cases of these? I don't see a DT patch
+> making use of them. And if you do, what is the PHY on the other end
+> which also allows you to invert the clocks?
+> 
+The use case I am working on is the Cisco Meraki MX65 which requires bit
+18 set (qca,sgmii-txclk-falling-edge). On the other side is a BCM58625
+SRAB with ports 4 and 5 in SGMII mode. There is no special polarity
+configuration set on this side though I do have very limited info on
+what is available. The settings I have replicate the vendor
+configuration extracted from the device.
 
-According to common LED bindings you should propose a new function
-if none of the existing ones fits your needs.
+The qca,sgmii-rxclk-falling-edge option (bit 19) is commonly used
+according to the device trees found in the OpenWrt, which is still using
+the ar8216 driver. With a count through the ar8327-initvals I see bit 19
+set on 18 of 22 devices using SGMII on MAC0.
+>        Andrew
+> 
 
-> This is normally used for motherboard lightning, right? I believe this
-> is getting common on gaming boards, and we want common support for
-> that.
-
-I agree.
-
--- 
-Best regards,
-Jacek Anaszewski
+Matthew
