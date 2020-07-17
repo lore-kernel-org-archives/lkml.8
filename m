@@ -2,144 +2,129 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8464DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC5D20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD62206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:21:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="wOwSRd4t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+B1FN5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgGQSUV (ORCPT
+        id S1728140AbgGQSVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:20:21 -0400
-Received: from mga14.intel.com ([192.55.52.115]:54614 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgGQSUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:20:20 -0400
-IronPort-SDR: NrjipcfP/ib/M827hMK0Tgd+ajEnYWKmBmB/GY6VSDN1rim2QXeNS931+pEqLeHH5gpWgqVbl9
- dYPI775+qYtw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="148818372"
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="148818372"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 11:20:17 -0700
-IronPort-SDR: uoUIWsFuI1ggkZ+90mAWSDhzaxElWi27C1B+/JAR5ghIqW5NufNKkvEYG2qJtdOxSpAVP19Htz
- irHUWL9/bYpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="325500586"
-Received: from orsmsx605.amr.corp.intel.com ([10.22.229.18])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Jul 2020 11:20:16 -0700
-Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
- ORSMSX605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 17 Jul 2020 11:20:16 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- orsmsx605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 17 Jul 2020 11:20:16 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.54) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Fri, 17 Jul 2020 11:20:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eib6HwLVoXeaV7auHqbpouh81lluFO61QxhvFgtoFyvSYDC6NOz0obfhhOutvzlziAHsGiWF3c0boqABqaAJaBl81tJk6yI66/lojGu8svp6Lr4tTBZ7qQKPFA675fxqEOxIhBASaIe6trsMFigiZXZ69nCyrjb1mDdQjkjB5dwJ1AExHLTARzzLtvElHrYnYLKNPBv+aXWqEYGp7EnzjZCP/htCKYsk9y68inrMGIDPnhIh57L2yWOa4W/I3eL2H2LkGoBva/2BpjdgsH1q2jS/onvlEzc2e/E63yruxV+3IqkD2CRChSlWgflf2mZBTICMpOqTfvLmC50t46cpWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=riZMtts0ffci9nbXLu3GOvTbMlEBlb7ug4cALPOi61s=;
- b=Ksu2G31De7IJmSadjHw6djd2NOFRuk4dX10vx0dtzfUTaNcepEz7jURsBk2YK8j40/KaFK4vCPX7KgLboMxV3PUrkUO5CdXUrgz6eXcMLRbTx7sl1AtL+00voHmJxOwBpt1IS1MgQYDkH70JeI1THOjBhPYtQyrwm70JoerDCsLsN31AtyXYUXhaCbhab/hz8pxOcQObx/UjWKzC2hp48z0jaeTDwGHdJjr69pI2hOV4QVoAIJWyoF1XsamzJFOmxUYCJbo1knb9UUYG8+vzuKEZtqKsjSu46/4IvGDUvhYJzUMfAhW92H84FA1DbMsHYwmP1ASA8cbI8CgL6v51VA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=riZMtts0ffci9nbXLu3GOvTbMlEBlb7ug4cALPOi61s=;
- b=wOwSRd4tm9WtwigRIqlN0GzUrvoIV4Il0Q1cyOxlsGiTlolH/GQx5uEieslIpjej/xz8WuJvpi96V7eb48sJtrs2HbIbV4M+kIYOS2HMphwvPGhT1K5eXVcJNULzaStXZ7kVQL5k67kfbV33dQERvY6jwSU96UIR0woW0BJ8XpY=
-Received: from SN6PR11MB2574.namprd11.prod.outlook.com (2603:10b6:805:59::14)
- by SN6PR11MB3485.namprd11.prod.outlook.com (2603:10b6:805:b7::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Fri, 17 Jul
- 2020 18:20:13 +0000
-Received: from SN6PR11MB2574.namprd11.prod.outlook.com
- ([fe80::b8e9:bae7:d1d8:64f4]) by SN6PR11MB2574.namprd11.prod.outlook.com
- ([fe80::b8e9:bae7:d1d8:64f4%2]) with mapi id 15.20.3174.025; Fri, 17 Jul 2020
- 18:20:13 +0000
-From:   "Eads, Gage" <gage.eads@intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "Karlsson, Magnus" <magnus.karlsson@intel.com>,
-        "Topel, Bjorn" <bjorn.topel@intel.com>
-Subject: RE: [PATCH 04/20] dlb2: add device ioctl layer and first 4 ioctls
-Thread-Topic: [PATCH 04/20] dlb2: add device ioctl layer and first 4 ioctls
-Thread-Index: AQHWWFqviGLMQx7oL0apZ2u4U144JKkMGHww
-Date:   Fri, 17 Jul 2020 18:20:12 +0000
-Message-ID: <SN6PR11MB2574B116D9A729D139E25486F67C0@SN6PR11MB2574.namprd11.prod.outlook.com>
-References: <20200712134331.8169-1-gage.eads@intel.com>
- <20200712134331.8169-5-gage.eads@intel.com>
- <68d23285-9028-a70d-1dee-f044c507109d@infradead.org>
-In-Reply-To: <68d23285-9028-a70d-1dee-f044c507109d@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [68.203.30.51]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ee7fb9b-033a-4ef2-5272-08d82a7e0c31
-x-ms-traffictypediagnostic: SN6PR11MB3485:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB34851CDF0150A40AD36B5D03F67C0@SN6PR11MB3485.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gobJAJ2Qm4KjjDdssdqjGPWsNv3F+p6l/0FatIbckn1xTygCkGjg3itTOQbn7sOe5HkQ+Y81QjBDnTD4DlQCvzWfNQXxb+jw2tiVWFHSqHgySdpwuBE/OI6PZhPACWNA5WLmmgd9nwpRpLkSnh8/KBEDtYXG87LPGUc+mstZ+1PxYm+/opoCWPnxgx3NTPCfXPfm+r41fW7YHNDUclNlUy2Vf5ANX6fxfOiQbOagV8X4KXW1OSs715H1ZrG9f4/GcgltqU9ZtT0jSBWmqv3mYdDGXxOUC50sKmZ7sS1isukeBjuGVHcxUxF+V+XG1SE1D+Jl8uo4pXwiFroqVStckQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2574.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(366004)(376002)(346002)(478600001)(6506007)(53546011)(186003)(26005)(2906002)(76116006)(4326008)(66446008)(64756008)(66556008)(66476007)(110136005)(66946007)(316002)(54906003)(33656002)(8936002)(7696005)(9686003)(8676002)(83380400001)(5660300002)(52536014)(71200400001)(86362001)(107886003)(55016002)(4744005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: lxMw6ETiRbyah/QxIbqxUgu/Wm0/DY6tEqv0Bu6hGXwFNJf2m/GFJUV4AXYKvzcHVNy1ZqUYupZcqOjQgXB+jbtEj8/K85zGGMwT+GCdooAdZ8yY5g2eeFo0ISpPcGxUb6zfM+/yTO0tUihTi6NDviF7PSVe5gbdS9lMKo5XQApjz0ixxHq8nnSVM+Mg0eu/et620Z56O8VYM1FMdSMDvSzRE2PRQcs7C3uXH6X5Kk6U1vDLdlQMnLkvdm50Huzn34T8NoeMBlstsgquVlWppJLsmQO65lYkTj/KrJDxzYR70jXMTan5EgL3056BzI01CJiQ2GrtT0j6Bf17rHMZ+YRKyCwgRmsd57XYRVW5jH1M1tvnwW65GOaJOJRoaeNV/AhINFO5kiizwZfcoxvZW+178yPAqDdXrjmA2y55l1XP/BgUGS3fCAz3w771BNbVVMvdSpToSJC0oI1fHnDs/3VhpVIl3xJz30zYH+iV+Bs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 17 Jul 2020 14:21:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgGQSVZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:21:25 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CB1C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:21:24 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id l17so11376802iok.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=3BZIZFFWoflh+aCDXlOZJ2oTKuNvfj+cVytvkYsY/sw=;
+        b=i+B1FN5sfEO2JO9mjOHGAiDaKC/nW0OgUp/t1+69iSYVjdeyNRltLCBtFwhn4ddP2a
+         zOJVCdAdngjvA78h9yJHASGP7gJfhkfDYdcLGIOCeCNKiluR5J9tHzkIAx8km7j/A+xO
+         Hoo5NFdS2nXai3EJFSgi/hu9Xd1UcPkuCgco9YBa65IazvlkXrijzalxxD6dxeEIbflU
+         IQHyZ/wR6oocqbmgOIQNepjp8DNeovmr+lFHb+G0a7fRMF8QoLWDVvUYD2K8T54YcwoR
+         LTRw3yglABzPs7FUue1Ab4g0+i8JIh2wkKWs02114SqmHVqVi9VLXSsx7GKhEGcvD147
+         6xiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=3BZIZFFWoflh+aCDXlOZJ2oTKuNvfj+cVytvkYsY/sw=;
+        b=ogZJy5tIdjqRc/q+E5EQJr1MHF5v/uos91hLJhYWeQ5sb6BVv4yNnlWYGamDG+3seh
+         xf26C8GIQzIMjCiM4oNLut7ZxcDf+EAj655upWyqIx1i4HC1/Jx1vQqme9foQUCEYj9R
+         B+kZy4XjwpuiXDgC3spLW5U6ftX1MpXdV7cqVHueKvwb/PZFtLzddWimSNPjej5+ywEG
+         gNciiB6c9JBJVBGuBNq9oassg5vc5IoPyXR+mije90iVJaNmYrvkS828E6Gfc6szSvIW
+         LwY8d15XZNV8tvHUdEx7v6/roWMG2Qqt75ZTdEeVHxxUqoQOGMoxVJnFgZqRVEzVoTMG
+         5CRw==
+X-Gm-Message-State: AOAM533gG/9FD9JyAkSq1nb4XkZZrQmD2URRBiO+bm3QqInHPet7uFi0
+        tAVpG/+PgCyTP79pEcfwH29Xb64W3c9L9mIkPLk=
+X-Google-Smtp-Source: ABdhPJy4YkCpGbclYNUSLg9DK7bhX6/BwVjEl5UosNsBMzslhwjwMHZlLBYZ7I2+xBw3oxYA+REgm2aHqgHNwwSJeKk=
+X-Received: by 2002:a5e:9309:: with SMTP id k9mr10687234iom.135.1595010084329;
+ Fri, 17 Jul 2020 11:21:24 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2574.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ee7fb9b-033a-4ef2-5272-08d82a7e0c31
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 18:20:13.0100
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /U6FEmicMWhtbtbZNOgQM1STqGjdKOktC8T+cXFPP76EViN2tDJUiUBg/PvIpUW0K1M7F0uQDBl5d0M8tpKkZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3485
-X-OriginatorOrg: intel.com
+References: <20200714023836.2310569-1-nivedita@alum.mit.edu>
+ <20200715004133.1430068-1-nivedita@alum.mit.edu> <20200717134654.GA3187880@rani.riverdale.lan>
+ <CAKwvOdnTbatx8VB-rJSzyFPwfYnkMYK28yLBn1G+hUu8dyfYRA@mail.gmail.com>
+In-Reply-To: <CAKwvOdnTbatx8VB-rJSzyFPwfYnkMYK28yLBn1G+hUu8dyfYRA@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 17 Jul 2020 20:21:12 +0200
+Message-ID: <CA+icZUUxE=+yq-NPitRBwJ-92cqEP6TXdf=kRiLTN09UQUAi2Q@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] x86/boot: Remove run-time relocations from
+ compressed kernel
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFuZHkgRHVubGFwIDxy
-ZHVubGFwQGluZnJhZGVhZC5vcmc+DQo+IFNlbnQ6IFN1bmRheSwgSnVseSAxMiwgMjAyMCA5OjQy
-IEFNDQo+IFRvOiBFYWRzLCBHYWdlIDxnYWdlLmVhZHNAaW50ZWwuY29tPjsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsNCj4gYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlv
-bi5vcmcNCj4gQ2M6IEthcmxzc29uLCBNYWdudXMgPG1hZ251cy5rYXJsc3NvbkBpbnRlbC5jb20+
-OyBUb3BlbCwgQmpvcm4NCj4gPGJqb3JuLnRvcGVsQGludGVsLmNvbT4NCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCAwNC8yMF0gZGxiMjogYWRkIGRldmljZSBpb2N0bCBsYXllciBhbmQgZmlyc3QgNCBp
-b2N0bHMNCj4gDQo+IE9uIDcvMTIvMjAgNjo0MyBBTSwgR2FnZSBFYWRzIHdyb3RlOg0KPiA+ICsv
-KioqKioqKioqKioqKioqKioqKiovDQo+ID4gKy8qIGRsYjIgaW9jdGwgY29kZXMgKi8NCj4gPiAr
-LyoqKioqKioqKioqKioqKioqKioqLw0KPiA+ICsNCj4gPiArI2RlZmluZSBETEIyX0lPQ19NQUdJ
-QyAgJ2gnDQo+IA0KPiBIaSwNCj4gVGhpcyBtYWdpYyB2YWx1ZSBzaG91bGQgYmUgZG9jdW1lbnRl
-ZCBpbiBEb2N1bWVudGF0aW9uL3VzZXJzcGFjZS0NCj4gYXBpL2lvY3RsL2lvY3RsLW51bWJlci5y
-c3QuDQo+IA0KPiB0aGFua3MuDQo+IC0tDQo+IH5SYW5keQ0KDQpXaWxsIGZpeCBpbiB2Mi4NCg0K
-VGhhbmtzLA0KR2FnZQ0K
+On Fri, Jul 17, 2020 at 8:17 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Fri, Jul 17, 2020 at 6:46 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Tue, Jul 14, 2020 at 08:41:26PM -0400, Arvind Sankar wrote:
+> > > The compressed kernel currently contains bogus run-time relocations in
+> > > the startup code in head_{32,64}.S, which are generated by the linker,
+> > > but must not actually be processed at run-time.
+> > >
+> > > This generates warnings when linking with the BFD linker, and errors
+> > > with LLD, which defaults to erroring on run-time relocations in read-only
+> > > sections. It also requires the -z noreloc-overflow hack for the 64-bit
+> > > kernel, which prevents us from linking it as -pie on an older BFD linker
+> > > (<= 2.26) or on LLD, because the locations that are to be apparently
+> > > relocated are only 32-bits in size and so cannot really have
+> > > R_X86_64_RELATIVE relocations.
+> > >
+> > > This series aims to get rid of these relocations. I've build- and
+> > > boot-tested with combinations of clang/gcc-10 with lld/bfd-2.34, and
+> > > gcc-4.9.0 with bfd-2.24, skipping clang on 32-bit because it currently
+> > > has other issues [0].
+> > >
+> >
+> > Hi Thomas, Ingo, Borislav, would you be able to take a look over this
+> > series in time for 5.9?
+>
+> Hi Arvind, thanks for the series; I'm behind on testing.  When I try
+> to apply this series on top of linux-next, I get a collision in
+> drivers/firmware/efi/libstub/Makefile:27 when applying "0002
+> x86/boot/compressed: Force hidden visibility for all symbol
+> references". Would you mind refreshing the series to avoid that
+> collision?
+>
+
+I guess taking a Linux-next release as a new base is not a good idea.
+With the next Linux-next release... new troubles.
+Please, keep the base on recent Linux v5.8-rcX.
+
+- Sedat -
