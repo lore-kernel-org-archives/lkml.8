@@ -2,135 +2,382 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88F7C43469
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEF7C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95411207EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4082B2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:44:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cARyOXDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgGQRoE (ORCPT
+        id S1728324AbgGQRoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:44:04 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:42415 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726786AbgGQRoC (ORCPT
+        Fri, 17 Jul 2020 13:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728155AbgGQRnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:44:02 -0400
-Received: (qmail 1156982 invoked by uid 1000); 17 Jul 2020 13:44:00 -0400
-Date:   Fri, 17 Jul 2020 13:44:00 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, paulmck <paulmck@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
-Message-ID: <20200717174400.GA1156312@rowland.harvard.edu>
-References: <20200710015646.2020871-1-npiggin@gmail.com>
- <1370747990.15974.1594915396143.JavaMail.zimbra@efficios.com>
- <595582123.17106.1594925921537.JavaMail.zimbra@efficios.com>
- <20200716212416.GA1126458@rowland.harvard.edu>
- <1770378591.18523.1594993165391.JavaMail.zimbra@efficios.com>
- <20200717145102.GC1147780@rowland.harvard.edu>
- <1697220787.18880.1595000348405.JavaMail.zimbra@efficios.com>
- <20200717161145.GA1150454@rowland.harvard.edu>
- <12700909.18968.1595002969773.JavaMail.zimbra@efficios.com>
+        Fri, 17 Jul 2020 13:43:23 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46ED7C0619D6
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:23 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ls15so6894776pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:43:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ye5MMqp75FSC0nZmUKJZpPyaOqOv72KYmvLAzdzwzgM=;
+        b=cARyOXDEMA9HsSOs8Z9kzh/i4ez2+EXz2dzr7L7FLrV5aSV0ahHPqlAQp6fKKttHFJ
+         dnf/naRxMY3RaFe7uPzBaJusxDyTdYsF+CSt4drFPiYdrFIVi3y2ecXpt0igUbZAKJ9R
+         XimKVxgwlmf3RL9uVLspdDjEAeIety4B8iTog=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ye5MMqp75FSC0nZmUKJZpPyaOqOv72KYmvLAzdzwzgM=;
+        b=EFyDN3PMdKa/FLWKy8UjgTQtL4YM0StpW3hI4lWZjfSiOsv0fDZ8B1UtahgBZnS9nN
+         mbKG6O0+uX2H1xJ5GHzpOZhDrNRq5VvQKQuMJdjr2On4EOedhuUKSlBNRnv+b5up0mZN
+         uxFkQLyS+hlPBphv/gowur2bYQ20DGasnPLg5PBmPlkglb2JVxSQPwxU0xpp/2qm6wy4
+         8PoVWBZNlYhV3l7ifke25s2jnu3gjCUtyEHWUccc3hWdf9bPsMz2ejIct2HDfto0ytIP
+         EiYFFWixWroFtwVaS/FOtwSBXPEWqHjszAsE2Iw+YpOBWrM2VRHHGA1bxbATMylx5pkj
+         vuOg==
+X-Gm-Message-State: AOAM531Cye6bB6xFPGOiig6YqoYSGPMQSN5Khp+6rHnClo/AqpT8OJf2
+        iZLm5jw2Z/LxejnnuGEXBdAFdg==
+X-Google-Smtp-Source: ABdhPJyMpkg/XpQgl4LGIixhC0XGQB++DRj286YuOcuzc3dBmPZ8Aqb5h9uMGBKVbDgbhC6/zwYl5A==
+X-Received: by 2002:a17:90a:2465:: with SMTP id h92mr10365958pje.26.1595007802805;
+        Fri, 17 Jul 2020 10:43:22 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v22sm8307638pfe.48.2020.07.17.10.43.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 10:43:17 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        James Morris <jmorris@namei.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 06/13] fs/kernel_read_file: Remove redundant size argument
+Date:   Fri, 17 Jul 2020 10:43:01 -0700
+Message-Id: <20200717174309.1164575-7-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200717174309.1164575-1-keescook@chromium.org>
+References: <20200717174309.1164575-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12700909.18968.1595002969773.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:22:49PM -0400, Mathieu Desnoyers wrote:
-> ----- On Jul 17, 2020, at 12:11 PM, Alan Stern stern@rowland.harvard.edu wrote:
-> 
-> >> > I agree with Nick: A memory barrier is needed somewhere between the
-> >> > assignment at 6 and the return to user mode at 8.  Otherwise you end up
-> >> > with the Store Buffer pattern having a memory barrier on only one side,
-> >> > and it is well known that this arrangement does not guarantee any
-> >> > ordering.
-> >> 
-> >> Yes, I see this now. I'm still trying to wrap my head around why the memory
-> >> barrier at the end of membarrier() needs to be paired with a scheduler
-> >> barrier though.
-> > 
-> > The memory barrier at the end of membarrier() on CPU0 is necessary in
-> > order to enforce the guarantee that any writes occurring on CPU1 before
-> > the membarrier() is executed will be visible to any code executing on
-> > CPU0 after the membarrier().  Ignoring the kthread issue, we can have:
-> > 
-> >	CPU0			CPU1
-> >				x = 1
-> >				barrier()
-> >				y = 1
-> >	r2 = y
-> >	membarrier():
-> >	  a: smp_mb()
-> >	  b: send IPI		IPI-induced mb
-> >	  c: smp_mb()
-> >	r1 = x
-> > 
-> > The writes to x and y are unordered by the hardware, so it's possible to
-> > have r2 = 1 even though the write to x doesn't execute until b.  If the
-> > memory barrier at c is omitted then "r1 = x" can be reordered before b
-> > (although not before a), so we get r1 = 0.  This violates the guarantee
-> > that membarrier() is supposed to provide.
-> > 
-> > The timing of the memory barrier at c has to ensure that it executes
-> > after the IPI-induced memory barrier on CPU1.  If it happened before
-> > then we could still end up with r1 = 0.  That's why the pairing matters.
-> > 
-> > I hope this helps your head get properly wrapped.  :-)
-> 
-> It does help a bit! ;-)
-> 
-> This explains this part of the comment near the smp_mb at the end of membarrier:
-> 
->          * Memory barrier on the caller thread _after_ we finished
->          * waiting for the last IPI. [...]
-> 
-> However, it does not explain why it needs to be paired with a barrier in the
-> scheduler, clearly for the case where the IPI is skipped. I wonder whether this part
-> of the comment is factually correct:
-> 
->          * [...] Matches memory barriers around rq->curr modification in scheduler.
+In preparation for refactoring kernel_read_file*(), remove the redundant
+"size" argument which is not needed: it can be included in the return
+code, with callers adjusted. (VFS reads already cannot be larger than
+INT_MAX.)
 
-The reasoning is pretty much the same as above:
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/base/firmware_loader/main.c |  8 ++++----
+ fs/kernel_read_file.c               | 20 +++++++++-----------
+ include/linux/kernel_read_file.h    |  8 ++++----
+ kernel/kexec_file.c                 | 13 ++++++-------
+ kernel/module.c                     |  7 +++----
+ security/integrity/digsig.c         |  5 +++--
+ security/integrity/ima/ima_fs.c     |  5 +++--
+ 7 files changed, 32 insertions(+), 34 deletions(-)
 
-	CPU0			CPU1
-				x = 1
-				barrier()
-				y = 1
-	r2 = y
-	membarrier():
-	  a: smp_mb()
-				switch to kthread (includes mb)
-	  b: read rq->curr == kthread
-				switch to user (includes mb)
-	  c: smp_mb()
-	r1 = x
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index d4a413ea48ce..ea419c7d3d34 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -462,7 +462,7 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
+ 					     size_t in_size,
+ 					     const void *in_buffer))
+ {
+-	loff_t size;
++	size_t size;
+ 	int i, len;
+ 	int rc = -ENOENT;
+ 	char *path;
+@@ -494,10 +494,9 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
+ 		fw_priv->size = 0;
+ 
+ 		/* load firmware files from the mount namespace of init */
+-		rc = kernel_read_file_from_path_initns(path, &buffer,
+-						       &size, msize,
++		rc = kernel_read_file_from_path_initns(path, &buffer, msize,
+ 						       READING_FIRMWARE);
+-		if (rc) {
++		if (rc < 0) {
+ 			if (rc != -ENOENT)
+ 				dev_warn(device, "loading %s failed with error %d\n",
+ 					 path, rc);
+@@ -506,6 +505,7 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
+ 					 path);
+ 			continue;
+ 		}
++		size = rc;
+ 		dev_dbg(device, "Loading firmware from %s\n", path);
+ 		if (decompress) {
+ 			dev_dbg(device, "f/w decompressing %s\n",
+diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
+index 54d972d4befc..dc28a8def597 100644
+--- a/fs/kernel_read_file.c
++++ b/fs/kernel_read_file.c
+@@ -5,7 +5,7 @@
+ #include <linux/security.h>
+ #include <linux/vmalloc.h>
+ 
+-int kernel_read_file(struct file *file, void **buf, loff_t *size,
++int kernel_read_file(struct file *file, void **buf,
+ 		     loff_t max_size, enum kernel_read_file_id id)
+ {
+ 	loff_t i_size, pos;
+@@ -29,7 +29,7 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+-	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
++	if (i_size > INT_MAX || (max_size > 0 && i_size > max_size)) {
+ 		ret = -EFBIG;
+ 		goto out;
+ 	}
+@@ -59,8 +59,6 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+ 	}
+ 
+ 	ret = security_kernel_post_read_file(file, *buf, i_size, id);
+-	if (!ret)
+-		*size = pos;
+ 
+ out_free:
+ 	if (ret < 0) {
+@@ -72,11 +70,11 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+ 
+ out:
+ 	allow_write_access(file);
+-	return ret;
++	return ret == 0 ? pos : ret;
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file);
+ 
+-int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
++int kernel_read_file_from_path(const char *path, void **buf,
+ 			       loff_t max_size, enum kernel_read_file_id id)
+ {
+ 	struct file *file;
+@@ -89,14 +87,14 @@ int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
+ 	if (IS_ERR(file))
+ 		return PTR_ERR(file);
+ 
+-	ret = kernel_read_file(file, buf, size, max_size, id);
++	ret = kernel_read_file(file, buf, max_size, id);
+ 	fput(file);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
+ 
+ int kernel_read_file_from_path_initns(const char *path, void **buf,
+-				      loff_t *size, loff_t max_size,
++				      loff_t max_size,
+ 				      enum kernel_read_file_id id)
+ {
+ 	struct file *file;
+@@ -115,13 +113,13 @@ int kernel_read_file_from_path_initns(const char *path, void **buf,
+ 	if (IS_ERR(file))
+ 		return PTR_ERR(file);
+ 
+-	ret = kernel_read_file(file, buf, size, max_size, id);
++	ret = kernel_read_file(file, buf, max_size, id);
+ 	fput(file);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
+ 
+-int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
++int kernel_read_file_from_fd(int fd, void **buf, loff_t max_size,
+ 			     enum kernel_read_file_id id)
+ {
+ 	struct fd f = fdget(fd);
+@@ -130,7 +128,7 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
+ 	if (!f.file)
+ 		goto out;
+ 
+-	ret = kernel_read_file(f.file, buf, size, max_size, id);
++	ret = kernel_read_file(f.file, buf, max_size, id);
+ out:
+ 	fdput(f);
+ 	return ret;
+diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
+index 78cf3d7dc835..0ca0bdbed1bd 100644
+--- a/include/linux/kernel_read_file.h
++++ b/include/linux/kernel_read_file.h
+@@ -36,16 +36,16 @@ static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
+ }
+ 
+ int kernel_read_file(struct file *file,
+-		     void **buf, loff_t *size, loff_t max_size,
++		     void **buf, loff_t max_size,
+ 		     enum kernel_read_file_id id);
+ int kernel_read_file_from_path(const char *path,
+-			       void **buf, loff_t *size, loff_t max_size,
++			       void **buf, loff_t max_size,
+ 			       enum kernel_read_file_id id);
+ int kernel_read_file_from_path_initns(const char *path,
+-				      void **buf, loff_t *size, loff_t max_size,
++				      void **buf, loff_t max_size,
+ 				      enum kernel_read_file_id id);
+ int kernel_read_file_from_fd(int fd,
+-			     void **buf, loff_t *size, loff_t max_size,
++			     void **buf, loff_t max_size,
+ 			     enum kernel_read_file_id id);
+ 
+ #endif /* _LINUX_KERNEL_READ_FILE_H */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 1358069ce9e9..a201bbb19158 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -220,13 +220,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ {
+ 	int ret;
+ 	void *ldata;
+-	loff_t size;
+ 
+ 	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+-				       &size, INT_MAX, READING_KEXEC_IMAGE);
+-	if (ret)
++				       INT_MAX, READING_KEXEC_IMAGE);
++	if (ret < 0)
+ 		return ret;
+-	image->kernel_buf_len = size;
++	image->kernel_buf_len = ret;
+ 
+ 	/* Call arch image probe handlers */
+ 	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+@@ -243,11 +242,11 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	/* It is possible that there no initramfs is being loaded */
+ 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+ 		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
+-					       &size, INT_MAX,
++					       INT_MAX,
+ 					       READING_KEXEC_INITRAMFS);
+-		if (ret)
++		if (ret < 0)
+ 			goto out;
+-		image->initrd_buf_len = size;
++		image->initrd_buf_len = ret;
+ 	}
+ 
+ 	if (cmdline_len) {
+diff --git a/kernel/module.c b/kernel/module.c
+index e9765803601b..b6fd4f51cc30 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3988,7 +3988,6 @@ SYSCALL_DEFINE3(init_module, void __user *, umod,
+ SYSCALL_DEFINE3(finit_module, int, fd, const char __user *, uargs, int, flags)
+ {
+ 	struct load_info info = { };
+-	loff_t size;
+ 	void *hdr = NULL;
+ 	int err;
+ 
+@@ -4002,12 +4001,12 @@ SYSCALL_DEFINE3(finit_module, int, fd, const char __user *, uargs, int, flags)
+ 		      |MODULE_INIT_IGNORE_VERMAGIC))
+ 		return -EINVAL;
+ 
+-	err = kernel_read_file_from_fd(fd, &hdr, &size, INT_MAX,
++	err = kernel_read_file_from_fd(fd, &hdr, INT_MAX,
+ 				       READING_MODULE);
+-	if (err)
++	if (err < 0)
+ 		return err;
+ 	info.hdr = hdr;
+-	info.len = size;
++	info.len = err;
+ 
+ 	return load_module(&info, uargs, flags);
+ }
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index f8869be45d8f..97661ffabc4e 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -171,16 +171,17 @@ int __init integrity_add_key(const unsigned int id, const void *data,
+ int __init integrity_load_x509(const unsigned int id, const char *path)
+ {
+ 	void *data = NULL;
+-	loff_t size;
++	size_t size;
+ 	int rc;
+ 	key_perm_t perm;
+ 
+-	rc = kernel_read_file_from_path(path, &data, &size, 0,
++	rc = kernel_read_file_from_path(path, &data, 0,
+ 					READING_X509_CERTIFICATE);
+ 	if (rc < 0) {
+ 		pr_err("Unable to open file: %s (%d)", path, rc);
+ 		return rc;
+ 	}
++	size = rc;
+ 
+ 	perm = (KEY_POS_ALL & ~KEY_POS_SETATTR) | KEY_USR_VIEW | KEY_USR_READ;
+ 
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index e13ffece3726..9ba145d3d6d9 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -275,7 +275,7 @@ static ssize_t ima_read_policy(char *path)
+ {
+ 	void *data = NULL;
+ 	char *datap;
+-	loff_t size;
++	size_t size;
+ 	int rc, pathlen = strlen(path);
+ 
+ 	char *p;
+@@ -284,11 +284,12 @@ static ssize_t ima_read_policy(char *path)
+ 	datap = path;
+ 	strsep(&datap, "\n");
+ 
+-	rc = kernel_read_file_from_path(path, &data, &size, 0, READING_POLICY);
++	rc = kernel_read_file_from_path(path, &data, 0, READING_POLICY);
+ 	if (rc < 0) {
+ 		pr_err("Unable to open file: %s (%d)", path, rc);
+ 		return rc;
+ 	}
++	size = rc;
+ 
+ 	datap = data;
+ 	while (size > 0 && (p = strsep(&datap, "\n"))) {
+-- 
+2.25.1
 
-Once again, it is possible that x = 1 doesn't become visible to CPU0 
-until shortly before b.  But if c is omitted then "r1 = x" can be 
-reordered before b (to any time after a), so we can have r1 = 0.
-
-Here the timing requirement is that c executes after the first memory 
-barrier on CPU1 -- which is one of the ones around the rq->curr 
-modification.  (In fact, in this scenario CPU1's switch back to the user 
-process is irrelevant.)
-
-Alan Stern
