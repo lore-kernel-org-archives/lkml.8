@@ -7,70 +7,83 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A101EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD60FC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8701E2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D902074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgGQITa (ORCPT
+        id S1728402AbgGQITy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:19:30 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8313 "EHLO huawei.com"
+        Fri, 17 Jul 2020 04:19:54 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8314 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726240AbgGQIT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:19:29 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 536C352A645CA3F5BF09;
-        Fri, 17 Jul 2020 16:19:10 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 17 Jul 2020 16:19:02 +0800
-From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
-To:     <jbrunet@baylibre.com>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <khilman@baylibre.com>, <kuninori.morimoto.gx@renesas.com>
-CC:     <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <jingxiangfeng@huawei.com>
-Subject: [PATCH v2] ASoC: meson: fixes the missed kfree() for axg_card_add_tdm_loopback
-Date:   Fri, 17 Jul 2020 16:22:42 +0800
-Message-ID: <20200717082242.130627-1-jingxiangfeng@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726233AbgGQITy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:19:54 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6B4E61E758A4206AE34F;
+        Fri, 17 Jul 2020 16:19:50 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.70) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Fri, 17 Jul 2020 16:19:45 +0800
+From:   Zhang Changzhong <zhangchangzhong@huawei.com>
+To:     <opendmb@gmail.com>, <f.fainelli@gmail.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>
+CC:     <bcm-kernel-feedback-list@broadcom.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: bcmgenet: fix error returns in bcmgenet_probe()
+Date:   Fri, 17 Jul 2020 16:19:42 +0800
+Message-ID: <1594973982-27988-1-git-send-email-zhangchangzhong@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.70]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-axg_card_add_tdm_loopback() misses to call kfree() in an error path. We
-can use devm_kasprintf() to fix the issue, also improve maintainability.
-So use it instead.
+The driver forgets to call clk_disable_unprepare() in error path after
+a success calling for clk_prepare_enable().
 
-Fixes: c84836d7f650 ("ASoC: meson: axg-card: use modern dai_link style")
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+Fix to goto err_clk_disable if clk_prepare_enable() is successful.
+
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
 ---
- sound/soc/meson/axg-card.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
-index 89f7f64747cd..47f2d93224fe 100644
---- a/sound/soc/meson/axg-card.c
-+++ b/sound/soc/meson/axg-card.c
-@@ -116,7 +116,7 @@ static int axg_card_add_tdm_loopback(struct snd_soc_card *card,
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index ee84a26..23df6f2 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -4016,7 +4016,7 @@ static int bcmgenet_probe(struct platform_device *pdev)
+ 	if (err)
+ 		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+ 	if (err)
+-		goto err;
++		goto err_clk_disable;
  
- 	lb = &card->dai_link[*index + 1];
+ 	/* Mii wait queue */
+ 	init_waitqueue_head(&priv->wq);
+@@ -4028,14 +4028,14 @@ static int bcmgenet_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->clk_wol)) {
+ 		dev_dbg(&priv->pdev->dev, "failed to get enet-wol clock\n");
+ 		err = PTR_ERR(priv->clk_wol);
+-		goto err;
++		goto err_clk_disable;
+ 	}
  
--	lb->name = kasprintf(GFP_KERNEL, "%s-lb", pad->name);
-+	lb->name = devm_kasprintf(card->dev, GFP_KERNEL, "%s-lb", pad->name);
- 	if (!lb->name)
- 		return -ENOMEM;
+ 	priv->clk_eee = devm_clk_get_optional(&priv->pdev->dev, "enet-eee");
+ 	if (IS_ERR(priv->clk_eee)) {
+ 		dev_dbg(&priv->pdev->dev, "failed to get enet-eee clock\n");
+ 		err = PTR_ERR(priv->clk_eee);
+-		goto err;
++		goto err_clk_disable;
+ 	}
  
+ 	/* If this is an internal GPHY, power it on now, before UniMAC is
 -- 
-2.17.1
+1.8.3.1
 
