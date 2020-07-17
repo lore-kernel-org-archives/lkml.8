@@ -2,129 +2,264 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0DCC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCCAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 495BC20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF2B20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NViLlxEk"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="VdqgXlIR";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="VdqgXlIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgGQH4X (ORCPT
+        id S1726917AbgGQH7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:56:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgGQH4V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:56:21 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6644CC08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 00:56:21 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f139so15876660wmf.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 00:56:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=o5nIopuM74BtlFzAImb/PK0gyySVM6KhH9dqp/om8uc=;
-        b=NViLlxEklhp1mf7knnPOTkE3tfi428+VHQSNEDbHSufq2Kp0CtIaRQ6KLH/dp/bthm
-         5KB6kGNDHPBndZPUjVblnnJCuGZf5aRnunRSI+4jjCviFmVd6OCmsbIxO8Wz1lZ4gMV7
-         mo8OG0Z+4l6xUg1vCqprcFAf6fROOuI+9MeoYuRD66Zof1qzxtVhyLLPtpXozMRZImi0
-         6aaE1etFK/dZtL8XBO/+qgJzFimkfgrPuVuxMGKHD65yVqrQKijg49ibw7kavHy5IL9O
-         JgrA2mSWlNt4z3w2tSzq6FlYyJf+N6qAGTmHUAZa6sNoUVkmaml6SBt0+qk4VI6uX7KD
-         kt+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o5nIopuM74BtlFzAImb/PK0gyySVM6KhH9dqp/om8uc=;
-        b=Poh0YFRJ1F/Bpc1pQ48SjtPtepQe8uCWX42CqmjYK8NbESR6QCt1K+63RfEki/4fX4
-         NH+hKGTm7E69OqmRswgi9nrxTflt4kTfY04zzxcCeaJWCrunvb3NDeEjA2uYaVyTpDFc
-         xwLdVD/n5OtxX7Mpx8GMNHiP9dnwnV1ml1EvEcSpc8sz7bampyrLku1F6SvM7Z61/pU5
-         2DvX6UP7uIl0af8/Z6MopOpziDFfGG62UdiDnz13XARLo2FkEz9T4sxOKWy4gdSTYtcB
-         G3r/HKsnGP1rhenRyVe/G7E9yp/ZclaaVQSr97SM6nKQ9PLbeF/t9C9mJhbDFSxJ1OJx
-         Sfog==
-X-Gm-Message-State: AOAM530cNBV+TkpO+mk2+T3Fv6HZHqttHll1HfrZIcp7CL7i9KYFBJny
-        fz/L0uxnTbrz5+s3wCu/4L/o3w==
-X-Google-Smtp-Source: ABdhPJyQffzOr3evg0fAENlwAmDQoBs8yLbdDfhUB2Pv/w4X9/+ZCM+homnG3Ny/Q26Zm37J79d9mw==
-X-Received: by 2002:a1c:9e84:: with SMTP id h126mr7660444wme.61.1594972579968;
-        Fri, 17 Jul 2020 00:56:19 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
-        by smtp.googlemail.com with ESMTPSA id q7sm12848370wrs.27.2020.07.17.00.56.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 00:56:19 -0700 (PDT)
-Subject: Re: [PATCH v4 08/16] thermal: sun8i: add TEMP_CALIB_MASK for
- calibration data in sun50i_h6_ths_calibrate
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Frank Lee <frank@allwinnertech.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Fri, 17 Jul 2020 03:59:34 -0400
+Received: from mail-eopbgr70082.outbound.protection.outlook.com ([40.107.7.82]:37123
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726105AbgGQH7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:59:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hjwK6ihm6YK1QiRtTdMV2UYu4ctVtmpAkvtysJk3HQA=;
+ b=VdqgXlIRrQunEIjTlvISFr9B5st4Ql8m+BF+TFsSTMuJEIA39XNteUc9FK1dDN655k+pPvaCG6R965xm0Sx2uCfEn9z6oV1xxAZlxjlRWAw9B0N5ggAigkxhL9U5JXqHMZFakFu8hwOeB454GCtGFlHgPzV9KEagn0bYVPgB9UM=
+Received: from AM5PR0101CA0007.eurprd01.prod.exchangelabs.com
+ (2603:10a6:206:16::20) by VI1PR08MB3440.eurprd08.prod.outlook.com
+ (2603:10a6:803:7c::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Fri, 17 Jul
+ 2020 07:59:25 +0000
+Received: from AM5EUR03FT050.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:206:16:cafe::29) by AM5PR0101CA0007.outlook.office365.com
+ (2603:10a6:206:16::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend
+ Transport; Fri, 17 Jul 2020 07:59:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT050.mail.protection.outlook.com (10.152.17.47) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3195.18 via Frontend Transport; Fri, 17 Jul 2020 07:59:25 +0000
+Received: ("Tessian outbound 73b502bf693a:v62"); Fri, 17 Jul 2020 07:59:25 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 1b03c4195bc9e4d5
+X-CR-MTA-TID: 64aa7808
+Received: from 21672d42ed2f.2
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 98943E94-C0B2-4F88-874C-5D252BFE6894.1;
+        Fri, 17 Jul 2020 07:59:19 +0000
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 21672d42ed2f.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 17 Jul 2020 07:59:19 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iU9L+XIZMRGX0tyKqSzftN5B8D+vwscwVWO9NUmI1X3QNOWWBWtaU3isVxSAuCZZvEU/ov7vVmEalU9dhqfUA6ZWKXNbTL++pM+BGnOMjGzo1BgHBPOZQ1BUfsl+AUCd+c3triCIZouOnUjULnnpb3TnhB0QqgNc/oWKnM2p3LxERFJ2g/WAP4xVqzVMBOvtAeke5FURvXz7+h2imRUyUUGNn4YoddIJJKLlWOC7DlTDdq1Dbgyt+PrMWHoo+SdjrJ5/Tv64LV2j1nZJte8W5NdMjAzwBNBipN0Cn9od52luUSIocEmeFKenZkrJ7Iio/fFha2XXdi/aKyHWfci4/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hjwK6ihm6YK1QiRtTdMV2UYu4ctVtmpAkvtysJk3HQA=;
+ b=DQHQwNNGy9SYSiflQqU3XGhGI7U5cuwDUj/PaVoLscNpDqLv8Yxuv4jscU57I5h29gQzoOLSruLi3d0RFTFypSf7HOjYnigrGF9Q9eKPLCYTXc4iZtGgDNt31eUpnbM2qcodxfdxkSLWMhh4rb4ECLzSQMK0qxVp70PeAobYENK8WljgZXt2cS3RiQ40K2gDzQOuAdPZGCyjDkuAC6Zr+IrKVfSsF+/QZ30/YpYNBjhlusO8mrDD23hUyTFsUugYDygN/HJ6VlIqq2nt+QXtbqcMN9MSIYH5r6JkHNfh0eJnHIRfD03w4vgDx1HtvqnBi35Eh9AGt8ASYTTsv6yM4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hjwK6ihm6YK1QiRtTdMV2UYu4ctVtmpAkvtysJk3HQA=;
+ b=VdqgXlIRrQunEIjTlvISFr9B5st4Ql8m+BF+TFsSTMuJEIA39XNteUc9FK1dDN655k+pPvaCG6R965xm0Sx2uCfEn9z6oV1xxAZlxjlRWAw9B0N5ggAigkxhL9U5JXqHMZFakFu8hwOeB454GCtGFlHgPzV9KEagn0bYVPgB9UM=
+Authentication-Results-Original: ffwll.ch; dkim=none (message not signed)
+ header.d=none;ffwll.ch; dmarc=none action=none header.from=arm.com;
+Received: from DB6PR0801MB1719.eurprd08.prod.outlook.com (2603:10a6:4:3a::18)
+ by DB6PR0802MB2231.eurprd08.prod.outlook.com (2603:10a6:4:84::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Fri, 17 Jul
+ 2020 07:59:17 +0000
+Received: from DB6PR0801MB1719.eurprd08.prod.outlook.com
+ ([fe80::7d48:27e3:a154:17ef]) by DB6PR0801MB1719.eurprd08.prod.outlook.com
+ ([fe80::7d48:27e3:a154:17ef%12]) with mapi id 15.20.3174.027; Fri, 17 Jul
+ 2020 07:59:17 +0000
+Date:   Fri, 17 Jul 2020 15:59:11 +0800
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Qinglang Miao <miaoqinglang@huawei.com>,
+        Mihail Atanassov <mihail.atanassov@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
-        liyong@allwinnertech.com
-References: <cover.1594708863.git.frank@allwinnertech.com>
- <b8761e036b25f20873534e5f8d10b37b5d2ce72c.1594708864.git.frank@allwinnertech.com>
- <4771acd6-ecd3-b8e1-8605-75d78720b1d3@linaro.org>
- <CAEExFWv9_1kec_b+t+nnvT3cziXzmVa8GzJT3pQAZiCf4KA0ig@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <836e1b23-1c75-57fe-6e45-f7141272071c@linaro.org>
-Date:   Fri, 17 Jul 2020 09:56:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        dri-devel <dri-devel@lists.freedesktop.org>, nd <nd@arm.com>
+Subject: Re: [PATCH -next] drm/komeda: Convert to DEFINE_SHOW_ATTRIBUTE
+Message-ID: <20200717075911.GA79475@jamwan02-TSP300>
+References: <20200716090333.13334-1-miaoqinglang@huawei.com>
+ <20200717064017.GA76612@jamwan02-TSP300>
+ <CAKMK7uEpmhKok9Q3Rrg0v=1p7pv-wpV0Y3-k9GVav+Ad5Z4AkQ@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uEpmhKok9Q3Rrg0v=1p7pv-wpV0Y3-k9GVav+Ad5Z4AkQ@mail.gmail.com>
+X-ClientProxiedBy: SG2PR06CA0126.apcprd06.prod.outlook.com
+ (2603:1096:1:1d::28) To DB6PR0801MB1719.eurprd08.prod.outlook.com
+ (2603:10a6:4:3a::18)
 MIME-Version: 1.0
-In-Reply-To: <CAEExFWv9_1kec_b+t+nnvT3cziXzmVa8GzJT3pQAZiCf4KA0ig@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (203.126.0.113) by SG2PR06CA0126.apcprd06.prod.outlook.com (2603:1096:1:1d::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Fri, 17 Jul 2020 07:59:16 +0000
+X-Originating-IP: [203.126.0.113]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e31e4cd9-85c5-4fae-9e97-08d82a2752db
+X-MS-TrafficTypeDiagnostic: DB6PR0802MB2231:|VI1PR08MB3440:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR08MB3440A0ECAE6678866032CD15B37C0@VI1PR08MB3440.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 4YZqzeUG/5dv3AcnVECN99CY5FcFVrwRNd8xpGvF8PhXMoINZubNiTuAj3ekwCPpWv9biBQr2eecrivIHtoDQGn22NlZPktyvhsD4yUPPfGP2it930XhfxNMeEZpEakoJzY6pic9s1sgQHkYP8sgyzSRziMCEjyGJjgen5oJ/BrylEJLcjELk5MjqE/T54+dNNjdfJW/w2zBClQwhEwU5DiHfHcvYgARIOkL4DKUFa4A71ph9jDAsBGBpPohrr/Zdwq6OAE6Y+usWSU5bemROQktBCzCwEAfMJOwOfpIIMCz8UvF4CxJi0zNtzBXm1WtBOCDgYrdA7FcJd6jhr5faR3YnSPhCYA0E1DQ1iyEZczTv2bq/pLcqDHZYj8PTaZ/T39qap5O+deQ/90RSlg9sg==
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0801MB1719.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(4636009)(39860400002)(396003)(376002)(346002)(366004)(136003)(52116002)(6916009)(53546011)(478600001)(6666004)(9686003)(1076003)(316002)(8936002)(33716001)(26005)(5660300002)(6486002)(86362001)(66556008)(8676002)(6496006)(4326008)(956004)(54906003)(2906002)(83380400001)(66946007)(16526019)(966005)(33656002)(186003)(66476007)(83080400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: IoXICDR1K4KkujVBN39+18NJVzeyoUHNANVfvIGZAnm8WsQazLmG4GyRZ7Swgz28UDtHmgD80fVw1vvk14L8TbU2JP25j3gdKV3x43cxABF1LF35c6gVnkBQjFYZWOLFI9ZXCnPfO3sPYCvHuMPjgACh5cNYTiglMY94L/itWDHTBLrlp1cYrdQhcgG519mEDe0h5irpav3e2Fc07hLpJnnczHIoaWp+H9eQYzGAUgKLMZ3nFwxIcfpbU4Iv/r9PIlrv+1G+paXU+4NMZD9qF4f1qJibW73VRf7mLEA3WOA5DBuypaK0UaOXRYSSDqRWeDI+2VanE6S72V+8pgJfKl6FSLtMB6Ghx7DJiLVftnudNeK87tH0zsEO/PD4Bcs2ddYbXtyQmMSALifw4ZgUt24CmUCp52J8Hzs2foBnU5wK6/Xbxb4QXKQSMxK6d6bEDSWZMe9XTQmE6K1lX+X71cK5WcVHe3xlGbuNBRS2TjY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2231
+Original-Authentication-Results: ffwll.ch; dkim=none (message not signed)
+ header.d=none;ffwll.ch; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT050.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(396003)(39860400002)(136003)(346002)(376002)(46966005)(2906002)(8936002)(86362001)(47076004)(966005)(82740400003)(478600001)(6666004)(4326008)(33716001)(54906003)(6496006)(6862004)(956004)(336012)(186003)(16526019)(6486002)(53546011)(1076003)(81166007)(70586007)(70206006)(8676002)(26005)(36906005)(316002)(9686003)(5660300002)(82310400002)(83080400001)(33656002)(356005)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: fde948f9-fc8c-4d0f-2d7b-08d82a274dcf
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Vul0clbtRMrJVZJqzby225KJInQXF+rOWrGFuj3v331Z2kloSOgffnrZDswE/1J2bTRUoNbObcb9OrM1CiN8XA0R05pO+xkBgj2D6hRmMC05DtDGKMMUM3LKLWEXvNjdNYjxPBwdb7VFfMudKMClwMNIys+3ELKHpxAgPQkldITanU0bWs9EshaBD/mq5EKETVV3wm1rQuBFufsH25wSmyVFdyJNOr4FLJhe/ThtID0ubF6nq7jYbQFhpO5YW5MUbAPF1W2jSrs7TCvZM/GgibvIB0zJXJCzpH0aW9fn26U8HwHKAsTkZEPde+hlcMSpjvEyDWJG7uBNZcKD43Vg/4aC25oZDl6U1WVZhhmnINsk5tlfPTFmBWVznb6zEmYfquhYKZJkW+JKnluJ8yLRde0BIJ9DggU+fLuaueViP0/rRCDfVbC5pRsVjBDQ/DVT+2LV0M5q7ZGLZRGM3BdaSkQaZ1RRorNzw8yZx7s0GCM=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2020 07:59:25.4521
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e31e4cd9-85c5-4fae-9e97-08d82a2752db
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: AM5EUR03FT050.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3440
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/07/2020 09:35, Frank Lee wrote:
-> On Fri, Jul 17, 2020 at 12:26 PM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->>
->> On 14/07/2020 09:13, Frank Lee wrote:
->>> From: Yangtao Li <frank@allwinnertech.com>
->>>
->>> For sun50i_h6_ths_calibrate(), the data read from nvmem needs a round of
->>> calculation. On the other hand, the newer SOC may store other data in
->>> the space other than 12bit sensor data. Add mask operation to read data
->>> to avoid conversion error.
->>>
->>> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
->>> Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
->>
->> Can you clarify these SoB ?
+On Fri, Jul 17, 2020 at 09:06:57AM +0200, Daniel Vetter wrote:
+> On Fri, Jul 17, 2020 at 8:40 AM james qian wang (Arm Technology China)
+> <james.qian.wang@arm.com> wrote:
+> >
+> > On Thu, Jul 16, 2020 at 05:03:33PM +0800, Qinglang Miao wrote:
+> > > From: Liu Shixin <liushixin2@huawei.com>
+> > >
+> > > Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+> > >
+> > > Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+> > > ---
+> > >  drivers/gpu/drm/arm/display/komeda/komeda_dev.c | 13 +------------
+> > >  1 file changed, 1 insertion(+), 12 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> > > index 0246b2e94..4a10e6b9e 100644
+> > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> > > @@ -41,18 +41,7 @@ static int komeda_register_show(struct seq_file *sf, void *x)
+> > >       return 0;
+> > >  }
+> > >
+> > > -static int komeda_register_open(struct inode *inode, struct file *filp)
+> > > -{
+> > > -     return single_open(filp, komeda_register_show, inode->i_private);
+> > > -}
+> > > -
+> > > -static const struct file_operations komeda_register_fops = {
+> > > -     .owner          = THIS_MODULE,
+> > > -     .open           = komeda_register_open,
+> > > -     .read_iter              = seq_read_iter,
+
+-	.read		= seq_read,
++	.read_iter		= seq_read_iter,
+
+> > > -     .llseek         = seq_lseek,
+> > > -     .release        = single_release,
+> > > -};
+> > > +DEFINE_SHOW_ATTRIBUTE(komeda_register);
+> > >
+> >
+> > Hi Shixin & Qinglang
+> >
+> > Thanks for your patch.
+> >
+> > Reviewed-by: James Qian Wang <james.qian.wang@arm.com>
+> >
+> > Since your patch is not for drm-misc-next, so seems better
+> > to leave it to you to merge it. :)
 > 
-> Previously I used 'Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>',
-> maybe this should be removed directly?
+> I do think it's for drm-misc-next, what other tree would it be for?
+> Some people put -next in their patch tag to differentiate from -fixes,
+> so maintainers know what to do with the patch. It's also not part of a
+> series, hence I think this is on you to apply it.
 > 
->>
->> Frank Lee==Yangtao Li==frank@allwinnertech.com==tiny.windzz@gmail.com ?
->>
+> Cheers, Daniel
+
+Hi Daniel:
+
+I tried to apply this patch to drm-misc-next, but failed, and found
+this patch is actually based on linux-next, and the code base of
+linux-next is a little different with our drm-misc-next.
+and one of the difference is linux-next has a patch (call it patch-A):
+
+seq_file: switch over direct seq_read method calls to seq_read_iter
+https://lkml.org/lkml/2020/7/7/1267
+
+which changed code like below:
+
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+index 1d767473ba8a06..0246b2e94d8cbd 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+@@ -49,7 +49,7 @@ static int komeda_register_open(struct inode *inode, struct file *filp)
+ static const struct file_operations komeda_register_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= komeda_register_open,
+-	.read		= seq_read,
++	.read_iter		= seq_read_iter,
+ 	.llseek		= seq_lseek,
+ 	.release	= single_release,
+ };
+
+And these code will be deleted by this patch, if we merge this patch into
+drm-misc-next firstly before the patch-A, that may import a conflict when
+we merge our misc into upstreams.
+
+if we want it to be merged into drm-misc, I think we'd better to wait the
+upstream (the patch-A) has been synced back to drm-misc.
+
+And what's your opinion ?
+
+Thanks
+James
+
+> >
+> > Thanks
+> > James
+> >
+> > >  #ifdef CONFIG_DEBUG_FS
+> > >  static void komeda_debugfs_init(struct komeda_dev *mdev)
+> > > --
+> > > 2.17.1
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
 > 
-> Yeah.
-
-You are not supposed to add reviewed-by yourself. Please remove it.
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
