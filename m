@@ -2,73 +2,145 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEE9C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFB9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D212F20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F1C2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:37:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgGQBhQ (ORCPT
+        id S1726557AbgGQBhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 21:37:16 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56106 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726130AbgGQBhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 21:37:16 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 70E8D18C6EFF26CF5C9E;
-        Fri, 17 Jul 2020 09:37:14 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.91) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Jul 2020
- 09:37:12 +0800
-Subject: Re: [PATCH -next] rsxx: Convert to DEFINE_SHOW_ATTRIBUTE
-To:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200716090432.13691-1-miaoqinglang@huawei.com>
- <e4caa1de-db2c-c2f4-d1e8-fef7073a52ea@kernel.dk>
-From:   miaoqinglang <miaoqinglang@huawei.com>
-Message-ID: <c19c9e32-4b31-bcf1-df45-a29220e7e6cc@huawei.com>
-Date:   Fri, 17 Jul 2020 09:37:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 16 Jul 2020 21:37:43 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24124 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgGQBhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 21:37:42 -0400
+IronPort-SDR: rHgCLMA3HkjDI8D8bB+eFMIx5DCsIscAq3mjHJAfP0Mvp4//U8IgVVt/WU+zguJ7Sp4MlcEAu8
+ 0R9u7w4XsQiQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="148683221"
+X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
+   d="scan'208";a="148683221"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 18:37:42 -0700
+IronPort-SDR: mDJwukO3/b4zHYg94uiY9GZuGCejJiFsb7nzHyICOROF56n4CBxp8o90pEpUZ+O5X4Stskz5Ze
+ lj7+Vp8V/lOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
+   d="scan'208";a="318622136"
+Received: from lkp-server01.sh.intel.com (HELO 70d1600e1569) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Jul 2020 18:37:40 -0700
+Received: from kbuild by 70d1600e1569 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jwFJk-0000GP-7K; Fri, 17 Jul 2020 01:37:40 +0000
+Date:   Fri, 17 Jul 2020 09:36:07 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 8b68f1cda59dc238dc67989c8ac3fa95873f89ed
+Message-ID: <5f110087.nGl0dde6P4DnT332%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <e4caa1de-db2c-c2f4-d1e8-fef7073a52ea@kernel.dk>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.91]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 8b68f1cda59dc238dc67989c8ac3fa95873f89ed  Merge branch 'irq/urgent'
 
-在 2020/7/16 23:45, Jens Axboe 写道:
-> On 7/16/20 3:04 AM, Qinglang Miao wrote:
->> From: Liu Shixin <liushixin2@huawei.com>
->>
->> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
-> None of these apply against the 5.9 block tree, looks like some
-> read -> read_iter conversion has happened in another branch that
-> I'm not privy to.
+elapsed time: 722m
 
-Hi Jens,
+configs tested: 74
+configs skipped: 1
 
-     Sorry I didn't mention it in commit log, but this patch is based  
-on linux-next where commit <4d4901c6d7> has switched over direct  
-seq_read method calls to seq_read_iter, this is why there's conflict in  
-your apply.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-     Do you think I should send a new patch based on 5.8rc?
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-Thanks.
-
-
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
