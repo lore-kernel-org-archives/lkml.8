@@ -2,196 +2,151 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFB1C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA43C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9997320734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:49:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="mYRoWBW3"
+	by mail.kernel.org (Postfix) with ESMTP id 558CE206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgGQKty (ORCPT
+        id S1726322AbgGQKvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:49:54 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:34747 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725912AbgGQKtw (ORCPT
+        Fri, 17 Jul 2020 06:51:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgGQKvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:49:52 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id wNvzjCfERNPeYwNw2jaOh8; Fri, 17 Jul 2020 12:49:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1594982988; bh=JS/t+raJpRIh7LU/UhCHDAVLtLmzy+TOU7CNbEiDdu0=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=mYRoWBW3u0xkHn6ixCaauHml7saV8JPP4Rz0KjsNi4mldwhvnY5Bynu8jWDK5bUTu
-         tI6wS2DfKJ3oCt0U67Xtmo4CnSfjhrqY2gBjUgnpRGMzO/sza++aN+zNBcrAZpQqGb
-         NBsGitWooZWUrvZbtkzl09m/quE5PCGoYXsSAf6Zxt2oRdtF35LAWWc39MpwnlhSj0
-         Jb1GRtoFhhWBDAYjG8OajwEsaBeaGelye26W51vvoxcbNsUPUauxZhL2KR1QfQWX5j
-         gQypYuEfcMALBUifxPfopwRFVMC+hq7OVodThX/BPgPMeg4qg8u2dk2Wz8qGQP+bC1
-         ZS6GOGc09uzEg==
-Subject: Re: [PATCH v2 4/6] cx88: use generic power management
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-media@vger.kernel.org
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200717035608.97254-5-vaibhavgupta40@gmail.com>
- <202007171515.gDbDZtkQ%lkp@intel.com> <20200717072440.GA217230@gmail.com>
- <20200717103105.GA452501@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <1b3303cb-31c1-f7a6-d6eb-c64cd6f40db6@xs4all.nl>
-Date:   Fri, 17 Jul 2020 12:49:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 06:51:07 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BE22C061755
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 03:51:07 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jwNxE-0003u7-5w; Fri, 17 Jul 2020 12:51:00 +0200
+Message-ID: <c325bee7980feb3564de05a0a6d15c1708e2c7c0.camel@pengutronix.de>
+Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller
+ Subsystem
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        lukas@mntmn.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 17 Jul 2020 12:50:56 +0200
+In-Reply-To: <20200717094517.layssf75bxe3ijs4@fsr-ub1864-141>
+References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
+         <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
+         <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
+         <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
+         <20200717092758.GR3278063@phenom.ffwll.local>
+         <20200717094517.layssf75bxe3ijs4@fsr-ub1864-141>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-In-Reply-To: <20200717103105.GA452501@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfPkubAtmpjxVBEcTGbLMKTR66ZISGvDuiFi93wgEsJD211DwzZsHAyDT8ERdtHPf8or37Ft4LsEINumNoSkbimvkGyacbWRQaVlYnDINntOn4ne386w9
- A1xYDP4YEjIYGyGIOM0EM5Q1biZgH3u4nQPnBTVbMJt/N3siqdogNAOFJRp/h39FPYfnWe6ARMzSqP8pBT5bcowppuQjWSYnxWcJaMoAMhbFbT9mWcio52T7
- CT7QSh0zP8doD3lRMoI6A2qpOD/bW5QhXPYyxoy2zgsTF5feEZjXMNB+3DGcWg9RzfBue/P9y9SNRitJ2x1yXTKstrC7AVFFZs46Vbff6MHH6uuFGBMzC2wN
- 6xDBD6S8W9uD1b7VFpzRQJvCg+0bChK+MasjjMYBBlE4HJ6UAqNHPX8YiCtNrcMnUjMD6FWzA0jmRFCb5hmO30ZTEpObgzY4n1Al5cnSMKngWRwZaTAV0Ufu
- m8qtCDFgUFbCJSYIbGvjKlcOlD5abZvTqieywg==
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/07/2020 12:31, Vaibhav Gupta wrote:
-> On Fri, Jul 17, 2020 at 12:54:40PM +0530, Vaibhav Gupta wrote:
->> On Fri, Jul 17, 2020 at 03:14:28PM +0800, kernel test robot wrote:
->>> Hi Vaibhav,
->>>
->>> Thank you for the patch! Yet something to improve:
->>>
->>> [auto build test ERROR on linuxtv-media/master]
->>> [also build test ERROR on pci/next v5.8-rc5 next-20200716]
->>> [If your patch is applied to the wrong git tree, kindly drop us a note.
->>> And when submitting patch, we suggest to use '--base' as documented in
->>> https://git-scm.com/docs/git-format-patch]
->>>
->>> url:    https://github.com/0day-ci/linux/commits/Vaibhav-Gupta/pci-use-generic-power-management/20200717-120145
->>> base:   git://linuxtv.org/media_tree.git master
->>> config: s390-allmodconfig (attached as .config)
->>> compiler: s390-linux-gcc (GCC) 9.3.0
->>> reproduce (this is a W=1 build):
->>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>>         chmod +x ~/bin/make.cross
->>>         # save the attached .config to linux build tree
->>>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=s390 
->>>
->>> If you fix the issue, kindly add following tag as appropriate
->>> Reported-by: kernel test robot <lkp@intel.com>
->>>
->>> All errors (new ones prefixed by >>):
->>>
->>>    drivers/media/pci/cx88/cx88-video.c: In function 'cx8800_suspend':
->>>>> drivers/media/pci/cx88/cx88-video.c:1564:3: error: implicit declaration of function 'stop_video_dma'; did you mean 'start_video_dma'? [-Werror=implicit-function-declaration]
->>>     1564 |   stop_video_dma(dev);
->>>          |   ^~~~~~~~~~~~~~
->>>          |   start_video_dma
->>>    drivers/media/pci/cx88/cx88-video.c: In function 'cx8800_resume':
->>>>> drivers/media/pci/cx88/cx88-video.c:1600:3: error: implicit declaration of function 'restart_video_queue'; did you mean 'start_video_dma'? [-Werror=implicit-function-declaration]
->>>     1600 |   restart_video_queue(dev, &dev->vidq);
->>>          |   ^~~~~~~~~~~~~~~~~~~
->>>          |   start_video_dma
->>>    cc1: some warnings being treated as errors
->>>
->>> vim +1564 drivers/media/pci/cx88/cx88-video.c
->>>
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1553  
->>> 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1554  static int __maybe_unused cx8800_suspend(struct device *dev_d)
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1555  {
->>> 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1556  	struct cx8800_dev *dev = dev_get_drvdata(dev_d);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1557  	struct cx88_core *core = dev->core;
->>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1558  	unsigned long flags;
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1559  
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1560  	/* stop video+vbi capture */
->>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1561  	spin_lock_irqsave(&dev->slock, flags);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1562  	if (!list_empty(&dev->vidq.active)) {
->>> 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1563  		pr_info("suspend video\n");
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16 @1564  		stop_video_dma(dev);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1565  	}
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1566  	if (!list_empty(&dev->vbiq.active)) {
->>> 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1567  		pr_info("suspend vbi\n");
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1568  		cx8800_stop_vbi_dma(dev);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1569  	}
->>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1570  	spin_unlock_irqrestore(&dev->slock, flags);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1571  
->>> 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1572  	if (core->ir)
->>> 92f4fc10d7ba01 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2010-03-31  1573  		cx88_ir_stop(core);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1574  	/* FIXME -- shutdown device */
->>> e52e98a7eccfb0 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2005-09-09  1575  	cx88_shutdown(core);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1576  
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1577  	dev->state.disabled = 1;
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1578  	return 0;
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1579  }
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1580  
->>> 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1581  static int __maybe_unused cx8800_resume(struct device *dev_d)
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1582  {
->>> 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1583  	struct cx8800_dev *dev = dev_get_drvdata(dev_d);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1584  	struct cx88_core *core = dev->core;
->>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1585  	unsigned long flags;
->>> 08adb9e20be83b drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2005-09-09  1586  
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1587  	dev->state.disabled = 0;
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1588  
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1589  	/* FIXME: re-initialize hardware */
->>> e52e98a7eccfb0 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2005-09-09  1590  	cx88_reset(core);
->>> 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1591  	if (core->ir)
->>> 92f4fc10d7ba01 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2010-03-31  1592  		cx88_ir_start(core);
->>> 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1593  
->>> 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1594  	cx_set(MO_PCI_INTMSK, core->pci_irqmask);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1595  
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1596  	/* restart video+vbi capture */
->>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1597  	spin_lock_irqsave(&dev->slock, flags);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1598  	if (!list_empty(&dev->vidq.active)) {
->>> 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1599  		pr_info("resume video\n");
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16 @1600  		restart_video_queue(dev, &dev->vidq);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1601  	}
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1602  	if (!list_empty(&dev->vbiq.active)) {
->>> 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1603  		pr_info("resume vbi\n");
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1604  		cx8800_restart_vbi_queue(dev, &dev->vbiq);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1605  	}
->>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1606  	spin_unlock_irqrestore(&dev->slock, flags);
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1607  
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1608  	return 0;
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1609  }
->>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1610  
->>>
->>> ---
->>> 0-DAY CI Kernel Test Service, Intel Corporation
->>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->>
->> Got it. Thanks!
->> Fixed in v3.
->>
->> --Vaibhav Gupta
+Am Freitag, den 17.07.2020, 12:45 +0300 schrieb Laurentiu Palcu:
+> Hi Lukas and Daniel,
 > 
-> I fixed the error reported, in this v2 patch-series, by Kbuild and floated v3
-> in the mailing list.
-> But then I got notification from "[linux-media] Patchwork". It has applied my
-> v2 patch series. Please use v3.
+> On Fri, Jul 17, 2020 at 11:27:58AM +0200, Daniel Vetter wrote:
+> > On Fri, Jul 17, 2020 at 11:12:39AM +0200, Lucas Stach wrote:
+> > > Am Freitag, den 17.07.2020, 10:59 +0200 schrieb Daniel Vetter:
+> > > > On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+> > > > > Hi Laurentiu,
+> > > > > 
+> > > > > Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
+> > > > > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > > > > > 
+> > > > > > Hi,
+> > > > > > 
+> > > > > > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+> > > > > > includes only graphics plane support (no video planes), no HDR10 capabilities,
+> > > > > > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
+> > > > > > 
+> > > > > > Support for the rest of the features will be added incrementally, in subsequent
+> > > > > > patches.
+> > > > > > 
+> > > > > > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+> > > > > > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
+> > > > > 
+> > > > > I think the series (minus 3/5 and minor correction to the DT binding)
+> > > > > is fine to go in now. So just some formal questions: are you going to
+> > > > > maintain this driver in upstream? If so we should add a MAINTAINERS
+> > > > > entry to that effect. I can offer to act as a reviewer in this case.
+> 
+> I can maintain the DCSS driver, sure, and the more reviewers the better.
+> Thanks for helping out with this. Should I send a v6 then with a patch
+> for MAINTAINERS?
+> 
+> > > > > How do you intend to merge this? IMO pushing this through drm-misc
+> > > > > seems like the right thing to do. If you agree I can help you get this
+> > > > > applied. If you are going to maintain the driver on your own, I think
+> > > > > you should then apply for commit rights to drm-misc.
+> > > > 
+> > > > drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
+> > > > should put the entire collective of imx drivers under drm-misc? Or
+> > > > maybe it's just an oversight that the git repo isn't specified in the
+> > > > MAINTAINERS entry. Also maybe we should add the pengutronix kernel
+> > > > team alias there too?
+> > > 
+> > > drm/imx was exclusively the IPUv3 up until now, which is in fact
+> > > maintained outside of drm-misc in its own git tree. This has worked
+> > > quite well in the past so even though IPUv3 doesn't see a lot of churn
+> > > these days the motivation to change anything to this workflow is quite
+> > > low. And yes, the git tree is missing from the MAINTAINERS entry.
+> > > 
+> > > For the DCSS driver, if it's going to be maintained by NXP, I figured
+> > > it might be easier for Laurentiu to push things into drm-misc than set
+> > > up a separate public git tree. But IMHO that's fully up to him to
+> > > decide.
+> > 
+> > /me puts on maintainer hat
+> > 
+> > Much prefer drm-misc over random people playing maintainer and fumbling
+> > it. I think the reasonable options are either in the current imx tree, or
+> > drm-misc. Standalone tree for these small drivers just doesn't make much
+> > sense.
+> 
+> I don't have anything against either method, though I have to agree I
+> like things to be simple. Going through drm-misc sounds simple enough to me. :)
+> However, since there is going to be more activity in the DRM IMX area in
+> the future, reviving the drm/imx tree, and push all IMX related stuff
+> through drm/imx, could make sense as well.
 
-The message you got should say that is was superseded, not accepted.
+I think drm-misc is the right place then.
 
-I only marked v2 as Superseded, it wasn't applied.
+Please send a v6 with the following changes:
+- drop the component framework patch
+- drop the i.MX8MQ DT patch, this should go through Shawn's imx tree
+after the driver and binding has landed in drm-misc
+- you can add my Reviewed-by to the whole series or I can add it when
+applying
+- add a MAINTAINERS entry, please add me as a reviewer if you don't
+mind
+
+I can push this initial series into drm-misc until you've got your own
+commit rights.
 
 Regards,
-
-	Hans
-
-> 
-> --Vaibhav Gupta
-> 
+Lucas
 
