@@ -2,104 +2,169 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C83C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC95DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5132B20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF7C20737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UJ82aaZ4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jGmpJbFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgGQRsa (ORCPT
+        id S1727989AbgGQRtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:48:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46744 "EHLO
+        Fri, 17 Jul 2020 13:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgGQRsa (ORCPT
+        with ESMTP id S1726463AbgGQRtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:48:30 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7AB7C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:48:29 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id l2so18511663wmf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:48:29 -0700 (PDT)
+        Fri, 17 Jul 2020 13:49:16 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF6EC0619D4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:49:16 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id n5so7034301pgf.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:49:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5cA5RUvmio3ClfgI8pU8wP7vKSaKk9ymiyczHiblSGI=;
-        b=UJ82aaZ4PJK8DnGxDFuapcONUWsOBY4gwWplow/60/Zk2yXslUz9HCaPjWO+Km5nKC
-         27vfnD952Rb/9LSYSZOL02rQnrSnJaK1IwSwmE/rX2/ln1d4/fFEbSNhxTiC+EOs1ncU
-         NnK44j2uDxeNyoYTQtYB2cZqLPuF4QPR7Bg7vkLkr2yoZvhMNf+wTLkojOlmr+xcWTVn
-         ZdgntFQnkGBIBWbSnwueqHT4tjrr8V+jnPTtwx3QRfyvEutVRHQcaXCxGJH1NSc5s6iy
-         BntSWida+dRK+0gBvTvmEQ1apQxLxX653kDCCWPaLlix1Twrr2qLZuUNhb4tkFfX6Cxp
-         HVnQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UmBYnpJxLOKWnlQafaq4C6F9spEh+E46qapMdJKdqIk=;
+        b=jGmpJbFeB/mWj5s08JrCEpmPrV70zk0iTrM1SwiDc7+x09ybNxYSjiRZRaCoAi76lN
+         0xgvyFMiLQs/gjLKvXL9xklDnnClPU+OuYnQ7oQhSr3KOT+mv8YST83YVjeNEhJjlN+s
+         vj2un2SxZ6x6CLOG8xk18RT0iCO7YnKwd/D+w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5cA5RUvmio3ClfgI8pU8wP7vKSaKk9ymiyczHiblSGI=;
-        b=WcxGtblNbQUnisgH6qqZ2GPS3jz9bOSWQxkQoaDB5VAqiyN8wTp9mnNgbCBB2EElQg
-         O6n4WSqNOqTjPehM0ApMabT07yChqkgoqvWG6Egu616VpCTw+h0FVG6u7QWwQnQZHkm0
-         8/0InuIO+WYqWLG1mMRkbSTYR8DBzaYUsry2tJIiNMZYA4+PPBJwE0sZughW8Ynt6bLR
-         VlAXK2CtwL2myBdVspvvlJrUPbakEyV53aBh93MN0T5m82Xl6udZGkgJCvcJyRJ/t09f
-         KSKmyp5QYovRtpECPlpMTt4iJY3XBzCnsF2WlfqHMXfmtG4yWt2kkMA/YZBaQi3gGgZk
-         5rnA==
-X-Gm-Message-State: AOAM533uQZAq2DUtqEsC6LtEct6bY8DITPgQHtoZUUrmv7GVJcuaNPoy
-        HiU5Ch2CuvCIUoc4Vp3p6wkpN/WBUsg=
-X-Google-Smtp-Source: ABdhPJyWMku0BhtQCMKfPdwWx2yy2ByNeIqXqO791I/1KbbAS5AmVGrTO2Xbjy3zaxaCCCEHxjDZ+g==
-X-Received: by 2002:a05:600c:2511:: with SMTP id d17mr10745367wma.127.1595008108118;
-        Fri, 17 Jul 2020 10:48:28 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:45c9:b95c:ccef:aae6? ([2a01:e34:ed2f:f020:45c9:b95c:ccef:aae6])
-        by smtp.googlemail.com with ESMTPSA id l15sm15314927wro.33.2020.07.17.10.48.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 10:48:27 -0700 (PDT)
-Subject: Re: [PATCH] net: genetlink: Move initialization to core_initcall
-To:     David Miller <davem@davemloft.net>
-Cc:     kuba@kernel.org, jiri@mellanox.com, xiyou.wangcong@gmail.com,
-        johannes.berg@intel.com, mkubecek@suse.cz, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200715074120.8768-1-daniel.lezcano@linaro.org>
- <3ab741d2-2d44-fbcb-709d-c89d2b0c3649@linaro.org>
- <20200717.103439.774880145467935567.davem@davemloft.net>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <059ad7df-b555-a08d-1f81-5fcb31e2e21e@linaro.org>
-Date:   Fri, 17 Jul 2020 19:48:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UmBYnpJxLOKWnlQafaq4C6F9spEh+E46qapMdJKdqIk=;
+        b=QUOfsprARUcKH/7NXhisqKhSahbnldGkf7Fn3k2iaP0SSEzqhyPTSIdehlvKreXbHL
+         1GRDXGOUxpRGJsXInSujM9N9F9J60cp5y1Cet+836J1CA1q+lNlTJmkw1ZiddxyAYmzE
+         nCyQA98UJVKusZN9tIpfbwBNGV6YUDP5+pyhE5PQ6zaboooJ74Ponxi9071YH61RAFit
+         bEKe6uUQyRn7VwpWJnh8mvhvNO76JqqZZKoQMtxJDsqUvVZLLa2IUPoehGT5IkfLFNr+
+         UPDCTsx4uB1CeSp0px1GZ7iTidjnVyVZhaHIUC1ZGfbEPlydnPb5Oznlf2RrdhdUe5E1
+         1MWA==
+X-Gm-Message-State: AOAM531Ooqd0A2odvgi46s5Nj+oFBPbZJT8tV7lbk2QxobuM6KjIAgyw
+        5iJB8DB1k9mBuI0B1JWMm6W+tHYPmZg=
+X-Google-Smtp-Source: ABdhPJzpf9/ZajaIEXyFjFi2Ba7LeZk4ZttZruqVO8DSt3fEPjVmPRj3vBVymqSJ3TNgQl5mmN3v+w==
+X-Received: by 2002:a63:8c5d:: with SMTP id q29mr9353865pgn.249.1595008155556;
+        Fri, 17 Jul 2020 10:49:15 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s30sm8709549pgn.34.2020.07.17.10.49.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 10:49:14 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 10:49:13 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry
+ functionality
+Message-ID: <202007171045.FB4A586F1D@keescook>
+References: <20200716182208.180916541@linutronix.de>
+ <20200716185424.011950288@linutronix.de>
+ <202007161336.B993ED938@keescook>
+ <87d04vt98w.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200717.103439.774880145467935567.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d04vt98w.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/07/2020 19:34, David Miller wrote:
-> From: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Date: Wed, 15 Jul 2020 09:43:00 +0200
+On Thu, Jul 16, 2020 at 11:55:59PM +0200, Thomas Gleixner wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> > On Thu, Jul 16, 2020 at 08:22:09PM +0200, Thomas Gleixner wrote:
+> >> This code is needlessly duplicated and  different in all
+> >> architectures.
+> >> 
+> >> Provide a generic version based on the x86 implementation which has all the
+> >> RCU and instrumentation bits right.
+> >
+> > Ahh! You're reading my mind!
 > 
->> if you agree with this change, is it possible I merge it through the
->> thermal tree in order to fix the issue ?
-> 
-> No problem:
-> 
-> Acked-by: David S. Miller <davem@davemloft.net>
+> I told you about that plan at the last conference over a beer :)
 
-Thanks!
+Thank you for incepting it in my head, then! ;)
 
+> > [1] https://lore.kernel.org/lkml/20200716193141.4068476-2-krisman@collabora.com/
+> 
+> Saw that fly by. *shudder*
+
+Aw, it's nice. Better emulation! :)
+
+> 
+> >> +/*
+> >> + * Define dummy _TIF work flags if not defined by the architecture or for
+> >> + * disabled functionality.
+> >> + */
+> >
+> > When I was thinking about this last week I was pondering having a split
+> > between the arch-agnositc TIF flags and the arch-specific TIF flags, and
+> > that each arch could have a single "there is agnostic work to be done"
+> > TIF in their thread_info, and the agnostic flags could live in
+> > task_struct or something. Anyway, I'll keep reading...
+> 
+> That's going to be nasty. We rather go and expand the TIF storage to
+> 64bit. And then do the following in a generic header:
+
+I though the point was to make the TIF_WORK check as fast as possible,
+even on the 32-bit word systems. I mean it's not a huge performance hit,
+but *shrug*
+
+> 
+> #ifndef TIF_ARCH_SPECIFIC
+> # define TIF_ARCH_SPECIFIC
+> #endif
+> 
+> enum tif_bits {
+> 	TIF_NEED_RESCHED = 0,
+>         TIF_...,
+>         TIF_LAST_GENERIC,
+>         TIF_ARCH_SPECIFIC,
+> };
+>         
+> and in the arch specific one:
+> 
+> #define TIF_ARCH_SPECIFIC	\
+> 	TIF_ARCH_1,             \
+>         TIF_ARCH_2,
+> 
+> or something like that.
+
+Okay, yeah, that can work.
+
+> > There's been some recent confusion over "has the syscall changed,
+> > or did seccomp request it be skipped?" that was explored in arm64[2]
+> > (though I see Will and Keno in CC already). There might need to be a
+> > clearer way to distinguish between "wild userspace issued a -1 syscall"
+> > and "seccomp or ptrace asked for the syscall to be skipped". The
+> > difference is mostly about when ENOSYS gets set, with respect to calls
+> > to syscall_set_return_value(), but if the syscall gets changed, the arch
+> > may need to recheck the value and consider ENOSYS, etc. IIUC, what Will
+> > ended up with[3] was having syscall_trace_enter() return the syscall return
+> > value instead of the new syscall.
+> 
+> I was chatting with Will about that yesterday. IIRC he plans to fix the
+> immediate issue on arm64 first and then move arm64 over to the generic
+> variant. That's the reason why I reshuffled the patch series so the
+> generic parts are first which allows me to provide will a branch with
+> just those. If there are any changes needed we can just feed them back
+> into that branch and fixup the affected architecture trees.
+> 
+> IOW, that should not block progress on this stuff.
+
+Ok, great! I just wanted to make sure that didn't surprise anyone. :)
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Kees Cook
