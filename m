@@ -2,305 +2,263 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807CCC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC0320717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E907206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J8N1T4J+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iuthQu6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgGQRT5 (ORCPT
+        id S1727065AbgGQRUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:19:57 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17844 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgGQRT4 (ORCPT
+        Fri, 17 Jul 2020 13:20:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgGQRUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:19:56 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f11ddaf0000>; Fri, 17 Jul 2020 10:19:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 17 Jul 2020 10:19:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 17 Jul 2020 10:19:56 -0700
-Received: from [10.2.163.115] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Jul
- 2020 17:19:55 +0000
-Subject: Re: [RFC PATCH v3 00/18] Support for Tegra video capture from
- external sensor
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <robh+dt@kernel.org>, <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <f03bdb89-df7c-e9e8-1512-d57e5d2332bf@xs4all.nl>
- <d258fb56-14f6-a091-64e9-48294073c696@nvidia.com>
- <458db01d-3c9c-1aec-0d28-edcbf0265aa4@xs4all.nl>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <5694f74a-be8e-7a95-1739-0a5fc9820597@nvidia.com>
-Date:   Fri, 17 Jul 2020 10:23:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 13:20:07 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69A13C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:20:07 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id g22so2273088vke.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:20:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fA/qgfiMlIm6DaorpA1k/f2IvyM46KgPHDRmF2JATYU=;
+        b=iuthQu6LH99OsV+mQbxcja9ScSRaZvsR5qiIt+DsYophAQaNm8NC6wlZi+yHb2iNJl
+         eVtHP21CqgNla77GmrOUfa4p+gI83t5uNHjiPDa9WF1dk3ifmRaIsNHl+kWdnTYi0GfG
+         cno/9YebyzAxYJhLZ8RuA6dKl2b2JUycwnks0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fA/qgfiMlIm6DaorpA1k/f2IvyM46KgPHDRmF2JATYU=;
+        b=fzU/P8Tdz5DTOHM22stGSSi9HKp4CYUKH/NQv4wZvKwp6DSJvBfHZr6Zq1cbBdpz3k
+         9OXhiz92O7+c3zyY87Lj4+1Me/4U2d0/vto6j/Fh+b+HQynt5M7sFaGj/PUvn7TbSm78
+         ayW7AUq/YrNPwWzv/FBtiEYZvArQXw1nQ5XogZIrXuOBDcDb5MtNhtpikD4BCfVt5VAx
+         M9A/7ZaOltRGDSSzRd/gDQ1UJUtWle1j8gyHgESeUgJikFNWBy0c1vrlsfh8CrG8pst/
+         XS3TA3ukIMbicAieYGssUm0RvXxtt9YwJ+mUGlp5Ac5ufIX7RGSgHDMcgqcsA6LpAAdO
+         PkWw==
+X-Gm-Message-State: AOAM531/Kh4RsSuLr2JsCbiiYVTCN5Mgb9NjGsbW6jwPzmPQ3rndfEg3
+        bHqVpeb2lUlhD8ml1AAuVYNbH+Yw5k8=
+X-Google-Smtp-Source: ABdhPJyZOGe03pItgQ36h/iU4r003awwrk1xdU17H2Yhe94xq9OF7znJX4v2woV7tOIRK6vGEYvQlA==
+X-Received: by 2002:ac5:c912:: with SMTP id t18mr8156832vkl.54.1595006406111;
+        Fri, 17 Jul 2020 10:20:06 -0700 (PDT)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id l10sm1297966vkl.53.2020.07.17.10.20.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 10:20:05 -0700 (PDT)
+Received: by mail-ua1-f50.google.com with SMTP id o25so3110246uar.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:20:04 -0700 (PDT)
+X-Received: by 2002:ab0:150c:: with SMTP id o12mr8307356uae.90.1595006404233;
+ Fri, 17 Jul 2020 10:20:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <458db01d-3c9c-1aec-0d28-edcbf0265aa4@xs4all.nl>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595006383; bh=ix/Cjn65HAQkbcZVOyuhB82+wo9KUPdHKzHzIVDXYgM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=J8N1T4J+aMqpR3xTI5V4Q1LlFfc7/SUukXUDx7CHkQGctMUmBG5EINb9e6EW9hqQI
-         P1+07XO3xhonHXhzJTMG+Xns4Nhc8GjcJ/UCZgZbUfQCIjpk1kqhp5HRUb4o00xXLH
-         UJN1NcW/v4QLWYTjm5GBxEXawe9kZ/2A5eXilpDo1rxGuH0pJRx9UU/0EwWGmWick8
-         WtxL/lHuzX5WfACSKATaNWN2NQHuKnMGSfD037LbBlonmOxYDgbltjaq2n2sff5uVG
-         MNJg7Z3/0hfyJcINwqskitFvdNGhuPqT4aBbA/UdSEaf/AFEDxb5d8ESDH3NHbhacB
-         Mquo8OHdhAS+A==
+References: <20200708194715.4073300-1-abhishekbh@google.com>
+ <87y2ntotah.fsf@nanos.tec.linutronix.de> <CAD=FV=WCu7o41iyn27vNBWo4f_X_XVy+PPPjBKc+70g5jd5+8w@mail.gmail.com>
+ <874kq6ru08.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <874kq6ru08.fsf@nanos.tec.linutronix.de>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 17 Jul 2020 10:19:52 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WPhaZC87Yb5LOYZ3s7_NWS2yhyaA6RXZQYojfAGvX84g@mail.gmail.com>
+Message-ID: <CAD=FV=WPhaZC87Yb5LOYZ3s7_NWS2yhyaA6RXZQYojfAGvX84g@mail.gmail.com>
+Subject: Re: [PATCH v5] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Abhishek Bhardwaj <abhishekbh@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86 <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 7/17/20 10:08 AM, Hans Verkuil wrote:
-> On 17/07/2020 18:34, Sowjanya Komatineni wrote:
->> On 7/17/20 3:54 AM, Hans Verkuil wrote:
->>> Hi Sowjanya,
->>>
->>> On 15/07/2020 06:20, Sowjanya Komatineni wrote:
->>>> This series adds support for video capture from external camera sensor=
- to
->>>> Tegra video driver.
->>>>
->>>> Jetson TX1 has camera expansion connector and supports custom camera m=
-odule
->>>> designed as per TX1 design specification.
->>>>
->>>> This series also enables camera capture support for Jetson Nano which =
-has
->>>> Raspberry PI camera header.
->>>>
->>>> This series is tested with IMX219 camera sensor.
->>>>
->>>> This series include,
->>>>
->>>> VI I2C related fixes
->>>> - Camera sensor programming happens through VI I2C which is on host1x =
-bus.
->>>> - These patches includes device tree and I2C driver fixes for VI I2C.
->>>>
->>>> Tegra video driver updates
->>>> - TPG Vs Non-TPG based on Kconfig
->>>> - Support for external sensor video capture based on device graph from=
- DT.
->>>> - Support for selection ioctl operations
->>>> - Tegra MIPI CSI pads calibration
->>>> - CSI T-CLK and T-HS settle time computation based on clock rates.
->>>>
->>>> Host1x driver updates
->>>> - Adds API to allow creating mipi device for specific device node.
->>>> - Splits MIPI pads calibrate start and waiting for calibration to be d=
-one.
->>>>
->>>> Device tree updates
->>>> - Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson TX1=
- DT.
->>>> - Enabled VI and CSI support in Jetson Nano DT.
->>> I'm doing a bit of stress testing with:
->>>
->>> while true; do v4l2-ctl --stream-mmap --stream-count=3D1; done
->>>
->>> and I see that the imx274 has often streaming failures:
->>>
->>> [  172.025144] IMX274 8-001a: s_stream failed
->>> [  179.025192] IMX274 8-001a: imx274_write_mbreg : i2c bulk write faile=
-d, 3132 =3D 870 (2 bytes)
->>> [  179.033575] IMX274 8-001a: s_stream failed
->>> [  226.525378] IMX274 8-001a: imx274_write_mbreg : i2c bulk write faile=
-d, 3130 =3D 878 (2 bytes)
->>> [  226.533761] IMX274 8-001a: s_stream failed
->>> [  227.029325] IMX274 8-001a: imx274_write_mbreg : i2c bulk write faile=
-d, 30f6 =3D 107 (2 bytes)
->>> [  227.037758] IMX274 8-001a: s_stream failed
->>> [  247.025218] IMX274 8-001a: imx274_write_mbreg : i2c bulk write faile=
-d, 30f6 =3D 107 (2 bytes)
->>> [  247.033658] IMX274 8-001a: s_stream failed
->>> [  293.025517] IMX274 8-001a: s_stream failed
->>> [  309.024727] IMX274 8-001a: imx274_write_mbreg : i2c bulk write faile=
-d, 30e0 =3D 0 (2 bytes)
->>> [  309.032969] IMX274 8-001a: s_stream failed
->>> [  309.529506] IMX274 8-001a: imx274_write_mbreg : i2c bulk write faile=
-d, 30f8 =3D 11d2 (3 bytes)
->>> [  309.538103] IMX274 8-001a: imx274_set_frame_length error =3D -121
->>> [  309.544102] IMX274 8-001a: imx274_set_frame_interval error =3D -121
->>> [  309.550243] IMX274 8-001a: s_stream failed
->>> [  314.025561] IMX274 8-001a: s_stream failed
->>> [  329.025586] IMX274 8-001a: s_stream failed
->>> [  340.529567] IMX274 8-001a: imx274_write_mbreg : i2c bulk write faile=
-d, 303a =3D f0c (2 bytes)
->>> [  340.538009] IMX274 8-001a: s_stream failed
->>> [  347.525627] IMX274 8-001a: imx274_write_mbreg : i2c bulk write faile=
-d, 30f6 =3D 107 (2 bytes)
->>> [  347.534008] IMX274 8-001a: s_stream failed
->>> [  365.033640] IMX274 8-001a: s_stream failed
->>> [  437.525788] IMX274 8-001a: imx274_write_mbreg : i2c bulk write faile=
-d, 3038 =3D c (2 bytes)
->>> [  437.533997] IMX274 8-001a: s_stream failed
->>> [  456.029780] IMX274 8-001a: s_stream failed
->>> [  472.025862] IMX274 8-001a: s_stream failed
->>> [  498.025861] IMX274 8-001a: s_stream failed
->>> [  500.025905] IMX274 8-001a: s_stream failed
->>>
->>> where v4l2-ctl returns:
->>>
->>>                   VIDIOC_STREAMON returned -1 (Remote I/O error)
->>>
->>> I don't see this with the imx219.
->>>
->>> I also see this occasionally:
->>>
->>> [Fri Jul 17 12:51:42 2020] video4linux video1: failed to run capture st=
-art kthread: -4
->>>
->>> Something is not stable here.
->>>
->>> Regards,
->>>
->>> 	Hans
->> Hi Hans,
->>
->> Running the same single frame continuous loop for more than 2 hours now
->> and I don't see any failure.
->>
->> Above failure shows i2c bulk writes to IMX274 failure due to which
->> s_stream also failed.
->>
->> Not sure if its due to i2c mux in the path to sensor on your module
->> causing some issue when there is more i2c write traffic as we are doing
->> single stream in continuous loop. Also IMX219 does not show on your side
->> so something specific to IMX274 setup probably.
-> I'll take a closer look next week. Good to know that it works fine for yo=
-u.
+On Fri, Jul 17, 2020 at 9:22 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
->>
->> Regarding kthread_run failure where kthread_run() returned -EINTR during
->> capture start thread, I always see this happen at the point of stopping
->> the continuous single stream while loop by pressing ctrl+c after few
->> loops of execution.
-> Hmm, if this is normal behavior, then should this message be a debug mess=
-age
-> only? Or perhaps only show the message if the error code !=3D EINTR.
-
-I believe its good to still show this as its reported by kthread_run ->=20
-kthread_create_on_node.
-
-But not sure in real usecase we will ever use while true like this and=20
-we should use script to also break while loop along with v4l2-ctl=20
-termination when ctrl-c terminate request happens.
-
-
+> Doug,
 >
-> Regards,
+> Doug Anderson <dianders@chromium.org> writes:
+> > On Thu, Jul 9, 2020 at 3:51 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> TBH, I don't see why this is a good idea.
+> >>
+> >>  1) I'm not following your argumentation that the command line option is
+> >>     a poor Kconfig replacement. The L1TF mode is a boot time (module
+> >>     load time) decision and the command line parameter is there to
+> >>     override the carefully chosen and sensible default behaviour.
+> >
+> > When you say that the default behavior is carefully chosen and
+> > sensible, are you saying that (in your opinion) there would never be a
+> > good reason for someone distributing a kernel to others to change the
+> > default?  Certainly I agree that having the kernel command line
+> > parameter is nice to allow someone to override whatever the person
+> > building the kernel chose, but IMO it's not a good way to change the
+> > default built-in to the kernel.
 >
-> 	Hans
+> The problem is that you have to be careful about what you stick into
+> Kconfig. It's L1TF on x86 today and tomorrow it's MDS and whatever and
+> then you do the same thing on the other architectures as well. And we
+> still need the command line options so that generic builds can be
+> customized at boot time.
 >
->> while true; do v4l2-ctl --stream-mmap --stream-count=3D1; done
->>
->> when we stop loop with ctrl+c, v4l2-ctl terminates but loop does not
->> terminate immediately and probably SIGKILLed=C2=A0 is seen prior to comp=
-lete.
->>
->> Using below can help to terminate loop as well when we stop ctrl-c and
->> with this I don't see any repro of EINTR error from kthread_run when run
->> in infinite loop.
->>
->> while true; do ./v4l2-ctl --stream-mmap --stream-count=3D1 || break; don=
-e
->>
->>
->>
->>>> Delta between patch versions:
->>>>
->>>> [v3]:	Includes v2 feedback
->>>> 	- Uses separate helper function for retrieving remote csi subdevice
->>>> 	  and source subdevice.
->>>> 	- Added check for presence of subdevice ops set/get_selection
->>>> 	- dropped vb2_queue_release from driver and using
->>>> 	  vb2_video_unregister_device instead of video_unregister_device.
->>>> 	- video device register should happen in the last after all video
->>>> 	  device related setup is done in the driver. This is being addressed
->>>> 	  in below RFC patch. Once proper implementation of this is available
->>>> 	  will update Tegra video driver to use split APIs and do all setup
->>>> 	  prior to device register. Added this as TODO in the driver.
->>>> 	  https://www.spinics.net/lists/linux-media/msg172761.html
->>>>
->>>> 	Note:
->>>> 	Patch-0012 has compilation dependency on
->>>> 	https://patchwork.kernel.org/patch/11659521/
->>>>
->>>>
->>>> [v2]:	Includes below changes based on v1 feedback
->>>> 	- dt-binding document and the driver update for device graph to use
->>>> 	  separate ports for sink endpoint and source endpoint for csi.
->>>> 	- Use data-lanes endpoint property for csi.
->>>> 	- Update tegra_mipi_request() to take device node pointer argument
->>>> 	  rather than adding extra API.
->>>> 	- Remove checking for clk pointer before clk_disable.
->>>>
->>>>
->>>> Sowjanya Komatineni (18):
->>>>     dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and
->>>>       power-domains
->>>>     arm64: tegra: Add missing clocks and power-domains to Tegra210 VI =
-I2C
->>>>     i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
->>>>     i2c: tegra: Remove NULL pointer check before
->>>>       clk_enable/disable/prepare/unprepare
->>>>     i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
->>>>     i2c: tegra: Fix runtime resume to re-init VI I2C
->>>>     i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
->>>>     media: tegra-video: Fix channel format alignment
->>>>     media: tegra-video: Enable TPG based on kernel config
->>>>     media: tegra-video: Update format lookup to offset based
->>>>     dt-bindings: tegra: Update VI and CSI bindings with port info
->>>>     media: tegra-video: Add support for external sensor capture
->>>>     media: tegra-video: Add support for selection ioctl ops
->>>>     gpu: host1x: mipi: Update tegra_mipi_request() to be node based
->>>>     gpu: host1x: mipi: Use readl_relaxed_poll_timeout in tegra_mipi_wa=
-it
->>>>     gpu: host1x: mipi: Split tegra_mipi_calibrate and tegra_mipi_wait
->>>>     media: tegra-video: Add CSI MIPI pads calibration
->>>>     media: tegra-video: Compute settle times based on the clock rate
->>>>
->>>>    .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
->>>>    .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |  19 +-
->>>>    arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +
->>>>    drivers/gpu/drm/tegra/dsi.c                        |   9 +-
->>>>    drivers/gpu/host1x/mipi.c                          |  37 +-
->>>>    drivers/i2c/busses/i2c-tegra.c                     | 101 +--
->>>>    drivers/staging/media/tegra-video/Kconfig          |   7 +
->>>>    drivers/staging/media/tegra-video/csi.c            | 247 ++++++-
->>>>    drivers/staging/media/tegra-video/csi.h            |   8 +
->>>>    drivers/staging/media/tegra-video/tegra210.c       |  25 +-
->>>>    drivers/staging/media/tegra-video/vi.c             | 793 ++++++++++=
-+++++++++--
->>>>    drivers/staging/media/tegra-video/vi.h             |  25 +-
->>>>    drivers/staging/media/tegra-video/video.c          |  23 +-
->>>>    include/linux/host1x.h                             |   4 +-
->>>>    14 files changed, 1242 insertions(+), 154 deletions(-)
->>>>
+> > The current plan (as I understand it) is that we'd like to ship
+> > Chromebook kernels with this option changed from the default that's
+> > there now.  In your opinion, is that a sane thing to do?
+>
+> If it's sane for you folks, then feel free to do so. Distros & al patch
+> the kernel do death anyway, but that does not mean that mainline has to
+> have everything these people chose to do.
+
+Sure, we could carry a local patch.  ...but Chrome OS tries not to be
+like all other distros.  We try very hard (and keep trying harder each
+year) to _not_ carry local patches.  Sure, we fail sometimes, but we
+will still try.  In general it seems like the upstream Linux community
+pushes distros and other Linux users to be upstream first so it's a
+little discouraging to hear the advice of "just carry a local patch".
+
+In this case, though, I should close the loop.  Abhishek can correct
+me if I'm wrong, but I think the answer here was that it _wasn't_ sane
+for us to change this option via KConfig or even via kernel command
+line.  I believe that Abhishek found that it was better to (in
+userspace) look at the sysfs nodes and configure things how he wanted
+it at runtime.
+
+
+> >>  2) You can add the desired mode to the compiled in (partial) kernel
+> >>     command line today.
+> >
+> > This might be easier on x86 than it is on ARM.  ARM (and ARM64)
+> > kernels only have two modes: kernel provides cmdline and bootloader
+> > provides cmdline.  There are out-of-mainline ANDROID patches to
+> > address this but nothing in mainline.
+> >
+> > The patch we're discussing now is x86-only so it's not such a huge
+> > deal, but the fact that combining the kernel and bootloader
+> > commandline never landed in mainline for arm/arm64 means that this
+> > isn't a super common/expected thing to do.
+>
+> Did you try to get that merged for arm/arm64?
+
+Yes, years ago.  References:
+
+https://lore.kernel.org/r/1326492948-26160-1-git-send-email-dianders@chromium.org
+https://lore.kernel.org/r/1328223508-1228-1-git-send-email-dianders@chromium.org
+
+I didn't keep poking it because I got advice (not on the mailing list)
+that it was better to add a KConfig option rather than extending the
+command line.  ;-)  At the time it seemed a reasonable argument to me
+so I didn't keep pushing that patch.
+
+
+> >>  3) Boot loaders are well capable of handling large kernel command lines
+> >>     and the extra time spend for reading the parameter does not matter
+> >>     at all.
+> >
+> > Long command lines can still be a bit of a chore for humans to deal
+> > with.  Many times I've needed to look at "/proc/cmdline" and make
+> > sense of it.  The longer the command line is and the more cruft
+> > stuffed into it the more of a chore it is.  Yes, this is just one
+> > thing to put in the command line, but if 10 different drivers all have
+> > their "one thing" to put there it gets really long.  If 100 different
+> > drivers all want their one config option there it gets really really
+> > long.
+>
+> This will not go away when you want to support a gazillion of systems
+> which need tweaks left and right due to creative hardware/BIOS with a
+> generic kernel. And come on, parsing a long command line is not rocket
+> science and it's not something you do every two minutes.
+
+It's funny.  Your argument is the same as mine but the opposite.  I
+say: "but so much crap will be in the command line and it will be
+crazy" and you say "but so much crap will be in the KConfig and it
+will be crazy".  ;-)  I guess it depends on where you want to dump
+your trash.
+
+
+> > IMO the command line should be a last resort place to put
+> > things and should just contain:
+> >
+> > 1. Legacy things that _have_ to be in the command line because they've
+> > always been there.
+> >
+> > 2. Things that the bootloader/BIOS needs to communicate to the kernel
+> > and has no better way to communicate.
+> >
+> > 3. Cases where the person running the kernel needs to override a
+> > default set by the person compiling the kernel.
+>
+> Which is the case for a lot of things and it's widely used exactly for
+> that reason.
+
+Right.  To be clear, I definitely wasn't suggesting the option be
+_removed_ from the command line.
+
+
+> >>  4) It's just a tiny part of the whole speculation maze. If we go there
+> >>     for L1TF then we open the flood gates for a gazillion other config
+> >>     options.
+> >
+> > It seems like the only options that we'd need CONFIG option for would
+> > be the ones where it would be sane to change the default compiled into
+> > the kernel.  Hopefully that's not too many things?
+>
+> That's what _you_ need. But accepting this we set a precedence and how
+> do I argue that L1TF makes sense, but other things not? This stuff is
+> horrible enough already, no need to add more ifdefs and options and
+> whatever to it.
+
+Again, I think it gets into a matter of opinion.  I'm also objecting
+to setting a precedence, but in the opposite direction.  Today in
+Chrome OS we don't need to use the command line extending for this
+type of thing at all and (IMO) it's really nice.  Your config options
+are in one place, not mixed halfway between the command line and the
+KConfig.  Allowing this one config option to be configured in the
+command line opens the flood gates for having two places to look for
+the base config.  ;-)
+
+In any case, it doesn't sound like I'm going to convince you.  Also,
+since Abhishek has found another way to move forward it sounds like
+the right thing is to consider his patch abandoned anyway.
+
+
+> > Obviously, like many design choices, the above is all subjective.
+> > It's really your call and if these arguments don't convince you it
+> > sounds like the way forward is just to use "CONFIG_CMDLINE" and take
+> > advantage of the fact that on x86 this will get merged with the
+> > bootloader's command line.
+>
+> I rather see the support for command line merging extended to arm/arm64
+> because that's of general usefulness beyond the problem at hand.
+
+I have no objections to someone upstreaming those patches, for sure.
+Maybe one day the Android team will do it since they seem to have been
+carrying it as a local patch forever.  If nothing else, it gives us
+more flexibility.
+
+
+-Doug
