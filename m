@@ -2,144 +2,106 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ED1C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC93CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0B720717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD4D206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:30:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JPQxJ9YL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXVxk+Yl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgGQOe7 (ORCPT
+        id S1726442AbgGQOag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:34:59 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42804 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgGQOe6 (ORCPT
+        Fri, 17 Jul 2020 10:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbgGQOaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:34:58 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HEXhD0033219;
-        Fri, 17 Jul 2020 14:34:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=sC82X1Ql6Y+RsP6ymT7mIIOgEdvX7Xx89bBouH4vdWA=;
- b=JPQxJ9YLMSqNwkV8Rj+V9TNkk7ZrUA0Q5oZEDxGcZ4nFsg3idI0nMP6c3NplFmyYiMK+
- ZVfF6fQcWYQWKD3tsEoFlkFEVD7VIH+XEUriVJCm5ets2E2H1AcuJhNni0R7i5Srgl6Z
- XmWcdzu7CnU0F/GTgsALhswC2zWW5RLobM8kyFvC7nNpCksWHeMv4EzW2ne7HWvpMvOW
- K6B4YSR6DmHUiS8J5Fx4CTWzNJIpmedXb6RXzwEqan03XiJpr9h3UikSIP+0jzyY+Sem
- BhWMI5VA/emzIxqrP4+zgg/NDsUQlBxbOsneliea50eH5ca4NjZzG/2EY77Yfs4uhhTH Ew== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3275cmqk6f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 14:34:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HEXsXb113559;
-        Fri, 17 Jul 2020 14:34:30 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 32bbk0g0b0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 14:34:30 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06HEYTxn114997;
-        Fri, 17 Jul 2020 14:34:29 GMT
-Received: from localhost.localdomain (dhcp-10-175-216-252.vpn.oracle.com [10.175.216.252])
-        by userp3020.oracle.com with ESMTP id 32bbk0g09m-1;
-        Fri, 17 Jul 2020 14:34:29 +0000
-From:   gregory.herrero@oracle.com
-To:     linux-kernel@vger.kernel.org
-Cc:     rostedt@goodmis.org, stable@vger.kernel.org,
-        Gregory Herrero <gregory.herrero@oracle.com>
-Subject: [PATCH] recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.
-Date:   Fri, 17 Jul 2020 16:33:38 +0200
-Message-Id: <20200717143338.19302-1-gregory.herrero@oracle.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 17 Jul 2020 10:30:35 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C76DC0619D2;
+        Fri, 17 Jul 2020 07:30:35 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ls15so6606016pjb.1;
+        Fri, 17 Jul 2020 07:30:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yaYi6h5B07rG4qeTioPMA8wvtoyirSTqGxPbp9nZgr0=;
+        b=NXVxk+YlNj2Eam6zrVgjF0M4+RBDbyoBR9TVuKV9iKiNEXXMbsznnDpgzHmNo0QVkk
+         FvVN2zikv8iZiT65/2RSrVb2MZlMnV4Q+prItsKSqekuu8t4y8FButbsVMyVT4IVYhxX
+         Kg5RW9MLCQzrsvBSqVI+sh+cBOzrpqNodI10vi+DpAWRdCsJyw5g482am//xgazEFb2X
+         ueUFfFJGPBhv92/tFMZgllhWDDfR9DHK5A4ixDGPQPZ0a6hTaETMowE888FbWutWhqiX
+         biH7n/ngAM8Gn6jl7hJ4OwLSX524YJXshUEh/UvKycGJmWxAGFUsTl8Z6IsUNuVCRLw1
+         vlEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yaYi6h5B07rG4qeTioPMA8wvtoyirSTqGxPbp9nZgr0=;
+        b=OftskObNsnVWVSzdt/iw2fxsmN6ZTppyR9OyDjfNTNN3kc5P3pmoUcBJdQj8wm3wBh
+         fYS5kU0+o01Ty1Ew5d3aFOW5I9iD4I7LRbglzI26qCHKTq8olzHslnbXoQiht7RtF9r9
+         Bt7hHrGkbYkVK+hqIAdcHVY44ZyNb9cOKOtDVtZ/zwV7cUdt8yw+i0SNCBIdSDmXFAtR
+         BjLmaCOD561uG0rgKTb+lxnhg1N7vrPi1W6dSwK0S24hAZ+RSnoDHs81enFnPU71Sw0R
+         Rf705zcB/JA61C0EMIiPRuEJMplx0LKaQ+PKWy5/WnsCB+PazCviT181YCMtme7q16F9
+         NU8g==
+X-Gm-Message-State: AOAM530Ya1GEDbj+yJmfBvbOarZ2Cj7iyCOc0l7LaiBzwKZ9d+vT45M2
+        E8YchoxLt00NCNUWJ6f8AkA=
+X-Google-Smtp-Source: ABdhPJwDrmJiLhA2SZTMj3XfHOsOUgrx43kJPrUeWY8fwYz+3Bagj07sK2ZvjRzGhbroviQYMv7sTQ==
+X-Received: by 2002:a17:902:547:: with SMTP id 65mr7767642plf.191.1594996234764;
+        Fri, 17 Jul 2020 07:30:34 -0700 (PDT)
+Received: from localhost ([89.208.244.139])
+        by smtp.gmail.com with ESMTPSA id y19sm7946672pgj.35.2020.07.17.07.30.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Jul 2020 07:30:34 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 22:30:30 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     corbet@lwn.net, gregkh@linuxfoundation.org,
+        michal.simek@xilinx.com, wsa+renesas@sang-engineering.com,
+        linus.walleij@linaro.org, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 1/2] drivers: provide devm_platform_request_irq()
+Message-ID: <20200717143030.GB25998@nuc8i5>
+References: <20200527142611.9006-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007170107
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527142611.9006-1-zhengdejin5@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory Herrero <gregory.herrero@oracle.com>
+On Wed, May 27, 2020 at 10:26:10PM +0800, Dejin Zheng wrote:
+Hi Jonathan, Greg, Rafael, Linus, Michal and Wolfram:
 
-Currently, if a section has a relocation to '_mcount' symbol, a new
-__mcount_loc entry will be added whatever the relocation type is.
-This is problematic when a relocation to '_mcount' is in the middle of a
-section and is not a call for ftrace use.
+Could you help me review this patch if you have free time?
+Thank you very very much!
 
-Such relocation could be generated with below code for example:
-    bool is_mcount(unsigned long addr)
-    {
-        return (target == (unsigned long) &_mcount);
-    }
-
-With this snippet of code, ftrace will try to patch the mcount location
-generated by this code on module load and fail with:
-
-    Call trace:
-     ftrace_bug+0xa0/0x28c
-     ftrace_process_locs+0x2f4/0x430
-     ftrace_module_init+0x30/0x38
-     load_module+0x14f0/0x1e78
-     __do_sys_finit_module+0x100/0x11c
-     __arm64_sys_finit_module+0x28/0x34
-     el0_svc_common+0x88/0x194
-     el0_svc_handler+0x38/0x8c
-     el0_svc+0x8/0xc
-    ---[ end trace d828d06b36ad9d59 ]---
-    ftrace failed to modify
-    [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
-     actual:   66:a9:3c:90
-    Initializing ftrace call sites
-    ftrace record flags: 2000000
-     (0)
-    expected tramp: ffffa2dc6cf66724
-
-So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
-recordmcount.
-
-Fixes: ed60453fa8f8 ("ARM: 6511/1: ftrace: add ARM support for C version of recordmcount")
-Signed-off-by: Gregory Herrero <gregory.herrero@oracle.com>
----
- scripts/recordmcount.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 7225107a9aaf..e59022b3f125 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -434,6 +434,11 @@ static int arm_is_fake_mcount(Elf32_Rel const *rp)
- 	return 1;
- }
+BR,
+Dejin
+> It will call devm_request_irq() after platform_get_irq() function
+> in many drivers, sometimes, it is not right for the error handling
+> of these two functions in some drivers. so provide this function
+> to simplify the driver.
+> 
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+> v2 -> v3:
+> 	- add devm_platform_request_irq() to devres.rst by Grygorii's
+> 	  suggestion.
+> v1 -> v2:
+> 	- The patch content has not changed. just resend it by this discussion:
+> 	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+> 
  
-+static int arm64_is_fake_mcount(Elf64_Rel const *rp)
-+{
-+	return ELF64_R_TYPE(w(rp->r_info)) != R_AARCH64_CALL26;
-+}
-+
- /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
-  * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
-  * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
-@@ -547,6 +552,7 @@ static int do_file(char const *const fname)
- 		make_nop = make_nop_arm64;
- 		rel_type_nop = R_AARCH64_NONE;
- 		ideal_nop = ideal_nop4_arm64;
-+		is_fake_mcount64 = arm64_is_fake_mcount;
- 		break;
- 	case EM_IA_64:	reltype = R_IA64_IMM64; break;
- 	case EM_MIPS:	/* reltype: e_class    */ break;
--- 
-2.27.0
-
