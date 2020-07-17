@@ -2,91 +2,104 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB7CC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C19C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2804F20691
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:20:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AEJQmWGi"
+	by mail.kernel.org (Postfix) with ESMTP id 62F1220691
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgGQJUZ (ORCPT
+        id S1726399AbgGQJVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgGQJUY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:20:24 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B1FBC061755;
-        Fri, 17 Jul 2020 02:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vD7ogw/DhcHODHv2SCgzRx5wCV73axCwV9UAHq/1Hbs=; b=AEJQmWGipvhnfI6mCc6xEM/Rt1
-        P3GrZ7sBFk0hlBFp137PYFnvWOJGZNv3bFsNz986Z2rFlhmlsxqsFiuWGdaFXV58Q/0Q1lwLZWhkY
-        tohXqG4s7Guw2+BMyDO6CLmxbq8RVdkl9Uuvsse7QROwJgF8eklcfc38kX9b0GGQ7LUZ4vI4Dbn6x
-        7n+sL8Wa+yeDoXbuafGGA9MdKyEXEpDIsXCr9cRjsEyjdb5oLGK4REc34sUtyh1ApWgoc5qsynV83
-        GGvV+NQoh/Ropd/S9sG5wyHDOFNOfzYQZ9l88S2lEIq5poau+tVs1/+tSpgzET+mJwXFSvJfBgWIB
-        fDmu/Ixw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwMXQ-0002yY-4H; Fri, 17 Jul 2020 09:20:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B7450300446;
-        Fri, 17 Jul 2020 11:20:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A22FF29CF6F51; Fri, 17 Jul 2020 11:20:14 +0200 (CEST)
-Date:   Fri, 17 Jul 2020 11:20:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     ira.weiny@intel.com
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 12/17] memremap: Add zone device access protection
-Message-ID: <20200717092014.GB10769@hirez.programming.kicks-ass.net>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-13-ira.weiny@intel.com>
+        Fri, 17 Jul 2020 05:21:23 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7780 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725864AbgGQJVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:21:23 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 73228D0B5AF77BBC20AC;
+        Fri, 17 Jul 2020 17:21:21 +0800 (CST)
+Received: from DESKTOP-5IS4806.china.huawei.com (10.174.187.22) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 17 Jul 2020 17:21:12 +0800
+From:   Keqian Zhu <zhukeqian1@huawei.com>
+To:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>
+CC:     Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
+        <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>
+Subject: [RESEND PATCH] drivers: arm arch timer: Correct fault programming of CNTKCTL_EL1.EVNTI
+Date:   Fri, 17 Jul 2020 17:21:04 +0800
+Message-ID: <20200717092104.15428-1-zhukeqian1@huawei.com>
+X-Mailer: git-send-email 2.8.4.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717072056.73134-13-ira.weiny@intel.com>
+Content-Type: text/plain
+X-Originating-IP: [10.174.187.22]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:20:51AM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Device managed memory exposes itself to the kernel direct map which
-> allows stray pointers to access these device memories.
-> 
-> Stray pointers to normal memory may result in a crash or other
-> undesirable behavior which, while unfortunate, are usually recoverable
-> with a reboot.  Stray writes to areas such as non-volatile memory are
-> permanent in nature and thus are more likely to result in permanent user
-> data loss vs a stray write to other memory areas
+ARM virtual counter supports event stream. It can only trigger an event
+when the trigger bit of CNTVCT_EL0 changes from 0 to 1 (or from 1 to 0),
+so the actual period of event stream is 2 ^ (cntkctl_evnti + 1). For
+example, when the trigger bit is 0, then it triggers an event for every
+two cycles.
 
-> +		pks_update_protection(dev_page_pkey, PKEY_DISABLE_ACCESS);
+Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+---
+ drivers/clocksource/arm_arch_timer.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-So on the one hand you talk about the problem of stray writes, but then
-you disable all access.
-
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index ecf7b7db2d05..06d99a4b1b9b 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -799,10 +799,20 @@ static void __arch_timer_setup(unsigned type,
+ static void arch_timer_evtstrm_enable(int divider)
+ {
+ 	u32 cntkctl = arch_timer_get_cntkctl();
++	int cntkctl_evnti;
++
++	/*
++	 * Note that it can only trigger an event when the trigger bit
++	 * of CNTVCT_EL0 changes from 1 to 0 (or from 0 to 1), so the
++	 * actual period of event stream is 2 ^ (cntkctl_evnti + 1).
++	 */
++	cntkctl_evnti = divider - 1;
++	cntkctl_evnti = min(cntkctl_evnti, 15);
++	cntkctl_evnti = max(cntkctl_evnti, 0);
+ 
+ 	cntkctl &= ~ARCH_TIMER_EVT_TRIGGER_MASK;
+ 	/* Set the divider and enable virtual event stream */
+-	cntkctl |= (divider << ARCH_TIMER_EVT_TRIGGER_SHIFT)
++	cntkctl |= (cntkctl_evnti << ARCH_TIMER_EVT_TRIGGER_SHIFT)
+ 			| ARCH_TIMER_VIRT_EVT_EN;
+ 	arch_timer_set_cntkctl(cntkctl);
+ 	arch_timer_set_evtstrm_feature();
+@@ -816,10 +826,11 @@ static void arch_timer_configure_evtstream(void)
+ 	/* Find the closest power of two to the divisor */
+ 	evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ;
+ 	pos = fls(evt_stream_div);
+-	if (pos > 1 && !(evt_stream_div & (1 << (pos - 2))))
++	if ((pos == 1) || (pos > 1 && !(evt_stream_div & (1 << (pos - 2)))))
+ 		pos--;
++
+ 	/* enable event stream */
+-	arch_timer_evtstrm_enable(min(pos, 15));
++	arch_timer_evtstrm_enable(pos);
+ }
+ 
+ static void arch_counter_set_user_access(void)
+-- 
+2.19.1
 
