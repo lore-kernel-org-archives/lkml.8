@@ -2,151 +2,225 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA43C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 558CE206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24647206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:54:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="pR+g11Y+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbgGQKvI (ORCPT
+        id S1726401AbgGQKyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgGQKvH (ORCPT
+        Fri, 17 Jul 2020 06:54:35 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:53885 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbgGQKye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:51:07 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BE22C061755
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 03:51:07 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1jwNxE-0003u7-5w; Fri, 17 Jul 2020 12:51:00 +0200
-Message-ID: <c325bee7980feb3564de05a0a6d15c1708e2c7c0.camel@pengutronix.de>
-Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller
- Subsystem
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        lukas@mntmn.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Fri, 17 Jul 2020 12:50:56 +0200
-In-Reply-To: <20200717094517.layssf75bxe3ijs4@fsr-ub1864-141>
-References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
-         <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
-         <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
-         <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
-         <20200717092758.GR3278063@phenom.ffwll.local>
-         <20200717094517.layssf75bxe3ijs4@fsr-ub1864-141>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Fri, 17 Jul 2020 06:54:34 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id wO0YjChHrNPeYwO0cjaQH4; Fri, 17 Jul 2020 12:54:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1594983270; bh=ZO22z8Bx+Muk8AAJpt6+r35FG7vq2qgvgLxH4gHMSCA=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=pR+g11Y+AlPLGM4DOCXBSpMsCG4j/uWCBJ36fD47eLtD8nDX37OI/HTWZoB1fHkcl
+         21S/S3MF5/a6058PX9GWj3BD/yVSWU2ZsuS2dwjdu5TjBE7Ydy9X/jf+Odu/T9hTH1
+         U9yW0OnxQgJQ5ObAXoFB2+1fFpN20GfBCS5uhEyjMPHBJ3spVK1SkajpKeqA2HpE9E
+         2HZQDLHjIDEIPLXINd6gD96Kp4KrV0kIYBe3h3wezSwSSqWHDA6pYV19uJuK/5NVYn
+         eZmx1BzAPeLqhEZA8Kp9WL2vr0IdNHAzHFvL2kEBwIiyZZ5idGD/FdSpVNNjsQtlJN
+         yrOD9dpwGwPdQ==
+Subject: Re: [RFC PATCH v3 00/18] Support for Tegra video capture from
+ external sensor
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
+Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f03bdb89-df7c-e9e8-1512-d57e5d2332bf@xs4all.nl>
+Date:   Fri, 17 Jul 2020 12:54:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-CMAE-Envelope: MS4wfLi4ECYNdhlVjfMh9FEzQqx/iiu2UDdquQTrds7M9X35sLdjjXO6CBrTnU9icGrBVrBxl7/I+aWpZMKYALjhdb30Nc0JO//K0SDPHBd6noFw8wwLkPPD
+ G3WAMzlx3QaTsra3sqH512PRgIgh3cq03Njpqpsl5qcFB3zrhXvgbfdZrYxNPUVj53DfT2Z7BKm4QHXXPhqmfXggTiAcpptvIvBaLlr5HCZydyyz5+IAOooX
+ L1mj1SzCSNYI0SYYL0k1sae6/Bk+JR461toC10Qo4NhrfeXsn8+LWsbMybISV7ctZb/oYCG7AOOqqQqAWZhZDEU43gdn1VXw2yq8ZeSkb1q7EA3ybp3w+A/a
+ LIAMgoJDmKAYfU1OmyM0MTXpNzXs/i8NDPSiKPY/9T1bCaO+13s0559rup6/yRmqKmTXmT/oEq8a9zRnaFYBZjqyt74E3JqqYF/4Q8sPGfbMuein5iY4SZtx
+ 2JcUfGAbOUXi91E3XXGnT7Oyv9+WBAdpeKpl+cOtTVXznDBtm/FlhgA2t7YXbU6MqjFyQVqokBNYgTBFvGhORvnyW9LtTanL5GiSc8jRK65Vko6c6UngiRaj
+ Pz2koosDsb66MV6Nc7VbRDApkDofRF1OQa37ttRnSjPBcxTegXxSwuYmleNwywvB4+CUirbvx1yXIB13OyzqKglg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, den 17.07.2020, 12:45 +0300 schrieb Laurentiu Palcu:
-> Hi Lukas and Daniel,
-> 
-> On Fri, Jul 17, 2020 at 11:27:58AM +0200, Daniel Vetter wrote:
-> > On Fri, Jul 17, 2020 at 11:12:39AM +0200, Lucas Stach wrote:
-> > > Am Freitag, den 17.07.2020, 10:59 +0200 schrieb Daniel Vetter:
-> > > > On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
-> > > > > Hi Laurentiu,
-> > > > > 
-> > > > > Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
-> > > > > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > > > > > 
-> > > > > > Hi,
-> > > > > > 
-> > > > > > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> > > > > > includes only graphics plane support (no video planes), no HDR10 capabilities,
-> > > > > > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> > > > > > 
-> > > > > > Support for the rest of the features will be added incrementally, in subsequent
-> > > > > > patches.
-> > > > > > 
-> > > > > > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> > > > > > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
-> > > > > 
-> > > > > I think the series (minus 3/5 and minor correction to the DT binding)
-> > > > > is fine to go in now. So just some formal questions: are you going to
-> > > > > maintain this driver in upstream? If so we should add a MAINTAINERS
-> > > > > entry to that effect. I can offer to act as a reviewer in this case.
-> 
-> I can maintain the DCSS driver, sure, and the more reviewers the better.
-> Thanks for helping out with this. Should I send a v6 then with a patch
-> for MAINTAINERS?
-> 
-> > > > > How do you intend to merge this? IMO pushing this through drm-misc
-> > > > > seems like the right thing to do. If you agree I can help you get this
-> > > > > applied. If you are going to maintain the driver on your own, I think
-> > > > > you should then apply for commit rights to drm-misc.
-> > > > 
-> > > > drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
-> > > > should put the entire collective of imx drivers under drm-misc? Or
-> > > > maybe it's just an oversight that the git repo isn't specified in the
-> > > > MAINTAINERS entry. Also maybe we should add the pengutronix kernel
-> > > > team alias there too?
-> > > 
-> > > drm/imx was exclusively the IPUv3 up until now, which is in fact
-> > > maintained outside of drm-misc in its own git tree. This has worked
-> > > quite well in the past so even though IPUv3 doesn't see a lot of churn
-> > > these days the motivation to change anything to this workflow is quite
-> > > low. And yes, the git tree is missing from the MAINTAINERS entry.
-> > > 
-> > > For the DCSS driver, if it's going to be maintained by NXP, I figured
-> > > it might be easier for Laurentiu to push things into drm-misc than set
-> > > up a separate public git tree. But IMHO that's fully up to him to
-> > > decide.
-> > 
-> > /me puts on maintainer hat
-> > 
-> > Much prefer drm-misc over random people playing maintainer and fumbling
-> > it. I think the reasonable options are either in the current imx tree, or
-> > drm-misc. Standalone tree for these small drivers just doesn't make much
-> > sense.
-> 
-> I don't have anything against either method, though I have to agree I
-> like things to be simple. Going through drm-misc sounds simple enough to me. :)
-> However, since there is going to be more activity in the DRM IMX area in
-> the future, reviving the drm/imx tree, and push all IMX related stuff
-> through drm/imx, could make sense as well.
+Hi Sowjanya,
 
-I think drm-misc is the right place then.
+On 15/07/2020 06:20, Sowjanya Komatineni wrote:
+> This series adds support for video capture from external camera sensor to
+> Tegra video driver.
+> 
+> Jetson TX1 has camera expansion connector and supports custom camera module
+> designed as per TX1 design specification.
+> 
+> This series also enables camera capture support for Jetson Nano which has
+> Raspberry PI camera header.
+> 
+> This series is tested with IMX219 camera sensor.
+> 
+> This series include,
+> 
+> VI I2C related fixes
+> - Camera sensor programming happens through VI I2C which is on host1x bus.
+> - These patches includes device tree and I2C driver fixes for VI I2C.
+> 
+> Tegra video driver updates
+> - TPG Vs Non-TPG based on Kconfig
+> - Support for external sensor video capture based on device graph from DT.
+> - Support for selection ioctl operations
+> - Tegra MIPI CSI pads calibration
+> - CSI T-CLK and T-HS settle time computation based on clock rates.
+> 
+> Host1x driver updates
+> - Adds API to allow creating mipi device for specific device node.
+> - Splits MIPI pads calibrate start and waiting for calibration to be done.
+> 
+> Device tree updates
+> - Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson TX1 DT.
+> - Enabled VI and CSI support in Jetson Nano DT.
 
-Please send a v6 with the following changes:
-- drop the component framework patch
-- drop the i.MX8MQ DT patch, this should go through Shawn's imx tree
-after the driver and binding has landed in drm-misc
-- you can add my Reviewed-by to the whole series or I can add it when
-applying
-- add a MAINTAINERS entry, please add me as a reviewer if you don't
-mind
+I'm doing a bit of stress testing with:
 
-I can push this initial series into drm-misc until you've got your own
-commit rights.
+while true; do v4l2-ctl --stream-mmap --stream-count=1; done
+
+and I see that the imx274 has often streaming failures:
+
+[  172.025144] IMX274 8-001a: s_stream failed
+[  179.025192] IMX274 8-001a: imx274_write_mbreg : i2c bulk write failed, 3132 = 870 (2 bytes)
+[  179.033575] IMX274 8-001a: s_stream failed
+[  226.525378] IMX274 8-001a: imx274_write_mbreg : i2c bulk write failed, 3130 = 878 (2 bytes)
+[  226.533761] IMX274 8-001a: s_stream failed
+[  227.029325] IMX274 8-001a: imx274_write_mbreg : i2c bulk write failed, 30f6 = 107 (2 bytes)
+[  227.037758] IMX274 8-001a: s_stream failed
+[  247.025218] IMX274 8-001a: imx274_write_mbreg : i2c bulk write failed, 30f6 = 107 (2 bytes)
+[  247.033658] IMX274 8-001a: s_stream failed
+[  293.025517] IMX274 8-001a: s_stream failed
+[  309.024727] IMX274 8-001a: imx274_write_mbreg : i2c bulk write failed, 30e0 = 0 (2 bytes)
+[  309.032969] IMX274 8-001a: s_stream failed
+[  309.529506] IMX274 8-001a: imx274_write_mbreg : i2c bulk write failed, 30f8 = 11d2 (3 bytes)
+[  309.538103] IMX274 8-001a: imx274_set_frame_length error = -121
+[  309.544102] IMX274 8-001a: imx274_set_frame_interval error = -121
+[  309.550243] IMX274 8-001a: s_stream failed
+[  314.025561] IMX274 8-001a: s_stream failed
+[  329.025586] IMX274 8-001a: s_stream failed
+[  340.529567] IMX274 8-001a: imx274_write_mbreg : i2c bulk write failed, 303a = f0c (2 bytes)
+[  340.538009] IMX274 8-001a: s_stream failed
+[  347.525627] IMX274 8-001a: imx274_write_mbreg : i2c bulk write failed, 30f6 = 107 (2 bytes)
+[  347.534008] IMX274 8-001a: s_stream failed
+[  365.033640] IMX274 8-001a: s_stream failed
+[  437.525788] IMX274 8-001a: imx274_write_mbreg : i2c bulk write failed, 3038 = c (2 bytes)
+[  437.533997] IMX274 8-001a: s_stream failed
+[  456.029780] IMX274 8-001a: s_stream failed
+[  472.025862] IMX274 8-001a: s_stream failed
+[  498.025861] IMX274 8-001a: s_stream failed
+[  500.025905] IMX274 8-001a: s_stream failed
+
+where v4l2-ctl returns:
+
+                VIDIOC_STREAMON returned -1 (Remote I/O error)
+
+I don't see this with the imx219.
+
+I also see this occasionally:
+
+[Fri Jul 17 12:51:42 2020] video4linux video1: failed to run capture start kthread: -4
+
+Something is not stable here.
 
 Regards,
-Lucas
+
+	Hans
+
+> 
+> 
+> Delta between patch versions:
+> 
+> [v3]:	Includes v2 feedback
+> 	- Uses separate helper function for retrieving remote csi subdevice
+> 	  and source subdevice.
+> 	- Added check for presence of subdevice ops set/get_selection
+> 	- dropped vb2_queue_release from driver and using
+> 	  vb2_video_unregister_device instead of video_unregister_device.
+> 	- video device register should happen in the last after all video
+> 	  device related setup is done in the driver. This is being addressed
+> 	  in below RFC patch. Once proper implementation of this is available
+> 	  will update Tegra video driver to use split APIs and do all setup
+> 	  prior to device register. Added this as TODO in the driver.
+> 	  https://www.spinics.net/lists/linux-media/msg172761.html
+> 
+> 	Note:
+> 	Patch-0012 has compilation dependency on
+> 	https://patchwork.kernel.org/patch/11659521/
+> 
+> 
+> [v2]:	Includes below changes based on v1 feedback
+> 	- dt-binding document and the driver update for device graph to use
+> 	  separate ports for sink endpoint and source endpoint for csi.
+> 	- Use data-lanes endpoint property for csi.
+> 	- Update tegra_mipi_request() to take device node pointer argument
+> 	  rather than adding extra API.
+> 	- Remove checking for clk pointer before clk_disable.
+> 
+> 
+> Sowjanya Komatineni (18):
+>   dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and
+>     power-domains
+>   arm64: tegra: Add missing clocks and power-domains to Tegra210 VI I2C
+>   i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
+>   i2c: tegra: Remove NULL pointer check before
+>     clk_enable/disable/prepare/unprepare
+>   i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
+>   i2c: tegra: Fix runtime resume to re-init VI I2C
+>   i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
+>   media: tegra-video: Fix channel format alignment
+>   media: tegra-video: Enable TPG based on kernel config
+>   media: tegra-video: Update format lookup to offset based
+>   dt-bindings: tegra: Update VI and CSI bindings with port info
+>   media: tegra-video: Add support for external sensor capture
+>   media: tegra-video: Add support for selection ioctl ops
+>   gpu: host1x: mipi: Update tegra_mipi_request() to be node based
+>   gpu: host1x: mipi: Use readl_relaxed_poll_timeout in tegra_mipi_wait
+>   gpu: host1x: mipi: Split tegra_mipi_calibrate and tegra_mipi_wait
+>   media: tegra-video: Add CSI MIPI pads calibration
+>   media: tegra-video: Compute settle times based on the clock rate
+> 
+>  .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
+>  .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |  19 +-
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +
+>  drivers/gpu/drm/tegra/dsi.c                        |   9 +-
+>  drivers/gpu/host1x/mipi.c                          |  37 +-
+>  drivers/i2c/busses/i2c-tegra.c                     | 101 +--
+>  drivers/staging/media/tegra-video/Kconfig          |   7 +
+>  drivers/staging/media/tegra-video/csi.c            | 247 ++++++-
+>  drivers/staging/media/tegra-video/csi.h            |   8 +
+>  drivers/staging/media/tegra-video/tegra210.c       |  25 +-
+>  drivers/staging/media/tegra-video/vi.c             | 793 +++++++++++++++++++--
+>  drivers/staging/media/tegra-video/vi.h             |  25 +-
+>  drivers/staging/media/tegra-video/video.c          |  23 +-
+>  include/linux/host1x.h                             |   4 +-
+>  14 files changed, 1242 insertions(+), 154 deletions(-)
+> 
 
