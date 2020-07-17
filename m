@@ -2,132 +2,123 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16DFC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB51BC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A89752076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:35:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tnUMGTuF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2cIko/HO"
+	by mail.kernel.org (Postfix) with ESMTP id D7B1520704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgGQSfu (ORCPT
+        id S1728173AbgGQSfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:35:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42404 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728215AbgGQSfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:35:48 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595010946;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uiwrMAqmxawI1Rcn1I56Kp6XcBO1SrZK17qX3Nlc3kE=;
-        b=tnUMGTuFhdwPg+pZQK4Kj3X6yUKyH3XkRktnBEstN/JwQr6b8ytSs633JTcxcsmQjXKMXW
-        YCqzdLvEas7DeI44guNooVpBElpE679FIkfMKP+bQtWCUtNYpnqtk6Ifl35sUIi7MBNDAz
-        UvFtSwNj0uSqvXi1tWsxYuwc3KKgnq161DjLT9I8InSmlx1LzrvNrx90fuVbU0/XDowDQt
-        RlaULjsBTJxYmL014hXjZh7fwjP7ry2LjhljZgJomjYJWaJ+dn8t4FyesmBdPMsyJqHkgY
-        zvosasnwsprN2t9i2YjRSqD2Zp0jqW9vFAd3vc85mOd+5zh6GmaLdvL0GVh2Pw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595010946;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uiwrMAqmxawI1Rcn1I56Kp6XcBO1SrZK17qX3Nlc3kE=;
-        b=2cIko/HOAOpf3QwZjLesonVO1v0OVldA6urZyg/KCHfYF/AueNyuYTdi9tsLyqTmOAKJx3
-        3I8Tl5YbnxP6veAA==
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [patch V2 3/5] posix-cpu-timers: Provide mechanisms to defer timer handling to task_work
-In-Reply-To: <20200717172627.GC6067@redhat.com>
-References: <20200716201923.228696399@linutronix.de> <20200716202044.734067877@linutronix.de> <20200717172627.GC6067@redhat.com>
-Date:   Fri, 17 Jul 2020 20:35:46 +0200
-Message-ID: <87zh7yq9a5.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Jul 2020 14:35:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:14122 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbgGQSfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:35:39 -0400
+IronPort-SDR: //4GnEZZPNtM9v6kKKMoFYkMKN2Hre1nNkqxBA1sfhktWyPzLusO6+o3fcv0SFoywkgQ30W+qm
+ pR5KLZj8FS/A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="147633886"
+X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
+   d="scan'208";a="147633886"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 11:35:38 -0700
+IronPort-SDR: NM0cihuSUbRCIDOLyO/wBY2MF3ksevxSGDa5V+IUtDhZZaOYtFM2Tniyt0T2c8qqZVGvMEg7QH
+ jYrVMRbFM3mQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
+   d="scan'208";a="270882934"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Jul 2020 11:35:38 -0700
+Received: from orsmsx121.amr.corp.intel.com ([169.254.10.122]) by
+ ORSMSX107.amr.corp.intel.com ([169.254.1.92]) with mapi id 14.03.0439.000;
+ Fri, 17 Jul 2020 11:35:37 -0700
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
+        "grandmaster@al2klimov.de" <grandmaster@al2klimov.de>
+Subject: Re: [PATCH] ACPI: Replace HTTP links with HTTPS ones
+Thread-Topic: [PATCH] ACPI: Replace HTTP links with HTTPS ones
+Thread-Index: AQHWXGeTmvbPt1aLLEiZkNSAVB7nYakMjqkA
+Date:   Fri, 17 Jul 2020 18:35:37 +0000
+Message-ID: <7a2bdfafc7c8e22e87aa142b18390e1e8c921e4a.camel@intel.com>
+References: <20200717182436.75214-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200717182436.75214-1-grandmaster@al2klimov.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+x-originating-ip: [10.18.116.7]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F90A9ADFCEFEFF4498B736AC8AD77289@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oleg,
-
-Oleg Nesterov <oleg@redhat.com> writes:
-> Looks correct to me, but I forgot everything about posix-timers.c
-
-that's not a problem because this is about posix-cpu-timers.c :)
-
-> this obviously means that the expired timer won't fire until the
-> task returns to user-mode but probably we don't care.
-
-If the signal goes to the task itself it does not matter at all because
-it's going to be delivered when the task goes out to user space.
-
-If the signal goes to a supervisor process, then it will be slightly
-delayed but I could not find a problem with that at all.
-
-I'll add more reasoning to the changelog on V3.
-
->> +#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
->> +void posix_cpu_timers_work(struct callback_head *work);
->> +
->> +static inline void posix_cputimer_init_work(struct posix_cputimers *pct)
->> +{
->> +	pct->task_work.func = posix_cpu_timers_work;
->
-> init_task_work() ?
-
-Yeah.
-
->> +}
->> +#else
->> +static inline void posix_cputimer_init_work(struct posix_cputimers *pct) { }
->> +#endif
->> +
->>  static inline void posix_cputimers_init(struct posix_cputimers *pct)
->>  {
->>  	memset(pct, 0, sizeof(*pct));
->>  	pct->bases[0].nextevt = U64_MAX;
->>  	pct->bases[1].nextevt = U64_MAX;
->>  	pct->bases[2].nextevt = U64_MAX;
->> +	posix_cputimer_init_work(pct);
->>  }
->
-> And I can't resist. I know this is a common practice, please ignore, but to me
->
-> 	static inline void posix_cputimers_init(struct posix_cputimers *pct)
-> 	{
-> 		memset(pct, 0, sizeof(*pct));
-> 		pct->bases[0].nextevt = U64_MAX;
-> 		pct->bases[1].nextevt = U64_MAX;
-> 		pct->bases[2].nextevt = U64_MAX;
-> 	#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
-> 		init_task_work(&pct->task_work, posix_cpu_timers_work);
-> 	#endif
-> 	}
->
-> looks better than 2 posix_cputimer_init_work() definitions above.
-
-Gah, I hate ifdefs in the middle of the code :)
-
-> Note also that signal_struct->posix_cputimers.task_work is never used, perhaps
-> it would be better to move this task_work into task_struct? This way we do not
-> even need to change posix_cputimers_init(), we call simply initialize
-> init_task.posix_task_work.
-
-Let me look into that.
-
-Thanks,
-
-        tglx
+T24gRnJpLCAyMDIwLTA3LTE3IGF0IDIwOjI0ICswMjAwLCBBbGV4YW5kZXIgQS4gS2xpbW92IHdy
+b3RlOg0KPiBSYXRpb25hbGU6DQo+IFJlZHVjZXMgYXR0YWNrIHN1cmZhY2Ugb24ga2VybmVsIGRl
+dnMgb3BlbmluZyB0aGUgbGlua3MgZm9yIE1JVE0NCj4gYXMgSFRUUFMgdHJhZmZpYyBpcyBtdWNo
+IGhhcmRlciB0byBtYW5pcHVsYXRlLg0KPiANCj4gRGV0ZXJtaW5pc3RpYyBhbGdvcml0aG06DQo+
+IEZvciBlYWNoIGZpbGU6DQo+ICAgSWYgbm90IC5zdmc6DQo+ICAgICBGb3IgZWFjaCBsaW5lOg0K
+PiAgICAgICBJZiBkb2Vzbid0IGNvbnRhaW4gYFxieG1sbnNcYmA6DQo+ICAgICAgICAgRm9yIGVh
+Y2ggbGluaywgYFxiaHR0cDovL1teIyBcdFxyXG5dKig/Olx3fC8pYDoNCj4gCSAgSWYgbmVpdGhl
+ciBgXGJnbnVcLm9yZy9saWNlbnNlYCwgbm9yIGBcYm1vemlsbGFcLm9yZy9NUExcYmA6DQo+ICAg
+ICAgICAgICAgIElmIGJvdGggdGhlIEhUVFAgYW5kIEhUVFBTIHZlcnNpb25zDQo+ICAgICAgICAg
+ICAgIHJldHVybiAyMDAgT0sgYW5kIHNlcnZlIHRoZSBzYW1lIGNvbnRlbnQ6DQo+ICAgICAgICAg
+ICAgICAgUmVwbGFjZSBIVFRQIHdpdGggSFRUUFMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbGV4
+YW5kZXIgQS4gS2xpbW92IDxncmFuZG1hc3RlckBhbDJrbGltb3YuZGU+DQo+IC0tLQ0KPiAgQ29u
+dGludWluZyBteSB3b3JrIHN0YXJ0ZWQgYXQgOTM0MzFlMDYwN2U1Lg0KPiAgU2VlIGFsc286IGdp
+dCBsb2cgLS1vbmVsaW5lICctLWF1dGhvcj1BbGV4YW5kZXIgQS4gS2xpbW92IDxncmFuZG1hc3Rl
+ckBhbDJrbGltb3YuZGU+JyB2NS43Li5tYXN0ZXINCj4gDQo+ICBJZiB0aGVyZSBhcmUgYW55IFVS
+THMgdG8gYmUgcmVtb3ZlZCBjb21wbGV0ZWx5IG9yIGF0IGxlYXN0IG5vdCBqdXN0IEhUVFBTaWZp
+ZWQ6DQo+ICBKdXN0IGNsZWFybHkgc2F5IHNvIGFuZCBJJ2xsICp1bmRvIG15IGNoYW5nZSouDQo+
+ICBTZWUgYWxzbzogaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMjAvNi8yNy82NA0KPiANCj4gIElm
+IHRoZXJlIGFyZSBhbnkgdmFsaWQsIGJ1dCB5ZXQgbm90IGNoYW5nZWQgVVJMczoNCj4gIFNlZTog
+aHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMjAvNi8yNi84MzcNCj4gDQo+ICBJZiB5b3UgYXBwbHkg
+dGhlIHBhdGNoLCBwbGVhc2UgbGV0IG1lIGtub3cuDQo+IA0KPiAgU29ycnkgYWdhaW4gdG8gYWxs
+IG1haW50YWluZXJzIHdobyBjb21wbGFpbmVkIGFib3V0IHN1YmplY3QgbGluZXMuDQo+ICBOb3cg
+SSByZWFsaXplZCB0aGF0IHlvdSB3YW50IGFuIGFjdHVhbGx5IHBlcmZlY3QgcHJlZml4ZXMsDQo+
+ICBub3QganVzdCBzdWJzeXN0ZW0gb25lcy4NCj4gIEkgdHJpZWQgbXkgYmVzdC4uLg0KPiAgQW5k
+IHllcywgKkkgY291bGQqIChhdCBsZWFzdCBoYWxmLSlhdXRvbWF0ZSBpdC4NCj4gIEltcG9zc2li
+bGUgaXMgbm90aGluZyEgOikNCj4gDQo+IA0KPiAgLi4uL2Zpcm13YXJlLWd1aWRlL2FjcGkvRFNE
+LXByb3BlcnRpZXMtcnVsZXMucnN0ICAgICAgIHwgIDQgKystLQ0KPiAgLi4uL2Zpcm13YXJlLWd1
+aWRlL2FjcGkvZHNkL2RhdGEtbm9kZS1yZWZlcmVuY2VzLnJzdCAgIHwgIDQgKystLQ0KPiAgRG9j
+dW1lbnRhdGlvbi9maXJtd2FyZS1ndWlkZS9hY3BpL2RzZC9ncmFwaC5yc3QgICAgICAgIHwgMTAg
+KysrKystLS0tLQ0KPiAgRG9jdW1lbnRhdGlvbi9maXJtd2FyZS1ndWlkZS9hY3BpL2RzZC9sZWRz
+LnJzdCAgICAgICAgIHwgIDYgKysrLS0tDQo+ICBEb2N1bWVudGF0aW9uL2Zpcm13YXJlLWd1aWRl
+L2FjcGkvbHBpdC5yc3QgICAgICAgICAgICAgfCAgMiArLQ0KPiAgZHJpdmVycy9hY3BpL0tjb25m
+aWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0NCj4gIGRyaXZlcnMv
+YWNwaS9uZml0L25maXQuaCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstDQo+
+ICA3IGZpbGVzIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQ0KDQpG
+b3IgbmZpdC9uZml0LmgsDQpBY2tlZC1ieTogVmlzaGFsIFZlcm1hIDx2aXNoYWwubC52ZXJtYUBp
+bnRlbC5jb20+DQoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYWNwaS9uZml0L25maXQuaCBiL2Ry
+aXZlcnMvYWNwaS9uZml0L25maXQuaA0KPiBpbmRleCBmNTUyNWY4YmI3NzAuLmEzMDNmMDEyMzM5
+NCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9hY3BpL25maXQvbmZpdC5oDQo+ICsrKyBiL2RyaXZl
+cnMvYWNwaS9uZml0L25maXQuaA0KPiBAQCAtMTYsNyArMTYsNyBAQA0KPiAgLyogQUNQSSA2LjEg
+Ki8NCj4gICNkZWZpbmUgVVVJRF9ORklUX0JVUyAiMmYxMGU3YTQtOWU5MS0xMWU0LTg5ZDMtMTIz
+YjkzZjc1Y2JhIg0KPiAgDQo+IC0vKiBodHRwOi8vcG1lbS5pby9kb2N1bWVudHMvTlZESU1NX0RT
+TV9JbnRlcmZhY2UtVjEuNi5wZGYgKi8NCj4gKy8qIGh0dHBzOi8vcG1lbS5pby9kb2N1bWVudHMv
+TlZESU1NX0RTTV9JbnRlcmZhY2UtVjEuNi5wZGYgKi8NCj4gICNkZWZpbmUgVVVJRF9ORklUX0RJ
+TU0gIjQzMDlhYzMwLTBkMTEtMTFlNC05MTkxLTA4MDAyMDBjOWE2NiINCj4gIA0KPiAgLyogaHR0
+cHM6Ly9naXRodWIuY29tL0hld2xldHRQYWNrYXJkL2hwZS1udm0vYmxvYi9tYXN0ZXIvRG9jdW1l
+bnRhdGlvbi8gKi8NCj4gLS0gDQo+IDIuMjcuMA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXw0KPiBMaW51eC1udmRpbW0gbWFpbGluZyBsaXN0IC0tIGxp
+bnV4LW52ZGltbUBsaXN0cy4wMS5vcmcNCj4gVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0
+byBsaW51eC1udmRpbW0tbGVhdmVAbGlzdHMuMDEub3JnDQo=
