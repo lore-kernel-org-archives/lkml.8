@@ -2,119 +2,207 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F20C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A91F420759
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E2972176B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NpK8ZB0b"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFaH1+AI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgGQSZ2 (ORCPT
+        id S1728146AbgGQSZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:25:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52434 "EHLO
+        Fri, 17 Jul 2020 14:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgGQSZ1 (ORCPT
+        with ESMTP id S1727779AbgGQSZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:25:27 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C99A9C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:25:27 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id m22so7054864pgv.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:25:27 -0700 (PDT)
+        Fri, 17 Jul 2020 14:25:38 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA86DC0619D4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:25:37 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id h17so8768251oie.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:25:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=gfp8TD0TK5ywr5xVIQqXt4UYUBwsLiLq5aLmh/fWgMc=;
-        b=NpK8ZB0bdMbxWzl/pq5VT8a0z5qKaNdaPRH3iPx1izQuG7KZYGuCrOn0OChRrsqiBj
-         NkTGh1GSEJ6LAqS6Kc82gI4caz6SMeMYuVQ8L9dOG5PC13mv2aKQCsu8jcR57u5f2VS/
-         xm6sLguFQeBqRolXBBSzNxA/YEcTdC6Qv9iUc=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Kg4S7uclrZ5I69uo3imTxol1DJCZzu47bNS6rfDtCCY=;
+        b=VFaH1+AIJ+enjGLy5eIENCFaiUrQsqozvHROKDK3bPQC7w0xF32ov1eZo+SmlfkEJc
+         DzdykkwY4wd5ceFw/oH2m8Il2xzYOFV4nxeJ5QHNQ5bVy7OtCYOzAiUCdVI1aWsSPzJk
+         NgQ4MJ/3iACFbJBlroq4UB6olr4XnblRDcOzOyVtUiXcoPF6nwpFiNChaJxCUtC3odsn
+         aoLWvQsa+8urlQri0/aMWqcyFrW+aPHli3c6OmkLAn3v48XR2wICxudAztFy9X2jflhZ
+         OBCTwaPxhWDCipCA5ZUMcdZ4rnS3WavEWXdKRkw9JBxessaFXU5X9BGMQtd6IpEy1lj2
+         KAEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gfp8TD0TK5ywr5xVIQqXt4UYUBwsLiLq5aLmh/fWgMc=;
-        b=R4FkrwHJxP0WhnwqN+RnurtZDAEQgaLGu6wloYiDzJophzZSBI5sUcn2AUY/KISnH5
-         azKSqA8t6rg4mi3KrIefj/At8zsveBMqwabWZX/5Fo5NLqJgFlXspSvND/IO6HUcg7mC
-         Tx4zFygYE5B2NWumBaUyEZXVsDVPW7SWpGPqFG6cfoUFsjmhvLdWsqunTvgnU6yxR7bh
-         JJjYWeRnZV3DDF7oWnuwzRtLGszkDB9jUc0Vt1zCK+6QKNoS9cJHa7TfECZNJCk1rlFE
-         Qd4Hst6+jcVJZJgDnAnx4UtQVJVgiTQsK3RkaKlBbcjngarv9IU0feBVcXhfpTI7yAvE
-         a5Fg==
-X-Gm-Message-State: AOAM5316MqTu6iKs92D1oIAeLZxcSyJlNiV8eFvFbzZWGP8CIuEla48v
-        WjzK/TK1bMd2U4phkNvGTDnEoA==
-X-Google-Smtp-Source: ABdhPJwZQAZQ+VC4KmggFqf57W1uimgfpchQ5C/usQb8ZksJ+7N3YyoL1HAWPxDbNvBojkwQlzbILQ==
-X-Received: by 2002:aa7:9e0e:: with SMTP id y14mr8590826pfq.77.1595010327276;
-        Fri, 17 Jul 2020 11:25:27 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id x8sm8374708pfn.61.2020.07.17.11.25.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 11:25:26 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v2] pwm: bcm-iproc: handle clk_get_rate() return
-Date:   Fri, 17 Jul 2020 11:25:12 -0700
-Message-Id: <20200717182512.26001-1-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Kg4S7uclrZ5I69uo3imTxol1DJCZzu47bNS6rfDtCCY=;
+        b=J5oclsBMPq1IUMYDaAj/ouivJpc4hwxpQQuJmizJOB5X8zJM0FoaNP/c3cw5W3b2c9
+         qoFU/m5p0b+AqGqIhTtDTXEt1RMU7otb7BLJFa2vLUhbWnMq9QMXlNrwR/MrOKClzys1
+         45SGjq1mMC7jkJGi8sAvygEFHGVB9FF8z0tqZ9wqyxvMy7tbtjt4NwfCijjOkSfwAy1o
+         EbHRyqdcjc1EjQv7+r13RQFP7sEhx4CE+AP4z/pLQzWe3trseke59479iEGkTB5+/yq1
+         00Xtfv5LFeTGPELpSZZ2jkQuC1UKk5iBy+boWY++86iZuj/w2iP7xmSc6kuagNJ1iaTo
+         3c+w==
+X-Gm-Message-State: AOAM531Tay1P2kO8Fg7YlD5O8vTzBH8afs8n+QNQGvJyfQjkxyb4hkt0
+        U/xBT2tFPMaHCDZF88vhfTu0x0KDo10MLurBqcgoOA==
+X-Google-Smtp-Source: ABdhPJxX0uCkychUXbC7UEtPt0pfK+yu86bAuoc4L6CIsppWrXKNkoTCgOVkuiTBWaN5tPvPYoLxrJJffJqH9u5vEOQ=
+X-Received: by 2002:aca:380a:: with SMTP id f10mr8190766oia.161.1595010337104;
+ Fri, 17 Jul 2020 11:25:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
+ <20200712131003.23271-2-madhuparnabhowmik10@gmail.com> <20200712160856.GW9247@paulmck-ThinkPad-P72>
+ <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
+ <CAA42JLY2L6xFju_qZsVguGtXvDMqfCKbO_h1K9NJPjmqJEav=Q@mail.gmail.com>
+ <20200717170747.GW9247@paulmck-ThinkPad-P72> <CAEUSe79Ze92eB2kpTZUYvo357ca0C81BOxK+RCbr9h8C--SpSA@mail.gmail.com>
+In-Reply-To: <CAEUSe79Ze92eB2kpTZUYvo357ca0C81BOxK+RCbr9h8C--SpSA@mail.gmail.com>
+From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Date:   Fri, 17 Jul 2020 13:25:26 -0500
+Message-ID: <CAEUSe784hEv+C3zN1BDw=iaL1TFs8LNgp=ZfMpUES6Mn_Kb=Ew@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Dexuan-Linux Cui <dexuan.linux@gmail.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        madhuparnabhowmik10@gmail.com,
+        Josh Triplett <josh@joshtriplett.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, rcu@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
+        frextrite@gmail.com, lkft-triage@lists.linaro.org,
+        Dexuan Cui <decui@microsoft.com>, juhlee@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+The sender of this email would like to recall the message. And drink
+more coffee. The sender will also avoid making any more commits on
+Friday.
 
-Handle clk_get_rate() returning <= 0 condition to avoid
-possible division by zero.
+On Fri, 17 Jul 2020 at 13:03, Daniel D=C3=ADaz <daniel.diaz@linaro.org> wro=
+te:
+>
+> Hello!
+>
+> On Fri, 17 Jul 2020 at 12:07, Paul E. McKenney <paulmck@kernel.org> wrote=
+:
+> >
+> > On Thu, Jul 16, 2020 at 05:19:52PM -0700, Dexuan-Linux Cui wrote:
+> > > On Thu, Jul 16, 2020 at 7:47 AM Naresh Kamboju
+> > > <naresh.kamboju@linaro.org> wrote:
+> > > >
+> > > > On Sun, 12 Jul 2020 at 21:39, Paul E. McKenney <paulmck@kernel.org>=
+ wrote:
+> > > > >
+> > > > > On Sun, Jul 12, 2020 at 06:40:03PM +0530, madhuparnabhowmik10@gma=
+il.com wrote:
+> > > > > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > > > > >
+> > > > > > Use hlist_for_each_entry_srcu() instead of hlist_for_each_entry=
+_rcu()
+> > > > > > as it also checkes if the right lock is held.
+> > > > > > Using hlist_for_each_entry_rcu() with a condition argument will=
+ not
+> > > > > > report the cases where a SRCU protected list is traversed using
+> > > > > > rcu_read_lock(). Hence, use hlist_for_each_entry_srcu().
+> > > > > >
+> > > > > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.co=
+m>
+> > > > >
+> > > > > I queued both for testing and review, thank you!
+> > > > >
+> > > > > In particular, this one needs an ack by the maintainer.
+> > > > >
+> > > > >                                                         Thanx, Pa=
+ul
+> > > > >
+> > > > > >  arch/x86/kvm/mmu/page_track.c | 6 ++++--
+> > > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/p=
+age_track.c
+> > > > > > index a7bcde34d1f2..a9cd17625950 100644
+> > > > > > --- a/arch/x86/kvm/mmu/page_track.c
+> > > > > > +++ b/arch/x86/kvm/mmu/page_track.c
+> > > > > > @@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *=
+vcpu, gpa_t gpa, const u8 *new,
+> > > > > >               return;
+> > > > > >
+> > > > > >       idx =3D srcu_read_lock(&head->track_srcu);
+> > > > > > -     hlist_for_each_entry_rcu(n, &head->track_notifier_list, n=
+ode)
+> > > > > > +     hlist_for_each_entry_srcu(n, &head->track_notifier_list, =
+node,
+> > > > > > +                             srcu_read_lock_held(&head->track_=
+srcu))
+> > > >
+> > > > x86 build failed on linux -next 20200716.
+> > > >
+> > > > arch/x86/kvm/mmu/page_track.c: In function 'kvm_page_track_write':
+> > > > include/linux/rculist.h:727:30: error: left-hand operand of comma
+> > > > expression has no effect [-Werror=3Dunused-value]
+> > > >   for (__list_check_srcu(cond),     \
+> > > >                               ^
+> > > > arch/x86/kvm/mmu/page_track.c:232:2: note: in expansion of macro
+> > > > 'hlist_for_each_entry_srcu'
+> > > >   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+> > > >   ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > arch/x86/kvm/mmu/page_track.c: In function 'kvm_page_track_flush_sl=
+ot':
+> > > > include/linux/rculist.h:727:30: error: left-hand operand of comma
+> > > > expression has no effect [-Werror=3Dunused-value]
+> > > >   for (__list_check_srcu(cond),     \
+> > > >                               ^
+> > > > arch/x86/kvm/mmu/page_track.c:258:2: note: in expansion of macro
+> > > > 'hlist_for_each_entry_srcu'
+> > > >   hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+> > > >   ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > cc1: all warnings being treated as errors
+> > > > make[3]: *** [arch/x86/kvm/mmu/page_track.o] Error 1
+> > > >
+> > > > build link,
+> > > > https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DI=
+STRO=3Dlkft,MACHINE=3Dintel-corei7-64,label=3Ddocker-lkft/815/consoleText
+> > > >
+> > >
+> > > Hi, we're seeing the same building failure with the latest linux-next=
+ tree.
+> >
+> > I am not seeing this here.  Could you please let us know what compiler
+> > and command-line options you are using to generate this?
 
-Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Please disregard anything below.
 
----
-Changes from v1: ensure  'polarity' and 'enabled' are populated
-when clk_get_rate is 0.
----
- drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Thanks and greetings!
 
-diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-index 1f829edd8ee7..d392a828fc49 100644
---- a/drivers/pwm/pwm-bcm-iproc.c
-+++ b/drivers/pwm/pwm-bcm-iproc.c
-@@ -85,8 +85,6 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	u64 tmp, multi, rate;
- 	u32 value, prescale;
- 
--	rate = clk_get_rate(ip->clk);
--
- 	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
- 
- 	if (value & BIT(IPROC_PWM_CTRL_EN_SHIFT(pwm->hwpwm)))
-@@ -99,6 +97,13 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	else
- 		state->polarity = PWM_POLARITY_INVERSED;
- 
-+	rate = clk_get_rate(ip->clk);
-+	if (rate == 0) {
-+		state->period = 0;
-+		state->duty_cycle = 0;
-+		return;
-+	}
-+
- 	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
- 	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
- 	prescale &= IPROC_PWM_PRESCALE_MAX;
--- 
-2.17.1
+Daniel D=C3=ADaz
+daniel.diaz@linaro.org
 
+
+> It fails with gcc-8 and gcc-9, but it builds with gcc-10. Quick way to
+> reproduce:
+>   [host] docker run --rm -it -v /linux:/linux -w /linux
+> tuxbuild/build-gcc-9_mips
+>   [docker] make ARCH=3Dmips CROSS_COMPILE=3Dmips-linux-gnu- defconfig
+>   [docker] make ARCH=3Dmips CROSS_COMPILE=3Dmips-linux-gnu- mm
+>
+> You can use these other Docker containers: tuxbuild/build-gcc-8_mips
+> and tuxbuild/build-gcc-10_mips.
+>
+> Logs for those builds (and allnoconfig, tinyconfig, with gcc-8, gcc-9
+> and gcc-10) can also be found here:
+>   https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/643978135
+>
+> Greetings!
+>
+> Daniel D=C3=ADaz
+> daniel.diaz@linaro.org
