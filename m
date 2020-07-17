@@ -2,165 +2,123 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0CEC433FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65683C43459
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A51C20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C9AF2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:57:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sFPByDNA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PKIGtM3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgGQQ4C (ORCPT
+        id S1726812AbgGQQ54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38470 "EHLO
+        Fri, 17 Jul 2020 12:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgGQQ4A (ORCPT
+        with ESMTP id S1727036AbgGQQ4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:56:00 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C0DC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:55:59 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 22so15958586wmg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:55:59 -0700 (PDT)
+        Fri, 17 Jul 2020 12:56:06 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B09C0619D5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:06 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f2so11872363wrp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fLkc9nPCuFBlzzdiW7QaC6+VUWcbfx+wZE7RZ/DJmNs=;
-        b=sFPByDNA5iYDcZYuDfV45s4PhocxhrjliSkzVTpwzkpMoIJAC+Ow7ygouOnOQC05Fk
-         UXof8K/SHdq9efQWfx79WDIdIGG7i3OmiIALVQr5Nh3pvDjdTVMuAGHVZgfiJlRfAvUQ
-         /D6G5t/utAdZYH8VmsuOb0k5eBhQwdcvubu1hsT7byxwSm6vfttnDQE1F+cW3zYabv5k
-         Y1H5tQZB/pqQcrpgoyd0QuxAowJXUZqHDMgF9+OzyVTHjafWt3j3Exkzm5K2o85Ni0Pn
-         BD0IYGGRUFqUPpr4Z/ClpIz8oR50UQyWK3UFQQoh8NPaCYM/C/Alruk3FmmNg5+Rrbgj
-         tVFQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Nb/tQ5HxMJdwcZU2zmj2JX73dDo4qPaNgdilk8WGn+Q=;
+        b=PKIGtM3D2mbpyKmn3TKhhnoylY/9SJkUrY4ltLFIvfTnvtK22ZcRqj+nCxV7ManVNH
+         PM6fCgKXbO3du9XZekl35+F/HNFxILIuNr89nGvO8ZykWn3ZxeCXbyz16VaOu4wO2s0A
+         Q9DcmJ2djcG9N6cZJyM9u6x9govSwTDegiSXdbmxvOQIY1Z878AgbNMG0RuKNv+rnemV
+         EzgMJbROJp64FD8fLqBQ5/x6fMR5DUBqrLlF4wjYn+UEH7VnSn6FdaexPbS8sXcwCEOv
+         E0U3cqvHiAiXh07wKOKILeRvzBXnnw1GarLo4j//BBH50lLMEkNNCJKmnH4XQX149h+t
+         Qyaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fLkc9nPCuFBlzzdiW7QaC6+VUWcbfx+wZE7RZ/DJmNs=;
-        b=U20BbrQHyZOLs1IHE52ml0Tzy6PIwyzJ1r65doeX/yZhr66m0e7PG5/+DO90vf8fO3
-         8wIEDlwHFLWbSlCpnRGKSMay5X+mlQsMkyyYkXQFwSycd//NDQMlrGOakKMaFtcMM9UF
-         c3vcGbiqDbKGR4OjvE+V0j/53Fo/O1WbbG3CfE6xuhPQEpx2EEKhKIznGFyl/ps5CdWe
-         j2Zx5mISsB4GxeUccwjQI4GxCOoti1rtQaNNHrrvvKvZOe0nPE5JecMzNNKRdjoCuY65
-         Ui8mXzYaYtVdC5ml79iBlWo7Pqd4ea1O8LC6bfAG42j6fGT6+PpXJ6gyd5fqlfgVJPoy
-         IDeA==
-X-Gm-Message-State: AOAM530+48t/q+Lz3HeXd1tCnCwTETG7um5M+hOM9BfHb4odKmx/HWyS
-        rEVRC4pB4QlnkoVbxZEYQ2bi2Q==
-X-Google-Smtp-Source: ABdhPJxlRLyTEBRgP66TpNStZ4Vf90Rbo/XRmlXZaoAy3SRK+ONsTDWdNXHOBfZIS1TD/U04dGJsbg==
-X-Received: by 2002:a7b:c116:: with SMTP id w22mr9872360wmi.97.1595004958202;
-        Fri, 17 Jul 2020 09:55:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Nb/tQ5HxMJdwcZU2zmj2JX73dDo4qPaNgdilk8WGn+Q=;
+        b=ebySEhHpo1szE4cJr3siJyPmBonK0Rnp2IxHPfoFz9ezTX5L2UBlRMIWiJzThGTSdB
+         SGEqTK1Rt6OGLGpybe69moFXt/FJL+EtdSFULbYFYaWG+iLuTw4V9KnlZrluu4jbIUKr
+         nPepeVZ0E75Zd7Ihy5RUe2Hwbs333UzEpxwUUoF1A54P53h58DhxHbsQzvK91Kk2CWvs
+         LwM6P7wymoDtDp5mgMSYf6+DIYWuuNS6aqE6F4n3HuMTGPRjR9pLI7T7BaZI/HS097ih
+         xNj0zcRttIsui/4XTyVmOv5KpSebMBjSANn6oVVTJ4TXbhBVVO97zuWIMa9UR5ZtBQX8
+         cOvQ==
+X-Gm-Message-State: AOAM530Hcr6m4DnGsrW+ePKOtCwOZZ16iSO1VZ3siAAjbHaIe0JIRjew
+        uc5Z4GMO5bJGHIUKF3fESMieSA==
+X-Google-Smtp-Source: ABdhPJztkgQ/mGf0gxIVfj/VajfXJbHIhm8tYxqIPUW3TqJw+AzgcxbVjtmnL0yYGvZxxCqshqRMsg==
+X-Received: by 2002:a5d:6452:: with SMTP id d18mr11020033wrw.284.1595004965111;
+        Fri, 17 Jul 2020 09:56:05 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.55.57
+        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 09:55:57 -0700 (PDT)
+        Fri, 17 Jul 2020 09:56:04 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 00/30] Second batch of W=1 fixes for IIO
-Date:   Fri, 17 Jul 2020 17:55:08 +0100
-Message-Id: <20200717165538.3275050-1-lee.jones@linaro.org>
+        linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Silvan Murer <silvan.murer@gmail.com>,
+        Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>
+Subject: [PATCH 06/30] iio: dac: ltc2632: Fix formatting in kerneldoc struct header
+Date:   Fri, 17 Jul 2020 17:55:14 +0100
+Message-Id: <20200717165538.3275050-7-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200717165538.3275050-1-lee.jones@linaro.org>
+References: <20200717165538.3275050-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+Kerneldoc expects attributes/parameters to be in '@*.: ' format.
 
-Only a couple left after this.  I'll sort those next week.
+Fixes the following W=1 kernel build warning(s):
 
-Lee Jones (30):
-  iio: adc: ti_am335x_adc: Remove a couple of unused 'read' variables
-  iio: adc: twl4030-madc: Remove set but unused variables 'len'
-  iio: adc: twl4030-madc: Fix misnamed struct attribute
-  iio: magnetometer: hmc5843: 'hmc5843_pm_ops' is unused in 1 of 3 files
-    including hmc5843_core.h
-  iio: adc: twl6030-gpadc: Fix some misdocumentation and formatting
-    issues
-  iio: dac: ltc2632: Fix formatting in kerneldoc struct header
-  iio: light: si1145: Demote obvious misuse of kerneldoc to standard
-    comment blocks
-  iio: resolver: ad2s1200: Change ordering of compiler attribute macro
-  iio: temperature: mlx90632: Function parameter descriptions must match
-    exactly
-  iio: light: us5182d: Fix formatting in kerneldoc function block
-  iio: adc: ad799x: Demote seemingly unintentional kerneldoc header
-  iio: dac: ad5504: Fix formatting errors and demote non-compliant
-    kerneldoc
-  iio: adc: at91_adc: Fix 'bad line' warning
-  iio: adc: at91-sama5d2_adc: Struct kerneldoc titles need to start with
-    'struct '
-  iio: adc: cpcap-adc: Demote seemingly unintentional kerneldoc header
-  iio: accel: sca3000: Fix 2 misspellings and demote nonconforming
-    kerneldocs
-  iio: gyro: adxrs450: Change ordering of compiler attribute macro
-  iio: gyro: fxas21002c: Move 'fxas21002c_reg_fields' to the only file
-    its used
-  iio: imu: st_lsm6dsx: st_lsm6dsx: Reorder 'inline' declaration
-  iio: adc: max1363: Fix kerneldoc attribute formatting for 'lock'
-  iio: adc: max9611: Demote obvious misuse of kerneldoc to standard
-    comment blocks
-  iio: adc: mcp320x: Change ordering of compiler attribute macro
-  iio: adc: palmas_gpadc: Demote non-conforming kerneldoc header
-  iio: imu: inv_mpu6050: inv_mpu_core: Demote obvious misuse of
-    kerneldoc to standard comment blocks
-  iio: imu: inv_mpu6050: inv_mpu_ring: Demote seemingly unintentional
-    kerneldoc header
-  iio: adc: qcom-pm8xxx-xoadc: Demote standard comment block and supply
-    missing description
-  iio: magnetometer: ak8974: Add description for ak8974's 'scan'
-    attribute
-  iio: imu: st_lsm6dsx: st_lsm6dsx_shub: Demote obvious misuse of
-    kerneldoc to standard comment blocks
-  iio: imu: st_lsm6dsx: st_lsm6dsx: Mark 'st_lsm6dsx_accel_ext_info' as
-    __maybe_unused
-  iio: adc: rockchip_saradc: Demote Demote seemingly unintentional
-    kerneldoc header
+ drivers/iio/dac/ltc2632.c:50: warning: Function parameter or member 'powerdown_cache_mask' not described in 'ltc2632_state'
+ drivers/iio/dac/ltc2632.c:50: warning: Function parameter or member 'vref_mv' not described in 'ltc2632_state'
+ drivers/iio/dac/ltc2632.c:50: warning: Function parameter or member 'vref_reg' not described in 'ltc2632_state'
 
- drivers/iio/accel/sca3000.c                  | 12 ++--
- drivers/iio/adc/ad799x.c                     |  2 +-
- drivers/iio/adc/at91-sama5d2_adc.c           |  4 +-
- drivers/iio/adc/at91_adc.c                   |  2 +-
- drivers/iio/adc/cpcap-adc.c                  |  6 +-
- drivers/iio/adc/max1363.c                    |  2 +-
- drivers/iio/adc/max9611.c                    |  4 +-
- drivers/iio/adc/mcp320x.c                    |  2 +-
- drivers/iio/adc/palmas_gpadc.c               |  3 +-
- drivers/iio/adc/qcom-pm8xxx-xoadc.c          |  3 +-
- drivers/iio/adc/rockchip_saradc.c            |  2 +-
- drivers/iio/adc/ti_am335x_adc.c              |  8 +--
- drivers/iio/adc/twl4030-madc.c               | 14 ++---
- drivers/iio/adc/twl6030-gpadc.c              |  4 +-
- drivers/iio/dac/ad5504.c                     |  7 +--
- drivers/iio/dac/ltc2632.c                    |  6 +-
- drivers/iio/gyro/adxrs450.c                  |  2 +-
- drivers/iio/gyro/fxas21002c.h                | 66 --------------------
- drivers/iio/gyro/fxas21002c_core.c           | 66 ++++++++++++++++++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c   | 14 ++---
- drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c   |  2 +-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  5 +-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c |  8 +--
- drivers/iio/light/si1145.c                   |  6 +-
- drivers/iio/light/us5182d.c                  |  8 +--
- drivers/iio/magnetometer/ak8974.c            |  1 +
- drivers/iio/magnetometer/hmc5843.h           |  6 +-
- drivers/iio/resolver/ad2s1200.c              |  2 +-
- drivers/iio/temperature/mlx90632.c           |  4 +-
- 29 files changed, 136 insertions(+), 135 deletions(-)
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
+Cc: Silvan Murer <silvan.murer@gmail.com>
+Cc: Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/iio/dac/ltc2632.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
+index f891311f05cfe..733f13d3e5df4 100644
+--- a/drivers/iio/dac/ltc2632.c
++++ b/drivers/iio/dac/ltc2632.c
+@@ -38,9 +38,9 @@ struct ltc2632_chip_info {
+ /**
+  * struct ltc2632_state - driver instance specific data
+  * @spi_dev:			pointer to the spi_device struct
+- * @powerdown_cache_mask	used to show current channel powerdown state
+- * @vref_mv			used reference voltage (internal or external)
+- * @vref_reg		regulator for the reference voltage
++ * @powerdown_cache_mask:	used to show current channel powerdown state
++ * @vref_mv:			used reference voltage (internal or external)
++ * @vref_reg:		regulator for the reference voltage
+  */
+ struct ltc2632_state {
+ 	struct spi_device *spi_dev;
 -- 
 2.25.1
 
