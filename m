@@ -2,221 +2,111 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26E0C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8352074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:51:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DuaNck28"
+	by mail.kernel.org (Postfix) with ESMTP id C19322074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595012186;
+	bh=I9y75J42IaBzL+25s+fqD6Tv/7wRsnJAIgF5M/KtE8s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=X1xfTM6amVJYAVEkUxpReQegtNXFikLBA7qYU8oFDmOXyoKuyc6eTI3ZpfAEW4HFX
+	 8tpoAcSJw0OMNf4FHUx+vlAWbo5vHrMl+xrQ/Q/94NBnl9IV9zkgf5slZCVP0XNGM8
+	 0SwBYuwyP8x3lF6+Ln52KYFNFg6p8ztW71tHwqi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgGQSvV (ORCPT
+        id S1728248AbgGQS4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgGQSvV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:51:21 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC1BFC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:51:20 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so12209896wrs.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=W0XV4dFr3RYjtEBiF3D3e3s9h66bEDl3lyG1fgXEHCs=;
-        b=DuaNck28/9ga/FaLy4maDgdZnfSieEs3loiDk9AN98/zgCO6TlbSYre/tqEVJ5gMK6
-         0uj1OJc6MkSjrHnxMYjTbaQssOWldOVQoUzOVlAFoL5Zm82up8qvzMa5SfSs56sfQDIr
-         SUvdpXthtVQAyjeBLF/C543xgCX8KH0Ij357o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=W0XV4dFr3RYjtEBiF3D3e3s9h66bEDl3lyG1fgXEHCs=;
-        b=uC6rKLHr9IsoyhXSIiQQ1MQo/Qh3HTray8TQb1Wq+SmiB96r5Hvn3Q/6arF53gA6K5
-         uCS3cjE12qms5FuQ6jVAU5v1cdeADXO7kJSes9UhKarZZGALYSxdxcWrA+AM5vZxZLvL
-         cOpzBErNpnB+gIOhETp0/lW470+bEuBLw0Rml+0KhCFBfuLkAuQvk0QRCmzim6FnUErL
-         Qic8akGTMl6ymLckfgo4AgucGJ0hELlzRko9dNGh81+zmojZyU1JrDkdd/vGG90s6UuO
-         SJmILiyLeeUsFwC0jzVll7uLPSv5kumAfpGIdRhUlPB6AUxtQEPcXpXaMC2CyREaQ6H4
-         gxsw==
-X-Gm-Message-State: AOAM530x0TCk/zFUvOR+frf8MiZguBScEm/h1OOkWBfdOl+YV3aYM51A
-        AZep+73nfOba1wBih7sSec80OQSORdP/jh8s5A9yRQ==
-X-Google-Smtp-Source: ABdhPJwvUddcWMyhSzUmm3XImox0bWFW8PaTWfgIJMpo12uCcNdigo/4j+4QOdUAPCNLJT54SIRpaaqiuoGLYUJw3zI=
-X-Received: by 2002:a5d:6846:: with SMTP id o6mr11746430wrw.370.1595011879368;
- Fri, 17 Jul 2020 11:51:19 -0700 (PDT)
+        Fri, 17 Jul 2020 14:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727821AbgGQS4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:56:22 -0400
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 282992076A;
+        Fri, 17 Jul 2020 18:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595012182;
+        bh=I9y75J42IaBzL+25s+fqD6Tv/7wRsnJAIgF5M/KtE8s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YOgbEyq8cf4E8Nzby24S64YuwCPk30Pyc6TNnN/7KLYSfVxUlRfo1LKhyrR1mxvky
+         +WKAv9mBFQCbvz0vPdtusnhCt+1CL9ug4b0T469Si4vy4cJvJHsD2BUfA5WF5cfTXu
+         Ip34uThPZIACCqnZWc/Fy2nh0q2P7d7z2nDgCfPo=
+Received: by mail-ot1-f49.google.com with SMTP id n24so7584082otr.13;
+        Fri, 17 Jul 2020 11:56:22 -0700 (PDT)
+X-Gm-Message-State: AOAM530qIsmAXEaTjrYq9QFK+J/sBdSxFgxfeZgVBICnTp8fVmvoLkTP
+        YHvAmVgrvKdj8FTidbfMDb2qHeCKrLeWH9eoBw==
+X-Google-Smtp-Source: ABdhPJywlK24TqAj8hYZIsgs4xNwf07oJW+ZcpWB866d/ln/mXcc0o7YOwYsKhM3niloEukzN1I53bEoEo12QLx0uaA=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr9524072otb.107.1595012181490;
+ Fri, 17 Jul 2020 11:56:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200716170914.3623060-1-yuhsuan@chromium.org>
- <CABXOdTffo_PoFytXTR0DthRgxrp9SLkTrg2Wp6dMDXXj060KFw@mail.gmail.com>
- <f53d5f7b-6d9a-af68-7a48-fbb411625336@collabora.com> <CABXOdTf2x4zK9n0WN2djLxCbfQynF4p5v_opwB-DsEyRnRAd4g@mail.gmail.com>
-In-Reply-To: <CABXOdTf2x4zK9n0WN2djLxCbfQynF4p5v_opwB-DsEyRnRAd4g@mail.gmail.com>
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Date:   Sat, 18 Jul 2020 02:51:08 +0800
-Message-ID: <CAGvk5Prz_62Gzu98eZFDotzQOz5tMN72PB4UA9m315-PVfrsNQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ASoC: cros_ec_codec: Reset I2S RX when probing
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Benson Leung <bleung@chromium.org>,
-        ALSA development <alsa-devel@alsa-project.org>
+References: <1594878139-3402-1-git-send-email-rnayak@codeaurora.org>
+ <1594878139-3402-2-git-send-email-rnayak@codeaurora.org> <20200716195913.GA2744252@bogus>
+ <cd368ea7-6ddc-004c-164d-dbbad8516853@codeaurora.org>
+In-Reply-To: <cd368ea7-6ddc-004c-164d-dbbad8516853@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 17 Jul 2020 12:56:10 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+RXcgTVwd_JC8YLYb1Ni29zFD9AxcNsmcpyrdefWq3Kw@mail.gmail.com>
+Message-ID: <CAL_Jsq+RXcgTVwd_JC8YLYb1Ni29zFD9AxcNsmcpyrdefWq3Kw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: media: venus: Add an optional power
+ domain for perf voting
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guenter Roeck <groeck@google.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8817=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8810:32=E5=AF=AB=E9=81=93=EF=BC=9A
+On Thu, Jul 16, 2020 at 11:52 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
 >
-> On Thu, Jul 16, 2020 at 10:47 AM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
-> >
-> > Hi,
-> >
-> > On 16/7/20 19:23, Guenter Roeck wrote:
-> > > On Thu, Jul 16, 2020 at 10:09 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> =
-wrote:
-> > >>
-> > >> It is not guaranteed that I2S RX is disabled when the kernel booting=
-.
-> > >> For example, if the kernel crashes while it is enabled, it will keep
-> > >> enabled until the next time EC reboots. Reset I2S RX when probing to
-> > >> fix this issue.
-> > >>
-> > >> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> > >> ---
-> > >>  drivers/platform/chrome/cros_ec_proto.c        | 7 ++++++-
-> > >>  include/linux/platform_data/cros_ec_commands.h | 1 +
-> > >>  sound/soc/codecs/cros_ec_codec.c               | 9 +++++++++
-> > >>  3 files changed, 16 insertions(+), 1 deletion(-)
-> > >>
-> > >> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platf=
-orm/chrome/cros_ec_proto.c
-> > >> index 3e745e0fe092c..2c60690d7147c 100644
-> > >> --- a/drivers/platform/chrome/cros_ec_proto.c
-> > >> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> > >> @@ -572,7 +572,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_devi=
-ce *ec_dev,
-> > >>                 return -ENOTSUPP;
-> > >>         } else if (msg->result !=3D EC_RES_SUCCESS) {
-> > >>                 dev_dbg(ec_dev->dev, "Command result (err: %d)\n", m=
-sg->result);
-> > >> -               return -EPROTO;
-> > >> +               switch (msg->result) {
-> > >> +               case EC_RES_INVALID_PARAM:
-> > >> +                       return -EINVAL;
-> > >
-> > > As we have learned, this may impact other callers of
-> > > cros_ec_cmd_xfer_status() which only accept -EPROTO as error return
-> > > value. In addition to that, the code is odd:
-> > >
-> > >     if (msg->result =3D=3D EC_RES_INVALID_VERSION) {
-> > >         ...
-> > >     } else if (msg->result !=3D EC_RES_SUCCESS) {
-> > >         switch (msg->result) {
-> > >         ....
-> > >         }
-> > >     }
-> > >
-> >
-> > Ack, this is odd.
-> >
-> > > I really dislike the notion of changing error return values of
-> > > cros_ec_cmd_xfer_status() one by one. That can only cause ongoing
-> > > trouble with callers expecting specific error return codes (as we hav=
-e
-> > > already seen).
-> > >
-> >
-> > Hmm, that's a good point. Ok.
-> >
-> > Let's apply the Guenter's patch that maps the errors *and* fix the call=
-ers of
-> > cros_ec_cmd_xfer_status which only accept -EPROTO (there are few).
-> >
-> > Yu-Hsuan, can you take care of this and send a patch series with all th=
-e
-> > required patches? If not, I can work on this next week.
-> >
 >
-> I can look into it as well. Let me know - I don't want to duplicate work.
+> On 7/17/2020 1:29 AM, Rob Herring wrote:
+> > On Thu, Jul 16, 2020 at 11:12:16AM +0530, Rajendra Nayak wrote:
+> >> Add an optional power domain which when specified can be used for
+> >> setting the performance state of Venus.
+> >
+> > The h/w suddenly grew a new power island/domain? Seems like an abuse of
+> > power-domains...
 >
-> Guenter
-Hi Guenter,
-Really thanks for your assistance! Could you help me on those patches?
-Since you wrote that patch, I think it should be the most efficient
-way to make them merged.
+> The power-domain always existed, we have just managed to survive without
+> having venus support DVFS and have the domain always be at a high performance
+> level (set statically by boot code)
+> Now, if we care to do DVFS and support better PM on the SoC, its important
+> for the devices to manage this additional power domain (and dynamically
+> scale it)
+>
+> That said, if the name 'opp-pd' makes it look like a software construct,
+> like Bjorn mentioned, I am fine to give it a real name like 'cx-pd'
+> Does that sound good?
 
-Thanks,
-Yu-Hsuan
+He suggested 'cx' as '-pd' would be redundant. I have no idea what
+'cx' means, but fine.
 
->
-> > Thanks,
-> >   Enric
-> >
-> > > Guenter
-> > >
-> > >> +               default:
-> > >> +                       return -EPROTO;
-> > >> +               }
-> > >>         }
-> > >>
-> > >>         return ret;
-> > >> diff --git a/include/linux/platform_data/cros_ec_commands.h b/includ=
-e/linux/platform_data/cros_ec_commands.h
-> > >> index 69210881ebac8..11ce917ca924c 100644
-> > >> --- a/include/linux/platform_data/cros_ec_commands.h
-> > >> +++ b/include/linux/platform_data/cros_ec_commands.h
-> > >> @@ -4598,6 +4598,7 @@ enum ec_codec_i2s_rx_subcmd {
-> > >>         EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH =3D 0x2,
-> > >>         EC_CODEC_I2S_RX_SET_DAIFMT =3D 0x3,
-> > >>         EC_CODEC_I2S_RX_SET_BCLK =3D 0x4,
-> > >> +       EC_CODEC_I2S_RX_RESET =3D 0x5,
-> > >>         EC_CODEC_I2S_RX_SUBCMD_COUNT,
-> > >>  };
-> > >>
-> > >> diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cro=
-s_ec_codec.c
-> > >> index f23956cf4ed84..b5ff30b7f1aa8 100644
-> > >> --- a/sound/soc/codecs/cros_ec_codec.c
-> > >> +++ b/sound/soc/codecs/cros_ec_codec.c
-> > >> @@ -1034,6 +1034,15 @@ static int cros_ec_codec_platform_probe(struc=
-t platform_device *pdev)
-> > >>         }
-> > >>         priv->ec_capabilities =3D r.capabilities;
-> > >>
-> > >> +       /* Reset EC codec I2S RX. */
-> > >> +       p.cmd =3D EC_CODEC_I2S_RX_RESET;
-> > >> +       ret =3D send_ec_host_command(priv->ec_device, EC_CMD_EC_CODE=
-C_I2S_RX,
-> > >> +                                  (uint8_t *)&p, sizeof(p), NULL, 0=
-);
-> > >> +       if (ret =3D=3D -EINVAL)
-> > >> +               dev_info(dev, "Missing reset command. Please update =
-your EC firmware.\n");
-> > >> +       else if (ret)
-> > >> +               dev_err(dev, "failed to EC_CODEC_I2S_RESET: %d\n", r=
-et);
-> > >> +
-> > >>         platform_set_drvdata(pdev, priv);
-> > >>
-> > >>         ret =3D devm_snd_soc_register_component(dev, &i2s_rx_compone=
-nt_driver,
-> > >> --
-> > >> 2.27.0.389.gc38d7665816-goog
-> > >>
+> PS: Like I mentioned earlier [1], cx is a shared power island,
+> not a power island specific to this block, and definitely not a software
+> pm-domain construct.
+
+Put this context/detail into your patches. Assume I don't remember
+what happened last week.
+
+Unfortunately, gmail seems to have no way to filter on unread mails in
+reply to my replies and doesn't move the thread up in 'Sent' filter,
+so older threads get lost.
+
+Rob
+
+> [1] https://lore.kernel.org/patchwork/patch/1241077/
