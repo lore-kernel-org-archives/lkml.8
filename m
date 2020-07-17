@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B39EC43600
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1B8C43616
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8CA20768
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307C32080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgGQHWC (ORCPT
+        id S1728326AbgGQHWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:22:02 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11404 "EHLO mga05.intel.com"
+        Fri, 17 Jul 2020 03:22:04 -0400
+Received: from mga14.intel.com ([192.55.52.115]:54609 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbgGQHVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728036AbgGQHVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jul 2020 03:21:06 -0400
-IronPort-SDR: y8M7ecUu7mQKvQVt7RWQ/5RwvkQVYTTfp9Zaey2QbBOpnQtpGf/0F6Rvpq56zyj2Cb4RBrtvZZ
- lT/P/Bf5Rpew==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="234401106"
+IronPort-SDR: HLyejrJJHG+/cfJuiKlqOmDKGHFrYNZt+yL9k1BgTQPBhKxnAW3C6AuPM3vue7lsCwaa8gYJLn
+ 9CcqIsuQlC8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="148708700"
 X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="234401106"
+   d="scan'208";a="148708700"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:21:05 -0700
-IronPort-SDR: eL/eYlbNkfkhXTx6gIGCgsYd7ci/pLT9RgTZZEmFfQU8rSbbhOjANaABpVhvsoM0DmjWGusrNx
- +AjAMeXEQdcg==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:21:06 -0700
+IronPort-SDR: SpuOyWqnLmOe+gy1lr8SUmikVFfb6NOmjlt8qmzgs7esLkKOTHHgnMN1Tf86OkViIwr3GcIVrE
+ LFTaSVYSpZYw==
 X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="391321142"
+   d="scan'208";a="460761744"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:21:04 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:21:05 -0700
 From:   ira.weiny@intel.com
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -49,9 +49,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH RFC V2 07/17] Documentation/pkeys: Update documentation for kernel pkeys
-Date:   Fri, 17 Jul 2020 00:20:46 -0700
-Message-Id: <20200717072056.73134-8-ira.weiny@intel.com>
+Subject: [PATCH RFC V2 09/17] memremap: Convert devmap static branch to {inc,dec}
+Date:   Fri, 17 Jul 2020 00:20:48 -0700
+Message-Id: <20200717072056.73134-10-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
 In-Reply-To: <20200717072056.73134-1-ira.weiny@intel.com>
 References: <20200717072056.73134-1-ira.weiny@intel.com>
@@ -64,122 +64,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Future Intel CPUS will support Protection Key Supervisor (PKS).
+While reviewing Protection Key Supervisor support it was pointed out
+that using a counter to track static branch enable was an anti-pattern
+which was better solved using the provided static_branch_{inc,dec}
+functions.[1]
 
-Update the protection key documentation to cover pkeys on supervisor
-pages.
+Fix up devmap_managed_key to work the same way.  Also this should be
+safer because there is a very small (very unlikely) race when multiple
+callers try to enable at the same time.
 
+[1] https://lore.kernel.org/lkml/20200714194031.GI5523@worktop.programming.kicks-ass.net/
+
+To: Dan Williams <dan.j.williams@intel.com>
+To: Vishal Verma <vishal.l.verma@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- Documentation/core-api/protection-keys.rst | 81 +++++++++++++++++-----
- 1 file changed, 63 insertions(+), 18 deletions(-)
+ mm/memremap.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/core-api/protection-keys.rst b/Documentation/core-api/protection-keys.rst
-index ec575e72d0b2..5ac400a5a306 100644
---- a/Documentation/core-api/protection-keys.rst
-+++ b/Documentation/core-api/protection-keys.rst
-@@ -4,25 +4,33 @@
- Memory Protection Keys
- ======================
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 03e38b7a38f1..9fb9ad500e78 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -40,12 +40,10 @@ EXPORT_SYMBOL_GPL(memremap_compat_align);
+ #ifdef CONFIG_DEV_PAGEMAP_OPS
+ DEFINE_STATIC_KEY_FALSE(devmap_managed_key);
+ EXPORT_SYMBOL(devmap_managed_key);
+-static atomic_t devmap_managed_enable;
  
--Memory Protection Keys for Userspace (PKU aka PKEYs) is a feature
--which is found on Intel's Skylake (and later) "Scalable Processor"
--Server CPUs. It will be available in future non-server Intel parts
--and future AMD processors.
--
--For anyone wishing to test or use this feature, it is available in
--Amazon's EC2 C5 instances and is known to work there using an Ubuntu
--17.04 image.
--
- Memory Protection Keys provides a mechanism for enforcing page-based
- protections, but without requiring modification of the page tables
--when an application changes protection domains.  It works by
--dedicating 4 previously ignored bits in each page table entry to a
--"protection key", giving 16 possible keys.
-+when an application changes protection domains.
-+
-+PKeys Userspace (PKU) is a feature which is found on Intel's Skylake "Scalable
-+Processor" Server CPUs and later.  And It will be available in future
-+non-server Intel parts and future AMD processors.
-+
-+Future Intel processors will support Protection Keys for Supervisor pages
-+(PKS).
-+
-+For anyone wishing to test or use user space pkeys, it is available in Amazon's
-+EC2 C5 instances and is known to work there using an Ubuntu 17.04 image.
-+
-+pkes work by dedicating 4 previously Reserved bits in each page table entry to
-+a "protection key", giving 16 possible keys.  User and Supervisor pages are
-+treated separately.
+ static void devmap_managed_enable_put(void)
+ {
+-	if (atomic_dec_and_test(&devmap_managed_enable))
+-		static_branch_disable(&devmap_managed_key);
++	static_branch_dec(&devmap_managed_key);
+ }
  
--There is also a new user-accessible register (PKRU) with two separate
--bits (Access Disable and Write Disable) for each key.  Being a CPU
--register, PKRU is inherently thread-local, potentially giving each
--thread a different set of protections from every other thread.
-+Protections for each page are controlled with per CPU registers for each type
-+of page User and Supervisor.  Each of these 32 bit register stores two separate
-+bits (Access Disable and Write Disable) for each key.
-+
-+For Userspace the register is user-accessible (rdpkru/wrpkru).  For
-+Supervisor, the register (MSR_IA32_PKRS) is accessible only to the kernel.
-+
-+Being a CPU register, pkes are inherently thread-local, potentially giving
-+each thread an independent set of protections from every other thread.
+ static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
+@@ -56,8 +54,7 @@ static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
+ 		return -EINVAL;
+ 	}
  
- There are two new instructions (RDPKRU/WRPKRU) for reading and writing
- to the new register.  The feature is only available in 64-bit mode,
-@@ -30,8 +38,11 @@ even though there is theoretically space in the PAE PTEs.  These
- permissions are enforced on data access only and have no effect on
- instruction fetches.
- 
--Syscalls
--========
-+For kernel space rdmsr/wrmsr are used to access the kernel MSRs.
-+
-+
-+Syscalls for user space keys
-+============================
- 
- There are 3 system calls which directly interact with pkeys::
- 
-@@ -98,3 +109,37 @@ with a read()::
- The kernel will send a SIGSEGV in both cases, but si_code will be set
- to SEGV_PKERR when violating protection keys versus SEGV_ACCERR when
- the plain mprotect() permissions are violated.
-+
-+
-+Kernel API for PKS support
-+==========================
-+
-+PKS is intended to harden against unwanted access to kernel pages.  But it does
-+not completely restrict access under all conditions.  For example the MSR
-+setting is not saved/restored during irqs.  Thus the use of PKS is a mitigation
-+strategy rather than a form of strict security.
-+
-+The following calls are used to allocate, use, and deallocate a pkey which
-+defines a 'protection domain' within the kernel.  Setting a pkey value in a
-+supervisor mapping adds that mapping to the protection domain.  Then calls can be
-+used to enable/disable read and/or write access to all of the pages mapped with
-+that key:
-+
-+        int pks_key_alloc(const char * const pkey_user);
-+        #define PAGE_KERNEL_PKEY(pkey)
-+        #define _PAGE_KEY(pkey)
-+        int pks_update_protection(int pkey, unsigned long protection);
-+        void pks_key_free(int pkey);
-+
-+In-kernel users must be prepared to set PAGE_KERNEL_PKEY() permission in the
-+page table entries for the mappings they want to ptorect.
-+
-+WARNING: It is imperative that callers check for errors from pks_key_alloc()
-+because pkeys are a limited resource and so callers should be prepared to work
-+without PKS support.
-+
-+For admins a debugfs interface provides a list of the current keys in use at:
-+
-+        /sys/kernel/debug/x86/pks_keys_allocated
-+
-+Some example code can be found in lib/pks/pks_test.c
+-	if (atomic_inc_return(&devmap_managed_enable) == 1)
+-		static_branch_enable(&devmap_managed_key);
++	static_branch_inc(&devmap_managed_key);
+ 	return 0;
+ }
+ #else
 -- 
 2.28.0.rc0.12.gb6a658bd00c9
 
