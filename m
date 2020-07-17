@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3549AC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57984C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 043822063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327792063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgGQJZq (ORCPT
+        id S1726898AbgGQJZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:25:46 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:46598 "EHLO
+        Fri, 17 Jul 2020 05:25:51 -0400
+Received: from lucky1.263xmail.com ([211.157.147.135]:58966 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgGQJZo (ORCPT
+        with ESMTP id S1726848AbgGQJZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:25:44 -0400
+        Fri, 17 Jul 2020 05:25:47 -0400
 Received: from localhost (unknown [192.168.167.69])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 70E1BC5D92;
-        Fri, 17 Jul 2020 17:25:42 +0800 (CST)
+        by lucky1.263xmail.com (Postfix) with ESMTP id 90E8FA18BB;
+        Fri, 17 Jul 2020 17:25:44 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
@@ -31,9 +31,9 @@ X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
         by smtp.263.net (postfix) whith ESMTP id P18496T139713876850432S1594977933482006_;
-        Fri, 17 Jul 2020 17:25:41 +0800 (CST)
+        Fri, 17 Jul 2020 17:25:39 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <c65762aa01cf6daba0fd520ef8086536>
+X-UNIQUE-TAG: <ef5e95145e28e06049410d65100b368a>
 X-RL-SENDER: yifeng.zhao@rock-chips.com
 X-SENDER: zyf@rock-chips.com
 X-LOGIN-NAME: yifeng.zhao@rock-chips.com
@@ -49,20 +49,18 @@ Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
         heiko@sntech.de, linux-rockchip@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Yifeng Zhao <yifeng.zhao@rock-chips.com>
-Subject: [PATCH v8 7/8] arm: dts: rockchip: Add NFC node for RK2928 and other SoCs
-Date:   Fri, 17 Jul 2020 17:25:31 +0800
-Message-Id: <20200717092532.19853-3-yifeng.zhao@rock-chips.com>
+Subject: [PATCH v8 5/8] arm64: dts: rockchip: Add NFC node for PX30 SoC
+Date:   Fri, 17 Jul 2020 17:25:29 +0800
+Message-Id: <20200717092532.19853-1-yifeng.zhao@rock-chips.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200717092532.19853-1-yifeng.zhao@rock-chips.com>
+In-Reply-To: <20200717092420.19798-1-yifeng.zhao@rock-chips.com>
 References: <20200717092420.19798-1-yifeng.zhao@rock-chips.com>
- <20200717092532.19853-1-yifeng.zhao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add NAND FLASH Controller(NFC) node for RK2928, RK3066, RK3168
-and RK3188 SoCs.
+Add NAND FLASH Controller(NFC) node for PX30 SoC.
 
 Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
 ---
@@ -75,29 +73,35 @@ Changes in v4: None
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/rk3xxx.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/rockchip/px30.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index d929b60517ab..35c4537b9f29 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -273,6 +273,15 @@
+diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+index a6b8427156d5..e57b763f60ed 100644
+--- a/arch/arm64/boot/dts/rockchip/px30.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+@@ -972,6 +972,21 @@
  		status = "disabled";
  	};
  
-+	nfc: nand-controller@10500000 {
-+		compatible = "rockchip,rk2928-nfc";
-+		reg = <0x10500000 0x4000>;
-+		interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_NANDC0>;
-+		clock-names = "ahb";
++	nfc: nand-controller@ff3b0000 {
++		compatible = "rockchip,px30-nfc";
++		reg = <0x0 0xff3b0000 0x0 0x4000>;
++		interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_NANDC>, <&cru SCLK_NANDC>;
++		clock-names = "ahb", "nfc";
++		assigned-clocks = <&cru SCLK_NANDC>;
++		assigned-clock-rates = <150000000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&flash_ale &flash_bus8 &flash_cle &flash_cs0
++			     &flash_rdn &flash_rdy &flash_wrn &flash_dqs>;
++		power-domains = <&power PX30_PD_MMC_NAND>;
 +		status = "disabled";
 +	};
 +
- 	pmu: pmu@20004000 {
- 		compatible = "rockchip,rk3066-pmu", "syscon", "simple-mfd";
- 		reg = <0x20004000 0x100>;
+ 	gpu: gpu@ff400000 {
+ 		compatible = "rockchip,px30-mali", "arm,mali-bifrost";
+ 		reg = <0x0 0xff400000 0x0 0x4000>;
 -- 
 2.17.1
 
