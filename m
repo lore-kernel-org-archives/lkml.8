@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9C1C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1303C433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57E0D204EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982D6204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595001666;
-	bh=fsR2V9nMIGiFHgCWlU7kwwTgW3J9FqqBZRna6Su3DBM=;
+	s=default; t=1595001678;
+	bh=UJzWr7fIaC1FyWjEniPNQ4ep+bnFBKT0R2NcL+7tYnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p9Y+4YK3LgyPpQQdkdfwbJpLkDDtFmx5lGtGm5n02HrXsu7E8Ik+TU+hEwgYsaXku
-	 YdtT2W7A9AGPQtPd+x5UFjQK0+SgmskZsNizs+UjMNd7sRbiX3s+lLYczixDKzncHd
-	 VaGWS+qQKjUSC5rmBik6fGWt0QvNmcI9R210cTHI=
+	b=KUFZT1G7KThlCBbuMTHo0s39gUabxqAiYXNYGRxZwcgKvifWSh4lAxIX4Cv200DTK
+	 IkBjtXbVU2Myj9oBJj9rRfVYb2Nkc/JcDu2wDrs4/rPAdOVy25ykY9eM3pRQD7wP5I
+	 mzL/yQiOKz4nyWw1Dj2ljr/NRK+cdH+oHB/Isx6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgGQQBE (ORCPT
+        id S1726949AbgGQQA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:01:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40810 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 12:00:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbgGQQBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:01:01 -0400
+        id S1726424AbgGQQA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:00:58 -0400
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.194.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A0772083B;
-        Fri, 17 Jul 2020 16:01:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 303B320775;
+        Fri, 17 Jul 2020 16:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595001660;
-        bh=fsR2V9nMIGiFHgCWlU7kwwTgW3J9FqqBZRna6Su3DBM=;
+        s=default; t=1595001658;
+        bh=UJzWr7fIaC1FyWjEniPNQ4ep+bnFBKT0R2NcL+7tYnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZG2Ki6oBuZkZFWpVRuw/FgN0huucmjfwGn0ka0zUewV80jHFJ7v8SPNJdafLGUMXm
-         7vLIbOJ9ED5wYqUBGvHFMQbzutmOVK0h+G1BRcS4xGDyrnK+KIFtN1BMDURTvc7mk+
-         X6J3rQUcAWf8aNOtE5ll2mAJy+dPHux8gwQQdDJ8=
+        b=0WgIN4DfY0AZ3g0YEP5Q0tzl54zR701GSEQqV9NRmjuKcT2Z3KI+pru+Wr+xrl5wK
+         BBV9gLTd2nOwyuAU9iye1NKZJfvfaeV78GjXtn7NTf/RkTHbT2kzotAp9A41f54PCL
+         guEJDDms5CtyoEPE+ZU4Lzc4/aX8vDxR55/d6moU=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 3FABF5FD07; Sat, 18 Jul 2020 00:00:55 +0800 (CST)
+        id 1D6745FD2B; Sat, 18 Jul 2020 00:00:55 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <mripard@kernel.org>
 Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/8] arm64: dts: allwinner: h5: Add trip and cooling maps to CPU thermal zones
-Date:   Sat, 18 Jul 2020 00:00:50 +0800
-Message-Id: <20200717160053.31191-6-wens@kernel.org>
+Subject: [PATCH v2 2/8] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Add regulator supply to all CPU cores
+Date:   Sat, 18 Jul 2020 00:00:47 +0800
+Message-Id: <20200717160053.31191-3-wens@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200717160053.31191-1-wens@kernel.org>
 References: <20200717160053.31191-1-wens@kernel.org>
@@ -61,90 +61,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-This enables passive cooling by down-regulating CPU voltage and frequency.
-The trip points were copied from the H3.
+The device tree currently only assigns the a supply for the first CPU
+core, when in reality the regulator supply is shared by all four cores.
+This might cause an issue if the implementation does not realize the
+sharing of the supply.
 
+Assign the same regulator supply to the remaining CPU cores to address
+this.
+
+Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 30 ++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index 09523f6011c5..6735e316a39c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -3,6 +3,8 @@
- 
- #include <arm/sunxi-h3-h5.dtsi>
- 
-+#include <dt-bindings/thermal/thermal.h>
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+index 22466afd38a3..a628b5ee72b6 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+@@ -28,3 +28,15 @@ reg_vdd_cpux: vdd-cpux {
+ &cpu0 {
+ 	cpu-supply = <&reg_vdd_cpux>;
+ };
 +
- / {
- 	cpus {
- 		#address-cells = <1>;
-@@ -15,6 +17,7 @@ cpu0: cpu@0 {
- 			enable-method = "psci";
- 			clocks = <&ccu CLK_CPUX>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -24,6 +27,7 @@ cpu1: cpu@1 {
- 			enable-method = "psci";
- 			clocks = <&ccu CLK_CPUX>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -33,6 +37,7 @@ cpu2: cpu@2 {
- 			enable-method = "psci";
- 			clocks = <&ccu CLK_CPUX>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -42,6 +47,7 @@ cpu3: cpu@3 {
- 			enable-method = "psci";
- 			clocks = <&ccu CLK_CPUX>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
-@@ -173,6 +179,30 @@ cpu_thermal: cpu-thermal {
- 			polling-delay-passive = <0>;
- 			polling-delay = <0>;
- 			thermal-sensors = <&ths 0>;
++&cpu1 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
 +
-+			trips {
-+				cpu_hot_trip: cpu-hot {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
++&cpu2 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
 +
-+				cpu_very_hot_trip: cpu-very-hot {
-+					temperature = <100000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				cpu-hot-limit {
-+					trip = <&cpu_hot_trip>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		gpu_thermal {
++&cpu3 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
 -- 
 2.27.0
 
