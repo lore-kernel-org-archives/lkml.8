@@ -2,111 +2,134 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CA7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA02C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55FF2207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572A720578
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:38:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZQ57yMa5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgGQIge (ORCPT
+        id S1726429AbgGQIif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:36:34 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56694 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgGQIgc (ORCPT
+        Fri, 17 Jul 2020 04:38:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51540 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgGQIie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:36:32 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 112311C0BF2; Fri, 17 Jul 2020 10:36:31 +0200 (CEST)
-Date:   Fri, 17 Jul 2020 10:36:30 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     corbet@lwn.net, Randy Dunlap <rdunlap@infradead.org>,
-        Dave Airlie <airlied@redhat.com>,
-        SeongJae Park <sjpark@amazon.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Mark Brown <broonie@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Olof Johansson <olof@lixom.net>, Chris Mason <clm@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org,
-        tech-board-discuss@lists.linuxfoundation.org,
-        ksummit-discuss@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] CodingStyle: Inclusive Terminology
-Message-ID: <20200717083630.GE1027@bug>
-References: <159423201991.2466245.8461410729774664077.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Fri, 17 Jul 2020 04:38:34 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06H8cMQc035187;
+        Fri, 17 Jul 2020 03:38:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594975102;
+        bh=nAQCGUqo2TKuVDp/7DUdhh3dhnBqiYgA4vqkgj5+R5s=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ZQ57yMa5SWa6rSOSG3EGDx1zmXVwOjgdpKBiymfKbamxzRL7uP1f1ySVuzj4fgxPx
+         gJueY0PwRv0BDBbYCKY+588a1oi3Y37T8SeLEaMCZvSECZhYE2eLAKx2D1jJZfgIHX
+         fcxatk2cp6yCy87uEPSQfWqQtwx+4X7NGd/W09ZU=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06H8cMef036562;
+        Fri, 17 Jul 2020 03:38:22 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
+ Jul 2020 03:38:22 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 17 Jul 2020 03:38:22 -0500
+Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06H8cHcm087224;
+        Fri, 17 Jul 2020 03:38:17 -0500
+Subject: Re: [PATCH 7/7] arm64: defconfig: Enable AM654x SDHCI controller
+To:     Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        ARM-SoC Maintainers <soc@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+References: <20200619125801.9530-1-faiz_abbas@ti.com>
+ <20200619125801.9530-8-faiz_abbas@ti.com>
+ <3ed03440-7fbd-6abc-8a15-67e7217e2c3d@ti.com>
+ <2e50333c-5387-236f-3fb2-6d8014b224e0@ti.com>
+ <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <75cd485b-e3eb-19ee-ad1f-84cb04b0c807@ti.com>
+Date:   Fri, 17 Jul 2020 14:08:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159423201991.2466245.8461410729774664077.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-07-08 11:14:27, Dan Williams wrote:
-> Linux maintains a coding-style and its own idiomatic set of terminology.
-> Update the style guidelines to recommend replacements for the terms
-> master/slave and blacklist/whitelist.
-> 
-> Link: http://lore.kernel.org/r/159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> Acked-by: Dave Airlie <airlied@redhat.com>
-> Acked-by: SeongJae Park <sjpark@amazon.de>
-> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Acked-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-> Reviewed-by: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Olof Johansson <olof@lixom.net>
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> Signed-off-by: Chris Mason <clm@fb.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
-> Changes since v2 [1]:
-> - Pick up missed sign-offs and acks from Jon, Shuah, and Christian
->   (sorry about missing those earlier).
-> 
-> - Reformat the replacement list to make it easier to read.
-> 
-> - Add 'controller' as a suggested replacement (Kees and Mark)
-> 
-> - Fix up the paired term for 'performer' to be 'director' (Kees)
-> 
-> - Collect some new acks, reviewed-by's, and sign-offs for v2.
-> 
-> - Fix up Chris's email
-> 
-> [1]: http://lore.kernel.org/r/159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com
-> 
-> 
->  Documentation/process/coding-style.rst |   20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> +Recommended replacements for 'blacklist/whitelist' are: + 'denylist / allowlist' + 
-> 'blocklist / passlist' + +Exceptions for introducing new usage is to maintain a 
-> userspace ABI/API, +or when updating code for an existing (as of 2020) hardware or 
-> protocol +specification that mandates those terms. For new specifications +translate 
-> specification usage of the terminology to the kernel coding +standard where possible.
+Hi,
 
-Please try to understand how "blacklist" is used in the kernel before suggesting replacements.
+On 16/07/20 11:58 pm, Arnd Bergmann wrote:
+> On Thu, Jul 16, 2020 at 3:25 PM Sekhar Nori <nsekhar@ti.com> wrote:
+>>
+>> On 7/16/20 5:49 PM, Faiz Abbas wrote:
+>>> Hi,
+>>>
+>>> On 19/06/20 6:28 pm, Faiz Abbas wrote:
+>>>> Enable CONFIG_SDHCI_AM654 to Support AM65x sdhci controller.
+>>>>
+>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>> ---
+>>>>  arch/arm64/configs/defconfig | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>>>> index 883e8bace3ed..40dd13e0adc5 100644
+>>>> --- a/arch/arm64/configs/defconfig
+>>>> +++ b/arch/arm64/configs/defconfig
+>>>> @@ -731,6 +731,7 @@ CONFIG_MMC_DW_ROCKCHIP=y
+>>>>  CONFIG_MMC_SUNXI=y
+>>>>  CONFIG_MMC_BCM2835=y
+>>>>  CONFIG_MMC_SDHCI_XENON=y
+>>>> +CONFIG_MMC_SDHCI_AM654=y
+>>>>  CONFIG_MMC_OWL=y
+>>>>  CONFIG_NEW_LEDS=y
+>>>>  CONFIG_LEDS_CLASS=y
+>>>>
+>>>
+>>> Gentle ping. Will, Catalin, can this patch be picked up?
+>>
+>> From logs, Arnd has been picking up patches for this file. Looping in
+>> Arnd and ARM-SoC team.
+> 
+> I tend to ignore individual patches to the defconfig file unless
+> they are sent to:soc@kernel.org. The best way to get them
+> included is to have the platform maintainers pick up the
+> changes and send them that way as a separate pull request
+> at the same time as sending any DT updates.
+> 
+> The MAINTAINERS file lists Tero and Nishanth as maintainers
+> for the platform. If they want, I can apply this one directly, but in
+> the future, send it to them.
+> 
 
-NAK.
-									Pavel
+Thanks for clarifying Arnd. Tero, can you pick this up?
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Thanks,
+Faiz
