@@ -2,132 +2,155 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A591C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 024EE2076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594997877;
-	bh=iL1jI76lyN8hGCPilHF3T5xrNu549gmKglLqS+FY4/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l0MRnCReTWnsuqfQxyVbQmBIdOIfkM5IQGNQZPrcDbRjzJTuWPrKEL9rvT//iv9rL
-	 /eZVVrOCRBP3BUDdSR+Ret0JUeI+iR5p6jf9VBa/SK6JBWQ26aEw50YZ9GhG48JjKs
-	 Bo1xHZCR/gsu9LamS5eJGM+S/PtpX50VKvQMZW0k=
+	by mail.kernel.org (Postfix) with ESMTP id AA1B12076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgGQO5z (ORCPT
+        id S1726696AbgGQO6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33282 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 10:58:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54992 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgGQO5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:57:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0EBF20775;
-        Fri, 17 Jul 2020 14:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594997874;
-        bh=iL1jI76lyN8hGCPilHF3T5xrNu549gmKglLqS+FY4/g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iXpESSD3PzKwEUtwZdE4+G1uKDQZX2PWMKTCHe8apWU9AWE21809e2wj8uk/i1NRl
-         5bmid5/LJSA5Wk3eAsRkG5zTzlTyimIisMoH05sb1bwBkSDQ+RgkyzBScK+DU7ZgYi
-         /9AXZuxsdi0oUe+kqbRnjEdLXe+8HdVxh5LzhdSA=
-Date:   Fri, 17 Jul 2020 16:57:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Gutson <daniel@eclypsium.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>
-Subject: Re: [PATCH] [PATCH] Firmware security information in SYSFS
-Message-ID: <20200717145746.GB3008378@kroah.com>
-References: <20200716223627.253936-1-daniel.gutson@eclypsium.com>
- <20200717062841.GA3238569@kroah.com>
- <CAK8P3a1yy7YyeJH5k40yAXb23y9siBnfuqixb76t3BK9Xh=uXQ@mail.gmail.com>
- <CAFmMkTFLm9mw5-8Dj_7rhP2KBcLUoJ1WcQCJv5_k+QRsmJPxjg@mail.gmail.com>
+        id S1726232AbgGQO6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:58:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 151C3AE7B;
+        Fri, 17 Jul 2020 14:58:26 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 16:58:20 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+Cc:     helgaas@kernel.org, bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [RFC PATCH 14/35] i2c/busses: Change PCIBIOS_SUCCESSFUL to 0
+Message-ID: <20200717165820.6b5318ad@endymion>
+In-Reply-To: <20200713122247.10985-15-refactormyself@gmail.com>
+References: <20200713122247.10985-1-refactormyself@gmail.com>
+        <20200713122247.10985-15-refactormyself@gmail.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFmMkTFLm9mw5-8Dj_7rhP2KBcLUoJ1WcQCJv5_k+QRsmJPxjg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 11:46:39AM -0300, Daniel Gutson wrote:
-> On Fri, Jul 17, 2020 at 11:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
+Hi Saheed,
+
+On Mon, 13 Jul 2020 14:22:26 +0200, Saheed O. Bolarinwa wrote:
+> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
+> Their scope should be limited within arch/x86.
+
+Which PCI specification are you talking about here. In my "PCI Local
+Bus Revision 2.3" specification (March 29, 2002), chapter 2 is about
+Signal Definition and has nothing to do with the BIOS.
+
 > 
-> > On Fri, Jul 17, 2020 at 8:28 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Thu, Jul 16, 2020 at 07:36:27PM -0300, Daniel Gutson wrote:
-> > > > +What:                /sys/kernel/firmware-security/bioswe
-> > >
-> > > Ick, I stopped reading right here.
-> > >
-> > > No, this is not where this belongs.
-> > >
-> > > We already have /sys/firmware/, right?  And firmware-specific
-> > > subdirectories below that.
-> > >
-> > > We also have /sys/devices/system/ and I think that would be a much
-> > > better place for this, as it is easier to work with a real 'struct
-> > > device' than a "raw" kobject any day.  Bonus is you get full support of
-> > > userspace libraries when you do that, unlike when dealing with kobjects.
-> > >
-> > > Also, this really is a _SPECIFIC_ type of firmware that supports these
-> > > features, right?  Why not call that out too?  This is not generic by any
-> > > means.
-> >
-> > As I suggested in my previous review, I wouldn't worry too much about
-> > the user interface at the start, but instead first work out how the
-> > hardware
-> > support fits in with the existing drivers and once that looks fine decide
-> > on how to export it to user space.
-> >
-> > I agree the  /sys/kernel/firmware-security/bioswe sounds like the wrong
-> > place, but I'm not sure if adding any other new directory in sysfs is
-> > much better. I think the most promising would be to have it on the
-> > sysfs directory for the device it refers to,
+> Change all PCIBIOS_SUCCESSFUL to 0
 > 
-> 
-> My idea is to have all the firmware security information together in the
-> same place; this information comes from many devices.
-> This initial patch involves the SPI Controller, and I don't want to add
-> more stuff until there
-> is a consensus.
-> So, do you have a suggestion where to put this information?
-> /sys/devices/system/firmware-security?
-> /sys/firmware/security?
-> other?
-> 
-> Please advise.
+> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-ali15x3.c |  4 ++--
+>  drivers/i2c/busses/i2c-nforce2.c |  2 +-
+>  drivers/i2c/busses/i2c-sis5595.c | 10 +++++-----
+>  3 files changed, 8 insertions(+), 8 deletions(-)
 
-It's fun to focus on things like this, as it's the most visible part,
-but are you sure the "talk to the hardware" part is working properly?
+Hmmm. That seems to be a lot of changes to solve an essentially
+theoretical problem (if a problem at all). I am not familiar enough
+with the PCI subsystem to claim that it is fundamentally wrong, but
+enough to say I'm skeptical.
 
-If so, great, it should be a "class", as that way it is independent of
-any hardware type, right?  Classes show how devices talk to userspace in
-a common way (input, tty, led, block, etc.)  So why is this any
-different from that?
+PCI is a cross-architecture standard, and we can't possibly have the
+return value of core functions such as pci_write_config_word follow
+different conventions depending on the architecture, can we? Does
+pci_write_config_word() currently return PCIBIOS_SUCCESSFUL on success
+on x86 and 0 on success on other architectures? What about errors, do
+we return positive, "PCIBIOS-specific" error codes on x86 and negative,
+unix-like error codes on other architectures?
 
-But worry about the other part first please.  And if you ever find
-yourself using a "raw" kobject, you know you have done something wrong
-:)
+> diff --git a/drivers/i2c/busses/i2c-ali15x3.c b/drivers/i2c/busses/i2c-ali15x3.c
+> index 02185a1cfa77..359ee3e0864a 100644
+> --- a/drivers/i2c/busses/i2c-ali15x3.c
+> +++ b/drivers/i2c/busses/i2c-ali15x3.c
+> @@ -167,11 +167,11 @@ static int ali15x3_setup(struct pci_dev *ALI15X3_dev)
+>  	if(force_addr) {
+>  		dev_info(&ALI15X3_dev->dev, "forcing ISA address 0x%04X\n",
+>  			ali15x3_smba);
+> -		if (PCIBIOS_SUCCESSFUL != pci_write_config_word(ALI15X3_dev,
+> +		if (0 != pci_write_config_word(ALI15X3_dev,
+>  								SMBBA,
+>  								ali15x3_smba))
+>  			goto error;
 
-thanks,
+This leaves the code horribly aligned.
 
-greg k-h
+> -		if (PCIBIOS_SUCCESSFUL != pci_read_config_word(ALI15X3_dev,
+> +		if (0 != pci_read_config_word(ALI15X3_dev,
+>  								SMBBA, &a))
+>  			goto error;
+>  		if ((a & ~(ALI15X3_SMB_IOSIZE - 1)) != ali15x3_smba) {
+> diff --git a/drivers/i2c/busses/i2c-nforce2.c b/drivers/i2c/busses/i2c-nforce2.c
+> index 777278386f58..385f4f446f36 100644
+> --- a/drivers/i2c/busses/i2c-nforce2.c
+> +++ b/drivers/i2c/busses/i2c-nforce2.c
+> @@ -328,7 +328,7 @@ static int nforce2_probe_smb(struct pci_dev *dev, int bar, int alt_reg,
+>  		u16 iobase;
+>  
+>  		if (pci_read_config_word(dev, alt_reg, &iobase)
+> -		    != PCIBIOS_SUCCESSFUL) {
+> +		    != 0) {
+>  			dev_err(&dev->dev, "Error reading PCI config for %s\n",
+>  				name);
+>  			return -EIO;
+> diff --git a/drivers/i2c/busses/i2c-sis5595.c b/drivers/i2c/busses/i2c-sis5595.c
+> index c793a5c14cda..fbe3ee31eae3 100644
+> --- a/drivers/i2c/busses/i2c-sis5595.c
+> +++ b/drivers/i2c/busses/i2c-sis5595.c
+> @@ -176,10 +176,10 @@ static int sis5595_setup(struct pci_dev *SIS5595_dev)
+>  	if (force_addr) {
+>  		dev_info(&SIS5595_dev->dev, "forcing ISA address 0x%04X\n", sis5595_base);
+>  		if (pci_write_config_word(SIS5595_dev, ACPI_BASE, sis5595_base)
+> -		    != PCIBIOS_SUCCESSFUL)
+> +		    != 0)
+>  			goto error;
+>  		if (pci_read_config_word(SIS5595_dev, ACPI_BASE, &a)
+> -		    != PCIBIOS_SUCCESSFUL)
+> +		    != 0)
+>  			goto error;
+>  		if ((a & ~(SIS5595_EXTENT - 1)) != sis5595_base) {
+>  			/* doesn't work for some chips! */
+> @@ -189,15 +189,15 @@ static int sis5595_setup(struct pci_dev *SIS5595_dev)
+>  	}
+>  
+>  	if (pci_read_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, &val)
+> -	    != PCIBIOS_SUCCESSFUL)
+> +	    != 0)
+>  		goto error;
+>  	if ((val & 0x80) == 0) {
+>  		dev_info(&SIS5595_dev->dev, "enabling ACPI\n");
+>  		if (pci_write_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, val | 0x80)
+> -		    != PCIBIOS_SUCCESSFUL)
+> +		    != 0)
+>  			goto error;
+>  		if (pci_read_config_byte(SIS5595_dev, SIS5595_ENABLE_REG, &val)
+> -		    != PCIBIOS_SUCCESSFUL)
+> +		    != 0)
+>  			goto error;
+>  		if ((val & 0x80) == 0) {
+>  			/* doesn't work for some chips? */
+
+
+-- 
+Jean Delvare
+SUSE L3 Support
