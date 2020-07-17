@@ -2,224 +2,149 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDEBC433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9367C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2712620704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16E420704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:04:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A96Tg//m"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="C6S1AvtT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgGQICl (ORCPT
+        id S1728139AbgGQIEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40810 "EHLO
+        Fri, 17 Jul 2020 04:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgGQICk (ORCPT
+        with ESMTP id S1726233AbgGQIEH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:02:40 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80EEC061755
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:02:39 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o2so15935119wmh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:02:39 -0700 (PDT)
+        Fri, 17 Jul 2020 04:04:07 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 178D7C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:04:07 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k71so6159513pje.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:04:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ed5EvL3G9gT1l44x09gniqXiVev2natp2bMJdHLtU0o=;
-        b=A96Tg//maHu+0r1sZYW1Ue25KfWch0FmJByHKRbbGdCZLEyFbyYCgjh+yEpebUYuhP
-         sVBFGM0Rv9SC0s5Hyf2RUqR60aqdjqI5yJbSEW+TpWa69Buiki0xrIllt1ILdng8tHDg
-         SaL3iuhh3Dtm5ldLttOzoUmwWw6NALo7Ucl2qoZ5XI0e1uXAB4ZaWggfAJThmVotT9FU
-         GiZ+1qc+idffTup29WieIrRRXtb3fxvCrPeG9UCUfyVd+OcEhFL7UC/CY5hCTiNxE9xD
-         OtS5JSbPWQ0wEdvZiAtd+9JinNj8iPUMwUTFZRXbkrQFBZSE7CS1QbUvgsLTKjk2+ZKG
-         KwqQ==
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=KEvi0NuPU1IP8yO4PAQchnjzLd/x6LQsk0i3r7vHyn8=;
+        b=C6S1AvtTj8LyBgazLLSZt/LcOQkm40N2bLk8k+vnF1Q/0qesdwGhQOXIbIdrg+K0y3
+         6WRXf56QXTDlMKRmeCFZ40Wmw40hCGXJ7OH5bmuVOTpkjBdpI4cNzzTy063Ne67hZhDA
+         Kdd5l3sMZ+SBT2EsBKzvpMwcqdziXpz8MQdgU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ed5EvL3G9gT1l44x09gniqXiVev2natp2bMJdHLtU0o=;
-        b=mLUR/dqXQRBUsYSpn3LVcvrpldKPjokoUkLptzhRJfVo8p/KuVPQ9OllORvVkRWemT
-         SPLlKH1VIwnBylz0jQQscFR7iGMvmEoOtAE/NrJ0UBruwMIkW06RgtwyKAu70yMWRNSS
-         fbZ5CF0vsC+AcYr5qX8pcRsLHhhUB/Ih0Mjd+gm+XHJ4/oh8XwMO9F8qJta1C8IaF+YX
-         KgabC7T0yHlRrY1WD+vnRxStSsX1MmpUQXtOSI7vUn1J5u54dPiDh5DEJe3fr3u3mNmW
-         GkAKsuewjz/7WYux4/RqugWkBOneTU1196IfjNyIGWXaVvVnJn0jQoDmrsCLipY6HE9i
-         m7Ug==
-X-Gm-Message-State: AOAM533WPF1codaE7sNFtaeOZHlSYmh0EkxHfZIiUNM5NrcfF9a2hytH
-        la152phuEJ/G5utexmEKtaeSig==
-X-Google-Smtp-Source: ABdhPJwEUuzQn7dxmY0LfNwT3P0HP5hKgtS03Hyj6N+HTykWyP6bVZy+El0o2zqUhbn+j7AdPI1W6A==
-X-Received: by 2002:a7b:c185:: with SMTP id y5mr8318269wmi.85.1594972958083;
-        Fri, 17 Jul 2020 01:02:38 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
-        by smtp.googlemail.com with ESMTPSA id d13sm12833406wrq.89.2020.07.17.01.02.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 01:02:37 -0700 (PDT)
-Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
- X1000 OST.
-To:     Zhou Yanjie <zhouyanjie@wanyeetech.com>,
-        linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
- <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
- <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
- <f0dd2ea5-0627-35cf-5a58-aaff0bcb22cd@wanyeetech.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
-Date:   Fri, 17 Jul 2020 10:02:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <f0dd2ea5-0627-35cf-5a58-aaff0bcb22cd@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=KEvi0NuPU1IP8yO4PAQchnjzLd/x6LQsk0i3r7vHyn8=;
+        b=USrAFMZYhothpXOsgIlqYSJ6FK1gTQFdXs4kZcvYPz7a0nBtwhJAtOAJ3s09trnsZX
+         Sv7YNRYwlfo167GWbgPexdPZMJyfv/TwlvFEr7+B7xi9QhbFvbVQBaROGtCTh9u5d2JX
+         yGNwqQMgduYXEGm1kf2+NDe5GK+6xgz0xsdhIc1K3sTJxFjTpjrLHoxRd+hBn4UnlqUY
+         3qLpih2hU7lm4rz66iodO0dFvruyqm7Z218t1U4jD26EyfFOWzrE0PHmTe4r40UW1hIX
+         596aaRzT+Tz+ytLjQBZildKqcPdqI0iE8nrDMp4vbHOyynODKKX+BKlprwjckVBSpRRH
+         GaGQ==
+X-Gm-Message-State: AOAM530vUAw6ECVCX6medyw6mEUy0qvlZSaEoH5R+rVyNz8VrKjK6xJH
+        mtAtQulTgtIZKWzlTv9TDkROE2KfsGFi2g==
+X-Google-Smtp-Source: ABdhPJyIUB2X2bt07ezL/JxWGi7QM9dTUwoDl2jBg2/4sx2zMYj96jaBOidH0UnTgvjoskVWg8dGGQ==
+X-Received: by 2002:a17:902:6b08:: with SMTP id o8mr6813081plk.104.1594973046370;
+        Fri, 17 Jul 2020 01:04:06 -0700 (PDT)
+Received: from localhost.localdomain ([183.83.226.37])
+        by smtp.gmail.com with ESMTPSA id y7sm1933330pjp.47.2020.07.17.01.04.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jul 2020 01:04:05 -0700 (PDT)
+From:   Suniel Mahesh <sunil@amarulasolutions.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        gregkh@linuxfoundation.org, sashal@kernel.org
+Cc:     jagan@amarulasolutions.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v3] ARM: dts: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
+Date:   Fri, 17 Jul 2020 13:33:52 +0530
+Message-Id: <1594973032-29671-1-git-send-email-sunil@amarulasolutions.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20200711135925.GG21277@dragon>
+References: <20200711135925.GG21277@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/07/2020 08:13, Zhou Yanjie wrote:
-> Hi Daniel,
-> 
-> 在 2020/7/17 下午12:20, Daniel Lezcano 写道:
->> On 10/07/2020 19:02, 周琰杰 (Zhou Yanjie) wrote:
->>> X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
->>> OST, it no longer belongs to TCU. This driver will register both a
->>> clocksource and a sched_clock to the system.
->>>
->>> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
->>> Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->>> Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->>> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
->>> ---
->>>
->>> Notes:
->>>      v1->v2:
->>>      Fix compile warnings.
->>>      Reported-by: kernel test robot <lkp@intel.com>
->>>           v2->v3:
->>>      No change.
->>>           v3->v4:
->>>      1.Rename "ost" to "sysost"
->>>      1.Remove unrelated changes.
->>>      2.Remove ost_clock_parent enum.
->>>      3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
->>>      4.Set up independent .recalc_rate/.set_rate for percpu/global
->>> timer.
->>>      5.No longer call functions in variable declarations.
->>>           v4->v5:
->>>      Use "of_io_request_and_map()" instead "of_iomap()".
->>>      Suggested-by: Paul Cercueil <paul@crapouillou.net>
->>>           v5->v6:
->>>      No change.
->>>
->>>   drivers/clocksource/Kconfig          |  11 +
->>>   drivers/clocksource/Makefile         |   1 +
->>>   drivers/clocksource/ingenic-sysost.c | 539
->>> +++++++++++++++++++++++++++++++++++
->>>   3 files changed, 551 insertions(+)
->>>   create mode 100644 drivers/clocksource/ingenic-sysost.c
->>>
->>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->>> index 91418381fcd4..1bca8b8fb30f 100644
->>> --- a/drivers/clocksource/Kconfig
->>> +++ b/drivers/clocksource/Kconfig
->>> @@ -696,6 +696,17 @@ config INGENIC_TIMER
->>>       help
->>>         Support for the timer/counter unit of the Ingenic JZ SoCs.
->>>   +config INGENIC_SYSOST
->>> +    bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
->> We usually use silent options and let the platform's Kconfig enable it.
->> We show up the option only when COMPILE_TEST is enabled.
->>
->> Is there a reason to do it differently?
-> 
-> 
-> Do you mean
-> 
-> bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
-> 
-> or
-> 
-> default MACH_INGENIC ?
+From: Michael Trimarchi <michael@amarulasolutions.com>
 
-Both, no default here.
+The current pin muxing scheme muxes GPIO_1 pad for USB_OTG_ID
+because of which when card is inserted, usb otg is enumerated
+and the card is never detected.
 
-eg.
+[   64.492645] cfg80211: failed to load regulatory.db
+[   64.492657] imx-sdma 20ec000.sdma: external firmware not found, using ROM firmware
+[   76.343711] ci_hdrc ci_hdrc.0: EHCI Host Controller
+[   76.349742] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 2
+[   76.388862] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
+[   76.396650] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.08
+[   76.405412] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[   76.412763] usb usb2: Product: EHCI Host Controller
+[   76.417666] usb usb2: Manufacturer: Linux 5.8.0-rc1-next-20200618 ehci_hcd
+[   76.424623] usb usb2: SerialNumber: ci_hdrc.0
+[   76.431755] hub 2-0:1.0: USB hub found
+[   76.435862] hub 2-0:1.0: 1 port detected
 
-bool "Clocksource/timer using the SYSOST in Ingenic X SoCs" if COMPILE_TEST
+The TRM mentions GPIO_1 pad should be muxed/assigned for card detect
+and ENET_RX_ER pad for USB_OTG_ID for proper operation.
 
-and
+This patch fixes pin muxing as per TRM and is tested on a
+i.Core 1.5 MX6 DL SOM.
 
-in arch/mips/Kconfig in the config MACH_INGENIC section :
+[   22.449165] mmc0: host does not support reading read-only switch, assuming write-enable
+[   22.459992] mmc0: new high speed SDHC card at address 0001
+[   22.469725] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
+[   22.478856]  mmcblk0: p1 p2
 
-...
-select INGENIC_SYSOST
-...
+Fixes: 6df11287f7c9 ("ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Suniel Mahesh <sunil@amarulasolutions.com>
+---
+Changes for v3:
+- Changed subject of the patch, added fixes tag and copied stable kernel
+  as suggested by Shawn Guo.
 
-> This driver has some origins from "INGENIC_TIMER" driver and
-> "INGENIC_OST" driver.
-> Early Ingenic processors used TCU (timer/counter unit, has 6 or 8
-> generic timer channels) to provide clocksource and clockevent (both with
-> only 16bit precision). This part of the processor can only use
-> "INGENIC_TIMER" driver.
-> 
-> Later processors provide an independent 32bit or 64bit timer channel
-> (still under TCU, known as ost channel, this channel can not generate
-> interrupt) to provid higher precision clocksource. The "INGENIC_OST"
-> driver is for this channel. These processors can use "INGENIC_TIMER"
-> driver, but using "INGENIC_OST" driver to provide higher precision
-> clocksource would be a better choice (clockevent still needs to be
-> provided by generic timer channel of TCU, and still 16bit precision).
-> 
-> And the recent processors provide a SYSOST components, it is independent
-> from TCU, including a 64bit timer channel for clocksource and a 32bit
-> timer channel for clockevent. Although these processors can also use
-> "INGENIC_TIMER" driver, but the better choice is completely independent
-> use of "INGENIC_SYSOST" driver to provide higher precision clocksource
-> and clockevent.
+Changes for v2:
+- Changed patch description as suggested by Michael Trimarchi to make it
+  more readable/understandable.
 
-Ok, the rating should do the job then.
+NOTE:
+- patch tested on i.Core 1.5 MX6 DL
+---
+ arch/arm/boot/dts/imx6qdl-icore.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks for the explanation.
-
-> You may have already noticed that this independent SYSOST component is
-> like an upgraded and streamlined TCU, which only retains one generic
-> timer channel that can generate interrupts, upgrade it from 16bit to
-> 32bit, and then retain the 64bit ost channel. so the driver code and
-> Kconfig code of this patch is largely referenced
-> "INGENIC_TIMER" driver and "INGENIC_OST" driver.
-> 
-> Thanks and best regards!
-> 
->>> +    default MACH_INGENIC
->>> +    depends on MIPS || COMPILE_TEST
->>> +    depends on COMMON_CLK
->>> +    select MFD_SYSCON
->>> +    select TIMER_OF
->>> +    select IRQ_DOMAIN
->>> +    help
->>> +      Support for the SYSOST of the Ingenic X Series SoCs.
->>> +
->> [ ... ]
->>
->>
-
-
+diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+index f2f475e..23c318d 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -398,7 +398,7 @@
+ 
+ 	pinctrl_usbotg: usbotggrp {
+ 		fsl,pins = <
+-			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
++			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
+ 		>;
+ 	};
+ 
+@@ -410,6 +410,7 @@
+ 			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
+ 			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
+ 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
++			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1b0b0
+ 		>;
+ 	};
+ 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.7.4
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
