@@ -2,125 +2,89 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89333C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3E52065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E47206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:06:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aabBGO/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGQMBR (ORCPT
+        id S1726418AbgGQMGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:01:17 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35533 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgGQMBR (ORCPT
+        Fri, 17 Jul 2020 08:06:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgGQMGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:01:17 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q4so12350934lji.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:01:15 -0700 (PDT)
+        Fri, 17 Jul 2020 08:06:21 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35CBBC061755
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:06:21 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s9so12266020ljm.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LJR0i6k7cO0ZZMPI9z4MOM+krNnMR1fBcC0/4RFxoRc=;
+        b=aabBGO/8gdwSRkA/BTM3UdLB2r8u3KjxQfPB0aFML2rV2ttywdWnH96KH8Qq8+gwjk
+         qRzYI7lSm4R0yDFu54T/gxVFsYj84X17IVGB7iNgU3E8MuVhBiV+x5SymzPAhd6Fc0y2
+         GEL8k/lj8gVhMb7CshyoECk/icp7txJXkBXD5U54sL1C+DWvjnp9+BCYWzV69XsLeY8O
+         QRjDqd3wDlNx5SVGzMEZIuuFpIiDeoew8GJ02t33OzSEcpxOtbSWKR4bviqGQq1PaID0
+         1VOPixmOcBSH8zngj6epCfWITMdLCksuL8lTYXPhxaZ8PPdqHxc+g7qSXpa2QNpqloHx
+         Z08g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=PIGshzdtQhBbB3HFdyOsLZ2f6sGVhYTv8qekjEAe6Mc=;
-        b=sLrWXzPEA+XEExtbxSUJMt7ddnkXXtuUo8b820AhCfjyaoSIV01qL6yhZbKObDHSu9
-         hjHZOxNoGkfPTQivFvKBBR2kLqHvXHUrpqQNSRtjxCSUfMkSqhQFRp0BZkX8dhtoqlD1
-         RB3rFnEtmyZDfFEeMOINzw0GNQX/Q3UilJ+pHF9D1GkXJ7KZgvJShZmBx9bnSwqesOP4
-         tSNBouob/ZAJxbu+ZhcMBOg9mQ6v5SzhDIFFPbRPab7sIxv7iOx3Cz9e7rhu86wg8zY0
-         oEDIp0RsuEwHUBObXZTrVCVU3A4BJsAUjuTpO75t0HmXEQzjF7KdBIF9FYR6WaQrRDtw
-         pvgA==
-X-Gm-Message-State: AOAM533sbR0HzDeiI3Wftyst7Tz0iGu88oPvNpJQbtmLFd3SRqRLqoWV
-        XkiKJHMKMYNWaFRg5oSCOWk=
-X-Google-Smtp-Source: ABdhPJx5cWTwu0ovlYAo2vYsCOdJcAo2JkYme62hvSjqPX8hUz807Wd9UOs3gSWUes4pRBwREOyggg==
-X-Received: by 2002:a2e:b4d0:: with SMTP id r16mr4552055ljm.332.1594987274724;
-        Fri, 17 Jul 2020 05:01:14 -0700 (PDT)
-Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id y21sm1046054lff.34.2020.07.17.05.01.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 05:01:14 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH v2 0/4] Update memdup_user.cocci
-To:     Julia Lawall <Julia.Lawall@lip6.fr>
-Cc:     linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
-References: <20200608150038.223747-1-efremov@linux.com>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Message-ID: <5832f5b1-5f9a-9b52-5edf-249be2860dbd@linux.com>
-Date:   Fri, 17 Jul 2020 15:01:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LJR0i6k7cO0ZZMPI9z4MOM+krNnMR1fBcC0/4RFxoRc=;
+        b=gTbSIRRe8NRAn+bsl5RVqlfRu/Ct8/EsfIh5qzWTQ43zTRmB6YTqFVymE3GxsO7P21
+         oyjw3aYxT68nEpzM+AwvbvacZsLnQ2D6HxuwAPUElUAI/qxcOqQkrwWWdbmb0Ztz5P22
+         sdvhYPub7CSMCmuAUbDQ1mOLDxuxDh46Wghz3KvbeamWeNHgC7di1ccy1q0MoyJyOIpv
+         qD7nXBw3VMSbZ8dhrhhk2N9PE/o/0a7ELY2fvkYpjl/YS8LiT9egvu90atstj6eRupBi
+         n36ZTSbu+yQh6VmLXU2viHVYsFD2sViNTAUsuYtxwMXu2qH3af/LZVDIVJ6YfNEz8CIz
+         wjCQ==
+X-Gm-Message-State: AOAM533BabbZYOFKqyWO2rfuLsdqumc0T6xcbiRa/troKjWohMi+vtjP
+        7CIqk0AaDmVJ+oILUVwqqlOF35xD0PRD2fPXa75bUQ==
+X-Google-Smtp-Source: ABdhPJzM5ABK4ZPfUhITf86CQcHTzH09tokmVlULmlOslvOaUvuycksIQdKNexusQpjUZ7Pg1QWEtnYM7wvpKL6m+hA=
+X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr4643357ljj.283.1594987579348;
+ Fri, 17 Jul 2020 05:06:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200608150038.223747-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200716212109.GA17525@embeddedor>
+In-Reply-To: <20200716212109.GA17525@embeddedor>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Jul 2020 14:06:08 +0200
+Message-ID: <CACRpkdYXFOOv8yh+wMKSZ_7E2oXXXZZO2b9C-jLJN055mLdSzA@mail.gmail.com>
+Subject: Re: [PATCH][next] pinctrl: lpc18xx: Use fallthrough pseudo-keyword
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping?
+On Thu, Jul 16, 2020 at 11:15 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
 
-On 6/8/20 6:00 PM, Denis Efremov wrote:
-> Add GFP_USER to the allocation flags and handle vmemdup_user().
-> The third patch supresses memdup_user(), vmemdup_user() functions
-> detection. Last patch is a proof of concept for the rule selfchecking.
-> Gives the ability to detect that an open-coded pattern in a function
-> definition that we search for in the kernel sources changed.
-> 
-> Denis Efremov (4):
->   coccinelle: api: extend memdup_user transformation with GFP_USER
->   coccinelle: api: extend memdup_user rule with vmemdup_user()
->   coccinelle: api: filter out memdup_user definitions
->   coccinelle: api: add selfcheck for memdup_user rule
-> 
->  scripts/coccinelle/api/memdup_user.cocci | 106 ++++++++++++++++++++++-
->  1 file changed, 103 insertions(+), 3 deletions(-)
-> 
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1].
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Patch applied.
+
+Yours,
+Linus Walleij
