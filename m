@@ -2,177 +2,1026 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E841C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D361C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4625820739
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45E720739
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bJFqZtro"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqxciIfg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgGQD7Y (ORCPT
+        id S1726557AbgGQECH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 23:59:24 -0400
-Received: from mail-eopbgr20064.outbound.protection.outlook.com ([40.107.2.64]:44804
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726442AbgGQD7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 23:59:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dE0omw7mGGASxzK6laTG+u6aaI2VoNCRB57IMzzb2XZ2IZiznhHandjQkH0BeTXXMfhIHHvlFRvKuCFUjP4syIvKtnJLBQyLOIYMuUeQOUVVUCXSdLCYOrTFd7cquGJh0M8t44nl1UcyTSpInQ42jzYFKaF6BAW7/JgfG8SZLhpEa3W1Nhn8DGkTWeZPnzQsqXxSfNrY2ApGd4vFayfCe/Z7/uZ+LsS99MBUcM1roZxv86SRKmbbv7WuY9C+olgMzwdrRmo1nFWT00fD4VcP/kkTwNcoMnfVfqFAN9Sropew64cr8kUCgNId/pOyZFtfERN+AlaBaEt9hx2QUNdWzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y2ZasUN1Kp5ouNmgcNx0femEWEfNgHYOjPoCasX/nF0=;
- b=byDM5sE/F3aHGMeDYoj93Fl7gJSzvE5Jyxkxo38w1VlI6AHLN+RyCgeUiap4bMrwLkdhG38B7bXdbh/7UM/6R4Ed6nh/28qF7n8de6XKRQ3/+KD6rJOo/KxPhDdf0sPqepQC4+UFT+ikEAkuV+55/3CDXrVdSzUfHUd409/aJluyo3vUKNBappxJKe6p02RISXDUVdPoOWz0LwWzwU4JycSDGK9dpvL6lES8bt+XkZO/GKpl7nHIRI8WjU6VqEaDGUIy/mOEhLdgIfYnngl2gS7RkzkDLwDF3IemG4F5VNaem14WEH/Yn01XfD+DsebAJc7R74wkLqwM7E1VEewWTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y2ZasUN1Kp5ouNmgcNx0femEWEfNgHYOjPoCasX/nF0=;
- b=bJFqZtrojxJyYUdr/n8KSqKZl8g8ZFfMvTaNKwnP6RIhhNI3UQTNk8st0OldcHA04Vv6YLG8hbLUkIbbSBLbyK0kKGGe3LFT1RFkg2/DTGJGAq3xdPfGKepyglXDlWmqeqHe2gC5IvuyhzonCGkc+GMJhoihQVFiMnUnytul/ew=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM5PR0402MB2851.eurprd04.prod.outlook.com (2603:10a6:203:99::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Fri, 17 Jul
- 2020 03:59:20 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3174.026; Fri, 17 Jul 2020
- 03:59:20 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] usb: gadget: udc: Flush pending work also in error path
-Thread-Topic: [PATCH] usb: gadget: udc: Flush pending work also in error path
-Thread-Index: AQHWW2gRyaXWYCsNREqGl03uUDVrwakLJniA
-Date:   Fri, 17 Jul 2020 03:59:20 +0000
-Message-ID: <20200717035917.GB17070@b29397-desktop>
-References: <CGME20200716115546eucas1p1deb159dd37bc1211f4579d4d85f9af92@eucas1p1.samsung.com>
- <20200716115525.27519-1-m.szyprowski@samsung.com>
-In-Reply-To: <20200716115525.27519-1-m.szyprowski@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: samsung.com; dkim=none (message not signed)
- header.d=none;samsung.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ee87b898-4e9c-4c8c-4cf9-08d82a05c8b5
-x-ms-traffictypediagnostic: AM5PR0402MB2851:
-x-microsoft-antispam-prvs: <AM5PR0402MB285141B88244D69BA26DBF048B7C0@AM5PR0402MB2851.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8EKt8R5sBWhM/2PglC9VBk6UwaagBK7xmRV5Bm1rLziHh6HkKsKqMIokkJJcEJayqik5y0YfBpeeKKyqcS4tt+aG8aLwivNVwizYjz3NKlUGj/BR7sHcoLWS1iF/OebRiQCqucr1y7YfrzkwuKzMVi5ir81llw8tnda+us9wpJECnl2ja+0+uXsafhLcJ7Vz6D4s/GYfSBLK5IMBfhz1HgVOIzIcY28xj6vu+wSF4Y3MTSMWlLxG8XvMfGdEKnQcoQTok9A3/K5ANmzE1UBzgDE8JeO3YoU5y64xPSPM75p8/zUi3ukNs8PfQYUlXiUk
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(39860400002)(366004)(346002)(376002)(396003)(136003)(5660300002)(478600001)(316002)(66946007)(91956017)(44832011)(186003)(6512007)(66556008)(64756008)(66476007)(66446008)(53546011)(45080400002)(6506007)(26005)(54906003)(76116006)(9686003)(83380400001)(4326008)(33716001)(33656002)(8676002)(2906002)(8936002)(86362001)(71200400001)(1076003)(6916009)(6486002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: yyiJUJVhh96I/+OMiwD3eDB5BIPPBUgVUftV3imKJFJsUtkS8aK2ptG/3VIrnd97jsx7Yw7kGAZtVRF9ZunhIc0dyWS0CkHJIO0rmuaiXJjDCJwd/aEtI5V6cgyB935sqs/b1fKDHy8+YrSPwxwHpt05eEkDxJO67TO2FWTA55ef/RZAfjZ3dA/6t+22+BWLk9380wKJbuDLfu3pEfspvI7M8xlzQZPxcip1oLUhR2JwxNmtAuvG8xuCSU/yxbA+5EWJNJRq462K30OGRb7QJAJHA7gVvHsLbvyIeCIS3B++Vz5bDOINPSPIUKEhtvsjXXXk00QXNJgOmCA8qXCHlLUzI/4lgMjBUBIf4yNc/a68ZH6d9l6NCylkX7L7DXjKioq+rWOKgK34byZRFjHGj8O99YSakRFjMJqMYn5745faak/DurZm60pEXzyqfA0IOl04bw399e20maqBosw6K3fBOcKwquFTxxC0+q8d6AA=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <90CE83E6B24B604199B26379EC68C3A6@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 17 Jul 2020 00:02:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgGQECH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 00:02:07 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4BABC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:02:06 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id i4so9024241iov.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X8sIVYWjGAkZ2J2n937pV9Lqp8sObPsERaA2v07sjyk=;
+        b=nqxciIfgeLAWOyA1rAcAkvkgUC7n31RfEppWmAGs/JxLuf2RVe6JwZFIHX66BBQGei
+         tMyI+5UD6+XLeYhAxUHHBBLO2O6jwgIHK1B+wmWxibv9tiDeGhjSBLz80WssVeLlD9cR
+         CbLpdn6+/moSk9T77802IlMqlKkHcgX3pcvU5gnCN0AogHwgr/Qgfkx6aC/V3Cs7WZHZ
+         DfxgiOQ+AiLi2+Gg2msu44ngtu/zVbErGYRUdVKaCprwH5Y7gLwuOcYG3ncqUAX8qCh4
+         BSMCibcUiXxkSVA2RhvoRSluCA6AirDwOCOROZoXwpEKhV+Y6p0iXm0/5F0A0cY6PMoT
+         IJMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X8sIVYWjGAkZ2J2n937pV9Lqp8sObPsERaA2v07sjyk=;
+        b=EO0eRWKxRphE6qq0QdwexTZ3ePpupAjkpQYVwdrd3yBkLTc8POugYBO2p8EBtDzHee
+         L77unCdJM98G0acrgJvDbOyAl6UNe2Kzjf9EcDaPSqwQKct1sKGRES2CtMYRIIqk82tq
+         SCSAgBD6nZRXsa4mq03y2Rm5ijaQH3xKu0B9d87XpMM3HnpbEMQioNhe3JnNvPBu22g7
+         iEVsjtZx/3qPhXNbsUgZvdrvN3Fk5ggDlU4C39pa9s8STek8dzaFPsbcSSjIa+TEX+4C
+         imZjLHOpHgVe6/42QDzsf6MsgHsCqjY1k+fBoSseCv1XnQOuQ6GRxYGNEIl7jBGWYSzb
+         QO4A==
+X-Gm-Message-State: AOAM532CZddz9hYVqGSYw+dDHKfJuy8VjJSowL1S4Imq49wNqBWKdpbM
+        3v988Hw9y3Srlo91ug+54hkW1wFX+nEMWfqZPvI=
+X-Google-Smtp-Source: ABdhPJySsWFbEnbKhf7j0yYP9pcaRDIWa0nwyCo4jj3JxnXvapEwBwDofm4v6kTKKucp35JD+FP0igmfCAlfTkXAEUE=
+X-Received: by 2002:a05:6602:449:: with SMTP id e9mr7648422iov.71.1594958525946;
+ Thu, 16 Jul 2020 21:02:05 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee87b898-4e9c-4c8c-4cf9-08d82a05c8b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 03:59:20.2268
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1wGJQnsqJcji7TIHVu6Chj2XLKI32uPabYgtu9C/giQVj1NGuEkS7fZTdFnFTJTrMqOOvGvDP7t19pKsOee+Cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0402MB2851
+References: <CAF31+H5ZB7zn73obrc5svLzgfsTnyYe5TKvr7-6atUOqrRY+2w@mail.gmail.com>
+ <20200716160723.474af23e3a362e77bec3fcf7@linux-foundation.org> <CAB3wodcmaiB+AOiSYvoE6D3ATx7Kj7FMHfW+uwTfZEOGuWjX7Q@mail.gmail.com>
+In-Reply-To: <CAB3wodcmaiB+AOiSYvoE6D3ATx7Kj7FMHfW+uwTfZEOGuWjX7Q@mail.gmail.com>
+From:   Bernd Amend <bernd.amend@gmail.com>
+Date:   Fri, 17 Jul 2020 06:01:54 +0200
+Message-ID: <CAF31+H7U6VLxAsMmR1tOdwNFQLUeiwFHiZJzXZy8vAsqmpCWBQ@mail.gmail.com>
+Subject: Re: Regression: squashfs issues since change "squashfs: migrate from
+ ll_rw_block usage to BIO"
+To:     Phillip Lougher <phillip.lougher@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stefan Rommel <stefanrommel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-07-16 13:55:25, Marek Szyprowski wrote:
-> When binding an UDC driver to the pending gadget fails in
-> check_pending_gadget_drivers(), the usb_add_gadget_udc_release() function
-> ends without waiting for the usb_gadget_state_work to finish, what in
-> turn might cause the whole struct usb_gadget being freed by the caller
-> before the usb_gadget_state_work being executed.
->=20
-> This can be observed on some boards with USB Mass Storage gadget
-> compiled-in and kernel booted without the needed module parameters:
->=20
-> dwc2 12480000.hsotg: dwc2_check_params: Invalid parameter besl=3D1
-> dwc2 12480000.hsotg: dwc2_check_params: Invalid parameter g_np_tx_fifo_si=
-ze=3D1024
-> dwc2 12480000.hsotg: EPs: 16, dedicated fifos, 7808 entries in SPRAM
-> Mass Storage Function, version: 2009/09/11
-> LUN: removable file: (no medium)
-> no file given for LUN0
-> g_mass_storage 12480000.hsotg: failed to start g_mass_storage: -22
-> dwc2: probe of 12480000.hsotg failed with error -22
-> 8<--- cut here ---
-> Unable to handle kernel NULL pointer dereference at virtual address 00000=
-004
-> pgd =3D (ptrval)
-> [00000004] *pgd=3D00000000
-> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-> Modules linked in:
-> CPU: 1 PID: 88 Comm: kworker/1:2 Not tainted 5.8.0-rc5-next-20200715-0006=
-2-gc5bb489ae825-dirty #8792
-> Hardware name: Samsung Exynos (Flattened Device Tree)
-> Workqueue:  0x0 (rcu_gp)
-> PC is at process_one_work+0x44/0x7dc
-> ...
-> Process kworker/1:2 (pid: 88, stack limit =3D 0x(ptrval))
-> Stack: (0xed9f1f00 to 0xed9f2000)
-> ...
-> [<c0148590>] (process_one_work) from [<c0148d6c>] (worker_thread+0x44/0x5=
-1c)
-> [<c0148d6c>] (worker_thread) from [<c01500c0>] (kthread+0x158/0x1a0)
-> [<c01500c0>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
-> Exception stack(0xed9f1fb0 to 0xed9f1ff8)
-> ...
-> ---[ end trace 5033c1326a62e5f3 ]---
-> note: kworker/1:2[88] exited with preempt_count 1
->=20
-> Fix this by flushing pending work in error path.
->=20
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  drivers/usb/gadget/udc/core.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.=
-c
-> index c33ad8a333ad..4f82bcd31fd3 100644
-> --- a/drivers/usb/gadget/udc/core.c
-> +++ b/drivers/usb/gadget/udc/core.c
-> @@ -1230,6 +1230,7 @@ int usb_add_gadget_udc_release(struct device *paren=
-t, struct usb_gadget *gadget,
->  	return 0;
-> =20
->   err_del_udc:
-> +	flush_work(&gadget->work);
->  	device_del(&udc->dev);
-> =20
->   err_unlist_udc:
-> --=20
-> 2.17.1
->=20
+On Fri, Jul 17, 2020 at 3:22 AM Phillip Lougher
+<phillip.lougher@gmail.com> wrote:
+>
+> On Fri, Jul 17, 2020 at 12:07 AM Andrew Morton
+> <akpm@linux-foundation.org> wrote:
+> >
+> > On Tue, 14 Jul 2020 21:41:07 +0200 Bernd Amend <bernd.amend@gmail.com> wrote:
+> >
+> > > Hi,
+> > >
+> > > With the Linux Kernel version 5.8-rc5/master I am unable to mount some
+> > > squashfs filesystems compressed with "-comp lz4".
+> > > If I try to mount them I get the following error:
+> > > [    1.084246] SQUASHFS error: lz4 decompression failed, data probably corrupt
+> > > [    1.084545] SQUASHFS error: Failed to read block 0x873e1001: -5
+> > > [    1.084761] SQUASHFS error: Unable to read metadata cache entry [873e0fff]
+> > > [    1.084983] SQUASHFS error: Unable to read directory block [873e0fff:1586]
+> > > [    1.122564] SQUASHFS error: Unable to read metadata cache entry [873e0fff]
+> > > [    1.122708] SQUASHFS error: Unable to read directory block [873e0fff:1586]
+> > > [    1.122862] Starting init: /sbin/init exists but couldn't execute
+> > > it (error -5)
+> > > [    1.123027] SQUASHFS error: Unable to read metadata cache entry [873e0fff]
+> > > [    1.123152] SQUASHFS error: Unable to read directory block [873e0fff:1586]
+> > > [    1.123279] Starting init: /etc/init exists but couldn't execute it
+> > > (error -5)
+> > > [    1.123444] SQUASHFS error: Unable to read metadata cache entry [873e0fff]
+> > > [    1.123573] SQUASHFS error: Unable to read directory block [873e0fff:1586]
+> > > [    1.123713] Starting init: /bin/init exists but couldn't execute it
+> > > (error -5)
+> > > [    1.123900] SQUASHFS error: Unable to read metadata cache entry [873e0fff]
+> > >
+> > > or
+> > >
+> > > [ 4960.910693] attempt to access beyond end of device
+> > > [ 4960.910695] loop0: rw=2048, want=46, limit=40
+> > > [ 4960.910696] SQUASHFS error: Failed to read block 0x4001: -5
+> > > [ 4960.910697] SQUASHFS error: Unable to read metadata cache entry [3fff]
+> > > [ 4960.910698] SQUASHFS error: Unable to read inode 0x20c5000c
+> > >
+> > > I bisected the issue to the commit "squashfs: migrate from ll_rw_block
+> > > usage to BIO"
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/fs/squashfs?id=93e72b3c612adcaca13d874fcc86c53e6c8da541
+> > >
+> > > The issue can be reproduced by downloading
+> > > https://theworldsend.eu/demo.squashfs (20K) and the following command
+> > > line.
+> > > # mount demo.squashfs mnt && ls mnt && umount mnt
+> > >
+> > > The same squashfs can be mounted using Linux <=5.7.8.
+> > > The kernel config is identical to the Arch Linux Kernel configuration,
+> > > build using gcc 9 and 10 on x86_64.
+> >
+> > Thanks.  I queued a reversion patch.  I'll go ahead with this if we are
+> > unable to get this fixed in the next week or so.
+> >
+>
+> Yes, there is a bug in the patch.  I have tracked it down today, and I
+> will send out a fix patch tomorrow.
+>
+> The bug is here:
+>
+> +               /* Extract the length of the metadata block */
+> +               data = page_address(bvec->bv_page) + bvec->bv_offset;
+> +               length = data[offset];
+> +               if (offset <= bvec->bv_len - 1) {
+>
+> This check is wrong, it should be
+>
+> +               if (offset < bvec->bv_len - 1) {
+>
+>
+> Phillip
 
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Thanks, this change resolves the issue for me.
 
---=20
+Bernd
 
-Thanks,
-Peter Chen=
+>
+> > Are you able to check that the below fixes things up?
+> >
+> > Thanks.
+> >
+> >
+> > From: Andrew Morton <akpm@linux-foundation.org>
+> > Subject: revert "squashfs: migrate from ll_rw_block usage to BIO"
+> >
+> > Revert 93e72b3c612adc ("squashfs: migrate from ll_rw_block usage to BIO")
+> > due to a regression reported by Bernd Amend.
+> >
+> > Link: http://lkml.kernel.org/r/CAF31+H5ZB7zn73obrc5svLzgfsTnyYe5TKvr7-6atUOqrRY+2w@mail.gmail.com
+> > Reported-by: Bernd Amend <bernd.amend@gmail.com>
+> > Cc: Philippe Liard <pliard@google.com>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Adrien Schildknecht <adrien+dev@schischi.me>
+> > Cc: Phillip Lougher <phillip@squashfs.org.uk>
+> > Cc: Guenter Roeck <groeck@chromium.org>
+> > Cc: Daniel Rosenberg <drosen@google.com>
+> > Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> > ---
+> >
+> >  fs/squashfs/block.c                     |  273 ++++++++++------------
+> >  fs/squashfs/decompressor.h              |    5
+> >  fs/squashfs/decompressor_multi.c        |    9
+> >  fs/squashfs/decompressor_multi_percpu.c |    6
+> >  fs/squashfs/decompressor_single.c       |    9
+> >  fs/squashfs/lz4_wrapper.c               |   17 -
+> >  fs/squashfs/lzo_wrapper.c               |   17 -
+> >  fs/squashfs/squashfs.h                  |    4
+> >  fs/squashfs/xz_wrapper.c                |   51 +---
+> >  fs/squashfs/zlib_wrapper.c              |   63 ++---
+> >  fs/squashfs/zstd_wrapper.c              |   62 ++--
+> >  11 files changed, 237 insertions(+), 279 deletions(-)
+> >
+> > --- a/fs/squashfs/block.c~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/block.c
+> > @@ -13,7 +13,6 @@
+> >   * datablocks and metadata blocks.
+> >   */
+> >
+> > -#include <linux/blkdev.h>
+> >  #include <linux/fs.h>
+> >  #include <linux/vfs.h>
+> >  #include <linux/slab.h>
+> > @@ -28,104 +27,45 @@
+> >  #include "page_actor.h"
+> >
+> >  /*
+> > - * Returns the amount of bytes copied to the page actor.
+> > + * Read the metadata block length, this is stored in the first two
+> > + * bytes of the metadata block.
+> >   */
+> > -static int copy_bio_to_actor(struct bio *bio,
+> > -                            struct squashfs_page_actor *actor,
+> > -                            int offset, int req_length)
+> > -{
+> > -       void *actor_addr = squashfs_first_page(actor);
+> > -       struct bvec_iter_all iter_all = {};
+> > -       struct bio_vec *bvec = bvec_init_iter_all(&iter_all);
+> > -       int copied_bytes = 0;
+> > -       int actor_offset = 0;
+> > -
+> > -       if (WARN_ON_ONCE(!bio_next_segment(bio, &iter_all)))
+> > -               return 0;
+> > -
+> > -       while (copied_bytes < req_length) {
+> > -               int bytes_to_copy = min_t(int, bvec->bv_len - offset,
+> > -                                         PAGE_SIZE - actor_offset);
+> > -
+> > -               bytes_to_copy = min_t(int, bytes_to_copy,
+> > -                                     req_length - copied_bytes);
+> > -               memcpy(actor_addr + actor_offset,
+> > -                      page_address(bvec->bv_page) + bvec->bv_offset + offset,
+> > -                      bytes_to_copy);
+> > -
+> > -               actor_offset += bytes_to_copy;
+> > -               copied_bytes += bytes_to_copy;
+> > -               offset += bytes_to_copy;
+> > -
+> > -               if (actor_offset >= PAGE_SIZE) {
+> > -                       actor_addr = squashfs_next_page(actor);
+> > -                       if (!actor_addr)
+> > -                               break;
+> > -                       actor_offset = 0;
+> > -               }
+> > -               if (offset >= bvec->bv_len) {
+> > -                       if (!bio_next_segment(bio, &iter_all))
+> > -                               break;
+> > -                       offset = 0;
+> > -               }
+> > -       }
+> > -       squashfs_finish_page(actor);
+> > -       return copied_bytes;
+> > -}
+> > -
+> > -static int squashfs_bio_read(struct super_block *sb, u64 index, int length,
+> > -                            struct bio **biop, int *block_offset)
+> > +static struct buffer_head *get_block_length(struct super_block *sb,
+> > +                       u64 *cur_index, int *offset, int *length)
+> >  {
+> >         struct squashfs_sb_info *msblk = sb->s_fs_info;
+> > -       const u64 read_start = round_down(index, msblk->devblksize);
+> > -       const sector_t block = read_start >> msblk->devblksize_log2;
+> > -       const u64 read_end = round_up(index + length, msblk->devblksize);
+> > -       const sector_t block_end = read_end >> msblk->devblksize_log2;
+> > -       int offset = read_start - round_down(index, PAGE_SIZE);
+> > -       int total_len = (block_end - block) << msblk->devblksize_log2;
+> > -       const int page_count = DIV_ROUND_UP(total_len + offset, PAGE_SIZE);
+> > -       int error, i;
+> > -       struct bio *bio;
+> > -
+> > -       bio = bio_alloc(GFP_NOIO, page_count);
+> > -       if (!bio)
+> > -               return -ENOMEM;
+> > +       struct buffer_head *bh;
+> >
+> > -       bio_set_dev(bio, sb->s_bdev);
+> > -       bio->bi_opf = READ;
+> > -       bio->bi_iter.bi_sector = block * (msblk->devblksize >> SECTOR_SHIFT);
+> > -
+> > -       for (i = 0; i < page_count; ++i) {
+> > -               unsigned int len =
+> > -                       min_t(unsigned int, PAGE_SIZE - offset, total_len);
+> > -               struct page *page = alloc_page(GFP_NOIO);
+> > -
+> > -               if (!page) {
+> > -                       error = -ENOMEM;
+> > -                       goto out_free_bio;
+> > -               }
+> > -               if (!bio_add_page(bio, page, len, offset)) {
+> > -                       error = -EIO;
+> > -                       goto out_free_bio;
+> > +       bh = sb_bread(sb, *cur_index);
+> > +       if (bh == NULL)
+> > +               return NULL;
+> > +
+> > +       if (msblk->devblksize - *offset == 1) {
+> > +               *length = (unsigned char) bh->b_data[*offset];
+> > +               put_bh(bh);
+> > +               bh = sb_bread(sb, ++(*cur_index));
+> > +               if (bh == NULL)
+> > +                       return NULL;
+> > +               *length |= (unsigned char) bh->b_data[0] << 8;
+> > +               *offset = 1;
+> > +       } else {
+> > +               *length = (unsigned char) bh->b_data[*offset] |
+> > +                       (unsigned char) bh->b_data[*offset + 1] << 8;
+> > +               *offset += 2;
+> > +
+> > +               if (*offset == msblk->devblksize) {
+> > +                       put_bh(bh);
+> > +                       bh = sb_bread(sb, ++(*cur_index));
+> > +                       if (bh == NULL)
+> > +                               return NULL;
+> > +                       *offset = 0;
+> >                 }
+> > -               offset = 0;
+> > -               total_len -= len;
+> >         }
+> >
+> > -       error = submit_bio_wait(bio);
+> > -       if (error)
+> > -               goto out_free_bio;
+> > -
+> > -       *biop = bio;
+> > -       *block_offset = index & ((1 << msblk->devblksize_log2) - 1);
+> > -       return 0;
+> > -
+> > -out_free_bio:
+> > -       bio_free_pages(bio);
+> > -       bio_put(bio);
+> > -       return error;
+> > +       return bh;
+> >  }
+> >
+> > +
+> >  /*
+> >   * Read and decompress a metadata block or datablock.  Length is non-zero
+> >   * if a datablock is being read (the size is stored elsewhere in the
+> > @@ -136,88 +76,129 @@ out_free_bio:
+> >   * algorithms).
+> >   */
+> >  int squashfs_read_data(struct super_block *sb, u64 index, int length,
+> > -                      u64 *next_index, struct squashfs_page_actor *output)
+> > +               u64 *next_index, struct squashfs_page_actor *output)
+> >  {
+> >         struct squashfs_sb_info *msblk = sb->s_fs_info;
+> > -       struct bio *bio = NULL;
+> > -       int compressed;
+> > -       int res;
+> > -       int offset;
+> > +       struct buffer_head **bh;
+> > +       int offset = index & ((1 << msblk->devblksize_log2) - 1);
+> > +       u64 cur_index = index >> msblk->devblksize_log2;
+> > +       int bytes, compressed, b = 0, k = 0, avail, i;
+> > +
+> > +       bh = kcalloc(((output->length + msblk->devblksize - 1)
+> > +               >> msblk->devblksize_log2) + 1, sizeof(*bh), GFP_KERNEL);
+> > +       if (bh == NULL)
+> > +               return -ENOMEM;
+> >
+> >         if (length) {
+> >                 /*
+> >                  * Datablock.
+> >                  */
+> > +               bytes = -offset;
+> >                 compressed = SQUASHFS_COMPRESSED_BLOCK(length);
+> >                 length = SQUASHFS_COMPRESSED_SIZE_BLOCK(length);
+> > +               if (next_index)
+> > +                       *next_index = index + length;
+> > +
+> >                 TRACE("Block @ 0x%llx, %scompressed size %d, src size %d\n",
+> >                         index, compressed ? "" : "un", length, output->length);
+> > +
+> > +               if (length < 0 || length > output->length ||
+> > +                               (index + length) > msblk->bytes_used)
+> > +                       goto read_failure;
+> > +
+> > +               for (b = 0; bytes < length; b++, cur_index++) {
+> > +                       bh[b] = sb_getblk(sb, cur_index);
+> > +                       if (bh[b] == NULL)
+> > +                               goto block_release;
+> > +                       bytes += msblk->devblksize;
+> > +               }
+> > +               ll_rw_block(REQ_OP_READ, 0, b, bh);
+> >         } else {
+> >                 /*
+> >                  * Metadata block.
+> >                  */
+> > -               const u8 *data;
+> > -               struct bvec_iter_all iter_all = {};
+> > -               struct bio_vec *bvec = bvec_init_iter_all(&iter_all);
+> > -
+> > -               if (index + 2 > msblk->bytes_used) {
+> > -                       res = -EIO;
+> > -                       goto out;
+> > -               }
+> > -               res = squashfs_bio_read(sb, index, 2, &bio, &offset);
+> > -               if (res)
+> > -                       goto out;
+> > -
+> > -               if (WARN_ON_ONCE(!bio_next_segment(bio, &iter_all))) {
+> > -                       res = -EIO;
+> > -                       goto out_free_bio;
+> > -               }
+> > -               /* Extract the length of the metadata block */
+> > -               data = page_address(bvec->bv_page) + bvec->bv_offset;
+> > -               length = data[offset];
+> > -               if (offset <= bvec->bv_len - 1) {
+> > -                       length |= data[offset + 1] << 8;
+> > -               } else {
+> > -                       if (WARN_ON_ONCE(!bio_next_segment(bio, &iter_all))) {
+> > -                               res = -EIO;
+> > -                               goto out_free_bio;
+> > -                       }
+> > -                       data = page_address(bvec->bv_page) + bvec->bv_offset;
+> > -                       length |= data[0] << 8;
+> > -               }
+> > -               bio_free_pages(bio);
+> > -               bio_put(bio);
+> > +               if ((index + 2) > msblk->bytes_used)
+> > +                       goto read_failure;
+> >
+> > +               bh[0] = get_block_length(sb, &cur_index, &offset, &length);
+> > +               if (bh[0] == NULL)
+> > +                       goto read_failure;
+> > +               b = 1;
+> > +
+> > +               bytes = msblk->devblksize - offset;
+> >                 compressed = SQUASHFS_COMPRESSED(length);
+> >                 length = SQUASHFS_COMPRESSED_SIZE(length);
+> > -               index += 2;
+> > +               if (next_index)
+> > +                       *next_index = index + length + 2;
+> >
+> >                 TRACE("Block @ 0x%llx, %scompressed size %d\n", index,
+> > -                     compressed ? "" : "un", length);
+> > +                               compressed ? "" : "un", length);
+> > +
+> > +               if (length < 0 || length > output->length ||
+> > +                                       (index + length) > msblk->bytes_used)
+> > +                       goto block_release;
+> > +
+> > +               for (; bytes < length; b++) {
+> > +                       bh[b] = sb_getblk(sb, ++cur_index);
+> > +                       if (bh[b] == NULL)
+> > +                               goto block_release;
+> > +                       bytes += msblk->devblksize;
+> > +               }
+> > +               ll_rw_block(REQ_OP_READ, 0, b - 1, bh + 1);
+> >         }
+> > -       if (next_index)
+> > -               *next_index = index + length;
+> >
+> > -       res = squashfs_bio_read(sb, index, length, &bio, &offset);
+> > -       if (res)
+> > -               goto out;
+> > +       for (i = 0; i < b; i++) {
+> > +               wait_on_buffer(bh[i]);
+> > +               if (!buffer_uptodate(bh[i]))
+> > +                       goto block_release;
+> > +       }
+> >
+> >         if (compressed) {
+> > -               if (!msblk->stream) {
+> > -                       res = -EIO;
+> > -                       goto out_free_bio;
+> > -               }
+> > -               res = squashfs_decompress(msblk, bio, offset, length, output);
+> > +               if (!msblk->stream)
+> > +                       goto read_failure;
+> > +               length = squashfs_decompress(msblk, bh, b, offset, length,
+> > +                       output);
+> > +               if (length < 0)
+> > +                       goto read_failure;
+> >         } else {
+> > -               res = copy_bio_to_actor(bio, output, offset, length);
+> > +               /*
+> > +                * Block is uncompressed.
+> > +                */
+> > +               int in, pg_offset = 0;
+> > +               void *data = squashfs_first_page(output);
+> > +
+> > +               for (bytes = length; k < b; k++) {
+> > +                       in = min(bytes, msblk->devblksize - offset);
+> > +                       bytes -= in;
+> > +                       while (in) {
+> > +                               if (pg_offset == PAGE_SIZE) {
+> > +                                       data = squashfs_next_page(output);
+> > +                                       pg_offset = 0;
+> > +                               }
+> > +                               avail = min_t(int, in, PAGE_SIZE -
+> > +                                               pg_offset);
+> > +                               memcpy(data + pg_offset, bh[k]->b_data + offset,
+> > +                                               avail);
+> > +                               in -= avail;
+> > +                               pg_offset += avail;
+> > +                               offset += avail;
+> > +                       }
+> > +                       offset = 0;
+> > +                       put_bh(bh[k]);
+> > +               }
+> > +               squashfs_finish_page(output);
+> >         }
+> >
+> > -out_free_bio:
+> > -       bio_free_pages(bio);
+> > -       bio_put(bio);
+> > -out:
+> > -       if (res < 0)
+> > -               ERROR("Failed to read block 0x%llx: %d\n", index, res);
+> > +       kfree(bh);
+> > +       return length;
+> >
+> > -       return res;
+> > +block_release:
+> > +       for (; k < b; k++)
+> > +               put_bh(bh[k]);
+> > +
+> > +read_failure:
+> > +       ERROR("squashfs_read_data failed to read block 0x%llx\n",
+> > +                                       (unsigned long long) index);
+> > +       kfree(bh);
+> > +       return -EIO;
+> >  }
+> > --- a/fs/squashfs/decompressor.h~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/decompressor.h
+> > @@ -10,14 +10,13 @@
+> >   * decompressor.h
+> >   */
+> >
+> > -#include <linux/bio.h>
+> > -
+> >  struct squashfs_decompressor {
+> >         void    *(*init)(struct squashfs_sb_info *, void *);
+> >         void    *(*comp_opts)(struct squashfs_sb_info *, void *, int);
+> >         void    (*free)(void *);
+> >         int     (*decompress)(struct squashfs_sb_info *, void *,
+> > -               struct bio *, int, int, struct squashfs_page_actor *);
+> > +               struct buffer_head **, int, int, int,
+> > +               struct squashfs_page_actor *);
+> >         int     id;
+> >         char    *name;
+> >         int     supported;
+> > --- a/fs/squashfs/decompressor_multi.c~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/decompressor_multi.c
+> > @@ -6,7 +6,7 @@
+> >  #include <linux/types.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/slab.h>
+> > -#include <linux/bio.h>
+> > +#include <linux/buffer_head.h>
+> >  #include <linux/sched.h>
+> >  #include <linux/wait.h>
+> >  #include <linux/cpumask.h>
+> > @@ -180,15 +180,14 @@ wait:
+> >  }
+> >
+> >
+> > -int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
+> > -                       int offset, int length,
+> > -                       struct squashfs_page_actor *output)
+> > +int squashfs_decompress(struct squashfs_sb_info *msblk, struct buffer_head **bh,
+> > +       int b, int offset, int length, struct squashfs_page_actor *output)
+> >  {
+> >         int res;
+> >         struct squashfs_stream *stream = msblk->stream;
+> >         struct decomp_stream *decomp_stream = get_decomp_stream(msblk, stream);
+> >         res = msblk->decompressor->decompress(msblk, decomp_stream->stream,
+> > -               bio, offset, length, output);
+> > +               bh, b, offset, length, output);
+> >         put_decomp_stream(decomp_stream, stream);
+> >         if (res < 0)
+> >                 ERROR("%s decompression failed, data probably corrupt\n",
+> > --- a/fs/squashfs/decompressor_multi_percpu.c~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/decompressor_multi_percpu.c
+> > @@ -75,8 +75,8 @@ void squashfs_decompressor_destroy(struc
+> >         }
+> >  }
+> >
+> > -int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
+> > -       int offset, int length, struct squashfs_page_actor *output)
+> > +int squashfs_decompress(struct squashfs_sb_info *msblk, struct buffer_head **bh,
+> > +       int b, int offset, int length, struct squashfs_page_actor *output)
+> >  {
+> >         struct squashfs_stream *stream;
+> >         int res;
+> > @@ -84,7 +84,7 @@ int squashfs_decompress(struct squashfs_
+> >         local_lock(&msblk->stream->lock);
+> >         stream = this_cpu_ptr(msblk->stream);
+> >
+> > -       res = msblk->decompressor->decompress(msblk, stream->stream, bio,
+> > +       res = msblk->decompressor->decompress(msblk, stream->stream, bh, b,
+> >                                               offset, length, output);
+> >
+> >         local_unlock(&msblk->stream->lock);
+> > --- a/fs/squashfs/decompressor_single.c~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/decompressor_single.c
+> > @@ -7,7 +7,7 @@
+> >  #include <linux/types.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/slab.h>
+> > -#include <linux/bio.h>
+> > +#include <linux/buffer_head.h>
+> >
+> >  #include "squashfs_fs.h"
+> >  #include "squashfs_fs_sb.h"
+> > @@ -59,15 +59,14 @@ void squashfs_decompressor_destroy(struc
+> >         }
+> >  }
+> >
+> > -int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
+> > -                       int offset, int length,
+> > -                       struct squashfs_page_actor *output)
+> > +int squashfs_decompress(struct squashfs_sb_info *msblk, struct buffer_head **bh,
+> > +       int b, int offset, int length, struct squashfs_page_actor *output)
+> >  {
+> >         int res;
+> >         struct squashfs_stream *stream = msblk->stream;
+> >
+> >         mutex_lock(&stream->mutex);
+> > -       res = msblk->decompressor->decompress(msblk, stream->stream, bio,
+> > +       res = msblk->decompressor->decompress(msblk, stream->stream, bh, b,
+> >                 offset, length, output);
+> >         mutex_unlock(&stream->mutex);
+> >
+> > --- a/fs/squashfs/lz4_wrapper.c~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/lz4_wrapper.c
+> > @@ -4,7 +4,7 @@
+> >   * Phillip Lougher <phillip@squashfs.org.uk>
+> >   */
+> >
+> > -#include <linux/bio.h>
+> > +#include <linux/buffer_head.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/vmalloc.h>
+> > @@ -89,23 +89,20 @@ static void lz4_free(void *strm)
+> >
+> >
+> >  static int lz4_uncompress(struct squashfs_sb_info *msblk, void *strm,
+> > -       struct bio *bio, int offset, int length,
+> > +       struct buffer_head **bh, int b, int offset, int length,
+> >         struct squashfs_page_actor *output)
+> >  {
+> > -       struct bvec_iter_all iter_all = {};
+> > -       struct bio_vec *bvec = bvec_init_iter_all(&iter_all);
+> >         struct squashfs_lz4 *stream = strm;
+> >         void *buff = stream->input, *data;
+> > -       int bytes = length, res;
+> > +       int avail, i, bytes = length, res;
+> >
+> > -       while (bio_next_segment(bio, &iter_all)) {
+> > -               int avail = min(bytes, ((int)bvec->bv_len) - offset);
+> > -
+> > -               data = page_address(bvec->bv_page) + bvec->bv_offset;
+> > -               memcpy(buff, data + offset, avail);
+> > +       for (i = 0; i < b; i++) {
+> > +               avail = min(bytes, msblk->devblksize - offset);
+> > +               memcpy(buff, bh[i]->b_data + offset, avail);
+> >                 buff += avail;
+> >                 bytes -= avail;
+> >                 offset = 0;
+> > +               put_bh(bh[i]);
+> >         }
+> >
+> >         res = LZ4_decompress_safe(stream->input, stream->output,
+> > --- a/fs/squashfs/lzo_wrapper.c~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/lzo_wrapper.c
+> > @@ -9,7 +9,7 @@
+> >   */
+> >
+> >  #include <linux/mutex.h>
+> > -#include <linux/bio.h>
+> > +#include <linux/buffer_head.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/vmalloc.h>
+> >  #include <linux/lzo.h>
+> > @@ -63,24 +63,21 @@ static void lzo_free(void *strm)
+> >
+> >
+> >  static int lzo_uncompress(struct squashfs_sb_info *msblk, void *strm,
+> > -       struct bio *bio, int offset, int length,
+> > +       struct buffer_head **bh, int b, int offset, int length,
+> >         struct squashfs_page_actor *output)
+> >  {
+> > -       struct bvec_iter_all iter_all = {};
+> > -       struct bio_vec *bvec = bvec_init_iter_all(&iter_all);
+> >         struct squashfs_lzo *stream = strm;
+> >         void *buff = stream->input, *data;
+> > -       int bytes = length, res;
+> > +       int avail, i, bytes = length, res;
+> >         size_t out_len = output->length;
+> >
+> > -       while (bio_next_segment(bio, &iter_all)) {
+> > -               int avail = min(bytes, ((int)bvec->bv_len) - offset);
+> > -
+> > -               data = page_address(bvec->bv_page) + bvec->bv_offset;
+> > -               memcpy(buff, data + offset, avail);
+> > +       for (i = 0; i < b; i++) {
+> > +               avail = min(bytes, msblk->devblksize - offset);
+> > +               memcpy(buff, bh[i]->b_data + offset, avail);
+> >                 buff += avail;
+> >                 bytes -= avail;
+> >                 offset = 0;
+> > +               put_bh(bh[i]);
+> >         }
+> >
+> >         res = lzo1x_decompress_safe(stream->input, (size_t)length,
+> > --- a/fs/squashfs/squashfs.h~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/squashfs.h
+> > @@ -40,8 +40,8 @@ extern void *squashfs_decompressor_setup
+> >  /* decompressor_xxx.c */
+> >  extern void *squashfs_decompressor_create(struct squashfs_sb_info *, void *);
+> >  extern void squashfs_decompressor_destroy(struct squashfs_sb_info *);
+> > -extern int squashfs_decompress(struct squashfs_sb_info *, struct bio *,
+> > -                               int, int, struct squashfs_page_actor *);
+> > +extern int squashfs_decompress(struct squashfs_sb_info *, struct buffer_head **,
+> > +       int, int, int, struct squashfs_page_actor *);
+> >  extern int squashfs_max_decompressors(void);
+> >
+> >  /* export.c */
+> > --- a/fs/squashfs/xz_wrapper.c~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/xz_wrapper.c
+> > @@ -10,7 +10,7 @@
+> >
+> >
+> >  #include <linux/mutex.h>
+> > -#include <linux/bio.h>
+> > +#include <linux/buffer_head.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/xz.h>
+> >  #include <linux/bitops.h>
+> > @@ -117,12 +117,11 @@ static void squashfs_xz_free(void *strm)
+> >
+> >
+> >  static int squashfs_xz_uncompress(struct squashfs_sb_info *msblk, void *strm,
+> > -       struct bio *bio, int offset, int length,
+> > +       struct buffer_head **bh, int b, int offset, int length,
+> >         struct squashfs_page_actor *output)
+> >  {
+> > -       struct bvec_iter_all iter_all = {};
+> > -       struct bio_vec *bvec = bvec_init_iter_all(&iter_all);
+> > -       int total = 0, error = 0;
+> > +       enum xz_ret xz_err;
+> > +       int avail, total = 0, k = 0;
+> >         struct squashfs_xz *stream = strm;
+> >
+> >         xz_dec_reset(stream->state);
+> > @@ -132,23 +131,11 @@ static int squashfs_xz_uncompress(struct
+> >         stream->buf.out_size = PAGE_SIZE;
+> >         stream->buf.out = squashfs_first_page(output);
+> >
+> > -       for (;;) {
+> > -               enum xz_ret xz_err;
+> > -
+> > -               if (stream->buf.in_pos == stream->buf.in_size) {
+> > -                       const void *data;
+> > -                       int avail;
+> > -
+> > -                       if (!bio_next_segment(bio, &iter_all)) {
+> > -                               /* XZ_STREAM_END must be reached. */
+> > -                               error = -EIO;
+> > -                               break;
+> > -                       }
+> > -
+> > -                       avail = min(length, ((int)bvec->bv_len) - offset);
+> > -                       data = page_address(bvec->bv_page) + bvec->bv_offset;
+> > +       do {
+> > +               if (stream->buf.in_pos == stream->buf.in_size && k < b) {
+> > +                       avail = min(length, msblk->devblksize - offset);
+> >                         length -= avail;
+> > -                       stream->buf.in = data + offset;
+> > +                       stream->buf.in = bh[k]->b_data + offset;
+> >                         stream->buf.in_size = avail;
+> >                         stream->buf.in_pos = 0;
+> >                         offset = 0;
+> > @@ -163,17 +150,23 @@ static int squashfs_xz_uncompress(struct
+> >                 }
+> >
+> >                 xz_err = xz_dec_run(stream->state, &stream->buf);
+> > -               if (xz_err == XZ_STREAM_END)
+> > -                       break;
+> > -               if (xz_err != XZ_OK) {
+> > -                       error = -EIO;
+> > -                       break;
+> > -               }
+> > -       }
+> > +
+> > +               if (stream->buf.in_pos == stream->buf.in_size && k < b)
+> > +                       put_bh(bh[k++]);
+> > +       } while (xz_err == XZ_OK);
+> >
+> >         squashfs_finish_page(output);
+> >
+> > -       return error ? error : total + stream->buf.out_pos;
+> > +       if (xz_err != XZ_STREAM_END || k < b)
+> > +               goto out;
+> > +
+> > +       return total + stream->buf.out_pos;
+> > +
+> > +out:
+> > +       for (; k < b; k++)
+> > +               put_bh(bh[k]);
+> > +
+> > +       return -EIO;
+> >  }
+> >
+> >  const struct squashfs_decompressor squashfs_xz_comp_ops = {
+> > --- a/fs/squashfs/zlib_wrapper.c~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/zlib_wrapper.c
+> > @@ -10,7 +10,7 @@
+> >
+> >
+> >  #include <linux/mutex.h>
+> > -#include <linux/bio.h>
+> > +#include <linux/buffer_head.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/zlib.h>
+> >  #include <linux/vmalloc.h>
+> > @@ -50,35 +50,21 @@ static void zlib_free(void *strm)
+> >
+> >
+> >  static int zlib_uncompress(struct squashfs_sb_info *msblk, void *strm,
+> > -       struct bio *bio, int offset, int length,
+> > +       struct buffer_head **bh, int b, int offset, int length,
+> >         struct squashfs_page_actor *output)
+> >  {
+> > -       struct bvec_iter_all iter_all = {};
+> > -       struct bio_vec *bvec = bvec_init_iter_all(&iter_all);
+> > -       int zlib_init = 0, error = 0;
+> > +       int zlib_err, zlib_init = 0, k = 0;
+> >         z_stream *stream = strm;
+> >
+> >         stream->avail_out = PAGE_SIZE;
+> >         stream->next_out = squashfs_first_page(output);
+> >         stream->avail_in = 0;
+> >
+> > -       for (;;) {
+> > -               int zlib_err;
+> > -
+> > -               if (stream->avail_in == 0) {
+> > -                       const void *data;
+> > -                       int avail;
+> > -
+> > -                       if (!bio_next_segment(bio, &iter_all)) {
+> > -                               /* Z_STREAM_END must be reached. */
+> > -                               error = -EIO;
+> > -                               break;
+> > -                       }
+> > -
+> > -                       avail = min(length, ((int)bvec->bv_len) - offset);
+> > -                       data = page_address(bvec->bv_page) + bvec->bv_offset;
+> > +       do {
+> > +               if (stream->avail_in == 0 && k < b) {
+> > +                       int avail = min(length, msblk->devblksize - offset);
+> >                         length -= avail;
+> > -                       stream->next_in = data + offset;
+> > +                       stream->next_in = bh[k]->b_data + offset;
+> >                         stream->avail_in = avail;
+> >                         offset = 0;
+> >                 }
+> > @@ -92,28 +78,37 @@ static int zlib_uncompress(struct squash
+> >                 if (!zlib_init) {
+> >                         zlib_err = zlib_inflateInit(stream);
+> >                         if (zlib_err != Z_OK) {
+> > -                               error = -EIO;
+> > -                               break;
+> > +                               squashfs_finish_page(output);
+> > +                               goto out;
+> >                         }
+> >                         zlib_init = 1;
+> >                 }
+> >
+> >                 zlib_err = zlib_inflate(stream, Z_SYNC_FLUSH);
+> > -               if (zlib_err == Z_STREAM_END)
+> > -                       break;
+> > -               if (zlib_err != Z_OK) {
+> > -                       error = -EIO;
+> > -                       break;
+> > -               }
+> > -       }
+> > +
+> > +               if (stream->avail_in == 0 && k < b)
+> > +                       put_bh(bh[k++]);
+> > +       } while (zlib_err == Z_OK);
+> >
+> >         squashfs_finish_page(output);
+> >
+> > -       if (!error)
+> > -               if (zlib_inflateEnd(stream) != Z_OK)
+> > -                       error = -EIO;
+> > +       if (zlib_err != Z_STREAM_END)
+> > +               goto out;
+> > +
+> > +       zlib_err = zlib_inflateEnd(stream);
+> > +       if (zlib_err != Z_OK)
+> > +               goto out;
+> > +
+> > +       if (k < b)
+> > +               goto out;
+> > +
+> > +       return stream->total_out;
+> > +
+> > +out:
+> > +       for (; k < b; k++)
+> > +               put_bh(bh[k]);
+> >
+> > -       return error ? error : stream->total_out;
+> > +       return -EIO;
+> >  }
+> >
+> >  const struct squashfs_decompressor squashfs_zlib_comp_ops = {
+> > --- a/fs/squashfs/zstd_wrapper.c~revert-squashfs-migrate-from-ll_rw_block-usage-to-bio
+> > +++ a/fs/squashfs/zstd_wrapper.c
+> > @@ -9,7 +9,7 @@
+> >   */
+> >
+> >  #include <linux/mutex.h>
+> > -#include <linux/bio.h>
+> > +#include <linux/buffer_head.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/zstd.h>
+> >  #include <linux/vmalloc.h>
+> > @@ -59,44 +59,33 @@ static void zstd_free(void *strm)
+> >
+> >
+> >  static int zstd_uncompress(struct squashfs_sb_info *msblk, void *strm,
+> > -       struct bio *bio, int offset, int length,
+> > +       struct buffer_head **bh, int b, int offset, int length,
+> >         struct squashfs_page_actor *output)
+> >  {
+> >         struct workspace *wksp = strm;
+> >         ZSTD_DStream *stream;
+> >         size_t total_out = 0;
+> > -       int error = 0;
+> > +       size_t zstd_err;
+> > +       int k = 0;
+> >         ZSTD_inBuffer in_buf = { NULL, 0, 0 };
+> >         ZSTD_outBuffer out_buf = { NULL, 0, 0 };
+> > -       struct bvec_iter_all iter_all = {};
+> > -       struct bio_vec *bvec = bvec_init_iter_all(&iter_all);
+> >
+> >         stream = ZSTD_initDStream(wksp->window_size, wksp->mem, wksp->mem_size);
+> >
+> >         if (!stream) {
+> >                 ERROR("Failed to initialize zstd decompressor\n");
+> > -               return -EIO;
+> > +               goto out;
+> >         }
+> >
+> >         out_buf.size = PAGE_SIZE;
+> >         out_buf.dst = squashfs_first_page(output);
+> >
+> > -       for (;;) {
+> > -               size_t zstd_err;
+> > +       do {
+> > +               if (in_buf.pos == in_buf.size && k < b) {
+> > +                       int avail = min(length, msblk->devblksize - offset);
+> >
+> > -               if (in_buf.pos == in_buf.size) {
+> > -                       const void *data;
+> > -                       int avail;
+> > -
+> > -                       if (!bio_next_segment(bio, &iter_all)) {
+> > -                               error = -EIO;
+> > -                               break;
+> > -                       }
+> > -
+> > -                       avail = min(length, ((int)bvec->bv_len) - offset);
+> > -                       data = page_address(bvec->bv_page) + bvec->bv_offset;
+> >                         length -= avail;
+> > -                       in_buf.src = data + offset;
+> > +                       in_buf.src = bh[k]->b_data + offset;
+> >                         in_buf.size = avail;
+> >                         in_buf.pos = 0;
+> >                         offset = 0;
+> > @@ -108,8 +97,8 @@ static int zstd_uncompress(struct squash
+> >                                 /* Shouldn't run out of pages
+> >                                  * before stream is done.
+> >                                  */
+> > -                               error = -EIO;
+> > -                               break;
+> > +                               squashfs_finish_page(output);
+> > +                               goto out;
+> >                         }
+> >                         out_buf.pos = 0;
+> >                         out_buf.size = PAGE_SIZE;
+> > @@ -118,20 +107,29 @@ static int zstd_uncompress(struct squash
+> >                 total_out -= out_buf.pos;
+> >                 zstd_err = ZSTD_decompressStream(stream, &out_buf, &in_buf);
+> >                 total_out += out_buf.pos; /* add the additional data produced */
+> > -               if (zstd_err == 0)
+> > -                       break;
+> >
+> > -               if (ZSTD_isError(zstd_err)) {
+> > -                       ERROR("zstd decompression error: %d\n",
+> > -                                       (int)ZSTD_getErrorCode(zstd_err));
+> > -                       error = -EIO;
+> > -                       break;
+> > -               }
+> > -       }
+> > +               if (in_buf.pos == in_buf.size && k < b)
+> > +                       put_bh(bh[k++]);
+> > +       } while (zstd_err != 0 && !ZSTD_isError(zstd_err));
+> >
+> >         squashfs_finish_page(output);
+> >
+> > -       return error ? error : total_out;
+> > +       if (ZSTD_isError(zstd_err)) {
+> > +               ERROR("zstd decompression error: %d\n",
+> > +                               (int)ZSTD_getErrorCode(zstd_err));
+> > +               goto out;
+> > +       }
+> > +
+> > +       if (k < b)
+> > +               goto out;
+> > +
+> > +       return (int)total_out;
+> > +
+> > +out:
+> > +       for (; k < b; k++)
+> > +               put_bh(bh[k]);
+> > +
+> > +       return -EIO;
+> >  }
+> >
+> >  const struct squashfs_decompressor squashfs_zstd_comp_ops = {
+> > _
+> >
