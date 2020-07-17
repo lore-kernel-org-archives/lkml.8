@@ -2,134 +2,136 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B09B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEBEC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A251207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EBA92083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t0wYVFni"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LNz53P4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgGQNy2 (ORCPT
+        id S1726936AbgGQNyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38628 "EHLO
+        Fri, 17 Jul 2020 09:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
         with ESMTP id S1726090AbgGQNy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jul 2020 09:54:28 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE61C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:28 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b6so11183169wrs.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:28 -0700 (PDT)
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E758C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:29 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z15so11192473wrl.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mZfMUaA17R3icGqKhk35Xjzi+ajkOiQtF78NjxJlh+I=;
-        b=t0wYVFni3sQJhsteO0i7CsJzNHAU3gm1n7rUGL+qpWUY0zG24jq6mHGpCRztRtUnwf
-         IOYjz3GZfJtUIbcOJRAuKfwBpzFLJax83ltNTsLH9l3xREzmZgApSTfqhCn2FwFw16B/
-         BTKKJjo4LmfEa2aMP8au9ZoYNGN0u0qvyX4GRpJjQTaZ3G4fPh8Gs0mtNsjZBmG4cfkt
-         bntEjAaUGTb4QxIYeSdeXK4hSaily2WQ8SzEI1dLeee07rWeLCgM/AfajXQFM9kztgao
-         onKzun9gCP2HjWLxnRrX1L4F8cxFHTRi6fLr7mhJpi7EeL6wCz2tF8Xlyq6EgLdFVHEp
-         ZxIw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KGFwubHFzcLZa75OH2QfePfgNHp1yNFJ+5dMrYJqOBc=;
+        b=LNz53P4vPM8KOT6MgDZZt6XHv/VQQGMQknAGIrbSBeKWG/DqcokivbaP+KPiPKngn7
+         wyZfusiKq6wHj1H3NRXBVRRgwn92OZuXpoHoB4COPu/LYEEaBWueviYAs+8vaToPfiIX
+         +5mKXjsrA8Qsw9IgpOUyw9iRWhM+Pqy3/ulzSZ+J/rN5QrKtA3MWoVTDBIrTzip58nzf
+         78MvBYGi9ddoCLEP8NDJ/ry3KnnDNBWD0fJPc1A6756DJjCdCAN9/A1eh/zaUnKZmG3t
+         JvKl6C0QsjM25XYiStS/XegGKvdBvzcCc4VK+mXGcUrzHGlergl5K2K3pcv73mIL85xQ
+         Grzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mZfMUaA17R3icGqKhk35Xjzi+ajkOiQtF78NjxJlh+I=;
-        b=jZzwoZHgfRNLRXBmcLRI8LGnsN+0sADXy1xmYzqrZiWy8xquXZGF934e3+0NL/1Vld
-         isg6DHGXnA3U42mNbC0RXG1Sct2pTE5vZKrgKEcOWeJaPMJ11OUFW1qAshxe0NpA1ny8
-         7FfIbLmNWYNbXCwfL8BMVWFugmNV5favcX5Y8yZ9H7co8GnNSCm5i9RQBmQQk1fxGgYm
-         ye675n6OzjFfymDsA7au01E7JHInKuu+6elDmnmh5YjmDLgFEsEmRFrvSVkQIaKbMNyG
-         Rk3ithUcR6y1jIorthAa4cSl0jCk9K/Cc4p00xkKvxnfjJOplRMIWvBGJBPW9UPjUhlh
-         eC8w==
-X-Gm-Message-State: AOAM530966eIgFEX7MHwrsreDAdbmKzBc+zVimZC+gn3GOHQmGRpX3oc
-        o/FHwEeVQkPLUXdgifz+g32SdA==
-X-Google-Smtp-Source: ABdhPJxg8iuLuT9JBHIPwafmAtJ1s/7zlCngVDEQH1UApsQdxbmvzfQ6mI4P0ZzZNDSocgJDY6MAsA==
-X-Received: by 2002:a5d:4f0b:: with SMTP id c11mr10451087wru.344.1594994067074;
-        Fri, 17 Jul 2020 06:54:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KGFwubHFzcLZa75OH2QfePfgNHp1yNFJ+5dMrYJqOBc=;
+        b=jdYBkWX7jFZQ8wu+Ax62jDOXCuU9Zt891CvhV1LS6vW3GJtA3m8+xk2tv/KhUNk3CU
+         /+Qy2/MN/tM+WFohQjYWlpJgPZ+r6BeRluWoFunv4d6ccBQ+TdJWRk1fxvS5HnoGR9+d
+         01Y8FMOueP0xZ0Rvu+dHeL+a0ZRv//ezt6/6RZIUrnQsGfBWTKh8FRyazvDp/ucJ2c5m
+         b9MBZWDsxdpJMEZY+GTj7Acqy2oSzr960xypbABbGD9h8XUe/S02W1Tct6xN0U3TfMMn
+         r/w3lntgwVWE0P6FjbC7aeDRJyMt2CADc4l3rZoAO2MFk2BCEUgXbHx2g4AJMainz9Iy
+         9Meg==
+X-Gm-Message-State: AOAM5310XKmW5halQ7ArPGOZE7uwpUwF0eCTkKzwC6IjcBC23btk6khN
+        i4/itsO0Ob6zDW0lSKhYBCZ5S3KvGj2+UA==
+X-Google-Smtp-Source: ABdhPJyRBdalYFJ2SqW1AzaxyMFU8anZRL1EGLZqqUNS1odMSvESXDDxeCbz5xSprj+I0pStJ0HyWQ==
+X-Received: by 2002:adf:ee4d:: with SMTP id w13mr10311012wro.245.1594994068030;
+        Fri, 17 Jul 2020 06:54:28 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id w128sm16118356wmb.19.2020.07.17.06.54.25
+        by smtp.gmail.com with ESMTPSA id w128sm16118356wmb.19.2020.07.17.06.54.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 06:54:26 -0700 (PDT)
+        Fri, 17 Jul 2020 06:54:27 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 00/14] Rid W=1 warnings in SPI
-Date:   Fri, 17 Jul 2020 14:54:10 +0100
-Message-Id: <20200717135424.2442271-1-lee.jones@linaro.org>
+        linux-spi@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Martin Sperl <kernel@martin.sperl.org>
+Subject: [PATCH v2 01/14] spi: spi-loopback-test: Fix formatting issues in function header blocks
+Date:   Fri, 17 Jul 2020 14:54:11 +0100
+Message-Id: <20200717135424.2442271-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200717135424.2442271-1-lee.jones@linaro.org>
+References: <20200717135424.2442271-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+Kerneldoc function parameter descriptions must be in '@.*: ' format.
 
-After these patches are applied, the build system no longer
-complains about any W=0 nor W=1 level warnings in drivers/spi.
+Fixes the following W=1 kernel build warning(s):
 
-Hurrah!
+ drivers/spi/spi-loopback-test.c:897: warning: Function parameter or member 'spi' not described in 'spi_test_execute_msg'
+ drivers/spi/spi-loopback-test.c:897: warning: Function parameter or member 'test' not described in 'spi_test_execute_msg'
+ drivers/spi/spi-loopback-test.c:897: warning: Function parameter or member 'tx' not described in 'spi_test_execute_msg'
+ drivers/spi/spi-loopback-test.c:897: warning: Function parameter or member 'rx' not described in 'spi_test_execute_msg'
+ drivers/spi/spi-loopback-test.c:970: warning: Function parameter or member 'spi' not described in 'spi_test_run_test'
+ drivers/spi/spi-loopback-test.c:970: warning: Function parameter or member 'test' not described in 'spi_test_run_test'
+ drivers/spi/spi-loopback-test.c:970: warning: Function parameter or member 'tx' not described in 'spi_test_run_test'
+ drivers/spi/spi-loopback-test.c:970: warning: Function parameter or member 'rx' not described in 'spi_test_run_test'
 
-Changelog:
-
-v2
- - Add *-bys
- - Remove instead of use OF table
-
-Lee Jones (14):
-  spi: spi-loopback-test: Fix formatting issues in function header
-    blocks
-  spi: spi-bitbang: Demote obvious misuse of kerneldoc to standard
-    comment blocks
-  spi: spi-davinci: Fix a few kerneldoc misspellings and API slippages
-  spi: spi-ep93xx: Fix API slippage
-  spi: spi-meson-spifc: Fix misdocumenting of 'dev' in 'struct
-    meson_spifc'
-  spi: spi-meson-spicc: Remove set but never used variable 'data' from
-    meson_spicc_reset_fifo()
-  spi: spi-s3c64xx: Add missing entries for structs
-    's3c64xx_spi_dma_data' and 's3c64xx_spi_dma_data'
-  spi: spi-pl022: Provide missing struct attribute/function param docs
-  spi: spi-zynq-qspi: Add description for 2 missing
-    attributes/parameters
-  spi: spi-zynqmp-gqspi: Correct a couple of misspellings in kerneldoc
-  spi: spi-topcliff-pch: Add missing descriptions to 'struct
-    pch_spi_data'
-  spi: spi-at91-usart: Remove unused OF table 'struct of_device_id'
-  spi: spi-pxa2xx: Do not define 'struct acpi_device_id' when
-    !CONFIG_ACPI
-  spi: spi-amd: Do not define 'struct acpi_device_id' when !CONFIG_ACPI
-
- drivers/spi/spi-amd.c           |  2 ++
- drivers/spi/spi-at91-usart.c    |  7 -------
- drivers/spi/spi-bitbang.c       |  6 +++---
- drivers/spi/spi-davinci.c       |  7 ++++---
- drivers/spi/spi-ep93xx.c        |  2 +-
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Martin Sperl <kernel@martin.sperl.org>
+Cc: linux-spi@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
  drivers/spi/spi-loopback-test.c | 16 ++++++++--------
- drivers/spi/spi-meson-spicc.c   |  4 +---
- drivers/spi/spi-meson-spifc.c   |  2 +-
- drivers/spi/spi-pl022.c         | 12 +++++++++---
- drivers/spi/spi-pxa2xx.c        |  2 ++
- drivers/spi/spi-s3c64xx.c       |  9 ++++++++-
- drivers/spi/spi-topcliff-pch.c  |  8 ++++++--
- drivers/spi/spi-zynq-qspi.c     |  3 ++-
- drivers/spi/spi-zynqmp-gqspi.c  |  6 +++---
- 14 files changed, 50 insertions(+), 36 deletions(-)
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/spi/spi-loopback-test.c b/drivers/spi/spi-loopback-test.c
+index b6d79cd156fb5..9522d1b5786d5 100644
+--- a/drivers/spi/spi-loopback-test.c
++++ b/drivers/spi/spi-loopback-test.c
+@@ -885,10 +885,10 @@ static int spi_test_run_iter(struct spi_device *spi,
+ /**
+  * spi_test_execute_msg - default implementation to run a test
+  *
+- * spi: @spi_device on which to run the @spi_message
+- * test: the test to execute, which already contains @msg
+- * tx:   the tx buffer allocated for the test sequence
+- * rx:   the rx buffer allocated for the test sequence
++ * @spi: @spi_device on which to run the @spi_message
++ * @test: the test to execute, which already contains @msg
++ * @tx:   the tx buffer allocated for the test sequence
++ * @rx:   the rx buffer allocated for the test sequence
+  *
+  * Returns: error code of spi_sync as well as basic error checking
+  */
+@@ -957,10 +957,10 @@ EXPORT_SYMBOL_GPL(spi_test_execute_msg);
+  *                     including all the relevant iterations on:
+  *                     length and buffer alignment
+  *
+- * spi:  the spi_device to send the messages to
+- * test: the test which we need to execute
+- * tx:   the tx buffer allocated for the test sequence
+- * rx:   the rx buffer allocated for the test sequence
++ * @spi:  the spi_device to send the messages to
++ * @test: the test which we need to execute
++ * @tx:   the tx buffer allocated for the test sequence
++ * @rx:   the rx buffer allocated for the test sequence
+  *
+  * Returns: status code of spi_sync or other failures
+  */
 -- 
 2.25.1
 
