@@ -6,71 +6,68 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC802C433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A437DC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B130206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8494E206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594990152;
-	bh=px+ZOr5vGWOD2WY1nkEe6GE/wiHxQX4NyNmrfPIeG7M=;
+	s=default; t=1594990144;
+	bh=oveUsRxE3s8oXYlG1x5cDW1hlCLkwDVYSrD4BqPqSFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1P4R11Q4HLHagC+zXpFyti9K3mGK2Noa/Z7Kt81V0x2cJyjrRr/WuY3DMALhqXvjZ
-	 FSDRtQXDOu7hk8B3OlfH/RHljN6VY+XHAxwGsYE0iOGTs3Y0rfV27a+eD/Zyt/NqDI
-	 OpqCVa2UL91tDrf6DRNpGLr4zfCOmTYIrTpNARYk=
+	b=BtXfiLksq9EyM0YPsPRhrBba0XriKqcCR3YdfeoBknB/dLX+Mu9keI0APT1Bid9wF
+	 U1AOueQSFhurBdOtWY2oGJ7BdNheouwOm3sRr/3jRtsQ0UDCAlTimEZIMWm/4c+rqg
+	 BY9s+pyPRM2R0iNbFtsLdgjG0+gMljpK5VDj8zU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgGQMtL (ORCPT
+        id S1726698AbgGQMtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 08:49:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbgGQMs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:48:57 -0400
+        id S1726056AbgGQMsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 08:48:55 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C61E8207F5;
-        Fri, 17 Jul 2020 12:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B97620775;
+        Fri, 17 Jul 2020 12:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594990136;
-        bh=px+ZOr5vGWOD2WY1nkEe6GE/wiHxQX4NyNmrfPIeG7M=;
+        s=default; t=1594990135;
+        bh=oveUsRxE3s8oXYlG1x5cDW1hlCLkwDVYSrD4BqPqSFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iu1cvXPAlzooZ6RFLUKS78s8jwgqZAVrA9BXFIpWJcw6EZk29M3soHUxoO9YF+xom
-         D1Ol+o6cPd9LLJw7IXEVrnGoJn+zLuPKJoDYv87UVtj66Ld5C2ctFO/x4YfxsH1r75
-         jVHgRBdYRlt/EZ1YztBPKtyHMPJHD7Bcrh4N2rDA=
+        b=vpNpTMTzpGWGrYrt95Jx2Ul+jVSw/2ns4oGtH2ArDJV5sFfTY+L5ZG8UnreK2snAN
+         jsKvjS4RcW9BDL1vMCJdhHfiOqmoGRs4KZRZ8xip3FLibEEUvPlCRWONxoh+MZCWHP
+         bjZ0+sP08pROk+Uq7oCBCktebS+oGLFmDqD8bjVo=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1jwPnL-00Ccsm-AZ; Fri, 17 Jul 2020 13:48:55 +0100
+        id 1jwPnJ-00Ccsm-L7; Fri, 17 Jul 2020 13:48:53 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     Alexandre Torgue <alexandre.torgue@st.com>,
         Jason Cooper <jason@lakedaemon.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>
 Cc:     marex@denx.de, linux-arm-kernel@lists.infradead.org,
         linux-gpio@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
-        Joerg Roedel <joro@8bytes.org>, Andy Gross <agross@kernel.org>,
-        Todd Kjos <tkjos@google.com>, iommu@lists.linux-foundation.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v3 0/3] Allow for qcom-pdc to be loadable as a module
-Date:   Fri, 17 Jul 2020 13:48:45 +0100
-Message-Id: <159499001592.546505.10441967473975319808.b4-ty@kernel.org>
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/6] irqchip: Broadcom STB interrupt controller updates
+Date:   Fri, 17 Jul 2020 13:48:43 +0100
+Message-Id: <159499001591.546505.10421625541842835450.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200710231824.60699-1-john.stultz@linaro.org>
-References: <20200710231824.60699-1-john.stultz@linaro.org>
+In-Reply-To: <20200709223016.989-1-f.fainelli@gmail.com>
+References: <20200709223016.989-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, jason@lakedaemon.net, tglx@linutronix.de, john.stultz@linaro.org, linux-kernel@vger.kernel.org, marex@denx.de, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, joro@8bytes.org, agross@kernel.org, tkjos@google.com, iommu@lists.linux-foundation.org, linus.walleij@linaro.org, gregkh@linuxfoundation.org, mkshah@codeaurora.org, ilina@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, saravanak@google.com
+X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, jason@lakedaemon.net, tglx@linutronix.de, linux-kernel@vger.kernel.org, f.fainelli@gmail.com, marex@denx.de, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,28 +75,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 23:18:21 +0000, John Stultz wrote:
-> This patch series provides exports and config tweaks to allow
-> the qcom-pdc driver to be able to be configured as a permement
-> modules (particularlly useful for the Android Generic Kernel
-> Image efforts).
+On Thu, 9 Jul 2020 15:30:10 -0700, Florian Fainelli wrote:
+> This patch series contains a number of updates for Broadcom STB L2
+> interrupt controllers to enable them as wake-up interrupt controllers,
+> and add missing compatible strings that should be matched.
 > 
-> This was part of a larger patch series, to enable qcom_scm
-> driver to be a module as well, but I've split it out as there
-> are some outstanding objections I still need to address with
-> the follow-on patches, and wanted to see if progress could be
-> made on this subset of the series in the meantime.
+> Thanks!
+> 
+> Florian Fainelli (3):
+>   dt-bindings: interrupt-controller: Document Broadcom STB HIF L2
+>   dt-bindings: interrupt-controller: Document UPG auxiliary L2
+>   irqchip/brcmstb-l2: Match UPG_AUX_AON_INTR2 compatible
 > 
 > [...]
 
 Applied to irq/irqchip-5.9, thanks!
 
-[1/3] irqdomain: Export irq_domain_update_bus_token
-      commit: ce8cefa53c06cd98607125c52c91e74373a893a0
-[2/3] genirq: Export irq_chip_retrigger_hierarchy and irq_chip_set_vcpu_affinity_parent
-      commit: 96703f046c42f8ab15e735953cbfee572c717e2d
-[3/3] irqchip/qcom-pdc: Allow QCOM_PDC to be loadable as a permanent module
-      commit: 5ef7f1bbf9f56c5380c4d876655920cac92008e5
+[1/6] irqchip/bcm7120-l2: Set controller as wake-up source
+      commit: f4ccb74569aaf839c2830382e902dd50d564df55
+[2/6] irqchip/brcmstb-l2: Set controller as wake-up source
+      commit: c8d8d6fc478a30f3e8ea5372664dd2a808c4311e
+[3/6] dt-bindings: interrupt-controller: Document Broadcom STB HIF L2
+      commit: 90b06e2dc4d1e8e9311a5275d53f61d90b61efdc
+[4/6] irqchip/brcmstb-l2: Match HIF_SPI_INTR2 compatible
+      commit: 9ac793dc5c97691152818305974299604c67e110
+[5/6] dt-bindings: interrupt-controller: Document UPG auxiliary L2
+      commit: 03a7ac47c14c7ef50742a34b3cfba1a47a578a03
+[6/6] irqchip/brcmstb-l2: Match UPG_AUX_AON_INTR2 compatible
+      commit: 240e176a96187ee84e63626ca0d1aac92da503aa
 
 Cheers,
 
