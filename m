@@ -2,348 +2,382 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B26C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3FD520737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED82A20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jx/KtPBF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dJftu4V0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgGQRep (ORCPT
+        id S1727888AbgGQRfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:34:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23440 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727036AbgGQRen (ORCPT
+        Fri, 17 Jul 2020 13:35:13 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18643 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbgGQRfM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:34:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595007281;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xOYTxw3r0CL+8Q4MvBrIEj3j12LO6u9nDXOleZT0OGs=;
-        b=Jx/KtPBFnDBeeekF4V6MRauABFD7bnv3JgEkVZWzM660exIVruDS1dyWj+PfuQA8X5VfCD
-        SxHFAvrzOSbQENnrxP2JJjLpwapnirqZxtUdajqG8gur0Dykj7Ny+xphcrIKGMMLzOGZ4J
-        JpdPWSgRUjQVJU8OzOnyg4Xam+qth5Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-bYS67CsaOxOXfs0P_w4BaA-1; Fri, 17 Jul 2020 13:34:37 -0400
-X-MC-Unique: bYS67CsaOxOXfs0P_w4BaA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FB3C80183C;
-        Fri, 17 Jul 2020 17:34:35 +0000 (UTC)
-Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EE8846FECD;
-        Fri, 17 Jul 2020 17:34:25 +0000 (UTC)
-Subject: Re: [PATCH v5 04/15] vfio/type1: Report iommu nesting info to
- userspace
-To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        stefanha@gmail.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
- <1594552870-55687-5-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <2eb692fc-a399-8298-4b4b-68adb0357404@redhat.com>
-Date:   Fri, 17 Jul 2020 19:34:24 +0200
+        Fri, 17 Jul 2020 13:35:12 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f11e1430000>; Fri, 17 Jul 2020 10:34:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 17 Jul 2020 10:35:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 17 Jul 2020 10:35:11 -0700
+Received: from [10.2.163.115] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Jul
+ 2020 17:35:11 +0000
+Subject: Re: [RFC PATCH v3 00/18] Support for Tegra video capture from
+ external sensor
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <robh+dt@kernel.org>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+ <f03bdb89-df7c-e9e8-1512-d57e5d2332bf@xs4all.nl>
+ <d258fb56-14f6-a091-64e9-48294073c696@nvidia.com>
+ <458db01d-3c9c-1aec-0d28-edcbf0265aa4@xs4all.nl>
+ <5694f74a-be8e-7a95-1739-0a5fc9820597@nvidia.com>
+Message-ID: <9aa8be89-d181-2dca-36ca-ea118bd5b0a7@nvidia.com>
+Date:   Fri, 17 Jul 2020 10:38:36 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1594552870-55687-5-git-send-email-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <5694f74a-be8e-7a95-1739-0a5fc9820597@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595007299; bh=jRS5zSZgC3TTwtdDRmMxrzBxoJ0XApNVoiFAoBAhLKM=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=dJftu4V0swPYvE1qGrVkzdWjhx+x9DmnpPHlem2hK1eTQSMf/yPv1JCptYOwZUhGk
+         GqeMgkViJfwQwb6pnI8zpM72SJVtMxfufjEKOr4rT5nSZBeK1plz0k4EeC+WDoid+r
+         8TarzYzICZKATSjvKQZfKhHtEg563nBbpYQErJYOqBwDQwTWwckobcn8eS0LqRXB1J
+         yu8Zgn9M/whIGr015bwzgb1axvjLfagU92fxK3wB166v5hVXj2qWvpyTiFqbKOzvvA
+         Ubv6ooohwPUuCt8HV5QnpKKAEDGWeKPYvLFZDlqIWXYJ6iyO+YbaN3RlRh2lKSMRp8
+         5BhAOUDQswBFw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yi,
 
-On 7/12/20 1:20 PM, Liu Yi L wrote:
-> This patch exports iommu nesting capability info to user space through
-> VFIO. User space is expected to check this info for supported uAPIs (e.g.
-it is not only to check the supported uAPIS but rather to know which
-callbacks it must call upon vIOMMU events and which features are
-supported by the physical IOMMU.
-> PASID alloc/free, bind page table, and cache invalidation) and the vendor
-> specific format information for first level/stage page table that will be
-> bound to.
-> 
-> The nesting info is available only after the nesting iommu type is set
-> for a container.
-to NESTED type
- Current implementation imposes one limitation - one
-> nesting container should include at most one group. The philosophy of
-> vfio container is having all groups/devices within the container share
-> the same IOMMU context. When vSVA is enabled, one IOMMU context could
-> include one 2nd-level address space and multiple 1st-level address spaces.
-> While the 2nd-level address space is reasonably sharable by multiple groups
-> , blindly sharing 1st-level address spaces across all groups within the
-> container might instead break the guest expectation. In the future sub/
-> super container concept might be introduced to allow partial address space
-> sharing within an IOMMU context. But for now let's go with this restriction
-> by requiring singleton container for using nesting iommu features. Below
-> link has the related discussion about this decision.
-
-Maybe add a note about SMMU related changes spotted by Jean.
-> 
-> https://lkml.org/lkml/2020/5/15/1028
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
-> v4 -> v5:
-> *) address comments from Eric Auger.
-> *) return struct iommu_nesting_info for VFIO_IOMMU_TYPE1_INFO_CAP_NESTING as
->    cap is much "cheap", if needs extension in future, just define another cap.
->    https://lore.kernel.org/kvm/20200708132947.5b7ee954@x1.home/
-> 
-> v3 -> v4:
-> *) address comments against v3.
-> 
-> v1 -> v2:
-> *) added in v2
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 102 +++++++++++++++++++++++++++++++++++-----
->  include/uapi/linux/vfio.h       |  19 ++++++++
->  2 files changed, 109 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 3bd70ff..ed80104 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -62,18 +62,20 @@ MODULE_PARM_DESC(dma_entry_limit,
->  		 "Maximum number of user DMA mappings per container (65535).");
->  
->  struct vfio_iommu {
-> -	struct list_head	domain_list;
-> -	struct list_head	iova_list;
-> -	struct vfio_domain	*external_domain; /* domain for external user */
-> -	struct mutex		lock;
-> -	struct rb_root		dma_list;
-> -	struct blocking_notifier_head notifier;
-> -	unsigned int		dma_avail;
-> -	uint64_t		pgsize_bitmap;
-> -	bool			v2;
-> -	bool			nesting;
-> -	bool			dirty_page_tracking;
-> -	bool			pinned_page_dirty_scope;
-> +	struct list_head		domain_list;
-> +	struct list_head		iova_list;
-> +	/* domain for external user */
-> +	struct vfio_domain		*external_domain;
-> +	struct mutex			lock;
-> +	struct rb_root			dma_list;
-> +	struct blocking_notifier_head	notifier;
-> +	unsigned int			dma_avail;
-> +	uint64_t			pgsize_bitmap;
-> +	bool				v2;
-> +	bool				nesting;
-> +	bool				dirty_page_tracking;
-> +	bool				pinned_page_dirty_scope;
-> +	struct iommu_nesting_info	*nesting_info;
->  };
->  
->  struct vfio_domain {
-> @@ -130,6 +132,9 @@ struct vfio_regions {
->  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
->  					(!list_empty(&iommu->domain_list))
->  
-> +#define CONTAINER_HAS_DOMAIN(iommu)	(((iommu)->external_domain) || \
-> +					 (!list_empty(&(iommu)->domain_list)))
-> +
->  #define DIRTY_BITMAP_BYTES(n)	(ALIGN(n, BITS_PER_TYPE(u64)) / BITS_PER_BYTE)
->  
->  /*
-> @@ -1929,6 +1934,13 @@ static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
->  
->  	list_splice_tail(iova_copy, iova);
->  }
-> +
-> +static void vfio_iommu_release_nesting_info(struct vfio_iommu *iommu)
-> +{
-> +	kfree(iommu->nesting_info);
-> +	iommu->nesting_info = NULL;
-> +}
-> +
->  static int vfio_iommu_type1_attach_group(void *iommu_data,
->  					 struct iommu_group *iommu_group)
->  {
-> @@ -1959,6 +1971,12 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  		}
->  	}
->  
-> +	/* Nesting type container can include only one group */
-> +	if (iommu->nesting && CONTAINER_HAS_DOMAIN(iommu)) {
-> +		mutex_unlock(&iommu->lock);
-> +		return -EINVAL;
-> +	}
-> +
->  	group = kzalloc(sizeof(*group), GFP_KERNEL);
->  	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
->  	if (!group || !domain) {
-> @@ -2029,6 +2047,32 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	if (ret)
->  		goto out_domain;
->  
-> +	/* Nesting cap info is available only after attaching */
-> +	if (iommu->nesting) {
-> +		struct iommu_nesting_info tmp = { .size = 0, };
-> +
-> +		/* First get the size of vendor specific nesting info */
-> +		ret = iommu_domain_get_attr(domain->domain,
-> +					    DOMAIN_ATTR_NESTING,
-> +					    &tmp);
-> +		if (ret)
-> +			goto out_detach;
-> +
-> +		iommu->nesting_info = kzalloc(tmp.size, GFP_KERNEL);
-> +		if (!iommu->nesting_info) {
-> +			ret = -ENOMEM;
-> +			goto out_detach;
-> +		}
-> +
-> +		/* Now get the nesting info */
-> +		iommu->nesting_info->size = tmp.size;
-> +		ret = iommu_domain_get_attr(domain->domain,
-> +					    DOMAIN_ATTR_NESTING,
-> +					    iommu->nesting_info);
-> +		if (ret)
-> +			goto out_detach;
-> +	}
-> +
->  	/* Get aperture info */
->  	iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY, &geo);
->  
-> @@ -2138,6 +2182,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	return 0;
->  
->  out_detach:
-> +	vfio_iommu_release_nesting_info(iommu);
->  	vfio_iommu_detach_group(domain, group);
->  out_domain:
->  	iommu_domain_free(domain->domain);
-> @@ -2338,6 +2383,8 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
->  					vfio_iommu_unmap_unpin_all(iommu);
->  				else
->  					vfio_iommu_unmap_unpin_reaccount(iommu);
-> +
-> +				vfio_iommu_release_nesting_info(iommu);
->  			}
->  			iommu_domain_free(domain->domain);
->  			list_del(&domain->next);
-> @@ -2546,6 +2593,31 @@ static int vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
->  	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
->  }
->  
-> +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
-> +					   struct vfio_info_cap *caps)
-> +{
-> +	struct vfio_info_cap_header *header;
-> +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
-> +	size_t size;
-> +
-> +	size = offsetof(struct vfio_iommu_type1_info_cap_nesting, info) +
-> +		iommu->nesting_info->size;
-> +
-> +	header = vfio_info_cap_add(caps, size,
-> +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
-> +	if (IS_ERR(header))
-> +		return PTR_ERR(header);
-> +
-> +	nesting_cap = container_of(header,
-> +				   struct vfio_iommu_type1_info_cap_nesting,
-> +				   header);
-> +
-> +	memcpy(&nesting_cap->info, iommu->nesting_info,
-> +	       iommu->nesting_info->size);
-you must check whether nesting_info is non NULL before doing that.
-
-Besides I agree with Jean on the fact it may be better to not report the
-capability if nested is not supported.
-> +
-> +	return 0;
-> +}
-> +
->  static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
->  				     unsigned long arg)
->  {
-> @@ -2581,6 +2653,12 @@ static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
->  	if (!ret)
->  		ret = vfio_iommu_iova_build_caps(iommu, &caps);
->  
-> +	if (iommu->nesting_info) {
-> +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	mutex_unlock(&iommu->lock);
->  
->  	if (ret)
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 9204705..46a78af 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -14,6 +14,7 @@
->  
->  #include <linux/types.h>
->  #include <linux/ioctl.h>
-> +#include <linux/iommu.h>
->  
->  #define VFIO_API_VERSION	0
->  
-> @@ -1039,6 +1040,24 @@ struct vfio_iommu_type1_info_cap_migration {
->  	__u64	max_dirty_bitmap_size;		/* in bytes */
->  };
->  
-> +/*
-> + * The nesting capability allows to report the related capability
-> + * and info for nesting iommu type.
-> + *
-> + * The structures below define version 1 of this capability.
-> + *
-> + * User space selected VFIO_TYPE1_NESTING_IOMMU type should check
-> + * this capto get supported features.
-s/capto/capability to get
-> + *
-> + * @info: the nesting info provided by IOMMU driver.
-> + */
-> +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
-> +
-> +struct vfio_iommu_type1_info_cap_nesting {
-> +	struct	vfio_info_cap_header header;
-> +	struct iommu_nesting_info info;
-> +};
-> +
->  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
->  
->  /**
-> 
+On 7/17/20 10:23 AM, Sowjanya Komatineni wrote:
+>
+> On 7/17/20 10:08 AM, Hans Verkuil wrote:
+>> On 17/07/2020 18:34, Sowjanya Komatineni wrote:
+>>> On 7/17/20 3:54 AM, Hans Verkuil wrote:
+>>>> Hi Sowjanya,
+>>>>
+>>>> On 15/07/2020 06:20, Sowjanya Komatineni wrote:
+>>>>> This series adds support for video capture from external camera=20
+>>>>> sensor to
+>>>>> Tegra video driver.
+>>>>>
+>>>>> Jetson TX1 has camera expansion connector and supports custom=20
+>>>>> camera module
+>>>>> designed as per TX1 design specification.
+>>>>>
+>>>>> This series also enables camera capture support for Jetson Nano=20
+>>>>> which has
+>>>>> Raspberry PI camera header.
+>>>>>
+>>>>> This series is tested with IMX219 camera sensor.
+>>>>>
+>>>>> This series include,
+>>>>>
+>>>>> VI I2C related fixes
+>>>>> - Camera sensor programming happens through VI I2C which is on=20
+>>>>> host1x bus.
+>>>>> - These patches includes device tree and I2C driver fixes for VI I2C.
+>>>>>
+>>>>> Tegra video driver updates
+>>>>> - TPG Vs Non-TPG based on Kconfig
+>>>>> - Support for external sensor video capture based on device graph=20
+>>>>> from DT.
+>>>>> - Support for selection ioctl operations
+>>>>> - Tegra MIPI CSI pads calibration
+>>>>> - CSI T-CLK and T-HS settle time computation based on clock rates.
+>>>>>
+>>>>> Host1x driver updates
+>>>>> - Adds API to allow creating mipi device for specific device node.
+>>>>> - Splits MIPI pads calibrate start and waiting for calibration to=20
+>>>>> be done.
+>>>>>
+>>>>> Device tree updates
+>>>>> - Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson=20
+>>>>> TX1 DT.
+>>>>> - Enabled VI and CSI support in Jetson Nano DT.
+>>>> I'm doing a bit of stress testing with:
+>>>>
+>>>> while true; do v4l2-ctl --stream-mmap --stream-count=3D1; done
+>>>>
+>>>> and I see that the imx274 has often streaming failures:
+>>>>
+>>>> [=C2=A0 172.025144] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 179.025192] IMX274 8-001a: imx274_write_mbreg : i2c bulk write=
+=20
+>>>> failed, 3132 =3D 870 (2 bytes)
+>>>> [=C2=A0 179.033575] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 226.525378] IMX274 8-001a: imx274_write_mbreg : i2c bulk write=
+=20
+>>>> failed, 3130 =3D 878 (2 bytes)
+>>>> [=C2=A0 226.533761] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 227.029325] IMX274 8-001a: imx274_write_mbreg : i2c bulk write=
+=20
+>>>> failed, 30f6 =3D 107 (2 bytes)
+>>>> [=C2=A0 227.037758] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 247.025218] IMX274 8-001a: imx274_write_mbreg : i2c bulk write=
+=20
+>>>> failed, 30f6 =3D 107 (2 bytes)
+>>>> [=C2=A0 247.033658] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 293.025517] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 309.024727] IMX274 8-001a: imx274_write_mbreg : i2c bulk write=
+=20
+>>>> failed, 30e0 =3D 0 (2 bytes)
+>>>> [=C2=A0 309.032969] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 309.529506] IMX274 8-001a: imx274_write_mbreg : i2c bulk write=
+=20
+>>>> failed, 30f8 =3D 11d2 (3 bytes)
+>>>> [=C2=A0 309.538103] IMX274 8-001a: imx274_set_frame_length error =3D -=
+121
+>>>> [=C2=A0 309.544102] IMX274 8-001a: imx274_set_frame_interval error =3D=
+ -121
+>>>> [=C2=A0 309.550243] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 314.025561] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 329.025586] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 340.529567] IMX274 8-001a: imx274_write_mbreg : i2c bulk write=
+=20
+>>>> failed, 303a =3D f0c (2 bytes)
+>>>> [=C2=A0 340.538009] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 347.525627] IMX274 8-001a: imx274_write_mbreg : i2c bulk write=
+=20
+>>>> failed, 30f6 =3D 107 (2 bytes)
+>>>> [=C2=A0 347.534008] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 365.033640] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 437.525788] IMX274 8-001a: imx274_write_mbreg : i2c bulk write=
+=20
+>>>> failed, 3038 =3D c (2 bytes)
+>>>> [=C2=A0 437.533997] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 456.029780] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 472.025862] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 498.025861] IMX274 8-001a: s_stream failed
+>>>> [=C2=A0 500.025905] IMX274 8-001a: s_stream failed
+>>>>
+>>>> where v4l2-ctl returns:
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 VIDIOC_STREAMON returned -1 (Remote I/O e=
+rror)
+>>>>
+>>>> I don't see this with the imx219.
+>>>>
+>>>> I also see this occasionally:
+>>>>
+>>>> [Fri Jul 17 12:51:42 2020] video4linux video1: failed to run=20
+>>>> capture start kthread: -4
+>>>>
+>>>> Something is not stable here.
+>>>>
+>>>> Regards,
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+>>> Hi Hans,
+>>>
+>>> Running the same single frame continuous loop for more than 2 hours now
+>>> and I don't see any failure.
+>>>
+>>> Above failure shows i2c bulk writes to IMX274 failure due to which
+>>> s_stream also failed.
+>>>
+>>> Not sure if its due to i2c mux in the path to sensor on your module
+>>> causing some issue when there is more i2c write traffic as we are doing
+>>> single stream in continuous loop. Also IMX219 does not show on your=20
+>>> side
+>>> so something specific to IMX274 setup probably.
+>> I'll take a closer look next week. Good to know that it works fine=20
+>> for you.
+>>
+>>>
+>>> Regarding kthread_run failure where kthread_run() returned -EINTR=20
+>>> during
+>>> capture start thread, I always see this happen at the point of stopping
+>>> the continuous single stream while loop by pressing ctrl+c after few
+>>> loops of execution.
+>> Hmm, if this is normal behavior, then should this message be a debug=20
+>> message
+>> only? Or perhaps only show the message if the error code !=3D EINTR.
+>
+> I believe its good to still show this as its reported by kthread_run=20
+> -> kthread_create_on_node.
+>
+> But not sure in real usecase we will ever use while true like this and=20
+> we should use script to also break while loop along with v4l2-ctl=20
+> termination when ctrl-c terminate request happens.
+>
+Hi Hans, As this happens only during this type of case, I can update to=20
+show message only when error code !=3D EINTR.
 
 Thanks
 
-Eric
+Sowjanya
 
+>
+>>
+>> Regards,
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+>>
+>>> while true; do v4l2-ctl --stream-mmap --stream-count=3D1; done
+>>>
+>>> when we stop loop with ctrl+c, v4l2-ctl terminates but loop does not
+>>> terminate immediately and probably SIGKILLed=C2=A0 is seen prior to=20
+>>> complete.
+>>>
+>>> Using below can help to terminate loop as well when we stop ctrl-c and
+>>> with this I don't see any repro of EINTR error from kthread_run when=20
+>>> run
+>>> in infinite loop.
+>>>
+>>> while true; do ./v4l2-ctl --stream-mmap --stream-count=3D1 || break; do=
+ne
+>>>
+>>>
+>>>
+>>>>> Delta between patch versions:
+>>>>>
+>>>>> [v3]:=C2=A0=C2=A0=C2=A0 Includes v2 feedback
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Uses separate helper function for retrievin=
+g remote csi=20
+>>>>> subdevice
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 and source subdevice.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Added check for presence of subdevice ops s=
+et/get_selection
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- dropped vb2_queue_release from driver and u=
+sing
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vb2_video_unregister_device instead of=
+ video_unregister_device.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- video device register should happen in the =
+last after all video
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device related setup is done in the dr=
+iver. This is being=20
+>>>>> addressed
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 in below RFC patch. Once proper implem=
+entation of this is=20
+>>>>> available
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 will update Tegra video driver to use =
+split APIs and do all=20
+>>>>> setup
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 prior to device register. Added this a=
+s TODO in the driver.
+>>>>> https://www.spinics.net/lists/linux-media/msg172761.html
+>>>>>
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0Note:
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0Patch-0012 has compilation dependency on
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0https://patchwork.kernel.org/patch/11659521/
+>>>>>
+>>>>>
+>>>>> [v2]:=C2=A0=C2=A0=C2=A0 Includes below changes based on v1 feedback
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- dt-binding document and the driver update f=
+or device graph=20
+>>>>> to use
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 separate ports for sink endpoint and s=
+ource endpoint for csi.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Use data-lanes endpoint property for csi.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Update tegra_mipi_request() to take device =
+node pointer=20
+>>>>> argument
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rather than adding extra API.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Remove checking for clk pointer before clk_=
+disable.
+>>>>>
+>>>>>
+>>>>> Sowjanya Komatineni (18):
+>>>>> =C2=A0=C2=A0=C2=A0 dt-bindings: i2c: tegra: Document Tegra210 VI I2C =
+clocks and
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains
+>>>>> =C2=A0=C2=A0=C2=A0 arm64: tegra: Add missing clocks and power-domains=
+ to Tegra210=20
+>>>>> VI I2C
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Don't mark VI I2C as IRQ safe runtime =
+PM
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Remove NULL pointer check before
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_enable/disable/prepare/unprepare
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Fix the error path in tegra_i2c_runtim=
+e_resume
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Fix runtime resume to re-init VI I2C
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra21=
+0 vi i2c
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Fix channel format alignment
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Enable TPG based on kernel con=
+fig
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Update format lookup to offset=
+ based
+>>>>> =C2=A0=C2=A0=C2=A0 dt-bindings: tegra: Update VI and CSI bindings wit=
+h port info
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add support for external senso=
+r capture
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add support for selection ioct=
+l ops
+>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Update tegra_mipi_request() to =
+be node based
+>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Use readl_relaxed_poll_timeout =
+in=20
+>>>>> tegra_mipi_wait
+>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Split tegra_mipi_calibrate and =
+tegra_mipi_wait
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add CSI MIPI pads calibration
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Compute settle times based on =
+the clock rate
+>>>>>
+>>>>> =C2=A0=C2=A0 .../display/tegra/nvidia,tegra20-host1x.txt=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 92 ++-
+>>>>> =C2=A0=C2=A0 .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt | 19 =
++-
+>>>>> =C2=A0=C2=A0 arch/arm64/boot/dts/nvidia/tegra210.dtsi=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 6 +
+>>>>> =C2=A0=C2=A0 drivers/gpu/drm/tegra/dsi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 9 +-
+>>>>> =C2=A0=C2=A0 drivers/gpu/host1x/mipi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 37 +-
+>>>>> =C2=A0=C2=A0 drivers/i2c/busses/i2c-tegra.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 101 +--
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/Kconfig=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 7 +
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/csi.c=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 247 ++++++-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/csi.h=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 8 +
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/tegra210.c=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | 25 +-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/vi.c=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 793=20
+>>>>> +++++++++++++++++++--
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/vi.h=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 25 +-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/video.c=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 23 +-
+>>>>> =C2=A0=C2=A0 include/linux/host1x.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 +-
+>>>>> =C2=A0=C2=A0 14 files changed, 1242 insertions(+), 154 deletions(-)
+>>>>>
