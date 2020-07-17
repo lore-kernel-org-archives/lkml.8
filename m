@@ -7,104 +7,171 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1776DC433FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8A7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E776F2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA296207EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OReukPQJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nmzt8PjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgGQQ4a (ORCPT
+        id S1728018AbgGQQ4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38600 "EHLO
+        Fri, 17 Jul 2020 12:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbgGQQ4V (ORCPT
+        with ESMTP id S1727932AbgGQQ40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:56:21 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72CBAC0619D4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:21 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id j18so15953296wmi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:21 -0700 (PDT)
+        Fri, 17 Jul 2020 12:56:26 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C80C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:26 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id j18so15953814wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 09:56:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GLQMRZhAcaiH98XmK2nRHQzjjK7ctPbh4JOJq8lN/Zg=;
-        b=OReukPQJ3TIWhVLoquVjq+BeXvQT7cuSvvCcBFb0FD3W6ukPwpAZ3t+VKU2KQZDNJB
-         uLfyuKrtlK2hf/RZvQ5c7JhBXi0h3LBcNPrdTaNSCZkHimnuOwlFsIT3mlpVFlTjtA87
-         LGIALjoVGtVa8I28KhjT+QpMYCyq/cjQHimfvPZ2gkcdCnVDw6I+/8aL7CU1xb+MmNCP
-         BNCsb4Npwo3oQMvEUKza2FYOXeRL/MmcQNwHelQNf7luezRVKDgfbLJtjmQXtukgnet1
-         e2GKWxtR2vqawEYMOPl1xWO7n/UrcD9/dzfAKj8XSMioQbV9BRnBvA3cxsxOWW0gsbFx
-         tamg==
+        bh=hi8qOFeRWHwGMDY6+jyfXlM1WO1ALepxa0e5DvrODkg=;
+        b=nmzt8PjWuuA+nerSb1mT8vWtyIVb8t6x0n1ZjmUMFFq5nUEXV/oEb1bfhDKmv7k0gk
+         dtQ1sP5wZzl/3gBZtwoaFXnsSqL5WgnKFggNptn+AV63jQsWjtQsjjXKmjofXcKnyBeK
+         +xYZY5QnWpRDeoxkEJ0MMoq9xiPv+IeWZyiFTBI7SbJsWGxadSH9GsLR67Xm+oKbIeX0
+         nuo5jzYM6uzv7wSQh4Rt5ZujXneQexwZNsSvFxFcChybReyai11tjhaMjA7Y3vfXHdnh
+         B/JcJMpxxDj7ysxOz8ds+DYZBb/Db+Xp5fLrbSvEzRCE4IMRR84Zs0V7JjFubZ8mxKJR
+         C5fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GLQMRZhAcaiH98XmK2nRHQzjjK7ctPbh4JOJq8lN/Zg=;
-        b=O9l2s70o9FxvoW7O/Xo1LwEVtKfEak9rPSgHF6+Ak545cSYoq6bKLIq0cry+Li/zyb
-         JPN2PQvPvpzIQtozSuS4Uyj2FH4ftlOZo0OlFl2Pnctd3A5BQlGwZd5MzD+wjBhKvGQp
-         2qRD+HB963G9FMZX+HrEXk0qM/k7HuUmbROIu2GQf4QleBpCvqSRWuxp4OYJOK5XoJGR
-         eS0Ch6D90e+0LyjmZdJyZty0iy+COYW726he3vEFW9G58oX01wEsZE4IIZhyhtPXgoL5
-         U9J1vsQ2qQua/FCHlYV9wmmcjxUuvtYdfKOWvCHT3emKO4Gq87jB9u5kY3GN3H46PCQO
-         5WiQ==
-X-Gm-Message-State: AOAM531Kw3gaFOhutG3veg+4zKriVfTHrc09go5Rr0IFo+2gBkKLebXg
-        W4wo9e8Qi9KtilZXO2MxcRyAUw==
-X-Google-Smtp-Source: ABdhPJzKZPc/M/DK0dDuqHn74s8nL8cUXwq6RyA/6MudfzQXS/4hRjICV/HEuGEK7f9Kwc9NxblCwg==
-X-Received: by 2002:a1c:7413:: with SMTP id p19mr10064679wmc.60.1595004980122;
-        Fri, 17 Jul 2020 09:56:20 -0700 (PDT)
+        bh=hi8qOFeRWHwGMDY6+jyfXlM1WO1ALepxa0e5DvrODkg=;
+        b=TBW4V7aBq6ds+xdge8MGvfBQMN4JMOmvIzSXWHNXS3hc5JeXF5RdbAZKBenkfie2n+
+         IrGEvMnSmnRJw6S3nhHfdlHmJHsG6d4P1/D7Q4c4U06xTOvJ60nVdRk/9a9dbuUDr8yh
+         bVKo/QTWH5aDG5VE/xuLunOeI+4q+M8aLbldQC1Rab1VH0LJCb8D3UGoazeprgC0Cpf1
+         AT78TdBr1vESQMRny64TOMiUAcUQ8d2Hcy1ELqRhKqKRHtgx1jPNAyZJ7vOnOvizy6gs
+         ejMZlg1L/R5NqoIYT7odA5+BOX+hykQEXmJSByuwXdrjPrFHoHKpxtpacn2PiGq1lPjN
+         E/hw==
+X-Gm-Message-State: AOAM532rVZffn5gwnqw/g0QACgFXiiXsVvhJG7kL8gP3aIBkHMbS995G
+        wL3GLPgBgyCkC0QICA3ji9rOag==
+X-Google-Smtp-Source: ABdhPJzfenz4Z0x8Hd0PIQJbMUlVocb/ARj5dXJtbJSeh57vwPJPM27nkqMYuDx53bhXG4kR8UKxXQ==
+X-Received: by 2002:a1c:e90d:: with SMTP id q13mr10497071wmc.187.1595004985201;
+        Fri, 17 Jul 2020 09:56:25 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.19
+        by smtp.gmail.com with ESMTPSA id k4sm14941516wrp.86.2020.07.17.09.56.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 09:56:19 -0700 (PDT)
+        Fri, 17 Jul 2020 09:56:24 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Denis Ciocca <denis.ciocca@st.com>
-Subject: [PATCH 19/30] iio: imu: st_lsm6dsx: st_lsm6dsx: Reorder 'inline' declaration
-Date:   Fri, 17 Jul 2020 17:55:27 +0100
-Message-Id: <20200717165538.3275050-20-lee.jones@linaro.org>
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Subject: [PATCH 24/30] iio: imu: inv_mpu6050: inv_mpu_core: Demote obvious misuse of kerneldoc to standard comment blocks
+Date:   Fri, 17 Jul 2020 17:55:32 +0100
+Message-Id: <20200717165538.3275050-25-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717165538.3275050-1-lee.jones@linaro.org>
 References: <20200717165538.3275050-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+No attempt has been made to document any of the demoted functions here.
+
 Fixes the following W=1 kernel build warning(s):
 
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h:487:1: warning: ‘inline’ is not at beginning of declaration [-Wold-style-declaration]
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h:497:44: warning: ‘st_lsm6dsx_accel_ext_info’ defined but not used [-Wunused-const-variable=]
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:444: warning: Function parameter or member 'st' not described in 'inv_mpu6050_set_lpf_regs'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:444: warning: Function parameter or member 'val' not described in 'inv_mpu6050_set_lpf_regs'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:480: warning: Function parameter or member 'indio_dev' not described in 'inv_mpu6050_init_config'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:862: warning: Function parameter or member 'st' not described in 'inv_mpu6050_set_lpf'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:862: warning: Function parameter or member 'rate' not described in 'inv_mpu6050_set_lpf'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:893: warning: Function parameter or member 'dev' not described in 'inv_mpu6050_fifo_rate_store'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:893: warning: Function parameter or member 'attr' not described in 'inv_mpu6050_fifo_rate_store'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:893: warning: Function parameter or member 'buf' not described in 'inv_mpu6050_fifo_rate_store'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:893: warning: Function parameter or member 'count' not described in 'inv_mpu6050_fifo_rate_store'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:954: warning: Function parameter or member 'dev' not described in 'inv_fifo_rate_show'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:954: warning: Function parameter or member 'attr' not described in 'inv_fifo_rate_show'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:954: warning: Function parameter or member 'buf' not described in 'inv_fifo_rate_show'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:975: warning: Function parameter or member 'dev' not described in 'inv_attr_show'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:975: warning: Function parameter or member 'attr' not described in 'inv_attr_show'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:975: warning: Function parameter or member 'buf' not described in 'inv_attr_show'
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:1282: warning: Function parameter or member 'st' not described in 'inv_check_and_setup_chip'
 
-Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-Cc: Denis Ciocca <denis.ciocca@st.com>
+Cc: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index b56df409ed0fa..3e47a9287938b 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -484,7 +484,7 @@ st_lsm6dsx_write_locked(struct st_lsm6dsx_hw *hw, unsigned int addr,
- 	return err;
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+index 4d604fe842e5d..f6b2b2e8f1010 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -433,7 +433,7 @@ static int inv_mpu6050_set_gyro_fsr(struct inv_mpu6050_state *st,
+ 	return regmap_write(st->map, st->reg->gyro_config, data);
  }
  
--static const inline struct iio_mount_matrix *
-+static inline const struct iio_mount_matrix *
- st_lsm6dsx_get_mount_matrix(const struct iio_dev *iio_dev,
- 			    const struct iio_chan_spec *chan)
- {
+-/**
++/*
+  *  inv_mpu6050_set_lpf_regs() - set low pass filter registers, chip dependent
+  *
+  *  MPU60xx/MPU9150 use only 1 register for accelerometer + gyroscope
+@@ -467,7 +467,7 @@ static int inv_mpu6050_set_lpf_regs(struct inv_mpu6050_state *st,
+ 	return regmap_write(st->map, st->reg->accel_lpf, val);
+ }
+ 
+-/**
++/*
+  *  inv_mpu6050_init_config() - Initialize hardware, disable FIFO.
+  *
+  *  Initial configuration:
+@@ -847,7 +847,7 @@ static int inv_mpu6050_write_raw(struct iio_dev *indio_dev,
+ 	return result;
+ }
+ 
+-/**
++/*
+  *  inv_mpu6050_set_lpf() - set low pass filer based on fifo rate.
+  *
+  *                  Based on the Nyquist principle, the bandwidth of the low
+@@ -884,7 +884,7 @@ static int inv_mpu6050_set_lpf(struct inv_mpu6050_state *st, int rate)
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * inv_mpu6050_fifo_rate_store() - Set fifo rate.
+  */
+ static ssize_t
+@@ -945,7 +945,7 @@ inv_mpu6050_fifo_rate_store(struct device *dev, struct device_attribute *attr,
+ 	return count;
+ }
+ 
+-/**
++/*
+  * inv_fifo_rate_show() - Get the current sampling rate.
+  */
+ static ssize_t
+@@ -962,7 +962,7 @@ inv_fifo_rate_show(struct device *dev, struct device_attribute *attr,
+ 	return scnprintf(buf, PAGE_SIZE, "%u\n", fifo_rate);
+ }
+ 
+-/**
++/*
+  * inv_attr_show() - calling this function will show current
+  *                    parameters.
+  *
+@@ -1275,7 +1275,7 @@ static const struct iio_info mpu_info = {
+ 	.debugfs_reg_access = &inv_mpu6050_reg_access,
+ };
+ 
+-/**
++/*
+  *  inv_check_and_setup_chip() - check and setup chip.
+  */
+ static int inv_check_and_setup_chip(struct inv_mpu6050_state *st)
 -- 
 2.25.1
 
