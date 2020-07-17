@@ -2,143 +2,186 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD07C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35F8C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E85F12064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E2822064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="i4K38OYR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cVMA9O9q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgGQTTM (ORCPT
+        id S1728531AbgGQTTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:19:12 -0400
-Received: from mout.web.de ([212.227.15.4]:36047 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727999AbgGQTTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:19:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1595013519;
-        bh=KBBYg5jKhYtdb8avxOVNPB2JOheyh48NTKrDB6hfXp8=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=i4K38OYROzdresS/VIQlsE8MsV7TkvZaDXtyF+GYtmWM55qFfv4vV2POvJIrWUEzf
-         bDHOIILEuRXOp5AYWHA+RMhgxndCagyVeYpOlrEuqWSTToTJ2vkRJ98Ni4GI7bBhgg
-         cTCKrjOIcAfRPODLjYS73GjX2oLnO2UV4adN+uMc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.15.38]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MSJH1-1kPHAy0k2t-00TSSd; Fri, 17
- Jul 2020 21:18:39 +0200
-To:     Wang Hai <wanghai38@huawei.com>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Vishal Kulkarni <vishal@chelsio.com>,
-        Santosh Raspatur <santosh@chelsio.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Divy Le Ray <divy@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] net: cxgb3: add missed destroy_workqueue in cxgb3 probe
- failure
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <486de368-03d5-e168-038a-ae1506616703@web.de>
-Date:   Fri, 17 Jul 2020 21:18:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 17 Jul 2020 15:19:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59494 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728103AbgGQTTy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 15:19:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595013592;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Du0bkJJuZiGwcsmmaS0iHcsLc6G/grfEoCnxuV98a2A=;
+        b=cVMA9O9qwqHTlXzQDlGJVKukO12bNaB5vECaAfRW4BNVIHX0N8cAgWEl5BKQkqQAmo4liZ
+        rLDoLycslYMZVjyzIf6hRsrjvz5T2B2ocYZote11NIK1OVuGCHuBLVNlV2uD1wUQRjQpy2
+        Fl/ba4KSQZ+rb6V9eYAfH+Zzv1E/Iiw=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-380-Y3avddQfMs2FNuvtipfgOg-1; Fri, 17 Jul 2020 15:19:49 -0400
+X-MC-Unique: Y3avddQfMs2FNuvtipfgOg-1
+Received: by mail-qv1-f69.google.com with SMTP id l12so6103569qvu.21
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 12:19:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=Du0bkJJuZiGwcsmmaS0iHcsLc6G/grfEoCnxuV98a2A=;
+        b=UKyd+icAPd31VoH5xA58YZrum5K/d4JjZVf/9JVeCs+IhigemtLHYNgg7xowREY+si
+         WM7oZeedH95jXSNIuC+gj+tFRR1f2Wc9sn3E3dmdwxmwMofN+3gp9DhIzgXcwjen97QX
+         3lbHqFZVwOjx3MgHsHtPBWZrdlnCBib22ze2ufCTpEVheNwqPEjsP23zz9PQ106qQR18
+         LrotXymH+/TK9S22dQs95r5PZMmayKHfs/ABpJA53GZ8ayILUcIbqdwX7YddtWpromcE
+         KDgF7fDI0JZ9qpHdnTUHyWKaJuH19braUGkU2ZAujEscMKLc0Z6lnbyY5qkTYftbOucE
+         g6Qg==
+X-Gm-Message-State: AOAM532+btHhbdDsdzIcK/IBWsquZjzbb2O+twP2MJuAHZnvPlZ+Sw7T
+        8zL0lAYBBLdPvgPnS45OVOM8sjMhttSzBOLXMCGEMc8QpNI3SHbKvIDeY9wM79cSDWYBx1fRM4H
+        1rLgmuf5YRrzRsnPqIMLPGPUm
+X-Received: by 2002:ac8:2a3d:: with SMTP id k58mr11996370qtk.265.1595013589360;
+        Fri, 17 Jul 2020 12:19:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyT0/KR3PO3o3z4CMqcsVwsJeewSBzu5ESSc3mYOvNJKWnWh8PK7bA6UyC//9un04gWCMUW8A==
+X-Received: by 2002:ac8:2a3d:: with SMTP id k58mr11996348qtk.265.1595013589062;
+        Fri, 17 Jul 2020 12:19:49 -0700 (PDT)
+Received: from Whitewolf.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
+        by smtp.gmail.com with ESMTPSA id f41sm12423841qtk.55.2020.07.17.12.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 12:19:48 -0700 (PDT)
+Message-ID: <7bc7287b5cbac6535765b3490bd55da1e1cb4d07.camel@redhat.com>
+Subject: Re: [PATCH] RFC: ACPI / OSI: remove workarounds for hybrid graphics
+ laptops
+From:   Lyude Paul <lyude@redhat.com>
+Reply-To: lyude@redhat.com
+To:     Karol Herbst <kherbst@redhat.com>, linux-acpi@vger.kernel.org
+Cc:     Alex Hung <alex.hung@canonical.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Date:   Fri, 17 Jul 2020 15:19:47 -0400
+In-Reply-To: <20200717190547.648604-1-kherbst@redhat.com>
+References: <20200717190547.648604-1-kherbst@redhat.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:yBTQ0ySiaUEGe/ZHc137uVzBVhYTmf430PoxbMtU+PpDRYoqryj
- n+cJUWq0GzP7EMVMv2w22n9DbFDRkmcuMz1kbKDfxlUMR0UqIoUbrgBnDSinCcfWXn9Bnj+
- kpnb5fJxtbYyCf5cRwzAsFKMRj+k4xAOZVdCJJnIfM2wy4sZnHlHNR/QBHnoLzfylMPQdvt
- UO39Y1o2tNLZEfnSZyFmw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:67j5l7m4e8c=:+H9RNahoLba1R4Yr+3gGQ9
- IYQDT+zPsGLWxfPvbW8w+BKj5htZiYZmD3g5rMGlYx59dwg5v4xPje6eAQDngA4DuiYF7M0K2
- 8GCG/Jv0UaFQCZzVZtoMroG+u0Dc+jCS/00NViclPenltDQdXQA0VVnFnI04BiuIsgpraV5AI
- U9nxlHJDXbVIk86hhqSQlPWfE9ymQfXUy8LXbu9qtX6wtoQSi28lZuhqL0vbBNdS7L3hGL5RW
- i3wbp61AiC9f4/mHXY9pdDX/x82GhRAysTHfonWqi2109IMZw3hjuyB003rkG1MzgmI9K9z4i
- m20IkcEMw4V4zFcIOhYYU53Mc4oHcg6xSE27nnwqoe/S33+DcWPN4RYrryw714EDorT3O+A2Y
- GRQW3L+RRoxXnrF64y2Hj/rEpD39G14VO/StvljKf7c99mbXIOxy5OlDoNJemktHZmyScX+X2
- B2omV6ZV1ZQ816IkYeS4qHjCGtYmv9hgWPCXE8Ltm3n/f4uh3Dpm2c3y4i9jdbM+1r6lyMDcH
- dK/mAJpdMIsfZICy/9AXegI0Vl5LgPwV9AY8VJ8jqeFhwIXQcQcCzvIrt1LqvonUSn3696pPV
- BRUgT67VGL2Z5Pwt8d8IUuBWXCmv76zc3yaBZ5FjfHEwaL3ZclwRWQJEyQaFpc79Fg2CKkFIw
- ED4sAKkWXF2ozXbbsJ4hRqJD0kYQqqqJbqv9GW4VWxXo5h5gd8ONEzwO1uBwyeb8YKScHsIjV
- IJ2ZMUcI6KNOtJyZ4Rx25kcXW+BwuLvfM0dZ96vZsxusqX3gsByHGo08AHe5bwGNLIi4e3KPP
- 8WL20OV3wWNFucnR2HH8asX9kVwnsqjkMqKoMLFNhb9aKC8X/eRlHLUanKhyDLV7a6+TU95dI
- kQX0WyLS0xiHTxNYCNZwGhJ+vqBAmELa2In6Nl11/AaXO6CpxuFVUCB8MiJPXDV2oLJYK5+Un
- n1UHPgpZqwHwsH6AJrwDrLhtR6pHlEWOBBphxnTEli18Inm5bwFLlXEiZoByag4S0e/48rDWi
- NaYPSrm0VAQrEhq56J7RwdVKTY9D+Mptol0EKV+g7u6gIImgLAKs7oVY9fezAoWNztelYv2em
- fKlWF0Vjywm6u9DTVEennl1BmfMCpFlTKR7IZP3Tg4/TbvqbzsYlfhVWoBDvel2AyRwMxkP4R
- /e780DwdocDusbZDVf7YsBdyxd3LdPa3a9DFw6QMuZLe9zWxJkcFmS6QOdPzCB9LYVRq+m4qy
- zO+AocVzIFBZ6N9yI3P0VjPqS7Ozb/56h+1jr0g==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Add the missed calls to fix it.
+Hey-just wanted to give some additional context I think Karol missed here. It
+should be noted that since the last time me and Karol looked at reverting these,
+we've already fixed all of the nasty runtime PM (e.g. runtime D3) issues we
+could find. This includes the infamous one that was affecting nearly all of the
+nvidia pascal (+ some maxwell 2 and turing, it ended up being that the intel PCI
+bridge was the culprit) machines on the market. Right now I'm only aware of one
+major issue we have, which is the result of a recent PCI core change that we're
+already in the process of getting reverted:
 
-You propose to add only a single function call.
+https://lkml.org/lkml/2020/7/16/1288
 
+[if you do any testing of runtime PM, you may need to temporarily revert this
+patch to make things work]
 
-=E2=80=A6
-> +++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-> @@ -3407,6 +3407,7 @@ static int init_one(struct pci_dev *pdev, const st=
-ruct pci_device_id *ent)
->  out_disable_device:
->  	pci_disable_device(pdev);
->  out:
-> +	destroy_workqueue(cxgb3_wq);
->  	return err;
->  }
+So, really-runtime D3 is very much supported with nouveau. And we've put a _lot_
+of effort into making sure of that, and are happy to fix any issues you're still
+finding. It also works just fine in AMD, but if you're finding systems it
+doesn't work with amd on then please let the amdgpu folks know upstream so they
+can properly fix it. Otherwise, these ACPI workarounds are likely making the
+power consumption on these systems (for nouveau, amdgpu, and radeon)
+dramatically higher then it needs to be.
 
-I suggest to adjust also the usage of the label =E2=80=9Cout=E2=80=9D acco=
-rdingly.
+On Fri, 2020-07-17 at 21:05 +0200, Karol Herbst wrote:
+> It's hard to figure out what systems are actually affected and right now I
+> don't see a good way of removing those...
+> 
+> But I'd like to see thos getting removed and drivers fixed instead (which
+> happened at least for nouveau).
+> 
+> And as mentioned before, I prefer people working on fixing issues instead
+> of spending time to add firmware level workarounds which are hard to know
+> to which systems they apply to, hard to remove and basically a big huge
+> pain to work with.
+> In the end I have no idea how to even figure out what systems are affected
+> and which not by this, so I have no idea how to even verify we can safely
+> remove this (which just means those are impossible to remove unless we risk
+> breaking systems, which again makes those supper annoying to deal with).
+> 
+> Also from the comments it's hard to get what those bits really do. Are they
+> just preventing runtime pm or do the devices are powered down when booting?
+> I am sure it's the former, still...
+> 
+> Please, don't do this again.
+> 
+> For now, those workaround prevent power savings on systems those workaround
+> applies to, which might be any so those should get removed asap and if
+> new issues arrise removing those please do a proper bug report and we can
+> look into it and come up with a proper fix (and keep this patch out until
+> we resolve all of those).
+> 
+> Signed-off-by: Karol Herbst <kherbst@redhat.com>
+> CC: Alex Hung <alex.hung@canonical.com>
+> CC: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> CC: Len Brown <lenb@kernel.org>
+> CC: Lyude Paul <lyude@redhat.com>
+> CC: linux-kernel@vger.kernel.org
+> CC: dri-devel@lists.freedesktop.org
+> CC: nouveau@lists.freedesktop.org
+> ---
+>  drivers/acpi/osi.c | 24 ------------------------
+>  1 file changed, 24 deletions(-)
+> 
+> diff --git a/drivers/acpi/osi.c b/drivers/acpi/osi.c
+> index 9f68538091384..d4405e1ca9b97 100644
+> --- a/drivers/acpi/osi.c
+> +++ b/drivers/acpi/osi.c
+> @@ -44,30 +44,6 @@ osi_setup_entries[OSI_STRING_ENTRIES_MAX] __initdata = {
+>  	{"Processor Device", true},
+>  	{"3.0 _SCP Extensions", true},
+>  	{"Processor Aggregator Device", true},
+> -	/*
+> -	 * Linux-Dell-Video is used by BIOS to disable RTD3 for NVidia graphics
+> -	 * cards as RTD3 is not supported by drivers now.  Systems with NVidia
+> -	 * cards will hang without RTD3 disabled.
+> -	 *
+> -	 * Once NVidia drivers officially support RTD3, this _OSI strings can
+> -	 * be removed if both new and old graphics cards are supported.
+> -	 */
+> -	{"Linux-Dell-Video", true},
+> -	/*
+> -	 * Linux-Lenovo-NV-HDMI-Audio is used by BIOS to power on NVidia's HDMI
+> -	 * audio device which is turned off for power-saving in Windows OS.
+> -	 * This power management feature observed on some Lenovo Thinkpad
+> -	 * systems which will not be able to output audio via HDMI without
+> -	 * a BIOS workaround.
+> -	 */
+> -	{"Linux-Lenovo-NV-HDMI-Audio", true},
+> -	/*
+> -	 * Linux-HPI-Hybrid-Graphics is used by BIOS to enable dGPU to
+> -	 * output video directly to external monitors on HP Inc. mobile
+> -	 * workstations as Nvidia and AMD VGA drivers provide limited
+> -	 * hybrid graphics supports.
+> -	 */
+> -	{"Linux-HPI-Hybrid-Graphics", true},
+>  };
+>  
+>  static u32 acpi_osi_handler(acpi_string interface, u32 supported)
 
-Regards,
-Markus
