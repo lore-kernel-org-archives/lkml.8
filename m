@@ -2,150 +2,182 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1C6C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36C5E20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A86F20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:19:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sf/T5sXR"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="WJr5l5M9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgGQNSE (ORCPT
+        id S1726465AbgGQNTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32962 "EHLO
+        Fri, 17 Jul 2020 09:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgGQNSD (ORCPT
+        with ESMTP id S1726293AbgGQNTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:18:03 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBCE7C08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:18:02 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id j11so12571842ljo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:18:02 -0700 (PDT)
+        Fri, 17 Jul 2020 09:19:07 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1064DC08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:19:07 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e8so12632635ljb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YM/u3gjvM4q2JWx7UhekKDRsr2AbTo4qfrXy3xVIS9k=;
-        b=sf/T5sXRhkN8YEk+EOhFcH7el1N/kDRdyYraixUm9LORleyvBRdP8ykec29CpkXDZ0
-         XdWo4qDS1Eb3DhdzVwzo3n7xUQVm7CNj//prYhxniDyOhmZgnDxQq2loH/Q1zmNqNpw1
-         lB8Qmjes7B8dWb1K+U5rZm9CwsCECVIpnOt3TWQ8DL4f4muqq9Bsc8cf06KfSeuQYX50
-         2IbpMhKO+GSpgked7oB5bNy8GmbF/7mxtbN+DMyEhnj92oIcfQPJ53kNUUSYjZMYWn8V
-         FX0kTIWd/AuJ37dNa7Ivap7Qnqg8eIGtZoFy5rLiFsUVU4H+aiD9jnatv4aor2jp97pk
-         MGKw==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=npEG3Q8JCnzZnur7Cq6JNk21xogenaqhRA7YjsM9ezY=;
+        b=WJr5l5M97ciW2c/gjJQoeEJGmETPzM7Qr5IRBgUn1YBScg98hUkSzHSeJTg3OUPsqN
+         2Scj6G4YGWug3QNMtbZFC3QoKcWR/SfrE+ZlfdaUJN+16ebomabpyO890QKs0TfSwssg
+         GlwRJGVRacdblC9JpOlqVPmVq4YaiPWGimGKkIvrIMvoClA502INAywjscaO+jMQtYNV
+         FrdLzlPp8YBw4RfuDqDeOxlxXRKz4NzqUy+mC4V9pnVDfAFmeYBYR87xX8F1retQgweA
+         OtrVCgFfRj6hzdkmswIkViUTlADJQfm9E7KSYC+qLFxp8Njn3jYAupxNP8CkZ765YQba
+         sztw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YM/u3gjvM4q2JWx7UhekKDRsr2AbTo4qfrXy3xVIS9k=;
-        b=QmxxRqDhs5D0r2xRtJRmv5QhkPnbHigFUMEfHFyDbQIxK4nQtCfTnw9w6JtibY+NaF
-         7aS0PgTu6CyfH6h9HsVUphN7k2xrxgQh/gfuaP1eOX6VDQzMB+aOqjcFFPQG0CfnmAS3
-         6F/VJxy+dgza2KrRKTc15gxRz8bFjvtD7KubI+cCMvTKpvkNVHyfk7klUY4qKIVfnF/r
-         wAqKk4ClT3ecOtpzZZCj2s2xIURUqZ0wwy14fmd/63IK/4Jb4jtamu9VLXwUKz2kdczy
-         vNAvE+66f9dKF+JR07aBN/VArdyDwHOpfySapV4wacM29NitJBNlPK9vui9Cjh5jZUnV
-         WGtQ==
-X-Gm-Message-State: AOAM533oNhnckTmb2jcg04kH5oDPVcpImLD6D6Fp/0McXr77jqy9Kkkz
-        p0JzMJ75Nsbg6B5BnWkFVI71GuEvN0SqcA7PJkunpw4wdkQ=
-X-Google-Smtp-Source: ABdhPJzyiKZ2NKZx86wa+HGnmDvLl67Vrz1HhWzCdoYhwu2nhGboSac3BbZ6dVMwxJ5PgjdsgB9Ac7A5V093fgDDewk=
-X-Received: by 2002:a2e:910c:: with SMTP id m12mr4340344ljg.274.1594991881148;
- Fri, 17 Jul 2020 06:18:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=npEG3Q8JCnzZnur7Cq6JNk21xogenaqhRA7YjsM9ezY=;
+        b=UjbMut96uFHd6MnKruPSguGlt9Ri46PGhVJ7teK5DI9ZEXsythviRPw4OFTYn25/4+
+         5fBWHET8dU6n0nVe3bk5j6KIUrds+UVew2e82fzB6lC+NmAPE4bseIzY9LyWaS1SGeRP
+         vdDF0wnP3a40rAz0HC0Rs9wyR7WpQXywqXkulc2R9gFznFKuRCDl6WOERDdxrgUqfKiz
+         SfsQCIvgIYoGR8+AP8+Q5Ov1+EG3hjVc7w92rvF+VxuD7SYGN9UPclwPX3uvF3r+DXrD
+         dWYvRcIFnU0RiXBt34a7xiqMoH1u1J8hzwSHKv+PuPVSfV9zpQIMK8VqIe6MTWekMqAT
+         JfiA==
+X-Gm-Message-State: AOAM530wkxoxlZUnIhK7zq/SFu0JGCMePR7fIq+R4p1hRbFq7KV8BTf+
+        o9vLJOd0eTN57AjMZ8cbPv987g==
+X-Google-Smtp-Source: ABdhPJxEMQOqJH/bssfF2AGyslt8NjbQrH6kwGSmbOflAyOcRsfWYlCaG5NnnWf5rAblr67M877IMw==
+X-Received: by 2002:a05:651c:c5:: with SMTP id 5mr4934690ljr.9.1594991945447;
+        Fri, 17 Jul 2020 06:19:05 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id y69sm1861534lfa.86.2020.07.17.06.19.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 06:19:04 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 15:19:04 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 19/20] media: rcar-vin: Enable support for R8A774E1
+Message-ID: <20200717131904.GC175137@oden.dyn.berto.se>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-References: <20200627105437.453053-1-apusaka@google.com> <20200627185320.RFC.v1.1.Icea550bb064a24b89f2217cf19e35b4480a31afd@changeid>
- <91CFE951-262A-4E83-8550-25445AE84B5A@holtmann.org> <CAJQfnxFSfbUbPLVC-be41TqNXzr_6hLq2z=u521HL+BqxLHn_Q@mail.gmail.com>
- <7BBB55E0-FBD9-40C0-80D9-D5E7FC9F80D2@holtmann.org> <CALWDO_Vrn_pXMbkXifKFazha7BYPqLpCthqHOb9ZmVE3wDRMfA@mail.gmail.com>
- <F17D321B-DCD2-4A80-97EE-B4589FBFF406@holtmann.org>
-In-Reply-To: <F17D321B-DCD2-4A80-97EE-B4589FBFF406@holtmann.org>
-From:   Alain Michaud <alainmichaud@google.com>
-Date:   Fri, 17 Jul 2020 09:17:49 -0400
-Message-ID: <CALWDO_WHZppfGoUNZbNoH0ACCUfOhwYtNXRpH+pvsAx5bGVNqA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/2] Bluetooth: queue ACL packets if no handle is found
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Archie Pusaka <apusaka@google.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594919915-5225-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcel,
+Hi Lad,
 
-On Fri, Jul 17, 2020 at 2:51 AM Marcel Holtmann <marcel@holtmann.org> wrote=
-:
->
-> Hi Alain,
->
-> > >>> There is a possibility that an ACL packet is received before we
-> > >>> receive the HCI connect event for the corresponding handle. If this
-> > >>> happens, we discard the ACL packet.
-> > >>>
-> > >>> Rather than just ignoring them, this patch provides a queue for
-> > >>> incoming ACL packet without a handle. The queue is processed when
-> > >>> receiving a HCI connection event. If 2 seconds elapsed without
-> > >>> receiving the HCI connection event, assume something bad happened
-> > >>> and discard the queued packet.
-> > >>>
-> > >>> Signed-off-by: Archie Pusaka <apusaka@chromium.org>
-> > >>> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > >>
-> > >> so two things up front. I want to hide this behind a HCI_QUIRK_OUT_O=
-F_ORDER_ACL that a transport driver has to set first. Frankly if this kind =
-of out-of-order happens on UART or SDIO transports, then something is obvio=
-usly going wrong. I have no plan to fix up after a fully serialized transpo=
-rt.
-> > >>
-> > >> Secondly, if a transport sets HCI_QUIRK_OUT_OF_ORDER_ACL, then I wan=
-t this off by default. You can enable it via an experimental setting. The r=
-eason here is that we have to make it really hard and fail as often as poss=
-ible so that hardware manufactures and spec writers realize that something =
-is fundamentally broken here.
-> > I don't have any objection to making this explicit enable to non serial=
-ized transports.  However, I do wonder what the intention is around making =
-this off by default.  We already know there is a race condition between the=
- interupt and bulk endpoints over USB, so this can and does happen.  Hardwa=
-re manufaturers can't relly do much about this other than trying to pull th=
-e interupt endpoint more often, but that's only a workaround, it can't avoi=
-d it all together.
-> >
-> > IMO, this seems like a legitimate fix at the host level and I don't see=
- any obvious benefits to hide this fix under an experimental feature and ma=
-ke it more difficult for the customers and system integrators to discover.
->
-> the problem is that this is not a fix. It is papering over a hole and at =
-best a workaround with both eyes closed and hoping for the best. I am not l=
-ooking forward for the first security researcher to figure out that they ha=
-ve a chance to inject an unencrypted packet since we are waiting 2 seconds =
-for the USB transport to get its act together.
-I don't think this is the right characterization but I agree, 2
-seconds would be too long, it would ideally be no longer than the USB
-polling interval diff.
+Thanks for your work.
 
->
-> In addition, I think that Luiz attempt to align with the poll intervals i=
-nside the USB transport directly is a cleaner and more self-contained appro=
-ach. It also reduces the window of opportunity for any attacker since we ac=
-tually align the USB transport specific intervals with each other.
-I'll have to look at Luiz's patch and think through if this really
-eliminates the problem.  If may indeed be a more practical approach to
-this problem.
+On 2020-07-16 18:18:34 +0100, Lad Prabhakar wrote:
+> Add the SoC specific information for RZ/G2H (R8A774E1) SoC. Also add
+> the routing information between CSI2 and VIN (which is similar to
+> R-Car H3 except it lacks CSI41).
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
->
-> Regards
->
-> Marcel
->
+I do not have access to the datasheet so I can't verify the routing 
+table so I trust it is correct.
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> ---
+>  drivers/media/platform/rcar-vin/rcar-core.c | 40 +++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+> index 7440c8965d27..4fb76d1df308 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> @@ -944,6 +944,42 @@ static const struct rvin_info rcar_info_gen2 = {
+>  	.max_height = 2048,
+>  };
+>  
+> +static const struct rvin_group_route rcar_info_r8a774e1_routes[] = {
+> +	{ .csi = RVIN_CSI40, .channel = 0, .vin = 0, .mask = BIT(0) | BIT(3) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 0, .mask = BIT(1) | BIT(4) },
+> +	{ .csi = RVIN_CSI40, .channel = 1, .vin = 0, .mask = BIT(2) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 1, .mask = BIT(0) },
+> +	{ .csi = RVIN_CSI40, .channel = 1, .vin = 1, .mask = BIT(1) | BIT(3) },
+> +	{ .csi = RVIN_CSI40, .channel = 0, .vin = 1, .mask = BIT(2) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 1, .mask = BIT(4) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 2, .mask = BIT(0) },
+> +	{ .csi = RVIN_CSI40, .channel = 0, .vin = 2, .mask = BIT(1) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 2, .mask = BIT(2) },
+> +	{ .csi = RVIN_CSI40, .channel = 2, .vin = 2, .mask = BIT(3) },
+> +	{ .csi = RVIN_CSI20, .channel = 2, .vin = 2, .mask = BIT(4) },
+> +	{ .csi = RVIN_CSI40, .channel = 1, .vin = 3, .mask = BIT(0) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 3, .mask = BIT(1) | BIT(2) },
+> +	{ .csi = RVIN_CSI40, .channel = 3, .vin = 3, .mask = BIT(3) },
+> +	{ .csi = RVIN_CSI20, .channel = 3, .vin = 3, .mask = BIT(4) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 4, .mask = BIT(1) | BIT(4) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 5, .mask = BIT(0) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 5, .mask = BIT(4) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 6, .mask = BIT(0) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 6, .mask = BIT(2) },
+> +	{ .csi = RVIN_CSI20, .channel = 2, .vin = 6, .mask = BIT(4) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 7, .mask = BIT(1) | BIT(2) },
+> +	{ .csi = RVIN_CSI20, .channel = 3, .vin = 7, .mask = BIT(4) },
+> +	{ /* Sentinel */ }
+> +};
+> +
+> +static const struct rvin_info rcar_info_r8a774e1 = {
+> +	.model = RCAR_GEN3,
+> +	.use_mc = true,
+> +	.max_width = 4096,
+> +	.max_height = 4096,
+> +	.routes = rcar_info_r8a774e1_routes,
+> +};
+> +
+>  static const struct rvin_group_route rcar_info_r8a7795_routes[] = {
+>  	{ .csi = RVIN_CSI40, .channel = 0, .vin = 0, .mask = BIT(0) | BIT(3) },
+>  	{ .csi = RVIN_CSI20, .channel = 0, .vin = 0, .mask = BIT(1) | BIT(4) },
+> @@ -1220,6 +1256,10 @@ static const struct of_device_id rvin_of_id_table[] = {
+>  		.compatible = "renesas,vin-r8a774c0",
+>  		.data = &rcar_info_r8a77990,
+>  	},
+> +	{
+> +		.compatible = "renesas,vin-r8a774e1",
+> +		.data = &rcar_info_r8a774e1,
+> +	},
+>  	{
+>  		.compatible = "renesas,vin-r8a7778",
+>  		.data = &rcar_info_m1,
+> -- 
+> 2.17.1
+> 
+
+-- 
+Regards,
+Niklas Söderlund
