@@ -2,75 +2,161 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562DDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF90BC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3DE2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD20B20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:07:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RdncPW1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgGQJGd (ORCPT
+        id S1726512AbgGQJHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:06:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59048 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgGQJGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:06:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D5983B132;
-        Fri, 17 Jul 2020 09:06:35 +0000 (UTC)
-Date:   Fri, 17 Jul 2020 11:06:31 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Mark Brown <broonie@kernel.org>
-cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        Fri, 17 Jul 2020 05:07:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgGQJHB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:07:01 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0D0BC08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:07:00 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id j18so13890888wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=pTJD2ese6K2dNt2vdiLR06YU7WVcQu8Yel1U2q7XjxE=;
+        b=RdncPW1lDg4IpKF2/cfz2mxyZGwH70KBaBrCHlAamsL4R/bAvK/rxM+IWlU7qIyuan
+         xelunPXzbnc4+mXnnIHQzV2Q7I4VLS07NC6FMJctbAWgk/gPiV3DFh6FOAWO6wBP5n1W
+         CBPMe9ut3SIiMskcvMWaFgVY0Jsx32ZIvN1gBt6+fVgyK2uL7mCW7+CtaniJn3xckqrX
+         mZAknbz3eKXhxSkDrzdJeP5pO6L3DJIPsYa+LtmXApSGgwyAFdQBLpMPomp9c+Dd75j7
+         IEfa26GW1uAFTPFBNzcDH2QJE9d4E3UfGS95nHTVqMXYwEUwvQfxFD06YcbXHpuTrTKP
+         zUiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pTJD2ese6K2dNt2vdiLR06YU7WVcQu8Yel1U2q7XjxE=;
+        b=gcjtOnB+wRgfScqhYY2s22jhGVMUio/nGvnz3v8UCvDkmZamksvSwiq1IUyGO2aOwv
+         j+4BHszHMbnvqr2U3ewAOLyAJXJK9d1hjn08fYAQ/Cq4QvGy2Dx6UCoJQcCFPhEbOVH9
+         BiHBPeZAq1/VsAZYtFQFg1MdyrlQgueasM/BdrcGZtpR4KD4M26VcTKdNkOxC9hMscRM
+         WyTWcAdkbJeLPATrabcspm0ZCYgWyaMgbQB7MXgDwVg4DZjLT+L/jwRUYlYTDWyr/dZQ
+         03A7McjRnChz2E9UKf2ynGMQtJw3Bs9+xlmQwPbbQWIrJnlqGHrU8l8BeqmWscYayhD1
+         QvvA==
+X-Gm-Message-State: AOAM531hREjnhc8o3R70NaRXN6rrL8bjRzOB8ISI/eLgnOpDbjsNZ/ox
+        iO9ZIWAGR6VXxIheohuFd52Wjg==
+X-Google-Smtp-Source: ABdhPJzFwUFlTuHxJh9CJGSq2MTaZ8h+vLXDbC5cvbKZoxFQ53eDgLDHJN2B9P6MWQGOIdMYC9QPUQ==
+X-Received: by 2002:a1c:5982:: with SMTP id n124mr8364770wmb.77.1594976819379;
+        Fri, 17 Jul 2020 02:06:59 -0700 (PDT)
+Received: from dell ([2.27.167.94])
+        by smtp.gmail.com with ESMTPSA id a123sm12657865wmd.28.2020.07.17.02.06.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 02:06:58 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 10:06:56 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
-In-Reply-To: <20200716162022.GD5105@sirena.org.uk>
-Message-ID: <alpine.LSU.2.21.2007171105250.21694@pobox.suse.cz>
-References: <20200715202821.12220-1-broonie@kernel.org> <20200715202821.12220-4-broonie@kernel.org> <alpine.LSU.2.21.2007161342290.3958@pobox.suse.cz> <20200716162022.GD5105@sirena.org.uk>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 02/13] mfd: add simple regmap based I2C driver
+Message-ID: <20200717090656.GF3165313@dell>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-3-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200706175353.16404-3-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020, Mark Brown wrote:
+On Mon, 06 Jul 2020, Michael Walle wrote:
 
-> On Thu, Jul 16, 2020 at 01:56:13PM +0200, Miroslav Benes wrote:
-> > On Wed, 15 Jul 2020, Mark Brown wrote:
+> There are I2C devices which contain several different functions but
+> doesn't require any special access functions. For these kind of drivers
+> an I2C regmap should be enough.
 > 
-> > > -void save_stack_trace(struct stack_trace *trace)
-> > > -{
-> > > -	__save_stack_trace(current, trace, 0);
-> > > +	walk_stackframe(task, &frame, consume_entry, cookie);
-> > >  }
+> Create an I2C driver which creates an I2C regmap and enumerates its
+> children. If a device wants to use this as its MFD core driver, it has
+> to add an individual compatible string. It may provide its own regmap
+> configuration.
 > 
-> > just an idea for further improvement (and it might be a matter of taste). 
+> Subdevices can use dev_get_regmap() on the parent to get their regmap
+> instance.
 > 
-> Yeah, there's some more stuff that can be done - the reason I'm looking
-> at this code is to do reliable stack trace which is going to require at
-> least some changes to the actual unwinder, this just seemed like a
-> useful block moving things forwards in itself and I particularly wanted
-> feedback on patch 1.
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> Changes since v4:
+>  - new patch. Lee, please bear with me. I didn't want to delay the
+>    new version (where a lot of remarks on the other patches were
+>    addressed) even more, just because we haven't figured out how
+>    to deal with the MFD part. So for now, I've included this one.
+> 
+>  drivers/mfd/Kconfig          |  9 +++++++
+>  drivers/mfd/Makefile         |  1 +
+>  drivers/mfd/simple-mfd-i2c.c | 50 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 60 insertions(+)
+>  create mode 100644 drivers/mfd/simple-mfd-i2c.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 33df0837ab41..f1536a710aca 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called si476x-core.
+>  
+> +config MFD_SIMPLE_MFD_I2C
+> +	tristate "Simple regmap based I2C devices"
 
-Understood. Reliable stack traces would be an important step for live 
-patching on arm64, so I am looking forward to seeing that.
+Doesn't look like tristate to me.
 
-Thanks
-Miroslav
+Haven't you made this builtin only?
+
+> +	depends on I2C
+> +	select MFD_CORE
+
+Why?
+
+> +	select REGMAP_I2C
+> +	help
+> +	  This is a consolidated driver for all MFD devices which are
+> +	  basically just a regmap bus driver.
+
+Please expand on this.  I think it deserves greater explanation.
+
+>  config MFD_SM501
+>  	tristate "Silicon Motion SM501"
+>  	depends on HAS_DMA
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
