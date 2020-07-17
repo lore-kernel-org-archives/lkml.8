@@ -6,133 +6,95 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838CEC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70B482067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979AD206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgGQR4T convert rfc822-to-8bit (ORCPT
+        id S1727101AbgGQR6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:56:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42742 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgGQR4S (ORCPT
+        Fri, 17 Jul 2020 13:58:41 -0400
+Received: from smtprelay0060.hostedemail.com ([216.40.44.60]:57412 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726322AbgGQR6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:56:18 -0400
-Received: from mail-pg1-f198.google.com ([209.85.215.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jwUal-0003bm-Od
-        for linux-kernel@vger.kernel.org; Fri, 17 Jul 2020 17:56:15 +0000
-Received: by mail-pg1-f198.google.com with SMTP id j9so8411358pgm.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:56:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=DJeYw43KCdF1n+mtxqHrWGu9uDmkgMx6dDVvN1r/iUI=;
-        b=BMjaUd5kHGrXmTxoOFW8pUVh8aIDk2P50XGhMdCOMcgN6ACjU+9JvCGImvWh2qsgwv
-         F3fhVs1dj5uZUCnRg9eGORD5sCz9KQG/jhinu+X6YKnnG71D6LGLMAuciKacRtotuXZn
-         +t4S3xQ8l2t3jnzR2VLO/hs6287QN7mvQWqZrLBCjt0q5AeNEMS2bPdL+AsyBxjT2ck3
-         8KGAf7dKLbR7y1HUiN7W8+uxFmDdPoRoQsWCt0ou5H4/Zw+x+Ru+pIV9u4Hf9jYm2+im
-         SPRaxb8UG8IBv0L5yy8nPlvPj0tYfXlTV+ClpQ7gxjj6Dj6Bmk1T9H5BrpRxDXgNfCP8
-         Wgtw==
-X-Gm-Message-State: AOAM531lZsGt0TqDbyKwY53KZd2ZYdK02TAbie99qUQEVggAzYMQz2nk
-        Hg2ax8PLKLktTm0nCnCb1X04XD487V8V9mHZTBbsg+UHTITJD8S67J3skhC6uZNpErlTbiJkqWD
-        Z5KC4BXo1Hns43c27RIHlw1OCSjs1Blj6CcT8gg6Jzw==
-X-Received: by 2002:a17:902:a412:: with SMTP id p18mr8397696plq.283.1595008574082;
-        Fri, 17 Jul 2020 10:56:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyfTo9D7lyFkDMei5LDbgFf/qwVM6msV/kFw7ZA8SiHACyAuV9cXxTJL0fSYj34hSeq6uLdww==
-X-Received: by 2002:a17:902:a412:: with SMTP id p18mr8397678plq.283.1595008573667;
-        Fri, 17 Jul 2020 10:56:13 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id b18sm3514062pju.10.2020.07.17.10.56.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Jul 2020 10:56:13 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()"
- breaks NFS Kerberos on upstream stable 5.4.y
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <650B6279-9550-4844-9375-280F11C3DC4B@oracle.com>
-Date:   Sat, 18 Jul 2020 01:56:09 +0800
-Cc:     Pierre Sauter <pierre.sauter@stwm.de>,
-        matthew.ruffell@canonical.com,
-        linux-stable <stable@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-kernel-owner@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <CCF13E29-7B8B-47B3-A8D0-1A6E0E626BA6@canonical.com>
-References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com>
- <5619613.lOV4Wx5bFT@keks.as.studentenwerk.mhn.de>
- <0885F62B-F9D2-4248-9313-70DAA1A1DE71@oracle.com>
- <4546230.GXAFRqVoOG@keks.as.studentenwerk.mhn.de>
- <650B6279-9550-4844-9375-280F11C3DC4B@oracle.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 17 Jul 2020 13:58:40 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id A4DDB180A7FCE;
+        Fri, 17 Jul 2020 17:58:39 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: board51_1313e3626f0c
+X-Filterd-Recvd-Size: 2673
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 17 Jul 2020 17:58:38 +0000 (UTC)
+Message-ID: <97fc1ed63f4b4d1b6b450acf0cfc2dcad84e9ca1.camel@perches.com>
+Subject: Re: [PATCH 3/3] media: Add support for the AM/FM radio chip KT0913
+ from KT Micro.
+From:   Joe Perches <joe@perches.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Santiago Hormazabal <santiagohssl@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 17 Jul 2020 10:58:37 -0700
+In-Reply-To: <234961cc-f783-475c-d3db-69720a7da010@xs4all.nl>
+References: <20200717004441.116248-1-santiagohssl@gmail.com>
+         <20200717004441.116248-4-santiagohssl@gmail.com>
+         <b8cb9dbf-2a81-6a12-c754-e524f42a0574@xs4all.nl>
+         <9bd42f458908eedd810c5e8805f997997763d32a.camel@perches.com>
+         <234961cc-f783-475c-d3db-69720a7da010@xs4all.nl>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2020-07-17 at 12:04 +0200, Hans Verkuil wrote:
+> On 17/07/2020 11:51, Joe Perches wrote:
+> > On Fri, 2020-07-17 at 11:29 +0200, Hans Verkuil wrote:
+> > > It's standard linux codingstyle to use lowercase for hex numbers.
+> > > Can you change that throughout the source for the next version?
+> > 
+> > Is there a standard?  It's not in coding-style.rst.
+> > 
+> > While I prefer lowercase too, it seems the kernel has
+> > only ~2:1 preference for lowercase to uppercase hex.
+> > 
+> > $ git grep -ohP '\b0[xX][0-9a-f]+\b' | grep [a-f] | wc -l
+> > 1149833
+> > $ git grep -ohP '\b0[xX][0-9A-F]+\b' | grep [A-F] | wc -l
+> > 575781
+> > 
+> Well, it's indeed not a standard for the kernel as a whole, but certainly
+> for drivers/media:
+> 
+> $ git grep -ohP '\b0[xX][0-9a-f]+\b' drivers/media/ | grep [a-f] | wc -l
+> 109272
+> $ git grep -ohP '\b0[xX][0-9A-F]+\b' drivers/media/ | grep [A-F] | wc -l
+> 22392
+> 
+> The media subsystem has a 5:1 preference for lowercase. And uppercase is
+> mostly found in older drivers.
+> Still, I really prefer lowercase over uppercase, especially in new drivers.
 
+That's certainly any maintainer's preference right.
 
-> On Jul 18, 2020, at 01:34, Chuck Lever <chuck.lever@oracle.com> wrote:
-> 
-> 
-> 
->> On Jul 17, 2020, at 1:29 PM, Pierre Sauter <pierre.sauter@stwm.de> wrote:
->> 
->> Hi Chuck,
->> 
->> Am Donnerstag, 16. Juli 2020, 21:25:40 CEST schrieb Chuck Lever:
->>> So this makes me think there's a possibility you are not using upstream
->>> stable kernels. I can't help if I don't know what source code and commit
->>> stream you are using. It also makes me question the bisect result.
->> 
->> Yes you are right, I was referring to Ubuntu kernels 5.4.0-XX. From the
->> discussion in the Ubuntu bugtracker I got the impression that Ubuntu kernels
->> 5.4.0-XX and upstream 5.4.XX are closely related, obviously they are not. The
->> bisection was done by the original bug reporter and also refers to the Ubuntu
->> kernel.
->> 
->> In the meantime I tested v5.4.51 upstream, which shows no problems. Sorry for
->> the bother.
-> 
-> Pierre, thanks for confirming!
-> 
-> Kai-Heng suspected an upstream stable commit that is missing in 5.4.0-40,
-> but I don't have any good suggestions.
+Slightly unrelated:
 
-Well, Ubuntu's 5.4 kernel is based on upstream stable v5.4, so I asked users to test stable v5.4.51, however the feedback was negative, and that's the reason why I raised the issue here.
+The last 100k commits have only a ~2.5:1 use of
+lowercase to uppercase hex constants.
 
-Anyway, good to know that it's fixed in upstream stable, everything's good now!
-Thanks for your effort Chuck.
+While my cut-off for declaring something a generic
+kernel style standard is also ~5:1, this isn't a
+style check I would put into checkpatch as the
+per-subsystem variability is quite high.
 
-Kai-Heng
-
-
-> 
-> 
->>>> My krb5 etype is aes256-cts-hmac-sha1-96.
->>> 
->>> Thanks! And what is your NFS server and filesystem? It's possible that the
->>> client is not estimating the size of the reply correctly. Variables include
->>> the size of file handles, MIC verifiers, and wrap tokens.
->> 
->> The server is Debian with v4.19.130 upstream, filesystem ext4.
->> 
->>> You might try:
->>> 
->>> e8d70b321ecc ("SUNRPC: Fix another issue with MIC buffer space")
->> 
->> That one is actually in Ubuntus 5.4.0-40, from looking at the code.
-> 
-> --
-> Chuck Lever
+cheers, Joe
 
