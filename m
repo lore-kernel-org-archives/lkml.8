@@ -2,163 +2,140 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A092AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A32C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E48320717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594992194;
-	bh=YXmOefMvlOs7G1IJ3/xGseJf7pS/JY+GgUOoWYCRdsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1Ehcem0PMto1y0gq8aJPJ2bzlOqJSEebBgpnI4iLVQ0DFtz4UbKelL19D66v6334w
-	 o/PebQUw83IOHigGMfgFKDtIWossXAZnczD5+gl9nl5YA48A+rHsIUIoNbNbt3Yj4h
-	 z99W1KZlenmHfsTvyc1XZ1UXW+IOiO+Sm3PH4Big=
+	by mail.kernel.org (Postfix) with ESMTP id 903A32076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:23:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="G/PDUzaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgGQNXN (ORCPT
+        id S1726811AbgGQNXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:23:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgGQNXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:23:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 292DD2064B;
-        Fri, 17 Jul 2020 13:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594992191;
-        bh=YXmOefMvlOs7G1IJ3/xGseJf7pS/JY+GgUOoWYCRdsw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iHGfSp04sqXJQGRHKlCZEVORFrAeFfBcvjwv355yCV8T6VUkl3GdsRlSeMV4e25Sz
-         NrGX9IhzqSeUa/5SSfAylaRUiv28hLSgYvwA/tiAiqobuA2T+Zdes/mMzw30FEFnkR
-         yKxrtUYcsWx1fcspFFMyM94qyDRRJRU9dONpKnNs=
-Date:   Fri, 17 Jul 2020 15:23:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>, Jon Corbet <corbet@lwn.net>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        Adam Ford <aford173@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Olof Johansson <olof@lixom.net>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
-Message-ID: <20200717132303.GB2984939@kroah.com>
-References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
- <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
- <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
- <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
- <20200717121436.GA2953399@kroah.com>
- <CAK8P3a3Ds4O5yRtGSMbNN8R5dPcdb1HJTY=W5eyToFQ-UhzkBw@mail.gmail.com>
+        Fri, 17 Jul 2020 09:23:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbgGQNXQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:23:16 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E6FFC08C5DB
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:23:16 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id r19so12532035ljn.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:23:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=r5HS07ICf7E3a3QJxXXjTIF72wcfgMRIm+vhJsEtkcw=;
+        b=G/PDUzaIqdp1Gjj31VxhrrYLJsacpjKxAAeitpvz2KCk8yGUDLzVXlJ3q8zbAFP57j
+         r9tjyIvZkl67/BTM0oesxWME9XtuWS+46jAX+1t27JSS56lOyCbBDij7xZXHOa0dVyuh
+         7FiV92akZrkKRS6MZXvmgsB0stALd/vxBZU13pULuaIUK+0sVBzOXorHxtl227Nbmq6v
+         1uiigkmHl8tttEMfHoQVrbPXVQprxr/JmOjBIyTwAbPoVSPNRu9dqL2MOJAWM0bUcge0
+         RXWVCIoq2wClrs/UG/zsTqBNKGO7IieNNdBfsIyJSyiMRaT3pkmAj24448EPmt1d+j9I
+         m6tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=r5HS07ICf7E3a3QJxXXjTIF72wcfgMRIm+vhJsEtkcw=;
+        b=Iy4p749CsJ3VMks0+/jFjqfNyBydbiXKHrZPuckKq6Bp1mO8SxX2hLKt0oEI8OpZMQ
+         xdlDS6iwj+OaclfeBShzaG64dFPfyzsNts4lA9DWvX52J9bwQByc1/5iJOZ7Y0+PKMlg
+         NUm3h1TJTxWjBzr0s9WZ3mhfIsipEZBkr+jeYkdkU3OiJj/uceZ1FT1vrackkWRsV9b0
+         hP4eKyMTjN5s7HymapMdW1RCXvwv5sMYmaWUpq2Az1bhRtZOCaRdw3pbszxq5zz3V/+s
+         GRFpy1ZtQ5O9dzZ1/V8J0OKDYmULzZ1enAKLGgM6+01ws2nwEtIaxkmlwfmo8GDQpaZK
+         AEig==
+X-Gm-Message-State: AOAM531Unzamu5QZCRfy1UoxM4/UI5z4sb/SPBFNBBmWGFNt7lGVwARG
+        1Rs6+hI7r7GlGDnGKUzHtzqS1Q==
+X-Google-Smtp-Source: ABdhPJzUBTptxuJTLZ8lzud6Q9kGgaD4DEmyeJiAqkYBb3btArneE3fHcpaQCMg8v1lLUysLkIvUDg==
+X-Received: by 2002:a2e:1441:: with SMTP id 1mr4364600lju.93.1594992194884;
+        Fri, 17 Jul 2020 06:23:14 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id w5sm1648620lji.49.2020.07.17.06.23.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 06:23:14 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 15:23:13 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 03/20] thermal: rcar_gen3_thermal: Add r8a774e1 support
+Message-ID: <20200717132313.GB177462@oden.dyn.berto.se>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a3Ds4O5yRtGSMbNN8R5dPcdb1HJTY=W5eyToFQ-UhzkBw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594811350-14066-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 03:02:54PM +0200, Arnd Bergmann wrote:
-> On Fri, Jul 17, 2020 at 2:16 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Fri, Jul 17, 2020 at 02:01:16PM +0200, Linus Walleij wrote:
-> > > While I am a big fan of the Android GKI initiative this needs to be aligned
-> > > with the Linux core maintainers, so let's ask Greg. I am also paging
-> > > John Stultz on this: he is close to this action.
-> > >
-> > > They both know the Android people very well.
-> > >
-> > > So there is a rationale like this going on: in order to achieve GKI goals
-> > > and have as much as possible of the Linux kernel stashed into loadable
-> > > kernel modules, it has been elevated to modus operandi amongst
-> > > the developers pushing this change that it is OK to pile up a load of
-> > > modules that cannot ever be unloaded.
-> >
-> > Why can't the module be unloaded?  Is it just because they never
-> > implement the proper "remove all resources allocated" logic in a remove
-> > function, or something else?
-> 
-> For the core kernel parts, it's usually for the lack of tracking of who
-> is using the resource provided by the driver, as the subsystems tend
-> to be written around x86's "everything is built-in" model.
-> 
-> For instance, a PCIe host bridge might rely on the IOMMU, a
-> clock controller, an interrupt controller, a pin controller and a reset
-> controller. The host bridge can still be probed at reduced functionality
-> if some of these are missing, or it can use deferred probing when
-> some others are missing at probe time.
-> 
-> If we want all of drivers to be unloaded again, we need to do one
-> of two things:
-> 
-> a) track dependencies, so that removing one of the devices
->     underneath leads to everything depending on it to get removed
->     as well or will be notified about it going away and can stop using
->     it. This is the model used in the network subsystem, where
->     any ethernet driver can be unloaded and everything using the
->     device gets torn down.
-> 
-> b) use reference counting on the device or (at the minimum)
->     try_module_get()/module_put() calls for all such resources
->     so as long as the pci host bridge is there, so none of the devices
->     it uses will go away when they are still used.
-> 
-> Traditionally, we would have considered the PCIe host bridge to
-> be a fundamental part of the system, implying that everything it
-> uses is also fundamental, and there was no need to track
-> usage at all, just to ensure the probing is done in the right order.
+Hi Lad,
 
-Yeah, ick, for IOMMU and stuff like this, no, load it once and never
-unload it makes much more sense.
+Thanks for your work.
 
-Just know how to dynamically load the specific driver out of a
-collection of them, and all should be fine.
-
-> > > As a minimum requirement I would expect this to be marked by
-> > >
-> > > struct device_driver {
-> > >    (...)
-> > >     /* This module absolutely cannot be unbound */
-> > >    .suppress_bind_attrs = true;
-> > > };
-> >
-> > No, that's not what bind/unbind is really for.  That's a per-subsystem
-> > choice as to if you want to allow devices to be added/removed from
-> > drivers at runtime.  It has nothing to do with module load/unload.
+On 2020-07-15 12:08:53 +0100, Lad Prabhakar wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > 
-> It's a one-way dependency: If we can't allow the device to be
-> unbound, then we also should not allow module unloading because
-> that forces an unbind.
+> Add r8a774e1 specific compatible string.
+> 
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Ok, then turn that off for the subsystems this does not support, no
-objection from me.  It's just a fun hack that people use for testing out
-drivers on new devices, and for virtual devices.
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-thanks,
+> ---
+>  drivers/thermal/rcar_gen3_thermal.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
+> index c48c5e9b8f20..3f129ce4adc0 100644
+> --- a/drivers/thermal/rcar_gen3_thermal.c
+> +++ b/drivers/thermal/rcar_gen3_thermal.c
+> @@ -314,6 +314,10 @@ static const struct of_device_id rcar_gen3_thermal_dt_ids[] = {
+>  		.compatible = "renesas,r8a774b1-thermal",
+>  		.data = &rcar_gen3_ths_tj_1,
+>  	},
+> +	{
+> +		.compatible = "renesas,r8a774e1-thermal",
+> +		.data = &rcar_gen3_ths_tj_1,
+> +	},
+>  	{
+>  		.compatible = "renesas,r8a7795-thermal",
+>  		.data = &rcar_gen3_ths_tj_1,
+> -- 
+> 2.17.1
+> 
 
-greg k-h
+-- 
+Regards,
+Niklas Söderlund
