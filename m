@@ -2,89 +2,118 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E9BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B27DC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDC002070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832A622B4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgGQA1D (ORCPT
+        id S1726453AbgGQAXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 20:27:03 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3329 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgGQA1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 20:27:03 -0400
-IronPort-SDR: nH+sbXFBnfo/EmAwuQ9ckK1ZoKHJ9X775TGr/4owikqtmOKTku0dCkqWKcKPMU+vFBrdwLlldD
- HMMu9z8/QsTQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="137634999"
-X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
-   d="scan'208";a="137634999"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 17:27:02 -0700
-IronPort-SDR: vGNfmrcvuhK7fz+ePeI1ej9o62F/YfAHn6TElGwHZIPePJaZIn3EyWsa2chP2WOLQBmYQ1NLuk
- yPzE1hbDlMDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
-   d="scan'208";a="308831866"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Jul 2020 17:27:00 -0700
-Date:   Fri, 17 Jul 2020 08:27:29 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     kernel test robot <lkp@intel.com>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Mark-PK Tsai <Mark-PK.Tsai@mediatek.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel@vger.kernel.org, LKP <lkp@lists.01.org>
-Subject: Re: [LKP] Re: db57e98d87 ("mm/sparse.c: fix ALIGN() without power of
- 2 in .."): BUG: kernel reboot-without-warning in early-boot stage, last
- printk: early console in setup code
-Message-ID: <20200717002729.GA18418@intel.com>
-References: <20200716083159.GH3874@shao2-debian>
- <20200716150613.409103a2d1e4c3f5f63652b8@linux-foundation.org>
+        Thu, 16 Jul 2020 20:23:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7773 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725958AbgGQAXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 20:23:03 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9E79EA198379C7F1B5BB;
+        Fri, 17 Jul 2020 08:23:00 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.238) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Jul 2020
+ 08:22:53 +0800
+Subject: [PATCH -next v2] usb: usbtest: reduce stack usage in test_queue
+To:     Alan Stern <stern@rowland.harvard.edu>
+CC:     <linux-next@vger.kernel.org>, <gustavoars@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <qiang.zhang@windriver.com>,
+        "Wanghui (John)" <john.wanghui@huawei.com>
+References: <20200716082735.66342-1-cuibixuan@huawei.com>
+ <42fe1a83-38a5-816b-9258-8a344008f398@huawei.com>
+ <20200716154510.GE1112537@rowland.harvard.edu>
+From:   Bixuan Cui <cuibixuan@huawei.com>
+Message-ID: <ffa85702-86ab-48d7-4da2-2efcc94b05d3@huawei.com>
+Date:   Fri, 17 Jul 2020 08:22:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716150613.409103a2d1e4c3f5f63652b8@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200716154510.GE1112537@rowland.harvard.edu>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 03:06:13PM -0700, Andrew Morton wrote:
-> On Thu, 16 Jul 2020 16:32:00 +0800 kernel test robot <lkp@intel.com> wrote:
-> 
-> > Greetings,
-> > 
-> > 0day kernel testing robot got the below dmesg and the first bad commit is
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > 
-> > commit db57e98d87908b8837352abe08515e42752270c1
-> > Author:     Lecopzer Chen <lecopzer.chen@mediatek.com>
-> > AuthorDate: Mon Sep 23 15:36:24 2019 -0700
-> > Commit:     Linus Torvalds <torvalds@linux-foundation.org>
-> > CommitDate: Tue Sep 24 15:54:09 2019 -0700
-> > 
-> >     mm/sparse.c: fix ALIGN() without power of 2 in sparse_buffer_alloc()
-> 
-> Are we sure about this?  That patch is a year old - has something
-> in the test setup changed to make it visible at this late stage?
-sorry, kindly ignore this, this looks like a false positive which
-probably due to test environment. We will double check, if any finding
-related to kernel, we will provide udpdate.
+Fix the warning: [-Werror=-Wframe-larger-than=]
 
-Thanks
+drivers/usb/misc/usbtest.c: In function 'test_queue':
+drivers/usb/misc/usbtest.c:2148:1:
+warning: the frame size of 1232 bytes is larger than 1024 bytes
 
-> _______________________________________________
-> LKP mailing list -- lkp@lists.01.org
-> To unsubscribe send an email to lkp-leave@lists.01.org
+Reported-by: kbuild test robot <lkp@intel.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Bixuan Cui <cuibixuan@huawei.com>
+---
+v2: Change MAX_SGLEN to param->sglen.
+
+ drivers/usb/misc/usbtest.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
+index 8b220d56647b..150090ee4ec1 100644
+--- a/drivers/usb/misc/usbtest.c
++++ b/drivers/usb/misc/usbtest.c
+@@ -2043,7 +2043,7 @@ test_queue(struct usbtest_dev *dev, struct usbtest_param_32 *param,
+ 	unsigned		i;
+ 	unsigned long		packets = 0;
+ 	int			status = 0;
+-	struct urb		*urbs[MAX_SGLEN];
++	struct urb		**urbs;
+
+ 	if (!param->sglen || param->iterations > UINT_MAX / param->sglen)
+ 		return -EINVAL;
+@@ -2051,6 +2051,10 @@ test_queue(struct usbtest_dev *dev, struct usbtest_param_32 *param,
+ 	if (param->sglen > MAX_SGLEN)
+ 		return -EINVAL;
+
++	urbs = kcalloc(param->sglen, sizeof(*urbs), GFP_KERNEL);
++	if (!urbs)
++		return -ENOMEM;
++
+ 	memset(&context, 0, sizeof(context));
+ 	context.count = param->iterations * param->sglen;
+ 	context.dev = dev;
+@@ -2137,6 +2141,8 @@ test_queue(struct usbtest_dev *dev, struct usbtest_param_32 *param,
+ 	else if (context.errors >
+ 			(context.is_iso ? context.packet_count / 10 : 0))
+ 		status = -EIO;
++
++	kfree(urbs);
+ 	return status;
+
+ fail:
+@@ -2144,6 +2150,8 @@ test_queue(struct usbtest_dev *dev, struct usbtest_param_32 *param,
+ 		if (urbs[i])
+ 			simple_free_urb(urbs[i]);
+ 	}
++
++	kfree(urbs);
+ 	return status;
+ }
+
+--
+2.17.1
+
+
+.
+
+
+
