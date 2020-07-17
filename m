@@ -2,107 +2,95 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DE2C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0305520734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594997699;
-	bh=ekESCmOxSsO99Jgr9mXcv5Rm5ARC6YWFI2L+02tuKtU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C27Yzbl8Bvva9oIrXqQGDywYqqX/YMtXbO3dR5ciA7NhEHx4MopRgt4vZhgOl7K7R
-	 qxhdA8t7HXjIK4LVs6Df8AIun/rUl9ZwJfsR3dHJd/s7ut67iM0oao5J3fs0aFCvAG
-	 h2UbB9nTfNAf75q2z/l7cc8noOGo5S9LUgB7yMVY=
+	by mail.kernel.org (Postfix) with ESMTP id C841D2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:55:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i/hyofjw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgGQOy5 (ORCPT
+        id S1727040AbgGQOzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:54:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbgGQOy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:54:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59BAE2070E;
-        Fri, 17 Jul 2020 14:54:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594997696;
-        bh=ekESCmOxSsO99Jgr9mXcv5Rm5ARC6YWFI2L+02tuKtU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GzsOV7ABb0hP1Foh8qEttWwWQ/tenkJ7GyhQaR69Y02hFYIqSrNt7sEEqkwhVEroF
-         SM+RQUD7gxa41FoAgpsG71eQv9YJ9EHA/lprT3b0SomSeCl2M4TEA5fbwUA3LCTS1z
-         Tr9PV63pPpVPtoQqlw6yGTEZHO1fuLqTSJY6F8IM=
-Date:   Fri, 17 Jul 2020 16:54:48 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Gutson <daniel.gutson@eclypsium.com>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>
-Subject: Re: [PATCH] [PATCH] Firmware security information in SYSFS
-Message-ID: <20200717145448.GA3008378@kroah.com>
-References: <20200716223627.253936-1-daniel.gutson@eclypsium.com>
- <20200717062841.GA3238569@kroah.com>
- <CAK8P3a1yy7YyeJH5k40yAXb23y9siBnfuqixb76t3BK9Xh=uXQ@mail.gmail.com>
+        Fri, 17 Jul 2020 10:55:17 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51220 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgGQOzQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:55:16 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HEtBDR075663;
+        Fri, 17 Jul 2020 09:55:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594997711;
+        bh=ILo50kO6ZaOdsTSCv78i0Pa1kXFMMaSNMvFJOAtFzlA=;
+        h=From:To:Subject:Date;
+        b=i/hyofjwqwhtDDL014iF3ilR9ymjkqRNoidttj8kSmAtzZnD84n3FUdJY5pGdqVYR
+         3XSm1qap2Tbt1B2HdLNohm5wcHGOSh3xRhbdrXiT3Jc3lqC7NgQN4SEmsabKq1Y52k
+         5+3tU9Qq2YUhv11+g+FTenpD5OiZZXgrTG3dtnSg=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HEtB0u066964;
+        Fri, 17 Jul 2020 09:55:11 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
+ Jul 2020 09:55:10 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 17 Jul 2020 09:55:11 -0500
+Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HEtAg0090872;
+        Fri, 17 Jul 2020 09:55:10 -0500
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <nsekhar@ti.com>,
+        <grygorii.strashko@ti.com>, <vinicius.gomes@intel.com>
+Subject: [PATCH 1/2 v2] net: hsr: fix incorrect lsdu size in the tag of HSR frames for small frames
+Date:   Fri, 17 Jul 2020 10:55:09 -0400
+Message-ID: <20200717145510.30433-1-m-karicheri2@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1yy7YyeJH5k40yAXb23y9siBnfuqixb76t3BK9Xh=uXQ@mail.gmail.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 04:40:40PM +0200, Arnd Bergmann wrote:
-> On Fri, Jul 17, 2020 at 8:28 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Jul 16, 2020 at 07:36:27PM -0300, Daniel Gutson wrote:
-> > > +What:                /sys/kernel/firmware-security/bioswe
-> >
-> > Ick, I stopped reading right here.
-> >
-> > No, this is not where this belongs.
-> >
-> > We already have /sys/firmware/, right?  And firmware-specific
-> > subdirectories below that.
-> >
-> > We also have /sys/devices/system/ and I think that would be a much
-> > better place for this, as it is easier to work with a real 'struct
-> > device' than a "raw" kobject any day.  Bonus is you get full support of
-> > userspace libraries when you do that, unlike when dealing with kobjects.
-> >
-> > Also, this really is a _SPECIFIC_ type of firmware that supports these
-> > features, right?  Why not call that out too?  This is not generic by any
-> > means.
-> 
-> As I suggested in my previous review, I wouldn't worry too much about
-> the user interface at the start, but instead first work out how the hardware
-> support fits in with the existing drivers and once that looks fine decide
-> on how to export it to user space.
-> 
-> I agree the  /sys/kernel/firmware-security/bioswe sounds like the wrong
-> place, but I'm not sure if adding any other new directory in sysfs is
-> much better. I think the most promising would be to have it on the
-> sysfs directory for the device it refers to, but let's first see how the
-> information gets into the kernel.
+For small Ethernet frames with size less than minimum size 66 for HSR
+vs 60 for regular Ethernet frames, hsr driver currently doesn't pad the
+frame to make it minimum size. This results in incorrect LSDU size being
+populated in the HSR tag for these frames. Fix this by padding the frame
+to the minimum size applicable for HSR.
 
-Yes, the directory for the specific device would probably be best, but
-let's see where that really is :)
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ no change from original version
+ Sending this bug fix ahead of PRP patch series as per comment
+ net/hsr/hsr_forward.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-thanks,
+ Sending this bug fix ahead of PRP patch series as per comment
+diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+index ed13760463de..e42fd356f073 100644
+--- a/net/hsr/hsr_forward.c
++++ b/net/hsr/hsr_forward.c
+@@ -127,6 +127,9 @@ static void hsr_fill_tag(struct sk_buff *skb, struct hsr_frame_info *frame,
+ 	int lane_id;
+ 	int lsdu_size;
+ 
++	/* pad to minimum packet size which is 60 + 6 (HSR tag) */
++	skb_put_padto(skb, ETH_ZLEN + HSR_HLEN);
++
+ 	if (port->type == HSR_PT_SLAVE_A)
+ 		lane_id = 0;
+ 	else
+-- 
+2.17.1
 
-greg k-h
