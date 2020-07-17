@@ -2,208 +2,200 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9035C433F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9A220737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:10:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHAChKFH"
+	by mail.kernel.org (Postfix) with ESMTP id A06D520737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:11:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgGQIKt (ORCPT
+        id S1728333AbgGQILl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgGQIKs (ORCPT
+        Fri, 17 Jul 2020 04:11:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52582 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726113AbgGQILk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:10:48 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69693C061755;
-        Fri, 17 Jul 2020 01:10:48 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e8so6321403pgc.5;
-        Fri, 17 Jul 2020 01:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lLhlrw/90h7K4R1QF2JfjCIuOOucm4jPTVhciHTu7NQ=;
-        b=XHAChKFHhQc6obPfyO+UKg/XlIwERzLzqEX6cJAhJOvU/hWMeD9qdbFrQIGZHfjS6X
-         fsrdNtWZ+dtR0YuDf5+T7jFayKJ2xs+nl+uFyBEdm0cvLI/E9S9qGDd0SKGFs6fCj5J8
-         7wxCkTIx69J3WtMwMjIW0dJ3ij62cpDqS5kVU0cB9sbyNnfVZbqlgTt7ZlHvmQEFA67g
-         W2l2/qNgWdnBWhPgLrOXTy7tiZ22XPnfMU828RWZBbAwe47Gnggn6MYt9aPMhNHFO5l7
-         0bdk6glvzgR0WXAqsUIceEJQjq8KooGzaJOQPLfNphESHQC95lcr05OVauDMk4xEIw2v
-         w2CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lLhlrw/90h7K4R1QF2JfjCIuOOucm4jPTVhciHTu7NQ=;
-        b=Nh70wpGLvo+yBIDzVCCCO1ACxmFOwCdmRsjQyPBSMsjW6phbfGS1r4Ldj8KEFPrglz
-         jxDHzYdNSzXOtUsmIH6YQLs3dcA5/DGd+PLaMl+Q3asSUBd/Kfo5Oqk7OQsX4ikd/ycB
-         hd85L9XZC3guRouAbSBAVPTN84R+ba7wB96YFwjaHgf/rCjTtB5hjJYJ+kGorl9nKm7Y
-         M+e0/wF1YvURs70PQNrIEeYQXO0ypEGxFDuKXpKIDaNC3PmzEu/ww91pbzfd1/l+2wf5
-         oG9TS9+7nO9l5N3KHlBXCbuu2FSRwkwMWHSGHHyWwFor1n3y1D6qOqmxVGS1zGLAc6WJ
-         scWQ==
-X-Gm-Message-State: AOAM533HPttoCFuelFD4H/a/PcpOfyKrlmHnWezicZeSnIE/pZXRy/s2
-        pA6jGsKNbEDwgtEDMiEaGeQ=
-X-Google-Smtp-Source: ABdhPJxjPpwPG0D9XGfq9voxFl0VuxE7FX55nSfoIgIuNg8975Ev940nVh6O+LLYSJPd2LMRPzVwFQ==
-X-Received: by 2002:aa7:8582:: with SMTP id w2mr7318162pfn.34.1594973447856;
-        Fri, 17 Jul 2020 01:10:47 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id d5sm1937296pju.15.2020.07.17.01.10.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 01:10:47 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1 3/3] skd: use generic power management
-Date:   Fri, 17 Jul 2020 13:39:10 +0530
-Message-Id: <20200717080910.342741-4-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200717080910.342741-1-vaibhavgupta40@gmail.com>
-References: <20200717080910.342741-1-vaibhavgupta40@gmail.com>
+        Fri, 17 Jul 2020 04:11:40 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06H84Ni4186145;
+        Fri, 17 Jul 2020 04:11:33 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32autb2ph8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 04:11:33 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06H84cf4187071;
+        Fri, 17 Jul 2020 04:11:32 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32autb2pgn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 04:11:32 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06H8Ab8N008393;
+        Fri, 17 Jul 2020 08:11:31 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01dal.us.ibm.com with ESMTP id 328ux7w3r1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 08:11:31 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06H8BTXV39911930
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jul 2020 08:11:29 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD897BE051;
+        Fri, 17 Jul 2020 08:11:29 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C3E30BE054;
+        Fri, 17 Jul 2020 08:11:23 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.115.95])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 17 Jul 2020 08:11:23 +0000 (GMT)
+Subject: Re: [PATCH v3 0/5] powerpc/perf: Add json file support for hv_24x7
+ core level events
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
+        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
+        anju@linux.vnet.ibm.com, kan.liang@linux.intel.com,
+        nasastry@in.ibm.com
+References: <20200716094216.1418659-1-kjain@linux.ibm.com>
+ <20200716152237.GC373728@kernel.org>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <a80eebc2-885c-171d-7c7a-74df727d60b4@linux.ibm.com>
+Date:   Fri, 17 Jul 2020 13:41:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200716152237.GC373728@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-17_04:2020-07-17,2020-07-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 spamscore=100
+ priorityscore=1501 suspectscore=0 mlxscore=100 phishscore=0 bulkscore=0
+ impostorscore=0 mlxlogscore=-1000 clxscore=1015 lowpriorityscore=0
+ malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007170061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy PM have to manage PCI states and device's PM states
-themselves. They also need to take care of configuration registers.
 
-With improved and powerful support of generic PM, PCI Core takes care of
-above mentioned, device-independent, jobs.
 
-This driver makes use of PCI helper functions like
-pci_save/restore_state(), pci_enable/disable_device(),
-pci_request/release_regions(), pci_set_power_state() and
-pci_set_master() to do required operations. In generic mode, they are no
-longer needed.
+On 7/16/20 8:52 PM, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Jul 16, 2020 at 03:12:11PM +0530, Kajol Jain escreveu:
+>> Patchset enhance current runtime parameter support. It introduces new
+>> fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+>> used to specify perpkg events. 
+>>
+>> The "PerCore" and "PerChip" specifies whether its core or chip events.
+>> Based on which we can decide which runtime parameter user want to
+>> access. Now character  '?' can refers different parameter based on user
+>> requirement.
+>>
+>> Initially, every time we want to add new terms like chip, core, thread
+>> etc, we need to create corrsponding fields in pmu_events and event
+>> struct.
+>> This patchset adds an enum called 'aggr_mode_class' which store all these
+>> aggregation like perpkg/percore. It also adds new field 'AggregationMode'
+>> to capture these terms.
+>> Now, if user wants to add any new term, they just need to add it in
+>> the enum defined. I try to test it with  my current setup.
+>>
+>> I also need to replace PerPkg field to AggregationMode in all the
+>> x86 uncore json files. It will great if Andi and team can test it
+>> and let me know if they have any concerns.
+>>
+>> Changelog:
+>> v2 -> v3:
+>> - Did some nits changes suggested by Jiri include correction of
+>>   indentation, and making PerCore/PerChip values forward after
+>>   PerPkg as 1 in the enum.
+>> - Rebase the patchset on Arnaldo's tmp.perf/core branch.
+>> - Change RFC tag
+> 
+> Hey, have anybody provided Acked-by/Reviewed-by for previous revisions
+> of this patchset? If so you could have collected them for patches
+> without changes, was that the case?
 
-Change function parameter in both .suspend() and .resume() to
-"struct device*" type. Use to_pci_dev() to get "struct pci_dev*" variable.
+Hi Arnaldo,
+      I did get "Acked-by: Ian Rogers" on my initial prototype which I send in my RFC.
+Link to the patch: https://lkml.org/lkml/2020/7/5/399
 
-Compile-tested only.
+After that, I break it down and made some nits changes as suggested by Jiri, that's why I didn't
+add his Acked-by tag.
+Ian should I add it, if it seems fine to you.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/block/skd_main.c | 36 ++++++++++--------------------------
- 1 file changed, 10 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
-index 51569c199a6c..d8d1042e7338 100644
---- a/drivers/block/skd_main.c
-+++ b/drivers/block/skd_main.c
-@@ -3315,12 +3315,12 @@ static void skd_pci_remove(struct pci_dev *pdev)
- 	return;
- }
- 
--static int skd_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused skd_pci_suspend(struct device *dev)
- {
- 	int i;
--	struct skd_device *skdev;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct skd_device *skdev = pci_get_drvdata(pdev);
- 
--	skdev = pci_get_drvdata(pdev);
- 	if (!skdev) {
- 		dev_err(&pdev->dev, "no device data for PCI\n");
- 		return -EIO;
-@@ -3337,35 +3337,23 @@ static int skd_pci_suspend(struct pci_dev *pdev, pm_message_t state)
- 	if (skdev->pcie_error_reporting_is_enabled)
- 		pci_disable_pcie_error_reporting(pdev);
- 
--	pci_release_regions(pdev);
--	pci_save_state(pdev);
--	pci_disable_device(pdev);
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
- 	return 0;
- }
- 
--static int skd_pci_resume(struct pci_dev *pdev)
-+static int __maybe_unused skd_pci_resume(struct device *dev)
- {
- 	int i;
- 	int rc = 0;
--	struct skd_device *skdev;
- 
--	skdev = pci_get_drvdata(pdev);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct skd_device *skdev = pci_get_drvdata(pdev);
- 	if (!skdev) {
- 		dev_err(&pdev->dev, "no device data for PCI\n");
- 		return -1;
- 	}
- 
--	pci_set_power_state(pdev, PCI_D0);
--	pci_enable_wake(pdev, PCI_D0, 0);
--	pci_restore_state(pdev);
-+	device_wakeup_disable(dev);
- 
--	rc = pci_enable_device(pdev);
--	if (rc)
--		return rc;
--	rc = pci_request_regions(pdev, DRV_NAME);
--	if (rc)
--		goto err_out;
- 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
- 	if (rc)
- 		rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-@@ -3374,7 +3362,6 @@ static int skd_pci_resume(struct pci_dev *pdev)
- 		goto err_out_regions;
- 	}
- 
--	pci_set_master(pdev);
- 	rc = pci_enable_pcie_error_reporting(pdev);
- 	if (rc) {
- 		dev_err(&pdev->dev,
-@@ -3427,10 +3414,6 @@ static int skd_pci_resume(struct pci_dev *pdev)
- 		pci_disable_pcie_error_reporting(pdev);
- 
- err_out_regions:
--	pci_release_regions(pdev);
--
--err_out:
--	pci_disable_device(pdev);
- 	return rc;
- }
- 
-@@ -3450,13 +3433,14 @@ static void skd_pci_shutdown(struct pci_dev *pdev)
- 	skd_stop_device(skdev);
- }
- 
-+static SIMPLE_DEV_PM_OPS(skd_pci_pm_ops, skd_pci_suspend, skd_pci_resume);
-+
- static struct pci_driver skd_driver = {
- 	.name		= DRV_NAME,
- 	.id_table	= skd_pci_tbl,
- 	.probe		= skd_pci_probe,
- 	.remove		= skd_pci_remove,
--	.suspend	= skd_pci_suspend,
--	.resume		= skd_pci_resume,
-+	.driver.pm	= &skd_pci_pm_ops,
- 	.shutdown	= skd_pci_shutdown,
- };
- 
--- 
-2.27.0
-
+Thanks,
+Kajol Jain
+> 
+> - Arnaldo
+>  
+>> v1 -> v2:
+>> - Rather then adding new field as PerCore/PerChip, created a new enum
+>>   to get these fields. And new field as "AggregationMode" which can
+>>   be used to capture these fields from json file.
+>>   - Suggested By Ian Rogers
+>>
+>>
+>> Kajol Jain (5):
+>>   perf/pmu-events/jevents: Add enum to store aggregation like PerPkg
+>>   pmu-events/x86/uncore: Replace PerPkg field to AggregationMode in x86
+>>     json files
+>>   perf jevents: Add support for parsing perchip/percore events
+>>   perf/tools: Pass pmu_event structure as a parameter for
+>>     arch_get_runtimeparam
+>>   perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
+>>
+>>  tools/perf/arch/powerpc/util/header.c         |   7 +-
+>>  .../arch/powerpc/power9/nest_metrics.json     |  27 +-
+>>  .../arch/x86/broadwellde/uncore-cache.json    |  62 ++--
+>>  .../arch/x86/broadwellde/uncore-memory.json   |  18 +-
+>>  .../arch/x86/broadwellde/uncore-power.json    |  18 +-
+>>  .../arch/x86/broadwellx/uncore-cache.json     |  62 ++--
+>>  .../x86/broadwellx/uncore-interconnect.json   |   6 +-
+>>  .../arch/x86/broadwellx/uncore-memory.json    |  18 +-
+>>  .../arch/x86/broadwellx/uncore-power.json     |  18 +-
+>>  .../arch/x86/cascadelakex/uncore-memory.json  |  64 ++--
+>>  .../arch/x86/cascadelakex/uncore-other.json   | 332 +++++++++---------
+>>  .../arch/x86/haswellx/uncore-cache.json       |  62 ++--
+>>  .../x86/haswellx/uncore-interconnect.json     |   6 +-
+>>  .../arch/x86/haswellx/uncore-memory.json      |  18 +-
+>>  .../arch/x86/haswellx/uncore-power.json       |  18 +-
+>>  .../arch/x86/ivytown/uncore-cache.json        |  62 ++--
+>>  .../arch/x86/ivytown/uncore-interconnect.json |  10 +-
+>>  .../arch/x86/ivytown/uncore-memory.json       |  16 +-
+>>  .../arch/x86/ivytown/uncore-power.json        |  52 +--
+>>  .../arch/x86/jaketown/uncore-cache.json       |  40 +--
+>>  .../x86/jaketown/uncore-interconnect.json     |  10 +-
+>>  .../arch/x86/jaketown/uncore-memory.json      |  18 +-
+>>  .../arch/x86/jaketown/uncore-power.json       |  52 +--
+>>  .../x86/knightslanding/uncore-memory.json     |   8 +-
+>>  .../arch/x86/skylakex/uncore-memory.json      |  36 +-
+>>  .../arch/x86/skylakex/uncore-other.json       | 220 ++++++------
+>>  .../arch/x86/tremontx/uncore-memory.json      |  14 +-
+>>  .../arch/x86/tremontx/uncore-other.json       |  70 ++--
+>>  .../arch/x86/tremontx/uncore-power.json       |   2 +-
+>>  tools/perf/pmu-events/jevents.c               |  45 ++-
+>>  tools/perf/pmu-events/jevents.h               |   2 +-
+>>  tools/perf/pmu-events/pmu-events.h            |   8 +-
+>>  tools/perf/tests/pmu-events.c                 |   8 +-
+>>  tools/perf/util/metricgroup.c                 |   5 +-
+>>  tools/perf/util/metricgroup.h                 |   3 +-
+>>  tools/perf/util/pmu.c                         |   6 +-
+>>  36 files changed, 729 insertions(+), 694 deletions(-)
+>>
+>> -- 
+>> 2.26.2
+>>
+> 
