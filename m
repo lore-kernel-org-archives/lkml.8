@@ -2,370 +2,166 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URI_HEX autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B869C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5C5C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 237DA20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A6D20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:53:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ylq2qE5q"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qr0B4s+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgGQJxB (ORCPT
+        id S1726629AbgGQJxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:53:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgGQJxA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:53:00 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E855C061755
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:53:00 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f7so10352707wrw.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:53:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=Lo1c/rnGVSu77HdK5H98zGXvpAEi7FcMFBx3K97Q7EY=;
-        b=ylq2qE5qPz9y78ruRjO64q4OPJWlwyd9ILLAtULePnIhwpxEtXfKyED3+xsk26LdM9
-         hy89fYGUrgZ5xJo/kfk+wQ8JxUCvSE3w/rDQLMvARXULD2jkdzUeILZaNqcsfg7FNlyq
-         mF/RjwEIL4eVQY2smBS84+ht9iG5Kf6kXkOqPfYdB8XkgddnfBJH/DYolNEDlEhgh+3j
-         jZz47aFHAu4shkMVpzOBBkLshyr1OSm9nec3idaQKhDLLhm7OYZyb9X95NCoqBCMx2da
-         /hbkFtNciEqH3XRovuo9wfo7jmL1Id0TdSKLhHhfL7JIF+VgL6DfzU5f6bsi7pZo9w0X
-         Mzgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=Lo1c/rnGVSu77HdK5H98zGXvpAEi7FcMFBx3K97Q7EY=;
-        b=ov+ZkU+rTUQmLQc/6IRwUzo2iVEIEYw4iQZBKoBAum/BJ5FRVmg+o5QCgAaYcGlAHg
-         QWC4oFu+6rTi0wBBB7voOsauBHTj8COlh0wamx1iKAjsnvCN6G8Pt+f8zPp9TRzym2FI
-         MSXz6FLRm5jEX8xnfwZ3faTf975rgY8JBQfpPU6ZAtIH0RmVoWbmsb+62Hc1QhYTvqQy
-         XhlftymJctQwNhNi9x58OcSWkLxvTWenXXjZdpkzh1+n60BMuZmJ7k4idfqT5H8fh/PL
-         r20DKQNI0140aUuNH2w9ZuYz5z+NhiCkW8D+RwTuZOKjzvbPTdgUrirMz6UsmJpdxxFF
-         flGw==
-X-Gm-Message-State: AOAM532YIxT4Bgf89T32r5Q9bIjg+k7ny6eyD32FXdvHf0+k/w0/ITwV
-        sJ5kZVa3a2PWYTajEugX/3djZA==
-X-Google-Smtp-Source: ABdhPJx0jf5GOTTG7Sw/jwDteXmU6kMQUvQNJzl93iIOozT3w+lSuusIOz42avUeY8CeqChdfTex1A==
-X-Received: by 2002:adf:e7c9:: with SMTP id e9mr741274wrn.307.1594979579006;
-        Fri, 17 Jul 2020 02:52:59 -0700 (PDT)
-Received: from localhost ([2a01:cb19:8ae7:9d00:c90:cdad:cf4c:55db])
-        by smtp.gmail.com with ESMTPSA id n16sm14705874wra.19.2020.07.17.02.52.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 02:52:58 -0700 (PDT)
-References: <20200714092053.16067-1-fengping.yu@mediatek.com> <20200714092053.16067-3-fengping.yu@mediatek.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Mattijs Korpershoek <mkorpershoek@baylibre.com>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org,
-        "fengping.yu" <fengping.yu@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v14 2/3] drivers: input: keyboard: Add mtk keypad driver
-In-reply-to: <20200714092053.16067-3-fengping.yu@mediatek.com>
-Date:   Fri, 17 Jul 2020 11:52:57 +0200
-Message-ID: <87imemsc1y.fsf@baylibre.com>
+        Fri, 17 Jul 2020 05:53:14 -0400
+Received: from mail-eopbgr80047.outbound.protection.outlook.com ([40.107.8.47]:63456
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725864AbgGQJxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:53:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OnE1zSnA7m1sEX3F3pJj5IzFrrHlxrQU8cVbXP1uL+FByCzBo6+Pn3elfDV9IBXY7GSHla2NglnUIIRvQk/A1QmOsfupS4vRVuQzP5B0EanqVdFqRnc6958CKEUTwwnTp6ij8MpLZ/Dnrf4dL0SJ+l5ZfCKqKk3gXA0RqKsH9PvoMKu1BuUmh6FSY5uZwwxs/LWwqKt0eGyKefJJD3j0TmYXBdyLAQHlt1bBxu5Kml3Nnr3avY+xgssbZyE+8tsBEvvQ+nKi4smfS9sEdxNYt3CIo91lOpEAtHclalgRRQjOw0orJLnykbT12n4ua0kRxnRJQBqsJx5GQ0oXhjjXEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pH7DX6ofMbEBi7nz6qxsJL+zMHh7ND5O18jq77q6Xkc=;
+ b=Qwc1tgUpmyx4Zc3U0HvX/v9j6fHEuq60t54lARuWQ/Un6oIUuwrUiKuzY2kdusSr9NO94FGVie7Pk59lrcF6CW70klka0QyQlnXhd5bxNgp8EF+bzvTyjRRk8u3V47BDBRV5gFmIl0xHwO4TmMyaCoeM9W2ahVHonXzmmL45SqMSrI8o3zUAYTJZWFfmRr66a93ubBSnkgUPpa1Z/ea0/6CpPsZbuDYcE7i8oHwinnt6qwQa07gSm9U242wADcRqnjZUTQIRcVdaxqQSyMnfC9EU6Vz4YY3EcZ3rWGNq05RojlGWrzo9duZrsziVX+lkTwmzvMhUm2tyR1D+wWGwrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pH7DX6ofMbEBi7nz6qxsJL+zMHh7ND5O18jq77q6Xkc=;
+ b=qr0B4s+yXWwwLN28O4bbHQ8uyD29NGdGOEMtS73abG+IdvOWhqxJunDoaEEygr2PBJ/6r3j6PJv4VVU9X+M+KPKHMGIfcWuveidHqo0+5HSdAAkuvaPiM+I42x67E9eNN24VDh/9lbGLlsZETG+7F80fd77OaTnh88mxKgSwd3Y=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB6PR0401MB2376.eurprd04.prod.outlook.com (10.168.58.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3174.20; Fri, 17 Jul 2020 09:53:09 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3174.026; Fri, 17 Jul 2020
+ 09:53:09 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/2] pinctrl: imx: Support building SCU pinctrl driver as
+ module
+Thread-Topic: [PATCH 1/2] pinctrl: imx: Support building SCU pinctrl driver as
+ module
+Thread-Index: AQHWW4NHWrU0ATUAm0ydC8gIz0Rl9akKUIoAgAABVNCAAArtgIAAgWswgACWcoCAAAinQIAACZ8AgAABiOA=
+Date:   Fri, 17 Jul 2020 09:53:08 +0000
+Message-ID: <DB3PR0402MB391681666012C43C471FA0E2F57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1594912013-20859-1-git-send-email-Anson.Huang@nxp.com>
+ <c00f8fe3-d12a-0f91-c301-c028e5aa3f25@nxp.com>
+ <DB3PR0402MB3916C9FE00C0F4FC62ACB711F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <5e2af0c3-c832-3978-017e-0b1649aac61c@nxp.com>
+ <DB3PR0402MB3916AAEE01257A7F9A25A657F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <c27109aa-280f-db0d-980b-fbd735bab0a6@nxp.com>
+ <DB3PR0402MB3916A84BEF5EEC327EE35180F57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a256uR0zZn9ew9UoDqP51MdA4emCfMoZuPW6n9MqD5vPQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a256uR0zZn9ew9UoDqP51MdA4emCfMoZuPW6n9MqD5vPQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.22.28]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7bb140a2-d96e-4f23-685f-08d82a373602
+x-ms-traffictypediagnostic: DB6PR0401MB2376:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0401MB23765C8E2BA4721B246127A1F57C0@DB6PR0401MB2376.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TFLwY/48bjDCpSS5r78NkdDKMqNJIj7xhPWvEq94NGClaYr19ZnLKNGGvTGQoTCpB82HAuPz5rupq03CC+xRb7FveoNGXPfUtdvH3Ild34ODIgJJNpV10uSsLBbUq1HWQDAGH3OX4xncVcvbm6+F5WupgOdNA90vcMt2bRhKPOv6RbKwxWfE+/SJZJ0dNPhfyDsZ+R5YyifLc0g/HReITaZVzGV0u+mGi4rfh/28eih2VxDLFjSFgIkTlPz3Rs/RjM3NzsJIhBoQVvZ2f7x2tJSxEE8Q5pT6wtMHjvz3K9tsNS5cbuOViQwVGt6soLfNihjcVHpXtLmZyPrNsvqyRQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(366004)(136003)(396003)(39860400002)(83380400001)(54906003)(186003)(8676002)(33656002)(7696005)(6916009)(478600001)(86362001)(44832011)(7416002)(316002)(4326008)(26005)(8936002)(55016002)(53546011)(6506007)(66476007)(9686003)(52536014)(71200400001)(76116006)(66556008)(5660300002)(2906002)(66946007)(64756008)(66446008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: uFjghHqLufA+xdT+lIvjKOh3rJODtWxypbRQtvMdqcvNiXt1mlciWmM4GAXYck5T+wfuP8VXb6gxauDAsK6UUTOf/n717y3NwUQN0sU4D5mxBRCOHGpqrCS4JnKopmTLDl5tdvuiCgONQKJY7y9V/2JBqif9y+vtKPyX8o0vat6FivJTjQbm34ViduCsNhW0RR1xmNs/arrPuEo8vXi9koMYiM34lUm3pMNqVpUWPPCuPlvpLFlDlpi0l3qtUX5YHoQtafR0HaYjeaNMJvQkx/N2q/y0fFyzxlpRHIE82/dXPzOXCv6gBwF5O/x1zfcHzFfU3h1LWOeYuwkRKduSMguC6xFOeeB8b2/XPfEZ8+GTR2Cu17Tgy2iQqq50Hfmq3YYGg9skWHHf1LNhgsWpBBZKW0wnWjLpuxGYwC5X7D0941367dsQEicKT6k8/K/GChsqzkRfvvFmU7EuPfjf5E0+mh6SKzkyNYgGBC7Qr4w=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7bb140a2-d96e-4f23-685f-08d82a373602
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 09:53:08.9141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wb8gYTh3YACY0oJ115oT2UsnDjyIwrx2NDJvRkVtXI+caWe3736GoUpzRGDlL+GV/tzboSgzNFiXipYLSeRk7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2376
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fengping,
-
-Thank you for working on this driver, please see some remarks below
-
-Fengping Yu <fengping.yu@mediatek.com> writes:
-
-> From: "fengping.yu" <fengping.yu@mediatek.com>
->
-> This adds matrix keypad support for Mediatek SoCs.
->
-> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
-> Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/input/keyboard/Kconfig   |  11 ++
->  drivers/input/keyboard/Makefile  |   1 +
->  drivers/input/keyboard/mtk-kpd.c | 209 +++++++++++++++++++++++++++++++
->  3 files changed, 221 insertions(+)
->  create mode 100644 drivers/input/keyboard/mtk-kpd.c
->
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 793ecbbda32c..1ee845c292c6 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -782,6 +782,17 @@ config KEYBOARD_BCM
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called bcm-keypad.
->  
-> +config KEYBOARD_MTK_KPD
-> +	tristate "MediaTek Keypad Support"
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	select REGMAP_MMIO
-> +	select INPUT_MATRIXKMAP
-> +	help
-> +	  Say Y here if you want to use the keypad on MediaTek SoCs.
-> +	  If unsure, say N.
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called mtk-kpd.
-> +
->  config KEYBOARD_MTK_PMIC
->  	tristate "MediaTek PMIC keys support"
->  	depends on MFD_MT6397
-> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-> index 1d689fdd5c00..6c9d852c377e 100644
-> --- a/drivers/input/keyboard/Makefile
-> +++ b/drivers/input/keyboard/Makefile
-> @@ -43,6 +43,7 @@ obj-$(CONFIG_KEYBOARD_MATRIX)		+= matrix_keypad.o
->  obj-$(CONFIG_KEYBOARD_MAX7359)		+= max7359_keypad.o
->  obj-$(CONFIG_KEYBOARD_MCS)		+= mcs_touchkey.o
->  obj-$(CONFIG_KEYBOARD_MPR121)		+= mpr121_touchkey.o
-> +obj-$(CONFIG_KEYBOARD_MTK_KPD)		+= mtk-kpd.o
->  obj-$(CONFIG_KEYBOARD_MTK_PMIC) 	+= mtk-pmic-keys.o
->  obj-$(CONFIG_KEYBOARD_NEWTON)		+= newtonkbd.o
->  obj-$(CONFIG_KEYBOARD_NOMADIK)		+= nomadik-ske-keypad.o
-> diff --git a/drivers/input/keyboard/mtk-kpd.c b/drivers/input/keyboard/mtk-kpd.c
-> new file mode 100644
-> index 000000000000..861abe52f1a3
-> --- /dev/null
-> +++ b/drivers/input/keyboard/mtk-kpd.c
-> @@ -0,0 +1,209 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 MediaTek Inc.
-> + * Author Terry Chang <terry.chang@mediatek.com>
-> + */
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/input/matrix_keypad.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/property.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define MTK_KPD_NAME		"mtk-kpd"
-> +#define MTK_KPD_MEM		0x0004
-> +#define MTK_KPD_DEBOUNCE	0x0018
-> +#define MTK_KPD_DEBOUNCE_MASK	GENMASK(13, 0)
-> +#define MTK_KPD_DEBOUNCE_MAX_US	256000
-> +#define MTK_KPD_NUM_MEMS	5
-> +#define MTK_KPD_NUM_BITS	136	/* 4*32+8 MEM5 only use 8 BITS */
-> +
-> +struct mtk_keypad {
-> +	struct regmap *regmap;
-> +	struct input_dev *input_dev;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +	u32 n_rows;
-> +	u32 n_cols;
-> +	DECLARE_BITMAP(keymap_state, MTK_KPD_NUM_BITS);
-> +};
-> +
-> +static const struct regmap_config keypad_regmap_cfg = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = sizeof(u32),
-> +	.max_register = 36,
-> +};
-> +
-> +static irqreturn_t kpd_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct mtk_keypad *keypad = dev_id;
-> +	unsigned short *keycode = keypad->input_dev->keycode;
-> +	DECLARE_BITMAP(new_state, MTK_KPD_NUM_BITS);
-> +	DECLARE_BITMAP(change, MTK_KPD_NUM_BITS);
-> +	int bit_nr;
-> +	int pressed;
-> +	unsigned short code;
-> +
-> +	regmap_raw_read(keypad->regmap, MTK_KPD_MEM,
-> +			new_state, MTK_KPD_NUM_MEMS);
-> +
-> +	bitmap_xor(change, new_state, keypad->keymap_state, MTK_KPD_NUM_BITS);
-> +
-> +	for_each_set_bit(bit_nr, change, MTK_KPD_NUM_BITS) {
-> +		/* 1: not pressed, 0: pressed */
-> +		pressed = !test_bit(bit_nr, new_state);
-> +		dev_dbg(&keypad->input_dev->dev, "%s",
-> +			pressed ? "pressed" : "released");
-> +
-> +		/* 32bit register only use low 16bit as keypad mem register */
-> +		code = keycode[bit_nr - 16 * (BITS_TO_U32(bit_nr) - 1)];
-> +
-> +		input_report_key(keypad->input_dev, code, pressed);
-> +		input_sync(keypad->input_dev);
-> +
-> +		dev_dbg(&keypad->input_dev->dev,
-> +			"report Linux keycode = %d\n", code);
-> +	}
-> +
-> +	bitmap_copy(keypad->keymap_state, new_state, MTK_KPD_NUM_BITS);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void kpd_clk_disable(void *data)
-> +{
-> +	clk_disable_unprepare(data);
-> +}
-> +
-> +static int kpd_pdrv_probe(struct platform_device *pdev)
-> +{
-> +	struct mtk_keypad *keypad;
-> +	unsigned int irq;
-> +	u32 debounce;
-> +	bool wakeup;
-> +	int ret;
-> +
-> +	keypad = devm_kzalloc(&pdev->dev, sizeof(*keypad), GFP_KERNEL);
-> +	if (!keypad)
-> +		return -ENOMEM;
-> +
-> +	keypad->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(keypad->base))
-> +		return PTR_ERR(keypad->base);
-> +
-> +	keypad->regmap = devm_regmap_init_mmio(&pdev->dev,
-> +					       keypad->base,
-> +					       &keypad_regmap_cfg);
-> +	if (IS_ERR(keypad->regmap)) {
-> +		dev_err(&pdev->dev,
-> +			"regmap init failed:%ld\n", PTR_ERR(keypad->regmap));
-> +		return PTR_ERR(keypad->regmap);
-> +	}
-> +
-> +	bitmap_fill(keypad->keymap_state, MTK_KPD_NUM_BITS);
-> +
-> +	keypad->input_dev = devm_input_allocate_device(&pdev->dev);
-> +	if (!keypad->input_dev) {
-> +		dev_err(&pdev->dev, "Failed to allocate input dev\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	keypad->input_dev->name = MTK_KPD_NAME;
-> +	keypad->input_dev->id.bustype = BUS_HOST;
-> +
-> +	ret = matrix_keypad_parse_properties(&pdev->dev, &keypad->n_rows,
-> +					     &keypad->n_cols);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to parse keypad params\n");
-> +		return ret;
-> +	}
-> +
-> +	if (device_property_read_u32(&pdev->dev, "mediatek,debounce-us",
-> +				     &debounce))
-> +		debounce = 16000;
-> +
-> +	if (debounce > MTK_KPD_DEBOUNCE_MAX_US) {
-> +		dev_err(&pdev->dev, "Debounce time exceeds the maximum allowed time %dus\n",
-> +			MTK_KPD_DEBOUNCE_MAX_US);
-> +		return -EINVAL;
-> +	}
-> +
-> +	wakeup = device_property_read_bool(&pdev->dev, "wakeup-source");
-> +
-> +	dev_dbg(&pdev->dev, "n_row=%d n_col=%d debounce=%d\n",
-> +		keypad->n_rows, keypad->n_cols, debounce);
-> +
-> +	ret = matrix_keypad_build_keymap(NULL, NULL,
-> +					 keypad->n_rows,
-> +					 keypad->n_cols,
-> +					 NULL,
-> +					 keypad->input_dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to build keymap\n");
-> +		return ret;
-> +	}
-> +
-> +	regmap_write(keypad->regmap, MTK_KPD_DEBOUNCE,
-> +		     debounce * 32 / 1000 & MTK_KPD_DEBOUNCE_MASK);
-> +
-> +	keypad->clk = devm_clk_get(&pdev->dev, "kpd");
-> +	if (IS_ERR(keypad->clk))
-> +		return keypad->clk;
-Should we return PTR_ERR(keypad->clk) instead?
-When building this, we have a compiler warning:
-
-drivers/input/keyboard/mtk-kpd.c:154:10: warning: incompatible pointer to integer conversion returning 'struct clk *' from a function with result type 'int' [-Wint-conversion]
-                return keypad->clk;
-
-> +
-> +	ret = clk_prepare_enable(keypad->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "cannot prepare/enable keypad clock\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = devm_add_action_or_reset(&pdev->dev, kpd_clk_disable, keypad->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	ret = devm_request_threaded_irq(&pdev->dev, irq,
-> +					NULL, kpd_irq_handler, 0,
-Should we use IRQF_ONESHOT as irq flag here instead of 0?
-When running this on my board I have:
-
-  [    0.624890] genirq: Threaded irq requested with handler=NULL and !ONESHOT for irq 233
-  [    0.625901] mtk-kpd 10010000.kp: Failed to request IRQ#233:-22
-  [    0.626680] mtk-kpd: probe of 10010000.kp failed with error -22
-
-Most other drivers use IRQF_ONESHOT when calling
-devm_request_threaded_irq()
-
-> +					MTK_KPD_NAME, keypad);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to request IRQ#%d:%d\n",
-> +			irq, ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = input_register_device(keypad->input_dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register device\n");
-> +		return ret;
-> +	}
-> +
-> +	ret =  device_init_wakeup(&pdev->dev, wakeup);
-> +	if (ret)
-> +		dev_warn(&pdev->dev, "device_init_wakeup fail\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id kpd_of_match[] = {
-> +	{ .compatible = "mediatek,mt6779-keypad" },
-> +	{ .compatible = "mediatek,mt6873-keypad" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static struct platform_driver kpd_pdrv = {
-> +	.probe = kpd_pdrv_probe,
-> +	.driver = {
-> +		   .name = MTK_KPD_NAME,
-> +		   .of_match_table = kpd_of_match,
-> +	},
-> +};
-> +module_platform_driver(kpd_pdrv);
-> +
-> +MODULE_AUTHOR("Mediatek Corporation");
-> +MODULE_DESCRIPTION("MTK Keypad (KPD) Driver");
-> +MODULE_LICENSE("GPL");
-
+SGksIEFybmQNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gcGluY3RybDogaW14OiBTdXBw
+b3J0IGJ1aWxkaW5nIFNDVSBwaW5jdHJsIGRyaXZlciBhcw0KPiBtb2R1bGUNCj4gDQo+IE9uIEZy
+aSwgSnVsIDE3LCAyMDIwIGF0IDExOjI0IEFNIEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAu
+Y29tPg0KPiB3cm90ZToNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBwaW5jdHJsOiBp
+bXg6IFN1cHBvcnQgYnVpbGRpbmcgU0NVIHBpbmN0cmwNCj4gPiA+IGRyaXZlciBhcyBtb2R1bGUN
+Cj4gPiA+ICtNT0RVTEVfQVVUSE9SKCJEb25nIEFpc2hlbmc8YWlzaGVuZy5kb25nQG54cC5jb20+
+Iik7DQo+ID4gPiArTU9EVUxFX0RFU0NSSVBUSU9OKCJOWFAgaS5NWCBTQ1UgY29tbW9uIHBpbmN0
+cmwgZHJpdmVyIik7DQo+ID4gPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0KPiA+ID4NCj4g
+PiA+DQo+ID4gPiBUaGlzIGNhbiBiZSBpbiBhIHNlcGFyYXRlIHBhdGNoLg0KPiA+DQo+ID4gSSBk
+b24ndCB1bmRlcnN0YW5kLCB3aXRob3V0IGFkZGluZyBtb2R1bGUgbGljZW5zZSwgY2hhbmdpbmcg
+dGhlIFNDVQ0KPiA+IHBpbmN0cmwgZHJpdmVyIHRvICJ0cmlzdGF0ZSIsIHdoZW4gYnVpbGRpbmcg
+d2l0aCA9TSwgdGhlIGJ1aWxkIHdpbGwNCj4gPiBoYXZlIHdhcm5pbmcgYXMgYmVsb3csIHNvIEkg
+dGhpbmsgaXQgZG9lcyBOT1QgbWFrZSBzZW5zZSB0byBzcGxpdCBpdCB0byAyDQo+IHBhdGNoZXMu
+DQo+ID4NCj4gPiAgIENDIFtNXSAgZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLXNj
+dS5vDQo+ID4gICBNT0RQT1NUIE1vZHVsZS5zeW12ZXJzDQo+ID4gV0FSTklORzogbW9kcG9zdDog
+bWlzc2luZyBNT0RVTEVfTElDRU5TRSgpIGluDQo+IGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUv
+cGluY3RybC1zY3Uubw0KPiA+ICAgTEQgW01dICBkcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3Bp
+bmN0cmwtc2N1LmtvDQo+IA0KPiBJIGFncmVlIGl0IHdvdWxkIGJlIGNsZWFyZXIgdG8gZG8gaXQg
+YXMgc2VwYXJhdGUgcGF0Y2hlcywgYnV0IHlvdSB0aGVuIGhhdmUgdG8NCj4gYmUgY2FyZWZ1bCBh
+Ym91dCB0aGUgb3JkZXIgdG8gYXZvaWQgdGhlIHByb2JsZW0geW91IG1lbnRpb24uDQo+IA0KPiBB
+IGNsZWFyIGluZGljYXRpb24gdGhhdCBpdCBtYXkgYmUgc2Vuc2libGUgdG8gc3BsaXQgdXAgdGhl
+IHBhdGNoIGlzIHRoYXQgeW91cg0KPiBjaGFuZ2Vsb2cgaGFzIGEgbGlzdCBvZiBmaXZlIGl0ZW1z
+IGluIGl0LCB3aGljaCBhcmUgbW9zdGx5IGRvaW5nIGRpZmZlcmVudCB0aGluZ3MuDQo+IFRoZSBp
+ZGVhbCB3YXkgdG8gc3BsaXQgdXAgYSBwYXRjaCBzZXJpZXMgaXMgdG8gaGF2ZSBlYWNoIHBhdGNo
+IHdpdGggYSBjaGFuZ2Vsb2cNCj4gdGhhdCBoYXMgdG8gZXhwbGFpbiBleGFjdGx5IG9uZSB0aGlu
+ZywgYW5kIG1ha2VzIGl0IG9idmlvdXMgaG93IGVhY2ggY2hhbmdlZA0KPiBsaW5lIGNvcnJlc3Bv
+bmRzIHRvIHRoZSBkZXNjcmlwdGlvbiwgYnV0IG5ldmVyIGV4cGxhaW4gdGhlIHNhbWUgdGhpbmcg
+aW4gbW9yZQ0KPiB0aGFuIG9uZSBwYXRjaCAoaS5lLiB5b3UgY29tYmluZSBwYXRjaGVzIHRoYXQg
+ZG8gdGhlIHNhbWUgdGhpbmcgaW4gbXVsdGlwbGUNCj4gZmlsZXMpLg0KPiANCj4gSW4gdGhpcyBj
+YXNlLCBhIGdvb2Qgc3BsaXQgbWF5IGJlOg0KPiANCj4gcGF0Y2ggMToNCj4gICAgLSBVc2UgZnVu
+Y3Rpb24gY2FsbGJhY2tzIGZvciBTQ1UgcmVsYXRlZCBmdW5jdGlvbnMgaW4gcGluY3RybC1pbXgu
+Yw0KPiAgICAgICBpbiBvcmRlciB0byBzdXBwb3J0IHRoZSBzY2VuYXJpbyBvZiBQSU5DVFJMX0lN
+WCBpcyBidWlsdCBpbg0KPiAgICAgICB3aGlsZSBQSU5DVFJMX0lNWF9TQ1UgaXMgYnVpbHQgYXMg
+bW9kdWxlOw0KPiAgICAgLSBBbGwgZHJpdmVycyB1c2luZyBTQ1UgcGluY3RybCBkcml2ZXIgbmVl
+ZCB0byBpbml0aWFsaXplIHRoZQ0KPiAgICAgICBTQ1UgcmVsYXRlZCBmdW5jdGlvbiBjYWxsYmFj
+azsNCj4gDQo+IHBhdGNoIDI6DQo+ICAgICAtIEV4cG9ydCBTQ1UgcmVsYXRlZCBmdW5jdGlvbnMg
+YW5kIHVzZSAiSVNfRU5BQkxFRCIgaW5zdGVhZCBvZg0KPiAgICAgICAiaWZkZWYiIHRvIHN1cHBv
+cnQgU0NVIHBpbmN0cmwgZHJpdmVyIHVzZXIgYW5kIGl0c2VsZiB0byBiZQ0KPiAgICAgICBidWls
+dCBhcyBtb2R1bGU7DQo+ICAgICAtIENoYW5nZSBQSU5DVFJfSU1YX1NDVSB0byB0cmlzdGF0ZTsN
+Cj4gICAgIC0gQWRkIG1vZHVsZSBhdXRob3IsIGRlc2NyaXB0aW9uIGFuZCBsaWNlbnNlLg0KPiAN
+Cj4gYW5kIHRoZW4gcmV3cml0ZSB0aGUgZGVzY3JpcHRpb24gdG8gbm90IGhhdmUgYSBidWxsZXRl
+ZCBsaXN0Lg0KPiANCj4gVGhhdCBzYWlkLCBJIGRvbid0IHRoaW5rIGl0IGlzIGNyaXRpY2FsIGhl
+cmUsIGFuZCBJIHdvdWxkIG5vdCBoYXZlIGNvbXBsYWluZWQNCj4gYWJvdXQgdGhlIHZlcnNpb24g
+eW91IHNlbnQuDQo+IA0KPiBJZiB5b3UgZW5kIHVwIGNoYW5naW5nIHRoZSBwYXRjaCwgSSB0aGlu
+ayB5b3UgY2FuIGFjdHVhbGx5IGRyb3AgdGhlICIjaWYNCj4gSVNfRU5BQkxFRCgpIiBjaGVjayBl
+bnRpcmVseSwgYXMgdGhlIGZ1bmN0aW9ucyBhcmUgbm93IGFsd2F5cyBhc3N1bWVkIHRvIGJlDQo+
+IGF2YWlsYWJsZSwgYW5kIHdlIGRvbid0ICNpZmRlZiBkZWNsYXJhdGlvbnMgd2hlbiB0aGVyZSBp
+cyBubyAjZWxzZSBwYXRoDQo+IG90aGVyd2lzZS4NCj4gDQoNClRoYW5rcyBmb3IgdGhlIGdvb2Qg
+c3VnZ2VzdGlvbiwgaWYgdGhlcmUgaXMgb3RoZXIgY29tbWVudCBuZWVkIGEgVjIsIG9yIG1haW50
+YWluZXINCnRoaW5rcyBpdCBpcyBiZXR0ZXIgdG8gc3BsaXQgaXQgZm9sbG93aW5nIHlvdXIgZ3Vp
+ZGUsIEkgd2lsbCBzZW5kIFYyIGZvbGxvd2luZyB5b3VyIGd1aWRlLg0KDQpUaGFua3MsDQpBbnNv
+bg0K
