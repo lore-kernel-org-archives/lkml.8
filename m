@@ -2,136 +2,125 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE751C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309BDC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B25C820684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2F420684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:59:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vBH9iXY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgGQJ6j (ORCPT
+        id S1726426AbgGQJ76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:58:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgGQJ6j (ORCPT
+        Fri, 17 Jul 2020 05:59:58 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:21577 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgGQJ75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:58:39 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE0D4C061755
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:58:38 -0700 (PDT)
-Received: from [IPv6:2a01:e35:2fb5:1510:c567:382e:1974:9868] (unknown [IPv6:2a01:e35:2fb5:1510:c567:382e:1974:9868])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: aferraris)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id EA4562A4F66;
-        Fri, 17 Jul 2020 10:58:35 +0100 (BST)
-Subject: Re: [PATCH v2 2/2] ASoC: fsl_asrc: always use internal ratio
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     alsa-devel@alsa-project.org, Timur Tabi <timur@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        kernel@collabora.com, Shengjiu Wang <shengjiu.wang@gmail.com>
-References: <20200716145201.186270-1-arnaud.ferraris@collabora.com>
- <20200716151352.193451-1-arnaud.ferraris@collabora.com>
- <20200716151352.193451-3-arnaud.ferraris@collabora.com>
- <20200716233742.GA27376@Asurada-Nvidia>
-From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Autocrypt: addr=arnaud.ferraris@collabora.com; keydata=
- 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
- xZQG6fKWuIur3RI=
-Message-ID: <e4d96e1f-b988-bb24-b784-b4198d172e40@collabora.com>
-Date:   Fri, 17 Jul 2020 11:58:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 05:59:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594979996; x=1626515996;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=9vaHmuMsNN0kIp0YqM12N3y5Zy+mAtWNYvcQ8zisUCM=;
+  b=vBH9iXY1ugHiuN2VMVXO4uF7xlqNvWERnBrc9eWc9g5udeDFHnhT9aON
+   dfGZPwNbYFS5c3Ml9+4aLWJT8HTJ4Y2b6rrw7+dn1wz6hOy4ZPgTwuDSu
+   sTBFDc+x7Hk9U4btwG9CnESa1oZqh8Cul2NaIUbJBKDI5u+Yt+EOV+qsc
+   E=;
+IronPort-SDR: 6PDhm+xE4JDdLX39G/DZKH1Kn+CU+lfhtanLL/IjlririC28jO/snZL2Q7aMTFPxbVd11ZQ3CH
+ iRLZFTHsFQXA==
+X-IronPort-AV: E=Sophos;i="5.75,362,1589241600"; 
+   d="scan'208";a="42377858"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 17 Jul 2020 09:59:55 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 52A8CA11D6;
+        Fri, 17 Jul 2020 09:59:45 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 17 Jul 2020 09:59:44 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 17 Jul 2020 09:59:26 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     Mike Rapoport <rppt@kernel.org>, <akpm@linux-foundation.org>,
+        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: Re: Re: [PATCH v18 01/14] mm/page_ext: Export lookup_page_ext() to GPL modules
+Date:   Fri, 17 Jul 2020 11:59:10 +0200
+Message-ID: <20200717095910.23550-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200713173805.31923-1-sjpark@amazon.com> (raw)
 MIME-Version: 1.0
-In-Reply-To: <20200716233742.GA27376@Asurada-Nvidia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.26]
+X-ClientProxiedBy: EX13D14UWC003.ant.amazon.com (10.43.162.19) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 13 Jul 2020 19:38:05 +0200 SeongJae Park <sjpark@amazon.com> wrote:
 
-
-Le 17/07/2020 à 01:37, Nicolin Chen a écrit :
->> @@ -507,8 +507,7 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
->>  
->>  	/* Enable Ideal Ratio mode */
+> On Mon, 13 Jul 2020 20:19:09 +0300 Mike Rapoport <rppt@kernel.org> wrote:
 > 
-> The code is against the comments now -- need to update this line.
-
-It isn't, the following code still enables "Ideal Ratio" mode (see below)
-
->>  	regmap_update_bits(asrc->regmap, REG_ASRCTR,
->> -			   ASRCTR_IDRi_MASK(index) | ASRCTR_USRi_MASK(index),
->> -			   ASRCTR_IDR(index) | ASRCTR_USR(index));
->> +			   ASRCTR_IDRi_MASK(index), ASRCTR_IDR(index);
+> > On Mon, Jul 13, 2020 at 02:21:43PM +0200, SeongJae Park wrote:
+> > > On Mon, 13 Jul 2020 15:08:42 +0300 Mike Rapoport <rppt@kernel.org> wrote:
+> > > 
+> > > > Hi,
+> > > > 
+> > > > On Mon, Jul 13, 2020 at 10:41:31AM +0200, SeongJae Park wrote:
+> > > > > From: SeongJae Park <sjpark@amazon.de>
+> > > > > 
+> > > > > This commit exports 'lookup_page_ext()' to GPL modules.  It will be used
+> > > > > by DAMON in following commit for the implementation of the region based
+> > > > > sampling.
+> > > > 
+> > > > Maybe I'm missing something, but why is DAMON a module?
+> > > 
+> > > I made it loadable just for easier adoption from downstream kernels.  I could
+> > > drop the module build support if asked.
+> >  
+> > Well, exporting core mm symbols to modules should be considred very
+> > carefully. 
 > 
-> The driver falls back to ideal ratio mode if there is no matched
-> clock source. Your change seems to apply internal ratio mode any
-> way? Probably would break the fallback routine.
+> Agreed.  I will drop the module support from the next spin.
+> 
+> > 
+> > Why lookup_page_ext() is required for DAMON? It is not used anywhere in
+> > this patchset.
+> 
+> It's indirectly used.  In the 6th patch, DAMON uses 'set_page_young()' to not
+> interfere with other PTE Accessed bit users.  And, 'set_page_young()' uses
+> 'lookup_page_ext()' if !CONFIG_64BIT.  That's why I exported it.
 
-Strictly speaking, internal ratio is only enabled when we have matched
-clock sources, and is used in addition to the calculated dividers
-(allows the ASRC to better adjust to drifting/inaccurate physical
-clocks). "Ideal Ratio" mode is different, and still enabled as a
-fallback when no clock source is matched.
+This also means that it would make no sense if !64BIT && !PAGE_EXTENSION.  In
+the next spin, I will update the DAMON Kconfig to select PAGE_EXTENSION if
+!64BIT, as same to that of IDLE_PAGE_TRACKING.
 
-Ideal ratio requires both USRi and IDRi bits to be set, and that would
-still be the case if there is no matched clock source.
 
-The only difference my patch introduces is that USRi is always set (was
-previously cleared for "normal" mode), and therefore only IDRi needs to
-be set in order to enable ideal ratio mode.
-
-Regards,
-Arnaud
+Thanks,
+SeongJae Park
