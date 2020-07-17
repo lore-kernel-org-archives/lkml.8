@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4362C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8681EC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE8CD20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6696220717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:37:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1hceBPw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgWLw++g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgGQOhN (ORCPT
+        id S1726936AbgGQOhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:37:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45234 "EHLO
+        Fri, 17 Jul 2020 10:37:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgGQOhM (ORCPT
+        with ESMTP id S1726891AbgGQOhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:37:12 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429DFC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:37:12 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so6757866pgc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:37:12 -0700 (PDT)
+        Fri, 17 Jul 2020 10:37:05 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80A70C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:37:05 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id cv18so4145417pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:37:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fu+rs2+2gElCUdDzPBQL6sWFbu1uYUhKK5LQZgejHd4=;
-        b=G1hceBPwvaKjLw0Pz1VWyQfYuSAj3S6gxYAuMFBnFyaK/fQPgIaGZSGoVFkCZew70m
-         ze2Z3xLPLmgxND5yOmf85tI9pGH/TgwkAebNfYWNLc3IkWr+LZ9TpZqVdGdgyH+uNHw+
-         J1Eh3BGz32G19EECpZQbWIEas6/V25xLJz7ZTnUbosMjIqH/AsgzTIbMhAYQW4m8gawH
-         lgAb4dbKuhVMYmhdStvWrnVmbbsbktez/cExgpQnMuliiM115gMbQcBN6kTInPS5Q1UI
-         zhPKOHnWqtb7q2ezdJoYbP0LgzU/lyTQYuUzQZXkyldINOt0tlwh6QPauklhscvR3koY
-         xxeQ==
+        bh=7wvydDy/tQ74G4O3jAzNKHUyywTE4V4qeYSnenBNOr0=;
+        b=NgWLw++gpVGwFURrt7QN9QtIu1dIYhRMyU75CvsbvBaH2Ac5LglsEEwskA81TAn7wc
+         nEnQmgNt9IqXyjKIq9fbhVbxTKF6TafhJzEnIuVse/TOeZjLt6Up/Q+9l8PjB50C8aFY
+         N//s/djwIcZkE261jGhnLvcVaGmIyJrv2N3UCEFT3ipjRuSOoYW+oYpBteejgyNfNfIy
+         ahvOiEyRDz3w989E+OUYL+MtfO8MMTC4/vHHTU7L4H7OUqUkUviDzx4xFv5UNMJJyxFm
+         WZl76m44TBpGcWNf2OjxdP0u9o8RGeBXlghXfAJThsbAQaJZMi7MWEJxiF+tEDeYi+0a
+         EThA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fu+rs2+2gElCUdDzPBQL6sWFbu1uYUhKK5LQZgejHd4=;
-        b=cVXYJCIdQvkBw9Ohr9CD3S9oHwXHbk6J2BUwWk/rgz2E0QO9ADcgqnMGYd5673Z8Vl
-         nBkG7B/YcCZi6Pkm7ZYTU7FHOrw80yShhJTWDJBJBTXHzMYW4OZE8HKAulwWHs73AmKV
-         Esa6urqppPQ8k2TiX1jYaKjA9XVDJpyLvPckwB3ogGG7oki9P+72jV/WAnmNCYTfUx6v
-         VRnCHi5SCWa5WgZLYjjEjJc24iqAf35TWqJoaeZRCYkUYgKDbxz0R60Eu2t5GpeAIrEl
-         Oki1yEZp5XEqFrrN4Qa5MYspPvp1o62d2QIgJoWoO/QWC3mxNz+4rbm6NOkd4oj0ozdd
-         TIRA==
-X-Gm-Message-State: AOAM530lZ6QaJ5OWK/JoQdCsfgBeFMLjfgz8imABNk4rWKTLzZNTl+ks
-        7LJRw27S+gwaa9jTmO86wuY=
-X-Google-Smtp-Source: ABdhPJyACb8fWnQ3XHXwrxdhBgxXQhTgtgH/s2lAAE7C1CB7sxcrAJ/L2U5wSQjeMJw6gm5jgUxL+Q==
-X-Received: by 2002:a62:192:: with SMTP id 140mr7970491pfb.53.1594996631866;
-        Fri, 17 Jul 2020 07:37:11 -0700 (PDT)
+        bh=7wvydDy/tQ74G4O3jAzNKHUyywTE4V4qeYSnenBNOr0=;
+        b=E2q0lBvnvnXvz3Q29ceFrPIhI38mChU+uFzQoSmuYGhRUordIdHRM3zHbfqxznCE+J
+         +SyqOJJM+XYGTo90j598UltgkaLzzWDIt2PsIfbqbaY9M+wpRwOCmDB7i3IO2p2BOu3k
+         LQg2i0M8+0Ea3Bkv/ZLiHboeRSqaJWsEpiPjVHQ6dFLoLFNYVxPU1jfd8/Xm4y9ALCCf
+         XFr8lgP0zvWtj8Pai+FFkpWiEONaACZNQloMcia18Uff6EVirxhOdzdvfL7Tus5Tl0JX
+         wrsjMXZTk8yvREsAgPjJxQMyFVNHqz+DDftsSIhrXrfYxYpoBc9Z8cenX+5i9HsahRy0
+         3HNQ==
+X-Gm-Message-State: AOAM532XKgF0e/Fu28GLIiaQhseIJNNUgtcwE3ybGb00bRG2H6VypKuy
+        OH6dkO6cUL9tk6YymuLJHZ8=
+X-Google-Smtp-Source: ABdhPJytfJMa3bgrAABwd/bDxYo2MNyUEsuUUYV7D/TwPo26En5Ib7CGsEQIrzY9yhrBWfG+gq3nMQ==
+X-Received: by 2002:a17:90b:46d0:: with SMTP id jx16mr9627283pjb.222.1594996625114;
+        Fri, 17 Jul 2020 07:37:05 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.37.05
+        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.36.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 07:37:11 -0700 (PDT)
+        Fri, 17 Jul 2020 07:37:04 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 03/17] perf ftrace: factor out function write_tracing_file_int()
-Date:   Fri, 17 Jul 2020 22:36:14 +0800
-Message-Id: <20200717143628.47721-4-changbin.du@gmail.com>
+Subject: [PATCH v6 02/17] perf ftrace: add option '-F/--funcs' to list available functions
+Date:   Fri, 17 Jul 2020 22:36:13 +0800
+Message-Id: <20200717143628.47721-3-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717143628.47721-1-changbin.du@gmail.com>
 References: <20200717143628.47721-1-changbin.du@gmail.com>
@@ -81,55 +81,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will reuse this function later.
+This adds an option '-F/--funcs' to list all available functions to trace,
+which is read from tracing file 'available_filter_functions'.
+
+$ sudo ./perf ftrace -F | head
+trace_initcall_finish_cb
+initcall_blacklisted
+do_one_initcall
+do_one_initcall
+trace_initcall_start_cb
+run_init_process
+try_to_run_init_process
+match_dev_by_label
+match_dev_by_uuid
+rootfs_init_fs_context
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- tools/perf/builtin-ftrace.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
 
+---
+v3: fix return value issue.
+v2: option name '-l/--list-functions' -> '-F/--funcs'
+---
+ tools/perf/Documentation/perf-ftrace.txt |  4 +++
+ tools/perf/builtin-ftrace.c              | 46 ++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+index 952e46669168..d79560dea19f 100644
+--- a/tools/perf/Documentation/perf-ftrace.txt
++++ b/tools/perf/Documentation/perf-ftrace.txt
+@@ -30,6 +30,10 @@ OPTIONS
+ --verbose=::
+         Verbosity level.
+ 
++-F::
++--funcs::
++        List all available functions to trace.
++
+ -p::
+ --pid=::
+ 	Trace on existing process id (comma separated list).
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 3c0e60fdfe0f..9abf97c29cb6 100644
+index 5f53da87040d..3c0e60fdfe0f 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -168,6 +168,17 @@ static int read_tracing_file_to_stdout(const char *name)
- 	return ret;
+@@ -32,6 +32,7 @@ struct perf_ftrace {
+ 	struct evlist		*evlist;
+ 	struct target		target;
+ 	const char		*tracer;
++	bool			list_avail_functions;
+ 	struct list_head	filters;
+ 	struct list_head	notrace;
+ 	struct list_head	graph_funcs;
+@@ -127,6 +128,46 @@ static int append_tracing_file(const char *name, const char *val)
+ 	return __write_tracing_file(name, val, true);
  }
  
-+static int write_tracing_file_int(const char *name, int value)
++static int read_tracing_file_to_stdout(const char *name)
 +{
-+	char buf[16];
++	char buf[4096];
++	char *file;
++	int fd;
++	int ret = -1;
 +
-+	snprintf(buf, sizeof(buf), "%d", value);
-+	if (write_tracing_file(name, buf) < 0)
++	file = get_tracing_file(name);
++	if (!file) {
++		pr_debug("cannot get tracing file: %s\n", name);
 +		return -1;
++	}
 +
-+	return 0;
++	fd = open(file, O_RDONLY);
++	if (fd < 0) {
++		pr_debug("cannot open tracing file: %s: %s\n",
++			 name, str_error_r(errno, buf, sizeof(buf)));
++		goto out;
++	}
++
++	/* read contents to stdout */
++	while (true) {
++		int n = read(fd, buf, sizeof(buf));
++		if (n == 0)
++			break;
++		else if (n < 0)
++			goto out_close;
++
++		if (fwrite(buf, n, 1, stdout) != 1)
++			goto out_close;
++	}
++	ret = 0;
++
++out_close:
++	close(fd);
++out:
++	put_tracing_file(file);
++	return ret;
 +}
 +
  static int reset_tracing_cpu(void);
  static void reset_tracing_filters(void);
  
-@@ -298,8 +309,6 @@ static void reset_tracing_filters(void)
+@@ -301,6 +342,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 	signal(SIGCHLD, sig_handler);
+ 	signal(SIGPIPE, sig_handler);
  
- static int set_tracing_depth(struct perf_ftrace *ftrace)
- {
--	char buf[16];
--
- 	if (ftrace->graph_depth == 0)
- 		return 0;
- 
-@@ -308,9 +317,7 @@ static int set_tracing_depth(struct perf_ftrace *ftrace)
- 		return -1;
- 	}
- 
--	snprintf(buf, sizeof(buf), "%d", ftrace->graph_depth);
--
--	if (write_tracing_file("max_graph_depth", buf) < 0)
-+	if (write_tracing_file_int("max_graph_depth", ftrace->graph_depth) < 0)
- 		return -1;
- 
- 	return 0;
++	if (ftrace->list_avail_functions)
++		return read_tracing_file_to_stdout("available_filter_functions");
++
+ 	if (reset_tracing_files(ftrace) < 0) {
+ 		pr_err("failed to reset ftrace\n");
+ 		goto out;
+@@ -470,6 +514,8 @@ int cmd_ftrace(int argc, const char **argv)
+ 	const struct option ftrace_options[] = {
+ 	OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
+ 		   "tracer to use: function or function_graph (This option is deprecated)"),
++	OPT_BOOLEAN('F', "funcs", &ftrace.list_avail_functions,
++		    "Show available functions to filter"),
+ 	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
+ 		   "trace on existing process id"),
+ 	OPT_INCR('v', "verbose", &verbose,
 -- 
 2.25.1
 
