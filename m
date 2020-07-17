@@ -2,150 +2,133 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E28C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66FE020717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A219F20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zO+rgX64"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="Yr2Iz1CP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgGQNLi (ORCPT
+        id S1726820AbgGQNNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:11:38 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:48365 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726090AbgGQNLh (ORCPT
+        Fri, 17 Jul 2020 09:13:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbgGQNNH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:11:37 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HD8FkF006837;
-        Fri, 17 Jul 2020 15:11:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=8nLQ4BLOPtd+RIo+7t6Sr5QwFj1DO7gwx3ZjhqT5Eqc=;
- b=zO+rgX64ROgs+lF5zjg2Yy02V/SQoYxtoIp9KNdRHL+vlJLK2bREDqeSaIxc1nz+6dUF
- 0yma/xtUZ1cy2pcsQ1Td/wKo+wOwQsB/3dtQULkNvxCUZHe/58f4setL24egFq5FqvHM
- PUuzvOhAz9Xoq6hqRZXEVcCvMI5oamvVbtTrTlkku4MavOO0JnBWx97qiz+2OFK/tSaQ
- 7vDkDme4w6L38O2GI+rNQQb5TXu5G1DXXtxRUET29qSYZPR53aJw4xt2xFfTEJnp49l8
- o9nXFZI/j30aEHnJDia1y08R5YIWGvS1bAHHJ2CRtfRvUPHhfla1vkvBS7uwdk0KpB3J 9w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 327btt8h2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 15:11:09 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CCD6A10002A;
-        Fri, 17 Jul 2020 15:11:07 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AF8102B4D2D;
-        Fri, 17 Jul 2020 15:11:07 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 17 Jul
- 2020 15:11:07 +0200
-Subject: Re: [PATCH] irqchip/stm32-exti: map direct event to irq parent
-To:     Marc Zyngier <maz@kernel.org>
-CC:     kernel test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>, <kbuild-all@lists.01.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <marex@denx.de>
-References: <20200706081106.25125-1-alexandre.torgue@st.com>
- <202007081232.bA2RH80f%lkp@intel.com> <87imevemwg.wl-maz@kernel.org>
- <69fb49b4-6a41-edf4-fea3-3f10934817ca@st.com> <87eepaxqot.wl-maz@kernel.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <c95f45ba-5c1f-b252-6779-d3c4e11c4b26@st.com>
-Date:   Fri, 17 Jul 2020 15:11:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 09:13:07 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB4CC061755
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:13:06 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id u12so5999134lff.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=IYqIiSc4U+64C+dG7+7slm/+2g/0OvHpgIOhb6Omtgc=;
+        b=Yr2Iz1CP+EXc8VfkIDEksEY8LuFINVnWrfFXlpNEfmNponbzhEbML51zKfKEJKcimu
+         x1SnWuwfMbqbICdyW0Fkyf8z2jRI0dj2VVtiK0vt9+Li6/mx02iD09DEAMmmnGMZDFsp
+         v9qrVYb5fPT/ksWDS6HEEEhxB3mgGQSgpTl9jkHinDmTnMJRBY6ZwvroDmZNtB+/ycaN
+         R4CUaCV18VNjMH0K/SPqYMeAlS38rwJ6tO1YuLpWlEl1iGbu4ouGnMmwUp4Qy1S3HxPh
+         0hR2twN4iNh9G++ahDfjijCYizBZwgESgeK8xKSjPK2A2oh26Hivv91I99y1X0ci9dI5
+         5TjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=IYqIiSc4U+64C+dG7+7slm/+2g/0OvHpgIOhb6Omtgc=;
+        b=KnGCcGQ+lI6VxqlY0nqVtGk/G/+MZn+rKbppfcepj3O5fR2O4yZbXDWK0HonRE9M9d
+         xkGiT0meeVguLZHaho6O1FspBDdU+qEKaB9+BMNR319RlGxgeShsyxK3wdS+lFUbEpbH
+         64+ftpVr88uHEh7yTKlXpAiH30+wQgK+w4sB2FpptSyMZgT9IhEMuna4VeBhkcBiz+ZC
+         CwWqSvGq1C/JamaKeC+K2Kj7c8kU0We5lygGuOxQAWOE7mEOuhQZ+Ey28Q0lk/S7idjK
+         fPFWoXYmq46M45KflcjKcqI/DO4UmKE69WN4fnUVmNL1R5g6ZcWUOUhDekQXc3st+IrV
+         MAJw==
+X-Gm-Message-State: AOAM531gLCaNqupggPNYraeYtaDy26lvQzeQfzf9ekG29/1IjB10nIvm
+        fzaWKYEb8OHWSRBoF5YzZZpdbA==
+X-Google-Smtp-Source: ABdhPJyuAt5XLkeaHa2ADqc8yqRKoh6hwmeK7QXeggSiowkUr6/ybt/t04bLY7BvMRtrHmWBjAcMCQ==
+X-Received: by 2002:a19:710:: with SMTP id 16mr3866800lfh.171.1594991585253;
+        Fri, 17 Jul 2020 06:13:05 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id j4sm1862395lfb.94.2020.07.17.06.13.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 06:13:04 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 15:13:03 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 16/20] dt-bindings: media: renesas,csi2: Add R8A774E1
+ support
+Message-ID: <20200717131303.GA175137@oden.dyn.berto.se>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <87eepaxqot.wl-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_06:2020-07-17,2020-07-17 signatures=0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594919915-5225-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Lad,
 
+Thanks for your patch.
 
-On 7/17/20 2:37 PM, Marc Zyngier wrote:
-> On Fri, 10 Jul 2020 10:37:47 +0100,
-> Alexandre Torgue <alexandre.torgue@st.com> wrote:
->>
->> Hi Marc,
->>
->> On 7/10/20 11:31 AM, Marc Zyngier wrote:
->>> Alexandre,
->>>
->>> On Wed, 08 Jul 2020 05:57:24 +0100,
->>> kernel test robot <lkp@intel.com> wrote:
->>>>
->>>> [1  <text/plain; us-ascii (7bit)>]
->>>> Hi Alexandre,
->>>>
->>>> I love your patch! Perhaps something to improve:
->>>>
->>>> [auto build test WARNING on stm32/stm32-next]
->>>> [also build test WARNING on soc/for-next v5.8-rc4 next-20200707]
->>>> [If your patch is applied to the wrong git tree, kindly drop us a note.
->>>> And when submitting patch, we suggest to use  as documented in
->>>> https://git-scm.com/docs/git-format-patch]
->>>>
->>>> url:    https://github.com/0day-ci/linux/commits/Alexandre-Torgue/irqchip-stm32-exti-map-direct-event-to-irq-parent/20200706-161327
->>>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
->>>> config: arm-randconfig-s031-20200707 (attached as .config)
->>>> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
->>>> reproduce:
->>>>           wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>>>           chmod +x ~/bin/make.cross
->>>>           # apt-get install sparse
->>>>           # sparse version: v0.6.2-31-gabbfd661-dirty
->>>>           # save the attached .config to linux build tree
->>>>           COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=arm
->>>>
->>>> If you fix the issue, kindly add following tag as appropriate
->>>> Reported-by: kernel test robot <lkp@intel.com>
->>>>
->>>> All warnings (new ones prefixed by >>):
->>>>
->>>>      In file included from include/linux/build_bug.h:5,
->>>>                       from include/linux/bits.h:23,
->>>>                       from include/linux/bitops.h:5,
->>>>                       from drivers/irqchip/irq-stm32-exti.c:8:
->>>>      drivers/irqchip/irq-stm32-exti.c: In function 'stm32_exti_h_domain_alloc':
->>>>      drivers/irqchip/irq-stm32-exti.c:683:23: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
->>>>        683 |  if (desc->irq_parent >= 0) {
->>>>            |                       ^~
->>>>      include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
->>>>         58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
->>>>            |                                                    ^~~~
->>>>>> drivers/irqchip/irq-stm32-exti.c:683:2: note: in expansion of macro 'if'
->>>>        683 |  if (desc->irq_parent >= 0) {
->>>
->>> Do you plan to address this? Looks like an actual bug to me.
->>
->> I'll fix it in v2, I was just waiting for other comments before
->> sending a v2. Do you prefer I send a v2 with this fix, and you'll do
->> your review on this v2 ?
+On 2020-07-16 18:18:31 +0100, Lad Prabhakar wrote:
+> Add the compatible string for RZ/G2H (R8A774E1) to the list of supported
+> SoCs.
 > 
-> I'm certainly not going to review something that has such a glaring
-> issue.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Ok, I'll then send v2 quickly.
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
+> ---
+>  Documentation/devicetree/bindings/media/renesas,csi2.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> 	M.
+> diff --git a/Documentation/devicetree/bindings/media/renesas,csi2.yaml b/Documentation/devicetree/bindings/media/renesas,csi2.yaml
+> index c9e068231d4b..53b078622fd9 100644
+> --- a/Documentation/devicetree/bindings/media/renesas,csi2.yaml
+> +++ b/Documentation/devicetree/bindings/media/renesas,csi2.yaml
+> @@ -22,6 +22,7 @@ properties:
+>          - renesas,r8a774a1-csi2 # RZ/G2M
+>          - renesas,r8a774b1-csi2 # RZ/G2N
+>          - renesas,r8a774c0-csi2 # RZ/G2E
+> +        - renesas,r8a774e1-csi2 # RZ/G2H
+>          - renesas,r8a7795-csi2  # R-Car H3
+>          - renesas,r8a7796-csi2  # R-Car M3-W
+>          - renesas,r8a77965-csi2 # R-Car M3-N
+> -- 
+> 2.17.1
 > 
+
+-- 
+Regards,
+Niklas Söderlund
