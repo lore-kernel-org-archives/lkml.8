@@ -2,85 +2,93 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2955DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F6FC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F014D2076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416432076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:02:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlX0FGgF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdnZHm8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgGQPAB (ORCPT
+        id S1726776AbgGQPCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:00:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
+        Fri, 17 Jul 2020 11:02:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgGQO77 (ORCPT
+        with ESMTP id S1726351AbgGQPCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:59:59 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C51C0619D2;
-        Fri, 17 Jul 2020 07:59:59 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id k17so6240150lfg.3;
-        Fri, 17 Jul 2020 07:59:59 -0700 (PDT)
+        Fri, 17 Jul 2020 11:02:03 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE457C0619D2;
+        Fri, 17 Jul 2020 08:02:02 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id j11so13037913ljo.7;
+        Fri, 17 Jul 2020 08:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AIsBzWloYNimsmc0KYIOUkctLP/uf91NO5ZeFcTqUAc=;
-        b=WlX0FGgFU85j8INNp504Kl83RplOa+9JaoeAAgEOl+Ri1vXBcWmpGf57guccR1cSAj
-         8PfbKMwdkeI2GFlqNvC4zHIUMjWV5rxbCFl+FKROe+wUnvqXYgKugrK9sbaQhSjxE9JZ
-         BnCH6fjmVEd9iDW7e8J/P+2M53XNDOnKM1iqCGY1lfUIFR0v25drbtzcgCCOzCzHo1lk
-         mCC4I9ENAXb4xP60G0tAUU6tvVi39O6xND5yLvvbUvqNOD4dSKlXin2ag81IqSOStDJv
-         IXcHABoG8Ux1FahCEGG4wlHq1BvCQ7WiD72cGg6WJsj+8Z6DL+oEHTDlDJDfVZspzXcJ
-         D8Vw==
+        bh=Vj0THxkooDRCDITDoMqnCXMjOzpdY/9P9Eqdw05OK34=;
+        b=hdnZHm8bQ27NGLjoAEe+1uO25eN/PNI7VSElQYNWPhPlc8jPq4tKeRf4fNyFn8ZDvx
+         9/dx2ZJ96awCrq88v0nhlSjzj493SBM8KPyQgrP2/XfmDO9okpVXwx2YH3qZSS0CmzRe
+         tl963gqGdzJkYkrLYHInABOyoHwyJb4atjwysl6/N0lcud2YhH75l3pNrGsI/EnT/E4j
+         qKGf0aPyM4H0/wg27JAL2Od2WUbyof85heAsQkJvR0/NTqvLZYcS0+9JEtqPaTm0HOqx
+         mzdyLQt/vg07TTg/5V1r9AjpqbxbLzEso6X7s1019Gy+uO23Xr4NBtsmrqB0AxGFh02y
+         mFLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=AIsBzWloYNimsmc0KYIOUkctLP/uf91NO5ZeFcTqUAc=;
-        b=K5fbkf7dyIZhQrcxFo6KPjicWk15IBUccIInijZJ2pBTCb17UN2aB0IWaSiiz812p8
-         zUeYWiB9/dNH3NAosUjFoM/ENDvnjJFb3k6sCj/bNxQc+zqxooEgIo5ZwDls3TxnJpik
-         Q8Py3iTea/xR+5FTllFAjkISwD7IYv5qAQ6/DAzg8mqHnJKvLnfmzPiuSS7XesrTKaT2
-         HWYxfiG7kx2s/HUq81WOoEIte5+nMWOVawz8wHzQgCM4bngGEcauhyST8EytImmv7bck
-         WOW3px1X9yz8uJlIxJcVJum8V2wkqoUA8lAMFM8hdM04m02LIRFpoX2SVr9AUSKu1NOL
-         /e1w==
-X-Gm-Message-State: AOAM532Irk5juE4fRIYUwl48Mb81YsxCn9I2b735Q0q09+4vncrUcv8K
-        C1WvYXOAURjzeIOV0eAi5f+1AgXn
-X-Google-Smtp-Source: ABdhPJxa7d1sHKn11CgpK0Ph/XatNiYFYWQAvAn8F/chdThCJJ9I4yvmQ86DMvope5Tkh9DnrYp+LA==
-X-Received: by 2002:a19:4247:: with SMTP id p68mr4922622lfa.22.1594997997589;
-        Fri, 17 Jul 2020 07:59:57 -0700 (PDT)
+        bh=Vj0THxkooDRCDITDoMqnCXMjOzpdY/9P9Eqdw05OK34=;
+        b=CTFINH1aaDXoInauwWRcbomWWXGJYp1/nodLxQWn+dmDHMwpXeAoojeX6xfHlSq21N
+         HRivBtGblY6wsLquw+kO8cvXB1oz/s1220Ik+sJnUUbmTNF2P9xnPU9lmN/YNavVPcJy
+         XM8F/xSRVoQU/YTx7zTHsUqLq0VcX/akCyB+sugfjPnqVUI6E6nPnjmThuzL2Vb4E7qY
+         Hr3QllMAwUdwp8VoAGSBOUCUZlW5m++U+7yzERukMcYViFXBeEwCNQ3ohICgxRVMe8ut
+         r+pfz4AczHZFRKlQ89hpxUqky9tmCtIAOggHlcmsp/z96TLxmMgQygUvSdU/ADFDdI3k
+         Fl/g==
+X-Gm-Message-State: AOAM533lHpP7kd0gUwkjnM8+47TNjmiWRAFxL5zBQ9kR/2IiSAMAZVNn
+        8IxDeYnV/cTq3jWmJ3/PdsCyAe7X
+X-Google-Smtp-Source: ABdhPJyQ+WCihOlXt8PupgeNCC7ANZ6gdFcfhNDBl4mxjPolZLOSXDJiSWkHQhdjI0Pmd2yZHYxryg==
+X-Received: by 2002:a2e:8758:: with SMTP id q24mr4389912ljj.109.1594998120753;
+        Fri, 17 Jul 2020 08:02:00 -0700 (PDT)
 Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
-        by smtp.googlemail.com with ESMTPSA id m14sm2279017lfp.18.2020.07.17.07.59.56
+        by smtp.googlemail.com with ESMTPSA id u7sm2281772lfi.45.2020.07.17.08.01.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 07:59:56 -0700 (PDT)
-Subject: Re: [PATCH v11 0/4] Panel rotation patches
+        Fri, 17 Jul 2020 08:01:59 -0700 (PDT)
+Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
+ tegra_mipi_calibrate and tegra_mipi_wait
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+ <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
+ <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
+ <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
+ <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
+ <ce0c5ffb-f859-0eab-1ea5-044623dff221@nvidia.com>
+ <a2b8169c-c4a3-4862-cd27-8c1a51ddc558@gmail.com>
+ <4690e682-8495-2327-87c7-c2f06a7a479d@nvidia.com>
+ <66812127-38cf-2af3-51c0-50edbe446e73@nvidia.com>
+ <9b4fbf9d-d651-aa35-c0a6-b8f16aeb0900@gmail.com>
+ <550f1796-67ca-5856-223d-c68360243954@nvidia.com>
+ <ca8f2184-de30-03ec-9caf-e20a22d96a77@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Derek Basehore <dbasehore@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Daniel Stone <daniel@fooishbar.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200617231842.30671-1-digetx@gmail.com>
-Message-ID: <848a586a-060c-1244-e057-99f5b56baf09@gmail.com>
-Date:   Fri, 17 Jul 2020 17:59:55 +0300
+Message-ID: <080b30c7-1dce-dd2f-dd96-40f6e25da4d6@gmail.com>
+Date:   Fri, 17 Jul 2020 18:01:58 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200617231842.30671-1-digetx@gmail.com>
+In-Reply-To: <ca8f2184-de30-03ec-9caf-e20a22d96a77@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -89,57 +97,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.06.2020 02:18, Dmitry Osipenko пишет:
-> Hello!
+17.07.2020 07:46, Sowjanya Komatineni пишет:
+...
+> Looks like sequence posted in TRM need to be updated clearly for proper
+> MIPI CAL start and wait.
 > 
-> This series adds support for display panel's DT rotation property. It's a
-> continuation of the work that was initially started by Derek Basehore for
-> the panel driver that is used by some Mediatek device [1]. I picked up the
-> Derek's patches and added my t-b and r-b tags to them, I also added
-> rotation support to the panel-lvds and panel-simple drivers.
+> Correct steps should be like below
 > 
-> We need the rotation support for the Nexus 7 tablet device which is pending
-> to become supported by upstream kernel, the device has display panel mounted
-> upside-down and it uses panel-lvds [2].
+> 1. Set up CSI registers for use case such as number of lanes, virtual 
+> channel, etc.
+> 2. Initialize and power up CSI CIL interface
+> 3. Program MIPI CAL bias pads, cal configs, cal control registers and
+> enable calibration start
+> 4. Power up camera through the I2C interface and start sensor streaming
+> through the I2C
 > 
-> [1] https://lkml.org/lkml/2020/3/5/1119
-> [2] https://patchwork.ozlabs.org/project/linux-tegra/patch/20200607154327.18589-3-digetx@gmail.com/
+> Note: All sensors might not leave pads in LP-11 state as sensor may be
+> power down when not in use.
 > 
-> Changelog:
+> So start streaming prior to checking for calibration done status as
+> LP-11 -> HS transition happens during sensor stream and calibration
+> logic can apply results to pads and update done status,
 > 
-> v11: - This series is factored out from this patchset [3] because these
->        patches do not have hard dependency on the Tegra DRM patches and
->        it should be nicer to review and apply the properly grouped patches.
+> 5. Wait for done signal from calibration logic
 > 
->      - Initially [3] only touched the panel-lvds driver and Emil Velikov
->        suggested that it will be better to support more panels in the review
->        comments to [3]. So I included the Derek's patch for the BOE panel
->        and added rotation support to the panel-simple driver. I tested that
->        panel-lvds and panel-simple work properly with the rotated panel using
->        the Opentegra Xorg driver [4] and Wayland Weston [5].
+> 6. perform frame capture thru VI
+> 7. Frame done, CSI goes back to stop state, LP11
 > 
->      - The panel-lvds driver now prints a error message if rotation property
->        fails to be parsed.
-> 
-> [3] https://lore.kernel.org/lkml/20200614200121.14147-1-digetx@gmail.com/
-> [4] https://github.com/grate-driver/xf86-video-opentegra/commit/28eb20a3959bbe5bc3a3b67e55977093fd5114ca
-> [5] https://gitlab.freedesktop.org/wayland/weston/-/merge_requests/315
-> 
-> Derek Basehore (2):
->   drm/panel: Add helper for reading DT rotation
->   drm/panel: Read panel orientation for BOE TV101WUM-NL6
-> 
-> Dmitry Osipenko (2):
->   drm/panel: lvds: Read panel orientation
->   drm/panel-simple: Read panel orientation
-> 
->  drivers/gpu/drm/drm_panel.c                   | 43 +++++++++++++++++++
->  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    |  6 +++
->  drivers/gpu/drm/panel/panel-lvds.c            | 10 +++++
->  drivers/gpu/drm/panel/panel-simple.c          | 11 +++++
->  include/drm/drm_panel.h                       |  9 ++++
->  5 files changed, 79 insertions(+)
-> 
+> Will work internally to correct sequence in TRM ...
 
-Hi! Does anyone have any comments to this patchset? Will be nice if it
-could get into 5.9 :) Thanks in advance!
+Will be nice to have an updated TRM, thank you!
+
+Also, what about the auto-calibration? Isn't it needed to be enabled for
+CSI?
+
+> In mipi driver will update as below to have mipi clk enabled till
+> calibration status check is done.
+> 
+> Always tegra_mipi_wait() followes tegra_mipi_calibrate() in both DSI and
+> CSI. So below sequence should work good.
+> 
+> tegra_mipi_calibrate()
+> 
+> - clk_enable mipi cal
+> - program mipi cal registers (bias pads cfgs, mipi cal ctrl and trigger
+> calibration start)
+> 
+> tegra_mipi_wait()
+> - read mipi cal status and wait for active and done bits
+> - clk_disable mipi cal
+
+
+Maybe then it should be better to rename the functions like this:
+
+tegra_mipi_calibrate() -> tegra_mipi_start_calibration()
+tegra_mipi_wait()      -> tegra_mipi_finish_calibration().
+
+and there also should be tegra_mipi_cancel_calibration().
+
+
+Example:
+
+	tegra_mipi_start_calibration();
+
+	ret = v4l2_subdev_call(subdev, video, s_stream, on);
+	if (ret < 0) {
+		tegra_mipi_cancel_calibration();
+		goto err;
+	}
+
+	tegra_mipi_finish_calibration();
+
+
