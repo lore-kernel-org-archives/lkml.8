@@ -8,171 +8,139 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B614EC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF95C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFF220775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9FF20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F1f5WJb0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qzxIl9xX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgGQNoh (ORCPT
+        id S1726873AbgGQNon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:44:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47933 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726734AbgGQNog (ORCPT
+        Fri, 17 Jul 2020 09:44:43 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50372 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726848AbgGQNom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:44:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594993474;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mac458cRY7ETrZPwqvMBuN29OK7W50bpGzDOlGwzN9M=;
-        b=F1f5WJb0x6fZOCbwQLp80TkCzsBd8zLEQYaT5dPIEeDgS5nzArr7GCeohoN348+CBB4BG6
-        OSNtWpXCA8RboRhUi85jqEO0l/WeFGfS4480InjXGXhOrSb5jBsEIh/z+KHKmO0YTlroVm
-        c9aRRSMrq/vpvCKnH1cfJnANpBntulk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-256-tz2RhTTGOl6eWUyXu-DDbQ-1; Fri, 17 Jul 2020 09:44:32 -0400
-X-MC-Unique: tz2RhTTGOl6eWUyXu-DDbQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D4868064AA;
-        Fri, 17 Jul 2020 13:44:31 +0000 (UTC)
-Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 627D072AC7;
-        Fri, 17 Jul 2020 13:44:25 +0000 (UTC)
-Subject: Re: [PATCH v5 2/5] iommu/uapi: Add argsz for user filled data
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <1594925117-64892-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1594925117-64892-3-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <1538ec69-62a2-ea04-0870-a583fc63a2bf@redhat.com>
-Date:   Fri, 17 Jul 2020 15:44:23 +0200
+        Fri, 17 Jul 2020 09:44:42 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDiYd2116560;
+        Fri, 17 Jul 2020 08:44:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594993474;
+        bh=SMXuWJsxmjPAyDIe0p0NeiPV/Q2TG3sFLtbT/0PqEnY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qzxIl9xXQKM6im7cQ5vM1Tw31Um4DZ0oONxaswNz4lHb/NF4LJGCzeIjw3jwZrxkG
+         LVy7qIxwoLVf3jsOmYtH34ehFpCKH7F1hNaoCzkKD2RL3Wv19gus4cs9rVkFA+NkGG
+         GcINGjzBsnmjVmy7/hVDiRKVOzAFKA9mH7KQ+FaA=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HDiXdP057305
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jul 2020 08:44:33 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
+ Jul 2020 08:44:33 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 17 Jul 2020 08:44:33 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDiR2r061930;
+        Fri, 17 Jul 2020 08:44:29 -0500
+Subject: Re: [PATCH] arm64: arch_k3: enable chipid driver
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Nishanth Menon <nm@ti.com>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+References: <20200619162527.1226-1-grygorii.strashko@ti.com>
+ <4bbdfff6-8fba-0568-b243-5da9ee6e29b6@ti.com>
+ <5529a5b2-f929-76fe-d27f-43d3e0432b43@ti.com>
+ <cf3aa171-fb75-b118-ea02-eb380b48b0cf@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <00f4fd6e-a21d-6100-ee28-1a31f4e16d1d@ti.com>
+Date:   Fri, 17 Jul 2020 16:44:26 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <1594925117-64892-3-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <cf3aa171-fb75-b118-ea02-eb380b48b0cf@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+On 15/07/2020 13:03, Grygorii Strashko wrote:
+> Hi All,
+> 
+> On 07/07/2020 10:02, Peter Ujfalusi wrote:
+>> On 01/07/2020 13.18, Grygorii Strashko wrote:
+>>> On 19/06/2020 19:25, Grygorii Strashko wrote:
+>>>> Select TI chip id driver for TI's SoCs based on K3 architecture to
+>>>> provide
+>>>> this information to user space and Kernel as it is required by other
+>>>> drivers to determine SoC revision to function properly.
+>>>>
+>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>>> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+>>>> ---
+>>>>    arch/arm64/Kconfig.platforms | 1 +
+>>>>    1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/arch/arm64/Kconfig.platforms 
+>>>> b/arch/arm64/Kconfig.platforms
+>>>> index 8dd05b2a925c..1d3710e3626a 100644
+>>>> --- a/arch/arm64/Kconfig.platforms
+>>>> +++ b/arch/arm64/Kconfig.platforms
+>>>> @@ -98,6 +98,7 @@ config ARCH_K3
+>>>>        select TI_SCI_PROTOCOL
+>>>>        select TI_SCI_INTR_IRQCHIP
+>>>>        select TI_SCI_INTA_IRQCHIP
+>>>> +    select TI_K3_SOCINFO
+>>>>        help
+>>>>          This enables support for Texas Instruments' K3 multicore SoC
+>>>>          architecture.
+>>>>
+>>>
+>>> Are there any comments?
+>>
+>> Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>
+>>> The driver and dt changes were merged [1][2] and for adding new 
+>>> am654x SoC
+>>> revision SR2.0 we need this driver to be enabled always as other drivers
+>>> are
+>>> going to use SOC Bus API intensively.
+>>>
+>>> No dependencies.
+>>>
+>>> [1]
+>>> https://lore.kernel.org/lkml/20200512123449.16517-1-grygorii.strashko@ti.com/ 
+>>>
+>>>
+>>> [2]
+>>> https://lore.kernel.org/lkml/20200613164346.28852-1-grygorii.strashko@ti.com/ 
+>>>
+>>>
+> 
+> Any chances it can be applied for 5.9?
 
-On 7/16/20 8:45 PM, Jacob Pan wrote:
-> As IOMMU UAPI gets extended, user data size may increase. To support
-> backward compatibiliy, this patch introduces a size field to each UAPI
-> data structures. It is *always* the responsibility for the user to fill in
-> the correct size. Padding fields are adjusted to ensure 8 byte alignment.
-> 
-> Specific scenarios for user data handling are documented in:
-> Documentation/userspace-api/iommu.rst
-> 
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  include/uapi/linux/iommu.h | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> index e907b7091a46..d5e9014f690e 100644
-> --- a/include/uapi/linux/iommu.h
-> +++ b/include/uapi/linux/iommu.h
-> @@ -135,6 +135,7 @@ enum iommu_page_response_code {
->  
->  /**
->   * struct iommu_page_response - Generic page response information
-> + * @argsz: User filled size of this data
->   * @version: API version of this structure
->   * @flags: encodes whether the corresponding fields are valid
->   *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
-> @@ -143,6 +144,7 @@ enum iommu_page_response_code {
->   * @code: response code from &enum iommu_page_response_code
->   */
->  struct iommu_page_response {
-> +	__u32	argsz;
->  #define IOMMU_PAGE_RESP_VERSION_1	1
-Don't you need to incr the version for all the modified structs?
->  	__u32	version;
->  #define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
-> @@ -218,6 +220,7 @@ struct iommu_inv_pasid_info {
->  /**
->   * struct iommu_cache_invalidate_info - First level/stage invalidation
->   *     information
-> + * @argsz: User filled size of this data
->   * @version: API version of this structure
->   * @cache: bitfield that allows to select which caches to invalidate
->   * @granularity: defines the lowest granularity used for the invalidation:
-> @@ -246,6 +249,7 @@ struct iommu_inv_pasid_info {
->   * must support the used granularity.
->   */
->  struct iommu_cache_invalidate_info {
-> +	__u32	argsz;
->  #define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
->  	__u32	version;
-so there is no "flags" field in this struct. Is it OK?
->  /* IOMMU paging structure cache */
-> @@ -255,7 +259,7 @@ struct iommu_cache_invalidate_info {
->  #define IOMMU_CACHE_INV_TYPE_NR		(3)
->  	__u8	cache;
->  	__u8	granularity;
-> -	__u8	padding[2];
-> +	__u8	padding[6];
->  	union {
->  		struct iommu_inv_pasid_info pasid_info;
->  		struct iommu_inv_addr_info addr_info;
-> @@ -292,6 +296,7 @@ struct iommu_gpasid_bind_data_vtd {
->  
->  /**
->   * struct iommu_gpasid_bind_data - Information about device and guest PASID binding
-> + * @argsz:	User filled size of this data
->   * @version:	Version of this data structure
->   * @format:	PASID table entry format
->   * @flags:	Additional information on guest bind request
-> @@ -309,17 +314,18 @@ struct iommu_gpasid_bind_data_vtd {
->   * PASID to host PASID based on this bind data.
->   */
->  struct iommu_gpasid_bind_data {
-> +	__u32 argsz;
->  #define IOMMU_GPASID_BIND_VERSION_1	1
->  	__u32 version;
->  #define IOMMU_PASID_FORMAT_INTEL_VTD	1
->  	__u32 format;
-> +	__u32 addr_width;
->  #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
->  	__u64 flags;
->  	__u64 gpgd;
->  	__u64 hpasid;
->  	__u64 gpasid;
-> -	__u32 addr_width;
-> -	__u8  padding[12];
-> +	__u8  padding[8];
->  	/* Vendor specific data */
->  	union {
->  		struct iommu_gpasid_bind_data_vtd vtd;
-> 
-Thanks
+Queuing up for 5.9, thanks.
 
-Eric
+Sorry there has been some confusion on my behalf regarding the config 
+changes.
 
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
