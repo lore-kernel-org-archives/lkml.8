@@ -2,200 +2,172 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EBDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780E6C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A06D520737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAF020737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:13:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sqo0BbhB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgGQILl (ORCPT
+        id S1727002AbgGQINo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:11:41 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52582 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726113AbgGQILk (ORCPT
+        Fri, 17 Jul 2020 04:13:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34690 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726201AbgGQINo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:11:40 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06H84Ni4186145;
-        Fri, 17 Jul 2020 04:11:33 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32autb2ph8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 04:11:33 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06H84cf4187071;
-        Fri, 17 Jul 2020 04:11:32 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32autb2pgn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 04:11:32 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06H8Ab8N008393;
-        Fri, 17 Jul 2020 08:11:31 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01dal.us.ibm.com with ESMTP id 328ux7w3r1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 08:11:31 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06H8BTXV39911930
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 08:11:29 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CD897BE051;
-        Fri, 17 Jul 2020 08:11:29 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3E30BE054;
-        Fri, 17 Jul 2020 08:11:23 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.115.95])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 17 Jul 2020 08:11:23 +0000 (GMT)
-Subject: Re: [PATCH v3 0/5] powerpc/perf: Add json file support for hv_24x7
- core level events
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
-        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
-        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
-        anju@linux.vnet.ibm.com, kan.liang@linux.intel.com,
-        nasastry@in.ibm.com
-References: <20200716094216.1418659-1-kjain@linux.ibm.com>
- <20200716152237.GC373728@kernel.org>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <a80eebc2-885c-171d-7c7a-74df727d60b4@linux.ibm.com>
-Date:   Fri, 17 Jul 2020 13:41:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 17 Jul 2020 04:13:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594973622;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4AhK0Zzm0uakjm5OFnnhauntdAQG4ut12mfNiIODHdo=;
+        b=Sqo0BbhBSmOj9HFvnWn8mIsbNWZdfPhmIooyltBHmZ0fwQLPX7H0BH95W/hAH7/bhhXIh6
+        lLo6+kYv53H1ujz3olCxss0XIAkTSTDzh7hnY+836wQ23a6oNYXflwlb3p+WlA6O+PfCQo
+        PVdJUbjl1PCEWuz34AKwpWCcbL0m1rI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-qDc6bktpNXyY2uOE9se7qg-1; Fri, 17 Jul 2020 04:13:40 -0400
+X-MC-Unique: qDc6bktpNXyY2uOE9se7qg-1
+Received: by mail-wm1-f70.google.com with SMTP id c81so7746657wmd.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 01:13:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4AhK0Zzm0uakjm5OFnnhauntdAQG4ut12mfNiIODHdo=;
+        b=ldbnaNAnDg0GFWd55kwkytirM7Pida1Ft6zYWwtuHiQDioFytVQdGlyD7TiKfVcRSH
+         J3mDFxb6EDXuqZIhReU/0I2jmzt6Ve4sGYKcyPGorNhrxGZr6o4fUB2+uEG9DE4c4jNz
+         H+EH/9rabkQ5PcKFbkT/DFlJyW8AJbPQNT+UyvWZZErNQD0ABqj5HYS9aGoMyheaU/sG
+         syWyLgdpAYo4BMnLjbzSgK01LBTcJz5/ZXfwRciOK7vdYFcCLiO3syCLsQy/M0YEAnUo
+         k3SGGeLQ4Op36m/VPWAJ6HJWtzZWUCVCYMYw4caKoMwUFMZLxRvc/9XYCb70CDbJriUA
+         5dUQ==
+X-Gm-Message-State: AOAM5333jbfEpnSUNQTd3IYEeVIfJeJvP+AfOGPeM5CSzXWeJ0nJFLTE
+        u0BXBAsYrrJJUT7pbBvaZsUwtKBPaCOhu5ZLTGxt9+trhNXI2skq/oJzIxdSSGILnCSpd9YJfS4
+        AnrbA6EpBPVF1v8LyLlnOSRiO
+X-Received: by 2002:a1c:9e4c:: with SMTP id h73mr8623608wme.177.1594973619427;
+        Fri, 17 Jul 2020 01:13:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzeW6RsdiE3kyUT5zs2nMNiDhKPd7zXn+E25Grakr6B0wzn0S3WYa0J8I4e51M3iaPMLfxKUA==
+X-Received: by 2002:a1c:9e4c:: with SMTP id h73mr8623586wme.177.1594973619210;
+        Fri, 17 Jul 2020 01:13:39 -0700 (PDT)
+Received: from steredhat.lan ([5.180.207.22])
+        by smtp.gmail.com with ESMTPSA id a4sm14353571wrg.80.2020.07.17.01.13.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 01:13:38 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 10:13:33 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 1/3] io_uring: use an enumeration for
+ io_uring_register(2) opcodes
+Message-ID: <20200717081333.6z6rtwx3jtktwdvp@steredhat.lan>
+References: <20200716124833.93667-1-sgarzare@redhat.com>
+ <20200716124833.93667-2-sgarzare@redhat.com>
+ <ca242a15-576d-4099-a5f8-85c08985e3ff@gmail.com>
+ <a2f109b2-adbf-147d-9423-7a1a4bf99967@kernel.dk>
+ <20326d79-fb5a-2480-e52a-e154e056171f@gmail.com>
+ <76879432-745d-a5ca-b171-b1391b926ea2@kernel.dk>
+ <0357e544-d534-06d2-dc61-1169fc172d20@kernel.dk>
 MIME-Version: 1.0
-In-Reply-To: <20200716152237.GC373728@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_04:2020-07-17,2020-07-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 spamscore=100
- priorityscore=1501 suspectscore=0 mlxscore=100 phishscore=0 bulkscore=0
- impostorscore=0 mlxlogscore=-1000 clxscore=1015 lowpriorityscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007170061
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0357e544-d534-06d2-dc61-1169fc172d20@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/16/20 8:52 PM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Jul 16, 2020 at 03:12:11PM +0530, Kajol Jain escreveu:
->> Patchset enhance current runtime parameter support. It introduces new
->> fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
->> used to specify perpkg events. 
->>
->> The "PerCore" and "PerChip" specifies whether its core or chip events.
->> Based on which we can decide which runtime parameter user want to
->> access. Now character  '?' can refers different parameter based on user
->> requirement.
->>
->> Initially, every time we want to add new terms like chip, core, thread
->> etc, we need to create corrsponding fields in pmu_events and event
->> struct.
->> This patchset adds an enum called 'aggr_mode_class' which store all these
->> aggregation like perpkg/percore. It also adds new field 'AggregationMode'
->> to capture these terms.
->> Now, if user wants to add any new term, they just need to add it in
->> the enum defined. I try to test it with  my current setup.
->>
->> I also need to replace PerPkg field to AggregationMode in all the
->> x86 uncore json files. It will great if Andi and team can test it
->> and let me know if they have any concerns.
->>
->> Changelog:
->> v2 -> v3:
->> - Did some nits changes suggested by Jiri include correction of
->>   indentation, and making PerCore/PerChip values forward after
->>   PerPkg as 1 in the enum.
->> - Rebase the patchset on Arnaldo's tmp.perf/core branch.
->> - Change RFC tag
+On Thu, Jul 16, 2020 at 03:20:53PM -0600, Jens Axboe wrote:
+> On 7/16/20 2:51 PM, Jens Axboe wrote:
+> > On 7/16/20 2:47 PM, Pavel Begunkov wrote:
+> >> On 16/07/2020 23:42, Jens Axboe wrote:
+> >>> On 7/16/20 2:16 PM, Pavel Begunkov wrote:
+> >>>> On 16/07/2020 15:48, Stefano Garzarella wrote:
+> >>>>> The enumeration allows us to keep track of the last
+> >>>>> io_uring_register(2) opcode available.
+> >>>>>
+> >>>>> Behaviour and opcodes names don't change.
+> >>>>>
+> >>>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> >>>>> ---
+> >>>>>  include/uapi/linux/io_uring.h | 27 ++++++++++++++++-----------
+> >>>>>  1 file changed, 16 insertions(+), 11 deletions(-)
+> >>>>>
+> >>>>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+> >>>>> index 7843742b8b74..efc50bd0af34 100644
+> >>>>> --- a/include/uapi/linux/io_uring.h
+> >>>>> +++ b/include/uapi/linux/io_uring.h
+> >>>>> @@ -253,17 +253,22 @@ struct io_uring_params {
+> >>>>>  /*
+> >>>>>   * io_uring_register(2) opcodes and arguments
+> >>>>>   */
+> >>>>> -#define IORING_REGISTER_BUFFERS		0
+> >>>>> -#define IORING_UNREGISTER_BUFFERS	1
+> >>>>> -#define IORING_REGISTER_FILES		2
+> >>>>> -#define IORING_UNREGISTER_FILES		3
+> >>>>> -#define IORING_REGISTER_EVENTFD		4
+> >>>>> -#define IORING_UNREGISTER_EVENTFD	5
+> >>>>> -#define IORING_REGISTER_FILES_UPDATE	6
+> >>>>> -#define IORING_REGISTER_EVENTFD_ASYNC	7
+> >>>>> -#define IORING_REGISTER_PROBE		8
+> >>>>> -#define IORING_REGISTER_PERSONALITY	9
+> >>>>> -#define IORING_UNREGISTER_PERSONALITY	10
+> >>>>> +enum {
+> >>>>> +	IORING_REGISTER_BUFFERS,
+> >>>>> +	IORING_UNREGISTER_BUFFERS,
+> >>>>> +	IORING_REGISTER_FILES,
+> >>>>> +	IORING_UNREGISTER_FILES,
+> >>>>> +	IORING_REGISTER_EVENTFD,
+> >>>>> +	IORING_UNREGISTER_EVENTFD,
+> >>>>> +	IORING_REGISTER_FILES_UPDATE,
+> >>>>> +	IORING_REGISTER_EVENTFD_ASYNC,
+> >>>>> +	IORING_REGISTER_PROBE,
+> >>>>> +	IORING_REGISTER_PERSONALITY,
+> >>>>> +	IORING_UNREGISTER_PERSONALITY,
+> >>>>> +
+> >>>>> +	/* this goes last */
+> >>>>> +	IORING_REGISTER_LAST
+> >>>>> +};
+> >>>>
+> >>>> It breaks userspace API. E.g.
+> >>>>
+> >>>> #ifdef IORING_REGISTER_BUFFERS
+> >>>
+> >>> It can, yes, but we have done that in the past. In this one, for
+> >>
+> >> Ok, if nobody on the userspace side cares, then better to do that
+> >> sooner than later.
 > 
-> Hey, have anybody provided Acked-by/Reviewed-by for previous revisions
-> of this patchset? If so you could have collected them for patches
-> without changes, was that the case?
-
-Hi Arnaldo,
-      I did get "Acked-by: Ian Rogers" on my initial prototype which I send in my RFC.
-Link to the patch: https://lkml.org/lkml/2020/7/5/399
-
-After that, I break it down and made some nits changes as suggested by Jiri, that's why I didn't
-add his Acked-by tag.
-Ian should I add it, if it seems fine to you.
-
-Thanks,
-Kajol Jain
+> I actually don't think it's a huge issue. Normally if applications
+> do this, it's because they are using it and need it. Ala:
 > 
-> - Arnaldo
->  
->> v1 -> v2:
->> - Rather then adding new field as PerCore/PerChip, created a new enum
->>   to get these fields. And new field as "AggregationMode" which can
->>   be used to capture these fields from json file.
->>   - Suggested By Ian Rogers
->>
->>
->> Kajol Jain (5):
->>   perf/pmu-events/jevents: Add enum to store aggregation like PerPkg
->>   pmu-events/x86/uncore: Replace PerPkg field to AggregationMode in x86
->>     json files
->>   perf jevents: Add support for parsing perchip/percore events
->>   perf/tools: Pass pmu_event structure as a parameter for
->>     arch_get_runtimeparam
->>   perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
->>
->>  tools/perf/arch/powerpc/util/header.c         |   7 +-
->>  .../arch/powerpc/power9/nest_metrics.json     |  27 +-
->>  .../arch/x86/broadwellde/uncore-cache.json    |  62 ++--
->>  .../arch/x86/broadwellde/uncore-memory.json   |  18 +-
->>  .../arch/x86/broadwellde/uncore-power.json    |  18 +-
->>  .../arch/x86/broadwellx/uncore-cache.json     |  62 ++--
->>  .../x86/broadwellx/uncore-interconnect.json   |   6 +-
->>  .../arch/x86/broadwellx/uncore-memory.json    |  18 +-
->>  .../arch/x86/broadwellx/uncore-power.json     |  18 +-
->>  .../arch/x86/cascadelakex/uncore-memory.json  |  64 ++--
->>  .../arch/x86/cascadelakex/uncore-other.json   | 332 +++++++++---------
->>  .../arch/x86/haswellx/uncore-cache.json       |  62 ++--
->>  .../x86/haswellx/uncore-interconnect.json     |   6 +-
->>  .../arch/x86/haswellx/uncore-memory.json      |  18 +-
->>  .../arch/x86/haswellx/uncore-power.json       |  18 +-
->>  .../arch/x86/ivytown/uncore-cache.json        |  62 ++--
->>  .../arch/x86/ivytown/uncore-interconnect.json |  10 +-
->>  .../arch/x86/ivytown/uncore-memory.json       |  16 +-
->>  .../arch/x86/ivytown/uncore-power.json        |  52 +--
->>  .../arch/x86/jaketown/uncore-cache.json       |  40 +--
->>  .../x86/jaketown/uncore-interconnect.json     |  10 +-
->>  .../arch/x86/jaketown/uncore-memory.json      |  18 +-
->>  .../arch/x86/jaketown/uncore-power.json       |  52 +--
->>  .../x86/knightslanding/uncore-memory.json     |   8 +-
->>  .../arch/x86/skylakex/uncore-memory.json      |  36 +-
->>  .../arch/x86/skylakex/uncore-other.json       | 220 ++++++------
->>  .../arch/x86/tremontx/uncore-memory.json      |  14 +-
->>  .../arch/x86/tremontx/uncore-other.json       |  70 ++--
->>  .../arch/x86/tremontx/uncore-power.json       |   2 +-
->>  tools/perf/pmu-events/jevents.c               |  45 ++-
->>  tools/perf/pmu-events/jevents.h               |   2 +-
->>  tools/perf/pmu-events/pmu-events.h            |   8 +-
->>  tools/perf/tests/pmu-events.c                 |   8 +-
->>  tools/perf/util/metricgroup.c                 |   5 +-
->>  tools/perf/util/metricgroup.h                 |   3 +-
->>  tools/perf/util/pmu.c                         |   6 +-
->>  36 files changed, 729 insertions(+), 694 deletions(-)
->>
->> -- 
->> 2.26.2
->>
+> #ifndef IORING_REGISTER_SOMETHING
+> #define IORING_REGISTER_SOMETHING	fooval
+> #endif
 > 
+> and that'll still work just fine, even if an identical enum is there.
+> 
+
+Thank you both for the review!
+
+Then if you agree, I'll leave this patch as it is by introducing the enum.
+
+Stefano
+
