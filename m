@@ -2,86 +2,95 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB27AC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621A5C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A76532065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3714F207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:12:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dNkIccMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgGQTKj (ORCPT
+        id S1728647AbgGQTMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:10:39 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:58850 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728440AbgGQTKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:10:35 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jwVka-0008Lk-EN; Fri, 17 Jul 2020 21:10:28 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 30/30] iio: adc: rockchip_saradc: Demote Demote seemingly unintentional kerneldoc header
-Date:   Fri, 17 Jul 2020 21:10:27 +0200
-Message-ID: <4422628.h3HLAr0T0d@diego>
-In-Reply-To: <20200717165538.3275050-31-lee.jones@linaro.org>
-References: <20200717165538.3275050-1-lee.jones@linaro.org> <20200717165538.3275050-31-lee.jones@linaro.org>
+        Fri, 17 Jul 2020 15:12:00 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1396 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgGQTL6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 15:11:58 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f11f7c20006>; Fri, 17 Jul 2020 12:10:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 17 Jul 2020 12:11:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 17 Jul 2020 12:11:57 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Jul
+ 2020 19:11:57 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 17 Jul 2020 19:11:57 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.163.115]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f11f7fc0001>; Fri, 17 Jul 2020 12:11:56 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <luca@lucaceresoli.net>, <leonl@leopardimaging.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/3] media: i2c: imx274: Fix Y_OUT_SIZE register setting
+Date:   Fri, 17 Jul 2020 12:15:20 -0700
+Message-ID: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595013058; bh=DLvQ6chRzbjeKicuQdxuqVcpH3d1W/1R1Kay/NtRj70=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=dNkIccMwSkcpJVG9TVvN1c8DqptyYAYHC0pojdxtG/ndu8jD1Aqq8KySS2156GZQm
+         yngeqITKvsHwtyC2mPMbgIoU7I6NAAfkIR3cQD8BtywDat7iYArxf0NoScpyi9SlbM
+         pMUY7U4PFSmgDiu39pU9LqEhyukAf2VhxjdYKUi1jFtIlymWLn7Y7HB3wUpYAZWJqk
+         FLVNwWvdAlmJXbXy5zeU63P91/RarxpLqS8hNorSv25iXnI3FefRBmWj3t7FxlFbd4
+         1wR3HRZfgqhbsY6XDaelo7suvoDrmjeTShv0B0YG9M7chZ5jXhYugVQ6fVhFetF03x
+         lfT3lqnadGRRg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 17. Juli 2020, 18:55:38 CEST schrieb Lee Jones:
-> This is the only use of kerneldoc in the source file and no
-> descriptions are provided.
-> 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  drivers/iio/adc/rockchip_saradc.c:190: warning: Function parameter or member 'reset' not described in 'rockchip_saradc_reset_controller'
-> 
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: linux-rockchip@lists.infradead.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+As per Sony IMX274 Y_OUT_SIZE should be the height of effective
+image output from the sensor which are the actual total lines
+sent over MIPI CSI to receiver.
 
-Subject-line says "Demote Demote..."
+So, Y_OUT_SIZE should be same as crop height and this patch fixes it.
 
-Otherwise
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/media/i2c/imx274.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-> ---
->  drivers/iio/adc/rockchip_saradc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
-> index 582ba047c4a67..cf4ec59c1dab0 100644
-> --- a/drivers/iio/adc/rockchip_saradc.c
-> +++ b/drivers/iio/adc/rockchip_saradc.c
-> @@ -183,7 +183,7 @@ static const struct of_device_id rockchip_saradc_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
->  
-> -/**
-> +/*
->   * Reset SARADC Controller.
->   */
->  static void rockchip_saradc_reset_controller(struct reset_control *reset)
-> 
-
-
-
+diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
+index e6aa9f3..55869ff 100644
+--- a/drivers/media/i2c/imx274.c
++++ b/drivers/media/i2c/imx274.c
+@@ -1163,7 +1163,7 @@ static int imx274_apply_trimming(struct stimx274 *imx274)
+ 		(-imx274->crop.top / 2) : (imx274->crop.top / 2);
+ 	v_cut = (IMX274_MAX_HEIGHT - imx274->crop.height) / 2;
+ 	write_v_size = imx274->crop.height + 22;
+-	y_out_size   = imx274->crop.height + 14;
++	y_out_size   = imx274->crop.height;
+ 
+ 	err = imx274_write_mbreg(imx274, IMX274_HMAX_REG_LSB, hmax, 2);
+ 	if (!err)
+-- 
+2.7.4
 
