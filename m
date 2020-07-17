@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1753C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7605420717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0026A20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:37:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g28D7FQz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8oXAmK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgGQOhr (ORCPT
+        id S1727782AbgGQOhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:37:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45326 "EHLO
+        Fri, 17 Jul 2020 10:37:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgGQOhq (ORCPT
+        with ESMTP id S1726201AbgGQOhv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:37:46 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C81AC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:37:46 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id o1so5529789plk.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:37:46 -0700 (PDT)
+        Fri, 17 Jul 2020 10:37:51 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC69EC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:37:51 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x72so5481062pfc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:37:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=djkMUkZcrMKQIRHk66rYevNXyQYjoTPBJqAUtrmCrFU=;
-        b=g28D7FQzNyPK4ef5SAVJaHJHdJqSXGqw7D2MNGI9kV7fAGg4gJZvLPcH76AoGrRapG
-         7rjRbaWSLoxixYUmTvf/Lm2e2xDL7w7wMpb8Xu0DMZknYbMZuMs+cnp+0V+OuB8Z1e5S
-         jGLE8zVeOCdpPQ1SUegfeXJA+lEKhlFul5PIGJtxqbO/YrRQRqdedgzBcwtot0msXwxb
-         d8P76U9LvQhkcAwS5frcKnbEFGs5BRfVGquti+mEHb065xsLMWLbMH8GiPHsC2jwTUPA
-         /9hijo9GTuPGx4JoZIHtx1Dej1dGmjolfoUtAoarx4xVy6GsvJ/WlcIh13M6ADsDKYVe
-         eKRA==
+        bh=uH9FmidZkMqeDhyoNde7P2iPFWOBXIbSIju5FSPIJ3w=;
+        b=P8oXAmK9kiVjjDiqFoXfhvoxA1iuF53RyZcwW63aingovA9XUlp0y3AQ/fYUZM/aDJ
+         z3zmqRqwEg/G2aAZqAFZByr7I/tzsTtOCr9XamqszF2tTiFWRHwGFZ2svF/UnV4MlnR0
+         L8eQjqNetUNkXE3IjHc23EdXy6qQuLxv0aKrlfcqBlDFka0OxoS+gU1cGxtf0hv6MlW8
+         VZWUMH4Kp3vOG1jzWoH6l9kYhjMNu24RsxgwvCb83CRVFyeh8vsvHuM8QQf3hOc7CMny
+         8/W+DvZ/gbV84aG3jHVGsRTb/zbsf9SmU5PSC5PbNQk+H3Ab8YiAcvPVgBBG6jGYUafj
+         GIMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=djkMUkZcrMKQIRHk66rYevNXyQYjoTPBJqAUtrmCrFU=;
-        b=NPnFGWDaKIPhYIKXTJ7KorD+8RrkQB0K75K/1rVL6siGe/Yo76iDgXHTcbKaO8wfad
-         nSbnupF8VYOHQ3SCoiFhobpgA+WGriorE+f0Prs2290xevaetlm3/Sj/Nw/SVOjmoUTS
-         dD9IVdcDI2rpR+0iYMguTTNnGgYUO4iBCTYnchfO8tE2dIOB5CmGASx9lAIaXjhQSxAN
-         rdR8tOH5TgdIaTvzwdWcpOVrJqZWNZXsEk+1v5GLc0Fkf8dulXtWPmNXmpKoNgxfV4Oz
-         3seoXeFxiX7Pwg8fkoH9y1WxBhH18kHI0sVla7FkUScXxafaQgXkOQQUKyi3izI+jJMi
-         7mhA==
-X-Gm-Message-State: AOAM533IQgipYzPEraEiN+i6wgRgo3JLNhv50j912bH3Trr2ML5bNP2c
-        vJqx5fRKJ+srQqNsPC7aBgNElV7cYQU=
-X-Google-Smtp-Source: ABdhPJxf9h8u/OnrPpPPxpvWngV78hieodJx88f3H90lJsGG6MOfQ+YBiyxsa47roy5ww6Fz44S5eA==
-X-Received: by 2002:a17:90a:db8a:: with SMTP id h10mr10580110pjv.58.1594996665750;
-        Fri, 17 Jul 2020 07:37:45 -0700 (PDT)
+        bh=uH9FmidZkMqeDhyoNde7P2iPFWOBXIbSIju5FSPIJ3w=;
+        b=gMEyGF/L4tVwzEZ4ASQELhzRIi7rCpB6derSU0Gc/r0dKc7UoEsvFzV17Y3tPJZaq0
+         rsaMxBxEYvlDGh3tVHjp+H5YYCpgwpedaRBTta4yFsaTb5ak7jisrn2T9+tb/AEV3ZOA
+         6rGC15sZ1t2Tb2Pimow+qrLzpjBfa3QwT9Ztr0PZ96FgqhakhXwDZc5Y+8/jafYszQkO
+         nKNS0vDWi2YPSMK6fYY3ixxnsbngRZUpBgiV9Cue2D2/0vrdJBOyWe9OOJuWbrFUcckR
+         5DJa9GyrCnqWfAxPxLD6nt5c6cLe4PX8Y0uHtJciGLVuqTTPBscHTfPIiVFszm04FP7I
+         elaA==
+X-Gm-Message-State: AOAM531Ry0rKhShdFctvKb5jF3DyMn7xAmnqsvC/5/9udFUawly5YtDo
+        Keu1odV6SDfpQZXdt/f1gmc=
+X-Google-Smtp-Source: ABdhPJxx/VyHIxoxisb+dcwcEa6I+o5quThHzMNdbFbLWagP+pc4VmXuZDz5zzWDe+vgTn3McOEC2w==
+X-Received: by 2002:a63:6c5:: with SMTP id 188mr8862681pgg.33.1594996671307;
+        Fri, 17 Jul 2020 07:37:51 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.37.37
+        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.37.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 07:37:45 -0700 (PDT)
+        Fri, 17 Jul 2020 07:37:50 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 07/17] perf: util: add general function to parse sublevel options
-Date:   Fri, 17 Jul 2020 22:36:18 +0800
-Message-Id: <20200717143628.47721-8-changbin.du@gmail.com>
+Subject: [PATCH v6 08/17] perf ftrace: add support for tracing option 'func_stack_trace'
+Date:   Fri, 17 Jul 2020 22:36:19 +0800
+Message-Id: <20200717143628.47721-9-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717143628.47721-1-changbin.du@gmail.com>
 References: <20200717143628.47721-1-changbin.du@gmail.com>
@@ -81,223 +81,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This factors out a general function perf_parse_sublevel_options() to parse
-sublevel options. The 'sublevel' options is something like the '--debug'
-options which allow more sublevel options.
+This adds support to display call trace for function tracer. To do this,
+just specify a '--func-opts call-graph' option.
+
+$ sudo perf ftrace -T vfs_read --func-opts call-graph
+ iio-sensor-prox-855   [003]   6168.369657: vfs_read <-ksys_read
+ iio-sensor-prox-855   [003]   6168.369677: <stack trace>
+ => vfs_read
+ => ksys_read
+ => __x64_sys_read
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+ ...
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
 ---
-v2: add util/parse-sublevel-options.c
+v3: switch to uniform option --func-opts.
+v2: option name '-s' -> '--func-call-graph'
 ---
- tools/perf/util/Build                    |  1 +
- tools/perf/util/debug.c                  | 61 ++++++---------------
- tools/perf/util/parse-sublevel-options.c | 70 ++++++++++++++++++++++++
- tools/perf/util/parse-sublevel-options.h | 11 ++++
- 4 files changed, 99 insertions(+), 44 deletions(-)
- create mode 100644 tools/perf/util/parse-sublevel-options.c
- create mode 100644 tools/perf/util/parse-sublevel-options.h
+ tools/perf/Documentation/perf-ftrace.txt |  4 +++
+ tools/perf/builtin-ftrace.c              | 42 ++++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 8d18380ecd10..e86607ada0b5 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -117,6 +117,7 @@ endif
- perf-y += parse-branch-options.o
- perf-y += dump-insn.o
- perf-y += parse-regs-options.o
-+perf-y += parse-sublevel-options.o
- perf-y += term.o
- perf-y += help-unknown-cmd.o
- perf-y += mem-events.o
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index adb656745ecc..5cda5565777a 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -20,6 +20,7 @@
- #include "target.h"
- #include "ui/helpline.h"
- #include "ui/ui.h"
+diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+index 3eee073a7042..5a5069306141 100644
+--- a/tools/perf/Documentation/perf-ftrace.txt
++++ b/tools/perf/Documentation/perf-ftrace.txt
+@@ -74,6 +74,10 @@ OPTIONS
+ 	(or glob patterns).  It will be passed to 'set_ftrace_notrace'
+ 	in tracefs.
+ 
++--func-opts::
++	List of options allowed to set:
++	  call-graph - Display kernel stack trace for function tracer.
++
+ -G::
+ --graph-funcs=::
+ 	Set graph filter on the given function (or a glob pattern).
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 765ebd56e05f..e7c8697294f0 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -27,6 +27,7 @@
+ #include "util/cap.h"
+ #include "util/config.h"
+ #include "util/units.h"
 +#include "util/parse-sublevel-options.h"
  
- #include <linux/ctype.h>
- 
-@@ -173,65 +174,37 @@ void trace_event(union perf_event *event)
- 		     trace_event_printer, event);
- }
- 
--static struct debug_variable {
--	const char *name;
--	int *ptr;
--} debug_variables[] = {
--	{ .name = "verbose",		.ptr = &verbose },
--	{ .name = "ordered-events",	.ptr = &debug_ordered_events},
--	{ .name = "stderr",		.ptr = &redirect_to_stderr},
--	{ .name = "data-convert",	.ptr = &debug_data_convert },
--	{ .name = "perf-event-open",	.ptr = &debug_peo_args },
-+static struct sublevel_option debug_opts[] = {
-+	{ .name = "verbose",		.value_ptr = &verbose },
-+	{ .name = "ordered-events",	.value_ptr = &debug_ordered_events},
-+	{ .name = "stderr",		.value_ptr = &redirect_to_stderr},
-+	{ .name = "data-convert",	.value_ptr = &debug_data_convert },
-+	{ .name = "perf-event-open",	.value_ptr = &debug_peo_args },
- 	{ .name = NULL, }
+ struct perf_ftrace {
+ 	struct evlist		*evlist;
+@@ -40,6 +41,7 @@ struct perf_ftrace {
+ 	int			graph_depth;
+ 	unsigned long		percpu_buffer_size;
+ 	bool			inherit;
++	int			func_stack_trace;
  };
  
- int perf_debug_option(const char *str)
+ struct filter_entry {
+@@ -200,6 +202,7 @@ static void reset_tracing_filters(void);
+ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
  {
--	struct debug_variable *var = &debug_variables[0];
--	char *vstr, *s = strdup(str);
--	int v = 1;
--
--	vstr = strchr(s, '=');
--	if (vstr)
--		*vstr++ = 0;
--
--	while (var->name) {
--		if (!strcmp(s, var->name))
--			break;
--		var++;
--	}
--
--	if (!var->name) {
--		pr_err("Unknown debug variable name '%s'\n", s);
--		free(s);
--		return -1;
--	}
-+	int ret;
- 
--	if (vstr) {
--		v = atoi(vstr);
--		/*
--		 * Allow only values in range (0, 10),
--		 * otherwise set 0.
--		 */
--		v = (v < 0) || (v > 10) ? 0 : v;
--	}
-+	ret = perf_parse_sublevel_options(str, debug_opts);
-+	if (ret)
-+		return ret;
- 
--	if (quiet)
--		v = -1;
-+	/* Allow only verbose value in range (0, 10), otherwise set 0. */
-+	verbose = (verbose < 0) || (verbose > 10) ? 0 : verbose;
- 
--	*var->ptr = v;
--	free(s);
- 	return 0;
+ 	write_tracing_option_file("function-fork", "0");
++	write_tracing_option_file("func_stack_trace", "0");
  }
  
- int perf_quiet_option(void)
- {
--	struct debug_variable *var = &debug_variables[0];
-+	struct sublevel_option *opt = &debug_opts[0];
+ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+@@ -276,6 +279,17 @@ static int set_tracing_cpu(struct perf_ftrace *ftrace)
+ 	return set_tracing_cpumask(cpumap);
+ }
  
- 	/* disable all debug messages */
--	while (var->name) {
--		*var->ptr = -1;
--		var++;
-+	while (opt->name) {
-+		*opt->value_ptr = -1;
-+		opt++;
++static int set_tracing_func_stack_trace(struct perf_ftrace *ftrace)
++{
++	if (!ftrace->func_stack_trace)
++		return 0;
++
++	if (write_tracing_option_file("func_stack_trace", "1") < 0)
++		return -1;
++
++	return 0;
++}
++
+ static int reset_tracing_cpu(void)
+ {
+ 	struct perf_cpu_map *cpumap = perf_cpu_map__new(NULL);
+@@ -424,6 +438,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 		goto out_reset;
  	}
  
- 	return 0;
-diff --git a/tools/perf/util/parse-sublevel-options.c b/tools/perf/util/parse-sublevel-options.c
-new file mode 100644
-index 000000000000..a841d17ffd57
---- /dev/null
-+++ b/tools/perf/util/parse-sublevel-options.c
-@@ -0,0 +1,70 @@
-+#include <stdlib.h>
-+#include <stdint.h>
-+#include <string.h>
-+#include <stdio.h>
++	if (set_tracing_func_stack_trace(ftrace) < 0) {
++		pr_err("failed to set tracing option func_stack_trace\n");
++		goto out_reset;
++	}
 +
-+#include "util/debug.h"
-+#include "util/parse-sublevel-options.h"
-+
-+static int parse_one_sublevel_option(const char *str,
-+				     struct sublevel_option *opts)
+ 	if (set_tracing_filters(ftrace) < 0) {
+ 		pr_err("failed to set tracing filters\n");
+ 		goto out_reset;
+@@ -597,6 +616,26 @@ static int parse_buffer_size(const struct option *opt,
+ 	return -1;
+ }
+ 
++static int parse_func_tracer_opts(const struct option *opt,
++				  const char *str, int unset)
 +{
-+	struct sublevel_option *opt = opts;
-+	char *vstr, *s = strdup(str);
-+	int v = 1;
-+
-+	if (!s) {
-+		pr_err("no memory\n");
-+		return -1;
-+	}
-+
-+	vstr = strchr(s, '=');
-+	if (vstr)
-+		*vstr++ = 0;
-+
-+	while (opt->name) {
-+		if (!strcmp(s, opt->name))
-+			break;
-+		opt++;
-+	}
-+
-+	if (!opt->name) {
-+		pr_err("Unknown option name '%s'\n", s);
-+		free(s);
-+		return -1;
-+	}
-+
-+	if (vstr)
-+		v = atoi(vstr);
-+
-+	*opt->value_ptr = v;
-+	free(s);
-+	return 0;
-+}
-+
-+/* parse options like --foo a=<n>,b,c... */
-+int perf_parse_sublevel_options(const char *str, struct sublevel_option *opts)
-+{
-+	char *s = strdup(str);
-+	char *p = NULL;
 +	int ret;
++	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
++	struct sublevel_option func_tracer_opts[] = {
++		{ .name = "call-graph",	.value_ptr = &ftrace->func_stack_trace },
++		{ .name = NULL, }
++	};
 +
-+	if (!s) {
-+		pr_err("no memory\n");
-+		return -1;
-+	}
++	if (unset)
++		return 0;
 +
-+	p = strtok(s, ",");
-+	while (p) {
-+		ret = parse_one_sublevel_option(p, opts);
-+		if (ret) {
-+			free(s);
-+			return ret;
-+		}
++	ret = perf_parse_sublevel_options(str, func_tracer_opts);
++	if (ret)
++		return ret;
 +
-+		p = strtok(NULL, ",");
-+	}
-+
-+	free(s);
 +	return 0;
 +}
-diff --git a/tools/perf/util/parse-sublevel-options.h b/tools/perf/util/parse-sublevel-options.h
-new file mode 100644
-index 000000000000..9b9efcc2aaad
---- /dev/null
-+++ b/tools/perf/util/parse-sublevel-options.h
-@@ -0,0 +1,11 @@
-+#ifndef _PERF_PARSE_SUBLEVEL_OPTIONS_H
-+#define _PERF_PARSE_SUBLEVEL_OPTIONS_H
 +
-+struct sublevel_option {
-+	const char *name;
-+	int *value_ptr;
-+};
-+
-+int perf_parse_sublevel_options(const char *str, struct sublevel_option *opts);
-+
-+#endif
-\ No newline at end of file
+ int cmd_ftrace(int argc, const char **argv)
+ {
+ 	int ret;
+@@ -627,6 +666,9 @@ int cmd_ftrace(int argc, const char **argv)
+ 		     parse_filter_func),
+ 	OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
+ 		     "do not trace given functions", parse_filter_func),
++	OPT_CALLBACK(0, "func-opts", &ftrace, "options",
++		     "function tracer options, available options: call-graph",
++		     parse_func_tracer_opts),
+ 	OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
+ 		     "trace given functions using function_graph tracer",
+ 		     parse_filter_func),
 -- 
 2.25.1
 
