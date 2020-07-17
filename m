@@ -2,100 +2,107 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB72C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C01C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 930042173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:05:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UnE98u9h"
+	by mail.kernel.org (Postfix) with ESMTP id 700C0207EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594994759;
+	bh=9EQT3hOMbnuZ/8hseTErt+8ql3auDUgbS6ChJ0lzLu0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RsqZVabdH+rCGu9uWTYOBknWtTHzdKfr+yH/6fp6BC81wl+oJ8Yi6qQEEgDve6b3I
+	 nq4DdWQWEY3KuP3ulFjMa9CGtkYkihybRwBRKI8wizO87tDuzmdF5S00eR0YW83pd9
+	 XWstL/MhLkVUbag4rkIVrlHTzOzlcKbbkYU2Qxto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgGQOFd (ORCPT
+        id S1726564AbgGQOF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:05:33 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28829 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726675AbgGQOFc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:05:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594994731;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C/lQ3vRdbtpZD9qapzymRha97VMv2A/d7HdoKx/dG3o=;
-        b=UnE98u9hbf3+YtVBfKUJOugoMgoJjIN748Yj9mcBh6kO8Sv3ZhwKPtpk/boR/Iz7Y/mDGK
-        c3KZ+TW/br4D4ZasJ2nT3i3L0QhsrZwiSe4tJ3sERBnB5IrTniSovLmwf7ByHYxUuQREbA
-        u0WzpnHzeSs+q8GdG7FPGhBWot6r/Pc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-317-rydC_LwtPriSHU_3ZM-HHg-1; Fri, 17 Jul 2020 10:05:29 -0400
-X-MC-Unique: rydC_LwtPriSHU_3ZM-HHg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 17 Jul 2020 10:05:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbgGQOF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:05:58 -0400
+Received: from lenoir.home (lfbn-ncy-1-317-216.w83-196.abo.wanadoo.fr [83.196.152.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63AFF18A1DE1;
-        Fri, 17 Jul 2020 14:05:28 +0000 (UTC)
-Received: from starship (unknown [10.35.206.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CEA551002397;
-        Fri, 17 Jul 2020 14:05:26 +0000 (UTC)
-Message-ID: <681fa44e57531c81bef628f8a16a14098abdf2c2.camel@redhat.com>
-Subject: Re: [PATCH v1] device property: Avoid NULL pointer dereference in
- device_get_next_child_node()
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 17 Jul 2020 17:05:25 +0300
-In-Reply-To: <20200716182747.54929-1-andriy.shevchenko@linux.intel.com>
-References: <20200716182747.54929-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        by mail.kernel.org (Postfix) with ESMTPSA id 21EE12067D;
+        Fri, 17 Jul 2020 14:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594994757;
+        bh=9EQT3hOMbnuZ/8hseTErt+8ql3auDUgbS6ChJ0lzLu0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QAx7A6MvKEOlBOdft6TV3hf8TxrZZf33CmFOHdqI+Hi+Q1fzwVKuChTniUe/f6nOZ
+         /JeLh/9HzVy5TwU/5tl6sGV64l1z4sIc9g/Hm2NEH6LZLhzMnzq30eRu0/MSyLHHuK
+         0KNSeIzlwhCxxm6peOzunsdQCRL9NXDogUvNTbss=
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH 00/11] timer: Reduce timers softirq v3
+Date:   Fri, 17 Jul 2020 16:05:39 +0200
+Message-Id: <20200717140551.29076-1-frederic@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-16 at 21:27 +0300, Andy Shevchenko wrote:
-> When we have no primary fwnode or when it's a software node, we may end up
-> in the situation when fwnode is a NULL pointer. There is no point to look for
-> secondary fwnode in such case. Add a necessary check to a condition.
-> 
-> Fixes: 114dbb4fa7c4 ("drivers property: When no children in primary, try secondary")
-> Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This set piggybacks the 3 patches that have been posted seperately
+along the reviews.
 
-Tested-by: Maxim Levitsky <mlevitsk@redhat.com>
+Changes since v2:
 
-Best regards,
-	Maxim Levitsky
+1) Add "timer: Fix wheel index calculation on last level"
+   This one targets timers/urgent
 
-> ---
->  drivers/base/property.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 1e6d75e65938..d58aa98fe964 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -721,7 +721,7 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
->  		return next;
->  
->  	/* When no more children in primary, continue with secondary */
-> -	if (!IS_ERR_OR_NULL(fwnode->secondary))
-> +	if (fwnode && !IS_ERR_OR_NULL(fwnode->secondary))
->  		next = fwnode_get_next_child_node(fwnode->secondary, child);
->  
->  	return next;
+2) Add "timer: Preserve higher bits of expiration on index calculation"
+       "timer: Move trigger_dyntick_cpu() to enqueue_timer()"
+
+3) Rebase the series against the whole
+
+4) Fix comments in "timer: Move trigger_dyntick_cpu() to enqueue_timer()"
+   as per Anna Maria's suggestion
+
+5) Fix comments in "timer: Add comments about calc_index() ceiling work"
+   as per Thomas' suggestion
+
+Please pull the timers/softirq-v3 branch that can be found at:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git
+	timers/softirq-v3
+
+HEAD: f176eb2a146b422f78d81ec63273487c33b3011d
+
+Thanks,
+	Frederic
+---
+
+Frederic Weisbecker (11):
+      timer: Fix wheel index calculation on last level
+      timer: Preserve higher bits of expiration on index calculation
+      timer: Move trigger_dyntick_cpu() to enqueue_timer()
+      timer: Add comments about calc_index() ceiling work
+      timer: Optimize _next_timer_interrupt() level iteration
+      timers: Always keep track of next expiry
+      timer: Reuse next expiry cache after nohz exit
+      timer: Expand clk forward logic beyond nohz
+      timer: Spare timer softirq until next expiry
+      timer: Remove must_forward_clk
+      timer: Lower base clock forwarding threshold
+
+Anna-Maria Behnsen (1):
+      timers: Use only bucket expiry for base->next_expiry value
 
 
+ kernel/time/timer.c | 236 ++++++++++++++++++++--------------------------------
+ 1 file changed, 92 insertions(+), 144 deletions(-)
