@@ -2,108 +2,100 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,BODY_SINGLE_WORD,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B90C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945DDC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1CE32065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628722065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:00:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tCt3nDUB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgGQMAl (ORCPT
+        id S1726694AbgGQMAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:00:41 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:33159 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgGQMAj (ORCPT
+        Fri, 17 Jul 2020 08:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgGQMAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:00:39 -0400
-Received: by mail-lj1-f175.google.com with SMTP id e8so12314843ljb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:00:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ueC5VTlD9srXw3nIH9njJ76Dcn6bg+Ch492X/b41lbA=;
-        b=Y6NrbQjeLIjjLBXJ/ddGm3p4cl8ysjn0JItnQygRoatxvAZHdUBiDvkMLvKhqJ0uHv
-         vvaxZ3JsVziVdJ/0U2zNwvKDTDWg9MMQrCwQ5D3Y88vcpUhilC46Js511/ME3bFaSTJp
-         K4SHkeTr4jKYg/tcjrbpv4UYB0b+qp/+q1jMag95QlXxlY+GW6MoHU7AnYlzXFZDlJlT
-         uslgvjegXQioJvMxZktP8H19Xp3GeFQ9OBFrrYPqobDxd8Gw9xs0exd7GXP9olJl4Kyl
-         E8tbkWGkfdwen1ADtUUpv4eb1WMs0N4ZqXbE1D1LQbI5QDemzeDazAZUNNWna9sPbR5b
-         lg9A==
-X-Gm-Message-State: AOAM532VXa+TJtmUcO7ljc8gkvY1Ht7XuFOPxDyPxzxhJ/pT7pg4HFgO
-        rem5g2FCVgCiUW62tlLzgn0kINIz8gQ=
-X-Google-Smtp-Source: ABdhPJyW542CmHGAv0A+DU5K5ee/9HEiqqBqqk8C2DyyXLmFrAsg0vGQCH9SC9jMXOJUep6uCpocgg==
-X-Received: by 2002:a2e:a173:: with SMTP id u19mr4698932ljl.263.1594987237070;
-        Fri, 17 Jul 2020 05:00:37 -0700 (PDT)
-Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id i22sm1612123ljb.19.2020.07.17.05.00.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 05:00:36 -0700 (PDT)
-Subject: Re: [PATCH v2] coccinelle: api: add kvfree script
-To:     Julia Lawall <Julia.Lawall@lip6.fr>
-Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-References: <20200605204237.85055-1-efremov@linux.com>
- <20200614183632.13236-1-efremov@linux.com>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Message-ID: <f0ba75b4-8a33-dcff-ce0d-94eeda9c4b21@linux.com>
-Date:   Fri, 17 Jul 2020 15:00:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 08:00:53 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF6FC061755;
+        Fri, 17 Jul 2020 05:00:52 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B7V7l29pkz9sR4;
+        Fri, 17 Jul 2020 22:00:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594987251;
+        bh=4MGJKluqDSBdANksRYdiW/8gMkKqqwzjaR5VZewNpa4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tCt3nDUBVfJp0cefSiSVLdkJ/L+/fCfTRAlzahiGr6Z47pLATW5fRqmeseOBHaOob
+         O6Lg/h1ULRxDBAx1olmDzptpSgsVAUIIVv2Pze8QJwyUvCCjjlhaXLj5pf3q4nj4IP
+         TGoZ9B3ai4icVilqAH/1EBQpZGWdYJfy6Zj2xjyCzXccFcZQGHPa9z2FMlupHWOS47
+         S2clOIPN3lfqXWHYTKn05aHCaNwGHaqGqVcbiEFm3MpFm/34rYq2rglFMdMPkKSJD8
+         nZrX/Ehl3vgmaDUkjRWKqQ+yCC0lHKmSeyuQ1TilYeU3Q9Rw0nbg4v2BqBcMBrJFyG
+         TzSr1AovdRbrQ==
+Date:   Fri, 17 Jul 2020 22:00:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the mfd tree
+Message-ID: <20200717220050.034e93e0@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200614183632.13236-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/99+HQU_Mm71v2Rrv5FaYIpg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping?
+--Sig_/99+HQU_Mm71v2Rrv5FaYIpg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+In commit
+
+  52aa6355da7a ("mfd: kempld-core: Fix 'assignment of read-only location' e=
+rror")
+
+Fixes tag
+
+  Fixes: 765f4122aee ("mfd: core: Make a best effort attempt to match devic=
+es with the correct of_nodes")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/99+HQU_Mm71v2Rrv5FaYIpg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8RkvIACgkQAVBC80lX
+0GyonAf9HgXtPCrVl2OMVejZ0TR7gJMM3vNce+T+6OjaT6ygNWnCnt+zqAuSEZSz
+DrIMcwMbvvZwgsLFKwZ37BNY9pNzsbC2ZZKjVqcLps+87mYalBBnNKJtlir80H7x
+Epu/jjqQbAMzFJE2kYCXU86CbaWNlFakixJuJ02oHlIJv/UTk/U0eQaazgSVC0+A
+FHK8nsmdUiIjStxbpfNVcetGmJeawCUyA+gd7EqSSjTWRi3Rfj3AVrU2hDZMRw1p
+NGI7gb1bmOOg3UNK8u97TODY4Cm3PDQcfvGFkc4HN1bO1wVXziKfJKIwFjVns/UT
+/ovn0FuMMaURXOB8mdDOk3DY7EnSUg==
+=grsJ
+-----END PGP SIGNATURE-----
+
+--Sig_/99+HQU_Mm71v2Rrv5FaYIpg--
