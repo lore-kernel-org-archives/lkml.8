@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC33C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5327CC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6A4F20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C2B207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMOWGTNN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XeIx9NbO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgGQOiM (ORCPT
+        id S1727863AbgGQOiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:38:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45396 "EHLO
+        Fri, 17 Jul 2020 10:38:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgGQOiK (ORCPT
+        with ESMTP id S1726104AbgGQOiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:38:10 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBF78C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:10 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s189so6745971pgc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:10 -0700 (PDT)
+        Fri, 17 Jul 2020 10:38:20 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE107C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:20 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u185so5491222pfu.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:38:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SCBLcrGRp+pdOgjKOYl4FCLc+/ip6fXMEGxXzBrd2Vs=;
-        b=mMOWGTNNn+pgk5njSD+N2N2YUDy6thYRO5s9ZE1B6IqFTW7DzthTYR84hZ0ANQ/+Wa
-         aMM1ZnokRmLP4tQdCmsoDQF3Z+cArMFhv14wU87ixwS3eZ6i7+Viz+rBiINB34rerXBm
-         on+ERIP4rCX0NUIVXLF//5eEQ9LjUTNGgHM9bSZDuKXz+tfpOcwjDSZnLyAcfD6HUeoZ
-         8Fgev+Jk6re6NemP51P/X4ghUgon0OcJbBm+VwX4mqwlxX0uKXD7XjtizHP/p/ML7p1d
-         naRvJ4doER1mUAWMEVrLS0hrdVlPeRtVyMqCWPHyZdyZAdtAfy3WyiaHmGjI+ewa/uhF
-         H+7w==
+        bh=UFP+x3j4+5MaBu1RqkqiwZg2PpWg/cFgrQKA41+DGK0=;
+        b=XeIx9NbO9jcYgTU5r6EJBq2L3JfYGcdydHzE1GB8bgDURUF/rqIjU2RsdktIoFGpbn
+         8CqTWuynKJyHfW7k/ZpIxT61jugBj3H0Xf3jC+zryAJPYiIPdgbu3y5GFDAfUOPS3xD4
+         KNjbpqUq94k+h0+0WweMwOjY7K5rB4foA5JGN/VjbV3wWgMCz8LQ65ZiO2KmGRfkwYfH
+         uspcRh7+2ML56bGAkmS9d5QsEOStMGYP3BF1WYA+0SPqC93Jv7QxZcLax9YRKY9yXNW4
+         811bBXugkZpekrnaPM88aUsRTgNqfxRu9vrovuKoO/J89bI5GXbJGdF7XZ7NQAV2mulD
+         iYFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SCBLcrGRp+pdOgjKOYl4FCLc+/ip6fXMEGxXzBrd2Vs=;
-        b=fknHxs2Kj3KpX3wa9ZOwbchiyRMigFI+KFawpLnuRuaGBjHnwP0wF02s8QBeqcz8SA
-         0gV6sT9CwP0EslRfOYRpuUGx1i4YUSSPTpET3/FwNDd5XGyAnVO2WqQr8Q3zV7DVHFdW
-         tBJkHl6nJOKbqVovJo5SURU1ZYYz6jkhwLs+nlmdyJSRAI30NhVat9rtxUxCvzsgwb7U
-         VaDYwF/LFwY+Elsc7TI21wLVtAEA1Oth7Q/ylKnRLQf/513MlKFBU6rpo4fbpQpm4oSN
-         XYPoHsTQu59Yrod9EAlp5wFN7Qh8PUabnU/6I3EMES19OsS2/nMeeCE7ahqtcdzEbDMz
-         JHVg==
-X-Gm-Message-State: AOAM533Vp1OA/530yxoBfXwcR+yHZ3pGxP+yiHRJOdUbrW1FRJFz2uQE
-        LxAX9IWt3FP7VAxJ++x/wClOLeFKpkw=
-X-Google-Smtp-Source: ABdhPJzBaxEtivJXx91BxykwFeU6oF8sidUHthGT3O+Iy8zipfanZnPH7eBjQ+QZurkxmrTDYL4uOQ==
-X-Received: by 2002:aa7:9ec5:: with SMTP id r5mr7881849pfq.86.1594996690399;
-        Fri, 17 Jul 2020 07:38:10 -0700 (PDT)
+        bh=UFP+x3j4+5MaBu1RqkqiwZg2PpWg/cFgrQKA41+DGK0=;
+        b=QiClO7jX+V4RU0EFO5gvLicg2U6PZceQ2a6r3brkZtYSNBy6at2lexm3chdwsbuqKZ
+         xsVT8LGcQQ51fHfWG9QsZ79G0NBKaXm+/hb5LNvu9Pq/0Nx5l8WbQduZSB2kZf9TUzAL
+         uLMjBDBJRTqmBrVqNPnZG6W7JxRkbDaockJ12jnVph2l4N59DyrM+SS0mTJDtuIBpefq
+         YQHt/icJt4Jn8fKmd43W5nzeAqHHasrdT4tOeOa4BBGfcFIL2t0yln6SP3sLzpBcIYJS
+         SsH9hENe2OxqTw+WLVce1sA7mEivWfv3uWAsYdS+pjzSkAXneecLRLFiNGmfzeeAJ4oQ
+         ClgA==
+X-Gm-Message-State: AOAM531UOMGkcXjt52rz2J1pa67HVyZGn6iR2uTnvRwe0KjbmYI18wAn
+        uh+aToHsP9voZBEsFCKiHD0=
+X-Google-Smtp-Source: ABdhPJywgGmkNzHC5LKHp2qrRQuRSUWc3lDLWPw3DJs4Ovhu+7VPorSa1Mgn5ELXxJPdFjKwxOcrtw==
+X-Received: by 2002:a63:7c56:: with SMTP id l22mr8688320pgn.127.1594996700308;
+        Fri, 17 Jul 2020 07:38:20 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.38.05
+        by smtp.gmail.com with ESMTPSA id a68sm3214689pje.35.2020.07.17.07.38.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 07:38:09 -0700 (PDT)
+        Fri, 17 Jul 2020 07:38:19 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 11/17] perf ftrace: add support for tracing option 'irq-info'
-Date:   Fri, 17 Jul 2020 22:36:22 +0800
-Message-Id: <20200717143628.47721-12-changbin.du@gmail.com>
+Subject: [PATCH v6 12/17] perf ftrace: add option 'verbose' to show more info for graph tracer
+Date:   Fri, 17 Jul 2020 22:36:23 +0800
+Message-Id: <20200717143628.47721-13-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717143628.47721-1-changbin.du@gmail.com>
 References: <20200717143628.47721-1-changbin.du@gmail.com>
@@ -81,94 +81,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support to display irq context info for function tracer. To do
-this, just specify a '--func-opts irq-info' option.
+Sometimes we want ftrace display more and longer information about
+the trace.
+
+$ sudo perf ftrace -G '*'
+ 2)   0.979 us    |  mutex_unlock();
+ 2)   1.540 us    |  __fsnotify_parent();
+ 2)   0.433 us    |  fsnotify();
+
+$ sudo perf ftrace -G '*' --graph-opts verbose
+14160.770883 |   0)  <...>-47814   |  .... |   1.289 us    |  mutex_unlock();
+14160.770886 |   0)  <...>-47814   |  .... |   1.624 us    |  __fsnotify_parent();
+14160.770887 |   0)  <...>-47814   |  .... |   0.636 us    |  fsnotify();
+14160.770888 |   0)  <...>-47814   |  .... |   0.328 us    |  __sb_end_write();
+14160.770888 |   0)  <...>-47814   |  d... |   0.430 us    |  fpregs_assert_state_consistent();
+14160.770889 |   0)  <...>-47814   |  d... |               |  do_syscall_64() {
+14160.770889 |   0)  <...>-47814   |  .... |               |    __x64_sys_close() {
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
  tools/perf/Documentation/perf-ftrace.txt |  1 +
- tools/perf/builtin-ftrace.c              | 21 ++++++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ tools/perf/builtin-ftrace.c              | 29 +++++++++++++++++++++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-index 21d3b444587a..3ab1fe040994 100644
+index 3ab1fe040994..319ec6375228 100644
 --- a/tools/perf/Documentation/perf-ftrace.txt
 +++ b/tools/perf/Documentation/perf-ftrace.txt
-@@ -77,6 +77,7 @@ OPTIONS
- --func-opts::
+@@ -103,6 +103,7 @@ OPTIONS
  	List of options allowed to set:
- 	  call-graph - Display kernel stack trace for function tracer.
-+	  irq-info   - Display irq context info for function tracer.
+ 	  nosleep-time - Measure on-CPU time only for function_graph tracer.
+ 	  noirqs       - Ignore functions that happen inside interrupt.
++	  verbose      - Show process names, PIDs, timestamps, etc.
  
- -G::
- --graph-funcs=::
+ SEE ALSO
+ --------
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 6402df3984c0..95d87c5966ad 100644
+index 95d87c5966ad..0d893d97691d 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -42,6 +42,7 @@ struct perf_ftrace {
- 	unsigned long		percpu_buffer_size;
- 	bool			inherit;
- 	int			func_stack_trace;
-+	int			func_irq_info;
+@@ -45,6 +45,7 @@ struct perf_ftrace {
+ 	int			func_irq_info;
  	int			graph_nosleep_time;
  	int			graph_noirqs;
++	int			graph_verbose;
  };
-@@ -207,6 +208,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+ 
+ struct filter_entry {
+@@ -208,6 +209,9 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
  	write_tracing_option_file("func_stack_trace", "0");
  	write_tracing_option_file("sleep-time", "1");
  	write_tracing_option_file("funcgraph-irqs", "1");
-+	write_tracing_option_file("irq-info", "0");
++	write_tracing_option_file("funcgraph-proc", "0");
++	write_tracing_option_file("funcgraph-abstime", "0");
++	write_tracing_option_file("latency-format", "0");
+ 	write_tracing_option_file("irq-info", "0");
  }
  
- static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
-@@ -294,6 +296,17 @@ static int set_tracing_func_stack_trace(struct perf_ftrace *ftrace)
+@@ -423,6 +427,23 @@ static int set_tracing_funcgraph_irqs(struct perf_ftrace *ftrace)
  	return 0;
  }
  
-+static int set_tracing_func_irqinfo(struct perf_ftrace *ftrace)
++static int set_tracing_funcgraph_verbose(struct perf_ftrace *ftrace)
 +{
-+	if (!ftrace->func_irq_info)
++	if (!ftrace->graph_verbose)
 +		return 0;
 +
-+	if (write_tracing_option_file("irq-info", "1") < 0)
++	if (write_tracing_option_file("funcgraph-proc", "1") < 0)
++		return -1;
++
++	if (write_tracing_option_file("funcgraph-abstime", "1") < 0)
++		return -1;
++
++	if (write_tracing_option_file("latency-format", "1") < 0)
 +		return -1;
 +
 +	return 0;
 +}
 +
- static int reset_tracing_cpu(void)
+ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
  {
- 	struct perf_cpu_map *cpumap = perf_cpu_map__new(NULL);
-@@ -469,6 +482,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 	char *trace_file;
+@@ -517,6 +538,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
  		goto out_reset;
  	}
  
-+	if (set_tracing_func_irqinfo(ftrace) < 0) {
-+		pr_err("failed to set tracing option irq-info\n");
++	if (set_tracing_funcgraph_verbose(ftrace) < 0) {
++		pr_err("failed to set tracing option funcgraph-proc/funcgraph-abstime\n");
 +		goto out_reset;
 +	}
 +
- 	if (set_tracing_filters(ftrace) < 0) {
- 		pr_err("failed to set tracing filters\n");
+ 	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
+ 		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
  		goto out_reset;
-@@ -659,6 +677,7 @@ static int parse_func_tracer_opts(const struct option *opt,
- 	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
- 	struct sublevel_option func_tracer_opts[] = {
- 		{ .name = "call-graph",	.value_ptr = &ftrace->func_stack_trace },
-+		{ .name = "irq-info",	.value_ptr = &ftrace->func_irq_info },
+@@ -699,6 +725,7 @@ static int parse_graph_tracer_opts(const struct option *opt,
+ 	struct sublevel_option graph_tracer_opts[] = {
+ 		{ .name = "nosleep-time",	.value_ptr = &ftrace->graph_nosleep_time },
+ 		{ .name = "noirqs",		.value_ptr = &ftrace->graph_noirqs },
++		{ .name = "verbose",		.value_ptr = &ftrace->graph_verbose },
  		{ .name = NULL, }
  	};
  
-@@ -724,7 +743,7 @@ int cmd_ftrace(int argc, const char **argv)
- 	OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
- 		     "do not trace given functions", parse_filter_func),
- 	OPT_CALLBACK(0, "func-opts", &ftrace, "options",
--		     "function tracer options, available options: call-graph",
-+		     "function tracer options, available options: call-graph,irq-info",
- 		     parse_func_tracer_opts),
- 	OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
- 		     "trace given functions using function_graph tracer",
+@@ -753,7 +780,7 @@ int cmd_ftrace(int argc, const char **argv)
+ 	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
+ 		    "Max depth for function graph tracer"),
+ 	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
+-		     "graph tracer options, available options: nosleep-time,noirqs",
++		     "graph tracer options, available options: nosleep-time,noirqs,verbose",
+ 		     parse_graph_tracer_opts),
+ 	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
+ 		     "size of per cpu buffer", parse_buffer_size),
 -- 
 2.25.1
 
