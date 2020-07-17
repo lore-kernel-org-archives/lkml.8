@@ -2,112 +2,112 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07C8C433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD252C433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9A12076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE242076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgGQDEo (ORCPT
+        id S1727819AbgGQDEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 23:04:44 -0400
-Received: from mga17.intel.com ([192.55.52.151]:62908 "EHLO mga17.intel.com"
+        Thu, 16 Jul 2020 23:04:46 -0400
+Received: from mga11.intel.com ([192.55.52.93]:51486 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbgGQDEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 23:04:41 -0400
-IronPort-SDR: AwlRHPLTrih0MjCuF+ILO5VXva8W4zeHZTf1ztAQedv4AfI4EgAepqK/JuEVpjST0FsKkSNTCg
- Au0hngT0JT7w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129613949"
+        id S1727794AbgGQDEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 23:04:44 -0400
+IronPort-SDR: fbUKdYMor8OIpdxylk/VEjvivC4rdkzIvjvSGbvB0O3KhNhiywtUEgMtU3BS0N9+qsjWawv13h
+ EbhENyni1Fdw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="147518870"
 X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
-   d="scan'208";a="129613949"
+   d="scan'208";a="147518870"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 20:04:39 -0700
-IronPort-SDR: T2RKwTAkLJpyJWFnA7zQrkmA/IOU/vUAoTD5L1DP24cZ0+0J2Kr+D4GbwQm23YowDTSaKbjCH5
- AOtfMhqhHN0Q==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 20:04:41 -0700
+IronPort-SDR: VQEGZ2WgVvFJE1FAmFphcFmUPHlC3Zi5pgB/QjwWTUVIJhHf0bLL/vTztbgy7nArbBSXvvN+95
+ dbpfEO2xa2YQ==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
-   d="scan'208";a="460699820"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 20:04:35 -0700
-From:   Bard Liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
-        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
-        bard.liao@intel.com
-Subject: [PATCH v2 9/9] Soundwire: intel_init: save Slave(s) _ADR info in sdw_intel_ctx
-Date:   Thu, 16 Jul 2020 23:09:47 +0800
-Message-Id: <20200716150947.22119-10-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200716150947.22119-1-yung-chuan.liao@linux.intel.com>
-References: <20200716150947.22119-1-yung-chuan.liao@linux.intel.com>
+   d="scan'208";a="286686881"
+Received: from pgerasim-mobl1.ccr.corp.intel.com (HELO localhost) ([10.249.34.31])
+  by orsmga006.jf.intel.com with ESMTP; 16 Jul 2020 20:04:36 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH v4 2/7] kprobes: Use lock_modules() and unlock_modules()
+Date:   Fri, 17 Jul 2020 06:04:16 +0300
+Message-Id: <20200717030422.679972-3-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
+References: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save ACPI information in context so that we can match machine driver
-with sdw _ADR matching tables.
+Use lock_modules() and unlock_modules() in order to remove compile time
+dependency to the module subsystem.
 
-Suggested-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- drivers/soundwire/intel_init.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ kernel/kprobes.c            | 4 ++--
+ kernel/trace/trace_kprobe.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
-index 8d3992f9fcdd..047252a91c9e 100644
---- a/drivers/soundwire/intel_init.c
-+++ b/drivers/soundwire/intel_init.c
-@@ -188,7 +188,11 @@ static struct sdw_intel_ctx
- 	struct sdw_intel_link_res *link;
- 	struct sdw_intel_ctx *ctx;
- 	struct acpi_device *adev;
-+	struct sdw_slave *slave;
-+	struct list_head *node;
-+	struct sdw_bus *bus;
- 	u32 link_mask;
-+	int num_slaves = 0;
- 	int count;
- 	int i;
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 2e97febeef77..4e46d96d4e16 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -564,7 +564,7 @@ static void kprobe_optimizer(struct work_struct *work)
+ 	cpus_read_lock();
+ 	mutex_lock(&text_mutex);
+ 	/* Lock modules while optimizing kprobes */
+-	mutex_lock(&module_mutex);
++	lock_modules();
  
-@@ -265,6 +269,26 @@ static struct sdw_intel_ctx
- 		link->cdns = platform_get_drvdata(pdev);
+ 	/*
+ 	 * Step 1: Unoptimize kprobes and collect cleaned (unused and disarmed)
+@@ -589,7 +589,7 @@ static void kprobe_optimizer(struct work_struct *work)
+ 	/* Step 4: Free cleaned kprobes after quiesence period */
+ 	do_free_cleaned_kprobes();
  
- 		list_add_tail(&link->list, &ctx->link_list);
-+		bus = &link->cdns->bus;
-+		/* Calculate number of slaves */
-+		list_for_each(node, &bus->slaves)
-+			num_slaves++;
-+	}
-+
-+	ctx->ids = devm_kcalloc(&adev->dev, num_slaves,
-+				sizeof(*ctx->ids), GFP_KERNEL);
-+	if (!ctx->ids)
-+		goto err;
-+
-+	ctx->num_slaves = num_slaves;
-+	i = 0;
-+	list_for_each_entry(link, &ctx->link_list, list) {
-+		bus = &link->cdns->bus;
-+		list_for_each_entry(slave, &bus->slaves, node) {
-+			ctx->ids[i].id = slave->id;
-+			ctx->ids[i].link_id = bus->link_id;
-+			i++;
-+		}
- 	}
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 	mutex_unlock(&text_mutex);
+ 	cpus_read_unlock();
  
- 	return ctx;
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index aefb6065b508..710ec6a6aa8f 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -122,9 +122,9 @@ static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
+ 	if (!p)
+ 		return true;
+ 	*p = '\0';
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	ret = !!find_module(tk->symbol);
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 	*p = ':';
+ 
+ 	return ret;
 -- 
-2.17.1
+2.25.1
 
