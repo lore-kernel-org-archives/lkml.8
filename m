@@ -2,104 +2,84 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F188C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8F9C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4A1F20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:07:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eu/Idpav"
+	by mail.kernel.org (Postfix) with ESMTP id E01C720737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595005733;
+	bh=9N8+ZdOzuhLEfauEOtZL3Pz3V8sOdbC0+AJJLcjfRK0=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=cChj7v7K+6xTOBpN0bdDZof4ck8iBhM5p8mjhUvvejkkFODcZ4xNCh1qNOQTmWzAl
+	 6XQk1jVE4maKjXjSRCOV9DhwNpxRF1RO+7PBt9tgvGEdOA8qVdD11XURsM+raGgYkz
+	 AHdLqFDt8FCCVhiHIvlqFlO2vUtugePw2hzQb15A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGQRH5 (ORCPT
+        id S1727086AbgGQRIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgGQRH4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:07:56 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E8BC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:07:56 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g10so7579997wmc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=pXdlEIgb0R2eqM6YdIY4bxUBQ/fZpt56c2B8bap1rNQ=;
-        b=eu/Idpav/OdqgVR6qapiS1bO3wnmOzjcE1OUoAvo5H5oEuDQbjZcnZ+Fbax2Yv6hDb
-         HYMFLf2931dNSUpYBsBUTl9Zm0XUb9PdV3QDWbh57oxIiVXlcdwlcLrvYUaKOUu+ULVg
-         C8DAKsbnyY7FKcOTbxqFPARhb4SuJOPnFzQ7o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pXdlEIgb0R2eqM6YdIY4bxUBQ/fZpt56c2B8bap1rNQ=;
-        b=N5/nKkKqHASi2Hga1rgUgiBzwRURoaXakWHvq4lVN8tUpgO9Una1zVE7NE0D3LJP7u
-         KSg26SIYoBC4zDpJICXHvcKrnnnvCVVhe/xl1V4JQA8ckjm7AmnfbBpa/bm35TXXSmb2
-         mvrl7Qs0raClfitHZI/z6tW9cd66UZTLn6c7yw7P0Vfz4edG1ozRESRzyULp2Faje/8t
-         CMyNSRQRc5DSWp0t77O1ME2eGHbiC4yO2UiPzSBnbCQCM/N9vH6NEUfBubey2Rcqw1ri
-         lHvL78g9djbTDZyBFL6GbWkemWSUzOO4MIs5m6XqDDUL2vRjR2mX+s4h4VxG/fv//PC0
-         q6Rw==
-X-Gm-Message-State: AOAM531+78kPFq3MTUo6QPCQ/JB2oznKqWvQ2d0QS4WPzYLW1RK2fLh3
-        9CmtpN0FzEghiwd9UXVMNvS3bg==
-X-Google-Smtp-Source: ABdhPJw7tLX2tF2i9i6qGLjeSU1c50yI8HpYW5M+zZP+AASu4hYwehwUPlCKKWkBpC0SRRk/QhKm1Q==
-X-Received: by 2002:a1c:ab84:: with SMTP id u126mr9951175wme.43.1595005675222;
-        Fri, 17 Jul 2020 10:07:55 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id g145sm19294145wmg.23.2020.07.17.10.07.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 10:07:54 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH] pwm: bcm-iproc: handle clk_get_rate() return
-Date:   Fri, 17 Jul 2020 10:07:43 -0700
-Message-Id: <20200717170743.25466-1-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 Jul 2020 13:08:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbgGQRIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:08:48 -0400
+Received: from localhost (unknown [137.135.114.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F18AB207DD;
+        Fri, 17 Jul 2020 17:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595005728;
+        bh=9N8+ZdOzuhLEfauEOtZL3Pz3V8sOdbC0+AJJLcjfRK0=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=HroLxN4wn6+ypr6AYgjTfb75KBNwW7uUYtXK8AMHknmE7eE0v4yjtq7KxlmzOZxN0
+         pVgRjoHPVYolEdUAPENqNZwTjXtRi6r38d9d9DaFRGE6Ox5XCHuZ609jpOxYCs5J4m
+         RkZMjjOrzJL5xtj/wl0Y/kS/uuacO68PpZdHW2aU=
+Date:   Fri, 17 Jul 2020 17:08:47 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     cw00.choi@samsung.com, chanwoo@kernel.org
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH] PM / devfrq: Fix indentaion of devfreq_summary debugfs node
+In-Reply-To: <20200713073112.6297-1-cw00.choi@samsung.com>
+References: <20200713073112.6297-1-cw00.choi@samsung.com>
+Message-Id: <20200717170847.F18AB207DD@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Hi
 
-Handle clk_get_rate() returning <= 0 condition to avoid
-possible division by zero.
+[This is an automated email]
 
-Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- drivers/pwm/pwm-bcm-iproc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+This commit has been processed because it contains a "Fixes:" tag
+fixing commit: 66d0e797bf09 ("Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs"").
 
-diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-index 1f829edd8ee7..72a8607b6c8d 100644
---- a/drivers/pwm/pwm-bcm-iproc.c
-+++ b/drivers/pwm/pwm-bcm-iproc.c
-@@ -86,6 +86,11 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	u32 value, prescale;
- 
- 	rate = clk_get_rate(ip->clk);
-+	if (rate == 0) {
-+		state->period = 0;
-+		state->duty_cycle = 0;
-+		return;
-+	}
- 
- 	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
- 
+The bot has tested the following trees: v5.7.8, v5.4.51, v4.19.132, v4.14.188.
+
+v5.7.8: Build OK!
+v5.4.51: Failed to apply! Possible dependencies:
+    490a421bc575d ("PM / devfreq: Add debugfs support with devfreq_summary file")
+
+v4.19.132: Failed to apply! Possible dependencies:
+    490a421bc575d ("PM / devfreq: Add debugfs support with devfreq_summary file")
+
+v4.14.188: Failed to apply! Possible dependencies:
+    490a421bc575d ("PM / devfreq: Add debugfs support with devfreq_summary file")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
 -- 
-2.17.1
-
+Thanks
+Sasha
