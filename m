@@ -2,120 +2,74 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E19EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF6520768
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:20:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OnhsRGNm"
+	by mail.kernel.org (Postfix) with ESMTP id 73D5C20691
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgGQXUG (ORCPT
+        id S1728082AbgGQXc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 19:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgGQXUF (ORCPT
+        Fri, 17 Jul 2020 19:32:57 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:30531 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727946AbgGQXc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 19:20:05 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A6DEC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 16:20:05 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id w6so12558116ejq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 16:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=IVJhKu+Gp3LFHGjQOw8PatWF56LYveANRBsfi3RUZ5Q=;
-        b=OnhsRGNmVZDhGNNrNKkJ3qUL/Z4HPDbWsDxx1SWXQzR0Adyl8HZKMHTorIIGW9B+NP
-         GdFUuANZ60TLcSe9p19DsazMK4Ni1GrYFMOzG36v/rMXPO5xErDoodh2uKDk56EXPbOF
-         Cu9zDXABX/VVZxE2IOk+Wllt3voMXXqKHXhXk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=IVJhKu+Gp3LFHGjQOw8PatWF56LYveANRBsfi3RUZ5Q=;
-        b=dNWGOF3SiTvhu0t7hIcYkaSZ2ykVtFZcPmHOd9AWp93HAbqDHxhz9n9Jz7P169iLPW
-         qsnnaFY9nJlohALmcM0MqdiK6hcfNPAlYCQgv8XRiIxqaI1qBy/rTXZJE/CORmaQsF5h
-         FxW6cdNjRZFNn6KV8Q42CE9toPNDBOeRHYTQZJQvIW3rNDGpdBW6gKVV/3VMjahMikSN
-         HBqOIQpMed9UXO7YfK+yUetIHALRKyKmq1/Cntgt1/qFOYbqFbKfBbQLynmvH31WAd7j
-         wk9qj2uw1den4/ikbTUCX82Q+pXSo3n5gLkka2CwRPaWg49Sll8/+errgvUXRfJhVToS
-         z/LA==
-X-Gm-Message-State: AOAM532IBOxrCwXSYSgv4kL+fvSOn2CTRmoHJLqugS2vm/NvIZbbC64q
-        1chdu5GuxLnTIv9WZR0CHYKX8A==
-X-Google-Smtp-Source: ABdhPJwdBaBHYKfugz8zuvk0G6zHnB4TwuV69YU6wyOAEVVWulh+am5y0KaMTj8EfN6DKOnSFcXEDQ==
-X-Received: by 2002:a17:906:fcba:: with SMTP id qw26mr10599993ejb.112.1595028003947;
-        Fri, 17 Jul 2020 16:20:03 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id v11sm9074093eja.113.2020.07.17.16.20.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 16:20:03 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v3] pwm: bcm-iproc: handle clk_get_rate() return
-Date:   Fri, 17 Jul 2020 16:19:54 -0700
-Message-Id: <20200717231954.11695-1-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 Jul 2020 19:32:56 -0400
+X-Originating-IP: 90.65.108.121
+Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 634BF240003;
+        Fri, 17 Jul 2020 23:32:53 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Oleksij Rempel <linux@rempel-privat.de>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net] net: macb: use phy_interface_mode_is_rgmii everywhere
+Date:   Sat, 18 Jul 2020 01:32:21 +0200
+Message-Id: <20200717233221.840294-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+There is one RGMII check not using the phy_interface_mode_is_rgmii()
+helper. This prevents the driver from configuring the MAC properly when
+using a phy-mode that is not just rgmii, e.g. rgmii-rxid. This became an
+issue on sama5d3 xplained since the ksz9031 driver is hadling phy-mode
+properly and the phy-mode has to be set to rgmii-rxid.
 
-Handle clk_get_rate() returning 0 to avoid possible division by zero.
-
-Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Reviewed-off-by: Ray Jui <ray.jui@broadcom.com>
-
+Fixes: bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
-Changes from v2: update commit message to remove <= condition
-as clk_get_rate only returns value >= 0
----
- drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-index 1f829edd8ee7..d392a828fc49 100644
---- a/drivers/pwm/pwm-bcm-iproc.c
-+++ b/drivers/pwm/pwm-bcm-iproc.c
-@@ -85,8 +85,6 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	u64 tmp, multi, rate;
- 	u32 value, prescale;
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 52582e8ed90e..61d5b5744261 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3730,7 +3730,7 @@ static int macb_init(struct platform_device *pdev)
  
--	rate = clk_get_rate(ip->clk);
--
- 	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
- 
- 	if (value & BIT(IPROC_PWM_CTRL_EN_SHIFT(pwm->hwpwm)))
-@@ -99,6 +97,13 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	else
- 		state->polarity = PWM_POLARITY_INVERSED;
- 
-+	rate = clk_get_rate(ip->clk);
-+	if (rate == 0) {
-+		state->period = 0;
-+		state->duty_cycle = 0;
-+		return;
-+	}
-+
- 	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
- 	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
- 	prescale &= IPROC_PWM_PRESCALE_MAX;
+ 	if (!(bp->caps & MACB_CAPS_USRIO_DISABLED)) {
+ 		val = 0;
+-		if (bp->phy_interface == PHY_INTERFACE_MODE_RGMII)
++		if (phy_interface_mode_is_rgmii(bp->phy_interface))
+ 			val = GEM_BIT(RGMII);
+ 		else if (bp->phy_interface == PHY_INTERFACE_MODE_RMII &&
+ 			 (bp->caps & MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII))
 -- 
-2.17.1
+2.26.2
 
