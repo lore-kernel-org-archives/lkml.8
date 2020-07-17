@@ -2,202 +2,360 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E85CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D81320672
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CB62176B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:33:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHLGHkFF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGQDdv (ORCPT
+        id S1727029AbgGQDdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 23:33:51 -0400
-Received: from mga05.intel.com ([192.55.52.43]:36174 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbgGQDdu (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 23:33:50 -0400
-IronPort-SDR: O8qowj2vOxhv9lu+t7MqtLIfFmyOxJ+eP15uPS18Xv+qyDnXTUeyfBWeCew1zvS68iclHxOUm0
- QD8u0/ixU55A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="234384146"
-X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
-   d="scan'208";a="234384146"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 20:33:50 -0700
-IronPort-SDR: u4UGc5ernv23ce9W5F6Ln9VITLDb+fsoi5jRIYd4dre4UWQd0lgyUDxNILY41enJwRwkk0HEem
- onE7faxJberA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
-   d="scan'208";a="318646993"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Jul 2020 20:33:47 -0700
-Subject: Re: [PATCH] perf evsel: Don't set sample_regs_intr/sample_regs_user
- for dummy event
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        LKML <Linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, kan.liang@intel.com,
-        "Jin, Yao" <yao.jin@intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-References: <20200703004215.24418-1-yao.jin@linux.intel.com>
- <20200703110042.GA3282312@krava>
- <9fa0bd83-b21e-7bc2-af81-799f8e99f73b@linux.intel.com>
- <CAP-5=fUjUc7yAA2wyes+DhMkwP9Mw0Lu5gy=XOnugy=vW1jwoQ@mail.gmail.com>
- <b527838b-42e8-b48a-debc-fd91923150d5@linux.intel.com>
-Message-ID: <deb02b38-49eb-088d-6ebf-b5396e50c725@linux.intel.com>
-Date:   Fri, 17 Jul 2020 11:33:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 23:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbgGQDdw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 23:33:52 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D06CFC061755;
+        Thu, 16 Jul 2020 20:33:51 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id s26so4712448pfm.4;
+        Thu, 16 Jul 2020 20:33:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZrZklTY4A8jl29jfO57VHOywBPmSNgeum+XKzdXRoIE=;
+        b=UHLGHkFFlXizFDXAAYxTMCJEW0PO2NKwkhHFeTHv18UG3vegYimYn7k93q4BqIjXnG
+         uRxMaTnaWdePQWuHzensUP9xxeoCoJUajLLZACRNQ1SUsdKxEwd8vCEPc6rmEGxJBW3S
+         5+6bZOScjulw1LwFgud65Uzk69htCXJRnSuyAmy30nIkDimiQh4i/MGO0arCFjac6mZJ
+         22hvbDL6JUUAUyA1OCnc3mZGhkwKcQPpQJKtLj8FoVw8BJn+czIjbRUMRyzEHijsSR8o
+         /UYSXlXBwvPFi/vCbdNr0BDt9VCrIYpJVYWWMQ4XvRpXLxOemVKPkEzIp+0T4XXhrXvt
+         bdCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZrZklTY4A8jl29jfO57VHOywBPmSNgeum+XKzdXRoIE=;
+        b=ERNQa1glyVhVIZjlRGGkars+9Md8Mcuo5LDjvwnr5ECzMld84PrgYVP/E1X2VH1rDI
+         6tpgz5ISYtz3DHLcSv/k69WsqBqlnCIVR/0I3k42CfIUzceitrRhg01LeEsctaJVblKu
+         0M/OYqlpvsEUQ5Y2trzgQboFZLron3ppTxmc3Tvvm1f7YbqbJ4gjWP26RQ7HeU/PNGLL
+         CT90uwwoaEc17AYlWGRYH3nH6tcPR0CjPw8CKMlvXDDiaZRtF4M3ysjnEObvXAIiH5V3
+         xD63wXgthARHkfRAx5kE5Ts9fJhcPGzx5Rhe3A6hc4gAyLWQf4yJiOr5P/64QzSSS6/w
+         dQRw==
+X-Gm-Message-State: AOAM530+9d/sRTrIZZ4W+JdYkEsDwMgsc8T71FMyHsaYx6MA0I1vJ1LK
+        MfGpGk530wmjxDUrcR9sX+ufPIc+
+X-Google-Smtp-Source: ABdhPJzv1YUecZR/kalLYsg81zW5UUTqHhkPYJMgc/lG5yoaobiwl7PH2sIXWHJ/4cGH5CqwrwSWbQ==
+X-Received: by 2002:a62:2c07:: with SMTP id s7mr6250297pfs.191.1594956831329;
+        Thu, 16 Jul 2020 20:33:51 -0700 (PDT)
+Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
+        by smtp.gmail.com with ESMTPSA id d22sm5669678pfd.105.2020.07.16.20.33.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 20:33:50 -0700 (PDT)
+From:   Ben Chuang <benchuanggli@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ben.chuang@genesyslogic.com.tw, greg.tu@genesyslogic.com.tw,
+        SeanHY.Chen@genesyslogic.com.tw,
+        Ben Chuang <benchuanggli@gmail.com>
+Subject: [PATCH] mmc: sdhci-pci-gli: Set SDR104's clock to 205MHz and enable SSC for GL975x
+Date:   Fri, 17 Jul 2020 11:33:50 +0800
+Message-Id: <20200717033350.13006-1-benchuanggli@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <b527838b-42e8-b48a-debc-fd91923150d5@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-On 7/6/2020 8:55 AM, Jin, Yao wrote:
-> Hi Ian,
-> 
-> On 7/6/2020 8:47 AM, Ian Rogers wrote:
->> On Fri, Jul 3, 2020 at 5:31 PM Jin, Yao <yao.jin@linux.intel.com> wrote:
->>>
->>> Hi Jiri,
->>>
->>> On 7/3/2020 7:00 PM, Jiri Olsa wrote:
->>>> On Fri, Jul 03, 2020 at 08:42:15AM +0800, Jin Yao wrote:
->>>>> Since commit 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis"),
->>>>> a dummy event is added to capture mmaps.
->>>>>
->>>>> But if we run perf-record as,
->>>>>
->>>>>    # perf record -e cycles:p -IXMM0 -a -- sleep 1
->>>>>    Error:
->>>>>    dummy:HG: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
->>>>>
->>
->> Sorry for the breakage caused by modifying the dummy event. Could we
->> add a test to cover the issue? Perhaps in tools/perf/tests/shell/.
->> Trying to reproduce with a register on my skylakex on a 5.6.14 kernel
->> with:
->>
->> $ perf record -e cycles:p -IAX -a -- sleep 1
->>
->> succeeds.
->>
->> Thanks,
->> Ian
->>
-> 
-> -IAX should be no problem. The issue only occurs on the platform with extended regs supports, such 
-> as ICL. So I don't know if it's suitable to add it to perf test suite.
-> 
-> Thanks
-> Jin Yao
-> 
+Set SDR104's clock to 205MHz and enable SSC for GL9750 and GL9755
 
-Can this fix patch be accepted?
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+---
+ drivers/mmc/host/sdhci-pci-gli.c | 220 ++++++++++++++++++++++++++++++-
+ 1 file changed, 218 insertions(+), 2 deletions(-)
 
-Thanks
-Jin Yao
+diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
+index ca0166d9bf82..5da2b06d84ae 100644
+--- a/drivers/mmc/host/sdhci-pci-gli.c
++++ b/drivers/mmc/host/sdhci-pci-gli.c
+@@ -31,10 +31,18 @@
+ #define   SDHCI_GLI_9750_ALL_RST      (BIT(24)|BIT(25)|BIT(28)|BIT(30))
+ 
+ #define SDHCI_GLI_9750_PLL	      0x864
++#define   SDHCI_GLI_9750_PLL_LDIV       GENMASK(9, 0)
++#define   SDHCI_GLI_9750_PLL_PDIV       GENMASK(14, 12)
++#define   SDHCI_GLI_9750_PLL_DIR        BIT(15)
+ #define   SDHCI_GLI_9750_PLL_TX2_INV    BIT(23)
+ #define   SDHCI_GLI_9750_PLL_TX2_DLY    GENMASK(22, 20)
+ #define   GLI_9750_PLL_TX2_INV_VALUE    0x1
+ #define   GLI_9750_PLL_TX2_DLY_VALUE    0x0
++#define   SDHCI_GLI_9750_PLLSSC_STEP    GENMASK(28, 24)
++#define   SDHCI_GLI_9750_PLLSSC_EN      BIT(31)
++
++#define SDHCI_GLI_9750_PLLSSC        0x86C
++#define   SDHCI_GLI_9750_PLLSSC_PPM    GENMASK(31, 16)
+ 
+ #define SDHCI_GLI_9750_SW_CTRL      0x874
+ #define   SDHCI_GLI_9750_SW_CTRL_4    GENMASK(7, 6)
+@@ -76,6 +84,21 @@
+ #define PCIE_GLI_9763E_SCR	 0x8E0
+ #define   GLI_9763E_SCR_AXI_REQ	   BIT(9)
+ 
++#define PCI_GLI_9755_WT       0x800
++#define   PCI_GLI_9755_WT_EN    BIT(0)
++#define   GLI_9755_WT_EN_ON     0x1
++#define   GLI_9755_WT_EN_OFF    0x0
++
++#define PCI_GLI_9755_PLL            0x64
++#define   PCI_GLI_9755_PLL_LDIV       GENMASK(9, 0)
++#define   PCI_GLI_9755_PLL_PDIV       GENMASK(14, 12)
++#define   PCI_GLI_9755_PLL_DIR        BIT(15)
++#define   PCI_GLI_9755_PLLSSC_STEP    GENMASK(28, 24)
++#define   PCI_GLI_9755_PLLSSC_EN      BIT(31)
++
++#define PCI_GLI_9755_PLLSSC        0x68
++#define   PCI_GLI_9755_PLLSSC_PPM    GENMASK(15, 0)
++
+ #define GLI_MAX_TUNING_LOOP 40
+ 
+ /* Genesys Logic chipset */
+@@ -280,6 +303,84 @@ static int gl9750_execute_tuning(struct sdhci_host *host, u32 opcode)
+ 	return 0;
+ }
+ 
++static void gl9750_disable_ssc_pll(struct sdhci_host *host)
++{
++	u32 pll;
++
++	gl9750_wt_on(host);
++	pll = sdhci_readl(host, SDHCI_GLI_9750_PLL);
++	pll &= ~(SDHCI_GLI_9750_PLL_DIR | SDHCI_GLI_9750_PLLSSC_EN);
++	sdhci_writel(host, pll, SDHCI_GLI_9750_PLL);
++	gl9750_wt_off(host);
++}
++
++static void gl9750_set_pll(struct sdhci_host *host, u8 dir, u16 ldiv, u8 pdiv)
++{
++	u32 pll;
++
++	gl9750_wt_on(host);
++	pll = sdhci_readl(host, SDHCI_GLI_9750_PLL);
++	pll &= ~(SDHCI_GLI_9750_PLL_LDIV |
++		 SDHCI_GLI_9750_PLL_PDIV |
++		 SDHCI_GLI_9750_PLL_DIR);
++	pll |= FIELD_PREP(SDHCI_GLI_9750_PLL_LDIV, ldiv) |
++	       FIELD_PREP(SDHCI_GLI_9750_PLL_PDIV, pdiv) |
++	       FIELD_PREP(SDHCI_GLI_9750_PLL_DIR, dir);
++	sdhci_writel(host, pll, SDHCI_GLI_9750_PLL);
++	gl9750_wt_off(host);
++
++	/* wait for pll stable */
++	mdelay(1);
++}
++
++static void gl9750_set_ssc(struct sdhci_host *host, u8 enable, u8 step, u16 ppm)
++{
++	u32 pll;
++	u32 ssc;
++
++	gl9750_wt_on(host);
++	pll = sdhci_readl(host, SDHCI_GLI_9750_PLL);
++	ssc = sdhci_readl(host, SDHCI_GLI_9750_PLLSSC);
++	pll &= ~(SDHCI_GLI_9750_PLLSSC_STEP |
++		 SDHCI_GLI_9750_PLLSSC_EN);
++	ssc &= ~SDHCI_GLI_9750_PLLSSC_PPM;
++	pll |= FIELD_PREP(SDHCI_GLI_9750_PLLSSC_STEP, step) |
++	       FIELD_PREP(SDHCI_GLI_9750_PLLSSC_EN, enable);
++	ssc |= FIELD_PREP(SDHCI_GLI_9750_PLLSSC_PPM, ppm);
++	sdhci_writel(host, ssc, SDHCI_GLI_9750_PLLSSC);
++	sdhci_writel(host, pll, SDHCI_GLI_9750_PLL);
++	gl9750_wt_off(host);
++}
++
++static void gl9750_set_ssc_pll_205mhz(struct sdhci_host *host)
++{
++	/* set pll to 205MHz and enable ssc */
++	gl9750_set_ssc(host, 0x1, 0x1F, 0xFFE7);
++	gl9750_set_pll(host, 0x1, 0x246, 0x0);
++}
++
++static void sdhci_gl9750_set_clock(struct sdhci_host *host, unsigned int clock)
++{
++	struct mmc_ios *ios = &host->mmc->ios;
++	u16 clk;
++
++	host->mmc->actual_clock = 0;
++
++	gl9750_disable_ssc_pll(host);
++	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
++
++	if (clock == 0)
++		return;
++
++	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
++	if (clock == 200000000 && ios->timing == MMC_TIMING_UHS_SDR104) {
++		host->mmc->actual_clock = 205000000;
++		gl9750_set_ssc_pll_205mhz(host);
++	}
++
++	sdhci_enable_clk(host, clk);
++}
++
+ static void gli_pcie_enable_msi(struct sdhci_pci_slot *slot)
+ {
+ 	int ret;
+@@ -295,6 +396,121 @@ static void gli_pcie_enable_msi(struct sdhci_pci_slot *slot)
+ 	slot->host->irq = pci_irq_vector(slot->chip->pdev, 0);
+ }
+ 
++static inline void gl9755_wt_on(struct pci_dev *pdev)
++{
++	u32 wt_value;
++	u32 wt_enable;
++
++	pci_read_config_dword(pdev, PCI_GLI_9755_WT, &wt_value);
++	wt_enable = FIELD_GET(PCI_GLI_9755_WT_EN, wt_value);
++
++	if (wt_enable == GLI_9755_WT_EN_ON)
++		return;
++
++	wt_value &= ~PCI_GLI_9755_WT_EN;
++	wt_value |= FIELD_PREP(PCI_GLI_9755_WT_EN, GLI_9755_WT_EN_ON);
++
++	pci_write_config_dword(pdev, PCI_GLI_9755_WT, wt_value);
++}
++
++static inline void gl9755_wt_off(struct pci_dev *pdev)
++{
++	u32 wt_value;
++	u32 wt_enable;
++
++	pci_read_config_dword(pdev, PCI_GLI_9755_WT, &wt_value);
++	wt_enable = FIELD_GET(PCI_GLI_9755_WT_EN, wt_value);
++
++	if (wt_enable == GLI_9755_WT_EN_OFF)
++		return;
++
++	wt_value &= ~PCI_GLI_9755_WT_EN;
++	wt_value |= FIELD_PREP(PCI_GLI_9755_WT_EN, GLI_9755_WT_EN_OFF);
++
++	pci_write_config_dword(pdev, PCI_GLI_9755_WT, wt_value);
++}
++
++static void gl9755_disable_ssc_pll(struct pci_dev *pdev)
++{
++	u32 pll;
++
++	gl9755_wt_on(pdev);
++	pci_read_config_dword(pdev, PCI_GLI_9755_PLL, &pll);
++	pll &= ~(PCI_GLI_9755_PLL_DIR | PCI_GLI_9755_PLLSSC_EN);
++	pci_write_config_dword(pdev, PCI_GLI_9755_PLL, pll);
++	gl9755_wt_off(pdev);
++}
++
++static void gl9755_set_pll(struct pci_dev *pdev, u8 dir, u16 ldiv, u8 pdiv)
++{
++	u32 pll;
++
++	gl9755_wt_on(pdev);
++	pci_read_config_dword(pdev, PCI_GLI_9755_PLL, &pll);
++	pll &= ~(PCI_GLI_9755_PLL_LDIV |
++		 PCI_GLI_9755_PLL_PDIV |
++		 PCI_GLI_9755_PLL_DIR);
++	pll |= FIELD_PREP(PCI_GLI_9755_PLL_LDIV, ldiv) |
++	       FIELD_PREP(PCI_GLI_9755_PLL_PDIV, pdiv) |
++	       FIELD_PREP(PCI_GLI_9755_PLL_DIR, dir);
++	pci_write_config_dword(pdev, PCI_GLI_9755_PLL, pll);
++	gl9755_wt_off(pdev);
++
++	/* wait for pll stable */
++	mdelay(1);
++}
++
++static void gl9755_set_ssc(struct pci_dev *pdev, u8 enable, u8 step, u16 ppm)
++{
++	u32 pll;
++	u32 ssc;
++
++	gl9755_wt_on(pdev);
++	pci_read_config_dword(pdev, PCI_GLI_9755_PLL, &pll);
++	pci_read_config_dword(pdev, PCI_GLI_9755_PLLSSC, &ssc);
++	pll &= ~(PCI_GLI_9755_PLLSSC_STEP |
++		 PCI_GLI_9755_PLLSSC_EN);
++	ssc &= ~PCI_GLI_9755_PLLSSC_PPM;
++	pll |= FIELD_PREP(PCI_GLI_9755_PLLSSC_STEP, step) |
++	       FIELD_PREP(PCI_GLI_9755_PLLSSC_EN, enable);
++	ssc |= FIELD_PREP(PCI_GLI_9755_PLLSSC_PPM, ppm);
++	pci_write_config_dword(pdev, PCI_GLI_9755_PLLSSC, ssc);
++	pci_write_config_dword(pdev, PCI_GLI_9755_PLL, pll);
++	gl9755_wt_off(pdev);
++}
++
++static void gl9755_set_ssc_pll_205mhz(struct pci_dev *pdev)
++{
++	/* set pll to 205MHz and enable ssc */
++	gl9755_set_ssc(pdev, 0x1, 0x1F, 0xFFE7);
++	gl9755_set_pll(pdev, 0x1, 0x246, 0x0);
++}
++
++static void sdhci_gl9755_set_clock(struct sdhci_host *host, unsigned int clock)
++{
++	struct sdhci_pci_slot *slot = sdhci_priv(host);
++	struct mmc_ios *ios = &host->mmc->ios;
++	struct pci_dev *pdev;
++	u16 clk;
++
++	pdev = slot->chip->pdev;
++	host->mmc->actual_clock = 0;
++
++	gl9755_disable_ssc_pll(pdev);
++	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
++
++	if (clock == 0)
++		return;
++
++	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
++	if (clock == 200000000 && ios->timing == MMC_TIMING_UHS_SDR104) {
++		host->mmc->actual_clock = 205000000;
++		gl9755_set_ssc_pll_205mhz(pdev);
++	}
++
++	sdhci_enable_clk(host, clk);
++}
++
+ static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
+ {
+ 	struct sdhci_host *host = slot->host;
+@@ -440,7 +656,7 @@ static int gli_probe_slot_gl9763e(struct sdhci_pci_slot *slot)
+ }
+ 
+ static const struct sdhci_ops sdhci_gl9755_ops = {
+-	.set_clock		= sdhci_set_clock,
++	.set_clock		= sdhci_gl9755_set_clock,
+ 	.enable_dma		= sdhci_pci_enable_dma,
+ 	.set_bus_width		= sdhci_set_bus_width,
+ 	.reset			= sdhci_reset,
+@@ -460,7 +676,7 @@ const struct sdhci_pci_fixes sdhci_gl9755 = {
+ 
+ static const struct sdhci_ops sdhci_gl9750_ops = {
+ 	.read_l                 = sdhci_gl9750_readl,
+-	.set_clock		= sdhci_set_clock,
++	.set_clock		= sdhci_gl9750_set_clock,
+ 	.enable_dma		= sdhci_pci_enable_dma,
+ 	.set_bus_width		= sdhci_set_bus_width,
+ 	.reset			= sdhci_gl9750_reset,
+-- 
+2.27.0
 
->>>>> The issue is, if we enable the extended regs (-IXMM0), but the
->>>>> pmu->capabilities is not set with PERF_PMU_CAP_EXTENDED_REGS, the kernel
->>>>> will return -EOPNOTSUPP error.
->>>>>
->>>>> See following code pieces.
->>>>>
->>>>> /* in kernel/events/core.c */
->>>>> static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->>>>>
->>>>> {
->>>>>       ....
->>>>>       if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
->>>>>           has_extended_regs(event))
->>>>>               ret = -EOPNOTSUPP;
->>>>>       ....
->>>>> }
->>>>>
->>>>> For software dummy event, the PMU should be not set with
->>>>> PERF_PMU_CAP_EXTENDED_REGS. But unfortunately in current code, the dummy
->>>>> event has possibility to be set with PERF_REG_EXTENDED_MASK bit.
->>>>>
->>>>> In evsel__config, /* tools/perf/util/evsel.c */
->>>>>
->>>>> if (opts->sample_intr_regs) {
->>>>>       attr->sample_regs_intr = opts->sample_intr_regs;
->>>>> }
->>>>>
->>>>> If we use -IXMM0, the attr>sample_regs_intr will be set with
->>>>> PERF_REG_EXTENDED_MASK bit.
->>>>>
->>>>> It doesn't make sense to set attr->sample_regs_intr for a
->>>>> software dummy event.
->>>>>
->>>>> This patch adds dummy event checking before setting
->>>>> attr->sample_regs_intr.
->>>>>
->>>>> After:
->>>>>     # ./perf record -e cycles:p -IXMM0 -a -- sleep 1
->>>>>     [ perf record: Woken up 1 times to write data ]
->>>>>     [ perf record: Captured and wrote 0.413 MB perf.data (45 samples) ]
->>>>
->>>> LGTM, Adrian (cc-ed) just added another check to the same place,
->>>> but it looks like both of them should be there:
->>>>
->>>>     https://lore.kernel.org/lkml/20200630133935.11150-2-adrian.hunter@intel.com/
->>>>
->>>> jirka
->>>>
->>>
->>> Thanks Jiri! Yes, it looks like both of checks should be added here.
->>>
->>> So do I post v2 (just rebase) once Adrian's patch gets merged?
->>>
->>> Thanks
->>> Jin Yao
->>>
->>>>>
->>>>> Fixes: 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis")
->>>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->>>>> ---
->>>>>    tools/perf/util/evsel.c | 4 ++--
->>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->>>>> index 96e5171dce41..df3315543e86 100644
->>>>> --- a/tools/perf/util/evsel.c
->>>>> +++ b/tools/perf/util/evsel.c
->>>>> @@ -1020,12 +1020,12 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
->>>>>       if (callchain && callchain->enabled && !evsel->no_aux_samples)
->>>>>               evsel__config_callchain(evsel, opts, callchain);
->>>>>
->>>>> -    if (opts->sample_intr_regs) {
->>>>> +    if (opts->sample_intr_regs && !is_dummy_event(evsel)) {
->>>>>               attr->sample_regs_intr = opts->sample_intr_regs;
->>>>>               evsel__set_sample_bit(evsel, REGS_INTR);
->>>>>       }
->>>>>
->>>>> -    if (opts->sample_user_regs) {
->>>>> +    if (opts->sample_user_regs && !is_dummy_event(evsel)) {
->>>>>               attr->sample_regs_user |= opts->sample_user_regs;
->>>>>               evsel__set_sample_bit(evsel, REGS_USER);
->>>>>       }
->>>>> -- 
->>>>> 2.17.1
->>>>>
->>>>
