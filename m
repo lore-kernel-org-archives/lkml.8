@@ -2,138 +2,182 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EDEC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15EFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7747920672
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E89920672
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 03:41:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AE4PMhkm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgGQDmO (ORCPT
+        id S1726973AbgGQDl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 23:42:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50076 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726489AbgGQDmO (ORCPT
+        Thu, 16 Jul 2020 23:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgGQDl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 23:42:14 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06H32aFb179986
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 23:42:13 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32792xuxdv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 23:42:12 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06H3fYBK097092
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 23:42:09 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32792xuxcd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 23:42:09 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06H3ZuuU017148;
-        Fri, 17 Jul 2020 03:42:04 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 327527xdsr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 03:42:04 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06H3elc859375746
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 03:40:47 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C547A4053;
-        Fri, 17 Jul 2020 03:40:47 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 57AA6A404D;
-        Fri, 17 Jul 2020 03:40:46 +0000 (GMT)
-Received: from [9.199.41.4] (unknown [9.199.41.4])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 17 Jul 2020 03:40:46 +0000 (GMT)
-Subject: Re: [PATCH 1/2] libsubcmd: Fix OPT_CALLBACK_SET()
-To:     acme@redhat.com
-Cc:     jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200619133412.50705-1-ravi.bangoria@linux.ibm.com>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Message-ID: <3b15af42-bfb2-07dd-8bb2-df9cd6b32a34@linux.ibm.com>
-Date:   Fri, 17 Jul 2020 09:10:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 23:41:57 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB77BC061755;
+        Thu, 16 Jul 2020 20:41:56 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B7H42710Zz9sRN;
+        Fri, 17 Jul 2020 13:41:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594957315;
+        bh=I+diQgdBksqMDNEDQO1DW8SMPxA1UG60rYse/U+8AdA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=AE4PMhkmmCW7YXcQNLsaTU0YVx/3DxL140ssxxbvyM15wJf6Sg7BdnytdSo9TL4jQ
+         z9v9ulL7Zr6206TZbDOLKrwfCsRCepVfeP21MthdbDQwmDgUfctS4Kdn5HGdcLS7JV
+         fRymt4XdmRn3qw8mQka4MAgkTb4PZL1a83B3ZWNwJecpttG0NeQqwk82822LNXCjUK
+         qsKT3XpcxOQoIsRmQeA19APkq/2NajRFdWDRMK8NPJVz2X5549yI7R/d+UJFnUEWNf
+         ofbSS5z7ETAl0DDH9JjCwcvtLGb4fRQjM8GK6AwtCzm3u7Eefi8ZvDTNsn8dROYe2o
+         sJd75QfXwzNGw==
+Date:   Fri, 17 Jul 2020 13:41:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the mfd tree
+Message-ID: <20200717134154.50326d78@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200619133412.50705-1-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1
- mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 clxscore=1015
- adultscore=0 impostorscore=0 spamscore=0 malwarescore=0 bulkscore=0
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007170022
+Content-Type: multipart/signed; boundary="Sig_/wzSUY.Mm=JfxGqE90lH3=LR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
+--Sig_/wzSUY.Mm=JfxGqE90lH3=LR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Can you please consider this trivial fix.
+Hi all,
 
-Ravi
+After merging the mfd tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-On 6/19/20 7:04 PM, Ravi Bangoria wrote:
-> Any option macro with _SET suffix should set opt->set variable which
-> is not happening for OPT_CALLBACK_SET(). This is causing issues with
-> perf record --switch-output-event. Fix that.
-> 
-> Before:
->    # ./perf record --overwrite -e sched:*switch,syscalls:sys_enter_mmap \
->             --switch-output-event syscalls:sys_enter_mmap
->    ^C[ perf record: Woken up 1 times to write data ]
->    [ perf record: Captured and wrote 0.297 MB perf.data (657 samples) ]
-> 
-> After:
-> 
->    $ ./perf record --overwrite -e sched:*switch,syscalls:sys_enter_mmap \
->            --switch-output-event syscalls:sys_enter_mmap
->    [ perf record: dump data: Woken up 1 times ]
->    [ perf record: Dump perf.data.2020061918144542 ]
->    [ perf record: dump data: Woken up 1 times ]
->    [ perf record: Dump perf.data.2020061918144608 ]
->    [ perf record: dump data: Woken up 1 times ]
->    [ perf record: Dump perf.data.2020061918144660 ]
->    ^C[ perf record: dump data: Woken up 1 times ]
->    [ perf record: Dump perf.data.2020061918144784 ]
->    [ perf record: Woken up 0 times to write data ]
->    [ perf record: Dump perf.data.2020061918144803 ]
->    [ perf record: Captured and wrote 0.419 MB perf.data.<timestamp> ]
-> 
-> Fixes: 636eb4d001b1 ("libsubcmd: Introduce OPT_CALLBACK_SET()")
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->   tools/lib/subcmd/parse-options.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-> index dbb9efbf718a..39ebf6192016 100644
-> --- a/tools/lib/subcmd/parse-options.c
-> +++ b/tools/lib/subcmd/parse-options.c
-> @@ -237,6 +237,9 @@ static int get_value(struct parse_opt_ctx_t *p,
->   		return err;
->   
->   	case OPTION_CALLBACK:
-> +		if (opt->set)
-> +			*(bool *)opt->set = true;
-> +
->   		if (unset)
->   			return (*opt->callback)(opt, NULL, 1) ? (-1) : 0;
->   		if (opt->flags & PARSE_OPT_NOARG)
-> 
+drivers/mfd/kempld-core.c: In function 'kempld_register_cells_generic':
+drivers/mfd/kempld-core.c:105:13: error: assignment of read-only location '=
+devs[i++]'
+  105 |   devs[i++] =3D kempld_devs[KEMPLD_I2C];
+      |             ^
+drivers/mfd/kempld-core.c:108:13: error: assignment of read-only location '=
+devs[i++]'
+  108 |   devs[i++] =3D kempld_devs[KEMPLD_WDT];
+      |             ^
+drivers/mfd/kempld-core.c:111:13: error: assignment of read-only location '=
+devs[i++]'
+  111 |   devs[i++] =3D kempld_devs[KEMPLD_GPIO];
+      |             ^
+drivers/mfd/kempld-core.c:114:13: error: assignment of read-only location '=
+devs[i++]'
+  114 |   devs[i++] =3D kempld_devs[KEMPLD_UART];
+      |             ^
+
+Caused by commit
+
+  70d48975c152 ("mfd: core: Make a best effort attempt to match devices wit=
+h the correct of_nodes")
+
+I have added the following fix patch for today (I assume that there is
+a better solution):
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 17 Jul 2020 13:36:22 +1000
+Subject: [PATCH] fix up for struct mfd_cell change
+
+Fixes: 70d48975c152 ("mfd: core: Make a best effort attempt to match device=
+s with the correct of_nodes")
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/mfd/kempld-core.c | 28 ++++++++++------------------
+ 1 file changed, 10 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/mfd/kempld-core.c b/drivers/mfd/kempld-core.c
+index f48e21d8b97c..ad68ee699cb5 100644
+--- a/drivers/mfd/kempld-core.c
++++ b/drivers/mfd/kempld-core.c
+@@ -79,39 +79,31 @@ enum kempld_cells {
+ 	KEMPLD_UART,
+ };
+=20
+-static const struct mfd_cell kempld_devs[] =3D {
+-	[KEMPLD_I2C] =3D {
+-		.name =3D "kempld-i2c",
+-	},
+-	[KEMPLD_WDT] =3D {
+-		.name =3D "kempld-wdt",
+-	},
+-	[KEMPLD_GPIO] =3D {
+-		.name =3D "kempld-gpio",
+-	},
+-	[KEMPLD_UART] =3D {
+-		.name =3D "kempld-uart",
+-	},
++static const char *kempld_devs[] =3D {
++	[KEMPLD_I2C] =3D "kempld-i2c",
++	[KEMPLD_WDT] =3D "kempld-wdt",
++	[KEMPLD_GPIO] =3D "kempld-gpio",
++	[KEMPLD_UART] =3D "kempld-uart",
+ };
+=20
+ #define KEMPLD_MAX_DEVS	ARRAY_SIZE(kempld_devs)
+=20
+ static int kempld_register_cells_generic(struct kempld_device_data *pld)
+ {
+-	struct mfd_cell devs[KEMPLD_MAX_DEVS];
++	struct mfd_cell devs[KEMPLD_MAX_DEVS] =3D {};
+ 	int i =3D 0;
+=20
+ 	if (pld->feature_mask & KEMPLD_FEATURE_BIT_I2C)
+-		devs[i++] =3D kempld_devs[KEMPLD_I2C];
++		devs[i++].name =3D kempld_devs[KEMPLD_I2C];
+=20
+ 	if (pld->feature_mask & KEMPLD_FEATURE_BIT_WATCHDOG)
+-		devs[i++] =3D kempld_devs[KEMPLD_WDT];
++		devs[i++].name =3D kempld_devs[KEMPLD_WDT];
+=20
+ 	if (pld->feature_mask & KEMPLD_FEATURE_BIT_GPIO)
+-		devs[i++] =3D kempld_devs[KEMPLD_GPIO];
++		devs[i++].name =3D kempld_devs[KEMPLD_GPIO];
+=20
+ 	if (pld->feature_mask & KEMPLD_FEATURE_MASK_UART)
+-		devs[i++] =3D kempld_devs[KEMPLD_UART];
++		devs[i++].name =3D kempld_devs[KEMPLD_UART];
+=20
+ 	return mfd_add_devices(pld->dev, -1, devs, i, NULL, 0, NULL);
+ }
+--=20
+2.27.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/wzSUY.Mm=JfxGqE90lH3=LR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8RHgIACgkQAVBC80lX
+0GyeBQf/b5vLY/pw4G+VOpwfhhkkmnOYfUIioFB0RbMDhyACfxE+3uMLw6mkI9dQ
+g5oB7HHWkHqzXSNhdVjfua2Zc1CAh//TTQhRuf+19SfSo8Z47wF/Z6+eQT20hK1J
+1+5YvfeEh+S94RpnDmGAq35fFoDjC4WYP08KDslRgFGDNmkF3tcNhQ/f4PogO611
+ePhWyhkE4hbzCJb2VbtKARFWpHJZ1d/G4rXPxCD+SpCnXsVHsXGWKXj+yhcrmwCk
+VPvyaI9gC0l5p1NckYAFSXz40E21WJnz9CcQTOfwLbrNbVDi3y+BDMnfoCKQd7ai
+m7vkWmm9IEeZbqlIQa+XKtaZOLM54w==
+=B271
+-----END PGP SIGNATURE-----
+
+--Sig_/wzSUY.Mm=JfxGqE90lH3=LR--
