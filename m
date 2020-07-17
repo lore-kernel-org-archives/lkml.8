@@ -2,142 +2,207 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC62C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1D0C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA859208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B580420717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGQOo0 (ORCPT
+        id S1726429AbgGQOsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:44:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22688 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726198AbgGQOo0 (ORCPT
+        Fri, 17 Jul 2020 10:48:30 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:52801 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgGQOs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:44:26 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HEUmGP056868;
-        Fri, 17 Jul 2020 10:43:59 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32b61k6jhm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 10:43:58 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06HEeAsW001138;
-        Fri, 17 Jul 2020 14:43:58 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma02dal.us.ibm.com with ESMTP id 32752a5vre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 14:43:58 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06HEhsdp2425390
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 14:43:55 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 878AB78060;
-        Fri, 17 Jul 2020 14:43:56 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B9E9D78067;
-        Fri, 17 Jul 2020 14:43:53 +0000 (GMT)
-Received: from [153.66.254.194] (unknown [9.85.141.100])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 17 Jul 2020 14:43:53 +0000 (GMT)
-Message-ID: <1594997031.3344.27.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 0/5] mm: extend memfd with ability to create
- "secret" memory areas
-From:   James Bottomley <jejb@linux.ibm.com>
-Reply-To: jejb@linux.ibm.com
-To:     Pavel Machek <pavel@ucw.cz>, Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Idan Yaniv <idan.yaniv@ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
-Date:   Fri, 17 Jul 2020 07:43:51 -0700
-In-Reply-To: <20200717083601.GB1027@bug>
-References: <20200706172051.19465-1-rppt@kernel.org>
-         <20200717083601.GB1027@bug>
+        Fri, 17 Jul 2020 10:48:29 -0400
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MUl4z-1kMbVr2E53-00QkxK for <linux-kernel@vger.kernel.org>; Fri, 17 Jul
+ 2020 16:48:26 +0200
+Received: by mail-qt1-f178.google.com with SMTP id j10so7769140qtq.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 07:48:26 -0700 (PDT)
+X-Gm-Message-State: AOAM532fMUsm5a4dluc6dFQX+tkYx7ogpU0AE2wgJCtnHPFkCkEXyEAq
+        KHaul4rr4rKBqmx2VaC7a9kTTDhIu/93x2iZFH0=
+X-Google-Smtp-Source: ABdhPJydQsPw4SiioCuxhNcixkYPSWMwyS3lcBB0SHVk4eRFINTHXayFSR41dX2ugUkkcZeAgbyJtgwGwm9+YcdHsTM=
+X-Received: by 2002:ac8:2b98:: with SMTP id m24mr10840018qtm.7.1594997305357;
+ Fri, 17 Jul 2020 07:48:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200716223627.253936-1-daniel.gutson@eclypsium.com>
+In-Reply-To: <20200716223627.253936-1-daniel.gutson@eclypsium.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jul 2020 16:48:09 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2miOXUESw+ayiEzAZ07NcieztVMEY31wUgrkD2tBAtDg@mail.gmail.com>
+Message-ID: <CAK8P3a2miOXUESw+ayiEzAZ07NcieztVMEY31wUgrkD2tBAtDg@mail.gmail.com>
+Subject: Re: [PATCH] [PATCH] Firmware security information in SYSFS
+To:     Daniel Gutson <daniel.gutson@eclypsium.com>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_06:2020-07-17,2020-07-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 lowpriorityscore=0
- spamscore=100 clxscore=1011 bulkscore=0 mlxlogscore=-1000 adultscore=0
- phishscore=0 priorityscore=1501 impostorscore=0 suspectscore=0
- mlxscore=100 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007170103
+X-Provags-ID: V03:K1:Y15CeUDDR3n/zN/hWqhVNMaWLrQLdLhuiw1zysYkWn3grGd2ML8
+ FAjjCrVufncXDPps1MEOKyVwL6s/4JvGpUXOQmkR+eqfXxUf9zeLNjiau1SMM3KNwft9aaX
+ AnQks19xUZ99sBwMh+Fhk5qgs38yDJ7ugdCICz1bPlizVSX92kMHbCQZMDgiGYuWI6jT9za
+ kwzVeUOvuCjiLqlKQnOkQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IFi9cgwujf0=:qYENg35n0W82/3fDPzlth3
+ knCbi8ToGJUsmg3KLbpL+f6sQtWNWOuswQsEtAVjLaCFZaeuvYtGNK43uQMm2LU82hGCtc0Iw
+ OWERsZ6rBHjpAJ1UOOcffzpNm9dSd2IDqp8ImDaN+3NVuNHUi8yHFHuxMERRtJnPMh4wzpSZV
+ Ti9NHWfswUnyj/clnhBsEXgl96VIQruvl98fz6uDV+l16ctureuNfJY3LF6InO7Iv6lPMbM+m
+ 36lhBNWQoGt4Iak63NUW/s2uw/9+lgWiN2nSJBRwYPkL37wlw4ChKnxYn6RAL1zU2klJkXoet
+ MZrCSOnIBHSbuaZxgyeZjUYY4dMcQhTVbWQLUDt3otWaNHXTx9KgdeBJrgSvD7v/CX6cJFGt8
+ cwJEWtbT96lQKiG/jKDkFIywkZ8jNNxOwyUK9oM8EYu6xoG2Db59HaapmNXEjKgWtMlpRlYTl
+ iSBbnIB1t/EpF+f37VmmVFzX9B6RuUHjKAFEEAc4hGMW3ei305U0GSS4YpnPBgaD/lGktltop
+ 9IMhz0GRNZP5FGbnI6odCCJkvzaCaxFBVVt+JZvNEn4K1bpKz70drLGatlDsz7qSK8DDdkjwd
+ 0Aywe25SRzDAaup2ICpQWismHS99XncztnVTssEUMIgGXuETaTfpTd5Ez7+g6Z3aYmbrh05wX
+ aniIHmQKr9KjltdxikC/rD7MIkAOrOzkZa3kNfitMdYNmvGZlxfrXTQl/KSBerOufyf2D8XaM
+ 4b7VeQs7NwQqJOwo4towFO7QSF8VqNuH2b9ssh7WmthlL79BlqmO24JsVPg0Ic2RV8ux3StpY
+ F9IqkHbai4vfmepTiEZ/+ntbrKu7k6iPUxtgTI1xtpoWhVH6uBASBwd8P+4q1USAQC0Z5B5Or
+ Q5htdXXcWwcv8GUNi14Kp1rJ14l8WYhpQJByldKHAYlDtBEduoG2vwW4TRl385+qJqpvcvvuE
+ otZZid2hAsv89O60jRGvlru5yk0AZ/tEFYU1EoUjPsbOS+sQuEvEB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-17 at 10:36 +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > This is a second version of "secret" mappings implementation backed
-> > by a file descriptor. 
-> > 
-> > The file descriptor is created using memfd_create() syscall with a
-> > new MFD_SECRET flag. The file descriptor should be configured using
-> > ioctl() to define the desired protection and then mmap() of the fd
-> > will create a "secret" memory mapping. The pages in that mapping
-> > will be marked as not present in the direct map and will have
-> > desired protection bits set in the user page table. For instance,
-> > current implementation allows uncached mappings.
-> > 
-> > Hiding secret memory mappings behind an anonymous file allows
-> > (ab)use of the page cache for tracking pages allocated for the
-> > "secret" mappings as well as using address_space_operations for
-> > e.g. page migration callbacks.
-> > 
-> > The anonymous file may be also used implicitly, like hugetlb files,
-> > to implement mmap(MAP_SECRET) and use the secret memory areas with
-> > "native" mm ABIs.
-> 
-> I believe unix userspace normally requires mappings to be... well...
-> protected from other users. How is this "secret" thing different? How
-> do you explain the difference to userland programmers?
+On Fri, Jul 17, 2020 at 12:36 AM Daniel Gutson
+<daniel.gutson@eclypsium.com> wrote:
+>
 
-That's true in the normal case, but for the container cloud the threat
-model we're considering is a hostile other tenant trying to trick the
-kernel into giving them access to your mappings.  In the FOSDEM talk we
-did about this:
+> +static ssize_t internal_callback(struct kobject *kobj,
+> +                                struct kobj_attribute *attr, char *buf)
+> +{
+> +       struct firmware_security_data *fwsd =
+> +               container_of(attr, struct firmware_security_data, kobj_attr);
+> +       return fwsd->callback(buf, fwsd->private_data);
+> +}
+> +
+> +int register_firmware_security_data_callback(
+> +       const char *name, ssize_t (*callback)(char *buf, void *private_data),
+> +       void *private_data)
 
-https://fosdem.org/2020/schedule/event/kernel_address_space_isolation/
+Why do you have a callback interface here? I would have expected
+all the data to be static during the kernel run time, so just passing the
+information here would make it much simpler.
 
-We demonstrated the case where the hostile tenant obtained host root
-and then tried to get access via ptrace.  The point being that pushing
-the pages out of the direct map means that even root can't get access
-to the secret by any means the OS provides.  If you want to play with
-this yourself, we have a userspace library:
+> +static ssize_t cnl_read_field(char *buf, struct pci_dev *pdev, u32 mask)
+> +{
+> +       u32 bcr;
+> +
+> +       if (pci_read_config_dword(pdev, BCR, &bcr) != PCIBIOS_SUCCESSFUL)
+> +               return -EIO;
+> +
+> +       return sprintf(buf, "%d\n", (int)!!(bcr & mask));
+> +}
+> +
+> +static ssize_t cnl_wpd_firmware_security_callbacks(char *buf,
+> +                                                  void *private_data)
+> +{
+> +       return cnl_read_field(buf, (struct pci_dev *)private_data, BCR_WPD);
+> +}
+> +
+> +static ssize_t cnl_ble_firmware_security_callbacks(char *buf,
+> +                                                  void *private_data)
+> +{
+> +       return cnl_read_field(buf, (struct pci_dev *)private_data, BCR_BLE);
+> +}
+> +
+> +static ssize_t cnl_smm_bwp_firmware_security_callbacks(char *buf,
+> +                                                      void *private_data)
+> +{
+> +       return cnl_read_field(buf, (struct pci_dev *)private_data, BCR_SMM_BWP);
+> +}
+> +
+> +static void register_firmware_security_data_callbacks(struct pci_dev *pdev)
+> +{
+> +       register_firmware_security_data_callback(
+> +               "bioswe", &cnl_wpd_firmware_security_callbacks, pdev);
+> +       register_firmware_security_data_callback(
+> +               "ble", &cnl_ble_firmware_security_callbacks, pdev);
+> +       register_firmware_security_data_callback(
+> +               "smm_bwp", &cnl_smm_bwp_firmware_security_callbacks, pdev);
+> +}
 
-https://git.kernel.org/pub/scm/linux/kernel/git/jejb/secret-memory-preloader.git/
+All of this should probably become a single function that reads the
+registers and then passes the contents into whatever common function
+you have that makes them visible to user space.
 
-It does two things: the first is act as a preloader for openssl to
-redirect all the OPENSSL_malloc calls to secret memory meaning any
-secret keys get automatically protected this way and the other thing it
-does is expose the API to the user who needs it.  I anticipate that a
-lot of the use cases would be like the openssl one: many toolkits that
-deal with secret keys already have special handling for the memory to
-try to give them greater protection, so this would simply be pluggable
-into the toolkits without any need for user application modification.
+> @@ -76,7 +119,7 @@ static const struct pci_device_id intel_spi_pci_ids[] = {
+>         { PCI_VDEVICE(INTEL, 0xa224), (unsigned long)&bxt_info },
+>         { PCI_VDEVICE(INTEL, 0xa324), (unsigned long)&cnl_info },
+>         { PCI_VDEVICE(INTEL, 0xa3a4), (unsigned long)&bxt_info },
+> -       { },
+> +       {},
+>  };
+...
+>  #include "intel-spi.h"
+>
+> @@ -48,17 +49,17 @@
+>
+>  #define FADDR                          0x08
+>  #define DLOCK                          0x0c
+> -#define FDATA(n)                       (0x10 + ((n) * 4))
+> +#define FDATA(n)                       (0x10 + ((n)*4))
+>
+>  #define FRACC                          0x50
+>
+> -#define FREG(n)                                (0x54 + ((n) * 4))
+> +#define FREG(n)                                (0x54 + ((n)*4))
+>  #define FREG_BASE_MASK                 0x3fff
+>  #define FREG_LIMIT_SHIFT               16
+>  #define FREG_LIMIT_MASK                        (0x03fff << FREG_LIMIT_SHIFT)
+>
 
-James
+Accidental whitespace change, please skip these changes?
 
+> @@ -161,7 +164,8 @@ struct intel_spi {
+>
+>  static bool writeable;
+>  module_param(writeable, bool, 0);
+> -MODULE_PARM_DESC(writeable, "Enable write access to SPI flash chip (default=0)");
+> +MODULE_PARM_DESC(writeable,
+> +                "Enable write access to SPI flash chip (default=0)");
+>
+>  static void intel_spi_dump_regs(struct intel_spi *ispi)
+>  {
+
+This looks like a useful change, but it should be a separate patch.
+
+> @@ -179,8 +183,8 @@ static void intel_spi_dump_regs(struct intel_spi *ispi)
+>         dev_dbg(ispi->dev, "DLOCK=0x%08x\n", readl(ispi->base + DLOCK));
+>
+>         for (i = 0; i < 16; i++)
+> -               dev_dbg(ispi->dev, "FDATA(%d)=0x%08x\n",
+> -                       i, readl(ispi->base + FDATA(i)));
+> +               dev_dbg(ispi->dev, "FDATA(%d)=0x%08x\n", i,
+> +                       readl(ispi->base + FDATA(i)));
+>
+>         dev_dbg(ispi->dev, "FRACC=0x%08x\n", readl(ispi->base + FRACC));
+>
+> @@ -220,9 +224,8 @@ static void intel_spi_dump_regs(struct intel_spi *ispi)
+>                 base = value & PR_BASE_MASK;
+>
+>                 dev_dbg(ispi->dev, " %02d base: 0x%08x limit: 0x%08x [%c%c]\n",
+> -                        i, base << 12, (limit << 12) | 0xfff,
+> -                        value & PR_WPE ? 'W' : '.',
+> -                        value & PR_RPE ? 'R' : '.');
+> +                       i, base << 12, (limit << 12) | 0xfff,
+> +                       value & PR_WPE ? 'W' : '.', value & PR_RPE ? 'R' : '.');
+>         }
+>
+>         dev_dbg(ispi->dev, "Flash regions:\n");
+
+More whitespace changes.
+
+       Arnd
