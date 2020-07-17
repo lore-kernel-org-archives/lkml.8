@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A02C433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342DAC433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B135E207CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D7B3207CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 00:16:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OiQXSDCW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HFN+J5la"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgGQAQd (ORCPT
+        id S1726439AbgGQAQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 20:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
+        Thu, 16 Jul 2020 20:16:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgGQAQa (ORCPT
+        with ESMTP id S1726337AbgGQAQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 20:16:30 -0400
+        Thu, 16 Jul 2020 20:16:27 -0400
 Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217EEC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:30 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o13so5791505pgf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF50C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:26 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id k27so5783122pgm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 17:16:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jlkntRV846aUEo1Gl28BULv9E1NJaLJ91w5u0IdGAqY=;
-        b=OiQXSDCWqV8zDFUYVBAxlH0S9CUnxu5iNny+Dixx/cJuAc+BjwJxXZk2NeYdMn/4JM
-         po5lfGXXIcu237rEjN9QS6alFZsksWl0OsLnUjjmyoaa2VSLFxdsx9c0wclqDlpeCrG+
-         HRYy2HNZYiYfhM2z1JteVTx0DOTm7aLn3aPGOp6Yk9NTjXrXsTnLwm+GzAFBMlrvxdCO
-         5WvH2VytlFQke6xH+sVsHW2uCY9veYAsGGSk8znuUpUCJso0sxiUmXUosE/WnKW05fVp
-         9FfENWzbuDXCv41HbdfGyWbqsblDV4Cjq1n/ZcglHrIDq1Ec1+Wt0ywHHY9bNqrHZcHq
-         rA8Q==
+        bh=uWqUMnqB20Yorh5LQCiLslCOOm0+DCqawJ+UCE1bquU=;
+        b=HFN+J5lasdtEzt8WaDQDidUq/66N+NwxdcjPVhWpvCd+d0hZ5zNSLuBzBCKO+fjAOK
+         C8nKyAjwFqxuDObJnah2wuyJoJ2ffpvR5fWK8OkvnlSYCccjKz9rrM/TXwPfAQzddKXp
+         JegnspuFxDCFrVLUsvFTDz2sEWZMKfmsZDCWl7v+E+v74347FvLqBFFcl354G2qMbekZ
+         CZw7OAC26K6gtekJV0WnxnzqtDWPvg3aZFxlc3AFEfFeKAnJnR8VesnoH5Ln6MN1a6LP
+         94BkbVX/W5v3NeO0S5E4tZtZFQDXPnct1E0y/1HPGl1JKar2q9ypxL2cnAewiG2S6oco
+         2I/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jlkntRV846aUEo1Gl28BULv9E1NJaLJ91w5u0IdGAqY=;
-        b=F3fyObrwDLpMt8dBNn2RamdOGV5OpmXXt2VQYHACVcUvwAZx1GWxNuxy1Au4whdwc0
-         Te3PQFGd8mo0dgEV04SJjLYXwcOayHPjj2Sdb9mj7bhCC0NJUPSrQc/vK2gpo7CxMYss
-         LUv5x/p+NU32nuovRrLMAmsuBIcacPH80WtoyNEN7almYlmg6F9tTlRbzTSAqHcUw97J
-         cFL4FKD35EGWrq/o5WMSyeOTSOHaObW75fo4W8WipEy5YWsr/+C5GG+gSx0IpItcrrwS
-         9W7D6+tL9bxIU9skGps65YJEMo9I3p+btLv7+4shbeic4ndpUbzZQB5qSrXTR588j77T
-         1bJQ==
-X-Gm-Message-State: AOAM530V0mszs9nHfDt6t77NgHghg4E1mAiZNijVJX95mhrVRM96YPP4
-        9m75gq9fUDbmIjwSb0PwJhHglg==
-X-Google-Smtp-Source: ABdhPJyOw+rZ5tyQFkUplkrS1otZKw4EmrIzCvAXE7cq7d57IJm0Q+MOF5/GsoqJxLnC2KC8CmI1AQ==
-X-Received: by 2002:a63:d40d:: with SMTP id a13mr6437251pgh.225.1594944989377;
-        Thu, 16 Jul 2020 17:16:29 -0700 (PDT)
+        bh=uWqUMnqB20Yorh5LQCiLslCOOm0+DCqawJ+UCE1bquU=;
+        b=ebf31g1/3hCNU+cgTLwaRdEohQjgaS6Oo9EVn7wIdmmU9272v04JyEyMjAg8ShX/AE
+         UFA/uqgzDKn8P12bcJoTaJkR1XtPubX/+28W3j9fCP7j2iP6jMaL4WNL3+JJ4agP+rbK
+         1kdQcaRqfuAfh1WeXM1E0Ef+PCTWg0qEeUUway/6avTWgnuIEFWVkiCq9xY40+8Qhx7P
+         NnEX7SkPl3pBKdSV/tNC+onqma0sE5wg5AHLZbm/0um+hJTNEsuN5X1lz5nbJmSGY+RT
+         zbzdzr0Sf9cpskUzIpfEU2xpzr9pq/SqOcx37QgsPnJ5lCi59G53IMI4X8ZzUIb3PO5e
+         s8TQ==
+X-Gm-Message-State: AOAM531cgS/8zCqdAERQ74UX08www7ksbhcInOPpLuTYkzx8vVCsJRJW
+        7lZyF4gJcJdzJopmrmJkEB0f0Q==
+X-Google-Smtp-Source: ABdhPJzhp8wrF9EsgCUoqrojoUNB4BkSM3/fWxyDMIkhZTNNrxXnc9QP6rLIKqr2mcsWBO8ZpScFnA==
+X-Received: by 2002:a63:140f:: with SMTP id u15mr6116836pgl.94.1594944986245;
+        Thu, 16 Jul 2020 17:16:26 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r7sm6211950pgu.51.2020.07.16.17.16.27
+        by smtp.gmail.com with ESMTPSA id r7sm6211950pgu.51.2020.07.16.17.16.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 17:16:28 -0700 (PDT)
+        Thu, 16 Jul 2020 17:16:25 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -70,9 +70,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org,
         John Stultz <john.stultz@linaro.org>,
         Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 5/5] iommu/arm-smmu: Setup identity domain for boot mappings
-Date:   Thu, 16 Jul 2020 17:16:19 -0700
-Message-Id: <20200717001619.325317-6-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 3/5] iommu/arm-smmu: Move SMR and S2CR definitions to header file
+Date:   Thu, 16 Jul 2020 17:16:17 -0700
+Message-Id: <20200717001619.325317-4-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200717001619.325317-1-bjorn.andersson@linaro.org>
 References: <20200717001619.325317-1-bjorn.andersson@linaro.org>
@@ -83,18 +83,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With many Qualcomm platforms not having functional S2CR BYPASS a
-temporary IOMMU domain, without translation, needs to be allocated in
-order to allow these memory transactions.
-
-Unfortunately the boot loader uses the first few context banks, so
-rather than overwriting a active bank the last context bank is used and
-streams are diverted here during initialization.
-
-This also performs the readback of SMR registers for the Qualcomm
-platform, to trigger the mechanism.
-
-This is based on prior work by Thierry Reding and Laurentiu Tudor.
+Expose the SMR and S2CR structs in the header file, to allow platform
+specific implementations to populate/initialize the smrs and s2cr
+arrays.
 
 Tested-by: John Stultz <john.stultz@linaro.org>
 Tested-by: Vinod Koul <vkoul@kernel.org>
@@ -102,194 +93,66 @@ Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
-- Rebased to avoid conflict
 - Picked up tested-by
 
- drivers/iommu/arm-smmu-qcom.c | 11 +++++
- drivers/iommu/arm-smmu.c      | 79 +++++++++++++++++++++++++++++++++--
- drivers/iommu/arm-smmu.h      |  3 ++
- 3 files changed, 89 insertions(+), 4 deletions(-)
+ drivers/iommu/arm-smmu.c | 14 --------------
+ drivers/iommu/arm-smmu.h | 15 +++++++++++++++
+ 2 files changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-index 10eb024981d1..147af11049eb 100644
---- a/drivers/iommu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm-smmu-qcom.c
-@@ -26,6 +26,7 @@ static const struct of_device_id qcom_smmu_client_of_match[] __maybe_unused = {
- static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
- {
- 	unsigned int last_s2cr = ARM_SMMU_GR0_S2CR(smmu->num_mapping_groups - 1);
-+	u32 smr;
- 	u32 reg;
- 	int i;
- 
-@@ -56,6 +57,16 @@ static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
- 		}
- 	}
- 
-+	for (i = 0; i < smmu->num_mapping_groups; i++) {
-+		smr = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_SMR(i));
-+
-+		if (FIELD_GET(ARM_SMMU_SMR_VALID, smr)) {
-+			smmu->smrs[i].id = FIELD_GET(ARM_SMMU_SMR_ID, smr);
-+			smmu->smrs[i].mask = FIELD_GET(ARM_SMMU_SMR_MASK, smr);
-+			smmu->smrs[i].valid = true;
-+		}
-+	}
-+
- 	return 0;
- }
- 
 diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 08a650fe02e3..69bd8ee03516 100644
+index 5d5fe6741ed4..08a650fe02e3 100644
 --- a/drivers/iommu/arm-smmu.c
 +++ b/drivers/iommu/arm-smmu.c
-@@ -652,7 +652,8 @@ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+@@ -68,24 +68,10 @@ module_param(disable_bypass, bool, S_IRUGO);
+ MODULE_PARM_DESC(disable_bypass,
+ 	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
+ 
+-struct arm_smmu_s2cr {
+-	struct iommu_group		*group;
+-	int				count;
+-	enum arm_smmu_s2cr_type		type;
+-	enum arm_smmu_s2cr_privcfg	privcfg;
+-	u8				cbndx;
+-};
+-
+ #define s2cr_init_val (struct arm_smmu_s2cr){				\
+ 	.type = disable_bypass ? S2CR_TYPE_FAULT : S2CR_TYPE_BYPASS,	\
  }
  
- static int arm_smmu_init_domain_context(struct iommu_domain *domain,
--					struct arm_smmu_device *smmu)
-+					struct arm_smmu_device *smmu,
-+					bool boot_domain)
- {
- 	int irq, start, ret = 0;
- 	unsigned long ias, oas;
-@@ -770,6 +771,15 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 		ret = -EINVAL;
- 		goto out_unlock;
- 	}
-+
-+	/*
-+	 * Use the last context bank for identity mappings during boot, to
-+	 * avoid overwriting in-use bank configuration while we're setting up
-+	 * the new mappings.
-+	 */
-+	if (boot_domain)
-+		start = smmu->num_context_banks - 1;
-+
- 	ret = __arm_smmu_alloc_bitmap(smmu->context_map, start,
- 				      smmu->num_context_banks);
- 	if (ret < 0)
-@@ -1149,7 +1159,10 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	struct arm_smmu_master_cfg *cfg;
- 	struct arm_smmu_device *smmu;
-+	bool free_identity_domain = false;
-+	int idx;
- 	int ret;
-+	int i;
- 
- 	if (!fwspec || fwspec->ops != &arm_smmu_ops) {
- 		dev_err(dev, "cannot attach to SMMU, is it on the same bus?\n");
-@@ -1174,7 +1187,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 		return ret;
- 
- 	/* Ensure that the domain is finalised */
--	ret = arm_smmu_init_domain_context(domain, smmu);
-+	ret = arm_smmu_init_domain_context(domain, smmu, false);
- 	if (ret < 0)
- 		goto rpm_put;
- 
-@@ -1190,9 +1203,33 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 		goto rpm_put;
- 	}
- 
-+	/* Decrement use counter for any references to the identity domain */
-+	mutex_lock(&smmu->stream_map_mutex);
-+	if (smmu->identity) {
-+		struct arm_smmu_domain *identity = to_smmu_domain(smmu->identity);
-+
-+		for_each_cfg_sme(cfg, fwspec, i, idx) {
-+			if (smmu->s2crs[idx].cbndx == identity->cfg.cbndx) {
-+				smmu->num_identity_masters--;
-+				if (smmu->num_identity_masters == 0)
-+					free_identity_domain = true;
-+			}
-+		}
-+	}
-+	mutex_unlock(&smmu->stream_map_mutex);
-+
- 	/* Looks ok, so add the device to the domain */
- 	ret = arm_smmu_domain_add_master(smmu_domain, cfg, fwspec);
- 
-+	/*
-+	 * The last stream map to reference the identity domain has been
-+	 * overwritten, so it's now okay to free it.
-+	 */
-+	if (free_identity_domain) {
-+		arm_smmu_domain_free(smmu->identity);
-+		smmu->identity = NULL;
-+	}
-+
- 	/*
- 	 * Setup an autosuspend delay to avoid bouncing runpm state.
- 	 * Otherwise, if a driver for a suspended consumer device
-@@ -1922,17 +1959,51 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
- 
- static int arm_smmu_setup_identity(struct arm_smmu_device *smmu)
- {
-+	struct device *dev = smmu->dev;
-+	int cbndx = 0xff;
-+	int type = S2CR_TYPE_BYPASS;
-+	int ret;
- 	int i;
- 
-+	if (smmu->qcom_bypass_quirk) {
-+		/* Create a IDENTITY domain to use for all inherited streams */
-+		smmu->identity = arm_smmu_domain_alloc(IOMMU_DOMAIN_IDENTITY);
-+		if (!smmu->identity) {
-+			dev_err(dev, "failed to create identity domain\n");
-+			return -ENOMEM;
-+		}
-+
-+		smmu->identity->pgsize_bitmap = smmu->pgsize_bitmap;
-+		smmu->identity->type = IOMMU_DOMAIN_IDENTITY;
-+		smmu->identity->ops = &arm_smmu_ops;
-+
-+		ret = arm_smmu_init_domain_context(smmu->identity, smmu, true);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to initialize identity domain: %d\n", ret);
-+			return ret;
-+		}
-+
-+		type = S2CR_TYPE_TRANS;
-+		cbndx = to_smmu_domain(smmu->identity)->cfg.cbndx;
-+	}
-+
- 	for (i = 0; i < smmu->num_mapping_groups; i++) {
- 		if (smmu->smrs[i].valid) {
--			smmu->s2crs[i].type = S2CR_TYPE_BYPASS;
-+			smmu->s2crs[i].type = type;
- 			smmu->s2crs[i].privcfg = S2CR_PRIVCFG_DEFAULT;
--			smmu->s2crs[i].cbndx = 0xff;
-+			smmu->s2crs[i].cbndx = cbndx;
- 			smmu->s2crs[i].count++;
-+
-+			smmu->num_identity_masters++;
- 		}
- 	}
- 
-+	/* If no mappings where found, free the identiy domain again */
-+	if (smmu->identity && !smmu->num_identity_masters) {
-+		arm_smmu_domain_free(smmu->identity);
-+		smmu->identity = NULL;
-+	}
-+
- 	return 0;
- }
- 
+-struct arm_smmu_smr {
+-	u16				mask;
+-	u16				id;
+-	bool				valid;
+-};
+-
+ struct arm_smmu_cb {
+ 	u64				ttbr[2];
+ 	u32				tcr[2];
 diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index bcd160d01c53..37257ede86fa 100644
+index a71d193073e4..bcd160d01c53 100644
 --- a/drivers/iommu/arm-smmu.h
 +++ b/drivers/iommu/arm-smmu.h
-@@ -321,6 +321,9 @@ struct arm_smmu_device {
- 	/* IOMMU core code handle */
- 	struct iommu_device		iommu;
- 
-+	struct iommu_domain		*identity;
-+	unsigned int			num_identity_masters;
-+
- 	bool				qcom_bypass_quirk;
+@@ -251,6 +251,21 @@ enum arm_smmu_implementation {
+ 	QCOM_SMMUV2,
  };
+ 
++struct arm_smmu_s2cr {
++	struct iommu_group		*group;
++	int				count;
++	enum arm_smmu_s2cr_type		type;
++	enum arm_smmu_s2cr_privcfg	privcfg;
++	u8				cbndx;
++};
++
++struct arm_smmu_smr {
++	u16				mask;
++	u16				id;
++	bool				valid;
++	bool				pinned;
++};
++
+ struct arm_smmu_device {
+ 	struct device			*dev;
  
 -- 
 2.26.2
