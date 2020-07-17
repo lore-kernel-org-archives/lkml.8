@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8AEC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD940C433F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECD020704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D9E20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o6zhOep2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cLAkMx61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgGQGYO (ORCPT
+        id S1727819AbgGQGYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:24:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53890 "EHLO
+        Fri, 17 Jul 2020 02:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbgGQGYK (ORCPT
+        with ESMTP id S1727065AbgGQGYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:24:10 -0400
+        Fri, 17 Jul 2020 02:24:25 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F00C08C5C0;
-        Thu, 16 Jul 2020 23:24:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF9F7C08C5C0;
+        Thu, 16 Jul 2020 23:24:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=/E3yYoXC157551h6xowHq2pNR018OFBhJ9Arvav070Y=; b=o6zhOep28KSjcnYm3J9aHcpkgm
-        O2Fcz0+9OvZMn6mbYHPBFH/fhpi9DoauQT0ncpn5viSfaoFF6bLsJITCRXjgfdyqFLmf4LW5Djzbq
-        mVD4a9wW/2LPyab9lB73mzm+FvayvQ+EgI8+vOBPzlrpsBjPVCB3G88FaBPOFgmA9Mu2nVuQYxlZH
-        5LqOFVBqwVr859Q4epbLvsmne1egzV1tTu7+l4QNJED3wUW/yW3Y/QVQJEeAZPJymdlnG4fe6WTAC
-        BSzIX9qF0b7Pb8owGsYurQp2qXY/WMlbn+gcpCALS7U1mCseHNtxJKPafipfiMwCKx140COitXOWS
-        xalq63Mw==;
+        bh=milvAVOJM4QLrRIHrecFW2GQRin+zd5F1vYyEysY7aY=; b=cLAkMx61vS6bwmd5Zd6uLyOfjO
+        FgVzMLW/0vRlJLKn+atJQKqBiPdF+U5ARr5iGTBorAQzgeqPKzY3EOx2DDiJuc7ouc222OqWynkYB
+        nlUfxQqT+4SONem/13J3C/tjq+V1QbpfmaLCfbOge+hsPTsTNjjZ2uiesF3elNxm9AeTZUBLIT4Oy
+        HHHI4r01Su6AMPqsIEs9/fhoWHJnuCf7dAw6AhPjjRuT+wkFL12TSZF8rp40ZzOkKwQCwPbC3q8zv
+        FoAxxR8D1oGS0Cmdx+S2JiPfNyC4SIkkWqK3Zotj8YceIpSQN/r2Vt2xbXJhixo8cW2/PSLlivkw9
+        LJyzhv2g==;
 Received: from [2001:4bb8:105:4a81:3772:912d:640:e6c6] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwJmk-00051o-Jr; Fri, 17 Jul 2020 06:23:55 +0000
+        id 1jwJn4-000545-1S; Fri, 17 Jul 2020 06:24:15 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Alexei Starovoitov <ast@kernel.org>,
@@ -55,9 +55,9 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
         linux-can@vger.kernel.org, dccp@vger.kernel.org,
         linux-wpan@vger.kernel.org, mptcp@lists.01.org
-Subject: [PATCH 03/22] net: streamline __sys_getsockopt
-Date:   Fri, 17 Jul 2020 08:23:12 +0200
-Message-Id: <20200717062331.691152-4-hch@lst.de>
+Subject: [PATCH 12/22] netfilter: remove the compat argument to xt_copy_counters_from_user
+Date:   Fri, 17 Jul 2020 08:23:21 +0200
+Message-Id: <20200717062331.691152-13-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200717062331.691152-1-hch@lst.de>
 References: <20200717062331.691152-1-hch@lst.de>
@@ -69,60 +69,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return early when sockfd_lookup_light fails to reduce a level of
-indentation for most of the function body.
+Lift the in_compat_syscall() from the callers instead.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- net/socket.c | 31 ++++++++++++++-----------------
- 1 file changed, 14 insertions(+), 17 deletions(-)
+ include/linux/netfilter/x_tables.h | 2 +-
+ net/ipv4/netfilter/arp_tables.c    | 3 +--
+ net/ipv4/netfilter/ip_tables.c     | 3 +--
+ net/ipv6/netfilter/ip6_tables.c    | 3 +--
+ net/netfilter/x_tables.c           | 9 ++++-----
+ 5 files changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/net/socket.c b/net/socket.c
-index 49a6daf0293b83..b79376b17b45b7 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -2163,28 +2163,25 @@ static int __sys_getsockopt(int fd, int level, int optname,
- 	int max_optlen;
+diff --git a/include/linux/netfilter/x_tables.h b/include/linux/netfilter/x_tables.h
+index 5da88451853b28..b8b943ee7b8b66 100644
+--- a/include/linux/netfilter/x_tables.h
++++ b/include/linux/netfilter/x_tables.h
+@@ -302,7 +302,7 @@ int xt_data_to_user(void __user *dst, const void *src,
+ 		    int usersize, int size, int aligned_size);
  
- 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
--	if (sock != NULL) {
--		err = security_socket_getsockopt(sock, level, optname);
--		if (err)
--			goto out_put;
-+	if (!sock)
-+		return err;
+ void *xt_copy_counters_from_user(const void __user *user, unsigned int len,
+-				 struct xt_counters_info *info, bool compat);
++				 struct xt_counters_info *info);
+ struct xt_counters *xt_counters_alloc(unsigned int counters);
  
--		max_optlen = BPF_CGROUP_GETSOCKOPT_MAX_OPTLEN(optlen);
-+	err = security_socket_getsockopt(sock, level, optname);
-+	if (err)
-+		goto out_put;
+ struct xt_table *xt_register_table(struct net *net,
+diff --git a/net/ipv4/netfilter/arp_tables.c b/net/ipv4/netfilter/arp_tables.c
+index 15807fb4a65f3e..2c8a4dad39d748 100644
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -1008,8 +1008,7 @@ static int do_add_counters(struct net *net, const void __user *user,
+ 	struct arpt_entry *iter;
+ 	unsigned int addend;
  
--		if (level == SOL_SOCKET)
--			err =
--			    sock_getsockopt(sock, level, optname, optval,
-+	max_optlen = BPF_CGROUP_GETSOCKOPT_MAX_OPTLEN(optlen);
-+
-+	if (level == SOL_SOCKET)
-+		err = sock_getsockopt(sock, level, optname, optval, optlen);
-+	else
-+		err = sock->ops->getsockopt(sock, level, optname, optval,
- 					    optlen);
--		else
--			err =
--			    sock->ops->getsockopt(sock, level, optname, optval,
--						  optlen);
+-	paddc = xt_copy_counters_from_user(user, len, &tmp,
+-					   in_compat_syscall());
++	paddc = xt_copy_counters_from_user(user, len, &tmp);
+ 	if (IS_ERR(paddc))
+ 		return PTR_ERR(paddc);
  
--		err = BPF_CGROUP_RUN_PROG_GETSOCKOPT(sock->sk, level, optname,
--						     optval, optlen,
--						     max_optlen, err);
-+	err = BPF_CGROUP_RUN_PROG_GETSOCKOPT(sock->sk, level, optname, optval,
-+					     optlen, max_optlen, err);
- out_put:
--		fput_light(sock->file, fput_needed);
--	}
-+	fput_light(sock->file, fput_needed);
- 	return err;
- }
+diff --git a/net/ipv4/netfilter/ip_tables.c b/net/ipv4/netfilter/ip_tables.c
+index fbfad38f397949..161901dd1cae7f 100644
+--- a/net/ipv4/netfilter/ip_tables.c
++++ b/net/ipv4/netfilter/ip_tables.c
+@@ -1163,8 +1163,7 @@ do_add_counters(struct net *net, const void __user *user,
+ 	struct ipt_entry *iter;
+ 	unsigned int addend;
+ 
+-	paddc = xt_copy_counters_from_user(user, len, &tmp,
+-					   in_compat_syscall());
++	paddc = xt_copy_counters_from_user(user, len, &tmp);
+ 	if (IS_ERR(paddc))
+ 		return PTR_ERR(paddc);
+ 
+diff --git a/net/ipv6/netfilter/ip6_tables.c b/net/ipv6/netfilter/ip6_tables.c
+index 96c48e91e6c7f7..fd1f8f93123188 100644
+--- a/net/ipv6/netfilter/ip6_tables.c
++++ b/net/ipv6/netfilter/ip6_tables.c
+@@ -1179,8 +1179,7 @@ do_add_counters(struct net *net, const void __user *user, unsigned int len)
+ 	struct ip6t_entry *iter;
+ 	unsigned int addend;
+ 
+-	paddc = xt_copy_counters_from_user(user, len, &tmp,
+-					   in_compat_syscall());
++	paddc = xt_copy_counters_from_user(user, len, &tmp);
+ 	if (IS_ERR(paddc))
+ 		return PTR_ERR(paddc);
+ 	t = xt_find_table_lock(net, AF_INET6, tmp.name);
+diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
+index 99a468be4a59fb..32bab45af7e415 100644
+--- a/net/netfilter/x_tables.c
++++ b/net/netfilter/x_tables.c
+@@ -1033,15 +1033,14 @@ EXPORT_SYMBOL_GPL(xt_check_target);
+  * @user: src pointer to userspace memory
+  * @len: alleged size of userspace memory
+  * @info: where to store the xt_counters_info metadata
+- * @compat: true if we setsockopt call is done by 32bit task on 64bit kernel
+  *
+  * Copies counter meta data from @user and stores it in @info.
+  *
+  * vmallocs memory to hold the counters, then copies the counter data
+  * from @user to the new memory and returns a pointer to it.
+  *
+- * If @compat is true, @info gets converted automatically to the 64bit
+- * representation.
++ * If called from a compat syscall, @info gets converted automatically to the
++ * 64bit representation.
+  *
+  * The metadata associated with the counters is stored in @info.
+  *
+@@ -1049,13 +1048,13 @@ EXPORT_SYMBOL_GPL(xt_check_target);
+  * If IS_ERR is false, caller has to vfree the pointer.
+  */
+ void *xt_copy_counters_from_user(const void __user *user, unsigned int len,
+-				 struct xt_counters_info *info, bool compat)
++				 struct xt_counters_info *info)
+ {
+ 	void *mem;
+ 	u64 size;
+ 
+ #ifdef CONFIG_COMPAT
+-	if (compat) {
++	if (in_compat_syscall()) {
+ 		/* structures only differ in size due to alignment */
+ 		struct compat_xt_counters_info compat_tmp;
  
 -- 
 2.27.0
