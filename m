@@ -2,170 +2,193 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9680C433F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F7DC433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 808972076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594983886;
-	bh=nzKMZVBx0o1i0lnPZD4WolRVx+W+FMRUlx5HJotcjV8=;
-	h=Subject:From:To:References:Date:In-Reply-To:List-ID:From;
-	b=yBHGxhJR8rni64x3VNmTz8KhhNWtvzPxsJtIoNS99Z4C+1sb75OAl3PEdzH3cwNoH
-	 bJWgeiH5ls3mp7xM7Su+SsBQ8W1SzoHfUFl2Ju3ZINMR9e4Ba7YhK/CyF+EjRJ/0O7
-	 EX7ZIJ++FUFwjBchtOARhd8LNSDRM3kBpCVLJGuY=
+	by mail.kernel.org (Postfix) with ESMTP id 61AD0207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:04:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fH10izZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgGQLEp (ORCPT
+        id S1726758AbgGQLEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:04:45 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33406 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgGQLEn (ORCPT
+        Fri, 17 Jul 2020 07:04:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgGQLEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:04:43 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h28so7349560edz.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:04:41 -0700 (PDT)
+        Fri, 17 Jul 2020 07:04:13 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18045C061755
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:04:13 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m9so5237185pfh.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ZC8CEf+EoFs0JuZ28beB4kGU25SlgcLSyiI/XkWI7vI=;
+        b=fH10izZg3UjDvv/gNh2pT+vpiH779ojMfu/U44y84PK6/bi82epZHVivyZjkh4ycO2
+         ygTIa0sbnsLHJ9qnE/vBzS6GoPFCWqR9+QGej5EROc08BDcm2XOBljbBqMk8P0QD62+3
+         rN1+XaapSLi7IZoyMXL3zN5fXwXrzH49x3pgv6OAa20vLg5OIlHTBv8bvJcj1z7d+aDC
+         AcUtHNPJIPR6ugObvmhepBaL7z0D0PzUzS+Yqg0PWm3A406KHGqXsx0+y4+1bXQwEvbX
+         Brlb3ajgSDMkhFidc2Nc68ImqawZ8RZBUSpVW2E2HJTO4S6nP21kykxURYwdueeHPJUd
+         fxXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NwO9ooKVAyiPOOXEnU9bXuMrqYv/InVTMqk9eon28Ew=;
-        b=SR5YA6ogytSY8AIA4245VdS6xuBSz2VlF5rt1ROnJtOvYKj0iG4KdQVH9mqDMUgi0f
-         l9RnbDAPXHFJ+tVQMwss/36DoPZGSf32zg6XTCuK3aPrC6b/b9PcHUlxYfuQUifs09rY
-         oX55ODWiD7kwVWKBkbiD0pEburnXojZ2JpTqeZOTfBxUEUklmX85Db2vd30b+rF+8Azc
-         fzWbCPqKQY1EOl5mH+O0lfV/n5oNw02ciaPG6KXACzQ00Q1KLti0VjrgrwDqSbz2gb9I
-         DEv21sVMcoi8iPuRxbLVPhERbIq7jnMrX8505EFYJUYO8O/Y0Q3l1AthYiAsh17eaDxR
-         saZw==
-X-Gm-Message-State: AOAM531oiTREZiIy8g7HqGVZHIvmr7yRdUdZuUwUhYQUWgapp1VIiYIG
-        bVnN32VDSCkjCGf4GscszKvn6F+q
-X-Google-Smtp-Source: ABdhPJx61tEnahDVqdXy6ZzdBlNacQlTeSwEdtYAaf0QtVHZ8WMqCe+TIC+e7hUdsBnNoUkTIrIDIw==
-X-Received: by 2002:a50:fc88:: with SMTP id f8mr8795222edq.314.1594983880523;
-        Fri, 17 Jul 2020 04:04:40 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id v11sm7622129eja.113.2020.07.17.04.04.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 04:04:39 -0700 (PDT)
-Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
-From:   Jiri Slaby <jirislaby@kernel.org>
-To:     Oleg Nesterov <oleg@redhat.com>, christian@brauner.io,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-References: <6b253b55-586d-0bc4-9f58-c45c631abc60@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <5a8c4c38-7aeb-981a-8d3b-a7a5c8ca5564@kernel.org>
-Date:   Fri, 17 Jul 2020 13:04:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <6b253b55-586d-0bc4-9f58-c45c631abc60@kernel.org>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ZC8CEf+EoFs0JuZ28beB4kGU25SlgcLSyiI/XkWI7vI=;
+        b=ZTebomkeIkK5eZieL+KizYCdND/5dEBjLSN/RlayDDdLwj8bGO1KxeN/Eb3vqr2Of5
+         LaRb1u/Wc5/58INcDTbHMxDUNqaHo/7fUUs4PHbQ21xpg6VLRqye/2X8T/wqVfdn++uH
+         Z/XY99apZcP6rJVJU/N1l2oQ8bdWenb0C+OHxK3AckjHKDOMHEWamqMBtsAGTCtbKOpQ
+         vUYnMGG9hBi/Zr6t/2sYk6n3rvFqABCpUiuLuA4Gw8oyWbHL4MhV75wB+vt0dF5SjQmn
+         RkGMJp1NZNFAbZPHvKzGyt+CUNPXsgG+nIMd6a0LaubGS3ucyXpvYAMMEKt6TSkK8zJ5
+         0k0A==
+X-Gm-Message-State: AOAM531rYSRnSMAx9UsDoyrSFlmG6yYt2xsPSlufK0wVuRFHQfoNy5YJ
+        J5D65LDkfx/vAfMz4eSWu+FYF1xZ
+X-Google-Smtp-Source: ABdhPJz9NU6fjpXPM0iOXDH11noDSJVravEXE/247fNVBM3MwNWhnXafc6nHM2mnOWG0wUM7a0hC1w==
+X-Received: by 2002:a63:6d48:: with SMTP id i69mr8195450pgc.354.1594983852703;
+        Fri, 17 Jul 2020 04:04:12 -0700 (PDT)
+Received: from localhost.localdomain ([2402:7500:469:ae36:984e:c073:9d0b:7c09])
+        by smtp.gmail.com with ESMTPSA id o26sm7619183pfp.219.2020.07.17.04.04.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jul 2020 04:04:12 -0700 (PDT)
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+To:     lee.jones@linaro.org, matthias.bgg@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, benjamin.chao@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: [PATCH v2 6/9] mfd: mt6360: Rename mt6360_pmu by mt6360
+Date:   Fri, 17 Jul 2020 19:03:28 +0800
+Message-Id: <1594983811-25908-7-git-send-email-gene.chen.richtek@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
+References: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17. 07. 20, 12:45, Jiri Slaby wrote:
-> Hi,
-> 
-> the strace testsuite triggers this on 5.8-rc4 and -rc5 both on x86_64
-> and i586:
+From: Gene Chen <gene_chen@richtek.com>
 
-make check needs -jsomething, running is sequentially (-j1) doesn't
-trigger it. After the error, I cannot run anything. Like ps to find out
-what test caused the crash...
+Rename mt6360_pmu by mt6360, because of including
+not only PMU part, but also entire MT6360 IC
 
-5.7 was fine.
+Signed-off-by: Gene Chen <gene_chen@richtek.com>
+---
+ drivers/mfd/mt6360-core.c | 41 ++++++++++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 21 deletions(-)
 
->> kernel BUG at kernel/signal.c:1917!
->> invalid opcode: 0000 [#1] SMP NOPTI 
->> CPU: 7 PID: 18367 Comm: filter-unavaila Not tainted 5.8.0-rc4-3.g2cd7849-default #1 openSUSE Tumbleweed (unreleased)
->> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
->> RIP: 0010:do_notify_parent+0x239/0x270 
->> Code: d1 e8 41 89 c5 41 83 e5 01 48 8b 95 28 05 00 00 45 31 c0 4c 89 f6 44 89 e7 b9 01 00 00 00 e8 ce f2 ff ff e9 5b ff ff ff 0f 0b <0f> 0b 48 39 bf 50 05 00 00 75 17 48 8b 97 c0 05 00 00 48 8d 87 c0
->> RSP: 0018:ffffa05400f93d00 EFLAGS: 00010002
->> RAX: 0000000000000008 RBX: ffff9024ebb6dd00 RCX: 00000000000102f9
->> RDX: 0000000000000000 RSI: 0000000000000011 RDI: ffff9024ebb6dd00
->> RBP: ffff9024ebb6dd00 R08: 0000000000000000 R09: 000000000000000d
->> R10: 00007f7813000000 R11: ffffc2690721ae80 R12: 0000000000000000
->> R13: 0000000000000000 R14: 0000000000000009 R15: 0000000000000000
->> FS:  00007f7812ffc700(0000) GS:ffff902537dc0000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 00007f9c246a4a10 CR3: 00000001eba7c000 CR4: 00000000000406e0
->> Call Trace:
->>  exit_notify+0x1c0/0x1f0 
->>  do_exit+0x234/0x430
->>  do_group_exit+0x33/0xa0 
->>  get_signal+0x171/0x640
->>  do_signal+0x2a/0x1c0
->>  exit_to_usermode_loop+0x89/0x110
->>  __prepare_exit_to_usermode+0x92/0xd0
->>  do_syscall_64+0x59/0xd0 
->>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->> RIP: 0033:0x7f78149db992
->> Code: Bad RIP value.
->> RSP: 002b:00007f7812ffbed0 EFLAGS: 00000293 ORIG_RAX: 0000000000000022
->> RAX: fffffffffffffdfe RBX: 0000000000000000 RCX: 00007f78149db992
->> RDX: 0000000000000001 RSI: 0000558a4e07e033 RDI: 0000000000000000
->> RBP: 0000000000000000 R08: 0000000000000000 R09: 00007f7812ffc700
->> R10: 00007f7812ffc9d0 R11: 0000000000000293 R12: 0000000000000000
->> R13: 00007ffe4853b4bf R14: 00007ffe4853b4c0 R15: 00007f7812ffc700
->> Modules linked in: ata_generic ata_piix qemu_fw_cfg e1000 nls_iso8859_1 nls_cp437 vfat fat virtio_blk virtio_mmio xfs btrfs blake2b_generic xor raid6_pq libcrc32c crc32c_intel reiserfs squashfs fuse dm_snapshot dm_bufio dm_crypt dm_mod binfmt_misc loop sg virtio_rng
->> ---[ end trace 364c3385f192fee3 ]---
-> 
-> Any ideas?
-> 
-> thanks,
-> 
-
-
+diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+index 62bae1a..5dfc13e 100644
+--- a/drivers/mfd/mt6360-core.c
++++ b/drivers/mfd/mt6360-core.c
+@@ -119,7 +119,7 @@
+ #define MT6360_LDO6_PGB_EVT		126
+ #define MT6360_LDO7_PGB_EVT		127
+ 
+-static const struct regmap_irq mt6360_pmu_irqs[] =  {
++static const struct regmap_irq mt6360_irqs[] =  {
+ 	REGMAP_IRQ_REG_LINE(MT6360_CHG_TREG_EVT, 8),
+ 	REGMAP_IRQ_REG_LINE(MT6360_CHG_AICR_EVT, 8),
+ 	REGMAP_IRQ_REG_LINE(MT6360_CHG_MIVR_EVT, 8),
+@@ -216,9 +216,9 @@ static int mt6360_pmu_handle_post_irq(void *irq_drv_data)
+ 		MT6360_PMU_IRQ_SET, MT6360_IRQ_RETRIG, MT6360_IRQ_RETRIG);
+ }
+ 
+-static struct regmap_irq_chip mt6360_pmu_irq_chip = {
+-	.irqs = mt6360_pmu_irqs,
+-	.num_irqs = ARRAY_SIZE(mt6360_pmu_irqs),
++static struct regmap_irq_chip mt6360_irq_chip = {
++	.irqs = mt6360_irqs,
++	.num_irqs = ARRAY_SIZE(mt6360_irqs),
+ 	.num_regs = MT6360_PMU_IRQ_REGNUM,
+ 	.mask_base = MT6360_PMU_CHG_MASK1,
+ 	.status_base = MT6360_PMU_CHG_IRQ1,
+@@ -308,7 +308,7 @@ static const unsigned short mt6360_slave_addr[MT6360_SLAVE_MAX] = {
+ 	MT6360_TCPC_SLAVEID,
+ };
+ 
+-static int mt6360_pmu_probe(struct i2c_client *client)
++static int mt6360_probe(struct i2c_client *client)
+ {
+ 	struct mt6360_data *data;
+ 	unsigned int reg_data;
+@@ -339,10 +339,10 @@ static int mt6360_pmu_probe(struct i2c_client *client)
+ 		return -ENODEV;
+ 	}
+ 
+-	mt6360_pmu_irq_chip.irq_drv_data = data;
++	mt6360_irq_chip.irq_drv_data = data;
+ 	ret = devm_regmap_add_irq_chip(&client->dev, data->regmap, client->irq,
+ 				       IRQF_TRIGGER_FALLING, 0,
+-				       &mt6360_pmu_irq_chip, &data->irq_data);
++				       &mt6360_irq_chip, &data->irq_data);
+ 	if (ret) {
+ 		dev_err(&client->dev, "Failed to add Regmap IRQ Chip\n");
+ 		return ret;
+@@ -374,7 +374,7 @@ static int mt6360_pmu_probe(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static int __maybe_unused mt6360_pmu_suspend(struct device *dev)
++static int __maybe_unused mt6360_suspend(struct device *dev)
+ {
+ 	struct i2c_client *i2c = to_i2c_client(dev);
+ 
+@@ -384,7 +384,7 @@ static int __maybe_unused mt6360_pmu_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int __maybe_unused mt6360_pmu_resume(struct device *dev)
++static int __maybe_unused mt6360_resume(struct device *dev)
+ {
+ 
+ 	struct i2c_client *i2c = to_i2c_client(dev);
+@@ -395,25 +395,24 @@ static int __maybe_unused mt6360_pmu_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(mt6360_pmu_pm_ops,
+-			 mt6360_pmu_suspend, mt6360_pmu_resume);
++static SIMPLE_DEV_PM_OPS(mt6360_pm_ops, mt6360_suspend, mt6360_resume);
+ 
+-static const struct of_device_id __maybe_unused mt6360_pmu_of_id[] = {
+-	{ .compatible = "mediatek,mt6360_pmu", },
++static const struct of_device_id __maybe_unused mt6360_of_id[] = {
++	{ .compatible = "mediatek,mt6360", },
+ 	{},
+ };
+-MODULE_DEVICE_TABLE(of, mt6360_pmu_of_id);
++MODULE_DEVICE_TABLE(of, mt6360_of_id);
+ 
+-static struct i2c_driver mt6360_pmu_driver = {
++static struct i2c_driver mt6360_driver = {
+ 	.driver = {
+-		.name = "mt6360_pmu",
+-		.pm = &mt6360_pmu_pm_ops,
+-		.of_match_table = of_match_ptr(mt6360_pmu_of_id),
++		.name = "mt6360",
++		.pm = &mt6360_pm_ops,
++		.of_match_table = of_match_ptr(mt6360_of_id),
+ 	},
+-	.probe_new = mt6360_pmu_probe,
++	.probe_new = mt6360_probe,
+ };
+-module_i2c_driver(mt6360_pmu_driver);
++module_i2c_driver(mt6360_driver);
+ 
+ MODULE_AUTHOR("Gene Chen <gene_chen@richtek.com>");
+-MODULE_DESCRIPTION("MT6360 PMU I2C Driver");
++MODULE_DESCRIPTION("MT6360 I2C Driver");
+ MODULE_LICENSE("GPL v2");
 -- 
-js
+2.7.4
+
