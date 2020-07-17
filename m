@@ -2,89 +2,103 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1FCC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 396D520775
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21FC20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:34:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fy5nOkQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgGQQbT (ORCPT
+        id S1726670AbgGQQeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:31:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:45286 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbgGQQbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:31:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D75312FC;
-        Fri, 17 Jul 2020 09:31:17 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82CF33F68F;
-        Fri, 17 Jul 2020 09:31:16 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 17:31:11 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     m-karicheri2@ti.com, robh@kernel.org, bhelgaas@google.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v1] PCI: dwc: fix a warning about variable 'res' is
- uninitialized
-Message-ID: <20200717163111.GA8421@e121166-lin.cambridge.arm.com>
-References: <20200717133007.23858-1-zhengdejin5@gmail.com>
+        Fri, 17 Jul 2020 12:34:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgGQQeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:34:24 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A23EFC0619D2;
+        Fri, 17 Jul 2020 09:34:24 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o2so18136973wmh.2;
+        Fri, 17 Jul 2020 09:34:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nlNOxRU+8APNfpgYqlG415vJNutIBS3QSHzPE7f1viM=;
+        b=Fy5nOkQbWtOnQSdh4jAjJaZ3m1YgqUE/QuUoitEaBlTtREZLiV6iQbm/AUIEmUM3z9
+         gCpWokMyVr8GoqwhUgSLQtNRDt0H0iQvSWCIjipOU+SRlLkxESdirIlehQV73l4yDBaO
+         /w4NS2egHwDgzQa2/IQEkm7WaSTmAdqLxc0Xk2/2KQiw/CA2qbOoL65Gd1i/G4qE5WsJ
+         5bCg8zdu3y/KQDTFq1f7BDxzMr+Tfuzu3obyUefFIAnZy9tLmIFhKuWMJCzpHXtuPWKS
+         Sy+hODAIRqhXddVkBAoymhfyKahG/nB1nKV30JdXvGFg9qJwahgtyL4fCoO2nxtg+s6b
+         Gx3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nlNOxRU+8APNfpgYqlG415vJNutIBS3QSHzPE7f1viM=;
+        b=I3qRY3GpMYbxhB8HVqG/nW79DQdhxVBdjghEptkMK2TyZTnHLJoJ0zxwhqBWWcqmIz
+         GxoAj17no6h4i/L9h4UpQQ9BurtWCN5qpQsQTs4yePZKDGJqmdPR3tvnSYOSJUgJVDfs
+         /wNOLwMZDWpYDVXb8jn1oDlUpM9PLYQiGEYBPr8XowIvyJuKny/XCE1lF/tSGI43Bmzd
+         tOvbW2kyv837h2QHSsX215HoOOX29nRWZro11EOmm0HawYPvROy7tgfuQljXcAZ9dTeB
+         MG2akLmYxBEhGs7LzFXInaq9RtxdaGiQ0lYH8tjNDEqEAQTrRVYrsp7/9NG4SZ8hwH4L
+         Bcjg==
+X-Gm-Message-State: AOAM530FemAvlnVL5P8YRFbtn9djOMNLOL4ipjWIpef5LLyeDaIjymGh
+        ZFXftOseqeikBUAHhyJkF5478cjk
+X-Google-Smtp-Source: ABdhPJyaiZoLv8CL2HECAmgBAXLVjY+X61e6k6JmSw7eEfKTZUonGB7FwrqrYs07IfdczUaVJH73Dg==
+X-Received: by 2002:a1c:cc12:: with SMTP id h18mr10790316wmb.56.1595003663044;
+        Fri, 17 Jul 2020 09:34:23 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id x5sm15221914wmg.2.2020.07.17.09.34.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 09:34:22 -0700 (PDT)
+Subject: Re: [PATCH net 3/3] net: bcmgenet: restore HFB filters on resume
+To:     Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1594942697-37954-1-git-send-email-opendmb@gmail.com>
+ <1594942697-37954-4-git-send-email-opendmb@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <9706ae96-65cf-a84d-3879-497358bed73f@gmail.com>
+Date:   Fri, 17 Jul 2020 09:34:17 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717133007.23858-1-zhengdejin5@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1594942697-37954-4-git-send-email-opendmb@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 09:30:07PM +0800, Dejin Zheng wrote:
-> The kernel test robot reported a compile warning,
-> 
-> drivers/pci/controller/dwc/pci-keystone.c:1236:18: warning: variable 'res'
-> is uninitialized when used here [-Wuninitialized]
-> 
-> The commit c59a7d771134b5 ("PCI: dwc: Convert to
-> devm_platform_ioremap_resource_byname()") did a wrong conversion for
-> keystone driver. the commit use devm_platform_ioremap_resource_byname()
-> to replace platform_get_resource_byname() and devm_ioremap_resource().
-> but the subsequent code needs to use the variable 'res', which is got by
-> platform_get_resource_byname() for resource "app". so revert it.
-> 
-> Fixes: c59a7d771134b5 ("PCI: dwc: Convert to devm_platform_ioremap_resource_byname()")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pci-keystone.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Squashed in the commit it is fixing, thanks.
 
-Lorenzo
-
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 5ffc3b40c4f6..00279002102e 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -1228,8 +1228,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  	if (!pci)
->  		return -ENOMEM;
->  
-> -	ks_pcie->va_app_base =
-> -		devm_platform_ioremap_resource_byname(pdev, "app");
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
-> +	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(ks_pcie->va_app_base))
->  		return PTR_ERR(ks_pcie->va_app_base);
->  
-> -- 
-> 2.25.0
+On 7/16/2020 4:38 PM, Doug Berger wrote:
+> The Hardware Filter Block RAM may not be preserved when the GENET
+> block is reset during a deep sleep, so it is not sufficient to
+> only backup and restore the enables.
 > 
+> This commit clears out the HFB block and reprograms the rxnfc
+> rules when the system resumes from a suspended state. To support
+> this the bcmgenet_hfb_create_rxnfc_filter() function is modified
+> to access the register space directly so that it can't fail due
+> to memory allocation issues.
+> 
+> Fixes: f50932cca632 ("net: bcmgenet: add WAKE_FILTER support")
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
