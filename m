@@ -2,183 +2,119 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20265C433F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE37C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0491321744
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B0921775
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgGQGax (ORCPT
+        id S1727788AbgGQGcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:30:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:34814 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbgGQGas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:30:48 -0400
-IronPort-SDR: Ef4zPTRtIXbqlRtr6zknMf4+hYxbntpCUJCAjlyXgrzwmUBmz970PRjJ/qhwB/fROb5w6YGHug
- bNYNkWR/NtLA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="167677920"
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="167677920"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 23:30:48 -0700
-IronPort-SDR: Hi2y2CEkCmuNkqubBVtf1JbeMdy1yoTqHOpEuTqQgVUximFPKkNeaQT55SGyPwBqrm+uCUQQKD
- oUH9c9z+DDWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="326758925"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga007.jf.intel.com with ESMTP; 16 Jul 2020 23:30:45 -0700
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     broonie@kernel.org, robh@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, daniel.schwierzeck@gmail.com,
-        hauke@hauke-m.de, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v2 6/8] spi: lantiq: Move interrupt configuration to SoC specific data structure
-Date:   Fri, 17 Jul 2020 14:27:55 +0800
-Message-Id: <7eb6d863515245fedfa0296c72082df107367d07.1594957019.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
-References: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
-In-Reply-To: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
-References: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
+        Fri, 17 Jul 2020 02:32:32 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:41577 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbgGQGcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:32:32 -0400
+Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mj8a5-1kS5lL2xyn-00f99n; Fri, 17 Jul 2020 08:32:30 +0200
+Received: by mail-qt1-f175.google.com with SMTP id w27so6864166qtb.7;
+        Thu, 16 Jul 2020 23:32:30 -0700 (PDT)
+X-Gm-Message-State: AOAM533kYu3TQTcO99/jOt/vc99YNFqP3UcqU1clYoefE8ct1nHVd3R5
+        wnruFfPcm6T+SbD1wNfFMfOuaRN8ioV+2plEJho=
+X-Google-Smtp-Source: ABdhPJyIrO2tNL5pNeYwr+F4lkpDFfuG2l4JzP4UiWOMuiMb/Y+pJ5JATQyrKH/OqOT80hdzcJy8yYsZ1YnAf3q0N6k=
+X-Received: by 2002:ac8:33d7:: with SMTP id d23mr8943304qtb.204.1594967549456;
+ Thu, 16 Jul 2020 23:32:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200716234104.29049-1-atish.patra@wdc.com> <20200716234104.29049-2-atish.patra@wdc.com>
+In-Reply-To: <20200716234104.29049-2-atish.patra@wdc.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jul 2020 08:32:13 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2EesjQAs-YGrCO=cYfUVWFQ3CbJfVXJx3qZjCS_XW+wA@mail.gmail.com>
+Message-ID: <CAK8P3a2EesjQAs-YGrCO=cYfUVWFQ3CbJfVXJx3qZjCS_XW+wA@mail.gmail.com>
+Subject: Re: [RFT PATCH v3 1/9] RISC-V: Move DT mapping outof fixmap
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Will Deacon <will@kernel.org>, Zong Li <zong.li@sifive.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:zFGPvMwMNJCI4UkgWmgHsAIxbEItY1XE/2RYkSx0Rf/nPVgkQet
+ PeslIu0TxUVBt74msw23dSdmv3cOcXn482BDY94bkLjlrRspnqn8vAhbacKi0v+OwuNQA1I
+ Ixdb2qygAWDIvo6csTkBLGHr0E3GQeH9UZHEIDkckRiFTffIV2lOcK8yx1qb/WYLprDL8en
+ z2oD17NUmH2peQMRIyvdw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2eRsSsrUiqA=:GoMH2Ql4SXI4vdiUJFU+4X
+ TygvyZRIsmtveC50n1k9ScS4gcursFRukhJQ/uZrCo+S5RdcKNuSyMvV6hw5Rtn8VrA2rONz5
+ 1rem5XofWtf0VBH945R2g6VRJOvfUTaG+tmKGGvDW+lPpPjzFIGqPwV01n5xwr+ZFihPVuqWD
+ VRT3gJV1RiQqoOqOyxLQciTauNek+hy/YAX3BL23VfMuNB6NuPR69BJrcD0aMuiCHkufBwMKw
+ fqZSkuGmye4cj9BqtMd95RQRycnVdW+2mX6nyR6VVLbQylKiit8VengOHECajdui1ln4TBZp3
+ MH4as4a2AjYc2y8P3XabygOp+K0EhQjQB/WQaoSNBKsaMz8/g4nZtYrdgPxLqc0RJHncY1dqW
+ Rwj0XcVnzpPnn3OBMxSK9j0XXp6HfVhC+mwAVZBhgGHQUIKZNO4Py258o4/mcMpUAdVhKeC5y
+ /+YIQph654/QPfhF7aIFN0f34BDhJVTb1HtEuUNrfDi04yFkS4ZbXfS58UDWMGi2hQgOQm1Lp
+ SmfaOALZyOo1SKVLDVJ/msyjJAFfWSJQJwDwK8MjYZrytJXhc1VyY4d08Lhb3LSd5OmKhiEbH
+ fpGs6+fluaRxCy8k6/GLmelM+2ivJgafyi+lL35ZD9Ga7l2EiHUJm0BEj/MggBwf+G6DPoTw7
+ L8UHMR4xUqec9Vvj8QKSIE52yzgA2cOtHPM/NKhBcFK08Nl0KyPWg1EwWMRTCh8OujNASQxaQ
+ W1JWLNo4QkmVDUiC8qn4XSF2g5xTd+VbqYH/h+mUQ2xNaj4gwn3lRO9w2GuuV77YfOPVpvgmR
+ 8EG3gWRzbN8kATDthJ2voSQzofRWKET3YYCAYgq9tNyUUCkhD3NzgMAry0HnM+iPMhvykE3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Moving interrupt configuration to SoC specific data structure helps to add
-support for newer SoCs on which SPI controller with lesser interrupt lines
-compared to existing chipsets.
+On Fri, Jul 17, 2020 at 1:41 AM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> From: Anup Patel <anup.patel@wdc.com>
+>
+> Currently, RISC-V reserves 1MB of fixmap memory for device tree. However,
+> it maps only single PMD (2MB) space for fixmap which leaves only < 1MB space
+> left for other kernel features such as early ioremap which requires fixmap
+> as well. The fixmap size can be increased by another 2MB but it brings
+> additional complexity and changes the virtual memory layout as well.
+> If we require some additional feature requiring fixmap again, it has to be
+> moved again.
+>
+> Technically, DT doesn't need a fixmap as the memory occupied by the DT is
+> only used during boot. Thus, init memory section can be used for the same
+> purpose as well. This simplifies fixmap implementation.
+>
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
----
- drivers/spi/spi-lantiq-ssc.c | 64 +++++++++++++++++++++++++++-----------------
- 1 file changed, 39 insertions(+), 25 deletions(-)
+The patch seems fine for the moment, but I have one concern for the
+long run:
 
-diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
-index a0d1f82d309f9..2a433d9b5d8fe 100644
---- a/drivers/spi/spi-lantiq-ssc.c
-+++ b/drivers/spi/spi-lantiq-ssc.c
-@@ -150,7 +150,10 @@
- #define LTQ_SPI_IRNEN_T_XRX	BIT(0)	/* Receive end interrupt request */
- #define LTQ_SPI_IRNEN_ALL	0x1F
- 
-+struct lantiq_ssc_spi;
-+
- struct lantiq_ssc_hwcfg {
-+	int (*cfg_irq)(struct platform_device *pdev, struct lantiq_ssc_spi *spi);
- 	unsigned int	irnen_r;
- 	unsigned int	irnen_t;
- 	unsigned int	irncr;
-@@ -800,7 +803,40 @@ static int lantiq_ssc_transfer_one(struct spi_master *master,
- 	return transfer_start(spi, spidev, t);
- }
- 
-+static int lantiq_cfg_irq(struct platform_device *pdev, struct lantiq_ssc_spi *spi)
-+{
-+	int irq, err;
-+
-+	irq = platform_get_irq_byname(pdev, LTQ_SPI_RX_IRQ_NAME);
-+	if (irq < 0)
-+		return irq;
-+
-+	err = devm_request_irq(&pdev->dev, irq, lantiq_ssc_xmit_interrupt,
-+			       0, LTQ_SPI_RX_IRQ_NAME, spi);
-+	if (err)
-+		return err;
-+
-+	irq = platform_get_irq_byname(pdev, LTQ_SPI_TX_IRQ_NAME);
-+	if (irq < 0)
-+		return irq;
-+
-+	err = devm_request_irq(&pdev->dev, irq, lantiq_ssc_xmit_interrupt,
-+			       0, LTQ_SPI_TX_IRQ_NAME, spi);
-+
-+	if (err)
-+		return err;
-+
-+	irq = platform_get_irq_byname(pdev, LTQ_SPI_ERR_IRQ_NAME);
-+	if (irq < 0)
-+		return irq;
-+
-+	err = devm_request_irq(&pdev->dev, irq, lantiq_ssc_err_interrupt,
-+			       0, LTQ_SPI_ERR_IRQ_NAME, spi);
-+	return err;
-+}
-+
- static const struct lantiq_ssc_hwcfg lantiq_ssc_xway = {
-+	.cfg_irq	= lantiq_cfg_irq,
- 	.irnen_r	= LTQ_SPI_IRNEN_R_XWAY,
- 	.irnen_t	= LTQ_SPI_IRNEN_T_XWAY,
- 	.irnicr		= 0xF8,
-@@ -810,6 +846,7 @@ static const struct lantiq_ssc_hwcfg lantiq_ssc_xway = {
- };
- 
- static const struct lantiq_ssc_hwcfg lantiq_ssc_xrx = {
-+	.cfg_irq	= lantiq_cfg_irq,
- 	.irnen_r	= LTQ_SPI_IRNEN_R_XRX,
- 	.irnen_t	= LTQ_SPI_IRNEN_T_XRX,
- 	.irnicr		= 0xF8,
-@@ -833,9 +870,9 @@ static int lantiq_ssc_probe(struct platform_device *pdev)
- 	struct lantiq_ssc_spi *spi;
- 	const struct lantiq_ssc_hwcfg *hwcfg;
- 	const struct of_device_id *match;
--	int err, rx_irq, tx_irq, err_irq;
- 	u32 id, supports_dma, revision;
- 	unsigned int num_cs;
-+	int err;
- 
- 	match = of_match_device(lantiq_ssc_match, dev);
- 	if (!match) {
-@@ -844,18 +881,6 @@ static int lantiq_ssc_probe(struct platform_device *pdev)
- 	}
- 	hwcfg = match->data;
- 
--	rx_irq = platform_get_irq_byname(pdev, LTQ_SPI_RX_IRQ_NAME);
--	if (rx_irq < 0)
--		return -ENXIO;
--
--	tx_irq = platform_get_irq_byname(pdev, LTQ_SPI_TX_IRQ_NAME);
--	if (tx_irq < 0)
--		return -ENXIO;
--
--	err_irq = platform_get_irq_byname(pdev, LTQ_SPI_ERR_IRQ_NAME);
--	if (err_irq < 0)
--		return -ENXIO;
--
- 	master = spi_alloc_master(dev, sizeof(struct lantiq_ssc_spi));
- 	if (!master)
- 		return -ENOMEM;
-@@ -871,18 +896,7 @@ static int lantiq_ssc_probe(struct platform_device *pdev)
- 		goto err_master_put;
- 	}
- 
--	err = devm_request_irq(dev, rx_irq, lantiq_ssc_xmit_interrupt,
--			       0, LTQ_SPI_RX_IRQ_NAME, spi);
--	if (err)
--		goto err_master_put;
--
--	err = devm_request_irq(dev, tx_irq, lantiq_ssc_xmit_interrupt,
--			       0, LTQ_SPI_TX_IRQ_NAME, spi);
--	if (err)
--		goto err_master_put;
--
--	err = devm_request_irq(dev, err_irq, lantiq_ssc_err_interrupt,
--			       0, LTQ_SPI_ERR_IRQ_NAME, spi);
-+	err = hwcfg->cfg_irq(pdev, spi);
- 	if (err)
- 		goto err_master_put;
- 
--- 
-2.11.0
+> +#define DTB_EARLY_SIZE         SZ_1M
+> +static char early_dtb[DTB_EARLY_SIZE] __initdata;
 
+Hardcoding the size in .bss seems slightly problematic both for
+small and for big systems. On machines with very little memory,
+this can lead to running out of free pages before .initdata gets freed,
+and it increases the size of the uncompressed vmlinux file by quite
+a bit.
+
+On some systems, the 1MB limit may get too small. While most dtbs
+would fall into the range between 10KB and 100KB, it can also be
+much larger than that, e.g. when there are DT properties that include
+blobs like device firmware that gets loaded into hardware by a kernel
+driver.
+
+Is there anything stopping you from parsing the FDT in its original
+location without the extra copy before it gets unflattened?
+
+       Arnd
