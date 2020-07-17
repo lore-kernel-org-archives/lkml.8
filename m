@@ -2,94 +2,142 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C13DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98031C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C88B920717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:37:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="asn9ioA0"
+	by mail.kernel.org (Postfix) with ESMTP id 70CF620768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594985944;
+	bh=Q1O79PDKw4045cIPmduaCsJqy5wA5dlz9iIuqTUDHjI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J3SFm7IMmkSGPtAgop3Ly0j0dPpG+vPfTK+qaBx5rYJcBEPAlxM0pgvKUaYq82pnP
+	 /RIWKgZIVlU0SXUrB1LMff0KFxIZK9tFM3jV3KStMyFRNPpnDcUdTsaUWbffblutsU
+	 1dUGK4ghSlPORfHMJ7zhpM4szTUot2/vKj9U/IUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgGQLh3 (ORCPT
+        id S1726491AbgGQLjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:37:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgGQLh2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:37:28 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E6DC061755
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:37:28 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q7so12257328ljm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:37:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aDY3cD5VVLoGr2KLdiJZxuQ30Iu3LJPhEKN1R3GqVmo=;
-        b=asn9ioA02S/hp62TyD1ARksnk7gDpK6SJ6sMTqPlPbNxQRjDDoVqphes1+jfpwzJJk
-         E7XXm/uuD0GuYO3b+Atck5d8p0AZ6ftU68+1gCFJu/qiqHsE4UDHenSpSsNs4QQcbXZU
-         HbsE+IybJLWnOxZMgDIBG0ZibbpaTpacBkRZK+p4ERnF4rSzclUzeY/MJua6flEsr/sD
-         fyEwWV44BZmI7xKjyx8te5WMNfyD/JqwiZAZOnYh0FLCC4Ks06tubNdefvb55dWL05rA
-         ce4mIqHmJXaWCpo4a0kQPQZr68sOI5aucF6uIKpAjFaWyRYZLXfoaMrUGpb/Vkk7YtV8
-         heTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aDY3cD5VVLoGr2KLdiJZxuQ30Iu3LJPhEKN1R3GqVmo=;
-        b=Y1j1ksRkHetXhs6aTaAc5ljzM//hu/hjZ0Q/6ZJ8McIGvXXfDW17jBBazKmiWV/Yal
-         E4cyIvff/gmwttRj9yl8zj8BmnJIklg9WG30FU9rDWSFfBGDOaaNpVfeOxuEAmhdHCP0
-         KEKk1x6HdNFfIsNkoJ/oda9fopd9PgAoUqjBAI0VGWKxPZ+ezZHwwmM4wiAyZLTBpQfB
-         jgTawB5Mp2NwdHu9es7sQDOneS/33fsqr3AWvnBNOh5lFMyhf3GbbD0FFeSE1v7pTRS+
-         fYkd3rwXubiDiypP8jEofc+aJ2QPDchxOWp5zZPTRvBK9XBwl2ugyo10qwcJiB3hPKrL
-         tcZQ==
-X-Gm-Message-State: AOAM530+J4mTmmXqTnKKDnFI+dTiqwSZ++VZTX2lFwgogi8I/YenDtJH
-        ZlnsdEO/kc0b5t1v8gOFMg3yYpsDDtj0vZIRu/krmA==
-X-Google-Smtp-Source: ABdhPJwB/qaEUBGY9gRDpr0u1bTOhacvPAIMLTaHk5U982m8YxmSZNCmBF/9GWh8Loio1RhjAv/lZQhoaYqxLfNTFA0=
-X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr4631930ljc.286.1594985846763;
- Fri, 17 Jul 2020 04:37:26 -0700 (PDT)
+        Fri, 17 Jul 2020 07:39:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbgGQLjC (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 07:39:02 -0400
+Received: from quaco.ghostprotocols.net (179.176.12.94.dynamic.adsl.gvt.net.br [179.176.12.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B32D20717;
+        Fri, 17 Jul 2020 11:39:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594985941;
+        bh=Q1O79PDKw4045cIPmduaCsJqy5wA5dlz9iIuqTUDHjI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HWb+v3DJXZ1H96V/pOhLrRVD46+OTUBcKpCCeikBmYcujDr2T0DvM+GUd5es7l+4J
+         R91ZMmhXZwdLftvcfwNloZtC9jsda1msIS0nRKQHmhXuXoAuYyCXdskRGeCngmK7W1
+         cTlhXnzlvHzvIMjaqyTP+lqkxMyKDwTAwZnP8cak=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C0F99403C7; Fri, 17 Jul 2020 08:38:58 -0300 (-03)
+Date:   Fri, 17 Jul 2020 08:38:58 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Jin, Yao" <yao.jin@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        LKML <Linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, kan.liang@intel.com,
+        "Jin, Yao" <yao.jin@intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH] perf evsel: Don't set sample_regs_intr/sample_regs_user
+ for dummy event
+Message-ID: <20200717113858.GB77866@kernel.org>
+References: <20200703004215.24418-1-yao.jin@linux.intel.com>
+ <20200703110042.GA3282312@krava>
+ <9fa0bd83-b21e-7bc2-af81-799f8e99f73b@linux.intel.com>
+ <CAP-5=fUjUc7yAA2wyes+DhMkwP9Mw0Lu5gy=XOnugy=vW1jwoQ@mail.gmail.com>
+ <b527838b-42e8-b48a-debc-fd91923150d5@linux.intel.com>
+ <deb02b38-49eb-088d-6ebf-b5396e50c725@linux.intel.com>
+ <20200717082412.GA522549@krava>
+ <d6af19b3-a766-0c4a-a9fe-332f4b05aa72@linux.intel.com>
 MIME-Version: 1.0
-References: <20200717171634.4b68472c@canb.auug.org.au> <1594976475.4688.2.camel@mtkswgap22>
-In-Reply-To: <1594976475.4688.2.camel@mtkswgap22>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 17 Jul 2020 13:37:16 +0200
-Message-ID: <CACRpkdbDS1_33cjTfnE8MT015r1YLcUOLtiAbvOBg5cUz5if1w@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the pinctrl tree
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d6af19b3-a766-0c4a-a9fe-332f4b05aa72@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 11:01 AM Hanks Chen <hanks.chen@mediatek.com> wrote:
-> On Fri, 2020-07-17 at 17:16 +1000, Stephen Rothwell wrote:
+Em Fri, Jul 17, 2020 at 04:30:21PM +0800, Jin, Yao escreveu:
+> 
+> 
+> On 7/17/2020 4:24 PM, Jiri Olsa wrote:
+> > On Fri, Jul 17, 2020 at 11:33:46AM +0800, Jin, Yao wrote:
+> > > Hi,
+> > > 
+> > > On 7/6/2020 8:55 AM, Jin, Yao wrote:
+> > > > Hi Ian,
+> > > > 
+> > > > On 7/6/2020 8:47 AM, Ian Rogers wrote:
+> > > > > On Fri, Jul 3, 2020 at 5:31 PM Jin, Yao <yao.jin@linux.intel.com> wrote:
+> > > > > > 
+> > > > > > Hi Jiri,
+> > > > > > 
+> > > > > > On 7/3/2020 7:00 PM, Jiri Olsa wrote:
+> > > > > > > On Fri, Jul 03, 2020 at 08:42:15AM +0800, Jin Yao wrote:
+> > > > > > > > Since commit 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis"),
+> > > > > > > > a dummy event is added to capture mmaps.
+> > > > > > > > 
+> > > > > > > > But if we run perf-record as,
+> > > > > > > > 
+> > > > > > > >     # perf record -e cycles:p -IXMM0 -a -- sleep 1
+> > > > > > > >     Error:
+> > > > > > > >     dummy:HG: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+> > > > > > > > 
+> > > > > 
+> > > > > Sorry for the breakage caused by modifying the dummy event. Could we
+> > > > > add a test to cover the issue? Perhaps in tools/perf/tests/shell/.
+> > > > > Trying to reproduce with a register on my skylakex on a 5.6.14 kernel
+> > > > > with:
+> > > > > 
+> > > > > $ perf record -e cycles:p -IAX -a -- sleep 1
+> > > > > 
+> > > > > succeeds.
+> > > > > 
+> > > > > Thanks,
+> > > > > Ian
+> > > > > 
+> > > > 
+> > > > -IAX should be no problem. The issue only occurs on the platform with
+> > > > extended regs supports, such as ICL. So I don't know if it's suitable to
+> > > > add it to perf test suite.
+> > > > 
+> > > > Thanks
+> > > > Jin Yao
+> > > > 
+> > > 
+> > > Can this fix patch be accepted?
+> > 
+> > hi,
+> > my only concern was that it would conflict with Adrian's patch,
+> > other than that:
+> > 
+> > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > 
+> > thanks,
+> > jirka
+> > 
+> 
+> Thanks Jiri!
+> 
+> Adrian's patch has not been merged otherwise I can rebase my patch on top of Adrian's patch.
 
-> > Caused by commit
-> >
-> >   e6f744c6ad4f ("pinctrl: mediatek: add pinctrl support for MT6779 SoC")
-> >
-> > Forgot to include module.h (since it is tristate in Kconfig) or init.h?
-> >
-> > I used the pinctrl tree from next-20200716 for today.
-> >
->
-> My fault, I'll fix it in next version.
-> (Series: Add basic SoC Support for Mediatek MT6779 SoC)
+I'll check this today.
 
-OK I pulled out all the MTK6779 patches from my tree and wait
-for a new version.
-
-Yours,
-Linus Walleij
+- Arnaldo
