@@ -2,123 +2,101 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CF1C433F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4CD820734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A4520734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:36:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="ZnezmrH2";
+	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="o3D4Xy6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGQKdi (ORCPT
+        id S1726803AbgGQKgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:33:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37478 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726040AbgGQKdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:33:38 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 286BFE465BD03B9B8474;
-        Fri, 17 Jul 2020 18:33:35 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.70) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Fri, 17 Jul 2020 18:33:33 +0800
-From:   Zhang Changzhong <zhangchangzhong@huawei.com>
-To:     <mark.einon@gmail.com>, <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net: ethernet: et131x: Remove unused variable 'pm_csr'
-Date:   Fri, 17 Jul 2020 18:33:30 +0800
-Message-ID: <1594982010-30679-1-git-send-email-zhangchangzhong@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 17 Jul 2020 06:36:02 -0400
+Received: from djelibeybi.uuid.uk ([45.91.101.70]:44000 "EHLO
+        djelibeybi.uuid.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgGQKf7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 06:35:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=kl1i0BpeU/fu3rTjI9F8/qTmUCwKp0XQHy8o4MvhnDA=; b=ZnezmrH2uvIIKja5UcmJ296HUy
+        9F7lNnABjni3m/8Hm9ORXkjYWkI+7eAANE/bW/VtouO4xOx+gYrzl/ONpnwtLZbTmJdJ4XQl3sWwr
+        pDWedRTcLQHK9UWDuPkQ7O9RtJ85C+c2LZfvWDlTjaErwn99t02xqbWM0eO4oJoU9E3aYz3cN+Cm8
+        7g+vLmXG762WRuUwqB/1w7sfhpmNm9Vt4SBI55IrjgrAQ7BcSbzq4ELhe62kOfc8A3XGjxQWRHz4q
+        bsPK/yaZAQl01hDNMOJmyV6/fipG9ppTiZTAHB2cxzLKP3wAw+G3y6fOR3KALCnxLsIFh3rwaOqk2
+        T23PkNKA==;
+Received: by djelibeybi.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <simon@octiron.net>)
+        id 1jwNiQ-0005an-GU; Fri, 17 Jul 2020 11:35:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
+        Content-Transfer-Encoding:Content-Type:MIME-Version;
+        bh=kl1i0BpeU/fu3rTjI9F8/qTmUCwKp0XQHy8o4MvhnDA=; b=o3D4Xy6pDQB+ao3CwIk8nyRKzk
+        pspejMBhrBxUzp7ytuuB4kCxZhsOR5sy+0I9zirclzVZgNm7LqUN4kDXfsdlrqGl0Zl8Jn0YG9mMJ
+        cpN9cLmULIT6cGO9krT/1BnACLSWjnecnOVcMT8SxuN+UF18XrJd4zZSdR7js1CEpPpNebk9qgpF8
+        w+RmVYZ4AhOwyCfk4hQ5KNEO2TUdF5Rk86A0ijChV9Wm6HijGqvaP9ar6NsjAWi8vjujLAi7SJ+VV
+        l1mtATUtAIBgZJnZDg5qXX0PZ3hVmuMVEr7Z1F0Q8dFD4ebRc3gHSuycJCohktgUWoRP0lozlUmXt
+        qUvd6S5w==;
+Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <simon@octiron.net>)
+        id 1jwNiO-0004d0-9V; Fri, 17 Jul 2020 11:35:40 +0100
+Received: from localhost ([::1]:48888)
+        by skund.uuid.uk with esmtp (Exim 4.86_2)
+        (envelope-from <simon@octiron.net>)
+        id 1jwNiO-0000ML-5e; Fri, 17 Jul 2020 11:35:40 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.112.70]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 17 Jul 2020 11:35:40 +0100
+From:   Simon Arlott <simon@octiron.net>
+To:     =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+Cc:     jonas.gorski@gmail.com, kishon@ti.com, vkoul@kernel.org,
+        robh+dt@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v7 0/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
+In-Reply-To: <20200717094756.9951-1-noltari@gmail.com>
+References: <20200717094756.9951-1-noltari@gmail.com>
+Message-ID: <d601559d6e0ab67c3ff02713df3eb32e@arlott.org>
+X-Sender: simon@octiron.net
+User-Agent: Roundcube Webmail/1.2-beta
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gcc report warning as follows:
+On 2020-07-17 10:47, Álvaro Fernández Rojas wrote:
+> Add BCM63xx USBH PHY driver for BMIPS.
+> 
+> v7: remove Simon from authors and introduce changes suggested by Rob:
 
-drivers/net/ethernet/agere/et131x.c:953:6: warning:
- variable 'pm_csr' set but not used [-Wunused-but-set-variable]
-  953 |  u32 pm_csr;
-      |      ^~~~~~
-drivers/net/ethernet/agere/et131x.c:1002:6:warning:
- variable 'pm_csr' set but not used [-Wunused-but-set-variable]
- 1002 |  u32 pm_csr;
-      |      ^~~~~~
-drivers/net/ethernet/agere/et131x.c:3446:8: warning:
- variable 'pm_csr' set but not used [-Wunused-but-set-variable]
- 3446 |    u32 pm_csr;
-      |        ^~~~~~
+I asked you to remove my email address from the source code. All you've
+done is update it. I don't want spam. I know the address appears in the
+commit but you don't have to spray it around everywhere else.
 
-After commit 38df6492eb51 ("et131x: Add PCIe gigabit ethernet driver
-et131x to drivers/net"), 'pm_csr' is never used in these functions,
-so removing it to avoid build warning.
+You can keep my name in the MODULE_AUTHOR text but you need to omit the
+email address.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
----
- drivers/net/ethernet/agere/et131x.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+None of the original copyright notices included email addresses so I
+don't know why you think it is appropriate for you to add them.
 
-diff --git a/drivers/net/ethernet/agere/et131x.c b/drivers/net/ethernet/agere/et131x.c
-index 865892c..8806e1e 100644
---- a/drivers/net/ethernet/agere/et131x.c
-+++ b/drivers/net/ethernet/agere/et131x.c
-@@ -950,7 +950,6 @@ static void et1310_setup_device_for_multicast(struct et131x_adapter *adapter)
- 	u32 hash2 = 0;
- 	u32 hash3 = 0;
- 	u32 hash4 = 0;
--	u32 pm_csr;
- 
- 	/* If ET131X_PACKET_TYPE_MULTICAST is specified, then we provision
- 	 * the multi-cast LIST.  If it is NOT specified, (and "ALL" is not
-@@ -984,7 +983,7 @@ static void et1310_setup_device_for_multicast(struct et131x_adapter *adapter)
- 	}
- 
- 	/* Write out the new hash to the device */
--	pm_csr = readl(&adapter->regs->global.pm_csr);
-+	readl(&adapter->regs->global.pm_csr);
- 	if (!et1310_in_phy_coma(adapter)) {
- 		writel(hash1, &rxmac->multi_hash1);
- 		writel(hash2, &rxmac->multi_hash2);
-@@ -999,7 +998,6 @@ static void et1310_setup_device_for_unicast(struct et131x_adapter *adapter)
- 	u32 uni_pf1;
- 	u32 uni_pf2;
- 	u32 uni_pf3;
--	u32 pm_csr;
- 
- 	/* Set up unicast packet filter reg 3 to be the first two octets of
- 	 * the MAC address for both address
-@@ -1025,7 +1023,7 @@ static void et1310_setup_device_for_unicast(struct et131x_adapter *adapter)
- 		  (adapter->addr[4] << ET_RX_UNI_PF_ADDR1_5_SHIFT) |
- 		   adapter->addr[5];
- 
--	pm_csr = readl(&adapter->regs->global.pm_csr);
-+	readl(&adapter->regs->global.pm_csr);
- 	if (!et1310_in_phy_coma(adapter)) {
- 		writel(uni_pf1, &rxmac->uni_pf_addr1);
- 		writel(uni_pf2, &rxmac->uni_pf_addr2);
-@@ -3443,12 +3441,10 @@ static irqreturn_t et131x_isr(int irq, void *dev_id)
- 		 * send a pause packet, otherwise just exit
- 		 */
- 		if (adapter->flow == FLOW_TXONLY || adapter->flow == FLOW_BOTH) {
--			u32 pm_csr;
--
- 			/* Tell the device to send a pause packet via the back
- 			 * pressure register (bp req and bp xon/xoff)
- 			 */
--			pm_csr = readl(&iomem->global.pm_csr);
-+			readl(&iomem->global.pm_csr);
- 			if (!et1310_in_phy_coma(adapter))
- 				writel(3, &iomem->txmac.bp_ctrl);
- 		}
+Please only Cc: this email address, I don't want multiple copies of
+everything.
+
 -- 
-1.8.3.1
-
+Simon Arlott
