@@ -2,144 +2,166 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A606AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BBCC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E65D2064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B31620775
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:44:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcKAE/Sf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgGQVjd (ORCPT
+        id S1726892AbgGQVo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 17:39:33 -0400
-Received: from mga05.intel.com ([192.55.52.43]:24888 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgGQVjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 17:39:31 -0400
-IronPort-SDR: aBZHDjghD0crMd+R/XDYtcqWhPJ5nLUfrgPhoHmUF6bdbc8D8ucG/UNxn1ggygKf0OWYn6BtiC
- YUpWjjmzkOdQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="234532583"
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="234532583"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 14:39:30 -0700
-IronPort-SDR: AU7pg9gP52qGosMkjj44f+xwiuRZBXuNXBPORBl/nIscyOnQkujZOX7iJDcTIOdgYz9TXvt9wD
- p6bhZiX9j/bw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,364,1589266800"; 
-   d="scan'208";a="460984872"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga005.jf.intel.com with ESMTP; 17 Jul 2020 14:39:30 -0700
-Date:   Fri, 17 Jul 2020 14:39:30 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 04/17] x86/pks: Preserve the PKRS MSR on context
- switch
-Message-ID: <20200717213929.GR3008823@iweiny-DESK2.sc.intel.com>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-5-ira.weiny@intel.com>
- <20200717083140.GW10769@hirez.programming.kicks-ass.net>
+        Fri, 17 Jul 2020 17:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgGQVoZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 17:44:25 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760C2C0619D2;
+        Fri, 17 Jul 2020 14:44:25 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id c16so11900639ioi.9;
+        Fri, 17 Jul 2020 14:44:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Fd/5SIkVrVFZzPalYHXNTeKn+0gi9vnLo7/Yumj5M4=;
+        b=bcKAE/Sf81eYZEfhBovzR8YAPYCTd4vV1lqFR9E9VoqmGNHRnfUkMDAduGb0PP8akQ
+         sIlW/+OfHMBXiZosoLVNWKKIhZZ+lSCoSeecneDWd8o2XW60vFhgV379Zig5PvG5Uvwn
+         FAYEykMn7Cm93tftDLUKMQicxkX74eQRjmgM+AJ0MfgC4qRz8mo8L379FYPq2kj/A3LY
+         5EN8Cd8nRrLOiv6jwB1tAF8zlfSlmVAnyIzMIcrpfqZuoq0PMB4kH5NSnWFLfH+Z1Ik+
+         fwM3jQYeDSTd8sllNRP5CAS3ccrRCFCNWwFvuh5/3k1slHFI8SbPsLoF4evxU2nHbRUH
+         H1FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Fd/5SIkVrVFZzPalYHXNTeKn+0gi9vnLo7/Yumj5M4=;
+        b=Zbl2IE39+mC177PnqKt0zrZ8Q7rroY668P5hgJUTP3znsLYC56hMSxIImzw1f0qOCH
+         fhSnwJcbUvKlGQhL4baOY04ONShOXlqJoX3t5d9h0xcDj9CHY7oPnAdGw7ayKPniBwC8
+         ooBvieldsgf4TVOKPbToAiyg+g5JiAyQL0SdJWNdA5kT1tVpY9wzGtSszeuW6j0CsEnt
+         L7d4ralzTdutU6yo/wJkoPNOJhLtOzWWyEu3vpFxuljTKLVUuWKI3Ad2Vy99bZnv1Y5n
+         t1YSihWoND0MWqdBpPyIumMoy+jQA6I1fC4VM0E405g8dLxb5kK4G/kqMFWjQhw5Bi1/
+         ViHA==
+X-Gm-Message-State: AOAM532gnhzvSVCBXX38nPXffrR5/0F3Bp1IActqylcmhXZnSzUmZpml
+        gKTX6TKtWrAvmIu1ogrX1ktP3R6OBDu96nTgWuc=
+X-Google-Smtp-Source: ABdhPJytlgpn/i7PanH2EvX0H9E4zJ9p4z24bWhVnwVUVfqICVJrTSEyZxNvXpQlM77e59f7BvJaOv+pSzbqk/edfC4=
+X-Received: by 2002:a6b:2b12:: with SMTP id r18mr11208398ior.88.1595022264835;
+ Fri, 17 Jul 2020 14:44:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717083140.GW10769@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com> <1594429136-20002-21-git-send-email-alex.shi@linux.alibaba.com>
+In-Reply-To: <1594429136-20002-21-git-send-email-alex.shi@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 17 Jul 2020 14:44:14 -0700
+Message-ID: <CAKgT0Ufp2FsJd+Lz9U2c_w5Eeb121xRg4SJ5Xoj2=9qZnVKkrA@mail.gmail.com>
+Subject: Re: [PATCH v16 20/22] mm/vmscan: use relock for move_pages_to_lru
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:31:40AM +0200, Peter Zijlstra wrote:
-> On Fri, Jul 17, 2020 at 12:20:43AM -0700, ira.weiny@intel.com wrote:
-> 
-> > diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-> > index f362ce0d5ac0..d69250a7c1bf 100644
-> > --- a/arch/x86/kernel/process.c
-> > +++ b/arch/x86/kernel/process.c
-> > @@ -42,6 +42,7 @@
-> >  #include <asm/spec-ctrl.h>
-> >  #include <asm/io_bitmap.h>
-> >  #include <asm/proto.h>
-> > +#include <asm/pkeys_internal.h>
-> >  
-> >  #include "process.h"
-> >  
-> > @@ -184,6 +185,36 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
-> >  	return ret;
-> >  }
-> >  
-> > +/*
-> > + * NOTE: We wrap pks_init_task() and pks_sched_in() with
-> > + * CONFIG_ARCH_HAS_SUPERVISOR_PKEYS because using IS_ENABLED() fails
-> > + * due to the lack of task_struct->saved_pkrs in this configuration.
-> > + * Furthermore, we place them here because of the complexity introduced by
-> > + * header conflicts introduced to get the task_struct definition in the pkeys
-> > + * headers.
-> > + */
-> 
-> I don't see anything much useful in that comment.
+On Fri, Jul 10, 2020 at 5:59 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+> From: Hugh Dickins <hughd@google.com>
+>
+> Use the relock function to replace relocking action. And try to save few
+> lock times.
+>
+> Signed-off-by: Hugh Dickins <hughd@google.com>
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> ---
+>  mm/vmscan.c | 17 ++++++-----------
+>  1 file changed, 6 insertions(+), 11 deletions(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index bdb53a678e7e..078a1640ec60 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1854,15 +1854,15 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>         enum lru_list lru;
+>
+>         while (!list_empty(list)) {
+> -               struct lruvec *new_lruvec = NULL;
+> -
+>                 page = lru_to_page(list);
+>                 VM_BUG_ON_PAGE(PageLRU(page), page);
+>                 list_del(&page->lru);
+>                 if (unlikely(!page_evictable(page))) {
+> -                       spin_unlock_irq(&lruvec->lru_lock);
+> +                       if (lruvec) {
+> +                               spin_unlock_irq(&lruvec->lru_lock);
+> +                               lruvec = NULL;
+> +                       }
+>                         putback_lru_page(page);
+> -                       spin_lock_irq(&lruvec->lru_lock);
+>                         continue;
+>                 }
+>
+> @@ -1876,12 +1876,7 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>                  *                                        list_add(&page->lru,)
+>                  *     list_add(&page->lru,) //corrupt
+>                  */
+> -               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> -               if (new_lruvec != lruvec) {
+> -                       if (lruvec)
+> -                               spin_unlock_irq(&lruvec->lru_lock);
+> -                       lruvec = lock_page_lruvec_irq(page);
+> -               }
+> +               lruvec = relock_page_lruvec_irq(page, lruvec);
+>                 SetPageLRU(page);
+>
+>                 if (unlikely(put_page_testzero(page))) {
+> @@ -1890,8 +1885,8 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>
+>                         if (unlikely(PageCompound(page))) {
+>                                 spin_unlock_irq(&lruvec->lru_lock);
+> +                               lruvec = NULL;
+>                                 destroy_compound_page(page);
+> -                               spin_lock_irq(&lruvec->lru_lock);
+>                         } else
+>                                 list_add(&page->lru, &pages_to_free);
+>
 
-I'm happy to delete.  Internal reviews questioned the motive here so I added
-the comment to inform why this style was chosen rather than the preferred
-IS_ENABLED().
-
-I've deleted it now.
-
-> 
-> > +#ifdef CONFIG_ARCH_HAS_SUPERVISOR_PKEYS
-> > +DECLARE_PER_CPU(u32, pkrs_cache);
-> > +static inline void pks_init_task(struct task_struct *tsk)
-> > +{
-> > +	/* New tasks get the most restrictive PKRS value */
-> > +	tsk->thread.saved_pkrs = INIT_PKRS_VALUE;
-> > +}
-> > +static inline void pks_sched_in(void)
-> > +{
-> > +	u64 current_pkrs = current->thread.saved_pkrs;
-> > +
-> > +	/* Only update the MSR when current's pkrs is different from the MSR. */
-> > +	if (this_cpu_read(pkrs_cache) == current_pkrs)
-> > +		return;
-> > +
-> > +	write_pkrs(current_pkrs);
-> 
-> Should we write that like:
-> 
-> 	/*
-> 	 * PKRS is only temporarily changed during specific code paths.
-> 	 * Only a preemption during these windows away from the default
-> 	 * value would require updating the MSR.
-> 	 */
-> 	if (unlikely(this_cpu_read(pkrs_cache) != current_pkrs))
-> 		write_pkrs(current_pkrs);
-> 
-> ?
-
-Yes I think the unlikely is better.
-
-Thanks,
-Ira
-
-> 
-> > +}
-> > +#else
-> > +static inline void pks_init_task(struct task_struct *tsk) { }
-> > +static inline void pks_sched_in(void) { }
-> > +#endif
+It seems like this should just be rolled into patch 19. Otherwise if
+you are wanting to consider it as a "further optimization" type patch
+you might pull some of the optimizations you were pushing in patch 18
+into this patch as well and just call it out as adding relocks where
+there previously were none.
