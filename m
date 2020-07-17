@@ -2,177 +2,436 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE91C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9558E206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F42206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="J8O1ie20"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OuVoW+T5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgGQJIC (ORCPT
+        id S1726524AbgGQJIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:08:02 -0400
-Received: from mail-co1nam11on2081.outbound.protection.outlook.com ([40.107.220.81]:17264
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725950AbgGQJIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:08:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ERazna1vbeM6nNJWh+M2rA/IUQR75e/uwfv4UHSkI6g0cuJxaPJn+GLYe4dBmvrmF1Y/CRUyQ34GmOVpvwvE4xQZnqykejgeorNnqTyFbVqNsp0DKbBmtHV7+WgthGmjaQEu7mClejjMdFxmus+BHS9jiaH4DIh+1L3RKgHamLrKo4aldnGsgEjzax+bbi04H4U1Zisk1Z0mfz3+F1jJZPm0Dn+SLXkZtNTAPfgS+hz2Ot743AUi+bDli94wOZhAukCqF42cRUxAUc63ZiWr12Y7Bukgt4Fzcy7dNTqLN+F75PG73aI2goNUvliswka3s+9Fp+0CKtivZb7a/di+LA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9G8RBIoi+KO5Wtohuuz1YEjANZQasLr63vrMBOOlC1w=;
- b=Rcx7LMYr10Qst+QrvOjnZPIKEjK6XG6E2poY25CtRv3ojDS2jej8LiAh492xdXcFuWWyS8zB1dnq1jGi+oqSgxxg+5PIB9QvqULVHtj2DMHYBlA82oNCaXugJ9DzZLz0n43LkRQjSUIYrQzXrTKim9N5u1RF1GIq7fNDEFJMCkiehdTyUS12pUcVc/8uPSoWccC2oVGANx80Da3GXIfeBxkZzl2VayQy7oy9B/20RBu/yzb3sLc81DdlKh3xRzMtN1/xkSl8LoRlZ/74vbyNoIo8tYmdDR+MmmRXjHRIMXwaEVDOz+knuQZmZ9+g/U+Gg5Jc7BHtKcFQxgn7sLucgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 17 Jul 2020 05:08:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbgGQJIx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:08:53 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CE19C061755;
+        Fri, 17 Jul 2020 02:08:53 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id g20so7111236edm.4;
+        Fri, 17 Jul 2020 02:08:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9G8RBIoi+KO5Wtohuuz1YEjANZQasLr63vrMBOOlC1w=;
- b=J8O1ie20SwtNdwUeHJhxOEJvQO8wGHW1ldD3gfNhuRRk0m/U2BzBc8weHKYFcVWaj7vqq0GK1BRotPoICNR8eonIF0e0LSlnp5ER/sRZ4QgmrXOyxlW80oeR19cqKphWYcPQbuT6K+Bxs6ul2HOyxHv9tjFO9bCGJTsTZ5p+oSk=
-Received: from DM6PR12MB2619.namprd12.prod.outlook.com (2603:10b6:5:45::18) by
- DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3174.23; Fri, 17 Jul 2020 09:07:57 +0000
-Received: from DM6PR12MB2619.namprd12.prod.outlook.com
- ([fe80::c157:8999:dcc3:536f]) by DM6PR12MB2619.namprd12.prod.outlook.com
- ([fe80::c157:8999:dcc3:536f%3]) with mapi id 15.20.3174.025; Fri, 17 Jul 2020
- 09:07:57 +0000
-From:   "Quan, Evan" <Evan.Quan@amd.com>
-To:     Qiu Wenbo <qiuwenbo@phytium.com.cn>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-CC:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chen Wandun <chenwandun@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>, yu kuai <yukuai3@huawei.com>,
-        "Huang, JinHuiEric" <JinHuiEric.Huang@amd.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] drm/amd/powerplay: fix a crash when overclocking Vega M
-Thread-Topic: [PATCH] drm/amd/powerplay: fix a crash when overclocking Vega M
-Thread-Index: AQHWXAlk403P8m37e0Sx+6uNQ9W+lakLeyoQ
-Date:   Fri, 17 Jul 2020 09:07:57 +0000
-Message-ID: <DM6PR12MB2619F923B2D2930E3DB71A6DE47C0@DM6PR12MB2619.namprd12.prod.outlook.com>
-References: <20200717070958.41489-1-qiuwenbo@phytium.com.cn>
-In-Reply-To: <20200717070958.41489-1-qiuwenbo@phytium.com.cn>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ActionId=a04cbc03-2e10-4977-9ceb-3be8afcc5ca2;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ContentBits=0;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Enabled=true;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Method=Standard;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Name=Internal
- Use Only -
- Unrestricted;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SetDate=2020-07-17T09:06:56Z;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
-authentication-results: phytium.com.cn; dkim=none (message not signed)
- header.d=none;phytium.com.cn; dmarc=none action=none header.from=amd.com;
-x-originating-ip: [58.247.170.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 375e1b5e-b9a9-40d6-b93a-08d82a30e5c8
-x-ms-traffictypediagnostic: DM5PR12MB1163:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR12MB1163F2A7DF2E7569384899F1E47C0@DM5PR12MB1163.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tXJrF0wrA7nOYclTKkNJGBguM5B3T03YHbo2YtKRi5SFzXdjRoeQbN6Xow66rmT9GX78ZaEXw/aEMEtSNwtD5fJTpoZzspv23TZeqLwWNmM3aAz4RUtaINV1WAmZ8wCxxJsJYe4xmWgHFNLYU7Mn7108WyTzUF0LkhPFvmdmwU7NCCUq/Bu91IUtejxOGOPkhZygz0XoABOyeVXfNYmJN937IFYb1btbZcNNKT0h2r/hVdLkAJZNAkoKmx1aIGwTX5kpdkaPy8TEp/STtr4IKfGmoO4CxYVm1pNp9WJ3SqXqjIuhKzVT0m8Cp1rGxQcOloTDnQJdaQRpU25QaKWQ0dYI159L3mLFh+fz5I2fI1bZYzzN7TqgIss2msaFFI5WNPwTaT0+vHkPmh9z2UKYoA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2619.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(366004)(376002)(346002)(110136005)(316002)(66446008)(64756008)(66946007)(478600001)(6506007)(66476007)(76116006)(66556008)(83380400001)(26005)(53546011)(86362001)(2906002)(186003)(7696005)(71200400001)(33656002)(8936002)(55016002)(966005)(8676002)(52536014)(4326008)(45080400002)(54906003)(9686003)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: AsnPvOW0Jt5RINc8ns473BWqoEXUXZvcuUBFvMs3t+C0EdFLidfsosKfpbN7CNbK2gqkJ1YFASxhnYckbhfx0x6QXodq3va0M7kGshCWL/UiEEhM69Sig9aWlFElMZ5SgsJYG8WSyp9edCm526Xkq9xptal3PI6rZ7JAdjqewvTOy7fkrXtytKumNBDOKIMTe0vgQNzUx/XBziXbp0WfJy1N1+az0EKXPW+r9wtbXj+HZo6E4wmtAAx8KlxtEyqvxnUnrzbdWuZDY8RLntUhlu99WPdcATIRRieXdEi+3vUBMVA0f8ms1QUF8cV13Fnv7IhU3LBEGXku3Pzf8Gpgo97FkBhvufurwLbwGAJuyUfl/gUQPE1uVrdkFPdVnmrqiEr20zl/Mm0AVYaM8LjXbTR/Zi8bObWoU6JvQq4M773c5JV7uZOTzZz5bRyOPj3aBvw0lDCrzGFPjPU/IPHb1A8ZncZsVO2SkcCnET62fsx80N+g8dgCJmkrGHkNQ29y
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=L64mJp+Egw1Te+yzdOw1nlgMPdYcUDrBHl+mgtlrqpE=;
+        b=OuVoW+T5PFzJyt1a1Cbu7qq6blQBpCwLBhz/kmPWKSSjjRLTr66hLNEVyq/gnDhkS1
+         wq76RCO1L8hfZFl3LCWptbpViKPST+77ZMEc4QVmpG+YRkrHhD03SqmpjcNVEWDumC9h
+         hnNKQFsaXl6jUkomtegIe0AM9wuTfqUnfIYh2rK/g5OXwpcd4pygMGHdKUCvI7fFMUOR
+         2ZlxBaVpQMmbOs9IQ25jIpfX++XwSOYSKwJneZs0gauX19+ujjZHtzOMv3h6Xqf5PVlo
+         pHLNz5M+y9gitMfM5np1+dXZiZVQCB1MYkaZq2nRXVTgCV0nFSGAqXnEDzjCc/uKupyr
+         Z5pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=L64mJp+Egw1Te+yzdOw1nlgMPdYcUDrBHl+mgtlrqpE=;
+        b=FgBTTvPUFKI7nW5cdYzQqLcCDalDQbK7O6VpYFi1ZYceiYdlWXeiZOdGJxLb+SapL9
+         4t8UI3tQLPnJMpF2g291c/IxgyndhZL1f+1ZNV79GOUzK8b27F1pzIn0/Eqp/tZcRYPj
+         G5UUp9GzbZiQmyDTX2t2OxdLDFpmPxcW+coVBMkuMNtmBRcNVET3p7J2OFnhJf/uwVTN
+         p+rDCRhQsy/ISWibguPoF5IsVSkvpLqwFqOzubqhOaNNuRj+4Zc2KLlGLzqxolBFtZ+0
+         NOZYojAP60cFSCCdJTW3pTUmn3yHxFnu8rZ0Jb6tzefzkcczLa5FlNplZ2UxrfsWOGR9
+         6P6w==
+X-Gm-Message-State: AOAM531ARS/OUHGEG8vCbheLHvDkjIIfxYj8rIgHgd9CF9NwlcyMlrId
+        iQsRmwFPwAx+NZR1wWOChSk=
+X-Google-Smtp-Source: ABdhPJw15PWnYDPNLg7EPMKzZaqpVWa8ICrohUmTl4FOHJ64tbZXIRaZw2O2shTb5fXhjnZuCDZhBQ==
+X-Received: by 2002:a50:8d5a:: with SMTP id t26mr8671886edt.282.1594976931449;
+        Fri, 17 Jul 2020 02:08:51 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id f10sm7589092edr.69.2020.07.17.02.08.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 02:08:50 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 12:08:47 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Joergen Andreasen <joergen.andreasen@microchip.com>
+Cc:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Po Liu <po.liu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Ido Schimmel <idosch@idosch.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>
+Subject: Re: [EXT] Re: [PATCH v2 net-next 03/10] net: mscc: ocelot: allocated
+ rules to different hardware VCAP TCAMs by chain index
+Message-ID: <20200717090847.snxizsgaqebbwyui@skbuf>
+References: <20200602083613.ddzjh54zxtbklytw@ws.localdomain>
+ <CA+h21hocBOyuDFvnLq-sBEG5phaJPxbhvZ_P5H8HnTkBDv1x+w@mail.gmail.com>
+ <20200608135633.jznoxwny6qtzxjng@ws.localdomain>
+ <CA+h21hqoZdQeSxTtrEsVEHi6ZP1LrWKQGwZ9zPvjyWZ62TNfbg@mail.gmail.com>
+ <20200610181802.2sqdhsoyrkd4awcg@ws.localdomain>
+ <DB8PR04MB57851605ACFE209B4E54208EF07F0@DB8PR04MB5785.eurprd04.prod.outlook.com>
+ <20200716085044.wzwdca535aa5oiv4@soft-dev16>
+ <DB8PR04MB578594DD3C106D8BDE291B95F07F0@DB8PR04MB5785.eurprd04.prod.outlook.com>
+ <20200716144519.4dftowe74by3syzk@skbuf>
+ <20200717073411.vjjyq6ekhlqqnk2p@soft-dev16>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2619.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 375e1b5e-b9a9-40d6-b93a-08d82a30e5c8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 09:07:57.1810
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xwXS7ntrVltgITuFUUKkCV4Gv/BggUE+c+oFj9mm4T7TUyabxgJCtPqY1zLDNmT3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1163
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200717073411.vjjyq6ekhlqqnk2p@soft-dev16>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[AMD Official Use Only - Internal Distribution Only]
+On Fri, Jul 17, 2020 at 09:34:11AM +0200, Joergen Andreasen wrote:
+> The 07/16/2020 17:45, Vladimir Oltean wrote:
+> > Hi Vladimir,
+> > 
+> > On Thu, Jul 16, 2020 at 10:37:40AM +0000, Xiaoliang Yang wrote:
+> > > Hi Joergen,
+> > >
+> > >
+> > > -----Original Message-----
+> > > From: Joergen Andreasen <joergen.andreasen@microchip.com>
+> > > Sent: 2020年7月16日 16:51
+> > >
+> > > > >> >> Chain 0:           The default chain - today this is in IS2. If we proceed
+> > > > >> >>                     with this as is - then this will change.
+> > > > >> >> Chain 1-9999:      These are offloaded by "basic" classification.
+> > > > >> >> Chain 10000-19999: These are offloaded in IS1
+> > > > >> >>                     Chain 10000: Lookup-0 in IS1, and here we could limit the
+> > > > >> >>                                  action to do QoS related stuff (priority
+> > > > >> >>                                  update)
+> > > > >> >>                     Chain 11000: Lookup-1 in IS1, here we could do VLAN
+> > > > >> >>                                  stuff
+> > > > >> >>                     Chain 12000: Lookup-2 in IS1, here we could apply the
+> > > > >> >>                                  "PAG" which is essentially a GOTO.
+> > > > >> >>
+> > > > >> >> Chain 20000-29999: These are offloaded in IS2
+> > > > >> >>                     Chain 20000-20255: Lookup-0 in IS2, where CHAIN-ID -
+> > > > >> >>                                        20000 is the PAG value.
+> > > > >> >>                     Chain 21000-21000: Lookup-1 in IS2.
+> > > > >> >>
+> > > > >> >> All these chains should be optional - users should only need to
+> > > > >> >> configure the chains they need. To make this work, we need to
+> > > > >> >> configure both the desired actions (could be priority update) and the goto action.
+> > > > >> >> Remember in HW, all packets goes through this process, while in
+> > > > >> >> SW they only follow the "goto" path.
+> > > > >> >>
+> > > >>
+> > > >> I agree with this chain assignment, following is an example to set rules:
+> > > >>
+> > > >> 1. Set a matchall rule for each chain, the last chain do not need goto chain action.
+> > > >> # tc filter add dev swp0 chain 0 flower skip_sw action goto chain 10000
+> > > >> # tc filter add dev swp0 chain 10000 flower skip_sw action goto chain 21000
+> > > >> In driver, use these rules to register the chain.
+> > > >>
+> > > >> 2. Set normal rules.
+> > > >> # tc filter add dev swp0 chain 10000 protocol 802.1Q parent ffff: flower skip_sw vlan_id 1 vlan_prio 1 action skbedit priority 1 action goto chain 21000
+> > > >> # tc filter add dev swp0 chain 21000 protocol 802.1Q parent ffff: flower skip_sw vlan_id 1 vlan_prio 1 action drop
+> > > >>
+> > > >> In driver, we check if the chain ID has been registered, and goto
+> > > >> chain is the same as first matchall rule, if is not, then return
+> > > >> error. Each rule need has goto action except last chain.
+> > > >>
+> > > >> I also have check about chain template, it can not set an action
+> > > >> template for each chain, so I think it's no use for our case. If
+> > > >> this way to set rules is OK, I will update the patch to do as this.
+> > > >>
+> > > >> Thanks,
+> > > >> Xiaoliang Yang
+> > > >
+> > >
+> > > > I agree that you cannot set an action template for each chain but
+> > > > you can set a match template which for example can be used for
+> > > > setting up which IS1 key to generate for the device/port.
+> > > > The template ensures that you cannot add an illegal match.
+> > > > I have attached a snippet from a testcase I wrote in order to test these ideas.
+> > > > Note that not all actions are valid for the hardware.
+> > > >
+> > > > SMAC       = "00:00:00:11:11:11"
+> > > > DMAC       = "00:00:00:dd:dd:dd"
+> > > > VID1       = 0x10
+> > > > VID2       = 0x20
+> > > > PCP1       = 3
+> > > > PCP2       = 5
+> > > > DEI        = 1
+> > > > SIP        = "10.10.0.1"
+> > > > DIP        = "10.10.0.2"
+> > > >
+> > > > IS1_L0     = 10000 # IS1 lookup 0
+> > > > IS1_L1     = 11000 # IS1 lookup 1
+> > > > IS1_L2     = 12000 # IS1 lookup 2
+> > > >
+> > > > IS2_L0     = 20000 # IS2 lookup 0 # IS2 20000 - 20255 -> pag 0-255
+> > > > IS2_L0_P1  = 20001 # IS2 lookup 0 pag 1
+> > > > IS2_L0_P2  = 20002 # IS2 lookup 0 pag 2
+> > > >
+> > > > IS2_L1     = 21000 # IS2 lookup 1
+> > > >
+> > > > $skip = "skip_hw" # or "skip_sw"
+> > > >
+> > > > test "Chain templates and goto" do
+> > > >     t_i "'prio #' sets the sequence of filters. Lowest number = highest priority = checked first. 0..0xffff"
+> > > >     t_i "'handle #' is a reference to the filter. Use this is if you need to reference the filter later. 0..0xffffffff"
+> > > >     t_i "'chain #' is the chain to use. Chain 0 is the default. Different chains can have different templates. 0..0xffffffff"
+> > > >     $ts.dut.run "tc qdisc add dev #{$dp[0]} clsact"
+> > > >
+> > > >     t_i "Add templates"
+> > > >     t_i "Configure the VCAP port configuration to match the shortest key that fulfill the purpose"
+> > >
+> > > >     t_i "Create a template that sets IS1 lookup 0 to generate S1_NORMAL with S1_DMAC_DIP_ENA"
+> > > >     t_i "If you match on both src and dst you will generate S1_7TUPLE"
+> > > >     $ts.dut.run "tc chain add dev #{$dp[0]} ingress protocol ip chain #{IS1_L0} flower #{$skip} "\
+> > > >                 "dst_mac 00:00:00:00:00:00 "\
+> > > >                 "dst_ip 0.0.0.0 "
+> > > >
+> > > >     t_i "Create a template that sets IS1 lookup 1 to generate S1_5TUPLE_IP4"
+> > > >     $ts.dut.run "tc chain add dev #{$dp[0]} ingress protocol ip chain #{IS1_L1} flower #{$skip} "\
+> > > >                 "src_ip 0.0.0.0 "\
+> > > >                 "dst_ip 0.0.0.0 "
+> > > >
+> > > >     t_i "Create a template that sets IS1 lookup 2 to generate S1_DBL_VID"
+> > > >     $ts.dut.run "tc chain add dev #{$dp[0]} ingress protocol 802.1ad chain #{IS1_L2} flower #{$skip} "\
+> > > >                 "vlan_id 0 "\
+> > > >                 "vlan_prio 0 "\
+> > > >                 "vlan_ethtype 802.1q "\
+> > > >                 "cvlan_id 0 "\
+> > > >                 "cvlan_prio 0 "
+> > > >
+> > > >     $ts.dut.run "tc chain show dev #{$dp[0]} ingress"
+> > >
+> > > Why you set different filter keys on different lookup? Each lookup
+> > > only filter one type of keys?
+> > > If I want to filter a same key like dst_mac and do both QoS classified
+> > > action and vlan modify action, how to implement this in the same chain
+> > > #{IS1_L0} ?
+> > >
+> > > I think it's more reasonable to distinguish different lookup by different action like this:
+> > > IS1_L0     = 10000 # IS1 lookup 0     # do QoS classified action
+> > > IS1_L1     = 11000 # IS1 lookup 1     # do vlan modify action
+> > > IS1_L2     = 12000 # IS1 lookup 2     # do goto PAG action
+> > >
+> > > IS2_L0     = 20000 # IS2 lookup 0 # IS2 20000 - 20255 -> pag 0-255
+> > > IS2_L1          = 21000 # IS2 lookup 1
+> > >
+> > > So it’s no need to add templates, each lookup can support filtering
+> > > mac, IP or vlan tag, but only support one action.
+> > >
+> > > Thanks,
+> > > Xiaoliang
+> > 
+> > As far as I understand, he's still using the static chain numbers
+> > exactly for that, even though he didn't explicitly mention the action
+> > for each individual IS1 lookup.
+> > 
+> > The reason why he's also adding templates on each individual chain is to
+> > be able to configure VCAP_S1_KEY_CFG and VCAP_S2_CFG. The configuration
+> > of key type is per lookup.
+> > 
+> > Honestly, Joergen, I would take dynamic key configuration per lookup as
+> > a separate item. Xiaoliang's patch series for IS1 support is pretty
+> > large already.
+> > 
+> > Right now we have:
+> > 
+> > - In mainline:
+> > 
+> > S2_IP6_CFG
+> > S2_IP6_CFG controls the key generation for IPv6 frames. Bits 1:0
+> > control the first lookup and bits 3:2 control the second lookup.
+> > 0: IPv6 frames are matched against IP6_TCP_UDP or IP6_OTHER entries
+> > 1: IPv6 frames are matched against IP6_STD entries
+> > 2: IPv6 frames are matched against IP4_TCP_UDP or IP4_OTHER entries
+> > 3: IPv6 frames are matched against MAC_ETYPE entries
+> > 
+> > We set this field to 0xa (0b1010, aka 2 for both lookups: IP4_TCP_UDP).
+> > Although we don't really parse IPv6 keys coming from tc.
+> > 
+> > Also there are these fields which we're managing dynamically through
+> > ocelot_match_all_as_mac_etype, depending on whether there is any
+> > MAC_ETYPE key added by the user:
+> > S2_SNAP_DIS
+> > S2_ARP_DIS
+> > S2_IP_TCPUDP_DIS
+> > S2_IP_OTHER_DIS
+> > 
+> > - In Xiaoliang's patchset:
+> > 
+> > S1_KEY_IP6_CFG
+> > Selects key per lookup in S1 for IPv6 frames.
+> > 0: Use key S1_NORMAL
+> > 1: Use key S1_7TUPLE
+> > 2: Use key S1_5TUPLE_IP4
+> > 3: Use key S1_NORMAL_IP6
+> > 4: Use key S1_5TUPLE_IP6
+> > 5: Use key S1_DBL_VID
+> > 
+> > We set this to 2.
+> > 
+> > S1_KEY_IP4_CFG
+> > Selects key per lookup in S1 for IPv4 frames.
+> > 0: Use key S1_NORMAL
+> > 1: Use key S1_7TUPLE
+> > 2: Use key S1_5TUPLE_IP4
+> > 3: Use key S1_DBL_VID
+> > 
+> > We set this to 2.
+> > 
+> > Your input on which tc chain template could be used for each key type is
+> > valuable, we should create a table with all the options and associated
+> > key sizes (and therefore, number of available filters) and post it
+> > somewhere. I'm not completely sure that chains will be enough to
+> > describe every key type, at least not intuitively, For example if I just
+> > want to match on EtherType (protocol), I'll need an ETYPE (IS1) or
+> > MAC_ETYPE (IS2) rule, but the template for that will need to be
+> > formulated in terms of dst_mac because I don't think there's a way to
+> > use only the protocol in a template.
+> > 
+> > But I expect we keep using some default values (perhaps even the current
+> > ones, or deduce a valid key type from the first added rule, which is
+> > exactly what ocelot_match_all_as_mac_etype tries to do now) and don't
+> > expect the user to open the datasheet unless some advanced configuration
+> > is required. Otherwise I'm not sure who is going to use this. If the
+> > user sees a template shell script with the chains already set up,
+> > chances are it won't be too hard to add the right actions to the right
+> > chains. But if that is going to involve fiddling with templates to set
+> > up the right key type, when all they want is a source IPv4 address
+> > match, well, no chance.
+> > 
+> > If we agree that templates won't be strictly necessary for basic
+> > functionality, we can resubmit what we have already and think more about
+> > the best way to expose all key types. I don't honestly know about using
+> > a flower filter with 'protocol all' and no other key as a matchall
+> > replacement. This is going to be really, really restrictive, and this
+> > particular restriction could even be perhaps lifted in the meantime (I
+> > don't see a reason why 'matchall' wouldn't be allowed in a chain with a
+> > template installed).
+> > 
+> > But Xiaoliang has a point though: there is something which can never be
+> > supported: if I want to do QoS based on a list of filters, some of which
+> > need a S1_7TUPLE key, and others need a S1_NORMAL_IP6 key, then I can
+> > never do that, because in our model, there's only one chain/lookup
+> > reserved for QoS classification (a software constraint) but we need 2
+> > chains/lookups for the 2 different key types (a hardware constraint).
+> > Yes, this is something hypothetical at this point, but it bothers me
+> > that the model would be limiting us. The hardware should support QoS
+> > classification in more than 1 IS1 lookup, no? It isn't limited to
+> > IS1_L0. Maybe, after all, we should permit dynamic assignment of actions
+> > to chains. This way, "the QoS on multiple key types" use case could be
+> > supported. What do you think?
+> > 
+> > Allan also mentioned shared blocks. Do we see anything particularly
+> > difficult with those, that we should address first?
+> > 
+> > Thanks,
+> > -Vladimir
+> 
+> I agree that dynamic key configuration per lookup should be taken as a separate item.
+> I was just mentioning it because I think it is the only way to derive per port
+> key type generation with the current 'tc' command set.
+> 
+> The hardware supports all kind of actions in all lookups but mixing QoS and VLAN
+> actions in same lookup could be hard to understand for the user.
+> 
+> Let us say we want to apply a QoS action to <dip,dport> and a VLAN action to <dip>.
+> The most specific rule (the QoS action) must be specified first in the TCAM and
 
-Reviewed-by: Evan Quan <evan.quan@amd.com>
+Why must the rule with the most specific key be added first to the TCAM?
+Is this in reply to my comment about deriving an appropriate key type
+from the first filter introduced in each lookup?
 
------Original Message-----
-From: Qiu Wenbo <qiuwenbo@phytium.com.cn>
-Sent: Friday, July 17, 2020 3:10 PM
-To: Quan, Evan <Evan.Quan@amd.com>; amd-gfx@lists.freedesktop.org
-Cc: Qiu Wenbo <qiuwenbo@phytium.com.cn>; Deucher, Alexander <Alexander.Deuc=
-her@amd.com>; Koenig, Christian <Christian.Koenig@amd.com>; Zhou, David(Chu=
-nMing) <David1.Zhou@amd.com>; David Airlie <airlied@linux.ie>; Daniel Vette=
-r <daniel@ffwll.ch>; Chen Wandun <chenwandun@huawei.com>; YueHaibing <yueha=
-ibing@huawei.com>; yu kuai <yukuai3@huawei.com>; Huang, JinHuiEric <JinHuiE=
-ric.Huang@amd.com>; dri-devel@lists.freedesktop.org; linux-kernel@vger.kern=
-el.org
-Subject: [PATCH] drm/amd/powerplay: fix a crash when overclocking Vega M
+> if it matches, the lookup terminates and no VLAN action is applied to <dip>.
+> To solve this, the user must assign both QoS and VLAN action in the <dip,dport>
+> rule which is probably not very intuitive.
+> 
 
-Avoid kernel crash when vddci_control is SMU7_VOLTAGE_CONTROL_NONE and
-vddci_voltage_table is empty. It has been tested on Intel Hades Canyon
-(i7-8809G).
+If so, can't we simply alter the priority of the filters, such that the
+order in which they match on packets is not the same order as which they
+were introduced by the user?
 
-Bug: https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fbu=
-gzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D208489&amp;data=3D02%7C01%7Cevan.qu=
-an%40amd.com%7Cff6bf841473b46539e1708d82a20723d%7C3dd8961fe4884e608e11a82d9=
-94e183d%7C0%7C0%7C637305666456662890&amp;sdata=3D%2FMXKE9MMkUF2JPR3JiCTNdgA=
-yyRnQXkxpZfS9eTPrW8%3D&amp;reserved=3D0
-Fixes: ac7822b0026f ("drm/amd/powerplay: add smumgr support for VEGAM (v2)"=
-)
-Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
----
- drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Supporting multiple actions per rule could be interesting, in the sense
+that the hardware supports this feature and it would be therefore nice
+if it could be exposed.
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c b/drivers/=
-gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-index 3da71a088b92..0ecc18b55ffb 100644
---- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-@@ -644,9 +644,6 @@ static int vegam_get_dependency_volt_by_clk(struct pp_h=
-wmgr *hwmgr,
+I've been re-reading the discussion with you and Allan, and to be
+honest, I don't completely internalize why we are doing the
+1-action-per-chain now. Sorry. It has been said that the TCAM stops on
+first match in each lookup, and I understand that. So we must have,
+in each filter's list of actions, not only the action we want (vlan,
+skbedit priority, trap, drop, police), but also an explicit 'goto'
+action to the next lookup or TCAM. But if 'stealing' frames is the
+problem, then it's not just a QoS action that can steal frames from a
+VLAN action. But instead, a QoS action can steal frames even from
+another QoS action. I mean, in your example above, with a more generic
+<dip> key and another more specific <dip,dport> key, there's nothing
+about the action itself that is causing this 'stealing' to occur. So, I
+don't really see why we are forcing a unique action per chain/lookup,
+and how that, in itself, helps with anything. With my (certainly not as
+deep as yours) understanding, just chaining a goto after each action
+should be enough to keep the software and the hardware behavior
+identical. I would really appreciate if you could clarify my
+misunderstanding.
 
- /* sclk is bigger than max sclk in the dependence table */
- *voltage |=3D (dep_table->entries[i - 1].vddc * VOLTAGE_SCALE) << VDDC_SHI=
-FT;
--vddci =3D phm_find_closest_vddci(&(data->vddci_voltage_table),
--(dep_table->entries[i - 1].vddc -
--(uint16_t)VDDC_VDDCI_DELTA));
+> The raseon for using a flower filter with an empty key as the final 'catch all'
+> is that you cannot add a matchall filter in a chain configured with flower.
+> I haven't checked how ineffective this is in the sw path but it works as expected.
+> 
 
- if (SMU7_VOLTAGE_CONTROL_NONE =3D=3D data->vddci_control)
- *voltage |=3D (data->vbios_boot_state.vddci_bootup_value *
-@@ -654,8 +651,13 @@ static int vegam_get_dependency_volt_by_clk(struct pp_=
-hwmgr *hwmgr,
- else if (dep_table->entries[i - 1].vddci)
- *voltage |=3D (dep_table->entries[i - 1].vddci *
- VOLTAGE_SCALE) << VDDC_SHIFT;
--else
-+else {
-+vddci =3D phm_find_closest_vddci(&(data->vddci_voltage_table),
-+(dep_table->entries[i - 1].vddc -
-+(uint16_t)VDDC_VDDCI_DELTA));
-+
- *voltage |=3D (vddci * VOLTAGE_SCALE) << VDDCI_SHIFT;
-+}
+I realize now I didn't explicitly mention why the 'flower' instead of
+'matchall' concerns me if we use templates, and that is because one of
+the use cases we are interested in (which we are not covering in this
+patch series) is masked matching on the raw first 4 bytes after
+EtherType. This could be done with an u32 filter, and in hardware it
+would use the L3_IP4_SIP field of an S1_NORMAL half key:
 
- if (SMU7_VOLTAGE_CONTROL_NONE =3D=3D data->mvdd_control)
- *mvdd =3D data->vbios_boot_state.mvdd_bootup_value * VOLTAGE_SCALE;
---
-2.27.0
+L3_IP4_SIP
+Overloaded fields for different frame types:
+LLC frame: L3_IP4_SIP = [CTRL, PAYLOAD[0:2]]
+SNAP frame: L3_IP4_SIP = [PID[2:0], PAYLOAD[0]]
+IPv4 or IPv6 frame: L3_IP4_SIP = source IP address, bits [31:0]
+OAM, ARP or ETYPE frame: L3_IP4_SIP = PAYLOAD[0:3]  <- we have ETYPE frame
+For IPv4 or IPv6 frames, use destination IP address if
+VCAP_CFG.S1_DMAC_DIP_ENA is set for ingress port.
 
+But if tc chain templates require us to not mix different types of
+filters (such as matchall and flower, u32 and flower), I think it could
+become very challenging.
+
+> I don't see any problems with shared blocks. They could be used for setting
+> IGR_PORT_MASK if you want to apply a filter to more than one interface.
+> 
+
+Ok, that's what I figured too.
+
+> -- 
+> Joergen Andreasen, Microchip
+
+Thanks,
+-Vladimir
