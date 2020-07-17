@@ -2,81 +2,86 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2760EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A18BC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00C6320704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4114320704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eUL8MwSU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cqQG+5HH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgGQE0e (ORCPT
+        id S1726698AbgGQE2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35848 "EHLO
+        Fri, 17 Jul 2020 00:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbgGQE0d (ORCPT
+        with ESMTP id S1725300AbgGQE2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:26:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D9EC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:26:33 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z15so9576629wrl.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:26:33 -0700 (PDT)
+        Fri, 17 Jul 2020 00:28:06 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B621C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:28:04 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z15so9578592wrl.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:28:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LoCUtP8byPHdkiL2VvJP/PIMUDoLEvSomGOoDI3TEH0=;
-        b=eUL8MwSUooNOIy0u9skl2Et94Mj8yJVYuS5nVceQJbHXsMvsPHn0KDAuVB15zh0oGw
-         2xt3MzqRtVJEJpZCtg7TtxoScYas+7vKfWz2nHVllEWxogynfT04AK9E3jpffboYshhH
-         irioSZYr4JkX7p8mwgL9IMwfDlkPBF3i1YTQxZEJiWIVnVPz/pnRf0vAm9HLvlPrSR9w
-         6c4Hcqj5kgOxmal0KQP0pDedkmviWlTWTv3wMsVKNhP5mfT5XoWtsu20WpAlkzsEoqsp
-         752Cz6phrviS+klq1GMCG+ykHczCZK1VZnXVC29zsFe43T436Zjnv2lysudyF05nas/2
-         2Szw==
+        bh=xKiHKtXUo7NkO+4s96RBO3/zYsHU2Z/ckyeyMOpjSSk=;
+        b=cqQG+5HHP8FdB3WQLW9wGhsG7SeC7f21rTf6GbiqGayG4UG+Eb/ZxDPESsqFDBOneb
+         lEHteZt/4j7lwXdMwlfN7AdtgbvYmDW+2kPVuSVJSBxwsTSsgv41w+4VCt/Ceg/Qf3gL
+         goYjFGpMHwtDxONpZtwPovrBtog3pC5e3idIBg5Jp2GzhGV4UpPUHG0HFJ5YNbBobQc0
+         GLdY8dcZdbBInXqVuhNQPCBXdS3js1eFHfC/jjTDmX0aCvGeIxVSGpbiF9R4LQkkHkpM
+         sU/J9G4w5VTmV1l9GuHqO1IwyQNmDi9jCG/Llh8/+vJjwhcTSbA5fECuc1o+BYKL0d5A
+         44bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=LoCUtP8byPHdkiL2VvJP/PIMUDoLEvSomGOoDI3TEH0=;
-        b=Z+h8qwdRPyc6trysU8ksOu+exUgDSmqwARPZgBbwDm+4zwsHF9vJcWPbs6mvqBNgeB
-         Lwa3H6iWcprNU+iC6tDNnb4MOP/hxYfwoSm3DvM/ShPos6Y3ZO0EWd7MC+KQD6KFBLM3
-         hcqxTZ+r2D7aAuVBTw7D7/UnnhupZnTYi0/wtL/9zVL/oI1Spkw1ttPS59gCgxWjeoQ5
-         3itOA7mqIsqDNFgAVKGekBMsSw4Pb2oMx5WfO3T70G3gH3cXfH/lBad8Rgc+1f8wyVE7
-         Ab6zr23OFApaUsarSNEAcepNr0cREDNS+isBvGUZ1K9xt6Sd9tvqkFEttmxI4MJxCS4T
-         p3Lg==
-X-Gm-Message-State: AOAM533z/yxF7AeI+P8cv6ri7JVhSSabsZ2Rb9CG+3NLSi3YwbIEK5qe
-        I5dwWwlDwxTKCKHsJoTEIzIENwJyWos=
-X-Google-Smtp-Source: ABdhPJxZRpGSv5FtriBWUwmet70Rne8lc1DFz2TGU/bz/xpz6vX0D33o8sMUKQ35HSmG//ceMjFJ8w==
-X-Received: by 2002:a5d:498f:: with SMTP id r15mr8883201wrq.175.1594959991866;
-        Thu, 16 Jul 2020 21:26:31 -0700 (PDT)
+        bh=xKiHKtXUo7NkO+4s96RBO3/zYsHU2Z/ckyeyMOpjSSk=;
+        b=UoZzTv7fN44ojL9GBRNNW/AKdbohLsoViydn4tGwz1uoDVYKPAjkVw2D/lB91YkwPQ
+         QrncuUQ1IuTp8Z0HqIQukz0AvHgrmfg+zBs6+G6lU6ar6OIUcgp6NqLd8Ss9tI8pvzBp
+         v6u2qfsqoBpzmLMbzov5seFtf6HMHPe82Mfgu0tDRy9BxD5+4yqBbria2IrIuzzTr+68
+         JUZScEqZ2dirGyQcThwiE5XWjGUH4JG9JmmpK1QpImKT3BO/abfmFns6/VaayCp33CVf
+         FdWzEVSwD5AhBjxYldwq1QNn8+jTW2ApWA1rtZhTWZv8kQOXkVo9f8wlkQ3c6OooNZpn
+         3Kvw==
+X-Gm-Message-State: AOAM5315VM07PEP4vQpN6E86ttp0VapqiwLoSbfJZHTzaHOY7ipQPUwR
+        Xq8ChPAC+jKEZW6joDKWKZHnKA==
+X-Google-Smtp-Source: ABdhPJz608hYHsiwyB/EN+L+jwqQLZomE0K0feZYaj9wTWfFYhecxH/LFSN0LliZKeegIqo1mKBqpQ==
+X-Received: by 2002:adf:9283:: with SMTP id 3mr8013554wrn.231.1594960083192;
+        Thu, 16 Jul 2020 21:28:03 -0700 (PDT)
 Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
-        by smtp.googlemail.com with ESMTPSA id 138sm7191805wmb.1.2020.07.16.21.26.30
+        by smtp.googlemail.com with ESMTPSA id u186sm11862848wmu.10.2020.07.16.21.28.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 21:26:31 -0700 (PDT)
-Subject: Re: [PATCH v4 08/16] thermal: sun8i: add TEMP_CALIB_MASK for
- calibration data in sun50i_h6_ths_calibrate
-To:     Frank Lee <frank@allwinnertech.com>, anarsoul@gmail.com,
-        tiny.windzz@gmail.com, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, mripard@kernel.org, wens@csie.org,
-        linux-pm@vger.kernel.org
+        Thu, 16 Jul 2020 21:28:02 -0700 (PDT)
+Subject: Re: [PATCH v4 00/16] Allwinner A100 Initial support
+To:     Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
+        mripard@kernel.org, wens@csie.org, mturquette@baylibre.com,
+        sboyd@kernel.org, gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, lee.jones@linaro.org,
+        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
+        megous@megous.com, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org
 References: <cover.1594708863.git.frank@allwinnertech.com>
- <b8761e036b25f20873534e5f8d10b37b5d2ce72c.1594708864.git.frank@allwinnertech.com>
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <4771acd6-ecd3-b8e1-8605-75d78720b1d3@linaro.org>
-Date:   Fri, 17 Jul 2020 06:26:30 +0200
+Message-ID: <ffd5eead-571c-6548-0527-1e685ec869ef@linaro.org>
+Date:   Fri, 17 Jul 2020 06:28:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <b8761e036b25f20873534e5f8d10b37b5d2ce72c.1594708864.git.frank@allwinnertech.com>
+In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -85,40 +90,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/07/2020 09:13, Frank Lee wrote:
+On 14/07/2020 08:55, Frank Lee wrote:
 > From: Yangtao Li <frank@allwinnertech.com>
+
+Do you expect me to pick patches 7,8,9 or ack them ?
+
+> v4:
+> -drop "dt-bindings: pinctrl: sunxi: make gpio banks supplies required"
+> -fix dcdc1 regulator name
+> -get rid of underscore in dts node name
+> -Some trivial things in yaml files
 > 
-> For sun50i_h6_ths_calibrate(), the data read from nvmem needs a round of
-> calculation. On the other hand, the newer SOC may store other data in
-> the space other than 12bit sensor data. Add mask operation to read data
-> to avoid conversion error.
+> v3:
+> -Add pmu and nmi support
+> -Add read data mask for calibration
+> -Code style
+> -Some trivial things in yaml files
 > 
-> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
-
-Can you clarify these SoB ?
-
-Frank Lee==Yangtao Li==frank@allwinnertech.com==tiny.windzz@gmail.com ?
-
-
-
-> ---
->  drivers/thermal/sun8i_thermal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v2:
+> -Some naming consistency
+> -Repair email address
+> -Fix mmc clock
+> -Don't export system clock
+> -Fix checkpatch warning
+> -Drop unneeded pin function, convert to jtag_gpu and i2s_x
 > 
-> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> index 74d73be16496..f423d44b9290 100644
-> --- a/drivers/thermal/sun8i_thermal.c
-> +++ b/drivers/thermal/sun8i_thermal.c
-> @@ -244,7 +244,7 @@ static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
->  	ft_temp = (caldata[0] & FT_TEMP_MASK) * 100;
->  
->  	for (i = 0; i < tmdev->chip->sensor_num; i++) {
-> -		int sensor_reg = caldata[i + 1];
-> +		int sensor_reg = caldata[i + 1] & TEMP_CALIB_MASK;
->  		int cdata, offset;
->  		int sensor_temp = tmdev->chip->calc_temp(tmdev, i, sensor_reg);
->  
+> Yangtao Li (16):
+>   dt-bindings: clk: sunxi-ccu: add compatible string for A100 CCU and
+>     R-CCU
+>   clk: sunxi-ng: add support for the Allwinner A100 CCU
+>   dt-bindings: pinctrl: sunxi: Get rid of continual nesting
+>   dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
+>   pinctrl: sunxi: add support for the Allwinner A100 pin controller
+>   dt-bindings: nvmem: SID: add binding for A100's SID controller
+>   dt-bindings: thermal: sun8i: Add binding for A100's THS controller
+>   thermal: sun8i: add TEMP_CALIB_MASK for calibration data in
+>     sun50i_h6_ths_calibrate
+>   thermal: sun8i: Add A100's THS controller support
+>   mfd: axp20x: Allow the AXP803 to be probed by I2C
+>   dt-bindings: irq: sun7i-nmi: fix dt-binding for a80 nmi
+>   dt-bindings: irq: sun7i-nmi: Add binding for A100's NMI controller
+>   dt-bindings: i2c: mv64xxx: Add compatible for the A100 i2c node.
+>   arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
+>   dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
+>   arm64: allwinner: A100: add support for Allwinner Perf1 board
+> 
+>  .../devicetree/bindings/arm/sunxi.yaml        |    5 +
+>  .../clock/allwinner,sun4i-a10-ccu.yaml        |    7 +-
+>  .../bindings/i2c/marvell,mv64xxx-i2c.yaml     |    3 +
+>  .../allwinner,sun7i-a20-sc-nmi.yaml           |    5 +-
+>  .../nvmem/allwinner,sun4i-a10-sid.yaml        |   19 +-
+>  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  |  139 +-
+>  .../thermal/allwinner,sun8i-a83t-ths.yaml     |    6 +-
+>  arch/arm64/boot/dts/allwinner/Makefile        |    1 +
+>  .../allwinner/sun50i-a100-allwinner-perf1.dts |  180 +++
+>  .../arm64/boot/dts/allwinner/sun50i-a100.dtsi |  364 +++++
+>  drivers/clk/sunxi-ng/Kconfig                  |   10 +
+>  drivers/clk/sunxi-ng/Makefile                 |    2 +
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c      |  214 +++
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h      |   21 +
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100.c        | 1276 +++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100.h        |   56 +
+>  drivers/mfd/axp20x-i2c.c                      |    2 +
+>  drivers/pinctrl/sunxi/Kconfig                 |   10 +
+>  drivers/pinctrl/sunxi/Makefile                |    2 +
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |  105 ++
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |  708 +++++++++
+>  drivers/thermal/sun8i_thermal.c               |   16 +-
+>  include/dt-bindings/clock/sun50i-a100-ccu.h   |  116 ++
+>  include/dt-bindings/clock/sun50i-a100-r-ccu.h |   23 +
+>  include/dt-bindings/reset/sun50i-a100-ccu.h   |   68 +
+>  include/dt-bindings/reset/sun50i-a100-r-ccu.h |   18 +
+>  26 files changed, 3308 insertions(+), 68 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.h
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+>  create mode 100644 include/dt-bindings/clock/sun50i-a100-ccu.h
+>  create mode 100644 include/dt-bindings/clock/sun50i-a100-r-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun50i-a100-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun50i-a100-r-ccu.h
 > 
 
 
