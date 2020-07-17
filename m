@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70013C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CE9C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49F7822B49
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A3C2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594994767;
-	bh=yr2FpPKEOrI2vBP6qFthQ3LjXTu/j5hK33WdMUGw1FU=;
+	s=default; t=1594994779;
+	bh=EDDWXKvWEloZZ0qlv+ipxm9USc1hVYn2fgjl76vVANQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XR6Ed70vBlQTlMjtL1DswZY5vIk0LkFY5CdX62D7YWl1SVGZZzkmuFZiXtBBOAR8W
-	 ytQmyDRd8q6aDwn6NkJfjUdBDHnTKvH6gmoMdGN+chOxHQ9vvHN9/+Ufx/XlEG8ITF
-	 LARJU+ZuOQpC58ezssMC8blDASRWStvMmqXK8V+w=
+	b=lJbnRiM5FBwPjkU7aFqwFEZe6IhHRiTIQn8xBgrOpC90uxBADGWLLCMkiXm+vP8Fs
+	 Sx2t2t3DkP3hciRPfY/48U0oc+xJyyTCN8KE7FJPyLNoSZsC4RE2JGWx+sx/i8Ue6m
+	 bD2UMKNFzW4db66wQ+CYG06jAousHEE0ZQHcEM8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgGQOGG (ORCPT
+        id S1727839AbgGQOGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54104 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 10:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbgGQOGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:06:03 -0400
+        id S1727772AbgGQOGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:06:12 -0400
 Received: from lenoir.home (lfbn-ncy-1-317-216.w83-196.abo.wanadoo.fr [83.196.152.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA5C9207EA;
-        Fri, 17 Jul 2020 14:06:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 493C522C9C;
+        Fri, 17 Jul 2020 14:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594994762;
-        bh=yr2FpPKEOrI2vBP6qFthQ3LjXTu/j5hK33WdMUGw1FU=;
+        s=default; t=1594994771;
+        bh=EDDWXKvWEloZZ0qlv+ipxm9USc1hVYn2fgjl76vVANQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WY64IaGa5qBt3cNZHz0OrOt9jpGccui9SjtpuGBwXCKe5ISw6Djy9cQLZ20a9x5Kw
-         Op1cYtoj0yIQhadSarVJ+4uxe7dbx7VUEkZLQpfSxqusgJ1SSJ1gc98uUbFNMS8qsk
-         YYplT38PNE4hyPXRMfa6NLhpYFwZIwIjqrBN3Pp4=
+        b=wnpcj7pJaiUkRKq1YL3UEQWnoyldf3Ws+wJ4iw9HC8lR3I4QGBW6g8AFXqbL0k6sd
+         TxbAk+fwtTEvxGLYeq56wtj/Q2lTo4x9evDUGq01RcPJLlTpm8gowoWn1Zt3Ubdkzp
+         Qxy5b2VlW3inWSNRwqji+L+uSfjD5xX5AJ77fBoE=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH 03/12] timers: Use only bucket expiry for base->next_expiry value
-Date:   Fri, 17 Jul 2020 16:05:42 +0200
-Message-Id: <20200717140551.29076-4-frederic@kernel.org>
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH 09/12] timer: Expand clk forward logic beyond nohz
+Date:   Fri, 17 Jul 2020 16:05:48 +0200
+Message-Id: <20200717140551.29076-10-frederic@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200717140551.29076-1-frederic@kernel.org>
 References: <20200717140551.29076-1-frederic@kernel.org>
@@ -59,200 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+As for next_expiry, we want to expand base->clk catch up logic beyond
+nohz in order to avoid triggering useless softirqs.
 
-The bucket expiry time is the effective expriy time of timers and is
-greater than or equal to the requested timer expiry time. This is due
-to the guarantee that timers never expire early and the reduced expiry
-granularity in the secondary wheel levels.
+If we want to fire softirqs only to expire pending timers, periodic
+base->clk increments must be skippable for random amounts of time.
+Therefore we must prepare to catch-up with missing updates whenever we
+need an up-to-date base clock.
 
-When a timer is enqueued, trigger_dyntick_cpu() checks whether the
-timer is the new first timer. This check compares next_expiry with
-the requested timer expiry value and not with the effective expiry
-value of the bucket into which the timer was queued.
-
-Storing the requested timer expiry value in base->next_expiry can lead
-to base->clk going backwards if the requested timer expiry value is
-smaller than base->clk. Commit 30c66fc30ee7 ("timer: Prevent base->clk
-from moving backward") worked around this by preventing the store when
-timer->expiry is before base->clk, but did not fix the underlying
-problem.
-
-Use the expiry value of the bucket into which the timer is queued to
-do the new first timer check. This fixes the base->clk going backward
-problem.
-
-The workaround of commit 30c66fc30ee7 ("timer: Prevent base->clk from
-moving backward") in trigger_dyntick_cpu() is not longer necessary as the
-timers bucket expiry is guaranteed to be greater than or equal base->clk.
-
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Juri Lelli <juri.lelli@redhat.com>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Juri Lelli <juri.lelli@redhat.com>
 ---
- kernel/time/timer.c | 64 ++++++++++++++++++++++++---------------------
- 1 file changed, 34 insertions(+), 30 deletions(-)
+ kernel/time/timer.c | 26 ++++----------------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
 
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index bcdc3045138d..a7a3cf737411 100644
+index 13f48ee708aa..1be92b53b75f 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -487,35 +487,39 @@ static inline void timer_set_idx(struct timer_list *timer, unsigned int idx)
-  * Helper function to calculate the array index for a given expiry
-  * time.
-  */
--static inline unsigned calc_index(unsigned long expires, unsigned lvl)
-+static inline unsigned calc_index(unsigned long expires, unsigned lvl,
-+				  unsigned long *bucket_expiry)
+@@ -888,19 +888,12 @@ get_target_base(struct timer_base *base, unsigned tflags)
+ 
+ static inline void forward_timer_base(struct timer_base *base)
  {
- 	expires = (expires + LVL_GRAN(lvl)) >> LVL_SHIFT(lvl);
-+	*bucket_expiry = expires << LVL_SHIFT(lvl);
- 	return LVL_OFFS(lvl) + (expires & LVL_MASK);
- }
+-#ifdef CONFIG_NO_HZ_COMMON
+ 	unsigned long jnow;
  
--static int calc_wheel_index(unsigned long expires, unsigned long clk)
-+static int calc_wheel_index(unsigned long expires, unsigned long clk,
-+			    unsigned long *bucket_expiry)
- {
- 	unsigned long delta = expires - clk;
- 	unsigned int idx;
+-	/*
+-	 * We only forward the base when we are idle or have just come out of
+-	 * idle (must_forward_clk logic), and have a delta between base clock
+-	 * and jiffies. In the common case, run_timers will take care of it.
+-	 */
+-	if (likely(!base->must_forward_clk))
++	if (!base->must_forward_clk)
+ 		return;
  
- 	if (delta < LVL_START(1)) {
--		idx = calc_index(expires, 0);
-+		idx = calc_index(expires, 0, bucket_expiry);
- 	} else if (delta < LVL_START(2)) {
--		idx = calc_index(expires, 1);
-+		idx = calc_index(expires, 1, bucket_expiry);
- 	} else if (delta < LVL_START(3)) {
--		idx = calc_index(expires, 2);
-+		idx = calc_index(expires, 2, bucket_expiry);
- 	} else if (delta < LVL_START(4)) {
--		idx = calc_index(expires, 3);
-+		idx = calc_index(expires, 3, bucket_expiry);
- 	} else if (delta < LVL_START(5)) {
--		idx = calc_index(expires, 4);
-+		idx = calc_index(expires, 4, bucket_expiry);
- 	} else if (delta < LVL_START(6)) {
--		idx = calc_index(expires, 5);
-+		idx = calc_index(expires, 5, bucket_expiry);
- 	} else if (delta < LVL_START(7)) {
--		idx = calc_index(expires, 6);
-+		idx = calc_index(expires, 6, bucket_expiry);
- 	} else if (LVL_DEPTH > 8 && delta < LVL_START(8)) {
--		idx = calc_index(expires, 7);
-+		idx = calc_index(expires, 7, bucket_expiry);
- 	} else if ((long) delta < 0) {
- 		idx = clk & LVL_MASK;
-+		*bucket_expiry = clk;
- 	} else {
- 		/*
- 		 * Force expire obscene large timeouts to expire at the
-@@ -524,7 +528,7 @@ static int calc_wheel_index(unsigned long expires, unsigned long clk)
- 		if (delta >= WHEEL_TIMEOUT_CUTOFF)
- 			expires = clk + WHEEL_TIMEOUT_MAX;
+ 	jnow = READ_ONCE(jiffies);
+-	base->must_forward_clk = base->is_idle;
+ 	if ((long)(jnow - base->clk) < 2)
+ 		return;
  
--		idx = calc_index(expires, LVL_DEPTH - 1);
-+		idx = calc_index(expires, LVL_DEPTH - 1, bucket_expiry);
+@@ -915,7 +908,6 @@ static inline void forward_timer_base(struct timer_base *base)
+ 			return;
+ 		base->clk = base->next_expiry;
  	}
- 	return idx;
- }
-@@ -544,16 +548,18 @@ static void enqueue_timer(struct timer_base *base, struct timer_list *timer,
+-#endif
  }
  
- static void
--__internal_add_timer(struct timer_base *base, struct timer_list *timer)
-+__internal_add_timer(struct timer_base *base, struct timer_list *timer,
-+		     unsigned long *bucket_expiry)
- {
- 	unsigned int idx;
  
--	idx = calc_wheel_index(timer->expires, base->clk);
-+	idx = calc_wheel_index(timer->expires, base->clk, bucket_expiry);
- 	enqueue_timer(base, timer, idx);
- }
+@@ -1667,10 +1659,8 @@ u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
+ 		 * logic is only maintained for the BASE_STD base, deferrable
+ 		 * timers may still see large granularity skew (by design).
+ 		 */
+-		if ((expires - basem) > TICK_NSEC) {
+-			base->must_forward_clk = true;
++		if ((expires - basem) > TICK_NSEC)
+ 			base->is_idle = true;
+-		}
+ 	}
+ 	raw_spin_unlock(&base->lock);
  
- static void
--trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
-+trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer,
-+		    unsigned long bucket_expiry)
- {
- 	if (!is_timers_nohz_active())
- 		return;
-@@ -576,31 +582,29 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
- 	if (!base->is_idle)
- 		return;
- 
--	/* Check whether this is the new first expiring timer: */
--	if (time_after_eq(timer->expires, base->next_expiry))
-+	/*
-+	 * Check whether this is the new first expiring timer. The
-+	 * effective expiry time of the timer is required here
-+	 * (bucket_expiry) instead of timer->expires.
-+	 */
-+	if (time_after_eq(bucket_expiry, base->next_expiry))
- 		return;
- 
+@@ -1769,16 +1759,7 @@ static inline void __run_timers(struct timer_base *base)
  	/*
- 	 * Set the next expiry time and kick the CPU so it can reevaluate the
- 	 * wheel:
+ 	 * timer_base::must_forward_clk must be cleared before running
+ 	 * timers so that any timer functions that call mod_timer() will
+-	 * not try to forward the base. Idle tracking / clock forwarding
+-	 * logic is only used with BASE_STD timers.
+-	 *
+-	 * The must_forward_clk flag is cleared unconditionally also for
+-	 * the deferrable base. The deferrable base is not affected by idle
+-	 * tracking and never forwarded, so clearing the flag is a NOOP.
+-	 *
+-	 * The fact that the deferrable base is never forwarded can cause
+-	 * large variations in granularity for deferrable timers, but they
+-	 * can be deferred for long periods due to idle anyway.
++	 * not try to forward the base.
  	 */
--	if (time_before(timer->expires, base->clk)) {
--		/*
--		 * Prevent from forward_timer_base() moving the base->clk
--		 * backward
--		 */
--		base->next_expiry = base->clk;
--	} else {
--		base->next_expiry = timer->expires;
--	}
-+	base->next_expiry = bucket_expiry;
- 	wake_up_nohz_cpu(base->cpu);
- }
+ 	base->must_forward_clk = false;
  
- static void
- internal_add_timer(struct timer_base *base, struct timer_list *timer)
- {
--	__internal_add_timer(base, timer);
--	trigger_dyntick_cpu(base, timer);
-+	unsigned long bucket_expiry;
-+
-+	__internal_add_timer(base, timer, &bucket_expiry);
-+	trigger_dyntick_cpu(base, timer, bucket_expiry);
- }
- 
- #ifdef CONFIG_DEBUG_OBJECTS_TIMERS
-@@ -959,9 +963,9 @@ static struct timer_base *lock_timer_base(struct timer_list *timer,
- static inline int
- __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int options)
- {
-+	unsigned long clk = 0, flags, bucket_expiry;
- 	struct timer_base *base, *new_base;
- 	unsigned int idx = UINT_MAX;
--	unsigned long clk = 0, flags;
- 	int ret = 0;
- 
- 	BUG_ON(!timer->function);
-@@ -1000,7 +1004,7 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
- 		}
- 
- 		clk = base->clk;
--		idx = calc_wheel_index(expires, clk);
-+		idx = calc_wheel_index(expires, clk, &bucket_expiry);
- 
- 		/*
- 		 * Retrieve and compare the array index of the pending
-@@ -1059,7 +1063,7 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
- 	 */
- 	if (idx != UINT_MAX && clk == base->clk) {
- 		enqueue_timer(base, timer, idx);
--		trigger_dyntick_cpu(base, timer);
-+		trigger_dyntick_cpu(base, timer, bucket_expiry);
- 	} else {
- 		internal_add_timer(base, timer);
+@@ -1791,6 +1772,7 @@ static inline void __run_timers(struct timer_base *base)
+ 		while (levels--)
+ 			expire_timers(base, heads + levels);
  	}
++	base->must_forward_clk = true;
+ 	raw_spin_unlock_irq(&base->lock);
+ 	timer_base_unlock_expiry(base);
+ }
 -- 
 2.26.2
 
