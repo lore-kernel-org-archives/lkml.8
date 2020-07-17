@@ -2,224 +2,490 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50401C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92EC020717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC0B2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hFvShSzP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fiq2HROr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgGQNce (ORCPT
+        id S1726617AbgGQNdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:32:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42140 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726071AbgGQNcd (ORCPT
+        Fri, 17 Jul 2020 09:33:16 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32399 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726079AbgGQNdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:32:33 -0400
+        Fri, 17 Jul 2020 09:33:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594992751;
+        s=mimecast20190719; t=1594992792;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=gw7Bdg5F6PTJRpZOqnV/ZVS3jnjuaxd2N0oczZTUZYw=;
-        b=hFvShSzP3+GF25ieuiTCnNWYr9LT7HOCI4+FfBk74dZDJX5D/0bBPddM6asy5foMXrteCT
-        /JYuWqYwXONEv/4F5YQdv8SXeyWEnPLdojCF73SkjAV6Nfgz20NutZ/RXrV0MrqCgp6vMo
-        lErxlP+MTkujGUJSXVvOPMIUWjj1E8Q=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-7lYyssRSNbO7LNHT5ank8A-1; Fri, 17 Jul 2020 09:32:30 -0400
-X-MC-Unique: 7lYyssRSNbO7LNHT5ank8A-1
-Received: by mail-qv1-f70.google.com with SMTP id l12so5499220qvu.21
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:32:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=gw7Bdg5F6PTJRpZOqnV/ZVS3jnjuaxd2N0oczZTUZYw=;
-        b=X5jttXYHfvpzNTB/z17LjCwzsXVTXNRE9xB5EOrncQvOMU9PN8WQXz4Tz/WL1UsFBy
-         hkIWu93XmSkEBY3DwBy219C8hrsKK1vA71njTKFx/wlll7j9L6Nbc4p48OYVWkDfIVgF
-         zOFNr1sWn+/gJxC69DG6mP4Bp44+9DHy7WJnMare+QvN6Wm4Ap60Iil33A8PNcMo8J+E
-         F2usLa4K+GkgbiCzyWunJTZcZMtqPjD94iMefaED23ekR3y5KOW0f+4eJuMeWKtnbMFA
-         h+Rjmzn0muEf6o2vW+AW4yOxEN6iVNi7pxZIp9UkUMZo+CsJJlLw3LVb1TPMUUbtB7uq
-         cgwA==
-X-Gm-Message-State: AOAM533rJ+ZwnJLgemJa+F/I2TV7ZqTsCXWuPnrggP7YumPB/fc/AjOT
-        YujMc48EJqC3v5NVynL0WJFP4aXzejhlbR9oaaGlxtMSNyqloJoXD4skMoQBBQisg7Rd0SCRi7G
-        RBJOkuZbZxrh9yRILNZA7CbPi
-X-Received: by 2002:ac8:1305:: with SMTP id e5mr10471764qtj.78.1594992749435;
-        Fri, 17 Jul 2020 06:32:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzVukT5N1A8RHevyQUfkREmmAlrpMLsNUwqg40Hvp+6mZmIfyRmX1j7yE1q3Z+1fCBkwQPYqw==
-X-Received: by 2002:ac8:1305:: with SMTP id e5mr10471725qtj.78.1594992749028;
-        Fri, 17 Jul 2020 06:32:29 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id j24sm9568765qkl.79.2020.07.17.06.32.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 06:32:28 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Modularization of DFL private feature drivers
-To:     "Wu, Hao" <hao.wu@intel.com>, "Xu, Yilun" <yilun.xu@intel.com>,
-        "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>
-References: <1594791498-14495-1-git-send-email-yilun.xu@intel.com>
- <0c7c63b8-5444-2deb-9fed-18956a5ad938@redhat.com>
- <DM6PR11MB38194C448ECCF1E6BF386D3F857C0@DM6PR11MB3819.namprd11.prod.outlook.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <237c776b-8746-421d-26ad-eea7242a9172@redhat.com>
-Date:   Fri, 17 Jul 2020 06:32:26 -0700
+        bh=TJnULiqZs5eCmY/H42dJD/2GejG1R6YL8hga5+yw1iM=;
+        b=fiq2HROr+/HHOVermtPEAuMFtPQsTbklgHuqteLgcE2799DTGEzMNf5zJrLS+nkoMZ7PVp
+        E0Hn7HNfxLmlC33ZV4PV8LwCwIZZYNkVfTufAXF4kzBDrjSj3iJwT8tJemP7JBZi/yRVlW
+        OfhbCHMohB3RG3e2X8uewYaS5arXAi8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-482-b6B-O5q8PxiCiTPjMH8lCw-1; Fri, 17 Jul 2020 09:33:08 -0400
+X-MC-Unique: b6B-O5q8PxiCiTPjMH8lCw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D646100CCC1;
+        Fri, 17 Jul 2020 13:33:06 +0000 (UTC)
+Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4677F10013C0;
+        Fri, 17 Jul 2020 13:33:00 +0000 (UTC)
+Subject: Re: [PATCH v5 1/5] docs: IOMMU user API
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <1594925117-64892-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1594925117-64892-2-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <d8677d03-e3b8-88d3-21b1-12647008bb39@redhat.com>
+Date:   Fri, 17 Jul 2020 15:32:58 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <DM6PR11MB38194C448ECCF1E6BF386D3F857C0@DM6PR11MB3819.namprd11.prod.outlook.com>
+In-Reply-To: <1594925117-64892-2-git-send-email-jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacob,
 
-On 7/16/20 8:48 PM, Wu, Hao wrote:
->> Subject: Re: [PATCH 0/2] Modularization of DFL private feature drivers
->>
->> Generally i think this is a good approach.
->>
->> However I do have concern.
->>
->> The feature_id in dfl is magic number, similar to pci id but without a vendor
->> id.
->>
->> Is it possible to add something like a vendor id so different vendors would
->> not have to be so careful to use a unique id ?
-> Hi Tom,
->
-> Thanks for the comments.
->
-> Here is only one field defined in spec, that is feature id to distinguish one
-> feature with another one. There is no vendor id here I think, and several
-> cards are using this for now and seems not possible to change DFH format
-> for these products. : (
+On 7/16/20 8:45 PM, Jacob Pan wrote:
+> IOMMU UAPI is newly introduced to support communications between guest
+> virtual IOMMU and host IOMMU. There has been lots of discussions on how
+> it should work with VFIO UAPI and userspace in general.
+> 
+> This document is indended to clarify the UAPI design and usage. The
+intended
+> mechanics of how future extensions should be achieved are also covered
+> in this documentation.
+> 
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  Documentation/userspace-api/iommu.rst | 339 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 339 insertions(+)
+>  create mode 100644 Documentation/userspace-api/iommu.rst
+> 
+> diff --git a/Documentation/userspace-api/iommu.rst b/Documentation/userspace-api/iommu.rst
+> new file mode 100644
+> index 000000000000..efc3e1838235
+> --- /dev/null
+> +++ b/Documentation/userspace-api/iommu.rst
+> @@ -0,0 +1,339 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. iommu:
+> +
+> +=====================================
+> +IOMMU Userspace API
+> +=====================================
+> +
+> +IOMMU UAPI is used for virtualization cases where communications are
+> +needed between physical and virtual IOMMU drivers. For native
+s/native/baremetal?
+> +usage, IOMMU is a system device which does not need to communicate
+the IOMMU?
+> +with user space directly.
+> +
+> +The primary use cases are guest Shared Virtual Address (SVA) and
+> +guest IO virtual address (IOVA), wherein a virtual IOMMU (vIOMMU) is
+> +required to communicate with the physical IOMMU in the host.
+wherin the vIOMMU implementation relies on the physical IOMMU and for
+this reason requires interactions with the host driver.
 
-There looks like some unused bits in the first word, how about
+> +
+> +.. contents:: :local:
+> +
+> +Functionalities
+> +===============
+> +Communications of user and kernel involve both directions. The
+> +supported user-kernel APIs are as follows:
+> +
+> +1. Alloc/Free PASID
+> +2. Bind/unbind guest PASID (e.g. Intel VT-d)
+> +3. Bind/unbind guest PASID table (e.g. ARM sMMU)
+s/sMMU/SMMU
+> +4. Invalidate IOMMU caches
+> +5. Service IO page faults (page request and response)
+Report errors to the guest and serve page requests?
+> +
+> +Requirements
+> +============
+> +The IOMMU UAPIs are generic and extensible to meet the following
+> +requirements:
+> +
+> +1. Emulated and para-virtualised vIOMMUs
+> +2. Multiple vendors (Intel VT-d, ARM sMMU, etc.)
+SMMU
+> +3. Extensions to the UAPI shall not break existing user space
+> +
+> +Interfaces
+> +==========
+> +Although the data structures defined in IOMMU UAPI are self-contained,
+> +there is no user API functions introduced. Instead, IOMMU UAPI is
+> +designed to work with existing user driver frameworks such as VFIO.
+> +
+> +Extension Rules & Precautions
+> +-----------------------------
+> +When IOMMU UAPI gets extended, the data structures can *only* be
+> +modified in two ways:
+> +
+> +1. Adding new fields by re-purposing the padding[] field. No size change.
+> +2. Adding new union members at the end. May increase in size.
+May increase the structure sizes
+> +
+> +No new fields can be added *after* the variable sized union in that it
+> +will break backward compatibility when offset moves. In both cases, a
+> +new flag must be accompanied with a new field such that the IOMMU
+a new flag must be introduced whenever a change affects the structure
+using either method?
+> +driver can process the data based on the new flag. Version field is
+> +only reserved for the unlikely event of UAPI upgrade at its entirety.
+> +
+> +It's *always* the caller's responsibility to indicate the size of the
+> +structure passed by setting argsz appropriately.
+> +Though at the same time, argsz is user provided data which is not
+> +trusted. The argsz field allows the user to indicate how much data
+> +they're providing, it's still the kernel's responsibility to validate
+he is providing
+> +whether it's correct and sufficient for the requested operation.
+> +
+> +Compatibility Checking
+> +----------------------
+> +When IOMMU UAPI extension results in size increase, IOMMU UAPI core
+in some structure size increase, the IOMMU UAPI code
+> +and vendor driver shall handle the following cases:
+> +
+> +1. User and kernel has exact size match
+> +2. An older user with older kernel header (smaller UAPI size) running on a
+> +   newer kernel (larger UAPI size)
+> +3. A newer user with newer kernel header (larger UAPI size) running
+> +   on an older kernel.
+> +4. A malicious/misbehaving user pass illegal/invalid size but within
+> +   range. The data may contain garbage.> +
+> +Feature Checking
+> +----------------
+> +While launching a guest with vIOMMU, it is important to ensure that host
+> +can support the UAPI data structures to be used for vIOMMU-pIOMMU
+> +communications. Without upfront compatibility checking, future faults
+s/faults/failures?
+> +are difficult to report even in normal conditions. For example, TLB
+> +invalidations should always succeed. There is no architectural way to
+> +report back to the vIOMMU if the UAPI data is incompatible. If that
+> +happens, in order to protect IOMMU iosolation guarantee, we have to
+in order to guarantee IOMMU isOlation
+> +resort to not giving completion status in vIOMMU. This may result in
+> +VM hang.
+Why not simply saying a capability getter is offered to discover the
+feature support and potential API incompatibility support at an early
+stage. Detecting this later, when performing the actual cache/descriptor
+handling operations appears to be tricky and difficult to escalate to
+the guest.
 
-#define DFH_EOL            BIT_ULL(40)        /* End of list */
+> +
+> +For this reason the following IOMMU UAPIs cannot fail:
+> +
+> +1. Free PASID
+> +2. Unbind guest PASID
+> +3. Unbind guest PASID table (SMMU)
+> +4. Cache invalidate
 
-+define DFH_VENDOR    GENMAKE_ULL(49,41) /* Vendor ID */
+hum practically iommu_uapi_sva_unbind_gpasid return an int though (see
+below). So it sounds a bit misleading. What cannot fail?
 
-#define DFH_TYPE        GENMASK_ULL(63, 60)    /* Feature type */
+> +
+> +User applications such as QEMU are expected to import kernel UAPI
+> +headers. Backward compatibility is supported per feature flags.
+> +For example, an older QEMU (with older kernel header) can run on newer
+> +kernel. Newer QEMU (with new kernel header) may refuse to initialize
+> +on an older kernel if new feature flags are not supported by older
+> +kernel. Simply recompiling existing code with newer kernel header should
+> +not be an issue in that only existing flags are used.
+> +
+> +IOMMU vendor driver should report the below features to IOMMU UAPI
+> +consumers (e.g. via VFIO).
+> +
+> +1. IOMMU_NESTING_FEAT_SYSWIDE_PASID
+> +2. IOMMU_NESTING_FEAT_BIND_PGTBL
+> +3. IOMMU_NESTING_FEAT_BIND_PASID_TABLE
+> +4. IOMMU_NESTING_FEAT_CACHE_INVLD
+> +5. IOMMU_NESTING_FEAT_PAGE_REQUEST
+> +
+> +Take VFIO as example, upon request from VFIO user space (e.g. QEMU),
+> +VFIO kernel code shall query IOMMU vendor driver for the support of
+> +the above features. Query result can then be reported back to the
+> +user-space caller. Details can be found in
+> +Documentation/driver-api/vfio.rst.
+> +
+> +
+> +Data Passing Example with VFIO
+> +------------------------------
+> +As the ubiquitous userspace driver framework, VFIO is already IOMMU
+> +aware and shares many key concepts such as device model, group, and
+> +protection domain. Other user driver frameworks can also be extended
+> +to support IOMMU UAPI but it is outside the scope of this document.
+> +
+> +In this tight-knit VFIO-IOMMU interface, the ultimate consumer of the
+> +IOMMU UAPI data is the host IOMMU driver. VFIO facilitates user-kernel
+> +transport, capability checking, security, and life cycle management of
+> +process address space ID (PASID).
+> +
+> +Unlike normal user data passed via VFIO UAPI IOTCL, IOMMU driver is the
+> +ultimate consumer of its UAPI data.
+I don't really get this. Part of the VFIO API already mediates info
+towards the IOMMU driver, no?
 
-And Intel gets id 0.
+ At VFIO layer, the IOMMU UAPI data
+> +is wrapped in a VFIO UAPI data. It follows the
+> +pattern below::
+> +
+> +   struct {
+> +	__u32 argsz;
+> +	__u32 flags;
+> +	__u8  data[];
+> +   };
+> +
+> +Here data[] contains the IOMMU UAPI data structures. VFIO has the
+> +freedom to bundle the data as well as parse data size based on its own flags.
+> +
+> +In order to determine the size and feature set of the user data, argsz
+> +and flags are also embedded in the IOMMU UAPI data structures.
+> +A "__u32 argsz" field is *always* at the beginning of each structure.
+> +
+> +For example:
+> +::
+> +
+> +   struct iommu_cache_invalidate_info {
+> +	__u32	argsz;
+> +	#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+> +	__u32	version;
+there is no flags field in this struct, as opposed to what I can
+understand from "argsz and flags are also embedded in the IOMMU UAPI
+data structures"
+> +	/* IOMMU paging structure cache */
+> +	#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
+> +	#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device IOTLB */
+> +	#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID cache */
+> +	#define IOMMU_CACHE_INV_TYPE_NR		(3)
+> +	__u8	cache;
+> +	__u8	granularity;
+> +	__u8	padding[6];
+> +	union {
+> +		struct iommu_inv_pasid_info pasid_info;
+> +		struct iommu_inv_addr_info addr_info;
+> +	} granu;
+> +   };
+> +
+> +VFIO is responsible for checking its own argsz and flags then invokes
+s/flags then invokes/flags. It then invokes
+> +appropriate IOMMU UAPI functions. User pointer is passed to IOMMU
+the appropriate... I would say *The* user pointer is passed to *the*
+IOMMU, here and at many places in the doc. But I would prefer a native
+english speaker confirms.
+> +layer for further processing. The responsibilities are divided as
+> +follows:
+> +
+> +- Generic IOMMU layer checks argsz range based on UAPI data in the
+> +  current kernel version
+> +
+> +- Generic IOMMU layer checks content of the UAPI data for non-zero
+> +  reserved bits in flags, padding fields, and unsupported version.
+> +  This is to ensure not breaking userspace in the future when these
+> +  fields or flags are used.
+> +
+> +- Vendor IOMMU driver checks argsz based on vendor flags, UAPI data
+> +  is consumed based on flags. Vendor driver has access to
+> +  unadulterated argsz value in case of vendor specific future
+> +  extensions.
+> +
+> +To illustrate the two cases with and without vendor data, cache
+> +invalidation and bind guest PASID are given as examples respectively.
 
->
-> I fully understand the concern is the feature id management, and potential
-> conflicts there from different vendors. One possible method to resolve this
-> is managing the ids in a public place (web? Or just the driver header file for
-> feature id definition), all vendors can request some feature ids, and other
-> people can see which feature ids have been used so that they can avoid
-> using conflict ones with other people.
+I am not sure duplicating the code here is necessary. I think when the
+code gets upstream, it becomes the example to follow. The above
+description can help in understanding why such checks are there and I
+would stop here, personally.
+> +
+> +Example 1: Guest issues IOTLB invalidation, all guest provided data
+> +are generic. Vendor driver does not need to check argsz.
+> +
+> +::
+> +
+> + static int iommu_check_cache_invl_data(struct iommu_cache_invalidate_info *info)
+> + {
+> +	u32 mask;
+> +
+> +	if (info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> +		return -EINVAL;
+> +
+> +	mask = (1 << IOMMU_CACHE_INV_TYPE_NR) - 1;
+> +	if (info->cache & ~mask)
+> +		return -EINVAL;
+> +
+> +	if (info->granularity >= IOMMU_INV_GRANU_NR)
+> +		return -EINVAL;
+> +
+> +	switch (info->granularity) {
+> +	case IOMMU_INV_GRANU_ADDR:
+> +		mask = IOMMU_INV_ADDR_FLAGS_PASID |
+> +			IOMMU_INV_ADDR_FLAGS_ARCHID |
+> +			IOMMU_INV_ADDR_FLAGS_LEAF;
+> +
+> +		if (info->granu.addr_info.flags & ~mask)
+> +			return -EINVAL;
+> +		break;
+> +	case IOMMU_INV_GRANU_PASID:
+> +		mask = IOMMU_INV_PASID_FLAGS_PASID |
+> +			IOMMU_INV_PASID_FLAGS_ARCHID;
+> +		if (info->granu.pasid_info.flags & ~mask)
+> +			return -EINVAL;
+> +
+> +		break;
+> +	case IOMMU_INV_GRANU_DOMAIN:
+> +		/* No flags to check */
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (info->padding[0] || info->padding[1])
+> +		return -EINVAL;
+> +
+> +	return 0;
+> + }
+> +
+> + int iommu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
+> +			   void __user *uinfo)
+> + {
+> +	struct iommu_cache_invalidate_info inv_info = { 0 };
+> +	u32 minsz, maxsz;
+> +	int ret = 0;
+> +
+> +	if (unlikely(!domain->ops->cache_invalidate))
+> +		return -ENODEV;
+> +
+> +	/* Current kernel data size is the max to be copied from user */
+> +	maxsz = sizeof(struct iommu_cache_invalidate_info);
+> +
+> +	/*
+> +	 * No new spaces can be added before the variable sized union, the
+> +	 * minimum size is the offset to the union.
+> +	 */
+> +	minsz = offsetof(struct iommu_cache_invalidate_info, granu);
+> +
+> +	/* Copy minsz from user to get flags and argsz */
+> +	if (copy_from_user(&inv_info, uinfo, minsz))
+> +		return -EFAULT;
+> +
+> +	/* Fields before variable size union is mandatory */
+> +	if (inv_info.argsz < minsz)
+> +		return -EINVAL;
+> +
+> +	/* PASID and address granu requires additional info beyond minsz */
+> +	if (inv_info.argsz == minsz &&
+> +		((inv_info.granularity == IOMMU_INV_GRANU_PASID) ||
+> +			(inv_info.granularity == IOMMU_INV_GRANU_ADDR)))
+> +		return -EINVAL;
+> +	/*
+> +	 * User might be using a newer UAPI header which has a larger data
+> +	 * size, we shall support the existing flags within the current
+> +	 * size. Copy the remaining user data _after_ minsz but not more
+> +	 * than the current kernel supported size.
+> +	 */
+> +	if (copy_from_user((void *)&inv_info + minsz, uinfo + minsz,
+> +				min(inv_info.argsz, maxsz) - minsz))
+> +		return -EFAULT;
+> +
+> +	/* Now the argsz is validated, check the content */
+> +	ret = iommu_check_cache_invl_data(&inv_info);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return domain->ops->cache_invalidate(domain, dev, &inv_info);
+> + }
+> + EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
+> +
+> +
+> +Example 2: Bind guest PASID which includes vendor specific data.
+> +The IOMMU core processing of UAPI data follows the same flow as
+> +Example 1. Vendor driver handles the additional vendor specific flags
+> +as in VT-d driver below:
+> +
+> +::
+> +
+> + int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+> +			  struct iommu_gpasid_bind_data *data)
+> + {
+> +	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> +	struct dmar_domain *dmar_domain;
+> +	struct intel_svm_dev *sdev;
+> +	struct intel_svm *svm;
+> +	int ret = 0;
+> +
+> +	if (WARN_ON(!iommu) || !data)
+> +		return -EINVAL;
+> +
+> +	if (data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+> +		return -EINVAL;
+> +
+> +	/* IOMMU core ensures argsz is more than the start of the union */
+> +	if (data->argsz < offsetofend(struct iommu_gpasid_bind_data,
+> +            vendor.vtd))
+> +		return -EINVAL;
+> +   ...
+> + }
+> +
+> +
+> +Sharing UAPI with in-kernel users
+> +---------------------------------
+> +For UAPIs that are shared with in-kernel users, a wrapper function is
+> +provided to distinguish the callers. For example,
+> +
+> +Userspace caller ::
+> +
+> +  int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
+> +                                   struct device *dev,
+> +                                   void __user *udata)
+> +
+> +In-kernel caller ::
+> +
+> +  int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+> +                                   struct device *dev,
+> +                                   struct iommu_gpasid_bind_data *data)
+>Hope this helps. If some of my comments drive you in an opposite
+direction of what was said earlier, please feel free to ignore them ;-)
 
-The conflict will come in development when two vendors use the same unpublished feature id.
+Thanks
 
-Also keeping the truth of id's in the kernel source isn't that great because the public kernel always lags development repositories.
-
->
-> And in the later version DFH, this feature id will be replaced with GUID
-> I think, so it can resolve the conflict problems from different vendors?
-> But now, we still need to handle the existing ones. : )
-
-This is why I proposed needing to generalize the matching.
-
->
-> Thanks
-> Hao
->
->> This touches some of the matching function of the bus ops.  Could there be a
->> way for bus ops to be used so that there could be multiple matching
->> function.  Maybe the one in 0002 as a default so users could override it ?
->>
->> The use case I am worrying about is an OEM.  The OEM uses an unclaimed
->> feature_id and supplies their own platform device device driver to match the
->> feature_id.  But some later version of the kernel claims this feature_id and
->> the OEM's driver no longer works and since the value comes from pci config
->> space it is difficult to change.
->>
->> So looking for something like
->>
->> register_feature_matcher((*bus_match)(struct device *dev, struct
->> device_driver *drv))
->>
->> static int dfl_bus_match_default(struct device *dev, struct device_driver *drv)
->> {
->>     struct dfl_device *dfl_dev = to_dfl_dev(dev);
->>     struct dfl_driver *dfl_drv = to_dfl_drv(drv);
->>     const struct dfl_device_id *id_entry = dfl_drv->id_table;
->>
->>     while (id_entry->feature_id) {
->>         if (dfl_match_one_device(id_entry, dfl_dev)) {
->>             dfl_dev->id_entry = id_entry;
->>             return 1;
->>         }
->>         id_entry++;
->>     }
->>
->>     return 0;
->> }
->>
->> register_feature_matcher(&dfl_bus_match_default)
->>
->> static int dfl_bus_match(struct device *dev, struct device_driver *drv)
->> {
->>
->>     struct dfl_device *dfl_dev = to_dfl_dev(dev);
->>     struct dfl_driver *dfl_drv = to_dfl_drv(drv);
->>     const struct dfl_device_id *id_entry = dfl_drv->id_table;
->>
->>     while (id_entry->feature_id) {
->>
->>         matcher = Loop over matchers()
->>
->>         if (matcher(dev, drv)) {
->>             dfl_dev->id_entry = id_entry;
->>             return 1;
->>         }
->>         id_entry++;
->>     }
->>
->>     return 0;
->> }
->>
->> Or maybe use some of the unused bits in the dfl header to add a second
->> vendor-like id and change existing matcher to look feature_id and
->> vendor_like_id.
->>
->> Tom
->>
->>
->>
->> On 7/14/20 10:38 PM, Xu Yilun wrote:
->>> This patchset makes it possible to develop independent driver modules
->>> for DFL private features. It also helps to leverage existing kernel
->>> drivers to enable some IP blocks in DFL.
->>>
->>> Xu Yilun (2):
->>>   fpga: dfl: map feature mmio resources in their own feature drivers
->>>   fpga: dfl: create a dfl bus type to support DFL devices
->>>
->>>  Documentation/ABI/testing/sysfs-bus-dfl |  15 ++
->>>  drivers/fpga/dfl-pci.c                  |  21 +-
->>>  drivers/fpga/dfl.c                      | 435 +++++++++++++++++++++++++++-----
->>>  drivers/fpga/dfl.h                      |  91 ++++++-
->>>  4 files changed, 492 insertions(+), 70 deletions(-)
->>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
->>>
+Eric
 
