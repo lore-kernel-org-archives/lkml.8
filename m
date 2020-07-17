@@ -2,154 +2,148 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DECC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55376C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7D22064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD702064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:29:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="yIvI0olh"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pOJnlIP8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S3UsK4BQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbgGQT1M (ORCPT
+        id S1728630AbgGQT3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:27:12 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:64984 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727999AbgGQT1L (ORCPT
+        Fri, 17 Jul 2020 15:29:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42658 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727999AbgGQT3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:27:11 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HJQCto017519;
-        Fri, 17 Jul 2020 12:27:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=palg9+Cwha2/Apktwa1QnMjhU+VZ5A2f4++3ln+xwns=;
- b=yIvI0olhLxL+GCxtCsByQtsee2G7kmJ3VV3BQhuLvu5GhHG7lpkuXMUXVHf3BbxLezD2
- TsIpfTwVGg87FEfpJ+x7nPgKhIAgkisJdQcGPVfWPnQb8G5GqaX/l82ykKEc8vIDg8YJ
- ImIPXSsfBV7i6MjZuCf4mz8V5Ou0ablKXPpV2VCuFNbP2/KHvfe1K4LaR7eFmkz0c0hd
- VnWTOnxE0LhphSIIgAXROuNBDToENRhXHUcGhi6wHDr53yh58OVqg7LouIUZLqQNdTlV
- xENcg15GgfTTyOD9brFweYFu9Zbuol1z9SQfh8prLh1tQ6C2c9h5neEVTl4WLPmHwGAw qQ== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 32ap7ven3u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 12:27:09 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 17 Jul
- 2020 12:27:07 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 17 Jul 2020 12:27:08 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id F0B703F7041;
-        Fri, 17 Jul 2020 12:27:03 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Denis Bolotin <dbolotin@marvell.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
-        <QLogic-Storage-Upstream@marvell.com>, <netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next 10/13] qed: add support for new port modes
-Date:   Fri, 17 Jul 2020 22:26:33 +0300
-Message-ID: <20200717192633.181-1-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200717113155.1a9234b3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-References: <20200717113155.1a9234b3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200716115446.994-1-alobakin@marvell.com>
- <20200716115446.994-11-alobakin@marvell.com>
- <20200716181853.502dd619@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <27939848-7e83-2897-36f9-44f47d1bfb9c@marvell.com>
+        Fri, 17 Jul 2020 15:29:40 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595014176;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=epByd5xUArlj64sAwQwDhQ0ku+RyRhUcoJ9aqhT7QZw=;
+        b=pOJnlIP89W85WkeayXUyvnSOlcLSwC7H0IKBi1adAhCjyZQZ8ap6hcFeAxrRMuyl1bvCK8
+        fZBnF4fLXYdvGFo7FgMdfTl0+ojF3kR37ClLv1hxwtHQ7xyGCK2EF2yfVVA+aXgRxqCFdP
+        l6b7H6h9JE8w+01yq5WbN5fvxjqB6r8KvyUgRblFhgz8TtN9hiWijxCTYcHrGfXdFny+Pi
+        HJdaz4269YX7A7nbjjwigVzIWHldKqmV7j7lCHnHSd/Q0jet3cbrMUuP3Wze/YGVxOJpMD
+        gkDKGeGFG2fAah6fjoVEesLSQxklUa3S7TeYLtc+MfphKcrIarcQ7RCILa/k1g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595014176;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=epByd5xUArlj64sAwQwDhQ0ku+RyRhUcoJ9aqhT7QZw=;
+        b=S3UsK4BQe5+3DBSPnvpLNIWCaUaYjdBOdD/TwxDOUdmqfUwFqJXlwPMQl+PDTogKSBkfSx
+        8KaURcHGtkWfcXCg==
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry functionality
+In-Reply-To: <202007171045.FB4A586F1D@keescook>
+References: <20200716182208.180916541@linutronix.de> <20200716185424.011950288@linutronix.de> <202007161336.B993ED938@keescook> <87d04vt98w.fsf@nanos.tec.linutronix.de> <202007171045.FB4A586F1D@keescook>
+Date:   Fri, 17 Jul 2020 21:29:36 +0200
+Message-ID: <87mu3yq6sf.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_09:2020-07-17,2020-07-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Date: Fri, 17 Jul 2020 11:31:55 -0700
-From: Jakub Kicinski <kuba@kernel.org>
+Kees Cook <keescook@chromium.org> writes:
+> On Thu, Jul 16, 2020 at 11:55:59PM +0200, Thomas Gleixner wrote:
+>> Kees Cook <keescook@chromium.org> writes:
+>> >> +/*
+>> >> + * Define dummy _TIF work flags if not defined by the architecture or for
+>> >> + * disabled functionality.
+>> >> + */
+>> >
+>> > When I was thinking about this last week I was pondering having a split
+>> > between the arch-agnositc TIF flags and the arch-specific TIF flags, and
+>> > that each arch could have a single "there is agnostic work to be done"
+>> > TIF in their thread_info, and the agnostic flags could live in
+>> > task_struct or something. Anyway, I'll keep reading...
+>> 
+>> That's going to be nasty. We rather go and expand the TIF storage to
+>> 64bit. And then do the following in a generic header:
+>
+> I though the point was to make the TIF_WORK check as fast as possible,
+> even on the 32-bit word systems. I mean it's not a huge performance hit,
+> but *shrug*
 
-> On Fri, 17 Jul 2020 13:49:33 +0300 Igor Russkikh wrote:
->>> ----------------------------------------------------------------------
->>> On Thu, 16 Jul 2020 14:54:43 +0300 Alexander Lobakin wrote:  
->>>> These ports ship on new boards revisions and are supported by newer
->>>> firmware versions.
->>>>
->>>> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
->>>> Signed-off-by: Igor Russkikh <irusskikh@marvell.com>  
->>> 
->>> What is the driver actually doing with them, tho?
->>> 
->>> Looks like you translate some firmware specific field to a driver
->>> specific field, but I can't figure out what part of the code cares
->>> about hw_info.port_mode  
->> 
->> Hi Jakub,
->> 
->> You are right, this info is never used/reported.
->> 
->> Alexander is extending already existing non used field with new values from
->> our latest hardware revisions.
->> 
->> I thought devlink info could be a good place to output such kind of information.
->> 
->> Thats basically a layout of *Physical* ports on device - quite useful info I
->> think.
->> 
->> Important thing is these ports may not be directly mapped to PCI PFs. So
->> reading `ethtool eth*` may not explain you the real device capabilities.
->> 
->> Do you think it makes sense adding such info to `devlink info` then?
->
-> Devlink port has information about physical port, which don't have to
-> map 1:1 to netdevs. It also has lanes and port splitting which you may
-> want to report.
->
->
-> For now please make sure to not include any dead code in your
-> submissions (register defines etc. may be okay), perhaps try:
+For 64bit it's definitely faster to have 64bit flags.
 
-I think it would be better to drop this struct member at all since it's
-really not used anywhere. There'll be no problem to add it back anytime
-we might need it, but for now it seems unreasonable to keep it "just in
-case".
+For 32bit it's debatable whether having to fiddle with two words and
+taking care about ordering is faster or not. It's a pain on 32bit in any
+case.
 
-Got it, thanks, will send v2 soon.
+But what we can do is distangle the flags into those which really need
+to be grouped into a single 32bit TIF word and architecture specific
+ones which can live in a different place.
 
-> diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-> index d929556247a5..4bad836d0f74 100644
-> --- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-> +++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-> @@ -4026,6 +4026,21 @@ static int qed_hw_get_nvm_info(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
->  	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G:
->  		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_4X25G;
->  		break;
-> +	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X50G_R1:
-> +	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_4X50G_R1:
-> +	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R2:
-> +	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X100G_R2:
-> +	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R4:
-> +		/* TODO: set port_mode when it's actually used */
-> +		break;
->  	default:
->  		DP_NOTICE(p_hwfn, "Unknown port mode in 0x%08x\n", core_cfg);
->  		break;
->
-> And see if it will pass the muster.
->
-> Dead code makes it harder to review the patches.
+Looking at x86 which has the most pressure on TIF bits:
+
+Real TIF bits
+TIF_SYSCALL_TRACE       Entry/exit
+TIF_SYSCALL_TRACEPOINT	Entry/exit
+TIF_NOTIFY_RESUME       Entry/exit
+TIF_SIGPENDING          Entry/exit
+TIF_NEED_RESCHED        Entry/exit
+TIF_SINGLESTEP          Entry/exit
+TIF_SYSCALL_EMU         Entry/exit
+TIF_SYSCALL_AUDIT       Entry/exit
+TIF_SECCOMP             Entry/exit
+TIF_USER_RETURN_NOTIFY	Entry/exit      (x86 specific)
+TIF_UPROBE		Entry/exit
+TIF_PATCH_PENDING       Entry/exit
+TIF_POLLING_NRFLAG      Scheduler (related to TIF_NEED_RESCHED)
+TIF_MEMDIE              Historical, but not required to be a real one
+TIF_FSCHECK		Historical, but not required to be a real one
+
+Context switch group
+TIF_NOCPUID             X86 Context switch
+TIF_NOTSC               X86 Context switch
+TIF_SLD                 X86 Context switch
+TIF_BLOCKSTEP           X86 Context switch
+TIF_IO_BITMAP           X86 Context switch + Entry/exit (see below)
+TIF_NEED_FPU_LOAD       X86 Context switch + Entry/exit (see below)
+TIF_SSBD                X86 Context switch
+TIF_SPEC_IB             X86 Context switch
+TIF_SPEC_FORCE_UPDATE   X86 Context switch
+
+No group requirements
+TIF_IA32                X86 random
+TIF_FORCED_TF           X86 random
+TIF_LAZY_MMU_UPDATES    X86 random
+TIF_ADDR32              X86 random
+TIF_X32                 X86 random
+
+So the only interesting ones are TIF_IO_BITMAP and TIF_NEED_FPU_LOAD,
+but those are really not required to be in the real TIF group because
+they are independently evaluated _after_ the real TIF flags on exit to
+user space and that requires a reread of the flags anyway. So if we put
+the context switch and the random bits into a seperate word right after
+thread_info->flags then the second word is in the same cacheline and it
+wont matter. That way we gain plenty of free bits on 32 bit and have no
+dependency between the two words at all.
+
+The alternative is to play nasty games with TIF_IA32, TIF_ADDR32 and
+TIF_X32 to free up bits for 32bit and make the flags field 64 bit on 64
+bit kernels, but I prefer to do the above seperation.
+
+Thanks,
+
+        tglx
