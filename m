@@ -2,304 +2,428 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2618C433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B61C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBDA82070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEABF2064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 19:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bJS9Y8xb"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Dxz/h+2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgGQTMD (ORCPT
+        id S1728532AbgGQTLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:12:03 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1403 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbgGQTMB (ORCPT
+        Fri, 17 Jul 2020 15:11:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728376AbgGQTLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:12:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f11f7c40001>; Fri, 17 Jul 2020 12:11:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 17 Jul 2020 12:12:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 17 Jul 2020 12:12:00 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Jul
- 2020 19:11:59 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 17 Jul 2020 19:11:59 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.163.115]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f11f7fe0001>; Fri, 17 Jul 2020 12:11:59 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <luca@lucaceresoli.net>, <leonl@leopardimaging.com>,
-        <robh+dt@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/3] media: i2c: imx274: Add IMX274 power on and off sequence
-Date:   Fri, 17 Jul 2020 12:15:22 -0700
-Message-ID: <1595013322-15077-3-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
-References: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 17 Jul 2020 15:11:35 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B07A0C0619D6
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 12:11:34 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a6so7743149wmm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 12:11:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ANR3bM9WoDNZme2eXqbjD+VVwWr+Pg7y8IOcp52zafo=;
+        b=Dxz/h+2QtpKfi2V2MIRiLWspHxKnBOb+LTZCJQJcXrLXbCTI/zzk8g0vMz6lbwpirD
+         RJgzZIfyprhgCbX7khnO37bOshkA0CO+OVqolpIod43sL+Y/1xK7beL9EgNaXDtd+1JG
+         dVPoXc1C6hxeY1Z/gFQco1LhxYZxHIFaqOKNw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ANR3bM9WoDNZme2eXqbjD+VVwWr+Pg7y8IOcp52zafo=;
+        b=Kqnzzk4T9v1qNOT6SQuicY2uL5Dw/jf/CeWNf19dH1tGeji00qD3ymoKwF1sLmnmR/
+         IlYgFClaiU3aMkHPYzMNcFIrPdsakDH22tBVp7wqQ6yOxDei2XF09aIYlb8Q8S1gHZed
+         toJWAr+wd2gWrTyprt6xozHTJNMIOKLx97VX5qOFOlxlQUnQ/RzDjAgX2SoQTbq1kMfk
+         jQoBNXaLLb8ehp559VdebMdDRz8iGPnUpeNErcYrkJj6tJqctK0mi2LICsXbTPKcQDbf
+         IUQuqBxzi+LO4y5DPNkb4t5G5ShC0FgQPgrzhb6GsQZVfDTzCoCDptrp76QC0GAFf02R
+         QOhQ==
+X-Gm-Message-State: AOAM530NpYrA2cwKl0hjT2SGDpbEHP9eLl55HQMpcgm9x2ejSfRQTEsy
+        ycET8NexhFoSv+0O1clxcRvQ/ek0ELXfcVsVPHbXKfplInZ3ZML8YuHzVG7KhXraSu9yBCnhK1m
+        EQsHsyuMOh9TDIzlI4q/2QJB16IoXtxELLWwa8ZKUqkAcgTyZqpK0jc6YE7WRUqnk2+U6ycGli8
+        DMGRwznFUq
+X-Google-Smtp-Source: ABdhPJxlrNLen9A3t/vx46qqIt/YgXG8pswjfadJMYTKEoR7BaUCnM8+uSX2YSwpVqtlfY0BhaM18A==
+X-Received: by 2002:a7b:c0da:: with SMTP id s26mr9985824wmh.96.1595013092984;
+        Fri, 17 Jul 2020 12:11:32 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id d132sm15249820wmd.35.2020.07.17.12.11.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 12:11:32 -0700 (PDT)
+Subject: Re: [PATCH 05/13] fs/kernel_read_file: Split into separate source
+ file
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        James Morris <jmorris@namei.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200717174309.1164575-1-keescook@chromium.org>
+ <20200717174309.1164575-6-keescook@chromium.org>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <b574b926-58f3-0f4c-0bbc-1ca978836917@broadcom.com>
+Date:   Fri, 17 Jul 2020 12:11:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595013060; bh=boIvlrIG2qx41G9zjbey4MygAAMCqMjJQzTJ18Zg5mk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=bJS9Y8xb6VvtxfhFTwdZDiBJ6i32INrBvfuyigyXBuwjhoYX2BbDLm1hGxS9hxQve
-         HRfme8lDSqahhvaSrXdkkH4VNEwztHGzi6Q1t8jpW/+TFFQHxkeP4p4FvMt9WGMBWq
-         FqZTgeb0ic02lWjg7rRgDhOl4fSgvaC01ZFV+3GfHwCznUuezQphXSIZGuvLtfPz0P
-         5dj84UYgvKvQH7SuIItAiBevLel53dEFg9sw9W6CmB73aAz9S9P+MSY/Zv7PWpv7Us
-         Q6nU1i6KyE2kIgdxy6G+tbQEFI3FM7kTGhiLcjMsm75ExF6LsssHx6shIHHtr+SxEH
-         k0WF8SR1E1N4g==
+In-Reply-To: <20200717174309.1164575-6-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IMX274 has VANA analog 2.8V supply, VDIG digital core 1.8V supply,
-and VDDL digital io 1.2V supply which are optional based on camera
-module design.
 
-IMX274 also need external 24Mhz clock and is optional based on
-camera module design.
 
-This patch adds support for IMX274 power on and off to enable and
-disable these supplies and external clock.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/media/i2c/imx274.c | 135 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 132 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
-index 55869ff..c3f7bcd 100644
---- a/drivers/media/i2c/imx274.c
-+++ b/drivers/media/i2c/imx274.c
-@@ -19,6 +19,7 @@
- #include <linux/module.h>
- #include <linux/of_gpio.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/v4l2-mediabus.h>
- #include <linux/videodev2.h>
-@@ -27,6 +28,8 @@
- #include <media/v4l2-device.h>
- #include <media/v4l2-subdev.h>
- 
-+#define IMX274_DEFAULT_CLK_FREQ			24000000
-+
- /*
-  * See "SHR, SVR Setting" in datasheet
-  */
-@@ -131,6 +134,15 @@
- #define IMX274_TABLE_WAIT_MS			0
- #define IMX274_TABLE_END			1
- 
-+/* regulator supplies */
-+static const char * const imx274_supply_names[] = {
-+	"VDDL",  /* IF (1.2V) supply */
-+	"VDIG",  /* Digital Core (1.8V) supply */
-+	"VANA",  /* Analog (2.8V) supply */
-+};
-+
-+#define IMX274_NUM_SUPPLIES ARRAY_SIZE(imx274_supply_names)
-+
- /*
-  * imx274 I2C operation related structure
-  */
-@@ -501,6 +513,8 @@ struct imx274_ctrls {
-  * @frame_rate: V4L2 frame rate structure
-  * @regmap: Pointer to regmap structure
-  * @reset_gpio: Pointer to reset gpio
-+ * @supplies: imx274 analog and digital supplies
-+ * @inck: input clock to imx274
-  * @lock: Mutex structure
-  * @mode: Parameters for the selected readout mode
-  */
-@@ -514,6 +528,8 @@ struct stimx274 {
- 	struct v4l2_fract frame_interval;
- 	struct regmap *regmap;
- 	struct gpio_desc *reset_gpio;
-+	struct regulator *supplies[IMX274_NUM_SUPPLIES];
-+	struct clk *inck;
- 	struct mutex lock; /* mutex lock for operations */
- 	const struct imx274_mode *mode;
- };
-@@ -767,6 +783,98 @@ static void imx274_reset(struct stimx274 *priv, int rst)
- 	usleep_range(IMX274_RESET_DELAY1, IMX274_RESET_DELAY2);
- }
- 
-+/*
-+ * imx274_power_on - Function called to power on the sensor
-+ * @imx274: Pointer to device structure
-+ */
-+static int imx274_power_on(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct stimx274 *imx274 = to_imx274(sd);
-+	int i, ret;
-+
-+	ret = clk_prepare_enable(imx274->inck);
-+	if (ret) {
-+		dev_err(&imx274->client->dev, "Failed to enable clock\n");
-+		return ret;
-+	}
-+
-+	for (i = 0; i < IMX274_NUM_SUPPLIES; i++) {
-+		if (imx274->supplies[i]) {
-+			ret = regulator_enable(imx274->supplies[i]);
-+			if (ret < 0) {
-+				dev_err(&imx274->client->dev,
-+					"Failed to enable %s supply: %d\n",
-+					imx274_supply_names[i], ret);
-+				goto fail_reg;
-+			}
-+		}
-+	}
-+
-+	usleep_range(1, 2);
-+	imx274_reset(imx274, 1);
-+
-+	return 0;
-+
-+fail_reg:
-+	for (--i; i >= 0; i--) {
-+		if (imx274->supplies[i])
-+			regulator_disable(imx274->supplies[i]);
-+	}
-+
-+	clk_disable_unprepare(imx274->inck);
-+	return ret;
-+}
-+
-+/*
-+ * imx274_power_off - Function called to power off the sensor
-+ * @imx274: Pointer to device structure
-+ */
-+static int imx274_power_off(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct stimx274 *imx274 = to_imx274(sd);
-+	int i;
-+
-+	imx274_reset(imx274, 0);
-+
-+	for (i = 0; i < IMX274_NUM_SUPPLIES; i++) {
-+		if (imx274->supplies[i])
-+			regulator_disable(imx274->supplies[i]);
-+	}
-+
-+	clk_disable_unprepare(imx274->inck);
-+
-+	return 0;
-+}
-+
-+static int imx274_get_regulators(struct device *dev, struct stimx274 *imx274)
-+{
-+	int i, err;
-+	const char *supply;
-+
-+	for (i = 0; i < IMX274_NUM_SUPPLIES; i++) {
-+		supply = imx274_supply_names[i];
-+		imx274->supplies[i] = devm_regulator_get_optional(dev, supply);
-+		if (!IS_ERR(imx274->supplies[i]))
-+			continue;
-+		err = PTR_ERR(imx274->supplies[i]);
-+		if (err != -ENODEV) {
-+			if (err != -EPROBE_DEFER)
-+				dev_err(&imx274->client->dev,
-+					"Failed to get %s supply: %d\n",
-+					supply, err);
-+			return err;
-+		}
-+
-+		imx274->supplies[i] = NULL;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * imx274_s_ctrl - This is used to set the imx274 V4L2 controls
-  * @ctrl: V4L2 control to be set
-@@ -1836,6 +1944,13 @@ static int imx274_probe(struct i2c_client *client)
- 
- 	mutex_init(&imx274->lock);
- 
-+	imx274->inck = devm_clk_get_optional(&client->dev, "inck");
-+	ret = imx274_get_regulators(&client->dev, imx274);
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to get power regulators, err: %d\n", ret);
-+		return ret;
-+	}
-+
- 	/* initialize format */
- 	imx274->mode = &imx274_modes[IMX274_DEFAULT_BINNING];
- 	imx274->crop.width = IMX274_MAX_WIDTH;
-@@ -1883,15 +1998,26 @@ static int imx274_probe(struct i2c_client *client)
- 		goto err_me;
- 	}
- 
--	/* pull sensor out of reset */
--	imx274_reset(imx274, 1);
-+	/* power on the sensor */
-+	ret = imx274_power_on(&client->dev);
-+	if (ret < 0) {
-+		dev_err(&client->dev,
-+			"%s : imx274 power on failed\n", __func__);
-+		goto err_me;
-+	}
-+
-+	ret = clk_set_rate(imx274->inck, IMX274_DEFAULT_CLK_FREQ);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "Failed to set INCK clock rate\n");
-+		return ret;
-+	}
- 
- 	/* initialize controls */
- 	ret = v4l2_ctrl_handler_init(&imx274->ctrls.handler, 4);
- 	if (ret < 0) {
- 		dev_err(&client->dev,
- 			"%s : ctrl handler init Failed\n", __func__);
--		goto err_me;
-+		goto err_power_off;
- 	}
- 
- 	imx274->ctrls.handler.lock = &imx274->lock;
-@@ -1958,6 +2084,8 @@ static int imx274_probe(struct i2c_client *client)
- 
- err_ctrls:
- 	v4l2_ctrl_handler_free(&imx274->ctrls.handler);
-+err_power_off:
-+	imx274_power_off(&client->dev);
- err_me:
- 	media_entity_cleanup(&sd->entity);
- err_regmap:
-@@ -1975,6 +2103,7 @@ static int imx274_remove(struct i2c_client *client)
- 
- 	v4l2_async_unregister_subdev(sd);
- 	v4l2_ctrl_handler_free(&imx274->ctrls.handler);
-+	imx274_power_off(&client->dev);
- 	media_entity_cleanup(&sd->entity);
- 	mutex_destroy(&imx274->lock);
- 	return 0;
--- 
-2.7.4
+On 2020-07-17 10:43 a.m., Kees Cook wrote:
+> These routines are used in places outside of exec(2), so in preparation
+> for refactoring them, move them into a separate source file,
+> fs/kernel_read_file.c.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>   fs/Makefile           |   3 +-
+>   fs/exec.c             | 132 ----------------------------------------
+>   fs/kernel_read_file.c | 138 ++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 140 insertions(+), 133 deletions(-)
+>   create mode 100644 fs/kernel_read_file.c
+>
+> diff --git a/fs/Makefile b/fs/Makefile
+> index 2ce5112b02c8..a05fc247b2a7 100644
+> --- a/fs/Makefile
+> +++ b/fs/Makefile
+> @@ -13,7 +13,8 @@ obj-y :=	open.o read_write.o file_table.o super.o \
+>   		seq_file.o xattr.o libfs.o fs-writeback.o \
+>   		pnode.o splice.o sync.o utimes.o d_path.o \
+>   		stack.o fs_struct.o statfs.o fs_pin.o nsfs.o \
+> -		fs_types.o fs_context.o fs_parser.o fsopen.o
+> +		fs_types.o fs_context.o fs_parser.o fsopen.o \
+> +		kernel_read_file.o
+>   
+>   ifeq ($(CONFIG_BLOCK),y)
+>   obj-y +=	buffer.o block_dev.o direct-io.o mpage.o
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 07a7fe9ac5be..d619b79aab30 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -923,138 +923,6 @@ struct file *open_exec(const char *name)
+>   }
+>   EXPORT_SYMBOL(open_exec);
+>   
+> -int kernel_read_file(struct file *file, void **buf, loff_t *size,
+> -		     loff_t max_size, enum kernel_read_file_id id)
+> -{
+> -	loff_t i_size, pos;
+> -	ssize_t bytes = 0;
+> -	void *allocated = NULL;
+> -	int ret;
+> -
+> -	if (!S_ISREG(file_inode(file)->i_mode) || max_size < 0)
+> -		return -EINVAL;
+> -
+> -	ret = deny_write_access(file);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = security_kernel_read_file(file, id);
+> -	if (ret)
+> -		goto out;
+> -
+> -	i_size = i_size_read(file_inode(file));
+> -	if (i_size <= 0) {
+> -		ret = -EINVAL;
+> -		goto out;
+> -	}
+> -	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
+> -		ret = -EFBIG;
+> -		goto out;
+> -	}
+> -
+> -	if (!*buf)
+> -		*buf = allocated = vmalloc(i_size);
+> -	if (!*buf) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> -	}
+> -
+> -	pos = 0;
+> -	while (pos < i_size) {
+> -		bytes = kernel_read(file, *buf + pos, i_size - pos, &pos);
+> -		if (bytes < 0) {
+> -			ret = bytes;
+> -			goto out_free;
+> -		}
+> -
+> -		if (bytes == 0)
+> -			break;
+> -	}
+> -
+> -	if (pos != i_size) {
+> -		ret = -EIO;
+> -		goto out_free;
+> -	}
+> -
+> -	ret = security_kernel_post_read_file(file, *buf, i_size, id);
+> -	if (!ret)
+> -		*size = pos;
+> -
+> -out_free:
+> -	if (ret < 0) {
+> -		if (allocated) {
+> -			vfree(*buf);
+> -			*buf = NULL;
+> -		}
+> -	}
+> -
+> -out:
+> -	allow_write_access(file);
+> -	return ret;
+> -}
+> -EXPORT_SYMBOL_GPL(kernel_read_file);
+> -
+> -int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
+> -			       loff_t max_size, enum kernel_read_file_id id)
+> -{
+> -	struct file *file;
+> -	int ret;
+> -
+> -	if (!path || !*path)
+> -		return -EINVAL;
+> -
+> -	file = filp_open(path, O_RDONLY, 0);
+> -	if (IS_ERR(file))
+> -		return PTR_ERR(file);
+> -
+> -	ret = kernel_read_file(file, buf, size, max_size, id);
+> -	fput(file);
+> -	return ret;
+> -}
+> -EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
+> -
+> -int kernel_read_file_from_path_initns(const char *path, void **buf,
+> -				      loff_t *size, loff_t max_size,
+> -				      enum kernel_read_file_id id)
+> -{
+> -	struct file *file;
+> -	struct path root;
+> -	int ret;
+> -
+> -	if (!path || !*path)
+> -		return -EINVAL;
+> -
+> -	task_lock(&init_task);
+> -	get_fs_root(init_task.fs, &root);
+> -	task_unlock(&init_task);
+> -
+> -	file = file_open_root(root.dentry, root.mnt, path, O_RDONLY, 0);
+> -	path_put(&root);
+> -	if (IS_ERR(file))
+> -		return PTR_ERR(file);
+> -
+> -	ret = kernel_read_file(file, buf, size, max_size, id);
+> -	fput(file);
+> -	return ret;
+> -}
+> -EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
+> -
+> -int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
+> -			     enum kernel_read_file_id id)
+> -{
+> -	struct fd f = fdget(fd);
+> -	int ret = -EBADF;
+> -
+> -	if (!f.file)
+> -		goto out;
+> -
+> -	ret = kernel_read_file(f.file, buf, size, max_size, id);
+> -out:
+> -	fdput(f);
+> -	return ret;
+> -}
+> -EXPORT_SYMBOL_GPL(kernel_read_file_from_fd);
+> -
+>   #if defined(CONFIG_HAVE_AOUT) || defined(CONFIG_BINFMT_FLAT) || \
+>       defined(CONFIG_BINFMT_ELF_FDPIC)
+>   ssize_t read_code(struct file *file, unsigned long addr, loff_t pos, size_t len)
+> diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
+> new file mode 100644
+> index 000000000000..54d972d4befc
+> --- /dev/null
+> +++ b/fs/kernel_read_file.c
+> @@ -0,0 +1,138 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <linux/fs.h>
+> +#include <linux/fs_struct.h>
+> +#include <linux/kernel_read_file.h>
+> +#include <linux/security.h>
+> +#include <linux/vmalloc.h>
+> +
+> +int kernel_read_file(struct file *file, void **buf, loff_t *size,
+> +		     loff_t max_size, enum kernel_read_file_id id)
+> +{
+> +	loff_t i_size, pos;
+> +	ssize_t bytes = 0;
+> +	void *allocated = NULL;
+> +	int ret;
+> +
+> +	if (!S_ISREG(file_inode(file)->i_mode) || max_size < 0)
+> +		return -EINVAL;
+> +
+> +	ret = deny_write_access(file);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = security_kernel_read_file(file, id);
+> +	if (ret)
+> +		goto out;
+> +
+> +	i_size = i_size_read(file_inode(file));
+> +	if (i_size <= 0) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
+> +		ret = -EFBIG;
+> +		goto out;
+> +	}
+> +
+> +	if (!*buf)
+> +		*buf = allocated = vmalloc(i_size);
+> +	if (!*buf) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	pos = 0;
+> +	while (pos < i_size) {
+> +		bytes = kernel_read(file, *buf + pos, i_size - pos, &pos);
+> +		if (bytes < 0) {
+> +			ret = bytes;
+> +			goto out_free;
+> +		}
+> +
+> +		if (bytes == 0)
+> +			break;
+> +	}
+> +
+> +	if (pos != i_size) {
+> +		ret = -EIO;
+> +		goto out_free;
+> +	}
+> +
+> +	ret = security_kernel_post_read_file(file, *buf, i_size, id);
+> +	if (!ret)
+> +		*size = pos;
+> +
+> +out_free:
+> +	if (ret < 0) {
+> +		if (allocated) {
+> +			vfree(*buf);
+> +			*buf = NULL;
+> +		}
+> +	}
+> +
+> +out:
+> +	allow_write_access(file);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(kernel_read_file);
+> +
+> +int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
+> +			       loff_t max_size, enum kernel_read_file_id id)
+> +{
+> +	struct file *file;
+> +	int ret;
+> +
+> +	if (!path || !*path)
+> +		return -EINVAL;
+> +
+> +	file = filp_open(path, O_RDONLY, 0);
+> +	if (IS_ERR(file))
+> +		return PTR_ERR(file);
+> +
+> +	ret = kernel_read_file(file, buf, size, max_size, id);
+> +	fput(file);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
+> +
+> +int kernel_read_file_from_path_initns(const char *path, void **buf,
+> +				      loff_t *size, loff_t max_size,
+> +				      enum kernel_read_file_id id)
+> +{
+> +	struct file *file;
+> +	struct path root;
+> +	int ret;
+> +
+> +	if (!path || !*path)
+> +		return -EINVAL;
+> +
+> +	task_lock(&init_task);
+> +	get_fs_root(init_task.fs, &root);
+> +	task_unlock(&init_task);
+> +
+> +	file = file_open_root(root.dentry, root.mnt, path, O_RDONLY, 0);
+> +	path_put(&root);
+> +	if (IS_ERR(file))
+> +		return PTR_ERR(file);
+> +
+> +	ret = kernel_read_file(file, buf, size, max_size, id);
+> +	fput(file);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
+> +
+> +int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
+> +			     enum kernel_read_file_id id)
+> +{
+> +	struct fd f = fdget(fd);
+> +	int ret = -EBADF;
+> +
+> +	if (!f.file)
+> +		goto out;
+> +
+> +	ret = kernel_read_file(f.file, buf, size, max_size, id);
+> +out:
+> +	fdput(f);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(kernel_read_file_from_fd);
 
