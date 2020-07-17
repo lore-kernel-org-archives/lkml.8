@@ -2,117 +2,99 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9037C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9FD92063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A252076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:34:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594978448;
+	bh=mIhGLiufJ6/BMsDdvDFYl28TDS9pc3qUvHLrRoX6ZhE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YjVmrCu19Mbcvb2IO425dsAdWjeyW6Z7DuN44+ImcTrgTmcqDWC4Cz5F3QkH8udv9
+	 Rw/T16qWLLbx1GfWHwfsfYiXJSTn76GDmWAykzQhW+oCjkGmSzhGFiPlQ4Ebgj2sUu
+	 etQsyfnWST9BfLiIsy3czNi0KoPb0hQtLTL+G4/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgGQJb2 (ORCPT
+        id S1726090AbgGQJeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:31:28 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:35474 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725912AbgGQJb1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:31:27 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U2zo7Ok_1594978280;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U2zo7Ok_1594978280)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 17 Jul 2020 17:31:21 +0800
-Subject: Re: [PATCH v16 14/22] mm/thp: add tail pages into lru anyway in
- split_huge_page()
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
-        kirill@shutemov.name
-Cc:     =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila@nextfour.com>
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
- <1594429136-20002-15-git-send-email-alex.shi@linux.alibaba.com>
-Message-ID: <d478a44b-c598-e99b-d438-9387f208ad37@linux.alibaba.com>
-Date:   Fri, 17 Jul 2020 17:30:27 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Fri, 17 Jul 2020 05:34:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgGQJeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:34:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5718F2063A;
+        Fri, 17 Jul 2020 09:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594978445;
+        bh=mIhGLiufJ6/BMsDdvDFYl28TDS9pc3qUvHLrRoX6ZhE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b/KeB+YGDwp013yo7IEmGlJQ0quhL0ArbMiL1/cmtqv3B8x8OvqvwjMYwPFyNEfPU
+         99g9fqWXuU1fHr9/mT1Bhgi0wcfg5OVsE9wxRVLuWzleq4o0SJMWHqwnl0CVay2DtI
+         lXkxo5RWxUsrJNIJE2TlBMyEpQ+wloD5z78Dzsn0=
+Date:   Fri, 17 Jul 2020 11:33:57 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     stable@vger.kernel.org, arnd@arndb.de, sashal@kernel.org,
+        naresh.kamboju@linaro.org, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [Stable-5.4][PATCH 0/3] arm64: Allow the compat vdso to be
+ disabled at runtime
+Message-ID: <20200717093357.GA2371446@kroah.com>
+References: <20200715125614.3240269-1-maz@kernel.org>
+ <20200716115813.GB1668009@kroah.com>
+ <c9f5b2b0512067b128dd5c98acc5db7e@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1594429136-20002-15-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c9f5b2b0512067b128dd5c98acc5db7e@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 17, 2020 at 09:02:06AM +0100, Marc Zyngier wrote:
+> Hi Greg,
+> 
+> On 2020-07-16 12:58, Greg KH wrote:
+> > On Wed, Jul 15, 2020 at 01:56:11PM +0100, Marc Zyngier wrote:
+> > > This is a backport of the series that recently went into 5.8. Note
+> > > that the first patch is more a complete rewriting than a backport, as
+> > > the vdso implementation in 5.4 doesn't have much in common with
+> > > mainline. This affects the 32bit arch code in a benign way.
+> > > 
+> > > It has seen very little testing, as I don't have the HW that triggers
+> > > this issue. I have run it in VMs by faking the CPU MIDR, and nothing
+> > > caught fire. Famous last words.
+> > 
+> > These are also needed in 5.7.y, right?  If so, I need that series before
+> > I can take this one as we don't want people moving to a newer kernel and
+> > suffer regressions :(
+> 
+> The original mainline changes:
+> 
+> 4b661d6133c5 arm64: arch_timer: Disable the compat vdso for cores affected
+> by ARM64_WORKAROUND_1418040
+> c1fbec4ac0d7 arm64: arch_timer: Allow an workaround descriptor to disable
+> compat vdso
+> 97884ca8c292 arm64: Introduce a way to disable the 32bit vdso
+> 
+> do apply cleanly to stable-5.7. Do you want me to resend them separately,
+> or will you pick the patches directly from mainline?
 
-Add a VM_WARN_ON for tracking. and updated comments for the code.
-
-Thanks
-
----
-From f1381a1547625a6521777bf9235823d8fbd00dac Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Fri, 10 Jul 2020 16:54:37 +0800
-Subject: [PATCH v16 14/22] mm/thp: add tail pages into lru anyway in
- split_huge_page()
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Split_huge_page() must start with PageLRU(head), and we are holding the
-lru_lock here. If the head was cleared lru bit unexpected, tracking it.
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Mika Penttilä <mika.penttila@nextfour.com>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/huge_memory.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index d866b6e43434..28538444197b 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2348,15 +2348,19 @@ static void lru_add_page_tail(struct page *head, struct page *page_tail,
- 	VM_BUG_ON_PAGE(PageLRU(page_tail), head);
- 	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
- 
--	if (!list)
--		SetPageLRU(page_tail);
--
--	if (likely(PageLRU(head)))
--		list_add_tail(&page_tail->lru, &head->lru);
--	else if (list) {
-+	if (list) {
- 		/* page reclaim is reclaiming a huge page */
- 		get_page(page_tail);
- 		list_add_tail(&page_tail->lru, list);
-+	} else {
-+		/*
-+		 * Split start from PageLRU(head), and we are holding the
-+		 * lru_lock.
-+		 * Do a warning if the head's lru bit was cleared unexpected.
-+		 */
-+		VM_WARN_ON(!PageLRU(head));
-+		SetPageLRU(page_tail);
-+		list_add_tail(&page_tail->lru, &head->lru);
- 	}
- }
- 
--- 
-1.8.3.1
+Hm, cherry-pick seems to work due to file renames, let me try this
+again...
 
