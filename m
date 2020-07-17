@@ -2,131 +2,158 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894CFC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8057C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68AC82067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EFA2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LHmet0PT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ha9xdr5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgGQNa4 (ORCPT
+        id S1726968AbgGQNau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:30:56 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:30134 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726848AbgGQNat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:30:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594992648; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=YQ4zTOzVY7tD8+0LunMnnTS0zV8fWFiSWwGe3hpL4w0=; b=LHmet0PTh4d0fM8Tt5CNQK4Th70DJV2plFrJasbXLgp0hrYsrDsPv8qXC/W5Z5YoO69c2QhX
- sugZIqMAAHAOP0FDU+VjFvwJZRxXi/Zosw0VTEVjtt4vhl/BGovjW9KeRTVpvMszUQqp7ANf
- 9h4AZmN2HkuVRIJnqw4M+cxRO+M=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-west-2.postgun.com with SMTP id
- 5f11a7ea75eeb235f684d45b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 13:30:18
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 62904C43395; Fri, 17 Jul 2020 13:30:18 +0000 (UTC)
-Received: from akhilpo-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A8527C433AF;
-        Fri, 17 Jul 2020 13:30:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A8527C433AF
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
-        smasetty@codeaurora.org, devicetree@vger.kernel.org,
-        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
-        viresh.kumar@linaro.org, jonathan@marek.ca, robdclark@gmail.com,
-        bjorn.andersson@linaro.org
-Subject: [PATCH v6 6/6] arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU opp
-Date:   Fri, 17 Jul 2020 18:59:39 +0530
-Message-Id: <1594992579-20662-7-git-send-email-akhilpo@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
-References: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
+        Fri, 17 Jul 2020 09:30:50 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39676 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbgGQNas (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:30:48 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HDUBdD052006;
+        Fri, 17 Jul 2020 08:30:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594992611;
+        bh=1f8QGphM1gDJrV+uk7tlCewgRrYPd1fn7gpp9JJzAS0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ha9xdr5caMQ9HSqkgqjaXI0k7GcV8aBYkZVJoojL6WdL76SULLHnqN4n5Cnbu+7UY
+         4MOoHS+0GxySsIzt2rER4QqPCgy0ULc20vce7m80L8iJ3C/fRJotuqmRmiXopISStW
+         h7lgUhYZwakuVgqgfdxwO+LzgMTPky5kVFMnA6BM=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDUBup075551;
+        Fri, 17 Jul 2020 08:30:11 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
+ Jul 2020 08:30:11 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 17 Jul 2020 08:30:11 -0500
+Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HDU5Ld051528;
+        Fri, 17 Jul 2020 08:30:09 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <linux-watchdog@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <jan.kiszka@siemens.com>
+Subject: [PATCHv4 2/4] watchdog: add support for adjusting last known HW keepalive time
+Date:   Fri, 17 Jul 2020 16:29:56 +0300
+Message-ID: <20200717132958.14304-3-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200717132958.14304-1-t-kristo@ti.com>
+References: <20200717132958.14304-1-t-kristo@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sharat Masetty <smasetty@codeaurora.org>
+Certain watchdogs require the watchdog only to be pinged within a
+specific time window, pinging too early or too late cause the watchdog
+to fire. In cases where this sort of watchdog has been started before
+kernel comes up, we must adjust the watchdog keepalive window to match
+the actually running timer, so add a new driver API for this purpose.
 
-Add opp-peak-kBps bindings to the GPU opp table, listing the peak
-GPU -> DDR bandwidth requirement for each opp level. This will be
-used to scale the DDR bandwidth along with the GPU frequency dynamically.
-
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../watchdog/watchdog-kernel-api.rst          | 12 ++++++++
+ drivers/watchdog/watchdog_dev.c               | 30 +++++++++++++++++++
+ include/linux/watchdog.h                      |  2 ++
+ 3 files changed, 44 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 80fe54b..ff4ddf1 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1479,36 +1479,43 @@
- 				opp-800000000 {
- 					opp-hz = /bits/ 64 <800000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+					opp-peak-kBps = <8532000>;
- 				};
+diff --git a/Documentation/watchdog/watchdog-kernel-api.rst b/Documentation/watchdog/watchdog-kernel-api.rst
+index 068a55ee0d4a..baf44e986b07 100644
+--- a/Documentation/watchdog/watchdog-kernel-api.rst
++++ b/Documentation/watchdog/watchdog-kernel-api.rst
+@@ -336,3 +336,15 @@ an action is taken by a preconfigured pretimeout governor preassigned to
+ the watchdog device. If watchdog pretimeout governor framework is not
+ enabled, watchdog_notify_pretimeout() prints a notification message to
+ the kernel log buffer.
++
++To set the last known HW keepalive time for a watchdog, the following function
++should be used::
++
++  int watchdog_set_last_hw_keepalive(struct watchdog_device *wdd,
++                                     unsigned int last_ping_ms)
++
++This function must be called immediately after watchdog registration. It
++sets the last known hardware heartbeat to have happened last_ping_ms before
++current time. Calling this is only needed if the watchdog is already running
++when probe is called, and the watchdog can only be pinged after the
++min_hw_heartbeat_ms time has passed from the last ping.
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index bc1cfa288553..e74a0c6811b5 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -1138,6 +1138,36 @@ void watchdog_dev_unregister(struct watchdog_device *wdd)
+ 	watchdog_cdev_unregister(wdd);
+ }
  
- 				opp-650000000 {
- 					opp-hz = /bits/ 64 <650000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+					opp-peak-kBps = <7216000>;
- 				};
++/*
++ *	watchdog_set_last_hw_keepalive: set last HW keepalive time for watchdog
++ *	@wdd: watchdog device
++ *	@last_ping_ms: time since last HW heartbeat
++ *
++ *	Adjusts the last known HW keepalive time for a watchdog timer.
++ *	This is needed if the watchdog is already running when the probe
++ *	function is called, and it can't be pinged immediately. This
++ *	function must be called immediately after watchdog registration,
++ *	and min_hw_heartbeat_ms must be set for this to be useful.
++ */
++int watchdog_set_last_hw_keepalive(struct watchdog_device *wdd,
++				   unsigned int last_ping_ms)
++{
++	struct watchdog_core_data *wd_data;
++	ktime_t now;
++
++	if (!wdd)
++		return -EINVAL;
++
++	wd_data = wdd->wd_data;
++
++	now = ktime_get();
++
++	wd_data->last_hw_keepalive = ktime_sub(now, ms_to_ktime(last_ping_ms));
++
++	return __watchdog_ping(wdd);
++}
++EXPORT_SYMBOL_GPL(watchdog_set_last_hw_keepalive);
++
+ /*
+  *	watchdog_dev_init: init dev part of watchdog core
+  *
+diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+index 1464ce6ffa31..9b19e6bb68b5 100644
+--- a/include/linux/watchdog.h
++++ b/include/linux/watchdog.h
+@@ -210,6 +210,8 @@ extern int watchdog_init_timeout(struct watchdog_device *wdd,
+ extern int watchdog_register_device(struct watchdog_device *);
+ extern void watchdog_unregister_device(struct watchdog_device *);
  
- 				opp-565000000 {
- 					opp-hz = /bits/ 64 <565000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+					opp-peak-kBps = <5412000>;
- 				};
++int watchdog_set_last_hw_keepalive(struct watchdog_device *, unsigned int);
++
+ /* devres register variant */
+ int devm_watchdog_register_device(struct device *dev, struct watchdog_device *);
  
- 				opp-430000000 {
- 					opp-hz = /bits/ 64 <430000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+					opp-peak-kBps = <5412000>;
- 				};
- 
- 				opp-355000000 {
- 					opp-hz = /bits/ 64 <355000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+					opp-peak-kBps = <3072000>;
- 				};
- 
- 				opp-267000000 {
- 					opp-hz = /bits/ 64 <267000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+					opp-peak-kBps = <3072000>;
- 				};
- 
- 				opp-180000000 {
- 					opp-hz = /bits/ 64 <180000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+					opp-peak-kBps = <1804000>;
- 				};
- 			};
- 		};
 -- 
-2.7.4
+2.17.1
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
