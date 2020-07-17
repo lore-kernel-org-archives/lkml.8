@@ -2,99 +2,167 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25893C433F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89668C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0111207EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:01:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595001684;
-	bh=2ZbkrZccM4GRyeKL6L2cvwgpAuoXXOK43VqdE71mHdI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WiR6t2HL7viWp2Hz5DHKA4S4aB9ZFdUk/x6J+VHlIRCotav5uNZDRhhZzfs68a5Am
-	 0kEGVWfiRlC/vK+CXLtb73li7J8xnMGk1fop+URLpTdeLvZd4KQTWELVmg+xauLejG
-	 pZ/cOZKFuQm+8+XaEnJavrdPwJRPrc1w/zH36A08=
+	by mail.kernel.org (Postfix) with ESMTP id 6A1F6204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:02:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiErbZBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgGQQBW (ORCPT
+        id S1726820AbgGQQCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:01:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbgGQQA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:00:59 -0400
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.194.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D068206BE;
-        Fri, 17 Jul 2020 16:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595001658;
-        bh=2ZbkrZccM4GRyeKL6L2cvwgpAuoXXOK43VqdE71mHdI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yY+WDOnJn57BkxkmLI/zXIHgVNyIueEkL1qmzCzjz6EXM9kj/vLVBnOmeI9+WhhwC
-         2AQAJOOnqG+Twne9wJOK4duq90eNzhI9yFHicouK22DDAXAD0fgu+hWAIRMGunipXw
-         ZQg+t/RfgdUGD5TVuS3hYRC/RMtr9nryBUSbknjg=
-Received: by wens.tw (Postfix, from userid 1000)
-        id 29FD45FD44; Sat, 18 Jul 2020 00:00:55 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/8] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Fix CPU supply voltages
-Date:   Sat, 18 Jul 2020 00:00:48 +0800
-Message-Id: <20200717160053.31191-4-wens@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200717160053.31191-1-wens@kernel.org>
-References: <20200717160053.31191-1-wens@kernel.org>
+        Fri, 17 Jul 2020 12:02:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbgGQQCi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:02:38 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86646C0619D2;
+        Fri, 17 Jul 2020 09:02:38 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t6so5612139plo.3;
+        Fri, 17 Jul 2020 09:02:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kQQY75f1lwYr//B5FuZk+rYcaijF15RsL6V2AzTXG6s=;
+        b=SiErbZBCO4LyV40LgzLyuLsyk3Gy1CIrJI47k1tgmH2nSIij3507i2xnBKBmEP8FUo
+         XLLTBmoJOYxEhzlZOJoRpBKMUWYdF7pVp3BdDz4ZR3CrYybT5pMQyBDBjMnqkok/V13J
+         CYuF/nJmfr/RsIiMBJhAjdVCp6uUBQE3ig39l1d75qj1PV35c9zMh0jQUO28UoDV1mMi
+         yfazmoR+h1b5a0KHFPScXD/nCZRWsEvfBeCp/xKPqS/u1TlX+oteecm2h2TMW6jc11Cm
+         aqXKe59AO4qws7o3LCVWJq1kcVR93s4YVx/1axBDxWNoIR3yLo1ZI15QPUq2gwMANWj8
+         b3Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kQQY75f1lwYr//B5FuZk+rYcaijF15RsL6V2AzTXG6s=;
+        b=AiuzgN+ztnoQzLC7kb8En0AOFwRyY9RzGDsWjY//eEJZHh/0FzY3U1bG888NqP7gZc
+         Y5JOjxT4ETKlKK8qHhRpOPj+E/CuEbUO1hRmSURvnGLfGLwT1kVXZoknYqajbHrovlB4
+         09VaXq4tCYZ75KeeorRwmA5q7O+qdWXnDI1K4jfGzlu2F2LmpLAD09X4Jqqxbl3gTz/s
+         W7zD3qc7a7YN9vcdiJDcuOTdvsgAEbaIaN1tR43A2SU1SiJCsiorbWAcD3OpeCV30ZWj
+         d7xgv2TsPnxhqDLUBAdS+QFNqGwISWOCJ+SMHGyuHbqHBJlPYKw0NGCWCOrDS5MK3Qil
+         +oUQ==
+X-Gm-Message-State: AOAM531VenlouGMNoIrjzLRq94WUCHyBbVUYaJ5sYKMWpCXipqLiJ1pX
+        2QvK6vhHhoeSA/COIuFBqL0=
+X-Google-Smtp-Source: ABdhPJyIKIaBLIJKoCAh+OVZfiRxAQl2eDqu7Wxzg/1MIUQJrfmb5Gqr/gT6KYTgQSt5/1gpdKQLTQ==
+X-Received: by 2002:a17:90b:4ac3:: with SMTP id mh3mr11140785pjb.0.1595001757606;
+        Fri, 17 Jul 2020 09:02:37 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id p10sm7619131pgn.6.2020.07.17.09.02.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 09:02:36 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 09:02:34 -0700
+From:   'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
+To:     jingle <jingle.wu@emc.com.tw>
+Cc:     'linux-kernel' <linux-kernel@vger.kernel.org>,
+        'linux-input' <linux-input@vger.kernel.org>,
+        'phoenix' <phoenix@emc.com.tw>,
+        "'josh.chen'" <josh.chen@emc.com.tw>,
+        "'kai.heng.feng'" <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH 2/2] Input: elan_i2c - Modify the IAP related functio n
+ for page sizes 128, 512 bytes.
+Message-ID: <20200717160234.GE1665100@dtor-ws>
+References: <20200714105641.15151-1-jingle.wu@emc.com.tw>
+ <20200716053912.GB1665100@dtor-ws>
+ <1594880123.69588.jingle.wu@emc.com.tw>
+ <20200717012719.GC1665100@dtor-ws>
+ <20200717061010.GD1665100@dtor-ws>
+ <002c01d65c14$bccb9c10$3662d430$@emc.com.tw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <002c01d65c14$bccb9c10$3662d430$@emc.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+Hi Jingle,
 
-The Bananapi M2+ uses a GPIO line to change the effective resistance of
-the CPU supply regulator's feedback resistor network. The voltages
-described in the device tree were given directly by the vendor. This
-turns out to be slightly off compared to the real values.
+On Fri, Jul 17, 2020 at 04:31:58PM +0800, jingle wrote:
+> Hi Dmitry:
+> 
+> 1. 
+> 
+> In this function elan_get_fwinfo().
+> 
+> +static int elan_get_fwinfo(u16 ic_type, u8 iap_version, u8 pattern,
+> +			   u16 *validpage_count, u32 *signature_address,
+> +			   u16 *page_size)
+>  {
+> -	switch (ic_type) {
+> +	u16 type = pattern >= 0x01 ? ic_type : iap_version;
+> +
+> +	switch (type) {
+> 
+> This iap_version in pattern0 is read from this command
+> ETP_I2C_IAP_VERSION_CMD_OLD ,it is not from this command
+> ETP_I2C_IAP_VERSION.
+> So u16 type = pattern >= 0x01 ? ic_type : iap_version; <- wrong
+> 
+> 2. In this "static int elan_i2c_prepare_fw_update(struct i2c_client *client,
+> u16 ic_type, u8 iap_version)" function.
+> The ic is old pattern must be modify correct ic_type. (cmd is
+> ETP_I2C_IAP_VERSION)
 
-The updated voltages are based on calculations of the feedback resistor
-network, and verified down to three decimal places with a multi-meter.
+I see. It looks like there is some confusion on my part between IAP
+version, IC type, and the commands that we want to use. Please let me
+know if I understand this correctly:
 
-Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+- For patterns >=1 (newer)
+  IAP version is retrieved with ETP_I2C_IAP_VERSION_CMD
+  IC type is fetched with ETP_I2C_IC_TYPE_CMD
+  Version comes from ETP_I2C_NSM_VERSION_CMD
 
-diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-index a628b5ee72b6..235994a4a2eb 100644
---- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-+++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-@@ -16,12 +16,12 @@ reg_vdd_cpux: vdd-cpux {
- 		regulator-type = "voltage";
- 		regulator-boot-on;
- 		regulator-always-on;
--		regulator-min-microvolt = <1100000>;
--		regulator-max-microvolt = <1300000>;
-+		regulator-min-microvolt = <1108475>;
-+		regulator-max-microvolt = <1308475>;
- 		regulator-ramp-delay = <50>; /* 4ms */
- 		gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
- 		gpios-states = <0x1>;
--		states = <1100000 0>, <1300000 1>;
-+		states = <1108475 0>, <1308475 1>;
- 	};
- };
- 
--- 
-2.27.0
+- For pattern 0 (old)
+  Before your patches
+    IAP version was using ETP_I2C_IAP_VERSION_CMD (and you are saying
+    it is wrong)
+    Version comes from 1st byte of ETP_I2C_OSM_VERSION_CMD
+    IC type comes from 2nd byte of ETP_I2C_OSM_VERSION_CMD (and you are
+    saying it is some other bit of data - what is it then?)
 
+  After your patches
+    IAP version is retrieved with ETP_I2C_IAP_VERSION_CMD_OLD
+    Version comes from 1st byte of ETP_I2C_OSM_VERSION_CMD
+    IC type is retrieved with ETP_I2C_IAP_VERSION_CMD (should we rename
+    it then?)
+
+So the difference is where the the IC type is coming from for old
+patterns. However, as I mentioned, we have the following body of code:
+
+static int elan_check_ASUS_special_fw(struct elan_tp_data *data)
+{
+	if (data->ic_type == 0x0E) {
+		switch (data->product_id) {
+		case 0x05 ... 0x07:
+		case 0x09:
+		case 0x13:
+			return true;
+		}
+	} else if (data->ic_type == 0x08 && data->product_id == 0x26) {
+		/* ASUS EeeBook X205TA */
+		return true;
+	}
+
+	return false;
+}
+
+And before your patches ic_type here would be the 2nd byte of response
+to ETP_I2C_OSM_VERSION_CMD for older devices and my concern that
+replacing it with data from ETP_I2C_IAP_VERSION_CMD would break these
+checks.
+
+We need to reconcile what we have in this function with what you are
+proposing for firmware update code.
+
+Thanks,
+Dmitry
