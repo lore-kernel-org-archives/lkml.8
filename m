@@ -2,86 +2,116 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36BDC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7FA222B48
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:28:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594967331;
-	bh=/zDpcXferlVtWyvGBk0RCp/EESwPvxFdFmaWT7IB5mc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QaaJ/QIhnARaO5KBgur/U6sOej4ur/mBW5UKARHbipirxhXnAWWXAsc49TvzDpiL0
-	 Fke1mNBucphE6HowNma2sZeljK/bf0CS9zX59r7yP2LmMiNjwUAD/nKb+5utgxyW27
-	 9ISxVTj2L3ulSVhFJWNwPh9Wv/pPzw2Ntp+AUPX8=
+	by mail.kernel.org (Postfix) with ESMTP id CB68321744
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgGQG2u (ORCPT
+        id S1726988AbgGQGaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:28:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33200 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 02:30:39 -0400
+Received: from mga07.intel.com ([134.134.136.100]:39197 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgGQG2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:28:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAD6E21744;
-        Fri, 17 Jul 2020 06:28:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594967329;
-        bh=/zDpcXferlVtWyvGBk0RCp/EESwPvxFdFmaWT7IB5mc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mGn1qhG01OHqEEHQJUEmSuu/sVsHpdMBOUDRld0QlkpUsFb/3GgPZE0v1HXL4MOss
-         SQafuUuYSS91Vd2p+yKKuMTKGVA0cE4/Jd5hrN52gyaFFA9lmL9DHqkXRZOmqzOh9l
-         BXjcHxfLYZELw3WeZyuKI6/fdZ+kFeV4tMPKAcBI=
-Date:   Fri, 17 Jul 2020 08:28:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Gutson <daniel.gutson@eclypsium.com>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>
-Subject: Re: [PATCH] [PATCH] Firmware security information in SYSFS
-Message-ID: <20200717062841.GA3238569@kroah.com>
-References: <20200716223627.253936-1-daniel.gutson@eclypsium.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716223627.253936-1-daniel.gutson@eclypsium.com>
+        id S1726949AbgGQGah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:30:37 -0400
+IronPort-SDR: fwt5JJyieXYUaUOq0y8l+QWJer3JQ3z+Dne//9vkQhuNLaLDqR2nO2G2HTQKT+lmCM9NJ8oFAq
+ 6vyd5jcOGwow==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="214265104"
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="214265104"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 23:30:36 -0700
+IronPort-SDR: V+I1YajGvqWNa7xnfS7WNmctSlHkrktGf2f63Z60Svc+gPmOswOJmuF6SkYPFOAucX+X8ZCyki
+ Eszccvo5MhOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="486372672"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Jul 2020 23:30:33 -0700
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     broonie@kernel.org, robh@kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, daniel.schwierzeck@gmail.com,
+        hauke@hauke-m.de, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v2 3/8] spi: lantiq: Move interrupt control register offesets to SoC specific data structure
+Date:   Fri, 17 Jul 2020 14:27:52 +0800
+Message-Id: <f0f9723a30ea9c2ee48d2199f7512af9e15803b0.1594957019.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
+References: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
+In-Reply-To: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
+References: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 07:36:27PM -0300, Daniel Gutson wrote:
-> +What:		/sys/kernel/firmware-security/bioswe
+Address of Interrupt control registers are different on new chipsets.
+So move them to SoC specific data structure.
 
-Ick, I stopped reading right here.
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+---
+ drivers/spi/spi-lantiq-ssc.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-No, this is not where this belongs.
+diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
+index 1073a70a4beba..98e1c5d807597 100644
+--- a/drivers/spi/spi-lantiq-ssc.c
++++ b/drivers/spi/spi-lantiq-ssc.c
+@@ -50,8 +50,6 @@
+ #define LTQ_SPI_RXCNT		0x84
+ #define LTQ_SPI_DMACON		0xec
+ #define LTQ_SPI_IRNEN		0xf4
+-#define LTQ_SPI_IRNICR		0xf8
+-#define LTQ_SPI_IRNCR		0xfc
+ 
+ #define LTQ_SPI_CLC_SMC_S	16	/* Clock divider for sleep mode */
+ #define LTQ_SPI_CLC_SMC_M	(0xFF << LTQ_SPI_CLC_SMC_S)
+@@ -159,8 +157,10 @@
+ #define LTQ_SPI_IRNEN_ALL	0x1F
+ 
+ struct lantiq_ssc_hwcfg {
+-	unsigned int irnen_r;
+-	unsigned int irnen_t;
++	unsigned int	irnen_r;
++	unsigned int	irnen_t;
++	unsigned int	irncr;
++	unsigned int	irnicr;
+ };
+ 
+ struct lantiq_ssc_spi {
+@@ -793,13 +793,17 @@ static int lantiq_ssc_transfer_one(struct spi_master *master,
+ }
+ 
+ static const struct lantiq_ssc_hwcfg lantiq_ssc_xway = {
+-	.irnen_r = LTQ_SPI_IRNEN_R_XWAY,
+-	.irnen_t = LTQ_SPI_IRNEN_T_XWAY,
++	.irnen_r	= LTQ_SPI_IRNEN_R_XWAY,
++	.irnen_t	= LTQ_SPI_IRNEN_T_XWAY,
++	.irnicr		= 0xF8,
++	.irncr		= 0xFC,
+ };
+ 
+ static const struct lantiq_ssc_hwcfg lantiq_ssc_xrx = {
+-	.irnen_r = LTQ_SPI_IRNEN_R_XRX,
+-	.irnen_t = LTQ_SPI_IRNEN_T_XRX,
++	.irnen_r	= LTQ_SPI_IRNEN_R_XRX,
++	.irnen_t	= LTQ_SPI_IRNEN_T_XRX,
++	.irnicr		= 0xF8,
++	.irncr		= 0xFC,
+ };
+ 
+ static const struct of_device_id lantiq_ssc_match[] = {
+-- 
+2.11.0
 
-We already have /sys/firmware/, right?  And firmware-specific
-subdirectories below that.
-
-We also have /sys/devices/system/ and I think that would be a much
-better place for this, as it is easier to work with a real 'struct
-device' than a "raw" kobject any day.  Bonus is you get full support of
-userspace libraries when you do that, unlike when dealing with kobjects.
-
-Also, this really is a _SPECIFIC_ type of firmware that supports these
-features, right?  Why not call that out too?  This is not generic by any
-means.
-
-thanks,
-
-greg k-h
