@@ -2,197 +2,142 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5B6C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7307C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58F06207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 962EC20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594980508;
+	bh=gCGv+BOdErj4My2s2UtMojCmurB5s1x7zRohk6RLUzg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NLeKFnSXHICERN+olt1WlEzjgFpYXlUf/OL2M+YP7vGEZfG3J9h1EXti9mVCI5z/G
+	 SvOZM6Tk8P9yp5RVOpOhDHlr/zBptfSJweQofFmYk27pDKmz5ZwSL2juNv4jJQ2vwx
+	 6sHwOM8agkYLl6QMeUr3uQM5bOyLOmG8j+SObbNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgGQKIb (ORCPT
+        id S1726557AbgGQKI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:08:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:48054 "EHLO foss.arm.com"
+        Fri, 17 Jul 2020 06:08:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726201AbgGQKI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:08:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0042D6E;
-        Fri, 17 Jul 2020 03:08:28 -0700 (PDT)
-Received: from bogus (unknown [10.37.8.134])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18BAE3F66E;
-        Fri, 17 Jul 2020 03:08:26 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 11:08:23 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>,
-        "Paul J. Murphy" <paul.j.murphy@linux.intel.com>,
-        "Paul J. Murphy" <paul.j.murphy@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-Subject: Re: [PATCH] firmware: arm_scmi: Pass shmem address to SMCCC call
-Message-ID: <20200717100823.GB24501@bogus>
-References: <20200715165518.57558-1-daniele.alessandrelli@linux.intel.com>
- <5f74221b-aec7-7715-19d1-5cbb406f1bdc@gmail.com>
- <b4d22e4a5154a9ad4c224eb2dfaeb61ed1680834.camel@linux.intel.com>
+        id S1725932AbgGQKI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 06:08:26 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0072F20768;
+        Fri, 17 Jul 2020 10:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594980505;
+        bh=gCGv+BOdErj4My2s2UtMojCmurB5s1x7zRohk6RLUzg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E6hU5MZXfGTBkrenCHz4AuJpso3SHUOFQjex6kcXUXbdJ0/KjKb9tVTA1Epy43buQ
+         vfq+qI4mSA5Ly1blOiEypsLlhD6v7X4YvSs8qQF0AxQJTREqfX6PU2C7UAHpU7OQca
+         DW7fjdkZfS3Bpq/Man22UEi3CfmOdVHI7pHAippk=
+Date:   Fri, 17 Jul 2020 11:08:21 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     hannes@cmpxchg.org, catalin.marinas@arm.com, will.deacon@arm.com,
+        akpm@linux-foundation.org, xuyu@linux.alibaba.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org
+Subject: Re: [v2 PATCH] mm: avoid access flag update TLB flush for retried
+ page fault
+Message-ID: <20200717100820.GB8673@willie-the-truck>
+References: <1594848990-55657-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b4d22e4a5154a9ad4c224eb2dfaeb61ed1680834.camel@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1594848990-55657-1-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 03:13:03PM +0100, Daniele Alessandrelli wrote:
-> Hi Florian,
->
-> Thanks for you feedback.
->
-> On Wed, 2020-07-15 at 15:43 -0700, Florian Fainelli wrote:
-> >
-> > On 7/15/2020 9:55 AM, Daniele Alessandrelli wrote:
-> > > From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-> > >
-> > > Currently, when SMC/HVC is used as transport, the base address of
-> > > the
-> > > shared memory used for communication is not passed to the SMCCC
-> > > call.
-> > > This means that such an address must be hard-coded into the
-> > > bootloader.
-> > >
-> > > In order to increase flexibility and allow the memory layout to be
-> > > changed without modifying the bootloader, this patch adds the
-> > > shared
-> > > memory base address to the a1 argument of the SMCCC call.
-> > >
-> > > On the Secure Monitor side, the service call implementation can
-> > > therefore read the a1 argument in order to know the location of the
-> > > shared memory to use. This change is backward compatible to
-> > > existing
-> > > service call implementations as long as they don't check for a1 to
-> > > be
-> > > zero.
-> >
-> > resource_size_t being defined after phys_addr_t, its size is
-> > different
-> > between 32-bit, 32-bit with PAE and 64-bit so it would probably make
-> > more sense to define an physical address alignment, or maybe an
-> > address
-> > that is in multiple of 4KBytes so you can address up to 36-bits of
-> > physical address even on a 32-bit only system?
->
-> I see your point. After a quick look, I think that, practically, the
-> issue is with ARM32 LPAE addresses, for which phys_addr_t is a u64. So,
-> basically, for AArch32 systems with LPAE the 64-bit shmem_paddr gets
-> truncated to 32-bit when it's passed to the SMC32/HVC32 call.
->
-> To solve that, I would prefer splitting the address between two SMC
-> parameters (a1 = addr_lo, a2 = addr_hi), instead of imposing an
-> arbitrary alignment. Would that be reasonable?
->
+On Thu, Jul 16, 2020 at 05:36:30AM +0800, Yang Shi wrote:
+> Recently we found regression when running will_it_scale/page_fault3 test
+> on ARM64.  Over 70% down for the multi processes cases and over 20% down
+> for the multi threads cases.  It turns out the regression is caused by commit
+> 89b15332af7c0312a41e50846819ca6613b58b4c ("mm: drop mmap_sem before
+> calling balance_dirty_pages() in write fault").
+> 
+> The test mmaps a memory size file then write to the mapping, this would
+> make all memory dirty and trigger dirty pages throttle, that upstream
+> commit would release mmap_sem then retry the page fault.  The retried
+> page fault would see correct PTEs installed by the first try then update
+> dirty bit and clear read-only bit and flush TLBs for ARM.  The regression is
+> caused by the excessive TLB flush.  It is fine on x86 since x86 doesn't
+> clear read-only bit so there is no need to flush TLB for this case.
+> 
+> The page fault would be retried due to:
+> 1. Waiting for page readahead
+> 2. Waiting for page swapped in
+> 3. Waiting for dirty pages throttling
+> 
+> The first two cases don't have PTEs set up at all, so the retried page
+> fault would install the PTEs, so they don't reach there.  But the #3
+> case usually has PTEs installed, the retried page fault would reach the
+> dirty bit and read-only bit update.  But it seems not necessary to
+> modify those bits again for #3 since they should be already set by the
+> first page fault try.
+> 
+> Of course the parallel page fault may set up PTEs, but we just need care
+> about write fault.  If the parallel page fault setup a writable and dirty
+> PTE then the retried fault doesn't need do anything extra.  If the
+> parallel page fault setup a clean read-only PTE, the retried fault should
+> just call do_wp_page() then return as the below code snippet shows:
+> 
+> if (vmf->flags & FAULT_FLAG_WRITE) {
+>         if (!pte_write(entry))
+>             return do_wp_page(vmf);
+> }
+> 
+> With this fix the test result get back to normal.
+> 
+> Fixes: 89b15332af7c ("mm: drop mmap_sem before calling balance_dirty_pages() in write fault")
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Reported-by: Xu Yu <xuyu@linux.alibaba.com>
+> Debugged-by: Xu Yu <xuyu@linux.alibaba.com>
+> Tested-by: Xu Yu <xuyu@linux.alibaba.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+> v2: * Incorporated the comment from Will Deacon.
+>     * Updated the commit log per the discussion.
+> 
+>  mm/memory.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 87ec87c..e93e1da 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -4241,8 +4241,14 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+>  	if (vmf->flags & FAULT_FLAG_WRITE) {
+>  		if (!pte_write(entry))
+>  			return do_wp_page(vmf);
+> -		entry = pte_mkdirty(entry);
+>  	}
+> +
+> +	if (vmf->flags & FAULT_FLAG_TRIED)
+> +		goto unlock;
+> +
+> +	if (vmf->flags & FAULT_FLAG_WRITE)
+> +		entry = pte_mkdirty(entry);
+> +
 
-Again beware of the fact that this is vendor SiP FID space of SMCCC.
-Standardising that informally inside the Linux kernel is already bit
-risky and challenging. I don't want to complicate it with above
-splitting of address way.
 
-> >
-> > What discovery mechanism does the OS have that the specified address
-> > within the SMCCC call has been accepted by the firmware given the
-> > return
-> > value of that SMCCC call does not appear to be used or checked? Do we
-> > just expect a timeout initializing the SCMI subsystem?
->
-> The return code is actually checked at the end of the function:
-> https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/firmware/arm_scmi/smc.c#L118
->
-> But in the meantime scmi_rx_callback() has already been called. Not
-> sure if that's intentional or a possible bug.
->
+Thanks, this looks better to me.
 
-Yes, thanks for the catch. Not sure if it was intentional, Peng ?
-Even if it was I would like to fix as it is unnecessary to read response
-from shmem which may have garbage or the input itself when the command
-returns error.
+Andrew -- please can you update the version in your tree?
 
-> >
-> > Given that the kernel must somehow reserve this memory as a shared
-> > memory area for obvious reasons, and the trusted firmware must also
-> > ensure it treats this memory region with specific permissions in its
-> > translation regime, does it really make sense to give that much
-> > flexibility?
->
-> Well, the trusted firmware might reserve a bigger region to be used for
-> other service as well. In other words, the MMU of TF-A is not necessary
-> specifically set up for this region, but, possibly, for a bigger
-> general shared region.
->
-> Passing the SCMI shmem to the SMC call allows the shmem to be moved
-> within such bigger shared memory without modifying the trusted
-> firmware.
->
+Cheers,
 
-I am not entirely sure about this. I see this base address here as a
-unique identifier referred in the SCMI specification(5.1.3.1 Doorbell):
-
-"If the doorbell is SMC or HVC based, it should follow the SMC Calling
-Convention [SMCCC]. The doorbell needs to provide the identifier of
-the Shared Memory area that contains the payload. The Shared Memory area
-containing the payload is updated with the SCMI return response when the
-call returns. The identifier of the Shared Memory area should be 32-bits
-and each identifier should map to a distinct Shared Memory area."
-
-Sorry I seem to have missed the 32-bit part here when I said yes for
-using address as the identifier. I wasn't explicit before when I said
-I was OK for the address as 2nd parameter.
-
-Now I recall that I was thinking about additional/optional property from
-DT for this identifier, absence of which will be passing 0 as the id.
-
-> >
-> > If your boot loader has FDT patching capability, maybe it can also do
-> > a
-> > SMC call to provide the address to your trusted firmware, prior to
-> > loading the Linux kernel, and then they both agree, prior to boot
-> > about
-> > the shared memory address?
->
-> Yes, that's a possible solution, but it looks more complicated to me,
-> since it adds an additional component (the boot loader) to the
-> equation, while the goal of this patch was to reduce the coupling
-> between components (namely the DT/kernel and the trusted firmware).
->
-
-I agree with you too along with Florian's idea but I don't want to
-rely on that in the kernel.
-
-> I guess my question is: if we fix the handling of LPAE addresses and
-> the SMC return code, what is the drawback of having the shmem address
-> passed to the SMC?
->
-
-My main worry is the 32-bit identifier as specified in the spec now. I
-had missed that aspect in the spec when I agreed to use the address.
-
-> Anyway, I should have mentioned this in the commit message (sorry for
-> not doing so), but I submitted this patch because initial feedback from
-> Sudeep was positive [1]; but if there is no consensus around it I'm
-> fine with dropping it.
->
-> [1] https://lore.kernel.org/lkml/20200710075931.GB1189@bogus/
->
-
-Yes I am fine with the idea of adding identifier for distinguishing the
-shmem if there are multiple channels. I haven't brought the idea of
-changing that address w/o modifying TFA/firmware as IMO it is not that
-simple. Florian has covered the reasons for the same already.
-
---
-Regards,
-Sudeep
+Will
