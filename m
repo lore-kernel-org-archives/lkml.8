@@ -2,177 +2,160 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2853C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A540C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8E0320739
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2578B20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vTt6/yYc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qRocWK+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgGQVRI (ORCPT
+        id S1726834AbgGQVSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 17:17:08 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:34578 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgGQVRH (ORCPT
+        Fri, 17 Jul 2020 17:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgGQVSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 17:17:07 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200717211706euoutp02fab7d1efa300ce9d2a32faee323bb6be~ips7-oDzO1695016950euoutp02l
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 21:17:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200717211706euoutp02fab7d1efa300ce9d2a32faee323bb6be~ips7-oDzO1695016950euoutp02l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1595020626;
-        bh=axk5IGxg5wek4PUHhF+mZ0GxOxaDbbeSaF7m89FMM/Y=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=vTt6/yYcpOGISIpIaSKHYxyn4v1TsX6lIxpE3+MmvU7M/o39R4/mrGHi8Qp/KXHWq
-         4RjDRRVmnCR5NLwJI6sBOMVgJ68sQctfSGSdSg8M7eDw2tjXXeBYA548MMqbRtPeMd
-         7max5wOIt1q4jd5XsjS0gIVMW872y/RDLsryD2yA=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200717211705eucas1p1d26ce42722ffbd8451137ce3c30ca3b3~ips7ddgjD0501605016eucas1p1I;
-        Fri, 17 Jul 2020 21:17:05 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id B1.72.06456.155121F5; Fri, 17
-        Jul 2020 22:17:05 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200717211704eucas1p2192d6f38ba11691eff214a84cd3d4489~ips61H8xj0259702597eucas1p2U;
-        Fri, 17 Jul 2020 21:17:04 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200717211704eusmtrp1bc3f2dd68a6218ae5e80f4c504a3a939~ips60clzQ3040830408eusmtrp1b;
-        Fri, 17 Jul 2020 21:17:04 +0000 (GMT)
-X-AuditID: cbfec7f2-809ff70000001938-47-5f121551d02f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 20.26.06314.055121F5; Fri, 17
-        Jul 2020 22:17:04 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200717211704eusmtip25a9e83df205beba37224ad4211f71361~ips6UKHBJ0374603746eusmtip2H;
-        Fri, 17 Jul 2020 21:17:04 +0000 (GMT)
-Subject: Re: [PATCH] net: genetlink: Move initialization to core_initcall
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, davem@davemloft.net
-Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@mellanox.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <d67a4204-49c2-0184-b6fe-44d81dc4c129@samsung.com>
-Date:   Fri, 17 Jul 2020 23:17:04 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Fri, 17 Jul 2020 17:18:44 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B734FC0619D2;
+        Fri, 17 Jul 2020 14:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=emlnUk7RryteoQg6xYj1kkPbZ5GkUzfxyk9S6H+65WM=; b=qRocWK+BCrcBflwkZsro5GJ0vZ
+        0IoIJa7wj3mqklwECY4JKyEacxQ6M4j2Z0XVjbv3Ak2XDUBHkY6YscHvxhuRskvTDyYUdSGoOY7xJ
+        H1YwP5u+6aANH0h8N0KAqT3EjVogB0SeYnI2KucACTASgmyvP2QTSIXkNMjLhHBTbG689GX/d5B+l
+        E+he7Bo0PHqbdxRBqCz5A6Eqo7UAA+2EEYtaTMWpqRSBhHKRP/TGzZf/s6UJ/MZLI1MeMEJWpgBWc
+        DLsPmKfKhOO9xRKzNGlorTWez0Qiz0Vocf+ajiE8Db33pd/RhNqkDwpBrm21trYxgwhFkjtlcLz06
+        hRc5tUTA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwXke-0007oz-TN; Fri, 17 Jul 2020 21:18:41 +0000
+Subject: Re: [PATCH 07/25] Documentation: gpio/driver.h: fix sphinx warnings
+To:     Joe Perches <joe@perches.com>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>, corbet@lwn.net,
+        mchehab@kernel.org
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
+ <20200717185624.2009393-7-dwlsalmeida@gmail.com>
+ <684c5c2e-1b2d-bcb4-1320-a3a0dbed9b70@infradead.org>
+ <278ef62c230d69d51ca1bb4a0bbd978483f6f501.camel@perches.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <16d8378c-ab5b-7313-3cd9-be50181330a0@infradead.org>
+Date:   Fri, 17 Jul 2020 14:18:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200715074120.8768-1-daniel.lezcano@linaro.org>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <278ef62c230d69d51ca1bb4a0bbd978483f6f501.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPKsWRmVeSWpSXmKPExsWy7djP87qBokLxBqfniVnM+yxrMed8C4vF
-        nBdlFo9WzGK3uLCtj9Xi8q45bBZfnh9ntji2QMxi1YYuRgdOjy0rbzJ57Jx1l91j8Z6XTB6b
-        VnWyedy5tofN49n0w0weZxYcYff4vEkugCOKyyYlNSezLLVI3y6BK2Ppkd1MBQ8FKhp2/GJp
-        YLzK28XIySEhYCIx9/Ifti5GLg4hgRWMEtt3fGKEcL4wSvSsXg7lfGaUWL/jGDtMy/KGk0wQ
-        ieWMEhM2HmKHcN4zSmxpO87axcjBISzgKfH1rTBIg4iAs8SEK99YQGxmgYVMEn1TwWw2AUOJ
-        rrddbCA2r4CdxIXv78FaWQRUJXbPEgEJiwrESax/uZ0JokRQ4uTMJ2CtnEDly+c0sEGMlJfY
-        /nYOM4QtLnHryXwmiDuvsUv8uBgCYbtITHx6H+p+YYlXx7dA2TISpyf3sICcLyHQzCjx8Nxa
-        dginh1HictMMRogqa4k7536xgRzHLKApsX6XPkTYUWL9/x5mkLCEAJ/EjbeCEDfwSUzaNh0q
-        zCvR0SYEUa0mMev4Ori1By9cYp7AqDQLyWezkHwzC8k3sxD2LmBkWcUonlpanJueWmyYl1qu
-        V5yYW1yal66XnJ+7iRGYrE7/O/5pB+PXS0mHGAU4GJV4eDvWCMYLsSaWFVfmHmKU4GBWEuF1
-        Ons6Tog3JbGyKrUoP76oNCe1+BCjNAeLkjiv8aKXsUIC6YklqdmpqQWpRTBZJg5OqQbGxds6
-        jLUK372Rdjm15Apr1qt7Hdf9vfuk5z57fN3tUovMrCeu7PpOZw3aF/zTf7yW84IZa/DL29I/
-        UnnTfqSsqxP57v96etzEOGk1oceTWMM4vTiTHnWt7w/RT3A/32+ed/9E6na38Lcs9QaCC9eH
-        HP9fXXKI+eyrDbr+Xl7FZ8ufi6TvPp6pxFKckWioxVxUnAgAzNjrqFIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEIsWRmVeSWpSXmKPExsVy+t/xe7oBokLxBns6tCzmfZa1mHO+hcVi
-        zosyi0crZrFbXNjWx2pxedccNosvz48zWxxbIGaxakMXowOnx5aVN5k8ds66y+6xeM9LJo9N
-        qzrZPO5c28Pm8Wz6YSaPMwuOsHt83iQXwBGlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqln
-        aGwea2VkqqRvZ5OSmpNZllqkb5egl7H0yG6mgocCFQ07frE0MF7l7WLk5JAQMJFY3nCSqYuR
-        i0NIYCmjxKGzDWwQCRmJk9MaWCFsYYk/17rYIIreMkrc37aDsYuRg0NYwFPi61thkBoRAWeJ
-        CVe+sYDUMAssZpL4vWw5E0hCSMBW4tW234wgNpuAoUTX2y6wBbwCdhIXvr9nBZnDIqAqsXuW
-        CEhYVCBOYvmW+ewQJYISJ2c+YQGxOYHKl8+BuI1ZwExi3uaHzBC2vMT2t3OgbHGJW0/mM01g
-        FJqFpH0WkpZZSFpmIWlZwMiyilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzA+tx37uXkH46WN
-        wYcYBTgYlXh4O9YIxguxJpYVV+YeYpTgYFYS4XU6ezpOiDclsbIqtSg/vqg0J7X4EKMp0G8T
-        maVEk/OBqSOvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAOjZsfy
-        lEN+6ozKLtfiH0/uLxSbsMt8mzPz1UlsXY4r7CdNvmn+T/5GFv9RaZPPTt9zXHNEc3+tj/7F
-        9/zLD+8O2Q+XxTf0e6llygnX1RRfDNZaXG329uGbKueX2254XzdkPdwrymT5XG/Ou3bF3jCr
-        pzGL5P4FqJd/Wfnk54WcRRdSj0u/u5ukxFKckWioxVxUnAgACZn2luUCAAA=
-X-CMS-MailID: 20200717211704eucas1p2192d6f38ba11691eff214a84cd3d4489
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200717211704eucas1p2192d6f38ba11691eff214a84cd3d4489
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200717211704eucas1p2192d6f38ba11691eff214a84cd3d4489
-References: <20200715074120.8768-1-daniel.lezcano@linaro.org>
-        <CGME20200717211704eucas1p2192d6f38ba11691eff214a84cd3d4489@eucas1p2.samsung.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
-
-On 15.07.2020 09:41, Daniel Lezcano wrote:
-> The generic netlink is initialized far after the netlink protocol
-> itself at subsys_initcall. The devlink is initialized at the same
-> level, but after, as shown by a disassembly of the vmlinux:
->
-> [ ... ]
-> 374 ffff8000115f22c0 <__initcall_devlink_init4>:
-> 375 ffff8000115f22c4 <__initcall_genl_init4>:
-> [ ... ]
->
-> The function devlink_init() calls genl_register_family() before the
-> generic netlink subsystem is initialized.
->
-> As the generic netlink initcall level is set since 2005, it seems that
-> was not a problem, but now we have the thermal framework initialized
-> at the core_initcall level which creates the generic netlink family
-> and sends a notification which leads to a subtle memory corruption
-> only detectable when the CONFIG_INIT_ON_ALLOC_DEFAULT_ON option is set
-> with the earlycon at init time.
->
-> The thermal framework needs to be initialized early in order to begin
-> the mitigation as soon as possible. Moving it to postcore_initcall is
-> acceptable.
->
-> This patch changes the initialization level for the generic netlink
-> family to the core_initcall and comes after the netlink protocol
-> initialization.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-I confirm, that this change together with the thermal subsystem initcall 
-change fixes the issue observed in linux-next for the last few days.
-
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
+On 7/17/20 12:48 PM, Joe Perches wrote:
+> On Fri, 2020-07-17 at 12:37 -0700, Randy Dunlap wrote:
+>> On 7/17/20 11:56 AM, Daniel W. S. Almeida wrote:
+>>> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+>>>
+>>> Fix the following warnings:
+>>>
+>>> warning: Function parameter or member 'gc' not described in
+>>> 'gpiochip_add_data'
+>>>
+>>> warning: Excess function parameter 'chip' description in
+>>> 'gpiochip_add_data'
+>>>
+>>> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+>>
+>> Mauro has already fixed this one.
+> 
+> Not quite fixed though.
+> 
+> Both patches did not update the text for chip->base where
+> it should have been changed to gc->base
+> 
 > ---
->   net/netlink/genetlink.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
-> index 55ee680e9db1..36b8a1909826 100644
-> --- a/net/netlink/genetlink.c
-> +++ b/net/netlink/genetlink.c
-> @@ -1263,7 +1263,7 @@ static int __init genl_init(void)
->   	panic("GENL: Cannot register controller: %d\n", err);
->   }
->   
-> -subsys_initcall(genl_init);
-> +core_initcall(genl_init);
->   
->   static int genlmsg_mcast(struct sk_buff *skb, u32 portid, unsigned long group,
->   			 gfp_t flags)
+>  include/linux/gpio/driver.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index db82451776fc..91ae7ad8730d 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -497,7 +497,7 @@ extern int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  
+>  /**
+>   * gpiochip_add_data() - register a gpio_chip
+> - * @gc: the chip to register, with chip->base initialized
+> + * @gc: the chip to register, with gc->base initialized
+>   * @data: driver-private data associated with this chip
+>   *
+>   * Context: potentially before irqs will work
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+I had a patch for this but apparently I didn't send it since
+Mauro's patch had been merged. My patch is dated June 15-2020:
+
+
+From: Randy Dunlap <rdunlap@infradead.org>
+
+Fix kernel-doc warnings in <linux/gpio/driver.h>:
+
+../include/linux/gpio/driver.h:512: warning: Function parameter or member 'gc' not described in 'gpiochip_add_data'
+../include/linux/gpio/driver.h:512: warning: Excess function parameter 'chip' description in 'gpiochip_add_data'
+
+Fixes: 959bc7b22bd2 ("gpio: Automatically add lockdep keys")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+---
+MAURO!
+ include/linux/gpio/driver.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- linux-next-20200615.orig/include/linux/gpio/driver.h
++++ linux-next-20200615/include/linux/gpio/driver.h
+@@ -481,25 +481,25 @@ extern int gpiochip_add_data_with_key(st
+ 
+ /**
+  * gpiochip_add_data() - register a gpio_chip
+- * @chip: the chip to register, with chip->base initialized
++ * @gc: the gpio chip to register, with gc->base initialized
+  * @data: driver-private data associated with this chip
+  *
+  * Context: potentially before irqs will work
+  *
+  * When gpiochip_add_data() is called very early during boot, so that GPIOs
+- * can be freely used, the chip->parent device must be registered before
++ * can be freely used, the gc->parent device must be registered before
+  * the gpio framework's arch_initcall().  Otherwise sysfs initialization
+  * for GPIOs will fail rudely.
+  *
+  * gpiochip_add_data() must only be called after gpiolib initialization,
+  * ie after core_initcall().
+  *
+- * If chip->base is negative, this requests dynamic assignment of
++ * If gc->base is negative, this requests dynamic assignment of
+  * a range of valid GPIOs.
+  *
+  * Returns:
+  * A negative errno if the chip can't be registered, such as because the
+- * chip->base is invalid or already associated with a different chip.
++ * gc->base is invalid or already associated with a different chip.
+  * Otherwise it returns zero as a success code.
+  */
+ #ifdef CONFIG_LOCKDEP
+
+
+
 
