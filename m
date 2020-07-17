@@ -2,163 +2,130 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C010C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE45BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D40206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:21:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ACzxgl8p"
+	by mail.kernel.org (Postfix) with ESMTP id A027E20684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGQEVD (ORCPT
+        id S1726512AbgGQESv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:21:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725300AbgGQEVC (ORCPT
+        Fri, 17 Jul 2020 00:18:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35238 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725807AbgGQESv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:21:02 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6440BC061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:21:02 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f2so9573018wrp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vTU0fD0RqPTAMbppUiAJYQhElhFYod+EUa58MhwuRFg=;
-        b=ACzxgl8pWNw1qfxqU9+pYlrS4eR6a5e8McuQW2jb5q8hduM5b3kyZe5bs9+gGa8hL1
-         5FJtj/j+394vgNFHlQM2BW4bLEdoCF+hvyq4FnPvtaN4aX3i/NZ8W7szbOj6dDzcvx8M
-         105ReGcsasNaMMmppOs7r6YbsWyMAXlUhgWkN0PKnHnMLoleD5ljIbnU2JNlI0VNQ6hn
-         0mfgfFQO4eCe7L2o9yREBsMif2/QjWS24jxf0p8dmO/28uBfwiLo92hRfocfz8JAjyPN
-         G9AmS9LCbInhyHoihQp3JbZwc63+NvyBXrabUky7sSWI9WzW4HcpKbe0p9kw0VocDwoa
-         fN9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vTU0fD0RqPTAMbppUiAJYQhElhFYod+EUa58MhwuRFg=;
-        b=s97aKM0rAJ1D40loN7uwOPbxBY1WT/STun9TzflRu9lYH2Cla5uDHmnlOAev6Vl6PL
-         YlIGETG1TCdH+QQv4kxXSM2PkJOcgEX2YBq67skreGst6BQMJ+GlOaR8fZD+PMP8A5wk
-         DIZ5XkfiVrXtVl0hmF1AFCdoNux+A079kxHjS/2AwXQa4WgTDRLeXPHp9khHsfvzPlmi
-         sxJI9NHXdaHJ9gk/bpBH0cnrMoMyLudKreL4/RPHiRFITTiuRrvJYRcpmSt85qfabcNn
-         JegEpMqkyhxCAcqT/BAHq+wBj/8TxEg7OvXoFIX1fAat50H9FMbh6Vm8lNnj7VQBJ//y
-         NrnA==
-X-Gm-Message-State: AOAM530dt1y0SRY549zMCt1btPAlIuTDwnOrFFqU+DY2dLMpMhh86+eX
-        VaqdkMq8X3SdkdHRDuJgO/xSNQ==
-X-Google-Smtp-Source: ABdhPJwec3DisLdAS02+fUE6IczMefzHYliDuu268Dl6qCiJz8+nAomftZcYkwgKg4V15D7Jeop8BA==
-X-Received: by 2002:adf:dd83:: with SMTP id x3mr9050111wrl.292.1594959660912;
-        Thu, 16 Jul 2020 21:21:00 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
-        by smtp.googlemail.com with ESMTPSA id 138sm7175510wmb.1.2020.07.16.21.20.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 21:21:00 -0700 (PDT)
-Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
- X1000 OST.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
- <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
-Date:   Fri, 17 Jul 2020 06:20:59 +0200
+        Fri, 17 Jul 2020 00:18:51 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06H4IRsY125396;
+        Fri, 17 Jul 2020 00:18:42 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 329r21chj8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 00:18:41 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06H4IfVc126964;
+        Fri, 17 Jul 2020 00:18:41 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 329r21ch61-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 00:18:41 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06H4An6u008164;
+        Fri, 17 Jul 2020 04:17:32 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03fra.de.ibm.com with ESMTP id 327527k6bk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 04:17:32 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06H4G6LP28049780
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jul 2020 04:16:06 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 870D85205A;
+        Fri, 17 Jul 2020 04:17:29 +0000 (GMT)
+Received: from [9.102.1.129] (unknown [9.102.1.129])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 50F8052057;
+        Fri, 17 Jul 2020 04:17:26 +0000 (GMT)
+Subject: Re: [PATCH v3 06/12] ppc64/kexec_file: restrict memory usage of kdump
+ kernel
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     Pingfan Liu <piliu@redhat.com>, Petr Tesarik <ptesarik@suse.cz>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
+ <159466091925.24747.6840028682768745598.stgit@hbathini.in.ibm.com>
+ <87365s9ysj.fsf@morokweng.localdomain>
+ <baa29ea9-7698-a7e8-e5a4-c9f842e1fcc8@linux.ibm.com>
+ <875zance3n.fsf@morokweng.localdomain>
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Message-ID: <f1e6f1d4-5052-ce6a-747f-bb821987b75a@linux.ibm.com>
+Date:   Fri, 17 Jul 2020 09:47:25 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
+In-Reply-To: <875zance3n.fsf@morokweng.localdomain>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 lowpriorityscore=0
+ bulkscore=0 adultscore=0 spamscore=100 mlxscore=100 phishscore=0
+ malwarescore=0 clxscore=1015 priorityscore=1501 impostorscore=0
+ mlxlogscore=-1000 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007170025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/2020 19:02, 周琰杰 (Zhou Yanjie) wrote:
-> X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
-> OST, it no longer belongs to TCU. This driver will register both a
-> clocksource and a sched_clock to the system.
+
+
+On 17/07/20 3:33 am, Thiago Jung Bauermann wrote:
 > 
-> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-> Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-> ---
+> Hari Bathini <hbathini@linux.ibm.com> writes:
 > 
-> Notes:
->     v1->v2:
->     Fix compile warnings.
->     Reported-by: kernel test robot <lkp@intel.com>
->     
->     v2->v3:
->     No change.
->     
->     v3->v4:
->     1.Rename "ost" to "sysost"
->     1.Remove unrelated changes.
->     2.Remove ost_clock_parent enum.
->     3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
->     4.Set up independent .recalc_rate/.set_rate for percpu/global timer.
->     5.No longer call functions in variable declarations.
->     
->     v4->v5:
->     Use "of_io_request_and_map()" instead "of_iomap()".
->     Suggested-by: Paul Cercueil <paul@crapouillou.net>
->     
->     v5->v6:
->     No change.
+>> On 16/07/20 4:22 am, Thiago Jung Bauermann wrote:
+>>>
+>>> Hari Bathini <hbathini@linux.ibm.com> writes:
+>>>
+
+<snip>
+ 
+>>>> +	 * each representing a memory range.
+>>>> +	 */
+>>>> +	ranges = (len >> 2) / (n_mem_addr_cells + n_mem_size_cells);
+>>>> +
+>>>> +	for (i = 0; i < ranges; i++) {
+>>>> +		base = of_read_number(prop, n_mem_addr_cells);
+>>>> +		prop += n_mem_addr_cells;
+>>>> +		end = base + of_read_number(prop, n_mem_size_cells) - 1;
+>>
+>> prop is not used after the above.
+>>
+>>> You need to `prop += n_mem_size_cells` here.
+>>
+>> But yeah, adding it would make it look complete in some sense..
 > 
->  drivers/clocksource/Kconfig          |  11 +
->  drivers/clocksource/Makefile         |   1 +
->  drivers/clocksource/ingenic-sysost.c | 539 +++++++++++++++++++++++++++++++++++
->  3 files changed, 551 insertions(+)
->  create mode 100644 drivers/clocksource/ingenic-sysost.c
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 91418381fcd4..1bca8b8fb30f 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -696,6 +696,17 @@ config INGENIC_TIMER
->  	help
->  	  Support for the timer/counter unit of the Ingenic JZ SoCs.
->  
-> +config INGENIC_SYSOST
-> +	bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+> Isn't it used in the next iteration of the loop?
 
-We usually use silent options and let the platform's Kconfig enable it.
-We show up the option only when COMPILE_TEST is enabled.
+Memory@XXX/reg typically has only one range. I was looking at it
+from that perspective which is not right. Will update.
 
-Is there a reason to do it differently?
-
-> +	default MACH_INGENIC
-> +	depends on MIPS || COMPILE_TEST
-> +	depends on COMMON_CLK
-> +	select MFD_SYSCON
-> +	select TIMER_OF
-> +	select IRQ_DOMAIN
-> +	help
-> +	  Support for the SYSOST of the Ingenic X Series SoCs.
-> +
-
-[ ... ]
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks
+Hari
