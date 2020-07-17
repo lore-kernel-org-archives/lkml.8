@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E525C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41969C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E57F220704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D902076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMiS0Euj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOKWHDXy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgGQS62 (ORCPT
+        id S1728712AbgGQS6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:58:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57576 "EHLO
+        Fri, 17 Jul 2020 14:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728674AbgGQS60 (ORCPT
+        with ESMTP id S1728674AbgGQS63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:58:26 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2364C0619D2;
-        Fri, 17 Jul 2020 11:58:25 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so8433648qtg.4;
-        Fri, 17 Jul 2020 11:58:25 -0700 (PDT)
+        Fri, 17 Jul 2020 14:58:29 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15486C0619D2;
+        Fri, 17 Jul 2020 11:58:29 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id m9so4704459qvx.5;
+        Fri, 17 Jul 2020 11:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hBvIeKpc8mQa1QNo2CbdpaGmkT6vXPu7c1HQXieSSXY=;
-        b=SMiS0EujTMQ0Ssy/m4KNAWglXKPR0SZriQTAmjQ61spo+D+NvNVej1THZ3VdFP3nuE
-         wofL+Oe1hqyEj4bQiAPEHhj5RKiBUGyKHQkGGNx42wwXwv+XMc+09AEAh89H0OMhVdpP
-         /vO+AHv0vTXrytJTqT3VZX5rmfjWrX0085ic6HJoNZixgCFv1NVcieC9ydpCnLhAbZVh
-         4NkkShkQjkOKwNITN21jWoAFR9f/Wei6bAsX7hDAAO88sY4hU132xQkpvpWB+VYScXWk
-         ydE2qDnzGE3Ba7ncB4NYM4WC453DhTa0SaWyKa3aFsMlNIcLC3k9YW/l+AmBQCTiJoqN
-         wVfw==
+        bh=407sI7tDkkcS7hnHew6iLrde/ox7y6OHMpz2jDsv8WU=;
+        b=iOKWHDXyUKkbTZEupx4H1TXquLQ+HEDyuPBlq1AlvUzLJamZ8if/SPKc2diyuFFxzP
+         swInkmuncSuqi4pyOrjoNGQP5RIuYRWI6xagSWqra6gaS/323qlDdFjw5I8wK8T3XbVy
+         zw/d/qTpjve5yqqyA2wB5iUHf0XlyU7tOUjGD8MgcTFn06b8/WI0MVV+NZ6YwQP4Kv+H
+         ZMKT9FohOHh63tbOA9WTABerr2kUnBtwKwPc6iUt3HR1A2ojc30Lluv1F9ZHegYjfaOQ
+         RkZ2Z0R5lUW00lrWzkdS9pRN7Wk8OTOd2gfWkHZoQEcPBLeBxYcbOau/y6bGO1TpW7bZ
+         +5zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hBvIeKpc8mQa1QNo2CbdpaGmkT6vXPu7c1HQXieSSXY=;
-        b=bDMCb3CJzl9Jc0H3nyddaw3HrcJ35w8SeXi2hyWZbsGtIcuOQ5GwnRGkzP6rjL/NW7
-         6FpNMIw1cPNmiZrMd8SyulBmHe0X49GuzzfWSCVV9dNqR8xw5E9A50sa6WhqzuBYZ6eO
-         3eSlXtcYEm+rUns83weEgjxFxWA/5R+UHL3mSefQ4ICqSaQXNjzpZ5RY5zk734U4BTUf
-         77AZlziY31GyNL+YcDXs4adhxKH/XBdzKCe6zgBgifPfNCa7NLeaVUSsPnvhu4HYuRFt
-         5qO3QqlY+MkjdE/aCL42jy/5zO4pMBs3ALSDT101H8GIVw94meO1ZMSzj29huuSyEdhc
-         nRvg==
-X-Gm-Message-State: AOAM532SXo76Xd3RO/PJ+vPmVkBZQIXTc83ZMZfSL65/uCw3Stfc83lU
-        LACxlSmzxBF5Ng4Z4kaLgwU=
-X-Google-Smtp-Source: ABdhPJyhBMF4LSQmiZCEmGWxdnr62yr0g/ZwxvcSlizxDuSYW7wkaMmnYRwpPhRkTMO2nGQlEdyRfQ==
-X-Received: by 2002:ac8:4419:: with SMTP id j25mr12576200qtn.0.1595012305095;
-        Fri, 17 Jul 2020 11:58:25 -0700 (PDT)
+        bh=407sI7tDkkcS7hnHew6iLrde/ox7y6OHMpz2jDsv8WU=;
+        b=s+MIX7vrbWdgXajPUfXodoSVVy+4ywWiKS2aQrZrvbAhLuLcmVupP5Rf4dBj5GXx8W
+         Pfs0Yv1XSz13fR63NZzY8LdRUuj6x+yw1wJU3bzVsr42pgV3zxCMs9zaGEI0eKl+xYWM
+         9bxQKCR/NDIYNqIQkkXqqPP8I1G/sWYLyRVcNupOfzRJDbhw0xVYTXXJVKpmFy3S+Tkm
+         W1Oe2S0JC57GhhyNv+0RANp3wcD5uJRnkMDr5bj9dBlFgNlzk4unqKqKNlNKBk/ZbXuF
+         XB/MQDRV84ySciEEnybawhGq9AuR2WC49I/VIZg59X0h+/VedrKGVyISpbE+TY0kJPv7
+         nR6Q==
+X-Gm-Message-State: AOAM533MsGNCt3GdkLRsuwnertBNyTX3JToLiUBLar5hqRJ67sKaAc2T
+        XDaxZIm5KNy0HRQfkflFA1Q8MiRXQx0=
+X-Google-Smtp-Source: ABdhPJxSrKECrPTW/aFWa490oIZjJRC6pfEGFZQKO5fHJWySRx++ksrSHAfQNTaF4XP1gIfODQy8dg==
+X-Received: by 2002:a05:6214:13b4:: with SMTP id h20mr10312796qvz.248.1595012308289;
+        Fri, 17 Jul 2020 11:58:28 -0700 (PDT)
 Received: from localhost.localdomain ([2804:18:7002:653c:f7ea:490a:10b0:ec39])
-        by smtp.gmail.com with ESMTPSA id r6sm11380097qtt.81.2020.07.17.11.58.22
+        by smtp.gmail.com with ESMTPSA id r6sm11380097qtt.81.2020.07.17.11.58.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 11:58:24 -0700 (PDT)
+        Fri, 17 Jul 2020 11:58:27 -0700 (PDT)
 From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 X-Google-Original-From: Daniel W. S. Almeida
 To:     corbet@lwn.net, mchehab@kernel.org
 Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 21/25] Documentation/admin-guide/index.rst: fix sphinx warning
-Date:   Fri, 17 Jul 2020 15:56:20 -0300
-Message-Id: <20200717185624.2009393-21-dwlsalmeida@gmail.com>
+Subject: [PATCH 22/25] Documentation/bpf/index.rst: fix sphinx warning:
+Date:   Fri, 17 Jul 2020 15:56:21 -0300
+Message-Id: <20200717185624.2009393-22-dwlsalmeida@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
 References: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
@@ -80,28 +80,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-Fix the following warning:
+Fix the following warning
 
-Documentation/admin-guide/pstore-blk.rst:
-WARNING: document isn't included in any toctree
+Documentation/bpf/ringbuf.rst: WARNING: document isn't
+included in any toctree
 
 Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 ---
- Documentation/admin-guide/index.rst | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/bpf/index.rst | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 58c7f9fc2396c..ed1cf94ea50c2 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -41,6 +41,7 @@ problems and bugs in particular.
-    init
-    kdump/index
-    perf/index
-+   pstore-blk
+diff --git a/Documentation/bpf/index.rst b/Documentation/bpf/index.rst
+index 38b4db8be7a2b..0f60b95e83c40 100644
+--- a/Documentation/bpf/index.rst
++++ b/Documentation/bpf/index.rst
+@@ -58,6 +58,14 @@ Testing and debugging BPF
+    s390
  
- This is the beginning of a section with information of interest to
- application developers.  Documents covering various aspects of the kernel
+ 
++Other
++=====
++
++.. toctree::
++   :maxdepth: 1
++
++   ringbuf
++
+ .. Links:
+ .. _Documentation/networking/filter.rst: ../networking/filter.txt
+ .. _man-pages: https://www.kernel.org/doc/man-pages/
 -- 
 2.27.0
 
