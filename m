@@ -2,123 +2,148 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D953C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54821C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 633F020717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:35:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G9cwaGuv"
+	by mail.kernel.org (Postfix) with ESMTP id 3B95E20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgGQMfx (ORCPT
+        id S1726794AbgGQMgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:35:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgGQMfw (ORCPT
+        Fri, 17 Jul 2020 08:36:32 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44278 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgGQMgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:35:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E08BC061755;
-        Fri, 17 Jul 2020 05:35:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=JEnG7mSqI+pOdpDjfM+f6CJVo0VXXVteFm0g348cSBY=; b=G9cwaGuvyxgnPq4ixlH6xAMtBA
-        RrNLQI3/AuAxk9eoWKVfwYqarRZnBF8epiv5EF7SwjwDQYtTJLLTZjnv1+/O/yfyoT76J5xIZn8mT
-        xzY84BZ3cc8Teu2n9n5mNp8Jhz/HX7WxysLhd21d69kywy5LpoWnwaOF+kog6g0bJdCsl/R5Xo6YL
-        UG9ccKR6LT13o+iu4AveJjdxUEIno8rODv6IOEQN2N6BJVBwiy2nzk9xm8xQ07Ldug4HA9TazTt+c
-        BP2cZJ/8ObIweJoQTrDwByLuPtyF7YxFk84YBpRed85MrEDhKTDW9uvsOO/Gb6hguXGnyHWv1supa
-        swG19jVQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwPaa-0001He-1Z; Fri, 17 Jul 2020 12:35:44 +0000
-Date:   Fri, 17 Jul 2020 13:35:43 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
-Message-ID: <20200717123543.GO12769@casper.infradead.org>
-References: <20200717044427.68747-1-ebiggers@kernel.org>
+        Fri, 17 Jul 2020 08:36:32 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id E09AB8030802;
+        Fri, 17 Jul 2020 12:36:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id eSiPeAhr9U96; Fri, 17 Jul 2020 15:36:23 +0300 (MSK)
+Date:   Fri, 17 Jul 2020 15:36:21 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200717123621.6aphtbohvb3l42jc@mobilestation>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+ <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+ <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+ <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
+ <20200710161445.t6eradkgt4terdr3@mobilestation>
+ <20200715111315.GK34333@vkoul-mobl>
+ <20200715170843.w4rwl7zjwfcr7rg2@mobilestation>
+ <20200717081403.GL82923@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200717044427.68747-1-ebiggers@kernel.org>
+In-Reply-To: <20200717081403.GL82923@vkoul-mobl>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 09:44:27PM -0700, Eric Biggers wrote:
-> +The simplest implementation just uses a mutex and an 'inited' flag.
+On Fri, Jul 17, 2020 at 01:44:03PM +0530, Vinod Koul wrote:
+> On 15-07-20, 20:08, Serge Semin wrote:
+> > On Wed, Jul 15, 2020 at 04:43:15PM +0530, Vinod Koul wrote:
+> > > On 10-07-20, 19:14, Serge Semin wrote:
+> > > > On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
+> > > 
+> > > > > Since we should be able to handle longer lists and this is kind of a
+> > > > > hint for clients that above this number of nents the list will be broken
+> > > > > up to smaller 'bursts', which when traversing could cause latency.
+> > > > > 
+> > > > > sg_chunk_len might be another candidate.
+> > > > 
+> > > > Ok. We've got four candidates:
+> > > > - max_sg_nents_burst
+> > > > - max_sg_burst
+> > > > - max_sg_chain
+> > > > - sg_chunk_len
+> > > > 
+> > > > @Vinod, @Andy, what do you think?
+> > > 
+> > 
+> > > So IIUC your hw supports single sg and in that you would like to publish
+> > > the length of each chunk, is that correct?
+> > 
+> > No. My DMA engine does support only a single-entry SG-list, but the new DMA
+> > {~~slave~~,channel,device,peripheral,...} capability isn't about the length, but
+> > is about the maximum number of SG-list entries a DMA engine is able to
+> > automatically/"without software help" walk through and execute. In this thread
+> > we are debating about that new capability naming.
+> > 
+> > The name suggested in this patch: max_sg_nents. Peter noted (I mostly agree with
+> > him), that it might be ambiguous, since from it (without looking into the
+> > dma_slave_caps structure comment) a user might think that it's a maximum number of
+> > SG-entries, which can be submitted for the DMA engine execution, while in fact it's
+> > about the DMA engine capability of automatic/burst/"without software intervention"
+> > SG-list entries walking through. (Such information will be helpful to solve a
+> > problem discussed in this mailing thread, and described in the cover-letter to
+> > this patchset. We also discussed it with you and Andy in the framework of this
+> > patchset many times.)
+> > 
+> > As an alternative Peter suggested: max_sg_nents_burst. I also think it's better
+> > than "max_sg_nents" but for me it seems a bit long. max_sg_burst seems better.
+> > There is no need in having the "nents" in the name, since SG-list implies a list,
+> > which main parameter (if not to say only parameter) is the number of entries.
+> > "burst" is pointing out to the automatic/accelerated/"without software intervention"
+> > SG-list entries walking through.
+> > 
+> > On the second thought suggested by me "max_sg_chain" sounds worse than "max_sg_burst",
+> > because it also might be perceived as a parameter limiting the number of SG-list
+> > entries is able to be submitted for the DMA engine execution, while in fact it
+> > describes another matter.
+> > 
+> > Regarding "sg_chunk_len". I think it's ambiguous too, since the "chunk
+> > length" might be referred to both the entries length and to the sub-SG-list
+> > length.
+> > 
+> > So what do you think? What name is better describing the new DMA capability?
+> 
 
-There's a perfectly good real word "initialised" / initialized.
-https://chambers.co.uk/search/?query=inited&title=21st
+> How about max_nents_per_sg or max_nents_sg to signify that this implies
+> max nents for sg not sg entries.
 
-> +For the single-pointer case, a further optimized implementation
-> +eliminates the mutex and instead uses compare-and-exchange:
-> +
-> +	static struct foo *foo;
-> +
-> +	int init_foo_if_needed(void)
-> +	{
-> +		struct foo *p;
-> +
-> +		/* pairs with successful cmpxchg_release() below */
-> +		if (smp_load_acquire(&foo))
-> +			return 0;
-> +
-> +		p = alloc_foo();
-> +		if (!p)
-> +			return -ENOMEM;
-> +
-> +		/* on success, pairs with smp_load_acquire() above and below */
-> +		if (cmpxchg_release(&foo, NULL, p) != NULL) {
-> +			free_foo(p);
-> +			/* pairs with successful cmpxchg_release() above */
-> +			smp_load_acquire(&foo);
-> +		}
-> +		return 0;
-> +	}
-> +
-> +Note that when the cmpxchg_release() fails due to another task already
-> +having done it, a second smp_load_acquire() is required, since we still
-> +need to acquire the data that the other task released.  You may be
-> +tempted to upgrade cmpxchg_release() to cmpxchg() with the goal of it
-> +acting as both ACQUIRE and RELEASE, but that doesn't work here because
-> +cmpxchg() only guarantees memory ordering if it succeeds.
-> +
-> +Because of the above subtlety, the version with the mutex instead of
-> +cmpxchg_release() should be preferred, except potentially in cases where
-> +it is difficult to provide anything other than a global mutex and where
-> +the one-time data is part of a frequently allocated structure.  In that
-> +case, a global mutex might present scalability concerns.
+Well, as I see it those versions are no better than "max_sg_nents" suggested
+in this patch, which Peter and me considered ambiguous. By reading just
+capability name all "max_sg_nents" and "max_nents_per_sg" and "max_nents_sg"
+seem like describing a hard limitation of the number of SG-list entries, but
+in fact they should merely mean a maximum number of entries executed in a single
+DMA engine transaction without software intervention. We need to have some new
+word which would define that "automatic/accelerated/burst/chained/etc." DMA
+transaction.
 
-There are concerns other than scalability where we might want to eliminate
-the mutex.  For example, if (likely) alloc_foo() needs to allocate memory
-and we would need foo to perform page writeback, then either we must
-allocate foo using GFP_NOFS or do without the mutex, lest we deadlock
-on this new mutex.
+> IMO Burst/chain are not better than max_sg_nents.
 
-You might think this would argue for just using GFP_NOFS always, but
-GFP_NOFS is a big hammer which forbids reclaiming from any filesystem,
-whereas we might only need this foo to reclaim from a particular
-filesystem.
+Could you elaborate why? In case of having "max_sg_burst" we could give to a
+user an impression of this capability describing something similar to the
+"max_burst" (maximum burst transaction length), but in application to the
+SG-list. The main SG-list parameter is the number of entries, so having the
+"burst" word in the capability name we'd imply the bursted number of entries
+instead of the total number of entries if the "nents" word would have been used.
+
+-Sergey
+
+> 
+> -- 
+> ~Vinod
