@@ -4,61 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224D5C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C128220759
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF802074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:35:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xjRBs7kQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wz8x4Mgv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZliFmb8M";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ktr3L9kw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgGQV3U (ORCPT
+        id S1726932AbgGQVex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 17:29:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43288 "EHLO
+        Fri, 17 Jul 2020 17:34:53 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43312 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbgGQV3T (ORCPT
+        with ESMTP id S1726204AbgGQVex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 17:29:19 -0400
-Date:   Fri, 17 Jul 2020 21:29:16 -0000
+        Fri, 17 Jul 2020 17:34:53 -0400
+Date:   Fri, 17 Jul 2020 21:34:48 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595021357;
+        s=2020; t=1595021689;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tC+yA+yq9E1bqmjYAvSSbLlbvzwfvVgnFftexhEoBEw=;
-        b=xjRBs7kQ31CQGW5BE6TwEjEYgIbmq1xX4QQLoqng8NXpn1NSHWus0H2LfOkR1kxpwhoqFK
-        qMlnT6iaUiif31sbkyaOfkN8vW98XCnQXUz1+Cga2L3XM9o38+XtfssAe2q63sBJSp1tK+
-        Q93Pdy/1j2ni5ZxT1kWep/rMUYzpiGDOW6NmElefr67+FYE68jvMAGc6UYmzVAq/Mp1Owx
-        g2N8/Kw1iQQWF5qcJzVvy9idpRCZa3nnMsJRvcxW2gkWi8a0hiW5EtqK8he+Hk8x9eW50r
-        /vNomnHsubsOyhNRKWlgj1k0pVZ+hHu2FBlhygryLBAVWfWP1BdPoGuKni8Bag==
+        bh=SPWBpVP2RhRga83juGM3kt8abhmjMkgko6QmWcngcwY=;
+        b=ZliFmb8MyVLLYa2zg+x4ic5Oo4Ctx5EnF9JUmWohJQfMJtEW5uQ4ryAuVlyz7OUSD6H9lp
+        XToXcn0vfc25PIxOZf7s4Ap4filgobN7B+UyaEQez/6v+gh8eUJcmTnd/jGk/PB+Nbd2dy
+        4nuW3P/d2rjELD1D/PVZvn+CzATXYB/s5u9vn8VzmBRkY09tpNzae8nJNqSKFLlkDb0QU0
+        P0xJK4+AUpZysWr+YdSHoaoEVYb8Ndx2rlRmOqz073GGRptnjhFvWKys1LQF+mUEjqdm5Q
+        +5+jadVD4FLvggL3mZdTRd3XQAJ2xbHRytTKZf4KMVK8i5uOMZHW9gF4WDjIgg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595021357;
+        s=2020e; t=1595021689;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tC+yA+yq9E1bqmjYAvSSbLlbvzwfvVgnFftexhEoBEw=;
-        b=wz8x4Mgv6YNLBtWMpJtH3fF6GQqhpycaFFG7L8VJfsurVuqE1V0IaytvahaekW08vXjDev
-        z9pg8oc97TGOm6BA==
-From:   "tip-bot2 for Qinglang Miao" <tip-bot2@linutronix.de>
+        bh=SPWBpVP2RhRga83juGM3kt8abhmjMkgko6QmWcngcwY=;
+        b=ktr3L9kwtY7DWGfl/n4pCh671oMaxZK9/cFguy92C2N7QyIF9wg72ZHwo3yM83O/MaVgEy
+        YzUlZhd7YP5g7GAg==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/debugobjects] debugobjects: Convert to DEFINE_SHOW_ATTRIBUTE
-Cc:     Qinglang Miao <miaoqinglang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>, hch@lst.de,
+Subject: [tip: irq/urgent] genirq/affinity: Handle affinity setting on
+ inactive interrupts correctly
+Cc:     Ali Saidi <alisaidi@amazon.com>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200716084747.8034-1-miaoqinglang@huawei.com>
-References: <20200716084747.8034-1-miaoqinglang@huawei.com>
+In-Reply-To: <20200529015501.15771-1-alisaidi@amazon.com>
+References: <20200529015501.15771-1-alisaidi@amazon.com>
 MIME-Version: 1.0
-Message-ID: <159502135671.4006.15025741825906317468.tip-bot2@tip-bot2>
+Message-ID: <159502168875.4006.5712868222524660630.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -68,51 +69,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/debugobjects branch of tip:
+The following commit has been merged into the irq/urgent branch of tip:
 
-Commit-ID:     0f85c4805184765ff35e0079b3241ee8f25d1b2b
-Gitweb:        https://git.kernel.org/tip/0f85c4805184765ff35e0079b3241ee8f25d1b2b
-Author:        Qinglang Miao <miaoqinglang@huawei.com>
-AuthorDate:    Thu, 16 Jul 2020 16:47:47 +08:00
+Commit-ID:     baedb87d1b53532f81b4bd0387f83b05d4f7eb9a
+Gitweb:        https://git.kernel.org/tip/baedb87d1b53532f81b4bd0387f83b05d4f7eb9a
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Fri, 17 Jul 2020 18:00:02 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 17 Jul 2020 23:25:46 +02:00
+CommitterDate: Fri, 17 Jul 2020 23:30:43 +02:00
 
-debugobjects: Convert to DEFINE_SHOW_ATTRIBUTE
+genirq/affinity: Handle affinity setting on inactive interrupts correctly
 
-Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+Setting interrupt affinity on inactive interrupts is inconsistent when
+hierarchical irq domains are enabled. The core code should just store the
+affinity and not call into the irq chip driver for inactive interrupts
+because the chip drivers may not be in a state to handle such requests.
 
-[ tglx: Distangled it from the mess in -next ]
+X86 has a hacky workaround for that but all other irq chips have not which
+causes problems e.g. on GIC V3 ITS.
 
-Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+Instead of adding more ugly hacks all over the place, solve the problem in
+the core code. If the affinity is set on an inactive interrupt then:
+
+    - Store it in the irq descriptors affinity mask
+    - Update the effective affinity to reflect that so user space has
+      a consistent view
+    - Don't call into the irq chip driver
+
+This is the core equivalent of the X86 workaround and works correctly
+because the affinity setting is established in the irq chip when the
+interrupt is activated later on.
+
+Note, that this is only effective when hierarchical irq domains are enabled
+by the architecture. Doing it unconditionally would break legacy irq chip
+implementations.
+
+For hierarchial irq domains this works correctly as none of the drivers can
+have a dependency on affinity setting in inactive state by design.
+
+Remove the X86 workaround as it is not longer required.
+
+Fixes: 02edee152d6e ("x86/apic/vector: Ignore set_affinity call for inactive interrupts")
+Reported-by: Ali Saidi <alisaidi@amazon.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: hch@lst.de
-Link: https://lkml.kernel.org/r/20200716084747.8034-1-miaoqinglang@huawei.com
-
+Tested-by: Ali Saidi <alisaidi@amazon.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200529015501.15771-1-alisaidi@amazon.com
+Link: https://lkml.kernel.org/r/877dv2rv25.fsf@nanos.tec.linutronix.de
 ---
- lib/debugobjects.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ arch/x86/kernel/apic/vector.c | 22 ++++----------------
+ kernel/irq/manage.c           | 37 ++++++++++++++++++++++++++++++++--
+ 2 files changed, 40 insertions(+), 19 deletions(-)
 
-diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-index 48054db..fe45579 100644
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -1022,18 +1022,7 @@ static int debug_stats_show(struct seq_file *m, void *v)
- 	seq_printf(m, "objs_freed    :%d\n", debug_objects_freed);
- 	return 0;
- }
--
--static int debug_stats_open(struct inode *inode, struct file *filp)
--{
--	return single_open(filp, debug_stats_show, NULL);
--}
--
--static const struct file_operations debug_stats_fops = {
--	.open		= debug_stats_open,
--	.read		= seq_read,
--	.llseek		= seq_lseek,
--	.release	= single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(debug_stats);
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index cc8b16f..7649da2 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -446,12 +446,10 @@ static int x86_vector_activate(struct irq_domain *dom, struct irq_data *irqd,
+ 	trace_vector_activate(irqd->irq, apicd->is_managed,
+ 			      apicd->can_reserve, reserve);
  
- static int __init debug_objects_init_debugfs(void)
+-	/* Nothing to do for fixed assigned vectors */
+-	if (!apicd->can_reserve && !apicd->is_managed)
+-		return 0;
+-
+ 	raw_spin_lock_irqsave(&vector_lock, flags);
+-	if (reserve || irqd_is_managed_and_shutdown(irqd))
++	if (!apicd->can_reserve && !apicd->is_managed)
++		assign_irq_vector_any_locked(irqd);
++	else if (reserve || irqd_is_managed_and_shutdown(irqd))
+ 		vector_assign_managed_shutdown(irqd);
+ 	else if (apicd->is_managed)
+ 		ret = activate_managed(irqd);
+@@ -774,20 +772,10 @@ void lapic_offline(void)
+ static int apic_set_affinity(struct irq_data *irqd,
+ 			     const struct cpumask *dest, bool force)
  {
+-	struct apic_chip_data *apicd = apic_chip_data(irqd);
+ 	int err;
+ 
+-	/*
+-	 * Core code can call here for inactive interrupts. For inactive
+-	 * interrupts which use managed or reservation mode there is no
+-	 * point in going through the vector assignment right now as the
+-	 * activation will assign a vector which fits the destination
+-	 * cpumask. Let the core code store the destination mask and be
+-	 * done with it.
+-	 */
+-	if (!irqd_is_activated(irqd) &&
+-	    (apicd->is_managed || apicd->can_reserve))
+-		return IRQ_SET_MASK_OK;
++	if (WARN_ON_ONCE(!irqd_is_activated(irqd)))
++		return -EIO;
+ 
+ 	raw_spin_lock(&vector_lock);
+ 	cpumask_and(vector_searchmask, dest, cpu_online_mask);
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 7619111..2a9fec5 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -195,9 +195,9 @@ void irq_set_thread_affinity(struct irq_desc *desc)
+ 			set_bit(IRQTF_AFFINITY, &action->thread_flags);
+ }
+ 
++#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+ static void irq_validate_effective_affinity(struct irq_data *data)
+ {
+-#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+ 	const struct cpumask *m = irq_data_get_effective_affinity_mask(data);
+ 	struct irq_chip *chip = irq_data_get_irq_chip(data);
+ 
+@@ -205,9 +205,19 @@ static void irq_validate_effective_affinity(struct irq_data *data)
+ 		return;
+ 	pr_warn_once("irq_chip %s did not update eff. affinity mask of irq %u\n",
+ 		     chip->name, data->irq);
+-#endif
+ }
+ 
++static inline void irq_init_effective_affinity(struct irq_data *data,
++					       const struct cpumask *mask)
++{
++	cpumask_copy(irq_data_get_effective_affinity_mask(data), mask);
++}
++#else
++static inline void irq_validate_effective_affinity(struct irq_data *data) { }
++static inline void irq_init_effective_affinity(struct irq_data *data,
++					       const struct cpumask *mask) { }
++#endif
++
+ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+ 			bool force)
+ {
+@@ -304,6 +314,26 @@ static int irq_try_set_affinity(struct irq_data *data,
+ 	return ret;
+ }
+ 
++static bool irq_set_affinity_deactivated(struct irq_data *data,
++					 const struct cpumask *mask, bool force)
++{
++	struct irq_desc *desc = irq_data_to_desc(data);
++
++	/*
++	 * If the interrupt is not yet activated, just store the affinity
++	 * mask and do not call the chip driver at all. On activation the
++	 * driver has to make sure anyway that the interrupt is in a
++	 * useable state so startup works.
++	 */
++	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) || irqd_is_activated(data))
++		return false;
++
++	cpumask_copy(desc->irq_common_data.affinity, mask);
++	irq_init_effective_affinity(data, mask);
++	irqd_set(data, IRQD_AFFINITY_SET);
++	return true;
++}
++
+ int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
+ 			    bool force)
+ {
+@@ -314,6 +344,9 @@ int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
+ 	if (!chip || !chip->irq_set_affinity)
+ 		return -EINVAL;
+ 
++	if (irq_set_affinity_deactivated(data, mask, force))
++		return 0;
++
+ 	if (irq_can_move_pcntxt(data) && !irqd_is_setaffinity_pending(data)) {
+ 		ret = irq_try_set_affinity(data, mask, force);
+ 	} else {
