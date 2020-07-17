@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1B8C43616
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96303C43635
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 307C32080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4C82076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgGQHWE (ORCPT
+        id S1728361AbgGQHWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:22:04 -0400
-Received: from mga14.intel.com ([192.55.52.115]:54609 "EHLO mga14.intel.com"
+        Fri, 17 Jul 2020 03:22:12 -0400
+Received: from mga12.intel.com ([192.55.52.136]:48157 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728036AbgGQHVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:21:06 -0400
-IronPort-SDR: HLyejrJJHG+/cfJuiKlqOmDKGHFrYNZt+yL9k1BgTQPBhKxnAW3C6AuPM3vue7lsCwaa8gYJLn
- 9CcqIsuQlC8A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="148708700"
+        id S1728014AbgGQHVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:21:05 -0400
+IronPort-SDR: euGBuBzK4eGB63eW/2jMZlalPhL7JtIT/9aB72lXmqcgG4zvZRNnbulICoxnrpytsAz1ZP09zc
+ AGoXh651vtqA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129111928"
 X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="148708700"
+   d="scan'208";a="129111928"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:21:06 -0700
-IronPort-SDR: SpuOyWqnLmOe+gy1lr8SUmikVFfb6NOmjlt8qmzgs7esLkKOTHHgnMN1Tf86OkViIwr3GcIVrE
- LFTaSVYSpZYw==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:21:03 -0700
+IronPort-SDR: 8i/TZE8qfmw3EhMgZhG/RVSFnd+u3sPC5jkD2v98KRJWRdSZ/qmdi+GKnE2LirhYp+nvpHB/Ax
+ DUj5ubNB3hxw==
 X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="460761744"
+   d="scan'208";a="300484565"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:21:05 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:21:01 -0700
 From:   ira.weiny@intel.com
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+        x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH RFC V2 09/17] memremap: Convert devmap static branch to {inc,dec}
-Date:   Fri, 17 Jul 2020 00:20:48 -0700
-Message-Id: <20200717072056.73134-10-ira.weiny@intel.com>
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH RFC V2 02/17] x86/fpu: Refactor arch_set_user_pkey_access() for PKS support
+Date:   Fri, 17 Jul 2020 00:20:41 -0700
+Message-Id: <20200717072056.73134-3-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
 In-Reply-To: <20200717072056.73134-1-ira.weiny@intel.com>
 References: <20200717072056.73134-1-ira.weiny@intel.com>
@@ -62,54 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+From: Fenghua Yu <fenghua.yu@intel.com>
 
-While reviewing Protection Key Supervisor support it was pointed out
-that using a counter to track static branch enable was an anti-pattern
-which was better solved using the provided static_branch_{inc,dec}
-functions.[1]
+Define a helper, get_new_pkr(), which will be used to support both
+Protection Key User (PKU) and the new Protection Key for Supervisor
+(PKS) in subsequent patches.
 
-Fix up devmap_managed_key to work the same way.  Also this should be
-safer because there is a very small (very unlikely) race when multiple
-callers try to enable at the same time.
-
-[1] https://lore.kernel.org/lkml/20200714194031.GI5523@worktop.programming.kicks-ass.net/
-
-To: Dan Williams <dan.j.williams@intel.com>
-To: Vishal Verma <vishal.l.verma@intel.com>
+Co-developed-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- mm/memremap.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/pkeys.h |  2 ++
+ arch/x86/kernel/fpu/xstate.c | 17 +++--------------
+ arch/x86/mm/pkeys.c          | 28 ++++++++++++++++++++++++++++
+ 3 files changed, 33 insertions(+), 14 deletions(-)
 
-diff --git a/mm/memremap.c b/mm/memremap.c
-index 03e38b7a38f1..9fb9ad500e78 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -40,12 +40,10 @@ EXPORT_SYMBOL_GPL(memremap_compat_align);
- #ifdef CONFIG_DEV_PAGEMAP_OPS
- DEFINE_STATIC_KEY_FALSE(devmap_managed_key);
- EXPORT_SYMBOL(devmap_managed_key);
--static atomic_t devmap_managed_enable;
- 
- static void devmap_managed_enable_put(void)
- {
--	if (atomic_dec_and_test(&devmap_managed_enable))
--		static_branch_disable(&devmap_managed_key);
-+	static_branch_dec(&devmap_managed_key);
+diff --git a/arch/x86/include/asm/pkeys.h b/arch/x86/include/asm/pkeys.h
+index be8b3e448f76..34cef29fed20 100644
+--- a/arch/x86/include/asm/pkeys.h
++++ b/arch/x86/include/asm/pkeys.h
+@@ -136,4 +136,6 @@ static inline int vma_pkey(struct vm_area_struct *vma)
+ 	return (vma->vm_flags & vma_pkey_mask) >> VM_PKEY_SHIFT;
  }
  
- static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
-@@ -56,8 +54,7 @@ static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
- 		return -EINVAL;
- 	}
++u32 get_new_pkr(u32 old_pkr, int pkey, unsigned long init_val);
++
+ #endif /*_ASM_X86_PKEYS_H */
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index fc1ec2986e03..1def71dc8105 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -954,9 +954,7 @@ const void *get_xsave_field_ptr(int xfeature_nr)
+ int arch_set_user_pkey_access(struct task_struct *tsk, int pkey,
+ 		unsigned long init_val)
+ {
+-	u32 old_pkru;
+-	int pkey_shift = (pkey * PKR_BITS_PER_PKEY);
+-	u32 new_pkru_bits = 0;
++	u32 old_pkru, new_pkru;
  
--	if (atomic_inc_return(&devmap_managed_enable) == 1)
--		static_branch_enable(&devmap_managed_key);
-+	static_branch_inc(&devmap_managed_key);
+ 	/*
+ 	 * This check implies XSAVE support.  OSPKE only gets
+@@ -972,21 +970,12 @@ int arch_set_user_pkey_access(struct task_struct *tsk, int pkey,
+ 	 */
+ 	WARN_ON_ONCE(pkey >= arch_max_pkey());
+ 
+-	/* Set the bits we need in PKRU:  */
+-	if (init_val & PKEY_DISABLE_ACCESS)
+-		new_pkru_bits |= PKR_AD_BIT;
+-	if (init_val & PKEY_DISABLE_WRITE)
+-		new_pkru_bits |= PKR_WD_BIT;
+-
+-	/* Shift the bits in to the correct place in PKRU for pkey: */
+-	new_pkru_bits <<= pkey_shift;
+-
+ 	/* Get old PKRU and mask off any old bits in place: */
+ 	old_pkru = read_pkru();
+-	old_pkru &= ~((PKR_AD_BIT|PKR_WD_BIT) << pkey_shift);
++	new_pkru = get_new_pkr(old_pkru, pkey, init_val);
+ 
+ 	/* Write old part along with new part: */
+-	write_pkru(old_pkru | new_pkru_bits);
++	write_pkru(new_pkru);
+ 
  	return 0;
  }
- #else
+diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
+index f5efb4007e74..a5c680d32930 100644
+--- a/arch/x86/mm/pkeys.c
++++ b/arch/x86/mm/pkeys.c
+@@ -208,3 +208,31 @@ static __init int setup_init_pkru(char *opt)
+ 	return 1;
+ }
+ __setup("init_pkru=", setup_init_pkru);
++
++/*
++ * Get a new pkey register value from the user values specified.
++ *
++ * Kernel users use the same flags as user space:
++ *     PKEY_DISABLE_ACCESS
++ *     PKEY_DISABLE_WRITE
++ */
++u32 get_new_pkr(u32 old_pkr, int pkey, unsigned long init_val)
++{
++	int pkey_shift = (pkey * PKR_BITS_PER_PKEY);
++	u32 new_pkr_bits = 0;
++
++	/* Set the bits we need in the register:  */
++	if (init_val & PKEY_DISABLE_ACCESS)
++		new_pkr_bits |= PKR_AD_BIT;
++	if (init_val & PKEY_DISABLE_WRITE)
++		new_pkr_bits |= PKR_WD_BIT;
++
++	/* Shift the bits in to the correct place: */
++	new_pkr_bits <<= pkey_shift;
++
++	/* Mask off any old bits in place: */
++	old_pkr &= ~((PKR_AD_BIT | PKR_WD_BIT) << pkey_shift);
++
++	/* Return the old part along with the new part: */
++	return old_pkr | new_pkr_bits;
++}
 -- 
 2.28.0.rc0.12.gb6a658bd00c9
 
