@@ -2,186 +2,95 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EED8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E08C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5CD2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:11:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tHZXegle"
+	by mail.kernel.org (Postfix) with ESMTP id BCDB02074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:11:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgGQQLG (ORCPT
+        id S1727034AbgGQQLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:11:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgGQQLG (ORCPT
+        Fri, 17 Jul 2020 12:11:48 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:51325 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726104AbgGQQLs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:11:06 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE932C0619D2;
-        Fri, 17 Jul 2020 09:11:05 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id f16so6556892pjt.0;
-        Fri, 17 Jul 2020 09:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=p/JT8GvZCM/gEMGdeiSZlYf2mCTUbO5AeEqz30v/2yk=;
-        b=tHZXegleYTo8Je2SJDiwAg+PX42CyknF7dNkXn1u/4/eY7ENLwVGLY1T1sYTXOeDw+
-         R6clmCUZCKTCXQRMgxk6U7HI4lWs3g7DN9aOsHsiia3nfM4gq+aWg4lwXszbRk7ssozJ
-         Z+dbdQ5vsBNAvu19GSjH2HovV+O7S62oCnIlXHHdqxgrICL9Se6pgahwj95natNxQmI+
-         amsROk9bBpjvNzmkhpy8qacpGQPXbffIbrpElFvY9Wkn2UV/MxusWlRF6mzq9pG2VVyv
-         AUWrvUsyTjaIBIwe4MA9foMX49DgF3JYktk4TKdwqybhSERdgGpZSHfGQ+SRkeWh6DQ0
-         9jXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=p/JT8GvZCM/gEMGdeiSZlYf2mCTUbO5AeEqz30v/2yk=;
-        b=Q14XFphuIEMCZQtX+1mMm/qUYlWNtDJNtErXeXubxQGsbaPkDW88yjqN5p/D/IdIuC
-         KtgDgnU2Zhfjmz9yJx6m1ObBGwKcEQ5ntwu4GFGPfVomOfWU07McnWFWM6yTZOovCxW+
-         9zVCY2dRCCgzTVXWV8N8sPSy7GN52jjboHS8+4qjS0E+TNfWfh1ynPkrtoY4Eo7mpKX6
-         hSBEql4Q+afi9UrcN5BSLpeiVZUFVzwCGXop0gKpGc/w4GVoTDzIbpF/VDc68YVTY+LF
-         tqtYMfpTLJaiUVFgrECdA8OPXOO6rQ5+TX76NqQhCeO4weg/VsNg7iiKMLAdam64GNsf
-         ThWQ==
-X-Gm-Message-State: AOAM530rRnRL/4GsApbUd9BrXr7dXE4GTMOFDflgGyH71fIe3iEOJd2X
-        p6zW9MhA8wy3gm4Cc+sz0Co=
-X-Google-Smtp-Source: ABdhPJz8+9DiVk48iTznhvwlTqX9fNIICVnzTs33hfzm2Hn4JqvMgR+6xsmH2yQmzSkfzldh+26OeQ==
-X-Received: by 2002:a17:902:7d8f:: with SMTP id a15mr8138706plm.37.1595002265426;
-        Fri, 17 Jul 2020 09:11:05 -0700 (PDT)
-Received: from localhost ([89.208.244.139])
-        by smtp.gmail.com with ESMTPSA id q24sm8286571pfg.95.2020.07.17.09.11.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Jul 2020 09:11:04 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     corbet@lwn.net, gregkh@linuxfoundation.org, rafael@kernel.org,
-        f.fainelli@gmail.com, heiko@sntech.de, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH v4 1/2] drivers: provide devm_platform_request_irq()
-Date:   Sat, 18 Jul 2020 00:10:44 +0800
-Message-Id: <20200717161045.11458-2-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200717161045.11458-1-zhengdejin5@gmail.com>
-References: <20200717161045.11458-1-zhengdejin5@gmail.com>
+        Fri, 17 Jul 2020 12:11:48 -0400
+Received: (qmail 1153242 invoked by uid 1000); 17 Jul 2020 12:11:45 -0400
+Date:   Fri, 17 Jul 2020 12:11:45 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, paulmck <paulmck@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
+Message-ID: <20200717161145.GA1150454@rowland.harvard.edu>
+References: <20200710015646.2020871-1-npiggin@gmail.com>
+ <1594873644.viept6os6j.astroid@bobo.none>
+ <1494299304.15894.1594914382695.JavaMail.zimbra@efficios.com>
+ <1370747990.15974.1594915396143.JavaMail.zimbra@efficios.com>
+ <595582123.17106.1594925921537.JavaMail.zimbra@efficios.com>
+ <20200716212416.GA1126458@rowland.harvard.edu>
+ <1770378591.18523.1594993165391.JavaMail.zimbra@efficios.com>
+ <20200717145102.GC1147780@rowland.harvard.edu>
+ <1697220787.18880.1595000348405.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1697220787.18880.1595000348405.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It will call devm_request_irq() after platform_get_irq() function
-in many drivers, And sometimes, the error handling of these two functions
-is incorrect in some drivers. So this function is provided to simplify
-the driver.
+> > I agree with Nick: A memory barrier is needed somewhere between the
+> > assignment at 6 and the return to user mode at 8.  Otherwise you end up
+> > with the Store Buffer pattern having a memory barrier on only one side,
+> > and it is well known that this arrangement does not guarantee any
+> > ordering.
+> 
+> Yes, I see this now. I'm still trying to wrap my head around why the memory
+> barrier at the end of membarrier() needs to be paired with a scheduler
+> barrier though.
 
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v3 -> v4:
-	- The patch v3 sent on May 27 may be lost somewhere in the
-	  world, so resend it.
-v2 -> v3:
-	- add devm_platform_request_irq() to devres.rst by Grygorii's
-	  suggestion.
-v1 -> v2:
-	- The patch content has not changed. just resend it by this discussion:
-	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+The memory barrier at the end of membarrier() on CPU0 is necessary in 
+order to enforce the guarantee that any writes occurring on CPU1 before 
+the membarrier() is executed will be visible to any code executing on 
+CPU0 after the membarrier().  Ignoring the kthread issue, we can have:
 
- .../driver-api/driver-model/devres.rst        |  1 +
- drivers/base/platform.c                       | 33 +++++++++++++++++++
- include/linux/platform_device.h               |  4 +++
- 3 files changed, 38 insertions(+)
+	CPU0			CPU1
+				x = 1
+				barrier()
+				y = 1
+	r2 = y
+	membarrier():
+	  a: smp_mb()
+	  b: send IPI		IPI-induced mb
+	  c: smp_mb()
+	r1 = x
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index eaaaafc21134..9c75903bce7c 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -326,6 +326,7 @@ IRQ
-   devm_request_any_context_irq()
-   devm_request_irq()
-   devm_request_threaded_irq()
-+  devm_platform_request_irq()
-   devm_irq_alloc_descs()
-   devm_irq_alloc_desc()
-   devm_irq_alloc_desc_at()
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index e5d8a0503b4f..d4212d12bf60 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -275,6 +275,39 @@ int platform_irq_count(struct platform_device *dev)
- }
- EXPORT_SYMBOL_GPL(platform_irq_count);
- 
-+/**
-+ * devm_platform_request_irq - get an irq and allocate an interrupt
-+ *				line for a managed device
-+ * @pdev: platform device
-+ * @num: IRQ number index
-+ * @irq: get an IRQ for a device if irq != NULL
-+ * @handler: function to be called when the IRQ occurs
-+ * @irqflags: interrupt type flags
-+ * @devname: an ascii name for the claiming device, dev_name(dev) if NULL
-+ * @dev_id: a cookie passed back to the handler function
-+ *
-+ * Return: zero on success, negative error number on failure.
-+ */
-+int devm_platform_request_irq(struct platform_device *pdev, unsigned int num,
-+		unsigned int *irq, irq_handler_t handler,
-+		unsigned long irqflags, const char *devname, void *dev_id)
-+{
-+	int tmp_irq, ret;
-+
-+	tmp_irq = platform_get_irq(pdev, num);
-+	if (tmp_irq < 0)
-+		return tmp_irq;
-+
-+	ret = devm_request_irq(&pdev->dev, tmp_irq, handler, irqflags,
-+				devname, dev_id);
-+	if (ret < 0)
-+		dev_err(&pdev->dev, "can't request IRQ\n");
-+	else if (irq != NULL)
-+		*irq = tmp_irq;
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(devm_platform_request_irq);
-+
- /**
-  * platform_get_resource_byname - get a resource for a device by name
-  * @dev: platform device
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index 77a2aada106d..d94652deea5c 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -11,6 +11,7 @@
- #define _PLATFORM_DEVICE_H_
- 
- #include <linux/device.h>
-+#include <linux/interrupt.h>
- 
- #define PLATFORM_DEVID_NONE	(-1)
- #define PLATFORM_DEVID_AUTO	(-2)
-@@ -70,6 +71,9 @@ devm_platform_ioremap_resource_byname(struct platform_device *pdev,
- extern int platform_get_irq(struct platform_device *, unsigned int);
- extern int platform_get_irq_optional(struct platform_device *, unsigned int);
- extern int platform_irq_count(struct platform_device *);
-+extern int devm_platform_request_irq(struct platform_device *pdev,
-+		unsigned int num, unsigned int *irq, irq_handler_t handler,
-+		unsigned long irqflags, const char *devname, void *dev_id);
- extern struct resource *platform_get_resource_byname(struct platform_device *,
- 						     unsigned int,
- 						     const char *);
--- 
-2.25.0
+The writes to x and y are unordered by the hardware, so it's possible to 
+have r2 = 1 even though the write to x doesn't execute until b.  If the 
+memory barrier at c is omitted then "r1 = x" can be reordered before b 
+(although not before a), so we get r1 = 0.  This violates the guarantee 
+that membarrier() is supposed to provide.
 
+The timing of the memory barrier at c has to ensure that it executes 
+after the IPI-induced memory barrier on CPU1.  If it happened before 
+then we could still end up with r1 = 0.  That's why the pairing matters.
+
+I hope this helps your head get properly wrapped.  :-)
+
+Alan Stern
