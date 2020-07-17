@@ -4,93 +4,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E08C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED66DC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCDB02074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70DB2076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 16:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgGQQLs (ORCPT
+        id S1727847AbgGQQMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 12:11:48 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:51325 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726104AbgGQQLs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 12:11:48 -0400
-Received: (qmail 1153242 invoked by uid 1000); 17 Jul 2020 12:11:45 -0400
-Date:   Fri, 17 Jul 2020 12:11:45 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, paulmck <paulmck@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
-Message-ID: <20200717161145.GA1150454@rowland.harvard.edu>
-References: <20200710015646.2020871-1-npiggin@gmail.com>
- <1594873644.viept6os6j.astroid@bobo.none>
- <1494299304.15894.1594914382695.JavaMail.zimbra@efficios.com>
- <1370747990.15974.1594915396143.JavaMail.zimbra@efficios.com>
- <595582123.17106.1594925921537.JavaMail.zimbra@efficios.com>
- <20200716212416.GA1126458@rowland.harvard.edu>
- <1770378591.18523.1594993165391.JavaMail.zimbra@efficios.com>
- <20200717145102.GC1147780@rowland.harvard.edu>
- <1697220787.18880.1595000348405.JavaMail.zimbra@efficios.com>
+        Fri, 17 Jul 2020 12:12:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727786AbgGQQMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:12:39 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BAAD2070E;
+        Fri, 17 Jul 2020 16:12:35 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 12:12:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Linux-trace Users <linux-trace-users@vger.kernel.org>,
+        "linux-trace-devel@vger.kernel.org" 
+        <linux-trace-devel@vger.kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Yordan Karadzhov <y.karadz@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Changbin Du <changbin.du@gmail.com>,
+        Patrick McLean <chutzpah@gentoo.org>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Clark Williams <williams@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        John Kacur <jkacur@redhat.com>, Tony Jones <tonyj@suse.de>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Wagner <wagi@monom.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Josef Bacik <jbacik@fb.com>, troyengel@gmail.com,
+        Behan Webster <behanw@converseincode.com>
+Subject: [ANNOUNCE] trace-cmd 2.9
+Message-ID: <20200717121233.5d0d131c@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1697220787.18880.1595000348405.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > I agree with Nick: A memory barrier is needed somewhere between the
-> > assignment at 6 and the return to user mode at 8.  Otherwise you end up
-> > with the Store Buffer pattern having a memory barrier on only one side,
-> > and it is well known that this arrangement does not guarantee any
-> > ordering.
-> 
-> Yes, I see this now. I'm still trying to wrap my head around why the memory
-> barrier at the end of membarrier() needs to be paired with a scheduler
-> barrier though.
+I'm happy to announce that after over a year, we finally are able to
+release trace-cmd version 2.9!
 
-The memory barrier at the end of membarrier() on CPU0 is necessary in 
-order to enforce the guarantee that any writes occurring on CPU1 before 
-the membarrier() is executed will be visible to any code executing on 
-CPU0 after the membarrier().  Ignoring the kthread issue, we can have:
 
-	CPU0			CPU1
-				x = 1
-				barrier()
-				y = 1
-	r2 = y
-	membarrier():
-	  a: smp_mb()
-	  b: send IPI		IPI-induced mb
-	  c: smp_mb()
-	r1 = x
+Features and user visible updates since 2.8:
 
-The writes to x and y are unordered by the hardware, so it's possible to 
-have r2 = 1 even though the write to x doesn't execute until b.  If the 
-memory barrier at c is omitted then "r1 = x" can be reordered before b 
-(although not before a), so we get r1 = 0.  This violates the guarantee 
-that membarrier() is supposed to provide.
+ - git hash is now visible in trace-cmd --version output
 
-The timing of the memory barrier at c has to ensure that it executes 
-after the IPI-induced memory barrier on CPU1.  If it happened before 
-then we could still end up with r1 = 0.  That's why the pairing matters.
+ - Build: python-dir can be specified on the command line for python
+   location.
 
-I hope this helps your head get properly wrapped.  :-)
+ - Build: NO_UDIS86 on make command line to disable udisc86.
 
-Alan Stern
+ - Build: All headers needed by kernelshark installed.
+
+ - Added --proc-map to trace-cmd record.
+   Records the /proc/<pid>/maps of the traced file.
+   Used for seeing where page_faults happen (trace-cruncher can use it)
+
+ - Add --user to trace-cmd record, to allow to suid to another user to
+   execute the command also on the command line. Useful as trace-cmd needs
+   to be run as root to start the tracing, but when root should not be used
+   as the application being traced.
+
+ - Build: Install path of plugins have changed:
+                   ~/.traceevent/plugins/ --> ~/.local/lib/traceevent/plugins/
+   (install_prefix)/lib/trace-cmd/plugins --> (install_prefix)/lib/traceevent/plugins
+
+ - trace-cmd reset will now clear the tracing_cpumask file.
+
+ - ** NEW ** trace-cmd clear
+   Clear the trace file.
+
+ - ** NEW ** trace-cmd agent
+   Can be run on a guest, which will listen on a vsock for commands.
+   trace-cmd report -A Gust <options for guest>
+   Will connect to the guest agent and have the agent run tracing commands
+   sending the data back to the host. See man pages for more details.
+   (note, the synchronization of time stamps is not yet available,
+    that will be coming in the next release of trace-cmd).
+
+ - ** NEW ** trace-cmd setup-guest
+   Sets up fifos for a guest and host communications instead of vsocks.
+
+ - Add --cmdline_size option to trace-cmd record.
+   Changes the number of process names that are saved in the cache while
+   tracing.
+
+ - ** NEW ** trace-cmd dump
+   Dumps out raw data of the trace.dat file.
+
+ - Build: New: make test
+   Builds and runs various unit tests.
+
+ - More information from trace-cmd stat.
+
+ - trace-cmd reset will now clear the error log.
+
+ - Add option '-s' to trace-cmd list.
+   This will list the available systems (not events).
+
+ - Recording will now stop if -P is on the command line of trace-cmd record
+   and those processes all exit.
+
+ - trace-cmd start can now run commands.
+   This is useful when -F and -c are specified on the command line.
+   New "--fork" command line to have trace-cmd not wait for the command to
+   finish before exiting.
+
+ - ** New ** trace-cmd set command.
+   Used to set or unset options without messing with other ftrace options.
+
+Plus many fixes and infrastructure improvements.
+Changes are also made to set up having libtraceevent, libtracefs and
+kernelshark be moved into their own git repositories.
+
+We plan on working more more aggressively on the libraries and the tool
+set, such that 3.0 wont take a year to be released.
+
+For more information please visit: https://trace-cmd.org
+
+If you would like to contribute, check out the above web site for where
+we do our development, and feel free to contact us on how to get
+involved.
+
+Enjoy,
+
+-- Steve
