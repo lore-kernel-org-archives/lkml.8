@@ -2,135 +2,105 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5AFC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C635C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 871DE2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1432076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgGQJZh (ORCPT
+        id S1726829AbgGQJZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:25:37 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:50945 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgGQJZg (ORCPT
+        Fri, 17 Jul 2020 05:25:43 -0400
+Received: from lucky1.263xmail.com ([211.157.147.135]:58762 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgGQJZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:25:36 -0400
-X-Originating-IP: 90.65.108.121
-Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 930011BF235;
-        Fri, 17 Jul 2020 09:23:54 +0000 (UTC)
-Date:   Fri, 17 Jul 2020 11:23:54 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 06/19] clk: at91: sam9x60-pll: check fcore against ranges
-Message-ID: <20200717092354.GO3428@piout.net>
-References: <1594812267-6697-1-git-send-email-claudiu.beznea@microchip.com>
- <1594812267-6697-7-git-send-email-claudiu.beznea@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594812267-6697-7-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 17 Jul 2020 05:25:43 -0400
+Received: from localhost (unknown [192.168.167.69])
+        by lucky1.263xmail.com (Postfix) with ESMTP id ADD74A17BE;
+        Fri, 17 Jul 2020 17:25:40 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P18496T139713876850432S1594977933482006_;
+        Fri, 17 Jul 2020 17:25:40 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <29315f35b500a8659d079d3e972b1351>
+X-RL-SENDER: yifeng.zhao@rock-chips.com
+X-SENDER: zyf@rock-chips.com
+X-LOGIN-NAME: yifeng.zhao@rock-chips.com
+X-FST-TO: miquel.raynal@bootlin.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Yifeng Zhao <yifeng.zhao@rock-chips.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Subject: [PATCH v8 6/8] arm: dts: rockchip: Add NFC node for RV1108 SoC
+Date:   Fri, 17 Jul 2020 17:25:30 +0800
+Message-Id: <20200717092532.19853-2-yifeng.zhao@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200717092532.19853-1-yifeng.zhao@rock-chips.com>
+References: <20200717092420.19798-1-yifeng.zhao@rock-chips.com>
+ <20200717092532.19853-1-yifeng.zhao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/2020 14:24:14+0300, Claudiu Beznea wrote:
-> According to datasheet the range of 600-1200MHz is for the the
+Add NAND FLASH Controller(NFC) node for RV1108 SoC.
 
-the is repeated here
+Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+---
 
-> frequency generated by the fractional part of the PLL (namely
-> Fcorepllck according to datasheet). With this in mind the output
-> range of the PLL itself (fractional + div), taking into account
-> that the diverder is 8 bits wide, is 600/256-1200Hz=2.3-1200MHz.
-> 
+Changes in v8: None
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-divider
+ arch/arm/boot/dts/rv1108.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-> Fixes: a436c2a447e59 ("clk: at91: add sam9x60 PLL driver")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  drivers/clk/at91/clk-sam9x60-pll.c | 12 +++++++++++-
->  drivers/clk/at91/sam9x60.c         |  2 +-
->  2 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/clk-sam9x60-pll.c b/drivers/clk/at91/clk-sam9x60-pll.c
-> index dfb91c190bd1..00f2afd6e9b6 100644
-> --- a/drivers/clk/at91/clk-sam9x60-pll.c
-> +++ b/drivers/clk/at91/clk-sam9x60-pll.c
-> @@ -21,6 +21,9 @@
->  #define UPLL_DIV		2
->  #define PLL_MUL_MAX		(FIELD_GET(PMC_PLL_CTRL1_MUL_MSK, UINT_MAX) + 1)
->  
-> +#define FCORE_MIN		(600000000)
-> +#define FCORE_MAX		(1200000000)
-> +
->  #define PLL_MAX_ID		1
->  
->  struct sam9x60_pll {
-> @@ -169,6 +172,7 @@ static long sam9x60_pll_get_best_div_mul(struct sam9x60_pll *pll,
->  	unsigned long bestdiv = 0;
->  	unsigned long bestmul = 0;
->  	unsigned long bestfrac = 0;
-> +	unsigned long long fcore = 0;
-
-maybe it would be best to go for u64 here as this is what you cast into
-later.
-
->  
->  	if (rate < characteristics->output[0].min ||
->  	    rate > characteristics->output[0].max)
-> @@ -213,6 +217,11 @@ static long sam9x60_pll_get_best_div_mul(struct sam9x60_pll *pll,
->  				remainder = rate - tmprate;
->  		}
->  
-> +		fcore = parent_rate * (tmpmul + 1) +
-> +			((u64)parent_rate * tmpfrac >> 22);
-> +		if (fcore < FCORE_MIN || fcore > FCORE_MAX)
-> +			continue;
-> +
->  		/*
->  		 * Compare the remainder with the best remainder found until
->  		 * now and elect a new best multiplier/divider pair if the
-> @@ -232,7 +241,8 @@ static long sam9x60_pll_get_best_div_mul(struct sam9x60_pll *pll,
->  	}
->  
->  	/* Check if bestrate is a valid output rate  */
-> -	if (bestrate < characteristics->output[0].min ||
-> +	if (fcore < FCORE_MIN || fcore > FCORE_MAX ||
-> +	    bestrate < characteristics->output[0].min ||
->  	    bestrate > characteristics->output[0].max)
->  		return -ERANGE;
->  
-> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-> index 3e20aa68259f..633891b98d43 100644
-> --- a/drivers/clk/at91/sam9x60.c
-> +++ b/drivers/clk/at91/sam9x60.c
-> @@ -22,7 +22,7 @@ static const struct clk_master_layout sam9x60_master_layout = {
->  };
->  
->  static const struct clk_range plla_outputs[] = {
-> -	{ .min = 300000000, .max = 600000000 },
-> +	{ .min = 2343750, .max = 1200000000 },
->  };
->  
->  static const struct clk_pll_characteristics plla_characteristics = {
-> -- 
-> 2.7.4
-> 
-
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index f9cfe2c80791..56cf7f49773b 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -451,6 +451,17 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
++	nfc: nand-controller@30100000 {
++		compatible = "rockchip,rv1108-nfc";
++		reg = <0x30100000  0x1000>;
++		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_NANDC>, <&cru SCLK_NANDC>;
++		clock-names = "ahb", "nfc";
++		assigned-clocks = <&cru SCLK_NANDC>;
++		assigned-clock-rates = <150000000>;
++		status = "disabled";
++	};
++
+ 	emmc: mmc@30110000 {
+ 		compatible = "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x30110000 0x4000>;
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
+
+
+
