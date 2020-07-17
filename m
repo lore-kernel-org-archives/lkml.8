@@ -7,61 +7,59 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1FCC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA29C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCCD720734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643462070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kTTgFNTb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="THod4kPM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tD6nlKwP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bnJvwgaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgGQOvm (ORCPT
+        id S1728010AbgGQOvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:51:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbgGQOvN (ORCPT
+        Fri, 17 Jul 2020 10:51:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41178 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbgGQOvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:51:13 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DFEC0619D3;
-        Fri, 17 Jul 2020 07:51:12 -0700 (PDT)
+        Fri, 17 Jul 2020 10:51:14 -0400
 Date:   Fri, 17 Jul 2020 14:51:10 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594997470;
+        s=2020; t=1594997471;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CskPa9RPcNfozLy8UejoC3ZnVNx6pQobsO/ElT203cM=;
-        b=kTTgFNTbEV0d2nibjcYTq3i28qFWozvSxjKjM5V5lsrV/II8LD+/OWcCTyU1KsQgCvaqjj
-        skiTsxdshEGQljxz+BZV/k1EkoLcZVEJxrQypxLhq4t7fHDdwT8CPr/ZCHdD6NewJ5xhdn
-        IttLqTmpTzhFv2kORCo09eZXR+p4NyjsXLSLsEqOSVs0z1qLP4G3loBzlHBsK2uupENM2+
-        a3LmHOsjQ5f/DpIfmZTm5pI8i1TA8SCsJWub+i7+iC8J2ZjzBJ0Xgn3goudKKdlmy3Gwfj
-        khLqkIWGKmAyCi53PSFU7WFbsXIiDA7xzmsuoVMMN6fmxoFPE4AG3QTYJeo55g==
+        bh=lS+t5jPVtW4ya5DQ0VX0TYnYWANSmMy0vRoq8kEGljk=;
+        b=tD6nlKwPQWGQGWrIDXiPrkSWlmXqM3IyOoUjUqWg3u5+ZU1WBXXxqTKTMNtW3HQ93gkjZy
+        bYE2MkQEOBxVi4x33efNvlPtXmURj0YIu0/76h9gWlUBD2OHCzp1Cvy26IZky8B+4UC4KA
+        YAz3MJEggZH+RYkf8Ggv2pBvWWQLZlCJxJ+F25WsMUVimsi03E0k61tGJ/tEufuRydKGmg
+        HXYFUF/TXcfwUTra59pov+qhEpZMNkjibDqCojkLcBvnMt73xi1CIe2X5K9y4x6hwFIjsc
+        o2TFlOags2LAhn6yo0ArlKwSHIdd1viECR74/kdTQWUkwNuS3tFBKKK+0BjTsQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594997470;
+        s=2020e; t=1594997471;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CskPa9RPcNfozLy8UejoC3ZnVNx6pQobsO/ElT203cM=;
-        b=THod4kPMqr803YMPvIxJsvsO0y1noBYCPQun1zTCeQwwvHt2D2IueFsSmzcmTefGL63Z7s
-        sIiO754a2zQko0BA==
+        bh=lS+t5jPVtW4ya5DQ0VX0TYnYWANSmMy0vRoq8kEGljk=;
+        b=bnJvwgaL4yEPgGwDYTyJAckXGgNwprVVj/RaxTuOPYQcmWFloTYIq81n1eKhYBG4FqxYaF
+        bH2pahc7EdanWGAg==
 From:   "tip-bot2 for steve.wahl@hpe.com" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/platform] x86/platform/uv: Remove support for UV1 platform from uv
+Subject: [tip: x86/platform] x86/platform/uv: Remove support for uv1 platform
+ from uv_hub
 Cc:     Steve Wahl <steve.wahl@hpe.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200713212955.320087418@hpe.com>
-References: <20200713212955.320087418@hpe.com>
+In-Reply-To: <20200713212955.203480177@hpe.com>
+References: <20200713212955.203480177@hpe.com>
 MIME-Version: 1.0
-Message-ID: <159499747007.4006.10229652805128761175.tip-bot2@tip-bot2>
+Message-ID: <159499747063.4006.10455442521413710528.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -74,35 +72,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/platform branch of tip:
 
-Commit-ID:     f584c75307f3b75a83e006b98c5718fc20797851
-Gitweb:        https://git.kernel.org/tip/f584c75307f3b75a83e006b98c5718fc20797851
+Commit-ID:     9b9ee172410d839ca55ad2e25e96f7398fb66f4f
+Gitweb:        https://git.kernel.org/tip/9b9ee172410d839ca55ad2e25e96f7398fb66f4f
 Author:        steve.wahl@hpe.com <steve.wahl@hpe.com>
-AuthorDate:    Mon, 13 Jul 2020 16:30:01 -05:00
+AuthorDate:    Mon, 13 Jul 2020 16:30:00 -05:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 17 Jul 2020 16:47:46 +02:00
+CommitterDate: Fri, 17 Jul 2020 16:47:45 +02:00
 
-x86/platform/uv: Remove support for UV1 platform from uv
+x86/platform/uv: Remove support for uv1 platform from uv_hub
 
-UV1 is not longer supported by HPE
+UV1 is not longer supported by HPE.
 
 Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200713212955.320087418@hpe.com
+Link: https://lkml.kernel.org/r/20200713212955.203480177@hpe.com
 
 ---
- arch/x86/include/asm/uv/uv.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/uv/uv_hub.h | 34 ++-----------------------------
+ 1 file changed, 3 insertions(+), 31 deletions(-)
 
-diff --git a/arch/x86/include/asm/uv/uv.h b/arch/x86/include/asm/uv/uv.h
-index 3db8562..e48aea9 100644
---- a/arch/x86/include/asm/uv/uv.h
-+++ b/arch/x86/include/asm/uv/uv.h
-@@ -4,7 +4,7 @@
+diff --git a/arch/x86/include/asm/uv/uv_hub.h b/arch/x86/include/asm/uv/uv_hub.h
+index 60ca0af..c0bcadf 100644
+--- a/arch/x86/include/asm/uv/uv_hub.h
++++ b/arch/x86/include/asm/uv/uv_hub.h
+@@ -224,17 +224,11 @@ static inline struct uv_hub_info_s *uv_cpu_hub_info(int cpu)
+  * This is a software convention - NOT the hardware revision numbers in
+  * the hub chip.
+  */
+-#define UV1_HUB_REVISION_BASE		1
+ #define UV2_HUB_REVISION_BASE		3
+ #define UV3_HUB_REVISION_BASE		5
+ #define UV4_HUB_REVISION_BASE		7
+ #define UV4A_HUB_REVISION_BASE		8	/* UV4 (fixed) rev 2 */
  
- #include <asm/tlbflush.h>
+-static inline int is_uv1_hub(void)
+-{
+-	return is_uv_hubbed(uv(1));
+-}
+-
+ static inline int is_uv2_hub(void)
+ {
+ 	return is_uv_hubbed(uv(2));
+@@ -265,7 +259,7 @@ static inline int is_uvx_hub(void)
  
--enum uv_system_type {UV_NONE, UV_LEGACY_APIC, UV_X2APIC, UV_NON_UNIQUE_APIC};
-+enum uv_system_type {UV_NONE, UV_LEGACY_APIC, UV_X2APIC};
+ static inline int is_uv_hub(void)
+ {
+-	return is_uv1_hub() || is_uvx_hub();
++	return is_uvx_hub();
+ }
  
- struct cpumask;
- struct mm_struct;
+ union uvh_apicid {
+@@ -292,11 +286,6 @@ union uvh_apicid {
+ #define UV_PNODE_TO_GNODE(p)		((p) |uv_hub_info->gnode_extra)
+ #define UV_PNODE_TO_NASID(p)		(UV_PNODE_TO_GNODE(p) << 1)
+ 
+-#define UV1_LOCAL_MMR_BASE		0xf4000000UL
+-#define UV1_GLOBAL_MMR32_BASE		0xf8000000UL
+-#define UV1_LOCAL_MMR_SIZE		(64UL * 1024 * 1024)
+-#define UV1_GLOBAL_MMR32_SIZE		(64UL * 1024 * 1024)
+-
+ #define UV2_LOCAL_MMR_BASE		0xfa000000UL
+ #define UV2_GLOBAL_MMR32_BASE		0xfc000000UL
+ #define UV2_LOCAL_MMR_SIZE		(32UL * 1024 * 1024)
+@@ -313,25 +302,21 @@ union uvh_apicid {
+ #define UV4_GLOBAL_MMR32_SIZE		(16UL * 1024 * 1024)
+ 
+ #define UV_LOCAL_MMR_BASE		(				\
+-					is_uv1_hub() ? UV1_LOCAL_MMR_BASE : \
+ 					is_uv2_hub() ? UV2_LOCAL_MMR_BASE : \
+ 					is_uv3_hub() ? UV3_LOCAL_MMR_BASE : \
+ 					/*is_uv4_hub*/ UV4_LOCAL_MMR_BASE)
+ 
+ #define UV_GLOBAL_MMR32_BASE		(				\
+-					is_uv1_hub() ? UV1_GLOBAL_MMR32_BASE : \
+ 					is_uv2_hub() ? UV2_GLOBAL_MMR32_BASE : \
+ 					is_uv3_hub() ? UV3_GLOBAL_MMR32_BASE : \
+ 					/*is_uv4_hub*/ UV4_GLOBAL_MMR32_BASE)
+ 
+ #define UV_LOCAL_MMR_SIZE		(				\
+-					is_uv1_hub() ? UV1_LOCAL_MMR_SIZE : \
+ 					is_uv2_hub() ? UV2_LOCAL_MMR_SIZE : \
+ 					is_uv3_hub() ? UV3_LOCAL_MMR_SIZE : \
+ 					/*is_uv4_hub*/ UV4_LOCAL_MMR_SIZE)
+ 
+ #define UV_GLOBAL_MMR32_SIZE		(				\
+-					is_uv1_hub() ? UV1_GLOBAL_MMR32_SIZE : \
+ 					is_uv2_hub() ? UV2_GLOBAL_MMR32_SIZE : \
+ 					is_uv3_hub() ? UV3_GLOBAL_MMR32_SIZE : \
+ 					/*is_uv4_hub*/ UV4_GLOBAL_MMR32_SIZE)
+@@ -352,8 +337,6 @@ union uvh_apicid {
+ #define UVH_APICID		0x002D0E00L
+ #define UV_APIC_PNODE_SHIFT	6
+ 
+-#define UV_APICID_HIBIT_MASK	0xffff0000
+-
+ /* Local Bus from cpu's perspective */
+ #define LOCAL_BUS_BASE		0x1c00000
+ #define LOCAL_BUS_SIZE		(4 * 1024 * 1024)
+@@ -560,15 +543,6 @@ static inline int uv_apicid_to_pnode(int apicid)
+ 	return s2pn ? s2pn[pnode - uv_hub_info->min_socket] : pnode;
+ }
+ 
+-/* Convert an apicid to the socket number on the blade */
+-static inline int uv_apicid_to_socket(int apicid)
+-{
+-	if (is_uv1_hub())
+-		return (apicid >> (uv_hub_info->apic_pnode_shift - 1)) & 1;
+-	else
+-		return 0;
+-}
+-
+ /*
+  * Access global MMRs using the low memory MMR32 space. This region supports
+  * faster MMR access but not all MMRs are accessible in this space.
+@@ -660,7 +634,7 @@ static inline int uv_cpu_blade_processor_id(int cpu)
+ 	return uv_cpu_info_per(cpu)->blade_cpu_id;
+ }
+ 
+-/* Blade number to Node number (UV1..UV4 is 1:1) */
++/* Blade number to Node number (UV2..UV4 is 1:1) */
+ static inline int uv_blade_to_node(int blade)
+ {
+ 	return blade;
+@@ -674,7 +648,7 @@ static inline int uv_numa_blade_id(void)
+ 
+ /*
+  * Convert linux node number to the UV blade number.
+- * .. Currently for UV1 thru UV4 the node and the blade are identical.
++ * .. Currently for UV2 thru UV4 the node and the blade are identical.
+  * .. If this changes then you MUST check references to this function!
+  */
+ static inline int uv_node_to_blade_id(int nid)
+@@ -821,8 +795,6 @@ static inline void uv_set_cpu_scir_bits(int cpu, unsigned char value)
+ 	}
+ }
+ 
+-extern unsigned int uv_apicid_hibits;
+-
+ /*
+  * Get the minimum revision number of the hub chips within the partition.
+  * (See UVx_HUB_REVISION_BASE above for specific values.)
