@@ -2,118 +2,144 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E310C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE48C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAE582065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PJ51StK5"
+	by mail.kernel.org (Postfix) with ESMTP id 17C152065D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594999228;
+	bh=g0mnlni9XXk+nL9o5iJbyfC4t1kxF8cB5gGowQN1hjk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=iSt7vtNdbtAumipc0BBadVJOA1i9tpJYQ8hyF/k/tDpe4MlbApAEpZ8mXzcxuOtXH
+	 wTZlSEgeCB6bfwiZ1VztgeZFGDAYxNgrI4aTH+Mhc04IjCNMCw2kpvGHey2jnxqcOn
+	 HW+qykKoX61FOqAPpvBE0LdMDMFB+YHpWyBp2uLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgGQPZM (ORCPT
+        id S1726885AbgGQPU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:25:12 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:35170 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgGQPZM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 11:25:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594999511; x=1626535511;
-  h=from:to:cc:subject:date:message-id:content-id:
-   content-transfer-encoding:mime-version;
-  bh=G75k//OFjohU38ZgosvGO5q8OosY9IuKew7WVhx6Up0=;
-  b=PJ51StK5n5n5riZrPRdrzzapaPbfapbNVDZziuPhAB16s83gqH/3Njk3
-   lHCRLd5AYa4SY3mnzVN3tJ1gVRakT+gJl7yM0PbFAXYlMxqpuvKcrfR/i
-   BPCIaXV9Nq8o1T9wdvgE7m1OJo7HA/wa/CuM+dIPzReCzBc7YShM+MjyN
-   E=;
-IronPort-SDR: e1//RxWVXOsjAC65SEGU+2scnm0JZMIo9PmeGqu5BZ40eJge8dvUXtQP4wXhIddTnkvYQT8Csp
- G3oOG+K11Mog==
-X-IronPort-AV: E=Sophos;i="5.75,362,1589241600"; 
-   d="scan'208";a="52415837"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 17 Jul 2020 15:25:09 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id 32E86A261C;
-        Fri, 17 Jul 2020 15:25:07 +0000 (UTC)
-Received: from EX13D21UWB002.ant.amazon.com (10.43.161.177) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 17 Jul 2020 15:25:06 +0000
-Received: from EX13D02UWC001.ant.amazon.com (10.43.162.243) by
- EX13D21UWB002.ant.amazon.com (10.43.161.177) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 17 Jul 2020 15:25:06 +0000
-Received: from EX13D02UWC001.ant.amazon.com ([10.43.162.243]) by
- EX13D02UWC001.ant.amazon.com ([10.43.162.243]) with mapi id 15.00.1497.006;
- Fri, 17 Jul 2020 15:25:06 +0000
-From:   "Saidi, Ali" <alisaidi@amazon.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        Ali Saidi <aliaidi@amazon.com>, Marc Zyngier <maz@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] genirq/affinity: Handle affinity setting on inactive
- interrupts correctly
-Thread-Topic: [PATCH] genirq/affinity: Handle affinity setting on inactive
- interrupts correctly
-Thread-Index: AQHWXE5yOF+Kj67jZUWJl7gBhLLD9A==
-Date:   Fri, 17 Jul 2020 15:25:05 +0000
-Message-ID: <BBA90891-8A4A-4A39-BF51-13EECDE414F1@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.161.34]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <84714F54C0845F43865AFD07549EBBE3@amazon.com>
-Content-Transfer-Encoding: base64
+        Fri, 17 Jul 2020 11:20:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgGQPU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 11:20:26 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC07D2065D;
+        Fri, 17 Jul 2020 15:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594999225;
+        bh=g0mnlni9XXk+nL9o5iJbyfC4t1kxF8cB5gGowQN1hjk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=P4RuzDCvTjCZBGuOszevkAmDZi7N+WfVVzG7RbRYFTBSDmM9WdKmVGKYY0DiXXSz6
+         kcXul6gjvXV3Go3ZUUMU9WISbeoJewasQbMuJ35J8c9Mrnkf6bs4AlKMvGw/bXhzmC
+         24e5QXGPfRJ28Ik5SrSqfUps+TN6IxfTPL6KQdoQ=
+Date:   Fri, 17 Jul 2020 16:20:21 +0100
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, kernel-team@android.com
+Subject: [GIT PULL] arm64 fixes for -rc6
+Message-ID: <20200717152020.GA9056@willie-the-truck>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQrvu79PbiA3LzE3LzIwLCA5OjAwIEFNLCAiVGhvbWFzIEdsZWl4bmVyIiA8dGdseEBsaW51dHJv
-bml4LmRlPiB3cm90ZToNCg0KICAgIFNldHRpbmcgaW50ZXJydXB0IGFmZmluaXR5IG9uIGluYWN0
-aXZlIGludGVycnVwdHMgaXMgaW5jb25zaXN0ZW50IHdoZW4NCiAgICBoaWVyYXJjaGljYWwgaXJx
-IGRvbWFpbnMgYXJlIGVuYWJsZWQuIFRoZSBjb3JlIGNvZGUgc2hvdWxkIGp1c3Qgc3RvcmUgdGhl
-DQogICAgYWZmaW5pdHkgYW5kIG5vdCBjYWxsIGludG8gdGhlIGlycSBjaGlwIGRyaXZlciBmb3Ig
-aW5hY3RpdmUgaW50ZXJydXB0cw0KICAgIGJlY2F1c2UgdGhlIGNoaXAgZHJpdmVycyBtYXkgbm90
-IGJlIGluIGEgc3RhdGUgdG8gaGFuZGxlIHN1Y2ggcmVxdWVzdHMuDQoNCiAgICBYODYgaGFzIGEg
-aGFja3kgd29ya2Fyb3VuZCBmb3IgdGhhdCBidXQgYWxsIG90aGVyIGlycSBjaGlwcyBoYXZlIG5v
-dCB3aGljaA0KICAgIGNhdXNlcyBwcm9ibGVtcyBlLmcuIG9uIEdJQyBWMyBJVFMuDQoNCiAgICBJ
-bnN0ZWFkIG9mIGFkZGluZyBtb3JlIHVnbHkgaGFja3MgYWxsIG92ZXIgdGhlIHBsYWNlLCBzb2x2
-ZSB0aGUgcHJvYmxlbSBpbg0KICAgIHRoZSBjb3JlIGNvZGUuIElmIHRoZSBhZmZpbml0eSBpcyBz
-ZXQgb24gYW4gaW5hY3RpdmUgaW50ZXJydXB0IHRoZW46DQoNCiAgICAgICAgLSBTdG9yZSBpdCBp
-biB0aGUgaXJxIGRlc2NyaXB0b3JzIGFmZmluaXR5IG1hc2sNCiAgICAgICAgLSBVcGRhdGUgdGhl
-IGVmZmVjdGl2ZSBhZmZpbml0eSB0byByZWZsZWN0IHRoYXQgc28gdXNlciBzcGFjZSBoYXMNCiAg
-ICAgICAgICBhIGNvbnNpc3RlbnQgdmlldw0KICAgICAgICAtIERvbid0IGNhbGwgaW50byB0aGUg
-aXJxIGNoaXAgZHJpdmVyDQoNCiAgICBUaGlzIGlzIHRoZSBjb3JlIGVxdWl2YWxlbnQgb2YgdGhl
-IFg4NiB3b3JrYXJvdW5kIGFuZCB3b3JrcyBjb3JyZWN0bHkNCiAgICBiZWNhdXNlIHRoZSBhZmZp
-bml0eSBzZXR0aW5nIGlzIGVzdGFibGlzaGVkIGluIHRoZSBpcnEgY2hpcCB3aGVuIHRoZQ0KICAg
-IGludGVycnVwdCBpcyBhY3RpdmF0ZWQgbGF0ZXIgb24uDQoNCiAgICBOb3RlLCB0aGF0IHRoaXMg
-aXMgb25seSBlZmZlY3RpdmUgd2hlbiBoaWVyYXJjaGljYWwgaXJxIGRvbWFpbnMgYXJlIGVuYWJs
-ZWQNCiAgICBieSB0aGUgYXJjaGl0ZWN0dXJlLiBEb2luZyBpdCB1bmNvbmRpdGlvbmFsbHkgd291
-bGQgYnJlYWsgbGVnYWN5IGlycSBjaGlwDQogICAgaW1wbGVtZW50YXRpb25zLg0KDQogICAgRm9y
-IGhpZXJhcmNoaWFsIGlycSBkb21haW5zIHRoaXMgd29ya3MgY29ycmVjdGx5IGFzIG5vbmUgb2Yg
-dGhlIGRyaXZlcnMgY2FuDQogICAgaGF2ZSBhIGRlcGVuZGVuY3kgb24gYWZmaW5pdHkgc2V0dGlu
-ZyBpbiBpbmFjdGl2ZSBzdGF0ZSBieSBkZXNpZ24uDQoNCiAgICBSZW1vdmUgdGhlIFg4NiB3b3Jr
-YXJvdW5kIGFzIGl0IGlzIG5vdCBsb25nZXIgcmVxdWlyZWQuDQoNCiAgICBGaXhlczogMDJlZGVl
-MTUyZDZlICgieDg2L2FwaWMvdmVjdG9yOiBJZ25vcmUgc2V0X2FmZmluaXR5IGNhbGwgZm9yIGlu
-YWN0aXZlIGludGVycnVwdHMiKQ0KICAgIFJlcG9ydGVkLWJ5OiBBbGkgU2FpZGkgPGFsaXNhaWRp
-QGFtYXpvbi5jb20+DQogICAgU2lnbmVkLW9mZi1ieTogVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxp
-bnV0cm9uaXguZGU+DQogICAgQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcNCiAgICBMaW5rOiBo
-dHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjAwNTI5MDE1NTAxLjE1NzcxLTEtYWxpc2FpZGlA
-YW1hem9uLmNvbQ0KICAgIC0tLQ0KICAgIA0KDQpUZXN0ZWQgb24gYW4gYXJtNjQgc3lzdGVtIHRo
-YXQgb3JpZ2luYWxseSBleHBlcmllbmNlZCB0aGUgaXNzdWUgYW5kIGNvdWxkbid0IHJlcHJvZHVj
-ZSBpdCB3aXRoIHRoaXMgcGF0Y2guDQpUZXN0ZWQtYnk6IEFsaSBTYWlkaSA8YWxpc2FpZGlAYW1h
-em9uLmNvbT4NCg0KVGhhbmtzLA0KQWxpDQoNCg0K
+Hi Linus,
+
+Please pull this batch of arm64 fixes for -rc6. Although the diffstat is
+a bit larger than we'd usually have at this stage, a decent amount of it
+is the addition of comments describing our syscall tracing behaviour, and
+also a sweep across all the modular arm64 PMU drivers to make them rebust
+against unloading and unbinding.
+
+Summary is in the tag. Although there are a couple of minor things kicking
+around at the moment (CPU errata and module PLTs for very large modules),
+I'm not expecting any significant changes now for us in 5.8
+
+Cheers,
+
+Will
+
+--->8
+
+The following changes since commit 5679b28142193a62f6af93249c0477be9f0c669b:
+
+  arm64/alternatives: don't patch up internal branches (2020-07-09 14:57:59 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+
+for you to fetch changes up to f32ed8eb0e3f0d0ef4ddb854554d60ca5863a9f9:
+
+  drivers/perf: Prevent forced unbinding of PMU drivers (2020-07-17 10:51:44 +0100)
+
+----------------------------------------------------------------
+arm64 fixes for -rc6
+
+- Fix kernel text addresses for relocatable images booting using EFI
+  and with KASLR disabled so that they match the vmlinux ELF binary.
+
+- Fix unloading and unbinding of PMU driver modules.
+
+- Fix generic mmiowb() when writeX() is called from preemptible context
+  (reported by the riscv folks).
+
+- Fix ptrace hardware single-step interactions with signal handlers,
+  system calls and reverse debugging.
+
+- Fix reporting of 64-bit x0 register for 32-bit tasks via 'perf_regs'.
+
+- Add comments describing syscall entry/exit tracing ABI.
+
+----------------------------------------------------------------
+Qi Liu (2):
+      drivers/perf: Fix kernel panic when rmmod PMU modules during perf sampling
+      drivers/perf: Prevent forced unbinding of PMU drivers
+
+Will Deacon (9):
+      efi/libstub/arm64: Retain 2MB kernel Image alignment if !KASLR
+      arm64: ptrace: Consistently use pseudo-singlestep exceptions
+      arm64: ptrace: Override SPSR.SS when single-stepping is enabled
+      arm64: compat: Ensure upper 32 bits of x0 are zero on syscall return
+      arm64: ptrace: Add a comment describing our syscall entry/exit trap ABI
+      arm64: syscall: Expand the comment about ptrace and syscall(-1)
+      arm64: ptrace: Use NO_SYSCALL instead of -1 in syscall_trace_enter()
+      arm64: Use test_tsk_thread_flag() for checking TIF_SINGLESTEP
+      asm-generic/mmiowb: Allow mmiowb_set_pending() when preemptible()
+
+ arch/arm64/include/asm/debug-monitors.h        |  2 ++
+ arch/arm64/include/asm/syscall.h               | 12 ++++++-
+ arch/arm64/include/asm/thread_info.h           |  1 +
+ arch/arm64/kernel/debug-monitors.c             | 24 +++++++++----
+ arch/arm64/kernel/ptrace.c                     | 49 +++++++++++++++++++-------
+ arch/arm64/kernel/signal.c                     | 11 ++----
+ arch/arm64/kernel/syscall.c                    | 21 +++++++++--
+ drivers/firmware/efi/libstub/arm64-stub.c      | 25 +++++++------
+ drivers/firmware/efi/libstub/efi-stub-helper.c |  2 +-
+ drivers/perf/arm-cci.c                         |  1 +
+ drivers/perf/arm-ccn.c                         |  1 +
+ drivers/perf/arm_dsu_pmu.c                     |  1 +
+ drivers/perf/arm_smmuv3_pmu.c                  |  2 ++
+ drivers/perf/arm_spe_pmu.c                     |  1 +
+ drivers/perf/fsl_imx8_ddr_perf.c               |  2 ++
+ drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c  |  2 ++
+ drivers/perf/hisilicon/hisi_uncore_hha_pmu.c   |  2 ++
+ drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c   |  2 ++
+ drivers/perf/qcom_l2_pmu.c                     |  1 +
+ drivers/perf/qcom_l3_pmu.c                     |  1 +
+ drivers/perf/thunderx2_pmu.c                   |  1 +
+ drivers/perf/xgene_pmu.c                       |  1 +
+ include/asm-generic/mmiowb.h                   |  6 ++--
+ 23 files changed, 127 insertions(+), 44 deletions(-)
