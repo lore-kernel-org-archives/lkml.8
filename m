@@ -2,85 +2,89 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6CFC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26E8D20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB50207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 01:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594948186;
+	bh=YgKWBSEhMz+NBsILDChvn58XB6zvrCT46NsLfN2Wlvs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yO6B4ijIP8K7ZJNyOaPNl0v36qFWS+puPLMD6mCICZ1vqhrCfnqAoCiM7Y0gHEmL3
+	 cWlOHfCAj8kvxyIfjiWvWBhQKaEBhosGmrykqWzUVbT0YJgo3A31HdwQY/w8TgHz0x
+	 l/4Q6LJIK0n4DkOBY+DdxclJNvU8iq5hTd8E2Kwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgGQBE7 convert rfc822-to-8bit (ORCPT
+        id S1726803AbgGQBJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 21:04:59 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2644 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726138AbgGQBE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 21:04:59 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 37FDBF49E21E86D6E257;
-        Fri, 17 Jul 2020 09:04:57 +0800 (CST)
-Received: from dggeme703-chm.china.huawei.com (10.1.199.99) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Fri, 17 Jul 2020 09:04:56 +0800
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme703-chm.china.huawei.com (10.1.199.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Fri, 17 Jul 2020 09:04:56 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
- Fri, 17 Jul 2020 09:04:56 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: mmap: Merge vma after call_mmap() if possible
-Thread-Topic: [PATCH] mm: mmap: Merge vma after call_mmap() if possible
-Thread-Index: AdZb1cr2oR2Sm1QnnkShPIMChGHNoQ==
-Date:   Fri, 17 Jul 2020 01:04:56 +0000
-Message-ID: <6de8156c657a42e7a6acc24a5234b637@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.176.109]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 16 Jul 2020 21:09:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbgGQBJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 21:09:44 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76A68207BC;
+        Fri, 17 Jul 2020 01:09:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594948183;
+        bh=YgKWBSEhMz+NBsILDChvn58XB6zvrCT46NsLfN2Wlvs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=G1B1dSdQxJSbAwQbKGWfetCMby9xFfC7p/pGY5CWr4Okt2I0vXrAgr6WRzjFNORXB
+         AdjvdYH6Mh/eFqHoyigXwYxQzusAMPqLZff6rZXhrpCGImdP+F/cOm77Ia3K0zKOKw
+         LI2qL2r2VXGG7bboN3eJbgOSfNKleZ6O5z6D5FDQ=
+Date:   Thu, 16 Jul 2020 18:09:42 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Paolo Pisati <paolo.pisati@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] selftests: net: ip_defrag: modprobe missing
+ nf_defrag_ipv6 support
+Message-ID: <20200716180942.2c52ecd1@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200716155114.72625-1-paolo.pisati@canonical.com>
+References: <20200716155114.72625-1-paolo.pisati@canonical.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew Morton <akpm@linux-foundation.org> wrote:
->On Tue, 14 Jul 2020 11:07:44 +0800 linmiaohe <linmiaohe@huawei.com> wrote:
->
->> From: Miaohe Lin <linmiaohe@huawei.com>
->> 
->> The vm_flags may be changed after call_mmap() because drivers may set 
->> some flags for their own purpose. As a result, we failed to merge the 
->> adjacent vma due to the different vm_flags as userspace can't pass in the same one.
->> Try to merge vma after call_mmap() to fix this issue.
->> 
->> Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
->> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
->> ---
->> +		/* If vm_flags changed after call_mmap(), we should try merge vma again
->> +		 * as we may succeed this time.
->> +		 */
->> +		if (unlikely(vm_flags != vma->vm_flags && prev)) {
->> +			merge = vma_merge(mm, prev, vma->vm_start, vma->vm_end, vma->vm_flags,
->> +				NULL, vma->vm_file, vma->vm_pgoff, NULL, NULL_VM_UFFD_CTX);
->> +			if (merge) {
->> +				fput(file);
->> +				vm_area_free(vma);
->> +				vma = merge;
->> +				goto unmap_writable;
->
->Shouldn't we update local variable `vm_flags' here, to pick up the change?  And possibly `addr'?
+On Thu, 16 Jul 2020 17:51:14 +0200 Paolo Pisati wrote:
+> Fix ip_defrag.sh when CONFIG_NF_DEFRAG_IPV6=m:
+> 
+> $ sudo ./ip_defrag.sh
+> + set -e
+> + mktemp -u XXXXXX
+> + readonly NETNS=ns-rGlXcw
+> + trap cleanup EXIT
+> + setup
+> + ip netns add ns-rGlXcw
+> + ip -netns ns-rGlXcw link set lo up
+> + ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_high_thresh=9000000
+> + ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_low_thresh=7000000
+> + ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_time=1
+> + ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_high_thresh=9000000
+> + ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_low_thresh=7000000
+> + ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_time=1
+> + ip netns exec ns-rGlXcw sysctl -w net.netfilter.nf_conntrack_frag6_high_thresh=9000000
+> + cleanup
+> + ip netns del ns-rGlXcw
+> 
+> $ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+> ls: cannot access '/proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh': No such file or directory
+> 
+> $ sudo modprobe nf_defrag_ipv6
+> $ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+> -rw-r--r-- 1 root root 0 Jul 14 12:34 /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+> 
+> Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
 
-Yes, we should. `vm_flags` and `addr` should be updated to continue the work. Many thanks for your
-great review. I will fix it and test again. I will send a patch v2 soon.
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
