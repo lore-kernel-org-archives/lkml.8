@@ -2,103 +2,74 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 260FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA2AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA42B20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:33:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CMZF3sTp"
+	by mail.kernel.org (Postfix) with ESMTP id C512720734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgGQIdi (ORCPT
+        id S1726634AbgGQIfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:33:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38290 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725970AbgGQIdi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:33:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594974817;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=n6HQ4cRfKiCj6MVs/01fSUjQjB0YRcJewpfMhE5xrqw=;
-        b=CMZF3sTpM/qd2EhEroXqzA2yZOcTGEhucw8c4Z95QBO+8fZOCqq4979oPY3+l7c36UC9Hv
-        82GQiJn0HzjGxvLVMoOcvUeyteDOt2xRjOXj+ggMgNDH0/CeiIKlA5OoaoYagBhcozrY2T
-        26P3VR0B97MTynqYPSHrFnG09jlcb6E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-480-sKrxrS3ONJuKpSRaoS_KVQ-1; Fri, 17 Jul 2020 04:33:33 -0400
-X-MC-Unique: sKrxrS3ONJuKpSRaoS_KVQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 619C1800464;
-        Fri, 17 Jul 2020 08:33:31 +0000 (UTC)
-Received: from krava (unknown [10.40.192.81])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1CC1E10013D7;
-        Fri, 17 Jul 2020 08:33:28 +0000 (UTC)
-Date:   Fri, 17 Jul 2020 10:33:28 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        kan.liang@linux.intel.com, len.brown@intel.com
-Subject: Re: [PATCH 1/3] perf/x86/rapl: Fix missing psys sysfs attributes
-Message-ID: <20200717083328.GA528602@krava>
-References: <20200716151859.6854-1-rui.zhang@intel.com>
+        Fri, 17 Jul 2020 04:35:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35484 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726036AbgGQIfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:35:15 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BEB964107060872D0F1F;
+        Fri, 17 Jul 2020 16:35:13 +0800 (CST)
+Received: from localhost.localdomain (10.175.118.36) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 17 Jul 2020 16:35:03 +0800
+From:   Luo bin <luobin9@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
+Subject: [PATCH net-next v1 0/2] hinic: add some error messages for debug
+Date:   Fri, 17 Jul 2020 16:34:46 +0800
+Message-ID: <20200717083448.20936-1-luobin9@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716151859.6854-1-rui.zhang@intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain
+X-Originating-IP: [10.175.118.36]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 11:18:57PM +0800, Zhang Rui wrote:
-> This fixes a problem introduced by
-> commit 5fb5273a905c ("perf/x86/rapl: Use new MSR detection interface")
-> that perf event sysfs attributes for psys RAPL domain are missing.
-> 
-> Fixes: 5fb5273a905c ("perf/x86/rapl: Use new MSR detection interface")
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> Reviewed-by: Len Brown <len.brown@intel.com>
-> ---
->  arch/x86/events/rapl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-> index 0f2bf59f4354..51ff9a3618c9 100644
-> --- a/arch/x86/events/rapl.c
-> +++ b/arch/x86/events/rapl.c
-> @@ -665,7 +665,7 @@ static const struct attribute_group *rapl_attr_update[] = {
->  	&rapl_events_pkg_group,
->  	&rapl_events_ram_group,
->  	&rapl_events_gpu_group,
-> -	&rapl_events_gpu_group,
-> +	&rapl_events_psys_group,
+patch #1: support to handle hw abnormal event
+patch #2: improve the error messages when functions return failure and
+	  dump relevant registers in some exception handling processes
 
-I did copy & paste but did not change to psys :-\
+Luo bin (2):
+  hinic: add support to handle hw abnormal event
+  hinic: add log in exception handling processes
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+ .../ethernet/huawei/hinic/hinic_hw_api_cmd.c  |  27 +-
+ .../ethernet/huawei/hinic/hinic_hw_api_cmd.h  |   4 +
+ .../net/ethernet/huawei/hinic/hinic_hw_cmdq.c |   2 +
+ .../net/ethernet/huawei/hinic/hinic_hw_cmdq.h |   2 +
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 261 +++++++++++++++++-
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.h  | 144 +++++++++-
+ .../net/ethernet/huawei/hinic/hinic_hw_eqs.c  |  39 +++
+ .../net/ethernet/huawei/hinic/hinic_hw_eqs.h  |   6 +-
+ .../net/ethernet/huawei/hinic/hinic_hw_if.c   |  23 ++
+ .../net/ethernet/huawei/hinic/hinic_hw_if.h   |  10 +-
+ .../net/ethernet/huawei/hinic/hinic_hw_mbox.c |   2 +
+ .../net/ethernet/huawei/hinic/hinic_hw_mgmt.c |   1 +
+ .../net/ethernet/huawei/hinic/hinic_hw_mgmt.h |   4 +
+ .../net/ethernet/huawei/hinic/hinic_main.c    |  56 ++++
+ .../net/ethernet/huawei/hinic/hinic_port.c    |  62 ++---
+ .../net/ethernet/huawei/hinic/hinic_port.h    |  25 ++
+ .../net/ethernet/huawei/hinic/hinic_sriov.c   |   6 +-
+ 17 files changed, 623 insertions(+), 51 deletions(-)
 
-thanks,
-jirka
-
->  	NULL,
->  };
->  
-> -- 
-> 2.17.1
-> 
+-- 
+2.17.1
 
