@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFCDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E329CC433F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D42552074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC79A208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:57:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q/XwCED6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNN5Buzw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgGQS5G (ORCPT
+        id S1728535AbgGQS5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:57:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57332 "EHLO
+        Fri, 17 Jul 2020 14:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbgGQS5C (ORCPT
+        with ESMTP id S1728511AbgGQS5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:57:02 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8F6C0619D4;
-        Fri, 17 Jul 2020 11:57:02 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id z63so9694112qkb.8;
-        Fri, 17 Jul 2020 11:57:02 -0700 (PDT)
+        Fri, 17 Jul 2020 14:57:17 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C1CC0619D2;
+        Fri, 17 Jul 2020 11:57:17 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id u12so8375574qth.12;
+        Fri, 17 Jul 2020 11:57:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HE4dUHHpdZXvPh2mUviKYGtL/i1tJMEQSm9OTqPGgng=;
-        b=q/XwCED6UbEQVHMr1+ZJ+He5mlxlLmvp9oF+F0XkX1X7aaEOLAhGI2+PlzBQ4aw+bS
-         qlbLvL99mP7gmrpRmDRfkTKIcchOF8B8f74yOTi5yTeS9GMqnH3epVA3wqKISAs4lM8C
-         cmmZ42zP5B0+xaKdNgWdCHxJvSm+BasODiWXG2iMxJx+CoJL6LWRVDS5NxijTR2g92Wy
-         IhsK8FtQ7opqPvfryc8acEY8eYgHAAqT17FDqAUt1dU694FEqlJg1MTSp0ZqJfNYgLLv
-         tWT6LZOdiARBgvJWTl2sSSzht+Xw33btyL9lbjg0lMbRlekLWqgZuDM/DHUp+5CbLFnf
-         dRsA==
+        bh=CguGr4FHVrPkRGsMeKgPvOrZnbuic3mwstdNwyosH2c=;
+        b=SNN5BuzwjfYrZ8GhD3hLMzEHQIGnDjMkQByfOWEyjMYw/u/8x9mS5NlhEQ/WDDPyJA
+         OM3zjjIQKKXfyA8AjA6jP+XZlmwMPIvbIxLaEoPQp9MI3xvor2ORmPbPK8BKLyIt5eGY
+         jLbheyc+Y7RdFsnlLNHtld28tclIsnvK9XBvDKDCUY6Wx084UpMxo2uDC6dQ75fx6kaY
+         Jtig00UhaqwPOMkH7WxEBo0uV5ZA5gVCjx/U72WrDw1Tn916yOuBTmSYDkHBbfO8aArV
+         40+73t2M4ERczxsvQvPTLAhj6UjdPjpRad8XaoLHk4E9/l2iYSk37poaMdCthYEZYQ7p
+         lvDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HE4dUHHpdZXvPh2mUviKYGtL/i1tJMEQSm9OTqPGgng=;
-        b=dws9BSR2GZnsEFXnMqy6BJPSNvCpMDHOgOiv/lAW05AcFftrBjNlFI8/nv90PWPQ+o
-         VSl4YbmhAqHY54nLO15BhPZptddG1TPcomlTj6coeDJnEcTa4Xlzq7NDPiE8wyeasi/4
-         SCWCNEhLgRJfBeXZ4Y7M+M9qRdi6pMN85mUwoe122kZiCN13ElAC8qxnqrsxOT/LMGb/
-         1Fp1uZYOP9XEp4raAvSjgNeB7HztdkHZF8qjRMMl76WNtEdd+jxxmbjQ1bkTltleGeOP
-         pxDRdl+7at2Xhn4hyOVyUIXPKlg3h/eb6Co6bvzFcXUjudPtFvmkP/O4/iq46sGdAs7b
-         OTLg==
-X-Gm-Message-State: AOAM531mhGqz/j68dQW5JS4/Q5E8lkA/Dl6W6xXPNXYejqiyapo0FdFM
-        vZdo2exFKGEqHR5UCIOKgB4=
-X-Google-Smtp-Source: ABdhPJz8JypdOqkBDlVre+r9pIzv87BFlDCYF9VwfGBol2nEJlWu3I3zuZoGRlZaQiI8fIfDtDCuHw==
-X-Received: by 2002:a05:620a:2409:: with SMTP id d9mr10768334qkn.36.1595012221859;
-        Fri, 17 Jul 2020 11:57:01 -0700 (PDT)
+        bh=CguGr4FHVrPkRGsMeKgPvOrZnbuic3mwstdNwyosH2c=;
+        b=deTHLtU0pe0Cj/fRRhxCT3G/K90Uo7rjPdlu7BdMgaNBgPerM22kkTZAWfWRsILP8I
+         j4CVXicUS9tqq1eMe9g8ALfs2y9W0FhO4akz/CW/Qi9KQFT6OT0OfWJuQ6yf0qziIrht
+         sscmOZN2gFdmqPoqABBKDamoYn73wLqwQJrWHXlDvtfYMX0b7LybVS8fAmXc3BBlrOLL
+         moynE7MUD5HihYPNW8Tizk1zNYNRNX/4ujMFU4/PQ4dEJDGcPqbgpBMzhX6M9kzvVn59
+         Idlj+DmY796d5fl6aD3Exc3pNf4OtoYwO6tu0IJtRlnnvwUUwciy2ZtAOSqMUd8SA4rN
+         gOkg==
+X-Gm-Message-State: AOAM533DCHiSSCpIWiNYwck0Xi5+KTJd3Xe/p3mQjeYZB76t7TBUqGbi
+        xCnkjP449O52YICl6vU28zU=
+X-Google-Smtp-Source: ABdhPJw68litj6byZk1enWWXza6gm7E1mPQ1foBGbeWVLRLSi1P6R9NaFHBhboLNX68RR/3Q4gqXrg==
+X-Received: by 2002:ac8:197b:: with SMTP id g56mr11969284qtk.105.1595012236965;
+        Fri, 17 Jul 2020 11:57:16 -0700 (PDT)
 Received: from localhost.localdomain ([2804:18:7002:653c:f7ea:490a:10b0:ec39])
-        by smtp.gmail.com with ESMTPSA id r6sm11380097qtt.81.2020.07.17.11.56.59
+        by smtp.gmail.com with ESMTPSA id r6sm11380097qtt.81.2020.07.17.11.57.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 11:57:01 -0700 (PDT)
+        Fri, 17 Jul 2020 11:57:16 -0700 (PDT)
 From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 X-Google-Original-From: Daniel W. S. Almeida
 To:     corbet@lwn.net, mchehab@kernel.org
 Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 05/25] Documentation: serial_core.c: uart_get_rs485_mode: Fix sphinx warnings
-Date:   Fri, 17 Jul 2020 15:56:04 -0300
-Message-Id: <20200717185624.2009393-5-dwlsalmeida@gmail.com>
+Subject: [PATCH 10/25] Documentation: rculist.h: fix sphinx warning
+Date:   Fri, 17 Jul 2020 15:56:09 -0300
+Message-Id: <20200717185624.2009393-10-dwlsalmeida@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
 References: <20200717185624.2009393-1-dwlsalmeida@gmail.com>
@@ -80,32 +80,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-Fix the following warnings:
+Fix the following warning:
 
-warning: Excess function parameter 'dev' description in
-'uart_get_rs485_mode'
+warning: bad line: [@right ][node2 ... ]
 
-warning: Excess function parameter 'rs485conf' description in
-'uart_get_rs485_mode'
+This was missing a '*' at the start.
 
 Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 ---
- drivers/tty/serial/serial_core.c | 2 --
- 1 file changed, 2 deletions(-)
+ include/linux/rculist.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 57840cf903881..97df0c0e30e9b 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -3289,8 +3289,6 @@ EXPORT_SYMBOL(uart_remove_one_port);
- 
- /**
-  * uart_get_rs485_mode() - retrieve rs485 properties for given uart
-- * @dev: uart device
-- * @rs485conf: output parameter
+diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+index df587d181844b..7eed65b5f7130 100644
+--- a/include/linux/rculist.h
++++ b/include/linux/rculist.h
+@@ -512,7 +512,7 @@ static inline void hlist_replace_rcu(struct hlist_node *old,
+  * @right: The hlist head on the right
   *
-  * This function implements the device tree binding described in
-  * Documentation/devicetree/bindings/serial/rs485.txt.
+  * The lists start out as [@left  ][node1 ... ] and
+-                          [@right ][node2 ... ]
++ *                        [@right ][node2 ... ]
+  * The lists end up as    [@left  ][node2 ... ]
+  *                        [@right ][node1 ... ]
+  */
 -- 
 2.27.0
 
