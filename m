@@ -2,132 +2,208 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B246C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83107C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55C0920704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63867207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595011510;
+	bh=aQXux31L0fVJHV4y9kdNGhhZTnpp/2Df3qree3CTJyY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KaS9ZpQgNNbFirfQnbSuL/echceO+PojNo42bGgXZQiXQ+Awg2BzS+qeKzvR6r2Pd
+	 aFlz70vL6C1Giq0CjDuS9gJh5xmScCPbU2nb+PjgbQ7UT18kbO1e2FzTiq9Hc4QQz+
+	 uSUrsqIK28QJHMwbE6bN7pqSgT+bBwOnfe0JavJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgGQSmu (ORCPT
+        id S1728202AbgGQSpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:42:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbgGQSmt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:42:49 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D423C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:42:49 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 5483DBC06E;
-        Fri, 17 Jul 2020 18:42:46 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     geert@linux-m68k.org, funaho@jurai.org, grandmaster@al2klimov.de,
-        fthain@telegraphics.com.au, linux-m68k@lists.linux-m68k.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] m68k: Replace HTTP links with HTTPS ones
-Date:   Fri, 17 Jul 2020 20:42:40 +0200
-Message-Id: <20200717184240.79799-1-grandmaster@al2klimov.de>
+        Fri, 17 Jul 2020 14:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726322AbgGQSpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:45:08 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9644E208C7;
+        Fri, 17 Jul 2020 18:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595011507;
+        bh=aQXux31L0fVJHV4y9kdNGhhZTnpp/2Df3qree3CTJyY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TTVwmoGLYREFkLJUML0EPVfT4+mQ4tnEEUQwUtlL1R/MoiBcMlrdczMvuFK0qHX9J
+         IkzsNpZsONttrmB7pJxC8IxhESUapmP6QrKH4Pu17h09Hq1CbLoNhRDcFImD05h3rf
+         3dLJbmPAP3mfhuYC9hWPSwcigdOjgHPbSfpKMCr0=
+Received: by mail-ot1-f46.google.com with SMTP id g37so7564228otb.9;
+        Fri, 17 Jul 2020 11:45:07 -0700 (PDT)
+X-Gm-Message-State: AOAM531TwzcD7wW+8uS8C4/6FK8Qs1GdqdcJz2nKYiX4NoYsPxa5ueK0
+        jp6FN2v67F9nMd/gJw6KQAsymH61zXE9vGlb9w==
+X-Google-Smtp-Source: ABdhPJzjAX9VPCvhBaymbD8U6pueMna6x31wFEWxJwYV+L9W8q5c90gNWa24y9cUV9fKEYpCpbjo4E4/s6jNnBO1h5w=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr10192904ots.192.1595011506868;
+ Fri, 17 Jul 2020 11:45:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+References: <20200702191322.2639681-1-helen.koike@collabora.com>
+ <20200702191322.2639681-6-helen.koike@collabora.com> <CAL_JsqKHG4HgcpWvh_qnHPAkaGCd7Q8APk2ai_QxjUQhvd5APg@mail.gmail.com>
+ <822de449-8c01-d790-a9f9-e8b513bd7f87@collabora.com>
+In-Reply-To: <822de449-8c01-d790-a9f9-e8b513bd7f87@collabora.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 17 Jul 2020 12:44:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLEXvub_E_nVWtQ1H4Ru=jLuRgr+Aiyu6Hmqb7fObG4Dg@mail.gmail.com>
+Message-ID: <CAL_JsqLEXvub_E_nVWtQ1H4Ru=jLuRgr+Aiyu6Hmqb7fObG4Dg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/9] media: staging: rkisp1: remove unecessary clocks
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     devicetree@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mark Rutland <mark.rutland@arm.com>, karthik.poduval@gmail.com,
+        Johan Jonker <jbx6244@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Eddie Cai <eddie.cai.linux@gmail.com>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Fri, Jul 17, 2020 at 12:14 PM Helen Koike <helen.koike@collabora.com> wrote:
+>
+> Hi Rob,
+>
+> Thanks for your review.
+>
+> On 7/17/20 2:49 PM, Rob Herring wrote:
+> > On Thu, Jul 2, 2020 at 1:13 PM Helen Koike <helen.koike@collabora.com> wrote:
+> >>
+> >> aclk_isp_wrap is a child of aclk_isp, and hclk_isp_wrap is a child of
+> >> hclk_isp, thus we can remove parents from the list.
+> >
+> > But it looks like it is the wrap clocks you are removing.
+>
+> From this binding yes, but the idea is to add in the dt wherever clock
+> responsible for the full ACLK path for instance.
+> In the example below, clock aclk_isp is ACLK_ISP0_WRAPPER.
+> Does this make sense?
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Just perhaps clarify the renaming.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>
+> >
+> >>
+> >> Also, for the isp0, we only need the ISP clock, ACLK and HCLK.
+> >> In the future we'll need a pixel clock for RK3288 and RK3399, and a JPEG
+> >> clock for RK3288.
+> >>
+> >> So with the goal to cleanup the dt-bindings and remove it from staging,
+> >> simplify clock names to isp, aclk and hclk.
+> >>
+> >> For reference, this is the isp clock topology on RK3399:
+> >>
+> >>  xin24m
+> >>     pll_npll
+> >>        npll
+> >>           clk_isp1
+> >>           clk_isp0
+> >>     pll_cpll
+> >>        cpll
+> >>           aclk_isp1
+> >>              aclk_isp1_noc
+> >>              hclk_isp1
+> >>                 aclk_isp1_wrapper
+> >>                 hclk_isp1_noc
+> >>           aclk_isp0
+> >>              hclk_isp1_wrapper
+> >>              aclk_isp0_wrapper
+> >>              aclk_isp0_noc
+> >>              hclk_isp0
+> >>                 hclk_isp0_wrapper
+> >>                 hclk_isp0_noc
+> >>  pclkin_isp1_wrapper
+> >>
+> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >>
+> >> ---
+> >>
+> >> Changes in V4:
+> >> - update binding according to suggestion by Robin Murphy
+> >> on https://patchwork.kernel.org/patch/11475007/
+> >>
+> >> Changes in V3:
+> >> - this is a new patch in the series
+> >> ---
+> >>  .../bindings/media/rockchip-isp1.yaml         | 30 +++++++++----------
+> >>  drivers/staging/media/rkisp1/rkisp1-dev.c     |  8 ++---
+> >>  2 files changed, 17 insertions(+), 21 deletions(-)
+> >>
+> >> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> index 4d111ef2e89c7..f10c53d008748 100644
+> >> --- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> @@ -24,20 +24,20 @@ properties:
+> >>      maxItems: 1
+> >>
+> >>    clocks:
+> >> -    items:
+> >> -      - description: ISP clock
+> >> -      - description: ISP AXI clock clock
+> >> -      - description: ISP AXI clock  wrapper clock
+> >> -      - description: ISP AHB clock clock
+> >> -      - description: ISP AHB wrapper clock
+> >
+> > This is the correct way to describe multiple clocks.
+>
+> The idea was to prepare for rk3288 and rk3399 isp1, as suggested here https://patchwork.kernel.org/patch/11475007/#23462085
+>
+> Or should we do:
+>
+> clocks:
+>   oneOf:
+>     # rk3288 clocks
+>     - items:
+>       - description: ISP clock
+>       - description: ISP AXI clock
+>       - description: ISP AHB clock
+>       - description: ISP Pixel clock
+>       - description: ISP JPEG source clock
 
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+The main section should have this and 'minItems: 3'. IOW, it's a
+superset of what's valid. Then you can restrict specific compatibles
+further with an if/then schema. For rk3288, you need one with
+'minItems: 5'.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+>     # rk3399 isp0 clocks
+>     - items:
+>       - description: ISP clock
+>       - description: ISP AXI clock
+>       - description: ISP AHB clock
 
- If you apply the patch, please let me know.
+And this would be an if/then schema based on the compatible string and
+defining 'maxItems: 3'.
 
+>     # rk3399 isp1 clocks
+>     - items:
+>       - description: ISP clock
+>       - description: ISP AXI clock
+>       - description: ISP AHB clock
+>       - description: ISP Pixel clock
 
- arch/m68k/include/asm/mac_via.h | 4 ++--
- arch/m68k/mac/config.c          | 2 +-
- arch/m68k/mac/macboing.c        | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+And an if/then with { minItems: 4, maxItems: 4 }. Or really since
+these are just different instances, just combine them into 1
+conditional allowing 3 or 4 clocks.
 
-diff --git a/arch/m68k/include/asm/mac_via.h b/arch/m68k/include/asm/mac_via.h
-index 1149251ea58d..0cbab71f2592 100644
---- a/arch/m68k/include/asm/mac_via.h
-+++ b/arch/m68k/include/asm/mac_via.h
-@@ -30,7 +30,7 @@
-  *      http://www.rs6000.ibm.com/resource/technology/chrpio/via5.mak.html
-  *      ftp://ftp.austin.ibm.com/pub/technology/spec/chrp/inwork/CHRP_IORef_1.0.pdf
-  *
-- * also, http://developer.apple.com/technotes/hw/hw_09.html claims the
-+ * also, https://developer.apple.com/technotes/hw/hw_09.html claims the
-  * following changes for IIfx:
-  * VIA1A_vSccWrReq not available and that VIA1A_vSync has moved to an IOP.
-  * Also, "All of the functionality of VIA2 has been moved to other chips".
-@@ -178,7 +178,7 @@
- 				 * on others, 0=disable processor's instruction
- 				 * and data caches. */
- 
--/* Apple sez: http://developer.apple.com/technotes/ov/ov_04.html
-+/* Apple sez: https://developer.apple.com/technotes/ov/ov_04.html
-  * Another example of a valid function that has no ROM support is the use
-  * of the alternate video page for page-flipping animation. Since there
-  * is no ROM call to flip pages, it is necessary to go play with the
-diff --git a/arch/m68k/mac/config.c b/arch/m68k/mac/config.c
-index 5c9f3a2d6538..6f2eb1dcfc0c 100644
---- a/arch/m68k/mac/config.c
-+++ b/arch/m68k/mac/config.c
-@@ -240,7 +240,7 @@ static struct mac_model mac_data_table[] = {
- 	 * Weirdified Mac II hardware - all subtly different. Gee thanks
- 	 * Apple. All these boxes seem to have VIA2 in a different place to
- 	 * the Mac II (+1A000 rather than +4000)
--	 * CSA: see http://developer.apple.com/technotes/hw/hw_09.html
-+	 * CSA: see https://developer.apple.com/technotes/hw/hw_09.html
- 	 */
- 
- 	{
-diff --git a/arch/m68k/mac/macboing.c b/arch/m68k/mac/macboing.c
-index 388780797f7d..a904146dc4e6 100644
---- a/arch/m68k/mac/macboing.c
-+++ b/arch/m68k/mac/macboing.c
-@@ -116,7 +116,7 @@ static void mac_init_asc( void )
- 			 *   support 16-bit stereo output, but only mono input."
- 			 *
- 			 *   Technical Information Library (TIL) article number 16405. 
--			 *   http://support.apple.com/kb/TA32601 
-+			 *   https://support.apple.com/kb/TA32601 
- 			 *
- 			 * --David Kilzer
- 			 */
--- 
-2.27.0
+There are lots of examples to follow in the tree.
 
+Rob
