@@ -2,143 +2,125 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCF3C433FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C26C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27CA52074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D5A20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 23:48:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vCqye4rH"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="otR6BaPI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kfhrArN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgGQXsN (ORCPT
+        id S1728750AbgGQXs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 19:48:13 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45374 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgGQXsN (ORCPT
+        Fri, 17 Jul 2020 19:48:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44038 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbgGQXs4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 19:48:13 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HNm7PJ083783;
-        Fri, 17 Jul 2020 18:48:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595029687;
-        bh=jHlH05tXGOLRwWsXUTZTLlAmGKwGHC7r1J05PDf0zoA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vCqye4rHRTzTuGZJU9erSElVcIdYgoIZxjeQ1Lw6yUoAJnA5YoGyPaura7+jnel+M
-         lzd1BUwb4u9dygXbEIjQmWvexvNoviAJ/9W8FmYhYABVKPx96tUxmdNt1gPJht3xtD
-         INyOV4eyUV+kzZJuBx2gIQyPsSe1YBqeiYXRsdHw=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HNm73P042654
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 18:48:07 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 18:48:06 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 18:48:06 -0500
-Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HNm662037411;
-        Fri, 17 Jul 2020 18:48:06 -0500
-Received: from localhost ([10.250.34.57])
-        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 06HNm6ZI108262;
-        Fri, 17 Jul 2020 18:48:06 -0500
-From:   Suman Anna <s-anna@ti.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH v4 1/6] remoteproc: Introduce rproc_of_parse_firmware() helper
-Date:   Fri, 17 Jul 2020 18:47:55 -0500
-Message-ID: <20200717234800.9423-2-s-anna@ti.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200717234800.9423-1-s-anna@ti.com>
-References: <20200717234800.9423-1-s-anna@ti.com>
+        Fri, 17 Jul 2020 19:48:56 -0400
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595029734;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=hLhSscQ3zjADZ+KvQLXC+idNGz5GUHoq9ureYCScp5U=;
+        b=otR6BaPIX5ohSReVosDJMA7wVnx74Mt1JjlMB/d2YD3fO+9yblYQrARg0Dkk2auM4iL22o
+        aCnjFY+hCu6smfszJQalEPfseSQ9tXZFw8ssK5E36SGeCCzMsE4WzaoKKH9MdqFcNY4PY8
+        LhUR7AsAfVnbYSt5poq5JOXT+hK9C2kUjFd5/NpdAcrA9QktEy9gTJHQbY+ufa4JwJvUwl
+        GanUD6/J2LDk9RluUBaTw4PtUdFJUBUoB49qeoGBE0AcMDiLC9zyQIsKfA4yAG8+O8q+7B
+        119hePJXpFb22yZOQevEr2rUbfZ96MkSOiUo2ZdMmPaGwH8ALz/UUfuZkQIILw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595029734;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=hLhSscQ3zjADZ+KvQLXC+idNGz5GUHoq9ureYCScp5U=;
+        b=kfhrArN30d6YNoUwK1sDjzlfSELEzY7vWajQmDmdzPRtazzFBvNQf98PUPIWzA92B/Sa5l
+        gOSSiOH+weNgcsCA==
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] printk: reimplement LOG_CONT handling
+Date:   Sat, 18 Jul 2020 01:54:14 +0206
+Message-Id: <20200717234818.8622-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new helper function rproc_of_parse_firmware() to the remoteproc
-core that can be used by various remoteproc drivers to look up the
-the "firmware-name" property from a rproc device node. This property
-is already being used by multiple drivers, so this helper can avoid
-repeating equivalent code in remoteproc drivers.
+Hello,
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
-v4: No changes
-v3: https://patchwork.kernel.org/patch/11602327/
+Here is the second series to rework the printk subsystem. This series
+removes LOG_CONT handling from printk() callers, storing all LOG_CONT
+parts individually in the ringbuffer. With this series, LOG_CONT
+handling is moved to the ringbuffer readers that provide the record
+contents to users (console printing, syslog, /dev/kmsg).
 
- drivers/remoteproc/remoteproc_core.c     | 23 +++++++++++++++++++++++
- drivers/remoteproc/remoteproc_internal.h |  2 ++
- 2 files changed, 25 insertions(+)
+This change is necessary in order to support the upcoming move to a
+fully lockless printk() implementation.
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 9f04c30c4aaf..c458b218d524 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1034,6 +1034,29 @@ rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, size_t len,
- }
- EXPORT_SYMBOL(rproc_of_resm_mem_entry_init);
- 
-+/**
-+ * rproc_of_parse_firmware() - parse and return the firmware-name
-+ * @dev: pointer on device struct representing a rproc
-+ * @index: index to use for the firmware-name retrieval
-+ * @fw_name: pointer to a character string, in which the firmware
-+ *           name is returned on success and unmodified otherwise.
-+ *
-+ * This is an OF helper function that parses a device's DT node for
-+ * the "firmware-name" property and returns the firmware name pointer
-+ * in @fw_name on success.
-+ *
-+ * Return: 0 on success, or an appropriate failure.
-+ */
-+int rproc_of_parse_firmware(struct device *dev, int index, const char **fw_name)
-+{
-+	int ret;
-+
-+	ret = of_property_read_string_index(dev->of_node, "firmware-name",
-+					    index, fw_name);
-+	return ret ? ret : 0;
-+}
-+EXPORT_SYMBOL(rproc_of_parse_firmware);
-+
- /*
-  * A lookup table for resource handlers. The indices are defined in
-  * enum fw_resource_type.
-diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-index 4ba7cb59d3e8..e5341e91d2fc 100644
---- a/drivers/remoteproc/remoteproc_internal.h
-+++ b/drivers/remoteproc/remoteproc_internal.h
-@@ -28,6 +28,8 @@ struct rproc_debug_trace {
- void rproc_release(struct kref *kref);
- irqreturn_t rproc_vq_interrupt(struct rproc *rproc, int vq_id);
- void rproc_vdev_release(struct kref *ref);
-+int rproc_of_parse_firmware(struct device *dev, int index,
-+			    const char **fw_name);
- 
- /* from remoteproc_virtio.c */
- int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id);
+This series is in line with the agreements [0] made at the meeting
+during LPC2019 in Lisbon, with 1 exception: For the /dev/kmsg
+interface, empty line placeholder records are reported for the
+LOG_CONT parts.
+
+Using placeholders avoids tools such as systemd-journald from
+erroneously reporting missed messages. However, it also means that
+empty placeholder records are visible in systemd-journald logs and
+displayed in tools such as dmesg.
+
+The effect can be easily observed with the sysrq help:
+
+$ echo h | sudo tee /proc/sysrq-trigger
+$ sudo dmesg | tail -n 30
+$ sudo journalctl -k -n 30
+
+Providing the placeholder entries allows a userspace tool to identify
+if records were actually lost. IMHO this an important feature. Its
+side effect can be addressed by userspace tools if they change to
+silently consume empty records.
+
+For dump tools that process the ringbuffer directly (such as crash,
+makedumpfile, kexec-tools), they will need to implement LOG_CONT
+handling if they want to present clean continuous line messages.
+
+Finally, by moving LOG_CONT handling from writers to readers, some
+incorrect pr_cont() usage is revealed. Patch 4 of this series
+addresses one such example.
+
+This series is based on the printk git tree [1] printk-rework branch.
+
+[0] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git (printk-rework branch)
+
+John Ogness (4):
+  printk: ringbuffer: support dataless records
+  printk: store instead of processing cont parts
+  printk: process cont records during reading
+  ipconfig: cleanup printk usage
+
+ kernel/printk/printk.c            | 569 ++++++++++++++++++++----------
+ kernel/printk/printk_ringbuffer.c |  58 ++-
+ kernel/printk/printk_ringbuffer.h |  15 +-
+ net/ipv4/ipconfig.c               |  25 +-
+ 4 files changed, 434 insertions(+), 233 deletions(-)
+
 -- 
-2.26.0
+2.20.1
 
