@@ -2,131 +2,93 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F59FC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B27C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 793A72076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595010719;
-	bh=YHFPycUTgsDF1UJGgyC7LWsiRop+4nEUMYmTmNXt6f0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rkvMPSVRDN72QHUzfYsiAcSBP8oL6hZ3fOuMz9qb448HvbZqTE/zmWiT3YD/PIIy3
-	 fNGe7jck+/G1AbwKCuamcqxFZSwy028gvVN3ZSUygi9QYqf1T4faxh48CQZv/ZL7ft
-	 IqE2JUOsW+mEzS/uxNUGsT5vBCxoMG9AUadQjkJ0=
+	by mail.kernel.org (Postfix) with ESMTP id 4E32C20759
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgGQSb6 (ORCPT
+        id S1727978AbgGQS3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46986 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 14:29:50 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:58694 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbgGQSb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:31:58 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E7E20759;
-        Fri, 17 Jul 2020 18:31:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595010717;
-        bh=YHFPycUTgsDF1UJGgyC7LWsiRop+4nEUMYmTmNXt6f0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uY9z5GFL5wr9rt4JseHttadmmmHwUKrbMZC7HgrilpDBbLcfMJ2gEvc+V/2fDE5eb
-         F5GgYkSlQGORe/913kjxedtpgOCqZlw2b6Kyim2kaNlGn/FNl35LVOk8YiJE7P9a+M
-         pgiizxg6DiK9ve2OxtLVmUGdWpfoYYOSFGSWrsWA=
-Date:   Fri, 17 Jul 2020 11:31:55 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Igor Russkikh <irusskikh@marvell.com>
-Cc:     Alexander Lobakin <alobakin@marvell.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Denis Bolotin <dbolotin@marvell.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
-        <QLogic-Storage-Upstream@cavium.com>, <netdev@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH net-next 10/13] qed: add support for new port
- modes
-Message-ID: <20200717113155.1a9234b3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <27939848-7e83-2897-36f9-44f47d1bfb9c@marvell.com>
-References: <20200716115446.994-1-alobakin@marvell.com>
-        <20200716115446.994-11-alobakin@marvell.com>
-        <20200716181853.502dd619@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <27939848-7e83-2897-36f9-44f47d1bfb9c@marvell.com>
+        id S1726322AbgGQS3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:29:49 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 1AA4EBC062;
+        Fri, 17 Jul 2020 18:29:46 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     colin@colino.net, benh@kernel.crashing.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] macintosh/therm_adt746x: Replace HTTP links with HTTPS ones
+Date:   Fri, 17 Jul 2020 20:29:40 +0200
+Message-Id: <20200717182940.75484-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 13:49:33 +0300 Igor Russkikh wrote:
-> > ----------------------------------------------------------------------
-> > On Thu, 16 Jul 2020 14:54:43 +0300 Alexander Lobakin wrote:  
-> >> These ports ship on new boards revisions and are supported by newer
-> >> firmware versions.
-> >>
-> >> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-> >> Signed-off-by: Igor Russkikh <irusskikh@marvell.com>  
-> > 
-> > What is the driver actually doing with them, tho?
-> > 
-> > Looks like you translate some firmware specific field to a driver
-> > specific field, but I can't figure out what part of the code cares
-> > about hw_info.port_mode  
-> 
-> Hi Jakub,
-> 
-> You are right, this info is never used/reported.
-> 
-> Alexander is extending already existing non used field with new values from
-> our latest hardware revisions.
-> 
-> I thought devlink info could be a good place to output such kind of information.
-> 
-> Thats basically a layout of *Physical* ports on device - quite useful info I
-> think.
-> 
-> Important thing is these ports may not be directly mapped to PCI PFs. So
-> reading `ethtool eth*` may not explain you the real device capabilities.
-> 
-> Do you think it makes sense adding such info to `devlink info` then?
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Devlink port has information about physical port, which don't have to
-map 1:1 to netdevs. It also has lanes and port splitting which you may
-want to report.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
 
 
-For now please make sure to not include any dead code in your
-submissions (register defines etc. may be okay), perhaps try:
+ drivers/macintosh/therm_adt746x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-index d929556247a5..4bad836d0f74 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-@@ -4026,6 +4026,21 @@ static int qed_hw_get_nvm_info(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
- 	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_4X25G:
- 		p_hwfn->hw_info.port_mode = QED_PORT_MODE_DE_4X25G;
- 		break;
-+	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X50G_R1:
-+	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_4X50G_R1:
-+	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R2:
-+	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_2X100G_R2:
-+	case NVM_CFG1_GLOB_NETWORK_PORT_MODE_AHP_1X100G_R4:
-+		/* TODO: set port_mode when it's actually used */
-+		break;
- 	default:
- 		DP_NOTICE(p_hwfn, "Unknown port mode in 0x%08x\n", core_cfg);
- 		break;
+diff --git a/drivers/macintosh/therm_adt746x.c b/drivers/macintosh/therm_adt746x.c
+index 8f7725dc2166..7e218437730c 100644
+--- a/drivers/macintosh/therm_adt746x.c
++++ b/drivers/macintosh/therm_adt746x.c
+@@ -5,8 +5,8 @@
+  * Copyright (C) 2003, 2004 Colin Leroy, Rasmus Rohde, Benjamin Herrenschmidt
+  *
+  * Documentation from 115254175ADT7467_pra.pdf and 3686221171167ADT7460_b.pdf
+- * http://www.onsemi.com/PowerSolutions/product.do?id=ADT7467
+- * http://www.onsemi.com/PowerSolutions/product.do?id=ADT7460
++ * https://www.onsemi.com/PowerSolutions/product.do?id=ADT7467
++ * https://www.onsemi.com/PowerSolutions/product.do?id=ADT7460
+  *
+  */
+ 
+-- 
+2.27.0
 
-And see if it will pass the muster.
-
-Dead code makes it harder to review the patches.
