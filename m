@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E26C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E3FC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07E52207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D302083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 13:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sxuSTfoC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KkJ58wTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgGQNyg (ORCPT
+        id S1727038AbgGQNyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38640 "EHLO
+        Fri, 17 Jul 2020 09:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgGQNya (ORCPT
+        with ESMTP id S1726932AbgGQNya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jul 2020 09:54:30 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51AC6C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:30 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z13so11219275wrw.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:30 -0700 (PDT)
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BBF1C0619D5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:31 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a6so11236579wrm.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 06:54:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+k3VcTxp8QDyMoYM0yDw+EEU9DorBAQ7cdSI3O9/bb8=;
-        b=sxuSTfoC2hrZKKISGmaJt1ryNoM+Mb53vx2VqywQ2dm6pt4TZ3WpIxoolFr/96l5HI
-         zgp/5o581dmdBiSgQH3SacRs4hO0s2WCDSNAoa/pJXkzvrtSt48cyV/mcy5I48v5N6uj
-         xmXqic/H5aJT4crWkPnWZ3OyiIOkd6vfhc8jU3EPrcggEqC2+I1bjp0fuQRPhgEGivWK
-         ha15AuG72HyS/oCVqOEXoBdq9Osq05Ti56BmkcMaSYnI4b8Yl6qBjBfxGW/MIAqK9BRQ
-         48m14QnuLysn9zQoC8jLbQP5u+0EN6xO+0yHGeuvFjNT3LPCFTTjHa67pDCtydIvFQ9Q
-         GIiw==
+        bh=vKemoWjqR6g96Xgsgirmftjm/E0sdVIsOFgpktr/D0I=;
+        b=KkJ58wTNLjFEfso6eafu7XHSWYDgIT2QpWO7ZoFkscH8T9bz8ZmXHL/FjjlmZ89szi
+         SaFxtVC+zwUMaS9y7ToZr9FGXrgGE9lajWTHriEwPcmteH93rS1qRDvL4YRUgyiwqVjY
+         j2XI/cb69GWiMEVGLVZJpYOnN7mJxmtOVxzdc5xq7P1QqsKa5UyRwAwgxwGNN4SMhZ9c
+         TqcG0zsLXsFS6Z54kAMk4BtYeysJM7Og48NOlrTAwXyP4f1nYDQ2Co2a33Si6aDn5C8r
+         t84r0SBiYXp9Hn5nQINc7//3xnye6zTLmDHLpUWGwXf2nG1a/uQpGh81nFfjKIfX3oCe
+         TMVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+k3VcTxp8QDyMoYM0yDw+EEU9DorBAQ7cdSI3O9/bb8=;
-        b=rsQnJFNAE0USc4JdqIylUbLf33VcMwK9ol3c52aV0S+AGaSLLUYPspCuxEqUqNgzPE
-         r2Gk+UO7iTa4I/noaasILSHshcdv59YQZe59mdF5jg7u0P+jjsWl1jInPqwf/vdKepuf
-         b67yn1V5o2HjcRjyo1aCj+mjhBiKEhtDfhggtm85QCES5stnOuZJ/goQuq2tCC5oFEu3
-         9W9WyTEsj6RG/4lrE9fzvgwACQTF06wOYPq8Z9sFlCkEmCJpzHS0Xr2dL8u55EFOkiXh
-         lqWvzjapTjSkd9e/o/gVf436YMCnqvIDyCTroK89YIgJsbTdToKku2rQA4LLRyf4FGlM
-         HDpA==
-X-Gm-Message-State: AOAM533p4loniw9jtF5MHz6i5EN0i9XepYSJymk2ts4CYEMlrWquO3Wy
-        EKFvatQRTveRs4ivaiRhBe3C2g==
-X-Google-Smtp-Source: ABdhPJxWtRjEu5h/VTCvkKtCbMutdB3KhIeOKshDePoFQqyehuXzpt7xnH4k4MXi+QlSEZd2V53Rcw==
-X-Received: by 2002:a5d:5450:: with SMTP id w16mr3244734wrv.155.1594994069010;
+        bh=vKemoWjqR6g96Xgsgirmftjm/E0sdVIsOFgpktr/D0I=;
+        b=DKd9p0lAtjGMsMsjTevMzO3V8m1ITps1ZuObJJr93zi+QHcweIv7iOXbdQgadMJbmo
+         +sYYGNFVnddvC2wP7RgTo5U64En2p3WgLj0QT0aOFdikDoCKa5L8s0Vhblm/45mT5JU4
+         g7cmAJ4xpanhCpCiVhTbpoIGKNLEyYSnVt2KevaBMyjBVUHNCDkn3TQlsBhz7H+4PsC4
+         v0QG4PxRkrTvVheElVQvvqaEcgmDDZe3zqiZVpqJNRYU82J6BKyH9HrNj/YQi3nQKL+8
+         TG2Ac1+4WzKwgnRU76KEUsjvh1E+Q5E2jNjWbWdDAZFzQHcKCkYEtpf9XW4v4xYOvBzZ
+         gB3g==
+X-Gm-Message-State: AOAM531h7KUSfWcQWRRn/CDfmBpRC/Dto+Al0KCn4aP2E9kgy138bnSQ
+        F+95wRuonpHXLvx9lh11vRkCIA==
+X-Google-Smtp-Source: ABdhPJyScPf7JwQtEZvA5sD1ShLQoa/+KNAe8xTjYnMg0F86HrLTvwwPzQtxX+Mk4a1wGK3SMbuJaQ==
+X-Received: by 2002:adf:e44c:: with SMTP id t12mr11315545wrm.103.1594994069964;
         Fri, 17 Jul 2020 06:54:29 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id w128sm16118356wmb.19.2020.07.17.06.54.28
+        by smtp.gmail.com with ESMTPSA id w128sm16118356wmb.19.2020.07.17.06.54.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 06:54:28 -0700 (PDT)
+        Fri, 17 Jul 2020 06:54:29 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 02/14] spi: spi-bitbang: Demote obvious misuse of kerneldoc to standard comment blocks
-Date:   Fri, 17 Jul 2020 14:54:12 +0100
-Message-Id: <20200717135424.2442271-3-lee.jones@linaro.org>
+Subject: [PATCH v2 03/14] spi: spi-davinci: Fix a few kerneldoc misspellings and API slippages
+Date:   Fri, 17 Jul 2020 14:54:13 +0100
+Message-Id: <20200717135424.2442271-4-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200717135424.2442271-1-lee.jones@linaro.org>
 References: <20200717135424.2442271-1-lee.jones@linaro.org>
@@ -76,50 +76,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No attempt has been made to document any of the demoted functions here.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/spi/spi-bitbang.c:181: warning: Function parameter or member 'spi' not described in 'spi_bitbang_setup'
- drivers/spi/spi-bitbang.c:215: warning: Function parameter or member 'spi' not described in 'spi_bitbang_cleanup'
- drivers/spi/spi-bitbang.c:434: warning: Function parameter or member 'bitbang' not described in 'spi_bitbang_stop'
+ drivers/spi/spi-davinci.c:249: warning: Function parameter or member 'dspi' not described in 'davinci_spi_get_prescale'
+ drivers/spi/spi-davinci.c:249: warning: Function parameter or member 'max_speed_hz' not described in 'davinci_spi_get_prescale'
+ drivers/spi/spi-davinci.c:249: warning: Excess function parameter 'maxspeed_hz' description in 'davinci_spi_get_prescale'
+ drivers/spi/spi-davinci.c:719: warning: Function parameter or member 'data' not described in 'dummy_thread_fn'
+ drivers/spi/spi-davinci.c:719: warning: Excess function parameter 'context_data' description in 'dummy_thread_fn'
+ drivers/spi/spi-davinci.c:735: warning: Function parameter or member 'data' not described in 'davinci_spi_irq'
+ drivers/spi/spi-davinci.c:735: warning: Excess function parameter 'context_data' description in 'davinci_spi_irq'
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/spi/spi-bitbang.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/spi/spi-davinci.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
-index 68491a8bf7b5b..1a7352abd8786 100644
---- a/drivers/spi/spi-bitbang.c
-+++ b/drivers/spi/spi-bitbang.c
-@@ -174,7 +174,7 @@ int spi_bitbang_setup_transfer(struct spi_device *spi, struct spi_transfer *t)
- }
- EXPORT_SYMBOL_GPL(spi_bitbang_setup_transfer);
+diff --git a/drivers/spi/spi-davinci.c b/drivers/spi/spi-davinci.c
+index f50c0c79cbdfa..818f2b22875d2 100644
+--- a/drivers/spi/spi-davinci.c
++++ b/drivers/spi/spi-davinci.c
+@@ -236,7 +236,8 @@ static void davinci_spi_chipselect(struct spi_device *spi, int value)
  
--/**
-+/*
-  * spi_bitbang_setup - default setup for per-word I/O loops
-  */
- int spi_bitbang_setup(struct spi_device *spi)
-@@ -208,7 +208,7 @@ int spi_bitbang_setup(struct spi_device *spi)
- }
- EXPORT_SYMBOL_GPL(spi_bitbang_setup);
- 
--/**
-+/*
-  * spi_bitbang_cleanup - default cleanup for per-word I/O loops
-  */
- void spi_bitbang_cleanup(struct spi_device *spi)
-@@ -427,7 +427,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
- }
- EXPORT_SYMBOL_GPL(spi_bitbang_start);
- 
--/**
-+/*
-  * spi_bitbang_stop - stops the task providing spi communication
-  */
- void spi_bitbang_stop(struct spi_bitbang *bitbang)
+ /**
+  * davinci_spi_get_prescale - Calculates the correct prescale value
+- * @maxspeed_hz: the maximum rate the SPI clock can run at
++ * @dspi: the controller data
++ * @max_speed_hz: the maximum rate the SPI clock can run at
+  *
+  * This function calculates the prescale value that generates a clock rate
+  * less than or equal to the specified maximum.
+@@ -710,7 +711,7 @@ static int davinci_spi_bufs(struct spi_device *spi, struct spi_transfer *t)
+ /**
+  * dummy_thread_fn - dummy thread function
+  * @irq: IRQ number for this SPI Master
+- * @context_data: structure for SPI Master controller davinci_spi
++ * @data: structure for SPI Master controller davinci_spi
+  *
+  * This is to satisfy the request_threaded_irq() API so that the irq
+  * handler is called in interrupt context.
+@@ -723,7 +724,7 @@ static irqreturn_t dummy_thread_fn(s32 irq, void *data)
+ /**
+  * davinci_spi_irq - Interrupt handler for SPI Master Controller
+  * @irq: IRQ number for this SPI Master
+- * @context_data: structure for SPI Master controller davinci_spi
++ * @data: structure for SPI Master controller davinci_spi
+  *
+  * ISR will determine that interrupt arrives either for READ or WRITE command.
+  * According to command it will do the appropriate action. It will check
 -- 
 2.25.1
 
