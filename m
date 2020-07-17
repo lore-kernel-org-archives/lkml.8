@@ -2,176 +2,130 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6541DC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 05:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 05:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4F720704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 05:07:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ISEZ199N"
+	by mail.kernel.org (Postfix) with ESMTP id 345B22070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 05:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbgGQFHo (ORCPT
+        id S1726046AbgGQFLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 01:07:44 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:60807 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725300AbgGQFHn (ORCPT
+        Fri, 17 Jul 2020 01:11:02 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:46617 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725300AbgGQFLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 01:07:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594962462; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=X5BaP4NyQfI2naFIt5otfZ99CC+9Jy2wAJD8Qo0dYTM=;
- b=ISEZ199NMumu4SQ5d9fXk/SwyR8YLWcA9yc1T7O1iCgwj2y8SY2M5S+TeSzEhn9fesOFYzNc
- uQUek0TFbEsdt7bk8TJs7f3VDxLQFLB5FhjVJkKv5Oe+wVi87oVl2er+EbhyQvdcwmrJraZ9
- GSZQhRq46iiXWyDLuchsECVXlNo=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
- 5f113215e3bee1251055db25 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 05:07:33
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8F70EC43391; Fri, 17 Jul 2020 05:07:32 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7876C433C9;
-        Fri, 17 Jul 2020 05:07:31 +0000 (UTC)
+        Fri, 17 Jul 2020 01:11:02 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U2ytDbF_1594962637;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U2ytDbF_1594962637)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 17 Jul 2020 13:10:38 +0800
+Subject: Re: [PATCH v16 15/22] mm/compaction: do page isolation first in
+ compaction
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1594429136-20002-16-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0Ue72SfAmxCS+tay1NjioW9WBOvVgrhwUtVPz2aDCrcHPQ@mail.gmail.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <e724c44b-4135-3302-16fa-1df624fa81fa@linux.alibaba.com>
+Date:   Fri, 17 Jul 2020 13:09:43 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CAKgT0Ue72SfAmxCS+tay1NjioW9WBOvVgrhwUtVPz2aDCrcHPQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 17 Jul 2020 10:37:31 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        evgreen@chromium.org, ohad@wizery.com
-Subject: Re: [PATCH 1/3] remoteproc: qcom_q6v5_mss: Add modem debug policy
- support
-In-Reply-To: <20200717044133.GB2922385@builder.lan>
-References: <20200716123630.21892-1-sibis@codeaurora.org>
- <20200716123630.21892-2-sibis@codeaurora.org>
- <20200717044133.GB2922385@builder.lan>
-Message-ID: <954fa575f198603b7d8846051d769c61@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Bjorn,
-Thanks for taking time to review
-the series.
 
-On 2020-07-17 10:11, Bjorn Andersson wrote:
-> On Thu 16 Jul 05:36 PDT 2020, Sibi Sankar wrote:
-> 
->> Add modem debug policy support which will enable coredumps and live
->> debug support when the msadp firmware is present on secure devices.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  drivers/remoteproc/qcom_q6v5_mss.c | 15 ++++++++++++++-
->>  1 file changed, 14 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c 
->> b/drivers/remoteproc/qcom_q6v5_mss.c
->> index 13c6d5a72a831..95e21ed607cb9 100644
->> --- a/drivers/remoteproc/qcom_q6v5_mss.c
->> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
->> @@ -187,6 +187,7 @@ struct q6v5 {
->>  	phys_addr_t mba_phys;
->>  	void *mba_region;
->>  	size_t mba_size;
->> +	size_t dp_size;
->> 
->>  	phys_addr_t mpss_phys;
->>  	phys_addr_t mpss_reloc;
->> @@ -406,6 +407,13 @@ static int q6v5_xfer_mem_ownership(struct q6v5 
->> *qproc, int *current_perm,
->>  static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
->>  {
->>  	struct q6v5 *qproc = rproc->priv;
->> +	const struct firmware *dp_fw;
+>> @@ -950,6 +951,21 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>>                 if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
+>>                         goto isolate_fail;
+>>
+>> +               /*
+>> +                * Be careful not to clear PageLRU until after we're
+>> +                * sure the page is not being freed elsewhere -- the
+>> +                * page release code relies on it.
+>> +                */
+>> +               if (unlikely(!get_page_unless_zero(page)))
+>> +                       goto isolate_fail;
 >> +
->> +	if (!request_firmware(&dp_fw, "msadp", qproc->dev) && fw->size <= 
->> SZ_1M) {
+>> +               if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
+>> +                       goto isolate_fail_put;
+>> +
+>> +               /* Try isolate the page */
+>> +               if (!TestClearPageLRU(page))
+>> +                       goto isolate_fail_put;
+>> +
+>>                 /* If we already hold the lock, we can skip some rechecking */
+>>                 if (!locked) {
+>>                         locked = compact_lock_irqsave(&pgdat->lru_lock,
 > 
-> Can we change this to a request_firmware_direct() to avoid the fact 
-> that
-> as written here devices lacking this file will pause here for 60 
-> seconds
-> waiting for userspace to assist in loading it (which at least none of 
-> my
-> systems do).
-> 
-> I also think that while it's nice to check that fw->size <= SZ_1M, to
-> avoid overwriting the tail of it, you should check that SZ_1M +
-> dp_fw->size < mba_size. To ensure that the memcpy doesn't go out of
-> bounds.
+> Why not do the __isolate_lru_page_prepare before getting the page?
+> That way you can avoid performing an extra atomic operation on non-LRU
+> pages.
+>
 
-Sure I'll get ^^ done in the
-next re-spin.
+This change come from Hugh Dickins as mentioned from commit log:
+>> trylock_page() is not safe to use at this time: its setting PG_locked
+>> can race with the page being freed or allocated ("Bad page"), and can
+>> also erase flags being set by one of those "sole owners" of a freshly
+>> allocated page who use non-atomic __SetPageFlag().
 
-> 
->> +		memcpy(qproc->mba_region + SZ_1M, dp_fw->data, dp_fw->size);
->> +		qproc->dp_size = dp_fw->size;
->> +		release_firmware(dp_fw);
->> +	}
->> 
->>  	memcpy(qproc->mba_region, fw->data, fw->size);
->> 
->> @@ -896,6 +904,10 @@ static int q6v5_mba_load(struct q6v5 *qproc)
->>  	}
->> 
->>  	writel(qproc->mba_phys, qproc->rmb_base + RMB_MBA_IMAGE_REG);
->> +	if (qproc->dp_size) {
->> +		writel(qproc->mba_phys + SZ_1M, qproc->rmb_base + 
->> RMB_PMI_CODE_START_REG);
->> +		writel(qproc->dp_size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
->> +	}
->> 
->>  	ret = q6v5proc_reset(qproc);
->>  	if (ret)
->> @@ -1258,7 +1270,8 @@ static int q6v5_start(struct rproc *rproc)
->>  	if (ret)
->>  		return ret;
->> 
->> -	dev_info(qproc->dev, "MBA booted, loading mpss\n");
->> +	dev_info(qproc->dev, "MBA booted, debug policy %s, loading mpss\n",
->> +		 qproc->dp_size ? "enabled" : "disabled");
-> 
-> "MBA booted with%s debug policy, loading mpss\n", qproc->dp_size ? "" : 
-> "out"
-> 
-> Please.
+Hi Hugh,
 
-Sure I'll use your template instead.
+would you like to show more details of the bug?
 
-> 
-> Regards,
-> Bjorn
-> 
->> 
->>  	ret = q6v5_mpss_load(qproc);
->>  	if (ret)
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
+...
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+>> +                        * sure the page is not being freed elsewhere -- the
+>> +                        * page release code relies on it.
+>> +                        */
+>> +                       if (unlikely(!get_page_unless_zero(page)))
+>> +                               goto busy;
+>> +
+>> +                       if (!TestClearPageLRU(page)) {
+>> +                               /*
+>> +                                * This page may in other isolation path,
+>> +                                * but we still hold lru_lock.
+>> +                                */
+>> +                               put_page(page);
+>> +                               goto busy;
+>> +                       }
+>> +
+> 
+> I wonder if it wouldn't make sense to combine these two atomic ops
+> with tests and the put_page into a single inline function? Then it
+> could be possible to just do one check and if succeeds you do the
+> block of code below, otherwise you just fall-through into the -EBUSY
+> case.
+> 
+
+Uh, since get_page changes page->_refcount, TestClearPageLRU changes page->flags,
+So I don't know how to combine them, could you make it more clear with code?
+
+Thanks
+Alex
