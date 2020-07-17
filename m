@@ -2,101 +2,118 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CF1C433F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C67C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88A4520734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A6C2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:33:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="ZnezmrH2";
-	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="o3D4Xy6p"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qAfNIv/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgGQKgC (ORCPT
+        id S1726418AbgGQKdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:36:02 -0400
-Received: from djelibeybi.uuid.uk ([45.91.101.70]:44000 "EHLO
-        djelibeybi.uuid.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgGQKf7 (ORCPT
+        Fri, 17 Jul 2020 06:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgGQKdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:35:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kl1i0BpeU/fu3rTjI9F8/qTmUCwKp0XQHy8o4MvhnDA=; b=ZnezmrH2uvIIKja5UcmJ296HUy
-        9F7lNnABjni3m/8Hm9ORXkjYWkI+7eAANE/bW/VtouO4xOx+gYrzl/ONpnwtLZbTmJdJ4XQl3sWwr
-        pDWedRTcLQHK9UWDuPkQ7O9RtJ85C+c2LZfvWDlTjaErwn99t02xqbWM0eO4oJoU9E3aYz3cN+Cm8
-        7g+vLmXG762WRuUwqB/1w7sfhpmNm9Vt4SBI55IrjgrAQ7BcSbzq4ELhe62kOfc8A3XGjxQWRHz4q
-        bsPK/yaZAQl01hDNMOJmyV6/fipG9ppTiZTAHB2cxzLKP3wAw+G3y6fOR3KALCnxLsIFh3rwaOqk2
-        T23PkNKA==;
-Received: by djelibeybi.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <simon@octiron.net>)
-        id 1jwNiQ-0005an-GU; Fri, 17 Jul 2020 11:35:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
-        Content-Transfer-Encoding:Content-Type:MIME-Version;
-        bh=kl1i0BpeU/fu3rTjI9F8/qTmUCwKp0XQHy8o4MvhnDA=; b=o3D4Xy6pDQB+ao3CwIk8nyRKzk
-        pspejMBhrBxUzp7ytuuB4kCxZhsOR5sy+0I9zirclzVZgNm7LqUN4kDXfsdlrqGl0Zl8Jn0YG9mMJ
-        cpN9cLmULIT6cGO9krT/1BnACLSWjnecnOVcMT8SxuN+UF18XrJd4zZSdR7js1CEpPpNebk9qgpF8
-        w+RmVYZ4AhOwyCfk4hQ5KNEO2TUdF5Rk86A0ijChV9Wm6HijGqvaP9ar6NsjAWi8vjujLAi7SJ+VV
-        l1mtATUtAIBgZJnZDg5qXX0PZ3hVmuMVEr7Z1F0Q8dFD4ebRc3gHSuycJCohktgUWoRP0lozlUmXt
-        qUvd6S5w==;
-Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jwNiO-0004d0-9V; Fri, 17 Jul 2020 11:35:40 +0100
-Received: from localhost ([::1]:48888)
-        by skund.uuid.uk with esmtp (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jwNiO-0000ML-5e; Fri, 17 Jul 2020 11:35:40 +0100
+        Fri, 17 Jul 2020 06:33:10 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4767AC08C5C0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 03:33:10 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g10so6978456wmc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 03:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zi8jnewWWqGBDaiGUwotaO11fwfV4C/fWvx82bCaiGs=;
+        b=qAfNIv/1PD9HZtu5z/b7L4wjsmN4Hj3cSHg07fnUfCsnzNroj/Z3PLeA/TEbWAm7I2
+         qgLmmD+DRIAoIDp5bIozb9OiMhtsCrGLyiOhrk2DieUmK+ZSj4BzuiOShQ9+J2snHNDQ
+         ELx620+7CuVezF/5UxkHQNws4RNlg+aB1fn1nHd+LaH5c3xt8i+yX65cjGXC9yjKX7at
+         mDKp6f5bqExeA48g3h0YCtFuG4XPjiTptoqjJHz/fOOkfN/1w9ZM4XXzd9DgCb4tX54O
+         kakfv2F4F3fS4rkCGTYe2D7pOblKyO10gTdolj6BkmxFnRCb+To7yKxggGas1xtWVFS9
+         /itQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zi8jnewWWqGBDaiGUwotaO11fwfV4C/fWvx82bCaiGs=;
+        b=pRSfBFkzJjBPNBMk4JPzDVzSpEt7aYfWSBc1ExTvBIqTiGPFquKx7Ji8O1zr4hqhab
+         gh1Ba35S7vKYcO+pqDH8Bv+9RE26UyC/btaq++HK8DnImcqAg7YHetX/4OQi+HgIySLS
+         Nu724uGi3WGYlDxO+AIFVHUImASf2eoloMPr8hMzrSnDsla+8y6t/2XJ89dnZGVVUGsw
+         isO4vim/wv+ZHVYhItKHxzxjQe6/PH79r4tyUeFOamlfTIrJ86PB6xgwEMDoPDxO4Jd+
+         55P4r8muph/0UlxH83Vi1LiEAJMGupEtKhJxpxDmG6/237Ipr97ZXcUQxFvf2qN8a3YU
+         bexA==
+X-Gm-Message-State: AOAM530X8NPECFWsY09PoqFkDVGijzRiLfMOuf9aw/fbt4bJu8ycI2+b
+        YffgNmz2H8lI9hj8ZKcLaU8uxQ==
+X-Google-Smtp-Source: ABdhPJxqyLRZnxEq1KDZDv0rSrpib/c6MB25cE43V84SI6vmZm32XKilMzpv08RxpslWOrFBpNzoGA==
+X-Received: by 2002:a7b:c94a:: with SMTP id i10mr9028334wml.183.1594981988862;
+        Fri, 17 Jul 2020 03:33:08 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:f693:9fff:fef4:a7ef])
+        by smtp.gmail.com with ESMTPSA id m9sm12396277wml.45.2020.07.17.03.33.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 03:33:08 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 11:33:05 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-kernel@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH 2/2] thermal: cpufreq_cooling: Reuse effective_cpu_util()
+Message-ID: <20200717103305.GA2385870@google.com>
+References: <cover.1594707424.git.viresh.kumar@linaro.org>
+ <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
+ <20200717101438.GA2366103@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 17 Jul 2020 11:35:40 +0100
-From:   Simon Arlott <simon@octiron.net>
-To:     =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-Cc:     jonas.gorski@gmail.com, kishon@ti.com, vkoul@kernel.org,
-        robh+dt@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v7 0/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
-In-Reply-To: <20200717094756.9951-1-noltari@gmail.com>
-References: <20200717094756.9951-1-noltari@gmail.com>
-Message-ID: <d601559d6e0ab67c3ff02713df3eb32e@arlott.org>
-X-Sender: simon@octiron.net
-User-Agent: Roundcube Webmail/1.2-beta
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717101438.GA2366103@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-17 10:47, Álvaro Fernández Rojas wrote:
-> Add BCM63xx USBH PHY driver for BMIPS.
+On Friday 17 Jul 2020 at 11:14:38 (+0100), Quentin Perret wrote:
+> On Tuesday 14 Jul 2020 at 12:06:53 (+0530), Viresh Kumar wrote:
+> >  /**
+> > - * get_load() - get load for a cpu since last updated
+> > + * get_load() - get current load for a cpu
+> >   * @cpufreq_cdev:	&struct cpufreq_cooling_device for this cpu
+> >   * @cpu:	cpu number
+> > - * @cpu_idx:	index of the cpu in time_in_idle*
+> > + * @cpu_idx:	index of the cpu
+> >   *
+> > - * Return: The average load of cpu @cpu in percentage since this
+> > - * function was last called.
+> > + * Return: The current load of cpu @cpu in percentage.
+> >   */
+> >  static u32 get_load(struct cpufreq_cooling_device *cpufreq_cdev, int cpu,
+> >  		    int cpu_idx)
+> >  {
+> > -	u32 load;
+> > -	u64 now, now_idle, delta_time, delta_idle;
+> > -	struct time_in_idle *idle_time = &cpufreq_cdev->idle_time[cpu_idx];
+> > -
+> > -	now_idle = get_cpu_idle_time(cpu, &now, 0);
+> > -	delta_idle = now_idle - idle_time->time;
+> > -	delta_time = now - idle_time->timestamp;
+> > +	unsigned long util = cpu_util_cfs(cpu_rq(cpu));
+> > +	unsigned long max = arch_scale_cpu_capacity(cpu);
 > 
-> v7: remove Simon from authors and introduce changes suggested by Rob:
+> Should we subtract the thermal PELT signal from max?
 
-I asked you to remove my email address from the source code. All you've
-done is update it. I don't want spam. I know the address appears in the
-commit but you don't have to spray it around everywhere else.
-
-You can keep my name in the MODULE_AUTHOR text but you need to omit the
-email address.
-
-None of the original copyright notices included email addresses so I
-don't know why you think it is appropriate for you to add them.
-
-Please only Cc: this email address, I don't want multiple copies of
-everything.
-
--- 
-Simon Arlott
+Actually, that or add it the ENERGY_UTIL case in effective_cpu_util() as
+this appears to be missing for EAS too ...
