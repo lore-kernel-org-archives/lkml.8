@@ -2,119 +2,221 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164E9C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 019B9208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8352074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:51:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DuaNck28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgGQSxr (ORCPT
+        id S1728113AbgGQSvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:53:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47934 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727821AbgGQSxq (ORCPT
+        Fri, 17 Jul 2020 14:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgGQSvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:53:46 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HIbbD2146416;
-        Fri, 17 Jul 2020 14:53:29 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1mxm38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 14:53:29 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06HI3wLC147345;
-        Fri, 17 Jul 2020 14:53:29 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1mxm2s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 14:53:29 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06HIeKRL002749;
-        Fri, 17 Jul 2020 18:53:27 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 329nmyk7a8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 18:53:27 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06HIrOm364422340
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 18:53:24 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9660E5204E;
-        Fri, 17 Jul 2020 18:53:24 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.74.95])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 45A345204F;
-        Fri, 17 Jul 2020 18:53:20 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     mpe@ellerman.id.au, npiggin@gmail.com, benh@kernel.crashing.org,
-        paulus@samba.org, mikey@neuling.org, ego@linux.vnet.ibm.com,
-        svaidy@linux.ibm.com, psampat@linux.ibm.com,
-        pratik.r.sampat@gmail.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] powerpc/powernv/idle: Exclude mfspr on HID1,4,5 on P9 and above
-Date:   Sat, 18 Jul 2020 00:23:06 +0530
-Message-Id: <20200717185306.60607-4-psampat@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200717185306.60607-1-psampat@linux.ibm.com>
-References: <20200717185306.60607-1-psampat@linux.ibm.com>
+        Fri, 17 Jul 2020 14:51:21 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC1BFC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:51:20 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f18so12209896wrs.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=W0XV4dFr3RYjtEBiF3D3e3s9h66bEDl3lyG1fgXEHCs=;
+        b=DuaNck28/9ga/FaLy4maDgdZnfSieEs3loiDk9AN98/zgCO6TlbSYre/tqEVJ5gMK6
+         0uj1OJc6MkSjrHnxMYjTbaQssOWldOVQoUzOVlAFoL5Zm82up8qvzMa5SfSs56sfQDIr
+         SUvdpXthtVQAyjeBLF/C543xgCX8KH0Ij357o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W0XV4dFr3RYjtEBiF3D3e3s9h66bEDl3lyG1fgXEHCs=;
+        b=uC6rKLHr9IsoyhXSIiQQ1MQo/Qh3HTray8TQb1Wq+SmiB96r5Hvn3Q/6arF53gA6K5
+         uCS3cjE12qms5FuQ6jVAU5v1cdeADXO7kJSes9UhKarZZGALYSxdxcWrA+AM5vZxZLvL
+         cOpzBErNpnB+gIOhETp0/lW470+bEuBLw0Rml+0KhCFBfuLkAuQvk0QRCmzim6FnUErL
+         Qic8akGTMl6ymLckfgo4AgucGJ0hELlzRko9dNGh81+zmojZyU1JrDkdd/vGG90s6UuO
+         SJmILiyLeeUsFwC0jzVll7uLPSv5kumAfpGIdRhUlPB6AUxtQEPcXpXaMC2CyREaQ6H4
+         gxsw==
+X-Gm-Message-State: AOAM530x0TCk/zFUvOR+frf8MiZguBScEm/h1OOkWBfdOl+YV3aYM51A
+        AZep+73nfOba1wBih7sSec80OQSORdP/jh8s5A9yRQ==
+X-Google-Smtp-Source: ABdhPJwvUddcWMyhSzUmm3XImox0bWFW8PaTWfgIJMpo12uCcNdigo/4j+4QOdUAPCNLJT54SIRpaaqiuoGLYUJw3zI=
+X-Received: by 2002:a5d:6846:: with SMTP id o6mr11746430wrw.370.1595011879368;
+ Fri, 17 Jul 2020 11:51:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_09:2020-07-17,2020-07-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- spamscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=886
- suspectscore=0 phishscore=0 bulkscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007170128
+References: <20200716170914.3623060-1-yuhsuan@chromium.org>
+ <CABXOdTffo_PoFytXTR0DthRgxrp9SLkTrg2Wp6dMDXXj060KFw@mail.gmail.com>
+ <f53d5f7b-6d9a-af68-7a48-fbb411625336@collabora.com> <CABXOdTf2x4zK9n0WN2djLxCbfQynF4p5v_opwB-DsEyRnRAd4g@mail.gmail.com>
+In-Reply-To: <CABXOdTf2x4zK9n0WN2djLxCbfQynF4p5v_opwB-DsEyRnRAd4g@mail.gmail.com>
+From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Date:   Sat, 18 Jul 2020 02:51:08 +0800
+Message-ID: <CAGvk5Prz_62Gzu98eZFDotzQOz5tMN72PB4UA9m315-PVfrsNQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ASoC: cros_ec_codec: Reset I2S RX when probing
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Benson Leung <bleung@chromium.org>,
+        ALSA development <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-POWER9 onwards the support for the registers HID1, HID4, HID5 has been
-receded.
-Although mfspr on the above registers worked in Power9, In Power10
-simulator is unrecognized. Moving their assignment under the
-check for machines lower than Power9
+Guenter Roeck <groeck@google.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8817=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8810:32=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Thu, Jul 16, 2020 at 10:47 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+> >
+> > Hi,
+> >
+> > On 16/7/20 19:23, Guenter Roeck wrote:
+> > > On Thu, Jul 16, 2020 at 10:09 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> =
+wrote:
+> > >>
+> > >> It is not guaranteed that I2S RX is disabled when the kernel booting=
+.
+> > >> For example, if the kernel crashes while it is enabled, it will keep
+> > >> enabled until the next time EC reboots. Reset I2S RX when probing to
+> > >> fix this issue.
+> > >>
+> > >> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> > >> ---
+> > >>  drivers/platform/chrome/cros_ec_proto.c        | 7 ++++++-
+> > >>  include/linux/platform_data/cros_ec_commands.h | 1 +
+> > >>  sound/soc/codecs/cros_ec_codec.c               | 9 +++++++++
+> > >>  3 files changed, 16 insertions(+), 1 deletion(-)
+> > >>
+> > >> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platf=
+orm/chrome/cros_ec_proto.c
+> > >> index 3e745e0fe092c..2c60690d7147c 100644
+> > >> --- a/drivers/platform/chrome/cros_ec_proto.c
+> > >> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> > >> @@ -572,7 +572,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_devi=
+ce *ec_dev,
+> > >>                 return -ENOTSUPP;
+> > >>         } else if (msg->result !=3D EC_RES_SUCCESS) {
+> > >>                 dev_dbg(ec_dev->dev, "Command result (err: %d)\n", m=
+sg->result);
+> > >> -               return -EPROTO;
+> > >> +               switch (msg->result) {
+> > >> +               case EC_RES_INVALID_PARAM:
+> > >> +                       return -EINVAL;
+> > >
+> > > As we have learned, this may impact other callers of
+> > > cros_ec_cmd_xfer_status() which only accept -EPROTO as error return
+> > > value. In addition to that, the code is odd:
+> > >
+> > >     if (msg->result =3D=3D EC_RES_INVALID_VERSION) {
+> > >         ...
+> > >     } else if (msg->result !=3D EC_RES_SUCCESS) {
+> > >         switch (msg->result) {
+> > >         ....
+> > >         }
+> > >     }
+> > >
+> >
+> > Ack, this is odd.
+> >
+> > > I really dislike the notion of changing error return values of
+> > > cros_ec_cmd_xfer_status() one by one. That can only cause ongoing
+> > > trouble with callers expecting specific error return codes (as we hav=
+e
+> > > already seen).
+> > >
+> >
+> > Hmm, that's a good point. Ok.
+> >
+> > Let's apply the Guenter's patch that maps the errors *and* fix the call=
+ers of
+> > cros_ec_cmd_xfer_status which only accept -EPROTO (there are few).
+> >
+> > Yu-Hsuan, can you take care of this and send a patch series with all th=
+e
+> > required patches? If not, I can work on this next week.
+> >
+>
+> I can look into it as well. Let me know - I don't want to duplicate work.
+>
+> Guenter
+Hi Guenter,
+Really thanks for your assistance! Could you help me on those patches?
+Since you wrote that patch, I think it should be the most efficient
+way to make them merged.
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
- arch/powerpc/platforms/powernv/idle.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks,
+Yu-Hsuan
 
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index d439e11af101..d24d6671f3e8 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -73,9 +73,6 @@ static int pnv_save_sprs_for_deep_states(void)
- 	 */
- 	uint64_t lpcr_val	= mfspr(SPRN_LPCR);
- 	uint64_t hid0_val	= mfspr(SPRN_HID0);
--	uint64_t hid1_val	= mfspr(SPRN_HID1);
--	uint64_t hid4_val	= mfspr(SPRN_HID4);
--	uint64_t hid5_val	= mfspr(SPRN_HID5);
- 	uint64_t hmeer_val	= mfspr(SPRN_HMEER);
- 	uint64_t msr_val = MSR_IDLE;
- 	uint64_t psscr_val = pnv_deepest_stop_psscr_val;
-@@ -117,6 +114,9 @@ static int pnv_save_sprs_for_deep_states(void)
- 
- 			/* Only p8 needs to set extra HID regiters */
- 			if (!pvr_version_is(PVR_POWER9)) {
-+				uint64_t hid1_val = mfspr(SPRN_HID1);
-+				uint64_t hid4_val = mfspr(SPRN_HID4);
-+				uint64_t hid5_val = mfspr(SPRN_HID5);
- 
- 				rc = opal_slw_set_reg(pir, SPRN_HID1, hid1_val);
- 				if (rc != 0)
--- 
-2.25.4
-
+>
+> > Thanks,
+> >   Enric
+> >
+> > > Guenter
+> > >
+> > >> +               default:
+> > >> +                       return -EPROTO;
+> > >> +               }
+> > >>         }
+> > >>
+> > >>         return ret;
+> > >> diff --git a/include/linux/platform_data/cros_ec_commands.h b/includ=
+e/linux/platform_data/cros_ec_commands.h
+> > >> index 69210881ebac8..11ce917ca924c 100644
+> > >> --- a/include/linux/platform_data/cros_ec_commands.h
+> > >> +++ b/include/linux/platform_data/cros_ec_commands.h
+> > >> @@ -4598,6 +4598,7 @@ enum ec_codec_i2s_rx_subcmd {
+> > >>         EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH =3D 0x2,
+> > >>         EC_CODEC_I2S_RX_SET_DAIFMT =3D 0x3,
+> > >>         EC_CODEC_I2S_RX_SET_BCLK =3D 0x4,
+> > >> +       EC_CODEC_I2S_RX_RESET =3D 0x5,
+> > >>         EC_CODEC_I2S_RX_SUBCMD_COUNT,
+> > >>  };
+> > >>
+> > >> diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cro=
+s_ec_codec.c
+> > >> index f23956cf4ed84..b5ff30b7f1aa8 100644
+> > >> --- a/sound/soc/codecs/cros_ec_codec.c
+> > >> +++ b/sound/soc/codecs/cros_ec_codec.c
+> > >> @@ -1034,6 +1034,15 @@ static int cros_ec_codec_platform_probe(struc=
+t platform_device *pdev)
+> > >>         }
+> > >>         priv->ec_capabilities =3D r.capabilities;
+> > >>
+> > >> +       /* Reset EC codec I2S RX. */
+> > >> +       p.cmd =3D EC_CODEC_I2S_RX_RESET;
+> > >> +       ret =3D send_ec_host_command(priv->ec_device, EC_CMD_EC_CODE=
+C_I2S_RX,
+> > >> +                                  (uint8_t *)&p, sizeof(p), NULL, 0=
+);
+> > >> +       if (ret =3D=3D -EINVAL)
+> > >> +               dev_info(dev, "Missing reset command. Please update =
+your EC firmware.\n");
+> > >> +       else if (ret)
+> > >> +               dev_err(dev, "failed to EC_CODEC_I2S_RESET: %d\n", r=
+et);
+> > >> +
+> > >>         platform_set_drvdata(pdev, priv);
+> > >>
+> > >>         ret =3D devm_snd_soc_register_component(dev, &i2s_rx_compone=
+nt_driver,
+> > >> --
+> > >> 2.27.0.389.gc38d7665816-goog
+> > >>
