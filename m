@@ -2,86 +2,123 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D953C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA33020717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633F020717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:35:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G9cwaGuv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgGQMfe (ORCPT
+        id S1726759AbgGQMfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:35:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38749 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgGQMfe (ORCPT
+        Fri, 17 Jul 2020 08:35:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgGQMfw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:35:34 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z13so10895104wrw.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:35:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LMlJy6wOrhNkKa4XkVHfxAFVkzL5mhjIxwrUsBxg66M=;
-        b=PljGJlo1TYw/Za7hZygG4J0VJiBO1SqYoZVH2BSh+y3BTGaK+szR9T67gNS1teJUTJ
-         Cut2w9YfRu++Qg8sM7snwVRjGXLxIw3kVfgTkK/Yi6tAk1O8mD3yHOo2Ie8y+IwB4ZrP
-         85amcidb502RftiaYj3KlMBMMyzs9zzEIpXTqoZujNBBuiy/x5Z56l5NloRI1JuxQc4x
-         48m1fmlTScwPfC9VTQbsAqSfXt9HadVl7F9Dqt5l8g9QLldua2x9mF3SQQCo3tMxBflO
-         iw+WKw8QDU29lkq0gvXJR6cNFrkuRT1//2SFq/GwE/TKuNT9YbtVcOqv0deJwCQuSGVt
-         hdlA==
-X-Gm-Message-State: AOAM53128DBlmc7jQIecQyWFi/H6tY9eRX7GrlumPFXtq2YuKLwtTvmq
-        bOPJKRgeAsT8tAWR62N1CvZGjtvpR4g=
-X-Google-Smtp-Source: ABdhPJxamTel4GRbJdczjOpGTMpacyOtEG5oZShOC1IKuAW3y5ywbiax/ApHwj+QU76etivkADss9g==
-X-Received: by 2002:a05:6000:1288:: with SMTP id f8mr2158588wrx.62.1594989332416;
-        Fri, 17 Jul 2020 05:35:32 -0700 (PDT)
-Received: from msft-t490s.fritz.box (host-80-104-32-206.retail.telecomitalia.it. [80.104.32.206])
-        by smtp.gmail.com with ESMTPSA id v5sm13348724wmh.12.2020.07.17.05.35.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 05:35:31 -0700 (PDT)
-From:   Matteo Croce <mcroce@linux.microsoft.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmem: update Kconfig description
-Date:   Fri, 17 Jul 2020 14:35:27 +0200
-Message-Id: <20200717123527.26291-1-mcroce@linux.microsoft.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 17 Jul 2020 08:35:52 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E08BC061755;
+        Fri, 17 Jul 2020 05:35:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JEnG7mSqI+pOdpDjfM+f6CJVo0VXXVteFm0g348cSBY=; b=G9cwaGuvyxgnPq4ixlH6xAMtBA
+        RrNLQI3/AuAxk9eoWKVfwYqarRZnBF8epiv5EF7SwjwDQYtTJLLTZjnv1+/O/yfyoT76J5xIZn8mT
+        xzY84BZ3cc8Teu2n9n5mNp8Jhz/HX7WxysLhd21d69kywy5LpoWnwaOF+kog6g0bJdCsl/R5Xo6YL
+        UG9ccKR6LT13o+iu4AveJjdxUEIno8rODv6IOEQN2N6BJVBwiy2nzk9xm8xQ07Ldug4HA9TazTt+c
+        BP2cZJ/8ObIweJoQTrDwByLuPtyF7YxFk84YBpRed85MrEDhKTDW9uvsOO/Gb6hguXGnyHWv1supa
+        swG19jVQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwPaa-0001He-1Z; Fri, 17 Jul 2020 12:35:44 +0000
+Date:   Fri, 17 Jul 2020 13:35:43 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+Message-ID: <20200717123543.GO12769@casper.infradead.org>
+References: <20200717044427.68747-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717044427.68747-1-ebiggers@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@microsoft.com>
+On Thu, Jul 16, 2020 at 09:44:27PM -0700, Eric Biggers wrote:
+> +The simplest implementation just uses a mutex and an 'inited' flag.
 
-nvmem can't be built as module anymore, update its Kconfig description.
+There's a perfectly good real word "initialised" / initialized.
+https://chambers.co.uk/search/?query=inited&title=21st
 
-Fixes: 2a37ce25d9f2 ("nvmem: disallow modular CONFIG_NVMEM")
-Signed-off-by: Matteo Croce <mcroce@microsoft.com>
----
- drivers/nvmem/Kconfig | 3 ---
- 1 file changed, 3 deletions(-)
+> +For the single-pointer case, a further optimized implementation
+> +eliminates the mutex and instead uses compare-and-exchange:
+> +
+> +	static struct foo *foo;
+> +
+> +	int init_foo_if_needed(void)
+> +	{
+> +		struct foo *p;
+> +
+> +		/* pairs with successful cmpxchg_release() below */
+> +		if (smp_load_acquire(&foo))
+> +			return 0;
+> +
+> +		p = alloc_foo();
+> +		if (!p)
+> +			return -ENOMEM;
+> +
+> +		/* on success, pairs with smp_load_acquire() above and below */
+> +		if (cmpxchg_release(&foo, NULL, p) != NULL) {
+> +			free_foo(p);
+> +			/* pairs with successful cmpxchg_release() above */
+> +			smp_load_acquire(&foo);
+> +		}
+> +		return 0;
+> +	}
+> +
+> +Note that when the cmpxchg_release() fails due to another task already
+> +having done it, a second smp_load_acquire() is required, since we still
+> +need to acquire the data that the other task released.  You may be
+> +tempted to upgrade cmpxchg_release() to cmpxchg() with the goal of it
+> +acting as both ACQUIRE and RELEASE, but that doesn't work here because
+> +cmpxchg() only guarantees memory ordering if it succeeds.
+> +
+> +Because of the above subtlety, the version with the mutex instead of
+> +cmpxchg_release() should be preferred, except potentially in cases where
+> +it is difficult to provide anything other than a global mutex and where
+> +the one-time data is part of a frequently allocated structure.  In that
+> +case, a global mutex might present scalability concerns.
 
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index d7b7f6d688e7..954d3b4a52ab 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -7,9 +7,6 @@ menuconfig NVMEM
- 	  This framework is designed to provide a generic interface to NVMEM
- 	  from both the Linux Kernel and the userspace.
- 
--	  This driver can also be built as a module. If so, the module
--	  will be called nvmem_core.
--
- 	  If unsure, say no.
- 
- if NVMEM
--- 
-2.26.2
+There are concerns other than scalability where we might want to eliminate
+the mutex.  For example, if (likely) alloc_foo() needs to allocate memory
+and we would need foo to perform page writeback, then either we must
+allocate foo using GFP_NOFS or do without the mutex, lest we deadlock
+on this new mutex.
 
+You might think this would argue for just using GFP_NOFS always, but
+GFP_NOFS is a big hammer which forbids reclaiming from any filesystem,
+whereas we might only need this foo to reclaim from a particular
+filesystem.
