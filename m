@@ -2,123 +2,86 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED41C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3820A20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594989280;
-	bh=33tjZQH1C4xO/jHnWjoKMYBh6IKIV2OgfAuYgQAMOA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qd4LDTCs8sQDSewKes1NR3qro3CUcyE3bjZ01VlLarLcB7jJ79GA5OkzDEj5CBLQW
-	 UApes6feDzMQ8dl1EkI38qSoFGfFJHUfwwP46jFUaIRKHEiezuwCPh4K83KN6ENQqs
-	 Z8z/1umyPuQ05BOfAkLdCwsCITLtg6UaMkXJ7JgE=
+	by mail.kernel.org (Postfix) with ESMTP id EA33020717
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgGQMei (ORCPT
+        id S1726569AbgGQMfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:34:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgGQMei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:34:38 -0400
-Received: from quaco.ghostprotocols.net (179.176.12.94.dynamic.adsl.gvt.net.br [179.176.12.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9457206BE;
-        Fri, 17 Jul 2020 12:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594989278;
-        bh=33tjZQH1C4xO/jHnWjoKMYBh6IKIV2OgfAuYgQAMOA4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ajmTmmG928Wru9EYzGoaDRLYHvtvENN3tmjKPD5ncu1wGTRMze7CtoXRHIyKjiiMG
-         tJOK+Rrl/00fx5OwmoCQy8a21jDRDlxmD9JP0UrDNYrnqx2EWbAvXc8QJRiaeaFg8E
-         pibEGdnRzF+ZEFIXFZAvn+j6mZl6V6dI/QEeLEco=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 364B740482; Fri, 17 Jul 2020 09:34:35 -0300 (-03)
-Date:   Fri, 17 Jul 2020 09:34:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     acme@redhat.com, jolsa@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] libsubcmd: Fix OPT_CALLBACK_SET()
-Message-ID: <20200717123435.GC77866@kernel.org>
-References: <20200619133412.50705-1-ravi.bangoria@linux.ibm.com>
- <3b15af42-bfb2-07dd-8bb2-df9cd6b32a34@linux.ibm.com>
+        Fri, 17 Jul 2020 08:35:34 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38749 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgGQMfe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 08:35:34 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z13so10895104wrw.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 05:35:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LMlJy6wOrhNkKa4XkVHfxAFVkzL5mhjIxwrUsBxg66M=;
+        b=PljGJlo1TYw/Za7hZygG4J0VJiBO1SqYoZVH2BSh+y3BTGaK+szR9T67gNS1teJUTJ
+         Cut2w9YfRu++Qg8sM7snwVRjGXLxIw3kVfgTkK/Yi6tAk1O8mD3yHOo2Ie8y+IwB4ZrP
+         85amcidb502RftiaYj3KlMBMMyzs9zzEIpXTqoZujNBBuiy/x5Z56l5NloRI1JuxQc4x
+         48m1fmlTScwPfC9VTQbsAqSfXt9HadVl7F9Dqt5l8g9QLldua2x9mF3SQQCo3tMxBflO
+         iw+WKw8QDU29lkq0gvXJR6cNFrkuRT1//2SFq/GwE/TKuNT9YbtVcOqv0deJwCQuSGVt
+         hdlA==
+X-Gm-Message-State: AOAM53128DBlmc7jQIecQyWFi/H6tY9eRX7GrlumPFXtq2YuKLwtTvmq
+        bOPJKRgeAsT8tAWR62N1CvZGjtvpR4g=
+X-Google-Smtp-Source: ABdhPJxamTel4GRbJdczjOpGTMpacyOtEG5oZShOC1IKuAW3y5ywbiax/ApHwj+QU76etivkADss9g==
+X-Received: by 2002:a05:6000:1288:: with SMTP id f8mr2158588wrx.62.1594989332416;
+        Fri, 17 Jul 2020 05:35:32 -0700 (PDT)
+Received: from msft-t490s.fritz.box (host-80-104-32-206.retail.telecomitalia.it. [80.104.32.206])
+        by smtp.gmail.com with ESMTPSA id v5sm13348724wmh.12.2020.07.17.05.35.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 05:35:31 -0700 (PDT)
+From:   Matteo Croce <mcroce@linux.microsoft.com>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] nvmem: update Kconfig description
+Date:   Fri, 17 Jul 2020 14:35:27 +0200
+Message-Id: <20200717123527.26291-1-mcroce@linux.microsoft.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3b15af42-bfb2-07dd-8bb2-df9cd6b32a34@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jul 17, 2020 at 09:10:45AM +0530, Ravi Bangoria escreveu:
-> Hi Arnaldo,
-> 
-> Can you please consider this trivial fix.
+From: Matteo Croce <mcroce@microsoft.com>
 
-Trivial but important, sorry for taking so long, applied to perf/urgent,
-aimed at v5.8,
+nvmem can't be built as module anymore, update its Kconfig description.
 
-- Arnaldo
+Fixes: 2a37ce25d9f2 ("nvmem: disallow modular CONFIG_NVMEM")
+Signed-off-by: Matteo Croce <mcroce@microsoft.com>
+---
+ drivers/nvmem/Kconfig | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index d7b7f6d688e7..954d3b4a52ab 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -7,9 +7,6 @@ menuconfig NVMEM
+ 	  This framework is designed to provide a generic interface to NVMEM
+ 	  from both the Linux Kernel and the userspace.
  
-> Ravi
-> 
-> On 6/19/20 7:04 PM, Ravi Bangoria wrote:
-> > Any option macro with _SET suffix should set opt->set variable which
-> > is not happening for OPT_CALLBACK_SET(). This is causing issues with
-> > perf record --switch-output-event. Fix that.
-> > 
-> > Before:
-> >    # ./perf record --overwrite -e sched:*switch,syscalls:sys_enter_mmap \
-> >             --switch-output-event syscalls:sys_enter_mmap
-> >    ^C[ perf record: Woken up 1 times to write data ]
-> >    [ perf record: Captured and wrote 0.297 MB perf.data (657 samples) ]
-> > 
-> > After:
-> > 
-> >    $ ./perf record --overwrite -e sched:*switch,syscalls:sys_enter_mmap \
-> >            --switch-output-event syscalls:sys_enter_mmap
-> >    [ perf record: dump data: Woken up 1 times ]
-> >    [ perf record: Dump perf.data.2020061918144542 ]
-> >    [ perf record: dump data: Woken up 1 times ]
-> >    [ perf record: Dump perf.data.2020061918144608 ]
-> >    [ perf record: dump data: Woken up 1 times ]
-> >    [ perf record: Dump perf.data.2020061918144660 ]
-> >    ^C[ perf record: dump data: Woken up 1 times ]
-> >    [ perf record: Dump perf.data.2020061918144784 ]
-> >    [ perf record: Woken up 0 times to write data ]
-> >    [ perf record: Dump perf.data.2020061918144803 ]
-> >    [ perf record: Captured and wrote 0.419 MB perf.data.<timestamp> ]
-> > 
-> > Fixes: 636eb4d001b1 ("libsubcmd: Introduce OPT_CALLBACK_SET()")
-> > Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> > ---
-> >   tools/lib/subcmd/parse-options.c | 3 +++
-> >   1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-> > index dbb9efbf718a..39ebf6192016 100644
-> > --- a/tools/lib/subcmd/parse-options.c
-> > +++ b/tools/lib/subcmd/parse-options.c
-> > @@ -237,6 +237,9 @@ static int get_value(struct parse_opt_ctx_t *p,
-> >   		return err;
-> >   	case OPTION_CALLBACK:
-> > +		if (opt->set)
-> > +			*(bool *)opt->set = true;
-> > +
-> >   		if (unset)
-> >   			return (*opt->callback)(opt, NULL, 1) ? (-1) : 0;
-> >   		if (opt->flags & PARSE_OPT_NOARG)
-> > 
-
+-	  This driver can also be built as a module. If so, the module
+-	  will be called nvmem_core.
+-
+ 	  If unsure, say no.
+ 
+ if NVMEM
 -- 
+2.26.2
 
-- Arnaldo
