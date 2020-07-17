@@ -2,133 +2,84 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F0C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37102C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2DD42070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:55:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTEcmskv"
+	by mail.kernel.org (Postfix) with ESMTP id 10FA42070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594979884;
+	bh=Zz2+ApO956fhXzUJmK96gy8OpESoWOBT3sYWqJtTRHY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yGlVxsKsqP6V/eHqQzeUCQ0n1+jWmAmNr+unf6dbkYd88Fxr+GNAESymK1ihtc5Rx
+	 E2fup1m1xY+3HgpJoQWvhd99aRYic5Bf8KdIVAC0YHDjRMzGyDvsfNNcSEZq1STPJZ
+	 pixF2oPioo6Sg+BMcNEnvhRiuUEt1wOOSj7oJ1Eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgGQJzm (ORCPT
+        id S1726233AbgGQJ6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgGQJzk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:55:40 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4747EC061755;
-        Fri, 17 Jul 2020 02:55:40 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id p26so1747360oos.7;
-        Fri, 17 Jul 2020 02:55:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oGHifvlf/HbJ5pbC1JrepfaNxTOZH7NvvEomCEvCSFs=;
-        b=hTEcmskvt6ltxtTePZN2NozRNi16ia3OaHE0zlZ2fHiGwMHqe2hYnL9qye8cCD4u6o
-         PGsxhgYHaPBBreX/bCCumKuAyTabxgnDPo5/uRFwi3WAoYZ7/QnKrc2J6u0yWWHkCY6O
-         XtNTm4IVjNUjCZNI16AF888AFQMeIdxOf/q8VU8rzquTBkwIVuDdIdD/1/6aLM469Git
-         fNbWE1VMj3cXT+haQIFrEPg1Qrt1aRwIAI9AsTfplajDccXrKloAMfa7gUzpGzta7F/l
-         sf2F92AQyMPjDLzMENCl1lPSYBqnu/Q/hSAFe7DgvlYgpdhi/f0ExIfc9yjuRMMLZNaK
-         RApQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oGHifvlf/HbJ5pbC1JrepfaNxTOZH7NvvEomCEvCSFs=;
-        b=TLLAYVfMFLcLkM2LfuP6thSsP6XXPXczaadC+Ij/Fso78VCL9/SYuxFbN8UTN4Bsou
-         vv52SGP5cRKJq1XrbwuaBN0W2e0fp+wiIw7scKrRxtGfjzG1KL/x/ksCywJRDH1m30NP
-         CoCzjmqhPcK0NA0fJwP4VFgMQ8CVf4hDyWSyzsMP4L+WhkzglUvlVK9bDv1oOl0SxOQZ
-         54pnsYg5LQ2lm5Aj/SZo7nQl/FWzX1T7lKWwdCb/34MpYLctJKZCDJz/TuF22YTljJB6
-         16TefZZCMU85NVmQyREh6B0h8rA54DFgAcvjJeNwG1heE91ipUCZXxRwABjYW8oNLdn2
-         iz+g==
-X-Gm-Message-State: AOAM531DGzOI4wLyZKMrnrk/yMxYIYhxCGaeLq1Jyz+pr3cSadnTw0AK
-        D3ulBvfBOHPN+bSHuQsYWTmw/GDXPPL0icLDiMbMFQOQ
-X-Google-Smtp-Source: ABdhPJyHkAUM4tu03EyydI36alK/e4dJ+/7rQIW8HB0MdZnnsL3p05DAothkh63l4EI83t4DDQqQJ0AntHJRJVPY0XQ=
-X-Received: by 2002:a4a:98c8:: with SMTP id b8mr7821728ooj.42.1594979739612;
- Fri, 17 Jul 2020 02:55:39 -0700 (PDT)
+        Fri, 17 Jul 2020 05:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgGQJ6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:58:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9841520684;
+        Fri, 17 Jul 2020 09:58:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594979882;
+        bh=Zz2+ApO956fhXzUJmK96gy8OpESoWOBT3sYWqJtTRHY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ddLhCSVC58MMF4b1pgQZ0TOXAk5WBoBERnUXi9UeK4RAW6RZ5lswYhnJZbvupW21B
+         /NUDLo3Zhfyw4+mACae/+svfvqlLyOAQwasY4vFWBUaE8Jla6d+eyI9x7B4uAlWXSe
+         4t2e6jjv34ueMpGIuZHmV0p4FohouwzsvEcCM7Po=
+Date:   Fri, 17 Jul 2020 11:57:54 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [git pull] habanalabs fixes pull request for kernel 5.8-rc4/5
+Message-ID: <20200717095754.GA2461800@kroah.com>
+References: <20200710170322.GA29124@ogabbay-VM>
 MIME-Version: 1.0
-References: <20200714172049.27738-1-novikov@ispras.ru>
-In-Reply-To: <20200714172049.27738-1-novikov@ispras.ru>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 17 Jul 2020 10:55:13 +0100
-Message-ID: <CA+V-a8sekdRDqahs-Zi-KiSbdv0sRHy7KuHraTRtuE6mz2+beg@mail.gmail.com>
-Subject: Re: [PATCH] media: isif: reset global state
-To:     Evgeny Novikov <novikov@ispras.ru>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, ldv-project@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710170322.GA29124@ogabbay-VM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Evgeny,
+On Fri, Jul 10, 2020 at 08:03:22PM +0300, Oded Gabbay wrote:
+> Hello Greg,
+> 
+> This pull request is for the next rc (rc4 or 5) and it contains:
+> 
+> 1. Important bug fix for the GAUDI command parsing code.
+> 
+> 2. Change in debugfs interface that is relevant only for GAUDI and
+>    therefore can still be changed in this release.
+> 
+> 3. Workaround for a timeout problem in GOYA and GAUDI.
+> 
+> Details are in the tag message below.
+> 
+> Thanks,
+> Oded
+> 
+> The following changes since commit 897c44f0bae574c5fb318c759b060bebf9dd6013:
+> 
+>   virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial (2020-07-10 15:12:48 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2020-07-10
 
-Thank you for the patch.
+Sorry for the delay, now pulled and pushed out.
 
-On Tue, Jul 14, 2020 at 6:20 PM Evgeny Novikov <novikov@ispras.ru> wrote:
->
-> isif_probe() invokes iounmap() on error handling paths, but it does not
-> reset the global state. So, later it can invoke iounmap() even when
-> ioremap() fails. This is the case also for isif_remove(). The patch
-> resets the global state after invoking iounmap() to avoid this.
->
-> Found by Linux Driver Verification project (linuxtesting.org).
->
-> Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-> ---
->  drivers/media/platform/davinci/isif.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
-> index c98edb67cfb2..c53cecd072b1 100644
-> --- a/drivers/media/platform/davinci/isif.c
-> +++ b/drivers/media/platform/davinci/isif.c
-> @@ -1075,10 +1075,14 @@ static int isif_probe(struct platform_device *pdev)
->         release_mem_region(res->start, resource_size(res));
->         i--;
->  fail_nobase_res:
-> -       if (isif_cfg.base_addr)
-> +       if (isif_cfg.base_addr) {
->                 iounmap(isif_cfg.base_addr);
-> -       if (isif_cfg.linear_tbl0_addr)
-> +               isif_cfg.base_addr = NULL;
-> +       }
-> +       if (isif_cfg.linear_tbl0_addr) {
->                 iounmap(isif_cfg.linear_tbl0_addr);
-> +               isif_cfg.linear_tbl0_addr = NULL;
-> +       }
->
-As the probe itself is failing I don't see a benefit in setting the
-pointers to NULL. Unless I'm missing something.
-
-Cheers,
---Prabhakar
-
->         while (i >= 0) {
->                 res = platform_get_resource(pdev, IORESOURCE_MEM, i);
-> @@ -1096,8 +1100,11 @@ static int isif_remove(struct platform_device *pdev)
->         int i = 0;
->
->         iounmap(isif_cfg.base_addr);
-> +       isif_cfg.base_addr = NULL;
->         iounmap(isif_cfg.linear_tbl0_addr);
-> +       isif_cfg.linear_tbl0_addr = NULL;
->         iounmap(isif_cfg.linear_tbl1_addr);
-> +       isif_cfg.linear_tbl1_addr = NULL;
->         while (i < 3) {
->                 res = platform_get_resource(pdev, IORESOURCE_MEM, i);
->                 if (res)
-> --
-> 2.16.4
->
+greg k-h
