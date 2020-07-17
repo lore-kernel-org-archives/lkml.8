@@ -2,195 +2,196 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FECC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265C0C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB7E2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB20206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 06:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="T4rSOT9u"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="VOXMigaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgGQGEo (ORCPT
+        id S1726863AbgGQGE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 02:04:44 -0400
-Received: from mail-eopbgr1310118.outbound.protection.outlook.com ([40.107.131.118]:7595
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726201AbgGQGEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:04:44 -0400
+        Fri, 17 Jul 2020 02:04:56 -0400
+Received: from mga02.intel.com ([134.134.136.20]:31252 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgGQGEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 02:04:55 -0400
+IronPort-SDR: wFFz0evBO6yM67AzOL4ePBuvB+ZcEbWpZENOPqltrhInv4g78ZxCYx4iFOyKa8laqjnB1oKrdt
+ b40S48TBfVIw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="137659780"
+X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
+   d="scan'208";a="137659780"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 23:04:55 -0700
+IronPort-SDR: reqtBt/W6KCf0h6XssoCO9cwvQ/D+wsyefQU6jnK4/xq66pMM2i9UT0MVem8nbR7+tfmDGEc6R
+ taFacEfdu7gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="326754417"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga007.jf.intel.com with ESMTP; 16 Jul 2020 23:04:55 -0700
+Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 16 Jul 2020 23:04:54 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ orsmsx608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 16 Jul 2020 23:04:54 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.56) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 16 Jul 2020 23:04:54 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c0kdmUzDt31iCB8UKqtOGsSOD2y8WP3MmAqBihg/5bnFV+v6IfwhC/hM66O2rGqcXJWacchAG5Rk+zhJfDEgVuvIlobxmKrX96LUa6j9BTggcOs03rD2xvN9I/pyf+lSj9lis95rCUstLzFQFhX16fni7m4ccWX8Ok4SvmFv08Cyah0PXfQ41zWlpMpgf7lL+IK7ITxxFNL3+SrDFaMOFgJdEa0UaaWxmR34PYfree1MpwW3wHCLwHPN349AxwaAQG3YWNBW2aXGgJHZjsIWwlGC269DEUiIk4EgZK7gBw558O69uGRM3fTskHR/h4IqHuWKI3a0LnaK9gpMmq64EQ==
+ b=DxNpFxC67AiHA1jG8KT8dXeha1gv+HP6963ajl5qwnRmCcPj50K1Mm5P42Yw4/yH+2/SsT/usZ6uj8jypciOjdLM36lcNLYmBMGx+wQpy7L2nkRswEZz7lTdkaq1BoxiTYbNSMxYlu2sSsGlv4SZKv3mos97+8TcIZGZAVFUit4DVEaMNrrrj45oKppliccnaO3seYqjBn4hgUorzMhS2crHltx/nPDxjXe3vuNAZ1qb+O/MH69EEtUHI7ogzu+pWK93dox01XxPM9Wr2k0L5ld/nzd9LBExr5fsRZuLmR6qdQAnsez62yEnK4QvLn52KwXXbybbrpDncw2mRB2oVQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XDDANLUSfqTEe2b4Vz2hixm8ZUHTJQkFk3yZzng1SaM=;
- b=cIgJ9XnDtatZEA4TxsGw4O/c7M5dgmvaXWtghIQBniuWm2c8tISGt8gDqrzmyY5niuOr/aFRQps80eyLHerZxt+p5hOtxGKGgDFMwmJ4s/JvELKvJsBqZ+mFqjKdMjmeCDURtjGQeJNayCR0toYkgTshwdANVKmV1iAS4P7e+IcmcWb0MRWxjNu0gcIfPwKFf0DhmU1ogNdO4lZPLPLpleywuKxR1uGta2MQW7vtIIjme5VdE+Gi8Qc+P4RneWqjUDhWVW3cvc7hVLX4v7EMobv3JGeeZLR6cHXQ5UGhv+jJrbuqLfgtu662qjjqya4CDs1OlD+ZjXS0FMnB2E9htg==
+ bh=qMHNzplyluR7erOe/Xo3k+sKFXmiKAxAUOWBWyGePYA=;
+ b=oLFlT1G/+fJYnh+dR8TncCCfWHpfNakjGmCWm3tVBphfb263kEdLQJa+npz29zLiAnfBXNFbGun82PEvDOuBvufF5+NbN/3scClPOpZycvsdFGmekjD9fYGyCYihEZgn/GQL8f3KVYaUrMhErIbsCA+5AdIc7J5GtAu8n6yvOJp+Nn2tn1pVBeXzKRk7HhIouAfbfIe+aoZmkHEsFeBeh4OxgnonfF4Z+NpKUQZQA/avlAD63l3I4SiH0ix19q/b414rMQqdKJo4zXW8kgIllD3ixjdyAfXMmTbwr38fAZl2aG3rBFse+pHGKEryGS4itx6R7New2ZS4Y1hOBU/+Xw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XDDANLUSfqTEe2b4Vz2hixm8ZUHTJQkFk3yZzng1SaM=;
- b=T4rSOT9u6RpIMmjENs1TzVLCNzjZyEC4TAanWUrNinYCXQFCD0JvZtynyCWi925/XrGy1T38fG0pm4NAdpYjyal691U65LkmDJ4gmgz2syjTNv9T7Z46jRHno8zvu1/nlij/VQjvzdxXC2yF3VQZBsPhKgPDIY+mSXltbSKhOz4=
-Received: from HK0P153MB0275.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::14)
- by HKAP153MB0370.APCP153.PROD.OUTLOOK.COM (2603:1096:203:d4::14) with
+ bh=qMHNzplyluR7erOe/Xo3k+sKFXmiKAxAUOWBWyGePYA=;
+ b=VOXMigaCOq8VudFK6akHCgdKoOun5wsJB+yUVSaARpIzn7KziBi45QOqmeSpIBHdY+tNDCBKlnT3m/EJeMZtCsD2W/xe1VeNMayVHKZ/bm1lVwMJcftcsBwyy+PcW0sOfeULZB21tggrOuRWPb30foBBNoIEUS/gmQBtCsP7TjQ=
+Received: from DM6PR11MB3963.namprd11.prod.outlook.com (2603:10b6:5:19b::16)
+ by DM6PR11MB3962.namprd11.prod.outlook.com (2603:10b6:5:192::26) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.13; Fri, 17 Jul
- 2020 06:04:32 +0000
-Received: from HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
- ([fe80::b5ca:82a1:cb67:52e]) by HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
- ([fe80::b5ca:82a1:cb67:52e%6]) with mapi id 15.20.3216.013; Fri, 17 Jul 2020
- 06:04:32 +0000
-From:   Chi Song <Song.Chi@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Fri, 17 Jul
+ 2020 06:04:51 +0000
+Received: from DM6PR11MB3963.namprd11.prod.outlook.com
+ ([fe80::714f:fa64:4fd8:c9df]) by DM6PR11MB3963.namprd11.prod.outlook.com
+ ([fe80::714f:fa64:4fd8:c9df%6]) with mapi id 15.20.3195.022; Fri, 17 Jul 2020
+ 06:04:51 +0000
+From:   "Mani, Rajmohan" <rajmohan.mani@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>,
+        =?iso-8859-2?Q?Bla=BE_Hrastnik?= <blaz@mxxn.io>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: [PATCH net-next] net: hyperv: Add attributes to show RX/TX
- indirection table
-Thread-Topic: [PATCH net-next] net: hyperv: Add attributes to show RX/TX
- indirection table
-Thread-Index: AdZb/5iAkDMuWyahRIOBehKiULg7mg==
-Date:   Fri, 17 Jul 2020 06:04:31 +0000
-Message-ID: <HK0P153MB027502644323A21B09F6DA60987C0@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "pmalani@chromium.org" <pmalani@chromium.org>,
+        "bleung@chromium.org" <bleung@chromium.org>
+Subject: RE: [PATCH 2/2] usb: typec: intel_pmc_mux: Check the port status
+ before connect
+Thread-Topic: [PATCH 2/2] usb: typec: intel_pmc_mux: Check the port status
+ before connect
+Thread-Index: AQHWWz+GMlKLLCj8UEiQgrY2PIsTTakLSa1A
+Date:   Fri, 17 Jul 2020 06:04:51 +0000
+Message-ID: <DM6PR11MB39632A8236161E4A27FAB1BBF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
+References: <20200716003310.26125-1-rajmohan.mani@intel.com>
+ <20200716003310.26125-3-rajmohan.mani@intel.com>
+ <20200716070508.GB962748@kroah.com>
+In-Reply-To: <20200716070508.GB962748@kroah.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-17T06:04:30Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e65774ea-85c5-4afa-a5de-cbef4b422b7c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [2404:f801:8050:1:4906:99ed:e85b:7e58]
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=intel.com;
+x-originating-ip: [76.126.121.82]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8185eb83-bf37-4f0a-326c-08d82a17464a
-x-ms-traffictypediagnostic: HKAP153MB0370:
+x-ms-office365-filtering-correlation-id: 214d073f-cca6-48a4-a05d-08d82a1751d2
+x-ms-traffictypediagnostic: DM6PR11MB3962:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HKAP153MB0370FAD65B85B353335C6986987C0@HKAP153MB0370.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-microsoft-antispam-prvs: <DM6PR11MB39622A5AA3F536B5713079E3F67C0@DM6PR11MB3962.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AWSh/tqwDyNF3Ane7vEs8hRdqASZ3us4XsVMPn+EfQyJdu40ENNUbKKbUrKehXk+duOjxGVgNYxrUzk4nMNIQxzcSoBxaE/sSnrCoCxsSHSId32sJoc/e+/4cI0Kjf4fx5uM9FtbJFF5ZXotCJHF4uwQwO1O7Pj+6A5NgiTXqraSetjgBSOtcze+aa3vmWnBlRYr3YPjDusrO0OzHCFX3y1MtNcWaFpxT1O+XHzRJEOBDrDdjjwr8U9Yd3BPYGgP+li/GhrfzA+Uwwwn29wTjrUqUr3tU3N3Kq9UI/0rTEMtIYrJm7qOqaQYqh4WGAiJXc58+QiQ6e5KLCR4QHnpaEoFuRP+LlbpY38og33jbjqJsRaJVl7isG/WaF3hllj6
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0275.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(366004)(346002)(136003)(376002)(316002)(54906003)(8990500004)(110136005)(478600001)(10290500003)(7696005)(2906002)(186003)(4326008)(6506007)(55016002)(9686003)(7416002)(52536014)(33656002)(82950400001)(82960400001)(8936002)(8676002)(86362001)(71200400001)(66476007)(66446008)(66556008)(64756008)(76116006)(5660300002)(66946007)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 4Ux+fHsjMv6QasVsW0GJaRaCbEMgaNiFgT74m/Meb7qqCnJgtb1g63qKdgNfjDlEAHZElc8iTM4eXAKve6q8Fg5pB2DwmQnUxi/Q1jssZj1yuycDQUDO96iT0hWlUXVxX1cig994DatD98XaKGwJvGpx9NzoEXljz02aekq0KqoV9XYuTqK6Ne6j0J/vDdAcL5HYVZrC63Sl+XiStVsPqbOTDx9/U3i7Ha4XExcEhEanWAGHMX/+Oixn9oFrlLEd0uwdB4WCLSSXaPh2tPUxHvSWYvbitSQkmj2F/VIUXnyyAr2UX/XjtWZCwv4T2KduT1oSFNbsfQO4udNQ0g5ULRJuDzMY6Vu64XsO+gFmKkZ8EsV1GM0YNYccIp2Gc9URuoK5+huMduSddABrxB+UOCRxJsd0VTllXfpsPuCzx8QeYe5INMm1HfFUCX+u0sBMs2QV4QV5buBlvPgymRP+clTE3VLOgFWUyN8JMqt4KqoaCIUxIkPeV5/n4sJy1UOB/LdZeYjnxNmJ1m7j1+dq4vOC9TrM+lQcj8DGqZaR22w=
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: nrg3PliTp110rCbWevOZUIOZNr8olP2cT4c+6WZ7X3GMbBhroam80ODy9Z+ovloz5V+mkBVjbJFhm31fP5NAcmS8q0Kdu9vSublTrlLGP6LtWsh5QCaUWJPuLUS8cLHTscvmD2CbnCqUK5/+lFmBHW+G/jZjW/cAmbYKduwk9XdWwkkmDX9ECYwIqmr5YwpCxkgwi1IJHMXlnPwyu189NPtAC9966fJy8PXM+Tea1vGcS11Wf3/sXui/nG3zPP5atI+4xVvj5W4rJpd5UnoFyx5gbvNCOnq3uLBtR4Fkc9odlmian3RnOQp4xsqTN2eqopKe7QO1/adnBrZlGqbr2g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(396003)(136003)(39860400002)(346002)(6916009)(316002)(86362001)(26005)(8936002)(4326008)(186003)(9686003)(7696005)(76116006)(5660300002)(52536014)(66946007)(66556008)(66476007)(66446008)(64756008)(54906003)(71200400001)(8676002)(6506007)(53546011)(83380400001)(478600001)(7416002)(2906002)(33656002)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: NPaoru+nGph+d7/h3vu+fPXwg3DSP4mJNV5gQJxcWHEMXzkm2Sjsyx9RDDWXFJzWNtbfY6TfgVFv5Q/5Jx4qL5m+5dgAwEDN/9lJ6bzCSctdfF7u2WOsluXI2cWQn934E8Kn4KVDMM98eSaaiyZGgx5fgGFXZyGpA4U1E5LYp5ComP/ui/Sv5uamGXWTYKo+ZVoo7bVfwOROoXsAWLIpGYLaJbA/ZeQzxzoaLiJw+6rWy+E+/Zf6riJWbD6pySyRP0ukYsn/tcp4WLpYYEFBQDjHnyJBNds/NqFr1LU7eQLvCGvsTs2S2Crf5ED75+KtAe9ZkitRlq+9wbWD/zOyMDPH2zr/STwD/MZKR/bTKz6rk4UtJDRw5bASgD6vuLTaAKFwEKMlI2IrQxQq7pPU85VzMv/fXwQpMKI8wagaluezPKQPNrdfj0taNPrtDVoMeTZeHbHCuoBgZ6E5FBuTM+YpvEHENjhyhb/fY+YvaMuiJOfNQA3VAaQimI1I8pcZ
+Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8185eb83-bf37-4f0a-326c-08d82a17464a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 06:04:32.0119
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 214d073f-cca6-48a4-a05d-08d82a1751d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 06:04:51.7787
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: P3XA5Ai1ozqjv2HJJ+zK4bfcu7t7iUNA7uk5/IHN+P16MR8ZQZzT7fDWclnBy+acK2aTro5pNtA5/8cenpxiNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HKAP153MB0370
+X-MS-Exchange-CrossTenant-userprincipalname: QxEjoXIO2rXfcPYj5vS9nkCTpXa1PyZvTIWzhX7Jdt2Qg0E3pd64ZIH6Ymcq4dcug2RXHZg45f9IItwEUs8tXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3962
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The network is observed with low performance, if TX indirection table is im=
-balance.
-But the table is in memory and set in runtime, it's hard to know. Add them =
-to attributes can help on troubleshooting.
----
- drivers/net/hyperv/netvsc_drv.c | 46 +++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+Hi Greg,
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
-v.c
-index 6267f706e8ee..cd6fe96e10c1 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2370,6 +2370,51 @@ static int netvsc_unregister_vf(struct net_device *v=
-f_netdev)
- 	return NOTIFY_OK;
- }
-=20
-+static ssize_t tx_indirection_table_show(struct device *dev,
-+					 struct device_attribute *dev_attr,
-+					 char *buf)
-+{
-+	struct net_device *ndev =3D to_net_dev(dev);
-+	struct net_device_context *ndc =3D netdev_priv(ndev);
-+	int i =3D 0;
-+	ssize_t offset =3D 0;
-+
-+	for (i =3D 0; i < VRSS_SEND_TAB_SIZE; i++)
-+		offset +=3D sprintf(buf + offset, "%u ", ndc->tx_table[i]);
-+	buf[offset - 1] =3D '\n';
-+
-+	return offset;
-+}
-+static DEVICE_ATTR_RO(tx_indirection_table);
-+
-+static ssize_t rx_indirection_table_show(struct device *dev,
-+					 struct device_attribute *dev_attr,
-+					 char *buf)
-+{
-+	struct net_device *ndev =3D to_net_dev(dev);
-+	struct net_device_context *ndc =3D netdev_priv(ndev);
-+	int i =3D 0;
-+	ssize_t offset =3D 0;
-+
-+	for (i =3D 0; i < ITAB_NUM; i++)
-+		offset +=3D sprintf(buf + offset, "%u ", ndc->rx_table[i]);
-+	buf[offset - 1] =3D '\n';
-+
-+	return offset;
-+}
-+static DEVICE_ATTR_RO(rx_indirection_table);
-+
-+static struct attribute *netvsc_dev_attrs[] =3D {
-+	&dev_attr_tx_indirection_table.attr,
-+	&dev_attr_rx_indirection_table.attr,
-+	NULL
-+};
-+
-+const struct attribute_group netvsc_dev_group =3D {
-+	.name =3D NULL,
-+	.attrs =3D netvsc_dev_attrs,
-+};
-+
- static int netvsc_probe(struct hv_device *dev,
- 			const struct hv_vmbus_device_id *dev_id)
- {
-@@ -2410,6 +2455,7 @@ static int netvsc_probe(struct hv_device *dev,
-=20
- 	net->netdev_ops =3D &device_ops;
- 	net->ethtool_ops =3D &ethtool_ops;
-+	net->sysfs_groups[0] =3D &netvsc_dev_group;
- 	SET_NETDEV_DEV(net, &dev->device);
-=20
- 	/* We always need headroom for rndis header */
---=20
-2.25.1
+> -----Original Message-----
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Sent: Thursday, July 16, 2020 12:05 AM
+> To: Mani, Rajmohan <rajmohan.mani@intel.com>
+> Cc: Darren Hart <dvhart@infradead.org>; Andy Shevchenko
+> <andy@infradead.org>; Mika Westerberg
+> <mika.westerberg@linux.intel.com>; Dmitry Torokhov
+> <dmitry.torokhov@gmail.com>; Lee Jones <lee.jones@linaro.org>; Ayman
+> Bagabas <ayman.bagabas@gmail.com>; Masahiro Yamada
+> <masahiroy@kernel.org>; Joseph, Jithu <jithu.joseph@intel.com>; Bla=BE
+> Hrastnik <blaz@mxxn.io>; Srinivas Pandruvada
+> <srinivas.pandruvada@linux.intel.com>; linux-kernel@vger.kernel.org;
+> platform-driver-x86@vger.kernel.org; Heikki Krogerus
+> <heikki.krogerus@linux.intel.com>; linux-usb@vger.kernel.org;
+> pmalani@chromium.org; bleung@chromium.org
+> Subject: Re: [PATCH 2/2] usb: typec: intel_pmc_mux: Check the port status
+> before connect
+>=20
+> On Wed, Jul 15, 2020 at 05:33:10PM -0700, Rajmohan Mani wrote:
+> > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> >
+> > The PMC microcontroller that we use for configuration, does not supply
+> > any status information back. For port status we need to talk to
+> > another controller on the board called IOM (I/O manager).
+> >
+> > By checking the port status before configuring the muxes, we can make
+> > sure that we do not reconfigure the port after bootup when the system
+> > firmware (for example BIOS) has already configured it.
+> >
+> > Using the status information also to check if DisplayPort HPD is still
+> > asserted when the cable plug is disconnected, and clearing it if it
+> > is.
+> >
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>=20
+> You can't just forward on patches from others without also adding your
+> signed-off-by to them, right?
+>=20
+
+Sorry I missed this.
+
+> Please fix up this series and try again.
+>=20
+
+Ack. Will fix this with v2.
+
+> thanks,
+>=20
+> greg k-h
