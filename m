@@ -2,135 +2,183 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB74CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF69C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8535320684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:38:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BiXgkm8Q"
+	by mail.kernel.org (Postfix) with ESMTP id B32EB20684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 20:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgGQUi6 (ORCPT
+        id S1728763AbgGQUjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:38:58 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56768 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgGQUi5 (ORCPT
+        Fri, 17 Jul 2020 16:39:54 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:16175
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726492AbgGQUjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:38:57 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HKXO8D151756;
-        Fri, 17 Jul 2020 20:38:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=VLVPZEMJwQQ0WvBRzyPVCNtnIVB0qvXryFUj1Ha4Tno=;
- b=BiXgkm8QaDArg06s5nzI7L6kgCR5+25TC5KWESzfPx3PaDuvyyYtpFLGekW9bqJOuPul
- GhkQhPaX08zPXTN6b/3KqdPaH59xr/pPO8Snyg4Kx3EBr6qmpaiHUbe8Y9dlD50IFfBQ
- vNj0D5mwhQ0GslbO0OXJthpJ2XIYGznJ7SD1E0VRUP79QNMmyMekMELauk11SFTwwKSu
- T90ROJq90ClOvreZfTq3qLQ/Zunw10LnTp5eAPgBm5RHFXrzb9jjegI3gk298mSA7pqw
- k+C7q46wXGBony9uOIBM2yTyOFtsXxjzrGX5CXYqDRHKw9+hLF2wguuO9Yy2g4hgQ4Ku Wg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3275cmscfk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 20:38:49 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HKc0Yh124545;
-        Fri, 17 Jul 2020 20:38:48 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 32bj2d2mfa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 20:38:48 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06HKciQV018816;
-        Fri, 17 Jul 2020 20:38:44 GMT
-Received: from localhost (/10.159.159.76)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Jul 2020 13:38:44 -0700
-Date:   Fri, 17 Jul 2020 13:38:42 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Dave Chinner <dchinner@redhat.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Brian Foster <bfoster@redhat.com>
-Subject: Re: arch/x86/include/asm/preempt.h:79:9: sparse: sparse: context
- imbalance in 'xfs_iflush_abort' - wrong count at exit
-Message-ID: <20200717203842.GP7625@magnolia>
-References: <202007131148.9IapVMiV%lkp@intel.com>
+        Fri, 17 Jul 2020 16:39:53 -0400
+X-IronPort-AV: E=Sophos;i="5.75,364,1589234400"; 
+   d="scan'208";a="354704933"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 22:39:21 +0200
+Date:   Fri, 17 Jul 2020 22:39:20 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>
+cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] coccinelle: api: add kzfree script
+In-Reply-To: <20200717115709.543882-1-efremov@linux.com>
+Message-ID: <alpine.DEB.2.22.394.2007172239130.2837@hadrien>
+References: <20200604140805.111613-1-efremov@linux.com> <20200717115709.543882-1-efremov@linux.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202007131148.9IapVMiV%lkp@intel.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- adultscore=0 spamscore=0 bulkscore=0 malwarescore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007170139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007170138
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 11:03:53AM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   11ba468877bb23f28956a35e896356252d63c983
-> commit: 4165994ac9672d91134675caa6de3645a9ace6c8 xfs: factor common AIL item deletion code
-> date:   4 months ago
-> config: i386-randconfig-s001-20200713 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
-> reproduce:
->         # apt-get install sparse
->         # sparse version: v0.6.2-37-gc9676a3b-dirty
->         git checkout 4165994ac9672d91134675caa6de3645a9ace6c8
->         # save the attached .config to linux build tree
->         make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=i386 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> 
-> sparse warnings: (new ones prefixed by >>)
-> 
-> >> arch/x86/include/asm/preempt.h:79:9: sparse: sparse: context imbalance in 'xfs_iflush_abort' - wrong count at exit
 
-Um, does this still need attention?
 
---D
+On Fri, 17 Jul 2020, Denis Efremov wrote:
 
-> vim +/xfs_iflush_abort +79 arch/x86/include/asm/preempt.h
-> 
-> c2daa3bed53a81 Peter Zijlstra    2013-08-14  72  
-> c2daa3bed53a81 Peter Zijlstra    2013-08-14  73  /*
-> c2daa3bed53a81 Peter Zijlstra    2013-08-14  74   * The various preempt_count add/sub methods
-> c2daa3bed53a81 Peter Zijlstra    2013-08-14  75   */
-> c2daa3bed53a81 Peter Zijlstra    2013-08-14  76  
-> c2daa3bed53a81 Peter Zijlstra    2013-08-14  77  static __always_inline void __preempt_count_add(int val)
-> c2daa3bed53a81 Peter Zijlstra    2013-08-14  78  {
-> b3ca1c10d7b32f Christoph Lameter 2014-04-07 @79  	raw_cpu_add_4(__preempt_count, val);
-> c2daa3bed53a81 Peter Zijlstra    2013-08-14  80  }
-> c2daa3bed53a81 Peter Zijlstra    2013-08-14  81  
-> 
-> :::::: The code at line 79 was first introduced by commit
-> :::::: b3ca1c10d7b32fdfdfaf5484eda486323f52d9be percpu: add raw_cpu_ops
-> 
-> :::::: TO: Christoph Lameter <cl@linux.com>
-> :::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
-> 
+> Check for memset()/memzero_explicit() followed by kfree()/vfree()/kvfree().
+>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+
+Applied.
+
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
-
+> Changes in v2:
+>  - memset_explicit() added
+>  - kvfree_sensitive() added
+>  - forall added to r1
+>  - ... between memset and kfree added
+> Changes in v3:
+>  - Explicit filter for definitions instead of !(file in "...") conditions
+>  - type T added to match casts
+>  - memzero_explicit() patterns fixed
+>  - additional rule "cond" added to filter false-positives
+> Changes in v4:
+>  - memset call fixed in rp_memset
+>  - @m added to rp_memset,rp_memzero rules
+>
+>  scripts/coccinelle/api/kzfree.cocci | 101 ++++++++++++++++++++++++++++
+>  1 file changed, 101 insertions(+)
+>  create mode 100644 scripts/coccinelle/api/kzfree.cocci
+>
+> diff --git a/scripts/coccinelle/api/kzfree.cocci b/scripts/coccinelle/api/kzfree.cocci
+> new file mode 100644
+> index 000000000000..33625bd7cec9
+> --- /dev/null
+> +++ b/scripts/coccinelle/api/kzfree.cocci
+> @@ -0,0 +1,101 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +///
+> +/// Use kzfree, kvfree_sensitive rather than memset or
+> +/// memzero_explicit followed by kfree
+> +///
+> +// Confidence: High
+> +// Copyright: (C) 2020 Denis Efremov ISPRAS
+> +// Options: --no-includes --include-headers
+> +//
+> +// Keywords: kzfree, kvfree_sensitive
+> +//
+> +
+> +virtual context
+> +virtual patch
+> +virtual org
+> +virtual report
+> +
+> +@initialize:python@
+> +@@
+> +# kmalloc_oob_in_memset uses memset to explicitly trigger out-of-bounds access
+> +filter = frozenset(['kmalloc_oob_in_memset', 'kzfree', 'kvfree_sensitive'])
+> +
+> +def relevant(p):
+> +    return not (filter & {el.current_element for el in p})
+> +
+> +@cond@
+> +position ok;
+> +@@
+> +
+> +if (...)
+> +  \(memset@ok\|memzero_explicit@ok\)(...);
+> +
+> +@r depends on !patch forall@
+> +expression E;
+> +position p : script:python() { relevant(p) };
+> +position m != cond.ok;
+> +type T;
+> +@@
+> +
+> +(
+> +* memset@m((T)E, 0, ...);
+> +|
+> +* memzero_explicit@m((T)E, ...);
+> +)
+> +  ... when != E
+> +      when strict
+> +* \(kfree\|vfree\|kvfree\)(E)@p;
+> +
+> +@rp_memzero depends on patch@
+> +expression E, size;
+> +position p : script:python() { relevant(p) };
+> +position m != cond.ok;
+> +type T;
+> +@@
+> +
+> +- memzero_explicit@m((T)E, size);
+> +  ... when != E
+> +      when strict
+> +// TODO: uncomment when kfree_sensitive will be merged.
+> +// Only this case is commented out because developers
+> +// may not like patches like this since kzfree uses memset
+> +// internally (not memzero_explicit).
+> +//(
+> +//- kfree(E)@p;
+> +//+ kfree_sensitive(E);
+> +//|
+> +- \(vfree\|kvfree\)(E)@p;
+> ++ kvfree_sensitive(E, size);
+> +//)
+> +
+> +@rp_memset depends on patch@
+> +expression E, size;
+> +position p : script:python() { relevant(p) };
+> +position m != cond.ok;
+> +type T;
+> +@@
+> +
+> +- memset@m((T)E, 0, size);
+> +  ... when != E
+> +      when strict
+> +(
+> +- kfree(E)@p;
+> ++ kzfree(E);
+> +|
+> +- \(vfree\|kvfree\)(E)@p;
+> ++ kvfree_sensitive(E, size);
+> +)
+> +
+> +@script:python depends on report@
+> +p << r.p;
+> +@@
+> +
+> +coccilib.report.print_report(p[0],
+> +  "WARNING: opportunity for kzfree/kvfree_sensitive")
+> +
+> +@script:python depends on org@
+> +p << r.p;
+> +@@
+> +
+> +coccilib.org.print_todo(p[0],
+> +  "WARNING: opportunity for kzfree/kvfree_sensitive")
+> --
+> 2.26.2
+>
+>
