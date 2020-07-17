@@ -2,218 +2,313 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73657C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357AAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD3820768
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:53:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cdXNAgiO"
+	by mail.kernel.org (Postfix) with ESMTP id EBC962076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594983765;
+	bh=bbLMObkNrniR80ZdzHzteBsWJ5zcpRCBrOI2j6GQ4W0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hFLhOxjCfDFrP0hfie27C+4gw0mS/9uzu1PSCf4nYB3g4InjXqOHrLpWBH9/sbB8X
+	 ZIcnJBljEnf0tQCrmlXBPBpeA+9wCKydEAcuWVWTWehoAvls5SnnWyO4JWHlsb/Pr3
+	 vs8dQcA1xKN/fnMEPIHHk4bBT6BYOPa31nmK5Ca8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbgGQKxk (ORCPT
+        id S1726293AbgGQLCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgGQKxj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:53:39 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BE00C061755;
-        Fri, 17 Jul 2020 03:53:39 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u185so5231101pfu.1;
-        Fri, 17 Jul 2020 03:53:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2bwXFrznnY2iWmla93PUebHr1KkoR2fOrK6BbwNy124=;
-        b=cdXNAgiOel5unZSTS0T6oRHYNG4z9RMO+Eat77I1s/hrZVFdyC/kgyrRUvGLWjLFf1
-         GROIyA+diXw+9ZAF4p+5U2G/Qh4mC2cOCw3CloxHpbQWWkxWzij6AicaD86K/Qxtu2nE
-         re4wo1h2RV5+IVjrx+G8FQTJ5ihDIvIt9FW7U9pc5/2uaL3O5higUNsA5MG/VNWuMxYG
-         NJqfOQYHDIJwe8qCs1UAcHg+vjviWQOB+UfTHDhVkwTzyxVJ2QbayW4R8ooBW/H47q05
-         SBYKFy4TFS+RPFzLxrvtLvpOxKHKeVTMspCVEMQl7H+FCz88F2KaVaEkJe2VeplXeqof
-         ooBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2bwXFrznnY2iWmla93PUebHr1KkoR2fOrK6BbwNy124=;
-        b=alYKamqd7qEdpm055tdQOpfFkGoi456Spep1NE3QyijSvRlJujsH3Gmz8s5pjHx9e1
-         fQNLig4FOIgJXHEzVywf/7/H3A4wPEBIL9IWBigWyuniDgthqfQeM2HP93xN7V30fPdl
-         5q+JxDrKmsPgVEhiFQIYONjby/9jFS4x60fpvE6x+UA+hW0T5lIDCxMw9S8zVrlj8jwY
-         4SHzwZLI+D4iwq6uR609p53DVupvrhSBpZuYgUOCFg0iopH+ELXwVq9Vmy+hTW56UHJT
-         kZXUX5TSVmyY+n2WOtG1h/KJjDrWz1M3QmnsL5UmFpoT/fvmvvyKtG1XtC0CEZA6tY9+
-         dmyw==
-X-Gm-Message-State: AOAM532P1aNa6mUkA1C8RmYKY0R8qV9+PRb3kfQ2sAfnP/dBKdioXJvj
-        +7RTYf7WN1/rzYuuhhqosew=
-X-Google-Smtp-Source: ABdhPJxphwDwmRfwjDV8cFXx16rxS83JL4BVVrJcGbxNO8ujLzlbSXMPROfES3hMESyk6jHLfnk7Hg==
-X-Received: by 2002:a63:338c:: with SMTP id z134mr7935521pgz.245.1594983218830;
-        Fri, 17 Jul 2020 03:53:38 -0700 (PDT)
-Received: from gmail.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id y6sm7617934pfp.7.2020.07.17.03.53.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 03:53:38 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 16:21:57 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v2 4/6] cx88: use generic power management
-Message-ID: <20200717105157.GA453960@gmail.com>
-References: <20200717035608.97254-5-vaibhavgupta40@gmail.com>
- <202007171515.gDbDZtkQ%lkp@intel.com>
- <20200717072440.GA217230@gmail.com>
- <20200717103105.GA452501@gmail.com>
- <1b3303cb-31c1-f7a6-d6eb-c64cd6f40db6@xs4all.nl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1b3303cb-31c1-f7a6-d6eb-c64cd6f40db6@xs4all.nl>
+        Fri, 17 Jul 2020 07:02:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgGQLCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 07:02:42 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF84D20717;
+        Fri, 17 Jul 2020 11:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594983761;
+        bh=bbLMObkNrniR80ZdzHzteBsWJ5zcpRCBrOI2j6GQ4W0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dqzm/OI6mZOxyuUKPJ7jFTK+TsDEjToHh/tLOy9xUBQ0ukZBFD8kQt8fFOxEk03fW
+         BwU1AfbENm2NKpfpqLKq+ks8pBss9yT0+cwgjABMePaatnRza0S8ZMUDZPZknMAAlL
+         3TXECbw7eZtO0cuZCTRvKCVwNpJnABIlFHvSRfbE=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jwO8V-00CbW3-DI; Fri, 17 Jul 2020 12:02:39 +0100
+Date:   Fri, 17 Jul 2020 12:02:38 +0100
+Message-ID: <87imemxv3l.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        <lee.jones@linaro.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <david@lechnology.com>,
+        <wmills@ti.com>
+Subject: Re: [PATCHv3 3/6] irqchip/irq-pruss-intc: Add support for shared and invalid interrupts
+In-Reply-To: <3a73bb14-9f7b-970d-fbae-f9c7bb7bdf1e@ti.com>
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+        <1593699479-1445-4-git-send-email-grzegorz.jaszczyk@linaro.org>
+        <2a6b0391f1395eb0aa15ffee6769184e@kernel.org>
+        <3a73bb14-9f7b-970d-fbae-f9c7bb7bdf1e@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: s-anna@ti.com, grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:49:43PM +0200, Hans Verkuil wrote:
-> On 17/07/2020 12:31, Vaibhav Gupta wrote:
-> > On Fri, Jul 17, 2020 at 12:54:40PM +0530, Vaibhav Gupta wrote:
-> >> On Fri, Jul 17, 2020 at 03:14:28PM +0800, kernel test robot wrote:
-> >>> Hi Vaibhav,
-> >>>
-> >>> Thank you for the patch! Yet something to improve:
-> >>>
-> >>> [auto build test ERROR on linuxtv-media/master]
-> >>> [also build test ERROR on pci/next v5.8-rc5 next-20200716]
-> >>> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> >>> And when submitting patch, we suggest to use '--base' as documented in
-> >>> https://git-scm.com/docs/git-format-patch]
-> >>>
-> >>> url:    https://github.com/0day-ci/linux/commits/Vaibhav-Gupta/pci-use-generic-power-management/20200717-120145
-> >>> base:   git://linuxtv.org/media_tree.git master
-> >>> config: s390-allmodconfig (attached as .config)
-> >>> compiler: s390-linux-gcc (GCC) 9.3.0
-> >>> reproduce (this is a W=1 build):
-> >>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >>>         chmod +x ~/bin/make.cross
-> >>>         # save the attached .config to linux build tree
-> >>>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=s390 
-> >>>
-> >>> If you fix the issue, kindly add following tag as appropriate
-> >>> Reported-by: kernel test robot <lkp@intel.com>
-> >>>
-> >>> All errors (new ones prefixed by >>):
-> >>>
-> >>>    drivers/media/pci/cx88/cx88-video.c: In function 'cx8800_suspend':
-> >>>>> drivers/media/pci/cx88/cx88-video.c:1564:3: error: implicit declaration of function 'stop_video_dma'; did you mean 'start_video_dma'? [-Werror=implicit-function-declaration]
-> >>>     1564 |   stop_video_dma(dev);
-> >>>          |   ^~~~~~~~~~~~~~
-> >>>          |   start_video_dma
-> >>>    drivers/media/pci/cx88/cx88-video.c: In function 'cx8800_resume':
-> >>>>> drivers/media/pci/cx88/cx88-video.c:1600:3: error: implicit declaration of function 'restart_video_queue'; did you mean 'start_video_dma'? [-Werror=implicit-function-declaration]
-> >>>     1600 |   restart_video_queue(dev, &dev->vidq);
-> >>>          |   ^~~~~~~~~~~~~~~~~~~
-> >>>          |   start_video_dma
-> >>>    cc1: some warnings being treated as errors
-> >>>
-> >>> vim +1564 drivers/media/pci/cx88/cx88-video.c
-> >>>
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1553  
-> >>> 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1554  static int __maybe_unused cx8800_suspend(struct device *dev_d)
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1555  {
-> >>> 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1556  	struct cx8800_dev *dev = dev_get_drvdata(dev_d);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1557  	struct cx88_core *core = dev->core;
-> >>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1558  	unsigned long flags;
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1559  
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1560  	/* stop video+vbi capture */
-> >>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1561  	spin_lock_irqsave(&dev->slock, flags);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1562  	if (!list_empty(&dev->vidq.active)) {
-> >>> 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1563  		pr_info("suspend video\n");
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16 @1564  		stop_video_dma(dev);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1565  	}
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1566  	if (!list_empty(&dev->vbiq.active)) {
-> >>> 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1567  		pr_info("suspend vbi\n");
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1568  		cx8800_stop_vbi_dma(dev);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1569  	}
-> >>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1570  	spin_unlock_irqrestore(&dev->slock, flags);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1571  
-> >>> 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1572  	if (core->ir)
-> >>> 92f4fc10d7ba01 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2010-03-31  1573  		cx88_ir_stop(core);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1574  	/* FIXME -- shutdown device */
-> >>> e52e98a7eccfb0 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2005-09-09  1575  	cx88_shutdown(core);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1576  
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1577  	dev->state.disabled = 1;
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1578  	return 0;
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1579  }
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1580  
-> >>> 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1581  static int __maybe_unused cx8800_resume(struct device *dev_d)
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1582  {
-> >>> 3bdbfebc5677cf drivers/media/pci/cx88/cx88-video.c   Vaibhav Gupta         2020-07-17  1583  	struct cx8800_dev *dev = dev_get_drvdata(dev_d);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1584  	struct cx88_core *core = dev->core;
-> >>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1585  	unsigned long flags;
-> >>> 08adb9e20be83b drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2005-09-09  1586  
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1587  	dev->state.disabled = 0;
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1588  
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1589  	/* FIXME: re-initialize hardware */
-> >>> e52e98a7eccfb0 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2005-09-09  1590  	cx88_reset(core);
-> >>> 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1591  	if (core->ir)
-> >>> 92f4fc10d7ba01 drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2010-03-31  1592  		cx88_ir_start(core);
-> >>> 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1593  
-> >>> 13595a51c0da8e drivers/media/video/cx88/cx88-video.c Mauro Carvalho Chehab 2007-10-01  1594  	cx_set(MO_PCI_INTMSK, core->pci_irqmask);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1595  
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1596  	/* restart video+vbi capture */
-> >>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1597  	spin_lock_irqsave(&dev->slock, flags);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1598  	if (!list_empty(&dev->vidq.active)) {
-> >>> 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1599  		pr_info("resume video\n");
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16 @1600  		restart_video_queue(dev, &dev->vidq);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1601  	}
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1602  	if (!list_empty(&dev->vbiq.active)) {
-> >>> 65bc2fe86e6670 drivers/media/pci/cx88/cx88-video.c   Mauro Carvalho Chehab 2016-11-13  1603  		pr_info("resume vbi\n");
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1604  		cx8800_restart_vbi_queue(dev, &dev->vbiq);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1605  	}
-> >>> 5ddfbbb9ca2e74 drivers/media/pci/cx88/cx88-video.c   Alexey Khoroshilov    2013-04-13  1606  	spin_unlock_irqrestore(&dev->slock, flags);
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1607  
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1608  	return 0;
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1609  }
-> >>> ^1da177e4c3f41 drivers/media/video/cx88/cx88-video.c Linus Torvalds        2005-04-16  1610  
-> >>>
-> >>> ---
-> >>> 0-DAY CI Kernel Test Service, Intel Corporation
-> >>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> >>
-> >> Got it. Thanks!
-> >> Fixed in v3.
-> >>
-> >> --Vaibhav Gupta
-> > 
-> > I fixed the error reported, in this v2 patch-series, by Kbuild and floated v3
-> > in the mailing list.
-> > But then I got notification from "[linux-media] Patchwork". It has applied my
-> > v2 patch series. Please use v3.
-> 
-> The message you got should say that is was superseded, not accepted.
-yes.
-> 
-> I only marked v2 as Superseded, it wasn't applied.
-Okay.
+On Fri, 10 Jul 2020 21:59:17 +0100,
+Suman Anna <s-anna@ti.com> wrote:
 
-Thanks for clarification! :)
---Vaibhav Gupta
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > 
-> > --Vaibhav Gupta
-> > 
-> 
+Hi Suman,
+
+[...]
+
+>
+> Hi Marc,
+>=20
+> On 7/2/20 12:44 PM, Marc Zyngier wrote:
+> > On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
+> >> From: Suman Anna <s-anna@ti.com>
+> >>=20
+> >> The PRUSS INTC has a fixed number of output interrupt lines that are
+> >> connected to a number of processors or other PRUSS instances or other
+> >> devices (like DMA) on the SoC. The output interrupt lines 2 through 9
+> >> are usually connected to the main Arm host processor and are referred
+> >> to as host interrupts 0 through 7 from ARM/MPU perspective.
+> >>=20
+> >> All of these 8 host interrupts are not always exclusively connected
+> >> to the Arm interrupt controller. Some SoCs have some interrupt lines
+> >> not connected to the Arm interrupt controller at all, while a few othe=
+rs
+> >> have the interrupt lines connected to multiple processors in which they
+> >> need to be partitioned as per SoC integration needs. For example, AM43=
+7x
+> >> and 66AK2G SoCs have 2 PRUSS instances each and have the host interrup=
+t 5
+> >> connected to the other PRUSS, while AM335x has host interrupt 0 shared
+> >> between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU a=
+nd
+> >> a DMA controller.
+> >>=20
+> >> Add support to the PRUSS INTC driver to allow both these shared and
+> >> invalid interrupts by not returning a failure if any of these interrup=
+ts
+> >> are skipped from the corresponding INTC DT node.
+> >=20
+> > That's not exactly "adding support", is it? It really is "ignore these
+> > interrupts because they are useless from the main CPU's perspective",
+> > right?
+>=20
+> Correct. We can rephrase this to something like
+> "Add logic to the PRUSS INTC driver to ignore.."
+>=20
+> >=20
+> >>=20
+> >> Signed-off-by: Suman Anna <s-anna@ti.com>
+> >> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> >> ---
+> >> v2->v3:
+> >> - Extra checks for (intc->irqs[i]) in error/remove path was moved from
+> >> =C2=A0 "irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
+> >> =C2=A0 interrupts" to this patch
+> >> v1->v2:
+> >> - https://patchwork.kernel.org/patch/11069757/
+> >> ---
+> >> =C2=A0drivers/irqchip/irq-pruss-intc.c | 73
+> >> +++++++++++++++++++++++++++++++++++++---
+> >> =C2=A01 file changed, 68 insertions(+), 5 deletions(-)
+> >>=20
+> >> diff --git a/drivers/irqchip/irq-pruss-intc.c
+> >> b/drivers/irqchip/irq-pruss-intc.c
+> >> index fb3dda3..49c936f 100644
+> >> --- a/drivers/irqchip/irq-pruss-intc.c
+> >> +++ b/drivers/irqchip/irq-pruss-intc.c
+> >> @@ -65,11 +65,15 @@
+> >> =C2=A0 * @irqs: kernel irq numbers corresponding to PRUSS host interru=
+pts
+> >> =C2=A0 * @base: base virtual address of INTC register space
+> >> =C2=A0 * @domain: irq domain for this interrupt controller
+> >> + * @shared_intr: bit-map denoting if the MPU host interrupt is shared
+> >=20
+> > nit: bitmap
+>=20
+> ok
+>=20
+> >=20
+> >> + * @invalid_intr: bit-map denoting if host interrupt is not
+> >> connected to MPU
+> >> =C2=A0 */
+> >> =C2=A0struct pruss_intc {
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 unsigned int irqs[MAX_NUM_HOST_IRQS];
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 void __iomem *base;
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 struct irq_domain *domain;
+> >> +=C2=A0=C2=A0=C2=A0 u16 shared_intr;
+> >> +=C2=A0=C2=A0=C2=A0 u16 invalid_intr;
+> >=20
+> > Please represent bitmaps as an unsigned long.
+>=20
+> ok. We have atmost 8 interrupts coming in, but agree on the change
+> since we are using the BIT() macro below.
+>=20
+> >=20
+> >> =C2=A0};
+> >>=20
+> >> =C2=A0static inline u32 pruss_intc_read_reg(struct pruss_intc *intc,
+> >> unsigned int reg)
+> >> @@ -222,7 +226,8 @@ static int pruss_intc_probe(struct
+> >> platform_device *pdev)
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "host_intr4", "host_i=
+ntr5", "host_intr6", "host_intr7", };
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev =3D &pdev->dev;
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 struct pruss_intc *intc;
+> >> -=C2=A0=C2=A0=C2=A0 int i, irq;
+> >> +=C2=A0=C2=A0=C2=A0 int i, irq, count;
+> >> +=C2=A0=C2=A0=C2=A0 u8 temp_intr[MAX_NUM_HOST_IRQS] =3D { 0 };
+> >>=20
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 intc =3D devm_kzalloc(dev, sizeof(*intc), GFP=
+_KERNEL);
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 if (!intc)
+> >> @@ -235,6 +240,52 @@ static int pruss_intc_probe(struct
+> >> platform_device *pdev)
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return PTR_ERR(intc->=
+base);
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 }
+> >>=20
+> >> +=C2=A0=C2=A0=C2=A0 count =3D of_property_read_variable_u8_array(dev->=
+of_node,
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 "ti,irqs-reserved",
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 temp_intr, 0,
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 MAX_NUM_HOST_IRQS);
+> >> +=C2=A0=C2=A0=C2=A0 /*
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0 * The irqs-reserved is used only for some So=
+C's therefore not
+> >> having
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0 * this property is still valid
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+> >> +=C2=A0=C2=A0=C2=A0 if (count =3D=3D -EINVAL)
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 count =3D 0;
+> >> +=C2=A0=C2=A0=C2=A0 if (count < 0)
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return count;
+> >> +
+> >> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < count; i++) {
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (temp_intr[i] >=3D MAX_=
+NUM_HOST_IRQS) {
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=
+v_warn(dev, "ignoring invalid reserved irq %d\n",
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 temp_intr[i]);
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 co=
+ntinue;
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> >> +
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 intc->invalid_intr |=3D BI=
+T(temp_intr[i]);
+> >> +=C2=A0=C2=A0=C2=A0 }
+> >> +
+> >> +=C2=A0=C2=A0=C2=A0 count =3D of_property_read_variable_u8_array(dev->=
+of_node,
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 "ti,irqs-shared",
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 temp_intr, 0,
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 MAX_NUM_HOST_IRQS);
+> >> +=C2=A0=C2=A0=C2=A0 /*
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0 * The irqs-shared is used only for some SoC'=
+s therefore not having
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0 * this property is still valid
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+> >> +=C2=A0=C2=A0=C2=A0 if (count =3D=3D -EINVAL)
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 count =3D 0;
+> >> +=C2=A0=C2=A0=C2=A0 if (count < 0)
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return count;
+> >> +
+> >> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < count; i++) {
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (temp_intr[i] >=3D MAX_=
+NUM_HOST_IRQS) {
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=
+v_warn(dev, "ignoring invalid shared irq %d\n",
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 temp_intr[i]);
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 co=
+ntinue;
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> >> +
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 intc->shared_intr |=3D BIT=
+(temp_intr[i]);
+> >> +=C2=A0=C2=A0=C2=A0 }
+> >> +
+> >=20
+> > You probably want to move this in a separate function, since you popula=
+te a
+> > common structure.
+> >=20
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 pruss_intc_init(intc);
+> >>=20
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 /* always 64 events */
+> >> @@ -244,8 +295,14 @@ static int pruss_intc_probe(struct
+> >> platform_device *pdev)
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+> >>=20
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < MAX_NUM_HOST_IRQS; i++) {
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (intc->invalid_intr & B=
+IT(i))
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 co=
+ntinue;
+> >> +
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 irq =3D platform_get_=
+irq_byname(pdev, irq_names[i]);
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (irq <=3D 0) {
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if=
+ (intc->shared_intr & BIT(i))
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 continue;
+> >=20
+> > I don't really understand why you are treating these "shared" interrupts
+> > differently from the invalid ones. In all cases, they shouldn't be used.
+>=20
+> The behavior is the same in how we handle it, but the difference is
+> that an "invalid" one is never even connected to the ARM interrupt
+> controller, while the "shared" one is a choice. So, unless this
+> interrupt is being used/handled by a different processor/entity, you
+> would not see this skipped from the dts node.
+
+And I'm saying that all that matters is that you are discarding these
+interrupts. Whether they are flagged invalid or shared, they are not
+available to Linux. So the difference in handling is pointless and
+only makes it harder to understand what you are doing.
+
+Thanks,
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
