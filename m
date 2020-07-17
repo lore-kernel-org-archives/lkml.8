@@ -2,117 +2,228 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815EBC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96228C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA222076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:49:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="RC/p++b7"
+	by mail.kernel.org (Postfix) with ESMTP id 71CA920734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 10:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594982989;
+	bh=m4E2Qlwl0PzfDZp6G5x1yaTQ8T2DRdddavKw5MRwr2Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AaKV1dI1WkCfc9DbPiEUjsZm7+HunJxs+wcSGR97gvvGMqzj/WphETFIeo4y1RIno
+	 584DO4uovajXFLbnzhdVLsAkOlNckApy6nD8yQnd2Fgxop1ngdmEiyoEy86KW3APEB
+	 /Ab8G26YlO5vhxQ2VmwXb/ED63TM/CufSzWn6wZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgGQKtn (ORCPT
+        id S1726422AbgGQKts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:49:43 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:13406 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725912AbgGQKtm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:49:42 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HAgfch010272;
-        Fri, 17 Jul 2020 03:49:39 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pfpt0818;
- bh=LI15vtc1sBeo327JWQg5OChc27nKdjqnS+CvYVaEkSI=;
- b=RC/p++b7vs/nXZkKXSTqs4tbnWek2/uCjopTPXaUIqUoTA53FqZuxC1ZQfrdOlCQQLJO
- vo6KuivqdPbfVWmmBB1r2Rk45bHKyVGbN5C++65f4dbvbRE3UN3/3wDzpI3o0LSdCjyT
- TLQlst4pYryyh7C0CwMHCPUBoNkv0qog9kftWoIK5Y61+WvImWhWs3EL3ZinzYH/2QsJ
- CgomND5vicxMogd6qyrhI9wNNysNfgGkVhrLZbLQQ87Hla7VR1LEAZz9r6eSyjM4Xvza
- TSXtJm9siMq4e+oy6EyOKvGRgvLsgXpVA7bw/wQB1cEQNPsG1gGZ2lHycy0p6WiXAiIF yw== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 32ap7vcw11-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 03:49:39 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 17 Jul
- 2020 03:49:38 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 17 Jul 2020 03:49:38 -0700
-Received: from [10.193.54.28] (NN-LT0019.marvell.com [10.193.54.28])
-        by maili.marvell.com (Postfix) with ESMTP id 8D2FC3F7041;
-        Fri, 17 Jul 2020 03:49:34 -0700 (PDT)
-Subject: Re: [EXT] Re: [PATCH net-next 10/13] qed: add support for new port
- modes
-To:     Jakub Kicinski <kuba@kernel.org>,
-        Alexander Lobakin <alobakin@marvell.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Denis Bolotin <dbolotin@marvell.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
-        <QLogic-Storage-Upstream@cavium.com>, <netdev@vger.kernel.org>
-References: <20200716115446.994-1-alobakin@marvell.com>
- <20200716115446.994-11-alobakin@marvell.com>
- <20200716181853.502dd619@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Igor Russkikh <irusskikh@marvell.com>
-Message-ID: <27939848-7e83-2897-36f9-44f47d1bfb9c@marvell.com>
-Date:   Fri, 17 Jul 2020 13:49:33 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0
-MIME-Version: 1.0
-In-Reply-To: <20200716181853.502dd619@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_06:2020-07-17,2020-07-17 signatures=0
+        Fri, 17 Jul 2020 06:49:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgGQKto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 06:49:44 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D44520734;
+        Fri, 17 Jul 2020 10:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594982983;
+        bh=m4E2Qlwl0PzfDZp6G5x1yaTQ8T2DRdddavKw5MRwr2Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FikxkxVbC7w8+8HsO1EqgoFIw2oPjWZzC9Zyy7PuyS9KyJ3mGvNiIwUabspzX8kpW
+         bDocfwoAb67WQk9J9YncgdrgB4ApFeU2dOWUScUj1heeTAOiDckHNnf6tTHOGWFWWp
+         Oi6aIvZ8BRzTUWnX59nyuIpZI4CEZapa5UEvjDwk=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jwNvy-00CbMK-3Z; Fri, 17 Jul 2020 11:49:42 +0100
+Date:   Fri, 17 Jul 2020 11:49:41 +0100
+Message-ID: <87k0z2xvp6.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Hanks Chen <hanks.chen@mediatek.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2] irqchip: Add IRQCHIP_PLATFORM_DRIVER_BEGIN/END and IRQCHIP_MATCH helper macros
+In-Reply-To: <20200717024447.3128361-1-saravanak@google.com>
+References: <20200717024447.3128361-1-saravanak@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: saravanak@google.com, tglx@linutronix.de, jason@lakedaemon.net, matthias.bgg@gmail.com, john.stultz@linaro.org, cc.hwang@mediatek.com, loda.chou@mediatek.com, hanks.chen@mediatek.com, kernel-team@android.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Saravana,
 
+Thanks for re-spinning this one.
 
-> ----------------------------------------------------------------------
-> On Thu, 16 Jul 2020 14:54:43 +0300 Alexander Lobakin wrote:
->> These ports ship on new boards revisions and are supported by newer
->> firmware versions.
->>
->> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
->> Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+On Fri, 17 Jul 2020 03:44:47 +0100,
+Saravana Kannan <saravanak@google.com> wrote:
 > 
-> What is the driver actually doing with them, tho?
+> Compiling an irqchip driver as a platform driver needs to bunch of
+> things to be done right:
+> - Making sure the parent domain is initialized first
+> - Making sure the device can't be unbound from sysfs
+> - Disallowing module unload if it's built as a module
+> - Finding the parent node
+> - Etc.
 > 
-> Looks like you translate some firmware specific field to a driver
-> specific field, but I can't figure out what part of the code cares
-> about hw_info.port_mode
+> Instead of trying to make sure all future irqchip platform drivers get
+> this right, provide boilerplate macros that take care of all of this.
+> 
+> An example use would look something like this. Where acme_foo_init and
+> acme_bar_init are similar to what would be passed to IRQCHIP_DECLARE.
+> 
+> IRQCHIP_PLATFORM_DRIVER_BEGIN
 
-Hi Jakub,
+I think there is some value in having the BEGIN statement containing
+the driver name, see below.
 
-You are right, this info is never used/reported.
+> IRQCHIP_MATCH(foo, "acme,foo", acme_foo_init)
+> IRQCHIP_MATCH(bar, "acme,bar", acme_bar_init)
+> IRQCHIP_PLATFORM_DRIVER_END(acme_irq)
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/irqchip/irqchip.c | 22 ++++++++++++++++++++++
+>  include/linux/irqchip.h   | 23 +++++++++++++++++++++++
+>  2 files changed, 45 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irqchip.c b/drivers/irqchip/irqchip.c
+> index 2b35e68bea82..236ea793f01c 100644
+> --- a/drivers/irqchip/irqchip.c
+> +++ b/drivers/irqchip/irqchip.c
+> @@ -10,8 +10,10 @@
+>  
+>  #include <linux/acpi.h>
+>  #include <linux/init.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/irqchip.h>
+> +#include <linux/platform_device.h>
+>  
+>  /*
+>   * This special of_device_id is the sentinel at the end of the
+> @@ -29,3 +31,23 @@ void __init irqchip_init(void)
+>  	of_irq_init(__irqchip_of_table);
+>  	acpi_probe_device_table(irqchip);
+>  }
+> +
+> +int platform_irqchip_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *par_np = of_irq_find_parent(np);
+> +	of_irq_init_cb_t irq_init_cb = of_device_get_match_data(&pdev->dev);
+> +
+> +	if (!irq_init_cb)
+> +		return -EINVAL;
+> +
+> +	if (par_np == np)
+> +		par_np = NULL;
+> +
+> +	/* If there's a parent irqchip, make sure it has been initialized. */
+> +	if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
 
-Alexander is extending already existing non used field with new values from
-our latest hardware revisions.
+There is no guarantee that the calling driver wants BUS_ANY as a token
+for its parent. It may work for now, if you only have dependencies to
+drivers that only expose a single domain, but that's not a general
+purpose check..
 
-I thought devlink info could be a good place to output such kind of information.
+At least, please add a comment saying that the new driver may want to
+check that the irqdomain it depends on may not be available.
 
-Thats basically a layout of *Physical* ports on device - quite useful info I
-think.
+> +		return -EPROBE_DEFER;
+> +
+> +	return irq_init_cb(np, par_np);
+> +}
+> +EXPORT_SYMBOL_GPL(platform_irqchip_probe);
+> diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
+> index 950e4b2458f0..6d5eba7cbbb7 100644
+> --- a/include/linux/irqchip.h
+> +++ b/include/linux/irqchip.h
+> @@ -13,6 +13,7 @@
+>  
+>  #include <linux/acpi.h>
+>  #include <linux/of.h>
+> +#include <linux/platform_device.h>
+>  
+>  /*
+>   * This macro must be used by the different irqchip drivers to declare
+> @@ -26,6 +27,28 @@
+>   */
+>  #define IRQCHIP_DECLARE(name, compat, fn) OF_DECLARE_2(irqchip, name, compat, fn)
+>  
+> +extern int platform_irqchip_probe(struct platform_device *pdev);
+> +
+> +#define IRQCHIP_PLATFORM_DRIVER_BEGIN \
+> +static const struct of_device_id __irqchip_match_table[] = {
 
-Important thing is these ports may not be directly mapped to PCI PFs. So
-reading `ethtool eth*` may not explain you the real device capabilities.
+How about:
 
-Do you think it makes sense adding such info to `devlink info` then?
+#define IRQCHIP_PLATFORM_DRIVER_BEGIN(drv_name)	\
+static const struct of_device_id __irqchip_match_table_##drv_name = {
 
-Thanks
-  Igor
+which makes it easier to debug when you want to identify specific
+structures in an object (otherwise, they all have the same
+name...). it is also much more pleasing aesthetically ;-).
+
+> +
+> +#define IRQCHIP_MATCH(compat, fn) { .compatible = compat, .data = fn },
+> +
+> +#define IRQCHIP_PLATFORM_DRIVER_END(drv_name)		\
+> +	{},						\
+> +};							\
+> +MODULE_DEVICE_TABLE(of, __irqchip_match_table);		\
+> +static struct platform_driver drv_name##_driver = {	\
+
+const?
+
+> +	.probe  = platform_irqchip_probe,		\
+> +	.driver = {					\
+> +		.name = #drv_name,			\
+> +		.owner = THIS_MODULE,			\
+> +		.of_match_table = __irqchip_match_table,\
+> +		.suppress_bind_attrs = true,		\
+> +	},						\
+> +};							\
+> +builtin_platform_driver(drv_name##_driver)
+> +
+>  /*
+>   * This macro must be used by the different irqchip drivers to declare
+>   * the association between their version and their initialization function.
+> -- 
+> 2.28.0.rc0.105.gf9edc3c819-goog
+> 
+> 
+
+Otherwise looks good. When you respin it, it would be good to also
+submit one user of this API by converting an existing driver, as I'd
+hate to merge something that has no user.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
