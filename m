@@ -2,101 +2,109 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1873C2BB1E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5153CC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A40F92074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A38B20737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:23:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q22LmMWP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EVLuhEDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgGQHWq (ORCPT
+        id S1728145AbgGQHX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:22:46 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55368 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgGQHWq (ORCPT
+        Fri, 17 Jul 2020 03:23:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbgGQHXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:22:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06H7MgEr010271;
-        Fri, 17 Jul 2020 02:22:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594970562;
-        bh=XNNcfenzn5BVU/fqCgZrkziwMHoFzsF1wvlu4KoZgxw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=q22LmMWP7lD4vOudYIqSJvIRnD4REdx9eh3jmTX/0nev33P6RvryVQLbQQy1gIZe2
-         3KPylsc9Tet61tnDx1wWQ8efyGmDvyn/7IXueu7ImNf5RAPa9W4Ow638vdpuuTsV1o
-         O1/SPsBDrlyFbBdjP1VSFYyb7PAvxKjxXte7UveA=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06H7Mg5F043448;
-        Fri, 17 Jul 2020 02:22:42 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 02:22:42 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 02:22:42 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06H7McFK128800;
-        Fri, 17 Jul 2020 02:22:39 -0500
-Subject: Re: [PATCH 0/2] Add support for SD card on on AM65x-evm
-To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>
-References: <20200710190215.30938-1-faiz_abbas@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <4873d494-d38e-acb1-242e-9fb2f6dbf999@ti.com>
-Date:   Fri, 17 Jul 2020 10:22:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200710190215.30938-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 17 Jul 2020 03:23:25 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B57C08C5C0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 00:23:24 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id s5so5468591qkj.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 00:23:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=5JEHKtkNKwD/IFM6abRMVdLiY/nHNFDRNsJu7Y4oxIQ=;
+        b=EVLuhEDfl6DZfCFR93tOM8LMOcPSAmqarvN0/aeKDzhjJYsPnD9A76hKAwYn5U+vLl
+         X7nj7aHYzY4TzVwkilEoKwV6Ns3VmLifEJtEfuWg4vHnd7VPvumlPkpdZuLPeWo7GOqU
+         lQPQp4w1EtYwsS98PsELQYO2qF7wd2VRo8EVI9Z0Al/Xcu5hYNIAKOuoz2TmrKsO3Bom
+         Za8jUnqGG5TpaxAA+3Dx3imqKnHPD92aJfjs0uLieGleb+sD5faOWhZhW8Nr8aNfKal+
+         cN8+7hatUtaeN8yo4AdOrjYVoUwqzEh2h6vBq9KCZZCNZkNNrQUtF/Ze7TFtOY1nATBk
+         4B2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=5JEHKtkNKwD/IFM6abRMVdLiY/nHNFDRNsJu7Y4oxIQ=;
+        b=OV1go9obXBNuCX+xEUOGhe6ZGbugWFHigArNP5z/zF4j/fFl5FkRk0AY6jLoigJ5WY
+         qzsqXY90QOMRHHa+xI6lIMnvYtTmVLorYFCbHm/ZpJs0866zf+Rt94S/bJi2kvccnHrW
+         K+cDtkF22eMN0W1oAppQ+XcwbNR609gqcRzBiL/mPNAHf3XNZJHLoSwpENjJOuc4SLYi
+         1oE1fDk7emzgjT83knwAd8/Rj+nK46ZUjJMZ6kvDmM2UHrwYZtAlJLEEoSmhJvgrg+Zm
+         vligr+55A/xoFCtpQ0VAOHyXa4uDcHWXSkh5G6EVjDX7yZnq6+KuWXFtzu4hEGEUqk46
+         rhFQ==
+X-Gm-Message-State: AOAM532HNaIweqlhUzt24IlSnKhE+meP6R0B8PamatIVMZAVdCIJGahG
+        7wgYqDcDIMTmyDqyEHRkQMMToh1946eE
+X-Google-Smtp-Source: ABdhPJyu6o/+eHADGbRiTA6nJ9eXX4wP+XlVH17O9nWIVLs4cg1HQkJTLuqrw9yZ/ysh1FWVtnVwOREcvew3
+X-Received: by 2002:a0c:e747:: with SMTP id g7mr7589622qvn.77.1594970603845;
+ Fri, 17 Jul 2020 00:23:23 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 00:23:19 -0700
+Message-Id: <20200717072319.101302-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+Subject: [PATCH] libbpf bpf_helpers: Use __builtin_offsetof for offsetof if available
+From:   Ian Rogers <irogers@google.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/2020 22:02, Faiz Abbas wrote:
-> The following patches add support for SD card node in am654x-evm
-> 
-> Because of fundamental interface issues (see patch 2 for details),
-> SD card was never enabled for silicon revision 1.0
-> 
-> These issues have been fixed with SR2.0 but boards with SR1.0 are
-> recommended to disable this node
-> 
-> These patches depend on kernel patches for supporting silicon revision
-> 2.0 posted here:
-> https://patchwork.kernel.org/project/linux-mmc/list/?series=305565
-> 
-> The dependencies have been picked up and are in linux-next
+The non-builtin route for offsetof has a dependency on size_t from
+stdlib.h/stdint.h that is undeclared and may break targets.
+The offsetof macro in bpf_helpers may disable the same macro in other
+headers that have a #ifdef offsetof guard. Rather than add additional
+dependencies improve the offsetof macro declared here to use the
+builtin if available.
 
-Queued up for 5.9, thanks.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/bpf/bpf_helpers.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
--Tero
+diff --git a/tools/lib/bpf/bpf_helpers.h b/tools/lib/bpf/bpf_helpers.h
+index a510d8ed716f..ed2ac74fc515 100644
+--- a/tools/lib/bpf/bpf_helpers.h
++++ b/tools/lib/bpf/bpf_helpers.h
+@@ -40,8 +40,12 @@
+  * Helper macro to manipulate data structures
+  */
+ #ifndef offsetof
++#if __has_builtin(__builtin_offsetof)
++#define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
++#else
+ #define offsetof(TYPE, MEMBER)  ((size_t)&((TYPE *)0)->MEMBER)
+ #endif
++#endif
+ #ifndef container_of
+ #define container_of(ptr, type, member)				\
+ 	({							\
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
 
-> 
-> Faiz Abbas (2):
->    arm64: dts: ti: k3-am65-main: Add support for sdhci1
->    arm64: dts: ti: k3-am654-base-board: Add support for SD card
-> 
->   arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 24 +++++++++++++++++++
->   .../arm64/boot/dts/ti/k3-am654-base-board.dts | 24 +++++++++++++++++++
->   2 files changed, 48 insertions(+)
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
