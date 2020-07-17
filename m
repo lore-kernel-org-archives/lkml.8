@@ -2,123 +2,186 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48BBC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E557C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 852EB20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C1B2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594975321;
+	bh=8hSdczxiD3J3IvIYJ/VYZ7xBQTArpVynDQqsZPq4+IE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QvhjQj/lw4x+grn1PaLj6+MHJk2O0Ls8AmKMCTGrf0/lGxTb/9b9sShxZ6gfXMpfa
+	 dOhLn0uY0qwHYvsFFA79sGcJOG1DK10qSJRWcAu+BFt5Jbew8/rNeu+Ryf5nmirx+g
+	 ZBaL9GEL8SBEtoEnd3kqxmnGk0zxNO2vt5OQnJ6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGQIkJ (ORCPT
+        id S1726344AbgGQIl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:40:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42942 "EHLO mx2.suse.de"
+        Fri, 17 Jul 2020 04:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgGQIkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:40:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E87CEB829;
-        Fri, 17 Jul 2020 08:40:10 +0000 (UTC)
-Subject: Re: [PATCH] media: atomisp: do not free kmalloc memory by vfree
-To:     corbet@lwn.net
-Cc:     linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-References: <b7636799383bfb85c59d27e140a3c0e56d4af87d.camel@perches.com>
- <20200717080558.24829-1-jslaby@suse.cz>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4e1664f0-8ec1-7427-2bc5-871810a5cc31@suse.cz>
-Date:   Fri, 17 Jul 2020 10:40:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725864AbgGQIl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:41:58 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66B9320691;
+        Fri, 17 Jul 2020 08:41:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594975318;
+        bh=8hSdczxiD3J3IvIYJ/VYZ7xBQTArpVynDQqsZPq4+IE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bpTTDIYNHx8pQMROgwk+7MVjHzpoSGqiRhUxak/Q54REoZBqe6Na5bJmmQyrdZ+k3
+         WRcwhSe86jGcfoSj0TH+orsXYd4+V6Fza4giN790pbQbGOj22NTAFfTPQVqlk5CCYQ
+         Ost0cqsfzZJUzGjixw8XEyZg2OUNb5kHF4Vsrrh8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jwLwL-00CZKZ-05; Fri, 17 Jul 2020 09:41:57 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200717080558.24829-1-jslaby@suse.cz>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 17 Jul 2020 09:41:56 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.or
+Subject: Re: [PATCH 1/2] irqchip: imx-intmux: add system PM support
+In-Reply-To: <20200716193244.31090-2-qiangqing.zhang@nxp.com>
+References: <20200716193244.31090-1-qiangqing.zhang@nxp.com>
+ <20200716193244.31090-2-qiangqing.zhang@nxp.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <364c4a4dc83618f937169ce07e6a6908@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: qiangqing.zhang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.or
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry Jon, wrong To: field, this was supposed to be addressed to Mauro
-(who is CCed).
+On 2020-07-16 20:32, Joakim Zhang wrote:
+> Add system PM support for intmux interrupt controller.
 
-On 17. 07. 20, 10:05, Jiri Slaby wrote:
-> fw_minibuffer[i].buffer is allocated by kmalloc in sh_css_load_blob_info
-> and by vmalloc in setup_binary. So use kvfree to decide which of those
-> allocators to use for freeing.
+Care to be a little more descriptive?
+
 > 
-> Also remove the useless cast.
-> 
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 > ---
->  drivers/staging/media/atomisp/pci/sh_css_firmware.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/irqchip/irq-imx-intmux.c | 59 ++++++++++++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
 > 
-> diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-> index d4ab15b6d1ac..d0011b1d97ed 100644
-> --- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-> +++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-> @@ -358,7 +358,7 @@ void sh_css_unload_firmware(void)
->  			if (fw_minibuffer[i].name)
->  				kfree((void *)fw_minibuffer[i].name);
->  			if (fw_minibuffer[i].buffer)
-> -				vfree((void *)fw_minibuffer[i].buffer);
-> +				kvfree(fw_minibuffer[i].buffer);
->  		}
->  		kfree(fw_minibuffer);
->  		fw_minibuffer = NULL;
+> diff --git a/drivers/irqchip/irq-imx-intmux.c 
+> b/drivers/irqchip/irq-imx-intmux.c
+> index c27577c81126..6095f76c4f0d 100644
+> --- a/drivers/irqchip/irq-imx-intmux.c
+> +++ b/drivers/irqchip/irq-imx-intmux.c
+> @@ -70,6 +70,9 @@ struct intmux_data {
+>  	void __iomem			*regs;
+>  	struct clk			*ipg_clk;
+>  	int				channum;
+> +#ifdef CONFIG_PM
+> +	unsigned int			*saved_reg;
+
+Please use u32 for 32bit HW registers.
+
+> +#endif
+>  	struct intmux_irqchip_data	irqchip_data[];
+>  };
 > 
+> @@ -232,6 +235,15 @@ static int imx_intmux_probe(struct platform_device 
+> *pdev)
+>  	data->channum = channum;
+>  	raw_spin_lock_init(&data->lock);
+> 
+> +	if (IS_ENABLED(CONFIG_PM)) {
+> +		/* save CHANIER register */
+> +		data->saved_reg = devm_kzalloc(&pdev->dev,
+> +					       sizeof(unsigned int) * channum,
+> +					       GFP_KERNEL);
+> +		if (!data->saved_reg)
 
+Which isn't defined when !CONFIG_PM. The compiler is allowed to
+bail here, and does (see the two kbuild failures).
 
+> +			return -ENOMEM;
+> +	}
+> +
+>  	ret = clk_prepare_enable(data->ipg_clk);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
+> @@ -293,6 +305,53 @@ static int imx_intmux_remove(struct 
+> platform_device *pdev)
+>  	return 0;
+>  }
+> 
+> +#ifdef CONFIG_PM
+> +static void imx_intmux_save_regs(struct intmux_data *data)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < data->channum; i++)
+> +		data->saved_reg[i] = readl_relaxed(data->regs + CHANIER(i));
+> +}
+> +
+> +static void imx_intmux_restore_regs(struct intmux_data *data)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < data->channum; i++)
+> +		writel_relaxed(data->saved_reg[i], data->regs + CHANIER(i));
+> +}
+
+Please move these two trivial functions into their respective callers.
+
+> +
+> +static int imx_intmux_suspend(struct device *dev)
+> +{
+> +	struct intmux_data *data = dev_get_drvdata(dev);
+> +
+> +	imx_intmux_save_regs(data);
+> +	clk_disable_unprepare(data->ipg_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_intmux_resume(struct device *dev)
+> +{
+> +	struct intmux_data *data = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(data->ipg_clk);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable ipg clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +	imx_intmux_restore_regs(data);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static const struct dev_pm_ops imx_intmux_pm_ops = {
+> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_intmux_suspend, imx_intmux_resume)
+> +};
+> +
+>  static const struct of_device_id imx_intmux_id[] = {
+>  	{ .compatible = "fsl,imx-intmux", },
+>  	{ /* sentinel */ },
+
+Thanks,
+
+         M.
 -- 
-js
-suse labs
+Jazz is not dead. It just smells funny...
