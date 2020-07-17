@@ -2,130 +2,109 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF19CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AEFC433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A665F20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:10:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sa1P3Kzy"
+	by mail.kernel.org (Postfix) with ESMTP id 0307B2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 21:14:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgGQVKJ (ORCPT
+        id S1726691AbgGQVOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 17:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgGQVKI (ORCPT
+        Fri, 17 Jul 2020 17:14:24 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54132 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgGQVOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 17:10:08 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E729C0619D2;
-        Fri, 17 Jul 2020 14:10:08 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id o3so8461359ilo.12;
-        Fri, 17 Jul 2020 14:10:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dGY2CcpG+3E/GgTnkS2Rd95XUJ3WTaSOrzDRZRkdebk=;
-        b=sa1P3Kzy43hPp0azgBtrJI/pXdQyGU3ArG3VZQHof1cfxQQmHBeQQeVpshGq1qtzkK
-         aBAQjNpjtj+EQMABp9exhFc8AUo0p2LhtVAG65w6G/tR2S5UGmVPeiKh+hajO6FDYAph
-         U1KQA79kGahWeX4cDR3pNJ/b356kPljLVsr4WYt2pln96RFlzDzlY4wpXiUS3jg2Zx6j
-         euuEe2heXStT+jZ8yGg5cLKlfGRrr5ecRH+A8kGeECQtWSPILkiLRM1rC0B8cs5TgewF
-         zXwoYOXXzQZZf7DGH+xXYwv6Qwo8fh1NzT2bXAGvmyPwVpiw4RyiMBA4s/aKlvy9Mq8P
-         COPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dGY2CcpG+3E/GgTnkS2Rd95XUJ3WTaSOrzDRZRkdebk=;
-        b=M1N21JMEhDGPIqS2qedM62GPTiq8ohAmmwaQvi+41tmzAdlRF2HR5zq9gRR02hzaOY
-         DAdHdOn13g4/et3BmVtzQCoCt8fiefrh4cPTMyGci0GrvRg3WCpJxPOx2RHyit7yhdpL
-         TBEL9A82xbg3ks7+LAgJhsxq909VCWUK0qWsI4NvCFa3IR103acfHAtQIsnBd9meuV5k
-         8WjPhXSRdudV7jDdKC+KVPLXQUNL7ZjxoPekwAX0Ds23UenvL9HRXDwMfy4n/ttv5cRa
-         UJ3N25+QZWAabyoFrWZrnqhuOP7YsK4BVzLNnVHgH1iBIqdatQVmNnIoR3xER5bO8OBK
-         gpQQ==
-X-Gm-Message-State: AOAM532CXecKfz2YfDlhYG6aRPbhWrVu781dY1YF17JPnV7kU7oUxUbw
-        Um9N1ZF2Ht1k6zmouWjha5fL3Wt8sIQmwSAXkEc=
-X-Google-Smtp-Source: ABdhPJwMgmu3v6Y8FqgTCE4q1t8jHKumfJGC2BOx4YeplWn/vvCzUrve4oyAXW93ROhPUsAkbjKAEtA++hD6PZvR+Co=
-X-Received: by 2002:a92:5a05:: with SMTP id o5mr11762146ilb.237.1595020207855;
- Fri, 17 Jul 2020 14:10:07 -0700 (PDT)
+        Fri, 17 Jul 2020 17:14:24 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 81F271C0BD7; Fri, 17 Jul 2020 23:14:21 +0200 (CEST)
+Date:   Fri, 17 Jul 2020 23:14:20 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] memory: Convert to DEFINE_SHOW_ATTRIBUTE
+Message-ID: <20200717211420.GA4140@amd>
+References: <20200716090303.13154-1-miaoqinglang@huawei.com>
 MIME-Version: 1.0
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com> <1594429136-20002-22-git-send-email-alex.shi@linux.alibaba.com>
-In-Reply-To: <1594429136-20002-22-git-send-email-alex.shi@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 17 Jul 2020 14:09:56 -0700
-Message-ID: <CAKgT0UeK3c4NjoJ7MQMxU20Bu0AZKZh73Cj4P_g5OSL6KaONhQ@mail.gmail.com>
-Subject: Re: [PATCH v16 21/22] mm/pgdat: remove pgdat lru_lock
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Content-Disposition: inline
+In-Reply-To: <20200716090303.13154-1-miaoqinglang@huawei.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 5:59 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
-> Now pgdat.lru_lock was replaced by lruvec lock. It's not used anymore.
->
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: cgroups@vger.kernel.org
-> ---
->  include/linux/mmzone.h | 1 -
->  mm/page_alloc.c        | 1 -
->  2 files changed, 2 deletions(-)
->
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 36c1680efd90..8d7318ce5f62 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -735,7 +735,6 @@ struct deferred_split {
->
->         /* Write-intensive fields used by page reclaim */
->         ZONE_PADDING(_pad1_)
-> -       spinlock_t              lru_lock;
->
->  #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
->         /*
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index e028b87ce294..4d7df42b32d6 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -6721,7 +6721,6 @@ static void __meminit pgdat_init_internals(struct pglist_data *pgdat)
->         init_waitqueue_head(&pgdat->pfmemalloc_wait);
->
->         pgdat_page_ext_init(pgdat);
-> -       spin_lock_init(&pgdat->lru_lock);
->         lruvec_init(&pgdat->__lruvec);
->  }
->
 
-This patch would probably make more sense as part of patch 18 since
-you removed all of the users of this field there.
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu 2020-07-16 17:03:03, Qinglang Miao wrote:
+> From: Yongqiang Liu <liuyongqiang13@huawei.com>
+>=20
+> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+>=20
+> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
+> ---
+>  drivers/memory/emif.c               | 22 ++--------------------
+>  drivers/memory/tegra/tegra124-emc.c | 14 +-------------
+>  2 files changed, 3 insertions(+), 33 deletions(-)
+>=20
+> diff --git a/drivers/memory/emif.c b/drivers/memory/emif.c
+> index 58a82eea5..aab8ddad7 100644
+> --- a/drivers/memory/emif.c
+> +++ b/drivers/memory/emif.c
+> @@ -131,16 +131,7 @@ static int emif_regdump_show(struct seq_file *s, voi=
+d *unused)
+>  	return 0;
+>  }
+> =20
+> -static int emif_regdump_open(struct inode *inode, struct file *file)
+> -{
+> -	return single_open(file, emif_regdump_show, inode->i_private);
+> -}
+> -
+> -static const struct file_operations emif_regdump_fops =3D {
+> -	.open			=3D emif_regdump_open,
+> -	.read_iter			=3D seq_read_iter,
+> -	.release		=3D single_release,
+> -};
+> +DEFINE_SHOW_ATTRIBUTE(emif_regdump);
+
+This is not equivalent (and I guess changelog should mention that).
+
+Along with other changes, we get:
+
+        .owner          =3D THIS_MODULE,
+        .llseek         =3D seq_lseek,
+
+=2E Is that okay thing to add?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8SFKwACgkQMOfwapXb+vKdwgCgjCF3E0BpUkXhEQaCJxb5Tope
+PPUAn0wflSY2RbBWEqdQudvWxNTPIPO4
+=hwT1
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
