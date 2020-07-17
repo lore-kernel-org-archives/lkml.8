@@ -2,227 +2,114 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35907C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF09BC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34F220684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09772070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 09:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgGQJMu (ORCPT
+        id S1726528AbgGQJMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:12:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgGQJMu (ORCPT
+        Fri, 17 Jul 2020 05:12:43 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58229 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgGQJMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 05:12:50 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87B2C061755
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 02:12:49 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1jwMQ6-0000xV-VD; Fri, 17 Jul 2020 11:12:43 +0200
-Message-ID: <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
-Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller
- Subsystem
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Daniel Vetter <daniel@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        lukas@mntmn.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Fri, 17 Jul 2020 11:12:39 +0200
-In-Reply-To: <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
-References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
-         <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
-         <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Fri, 17 Jul 2020 05:12:42 -0400
+X-Originating-IP: 90.65.108.121
+Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id E4FFEFF80C;
+        Fri, 17 Jul 2020 09:12:38 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 11:12:38 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 07/19] clk: at91: sam9x60-pll: use frac when setting
+ frequency
+Message-ID: <20200717091238.GL3428@piout.net>
+References: <1594812267-6697-1-git-send-email-claudiu.beznea@microchip.com>
+ <1594812267-6697-8-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594812267-6697-8-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, den 17.07.2020, 10:59 +0200 schrieb Daniel Vetter:
-> On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
-> > Hi Laurentiu,
-> > 
-> > Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
-> > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > > 
-> > > Hi,
-> > > 
-> > > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> > > includes only graphics plane support (no video planes), no HDR10 capabilities,
-> > > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> > > 
-> > > Support for the rest of the features will be added incrementally, in subsequent
-> > > patches.
-> > > 
-> > > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> > > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
-> > 
-> > I think the series (minus 3/5 and minor correction to the DT binding)
-> > is fine to go in now. So just some formal questions: are you going to
-> > maintain this driver in upstream? If so we should add a MAINTAINERS
-> > entry to that effect. I can offer to act as a reviewer in this case.
-> > 
-> > How do you intend to merge this? IMO pushing this through drm-misc
-> > seems like the right thing to do. If you agree I can help you get this
-> > applied. If you are going to maintain the driver on your own, I think
-> > you should then apply for commit rights to drm-misc.
-> 
-> drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
-> should put the entire collective of imx drivers under drm-misc? Or
-> maybe it's just an oversight that the git repo isn't specified in the
-> MAINTAINERS entry. Also maybe we should add the pengutronix kernel
-> team alias there too?
-
-drm/imx was exclusively the IPUv3 up until now, which is in fact
-maintained outside of drm-misc in its own git tree. This has worked
-quite well in the past so even though IPUv3 doesn't see a lot of churn
-these days the motivation to change anything to this workflow is quite
-low. And yes, the git tree is missing from the MAINTAINERS entry.
-
-For the DCSS driver, if it's going to be maintained by NXP, I figured
-it might be easier for Laurentiu to push things into drm-misc than set
-up a separate public git tree. But IMHO that's fully up to him to
-decide.
-
-Regards,
-Lucas
-
-> -Daniel
-> 
-> 
-> > Regards,
-> > Lucas
-> > 
-> > > Thanks,
-> > > Laurentiu
-> > > 
-> > > Changes in v5:
-> > >  * Rebased to latest;
-> > >  * Took out component framework support and made it a separate patch so
-> > >    that people can still test with HDP driver, which makes use of it.
-> > >    But the idea is to get rid of it once HDP driver's next versions
-> > >    will remove component framework as well;
-> > >  * Slight improvement to modesetting: avoid cutting off the pixel clock
-> > >    if the new mode and the old one are equal. Also, in this case, is
-> > >    not necessary to wait for DTG to shut off. This would allow to switch
-> > >    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
-> > >    from DCSS point of view);
-> > >  * Do not fire off CTXLD when going to suspend, unless it still has
-> > >    entries that need to be committed to DCSS;
-> > >  * Addressed Rob's comments on bindings;
-> > > 
-> > > Changes in v4:
-> > >  * Addressed Lucas and Philipp's comments:
-> > >    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
-> > >    * Removed usage of devm_ functions since I'm already doing all the
-> > >      clean-up in the submodules_deinit();
-> > >    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
-> > >    * Removed en_completion variable from dcss_crtc since this was
-> > >      introduced mainly to avoid vblank timeout warnings which were fixed
-> > >      by arming the vblank event in flush() instead of begin();
-> > >    * Removed clks_on and irq_enabled flags since all the calls to
-> > >      enabling/disabling clocks and interrupts were balanced;
-> > >    * Removed the custom atomic_commit callback and used the DRM core
-> > >      helper and, in the process, got rid of a workqueue that wasn't
-> > >      necessary anymore;
-> > >    * Fixed some minor DT binding issues flagged by Philipp;
-> > >    * Some other minor changes suggested by Lucas;
-> > >  * Removed YUV formats from the supported formats as these cannot work
-> > >    without the HDR10 module CSCs and LUTs. Will add them back when I
-> > >    will add support for video planes;
-> > > 
-> > > Changes in v3:
-> > >  * rebased to latest linux-next and made it compile as drmP.h was
-> > >    removed;
-> > >  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
-> > >  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
-> > >  * fixed a a spurious hang reported by Lukas Hartmann and encountered
-> > >    by me several times;
-> > >  * mask DPR and DTG interrupts by default, as they may come enabled from
-> > >    U-boot;
-> > > 
-> > > Changes in v2:
-> > >  * Removed '0x' in node's unit-address both in DT and yaml;
-> > >  * Made the address region size lowercase, to be consistent;
-> > >  * Removed some left-over references to P010;
-> > >  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
-> > >    issues reported by kbuild for other architectures;
-> > > 
-> > > Laurentiu Palcu (5):
-> > >   drm/imx: compile imx directory by default
-> > >   drm/imx: Add initial support for DCSS on iMX8MQ
-> > >   drm/imx/dcss: add component framework functionality
-> > >   dt-bindings: display: imx: add bindings for DCSS
-> > >   arm64: dts: imx8mq: add DCSS node
-> > > 
-> > >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml |  84 ++
-> > >  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  23 +
-> > >  drivers/gpu/drm/Makefile                      |   2 +-
-> > >  drivers/gpu/drm/imx/Kconfig                   |   2 +
-> > >  drivers/gpu/drm/imx/Makefile                  |   1 +
-> > >  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
-> > >  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
-> > >  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
-> > >  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
-> > >  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
-> > >  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 314 +++++++
-> > >  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
-> > >  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
-> > >  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 183 ++++
-> > >  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
-> > >  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 185 ++++
-> > >  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  43 +
-> > >  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
-> > >  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
-> > >  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
-> > >  20 files changed, 4123 insertions(+), 1 deletion(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
-> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
-> > > 
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+On 15/07/2020 14:24:15+0300, Claudiu Beznea wrote:
+> In commit a436c2a447e59 ("clk: at91: add sam9x60 PLL driver")
+> the fractional part of PLL wasn't set on registers but it was
+> calculated and taken into account for determining div and mul
+> (see sam9x60_pll_get_best_div_mul()).
 > 
 
+I think this becomes an issue only once 4/19 is applied so you should
+probably squash those two together.
+
+> Fixes: a436c2a447e59 ("clk: at91: add sam9x60 PLL driver")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  drivers/clk/at91/clk-sam9x60-pll.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/clk-sam9x60-pll.c b/drivers/clk/at91/clk-sam9x60-pll.c
+> index 00f2afd6e9b6..13e15bd48770 100644
+> --- a/drivers/clk/at91/clk-sam9x60-pll.c
+> +++ b/drivers/clk/at91/clk-sam9x60-pll.c
+> @@ -16,6 +16,7 @@
+>  
+>  #define	PMC_PLL_CTRL0_DIV_MSK	GENMASK(7, 0)
+>  #define	PMC_PLL_CTRL1_MUL_MSK	GENMASK(31, 24)
+> +#define	PMC_PLL_CTRL1_FRACR_MSK	GENMASK(21, 0)
+>  
+>  #define PLL_DIV_MAX		(FIELD_GET(PMC_PLL_CTRL0_DIV_MSK, UINT_MAX) + 1)
+>  #define UPLL_DIV		2
+> @@ -55,7 +56,7 @@ static int sam9x60_pll_prepare(struct clk_hw *hw)
+>  	unsigned long flags;
+>  	u8 div;
+>  	u16 mul;
+> -	u32 val;
+> +	u32 val, frac;
+>  
+>  	spin_lock_irqsave(pll->lock, flags);
+>  	regmap_write(regmap, AT91_PMC_PLL_UPDT, pll->id);
+> @@ -65,9 +66,10 @@ static int sam9x60_pll_prepare(struct clk_hw *hw)
+>  
+>  	regmap_read(regmap, AT91_PMC_PLL_CTRL1, &val);
+>  	mul = FIELD_GET(PMC_PLL_CTRL1_MUL_MSK, val);
+> +	frac = FIELD_GET(PMC_PLL_CTRL1_FRACR_MSK, val);
+>  
+>  	if (sam9x60_pll_ready(regmap, pll->id) &&
+> -	    (div == pll->div && mul == pll->mul)) {
+> +	    (div == pll->div && mul == pll->mul && frac == pll->frac)) {
+>  		spin_unlock_irqrestore(pll->lock, flags);
+>  		return 0;
+>  	}
+> @@ -80,7 +82,8 @@ static int sam9x60_pll_prepare(struct clk_hw *hw)
+>  	regmap_write(regmap, AT91_PMC_PLL_ACR, val);
+>  
+>  	regmap_write(regmap, AT91_PMC_PLL_CTRL1,
+> -		     FIELD_PREP(PMC_PLL_CTRL1_MUL_MSK, pll->mul));
+> +		     FIELD_PREP(PMC_PLL_CTRL1_MUL_MSK, pll->mul) |
+> +		     FIELD_PREP(PMC_PLL_CTRL1_FRACR_MSK, pll->frac));
+>  
+>  	if (pll->characteristics->upll) {
+>  		/* Enable the UTMI internal bandgap */
+> -- 
+> 2.7.4
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
