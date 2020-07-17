@@ -2,107 +2,93 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E177BC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFBB820704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:16:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YJ/14INQ"
+	by mail.kernel.org (Postfix) with ESMTP id C649320704
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 07:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgGQHQk (ORCPT
+        id S1726964AbgGQHSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:16:40 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48613 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726113AbgGQHQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:16:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B7Mqk6xh3z9sRW;
-        Fri, 17 Jul 2020 17:16:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594970195;
-        bh=oTj8Uaaotye20E7nbwvHhre4w0zWt0nBV6tySDhiD+E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YJ/14INQyPXfRursA7MF7Ch5Bxhi61lCq31FGRwEa/cM/u+hg7GyA8iTZalnKCGGx
-         ysH9alOH9ybXdiRrPFyJ0dAhpQOruHfdUCTYfjkQ54PvnbXwjlTsKL8zP+LyYhVO+z
-         XD5TdxqdfEVpyHh4mZVmDV2D+YN+JydSSAIH1DChIYwITWmFTwf5lWymau/efGPjDE
-         tItCdRiNou0vSfA2YZD4Ff1hlNu7S5N7yfT3+6uHfJyccymP99JWy+zoUktCMco5Zl
-         CgKiWIp2r46c+u0n8WBZ/DItXKboS5eIlIWNAhK/mHW6aGy8jtL2fkBg/GLu3wgRU/
-         2MsOvT3aIMn5Q==
-Date:   Fri, 17 Jul 2020 17:16:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Subject: linux-next: build failure after merge of the pinctrl tree
-Message-ID: <20200717171634.4b68472c@canb.auug.org.au>
+        Fri, 17 Jul 2020 03:18:18 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37199 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgGQHSS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:18:18 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 12so7270519oir.4;
+        Fri, 17 Jul 2020 00:18:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a5hTKsShr1r3N7ckghpJVGyfr7q/TFPmmyprZtIxXpA=;
+        b=UlNfzIWCZAOyLy0eE6A9t2GfjZVT3oCCOPAx2qCb+ld7moJ9NFw6Ryw/j8cqEKBUMB
+         oVItLNwIHjzTdQT77Rk5bXWLovd9Ms9uM9o27D6iraI/qxaDdT7uBahhPpIN8AJKVpII
+         lHDSEplnbdVpDJO0MRJmYli7hvrcxjUm8CKnpav2XVrGYMs/vShrvsMS7lBPdeL+aK22
+         34bekdSMHV+snBg6d6T/c4Khbv/tQYm0qHmVaM9GX973RUxlJ3ItY/DJbpyM33zFPhVS
+         515MPt0ZbtSINxub67tPi6k3LowcqWWyaFDqhEAH/nTb7a/9jGhbWzYsKjbRGCDBVSST
+         FxNw==
+X-Gm-Message-State: AOAM533lzcQq8iJssfQQm49vLbvBpZAsn64H1LFb2lK2M0HtxQx4zIYb
+        BqYBc2EIjrQ+QbfSH4aC4Qi7oFMVlunOsOOd2H8=
+X-Google-Smtp-Source: ABdhPJxlyTHAAuX2MIEk8itC1oT3cHf7n9+SAmrvOegCDH4dUIhUmVSg+H3YLLWpUP0fnB5/i4BOHOfR15M/I5rhJjw=
+X-Received: by 2002:aca:ac10:: with SMTP id v16mr6263830oie.153.1594970296950;
+ Fri, 17 Jul 2020 00:18:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ip=NXk1Hx7QoDwi+Gmdo.e2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200716211517.GA17174@embeddedor>
+In-Reply-To: <20200716211517.GA17174@embeddedor>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 17 Jul 2020 09:18:06 +0200
+Message-ID: <CAMuHMdU7p6wY3vzV2mRzWrvn_nDuJBFVtc5QK-mLQ7kJbm1HqA@mail.gmail.com>
+Subject: Re: [PATCH][next] PCI: rcar-gen2: Use fallthrough pseudo-keyword
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ip=NXk1Hx7QoDwi+Gmdo.e2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Gustavo,
 
-Hi all,
+Thanks for your patch!
 
-After merging the pinctrl tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+On Thu, Jul 16, 2020 at 11:11 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> fall-through markings when it is the case.
 
-drivers/pinctrl/mediatek/pinctrl-mt6779.c:783:1: warning: data definition h=
-as no type or storage class
-  783 | arch_initcall(mt6779_pinctrl_init);
-      | ^~~~~~~~~~~~~
-drivers/pinctrl/mediatek/pinctrl-mt6779.c:783:1: error: type defaults to 'i=
-nt' in declaration of 'arch_initcall' [-Werror=3Dimplicit-int]
-drivers/pinctrl/mediatek/pinctrl-mt6779.c:783:1: warning: parameter names (=
-without types) in function declaration
-drivers/pinctrl/mediatek/pinctrl-mt6779.c:779:19: warning: 'mt6779_pinctrl_=
-init' defined but not used [-Wunused-function]
-  779 | static int __init mt6779_pinctrl_init(void)
-      |                   ^~~~~~~~~~~~~~~~~~~
+Which unnecessary marking is being removed?
+I don't see any.
 
-Caused by commit
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-  e6f744c6ad4f ("pinctrl: mediatek: add pinctrl support for MT6779 SoC")
+For the actual patch contents:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Forgot to include module.h (since it is tristate in Kconfig) or init.h?
+Gr{oetje,eeting}s,
 
-I used the pinctrl tree from next-20200716 for today.
+                        Geert
 
---=20
-Cheers,
-Stephen Rothwell
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---Sig_/Ip=NXk1Hx7QoDwi+Gmdo.e2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8RUFIACgkQAVBC80lX
-0GwW4Qf/U9+yRyzHbBgotPvNHdRVuVngKgRqwGRr2Q+biDGlpjacKUVLt9om0Jb0
-Uaet6q5UsQHBBjopnZg3N4knmaIVCUHTsDLdG+wHnjOUHsHrhdpQlK1A188Yti0B
-UuOGJnCAlKMuNUmZDKn9u4X+F66X/BMCh0izUUETjmuV6zPc+X2OUBOIgEL/P7Yq
-VUwbkXn1DGrzIvoxyWqVkALk4kOkivO6u564MN3a0jtdFBf4rvnV0ab5H3K8ZYH7
-+Gd1FPXFkZagPeLDsY884eg1f9pzv/yJ4GzrV063Zj5LYACXv/wQawtPy8oMY9GZ
-lU+huz43csOde8EMBwdU1kS1JFZ6jw==
-=wOdB
------END PGP SIGNATURE-----
-
---Sig_/Ip=NXk1Hx7QoDwi+Gmdo.e2--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
