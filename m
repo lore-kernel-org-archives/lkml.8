@@ -3,127 +3,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45725C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 224492070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D1220775
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 15:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595000196;
-	bh=EStHlET+Kj6osu0kp3FnJHOLFkPb1jcuA8gJWGNKWeE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=t8nQSjlK5J3e8FVtwAVV43prOnVRTAictCOMT2G4wDFPA5h/YNzu3GgnKgE0SyuyP
-	 iQtGh61Ass37vQrgmzmyKKD2K1sG2T+XCTDCCxmhp+qtuYj3bfj8dfjo3pYpjZbA0A
-	 wg1ySBBbP2Srt+4AVOxM9FMMM3XEI0PIMMZ7Md9k=
+	s=default; t=1595000221;
+	bh=jYc1aUN/I4P6tRz3VyMWhNF0QnaoeYEKgUKNa+KrnaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ogosNaHqJn9KAsRFB+oEn22GsUxEr40UaE2HseHgrWq4lMrgyipxeNi2eJIN4kYZM
+	 t80FOha4jmwX7e766QD9vkRVbtWRfXW3IXX4nr5d36GWM1+/itjdCZPFqcjADUJy5Z
+	 JL9bckhuc9B4HFhygS5ZS2mPxymQqyQnjXkTU3mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgGQPgf (ORCPT
+        id S1726983AbgGQPhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:36:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56270 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 11:37:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgGQPgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 11:36:33 -0400
-Received: from [192.168.1.30] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726198AbgGQPg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 11:36:59 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 182C32076A;
-        Fri, 17 Jul 2020 15:36:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A8412070A;
+        Fri, 17 Jul 2020 15:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595000192;
-        bh=EStHlET+Kj6osu0kp3FnJHOLFkPb1jcuA8gJWGNKWeE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=leg10EKQ9VE6SBOSbWsZrEpQfYae5bSISdDaEl9iu68+PPyA/gEBtyEKsRr1LSO3G
-         tH+U2EqXo78xXyH67R13kxc79s+pr92xj6n0pEWEygaxR5i/rK2ZLoFPkBTs4gD4Fs
-         gaj86aQu5pvYhVclYv3Q+I3uSAwpBo5cILUM5ZS8=
-Subject: Re: linux-next: Fixes tags need some work in the arm-soc-fixes tree
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Olof Johansson <olof@lixom.net>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-References: <20200714075729.68b92239@canb.auug.org.au>
- <1381a6c0-22fe-a175-f649-ea49da3451da@kernel.org>
- <CAK8P3a06bHeOqkQPG3Ap4hu4yFU-LA3L-5nwqk+7VGhSrKO_ng@mail.gmail.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <3761e5c8-3ba4-2925-9f3a-2d98dd1e46e2@kernel.org>
-Date:   Fri, 17 Jul 2020 10:36:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        s=default; t=1595000218;
+        bh=jYc1aUN/I4P6tRz3VyMWhNF0QnaoeYEKgUKNa+KrnaI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lYrCL/576fIybqoKqFHqApQ0M13jBy6owWhQN6cG6wMCWfYYJYR+ejLvNZrakEMXR
+         +ehg8ackJ8jme84icUzgIHxUdZdYMkKHJTwkzu7jculJFLHRIj2SXWg9tO2moPc4G8
+         e6Tn4tBGsia5bmOEY2PEFUAFKJWwet2fMyHfbk+A=
+Date:   Fri, 17 Jul 2020 16:36:47 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>, Jon Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Adam Ford <aford173@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+Message-ID: <20200717153647.GA10361@sirena.org.uk>
+References: <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
+ <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
+ <20200717121436.GA2953399@kroah.com>
+ <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
+ <20200717132101.GA2984939@kroah.com>
+ <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
+ <20200717141344.GA2992942@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a06bHeOqkQPG3Ap4hu4yFU-LA3L-5nwqk+7VGhSrKO_ng@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
+Content-Disposition: inline
+In-Reply-To: <20200717141344.GA2992942@kroah.com>
+X-Cookie: You have a message from the operator.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--DocE+STaALJfprDB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 7/16/20 3:10 PM, Arnd Bergmann wrote:
-> On Wed, Jul 15, 2020 at 9:14 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
->>
->> -----BEGIN PGP SIGNED MESSAGE-----
->> Hash: SHA512
->>
->> Hi,
->>
->> I apologize for this! I have an updated branch that fixes these tags.
->> Let me know if I need to respin the pull request.
-> 
-> I've recreated the branch from scratch now (this was one of only
-> two pull requests I got anyway), it should be fine now.
-> 
+On Fri, Jul 17, 2020 at 04:13:44PM +0200, Greg KH wrote:
+> On Fri, Jul 17, 2020 at 03:54:49PM +0200, Arnd Bergmann wrote:
 
-Thank you!
+> > > And look at the driver core work for many driver subsystems to be fixed
+> > > up just to get a single kernel image to work on multiple platforms.
+> > > Just because older ones did it, doesn't mean it actually works today :)
 
-Dinh
+> > Can you give a specific example? The only problem I'm aware of for
+> > those SoCs is drivers being outside of the mainline kernel. Clearly
+> > having support for loadable modules helps SoC vendors because it
+> > allows them to support a new platform with an existing binary kernel
+> > by shipping third-party driver modules, but for stuff that is already
+> > in mainline, we could in theory support all hardware in a single gigantic
+> > binary kernel with no support for loadable modules at all.
+
+> That did not work for many drivers for some reason, look at all the work
+> Saravana had to do in the driver core and device tree code for it to
+> happen correctly over the past year.
+
+Could you be more specific about these issues?  I'm aware of his work
+around probe ordering but that's not at all arch specific, the same
+issues affect every architecture, so doesn't seem to be what you're
+talking about.
+
+arm64 has never supported anything other than a multiplatform kernel,
+and the actively maintained 32 bit platforms have supported one for more
+than half a decade at this point.  CI systems keep managing to test
+these kernels, distributions seem to keep managing to ship them and
+users appear able to install and use them so it doesn't seem quite so
+fundamentally broken as all that.
+
+--DocE+STaALJfprDB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8RxY4ACgkQJNaLcl1U
+h9DeQgf/WFJpLDFRsnueznmq4Wb0AlXKTMQMYtt95FUFV2LNcNJzvy6OQZ/ggVo/
+Y8VvSa5i9gfeOzO7kadzCZxHXPtZu9Jb4ZZYdEnzubh+/TiVUQoyhZSq7KKzo1Pt
+81k6zKBpyfO+1JfXhWORRqU9lhanGvGconjefn25LVtARQw3YQWepyKVGfw4x2A2
+xYxhoC3F7SdE7dLDPUa32DzmuTQmXX056JzwX6zAusBtHknnJWiFuPkLs5yjQ92f
+BGi5y5bWcmZfgjJwx9kc82Fua3tY63sQnRNJrUITDxC8aeqaDIGFyna/rMwxMH5k
+tV3+xNfHrx3KDuSmeyqs75QV+2+dlQ==
+=YZrk
+-----END PGP SIGNATURE-----
+
+--DocE+STaALJfprDB--
