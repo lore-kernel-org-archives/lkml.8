@@ -2,80 +2,169 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B605C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6015C20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:38:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kkZ15Sln";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0Nt3KUrp"
+	by mail.kernel.org (Postfix) with ESMTP id 33BE820759
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 18:34:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgGQSiN (ORCPT
+        id S1726580AbgGQSeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:38:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgGQSiM (ORCPT
+        Fri, 17 Jul 2020 14:34:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32560 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726104AbgGQSet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:38:12 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE3EC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 11:38:12 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595011090;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=epzCBXg5qGcUfz87P+4zTdQJlxn0UPwHoqC1rhawI+4=;
-        b=kkZ15SlnVeAyM8KP28wI99EpmR25TiEo1o/GP3Z++FjeSUic/TRu8p3NAqkP5517rnE7lc
-        LMvco4TaXym9Wt0fhT/Y4eDrqblfetORQ5jIPFurRDN0W2lblI9BDdxREKgbDbLzzS4Wfu
-        q4AyPva3YdECri3KJT+KkDyG3dVANoKM4b8zjOv2F+qR16QDgymvIk9eZxbhPO3oqw2Avl
-        48rfrrz2OA+zrPiyzoyAkNQ0+NIvi8vTl5y2PANGb87/YsoPQ3QyGFiBXu9m53b9pGtdz1
-        KI0UW9hvl0ZRXZKXTIlrTXYV4iFp8YH1yjBS59gW4cR9FO46T9ggu+yoieHzfg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595011090;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=epzCBXg5qGcUfz87P+4zTdQJlxn0UPwHoqC1rhawI+4=;
-        b=0Nt3KUrpCBd404neVuL9guOuxvCq5t65zxuM0w8h9hphTZfoh6vSm0wvNN91BIQyvm9VgH
-        Rfe13kHJvvxoFlCw==
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [patch V2 3/5] posix-cpu-timers: Provide mechanisms to defer timer handling to task_work
-In-Reply-To: <20200716225458.GL5523@worktop.programming.kicks-ass.net>
-References: <20200716201923.228696399@linutronix.de> <20200716202044.734067877@linutronix.de> <20200716225458.GL5523@worktop.programming.kicks-ass.net>
-Date:   Fri, 17 Jul 2020 20:38:10 +0200
-Message-ID: <87tuy6q965.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Jul 2020 14:34:49 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HIWvmn053972;
+        Fri, 17 Jul 2020 14:34:40 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32autbkkau-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 14:34:39 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06HIYcJf065521;
+        Fri, 17 Jul 2020 14:34:38 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32autbkk9x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 14:34:38 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06HILB7I029041;
+        Fri, 17 Jul 2020 18:34:37 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma05wdc.us.ibm.com with ESMTP id 327529jyyu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jul 2020 18:34:37 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06HIYahq52036090
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jul 2020 18:34:36 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 90460AE060;
+        Fri, 17 Jul 2020 18:34:36 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AB42DAE05F;
+        Fri, 17 Jul 2020 18:34:31 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.51.42])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Fri, 17 Jul 2020 18:34:31 +0000 (GMT)
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466085652.24747.2414199807974963385.stgit@hbathini.in.ibm.com> <87v9io8c13.fsf@morokweng.localdomain> <63d551a9-684b-768b-8b0f-2a0da68d7f11@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Pingfan Liu <piliu@redhat.com>, Nayna Jain <nayna@linux.ibm.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 02/12] powerpc/kexec_file: mark PPC64 specific code
+In-reply-to: <63d551a9-684b-768b-8b0f-2a0da68d7f11@linux.ibm.com>
+Date:   Fri, 17 Jul 2020 15:34:27 -0300
+Message-ID: <87ft9quh1o.fsf@morokweng.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-17_09:2020-07-17,2020-07-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 spamscore=100
+ priorityscore=1501 suspectscore=0 mlxscore=100 phishscore=0 bulkscore=0
+ impostorscore=0 mlxlogscore=-1000 clxscore=1015 lowpriorityscore=0
+ malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007170129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Thu, Jul 16, 2020 at 10:19:26PM +0200, Thomas Gleixner wrote:
->> +static void __run_posix_cpu_timers(struct task_struct *tsk)
->> +{
->> +	struct posix_cputimers *pct = &tsk->posix_cputimers;
->> +
->> +	if (!test_and_set_bit(CPUTIMERS_WORK_SCHEDULED, &pct->flags))
->> +		task_work_add(tsk, &pct->task_work, true);
->
-> s/true/TWA_RESUME/g
->
-> see: e91b48162332 ("task_work: teach task_work_add() to do signal_wake_up()")
 
-Duh, yes.
+Hari Bathini <hbathini@linux.ibm.com> writes:
+
+> On 16/07/20 7:19 am, Thiago Jung Bauermann wrote:
+>> 
+>> I didn't forget about this patch. I just wanted to see more of the
+>> changes before comenting on it.
+>> 
+>> Hari Bathini <hbathini@linux.ibm.com> writes:
+>> 
+>>> Some of the kexec_file_load code isn't PPC64 specific. Move PPC64
+>>> specific code from kexec/file_load.c to kexec/file_load_64.c. Also,
+>>> rename purgatory/trampoline.S to purgatory/trampoline_64.S in the
+>>> same spirit.
+>> 
+>> There's only a 64 bit implementation of kexec_file_load() so this is a
+>> somewhat theoretical exercise, but there's no harm in getting the code
+>> organized, so:
+>> 
+>> Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+>> 
+>> I have just one question below.
+>
+> <snip>
+>
+>>> +/**
+>>> + * setup_new_fdt_ppc64 - Update the flattend device-tree of the kernel
+>>> + *                       being loaded.
+>>> + * @image:               kexec image being loaded.
+>>> + * @fdt:                 Flattened device tree for the next kernel.
+>>> + * @initrd_load_addr:    Address where the next initrd will be loaded.
+>>> + * @initrd_len:          Size of the next initrd, or 0 if there will be none.
+>>> + * @cmdline:             Command line for the next kernel, or NULL if there will
+>>> + *                       be none.
+>>> + *
+>>> + * Returns 0 on success, negative errno on error.
+>>> + */
+>>> +int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+>>> +			unsigned long initrd_load_addr,
+>>> +			unsigned long initrd_len, const char *cmdline)
+>>> +{
+>>> +	int chosen_node, ret;
+>>> +
+>>> +	/* Remove memory reservation for the current device tree. */
+>>> +	ret = delete_fdt_mem_rsv(fdt, __pa(initial_boot_params),
+>>> +				 fdt_totalsize(initial_boot_params));
+>>> +	if (ret == 0)
+>>> +		pr_debug("Removed old device tree reservation.\n");
+>>> +	else if (ret != -ENOENT) {
+>>> +		pr_err("Failed to remove old device-tree reservation.\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len,
+>>> +			    cmdline, &chosen_node);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	ret = fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", NULL, 0);
+>>> +	if (ret)
+>>> +		pr_err("Failed to update device-tree with linux,booted-from-kexec\n");
+>>> +
+>>> +	return ret;
+>>> +}
+>> 
+>> For setup_purgatory_ppc64() you start with an empty function and build
+>> from there, but for setup_new_fdt_ppc64() you moved some code here. Is
+>> the code above 64 bit specific?
+>
+> Actually, I was not quiet sure if fdt updates like in patch 6 & patch 9 can be
+> done after setup_ima_buffer() call. If you can confirm, I will move them back
+> to setup_purgatory()
+
+Hari and I discussed this off-line and we came to the conclusion that
+theis code can be moved back to setup_new_fdt().
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
