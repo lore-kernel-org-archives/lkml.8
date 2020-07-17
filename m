@@ -2,86 +2,131 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F5C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79E872076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C3D20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DwB7iiOp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fdfr63X/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IotAVYy/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgGQLWe (ORCPT
+        id S1726525AbgGQLWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43418 "EHLO
+        Fri, 17 Jul 2020 07:22:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgGQLWd (ORCPT
+        with ESMTP id S1726422AbgGQLWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:22:33 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9E9C061755;
-        Fri, 17 Jul 2020 04:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ScRcak3+YLnK0/Ajj7pWGryQXqgK+eh4WORPeOEWNM8=; b=DwB7iiOpiSXr/UmffzIY8qzpD/
-        FXFx40H9475zT+5+zCrE27fdFyphk7NXVgAt8lhVagq6FYHucJaVeCM4AB+2q/+yJALuLQ3ToQuLk
-        dS3HTxHoHBuJpHXWJWYA55A8MypGV2FG9XCH7O16BI5w0gFFJM4ngG7vydr5kuJNxEfcxTo1SWuQd
-        Wjf7gcaGNTRe+8IRXjVayp+MDT4u3/Z5ewHe6Stt+5l8OuPP/diriB7VuqnJZ6dPi7iyw8NG1cxmn
-        1UlwEds/dza2F7FCpqjMmUI3RSYYusNqstH2yXhc39CLXf7tIoRVFlh/JSdAeNGuwDFe/9hjBplGn
-        EsZoVHDw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwORW-0003Ms-0y; Fri, 17 Jul 2020 11:22:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7D888307488;
-        Fri, 17 Jul 2020 13:22:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1C662203D4090; Fri, 17 Jul 2020 13:22:16 +0200 (CEST)
-Date:   Fri, 17 Jul 2020 13:22:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>
-Cc:     linux-arch@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v2 00/11] Fixup page directory freeing
-Message-ID: <20200717112216.GI10769@hirez.programming.kicks-ass.net>
-References: <20200717111005.024867618@infradead.org>
+        Fri, 17 Jul 2020 07:22:08 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8828DC061755;
+        Fri, 17 Jul 2020 04:22:08 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 11:22:06 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594984926;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vq55nEQay6RR9IZtBQHQbQIygvyxIzE9HauBDImIhvc=;
+        b=fdfr63X/M1GbfJ2s2Uhe0rH14CvX1/SnhWAwKNll6acxqw9RIxuwRfUIIRkF2Es8ZJQaTL
+        N7Pc5lba2pykyWr0lenJrfGeK6YnNeNSR5zJtluoF7KP24xJdSwQqltrA9OQ6H5eRXAjoM
+        qbL0C3UR+VPPi/9M+SVjU4oxao2A3YE3ElM7YLlT9VBfXtwdJ9fIITNJ1tbuBWiL1rcR6d
+        5WOlPOw46/wCCtLny9aWdRyESl0nnL/n+swFizOi6N9o3cWS6RG0miSrllneE7dn3u5/CZ
+        3zpxx70DeEz7mwwPloAxx0BGSK1+WIPVX+71NZF1C2ew6krwq1qqhdCH4YABOQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594984926;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vq55nEQay6RR9IZtBQHQbQIygvyxIzE9HauBDImIhvc=;
+        b=IotAVYy/csXyJJtaHrPd/tXqWZGHLp0RpjSQYq5ePpv6wMs9Sjxo5QrnzbQ0eZXDGyh1ag
+        BJgbigVfBGGjpeAg==
+From:   "tip-bot2 for Herbert Xu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] lockdep: Move list.h inclusion into lockdep.h
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200716063649.GA23065@gondor.apana.org.au>
+References: <20200716063649.GA23065@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717111005.024867618@infradead.org>
+Message-ID: <159498492623.4006.16207982024495976101.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 01:10:05PM +0200, Peter Zijlstra wrote:
-> Hi All,
-> 
-> While fixing a silly bug on SH (patch #1), I realized that even with the
-> trivial patch to restore prior behaviour, page directory freeing was still
-> broken.
+The following commit has been merged into the locking/core branch of tip:
 
-*sigh*, I got patches 1 and 2 in the 'wrong' order.
+Commit-ID:     5be542e945cb39a2457aa2cfe8b84aac95ef0f2d
+Gitweb:        https://git.kernel.org/tip/5be542e945cb39a2457aa2cfe8b84aac95ef0f2d
+Author:        Herbert Xu <herbert@gondor.apana.org.au>
+AuthorDate:    Thu, 16 Jul 2020 16:36:50 +10:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Thu, 16 Jul 2020 23:19:51 +02:00
+
+lockdep: Move list.h inclusion into lockdep.h
+
+Currently lockdep_types.h includes list.h without actually using any
+of its macros or functions.  All it needs are the type definitions
+which were moved into types.h long ago.  This potentially causes
+inclusion loops because both are included by many core header
+files.
+
+This patch moves the list.h inclusion into lockdep.h.  Note that
+we could probably remove it completely but that could potentially
+result in compile failures should any end users not include list.h
+directly and also be unlucky enough to not get list.h via some other
+header file.
+
+Reported-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Petr Mladek <pmladek@suse.com>
+Link: https://lkml.kernel.org/r/20200716063649.GA23065@gondor.apana.org.au
+---
+ include/linux/lockdep.h       | 1 +
+ include/linux/lockdep_types.h | 2 --
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index fd04b9e..7aafba0 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -22,6 +22,7 @@ extern int lock_stat;
+ #ifdef CONFIG_LOCKDEP
+ 
+ #include <linux/linkage.h>
++#include <linux/list.h>
+ #include <linux/debug_locks.h>
+ #include <linux/stacktrace.h>
+ 
+diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
+index 7b93506..bb35b44 100644
+--- a/include/linux/lockdep_types.h
++++ b/include/linux/lockdep_types.h
+@@ -32,8 +32,6 @@ enum lockdep_wait_type {
+ 
+ #ifdef CONFIG_LOCKDEP
+ 
+-#include <linux/list.h>
+-
+ /*
+  * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
+  * the total number of states... :-(
