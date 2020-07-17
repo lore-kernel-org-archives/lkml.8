@@ -2,162 +2,70 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A88FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD379C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B12A2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A633E20684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 04:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594961346;
-	bh=L8lqW9YWkE3hJz0DUPCXPBOUMOfpaEoI1neX+lDtyvg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VdkaECkUlsVGdkhmjP9DIlrZSieZnze8eSLKnN56NVG2HQuI/ov4YR+wSmN3GSZEP
-	 W0m3WYeSI7sQsDMYoSZXioHqlIHQHO8Ob0U3DVsp0E+osMCjXFXEtCn2HjIQzWbQh/
-	 xz6rEMEDhrDRVFxbNDnwITXsaqdk4OXxX0EJIrAo=
+	s=default; t=1594961406;
+	bh=CEV5+HvUM+LJKJaEOLF10YSjYvEU7QkhIiBxygFcz/8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=JM1jrU+sgBMRj+CGdj6p4e/L/FhCO8T92FbKIMmgxRoz3CkCC7WpAT2H31PDZdpdB
+	 9toPY77Rt3YnCO2Dc9HftxzOHyaEhcJavOyomXWKrxAJIMyG4hBLBvuJfk54PhEoGq
+	 KghXw+kPB65pb5GjbZieJYbssKNSO9X0YaGp7tVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgGQEtF (ORCPT
+        id S1726550AbgGQEuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44030 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 00:50:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbgGQEtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:49:04 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56D7D20737
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 04:49:03 +0000 (UTC)
+        id S1725811AbgGQEuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 00:50:03 -0400
+Subject: Re: [git pull] drm fixes for 5.8-rc6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594961343;
-        bh=L8lqW9YWkE3hJz0DUPCXPBOUMOfpaEoI1neX+lDtyvg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=z+rxNg5B7H9LBiuCEGSsYkwL9ZF4xQttstyNOv5daewr6uRVvV0RTLNULbosy1E9N
-         Vhu5hMpGIe1oZVg3fh4HYZG85X2rKvhv0B8b0BzkagdSZSIQEkWUvdZylWNngfYD+x
-         bcy8bAPyvAY6E0fcQPXj1THHopL4WDv956NUyA3Y=
-Received: by mail-wr1-f48.google.com with SMTP id q5so9624820wru.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 21:49:03 -0700 (PDT)
-X-Gm-Message-State: AOAM5335TnnZK8j8HTp8z3zRXUfczxgPJkkQ6RdejsfnWvQppV1HlRHP
-        n9Ia2wjaiCVBTgGSJCe0iJdonnZb3rSimt4uQzPIwg==
-X-Google-Smtp-Source: ABdhPJzQESTGfxYiW9og3fovzkL8ddBdcbKVxaRNke/i3V8sGRfmoTqbfEkdzzQ6x54hKLx40ei42WzpRDA0hhz0RHM=
-X-Received: by 2002:adf:f707:: with SMTP id r7mr8291178wrp.70.1594961341827;
- Thu, 16 Jul 2020 21:49:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200716193141.4068476-1-krisman@collabora.com>
- <20200716193141.4068476-2-krisman@collabora.com> <CALCETrWdCN5KsRUkrb8VoYGRBhy71P-MAHGWhuJ5y4Z3vByyvg@mail.gmail.com>
- <87wo32j394.fsf@collabora.com>
-In-Reply-To: <87wo32j394.fsf@collabora.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 16 Jul 2020 21:48:50 -0700
-X-Gmail-Original-Message-ID: <CALCETrUOe=a35rb-o44vLOSHmQ45EuommwoL2quowzw3h+J2gg@mail.gmail.com>
-Message-ID: <CALCETrUOe=a35rb-o44vLOSHmQ45EuommwoL2quowzw3h+J2gg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] kernel: Implement selective syscall userspace redirection
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com,
-        Matthew Wilcox <willy@infradead.org>,
-        Paul Gofman <gofmanp@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1594961403;
+        bh=CEV5+HvUM+LJKJaEOLF10YSjYvEU7QkhIiBxygFcz/8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=a5sNoLbBcOuJ7SOQPLPzaPrHJarkgWYV2FbpO7JfcUreRVCJ0e0nppYHuyzG5jdh2
+         XVM9WTywhcrZghEFEHz/p++4FcI+f6YKq24v6dR9lSfVs861lmd7MOKU5oFGHO86Hs
+         pDaQ+bdIXR1hzO+pqnG2/G/KCxX5mL85hP/nEL8w=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAPM=9txCq=97pFiCoOGLz7-Ght-spbVFKURx_b0kVw9sO1+=zw@mail.gmail.com>
+References: <CAPM=9txCq=97pFiCoOGLz7-Ght-spbVFKURx_b0kVw9sO1+=zw@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPM=9txCq=97pFiCoOGLz7-Ght-spbVFKURx_b0kVw9sO1+=zw@mail.gmail.com>
+X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
+ tags/drm-fixes-2020-07-17-1
+X-PR-Tracked-Commit-Id: adbe8a3cae94a63e9f416795c750237a9b789124
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8882572675c1bb1cc544f4e229a11661f1fc52e4
+Message-Id: <159496140350.7072.5113413721616431155.pr-tracker-bot@kernel.org>
+Date:   Fri, 17 Jul 2020 04:50:03 +0000
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:15 PM Gabriel Krisman Bertazi
-<krisman@collabora.com> wrote:
->
-> Andy Lutomirski <luto@kernel.org> writes:
->
-> > On Thu, Jul 16, 2020 at 12:31 PM Gabriel Krisman Bertazi
-> > <krisman@collabora.com> wrote:
-> >>
-> >
-> > This is quite nice.  I have a few comments, though:
-> >
-> > You mentioned rt_sigreturn().  Should this automatically exempt the
-> > kernel-provided signal restorer on architectures (e.g. x86_32) that
-> > provide one?
->
-> That seems reasonable.  Not sure how easy it is to do it, though.
+The pull request you sent on Fri, 17 Jul 2020 13:42:02 +1000:
 
-For better or for worse, it's currently straightforward because the code is:
+> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-07-17-1
 
-__kernel_sigreturn:
-.LSTART_sigreturn:
-        popl %eax               /* XXX does this mean it needs unwind info? */
-        movl $__NR_sigreturn, %eax
-        SYSCALL_ENTER_KERNEL
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8882572675c1bb1cc544f4e229a11661f1fc52e4
 
-and SYSCALL_ENTER_KERNEL is hardwired as int $0x80.  (The latter is
-probably my fault, for better or for worse.)  So this would change to:
+Thank you!
 
-__vdso32_sigreturn_syscall:
-  SYSCALL_ENTER_KERNEL
-
-and vdso2c would wire up __vdso32_sigreturn_syscall.  Then there would
-be something like:
-
-bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs);
-
-and that would be that.  Does anyone have an opinion as to whether
-this is a good idea?  Modern glibc shouldn't be using this mechanism,
-I think, but I won't swear to it.
-
->
-> > The amount of syscall entry wiring that arches need to do is IMO
-> > already a bit out of hand.  Should we instead rename TIF_SECCOMP to
-> > TIF_SYSCALL_INTERCEPTION and have one generic callback that handles
-> > seccomp and this new thing?
->
-> Considering the previous suggestion from Kees to hide it inside the
-> tracehook and Thomas rework of this path, I'm not sure what is the best
-> solution here, but some rework of these flags is due.  Thomas suggested
-> expanding these flags to 64 bits and having some arch specific and
-> arch-agnostic flags.  With the storage expansion and arch-agnostic flags,
-> would this still be desirable?
-
-I think it would be desirable to consolidate this to avoid having
-multiple arches need to separately wire up all of these mechanisms.
-I'm not sure that the initial upstream implementation needs this, but
-it might be nice to support this out of the box on all arches with
-seccomp support.
-
->
-> >> +int do_syscall_user_dispatch(struct pt_regs *regs)
-> >> +{
-> >> +       struct syscall_user_dispatch *sd = &current->syscall_dispatch;
-> >> +       unsigned long ip = instruction_pointer(regs);
-> >> +       char state;
-> >> +
-> >> +       if (likely(ip >= sd->dispatcher_start && ip <= sd->dispatcher_end))
-> >> +               return 0;
-> >> +
-> >> +       if (likely(sd->selector)) {
-> >> +               if (unlikely(__get_user(state, sd->selector)))
-> >> +                       do_exit(SIGSEGV);
-> >> +
-> >> +               if (likely(state == 0))
-> >> +                       return 0;
-> >> +
-> >> +               if (state != 1)
-> >> +                       do_exit(SIGSEGV);
-> >
-> > This seems a bit extreme and hard to debug if it ever happens.
->
-> Makes sense, but I don't see a better way to return the error here.
-> Maybe a SIGSYS with a different si_errno?  Alternatively, we could
-> revert to the previous behavior of allowing syscalls on state != 0, that
-> existed in v1.  What do you think?
->
-
-I don't have a strong opinion.  SIGSYS with different si_errno is
-probably reasonable.
-
---Andy
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
