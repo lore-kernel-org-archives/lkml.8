@@ -2,125 +2,103 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90445C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F8EF20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D16020737
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 17:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qkRGYkOM"
+	dkim=pass (2048-bit key) header.d=stwm.de header.i=@stwm.de header.b="R95BtOTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgGQR21 (ORCPT
+        id S1727060AbgGQR3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:28:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgGQR20 (ORCPT
+        Fri, 17 Jul 2020 13:29:47 -0400
+Received: from mailin.studentenwerk.mhn.de ([141.84.225.229]:60586 "EHLO
+        email.studentenwerk.mhn.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726104AbgGQR3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:28:26 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38571C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:28:26 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id ga4so11665367ejb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 10:28:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7JTqB5slGWNqmPcHQg0gX2jPDhSmZshqLrbRwDwrvQQ=;
-        b=qkRGYkOMW6VaoakdKRVaH5aUrXdmDg5t9er9/Vce66oxkl7UQqyWYOlRwXYeCpY3wW
-         oGZLkqSMQcsYzJrQM1bl4jbPOH2ds+18vciyXIQPsIh7FHOEiWMHb+FbQPOAzmUtYx0d
-         jAFb5ZBiJf1OgEZsVfnTqp9/tGZUXdX3DMpkRciQc7dzdFZjMmS+H+DJQfvlr/CrsaXE
-         bH5rENTcwdmpjUlk5dB0JCsW5u+aaktYFW19sQYPYsWpe/3Pe/7RQhyb4jz0/LEW2lX3
-         sL4OLuZO05Zi99C6TpMJZ+BigM//cBFejkcKoMvjeBR4jPKuIlKROtzMLgdkDvKya0hC
-         pOsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7JTqB5slGWNqmPcHQg0gX2jPDhSmZshqLrbRwDwrvQQ=;
-        b=MV6HI8bil1N6Rz2Q1VTmEPrdWHfwsDfYnw05Dalhpuw2uT9fw2RNb5zXSRMtLjfX/g
-         3Qm67pfJVb/alf/n10EYEnmvd4c60fQR41tejdo4ZSYgXBlcL91NUFVMIh4drK55tgR0
-         dQwP1TdURYkmoEGbOm0+qYJyO/JzVjg81oVznX5w+tfjHA+hXY2nlqHHefhKoUupTprv
-         IGcRgFMDWcqmgDWft517E3O+nVBrDiwnUN2Fq7rXCaeu9tWw1NH50nfcymkvdNYpiT3J
-         7Zjqr/aNgIs75RHgle+t591N6bG6D5IBX6z98KkXYFQ3TvJh4LmNKuv6J8O23NoNW+cS
-         5k4A==
-X-Gm-Message-State: AOAM530xXhqDXVEKP+UEPBrF6mE6h5VD+SkQWtJ92ZQljqTb8MH067uY
-        6x6QBGL5zopaU0qMooYJxzICijmLi1D0Lz4z3DdC8A==
-X-Google-Smtp-Source: ABdhPJzlaBMxTWwrZe4YERy10lN7ECFDWF6Vu5QVaYVW+Htu2uWuMYN38XkknSqycX+o/PgPMS9zy6pkp2BhDOPkYdc=
-X-Received: by 2002:a17:906:eb93:: with SMTP id mh19mr9298900ejb.552.1595006904583;
- Fri, 17 Jul 2020 10:28:24 -0700 (PDT)
+        Fri, 17 Jul 2020 13:29:46 -0400
+Received: from mailhub.studentenwerk.mhn.de (mailhub.studentenwerk.mhn.de [127.0.0.1])
+        by email.studentenwerk.mhn.de (Postfix) with ESMTPS id 4B7dRD4J2QzRhSV;
+        Fri, 17 Jul 2020 19:29:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de; s=stwm-20170627;
+        t=1595006984;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uJr2b4jU2VVP6dxKKXRY+LDT5Rw2EvC3vE/csmHSnZ8=;
+        b=R95BtOTYv8mnKQi5bmRsB5MtTR8/gziVmk+z4Jpc8MCRBWX3/F9fcCZinXOHJe65mHT+zQ
+        ytABafxXTOvYWGYGQ3G+B6P/k7/8xIY7hv5qfI5yfxVYU9z4/So+S4PcZK0TQ+o5Vyw4u/
+        mbsbsNeDmcqTWNfv3zko4jujFTnGAEAMojNoef0PH+P0I2ZTOye3QUvt9EKJEUurkiQCtk
+        vSJLvdSvIdn3hVwW/ZOnoM7Uuza1kb6L+oQoh24BCxSnSNboIoZ1dk4ngTgyWXBHRdF+pO
+        CurVM8Z9I7P1NQ4hBXyD0tVt9GColGEqgJzUeG/Lokrv+qh/fplu6iYIicFGxA==
+From:   Pierre Sauter <pierre.sauter@stwm.de>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        matthew.ruffell@canonical.com,
+        linux-stable <stable@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()" breaks NFS Kerberos on upstream stable 5.4.y
+Date:   Fri, 17 Jul 2020 19:29:44 +0200
+Message-ID: <4546230.GXAFRqVoOG@keks.as.studentenwerk.mhn.de>
+Organization: Studentenwerk
+In-Reply-To: <0885F62B-F9D2-4248-9313-70DAA1A1DE71@oracle.com>
+References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com> <5619613.lOV4Wx5bFT@keks.as.studentenwerk.mhn.de> <0885F62B-F9D2-4248-9313-70DAA1A1DE71@oracle.com>
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-5-samitolvanen@google.com> <20200624212737.GV4817@hirez.programming.kicks-ass.net>
- <20200624214530.GA120457@google.com> <20200625074530.GW4817@hirez.programming.kicks-ass.net>
- <20200625161503.GB173089@google.com> <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
- <20200625224042.GA169781@google.com> <20200626112931.GF4817@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200626112931.GF4817@hirez.programming.kicks-ass.net>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 17 Jul 2020 10:28:13 -0700
-Message-ID: <CABCJKucSM7gqWmUtiBPbr208wB0pc25afJXc6yBQzJDZf4LSWA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Matt Helsley <mhelsley@vmware.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 4:29 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Jun 25, 2020 at 03:40:42PM -0700, Sami Tolvanen wrote:
->
-> > > Not boot tested, but it generates the required sections and they look
-> > > more or less as expected, ymmv.
->
-> > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > > index a291823f3f26..189575c12434 100644
-> > > --- a/arch/x86/Kconfig
-> > > +++ b/arch/x86/Kconfig
-> > > @@ -174,7 +174,6 @@ config X86
-> > >     select HAVE_EXIT_THREAD
-> > >     select HAVE_FAST_GUP
-> > >     select HAVE_FENTRY                      if X86_64 || DYNAMIC_FTRACE
-> > > -   select HAVE_FTRACE_MCOUNT_RECORD
-> > >     select HAVE_FUNCTION_GRAPH_TRACER
-> > >     select HAVE_FUNCTION_TRACER
-> > >     select HAVE_GCC_PLUGINS
-> >
-> > This breaks DYNAMIC_FTRACE according to kernel/trace/ftrace.c:
-> >
-> >   #ifndef CONFIG_FTRACE_MCOUNT_RECORD
-> >   # error Dynamic ftrace depends on MCOUNT_RECORD
-> >   #endif
-> >
-> > And the build errors after that seem to confirm this. It looks like we might
-> > need another flag to skip recordmcount.
->
-> Hurm, Steve, how you want to do that?
+Hi Chuck,
 
-Steven, did you have any thoughts about this? Moving recordmcount to
-an objtool pass that knows about call sites feels like a much cleaner
-solution than annotating kernel code to avoid unwanted relocations.
+Am Donnerstag, 16. Juli 2020, 21:25:40 CEST schrieb Chuck Lever:
+> So this makes me think there's a possibility you are not using upstream
+> stable kernels. I can't help if I don't know what source code and commit
+> stream you are using. It also makes me question the bisect result.
 
-Sami
+Yes you are right, I was referring to Ubuntu kernels 5.4.0-XX. From the
+discussion in the Ubuntu bugtracker I got the impression that Ubuntu kernels
+5.4.0-XX and upstream 5.4.XX are closely related, obviously they are not. T=
+he
+bisection was done by the original bug reporter and also refers to the Ubun=
+tu
+kernel.
+
+In the meantime I tested v5.4.51 upstream, which shows no problems. Sorry f=
+or
+the bother.
+
+> > My krb5 etype is aes256-cts-hmac-sha1-96.
+>=20
+> Thanks! And what is your NFS server and filesystem? It's possible that the
+> client is not estimating the size of the reply correctly. Variables inclu=
+de
+> the size of file handles, MIC verifiers, and wrap tokens.
+
+The server is Debian with v4.19.130 upstream, filesystem ext4.
+
+> You might try:
+>=20
+> e8d70b321ecc ("SUNRPC: Fix another issue with MIC buffer space")
+
+That one is actually in Ubuntus 5.4.0-40, from looking at the code.
+
+Best Regards
+=2D-=20
+Pierre Sauter
+Studentenwerk M=FCnchen
+=2D------
+
+
+
