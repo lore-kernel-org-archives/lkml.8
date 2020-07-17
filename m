@@ -2,152 +2,326 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E99EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D23E20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4QPo/np"
+	by mail.kernel.org (Postfix) with ESMTP id 4EA762074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 02:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgGQCMj (ORCPT
+        id S1726665AbgGQCRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 22:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgGQCMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 22:12:38 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86909C061755;
-        Thu, 16 Jul 2020 19:12:38 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id w34so6596688qte.1;
-        Thu, 16 Jul 2020 19:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2to7PZ35DmNzJzcrbrv1v/mw1Q6DUkd154VCyr9iHYM=;
-        b=Z4QPo/np7cP3M1LqYu5EjVw0oGllxD1s2t1KkJVuTCJmjURgb5cyz7yy1NvEhOURrJ
-         9naR0/w2uRgXGnOo8iLGmMc/Sn3ZT1x8giUYE46Q1ibL0fGebeX5c6KQWHGkm7XhTI1A
-         AW0z9ZDFWii9yToprB4nv8HkRM/e9kDdoYI6A3AZwW+tyJ6kcXJsO76DqSBJR/7BeuC+
-         pjtJjqo1OEohXcmCogMcs8aICiLz37X0KVtUfhCt7FUmYxMc1SpNgSqL0y3KpMLFHK1a
-         m5+pLo8gXsKOjPPXxy2euZt5pIVLPtDICiWUCJFta9OYf/ZZqyoszNZlnG52lKUpOFRk
-         DbEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2to7PZ35DmNzJzcrbrv1v/mw1Q6DUkd154VCyr9iHYM=;
-        b=nkNsyzg4VL4IzBBXcaWNpAE3T+BqjyVTfLQXfe7615bbwFqzJebGOV0oosmSN1ggsn
-         VQQNgu3/c9pUB4DIFZ4RPUjeOs4Vsl6cxqK3dF6fMUb0bbgyKDNSfyyNfVYzyXzVOhYO
-         TDzBfJztEtKIMqZ2sV2vdt6S3nxO71icwsML0IJJUanoeuN0lIqUdayPgYRkQgLStza+
-         Z/4Ge7Qil/qLrufjXStgavlyruwnL51r+KSlsF+blZfQh+nLucucimNXjcerEroYrYL6
-         8MTuMnt8NmhOT02QMh1qp8QlPxn6P53m/9BwFTUG0xwSQFb5K6LelaN6D9Jgk+zM33JF
-         IEfw==
-X-Gm-Message-State: AOAM532xTSz9t+Y43BqfeXFnJ+5PBVD9WYa0tFEILl/JyG+JjfREG1EP
-        ldkiS12wLGaeZhoO13lSAOg=
-X-Google-Smtp-Source: ABdhPJyL/IPCMF02mbDdmX6L6UIUmDWsfuLL612T41/Tr+CQ6HA3NtNqjsYig6nYlfN8cEZhnO1rvA==
-X-Received: by 2002:aed:2f46:: with SMTP id l64mr8237129qtd.1.1594951957365;
-        Thu, 16 Jul 2020 19:12:37 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id u20sm10432214qtj.39.2020.07.16.19.12.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 19:12:36 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 19:12:35 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Neftin, Sasha" <sasha.neftin@intel.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        intel-wired-lan@lists.osuosl.org, Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
-        "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>
-Subject: Re: [Intel-wired-lan] [PATCH] igc: Do not use link uninitialized in
- igc_check_for_copper_link
-Message-ID: <20200717021235.GA4098394@ubuntu-n2-xlarge-x86>
-References: <20200716044934.152364-1-natechancellor@gmail.com>
- <cdfec63a-e51f-e1a6-aa60-6ca949338306@intel.com>
+        Thu, 16 Jul 2020 22:17:16 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8310 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726138AbgGQCRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 22:17:16 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5777E2397207D260FF2C;
+        Fri, 17 Jul 2020 10:17:12 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.91) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Jul 2020
+ 10:17:02 +0800
+Subject: Re: [PATCH -next] scsi: hisi_sas: Convert to DEFINE_SHOW_ATTRIBUTE
+To:     luojiaxing <luojiaxing@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Garry <john.garry@huawei.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200716084714.7872-1-miaoqinglang@huawei.com>
+ <c3bc1f66-2eae-1f9b-58bf-7eacb25739e1@huawei.com>
+From:   miaoqinglang <miaoqinglang@huawei.com>
+Message-ID: <a02d6696-f23c-08d0-d29c-0cb136c63835@huawei.com>
+Date:   Fri, 17 Jul 2020 10:17:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cdfec63a-e51f-e1a6-aa60-6ca949338306@intel.com>
+In-Reply-To: <c3bc1f66-2eae-1f9b-58bf-7eacb25739e1@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.91]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 07:29:03PM +0300, Neftin, Sasha wrote:
-> On 7/16/2020 07:49, Nathan Chancellor wrote:
-> > Clang warns:
-> > 
-> Hello Nathan,
-> Thanks for tracking our code.Please, look at https://patchwork.ozlabs.org/project/intel-wired-lan/patch/20200709073416.14126-1-sasha.neftin@intel.com/
-> - I hope this patch already address this Clang warns - please, let me know.
 
-I have not explicitly tested it but it seems obvious that it will. Let's
-go with that.
 
-Cheers,
-Nathan
+在 2020/7/16 20:39, luojiaxing 写道:
+> Hi, Qinglang
+> 
+> On 2020/7/16 16:47, Qinglang Miao wrote:
+>> From: Yongqiang Liu <liuyongqiang13@huawei.com>
+>>
+>> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+>>
+>> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
+>> ---
+>>   drivers/scsi/hisi_sas/hisi_sas_main.c | 137 ++------------------------
+>>   1 file changed, 10 insertions(+), 127 deletions(-)
+>>
+>> diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c 
+>> b/drivers/scsi/hisi_sas/hisi_sas_main.c
+>> index 852d2620e..f50b0c78f 100644
+>> --- a/drivers/scsi/hisi_sas/hisi_sas_main.c
+>> +++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+>> @@ -2870,19 +2870,7 @@ static int hisi_sas_debugfs_global_show(struct 
+>> seq_file *s, void *p)
+>>       return 0;
+>>   }
+>> -static int hisi_sas_debugfs_global_open(struct inode *inode, struct 
+>> file *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_global_show,
+>> -               inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_global_fops = {
+>> -    .open = hisi_sas_debugfs_global_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+> 
+> 
+> I saw that your code is different from code in kernel 5.8-rc4, and it 
+> should be as follow:
+> 
+> static const struct file_operations hisi_sas_debugfs_global_fops = {
+>      .open = hisi_sas_debugfs_global_open,
+>      .read = seq_read,
+>      .llseek = seq_lseek,
+>      .release = single_release,
+>      .owner = THIS_MODULE,
+> };
+> 
+Sorry I didn't mention it in commit log, but this patch is based on 
+linux-next where commit <4d4901c6d7> has switched over direct  seq_read 
+method calls to seq_read_iter. I can send a new patch based on  v5.8-rc 
+if you don't mind.
+> 
+> Plus, if we use this macro directly when we write this code, it really 
+> makes the code simpler. But if we accept the cleanup now,
+> 
+> we might need to consider evading compilation failures when we merge 
+> these code back to some older kernel (e.g kernel 4.14 for centOS 7.6).
+> 
+> I think this marco is introduced into kernel 4.16-rc2.
+> 
+Yes, you're right, the macro and commit <4d4901c6d7> need to be  applied 
+before this clean up patch. But I don't think this patch as well as 
+commit<4d4901c6d7> need to be merged back to older kernel.
+> 
+> So I don't see much additional benefit to us from this simplification. 
+> But this marco is quite helpful and I think I will use it somewhere else.
+> 
+> Thanks
+> 
+> Jiaxing
+> 
+Glad to know your opnions.
 
-> > drivers/net/ethernet/intel/igc/igc_mac.c:374:6: warning: variable 'link'
-> > is used uninitialized whenever 'if' condition is true
-> > [-Wsometimes-uninitialized]
-> >          if (!mac->get_link_status) {
-> >              ^~~~~~~~~~~~~~~~~~~~~
-> > drivers/net/ethernet/intel/igc/igc_mac.c:424:33: note: uninitialized use
-> > occurs here
-> >          ret_val = igc_set_ltr_i225(hw, link);
-> >                                         ^~~~
-> > drivers/net/ethernet/intel/igc/igc_mac.c:374:2: note: remove the 'if' if
-> > its condition is always false
-> >          if (!mac->get_link_status) {
-> >          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/net/ethernet/intel/igc/igc_mac.c:367:11: note: initialize the
-> > variable 'link' to silence this warning
-> >          bool link;
-> >                   ^
-> >                    = 0
-> > 1 warning generated.
-> > 
-> > It is not wrong, link is only uninitialized after this through
-> > igc_phy_has_link. Presumably, if we skip the majority of this function
-> > when get_link_status is false, we should skip calling igc_set_ltr_i225
-> > as well. Just directly return 0 in this case, rather than bothering with
-> > adding another label or initializing link in the if statement.
-> > 
-> > Fixes: 707abf069548 ("igc: Add initial LTR support")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1095
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >   drivers/net/ethernet/intel/igc/igc_mac.c | 6 ++----
-> >   1 file changed, 2 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/intel/igc/igc_mac.c b/drivers/net/ethernet/intel/igc/igc_mac.c
-> > index b47e7b0a6398..26e3c56a4a8b 100644
-> > --- a/drivers/net/ethernet/intel/igc/igc_mac.c
-> > +++ b/drivers/net/ethernet/intel/igc/igc_mac.c
-> > @@ -371,10 +371,8 @@ s32 igc_check_for_copper_link(struct igc_hw *hw)
-> >   	 * get_link_status flag is set upon receiving a Link Status
-> >   	 * Change or Rx Sequence Error interrupt.
-> >   	 */
-> > -	if (!mac->get_link_status) {
-> > -		ret_val = 0;
-> > -		goto out;
-> > -	}
-> > +	if (!mac->get_link_status)
-> > +		return 0;
-> >   	/* First we want to see if the MII Status Register reports
-> >   	 * link.  If so, then we want to get the current speed/duplex
-> > 
-> > base-commit: ca0e494af5edb59002665bf12871e94b4163a257
-> > 
-> Thanks,
-> Sasha
+Thanks.
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_global);
+>>   static int hisi_sas_debugfs_axi_show(struct seq_file *s, void *p)
+>>   {
+>> @@ -2897,19 +2885,7 @@ static int hisi_sas_debugfs_axi_show(struct 
+>> seq_file *s, void *p)
+>>       return 0;
+>>   }
+>> -static int hisi_sas_debugfs_axi_open(struct inode *inode, struct file 
+>> *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_axi_show,
+>> -               inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_axi_fops = {
+>> -    .open = hisi_sas_debugfs_axi_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_axi);
+>>   static int hisi_sas_debugfs_ras_show(struct seq_file *s, void *p)
+>>   {
+>> @@ -2924,19 +2900,7 @@ static int hisi_sas_debugfs_ras_show(struct 
+>> seq_file *s, void *p)
+>>       return 0;
+>>   }
+>> -static int hisi_sas_debugfs_ras_open(struct inode *inode, struct file 
+>> *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_ras_show,
+>> -               inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_ras_fops = {
+>> -    .open = hisi_sas_debugfs_ras_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_ras);
+>>   static int hisi_sas_debugfs_port_show(struct seq_file *s, void *p)
+>>   {
+>> @@ -2951,18 +2915,7 @@ static int hisi_sas_debugfs_port_show(struct 
+>> seq_file *s, void *p)
+>>       return 0;
+>>   }
+>> -static int hisi_sas_debugfs_port_open(struct inode *inode, struct 
+>> file *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_port_show, 
+>> inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_port_fops = {
+>> -    .open = hisi_sas_debugfs_port_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_port);
+>>   static void hisi_sas_show_row_64(struct seq_file *s, int index,
+>>                    int sz, __le64 *ptr)
+>> @@ -3019,18 +2972,7 @@ static int hisi_sas_debugfs_cq_show(struct 
+>> seq_file *s, void *p)
+>>       return 0;
+>>   }
+>> -static int hisi_sas_debugfs_cq_open(struct inode *inode, struct file 
+>> *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_cq_show, 
+>> inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_cq_fops = {
+>> -    .open = hisi_sas_debugfs_cq_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_cq);
+>>   static void hisi_sas_dq_show_slot(struct seq_file *s, int slot, void 
+>> *dq_ptr)
+>>   {
+>> @@ -3052,18 +2994,7 @@ static int hisi_sas_debugfs_dq_show(struct 
+>> seq_file *s, void *p)
+>>       return 0;
+>>   }
+>> -static int hisi_sas_debugfs_dq_open(struct inode *inode, struct file 
+>> *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_dq_show, 
+>> inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_dq_fops = {
+>> -    .open = hisi_sas_debugfs_dq_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_dq);
+>>   static int hisi_sas_debugfs_iost_show(struct seq_file *s, void *p)
+>>   {
+>> @@ -3080,18 +3011,7 @@ static int hisi_sas_debugfs_iost_show(struct 
+>> seq_file *s, void *p)
+>>       return 0;
+>>   }
+>> -static int hisi_sas_debugfs_iost_open(struct inode *inode, struct 
+>> file *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_iost_show, 
+>> inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_iost_fops = {
+>> -    .open = hisi_sas_debugfs_iost_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_iost);
+>>   static int hisi_sas_debugfs_iost_cache_show(struct seq_file *s, void 
+>> *p)
+>>   {
+>> @@ -3117,20 +3037,7 @@ static int 
+>> hisi_sas_debugfs_iost_cache_show(struct seq_file *s, void *p)
+>>       return 0;
+>>   }
+>> -static int hisi_sas_debugfs_iost_cache_open(struct inode *inode,
+>> -                        struct file *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_iost_cache_show,
+>> -               inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_iost_cache_fops = {
+>> -    .open = hisi_sas_debugfs_iost_cache_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_iost_cache);
+>>   static int hisi_sas_debugfs_itct_show(struct seq_file *s, void *p)
+>>   {
+>> @@ -3147,18 +3054,7 @@ static int hisi_sas_debugfs_itct_show(struct 
+>> seq_file *s, void *p)
+>>       return 0;
+>>   }
+>> -static int hisi_sas_debugfs_itct_open(struct inode *inode, struct 
+>> file *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_itct_show, 
+>> inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_itct_fops = {
+>> -    .open = hisi_sas_debugfs_itct_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_itct);
+>>   static int hisi_sas_debugfs_itct_cache_show(struct seq_file *s, void 
+>> *p)
+>>   {
+>> @@ -3184,20 +3080,7 @@ static int 
+>> hisi_sas_debugfs_itct_cache_show(struct seq_file *s, void *p)
+>>       return 0;
+>>   }
+>> -static int hisi_sas_debugfs_itct_cache_open(struct inode *inode,
+>> -                        struct file *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_itct_cache_show,
+>> -               inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_itct_cache_fops = {
+>> -    .open = hisi_sas_debugfs_itct_cache_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_itct_cache);
+>>   static void hisi_sas_debugfs_create_files(struct hisi_hba *hisi_hba)
+>>   {
+> 
+> .
+
