@@ -6,52 +6,40 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A65C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916E6C433F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5243320691
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73AB120578
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgGQIgS (ORCPT
+        id S1727927AbgGQIgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:36:18 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56612 "EHLO
+        Fri, 17 Jul 2020 04:36:25 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:56656 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgGQIgQ (ORCPT
+        with ESMTP id S1727853AbgGQIgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:36:16 -0400
+        Fri, 17 Jul 2020 04:36:25 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2E8971C0BEB; Fri, 17 Jul 2020 10:36:11 +0200 (CEST)
-Date:   Fri, 17 Jul 2020 10:36:10 +0200
+        id 2F4FE1C0BDF; Fri, 17 Jul 2020 10:36:21 +0200 (CEST)
+Date:   Fri, 17 Jul 2020 10:36:20 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K??nig <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 12/13] arm64: dts: freescale: sl28: enable LED support
-Message-ID: <20200717083610.GC1027@bug>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-13-michael@walle.cc>
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v2 03/11] arm64: dts: renesas: hihope-common: Separate
+ out Rev.2.0 specific into hihope-common-rev2.dtsi file
+Message-ID: <20200717083620.GD1027@bug>
+References: <1593004330-5039-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1593004330-5039-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200706175353.16404-13-michael@walle.cc>
+In-Reply-To: <1593004330-5039-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,30 +48,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi!
 
-> Now that we have support for GPIO lines of the SMARC connector, enable
-> LED support on the KBox A-230-LS. There are two LEDs without fixed
-> functions, one is yellow and one is green. Unfortunately, it is just one
-> multi-color LED, thus while it is possible to enable both at the same
-> time it is hard to tell the difference between "yellow only" and "yellow
-> and green".
+Can we have node names consistent with other systems?
 
-> +		user_yellow {
-> +			label = "s1914:yellow:user";
-> +			gpios = <&sl28cpld_gpio0 0 0>;
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		bt_active_led {
+> +			label = "blue:bt";
+> +			gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "hci0-power";
+> +			default-state = "off";
 > +		};
 > +
-> +		user_green {
-> +			label = "s1914:green:user";
-> +			gpios = <&sl28cpld_gpio1 3 0>;
+> +		wlan_active_led {
+> +			label = "yellow:wlan";
+> +			gpios = <&gpio7  1 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "phy0tx";
+> +			default-state = "off";
 > +		};
+> +	};
 
-This is not suitable label for such LEDs... there's zero chance userland will
-know what to do with these.
-
-Do they have some kind of "usual" function?
-
-Best regards,
-									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
