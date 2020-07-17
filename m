@@ -2,140 +2,146 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B01DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDDCC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCBB220768
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594989479;
-	bh=8rxV1xvju/8foQ9apsiU1bhWwlzXKlFsLK3ubUrwX4w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=o0iCMlo2/rsBEsA7Wr8SBrw0Raaj1GykT+eVuaHUpWs93sQoWJKKA8WuOHRfLqswy
-	 uyRvdQQvhQmxgbTohoEK9PqrmiVAESi+Nfk+HvJjZx9w6m3r1haZTNny+Q+I2Nf540
-	 Rd6zBkOgWqutHiAupfg7mxDDDm7SJtUBdiob4CAc=
+	by mail.kernel.org (Postfix) with ESMTP id 28FAD206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 12:40:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A0MQw1Qv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgGQMh6 (ORCPT
+        id S1726442AbgGQMk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgGQMh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:37:57 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 17 Jul 2020 08:40:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42825 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726090AbgGQMk1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 08:40:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594989625;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Rttk+XtaMzhFwuc22uPWendfKEFz7sRFjPiSryu4BTU=;
+        b=A0MQw1QvLzirihvGhclDrQddQf1TsZqHJsMPvTtwu4jXEYPE1wsDF2ZhaqsVshIzqu47jK
+        7G2Kq4kBycuhIaPPLo6IaQSytzlc8X0YU8Sc5NuoCGW7MOlpb6K3e+sD3US4Pd4yF+LKBG
+        eyJXjI3k0/hwKvNXbv+0J1mupfwprMU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-218-V3DTRKEAOC6GeQp4geiNLw-1; Fri, 17 Jul 2020 08:40:21 -0400
+X-MC-Unique: V3DTRKEAOC6GeQp4geiNLw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E170720717;
-        Fri, 17 Jul 2020 12:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594989477;
-        bh=8rxV1xvju/8foQ9apsiU1bhWwlzXKlFsLK3ubUrwX4w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Nzwaz+ZzCa8l2Dkyd2NU0KQYW5ni1IOTcr/Izc7flRw7ziaLO+Vtmtov2YFQqaLuo
-         KHPmAJGeB65truNsIbP5K1OINeNHvhzJvarAiYpUGtAiLu1gG5paeXWAq/T1MUB99w
-         AXNM4Q6Jzdew2UZA/CV5LHR3Z7JQ4YgfXw5/rEZc=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jwPch-00Cclh-9K; Fri, 17 Jul 2020 13:37:55 +0100
-Date:   Fri, 17 Jul 2020 13:37:54 +0100
-Message-ID: <87eepaxqot.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>, <kbuild-all@lists.01.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <marex@denx.de>
-Subject: Re: [PATCH] irqchip/stm32-exti: map direct event to irq parent
-In-Reply-To: <69fb49b4-6a41-edf4-fea3-3f10934817ca@st.com>
-References: <20200706081106.25125-1-alexandre.torgue@st.com>
-        <202007081232.bA2RH80f%lkp@intel.com>
-        <87imevemwg.wl-maz@kernel.org>
-        <69fb49b4-6a41-edf4-fea3-3f10934817ca@st.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, lkp@intel.com, tglx@linutronix.de, jason@lakedaemon.net, kbuild-all@lists.01.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, marex@denx.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F52D19200C0;
+        Fri, 17 Jul 2020 12:40:20 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.194.199])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3114B19C58;
+        Fri, 17 Jul 2020 12:40:19 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 17 Jul 2020 14:40:20 +0200 (CEST)
+Date:   Fri, 17 Jul 2020 14:40:18 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Jiri Slaby <jirislaby@kernel.org>
+Cc:     christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+Message-ID: <20200717124017.GB6067@redhat.com>
+References: <6b253b55-586d-0bc4-9f58-c45c631abc60@kernel.org>
+ <5a8c4c38-7aeb-981a-8d3b-a7a5c8ca5564@kernel.org>
+ <20200717122651.GA6067@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717122651.GA6067@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 10:37:47 +0100,
-Alexandre Torgue <alexandre.torgue@st.com> wrote:
-> 
-> Hi Marc,
-> 
-> On 7/10/20 11:31 AM, Marc Zyngier wrote:
-> > Alexandre,
-> > 
-> > On Wed, 08 Jul 2020 05:57:24 +0100,
-> > kernel test robot <lkp@intel.com> wrote:
-> >> 
-> >> [1  <text/plain; us-ascii (7bit)>]
-> >> Hi Alexandre,
-> >> 
-> >> I love your patch! Perhaps something to improve:
-> >> 
-> >> [auto build test WARNING on stm32/stm32-next]
-> >> [also build test WARNING on soc/for-next v5.8-rc4 next-20200707]
-> >> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> >> And when submitting patch, we suggest to use  as documented in
-> >> https://git-scm.com/docs/git-format-patch]
-> >> 
-> >> url:    https://github.com/0day-ci/linux/commits/Alexandre-Torgue/irqchip-stm32-exti-map-direct-event-to-irq-parent/20200706-161327
-> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
-> >> config: arm-randconfig-s031-20200707 (attached as .config)
-> >> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
-> >> reproduce:
-> >>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >>          chmod +x ~/bin/make.cross
-> >>          # apt-get install sparse
-> >>          # sparse version: v0.6.2-31-gabbfd661-dirty
-> >>          # save the attached .config to linux build tree
-> >>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=arm
-> >> 
-> >> If you fix the issue, kindly add following tag as appropriate
-> >> Reported-by: kernel test robot <lkp@intel.com>
-> >> 
-> >> All warnings (new ones prefixed by >>):
-> >> 
-> >>     In file included from include/linux/build_bug.h:5,
-> >>                      from include/linux/bits.h:23,
-> >>                      from include/linux/bitops.h:5,
-> >>                      from drivers/irqchip/irq-stm32-exti.c:8:
-> >>     drivers/irqchip/irq-stm32-exti.c: In function 'stm32_exti_h_domain_alloc':
-> >>     drivers/irqchip/irq-stm32-exti.c:683:23: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
-> >>       683 |  if (desc->irq_parent >= 0) {
-> >>           |                       ^~
-> >>     include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
-> >>        58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-> >>           |                                                    ^~~~
-> >>>> drivers/irqchip/irq-stm32-exti.c:683:2: note: in expansion of macro 'if'
-> >>       683 |  if (desc->irq_parent >= 0) {
-> > 
-> > Do you plan to address this? Looks like an actual bug to me.
-> 
-> I'll fix it in v2, I was just waiting for other comments before
-> sending a v2. Do you prefer I send a v2 with this fix, and you'll do
-> your review on this v2 ?
+On 07/17, Oleg Nesterov wrote:
+>
+> On 07/17, Jiri Slaby wrote:
+> >
+> > On 17. 07. 20, 12:45, Jiri Slaby wrote:
+> > > Hi,
+> > >
+> > > the strace testsuite triggers this on 5.8-rc4 and -rc5 both on x86_64
+> > > and i586:
+> >
+> > make check needs -jsomething, running is sequentially (-j1) doesn't
+> > trigger it. After the error, I cannot run anything. Like ps to find out
+> > what test caused the crash...
+>
+> Strange... I'll try to reproduce but I can't do this till Monday.
+>
+> Meanwhile, could you try the patch below? It needs CONFIG_DEBUG_ATOMIC_SLEEP.
 
-I'm certainly not going to review something that has such a glaring
-issue.
+please see the updated patch below, lets check ptrace_unfreeze() too.
 
-	M.
+Oleg.
 
--- 
-Without deviation from the norm, progress is not possible.
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 43d6179508d6..71c76bc7dec6 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -180,6 +180,7 @@ static bool ptrace_freeze_traced(struct task_struct *task)
+ 
+ 	spin_lock_irq(&task->sighand->siglock);
+ 	if (task_is_traced(task) && !__fatal_signal_pending(task)) {
++		task->task_state_change = _THIS_IP_;
+ 		task->state = __TASK_TRACED;
+ 		ret = true;
+ 	}
+@@ -203,8 +204,10 @@ static void ptrace_unfreeze_traced(struct task_struct *task)
+ 	if (task->state == __TASK_TRACED) {
+ 		if (__fatal_signal_pending(task))
+ 			wake_up_state(task, __TASK_TRACED);
+-		else
++		else {
++			task->task_state_change = _THIS_IP_;
+ 			task->state = TASK_TRACED;
++		}
+ 	}
+ 	spin_unlock_irq(&task->sighand->siglock);
+ }
+diff --git a/kernel/signal.c b/kernel/signal.c
+index ee22ec78fd6d..ba4c4c9ed9b5 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1914,7 +1914,9 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+ 	BUG_ON(sig == -1);
+ 
+  	/* do_notify_parent_cldstop should have been called instead.  */
+- 	BUG_ON(task_is_stopped_or_traced(tsk));
++	WARN(task_is_stopped_or_traced(tsk),
++		"exist with state=%ld set at %pS",
++		tsk->state, (void*)tsk->task_state_change);
+ 
+ 	BUG_ON(!tsk->ptrace &&
+ 	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
+@@ -2214,6 +2216,7 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
+ 		preempt_enable_no_resched();
+ 		freezable_schedule();
+ 		cgroup_leave_frozen(true);
++		WARN_ON(current->state);
+ 	} else {
+ 		/*
+ 		 * By the time we got the lock, our tracer went away.
+@@ -2393,6 +2396,7 @@ static bool do_signal_stop(int signr)
+ 		/* Now we don't run again until woken by SIGCONT or SIGKILL */
+ 		cgroup_enter_frozen();
+ 		freezable_schedule();
++		WARN_ON(current->state);
+ 		return true;
+ 	} else {
+ 		/*
+
