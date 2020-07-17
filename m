@@ -2,226 +2,78 @@ Return-Path: <SRS0=w5GM=A4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 507B0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF69C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C30920734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594997562;
-	bh=2od25Q1VdQOA69Zrte8drsEjwehuDeHLS7JyAaKmumc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w8HDYAgJLcardNCKinCbPwDds5lrWynfX/E6JQinRpOCCGio4NAHWIzE1RKAwGJmC
-	 A+rfZcL8AGKb4ffd5ML4kuczPpEbVYqH7QVaILgD36vqzq01wXonukhGUjvwLxgU0A
-	 ZqXaZD389yEp6XdYObsoQKQkb601bnj1CRvsz9zU=
+	by mail.kernel.org (Postfix) with ESMTP id 7811A2076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 14:53:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="TCDYB7zu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgGQOwk (ORCPT
+        id S1726512AbgGQOxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbgGQOwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:52:40 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 168422070E;
-        Fri, 17 Jul 2020 14:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594997559;
-        bh=2od25Q1VdQOA69Zrte8drsEjwehuDeHLS7JyAaKmumc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=05gnnOnNZ9i2ge2z54hbQaoELtKOXzoXJQEuxtV6+SKBLuwqYqqEQPa696RHzOnZu
-         ukCWvZweXtnko3BtRp2OctMgF1D0dmgvYS7ho5donabouQVFgvHpmatrQrreLnMrOk
-         BJYRGPxA7Z708A16+8gh+MEgoaoaPeOmT4S6r1aw=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EA3D540482; Fri, 17 Jul 2020 11:52:36 -0300 (-03)
-Date:   Fri, 17 Jul 2020 11:52:36 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Fri, 17 Jul 2020 10:53:19 -0400
+Received: from smtp103.iad3b.emailsrvr.com ([146.20.161.103]:35254 "EHLO
+        smtp103.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726229AbgGQOxS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:53:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1594997597;
+        bh=YNazr2X64J47Zs71qG1bJD53gaInVX9LWD2T4M7xB1M=;
+        h=From:To:Subject:Date:From;
+        b=TCDYB7zuZleX793vyEb6uMbZLk/A4zlzw43A1DVaNVhLJAlZoQOtLXq1RoQeAk0vr
+         CfYKSDC6UpXblSfDkj0KNcHx0/HBb7AE0ZHZNxMpEEdH8uQdUL9YVfkZK2IBsAGn/K
+         gH7G/u1HpkLZ4xQC8mIwdXOL588oqpSg/rqhhv9s=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp5.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 32D27401E7;
+        Fri, 17 Jul 2020 10:53:17 -0400 (EDT)
+From:   Ian Abbott <abbotti@mev.co.uk>
+To:     devel@driverdev.osuosl.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 02/17] perf ftrace: add option '-F/--funcs' to list
- available functions
-Message-ID: <20200717145236.GA712240@kernel.org>
-References: <20200717143628.47721-1-changbin.du@gmail.com>
- <20200717143628.47721-3-changbin.du@gmail.com>
+Subject: [PATCH 0/4] staging: comedi: INSN_CONFIG_DIGITAL_TRIG fixes
+Date:   Fri, 17 Jul 2020 15:52:53 +0100
+Message-Id: <20200717145257.112660-1-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717143628.47721-3-changbin.du@gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+X-Classification-ID: 3cd28aa4-5d40-4a0c-a681-8cbccbead0a1-1-1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jul 17, 2020 at 10:36:13PM +0800, Changbin Du escreveu:
-> This adds an option '-F/--funcs' to list all available functions to trace,
-> which is read from tracing file 'available_filter_functions'.
+These patches correct problems with INSN_CONFIG_DIGITAL_TRIG comedi
+configuration instructions in various comedi drivers, in particular the
+use of unconstrained bit shift amounts from userspace leading to
+undefined behaviour (although hopefully not the kernel crashy sort).
 
-I'll apply and add a comment stating that this is the same workflow as
-for 'perf probe', i.e. stress that the value in 'perf ftrace' as opposed
-to use 'trace-cmd' or plain using the debugfs/tracefs interface is to
-have a consistent set of options and procedures accross perf and ftrace,
-one that allows users to go from:
+The patches have been marked for inclusion in the stable tree.  Note
+that patch 4 changes a similar area of code to Dan Carpenter's commit
+ef75e14a6c93 ("staging: comedi: verify array index is correct before
+using it"), so I have indicated it as a prerequisite.
 
-perf trace --pid 1234
+*Note to Greg KH*: I have based these patches on your "staging-linus"
+branch due to the prerequisite ef75e14a6c93 mentioned above being
+present in neither "staging-next" nor "staging-testing" at the time of
+posting.
 
-to:
+1) staging: comedi: ni_6527: fix INSN_CONFIG_DIGITAL_TRIG support
+2) staging: comedi: addi_apci_1032: check INSN_CONFIG_DIGITAL_TRIG shift
+3) staging: comedi: addi_apci_1564: check INSN_CONFIG_DIGITAL_TRIG shift
+4) staging: comedi: addi_apci_1500: check INSN_CONFIG_DIGITAL_TRIG shift
 
-perf ftrace --pid 1234
+ drivers/staging/comedi/drivers/addi_apci_1032.c | 20 ++++++++++++++------
+ drivers/staging/comedi/drivers/addi_apci_1500.c | 24 +++++++++++++++++++-----
+ drivers/staging/comedi/drivers/addi_apci_1564.c | 20 ++++++++++++++------
+ drivers/staging/comedi/drivers/ni_6527.c        |  2 +-
+ 4 files changed, 48 insertions(+), 18 deletions(-)
 
-to:
-
-perf stat --pid 1234
-
-to:
-
-perf top --pid 1234
-
-to:
-
-perf record --pid 1234
-
-to:
-
-perf script --pid 1234
-
-etc
-
-and get different views, for live or postmortem analysis.
-
-- Arnaldo
- 
-> $ sudo ./perf ftrace -F | head
-> trace_initcall_finish_cb
-> initcall_blacklisted
-> do_one_initcall
-> do_one_initcall
-> trace_initcall_start_cb
-> run_init_process
-> try_to_run_init_process
-> match_dev_by_label
-> match_dev_by_uuid
-> rootfs_init_fs_context
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> 
-> ---
-> v3: fix return value issue.
-> v2: option name '-l/--list-functions' -> '-F/--funcs'
-> ---
->  tools/perf/Documentation/perf-ftrace.txt |  4 +++
->  tools/perf/builtin-ftrace.c              | 46 ++++++++++++++++++++++++
->  2 files changed, 50 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> index 952e46669168..d79560dea19f 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -30,6 +30,10 @@ OPTIONS
->  --verbose=::
->          Verbosity level.
->  
-> +-F::
-> +--funcs::
-> +        List all available functions to trace.
-> +
->  -p::
->  --pid=::
->  	Trace on existing process id (comma separated list).
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 5f53da87040d..3c0e60fdfe0f 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -32,6 +32,7 @@ struct perf_ftrace {
->  	struct evlist		*evlist;
->  	struct target		target;
->  	const char		*tracer;
-> +	bool			list_avail_functions;
->  	struct list_head	filters;
->  	struct list_head	notrace;
->  	struct list_head	graph_funcs;
-> @@ -127,6 +128,46 @@ static int append_tracing_file(const char *name, const char *val)
->  	return __write_tracing_file(name, val, true);
->  }
->  
-> +static int read_tracing_file_to_stdout(const char *name)
-> +{
-> +	char buf[4096];
-> +	char *file;
-> +	int fd;
-> +	int ret = -1;
-> +
-> +	file = get_tracing_file(name);
-> +	if (!file) {
-> +		pr_debug("cannot get tracing file: %s\n", name);
-> +		return -1;
-> +	}
-> +
-> +	fd = open(file, O_RDONLY);
-> +	if (fd < 0) {
-> +		pr_debug("cannot open tracing file: %s: %s\n",
-> +			 name, str_error_r(errno, buf, sizeof(buf)));
-> +		goto out;
-> +	}
-> +
-> +	/* read contents to stdout */
-> +	while (true) {
-> +		int n = read(fd, buf, sizeof(buf));
-> +		if (n == 0)
-> +			break;
-> +		else if (n < 0)
-> +			goto out_close;
-> +
-> +		if (fwrite(buf, n, 1, stdout) != 1)
-> +			goto out_close;
-> +	}
-> +	ret = 0;
-> +
-> +out_close:
-> +	close(fd);
-> +out:
-> +	put_tracing_file(file);
-> +	return ret;
-> +}
-> +
->  static int reset_tracing_cpu(void);
->  static void reset_tracing_filters(void);
->  
-> @@ -301,6 +342,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  	signal(SIGCHLD, sig_handler);
->  	signal(SIGPIPE, sig_handler);
->  
-> +	if (ftrace->list_avail_functions)
-> +		return read_tracing_file_to_stdout("available_filter_functions");
-> +
->  	if (reset_tracing_files(ftrace) < 0) {
->  		pr_err("failed to reset ftrace\n");
->  		goto out;
-> @@ -470,6 +514,8 @@ int cmd_ftrace(int argc, const char **argv)
->  	const struct option ftrace_options[] = {
->  	OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
->  		   "tracer to use: function or function_graph (This option is deprecated)"),
-> +	OPT_BOOLEAN('F', "funcs", &ftrace.list_avail_functions,
-> +		    "Show available functions to filter"),
->  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
->  		   "trace on existing process id"),
->  	OPT_INCR('v', "verbose", &verbose,
-> -- 
-> 2.25.1
-> 
-
--- 
-
-- Arnaldo
