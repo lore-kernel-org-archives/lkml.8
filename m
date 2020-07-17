@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94D9C433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AFEC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 760CA2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DCE20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jul 2020 11:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nyyWe7Al"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tp/BH55Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgGQLOq (ORCPT
+        id S1726836AbgGQLOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:14:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42198 "EHLO
+        Fri, 17 Jul 2020 07:14:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgGQLOk (ORCPT
+        with ESMTP id S1726446AbgGQLOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:14:40 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE45DC08C5DC;
-        Fri, 17 Jul 2020 04:14:39 -0700 (PDT)
+        Fri, 17 Jul 2020 07:14:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39D6C061755;
+        Fri, 17 Jul 2020 04:14:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=FUm1Ir3tUJJdB8qdXiVgRoT6pMrHP/Au+B6bLpG9yBA=; b=nyyWe7AlZtYdYSw49Sonwdxz2r
-        KoQtTILVvXgJriLvasWk1Jh78FRgv6TwvxgW9OfTZnHOfpDdp0XRGhHkROr9M0rS8EE1ZWERqEZCb
-        B4aLODSSNLN9BuP9VeeCsJRd1lCzDfSXB1o9kJN9xYbsbwUPyglN+NaEeeHEdZoR+6xv56usNBrAg
-        E4M1ALbe2VwlUOwGw0TtgdLJDkOPtGYvMUB7f/nq3raSnihsty8lX4VKZGHH7eb7vSNthUAW4d0m3
-        ClYXcabVNTdqUwUgL5MxtmMU6aZva1lf7kQ0POZDK3bIv1gmVVtN3QMYW68wBEeJlpSJOR+/z2oJT
-        H3PPqaIA==;
+        bh=nUUfhERBps7kvabI82RVV43naTK71jo6AAVltGUbW/s=; b=tp/BH55Z/QaPl4II/4kpXNcQdv
+        XDl6UXJmW/vuilqUj195qptQ8vI7Xjlkz+6fvZRtbA3aih5li6rf3HtArbX12fyCj3oHtV5B5n4x9
+        pcc8tGMTIGSttnHzrRfWW0GvzPzKr+OYzu71OrB+gClwoAs8q2snBYoiufgmW5vPb/O0n7oS/VgLp
+        1NhQGSuISW5KYKcEhffZD+fJUGtlP066i0gESEXqxUnAkm4l8RznaZm0krzFJi3a2czVK2nIuw55x
+        OboZwga/+8b43D0SyvxLOGCPFwZjTAjdlw36TvLSKt/cw886FL9tjZ2hH7WNnF1cGZeJlxfAKWDZY
+        wt8k6hUA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwOJZ-0001Zl-Hw; Fri, 17 Jul 2020 11:14:05 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwOJZ-00051O-Og; Fri, 17 Jul 2020 11:14:06 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1525F305E21;
-        Fri, 17 Jul 2020 13:14:02 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 86B813074D4;
+        Fri, 17 Jul 2020 13:14:04 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id A9E9E203D408E; Fri, 17 Jul 2020 13:14:02 +0200 (CEST)
-Message-ID: <20200717111349.417688532@infradead.org>
+        id D4590203D409A; Fri, 17 Jul 2020 13:14:02 +0200 (CEST)
+Message-ID: <20200717111350.001250805@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 17 Jul 2020 13:10:06 +0200
+Date:   Fri, 17 Jul 2020 13:10:16 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Will Deacon <will@kernel.org>,
         "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
@@ -68,7 +68,7 @@ Cc:     linux-arch@vger.kernel.org, linux-sh@vger.kernel.org,
         Paul Walmsley <paul.walmsley@sifive.com>,
         John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
         Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2 01/11] asm-generic/tlb: Fix MMU_GATHER_TABLE_FREE
+Subject: [PATCH v2 11/11] m68k/tlb: Fix __p*_free_tlb()
 References: <20200717111005.024867618@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -77,75 +77,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first MMU_GATHER_TABLE_FREE user showed a logic error in the
-tlb_needs_table_invalidate() definition. Make sure any TABLE_FREE has
-it defined.
+Just like regular pages, page directories need to observe the
+following order:
 
-Fixes: 0d6e24d430ef ("asm-generic/tlb: provide MMU_GATHER_TABLE_FREE")
+ 1) unhook
+ 2) TLB invalidate
+ 3) free
+
+to ensure it is safe against concurrent accesses.
+
+The Motorola MMU has funny PMD stuff, so use a custom table freeer.
+
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/asm-generic/tlb.h |   35 +++++++++++++++++++----------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ arch/m68k/Kconfig                        |    1 +
+ arch/m68k/include/asm/mcf_pgalloc.h      |   14 ++++++--------
+ arch/m68k/include/asm/motorola_pgalloc.h |   10 ++++++----
+ arch/m68k/mm/motorola.c                  |   17 +++++++++++++++++
+ 4 files changed, 30 insertions(+), 12 deletions(-)
 
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -172,6 +172,18 @@
-  *  various ptep_get_and_clear() functions.
-  */
+--- a/arch/m68k/Kconfig
++++ b/arch/m68k/Kconfig
+@@ -32,6 +32,7 @@ config M68K
+ 	select OLD_SIGSUSPEND3
+ 	select OLD_SIGACTION
+ 	select MMU_GATHER_NO_RANGE if MMU
++	select MMU_GATHER_TABLE_FREE if MMU_MOTOROLA
  
-+#ifndef CONFIG_MMU_GATHER_RCU_TABLE_FREE
-+
-+/*
-+ * Only RCU table free can override this; otherwise the TLBI is needed to
-+ * provide existence guarantees for software walkers.
-+ */
-+#ifdef tlb_needs_table_invalidate
-+#error tlb_needs_table_invalidate() requires MMU_GATHER_RCU_TABLE_FREE
-+#endif
-+
-+#endif /* CONFIG_MMU_GATHER_RCU_TABLE_FREE */
-+
- #ifdef CONFIG_MMU_GATHER_TABLE_FREE
+ config CPU_BIG_ENDIAN
+ 	def_bool y
+--- a/arch/m68k/include/asm/mcf_pgalloc.h
++++ b/arch/m68k/include/asm/mcf_pgalloc.h
+@@ -34,14 +34,12 @@ extern inline pmd_t *pmd_alloc_kernel(pg
  
- struct mmu_table_batch {
-@@ -187,17 +199,6 @@ struct mmu_table_batch {
+ #define pmd_pgtable(pmd) pfn_to_virt(pmd_val(pmd) >> PAGE_SHIFT)
  
- extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
- 
--#else /* !CONFIG_MMU_GATHER_HAVE_TABLE_FREE */
+-static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pgtable,
+-				  unsigned long address)
+-{
+-	struct page *page = virt_to_page(pgtable);
 -
--/*
-- * Without MMU_GATHER_TABLE_FREE the architecture is assumed to have page based
-- * page directories and we can use the normal page batching to free them.
-- */
--#define tlb_remove_table(tlb, page) tlb_remove_page((tlb), (page))
--
--#endif /* CONFIG_MMU_GATHER_TABLE_FREE */
--
--#ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
- /*
-  * This allows an architecture that does not use the linux page-tables for
-  * hardware to skip the TLBI when freeing page tables.
-@@ -206,13 +207,15 @@ extern void tlb_remove_table(struct mmu_
- #define tlb_needs_table_invalidate() (true)
- #endif
+-	pgtable_pte_page_dtor(page);
+-	__free_page(page);
+-}
++#define __pte_free_tlb(tlb, pgtable, addr)		\
++do {							\
++	struct page *page = virt_to_page(pgtable);	\
++	pgtable_pte_page_dtor(page);			\
++	tlb_remove_page((tlb), page);			\
++} while (0)
  
--#else
-+#else /* !CONFIG_MMU_GATHER_HAVE_TABLE_FREE */
+ static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+ {
+--- a/arch/m68k/include/asm/motorola_pgalloc.h
++++ b/arch/m68k/include/asm/motorola_pgalloc.h
+@@ -14,6 +14,8 @@ enum m68k_table_types {
+ 	TABLE_PTE = 1,
+ };
  
--#ifdef tlb_needs_table_invalidate
--#error tlb_needs_table_invalidate() requires MMU_GATHER_RCU_TABLE_FREE
--#endif
-+/*
-+ * Without MMU_GATHER_TABLE_FREE the architecture is assumed to have page based
-+ * page directories and we can use the normal page batching to free them.
-+ */
-+#define tlb_remove_table(tlb, page) tlb_remove_page((tlb), (page))
++extern void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int type);
++extern void __tlb_remove_table(void *table);
+ extern void init_pointer_table(void *table, int type);
+ extern void *get_pointer_table(int type);
+ extern int free_pointer_table(void *table, int type);
+@@ -47,7 +49,7 @@ static inline void pte_free(struct mm_st
+ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pgtable,
+ 				  unsigned long address)
+ {
+-	free_pointer_table(pgtable, TABLE_PTE);
++	pgtable_free_tlb(tlb, pgtable, TABLE_PTE);
+ }
  
--#endif /* CONFIG_MMU_GATHER_RCU_TABLE_FREE */
-+#endif /* CONFIG_MMU_GATHER_TABLE_FREE */
+ 
+@@ -61,10 +63,10 @@ static inline int pmd_free(struct mm_str
+ 	return free_pointer_table(pmd, TABLE_PMD);
+ }
+ 
+-static inline int __pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd,
+-				 unsigned long address)
++static inline void __pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd,
++				  unsigned long address)
+ {
+-	return free_pointer_table(pmd, TABLE_PMD);
++	pgtable_free_tlb(tlb, pmd, TABLE_PMD);
+ }
  
  
- #ifndef CONFIG_MMU_GATHER_NO_GATHER
+--- a/arch/m68k/mm/motorola.c
++++ b/arch/m68k/mm/motorola.c
+@@ -215,6 +215,23 @@ int free_pointer_table(void *table, int
+ 	return 0;
+ }
+ 
++void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int type)
++{
++	unsigned long ptr = (unsigned long)table;
++	BUG_ON(type > 1);
++	BUG_ON(ptr  & 1);
++	ptr |= type;
++	tlb_remove_table(tlb, (void *)ptr);
++}
++
++void __tlb_remove_table(void *table)
++{
++	int type = (unsigned long)table & 1;
++	table = (void *)((unsigned long)table & ~1);
++
++	free_pointer_table(table, type);
++}
++
+ /* size of memory already mapped in head.S */
+ extern __initdata unsigned long m68k_init_mapped_size;
+ 
 
 
