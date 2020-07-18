@@ -2,138 +2,143 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762E5C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9526C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6B72076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D692076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ne7cdRDd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rupq1Mcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgGRUEG (ORCPT
+        id S1728271AbgGRUEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 16:04:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33610 "EHLO
+        Sat, 18 Jul 2020 16:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgGRUEF (ORCPT
+        with ESMTP id S1726798AbgGRUEp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 16:04:05 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD49C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 13:04:04 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g10so9264766wmc.1
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 13:04:04 -0700 (PDT)
+        Sat, 18 Jul 2020 16:04:45 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A51EEC0619D2;
+        Sat, 18 Jul 2020 13:04:45 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r12so14194388wrj.13;
+        Sat, 18 Jul 2020 13:04:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=n3wmalXMf5RKdLRLN2Edh3BeBHa7ZnwIzM8k1DA3s8I=;
-        b=ne7cdRDd09qgXdnFVUb/lT9/BuqLGPItDxnLgkv7cX0/mvBii4cFfQbmUZLzduYq/6
-         7s1F2WyE0DfQdHL9LRQ3w+SXHJZHudNgSrNlzDzP6rNJVSjGmKzqkI0Okiuh1Y+MpAwj
-         NOo2VKijv3w4EBiZs6GIergq/76K2S6aj4xlGGQB9eggoNxVZO+Y2caT2sDVd+7wGMiF
-         jcqsOSGE9J4OynScE+4OO7H5XAMbqzrYH9KsFHsTBBu2zV4zWyV+kB3KnmwwKwGStaWL
-         GGLgHQ3Cd92TSwOhiXTxdAPm3D9TlxnMdwux/3IzID6gVlKnkJ/GZIq5+HvTUbjxpHGm
-         cUaQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=6iOmVRoMVbU4qIjJZMlbcTETVfsHT39IuIHdkQtrsZM=;
+        b=rupq1Mcd02Am9QpslDBvv9BvBLAWI3XaIjp8CXahnwPEU4u2vDw1NdsSCFqRtnC/q2
+         kEhbrawoocZE14sCY1S722viEoU365QLzhvMMQj8Mr/4Z7dr9XTmte16uuPPOfXioT2D
+         ouUVKomLIghO4nc+7Q9yJ22x96rIgkfcKmdZQxREZc1gy+S00KNb9LqOAGGB5Qbb/mK9
+         0PCVoBquQwzDCGx/6DAxrxLua/XSwJ4I8saRwsPA+ejk7fWD2QDRSIwpKTz55fjzroaN
+         qR/1QxvPcBurfddRlqhxJgpkSCMyrDQkPNmLuWIdSt9MZIr8D4WqyzHjA62etaQHTHEN
+         jfAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=n3wmalXMf5RKdLRLN2Edh3BeBHa7ZnwIzM8k1DA3s8I=;
-        b=eipG8mMt1FTiaLiEPwTotqitMtgHKCLAGcwMz3e+2RLyHiTGU3uKvmzQU8wBNkVZ8G
-         kCR0Hk5eIg1Ne1+GYAwPpCwNgTfjfUtR3l77Pj8EwUDWBM+y2BD7LbG+ujg9jeDaowrt
-         uS8xT4s4rLFPqt4vMYvuK4D3fIVlBY9Ht2cMudcn0ZoyDOdwp1LZbfnsaItw/Pwnsofs
-         xDEBiscZ9chjXmorKi23hzK59e2S6jCM87TYCDl5kdzX5XAVDg8cKI7vgkuOQrPAAK4S
-         4dDGLWktci8co9oDip1a09gqJakT0IMdMQDtdYvbXjHAKoRLoL/d/dYrHe7c+jKPVASv
-         K59w==
-X-Gm-Message-State: AOAM531flf9mMqLw8NTtv6QHu8OZJ73uWkBGjv5uCvxgbFkPngtZfdFs
-        ovY7k7z0SzfAnRdO47nMZQ==
-X-Google-Smtp-Source: ABdhPJwdcwx43GlqCWVegzP07sgYkGwTpgWjf7cAPhoMDjs2HHlSuCYvAXYz9Ut+qF6WP+Sx7f3KlQ==
-X-Received: by 2002:a1c:6a13:: with SMTP id f19mr15709913wmc.106.1595102643612;
-        Sat, 18 Jul 2020 13:04:03 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:810b:f40:e00:922b:34ff:fe38:6455])
-        by smtp.googlemail.com with ESMTPSA id l15sm21073826wro.33.2020.07.18.13.04.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 13:04:03 -0700 (PDT)
-From:   Alex Bee <knaerzche@gmail.com>
-To:     Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner=20?= <heiko@sntech.de>
-Cc:     Alex Bee <knaerzche@gmail.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] drm: rockchip: use overlay windows as such
-Date:   Sat, 18 Jul 2020 22:03:23 +0200
-Message-Id: <20200718200323.3559-6-knaerzche@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200718200323.3559-1-knaerzche@gmail.com>
-References: <20200718200323.3559-1-knaerzche@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=6iOmVRoMVbU4qIjJZMlbcTETVfsHT39IuIHdkQtrsZM=;
+        b=m6XT3z7GprwJb23VLe+o2gGLy2UsksWlmRGo6YSi6QmgjBcrDR1zOZge9KmpztWvXk
+         aWAgZQkePttHsfgZP1SFW2SmQcPtcyOTqBKr+GfVeRMkXloa2rN4eVDL9UAe0/sI//nz
+         U/pGvs/2Ltcgtwfcaz4sHE96JoYbH7hQtFUAklBv4vBud1N6hNaO8e+HI6kolFLqt7bp
+         4XFSk8vmCYtnuoOQbrpwJMdmI7fQKhdB0N/9SnJ4igVQl9CBxTZVE8PnjYj48IT2HEdQ
+         jOG4DCeh/GWOgiha8oLrKSGIRggxOKm/qmWGtvqxYLOA7E2x+ruEyb+chA5uAX3DVw+Q
+         0pEg==
+X-Gm-Message-State: AOAM531CDXbDIQXZzyzol1XlPQP8akwpqPTh/s7wNrs5D2CM5cRyQEmX
+        ojGSeQCyt5TnDx4SHSqZfxIZGsj50rQYDA==
+X-Google-Smtp-Source: ABdhPJyIPgcYzZrlIDWvCmxIBQ+wXZNKSfXDuNrUb2LIjS1hZaqXB6MrhLcULcS0HRe7RH5epxWP5w==
+X-Received: by 2002:adf:e6ce:: with SMTP id y14mr15559924wrm.401.1595102683993;
+        Sat, 18 Jul 2020 13:04:43 -0700 (PDT)
+Received: from net.saheed (540018D7.dsl.pool.telekom.hu. [84.0.24.215])
+        by smtp.gmail.com with ESMTPSA id o7sm8289049wrv.50.2020.07.18.13.04.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jul 2020 13:04:43 -0700 (PDT)
+Subject: Re: [RFC PATCH 14/35] i2c/busses: Change PCIBIOS_SUCCESSFUL to 0
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     helgaas@kernel.org, bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20200713122247.10985-1-refactormyself@gmail.com>
+ <20200713122247.10985-15-refactormyself@gmail.com>
+ <20200717165820.6b5318ad@endymion>
+From:   Saheed Bolarinwa <refactormyself@gmail.com>
+Message-ID: <44eecce1-7c2d-32c8-865e-e80aa6c3a891@gmail.com>
+Date:   Sat, 18 Jul 2020 21:05:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200717165820.6b5318ad@endymion>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As stated in the comment for rk3288_vop_win_data windows
-that are supposed to be an overlay window are missused as HWC windows
-due to the missing implementation of that window type in VOP driver.
 
-This is also true for RK3036, RK3126, RK3188 and RK3228 VOPs which
-all have at least one dedicated HWC window (which are currently not
-definded in the driver).
-Since all of the mentioned VOPs have only one overlay window and all
-of them support alpha blending now it should be used as such, since
-this gives a much wider usage-perspective for them.
+On 7/17/20 4:58 PM, Jean Delvare wrote:
 
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
----
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Which PCI specification are you talking about here. In my "PCI Local
+> Bus Revision 2.3" specification (March 29, 2002), chapter 2 is about
+> Signal Definition and has nothing to do with the BIOS.
+http://read.pudn.com/downloads211/doc/comm/994029/pcifw_r3_0_updated.pdf
+>> Change all PCIBIOS_SUCCESSFUL to 0
+>>
+>> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+>> ---
+>>   drivers/i2c/busses/i2c-ali15x3.c |  4 ++--
+>>   drivers/i2c/busses/i2c-nforce2.c |  2 +-
+>>   drivers/i2c/busses/i2c-sis5595.c | 10 +++++-----
+>>   3 files changed, 8 insertions(+), 8 deletions(-)
+> Hmmm. That seems to be a lot of changes to solve an essentially
+> theoretical problem (if a problem at all). I am not familiar enough
+> with the PCI subsystem to claim that it is fundamentally wrong, but
+> enough to say I'm skeptical.
+>
+> PCI is a cross-architecture standard, and we can't possibly have the
+> return value of core functions such as pci_write_config_word follow
+> different conventions depending on the architecture, can we? Does
+> pci_write_config_word() currently return PCIBIOS_SUCCESSFUL on success
+> on x86 and 0 on success on other architectures? What about errors, do
+> we return positive, "PCIBIOS-specific" error codes on x86 and negative,
+> unix-like error codes on other architectures?
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-index f2f9a9af39e3..756c580f206a 100644
---- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-@@ -131,7 +131,7 @@ static const struct vop_win_data rk3036_vop_win_data[] = {
- 	{ .base = 0x00, .phy = &rk3036_win0_data,
- 	  .type = DRM_PLANE_TYPE_PRIMARY },
- 	{ .base = 0x00, .phy = &rk3036_win1_data,
--	  .type = DRM_PLANE_TYPE_CURSOR },
-+	  .type = DRM_PLANE_TYPE_OVERLAY },
- };
- 
- static const int rk3036_vop_intrs[] = {
-@@ -200,7 +200,7 @@ static const struct vop_win_data rk3126_vop_win_data[] = {
- 	{ .base = 0x00, .phy = &rk3036_win0_data,
- 	  .type = DRM_PLANE_TYPE_PRIMARY },
- 	{ .base = 0x00, .phy = &rk3126_win1_data,
--	  .type = DRM_PLANE_TYPE_CURSOR },
-+	  .type = DRM_PLANE_TYPE_OVERLAY },
- };
- 
- static const struct vop_data rk3126_vop = {
-@@ -543,7 +543,7 @@ static const struct vop_win_data rk3188_vop_win_data[] = {
- 	{ .base = 0x00, .phy = &rk3188_win0_data,
- 	  .type = DRM_PLANE_TYPE_PRIMARY },
- 	{ .base = 0x00, .phy = &rk3188_win1_data,
--	  .type = DRM_PLANE_TYPE_CURSOR },
-+	  .type = DRM_PLANE_TYPE_OVERLAY },
- };
- 
- static const int rk3188_vop_intrs[] = {
-@@ -980,7 +980,7 @@ static const struct vop_win_data rk3228_vop_win_data[] = {
- 	{ .base = 0x00, .phy = &rk3288_win01_data,
- 	  .type = DRM_PLANE_TYPE_PRIMARY },
- 	{ .base = 0x40, .phy = &rk3288_win01_data,
--	  .type = DRM_PLANE_TYPE_CURSOR },
-+	  .type = DRM_PLANE_TYPE_OVERLAY },
- };
- 
- static const struct vop_data rk3228_vop = {
--- 
-2.17.1
+Unfortunately, the cover letter did not go through. I have resent it now:
+
+https://lore.kernel.org/linux-i2c/20200718184558.110942-1-refactormyself@gmail.com/T/#u
+
+Here is a discussion thread on it:
+
+https://lore.kernel.org/linux-pci/fb40545a8de8df8914df40d7d6167752c5244ce6.camel@kernel.crashing.org/T/#t
+
+>> diff --git a/drivers/i2c/busses/i2c-ali15x3.c b/drivers/i2c/busses/i2c-ali15x3.c
+>> index 02185a1cfa77..359ee3e0864a 100644
+>> --- a/drivers/i2c/busses/i2c-ali15x3.c
+>> +++ b/drivers/i2c/busses/i2c-ali15x3.c
+>> @@ -167,11 +167,11 @@ static int ali15x3_setup(struct pci_dev *ALI15X3_dev)
+>>   	if(force_addr) {
+>>   		dev_info(&ALI15X3_dev->dev, "forcing ISA address 0x%04X\n",
+>>   			ali15x3_smba);
+>> -		if (PCIBIOS_SUCCESSFUL != pci_write_config_word(ALI15X3_dev,
+>> +		if (0 != pci_write_config_word(ALI15X3_dev,
+>>   								SMBBA,
+>>   								ali15x3_smba))
+>>   			goto error;
+> This leaves the code horribly aligned.
+
+Sorry about that, lessons learnt.
+
+Thank you for the review.
+
+- Saheed
 
