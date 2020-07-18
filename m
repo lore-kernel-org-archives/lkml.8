@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C704CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3A4C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A23A620768
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18D22070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:55:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hMR9rqTu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h9Dcau0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgGRCyr (ORCPT
+        id S1728958AbgGRCzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 22:54:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45978 "EHLO
+        Fri, 17 Jul 2020 22:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgGRCyq (ORCPT
+        with ESMTP id S1728834AbgGRCzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 22:54:46 -0400
+        Fri, 17 Jul 2020 22:55:09 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72373C0619D2;
-        Fri, 17 Jul 2020 19:54:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B13C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 19:55:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
         MIME-Version:Date:Message-ID:To:Subject:From:Sender:Reply-To:Cc:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=Q9NZ4VS0Tkgc6xAaH+4+rvYNPMxXO74kaCIC3MVBWYo=; b=hMR9rqTu03WJqzgN7B1dY0Cpk2
-        9L+twrL+DjELSLdi/xxwlWBT8c5ZLIfT661/QDEP9IPyVyGhBnQsc/J30dsBW+bpSGpzrzBvOk4mE
-        u3TQZKU7+/xL1yJH+TBPkmVA6T/2mXx17kh8hBcJHbmtoMOzfulMC4FBCGr3Iu4RGDTiixjseTkcw
-        IlYlk5Htwbjrb8qnPy8JMmTvRYdEheUEMKa+GFVSZk1hXiA60ICfG4Nffx6DI0xgocD6m9+T/ecSn
-        P28xM0uSfuLgB467TbSoUyvPIut8XMSyj/q3X6Og0CJwG7S96uMIfojYnso2we6ob8e0Z/xt2wziz
-        6GGSUshQ==;
+        bh=9XVmt3tMTBJ+DnRqStU6NErngxKBvMZ8OtN1V0XNDpI=; b=h9Dcau0Zju/aBHXacDUS36IT2M
+        o11t+ANpxTmOGZ5oQu1nyWgghysUY/ioVIRJRfFXbgctNzEtNHOKhEP29Fza/dRvWrVYZKX5xd7L9
+        SqeTv5HUMMrJZS6cnQUzn5ghRbyqkbiYTVBcTUpR5RNby61qWqCheop3ARjC2WQEQgC+AMo6u6lXA
+        r3s88QlPq/tj4kK1qB3erQOQrvhp+qEmA3+mVqfSbjOXlNJJN+fOemxnpk4mZhgYQgLmSO+o59YEg
+        N7dM+EUHUUoVZ/coKoMi+2O5H2GDHaeJ+b5ibJUE5I633wna8e8lGBppL/9+vd5jY/DR4SPKgBeHW
+        cZhNQ7cg==;
 Received: from [2601:1c0:6280:3f0::19c2]
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwczs-0006nV-ET; Sat, 18 Jul 2020 02:54:44 +0000
+        id 1jwd0C-0006oK-Us; Sat, 18 Jul 2020 02:55:05 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] linux/exportfs.h: drop duplicated word in a comment
+Subject: [PATCH] clang: linux/compiler-clang.h: drop duplicated word in a
+ comment
 To:     LKML <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Message-ID: <c61b707a-8fd8-5b1b-aab0-679122881543@infradead.org>
-Date:   Fri, 17 Jul 2020 19:54:41 -0700
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Message-ID: <6a18c301-3505-742f-4dd7-0f38d0e537b9@infradead.org>
+Date:   Fri, 17 Jul 2020 19:55:02 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
@@ -60,24 +60,23 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Drop the doubled word "a" in a comment.
+Drop the doubled word "the" in a comment.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
 ---
- include/linux/exportfs.h |    2 +-
+ include/linux/compiler-clang.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200714.orig/include/linux/exportfs.h
-+++ linux-next-20200714/include/linux/exportfs.h
-@@ -178,7 +178,7 @@ struct fid {
-  * get_name:
-  *    @get_name should find a name for the given @child in the given @parent
-  *    directory.  The name should be stored in the @name (with the
-- *    understanding that it is already pointing to a a %NAME_MAX+1 sized
-+ *    understanding that it is already pointing to a %NAME_MAX+1 sized
-  *    buffer.   get_name() should return %0 on success, a negative error code
-  *    or error.  @get_name will be called without @parent->i_mutex held.
-  *
+--- linux-next-20200714.orig/include/linux/compiler-clang.h
++++ linux-next-20200714/include/linux/compiler-clang.h
+@@ -40,7 +40,7 @@
+ #endif
+ 
+ /*
+- * Not all versions of clang implement the the type-generic versions
++ * Not all versions of clang implement the type-generic versions
+  * of the builtin overflow checkers. Fortunately, clang implements
+  * __has_builtin allowing us to avoid awkward version
+  * checks. Unfortunately, we don't know which version of gcc clang
 
