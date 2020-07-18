@@ -7,114 +7,133 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9450F2073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F582073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595088943;
-	bh=RYYoGC33ot2PTRIYQJZqtzM135KyMAhZ0Tx+A5h+stA=;
+	s=default; t=1595088796;
+	bh=e554OwEh/JVBkbBwC3gyWMTLTXY+2kQFnjc/gfeyC08=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=T3Szy4gWGxceW9MuVYNjuntoLTZzERrSx6C92gm8PLMQCAGz3CRP9XDGrKlPTjV2W
-	 kMOmAjxWlt0baBCPPC0Q/RShsHQE5wxbCe517wlZ2ckYxkDJATTL/cHyD6aF0Q/VU6
-	 QjiIbc2bf6Xe3FhBtVj+01hl2l/SPIVm2Odb+kyI=
+	b=tyyaXvmea3PZS9fzYyUjLCpAGK6YxJVIOkjYRK6orWnNicHAzYvBf+PRI6uXHzw6X
+	 s2ILsv7U3s4PHXWzWpx8Lk+ya6/xjDz5Ck9BGG2lYoxpL2OMgKpB9AOs0s2bzGkKug
+	 0/qa6Ytn8t+32HXU9WRedlI87SobkichsihHcbXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgGRQPm (ORCPT
+        id S1728290AbgGRQNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 12:15:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60582 "EHLO mail.kernel.org"
+        Sat, 18 Jul 2020 12:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbgGRQPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 12:15:42 -0400
+        id S1726411AbgGRQNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 12:13:14 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E574B2070E;
-        Sat, 18 Jul 2020 16:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C162070E;
+        Sat, 18 Jul 2020 16:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595088941;
-        bh=RYYoGC33ot2PTRIYQJZqtzM135KyMAhZ0Tx+A5h+stA=;
+        s=default; t=1595088794;
+        bh=e554OwEh/JVBkbBwC3gyWMTLTXY+2kQFnjc/gfeyC08=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JWLi2lyx4YSiRifXIlLL/T8pCbT9SIoBCxNOFhI80RH4g0Tc/1TMcho7HEY+JIjXD
-         d4cy5LVdNWrfb+SzAh8BDuGSGMWuQrf4tKTf7Ynxvdpg8HE7v4d4bon5LB1GShrJ99
-         8kJ+axZKoGc1Ga/eMDNEXlmuo7PuasBRey3baCL4=
-Date:   Sat, 18 Jul 2020 17:15:36 +0100
+        b=XqPB8NXLfKr8Q1U42KRegWlcILXr8o4DFYqvvCEX2Pq+PWZK+kwpB2yrkZcP77+tA
+         TE/2I6+GG9+zRoseQveGTNHah1tCHSwBfd2sihuGfumVafTQHMrz7VcoqIOK3QENZc
+         l0JsxtTSgTlK9EMMHtL7rkj8T4Ur1OQrgRchZ7gY=
+Date:   Sat, 18 Jul 2020 17:13:10 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 30/30] iio: adc: rockchip_saradc: Demote Demote
- seemingly unintentional kerneldoc header
-Message-ID: <20200718171536.5b5ac001@archlinux>
-In-Reply-To: <4422628.h3HLAr0T0d@diego>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+Subject: Re: [PATCH 28/30] iio: imu: st_lsm6dsx: st_lsm6dsx_shub: Demote
+ obvious misuse of kerneldoc to standard comment blocks
+Message-ID: <20200718171310.3a710610@archlinux>
+In-Reply-To: <20200717165538.3275050-29-lee.jones@linaro.org>
 References: <20200717165538.3275050-1-lee.jones@linaro.org>
-        <20200717165538.3275050-31-lee.jones@linaro.org>
-        <4422628.h3HLAr0T0d@diego>
+        <20200717165538.3275050-29-lee.jones@linaro.org>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 21:10:27 +0200
-Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+On Fri, 17 Jul 2020 17:55:36 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
 
-> Am Freitag, 17. Juli 2020, 18:55:38 CEST schrieb Lee Jones:
-> > This is the only use of kerneldoc in the source file and no
-> > descriptions are provided.
-> >=20
-> > Fixes the following W=3D1 kernel build warning(s):
-> >=20
-> >  drivers/iio/adc/rockchip_saradc.c:190: warning: Function parameter or =
-member 'reset' not described in 'rockchip_saradc_reset_controller'
-> >=20
-> > Cc: Heiko Stuebner <heiko@sntech.de>
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Cc: linux-rockchip@lists.infradead.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org> =20
->=20
-> Subject-line says "Demote Demote..."
->=20
-> Otherwise
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Fixed up and applied.
+> No attempt has been made to document any of the demoted functions here.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:174: warning: Function parameter or member 'hw' not described in 'st_lsm6dsx_shub_read_output'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:174: warning: Function parameter or member 'data' not described in 'st_lsm6dsx_shub_read_output'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:174: warning: Function parameter or member 'len' not described in 'st_lsm6dsx_shub_read_output'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:205: warning: Function parameter or member 'hw' not described in 'st_lsm6dsx_shub_write_reg'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:205: warning: Function parameter or member 'addr' not described in 'st_lsm6dsx_shub_write_reg'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:205: warning: Function parameter or member 'data' not described in 'st_lsm6dsx_shub_write_reg'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:205: warning: Function parameter or member 'len' not described in 'st_lsm6dsx_shub_write_reg'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:285: warning: Function parameter or member 'sensor' not described in 'st_lsm6dsx_shub_read'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:285: warning: Function parameter or member 'addr' not described in 'st_lsm6dsx_shub_read'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:285: warning: Function parameter or member 'data' not described in 'st_lsm6dsx_shub_read'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:285: warning: Function parameter or member 'len' not described in 'st_lsm6dsx_shub_read'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:335: warning: Function parameter or member 'sensor' not described in 'st_lsm6dsx_shub_write'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:335: warning: Function parameter or member 'addr' not described in 'st_lsm6dsx_shub_write'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:335: warning: Function parameter or member 'data' not described in 'st_lsm6dsx_shub_write'
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c:335: warning: Function parameter or member 'len' not described in 'st_lsm6dsx_shub_write'
+> 
+> Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Applied.
 
-Thanks for whole set Lee.
+Thanks,
 
 Jonathan
 
->=20
->=20
-> > ---
-> >  drivers/iio/adc/rockchip_saradc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockch=
-ip_saradc.c
-> > index 582ba047c4a67..cf4ec59c1dab0 100644
-> > --- a/drivers/iio/adc/rockchip_saradc.c
-> > +++ b/drivers/iio/adc/rockchip_saradc.c
-> > @@ -183,7 +183,7 @@ static const struct of_device_id rockchip_saradc_ma=
-tch[] =3D {
-> >  };
-> >  MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
-> > =20
-> > -/**
-> > +/*
-> >   * Reset SARADC Controller.
-> >   */
-> >  static void rockchip_saradc_reset_controller(struct reset_control *res=
-et)
-> >  =20
->=20
->=20
->=20
->=20
+> ---
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
+> index c1f83fe0d8dad..9a14dde4795da 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
+> @@ -163,7 +163,7 @@ static void st_lsm6dsx_shub_wait_complete(struct st_lsm6dsx_hw *hw)
+>  	msleep((2000000U / odr) + 1);
+>  }
+>  
+> -/**
+> +/*
+>   * st_lsm6dsx_shub_read_output - read i2c controller register
+>   *
+>   * Read st_lsm6dsx i2c controller register
+> @@ -195,7 +195,7 @@ st_lsm6dsx_shub_read_output(struct st_lsm6dsx_hw *hw, u8 *data,
+>  	return err;
+>  }
+>  
+> -/**
+> +/*
+>   * st_lsm6dsx_shub_write_reg - write i2c controller register
+>   *
+>   * Write st_lsm6dsx i2c controller register
+> @@ -273,7 +273,7 @@ static int st_lsm6dsx_shub_master_enable(struct st_lsm6dsx_sensor *sensor,
+>  	return err;
+>  }
+>  
+> -/**
+> +/*
+>   * st_lsm6dsx_shub_read - read data from slave device register
+>   *
+>   * Read data from slave device register. SLV0 is used for
+> @@ -323,7 +323,7 @@ st_lsm6dsx_shub_read(struct st_lsm6dsx_sensor *sensor, u8 addr,
+>  					 sizeof(config));
+>  }
+>  
+> -/**
+> +/*
+>   * st_lsm6dsx_shub_write - write data to slave device register
+>   *
+>   * Write data from slave device register. SLV0 is used for
 
