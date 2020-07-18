@@ -2,101 +2,103 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF50C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0111C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48A0E2076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595082832;
-	bh=aGwpt6WMtqY5/WwIWAUClRDNeEjX6lZPDr9q46ZIAzA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Pm5hzk1lZ/PZLTBJD2QGq1cQ2Vpu2J0uVQSaB9rMtjYUSOsHVBHwEmfQODL9mlFZR
-	 QdYZiUy/fPwgdpdAtido9wow8kLV3SccE8Vs1B4xi7bANoT6DAlwyzhrHL6u+VBAHs
-	 xTR6StpsdYL0qxbbKxY3xUOpwKaeVd3IUa3+e39E=
+	by mail.kernel.org (Postfix) with ESMTP id 71AF720684
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgGROdv (ORCPT
+        id S1727788AbgGROfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 10:33:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbgGROdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 10:33:50 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 843B22064B;
-        Sat, 18 Jul 2020 14:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595082830;
-        bh=aGwpt6WMtqY5/WwIWAUClRDNeEjX6lZPDr9q46ZIAzA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Gge3LrrjfJKyzp//YFHSwSmJVxw7LfnupVN36U63PeAqSXkxRPKvxWsEHCV/LqNw7
-         m/EMa0BK62RgKjFd1YnGzoReJaUHRmQSSFzFAPtHYrefkFkPx6R4PFC+BFfN6pfmJH
-         ukVYIi2uU1CsfI2Iw0+T2mhjS1OJ1/vJiOOEru3I=
-Date:   Sat, 18 Jul 2020 15:33:45 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Andreas Brauchli <a.brauchli@elementarea.net>,
-        Pascal Sachs <pascal.sachs@sensirion.com>
-Subject: Re: [PATCH 05/30] iio: chemical: sgp30: Add description for
- sgp_read_cmd()'s 'duration_us'
-Message-ID: <20200718153345.0a6a5720@archlinux>
-In-Reply-To: <20200716135928.1456727-6-lee.jones@linaro.org>
-References: <20200716135928.1456727-1-lee.jones@linaro.org>
-        <20200716135928.1456727-6-lee.jones@linaro.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 Jul 2020 10:35:04 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:49105 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726574AbgGROfD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 10:35:03 -0400
+Received: (qmail 1180388 invoked by uid 1000); 18 Jul 2020 10:35:02 -0400
+Date:   Sat, 18 Jul 2020 10:35:02 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+Message-ID: <20200718143502.GC1179836@rowland.harvard.edu>
+References: <20200717044427.68747-1-ebiggers@kernel.org>
+ <20200717174750.GQ12769@casper.infradead.org>
+ <20200718013839.GD2183@sol.localdomain>
+ <20200718021304.GS12769@casper.infradead.org>
+ <20200718052818.GF2183@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718052818.GF2183@sol.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 14:59:03 +0100
-Lee Jones <lee.jones@linaro.org> wrote:
+On Fri, Jul 17, 2020 at 10:28:18PM -0700, Eric Biggers wrote:
+> /**
+>  * INIT_ONCE() - do one-time initialization
+>  * @done: pointer to a 'bool' flag that tracks whether initialization has been
+>  *	  done yet or not.  Must be false by default.
+>  * @mutex: pointer to a mutex to use to synchronize executions of @init_func
+>  * @init_func: the one-time initialization function
+>  * @...: additional arguments to pass to @init_func (optional)
+>  *
+>  * This is a more general version of DO_ONCE_BLOCKING() which supports
+>  * non-static data by allowing the user to specify their own 'done' flag and
+>  * mutex.
+>  *
+>  * Return: 0 on success (done or already done), or a negative errno value
+>  *	   returned by @init_func.
 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  drivers/iio/chemical/sgp30.c:236: warning: Function parameter or member 'duration_us' not described in 'sgp_read_cmd'
-> 
-> Cc: Andreas Brauchli <a.brauchli@elementarea.net>
-> Cc: Pascal Sachs <pascal.sachs@sensirion.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+It might be worth pointing out explicitly that init_func can be called 
+multiple times, if it returns an error.
 
-Perhaps we can do better on the wording.
+>  */
+> #define INIT_ONCE(done, mutex, init_func, ...)				\
+> ({									\
+>  	int err = 0;							\
+> 									\
+> 	if (!smp_load_acquire(done)) {					\
+> 		mutex_lock(mutex);					\
+> 		if (!*(done)) {						\
+> 			err = init_func(__VA_ARGS__);			\
+> 			if (!err)					\
+> 				smp_store_release((done), true);	\
+> 		}							\
+> 		mutex_unlock(mutex);					\
+> 	}								\
+>  	err;								\
+> })
 
-> ---
->  drivers/iio/chemical/sgp30.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/iio/chemical/sgp30.c b/drivers/iio/chemical/sgp30.c
-> index 403e8803471a9..82e407d48a0aa 100644
-> --- a/drivers/iio/chemical/sgp30.c
-> +++ b/drivers/iio/chemical/sgp30.c
-> @@ -227,6 +227,7 @@ static int sgp_verify_buffer(const struct sgp_data *data,
->   * @cmd:         SGP Command to issue
->   * @buf:         Raw data buffer to use
->   * @word_count:  Num words to read, excluding CRC bytes
-> + * @duration_us: Time to sleep in microseconds
+If this macro is invoked in multiple places for the same object (which 
+is not unlikely), there is a distinct risk that people will supply 
+different mutexes or done variables for the invocations.
 
-Time taken to sensor to take a reading and data to be ready.
+IMO a better approach would be to have a macro which, given a variable 
+name v, generates an actual init_once_v() function.  Then code wanting 
+to use v would call init_once_v() first, with no danger of inconsistent 
+usage.  You can fill in the details...
 
-Something like that maybe?  I've not checked the datasheet but from
-code that looks to be what this describes..
-
-Jonathan
-
->   *
->   * Return:       0 on success, negative error otherwise.
->   */
-
+Alan Stern
