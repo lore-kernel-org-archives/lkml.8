@@ -2,67 +2,97 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E968FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E80C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C865020717
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C295A20717
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgGRBZq (ORCPT
+        id S1728193AbgGRBZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 21:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgGRBZq (ORCPT
+        Fri, 17 Jul 2020 21:25:57 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:59677 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726710AbgGRBZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 21:25:46 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F94FC0619D2;
-        Fri, 17 Jul 2020 18:25:46 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 94C7911E45910;
-        Fri, 17 Jul 2020 18:25:43 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 18:25:40 -0700 (PDT)
-Message-Id: <20200717.182540.2222186339961093391.davem@davemloft.net>
-To:     mstarovoitov@marvell.com
-Cc:     kuba@kernel.org, irusskikh@marvell.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ndanilov@marvell.com
-Subject: Re: [PATCH net] net: atlantic: disable PTP on AQC111, AQC112
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200717203949.9098-1-mstarovoitov@marvell.com>
-References: <20200717203949.9098-1-mstarovoitov@marvell.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jul 2020 18:25:43 -0700 (PDT)
+        Fri, 17 Jul 2020 21:25:56 -0400
+Received: (qmail 1169335 invoked by uid 1000); 17 Jul 2020 21:25:55 -0400
+Date:   Fri, 17 Jul 2020 21:25:55 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+Message-ID: <20200718012555.GA1168834@rowland.harvard.edu>
+References: <20200717044427.68747-1-ebiggers@kernel.org>
+ <20200717205340.GR7625@magnolia>
+ <20200718005857.GB2183@sol.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718005857.GB2183@sol.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Starovoytov <mstarovoitov@marvell.com>
-Date: Fri, 17 Jul 2020 23:39:49 +0300
+On Fri, Jul 17, 2020 at 05:58:57PM -0700, Eric Biggers wrote:
+> On Fri, Jul 17, 2020 at 01:53:40PM -0700, Darrick J. Wong wrote:
+> > > +There are also cases in which the smp_load_acquire() can be replaced by
+> > > +the more lightweight READ_ONCE().  (smp_store_release() is still
+> > > +required.)  Specifically, if all initialized memory is transitively
+> > > +reachable from the pointer itself, then there is no control dependency
+> > 
+> > I don't quite understand what "transitively reachable from the pointer
+> > itself" means?  Does that describe the situation where all the objects
+> > reachable through the object that the global struct foo pointer points
+> > at are /only/ reachable via that global pointer?
+> > 
+> 
+> The intent is that "transitively reachable" means that all initialized memory
+> can be reached by dereferencing the pointer in some way, e.g. p->a->b[5]->c.
+> 
+> It could also be the case that allocating the object initializes some global or
+> static data, which isn't reachable in that way.  Access to that data would then
+> be a control dependency, which a data dependency barrier wouldn't work for.
+> 
+> It's possible I misunderstood something.  (Note the next paragraph does say that
+> using READ_ONCE() is discouraged, exactly for this reason -- it can be hard to
+> tell whether it's correct.)  Suggestions of what to write here are appreciated.
 
-> From: Nikita Danilov <ndanilov@marvell.com>
-> 
-> This patch disables PTP on AQC111 and AQC112 due to a known HW issue,
-> which can cause datapath issues.
-> 
-> Ideally PTP block should have been disabled via PHY provisioning, but
-> unfortunately many units have been shipped with enabled PTP block.
-> Thus, we have to work around this in the driver.
-> 
-> Fixes: dbcd6806af420 ("net: aquantia: add support for Phy access")
-> Signed-off-by: Nikita Danilov <ndanilov@marvell.com>
-> Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
-> Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Perhaps something like this:
 
-Applied and queued up for -stable, thank you.
+	Specifically, if the only way to reach the initialized memory 
+	involves dereferencing the pointer itself then READ_ONCE() is 
+	sufficient.  This is because there will be an address dependency 
+	between reading the pointer and accessing the memory, which will 
+	ensure proper ordering.  But if some of the initialized memory 
+	is reachable some other way (for example, if it is global or 
+	static data) then there need not be an address dependency, 
+	merely a control dependency (checking whether the pointer is 
+	non-NULL).  Control dependencies do not always ensure ordering 
+	-- certainly not for reads, and depending on the compiler, 
+	possibly not for some writes -- and therefore a load-acquire is 
+	necessary.
+
+Perhaps this is more wordy than you want, but it does get the important 
+ideas across.
+
+Alan Stern
