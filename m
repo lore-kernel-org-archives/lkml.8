@@ -2,116 +2,121 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83837C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE412073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617AA2073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cEN169Lj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgGRUj4 (ORCPT
+        id S1728056AbgGRUga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 16:39:56 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49197 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgGRUj4 (ORCPT
+        Sat, 18 Jul 2020 16:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbgGRUg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 16:39:56 -0400
-X-Originating-IP: 91.175.115.186
-Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 99EC140004;
-        Sat, 18 Jul 2020 20:39:52 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        jason@lakedaemon.net, andrew@lunn.ch,
-        sebastian.hesselbarth@gmail.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: Re: [PATCH] ARM: dts: kirkwood: Replace HTTP links with HTTPS ones
-In-Reply-To: <20200713070908.31846-1-grandmaster@al2klimov.de>
-References: <20200713070908.31846-1-grandmaster@al2klimov.de>
-Date:   Sat, 18 Jul 2020 22:39:52 +0200
-Message-ID: <87wo3036cn.fsf@FE-laptop>
+        Sat, 18 Jul 2020 16:36:29 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FC8BC0619D2;
+        Sat, 18 Jul 2020 13:36:29 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ch3so8099936pjb.5;
+        Sat, 18 Jul 2020 13:36:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bk2QSR1SuLlLo+kcm5baN1Xf8lfAD0BCwF2zEj5OvgI=;
+        b=cEN169Ljx0z2eMiuFm4ls2BJZyDql8ita1d1jL8fkjGmmlXoyInNKBQIrIw1zjSn9x
+         ZK3rHJciUVRSYIUTRxbfLmASYiifjy1uRSD2TPA7Dnb/Io9NthetjtsyOxbG5KN01tSE
+         5Fae9RSGHPUJ9S4H+vsXQjanhPwjr1Frf1jL+ivPrm5VASeMJPvjTnMwl8iIe2DdNwtb
+         OakJV23lvxbFQntJH+V/2upiyMNpt5NxTXDjiE2NWdh8F7Z2+/dzt7S7xI/wqOpvN4ts
+         C6bvPWDA0I3bi35eK5UCn0rYVqjJk2Lyg//6IZOsAdJXy4QJg7BOWNYFfSKUHG0GO965
+         SHZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bk2QSR1SuLlLo+kcm5baN1Xf8lfAD0BCwF2zEj5OvgI=;
+        b=UgwNLoJC4xCqkuDaKkXXKNsDF6HloQMXS1JPvE4233JK1p1j07GAsgCmseAS/KvYM6
+         ZG7n8uA/kCTjSPuOWFUrzxBeyjCYaM4y4R32ULQCLuEl6j+YY8PErncMXOIJYHTRPE1s
+         31LxOTVjA6eagO528noNP4p3dPiVAESkcpc2lkKCR6Pwzr6MOHbpDjyPsIALrbpp7wL1
+         T3Oqj7eknKbrK3kdaJ9nZK9qYDTHAZzglD0+ioNYvlY1ribSSZOeDdtoGVNhMZMiK0Cj
+         ZOzD77oBDlGqwMKlYgpW71RD1gFHpS41NaRgF/DOVOPBSEecn3MSUyUHv86m/XH0HEev
+         FrSQ==
+X-Gm-Message-State: AOAM531bzC6V352wxyw428f98uoRneDuW0pOV7pGX/OjILAt0YQ3Kkiv
+        Fh7EMIshxIdaUQKoJKIaDKc+7Vso
+X-Google-Smtp-Source: ABdhPJxV18hqicPRNLCtLq6tx02zh1hg/C/XIKs7z89+YOShPtmGkPPq7MqhfFpx1NsC7VbdTgampw==
+X-Received: by 2002:a17:90a:2b0f:: with SMTP id x15mr10843455pjc.230.1595104588486;
+        Sat, 18 Jul 2020 13:36:28 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id k26sm10868029pgt.90.2020.07.18.13.36.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jul 2020 13:36:27 -0700 (PDT)
+Subject: Re: [PATCH net-next 1/4] net: Wrap ndo_do_ioctl() to prepare for DSA
+ stacked ops
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200718030533.171556-1-f.fainelli@gmail.com>
+ <20200718030533.171556-2-f.fainelli@gmail.com>
+ <20200718203010.6dg5chsor5rufkaa@skbuf>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <a8b08bf9-2f45-8816-4056-2da42d4d9e24@gmail.com>
+Date:   Sat, 18 Jul 2020 13:36:25 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200718203010.6dg5chsor5rufkaa@skbuf>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Alexander A. Klimov" <grandmaster@al2klimov.de> writes:
 
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-Applied on mvebu/dt
+On 7/18/2020 1:30 PM, Vladimir Oltean wrote:
+> Hi Florian,
+> 
+> On Fri, Jul 17, 2020 at 08:05:30PM -0700, Florian Fainelli wrote:
+>> In preparation for adding another layer of call into a DSA stacked ops
+>> singleton, wrap the ndo_do_ioctl() call into dev_do_ioctl().
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+> 
+> I missed most of the context, but this looks interesting. Am I correct
+> in saying that this could save us from having to manually pass
+> phy_mii_ioctl() and that it could be generically handled here?
 
-Thanks,
+The motivation for this work started with the realization while
+untangling the ethtool/netlink and PHY library that tests like those:
+dev->netdev_ops == &foo_ops would be defeated by the way DSA overloads
+the DSA net_device operations. A better solution needed to be found.
 
-Gregory
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
->
->  If there are any URLs to be removed completely or at least not just HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
->
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
->
->  If you apply the patch, please let me know.
->
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
->
->
->  arch/arm/boot/dts/kirkwood-b3.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/kirkwood-b3.dts b/arch/arm/boot/dts/kirkwood-b3.dts
-> index 17f48f88a983..a7636fe28501 100644
-> --- a/arch/arm/boot/dts/kirkwood-b3.dts
-> +++ b/arch/arm/boot/dts/kirkwood-b3.dts
-> @@ -9,7 +9,7 @@
->   * L2 cache. If your B3 silently fails to boot, u-boot is probably too
->   * old. Either upgrade, or consider the following email:
->   *
-> - * http://lists.debian.org/debian-arm/2012/08/msg00128.html
-> + * https://lists.debian.org/debian-arm/2012/08/msg00128.html
->   */
->  
->  /dts-v1/;
-> -- 
-> 2.27.0
->
-
+You are correct that we could just put a call to phy_mii_ioctl() here as
+well and avoid having drivers have to use phy_do_ioctl_running or roll
+their own.
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Florian
