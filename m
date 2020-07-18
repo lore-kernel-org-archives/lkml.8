@@ -8,69 +8,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64061C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893C9C433ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 448692073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DE62073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:52:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhuSdnho"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="taLp8dAp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgGRQwG (ORCPT
+        id S1728224AbgGRQwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 12:52:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60846 "EHLO
+        Sat, 18 Jul 2020 12:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbgGRQwF (ORCPT
+        with ESMTP id S1727847AbgGRQwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 12:52:05 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCEA0C0619D2;
-        Sat, 18 Jul 2020 09:52:05 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id l23so3764976qkk.0;
-        Sat, 18 Jul 2020 09:52:05 -0700 (PDT)
+        Sat, 18 Jul 2020 12:52:15 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC2DFC0619D2;
+        Sat, 18 Jul 2020 09:52:14 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id e13so11582773qkg.5;
+        Sat, 18 Jul 2020 09:52:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XdEluW/746NqBXt9yMW4+jjqpUNSxP0XQYZLsKkqYqM=;
-        b=AhuSdnhoLrYjgBKs+jjZX9Lj/G+27dP5I8edq2ddJVPW4kmegwlPo7N5kJ/opW9aZO
-         DHuoYJNrY9V1v2wlhPwxA00Euuc+SUDpeWgU6PB4FPFpeVL7Uuz3fwhKQ0Hi90mo9QEh
-         hUJt7ftHeR/QONe9OUBTzkfWup2OQppiQQ8MHtRQkUomfzFtpdM1VIQ3DI8oBPllvJDt
-         jBBIIxrSiq9rRorR8kToPYok081sbARPC5UgrI8lpDaOM+2otxlS5gEHFJQMNt2aWSvo
-         qQkYNahy8jViHwuyET/yYC0o8i6giPdt8He3+z5rAJELSniTcZDAr6E7yAIy9fQmec4Q
-         CI6w==
+        bh=9h6K45vkpXDeowF/Ktfihv6pK2OwZVMzS2bGOB7FuYg=;
+        b=taLp8dApvZABtj4fuMZayWYO/pecoysRuG6QzfFz+B69i/M07CBU3sn+A3CX2MwSeN
+         LCfFMSqjB+iTm3ncb4tKq/FqYrZ3Qg6Ax68bppxvsonPovsRgQlXJX87V123SxqimUwr
+         +73k4UnPTCdz1L2QDtnRojaYjZUAnZR9sfiiZEQy/2po+Rh0Ou8EttXFMhI6i+rBaeSn
+         m9/SpZSCnH2sGVrNNDLlKSGWEWXzlJQD6suKnwWtxq100msd/d3lNJjq6FySkYFC3j9W
+         ZBiQDvDvL+HTU/S70uXofuudmoMO5Y2lPl38hNrjZULFrt1ggWDMiPsiCNVNHtr8rS4w
+         FFcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XdEluW/746NqBXt9yMW4+jjqpUNSxP0XQYZLsKkqYqM=;
-        b=H1pUe+jUV38tJF2cxcoKbPUkCON43OsYnJ46UrPwFKR+gG3jo34dKiLdFXJMfxMOW1
-         m/ISixK2iw3zXFQbDvWMaDJ6oglsTnUM/BxkZL7sW9DrWx9ag1YAu1NunlSs50tUjzCn
-         wP42sx7m27+MW5vY6C8RV7JTUI1wg2PncWpGFzjdizPFI0E8Z03u7Eg8gm2DmkhOMee6
-         sWJl+kwHGXSSO10DYi4qqs6CHFk85ktmNBFVO4Yv1H4M88oZQxs5Lm5zJtC7grLG8Tw4
-         wz7CPCZrFh5QkU4VMorQN2NIGWUX/wFk1TpWsZa+5a1XZzNjqROSYaPiqoGuEF7QySol
-         B1Aw==
-X-Gm-Message-State: AOAM531i0m+z0dhvcdlVrwEw6KzAFj5AIdRPNaDTWc4O1C70B7Y7ahLE
-        FA0vu90Ta/wbtnWSZOWKBD0=
-X-Google-Smtp-Source: ABdhPJyknxrgAaOuaXy5QUEQQlacHPoArpNhy/nP0nz8Zovr4n10S/Zo3vJ8ynRqPsGP4D8z5DFxcg==
-X-Received: by 2002:a37:b941:: with SMTP id j62mr13847107qkf.233.1595091124996;
-        Sat, 18 Jul 2020 09:52:04 -0700 (PDT)
+        bh=9h6K45vkpXDeowF/Ktfihv6pK2OwZVMzS2bGOB7FuYg=;
+        b=hh8wrAhMQetH7mvI8iujRnkgT/D61bvEebylKa1/cclHR/OGh14ho69vKh4ZC3etQv
+         IOX+imU9Mi8pXeU/+wbnu9ZNdc0bvfP1aDNnZjSHtlEt1dGorKT27x0NXWSK8ebQNjtX
+         l81kRdcUY6F5lJVK9qbyd1o798H0hZ5pIzNeM3GH8Z87Vd/HdF+vWWxiva9IfYIipFsb
+         PQ2uZs68xO2xY45KQvlFvsDinovmVrjD/I6o5XSV/b1y84IZ8o2teuBc3VHeZNNDI+52
+         s6X8w+tOMF62+Z1PDC/h+JsQVFLrxHcWx+cfgsgsJxpe3m8b3MdQMgjrV7Oj8uNrSGsW
+         Drdg==
+X-Gm-Message-State: AOAM5301Y+H+SM1VEqGGi51oge3xZ4WDVrYkMu9qB9CwIgrzf40CIzuu
+        HLXhmAAXm/sZaoItKjZY0P8=
+X-Google-Smtp-Source: ABdhPJw31yI2A2zxbk2J5sAQRp9sjKM/HZ3aH8iCOERJ6gqSBh87EiG/Num0cJhMMrCzNJnHMSqxtQ==
+X-Received: by 2002:a05:620a:2eb:: with SMTP id a11mr13407474qko.383.1595091134082;
+        Sat, 18 Jul 2020 09:52:14 -0700 (PDT)
 Received: from localhost.localdomain ([2804:18:602d:16d:d038:1a92:190d:65d2])
-        by smtp.gmail.com with ESMTPSA id q5sm15361801qtf.12.2020.07.18.09.51.59
+        by smtp.gmail.com with ESMTPSA id q5sm15361801qtf.12.2020.07.18.09.52.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 09:52:04 -0700 (PDT)
+        Sat, 18 Jul 2020 09:52:13 -0700 (PDT)
 From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 X-Google-Original-From: Daniel W. S. Almeida
-To:     corbet@lwn.net, keescook@chromium.org, anton@enomsg.org,
-        ccross@android.com, tony.luck@intel.com, mchehab+huawei@kernel.org,
-        j.neuschaefer@gmx.net, shobhitkukreti@gmail.com,
-        rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     "Daniel W . S . Almeida" <dwlsalmeida@gmail.com>,
+To:     rjw@rjwysocki.net, lenb@kernel.org
+Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: admin-guide/index.rst: Add pstore-blk.rst
-Date:   Sat, 18 Jul 2020 13:51:03 -0300
-Message-Id: <20200718165107.625847-9-dwlsalmeida@gmail.com>
+Subject: [PATCH] docs: firmware-guide/acpi/index.rst: Add intel-pmc-mux.rst
+Date:   Sat, 18 Jul 2020 13:51:05 -0300
+Message-Id: <20200718165107.625847-11-dwlsalmeida@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200718165107.625847-1-dwlsalmeida@gmail.com>
 References: <20200718165107.625847-1-dwlsalmeida@gmail.com>
@@ -81,32 +78,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
 Fix the following warning:
 
-Documentation/admin-guide/pstore-blk.rst:
+Documentation/firmware-guide/acpi/intel-pmc-mux.rst:
 WARNING: document isn't included in any toctree
 
-By adding 'pstore-blk.rst' to the index
+By adding 'intel-pmc-mux.rst' to the index.
 
 Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 ---
- Documentation/admin-guide/index.rst | 1 +
+ Documentation/firmware-guide/acpi/index.rst | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 58c7f9fc2396c..ed1cf94ea50c2 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -41,6 +41,7 @@ problems and bugs in particular.
-    init
-    kdump/index
-    perf/index
-+   pstore-blk
- 
- This is the beginning of a section with information of interest to
- application developers.  Documents covering various aspects of the kernel
+diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+index ad3b5afdae77e..f72b5f1769fb2 100644
+--- a/Documentation/firmware-guide/acpi/index.rst
++++ b/Documentation/firmware-guide/acpi/index.rst
+@@ -26,3 +26,4 @@ ACPI Support
+    lpit
+    video_extension
+    extcon-intel-int3496
++   intel-pmc-mux
 -- 
 2.27.0
 
