@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54181C433F1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E92DC433F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 317B6207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753BF2076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPJpR4r8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WENSboNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgGRG6C (ORCPT
+        id S1729147AbgGRG6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:58:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54830 "EHLO
+        Sat, 18 Jul 2020 02:58:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgGRG56 (ORCPT
+        with ESMTP id S1729098AbgGRG6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 02:57:58 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992B6C0619D2;
-        Fri, 17 Jul 2020 23:57:58 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a6so13255592wrm.4;
-        Fri, 17 Jul 2020 23:57:58 -0700 (PDT)
+        Sat, 18 Jul 2020 02:58:03 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F013DC0619D2;
+        Fri, 17 Jul 2020 23:58:02 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so20467581wml.3;
+        Fri, 17 Jul 2020 23:58:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ylzKfvJHgekxjZxp4VQuW17EoD7pYVoukf8XeW0SJg8=;
-        b=nPJpR4r8aWcg21Jci2wdL9PPFkYkK3SovheA8oW0iOctEWsGMb0hoqZl+PgWgygYsP
-         nRTxIFBSNRQnROHrwxaLbjoZsSUCN7tJdtXwnjBlvOVPZt3Hp3wX2Qu2hB8lysDU75bS
-         xSH/snWzBSXRzNlso6CBnscdWqfTEt+I5PbrSZIrrwy796oFW/4YHNF2f13nVsKyAK/H
-         6MYXZPUE8sVEeagfZ0HDsh9ejhHT8EwiAnI3jbVGAoRraDc2swQjFDZAVoV4G0GCkh9Y
-         2CpawS7R03MKzyzqTfNwUac/1IH+XeT/Jo2X9gw995k6cGQkbvDCOGQuRnjQX4Yl2560
-         Pggw==
+        bh=DR+MN9yI45B0CbPas30C2sDxsoxmrDbz6ZTE82Yi1YU=;
+        b=WENSboNWqFEFKMhQ1tpuQelRMJAoIzuNKBQN5XrO86dudVwcu92a3aNhzf/hlGc70C
+         99QuqYIR8SsFjoVQgDKKzVGUrP4+ay/lkffYF0gtdz02LOYtjut8md2FNXS04mJsRS2o
+         FKK5iZs2FO/SJGqeip0SksH48C2emf6ivIjUSa9R48xoh6LzVmZyv0BwFC4VDA/ow4un
+         S8tOWLsQGbZ5UNLWIWQIZo6hoXZwjY0XIcLO4XR/kj/wM/FZ9KF1x+/ryHYkCYaTQJIT
+         mvGkLlP4D3O7uBc2jdIoLUW+EmFLc1FEDftrBQzCMOxAXBkFyApgX3u020lCf+QzlV+u
+         92ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ylzKfvJHgekxjZxp4VQuW17EoD7pYVoukf8XeW0SJg8=;
-        b=IV4zu+KiDwSf7InDPR1/4yO739+D35Zt+6pRB3t1v4rJXqCJFwMlqmTiSyw3R1CUM1
-         N8e1xv+ZWFJ2Pz0xQDgQISLdmCY77qVKdTvabx7bk0XqTi4eoIFOLGxtfs6cVktpHMOe
-         FIqlg62aNMNYnVn/7/4VIlXh5QfDZRwxuiQEjcEGBiMp6MaHZGoYTxophlp/Iv3ARlWg
-         ir69U7htDFd4/GP+MqTIOXjRx0cjazLbUGosMEg2cWsfrRcJn1hsMZ9xXguBL2me0Nzk
-         P4Cp3ZzSeEXiFLexlCr+Abnrh0DEpch0LpnA5D7VuZYqbICBv2kYQycxXzSB//GR2WQM
-         wv+A==
-X-Gm-Message-State: AOAM530nWytKVVgoa0Ech1o6tDofKsZ3ArShA6BOolzXIt/d0A5CZb4W
-        85A1X0vMlKbLnhhBSpFb6SjwxG4g
-X-Google-Smtp-Source: ABdhPJyAQvdVb5lV8Tc2ia6rNx22vRUUaGpgY2GDkA2oJxe8zKwjgMj/Ha9H9SDMRqmQO0JsLaPyJA==
-X-Received: by 2002:adf:b1ca:: with SMTP id r10mr14528884wra.150.1595055477364;
-        Fri, 17 Jul 2020 23:57:57 -0700 (PDT)
+        bh=DR+MN9yI45B0CbPas30C2sDxsoxmrDbz6ZTE82Yi1YU=;
+        b=eVuucsUH92CqtaGhQeI6NXpuPhQjnn8rPDC73W6O6/UGp5g4yIraL4cprjgYxHtcV1
+         nOOi9IPrKNrOkIQys2I32Wrbu1RRYn7JEm7r6jS2w/TyX3naOmiM6hlpGWKlQS0lv9Tw
+         1Gpm+vkbSONgfs3ZgyOUWQFJh11JexkyzA04t2IBqZrsnB8F6mw6WoCJsDDW6zuUsaeF
+         4lOE7Nph0yg3U0griMqIIWh1vQzXWZx5nWEicv1/igTaC39niGBOioF26hURr3pE+4FV
+         pGTqS04K9pVSiAXzJfaDYLQD3n5QqU0AxTMsccFmAiMtk7IixLDgZ2TYpLuu3RB0LDFC
+         t5iw==
+X-Gm-Message-State: AOAM532FlqjrOcAGd2xhbu032O/0EVpzZL/TSyR5uCnFLwu/YJfXG7cJ
+        bygibEoAQbufadc+etYjC2Bg3aNO
+X-Google-Smtp-Source: ABdhPJweouzzfuZ/Hx+GE+ZOtOp3U/VJVa4dJNLXiSlFEcR7hnZHpn2pOAOKEreYUvRVMOyapB6v0A==
+X-Received: by 2002:a1c:dfd6:: with SMTP id w205mr13231447wmg.118.1595055481607;
+        Fri, 17 Jul 2020 23:58:01 -0700 (PDT)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.57.55
+        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.57.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 23:57:56 -0700 (PDT)
+        Fri, 17 Jul 2020 23:58:01 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -66,9 +66,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 06/12] arm64: dts: meson: add audio playback to p201
-Date:   Sat, 18 Jul 2020 06:57:33 +0000
-Message-Id: <20200718065739.7802-7-christianshewitt@gmail.com>
+Subject: [PATCH 08/12] arm64: dts: meson: add audio playback to p212-s905x dtsi
+Date:   Sat, 18 Jul 2020 06:57:35 +0000
+Message-Id: <20200718065739.7802-9-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200718065739.7802-1-christianshewitt@gmail.com>
 References: <20200718065739.7802-1-christianshewitt@gmail.com>
@@ -81,26 +81,29 @@ Add initial audio support limited to HDMI i2s.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- .../boot/dts/amlogic/meson-gxbb-p201.dts      | 40 +++++++++++++++++++
+ .../dts/amlogic/meson-gxl-s905x-p212.dtsi     | 40 +++++++++++++++++++
  1 file changed, 40 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
-index 150a82f3b2d7..2e2bccbcfd43 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
-@@ -8,10 +8,50 @@
- /dts-v1/;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+index 05cb2f5e5c36..40776d42bf8e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+@@ -11,6 +11,7 @@
+ /* Common DTSI for devices which are based on the P212 reference board. */
  
- #include "meson-gxbb-p20x.dtsi"
+ #include "meson-gxl-s905x.dtsi"
 +#include <dt-bindings/sound/meson-aiu.h>
  
  / {
- 	compatible = "amlogic,p201", "amlogic,meson-gxbb";
- 	model = "Amlogic Meson GXBB P201 Development Board";
+ 	aliases {
+@@ -85,6 +86,45 @@
+ 		clocks = <&wifi32k>;
+ 		clock-names = "ext_clock";
+ 	};
 +
 +	sound {
 +		compatible = "amlogic,gx-sound-card";
-+		model = "GXBB-P201";
++		model = "GXL-S905X-P212";
 +		assigned-clocks = <&clkc CLKID_MPLL0>,
 +				  <&clkc CLKID_MPLL1>,
 +				  <&clkc CLKID_MPLL2>;
