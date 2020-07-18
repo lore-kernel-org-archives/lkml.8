@@ -2,128 +2,129 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE7DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 17:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC712C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 17:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D24820775
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 17:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595094243;
-	bh=uN52bz2TnOuj9TlKoB6pj/zQGShG9ZdyGjDoFj5YftM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2JbChZEvFT/6ru61vRqYDk0K9jQwoLlwj1GKVT8ARMiOKOBpWoooRh3XtLEkCnodt
-	 ypefQQtKXrgHhoujz3LDYUpkKHBT0QfEfTpq4maO3wAaX6Dl2SpfY5T7266wRoKTA0
-	 e1Yn7ZAkaEMz0toQCqQ8jLDfR9omBdVDexa0Idac=
+	by mail.kernel.org (Postfix) with ESMTP id 89B6020717
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 17:58:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cpJF38mn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgGRRmt (ORCPT
+        id S1727888AbgGRR5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 13:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgGRRmt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 13:42:49 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5467C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 10:42:48 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id b30so5428772lfj.12
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 10:42:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GiY4+QiT/AY/Z/a8K8W0oYps875PzAtQx8Asj6Q1aPg=;
-        b=FM+3ch1bDzhsiXNk+T+LOrHD4qkMShboABLic2xzn+DKHMi9Cgt2kWfMijpega0ALy
-         JQOhddwsoTpnDE/eexxgbiNkVKH9MQ+fSTpjlS2vysSTAT+7EO9kqxZg+1gtIEYIjgfu
-         Yt2hjqDc5MP/2HjiXc67Jpa/06la4Hw8kgZiw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GiY4+QiT/AY/Z/a8K8W0oYps875PzAtQx8Asj6Q1aPg=;
-        b=DgsYhZILvLuIQzEMc2yBdi9W+jY2n0m+Sna2lJiQiUdsUg1ZHZszQhL0DmUffNLw/J
-         ThpdyxaC5gQeaV49PEmL6uGxxvmbDgUCUqtq3QaiqfqDAwcurAxwe82X04bgz56p8PoW
-         6rusyZkLIqiNw3b48HJyEbhOgUIFoTw7+/jblkQv1oJfrjTQhiR0TlZU6p43cw81zjOE
-         WZD9ZBIcGqTwWG0P4+ly6LzVJSg9SNAX1X9hoIs3DkZkCLzyQHJ6usUZtbTzjGO0gtp8
-         Ywcd/Vsj8PjU44hN9fvmKC1XbjXzXbQvcOaA7F5G+0IZgx6UaTgchSjP6YU9HI44oGxN
-         8UQA==
-X-Gm-Message-State: AOAM531n4I8OxVIehXk/1g/nXzrInt3zoX2osjVngucY+YBQW9hyGnhs
-        hzqd8S/AT1MnpwRJ13TkfFTXpUMfCvU=
-X-Google-Smtp-Source: ABdhPJzXqXMRI4SKqOB+O98Len/0QycmrwaA2/r4OzxFBXPIpN6ug2VlSDP+P6krqPICWJlG9DxtdQ==
-X-Received: by 2002:a19:228a:: with SMTP id i132mr5894610lfi.178.1595094166479;
-        Sat, 18 Jul 2020 10:42:46 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id h26sm2293263ljb.78.2020.07.18.10.42.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jul 2020 10:42:45 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id o4so7730012lfi.7
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 10:42:44 -0700 (PDT)
-X-Received: by 2002:ac2:4422:: with SMTP id w2mr6995326lfl.152.1595094164495;
- Sat, 18 Jul 2020 10:42:44 -0700 (PDT)
+        Sat, 18 Jul 2020 13:57:50 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41965 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbgGRR5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 13:57:50 -0400
+Received: from [IPv6:2601:646:8600:3281:9416:e5ae:2b2f:5c90] ([IPv6:2601:646:8600:3281:9416:e5ae:2b2f:5c90])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 06IHux0t2096145
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Sat, 18 Jul 2020 10:57:00 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 06IHux0t2096145
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020062301; t=1595095022;
+        bh=576S0uLdlTzZkpv4dTasY9ctAja7Muk0zQ6AU9/0rFE=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=cpJF38mnPmSLQcTdI+s4iNg3G/fWoGECqGRTrU3PAZq/urufmkKV6bU7iGNH0yuxt
+         rirYPVU2iYjZZKLV7eHpZBHQpGOW/DF4YWMCNW+MFWIf9Z1SlUIY6F+L86crXfGZLG
+         8pAXoV1kx3bVY0iWeR5QVZjLo1i1suhjiim0irplVkVz2y0+K/tcBxr4f1a4xSF/Mr
+         nxPFd5BeAm28FcI322JB6nGxVUezSIfB1GbkUfbntA4vcWnwqD73+ujBFXCSkxcrMY
+         aiMifXb2qu4RqF+S3oikjCDFsnRdWcy5fOI9qsq1zMyOrxZK+4ke5juCuTkCSpusvY
+         5CRMXEIBMvpAg==
+Date:   Sat, 18 Jul 2020 10:56:48 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200709103355.11359-1-joro@8bytes.org>
+References: <20200709103355.11359-1-joro@8bytes.org>
 MIME-Version: 1.0
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com> <87blkcanps.fsf@jogness.linutronix.de>
-In-Reply-To: <87blkcanps.fsf@jogness.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 18 Jul 2020 10:42:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgX9Q+en5j8EmYkhxEx8H0EzHhx5WqPGui7KNiV7=ZK-w@mail.gmail.com>
-Message-ID: <CAHk-=wgX9Q+en5j8EmYkhxEx8H0EzHhx5WqPGui7KNiV7=ZK-w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] printk: reimplement LOG_CONT handling
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] x86/idt: Make sure idt_table takes a whole page
+To:     Joerg Roedel <joro@8bytes.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+CC:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        joro@8bytes.org
+From:   hpa@zytor.com
+Message-ID: <0CEC6A66-FD50-4B6B-9521-A40E5B9DA10F@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 7:43 AM John Ogness <john.ogness@linutronix.de> wrote:
+On July 9, 2020 3:33:55 AM PDT, Joerg Roedel <joro@8bytes=2Eorg> wrote:
+>From: Joerg Roedel <jroedel@suse=2Ede>
 >
-> I expect this is handled correctly since the reader is not given any
-> parts until a full line is ready, but I will put more focus on testing
-> this to make sure.
+>On x86-32 the idt_table with 256 entries needs only 2048 bytes=2E It is
+>page-aligned, but the end of the =2Ebss=2E=2Epage_aligned section is not
+>guaranteed to be page-aligned=2E
+>
+>As a result, symbols from other =2Ebss sections may end up on the same
+>4k page as the idt_table, and will accidentially get mapped read-only
+>during boot, causing unexpected page-faults when the kernel writes to
+>them=2E
+>
+>Avoid this by making the idt_table 4kb in size even on x86-32=2E On
+>x86-64 the idt_table is already 4kb large, so nothing changes there=2E
+>
+>Fixes: 3e77abda65b1c ("x86/idt: Consolidate idt functionality")
+>Signed-off-by: Joerg Roedel <jroedel@suse=2Ede>
+>---
+> arch/x86/kernel/idt=2Ec | 12 ++++++++++--
+> 1 file changed, 10 insertions(+), 2 deletions(-)
+>
+>diff --git a/arch/x86/kernel/idt=2Ec b/arch/x86/kernel/idt=2Ec
+>index 0db21206f2f3=2E=2E83e24f837127 100644
+>--- a/arch/x86/kernel/idt=2Ec
+>+++ b/arch/x86/kernel/idt=2Ec
+>@@ -157,8 +157,13 @@ static const __initconst struct idt_data
+>apic_idts[] =3D {
+> #endif
+> };
+>=20
+>-/* Must be page-aligned because the real IDT is used in the cpu entry
+>area */
+>-static gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
+>+/*
+>+ * Must be page-aligned because the real IDT is used in the cpu entry
+>area=2E
+>+ * Allocate more entries than needed so that idt_table takes a whole
+>page, so it
+>+ * is safe to map the idt_table read-only and into the user-space
+>page-table=2E
+>+ */
+>+#define IDT_ENTRIES_ALLOCATED	(PAGE_SIZE / sizeof(gate_desc))
+>+static gate_desc idt_table[IDT_ENTRIES_ALLOCATED] __page_aligned_bss;
+>=20
+> struct desc_ptr idt_descr __ro_after_init =3D {
+> 	=2Esize		=3D IDT_TABLE_SIZE - 1,
+>@@ -335,6 +340,9 @@ void __init idt_setup_apic_and_irq_gates(void)
+> 	idt_map_in_cea();
+> 	load_idt(&idt_descr);
+>=20
+>+	BUILD_BUG_ON(IDT_ENTRIES_ALLOCATED < IDT_ENTRIES);
+>+	BUILD_BUG_ON(sizeof(idt_table) !=3D PAGE_SIZE);
+>+
+> 	/* Make the IDT table read only */
+> 	set_memory_ro((unsigned long)&idt_table, 1);
+>=20
 
-Yeah, the patches looked fine, but I only scanned them, and just
-wanted to make sure.
+NAK=2E=2E=2E this isn't the right way to fix this and just really kicks th=
+e can down the road=2E The reason is that you aren't fixing the module that=
+ actually has a problem=2E
 
-Over the years, we've gotten printk wrong so many times that I get a
-bit paranoid. Things can look fine on the screen, but then have odd
-line breaks in the logs. Or vice versa. Or work fine on some machine,
-but consistently show some race on another.
-
-And some of the more complex features are hardly ever actually used -
-I'm not sure the optional message context (aka dictionary) is ever
-actually used.
-
-Yes, all the "dev_printk()" helpers fill it in with the device
-information (create_syslog_header()), and you _can_ use them if you
-know about them (ie
-
-    journalctl -b _KERNEL_SUBSYSTEM=pci_bus
-
-but I sometimes wonder how many people use all this complexity. And
-how many people even know about it..)
-
-So there are hidden things in there that can easily break *subtly* and
-then take ages for people to notice, because while some are very
-obvious indeed ("why is my module list message broken up into a
-hundred lines?") others might be things people aren't even aware of.
-
-Maybe a lot of system tools use those kernel dictionaries. Maybe it
-would break immediately. I just sometimes wonder...
-
-                 Linus
+The Right Way[TM] is to figure out which module(s) lack the proper alignme=
+nt for this section=2E A script using objdump -h or readelf -SW running ove=
+r the =2Eo files looking for alignment less than 2**12 should spot the modu=
+les that are missing the proper =2Ebalign directives=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
