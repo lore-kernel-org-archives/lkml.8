@@ -2,62 +2,67 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6085BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F17AC433E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B84420809
+	by mail.kernel.org (Postfix) with ESMTP id F168A20691
 	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:06:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nkLT+MDk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pc3OXUSR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgGRAGo (ORCPT
+        id S1728803AbgGRAGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 20:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
+        Fri, 17 Jul 2020 20:06:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgGRAGn (ORCPT
+        with ESMTP id S1727981AbgGRAGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 20:06:43 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E79C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:06:42 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id x6so7451261qtf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:06:42 -0700 (PDT)
+        Fri, 17 Jul 2020 20:06:48 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7201CC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:06:48 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id m81so13320228ybf.6
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:06:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=rJVmt4ZwvRTHWXzLKcOClrGZS1hFJIY01F+5WZok3xc=;
-        b=nkLT+MDkiiaXW4XaRtaceajqWSG1GinaUs7iUYNAPyVF3I16mAM60i0gGxIDbAsMQt
-         fYL3Y4hkLQ4zrCRLIrRhLXNAFIUzqqbNLcna5BgT/oUTLTWlK2CVCP26dSTIHxdBJ9ha
-         0ACj5SjZiHCYVw2sKDNWSf9UjvBfXMIAVREz2NDrkfitTNAXQDqByq4edHfoQysDKFnn
-         XC4oT1Yu/8OuXz/+K6DazZZVmvoiE3s04R4QsiTeyT81Px5iQFL5NBAfHgZE3j/NJjdP
-         d7FBIRkJbXCCOJ0U9kQsUWd45y3rWC+omYqme3AiSCb14sHnlJK5v/B+S1aTOcNzOgv3
-         Q7Tw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=9lliIP397BkHUMIYOIiz1lmKlM09rTtKqti3dJZq5NI=;
+        b=Pc3OXUSRMtC51Xe5/XMfqVgGHTzqEztWThvDswR20yBvK4q20Xw3ZNE+8dkR19OmDD
+         gDksFj5HOd268anWSSimT3Gn9d+v7SfcYJjjCEJY6k3KED8/Qg0cUFL25Q3MLk3u6WzP
+         6SQOsdECq3m8nfn4B/G+qcw93FKsucGX6KBj42CnWiZKaOz2sMFI1iIBqIg8B/YnRj6U
+         VozP0QbaLKiXIdIxryY+7xaJJEGEd8+z9ZmQZXSjBMWae0vTANsynMnqxGRMmmAY2Nz7
+         y01D9HdzUEov/4to4JpMNjFHQb5ZWpIPNEGfCjmvUCtCL/gSUXe19cgBOBtkE/HRrupU
+         dKKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=rJVmt4ZwvRTHWXzLKcOClrGZS1hFJIY01F+5WZok3xc=;
-        b=HN+ercvHDFTSInwyJcM0DE0af+GiiHKG07LpVBldvvuFVD3emQLBcNQH7H/e9ROm6N
-         86zuT2DsUHeFajd/2DU03EuPfN/ly41n+bGZrsXva2ehICq2lH/oRC1djZ3VUlx5fdYt
-         ub0AhHikJu+XePkqA6mNdnPgwYNeZin56IELqnJMB9Uzr3n9eYEuFbKHM0dViXsCj3gK
-         tM6yAYDb+qxgjciFKGYlpPGO+wmKd0+JyHgDIXAMowpcqkJVE1oIz+nCpBtnL7AUQkEP
-         U/UKVik4/HX9+baXDxx5D+ml1041aJiGN9Zr1I5sNZVZLoIIte4OeMcZTEEBavEngDRa
-         DeEg==
-X-Gm-Message-State: AOAM531KKcCW03w7AZ6egIiTVlB3PQXxFKJAXe9hCsLUlvZExmJBGMl7
-        MN5LIZLyKleHVbTrHb+uz6c6SbTphvfNAYI=
-X-Google-Smtp-Source: ABdhPJz83yKT96CBvwXwQbOgr6og9PaNdHb27iy5PN2zqKCaFfX0K9leKlkCDg5IteBpKBZ/nYJFfwCY8C2fVsE=
-X-Received: by 2002:a05:6214:3ec:: with SMTP id cf12mr11680570qvb.251.1595030800209;
- Fri, 17 Jul 2020 17:06:40 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 17:06:33 -0700
-Message-Id: <20200718000637.3632841-1-saravanak@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=9lliIP397BkHUMIYOIiz1lmKlM09rTtKqti3dJZq5NI=;
+        b=FEuTXODZhIzUSknPHKnof2JxAMlMyfWBKV8tFiBkDLo8PdSVP8nyeWiJch5YKJgvtt
+         KPAUD886at+abnIMw0rDJKv77Hmf374EothyutDsDCvhe3ZxwRc5pL5HvIvCSIkQ++EO
+         ap5sIgu+xkGxq5vU2lqosAuVwrRoLK0PQjZWntkiNMBxA9dZpb3q36in/zmB0gXMwwN8
+         YSLNi//UMlO8Cb94EPaW5JOeuT4OdDmad22xjXsJbd0FVDvf5bhB3u1+vyY7I6KzzSH2
+         85ogCbKdEXgBIqtU2y465UNr67TH9DgbB3y8uX9yWGC/tvupCCG1/9HeDMGknsijy+UY
+         UvBA==
+X-Gm-Message-State: AOAM531nR4kmi0BaayLJD2q52zWEAomhiGYyYzWqG5clxNo59gDo/Lxy
+        XuHH1t7VF+b4sRm0mkyeTDLBHtYaLunNvLc=
+X-Google-Smtp-Source: ABdhPJzaoGGT2QOhK85hcWY30M8zasDny3EJDQN0UI4RBnyRl5EEGtO+6Y9IPCYksqge9OpTXg7V9ykOWjui2KA=
+X-Received: by 2002:a25:abc5:: with SMTP id v63mr17904281ybi.148.1595030807668;
+ Fri, 17 Jul 2020 17:06:47 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 17:06:36 -0700
+In-Reply-To: <20200718000637.3632841-1-saravanak@google.com>
+Message-Id: <20200718000637.3632841-4-saravanak@google.com>
 Mime-Version: 1.0
+References: <20200718000637.3632841-1-saravanak@google.com>
 X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [PATCH v3 0/4] irqchip: Add IRQCHIP_PLATFORM_DRIVER helper macros
+Subject: [PATCH v3 3/4] irqchip/mtk-sysirq: Convert to a platform driver
 From:   Saravana Kannan <saravanak@google.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -78,38 +83,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Made a series out of the previous v2 patch + some example uses of the
-macros.
+This driver can work as a platform driver. So covert it to a platform
+driver.
 
-Not sure if the MTK changes work (just compile tested), but saw that
-Hanks was trying to make those drivers into tristate. So I assume
-they'll work as platform drivers. Please wait for MTK Ack before picking
-up patches 3 and 4.
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/irqchip/irq-mtk-sysirq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-v1-v2:
-- Instead of redifining IRQCHIP_DECLARE, created new macros.
-- Added more checks in the probe helper function to ensure topological
-  probe ordering when fw_devlink is not "on".
-
-v2->v3:
-- Added comments
-- Changed IRQCHIP_PLATFORM_DRIVER_BEGIN macro parameters
-
-Saravana Kannan (4):
-  irqchip: Add IRQCHIP_PLATFORM_DRIVER_BEGIN/END and IRQCHIP_MATCH
-    helper macros
-  irqchip/qcom-pdc: Switch to using IRQCHIP_PLATFORM_DRIVER helper
-    macros
-  irqchip/mtk-sysirq: Convert to a platform driver
-  irqchip/mtk-cirq: Convert to a platform driver
-
- drivers/irqchip/irq-mtk-cirq.c   |  4 +++-
- drivers/irqchip/irq-mtk-sysirq.c |  4 +++-
- drivers/irqchip/irqchip.c        | 29 +++++++++++++++++++++++++++++
- drivers/irqchip/qcom-pdc.c       | 26 +++-----------------------
- include/linux/irqchip.h          | 23 +++++++++++++++++++++++
- 5 files changed, 61 insertions(+), 25 deletions(-)
-
+diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+index 6ff98b87e5c0..7299c5ab4d10 100644
+--- a/drivers/irqchip/irq-mtk-sysirq.c
++++ b/drivers/irqchip/irq-mtk-sysirq.c
+@@ -231,4 +231,6 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
+ 	kfree(chip_data);
+ 	return ret;
+ }
+-IRQCHIP_DECLARE(mtk_sysirq, "mediatek,mt6577-sysirq", mtk_sysirq_of_init);
++IRQCHIP_PLATFORM_DRIVER_BEGIN(mtk_sysirq)
++IRQCHIP_MATCH("mediatek,mt6577-sysirq", mtk_sysirq_of_init)
++IRQCHIP_PLATFORM_DRIVER_END(mtk_sysirq)
 -- 
 2.28.0.rc0.105.gf9edc3c819-goog
 
