@@ -2,306 +2,314 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7135C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D0E2070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEF820734
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:24:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595089474;
+	bh=km2mzwtZ+FjNhtaMQXEWg0EuxYlrDbyzGAdxsGPwbwA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1yZrBrhoKzdNO7Ak3ZgUq3Y3CKnSemhI/D3ZfXBOySckLeoTHnBJftiE0FZM+0CAw
+	 kO8curJMQZ3oxpYSkix9Dkrl2t/O99awU6+7qAP8Tos03eLpS2V4O1gye4AhcudkxC
+	 ChrXVDCgwimBZBF10qsRpY+6g6D5ZQIhT1QWxCFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbgGRQSe (ORCPT
+        id S1727819AbgGRQYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 12:18:34 -0400
-Received: from out28-146.mail.aliyun.com ([115.124.28.146]:40649 "EHLO
-        out28-146.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgGRQSe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 12:18:34 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436284|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.267473-0.0231451-0.709382;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I3xh4B._1595089102;
-Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I3xh4B._1595089102)
-          by smtp.aliyun-inc.com(10.147.42.135);
-          Sun, 19 Jul 2020 00:18:23 +0800
-Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
- X1000 OST.
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, tglx@linutronix.de, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
- <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
- <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
- <f0dd2ea5-0627-35cf-5a58-aaff0bcb22cd@wanyeetech.com>
- <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
- <512ODQ.64YN0BEY1JJG@crapouillou.net>
- <096c8788-3c50-3eae-1c8e-c0c7487b00af@wanyeetech.com>
- <S29ODQ.X11A9NSVRIIJ@crapouillou.net>
- <36aec769-da25-20dd-2ca4-351f7c5369fb@wanyeetech.com>
- <MAAODQ.8WWI41VIHCH92@crapouillou.net>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <7fc3c80a-da57-6398-ed21-aff3f9ede041@wanyeetech.com>
-Date:   Sun, 19 Jul 2020 00:18:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Sat, 18 Jul 2020 12:24:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbgGRQYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 12:24:10 -0400
+Received: from kernel.org (unknown [87.71.40.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0150720734;
+        Sat, 18 Jul 2020 16:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595089449;
+        bh=km2mzwtZ+FjNhtaMQXEWg0EuxYlrDbyzGAdxsGPwbwA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jqNDWhd3xFmC2b0tXUdXJ+AsInllep5JA5RNocblgXsd5dYIBfk8+dsh/L9QtLvr6
+         PxfXaJqz2AzdvusBty/jfjCgQXcEKmdIAyUNDx2kZTWPlS0ugCCv6BBH8z0iOnvY87
+         dDkXVwEogi7zB+ISmYgs1VjILf79dte4Umo1ONJs=
+Date:   Sat, 18 Jul 2020 19:23:59 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
+Subject: Re: [PATCH v4 3/7] vmalloc: Add text_alloc() and text_free()
+Message-ID: <20200718162359.GA2919062@kernel.org>
+References: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
+ <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <MAAODQ.8WWI41VIHCH92@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 17, 2020 at 06:04:17AM +0300, Jarkko Sakkinen wrote:
+> Introduce functions for allocating memory for dynamic trampolines, such
+> as kprobes. An arch can promote the availability of these functions with
+> CONFIG_ARCH_HAS_TEXT_ALLOC. Provide default/fallback implementation
+> wrapping module_alloc() and module_memfree().
+> 
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  include/linux/vmalloc.h | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index 0221f852a7e1..e981436e30b6 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -9,6 +9,7 @@
+>  #include <asm/page.h>		/* pgprot_t */
+>  #include <linux/rbtree.h>
+>  #include <linux/overflow.h>
+> +#include <linux/moduleloader.h>
+>  
+>  #include <asm/vmalloc.h>
+>  
+> @@ -249,4 +250,26 @@ pcpu_free_vm_areas(struct vm_struct **vms, int nr_vms)
+>  int register_vmap_purge_notifier(struct notifier_block *nb);
+>  int unregister_vmap_purge_notifier(struct notifier_block *nb);
+>  
+> +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
+> +/*
+> + * Allocate memory to be used for dynamic trampoline code.
+> + */
+> +void *text_alloc(unsigned long size);
+> +
+> +/*
+> + * Free memory returned from text_alloc().
+> + */
+> +void text_free(void *region);
+> +#else
+> +static inline void *text_alloc(unsigned long size)
+> +{
+> +	return module_alloc(size);
+> +}
+> +
+> +static inline void text_free(void *region)
+> +{
+> +	module_memfree(region);
+> +}
 
-在 2020/7/19 上午12:11, Paul Cercueil 写道:
->
->
-> Le sam. 18 juil. 2020 à 23:55, Zhou Yanjie <zhouyanjie@wanyeetech.com> 
-> a écrit :
->> Hi Paul,
->>
->> 在 2020/7/18 下午11:44, Paul Cercueil 写道:
->>> Hi Zhou,
->>>
->>> Le sam. 18 juil. 2020 à 21:42, Zhou Yanjie 
->>> <zhouyanjie@wanyeetech.com> a écrit :
->>>> Hello Paul and Daniel,
->>>>
->>>> 在 2020/7/18 下午9:12, Paul Cercueil 写道:
->>>>> Hi Daniel,
->>>>>
->>>>> Le ven. 17 juil. 2020 à 10:02, Daniel Lezcano 
->>>>> <daniel.lezcano@linaro.org> a écrit :
->>>>>> On 17/07/2020 08:13, Zhou Yanjie wrote:
->>>>>>>  Hi Daniel,
->>>>>>>
->>>>>>>  在 2020/7/17 下午12:20, Daniel Lezcano 写道:
->>>>>>>>  On 10/07/2020 19:02, 周琰杰 (Zhou Yanjie) wrote:
->>>>>>>>>  X1000 and SoCs after X1000 (such as X1500 and X1830) had a 
->>>>>>>>> separate
->>>>>>>>>  OST, it no longer belongs to TCU. This driver will register 
->>>>>>>>> both a
->>>>>>>>>  clocksource and a sched_clock to the system.
->>>>>>>>>
->>>>>>>>>  Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
->>>>>>>>>  Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->>>>>>>>>  Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->>>>>>>>>  Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->>>>>>>>>  Reviewed-by: Paul Cercueil <paul@crapouillou.net>
->>>>>>>>>  ---
->>>>>>>>>
->>>>>>>>>  Notes:
->>>>>>>>>       v1->v2:
->>>>>>>>>       Fix compile warnings.
->>>>>>>>>       Reported-by: kernel test robot <lkp@intel.com>
->>>>>>>>>            v2->v3:
->>>>>>>>>       No change.
->>>>>>>>>            v3->v4:
->>>>>>>>>       1.Rename "ost" to "sysost"
->>>>>>>>>       1.Remove unrelated changes.
->>>>>>>>>       2.Remove ost_clock_parent enum.
->>>>>>>>>       3.Remove 
->>>>>>>>> ost->percpu_timer_channel/ost->global_timer_channel.
->>>>>>>>>       4.Set up independent .recalc_rate/.set_rate for 
->>>>>>>>> percpu/global
->>>>>>>>>  timer.
->>>>>>>>>       5.No longer call functions in variable declarations.
->>>>>>>>>            v4->v5:
->>>>>>>>>       Use "of_io_request_and_map()" instead "of_iomap()".
->>>>>>>>>       Suggested-by: Paul Cercueil <paul@crapouillou.net>
->>>>>>>>>            v5->v6:
->>>>>>>>>       No change.
->>>>>>>>>
->>>>>>>>>    drivers/clocksource/Kconfig          |  11 +
->>>>>>>>>    drivers/clocksource/Makefile         |   1 +
->>>>>>>>>    drivers/clocksource/ingenic-sysost.c | 539
->>>>>>>>>  +++++++++++++++++++++++++++++++++++
->>>>>>>>>    3 files changed, 551 insertions(+)
->>>>>>>>>    create mode 100644 drivers/clocksource/ingenic-sysost.c
->>>>>>>>>
->>>>>>>>>  diff --git a/drivers/clocksource/Kconfig 
->>>>>>>>> b/drivers/clocksource/Kconfig
->>>>>>>>>  index 91418381fcd4..1bca8b8fb30f 100644
->>>>>>>>>  --- a/drivers/clocksource/Kconfig
->>>>>>>>>  +++ b/drivers/clocksource/Kconfig
->>>>>>>>>  @@ -696,6 +696,17 @@ config INGENIC_TIMER
->>>>>>>>>        help
->>>>>>>>>          Support for the timer/counter unit of the Ingenic JZ 
->>>>>>>>> SoCs.
->>>>>>>>>    +config INGENIC_SYSOST
->>>>>>>>>  +    bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
->>>>>>>>  We usually use silent options and let the platform's Kconfig 
->>>>>>>> enable it.
->>>>>>>>  We show up the option only when COMPILE_TEST is enabled.
->>>>>>>>
->>>>>>>>  Is there a reason to do it differently?
->>>>>>>
->>>>>>>
->>>>>>>  Do you mean
->>>>>>>
->>>>>>>  bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
->>>>>>>
->>>>>>>  or
->>>>>>>
->>>>>>>  default MACH_INGENIC ?
->>>>>>
->>>>>> Both, no default here.
->>>>>>
->>>>>> eg.
->>>>>>
->>>>>> bool "Clocksource/timer using the SYSOST in Ingenic X SoCs" if 
->>>>>> COMPILE_TEST
->>>>>>
->>>>>> and
->>>>>>
->>>>>> in arch/mips/Kconfig in the config MACH_INGENIC section :
->>>>>>
->>>>>> ...
->>>>>> select INGENIC_SYSOST
->>>>>> ...
->>>>>
->>>>> Disagreed. That's not how we do things on MIPS. Selecting 
->>>>> MACH_INGENIC means "this kernel will support Ingenic SoCs", 
->>>>> but not that it will only support these. Hence the depends on 
->>>>> MIPS / default MACH_INGENIC.
->>>>>
->>>>> As for the select INGENIC_SYSOST, this driver only applies to a 
->>>>> few SoCs, I certainly don't want it to be force-enabled. I 
->>>>> don't even wait it to be force-enabled on X1000, since it is 
->>>>> optional there too.
->>>>>
->>>>> Cheers,
->>>>> -Paul
->>>>
->>>>
->>>> If we still need to keep the "default MACH_INGENIC", then Daniel 
->>>> can directly apply the v6 version.
->>>>
->>>> If we need to use the silent options, maybe we can enable them 
->>>> separately according to 
->>>> MACH_JZ4740/MACH_JZ4770/MACH_JZ4780/MACH_X1000/MACH_X1830.
->>>>
->>>> In fact, I think X1000 and X1830 need to enable this driver in most 
->>>> cases, because the current test has found that use TCU to provide 
->>>> clocksource and clockevent will cause data loss/error when 
->>>> transmitting data through spi or ethernet. And these errors no 
->>>> longer appear after using OST.
->>>
->>> This is likely because the clock is too fast, try to reduce it by a 
->>> factor 2 or 4, it should behave better.
->>>
->>
->> Yes, it is indeed because the clock is too fast, especially the TCU 
->> only has 16-bit, which makes this problem more serious. I even 
->> reduced the timing clock to the lowest possible 23kHz (divided by 
->> 1024). The problem has been alleviated, but it cannot completely 
->> solved, and finally there is no problem after opening the OST.
->>
->>
->>> If it turns out OST is really needed, then it should be selected 
->>> from MACH_X1000/X1830, not MACH_INGENIC.
->>>
->>
->> Sure, I will do it in v8.
->>
->> Thanks and best regards!
->
-> Please do it in a separate patch then (but in the same patchset).
->
+Using module_alloc() as the default implementation of generic
+text_alloc() does not sound right to me.
 
-Okay, I will remove "default MACH_INGENIC" first, and then enable OST later.
+I would suggest rename module_alloc() to text_alloc() on x86, as Peter
+proposed and then add text_alloc_kprobes() that can be overridden by the
+architectures. x86 could use text_alloc(), arm64 vmalloc() with options
+of their choice and the fallback would remain module_alloc(). Something
+like (untested) patch below:
 
 
-> Cheers,
-> -Paul
->
->>
->>> Cheers,
->>> -Paul
->>>
->>>> Thanks and best regards!
->>>>
->>>>
->>>>>
->>>>>>
->>>>>>>  This driver has some origins from "INGENIC_TIMER" driver and
->>>>>>>  "INGENIC_OST" driver.
->>>>>>>  Early Ingenic processors used TCU (timer/counter unit, has 6 or 8
->>>>>>>  generic timer channels) to provide clocksource and clockevent 
->>>>>>> (both with
->>>>>>>  only 16bit precision). This part of the processor can only use
->>>>>>>  "INGENIC_TIMER" driver.
->>>>>>>
->>>>>>>  Later processors provide an independent 32bit or 64bit timer 
->>>>>>> channel
->>>>>>>  (still under TCU, known as ost channel, this channel can not 
->>>>>>> generate
->>>>>>>  interrupt) to provid higher precision clocksource. The 
->>>>>>> "INGENIC_OST"
->>>>>>>  driver is for this channel. These processors can use 
->>>>>>> "INGENIC_TIMER"
->>>>>>>  driver, but using "INGENIC_OST" driver to provide higher precision
->>>>>>>  clocksource would be a better choice (clockevent still needs to be
->>>>>>>  provided by generic timer channel of TCU, and still 16bit 
->>>>>>> precision).
->>>>>>>
->>>>>>>  And the recent processors provide a SYSOST components, it is 
->>>>>>> independent
->>>>>>>  from TCU, including a 64bit timer channel for clocksource and a 
->>>>>>> 32bit
->>>>>>>  timer channel for clockevent. Although these processors can 
->>>>>>> also use
->>>>>>>  "INGENIC_TIMER" driver, but the better choice is completely 
->>>>>>> independent
->>>>>>>  use of "INGENIC_SYSOST" driver to provide higher precision 
->>>>>>> clocksource
->>>>>>>  and clockevent.
->>>>>>
->>>>>> Ok, the rating should do the job then.
->>>>>>
->>>>>> Thanks for the explanation.
->>>>>>
->>>>>>>  You may have already noticed that this independent SYSOST 
->>>>>>> component is
->>>>>>>  like an upgraded and streamlined TCU, which only retains one 
->>>>>>> generic
->>>>>>>  timer channel that can generate interrupts, upgrade it from 
->>>>>>> 16bit to
->>>>>>>  32bit, and then retain the 64bit ost channel. so the driver 
->>>>>>> code and
->>>>>>>  Kconfig code of this patch is largely referenced
->>>>>>>  "INGENIC_TIMER" driver and "INGENIC_OST" driver.
->>>>>>>
->>>>>>>  Thanks and best regards!
->>>>>>>
->>>>>>>>>  +    default MACH_INGENIC
->>>>>>>>>  +    depends on MIPS || COMPILE_TEST
->>>>>>>>>  +    depends on COMMON_CLK
->>>>>>>>>  +    select MFD_SYSCON
->>>>>>>>>  +    select TIMER_OF
->>>>>>>>>  +    select IRQ_DOMAIN
->>>>>>>>>  +    help
->>>>>>>>>  +      Support for the SYSOST of the Ingenic X Series SoCs.
->>>>>>>>>  +
->>>>>>>>  [ ... ]
->>>>>>>>
->>>>>>>>
->>>>>>
->>>>>>
->>>>>> -- 
->>>>>> <http://www.linaro.org/> Linaro.org │ Open source software for 
->>>>>> ARM SoCs
->>>>>>
->>>>>> Follow Linaro: <http://www.facebook.com/pages/Linaro> Facebook |
->>>>>> <http://twitter.com/#!/linaroorg> Twitter |
->>>>>> <http://www.linaro.org/linaro-blog/> Blog
->>>>>
->>>
->
+From 928b6903e76ebf5790fc415f9eed390e400e5bc3 Mon Sep 17 00:00:00 2001
+From: Mike Rapoport <rppt@linux.ibm.com>
+Date: Sat, 18 Jul 2020 19:13:02 +0300
+Subject: [PATCH] kprobes: introduce text_alloc_kprobes() and
+ text_free_kprobes()
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/Kconfig                       |  5 ++++-
+ arch/arm64/Kconfig                 |  1 +
+ arch/arm64/kernel/probes/kprobes.c | 10 ++++++++--
+ arch/x86/Kconfig                   |  3 ++-
+ arch/x86/kernel/kprobes/core.c     |  9 ++++-----
+ include/linux/kprobes.h            | 17 +++++++++++++++--
+ kernel/kprobes.c                   |  8 ++++----
+ 7 files changed, 38 insertions(+), 15 deletions(-)
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 8cc35dc556c7..c0589b3b3225 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -61,7 +61,7 @@ config OPROFILE_NMI_TIMER
+ 
+ config KPROBES
+ 	bool "Kprobes"
+-	depends on MODULES
++	depends on MODULES || HAVE_KPROBES_TEXT_ALLOC
+ 	depends on HAVE_KPROBES
+ 	select KALLSYMS
+ 	help
+@@ -186,6 +186,9 @@ config HAVE_IOREMAP_PROT
+ config HAVE_KPROBES
+ 	bool
+ 
++config HAVE_KPROBES_TEXT_ALLOC
++	bool
++
+ config HAVE_KRETPROBES
+ 	bool
+ 
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 66dc41fd49f2..abc0538b13ef 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -177,6 +177,7 @@ config ARM64
+ 	select HAVE_STACKPROTECTOR
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select HAVE_KPROBES
++	select HAVE_KPROBES_TEXT_ALLOC
+ 	select HAVE_KRETPROBES
+ 	select HAVE_GENERIC_VDSO
+ 	select IOMMU_DMA if IOMMU_SUPPORT
+diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+index 5290f17a4d80..fac8c6020040 100644
+--- a/arch/arm64/kernel/probes/kprobes.c
++++ b/arch/arm64/kernel/probes/kprobes.c
+@@ -118,13 +118,19 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
+ 	return 0;
+ }
+ 
+-void *alloc_insn_page(void)
++void *text_alloc_kprobes(unsigned long size)
+ {
+-	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
++	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
+ 			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
+ 			NUMA_NO_NODE, __builtin_return_address(0));
+ }
+ 
++void text_free_kprobes(void *mem)
++{
++	lockdep_assert_irqs_enabled();
++	vfree(mem);
++}
++
+ /* arm kprobe: install breakpoint in text */
+ void __kprobes arch_arm_kprobe(struct kprobe *p)
+ {
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 883da0abf779..d08b92f91531 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -190,6 +190,7 @@ config X86
+ 	select HAVE_KERNEL_XZ
+ 	select HAVE_KPROBES
+ 	select HAVE_KPROBES_ON_FTRACE
++	select HAVE_KPROBES_TEXT_ALLOC
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+ 	select HAVE_KRETPROBES
+ 	select HAVE_KVM
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index ada39ddbc922..a3e8f01c62d4 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -418,12 +418,11 @@ static int prepare_boost(kprobe_opcode_t *buf, struct kprobe *p,
+ 	return len;
+ }
+ 
+-/* Make page to RO mode when allocate it */
+-void *alloc_insn_page(void)
++void *text_alloc_kprobes(unsigned long size)
+ {
+ 	void *page;
+ 
+-	page = module_alloc(PAGE_SIZE);
++	page = text_alloc(size);
+ 	if (!page)
+ 		return NULL;
+ 
+@@ -444,9 +443,9 @@ void *alloc_insn_page(void)
+ }
+ 
+ /* Recover page to RW mode before releasing it */
+-void free_insn_page(void *page)
++void text_free_kprobes(void *page)
+ {
+-	module_memfree(page);
++	text_free(page);
+ }
+ 
+ static int arch_copy_kprobe(struct kprobe *p)
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 6adf90f248d7..dbc9c71d4ec4 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -27,6 +27,7 @@
+ #include <linux/rcupdate.h>
+ #include <linux/mutex.h>
+ #include <linux/ftrace.h>
++#include <linux/moduleloader.h>
+ #include <asm/kprobes.h>
+ 
+ #ifdef CONFIG_KPROBES
+@@ -374,8 +375,20 @@ int enable_kprobe(struct kprobe *kp);
+ 
+ void dump_kprobe(struct kprobe *kp);
+ 
+-void *alloc_insn_page(void);
+-void free_insn_page(void *page);
++#ifdef CONFIG_HAVE_KPROBES_TEXT_ALLOC
++void *text_alloc_kprobes(unsigned long size);
++void text_free_kprobes(void *page);
++#else
++static inline void *text_alloc_kprobes(unsigned long size)
++{
++	return module_alloc(size);
++}
++
++static inline void text_free_kprobes(void *page)
++{
++	module_memfree(page);
++}
++#endif
+ 
+ #else /* !CONFIG_KPROBES: */
+ 
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 2e97febeef77..c4f107682250 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -109,14 +109,14 @@ enum kprobe_slot_state {
+ 	SLOT_USED = 2,
+ };
+ 
+-void __weak *alloc_insn_page(void)
++static void *alloc_insn_page(void)
+ {
+-	return module_alloc(PAGE_SIZE);
++	return text_alloc_kprobes(PAGE_SIZE);
+ }
+ 
+-void __weak free_insn_page(void *page)
++static void free_insn_page(void *page)
+ {
+-	module_memfree(page);
++	text_free_kprobes(page);
+ }
+ 
+ struct kprobe_insn_cache kprobe_insn_slots = {
+-- 
+2.26.2
+
+
+> +#endif
+> +
+>  #endif /* _LINUX_VMALLOC_H */
+> -- 
+> 2.25.1
+> 
+
+-- 
+Sincerely yours,
+Mike.
