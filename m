@@ -2,391 +2,272 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E2BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CE2C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE032074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C832074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGRLz5 (ORCPT
+        id S1726905AbgGRL4C convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 07:55:57 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:41011 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgGRLzz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 07:55:55 -0400
-Received: from localhost.localdomain ([93.22.37.252])
-        by mwinf5d41 with ME
-        id 4bvo230035SQgGV03bvoVQ; Sat, 18 Jul 2020 13:55:51 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 18 Jul 2020 13:55:51 +0200
-X-ME-IP: 93.22.37.252
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     kuba@kernel.org, davem@davemloft.net, jeffrey.t.kirsher@intel.com
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] e100: switch from 'pci_' to 'dma_' API
-Date:   Sat, 18 Jul 2020 13:55:46 +0200
-Message-Id: <20200718115546.358240-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sat, 18 Jul 2020 07:56:02 -0400
+Received: from mgw-01.mpynet.fi ([82.197.21.90]:39344 "EHLO mgw-01.mpynet.fi"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726569AbgGRL4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 07:56:02 -0400
+Received: from pps.filterd (mgw-01.mpynet.fi [127.0.0.1])
+        by mgw-01.mpynet.fi (8.16.0.42/8.16.0.42) with SMTP id 06IBt86M022075;
+        Sat, 18 Jul 2020 14:55:36 +0300
+Received: from ex13.tuxera.com (ex13.tuxera.com [178.16.184.72])
+        by mgw-01.mpynet.fi with ESMTP id 32bvr682u4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sat, 18 Jul 2020 14:55:35 +0300
+Received: from tuxera-exch.ad.tuxera.com (10.20.48.11) by
+ tuxera-exch.ad.tuxera.com (10.20.48.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 18 Jul 2020 14:55:34 +0300
+Received: from tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789]) by
+ tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789%12]) with mapi id
+ 15.00.1497.006; Sat, 18 Jul 2020 14:55:34 +0300
+From:   Anton Altaparmakov <anton@tuxera.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     freak07 <michalechner92@googlemail.com>,
+        "linux-ntfs-dev@lists.sourceforge.net" 
+        <linux-ntfs-dev@lists.sourceforge.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Luca Stefani <luca.stefani.ge1@gmail.com>
+Subject: Re: [PATCH v2] ntfs: Fix ntfs_test_inode and ntfs_init_locked_inode
+ function type
+Thread-Topic: [PATCH v2] ntfs: Fix ntfs_test_inode and ntfs_init_locked_inode
+ function type
+Thread-Index: AQHWXPYd6q3TtZ3z0UGWdJJclBe4aqkNCHeA
+Date:   Sat, 18 Jul 2020 11:55:33 +0000
+Message-ID: <77108A50-8D4D-4303-8C4B-80F463478484@tuxera.com>
+References: <20200627190230.1191796-1-luca.stefani.ge1@gmail.com>
+ <20200718112513.533800-1-luca.stefani.ge1@gmail.com>
+In-Reply-To: <20200718112513.533800-1-luca.stefani.ge1@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [109.155.251.171]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <8FE74CCC138DEB4B96773477A5D7D94F@ex13.tuxera.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-18_05:2020-07-17,2020-07-18 signatures=0
+X-Proofpoint-Spam-Details: rule=mpy_notspam policy=mpy score=0 suspectscore=0 bulkscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 adultscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007180091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+Hi Andrew,
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
+Please can you merge this patch?  Thanks a lot in advance!
 
-When memory is allocated in 'e100_alloc()', GFP_KERNEL can be used because
-it is only called from the probe function and no lock is acquired.
+Luca, thank you for the updated patch!
+
+Best regards,
+
+	Anton
+
+> On 18 Jul 2020, at 12:25, Luca Stefani <luca.stefani.ge1@gmail.com> wrote:
+> 
+> Clang's Control Flow Integrity (CFI) is a security mechanism that can
+> help prevent JOP chains, deployed extensively in downstream kernels
+> used in Android.
+> 
+> It's deployment is hindered by mismatches in function signatures.  For
+> this case, we make callbacks match their intended function signature,
+> and cast parameters within them rather than casting the callback when
+> passed as a parameter.
+> 
+> When running `mount -t ntfs ...` we observe the following trace:
+> 
+> Call trace:
+> __cfi_check_fail+0x1c/0x24
+> name_to_dev_t+0x0/0x404
+> iget5_locked+0x594/0x5e8
+> ntfs_fill_super+0xbfc/0x43ec
+> mount_bdev+0x30c/0x3cc
+> ntfs_mount+0x18/0x24
+> mount_fs+0x1b0/0x380
+> vfs_kern_mount+0x90/0x398
+> do_mount+0x5d8/0x1a10
+> SyS_mount+0x108/0x144
+> el0_svc_naked+0x34/0x38
+> 
+> Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
+> Tested-by: freak07 <michalechner92@googlemail.com>
+> Acked-by: Anton Altaparmakov <anton@tuxera.com>
+> ---
+> fs/ntfs/dir.c   |  2 +-
+> fs/ntfs/inode.c | 27 ++++++++++++++-------------
+> fs/ntfs/inode.h |  4 +---
+> fs/ntfs/mft.c   |  4 ++--
+> 4 files changed, 18 insertions(+), 19 deletions(-)
+> 
+> diff --git a/fs/ntfs/dir.c b/fs/ntfs/dir.c
+> index 3c4811469ae8..e278bfc5ee7f 100644
+> --- a/fs/ntfs/dir.c
+> +++ b/fs/ntfs/dir.c
+> @@ -1503,7 +1503,7 @@ static int ntfs_dir_fsync(struct file *filp, loff_t start, loff_t end,
+> 	na.type = AT_BITMAP;
+> 	na.name = I30;
+> 	na.name_len = 4;
+> -	bmp_vi = ilookup5(vi->i_sb, vi->i_ino, (test_t)ntfs_test_inode, &na);
+> +	bmp_vi = ilookup5(vi->i_sb, vi->i_ino, ntfs_test_inode, &na);
+> 	if (bmp_vi) {
+>  		write_inode_now(bmp_vi, !datasync);
+> 		iput(bmp_vi);
+> diff --git a/fs/ntfs/inode.c b/fs/ntfs/inode.c
+> index d4359a1df3d5..9bb9f0952b18 100644
+> --- a/fs/ntfs/inode.c
+> +++ b/fs/ntfs/inode.c
+> @@ -30,10 +30,10 @@
+> /**
+>  * ntfs_test_inode - compare two (possibly fake) inodes for equality
+>  * @vi:		vfs inode which to test
+> - * @na:		ntfs attribute which is being tested with
+> + * @data:	data which is being tested with
+>  *
+>  * Compare the ntfs attribute embedded in the ntfs specific part of the vfs
+> - * inode @vi for equality with the ntfs attribute @na.
+> + * inode @vi for equality with the ntfs attribute @data.
+>  *
+>  * If searching for the normal file/directory inode, set @na->type to AT_UNUSED.
+>  * @na->name and @na->name_len are then ignored.
+> @@ -43,8 +43,9 @@
+>  * NOTE: This function runs with the inode_hash_lock spin lock held so it is not
+>  * allowed to sleep.
+>  */
+> -int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
+> +int ntfs_test_inode(struct inode *vi, void *data)
+> {
+> +	ntfs_attr *na = (ntfs_attr *)data;
+> 	ntfs_inode *ni;
+> 
+> 	if (vi->i_ino != na->mft_no)
+> @@ -72,9 +73,9 @@ int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
+> /**
+>  * ntfs_init_locked_inode - initialize an inode
+>  * @vi:		vfs inode to initialize
+> - * @na:		ntfs attribute which to initialize @vi to
+> + * @data:	data which to initialize @vi to
+>  *
+> - * Initialize the vfs inode @vi with the values from the ntfs attribute @na in
+> + * Initialize the vfs inode @vi with the values from the ntfs attribute @data in
+>  * order to enable ntfs_test_inode() to do its work.
+>  *
+>  * If initializing the normal file/directory inode, set @na->type to AT_UNUSED.
+> @@ -87,8 +88,9 @@ int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
+>  * NOTE: This function runs with the inode->i_lock spin lock held so it is not
+>  * allowed to sleep. (Hence the GFP_ATOMIC allocation.)
+>  */
+> -static int ntfs_init_locked_inode(struct inode *vi, ntfs_attr *na)
+> +static int ntfs_init_locked_inode(struct inode *vi, void *data)
+> {
+> +	ntfs_attr *na = (ntfs_attr *)data;
+> 	ntfs_inode *ni = NTFS_I(vi);
+> 
+> 	vi->i_ino = na->mft_no;
+> @@ -131,7 +133,6 @@ static int ntfs_init_locked_inode(struct inode *vi, ntfs_attr *na)
+> 	return 0;
+> }
+> 
+> -typedef int (*set_t)(struct inode *, void *);
+> static int ntfs_read_locked_inode(struct inode *vi);
+> static int ntfs_read_locked_attr_inode(struct inode *base_vi, struct inode *vi);
+> static int ntfs_read_locked_index_inode(struct inode *base_vi,
+> @@ -164,8 +165,8 @@ struct inode *ntfs_iget(struct super_block *sb, unsigned long mft_no)
+> 	na.name = NULL;
+> 	na.name_len = 0;
+> 
+> -	vi = iget5_locked(sb, mft_no, (test_t)ntfs_test_inode,
+> -			(set_t)ntfs_init_locked_inode, &na);
+> +	vi = iget5_locked(sb, mft_no, ntfs_test_inode,
+> +			ntfs_init_locked_inode, &na);
+> 	if (unlikely(!vi))
+> 		return ERR_PTR(-ENOMEM);
+> 
+> @@ -225,8 +226,8 @@ struct inode *ntfs_attr_iget(struct inode *base_vi, ATTR_TYPE type,
+> 	na.name = name;
+> 	na.name_len = name_len;
+> 
+> -	vi = iget5_locked(base_vi->i_sb, na.mft_no, (test_t)ntfs_test_inode,
+> -			(set_t)ntfs_init_locked_inode, &na);
+> +	vi = iget5_locked(base_vi->i_sb, na.mft_no, ntfs_test_inode,
+> +			ntfs_init_locked_inode, &na);
+> 	if (unlikely(!vi))
+> 		return ERR_PTR(-ENOMEM);
+> 
+> @@ -280,8 +281,8 @@ struct inode *ntfs_index_iget(struct inode *base_vi, ntfschar *name,
+> 	na.name = name;
+> 	na.name_len = name_len;
+> 
+> -	vi = iget5_locked(base_vi->i_sb, na.mft_no, (test_t)ntfs_test_inode,
+> -			(set_t)ntfs_init_locked_inode, &na);
+> +	vi = iget5_locked(base_vi->i_sb, na.mft_no, ntfs_test_inode,
+> +			ntfs_init_locked_inode, &na);
+> 	if (unlikely(!vi))
+> 		return ERR_PTR(-ENOMEM);
+> 
+> diff --git a/fs/ntfs/inode.h b/fs/ntfs/inode.h
+> index 98e670fbdd31..363e4e820673 100644
+> --- a/fs/ntfs/inode.h
+> +++ b/fs/ntfs/inode.h
+> @@ -253,9 +253,7 @@ typedef struct {
+> 	ATTR_TYPE type;
+> } ntfs_attr;
+> 
+> -typedef int (*test_t)(struct inode *, void *);
+> -
+> -extern int ntfs_test_inode(struct inode *vi, ntfs_attr *na);
+> +extern int ntfs_test_inode(struct inode *vi, void *data);
+> 
+> extern struct inode *ntfs_iget(struct super_block *sb, unsigned long mft_no);
+> extern struct inode *ntfs_attr_iget(struct inode *base_vi, ATTR_TYPE type,
+> diff --git a/fs/ntfs/mft.c b/fs/ntfs/mft.c
+> index fbb9f1bc623d..0d62cd5bb7f8 100644
+> --- a/fs/ntfs/mft.c
+> +++ b/fs/ntfs/mft.c
+> @@ -958,7 +958,7 @@ bool ntfs_may_write_mft_record(ntfs_volume *vol, const unsigned long mft_no,
+> 		 * dirty code path of the inode dirty code path when writing
+> 		 * $MFT occurs.
+> 		 */
+> -		vi = ilookup5_nowait(sb, mft_no, (test_t)ntfs_test_inode, &na);
+> +		vi = ilookup5_nowait(sb, mft_no, ntfs_test_inode, &na);
+> 	}
+> 	if (vi) {
+> 		ntfs_debug("Base inode 0x%lx is in icache.", mft_no);
+> @@ -1019,7 +1019,7 @@ bool ntfs_may_write_mft_record(ntfs_volume *vol, const unsigned long mft_no,
+> 		vi = igrab(mft_vi);
+> 		BUG_ON(vi != mft_vi);
+> 	} else
+> -		vi = ilookup5_nowait(sb, na.mft_no, (test_t)ntfs_test_inode,
+> +		vi = ilookup5_nowait(sb, na.mft_no, ntfs_test_inode,
+> 				&na);
+> 	if (!vi) {
+> 		/*
+> -- 
+> 2.27.0
+> 
 
 
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
-
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
-
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
-
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/net/ethernet/intel/e100.c | 92 ++++++++++++++++---------------
- 1 file changed, 49 insertions(+), 43 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
-index 91c64f91a835..ec6b1024cd8a 100644
---- a/drivers/net/ethernet/intel/e100.c
-+++ b/drivers/net/ethernet/intel/e100.c
-@@ -1739,10 +1739,10 @@ static int e100_xmit_prepare(struct nic *nic, struct cb *cb,
- 	dma_addr_t dma_addr;
- 	cb->command = nic->tx_command;
- 
--	dma_addr = pci_map_single(nic->pdev,
--				  skb->data, skb->len, PCI_DMA_TODEVICE);
-+	dma_addr = dma_map_single(&nic->pdev->dev, skb->data, skb->len,
-+				  DMA_TO_DEVICE);
- 	/* If we can't map the skb, have the upper layer try later */
--	if (pci_dma_mapping_error(nic->pdev, dma_addr)) {
-+	if (dma_mapping_error(&nic->pdev->dev, dma_addr)) {
- 		dev_kfree_skb_any(skb);
- 		skb = NULL;
- 		return -ENOMEM;
-@@ -1828,10 +1828,10 @@ static int e100_tx_clean(struct nic *nic)
- 			dev->stats.tx_packets++;
- 			dev->stats.tx_bytes += cb->skb->len;
- 
--			pci_unmap_single(nic->pdev,
--				le32_to_cpu(cb->u.tcb.tbd.buf_addr),
--				le16_to_cpu(cb->u.tcb.tbd.size),
--				PCI_DMA_TODEVICE);
-+			dma_unmap_single(&nic->pdev->dev,
-+					 le32_to_cpu(cb->u.tcb.tbd.buf_addr),
-+					 le16_to_cpu(cb->u.tcb.tbd.size),
-+					 DMA_TO_DEVICE);
- 			dev_kfree_skb_any(cb->skb);
- 			cb->skb = NULL;
- 			tx_cleaned = 1;
-@@ -1855,10 +1855,10 @@ static void e100_clean_cbs(struct nic *nic)
- 		while (nic->cbs_avail != nic->params.cbs.count) {
- 			struct cb *cb = nic->cb_to_clean;
- 			if (cb->skb) {
--				pci_unmap_single(nic->pdev,
--					le32_to_cpu(cb->u.tcb.tbd.buf_addr),
--					le16_to_cpu(cb->u.tcb.tbd.size),
--					PCI_DMA_TODEVICE);
-+				dma_unmap_single(&nic->pdev->dev,
-+						 le32_to_cpu(cb->u.tcb.tbd.buf_addr),
-+						 le16_to_cpu(cb->u.tcb.tbd.size),
-+						 DMA_TO_DEVICE);
- 				dev_kfree_skb(cb->skb);
- 			}
- 			nic->cb_to_clean = nic->cb_to_clean->next;
-@@ -1925,10 +1925,10 @@ static int e100_rx_alloc_skb(struct nic *nic, struct rx *rx)
- 
- 	/* Init, and map the RFD. */
- 	skb_copy_to_linear_data(rx->skb, &nic->blank_rfd, sizeof(struct rfd));
--	rx->dma_addr = pci_map_single(nic->pdev, rx->skb->data,
--		RFD_BUF_LEN, PCI_DMA_BIDIRECTIONAL);
-+	rx->dma_addr = dma_map_single(&nic->pdev->dev, rx->skb->data,
-+				      RFD_BUF_LEN, DMA_BIDIRECTIONAL);
- 
--	if (pci_dma_mapping_error(nic->pdev, rx->dma_addr)) {
-+	if (dma_mapping_error(&nic->pdev->dev, rx->dma_addr)) {
- 		dev_kfree_skb_any(rx->skb);
- 		rx->skb = NULL;
- 		rx->dma_addr = 0;
-@@ -1941,8 +1941,10 @@ static int e100_rx_alloc_skb(struct nic *nic, struct rx *rx)
- 	if (rx->prev->skb) {
- 		struct rfd *prev_rfd = (struct rfd *)rx->prev->skb->data;
- 		put_unaligned_le32(rx->dma_addr, &prev_rfd->link);
--		pci_dma_sync_single_for_device(nic->pdev, rx->prev->dma_addr,
--			sizeof(struct rfd), PCI_DMA_BIDIRECTIONAL);
-+		dma_sync_single_for_device(&nic->pdev->dev,
-+					   rx->prev->dma_addr,
-+					   sizeof(struct rfd),
-+					   DMA_BIDIRECTIONAL);
- 	}
- 
- 	return 0;
-@@ -1961,8 +1963,8 @@ static int e100_rx_indicate(struct nic *nic, struct rx *rx,
- 		return -EAGAIN;
- 
- 	/* Need to sync before taking a peek at cb_complete bit */
--	pci_dma_sync_single_for_cpu(nic->pdev, rx->dma_addr,
--		sizeof(struct rfd), PCI_DMA_BIDIRECTIONAL);
-+	dma_sync_single_for_cpu(&nic->pdev->dev, rx->dma_addr,
-+				sizeof(struct rfd), DMA_BIDIRECTIONAL);
- 	rfd_status = le16_to_cpu(rfd->status);
- 
- 	netif_printk(nic, rx_status, KERN_DEBUG, nic->netdev,
-@@ -1981,9 +1983,9 @@ static int e100_rx_indicate(struct nic *nic, struct rx *rx,
- 
- 			if (ioread8(&nic->csr->scb.status) & rus_no_res)
- 				nic->ru_running = RU_SUSPENDED;
--		pci_dma_sync_single_for_device(nic->pdev, rx->dma_addr,
--					       sizeof(struct rfd),
--					       PCI_DMA_FROMDEVICE);
-+		dma_sync_single_for_device(&nic->pdev->dev, rx->dma_addr,
-+					   sizeof(struct rfd),
-+					   DMA_FROM_DEVICE);
- 		return -ENODATA;
- 	}
- 
-@@ -1995,8 +1997,8 @@ static int e100_rx_indicate(struct nic *nic, struct rx *rx,
- 		actual_size = RFD_BUF_LEN - sizeof(struct rfd);
- 
- 	/* Get data */
--	pci_unmap_single(nic->pdev, rx->dma_addr,
--		RFD_BUF_LEN, PCI_DMA_BIDIRECTIONAL);
-+	dma_unmap_single(&nic->pdev->dev, rx->dma_addr, RFD_BUF_LEN,
-+			 DMA_BIDIRECTIONAL);
- 
- 	/* If this buffer has the el bit, but we think the receiver
- 	 * is still running, check to see if it really stopped while
-@@ -2097,22 +2099,25 @@ static void e100_rx_clean(struct nic *nic, unsigned int *work_done,
- 			(struct rfd *)new_before_last_rx->skb->data;
- 		new_before_last_rfd->size = 0;
- 		new_before_last_rfd->command |= cpu_to_le16(cb_el);
--		pci_dma_sync_single_for_device(nic->pdev,
--			new_before_last_rx->dma_addr, sizeof(struct rfd),
--			PCI_DMA_BIDIRECTIONAL);
-+		dma_sync_single_for_device(&nic->pdev->dev,
-+					   new_before_last_rx->dma_addr,
-+					   sizeof(struct rfd),
-+					   DMA_BIDIRECTIONAL);
- 
- 		/* Now that we have a new stopping point, we can clear the old
- 		 * stopping point.  We must sync twice to get the proper
- 		 * ordering on the hardware side of things. */
- 		old_before_last_rfd->command &= ~cpu_to_le16(cb_el);
--		pci_dma_sync_single_for_device(nic->pdev,
--			old_before_last_rx->dma_addr, sizeof(struct rfd),
--			PCI_DMA_BIDIRECTIONAL);
-+		dma_sync_single_for_device(&nic->pdev->dev,
-+					   old_before_last_rx->dma_addr,
-+					   sizeof(struct rfd),
-+					   DMA_BIDIRECTIONAL);
- 		old_before_last_rfd->size = cpu_to_le16(VLAN_ETH_FRAME_LEN
- 							+ ETH_FCS_LEN);
--		pci_dma_sync_single_for_device(nic->pdev,
--			old_before_last_rx->dma_addr, sizeof(struct rfd),
--			PCI_DMA_BIDIRECTIONAL);
-+		dma_sync_single_for_device(&nic->pdev->dev,
-+					   old_before_last_rx->dma_addr,
-+					   sizeof(struct rfd),
-+					   DMA_BIDIRECTIONAL);
- 	}
- 
- 	if (restart_required) {
-@@ -2134,8 +2139,9 @@ static void e100_rx_clean_list(struct nic *nic)
- 	if (nic->rxs) {
- 		for (rx = nic->rxs, i = 0; i < count; rx++, i++) {
- 			if (rx->skb) {
--				pci_unmap_single(nic->pdev, rx->dma_addr,
--					RFD_BUF_LEN, PCI_DMA_BIDIRECTIONAL);
-+				dma_unmap_single(&nic->pdev->dev,
-+						 rx->dma_addr, RFD_BUF_LEN,
-+						 DMA_BIDIRECTIONAL);
- 				dev_kfree_skb(rx->skb);
- 			}
- 		}
-@@ -2177,8 +2183,8 @@ static int e100_rx_alloc_list(struct nic *nic)
- 	before_last = (struct rfd *)rx->skb->data;
- 	before_last->command |= cpu_to_le16(cb_el);
- 	before_last->size = 0;
--	pci_dma_sync_single_for_device(nic->pdev, rx->dma_addr,
--		sizeof(struct rfd), PCI_DMA_BIDIRECTIONAL);
-+	dma_sync_single_for_device(&nic->pdev->dev, rx->dma_addr,
-+				   sizeof(struct rfd), DMA_BIDIRECTIONAL);
- 
- 	nic->rx_to_use = nic->rx_to_clean = nic->rxs;
- 	nic->ru_running = RU_SUSPENDED;
-@@ -2377,8 +2383,8 @@ static int e100_loopback_test(struct nic *nic, enum loopback loopback_mode)
- 
- 	msleep(10);
- 
--	pci_dma_sync_single_for_cpu(nic->pdev, nic->rx_to_clean->dma_addr,
--			RFD_BUF_LEN, PCI_DMA_BIDIRECTIONAL);
-+	dma_sync_single_for_cpu(&nic->pdev->dev, nic->rx_to_clean->dma_addr,
-+				RFD_BUF_LEN, DMA_BIDIRECTIONAL);
- 
- 	if (memcmp(nic->rx_to_clean->skb->data + sizeof(struct rfd),
- 	   skb->data, ETH_DATA_LEN))
-@@ -2751,16 +2757,16 @@ static int e100_do_ioctl(struct net_device *netdev, struct ifreq *ifr, int cmd)
- 
- static int e100_alloc(struct nic *nic)
- {
--	nic->mem = pci_alloc_consistent(nic->pdev, sizeof(struct mem),
--		&nic->dma_addr);
-+	nic->mem = dma_alloc_coherent(&nic->pdev->dev, sizeof(struct mem),
-+				      &nic->dma_addr, GFP_KERNEL);
- 	return nic->mem ? 0 : -ENOMEM;
- }
- 
- static void e100_free(struct nic *nic)
- {
- 	if (nic->mem) {
--		pci_free_consistent(nic->pdev, sizeof(struct mem),
--			nic->mem, nic->dma_addr);
-+		dma_free_coherent(&nic->pdev->dev, sizeof(struct mem),
-+				  nic->mem, nic->dma_addr);
- 		nic->mem = NULL;
- 	}
- }
-@@ -2853,7 +2859,7 @@ static int e100_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto err_out_disable_pdev;
- 	}
- 
--	if ((err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32)))) {
-+	if ((err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32)))) {
- 		netif_err(nic, probe, nic->netdev, "No usable DMA configuration, aborting\n");
- 		goto err_out_free_res;
- 	}
 -- 
-2.25.1
+Anton Altaparmakov <anton at tuxera.com> (replace at with @)
+Lead in File System Development, Tuxera Inc., http://www.tuxera.com/
+Linux NTFS maintainer
 
