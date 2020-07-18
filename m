@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C80BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CACC433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1DC2076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DB4207FB
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595084894;
-	bh=EgGB+ugeIQQwLzSLmGioU4i2h2QENrkT5BGNqVLjjow=;
+	s=default; t=1595085010;
+	bh=lgIWion9D/0OTEIPDUtQys/BnOHW3hcw0kz4qL2VHgA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lV50f7tdLnKJAFeuQfuvM3SIDbZCUSxxlnDFDylVI3xtMeeWbC8lp73yK7rNfDpda
-	 9HnX0Nb/lE7HBw4ZexiYKabvo7R4Dbx37VuvcpHTBM8umcM6h8iIiFxoq7+qKkVex/
-	 625hFRZTwTelP/PJ5ETJALYP6G4RQAusp72V/lb4=
+	b=u1G6+iT1IsTESxELJq4BEOK0XYGUDG6dqI841sCxB3Nnd0yuRsMEVCm68Bq+6+VWE
+	 GHApveKlemlI60ym7OyS3IDwGcCYhs9PUg7UoZK2nELldcCtmU9TR1tinK20Ker4NO
+	 F+jANXVadp6ZOpUQjIj4LKwD8H76n8qHHxjHfLQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgGRPII (ORCPT
+        id S1727818AbgGRPKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 11:08:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36642 "EHLO mail.kernel.org"
+        Sat, 18 Jul 2020 11:10:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbgGRPIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 11:08:07 -0400
+        id S1726344AbgGRPKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 11:10:09 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A98412067D;
-        Sat, 18 Jul 2020 15:08:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C63972067D;
+        Sat, 18 Jul 2020 15:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595084887;
-        bh=EgGB+ugeIQQwLzSLmGioU4i2h2QENrkT5BGNqVLjjow=;
+        s=default; t=1595085008;
+        bh=lgIWion9D/0OTEIPDUtQys/BnOHW3hcw0kz4qL2VHgA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WMUuIEteR/3UF9zmCrn26mhUOitjFBpZCNZF3mfhSa6GTokRz6JAQL+DMUg2LQkdL
-         qlZJpUH3GrIYePq15SQBSQEQwqUWBXLPFAerkgyjiC+BzdXu9wXBwaNvehYbIUfyfK
-         9WRfTlYamjjns9gfEP8Nqb9hfxQirR7OBTPyddHE=
-Date:   Sat, 18 Jul 2020 16:08:02 +0100
+        b=Nd23bh3pd9ijTL9SdNUX38ajizHpH/XusgcniEzCTiAuDxlqXz1lVIkx1OMbMHtXc
+         ChATbDYWGZsBGWUTw5UXUEtNRI4lmbWf6uZwcBNT42WQIynnqkVCK4jo9dddRjKtUS
+         DpLS9RW7oCeYAbbLzPDRM4iH0NOtKRRo0GN4JNg0=
+Date:   Sat, 18 Jul 2020 16:10:04 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH 22/30] iio: dac: ad5755: Fix kerneldoc attribute
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Ricardo Ribalda <ribalda@kernel.org>
+Subject: Re: [PATCH 24/30] iio: dac: ad5761: Fix kerneldoc attribute
  formatting for 'lock'
-Message-ID: <20200718160802.55ca2232@archlinux>
-In-Reply-To: <20200716135928.1456727-23-lee.jones@linaro.org>
+Message-ID: <20200718161004.4e73c08a@archlinux>
+In-Reply-To: <20200716135928.1456727-25-lee.jones@linaro.org>
 References: <20200716135928.1456727-1-lee.jones@linaro.org>
-        <20200716135928.1456727-23-lee.jones@linaro.org>
+        <20200716135928.1456727-25-lee.jones@linaro.org>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -61,36 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 14:59:20 +0100
+On Thu, 16 Jul 2020 14:59:22 +0100
 Lee Jones <lee.jones@linaro.org> wrote:
 
 > Kerneldoc expects attributes/parameters to be in '@*.: ' format.
 > 
 > Fixes the following W=1 kernel build warning(s):
 > 
->  drivers/iio/dac/ad5755.c:105: warning: Function parameter or member 'lock' not described in 'ad5755_state'
+>  drivers/iio/dac/ad5761.c:80: warning: Function parameter or member 'lock' not described in 'ad5761_state'
 > 
 > Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Ricardo Ribalda <ribalda@kernel.org>
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Applied. Thanks,
+Applied,
 
-J
+Thanks,
+
+Jonathan
 
 > ---
->  drivers/iio/dac/ad5755.c | 2 +-
+>  drivers/iio/dac/ad5761.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
-> index 7723bd313fc6e..bee4ed0ce91a8 100644
-> --- a/drivers/iio/dac/ad5755.c
-> +++ b/drivers/iio/dac/ad5755.c
-> @@ -82,7 +82,7 @@ struct ad5755_chip_info {
->   * @pwr_down:	bitmask which contains  hether a channel is powered down or not
->   * @ctrl:	software shadow of the channel ctrl registers
->   * @channels:	iio channel spec for the device
-> - * @lock	lock to protect the data buffer during SPI ops
-> + * @lock:	lock to protect the data buffer during SPI ops
->   * @data:	spi transfer buffers
+> diff --git a/drivers/iio/dac/ad5761.c b/drivers/iio/dac/ad5761.c
+> index 67c4fa75c6f13..1d9d0e22d6f44 100644
+> --- a/drivers/iio/dac/ad5761.c
+> +++ b/drivers/iio/dac/ad5761.c
+> @@ -57,7 +57,7 @@ enum ad5761_supported_device_ids {
+>   * @use_intref:		true when the internal voltage reference is used
+>   * @vref:		actual voltage reference in mVolts
+>   * @range:		output range mode used
+> - * @lock		lock to protect the data buffer during SPI ops
+> + * @lock:		lock to protect the data buffer during SPI ops
+>   * @data:		cache aligned spi buffer
 >   */
->  struct ad5755_state {
+>  struct ad5761_state {
 
