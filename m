@@ -2,138 +2,100 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410E4C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2CAC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 166A52073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:40:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u5XRWCDE"
+	by mail.kernel.org (Postfix) with ESMTP id 995C62073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:41:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595086872;
+	bh=gRMgGwf57TpWPzv7Fbg6pSq51jgQkkjsG4BSEsJTtiY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=c0WgniUd7VrgSLtLKCjsJdnCxQ4MifOHaceB375dvdn0rHHwPfCeFDPIyPxbDuS7j
+	 eDCJUqEj29syX+StWt1ncJ9wixUBZ9L2/e1BRXZzcMZnpmmd9OIB/KV2IkFgaTvZ0X
+	 ScRT/FGI5rrNZ6i/Mvf5YYjskGzi+SOMAarCqqRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgGRPkn (ORCPT
+        id S1728185AbgGRPlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 11:40:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgGRPkn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 11:40:43 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0147CC0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 08:40:42 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id gc9so7921088pjb.2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 08:40:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=QC6uaWR6dusie0wlT5R1j0hRjcwCtYQTVPNPMCj1elU=;
-        b=u5XRWCDEwVNvRlYCeFYHCCtYBeHFm3mH43DbR2tvhNuk3lyFOydU6bg09nFt430Dcc
-         Ax8NNB9KYRwFp7C9gIrBQpDZTn+4cLLUFeuwKI98a52sWKrup9+8fdiYh0yJLZrTgL9y
-         il+gx6cpkPK5ZUqiO7ugZ3vaE7vuLskXrLuGSUN46CZlYi7poBB2ITKrV4TWRKEYJocm
-         GX1OY7fggtj8UHVDgo2uWRjzGcdMDC2cw1EKhTyI2iTTuAJe0S/7DmwUlyJ7RLF8WMle
-         arkQgxvLKV3/sLe5hHsTvDqcBVOqwxADewXZTl8LeSo+XJhc3j2nINrwpQ1J2XWvBCOs
-         iu0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=QC6uaWR6dusie0wlT5R1j0hRjcwCtYQTVPNPMCj1elU=;
-        b=EmgCyw+qNgcC7UJ0NcZTA8tY/36a5n3BIPdSFPKulPc4f9HN4bbiuCiCWAo8wpFmK9
-         NRGYp4UaK8+mQ92B47UAfuT8SKlZwsKNaG/YS0EdQglkHYxSSs0xlBvQUwUICkNqTC4E
-         cTy2peak8cArQpoXmwkOiQ+/grtuGIQjtE27+JKvTzOn1UoRE3ghUSsejpjcJtGlJZN1
-         srqGvQilXnKVAg/TlSXrEvGkH/mh6HYez+C3oUDaQGr1n91puooK8XLE3NvBMotfe6m+
-         z2L/V0qqL2dNp+VMvAWSx8nqzF0uxEEHAppiDGlKCpJpaJLQR5cDCoQnVAUMeZJ911s/
-         yW6g==
-X-Gm-Message-State: AOAM532vCqV7BdInA610LEcMnaYR8Rtye/b3qU7b0nA8ANzTBdZ4u4q4
-        UpzspXByWwjvwqVzybIbCTtYyhnCPvzlAQ==
-X-Google-Smtp-Source: ABdhPJzh4ZFaYN9tEEiDLgn+AhUuJH9a0GEgjpvjHHnol+xqa6XewBBT431QVimiM0ZfbB0ZPkJuuQ==
-X-Received: by 2002:a17:902:a981:: with SMTP id bh1mr11857962plb.280.1595086842407;
-        Sat, 18 Jul 2020 08:40:42 -0700 (PDT)
-Received: from blackclown ([103.88.82.25])
-        by smtp.gmail.com with ESMTPSA id 17sm5956823pjl.30.2020.07.18.08.40.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jul 2020 08:40:41 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 21:10:30 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: rts5208: rtsx: Replace depracated MSI API
-Message-ID: <20200718154030.GA28042@blackclown>
+        Sat, 18 Jul 2020 11:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbgGRPlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 11:41:11 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5658920734;
+        Sat, 18 Jul 2020 15:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595086871;
+        bh=gRMgGwf57TpWPzv7Fbg6pSq51jgQkkjsG4BSEsJTtiY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vhDKfOeAWLe7UDWWcA5aD5lJ/VBnc9BydNt3VYm9OIhzCnGxATwCWVwx8aYxE37X3
+         CatwSYJfcNL2pmKQtMJTftAS+nrL6BurvAaApoKVF6oXL/ZndRLeCU/i0Czf6m0wIt
+         ++w4xCYAHFneoj3m0+gONsZfOlTTd9vJ+1Wrq7lg=
+Date:   Sat, 18 Jul 2020 16:41:06 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        David Veenstra <davidjulianveenstra@gmail.com>,
+        Graff Yang <graff.yang@gmail.com>
+Subject: Re: [PATCH 08/30] iio: resolver: ad2s1200: Change ordering of
+ compiler attribute macro
+Message-ID: <20200718164106.5e57f276@archlinux>
+In-Reply-To: <20200717165538.3275050-9-lee.jones@linaro.org>
+References: <20200717165538.3275050-1-lee.jones@linaro.org>
+        <20200717165538.3275050-9-lee.jones@linaro.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 17 Jul 2020 17:55:16 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Kerneldoc gets confused if the variable does not follow the
+> type/attribute definitions.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/iio/resolver/ad2s1200.c:44: warning: Function parameter or member '____cacheline_aligned' not described in 'ad2s1200_state'
+> 
+> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+> Cc: David Veenstra <davidjulianveenstra@gmail.com>
+> Cc: Graff Yang <graff.yang@gmail.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Holding this for now whilst we discuss whether to just fix it in
+the kernel-doc script.
 
-Replace depracated pci_enable_msi with pci_alloc_irq_vectors.
+J
+> ---
+>  drivers/iio/resolver/ad2s1200.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/resolver/ad2s1200.c b/drivers/iio/resolver/ad2s1200.c
+> index a391f46ee06b7..29cfd57eff9e7 100644
+> --- a/drivers/iio/resolver/ad2s1200.c
+> +++ b/drivers/iio/resolver/ad2s1200.c
+> @@ -40,7 +40,7 @@ struct ad2s1200_state {
+>  	struct spi_device *sdev;
+>  	struct gpio_desc *sample;
+>  	struct gpio_desc *rdvel;
+> -	__be16 rx ____cacheline_aligned;
+> +	__be16 ____cacheline_aligned rx;
+>  };
+>  
+>  static int ad2s1200_read_raw(struct iio_dev *indio_dev,
 
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- drivers/staging/rts5208/rtsx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
-index e28e162d004e..b39d3f8b54df 100644
---- a/drivers/staging/rts5208/rtsx.c
-+++ b/drivers/staging/rts5208/rtsx.c
-@@ -310,7 +310,7 @@ static int __maybe_unused rtsx_resume(struct device *de=
-v_d)
- 	pci_set_master(pci);
-=20
- 	if (chip->msi_en) {
--		if (pci_enable_msi(pci) < 0)
-+		if (pci_alloc_irq_vectors(pci, 1, 1, PCI_IRQ_MSI) < 0)
- 			chip->msi_en =3D 0;
- 	}
-=20
-@@ -881,7 +881,7 @@ static int rtsx_probe(struct pci_dev *pci,
- 	dev_info(&pci->dev, "pci->irq =3D %d\n", pci->irq);
-=20
- 	if (dev->chip->msi_en) {
--		if (pci_enable_msi(pci) < 0)
-+		if (pci_alloc_irq_vectors(pci, 1, 1, PCI_IRQ_MSI) < 0)
- 			dev->chip->msi_en =3D 0;
- 	}
-=20
---=20
-2.17.1
-
-
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8TF+0ACgkQ+gRsbIfe
-747CGhAAnpA18/QVMvwQ9y5YMfOm81IHq7L/c/rnpI8bfFWCWBat+xEn4uiSqe51
-1uB2eqGDr6Mzzd6V/ub9NUmA7ZBH8SABfHdzSh8jLo1V+Ql/yxs2chakIMZuTISb
-kgliiEH262QBb5vgwyzaAOdx0TCubFBbn4RQyrs2qnKpIacsWeMzIpMMMJQV5bup
-HonQeIXlXooL010HxI8lBfDYV7Ih+blrnAW09rfiwXvq5xZufT5tild5zMsjtUVo
-gTzyWXY8Kvctx83c4e5HPkaeuYXG9/NA23pSKExtE0EWEvOyGvzX2n7rdHg0kfFi
-und2xSVuLZnTVIhczKOnLB9m1KEfm2LBWx8/a7d9yCL+52CSHsiXeKKxvQ5qE6Ic
-W2O97yhC8Wd2yFpY3Wh3AQ4jtXeACKUm4bxbDRdaOvQK6hYORQqosOJQ5hfiFHR8
-NsVnj6jaEoK1ydDErwCEvoh2qo9N27m97eIpBUAWMwlU1GueQUYR+Gv4lFPSzoRb
-kpp9B7VxhXfGgCf2NhcAztuM85JH8AZHUc31ezC4mtOaNU9JCunkJPQlFptRCsXj
-SbjKASQMy7opzABOjPbMy82EO5jtAlk4kidsjlh2mHswI/VobQMvHh48YB47H5iv
-/HWg5drO/V1zTboW9UiZ7vYaRBpxC7Wq4fx8HEc6nt+5zltZwfY=
-=MFt4
------END PGP SIGNATURE-----
-
---SLDf9lqlvOQaIe6s--
