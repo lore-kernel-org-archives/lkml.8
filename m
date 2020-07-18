@@ -2,121 +2,134 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13002C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E31AB2070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:20:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hraSxEa8"
+	by mail.kernel.org (Postfix) with ESMTP id A809F20829
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgGRNUX (ORCPT
+        id S1726777AbgGRNRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgGRNUW (ORCPT
+        Sat, 18 Jul 2020 09:17:16 -0400
+Received: from smtprelay0030.hostedemail.com ([216.40.44.30]:36496 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726566AbgGRNRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:20:22 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05149C0619D2;
-        Sat, 18 Jul 2020 06:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=u1Ta43l8ivno0FCtWUhrqwGXsKGzaaP+vzxnn7dCRs0=; b=hraSxEa8sSRapBAnEdTMHrFww
-        Ws8wbtC3pEWdiPCtvVN0dWA7gC8fH8K68gMZm2aBwDTQ5MLzW6PvXrytg2JhLfYosQs/XtjMQDNL/
-        om5EXahWcp7QwGUyvypqKNWgIhLEmxqjaVi+6vkHizFSWB4LCzL43ge1Hlr0AQvd4TBBqcGvoDsfe
-        duVMfvA2fCgIBQp/ZnN638bEdngPfn/rKugJasNr8X8Mw1me/J/PBHwly1Y7PCdQ0HBmEvSrnSx+K
-        fxva4v0RRLfMFh/UW8/WjxlHNtdT+1KCfUCT6Jrph84E3ik03Qg5Qjv3p0qjdadO2soOA0mda5ffC
-        2v1aC27bw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41078)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jwmlD-0001bu-P8; Sat, 18 Jul 2020 14:20:15 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jwml9-0002yE-BN; Sat, 18 Jul 2020 14:20:11 +0100
-Date:   Sat, 18 Jul 2020 14:20:11 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     John Crispin <john@phrozen.org>
-Cc:     Matthew Hagan <mnhagan88@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-Message-ID: <20200718132011.GQ1551@shell.armlinux.org.uk>
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
- <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
- <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <ac7f5f39-9f83-64c0-d8d5-9ea059619f67@gmail.com>
- <53851852-0efe-722e-0254-8652cdfea8fc@phrozen.org>
+        Sat, 18 Jul 2020 09:17:15 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 84C0D181D207A;
+        Sat, 18 Jul 2020 13:17:14 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: crib79_62139b626f13
+X-Filterd-Recvd-Size: 3809
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 18 Jul 2020 13:17:13 +0000 (UTC)
+Message-ID: <560eeb7388164e58ac0e47277fe2aec798c45a5c.camel@perches.com>
+Subject: Re: [PATCH 4/4] staging: rtl8188eu: include: placed constant on the
+ right side of the test in comparisons
+From:   Joe Perches <joe@perches.com>
+To:     B K Karthik <bkkarthik@pesu.pes.edu>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Straube <straube.linux@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Sat, 18 Jul 2020 06:17:12 -0700
+In-Reply-To: <20200718091857.quzs5sqvkjzngd6k@pesu-pes-edu>
+References: <20200718091857.quzs5sqvkjzngd6k@pesu-pes-edu>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53851852-0efe-722e-0254-8652cdfea8fc@phrozen.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:44:19PM +0200, John Crispin wrote:
-> in regards to the sgmii clk skew. I never understood the electrics fully I
-> am afraid, but without the patch it simply does not work. my eletcric foo is
-> unfortunately is not sufficient to understand the "whys" I am afraid.
+On Sat, 2020-07-18 at 05:18 -0400, B K Karthik wrote:
+> placed constant on the right side of the test
+> to fix warnings issued by checkpatch
+[]
+> diff --git a/drivers/staging/rtl8188eu/include/wifi.h b/drivers/staging/rtl8188eu/include/wifi.h
+[]
+> @@ -326,7 +326,7 @@ static inline unsigned char *get_hdr_bssid(unsigned char *pframe)
+>  
+>  static inline int IsFrameTypeCtrl(unsigned char *pframe)
+>  {
+> -	if (WIFI_CTRL_TYPE == GetFrameType(pframe))
+> +	if (GetFrameType(pframe) == WIFI_CTRL_TYPE)
+>  		return true;
+>  	else
+>  		return false;
 
-Do you happen to know what frequency the clock is?  Is it 1.25GHz or
-625MHz?  It sounds like it may be 1.25GHz if the edge is important.
+Always try to improve code instead of merely shutting
+up checkpatch warnings.
 
-If the clock is 1.25GHz, the "why" is because of hazards (it has
-nothing to do with delays in RGMII being propagated to SGMII).
+This function should likely be written:
 
-Quite simply, a flip-flop suffers from metastability if the clock and
-data inputs change at about the same time.  Amongst the parametrics of
-flip-flops will be a data setup time, and a data hold time, referenced
-to the clock signal.
+static inline bool IsFrameTypeCtrl(unsigned char *pframe)
+{
+	return GetFrameType(pframe) == WIFI_CTRL_TYPE;
+}
 
-If the data changes within the setup and hold times of the clock
-changing, then the output of the flip-flop is unpredictable - it can
-latch a logic 1 or a logic 0, or oscillate between the two until
-settling on one state.
+and given it's used only once, it might be expanded
+in that place and removed altogether.
 
-So, if data is clocked out on the rising edge of a clock signal, and
-clocked in on the rising edge of a clock signal - and the data and
-clock edges arrive within the setup and hold times at the flip-flop
-that is clocking the data in, there is a metastability hazard, and
-the data bit that is latched is unpredictable.
+Something like:
 
-One way to solve this is to clock data out on one edge, and clock data
-in on the opposite edge - this is used on buses such as SPI.  Other
-buses such as I2C define minimum separation between transitions between
-the SDA and SCL signals.
+(and the memcmp below could be ether_addr_equal instead
+ but I'm too lazy to find out if the addresses are both
+ guaranteed to be __aligned(2) which is likely)
 
-These solutions don't work with RGMII - the RGMII TXC clocks data on
-both edges.  The only solution there is to ensure a delay is introduced
-between the data and clock changes seen at the receiver - which can be
-done by introducing delays at the transmitter or at the receiver, or by
-serpentine routing of the traces to induce delays to separate the clock
-and data transitions sufficiently to avoid metastability.
+---
+ drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c | 8 +++++---
+ drivers/staging/rtl8188eu/include/wifi.h        | 7 -------
+ 2 files changed, 5 insertions(+), 10 deletions(-)
 
-If the clock is 625MHz (as with some Marvell devices for SGMII) then
-both clock edges are used, and both edges are used just like RGMII.
-Therefore, the same considerations as RGMII apply there to ensure that
-the data setup and hold times are not violated.
+diff --git a/drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c b/drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c
+index 7d0135fde795..a2994f9ecbde 100644
+--- a/drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c
++++ b/drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c
+@@ -144,10 +144,12 @@ void update_recvframe_phyinfo_88e(struct recv_frame *precvframe,
+ 
+ 	wlanhdr = precvframe->pkt->data;
+ 
+-	pkt_info.bPacketMatchBSSID = ((!IsFrameTypeCtrl(wlanhdr)) &&
+-		!pattrib->icv_err && !pattrib->crc_err &&
++	pkt_info.bPacketMatchBSSID =
++		GetFrameType(wlanhdr) != WIFI_CTRL_TYPE &&
++		!pattrib->icv_err &&
++		!pattrib->crc_err &&
+ 		!memcmp(get_hdr_bssid(wlanhdr),
+-		 get_bssid(&padapter->mlmepriv), ETH_ALEN));
++			get_bssid(&padapter->mlmepriv), ETH_ALEN);
+ 
+ 	pkt_info.bPacketToSelf = pkt_info.bPacketMatchBSSID &&
+ 				 (!memcmp(get_da(wlanhdr),
+diff --git a/drivers/staging/rtl8188eu/include/wifi.h b/drivers/staging/rtl8188eu/include/wifi.h
+index 791f287a546d..3998d5633860 100644
+--- a/drivers/staging/rtl8188eu/include/wifi.h
++++ b/drivers/staging/rtl8188eu/include/wifi.h
+@@ -324,13 +324,6 @@ static inline unsigned char *get_hdr_bssid(unsigned char *pframe)
+ 	return sa;
+ }
+ 
+-static inline int IsFrameTypeCtrl(unsigned char *pframe)
+-{
+-	if (WIFI_CTRL_TYPE == GetFrameType(pframe))
+-		return true;
+-	else
+-		return false;
+-}
+ /*-----------------------------------------------------------------------------
+ 			Below is for the security related definition
+ ------------------------------------------------------------------------------*/
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+
+
+
