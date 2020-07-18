@@ -2,115 +2,102 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE77C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE81C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA5020759
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4D72073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:34:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAFx9lfW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iU4puuJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgGRIb0 (ORCPT
+        id S1729000AbgGRIet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 04:31:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40856 "EHLO
+        Sat, 18 Jul 2020 04:34:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgGRIbZ (ORCPT
+        with ESMTP id S1728749AbgGRIet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 04:31:25 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7002DC0619D2;
-        Sat, 18 Jul 2020 01:31:25 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id e8so7783457pgc.5;
-        Sat, 18 Jul 2020 01:31:25 -0700 (PDT)
+        Sat, 18 Jul 2020 04:34:49 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E228BC0619D2;
+        Sat, 18 Jul 2020 01:34:48 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h22so15263180lji.9;
+        Sat, 18 Jul 2020 01:34:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=IJ6earoqykCVt6o3J28TqfvGcx0vADiIhfi51y4OCk4=;
-        b=gAFx9lfW47pIUPWLtcThE9MAfGBIkByT1JeFmZdlfSx3HzSFnYUupAGiPpacLQM2L4
-         X6Q5Tc9mtUG56h1fquzpy/upr0oIbVSjNRW7SBj29o5vBzWn7TpLMZfDu8JjXYgRE/1J
-         kEqaTIaps1K6/HyWZ9WFyqQejVef5HCFfyBpQKUCnw3LCU1xGYQp8kNvmitXw0+AhJCp
-         YKGw3ESUKBeF8O22cxiWk/MrGapbQArZLU5IzIQo677QxnBdyPk26qmQ64rP0Kihg9J7
-         jiQvQx86FLlDdJCAJtmdhTN9xHQQkQl4s4SsVh4KGw2GQyOG3npZKbCkhm3bz7oUyBFT
-         uZqw==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8LxBXucu22MekJzjcm9McVLQ6xx8d1C2UxhUn5AUQVA=;
+        b=iU4puuJ1t9aQMFxcrQUpwAs55vm9CVnCD+SxkQcdPDYW5ntHPRX0LUfd0sKfC71g1g
+         DckdRLgA9DgEKRohMh5hy2PUfgl5+HH/dcJqJRIXgPYa5agDwpAwdA6xJSKtQIccyaXJ
+         vshX+FmSy0o70KEY8Fvh2j9p5t4yECPswn4rh1g+vEPTX4VnoAgLl5O9uGcxoq2HgbV4
+         Vrxfh0mKMUGq86Hglo5ypwPKHrJBHmrzzSKPMS7HGACzXjbHGtn20ykZfhVsgZHgZUhQ
+         iEXhlWxHfXj3lMfnI/dKxPlb95aqYYv1qu2SYILEfMffZoH6ziqjSt7938R8szpinQhr
+         3qMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=IJ6earoqykCVt6o3J28TqfvGcx0vADiIhfi51y4OCk4=;
-        b=eNzAZWPGgdBa1x+Hk+qjkLhm9vpgmSNzFI7/aFdyBZo00lM1sqhe2igcIevB/wThmY
-         EDDy9wubCNHZTqj3XP0O9NSB7M5/ql64I0fyrOLc7JuavwyWAEOZprVI83BORGqkJE84
-         djjxvJVtoTnSuoAWg+GceKGu3qsWSk2n1dwVPSCEFcqi4Yt6fP4E1jlAkldMMAGrhQs5
-         lwjznZIEKyNEQ4X4ujBh3OiqYSUWNBbgkswR3/yRUiaBevSS91eaNJeyhoDdHN6eecfZ
-         71qYxRrim51jUqcuoJ90TZM7aP+5HKKJvQfsetrmsdFFWbxtbTUWS6mJ8XAtS0Up1ITa
-         WNJA==
-X-Gm-Message-State: AOAM533xOKpAqn3iC0jDlPeBmtmGoVrfSOlePtddN8Su9zRR+F3aaXYp
-        mHAQocj9KDc8gQijXP3GRUPRSwtDQP4=
-X-Google-Smtp-Source: ABdhPJzGKMQogFaHht6SdiKigrGPtZFXg0HVQ/V9AzI9QJx95FP0JqxF4z2OqYz04JKups1XRnQ/+A==
-X-Received: by 2002:a05:6a00:1589:: with SMTP id u9mr11609373pfk.201.1595061084952;
-        Sat, 18 Jul 2020 01:31:24 -0700 (PDT)
-Received: from blackclown ([103.88.82.25])
-        by smtp.gmail.com with ESMTPSA id k2sm9444641pgm.11.2020.07.18.01.31.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jul 2020 01:31:23 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 14:01:01 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org,
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8LxBXucu22MekJzjcm9McVLQ6xx8d1C2UxhUn5AUQVA=;
+        b=sDSwhFH3HAV1ZHRaQwbKqe/9Myt0gfYKgaBLyes5Lj74Qd1mzh3J5bAgazzJrvQiZ+
+         /eoLWU46bo+yRKLjJYOxdbiGmhfow2PeowX0iQsd2Sidq2zMLxKB6gAR6rm2G6c+1iRw
+         Iz4kofBtoYjhbRaOeCK3lh8FQtHy3JSlN+T7j+nOT5nBzm8ICxC1PwXywkMRQJDwRIKS
+         Jiqw3NNIDu/7ZG2IUy/uA0H9y8SsDkfT7+FU9VZYh2P/yFMJmVH2dJPbrZAf+8qF9i8D
+         PdHFSJBKc+toyEuAH4EJ9OJ63wsmSYhiyM1FHAaEpH1oTZwm3p7oSB268Dy3Rg0Q2sjY
+         nvew==
+X-Gm-Message-State: AOAM5321n+W2BSvUtBgMm0pJWF0GwfcUPN5tSGwj+DKFweqiDT4UKfVk
+        m9lgAiQbYv1ZZOBGV2YFsl/MO3xN
+X-Google-Smtp-Source: ABdhPJwfdy/KeGasBEr5jNeY291r6rmQZNvkJfzhUpsbYSckT2da/NemRlp8JGmePxIYJmPxAtS5AA==
+X-Received: by 2002:a2e:93d5:: with SMTP id p21mr5560378ljh.239.1595061287383;
+        Sat, 18 Jul 2020 01:34:47 -0700 (PDT)
+Received: from localhost.localdomain ([82.209.196.123])
+        by smtp.gmail.com with ESMTPSA id u26sm2789226lfq.72.2020.07.18.01.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jul 2020 01:34:46 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RESEND] net: decnet: TODO Items
-Message-ID: <20200718083101.GA26780@blackclown>
+Subject: [PATCH 0/2] task_put batching
+Date:   Sat, 18 Jul 2020 11:32:50 +0300
+Message-Id: <cover.1595021626.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For my a bit exaggerated test case perf continues to show high CPU
+cosumption by io_dismantle(), and so calling it io_iopoll_complete().
+Even though the patch doesn't yield throughput increase for my setup,
+probably because the effect is hidden behind polling, but it definitely
+improves relative percentage. And the difference should only grow with
+increasing number of CPUs. Another reason to have this is that atomics
+may affect other parallel tasks (e.g. which doesn't use io_uring)
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+before:
+io_iopoll_complete: 5.29%
+io_dismantle_req:   2.16%
 
-Hi Maintainers and Developers,
-	I am interested in the DECnet TODO list.
-I just need a quick response whether they are worth doing or not
-for the amount of development happening in this subsystem is extremely
-low and I can't help but question whether I should indulge in any of
-the listed works or not.
-
-Thanks,
-
-Suraj Upadhyay.
+after:
+io_iopoll_complete: 3.39%
+io_dismantle_req:   0.465%
 
 
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
+Pavel Begunkov (2):
+  tasks: add put_task_struct_many()
+  io_uring: batch put_task_struct()
 
------BEGIN PGP SIGNATURE-----
+ fs/io_uring.c              | 28 ++++++++++++++++++++++++++--
+ include/linux/sched/task.h |  6 ++++++
+ 2 files changed, 32 insertions(+), 2 deletions(-)
 
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8SszsACgkQ+gRsbIfe
-744LkxAArVPXt/aVg9CGW6jw9tZvXLJB6kCitq+ZFDE3m77Jicj/hpyXFXA2axll
-yyGpLPkmfp9ipYsqaZph3mL1m6d2paAcl/hxK+lNfOFNuc8MyCIh+jMSub9Wf2VW
-Bgjn4TOn5LQW8DqCN/Avxa1kh1hDj9K48q/KdH9LhoAjowz08UTI1ed/ZNcERhwu
-tHxX1EiLkbpnwueSZ7ljrB9bBEMQ7pEHmilB7ALLTiRN035Ugj3+PWI2zhYShe4T
-usCQv0tbhcllW6y9U9jAMAbBp/PlL86ti5RpeybdP1CbbS7EalhQ0lKA+/FxAmFP
-+uNaDVuI9KobwgNchNmZu095PxoAtyA61gWP2xAQsxmQGGbI2+MkTHVPy+wLmRnh
-vTS/gTPzKe5LPmJ9eYZwWIykTNkpBzBOaslXbdD+IlDwFEYd2UWYrKUJz/piB/hj
-5GQuiqbm68wHrFi/2zip1jOhfmRtkHKcIpQuOEkkmTWLlLc/TcMfAQzcnzDTZS59
-eC+bQiDrops+Y9EimXhXwIPnie1LvYiOvFiXlycTijZPkZBesPtbLk7mZgDsG4B9
-vVcclgAVqjCaNtJz9IlMINy5DA3sqAgUJd0QKRkFQhT5sMYWzR65EfjCxEN4058D
-Mehg4WNHsiVBoGV4ros2HJucgiAtiDX42QSmFpKBqOSU//Dwomo=
-=QZhb
------END PGP SIGNATURE-----
+-- 
+2.24.0
 
---GvXjxJ+pjyke8COw--
