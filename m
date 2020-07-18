@@ -2,159 +2,122 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BC3C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0385EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D05C2073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D7E20738
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJfohwtA"
+	dkim=pass (1024-bit key) header.d=cs.unc.edu header.i=@cs.unc.edu header.b="IwWw+pOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgGRUKq (ORCPT
+        id S1728023AbgGRUSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 16:10:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34628 "EHLO
+        Sat, 18 Jul 2020 16:18:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727042AbgGRUKq (ORCPT
+        with ESMTP id S1726801AbgGRUSK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 16:10:46 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EF07C0619D2;
-        Sat, 18 Jul 2020 13:10:46 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id q2so1008640qkc.8;
-        Sat, 18 Jul 2020 13:10:46 -0700 (PDT)
+        Sat, 18 Jul 2020 16:18:10 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7918C0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 13:18:09 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id w27so10233304qtb.7
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 13:18:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HfCfI9Ry75jIS0L/AMZU07uS7wzGWMcWBCKEzsuKDmw=;
-        b=BJfohwtAWZYl+V/uOHQpuI6c80rvv4c/VWAzTk7/5Cwaeov80khoFC6+OIuRNT15ei
-         FCwDNd3ketUB2X2JE/zpWPJdZaNhK4id8NP/bLUbkC5hAMlfv1yVLDIxr6m2MpETrdmT
-         jlsJkhkBru5VOIwwhpEouIJtA4TT54TwBazZd8fOmavtS+U5dO8udi0q3omo9Srp76Lh
-         ZbugOIaW7bPnKYOu1hcWg4codNGrglaYtaHiN0dojjd8JSggp5XHmfvMtjweZyK7riND
-         ARgGklsTKQAYn+TM+M254/VB4w4brQbuy0v+NAgZ3SZalap4xr68tx+e61TGICYdIT4m
-         9tNA==
+        d=cs.unc.edu; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=Wzy+cAnfVWyCNBRsbp4f96uaFuyezcnGy3p//wWBWlc=;
+        b=IwWw+pOP8iz9mglvw1oqstQ6ZxJyWkhps+nXR1W7C87271q704wKNliO3g40NlXtYX
+         FEdEP8H3UzLAiUjh7/U6V57lgeSPBgXJlgqoWmm5bZcj13guYXTbt1Ozrp2kuxt/U43T
+         SvA7YfgeZqrhMZDtgktMzQKvnW0QuTblDl0Qg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=HfCfI9Ry75jIS0L/AMZU07uS7wzGWMcWBCKEzsuKDmw=;
-        b=LUMZEHFGqOn1y6Y+NKQ2lQzIMHLZ0MoYLN5w30uNbxHFp1idG/AOebrj31KFbybPmV
-         Dzj73LTuz03HUjR4hlNA0WxTvgbsgyiOliQ1SIoBnhkNc4Xz9OivFsqMgtjAOYA6UwyN
-         zISXQQC35xlPtocrRZRYvBo+MyirSV9FIP2t1Hdaddia75gKCaE1JQRjfzl7ix70z0de
-         Gcz7NeanssmUtg19XH7HvojO8cEbkNfsVgFcNDz1iMhAv4xgDPddHeNFFM83L1R4qjin
-         wwDRhuvdIk/Z8yGBl2e2dwid7DGIAa2fEqJ6drpaLK1gWZms1cFYqbAM0YJIxh7uVytY
-         Ob3A==
-X-Gm-Message-State: AOAM533Z0yWvoGJUtBIIrGG9jNCa/R+reBkkXxUGu6mqHyVDtjAetPbc
-        Q2WTByQ/eqes+6DIg7TeQJ4=
-X-Google-Smtp-Source: ABdhPJxSg+ZIn5RKcVAYAYCk2vFVoyC3hKZRN4xqtTX769Xev4mHOCrXI+AgMs37AA7VtTV3up+i5g==
-X-Received: by 2002:a37:9b01:: with SMTP id d1mr15314073qke.65.1595103045341;
-        Sat, 18 Jul 2020 13:10:45 -0700 (PDT)
-Received: from atris.xiphos.ca (198-48-202-89.cpe.pppoe.ca. [198.48.202.89])
-        by smtp.gmail.com with ESMTPSA id l3sm14436287qtn.69.2020.07.18.13.10.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 13:10:44 -0700 (PDT)
-From:   Liam Beguin <liambeguin@gmail.com>
-To:     liambeguin@gmail.com, James.Bottomley@HansenPartnership.com,
-        deller@gmx.de
-Cc:     linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v1 1/1] parisc: add support for cmpxchg on u8 pointers
-Date:   Sat, 18 Jul 2020 16:10:21 -0400
-Message-Id: <20200718201021.23918-1-liambeguin@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        bh=Wzy+cAnfVWyCNBRsbp4f96uaFuyezcnGy3p//wWBWlc=;
+        b=anesM7daDHY1DJpioNBSt+Pi5APTKlI/iz6wG0IgWjId0UTNshUHcmFyvlxzLv3v5b
+         v3NZonBfbEVqijdVRHVnph7RaVleoOjdif/CY2xpaSpDOnjytjMPQ5qRsJSOQPtF0xtv
+         6evj3Qc1J6Dnu/uKrz5WuHhow8TxL5hyxrB9f3bO9NcQhwwmbolphKfjE98p5zJF7d0w
+         sQ6USNidGK1htLm2sw+pL9eBNpc7P/qCQqZZgNnj/T4WA8F01mTtZWIQ28d+DWmNDucp
+         JH3Y3MGv5djuE1TQmAw55f2mM0yBfLYbiwz4pGqEGfVTztFj+C+cYEBcMeNSA8Q0bXS9
+         VPJQ==
+X-Gm-Message-State: AOAM531sgnQc4mFbNWEzAHNppH+ShVJGkRMaPxw0CG2GSu/3X2fIV/Si
+        cfiRXOUcCOsw5kpZcGdZlq/8jQ==
+X-Google-Smtp-Source: ABdhPJyssU1ufVTgBHVnmx0gim5lL4wHfPYijT9LtU6LhysR/mZAHBckC38fdgAQFzGckorO1LGo+g==
+X-Received: by 2002:aed:2723:: with SMTP id n32mr16929892qtd.109.1595103488923;
+        Sat, 18 Jul 2020 13:18:08 -0700 (PDT)
+Received: from pepe.local (71-142-124-255.lightspeed.rlghnc.sbcglobal.net. [71.142.124.255])
+        by smtp.gmail.com with ESMTPSA id p36sm15125718qte.90.2020.07.18.13.18.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jul 2020 13:18:08 -0700 (PDT)
+Subject: Re: Linux FSGSBASE testing
+To:     Andy Lutomirski <luto@amacapital.net>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Stas Sergeev <stsp@list.ru>, linux-sgx@vger.kernel.org
+References: <CALCETrU_O4AxcJeBO77uXt2j8woYVtjZd18-YV0BuCKRAu00eA@mail.gmail.com>
+From:   Don Porter <porter@cs.unc.edu>
+Message-ID: <6e3d25fc-9a67-8655-a00a-b3afbc360ff0@cs.unc.edu>
+Date:   Sat, 18 Jul 2020 16:18:06 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrU_O4AxcJeBO77uXt2j8woYVtjZd18-YV0BuCKRAu00eA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel test bot reported[1] that using set_mask_bits on a u8 causes
-the following issue on parisc:
+On 6/20/20 11:59 AM, Andy Lutomirski wrote:
+> Hi Stas-
+> 
+> FSGSBASE support is queued up for Linux 5.9.  Since you're one of the
+> more exotic users of segmentation on Linux, is there any chance you
+> could test it?  The code is here:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=x86/fsgsbase
+> 
+> There are two interesting cases to test:
+> 
+> 1. FSGSBASE on.  This is the default if you boot this kernel on Ivy
+> Bridge or newer hardware.
+> 
+> 2. FSGSBASE off on a patched kernel.  Boot the same kernel as in #1
+> but either pass nofsgsbase on the kernel command line or use pre-Ivy
+> Bridge hardware.  You will *
+> 
+> You can tell you have FSGSBASE enabled for test #1 by running
+> tools/testing/selftests/x86/fsgsbase_64 -- the first line of output
+> will be :FSGSBASE instructions are enabled".  You can build it by
+> cd-ing to tools/testing/selftests/x86 and running make.
+> 
+> If anything is broken for you, I'd like to know before this makes it
+> into a released kernel!
+> 
+> Thanks,
+> Andy
+> 
 
-	hppa-linux-ld: drivers/phy/ti/phy-tusb1210.o: in function `tusb1210_probe':
-	>> (.text+0x2f4): undefined reference to `__cmpxchg_called_with_bad_pointer'
-	>> hppa-linux-ld: (.text+0x324): undefined reference to `__cmpxchg_called_with_bad_pointer'
-	hppa-linux-ld: (.text+0x354): undefined reference to `__cmpxchg_called_with_bad_pointer'
+FWIW, we tested this patch using Graphene under Case 1, both in our 
+standard CI pipelines, and with hand testing.  Everything looks good on 
+our end - no suspicious dmesg, no application-level issues.
 
-Add support for cmpxchg on u8 pointers.
+I also reran the stress test Andy suggested on a separate thread, which 
+also looks good:
+* Graphene running nginx pinned to core 0
+* infinite loop on core 0
+* perf top running
+* Exercised with non-SGX apache bench several times (~10 minutes of 
+testing time) also from core 0
 
-[1] https://lore.kernel.org/patchwork/patch/1272617/#1468946
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Liam Beguin <liambeguin@gmail.com>
----
- arch/parisc/include/asm/cmpxchg.h |  2 ++
- arch/parisc/lib/bitops.c          | 12 ++++++++++++
- 2 files changed, 14 insertions(+)
-
-Hi,
-
-This was reported by the kernel test bot on an architecture I can't
-really test on. I was only able to make sure this builds, nothing more.
-
-Should I also add __cmpxchg_u8 in the cmpxchg_local switch case?
-
-There are one or two minor cleanups we can do around that patch, but
-because of my limited testing options, I kept the changes to a minimum.
-
-If there's interest, I can include these in follow up patches:
-- update __cmpxchg_u32 to use u32 instead of unsigned int for
-  consistency
-- add support for __cmpxchg_u16
-
-Thanks,
-Liam
-
-diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
-index ab5c215cf46c..068958575871 100644
---- a/arch/parisc/include/asm/cmpxchg.h
-+++ b/arch/parisc/include/asm/cmpxchg.h
-@@ -60,6 +60,7 @@ extern void __cmpxchg_called_with_bad_pointer(void);
- extern unsigned long __cmpxchg_u32(volatile unsigned int *m, unsigned int old,
- 				   unsigned int new_);
- extern u64 __cmpxchg_u64(volatile u64 *ptr, u64 old, u64 new_);
-+extern u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new_);
- 
- /* don't worry...optimizer will get rid of most of this */
- static inline unsigned long
-@@ -71,6 +72,7 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new_, int size)
- #endif
- 	case 4: return __cmpxchg_u32((unsigned int *)ptr,
- 				     (unsigned int)old, (unsigned int)new_);
-+	case 1: return __cmpxchg_u8((u8 *)ptr, (u8)old, (u8)new_);
- 	}
- 	__cmpxchg_called_with_bad_pointer();
- 	return old;
-diff --git a/arch/parisc/lib/bitops.c b/arch/parisc/lib/bitops.c
-index 70ffbcf889b8..2e4d1f05a926 100644
---- a/arch/parisc/lib/bitops.c
-+++ b/arch/parisc/lib/bitops.c
-@@ -79,3 +79,15 @@ unsigned long __cmpxchg_u32(volatile unsigned int *ptr, unsigned int old, unsign
- 	_atomic_spin_unlock_irqrestore(ptr, flags);
- 	return (unsigned long)prev;
- }
-+
-+u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new)
-+{
-+	unsigned long flags;
-+	u8 prev;
-+
-+	_atomic_spin_lock_irqsave(ptr, flags);
-+	if ((prev = *ptr) == old)
-+		*ptr = new;
-+	_atomic_spin_unlock_irqrestore(ptr, flags);
-+	return prev;
-+}
-
-base-commit: 6cf7ccba29dcf39ab27630c383a3844078a6d5cd
--- 
-2.27.0
-
+All the best,
+Don
