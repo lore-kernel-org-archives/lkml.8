@@ -2,735 +2,240 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD41C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADF7C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADC422B48
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9531F2073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:07:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beR9fUb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgGRI67 (ORCPT
+        id S1726463AbgGRJHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 04:58:59 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51928 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726055AbgGRI66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 04:58:58 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3B587BD678AC09320ADA;
-        Sat, 18 Jul 2020 16:58:56 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 18 Jul 2020 16:58:45 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
-Subject: [PATCH net-next v2 1/2] hinic: add support to handle hw abnormal event
-Date:   Sat, 18 Jul 2020 16:58:29 +0800
-Message-ID: <20200718085830.27821-2-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200718085830.27821-1-luobin9@huawei.com>
-References: <20200718085830.27821-1-luobin9@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+        Sat, 18 Jul 2020 05:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgGRJHI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 05:07:08 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A35AC0619D2;
+        Sat, 18 Jul 2020 02:07:07 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id q15so17917450wmj.2;
+        Sat, 18 Jul 2020 02:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=0BWRPw8g2XYVXSVbobArkBx7EWxJQQknqmb4NXpsOwM=;
+        b=beR9fUb9+Ju9lRSUK9d40Ng8sbQhSPEP+kpI4XRfDpSg2UtZhGEpV8WGFjBFE0hite
+         H4B24U3qEGTY+NNzNtrKw1wkdr7K/UTZyNbMfCQEzC6J09nQHgMjoSansJWwRNErAPdN
+         T3onXS7bYI9gakeJU5vJRE4NxkBI3kUKtpcSQOXFTJZ84HBb6O/LgjIbAwy2eLwbNG50
+         d/gk67Wiy4i/WQLqYBei6xn6R3rFBPB3avLRlLnZyWDTAsgZj6dT9UbL54p0kWoT9AJI
+         EzmrKdVrPe3E9DI/ouOKEFHu4x6lFdCN4nu+e5cHpDOYOrufNcza2R/tNNVp3kvPu/wD
+         tt6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=0BWRPw8g2XYVXSVbobArkBx7EWxJQQknqmb4NXpsOwM=;
+        b=D4RuL9BIqv8cG6pCmRc1FDDIAEX5fRfBdsz/CZ6Nlj+iUtbGAvroNX7mriYraLksLc
+         eKM1I52XK1EZxZMw10MOKFMk0MaxVBCTvg9TT6zmQzpvRTfw5fU7SebCny0KoZueTflp
+         HEdfdzIVioPnGwYETh7FvYM8nGy95yVABcsopFEW6lX9mxOpp1FecfCF/BVEOJZTf019
+         vgNFahzZNTLcJsKdVtsY2TtCXU5BFzqUdb6IawuFj/ER7FzqrH1nDpGvfvjjMqLYqJ0x
+         1YXduDRJz818Pj6BI0+fqQuQUPdciK14uaJDHVszDatVbG9L4I+BOaHO+BzLQV4YYGAZ
+         y8xg==
+X-Gm-Message-State: AOAM531FJHGGn5T29FMUUaDoAq0lriLUeAfDzy1DTEMCN9+1OGS2ZsYl
+        XmBHLDPMEAVW7hGb1vTr1JM=
+X-Google-Smtp-Source: ABdhPJzoshdcpFBb5Yye8csFmbaOC7pfVxul+09SAuay65V7kYX7aTIBoGARazBeNCiCYARxn+7I0A==
+X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr13389823wmo.72.1595063226154;
+        Sat, 18 Jul 2020 02:07:06 -0700 (PDT)
+Received: from [172.16.20.20] ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id w12sm20824919wrm.79.2020.07.18.02.07.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Jul 2020 02:07:05 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: [PATCH 2/2] arm64: dts: meson: add support for the WeTek Core 2
+From:   Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <2ab5e28a-77f6-cac1-68ed-f0a23d5f2a24@baylibre.com>
+Date:   Sat, 18 Jul 2020 13:07:02 +0400
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <109D2AE5-AF4B-4DAF-B2C5-3B8740BF33BD@gmail.com>
+References: <20200718050056.1713-1-christianshewitt@gmail.com>
+ <20200718050056.1713-2-christianshewitt@gmail.com>
+ <2ab5e28a-77f6-cac1-68ed-f0a23d5f2a24@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+X-Mailer: Apple Mail (2.3445.104.14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add support to handle hw abnormal event such as hardware failure,
-cable unplugged,link error
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
----
-V1~V2: add link extended state
-V0~V1: fix auto build test WARNING
+> On 18 Jul 2020, at 12:52 pm, Neil Armstrong <narmstrong@baylibre.com> =
+wrote:
+>=20
+> Le 18/07/2020 =C3=A0 07:00, Christian Hewitt a =C3=A9crit :
+>> The WeTek Core2 is a commercial device based on the Amlogic Q200 =
+reference
+>> design but with the following differences:
+>>=20
+>> - 3GB RAM, 32GB eMMC
+>> - Blue and Red LEDs used to signal on/off status
+>> - uart_AO can be accessed after opening the case; soldering required
+>> - USB OTG is not accessible (inside the case)
+>> - Realtek RTL8152 Ethernet (internal USB connection)
+>>=20
+>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+>> ---
+>> arch/arm64/boot/dts/amlogic/Makefile          |  1 +
+>> .../dts/amlogic/meson-gxm-wetek-core2.dts     | 90 =
++++++++++++++++++++
+>> 2 files changed, 91 insertions(+)
+>> create mode 100644 =
+arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
+>>=20
+>> diff --git a/arch/arm64/boot/dts/amlogic/Makefile =
+b/arch/arm64/boot/dts/amlogic/Makefile
+>> index 5cac4d1d487d..4e2239ffcaa5 100644
+>> --- a/arch/arm64/boot/dts/amlogic/Makefile
+>> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+>> @@ -41,6 +41,7 @@ dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-q201.dtb
+>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-rbox-pro.dtb
+>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-s912-libretech-pc.dtb
+>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-vega-s96.dtb
+>> +dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-wetek-core2.dtb
+>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-sm1-sei610.dtb
+>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-sm1-khadas-vim3l.dtb
+>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-sm1-odroid-c4.dtb
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts =
+b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
+>> new file mode 100644
+>> index 000000000000..44fc5ea38dc0
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
+>> @@ -0,0 +1,90 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2020 Christian Hewitt <christianshewitt@gmail.com>
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "meson-gxm.dtsi"
+>> +#include "meson-gx-p23x-q20x.dtsi"
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/leds/common.h>
+>> +
+>> +/ {
+>> +	compatible =3D "wetek,core2", "amlogic,s912", =
+"amlogic,meson-gxm";
+>> +	model =3D "WeTek Core 2";
+>> +
+>> +	memory@0 {
+>> +		device_type =3D "memory";
+>> +		reg =3D <0x0 0x0 0x0 0x80000000>; /* 2 GiB or 3 GiB */
+>> +	};
+>> +
+>> +	leds {
+>> +		compatible =3D "gpio-leds";
+>> +
+>> +		blue {
+>> +			color =3D <LED_COLOR_ID_BLUE>;
+>> +			function =3D LED_FUNCTION_STATUS;
+>> +			gpios =3D <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
+>> +			default-state =3D "on";
+>> +		};
+>> +	};
+>> +
+>> +	adc-keys {
+>> +		compatible =3D "adc-keys";
+>> +		io-channels =3D <&saradc 0>;
+>> +		io-channel-names =3D "buttons";
+>> +		keyup-threshold-microvolt =3D <1710000>;
+>> +
+>> +		button-update {
+>> +			label =3D "update";
+>> +			linux,code =3D <KEY_VENDOR>;
+>> +			press-threshold-microvolt =3D <10000>;
+>> +		};
+>> +	};
+>> +
+>> +	gpio-keys-polled {
+>> +		compatible =3D "gpio-keys-polled";
+>> +		#address-cells =3D <1>;
+>> +		#size-cells =3D <0>;
+>> +		poll-interval =3D <100>;
+>> +
+>> +		button-power {
+>> +			label =3D "power";
+>> +			linux,code =3D <KEY_POWER>;
+>> +			gpios =3D <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +/* This is disabled as Realtek RTL8152 USB provides Ethernet */
+>> +&ethmac {
+>> +	status =3D "disabled";
+>> +	phy-mode =3D "rmii";
+>> +	phy-handle =3D <&internal_phy>;
+>=20
+> I think you can remove these 2 lines
+>=20
+>> +};
+>> +
+>> +&internal_phy {
+>> +	pinctrl-0 =3D <&eth_link_led_pins>, <&eth_act_led_pins>;
+>> +	pinctrl-names =3D "default";
+>=20
+> Simply add :
+> status =3D "disabled";
+>=20
+>> +};
+>> +
+>> +&ir {
+>> +	linux,rc-map-name =3D "rc-wetek-play2";
+>> +};
+>> +
+>> +/* This is connected to the Bluetooth module: */
+>> +&uart_A {
+>> +	status =3D "okay";
+>> +	pinctrl-0 =3D <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+>> +	pinctrl-names =3D "default";
+>> +	uart-has-rtscts;
+>> +
+>> +	bluetooth {
+>> +		compatible =3D "brcm,bcm43438-bt";
+>> +		enable-gpios =3D <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
+>> +		max-speed =3D <2000000>;
+>> +		clocks =3D <&wifi32k>;
+>> +		clock-names =3D "lpo";
+>> +	};
+>> +};
+>>=20
+>=20
+>=20
+> Otherwise looks good
+>=20
+> Neil
 
- drivers/net/ethernet/huawei/hinic/hinic_dev.h |   2 +
- .../net/ethernet/huawei/hinic/hinic_ethtool.c |  20 ++
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 249 +++++++++++++++++-
- .../net/ethernet/huawei/hinic/hinic_hw_dev.h  | 144 +++++++++-
- .../net/ethernet/huawei/hinic/hinic_hw_mgmt.h |   4 +
- .../net/ethernet/huawei/hinic/hinic_main.c    |  54 +++-
- .../net/ethernet/huawei/hinic/hinic_port.h    |  25 ++
- 7 files changed, 491 insertions(+), 7 deletions(-)
+I=E2=80=99ve tested both changes, both are fine so will send v2.
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-index befd925c03dc..eb939bbac7c6 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-@@ -98,6 +98,8 @@ struct hinic_dev {
- 	int				lb_pkt_len;
- 	u8				*lb_test_rx_buf;
- 	struct devlink			*devlink;
-+	bool				cable_unplugged;
-+	bool				module_unrecognized;
- };
- 
- struct hinic_devlink_priv {
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-index cb5ebae54f73..6bb65ade1d77 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-@@ -1766,6 +1766,25 @@ static int hinic_get_module_eeprom(struct net_device *netdev,
- 	return 0;
- }
- 
-+static int
-+hinic_get_link_ext_state(struct net_device *netdev,
-+			 struct ethtool_link_ext_state_info *link_ext_state_info)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+
-+	if (netif_carrier_ok(netdev))
-+		return -ENODATA;
-+
-+	if (nic_dev->cable_unplugged)
-+		link_ext_state_info->link_ext_state =
-+			ETHTOOL_LINK_EXT_STATE_NO_CABLE;
-+	else if (nic_dev->module_unrecognized)
-+		link_ext_state_info->link_ext_state =
-+			ETHTOOL_LINK_EXT_STATE_LINK_LOGICAL_MISMATCH;
-+
-+	return 0;
-+}
-+
- static const struct ethtool_ops hinic_ethtool_ops = {
- 	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS |
- 				     ETHTOOL_COALESCE_RX_MAX_FRAMES |
-@@ -1776,6 +1795,7 @@ static const struct ethtool_ops hinic_ethtool_ops = {
- 	.set_link_ksettings = hinic_set_link_ksettings,
- 	.get_drvinfo = hinic_get_drvinfo,
- 	.get_link = ethtool_op_get_link,
-+	.get_link_ext_state = hinic_get_link_ext_state,
- 	.get_ringparam = hinic_get_ringparam,
- 	.set_ringparam = hinic_set_ringparam,
- 	.get_coalesce = hinic_get_coalesce,
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 9831c14324e6..1b375e2c65a4 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -621,6 +621,231 @@ static void nic_mgmt_msg_handler(void *handle, u8 cmd, void *buf_in,
- 	nic_cb->cb_state &= ~HINIC_CB_RUNNING;
- }
- 
-+static void hinic_comm_recv_mgmt_self_cmd_reg(struct hinic_pfhwdev *pfhwdev,
-+					      u8 cmd,
-+					      comm_mgmt_self_msg_proc proc)
-+{
-+	u8 cmd_idx;
-+
-+	cmd_idx = pfhwdev->proc.cmd_num;
-+	if (cmd_idx >= HINIC_COMM_SELF_CMD_MAX) {
-+		dev_err(&pfhwdev->hwdev.hwif->pdev->dev,
-+			"Register recv mgmt process failed, cmd: 0x%x\n", cmd);
-+		return;
-+	}
-+
-+	pfhwdev->proc.info[cmd_idx].cmd = cmd;
-+	pfhwdev->proc.info[cmd_idx].proc = proc;
-+	pfhwdev->proc.cmd_num++;
-+}
-+
-+static void hinic_comm_recv_mgmt_self_cmd_unreg(struct hinic_pfhwdev *pfhwdev,
-+						u8 cmd)
-+{
-+	u8 cmd_idx;
-+
-+	cmd_idx = pfhwdev->proc.cmd_num;
-+	if (cmd_idx >= HINIC_COMM_SELF_CMD_MAX) {
-+		dev_err(&pfhwdev->hwdev.hwif->pdev->dev, "Unregister recv mgmt process failed, cmd: 0x%x\n",
-+			cmd);
-+		return;
-+	}
-+
-+	for (cmd_idx = 0; cmd_idx < HINIC_COMM_SELF_CMD_MAX; cmd_idx++) {
-+		if (cmd == pfhwdev->proc.info[cmd_idx].cmd) {
-+			pfhwdev->proc.info[cmd_idx].cmd = 0;
-+			pfhwdev->proc.info[cmd_idx].proc = NULL;
-+			pfhwdev->proc.cmd_num--;
-+		}
-+	}
-+}
-+
-+static void comm_mgmt_msg_handler(void *handle, u8 cmd, void *buf_in,
-+				  u16 in_size, void *buf_out, u16 *out_size)
-+{
-+	struct hinic_pfhwdev *pfhwdev = handle;
-+	u8 cmd_idx;
-+
-+	for (cmd_idx = 0; cmd_idx < pfhwdev->proc.cmd_num; cmd_idx++) {
-+		if (cmd == pfhwdev->proc.info[cmd_idx].cmd) {
-+			if (!pfhwdev->proc.info[cmd_idx].proc) {
-+				dev_warn(&pfhwdev->hwdev.hwif->pdev->dev,
-+					 "PF recv mgmt comm msg handle null, cmd: 0x%x\n",
-+					 cmd);
-+			} else {
-+				pfhwdev->proc.info[cmd_idx].proc
-+					(&pfhwdev->hwdev, buf_in, in_size,
-+					 buf_out, out_size);
-+			}
-+
-+			return;
-+		}
-+	}
-+
-+	dev_warn(&pfhwdev->hwdev.hwif->pdev->dev, "Received unknown mgmt cpu event: 0x%x\n",
-+		 cmd);
-+
-+	*out_size = 0;
-+}
-+
-+static void chip_fault_show(struct hinic_hwdev *hwdev,
-+			    struct hinic_fault_event *event)
-+{
-+	char fault_level[FAULT_TYPE_MAX][FAULT_SHOW_STR_LEN + 1] = {
-+		"fatal", "reset", "flr", "general", "suggestion"};
-+	char level_str[FAULT_SHOW_STR_LEN + 1] = {0};
-+	u8 level;
-+
-+	level = event->event.chip.err_level;
-+	if (level < FAULT_LEVEL_MAX)
-+		strncpy(level_str, fault_level[level],
-+			FAULT_SHOW_STR_LEN);
-+	else
-+		strncpy(level_str, "Unknown", FAULT_SHOW_STR_LEN);
-+
-+	if (level == FAULT_LEVEL_SERIOUS_FLR)
-+		dev_err(&hwdev->hwif->pdev->dev, "err_level: %d [%s], flr func_id: %d\n",
-+			level, level_str, event->event.chip.func_id);
-+
-+	dev_err(&hwdev->hwif->pdev->dev, "Module_id: 0x%x, err_type: 0x%x, err_level: %d[%s], err_csr_addr: 0x%08x, err_csr_value: 0x%08x\n",
-+		event->event.chip.node_id,
-+		event->event.chip.err_type, level, level_str,
-+		event->event.chip.err_csr_addr,
-+		event->event.chip.err_csr_value);
-+}
-+
-+static void fault_report_show(struct hinic_hwdev *hwdev,
-+			      struct hinic_fault_event *event)
-+{
-+	char fault_type[FAULT_TYPE_MAX][FAULT_SHOW_STR_LEN + 1] = {
-+		"chip", "ucode", "mem rd timeout", "mem wr timeout",
-+		"reg rd timeout", "reg wr timeout", "phy fault"};
-+	char type_str[FAULT_SHOW_STR_LEN + 1] = {0};
-+
-+	dev_err(&hwdev->hwif->pdev->dev, "Fault event report received, func_id: %d\n",
-+		HINIC_HWIF_FUNC_IDX(hwdev->hwif));
-+
-+	if (event->type < FAULT_TYPE_MAX)
-+		strncpy(type_str, fault_type[event->type], FAULT_SHOW_STR_LEN);
-+	else
-+		strncpy(type_str, "Unknown", FAULT_SHOW_STR_LEN);
-+
-+	dev_err(&hwdev->hwif->pdev->dev, "Fault type: %d [%s]\n", event->type,
-+		type_str);
-+	dev_err(&hwdev->hwif->pdev->dev,  "Fault val[0]: 0x%08x, val[1]: 0x%08x, val[2]: 0x%08x, val[3]: 0x%08x\n",
-+		event->event.val[0], event->event.val[1], event->event.val[2],
-+		event->event.val[3]);
-+
-+	switch (event->type) {
-+	case FAULT_TYPE_CHIP:
-+		chip_fault_show(hwdev, event);
-+		break;
-+	case FAULT_TYPE_UCODE:
-+		dev_err(&hwdev->hwif->pdev->dev, "Cause_id: %d, core_id: %d, c_id: %d, epc: 0x%08x\n",
-+			event->event.ucode.cause_id, event->event.ucode.core_id,
-+			event->event.ucode.c_id, event->event.ucode.epc);
-+		break;
-+	case FAULT_TYPE_MEM_RD_TIMEOUT:
-+	case FAULT_TYPE_MEM_WR_TIMEOUT:
-+		dev_err(&hwdev->hwif->pdev->dev, "Err_csr_ctrl: 0x%08x, err_csr_data: 0x%08x, ctrl_tab: 0x%08x, mem_index: 0x%08x\n",
-+			event->event.mem_timeout.err_csr_ctrl,
-+			event->event.mem_timeout.err_csr_data,
-+			event->event.mem_timeout.ctrl_tab,
-+			event->event.mem_timeout.mem_index);
-+		break;
-+	case FAULT_TYPE_REG_RD_TIMEOUT:
-+	case FAULT_TYPE_REG_WR_TIMEOUT:
-+		dev_err(&hwdev->hwif->pdev->dev, "Err_csr: 0x%08x\n",
-+			event->event.reg_timeout.err_csr);
-+		break;
-+	case FAULT_TYPE_PHY_FAULT:
-+		dev_err(&hwdev->hwif->pdev->dev, "Op_type: %u, port_id: %u, dev_ad: %u, csr_addr: 0x%08x, op_data: 0x%08x\n",
-+			event->event.phy_fault.op_type,
-+			event->event.phy_fault.port_id,
-+			event->event.phy_fault.dev_ad,
-+			event->event.phy_fault.csr_addr,
-+			event->event.phy_fault.op_data);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+/* pf fault report event */
-+static void pf_fault_event_handler(void *hwdev, void *buf_in, u16 in_size,
-+				   void *buf_out, u16 *out_size)
-+{
-+	struct hinic_cmd_fault_event *fault_event = buf_in;
-+
-+	fault_report_show(hwdev, &fault_event->event);
-+}
-+
-+static void mgmt_watchdog_timeout_event_handler(void *dev,
-+						void *buf_in, u16 in_size,
-+						void *buf_out, u16 *out_size)
-+{
-+	struct hinic_mgmt_watchdog_info *watchdog_info = NULL;
-+	struct hinic_hwdev *hwdev = dev;
-+	u32 *dump_addr = NULL;
-+	u32 stack_len, i, j;
-+	u32 *reg = NULL;
-+
-+	if (in_size != sizeof(*watchdog_info)) {
-+		dev_err(&hwdev->hwif->pdev->dev, "Invalid mgmt watchdog report, length: %d, should be %zu\n",
-+			in_size, sizeof(*watchdog_info));
-+		return;
-+	}
-+
-+	watchdog_info = buf_in;
-+
-+	dev_err(&hwdev->hwif->pdev->dev, "Mgmt deadloop time: 0x%x 0x%x, task id: 0x%x, sp: 0x%x\n",
-+		watchdog_info->curr_time_h, watchdog_info->curr_time_l,
-+		watchdog_info->task_id, watchdog_info->sp);
-+	dev_err(&hwdev->hwif->pdev->dev, "Stack current used: 0x%x, peak used: 0x%x, overflow flag: 0x%x, top: 0x%x, bottom: 0x%x\n",
-+		watchdog_info->curr_used, watchdog_info->peak_used,
-+		watchdog_info->is_overflow, watchdog_info->stack_top,
-+		watchdog_info->stack_bottom);
-+
-+	dev_err(&hwdev->hwif->pdev->dev, "Mgmt pc: 0x%08x, lr: 0x%08x, cpsr:0x%08x\n",
-+		watchdog_info->pc, watchdog_info->lr, watchdog_info->cpsr);
-+
-+	dev_err(&hwdev->hwif->pdev->dev, "Mgmt register info\n");
-+
-+	for (i = 0; i < 3; i++) {
-+		reg = watchdog_info->reg + (u64)(u32)(4 * i);
-+		dev_err(&hwdev->hwif->pdev->dev, "0x%08x 0x%08x 0x%08x 0x%08x\n",
-+			*(reg), *(reg + 1), *(reg + 2), *(reg + 3));
-+	}
-+
-+	dev_err(&hwdev->hwif->pdev->dev, "0x%08x\n", watchdog_info->reg[12]);
-+
-+	if (watchdog_info->stack_actlen <= 1024) {
-+		stack_len = watchdog_info->stack_actlen;
-+	} else {
-+		dev_err(&hwdev->hwif->pdev->dev, "Oops stack length: 0x%x is wrong\n",
-+			watchdog_info->stack_actlen);
-+		stack_len = 1024;
-+	}
-+
-+	dev_err(&hwdev->hwif->pdev->dev, "Mgmt dump stack, 16Bytes per line(start from sp)\n");
-+	for (i = 0; i < (stack_len / 16); i++) {
-+		dump_addr = (u32 *)(watchdog_info->data + ((u64)(u32)(i * 16)));
-+		dev_err(&hwdev->hwif->pdev->dev, "0x%08x 0x%08x 0x%08x 0x%08x\n",
-+			*dump_addr, *(dump_addr + 1), *(dump_addr + 2),
-+			*(dump_addr + 3));
-+	}
-+
-+	for (j = 0; j < ((stack_len % 16) / 4); j++) {
-+		dump_addr = (u32 *)(watchdog_info->data +
-+			    ((u64)(u32)(i * 16 + j * 4)));
-+		dev_err(&hwdev->hwif->pdev->dev, "0x%08x ", *dump_addr);
-+	}
-+
-+	*out_size = sizeof(*watchdog_info);
-+	watchdog_info = buf_out;
-+	watchdog_info->status = 0;
-+}
-+
- /**
-  * init_pfhwdev - Initialize the extended components of PF
-  * @pfhwdev: the HW device for PF
-@@ -647,13 +872,22 @@ static int init_pfhwdev(struct hinic_pfhwdev *pfhwdev)
- 		return err;
- 	}
- 
--	if (!HINIC_IS_VF(hwif))
-+	if (!HINIC_IS_VF(hwif)) {
- 		hinic_register_mgmt_msg_cb(&pfhwdev->pf_to_mgmt,
- 					   HINIC_MOD_L2NIC, pfhwdev,
- 					   nic_mgmt_msg_handler);
--	else
-+		hinic_register_mgmt_msg_cb(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
-+					   pfhwdev, comm_mgmt_msg_handler);
-+		hinic_comm_recv_mgmt_self_cmd_reg(pfhwdev,
-+						  HINIC_COMM_CMD_FAULT_REPORT,
-+						  pf_fault_event_handler);
-+		hinic_comm_recv_mgmt_self_cmd_reg
-+			(pfhwdev, HINIC_COMM_CMD_WATCHDOG_INFO,
-+			 mgmt_watchdog_timeout_event_handler);
-+	} else {
- 		hinic_register_vf_mbox_cb(hwdev, HINIC_MOD_L2NIC,
- 					  nic_mgmt_msg_handler);
-+	}
- 
- 	hinic_set_pf_action(hwif, HINIC_PF_MGMT_ACTIVE);
- 
-@@ -670,11 +904,18 @@ static void free_pfhwdev(struct hinic_pfhwdev *pfhwdev)
- 
- 	hinic_set_pf_action(hwdev->hwif, HINIC_PF_MGMT_INIT);
- 
--	if (!HINIC_IS_VF(hwdev->hwif))
-+	if (!HINIC_IS_VF(hwdev->hwif)) {
-+		hinic_comm_recv_mgmt_self_cmd_unreg(pfhwdev,
-+						    HINIC_COMM_CMD_WATCHDOG_INFO);
-+		hinic_comm_recv_mgmt_self_cmd_unreg(pfhwdev,
-+						    HINIC_COMM_CMD_FAULT_REPORT);
-+		hinic_unregister_mgmt_msg_cb(&pfhwdev->pf_to_mgmt,
-+					     HINIC_MOD_COMM);
- 		hinic_unregister_mgmt_msg_cb(&pfhwdev->pf_to_mgmt,
- 					     HINIC_MOD_L2NIC);
--	else
-+	} else {
- 		hinic_unregister_vf_mbox_cb(hwdev, HINIC_MOD_L2NIC);
-+	}
- 
- 	hinic_func_to_func_free(hwdev);
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-index 94593a8ad667..e6bcdce97e43 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-@@ -164,9 +164,12 @@ enum hinic_ucode_cmd {
- #define NIC_RSS_CMD_TEMP_FREE   0x02
- 
- enum hinic_mgmt_msg_cmd {
--	HINIC_MGMT_MSG_CMD_BASE         = 160,
-+	HINIC_MGMT_MSG_CMD_BASE         = 0xA0,
- 
--	HINIC_MGMT_MSG_CMD_LINK_STATUS  = 160,
-+	HINIC_MGMT_MSG_CMD_LINK_STATUS  = 0xA0,
-+
-+	HINIC_MGMT_MSG_CMD_CABLE_PLUG_EVENT	= 0xE5,
-+	HINIC_MGMT_MSG_CMD_LINK_ERR_EVENT	= 0xE6,
- 
- 	HINIC_MGMT_MSG_CMD_MAX,
- };
-@@ -359,12 +362,29 @@ struct hinic_nic_cb {
- 	unsigned long   cb_state;
- };
- 
-+#define HINIC_COMM_SELF_CMD_MAX 4
-+
-+typedef void (*comm_mgmt_self_msg_proc)(void *handle, void *buf_in, u16 in_size,
-+					void *buf_out, u16 *out_size);
-+
-+struct comm_mgmt_self_msg_sub_info {
-+	u8 cmd;
-+	comm_mgmt_self_msg_proc proc;
-+};
-+
-+struct comm_mgmt_self_msg_info {
-+	u8 cmd_num;
-+	struct comm_mgmt_self_msg_sub_info info[HINIC_COMM_SELF_CMD_MAX];
-+};
-+
- struct hinic_pfhwdev {
- 	struct hinic_hwdev              hwdev;
- 
- 	struct hinic_pf_to_mgmt         pf_to_mgmt;
- 
- 	struct hinic_nic_cb             nic_cb[HINIC_MGMT_NUM_MSG_CMD];
-+
-+	struct comm_mgmt_self_msg_info	proc;
- };
- 
- struct hinic_dev_cap {
-@@ -386,6 +406,126 @@ struct hinic_dev_cap {
- 	u8      rsvd3[204];
- };
- 
-+union hinic_fault_hw_mgmt {
-+	u32 val[4];
-+	/* valid only type == FAULT_TYPE_CHIP */
-+	struct {
-+		u8 node_id;
-+		u8 err_level;
-+		u16 err_type;
-+		u32 err_csr_addr;
-+		u32 err_csr_value;
-+		/* func_id valid only if err_level == FAULT_LEVEL_SERIOUS_FLR */
-+		u16 func_id;
-+		u16 rsvd2;
-+	} chip;
-+
-+	/* valid only if type == FAULT_TYPE_UCODE */
-+	struct {
-+		u8 cause_id;
-+		u8 core_id;
-+		u8 c_id;
-+		u8 rsvd3;
-+		u32 epc;
-+		u32 rsvd4;
-+		u32 rsvd5;
-+	} ucode;
-+
-+	/* valid only if type == FAULT_TYPE_MEM_RD_TIMEOUT ||
-+	 * FAULT_TYPE_MEM_WR_TIMEOUT
-+	 */
-+	struct {
-+		u32 err_csr_ctrl;
-+		u32 err_csr_data;
-+		u32 ctrl_tab;
-+		u32 mem_index;
-+	} mem_timeout;
-+
-+	/* valid only if type == FAULT_TYPE_REG_RD_TIMEOUT ||
-+	 * FAULT_TYPE_REG_WR_TIMEOUT
-+	 */
-+	struct {
-+		u32 err_csr;
-+		u32 rsvd6;
-+		u32 rsvd7;
-+		u32 rsvd8;
-+	} reg_timeout;
-+
-+	struct {
-+		/* 0: read; 1: write */
-+		u8 op_type;
-+		u8 port_id;
-+		u8 dev_ad;
-+		u8 rsvd9;
-+		u32 csr_addr;
-+		u32 op_data;
-+		u32 rsvd10;
-+	} phy_fault;
-+};
-+
-+struct hinic_fault_event {
-+	u8 type;
-+	u8 fault_level;
-+	u8 rsvd0[2];
-+	union hinic_fault_hw_mgmt event;
-+};
-+
-+struct hinic_cmd_fault_event {
-+	u8	status;
-+	u8	version;
-+	u8	rsvd0[6];
-+
-+	struct hinic_fault_event event;
-+};
-+
-+enum hinic_fault_type {
-+	FAULT_TYPE_CHIP,
-+	FAULT_TYPE_UCODE,
-+	FAULT_TYPE_MEM_RD_TIMEOUT,
-+	FAULT_TYPE_MEM_WR_TIMEOUT,
-+	FAULT_TYPE_REG_RD_TIMEOUT,
-+	FAULT_TYPE_REG_WR_TIMEOUT,
-+	FAULT_TYPE_PHY_FAULT,
-+	FAULT_TYPE_MAX,
-+};
-+
-+#define FAULT_SHOW_STR_LEN 16
-+
-+enum hinic_fault_err_level {
-+	FAULT_LEVEL_FATAL,
-+	FAULT_LEVEL_SERIOUS_RESET,
-+	FAULT_LEVEL_SERIOUS_FLR,
-+	FAULT_LEVEL_GENERAL,
-+	FAULT_LEVEL_SUGGESTION,
-+	FAULT_LEVEL_MAX
-+};
-+
-+struct hinic_mgmt_watchdog_info {
-+	u8 status;
-+	u8 version;
-+	u8 rsvd0[6];
-+
-+	u32 curr_time_h;
-+	u32 curr_time_l;
-+	u32 task_id;
-+	u32 rsv;
-+
-+	u32 reg[13];
-+	u32 pc;
-+	u32 lr;
-+	u32 cpsr;
-+
-+	u32 stack_top;
-+	u32 stack_bottom;
-+	u32 sp;
-+	u32 curr_used;
-+	u32 peak_used;
-+	u32 is_overflow;
-+
-+	u32 stack_actlen;
-+	u8 data[1024];
-+};
-+
- void hinic_hwdev_cb_register(struct hinic_hwdev *hwdev,
- 			     enum hinic_mgmt_msg_cmd cmd, void *handle,
- 			     void (*handler)(void *handle, void *buf_in,
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-index 21b93b654d6b..f626100b85c1 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-@@ -81,6 +81,8 @@ enum hinic_comm_cmd {
- 	HINIC_COMM_CMD_MSI_CTRL_REG_WR_BY_UP,
- 	HINIC_COMM_CMD_MSI_CTRL_REG_RD_BY_UP,
- 
-+	HINIC_COMM_CMD_FAULT_REPORT	= 0x37,
-+
- 	HINIC_COMM_CMD_SET_LED_STATUS	= 0x4a,
- 
- 	HINIC_COMM_CMD_L2NIC_RESET	= 0x4b,
-@@ -89,6 +91,8 @@ enum hinic_comm_cmd {
- 
- 	HINIC_COMM_CMD_GET_BOARD_INFO	= 0x52,
- 
-+	HINIC_COMM_CMD_WATCHDOG_INFO	= 0x56,
-+
- 	HINIC_COMM_CMD_MAX,
- };
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index c4c6f9c29f0e..5034e1cf650b 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -444,8 +444,11 @@ int hinic_open(struct net_device *netdev)
- 	if (!HINIC_IS_VF(nic_dev->hwdev->hwif))
- 		hinic_notify_all_vfs_link_changed(nic_dev->hwdev, link_state);
- 
--	if (link_state == HINIC_LINK_STATE_UP)
-+	if (link_state == HINIC_LINK_STATE_UP) {
- 		nic_dev->flags |= HINIC_LINK_UP;
-+		nic_dev->cable_unplugged = false;
-+		nic_dev->module_unrecognized = false;
-+	}
- 
- 	nic_dev->flags |= HINIC_INTF_UP;
- 
-@@ -935,6 +938,8 @@ static void link_status_event_handler(void *handle, void *buf_in, u16 in_size,
- 		down(&nic_dev->mgmt_lock);
- 
- 		nic_dev->flags |= HINIC_LINK_UP;
-+		nic_dev->cable_unplugged = false;
-+		nic_dev->module_unrecognized = false;
- 
- 		if ((nic_dev->flags & (HINIC_LINK_UP | HINIC_INTF_UP)) ==
- 		    (HINIC_LINK_UP | HINIC_INTF_UP)) {
-@@ -971,6 +976,39 @@ static void link_status_event_handler(void *handle, void *buf_in, u16 in_size,
- 	*out_size = sizeof(*ret_link_status);
- }
- 
-+static void cable_plug_event(void *handle,
-+			     void *buf_in, u16 in_size,
-+			     void *buf_out, u16 *out_size)
-+{
-+	struct hinic_cable_plug_event *plug_event = buf_in;
-+	struct hinic_dev *nic_dev = handle;
-+
-+	nic_dev->cable_unplugged = plug_event->plugged ? false : true;
-+
-+	*out_size = sizeof(*plug_event);
-+	plug_event = buf_out;
-+	plug_event->status = 0;
-+}
-+
-+static void link_err_event(void *handle,
-+			   void *buf_in, u16 in_size,
-+			   void *buf_out, u16 *out_size)
-+{
-+	struct hinic_link_err_event *link_err = buf_in;
-+	struct hinic_dev *nic_dev = handle;
-+
-+	if (link_err->err_type >= LINK_ERR_NUM)
-+		netif_info(nic_dev, link, nic_dev->netdev,
-+			   "Link failed, Unknown error type: 0x%x\n",
-+			   link_err->err_type);
-+	else
-+		nic_dev->module_unrecognized = true;
-+
-+	*out_size = sizeof(*link_err);
-+	link_err = buf_out;
-+	link_err->status = 0;
-+}
-+
- static int set_features(struct hinic_dev *nic_dev,
- 			netdev_features_t pre_features,
- 			netdev_features_t features, bool force_change)
-@@ -1206,6 +1244,12 @@ static int nic_dev_init(struct pci_dev *pdev)
- 
- 	hinic_hwdev_cb_register(nic_dev->hwdev, HINIC_MGMT_MSG_CMD_LINK_STATUS,
- 				nic_dev, link_status_event_handler);
-+	hinic_hwdev_cb_register(nic_dev->hwdev,
-+				HINIC_MGMT_MSG_CMD_CABLE_PLUG_EVENT,
-+				nic_dev, cable_plug_event);
-+	hinic_hwdev_cb_register(nic_dev->hwdev,
-+				HINIC_MGMT_MSG_CMD_LINK_ERR_EVENT,
-+				nic_dev, link_err_event);
- 
- 	err = set_features(nic_dev, 0, nic_dev->netdev->features, true);
- 	if (err)
-@@ -1237,6 +1281,10 @@ static int nic_dev_init(struct pci_dev *pdev)
- err_init_intr:
- err_set_pfc:
- err_set_features:
-+	hinic_hwdev_cb_unregister(nic_dev->hwdev,
-+				  HINIC_MGMT_MSG_CMD_LINK_ERR_EVENT);
-+	hinic_hwdev_cb_unregister(nic_dev->hwdev,
-+				  HINIC_MGMT_MSG_CMD_CABLE_PLUG_EVENT);
- 	hinic_hwdev_cb_unregister(nic_dev->hwdev,
- 				  HINIC_MGMT_MSG_CMD_LINK_STATUS);
- 	cancel_work_sync(&rx_mode_work->work);
-@@ -1356,6 +1404,10 @@ static void hinic_remove(struct pci_dev *pdev)
- 
- 	hinic_port_del_mac(nic_dev, netdev->dev_addr, 0);
- 
-+	hinic_hwdev_cb_unregister(nic_dev->hwdev,
-+				  HINIC_MGMT_MSG_CMD_LINK_ERR_EVENT);
-+	hinic_hwdev_cb_unregister(nic_dev->hwdev,
-+				  HINIC_MGMT_MSG_CMD_CABLE_PLUG_EVENT);
- 	hinic_hwdev_cb_unregister(nic_dev->hwdev,
- 				  HINIC_MGMT_MSG_CMD_LINK_STATUS);
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.h b/drivers/net/ethernet/huawei/hinic/hinic_port.h
-index 14931adaffb8..9c3cbe45c9ec 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_port.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_port.h
-@@ -189,6 +189,31 @@ struct hinic_port_link_status {
- 	u8      port_id;
- };
- 
-+struct hinic_cable_plug_event {
-+	u8	status;
-+	u8	version;
-+	u8	rsvd0[6];
-+
-+	u16	func_id;
-+	u8	plugged; /* 0: unplugged, 1: plugged */
-+	u8	port_id;
-+};
-+
-+enum link_err_type {
-+	LINK_ERR_MODULE_UNRECOGENIZED,
-+	LINK_ERR_NUM,
-+};
-+
-+struct hinic_link_err_event {
-+	u8	status;
-+	u8	version;
-+	u8	rsvd0[6];
-+
-+	u16	func_id;
-+	u8	err_type;
-+	u8	port_id;
-+};
-+
- struct hinic_port_func_state_cmd {
- 	u8      status;
- 	u8      version;
--- 
-2.17.1
+Thanks for the quick review.
+
+Christian
 
