@@ -2,176 +2,76 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E45C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50431C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDEE920768
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595036323;
-	bh=s/JzOkxSkfNtv0xY8lsJGN9mFrYMl/KFrYLNGUU2bU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZJk7esVTFGIZ1mgXaDYHEOO9QMmHkk5ycQ8GKdUmbPG66Nw7aBPKkbLp5w3S/e8Wp
-	 vJTtfmgMIpATdKzkFCh/HVFTtHBvBAE0LpVyAgBC5qxJEE9/71XwSynNELkbZ14OL5
-	 9caoD0sTQfmIe/7tygvhPedn//u2cFVHQhnnBSnY=
+	by mail.kernel.org (Postfix) with ESMTP id 23FF82076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgGRBim (ORCPT
+        id S1728857AbgGRBoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 21:38:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbgGRBim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 21:38:42 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2E3F2073E;
-        Sat, 18 Jul 2020 01:38:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595036321;
-        bh=s/JzOkxSkfNtv0xY8lsJGN9mFrYMl/KFrYLNGUU2bU8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0q7XdCxMQYLX0NebmbgdVQvCEgD4SLGqw/gmgT3IMo1D9Lre+Dt/3vWV0HLuLH5D3
-         YfUWGxoleps2vT9xLkxsnxAH7BRLP6YaEnUFPWK/rerRuzemezhsUL5hSngYCjbAKB
-         YckhkW+QVYv7Tgcp0WBtGi+6Z3e6pkmqfhcfcTnU=
-Date:   Fri, 17 Jul 2020 18:38:39 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
-Message-ID: <20200718013839.GD2183@sol.localdomain>
-References: <20200717044427.68747-1-ebiggers@kernel.org>
- <20200717174750.GQ12769@casper.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717174750.GQ12769@casper.infradead.org>
+        Fri, 17 Jul 2020 21:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbgGRBoA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 21:44:00 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE765C0619D2;
+        Fri, 17 Jul 2020 18:44:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6B10911E45914;
+        Fri, 17 Jul 2020 18:44:00 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 18:43:59 -0700 (PDT)
+Message-Id: <20200717.184359.1727120553942218221.davem@davemloft.net>
+To:     zhangchangzhong@huawei.com
+Cc:     mark.einon@gmail.com, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: ethernet: et131x: Remove unused variable
+ 'pm_csr'
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1594982010-30679-1-git-send-email-zhangchangzhong@huawei.com>
+References: <1594982010-30679-1-git-send-email-zhangchangzhong@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jul 2020 18:44:00 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 06:47:50PM +0100, Matthew Wilcox wrote:
-> On Thu, Jul 16, 2020 at 09:44:27PM -0700, Eric Biggers wrote:
-> > +If that doesn't apply, you'll have to implement one-time init yourself.
-> > +
-> > +The simplest implementation just uses a mutex and an 'inited' flag.
-> > +This implementation should be used where feasible:
+From: Zhang Changzhong <zhangchangzhong@huawei.com>
+Date: Fri, 17 Jul 2020 18:33:30 +0800
+
+> Gcc report warning as follows:
 > 
-> I think some syntactic sugar should make it feasible for normal people
-> to implement the most efficient version of this just like they use locks.
-
-Note that the cmpxchg version is not necessarily the "most efficient".
-
-If the one-time initialization is expensive, e.g. if it allocates a lot of
-memory or if takes a long time, it could be better to use the mutex version so
-that at most one task does it.
-
-> How about something like this ...
+> drivers/net/ethernet/agere/et131x.c:953:6: warning:
+>  variable 'pm_csr' set but not used [-Wunused-but-set-variable]
+>   953 |  u32 pm_csr;
+>       |      ^~~~~~
+> drivers/net/ethernet/agere/et131x.c:1002:6:warning:
+>  variable 'pm_csr' set but not used [-Wunused-but-set-variable]
+>  1002 |  u32 pm_csr;
+>       |      ^~~~~~
+> drivers/net/ethernet/agere/et131x.c:3446:8: warning:
+>  variable 'pm_csr' set but not used [-Wunused-but-set-variable]
+>  3446 |    u32 pm_csr;
+>       |        ^~~~~~
 > 
-> once.h:
+> After commit 38df6492eb51 ("et131x: Add PCIe gigabit ethernet driver
+> et131x to drivers/net"), 'pm_csr' is never used in these functions,
+> so removing it to avoid build warning.
 > 
-> static struct init_once_pointer {
-> 	void *p;
-> };
-> 
-> static inline void *once_get(struct init_once_pointer *oncep)
-> { ... }
-> 
-> static inline bool once_store(struct init_once_pointer *oncep, void *p)
-> { ... }
-> 
-> --- foo.c ---
-> 
-> struct foo *get_foo(gfp_t gfp)
-> {
-> 	static struct init_once_pointer my_foo;
-> 	struct foo *foop;
-> 
-> 	foop = once_get(&my_foo);
-> 	if (foop)
-> 		return foop;
-> 
-> 	foop = alloc_foo(gfp);
-> 	if (!once_store(&my_foo, foop)) {
-> 		free_foo(foop);
-> 		foop = once_get(&my_foo);
-> 	}
-> 
-> 	return foop;
-> }
-> 
-> Any kernel programmer should be able to handle that pattern.  And no mutex!
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
 
-I don't think this version would be worthwhile.  It eliminates type safety due
-to the use of 'void *', and doesn't actually save any lines of code.  Nor does
-it eliminate the need to correctly implement the cmpxchg failure case, which is
-tricky (it must free the object and get the new one) and will be rarely tested.
-
-It also forces all users of the struct to use this helper function to access it.
-That could be considered a good thing, but it's also bad because even with
-one-time init there's still usually some sort of ordering of "initialization"
-vs. "use".  Just taking a random example I'm familiar with, we do one-time init
-of inode::i_crypt_info when we open an encrypted file, so we guarantee it's set
-for all I/O to the file, where we then simply access ->i_crypt_info directly.
-We don't want the code to read like it's initializing ->i_crypt_info in the
-middle of ->writepages(), since that would be wrong.
-
-An improvement might be to make once_store() take the free function as a
-parameter so that it would handle the failure case for you:
-
-struct foo *get_foo(gfp_t gfp)
-{
-	static struct init_once_pointer my_foo;
-	struct foo *foop;
- 
- 	foop = once_get(&my_foo);
- 	if (!foop) {
-		foop = alloc_foo(gfp);
-		if (foop)
-			once_store(&my_foo, foop, free_foo);
-	}
- 	return foop;
-}
-
-I'm not sure even that version would be worthwhile, though.
-
-What I do like is DO_ONCE() in <linux/once.h>, which is used as just:
-
-    DO_ONCE(func)
-
-But it has limitations:
-
-   - Only atomic context
-   - Initialization can't fail
-   - Only global/static data
-
-We could address the first two limitations by splitting it into DO_ONCE_ATOMIC()
-and DO_ONCE_BLOCKING(), and by allowing the initialization function to return an
-error code.  That would make it work for all global/static data cases, I think.
-
-Ideally we'd have something almost as simple for non-global/non-static data too.
-I'm not sure the best way to do it, though.  It would have to be something more
-complex like:
-
-    ONETIME_INIT_DATA(&my_foo, alloc_foo, free_foo)
-
-- Eric
+Applied.
