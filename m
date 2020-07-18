@@ -2,140 +2,99 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9834BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC72C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D7B20724
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F60207EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5lAQfKS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkapY+La"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgGRKx5 (ORCPT
+        id S1726970AbgGRKyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 06:53:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34342 "EHLO
+        Sat, 18 Jul 2020 06:54:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgGRKxw (ORCPT
+        with ESMTP id S1726595AbgGRKxx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 06:53:52 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E26C0619D2;
-        Sat, 18 Jul 2020 03:53:52 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id ga4so13459566ejb.11;
-        Sat, 18 Jul 2020 03:53:52 -0700 (PDT)
+        Sat, 18 Jul 2020 06:53:53 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7815EC0619D2;
+        Sat, 18 Jul 2020 03:53:53 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id f12so13454534eja.9;
+        Sat, 18 Jul 2020 03:53:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zIs8U1AFp5oU7Cmugoi3AB4+ops3mMT+enEcajDUhwg=;
-        b=N5lAQfKS8Gbe8mgHP7atg2F/Fd0vQHeKM6ISEhazP33rstplU5A5hGe5QYDH+n8ZF9
-         QOn/rxmKkhnvWXEzBKq4mV9aoh2NeuOWc7NuaMDOy7TaC5ahcAw2JFc6KGby2b8+crRK
-         oRKz422Ut4VstmKSCmncObD+MR+xn1+k86QmLIqISs3k6s5jKhsEtfYiNJAZFmjG8gtt
-         O5IPLXJ8HRQpT5NQUvHvfWO52hFDnPHwveHCcEazAp1nPF2OYWfLpbhO87onOlHfUtkk
-         Kh31VOP+nh4kDl3hlhnImZ/gVIgpO3TU/AL1FnjKgJNXjGKqNIVCb7oLraMGMfrV7aS/
-         IJaA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=qnyjF/um+2YYiK5qPE8V6I4qNVycmbw1qA8+p5LbHz8=;
+        b=pkapY+LaAJsadMb/9iil5YYiB4qt45BxLP8jBr4/qZcjUnk7/QgKrLuYTgmm5VQPj2
+         T1Ft4sWfUqzOf9Witdvv6vIeeIoIdPkiZGH69+nh3WAQTvHtm/U2dffYTeelRSnfgh2t
+         9FpGgBVFZroIGxvGgXqjPdbVwBPi1BnuqV+30mYuM8upbPaUQZA7PXR071vLjDAhLSjc
+         UtCZ+mznUNMDF8Qxsexa2VKPXLlaJEUnw2UYIBqVHPkYcxOvYvrJs+wdbKLmchWg4nk8
+         SIJD8d28I1lIKwZ/+bO9rv6ZMgbMepKbRSSvaROmrShppxzDnG7PRTqi09kk7vGzja4B
+         xBhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zIs8U1AFp5oU7Cmugoi3AB4+ops3mMT+enEcajDUhwg=;
-        b=sO8hinRq+z7aLDrHdmjw3HBHyFu/cl7OewTxFuwU37ORh8DvEAH+86ReKDTCLd4vb+
-         bjQIRPrIjv88h2RdIE9ZGo74DNSxOxMs8Kg9cjNpz80QmzoMLgqXfokp29RGBPJHdOQ3
-         TkVXTlJmkgiqRfvFxcznaPRbv3VgAbw96DyYOTbSEjdDaQFZ1KT2OALpreiu0Q7uintW
-         p38TegfyhJ0B0PPRqWHaSrbnHzZyAu41uXjDymvy9cDgIobmoUyaNR3ybebOogeabX04
-         5rlI/l0QS69RoBA8k9Hrm4LrocV/5pdPDLWz6oLBQkuW11bXLUmhbuDAXS2GwRkHVjSz
-         omOw==
-X-Gm-Message-State: AOAM533WsLBYyVyBdNoY1kbw3DLyRizLK+01aMgpSNMQbYShAhMQiAms
-        PpZ7/zChFOwovzMqN3P5CmA=
-X-Google-Smtp-Source: ABdhPJyfxdy8JnK3/GBka8Msg1fQrDtZ/be2IA9Dfboj9fwWCufUWM5B0aLmW2SVGzT+dZUHfmrwcg==
-X-Received: by 2002:a17:906:33c5:: with SMTP id w5mr12120922eja.275.1595069631178;
-        Sat, 18 Jul 2020 03:53:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=qnyjF/um+2YYiK5qPE8V6I4qNVycmbw1qA8+p5LbHz8=;
+        b=pqhcEFuucPfSoz7H78rP2/LFCC40bP8Br+MoN214dSe3M7UDIU3/NgYyTRL0ppV9jO
+         vRqh9aH8T602o2rABO1Y8gW/L2o5aStFCoALAJQVd1ebjS0yn+RMb8DFq1RNJ9+w+oFv
+         jiD2RYr79V8znwcQlgTyW5GNlOhoJ9CybdwDNxPj9VLdSuI/m7bCrCQI035pSKZDmvUE
+         hrePVBbclv9s9ObyXG8hureOX10WH2mDWxjdO/TSBjNEZCeEKVXXNr/18EcB3HWRkO2c
+         cMYYCLn+9KPUvjFlb8HgjpAyDCWAAhNESQB4LQLdvqX4Aj/wUzpOe+njUATWRvfEV+iY
+         pyQA==
+X-Gm-Message-State: AOAM5306/HBH7Jm9EbN9JgwmdD1z+QBDw2KsngFdJUKFL4lDMTzbLcxS
+        PMpvb1hWqyFhwXHg49eZp5xWAc1Z3DA=
+X-Google-Smtp-Source: ABdhPJy3vMP+m37dlJZkyVfjKou6Tqt9/YVeCE2JUtKFDPsze60yOjmge+nBjbLAAn/pudJLvLC8aA==
+X-Received: by 2002:a17:906:144b:: with SMTP id q11mr11964922ejc.511.1595069632173;
+        Sat, 18 Jul 2020 03:53:52 -0700 (PDT)
 Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id r19sm10776381edp.79.2020.07.18.03.53.49
+        by smtp.gmail.com with ESMTPSA id r19sm10776381edp.79.2020.07.18.03.53.51
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 Jul 2020 03:53:50 -0700 (PDT)
+        Sat, 18 Jul 2020 03:53:51 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] rk3318 A95X Z2 board
-Date:   Sat, 18 Jul 2020 12:53:40 +0200
-Message-Id: <20200718105343.5152-1-jbx6244@gmail.com>
+Subject: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Shenzhen Zkmagic Technology Co., Ltd.
+Date:   Sat, 18 Jul 2020 12:53:41 +0200
+Message-Id: <20200718105343.5152-2-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200718105343.5152-1-jbx6244@gmail.com>
+References: <20200718105343.5152-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add rk3318 A95X Z2 board.
+Add vendor prefix for Shenzhen Zkmagic Technology Co., Ltd.
 
-What works:
- adc key
- emmc
- ethernet
- hdmi
- gpu
- ir
- mmc
- sd card
- vop
- usb2
- uart2
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Not tested:
- av
- uart0 / bt
- spdif
- wifi
-
-No support in mainline:
- usb3 (works with manufacturer driver)
- front display (works with custom gpio driver AD1628/HT1628)
-
-Problems:
- U-boot only starts on emmc, then loads kernel from sd card or emmc.
-
- Hdmi hotplug detects DVI modes, but marks them all BAD.
- The dw-hdmi driver needs more pre_pll_cfg_table entries.
- Slow boot behavior. Screen available way after boot. (no penguins)
-
- GPU support for Debian is not up to date. (old version)
- Use Github version instead.
- Test with glmark2-es2-drm gives glmark2 Score: 29
- Kernel log:
-  lima ff300000.gpu: pp pp0 reset time out
-  lima ff300000.gpu: pp pp1 reset time out
- No mainline support for GPU thermal and voltage to frequency.
- PWM1 supply connected to DMC, GPU and vcodec.
-
- The box only has a model name. Vendor prefix not verified.
-
- Etc.
-
-Changed V2:
-  add vendor prefix
-  changed compatible string
-  restyle
-  removed usb3 regulator node
-  changed led active high to active low
-
-Johan Jonker (3):
-  dt-bindings: Add vendor prefix for Shenzhen Zkmagic Technology Co.,
-    Ltd.
-  dt-bindings: arm: rockchip: add Zkmagic A95X Z2 description
-  arm64: dts: rockchip: add rk3318 A95X Z2 board
-
- .../devicetree/bindings/arm/rockchip.yaml          |   5 +
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- arch/arm64/boot/dts/rockchip/Makefile              |   1 +
- arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts    | 393 +++++++++++++++++++++
- 4 files changed, 401 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
-
---
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9aeab66be..5ab3d7c93 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1181,6 +1181,8 @@ patternProperties:
+     description: Shenzhen Zidoo Technology Co., Ltd.
+   "^zii,.*":
+     description: Zodiac Inflight Innovations
++  "^zkmagic,.*":
++    description: Shenzhen Zkmagic Technology Co., Ltd.
+   "^zte,.*":
+     description: ZTE Corp.
+   "^zyxel,.*":
+-- 
 2.11.0
 
