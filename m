@@ -2,156 +2,121 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1743C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C4EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A61AA20724
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43432076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQcIEmy3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rO91Ze9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgGRTYc (ORCPT
+        id S1727813AbgGRTfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 15:24:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46268 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727986AbgGRTYc (ORCPT
+        Sat, 18 Jul 2020 15:35:11 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16157 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbgGRTfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 15:24:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595100270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u6ND5MXNI3pG9DIwaU62hTv7ycSOCT4u+y0Yy4U0d3Q=;
-        b=PQcIEmy3sGFnKM6gxlUmYa6pX/vijD9uwlmTNqBnwhBwXqwUq8anpl3ShGLsTVhq2oiruW
-        1ImhV/IDq+D8PUFGbNOP8POHoguwhg/6/FeaUo0Os6xxhAO5nz7ZDxHRnRjOsgz0OJoefV
-        mgGwp2vLPza8lOW5YnIXzq6YevtLJxo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-247-sEQ4OMhIPpK3vZmIDfDdtA-1; Sat, 18 Jul 2020 15:24:28 -0400
-X-MC-Unique: sEQ4OMhIPpK3vZmIDfDdtA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2EA9E1800D42;
-        Sat, 18 Jul 2020 19:24:27 +0000 (UTC)
-Received: from starship (unknown [10.35.206.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D96BC75573;
-        Sat, 18 Jul 2020 19:24:25 +0000 (UTC)
-Message-ID: <e73f817c5274789d7aa59080455cf24b62acf50a.camel@redhat.com>
-Subject: Re: [PATCH v3 6/7] kconfig: qconf: don't show goback button on
- splitMode
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sat, 18 Jul 2020 22:24:24 +0300
-In-Reply-To: <d0a5ad7ddf090ff50aa486d874a8e5ab3840ea11.1593498345.git.mchehab+huawei@kernel.org>
-References: <cover.1593498345.git.mchehab+huawei@kernel.org>
-         <d0a5ad7ddf090ff50aa486d874a8e5ab3840ea11.1593498345.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Sat, 18 Jul 2020 15:35:11 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f134e790000>; Sat, 18 Jul 2020 12:33:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 18 Jul 2020 12:35:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 18 Jul 2020 12:35:10 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 18 Jul
+ 2020 19:35:06 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 18 Jul 2020 19:35:06 +0000
+Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f134ee90000>; Sat, 18 Jul 2020 12:35:06 -0700
+From:   Krishna Reddy <vdumpa@nvidia.com>
+To:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
+        <robh+dt@kernel.org>, <treding@nvidia.com>, <jonathanh@nvidia.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
+        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
+        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
+        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
+        <nicoleotsuka@gmail.com>, Krishna Reddy <vdumpa@nvidia.com>
+Subject: [PATCH v11 0/5] NVIDIA ARM SMMU Implementation
+Date:   Sat, 18 Jul 2020 12:34:52 -0700
+Message-ID: <20200718193457.30046-1-vdumpa@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595100793; bh=TN+H04oNQO9bZvotrlKTP2TmCq3SKVkosF9GEOPNIJU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=rO91Ze9GtaOlLYV08m4UPtp1X0ec4qU9039Jn2xYvNAuFgXvKxFibz9eOlaPcXCzn
+         Hie156uusl/owMiO3kHcX+9wuY6QCUWHtAEux9BmuY5tj3WcM7N4GFbFkwMxC6RkcK
+         6sJC1H4wFf7tA1Glo3jsFbzM5I9ovsxHqK7zqMWUzqEkPi6PlAGh4HkeZRvb78NFe5
+         b76j4ROvTUb4cwt7/1NYzIvxkoJAvVsHAQfAhmDS2j5jKYNjBY2VfV+rOKQpjf/J9K
+         C9VJABmlmPgwYTXK0oLhvurERH7nfGzpdj00i+XsjCzV72PrAOqhar4i6PngjWo+Im
+         +aJ3xCgRYJtLw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-30 at 08:26 +0200, Mauro Carvalho Chehab wrote:
-> the goback button does nothing on splitMode. So, why display
-> it?
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  scripts/kconfig/qconf.cc | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-> index e43fe4dcd4e7..6a327b69ff5f 100644
-> --- a/scripts/kconfig/qconf.cc
-> +++ b/scripts/kconfig/qconf.cc
-> @@ -437,9 +437,10 @@ void ConfigList::updateList(ConfigItem* item)
->  	if (rootEntry != &rootmenu && (mode == singleMode ||
->  	    (mode == symbolMode && rootEntry->parent != &rootmenu))) {
->  		item = (ConfigItem *)topLevelItem(0);
-> -		if (!item)
-> +		if (!item && mode != symbolMode) {
->  			item = new ConfigItem(this, 0, true);
-> -		last = item;
-> +			last = item;
-> +		}
->  	}
->  	if ((mode == singleMode || (mode == symbolMode && !(rootEntry->flags & MENU_ROOT))) &&
->  	    rootEntry->sym && rootEntry->prompt) {
+Changes in v11:
+Addressed Rob comment on DT binding patch to set min/maxItems of reg proper=
+ty in else part.
+Rebased on top of https://git.kernel.org/pub/scm/linux/kernel/git/will/linu=
+x.git/log/?h=3Dfor-joerg/arm-smmu/updates.
 
-I finally found some time to debug this.
+Changes in v10:
+Perform SMMU base ioremap before calling implementation init.
+Check for Global faults across both ARM MMU-500s during global interrupt.
+Check for context faults across all contexts of both ARM MMU-500s during co=
+ntext fault interrupt.
+Add new DT binding nvidia,smmu-500 for NVIDIA implementation.
+https://lkml.org/lkml/2020/7/8/57
 
-This patch make xconfig crash when you try to select a menu that opens a submenu.
-
-This is the backtrace:
-
-#0  0x000000000041d196 in ConfigItem::testUpdateMenu(bool) ()
-#1  0x000000000041e2f8 in ConfigList::updateList(ConfigItem*) ()
-#2  0x0000000000420e3a in ConfigList::setRootMenu(menu*) ()
-#3  0x00007ffff7
-0f1fb0 in void doActivate<false>(QObject*, int, void**) () at /lib64/libQt5Core.so.5
-#4  0x000000000041bd22 in ConfigList::menuSelected(menu*) ()
-#5  0x0000000000425eb0 in
-ConfigList::mouseDoubleClickEvent(QMouseEvent*) ()
-#6  0x00007ffff7a9fcd1 in QWidget::event(QEvent*) () at /lib64/libQt5Widgets.so.5
-#7  0x00007ffff7b483b2 in QFrame::event(QEvent*) () at
-/lib64/libQt5Widgets.so.5
-#8  0x00007ffff70c2d2e in QCoreApplicationPrivate::sendThroughObjectEventFilters(QObject*, QEvent*) () at /lib64/libQt5Core.so.5
-#9  0x00007ffff7a5e052 in
-QApplicationPrivate::notify_helper(QObject*, QEvent*) () at /lib64/libQt5Widgets.so.5
-#10 0x00007ffff7a63891 in QApplication::notify(QObject*, QEvent*) () at /lib64/libQt5Widgets.so.5
-#11
-0x00007ffff70c2fc0 in QCoreApplication::notifyInternal2(QObject*, QEvent*) () at /lib64/libQt5Core.so.5
-#12 0x00007ffff7a6278a in QApplicationPrivate::sendMouseEvent(QWidget*, QMouseEvent*, QWidget*,
-QWidget*, QWidget**, QPointer<QWidget>&, bool, bool) ()
-    at /lib64/libQt5Widgets.so.5
-#13 0x00007ffff7ab7f82 in QWidgetWindow::handleMouseEvent(QMouseEvent*) () at /lib64/libQt5Widgets.so.5
-#14
-0x00007ffff7abadde in QWidgetWindow::event(QEvent*) () at /lib64/libQt5Widgets.so.5
-#15 0x00007ffff7a5e063 in QApplicationPrivate::notify_helper(QObject*, QEvent*) () at /lib64/libQt5Widgets.so.5
-#16
-0x00007ffff70c2fc0 in QCoreApplication::notifyInternal2(QObject*, QEvent*) () at /lib64/libQt5Core.so.5
-#17 0x00007ffff74a7142 in
-QGuiApplicationPrivate::processMouseEvent(QWindowSystemInterfacePrivate::MouseEvent*) () at /lib64/libQt5Gui.so.5
-#18 0x00007ffff748915b in
-QWindowSystemInterface::sendWindowSystemEvents(QFlags<QEventLoop::ProcessEventsFlag>) () at /lib64/libQt5Gui.so.5
-#19 0x00007fffe6ecdc9e in xcbSourceDispatch(_GSource*, int (*)(void*), void*) () at
-/lib64/libQt5XcbQpa.so.5
-#20 0x00007ffff605b7af in g_main_context_dispatch () at /lib64/libglib-2.0.so.0
-#21 0x00007ffff605bb38 in g_main_context_iterate.constprop () at /lib64/libglib-2.0.so.0
-#22
-0x00007ffff605bc03 in g_main_context_iteration () at /lib64/libglib-2.0.so.0
-#23 0x00007ffff710eb73 in QEventDispatcherGlib::processEvents(QFlags<QEventLoop::ProcessEventsFlag>) () at
-/lib64/libQt5Core.so.5
-#24 0x00007ffff70c191b in QEventLoop::exec(QFlags<QEventLoop::ProcessEventsFlag>) () at /lib64/libQt5Core.so.5
-#25 0x00007ffff70c95a6 in QCoreApplication::exec() () at
-/lib64/libQt5Core.so.5
-#26 0x000000000040e553 in main ()
+v9 - https://lkml.org/lkml/2020/6/30/1282
+v8 - https://lkml.org/lkml/2020/6/29/2385
+v7 - https://lkml.org/lkml/2020/6/28/347
+v6 - https://lkml.org/lkml/2020/6/4/1018
+v5 - https://lkml.org/lkml/2020/5/21/1114
+v4 - https://lkml.org/lkml/2019/10/30/1054
+v3 - https://lkml.org/lkml/2019/10/18/1601
+v2 - https://lkml.org/lkml/2019/9/2/980
+v1 - https://lkml.org/lkml/2019/8/29/1588
 
 
+Krishna Reddy (5):
+  iommu/arm-smmu: move TLB timeout and spin count macros
+  iommu/arm-smmu: ioremap smmu mmio region before implementation init
+  iommu/arm-smmu: add NVIDIA implementation for ARM MMU-500 usage
+  dt-bindings: arm-smmu: add binding for Tegra194 SMMU
+  iommu/arm-smmu: Add global/context fault implementation hooks
+
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |  25 +-
+ MAINTAINERS                                   |   2 +
+ drivers/iommu/Makefile                        |   2 +-
+ drivers/iommu/arm-smmu-impl.c                 |   3 +
+ drivers/iommu/arm-smmu-nvidia.c               | 278 ++++++++++++++++++
+ drivers/iommu/arm-smmu.c                      |  29 +-
+ drivers/iommu/arm-smmu.h                      |   6 +
+ 7 files changed, 334 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/iommu/arm-smmu-nvidia.c
 
 
-For example:
-'Input device support'->'Keyboards'
-
-Maybe we shoudld just revert it? I tried to understand the code a little bit,
-but no luck yet to understand how the whole thing works.
-
-Best regards,
-	Maxim Levitsky
-
+base-commit: 49fbb25030265c660de732513f18275d88ff99d3
+--=20
+2.26.2
 
