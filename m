@@ -2,134 +2,122 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70062C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2E92070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CF52070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vMdwLDXf"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="BgxXTonA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgGRN0s (ORCPT
+        id S1726998AbgGRN2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgGRN0r (ORCPT
+        Sat, 18 Jul 2020 09:28:55 -0400
+Received: from m15111.mail.126.com ([220.181.15.111]:52017 "EHLO
+        m15111.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgGRN2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:26:47 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A479C0619D2;
-        Sat, 18 Jul 2020 06:26:47 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t6so6636085plo.3;
-        Sat, 18 Jul 2020 06:26:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=VqTT9IDO19+ZA5nv21Pkcu4zf3MDPeHk42EblBrQa6o=;
-        b=vMdwLDXf4i+qqdF9QRcnYNvVqSlfE3UZbAjpCea2Y0sRSKi72vS5GeC+Jx9gWKRa+P
-         Zld5FgXZylg48gUhK2zNTIa48Etg3GM8Ss0KeI8JxhyArKdjQ+jnXhhiobotZFvkQMMg
-         PoyNyG4/tb/bwlrMgc7qBvaJkIdOK2fi1aVNzOCQXPMj+eP/OyuD/q4rtehnQbetlCyY
-         US+7SZ5B9pYQPPs3oHQIsMucKEvn2TlDkXcngQTV+Fljq9EWBcOYRohnVyGRH0tQA5RH
-         cP1qsp0exsNvg2TANfA2mfZfmZG5kxD5ClubDHmFMMfE20zPZ+y0hlaaLmXKi96LL6fi
-         QzkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=VqTT9IDO19+ZA5nv21Pkcu4zf3MDPeHk42EblBrQa6o=;
-        b=UTkTegQy1dGW49lGEW2350sqmu8XgiGHtky4GRWqaGyjkTN4JIkceeljGQEQMrzdW/
-         xfVXPPuUCp2z8nC0IwyWGALh9RSJFqy9ChH2m3rMRvUge68IGr+Mtby+8AMazkcmdlqk
-         +WM2QTaz5WsJxoipchdGVLvORCz4IvUQl6diTFRmhMyh5wvPuc0CR10x7gBW71jST6M2
-         k2FEJaHP58FO2rSmu0Wh7KR/zGktKm/Wh4bffeeE4F5luwyi8hyenc0+zMZyQJe6IW78
-         mcm9wM7JRkOrM40xis3AX7R7naUyZpGQrWO+Y0l6rRGRYkO1D4VyKes/beW+l2wEaNZ3
-         7GFA==
-X-Gm-Message-State: AOAM531LhBBwGBdKqHlrdd1M/kpScA7Ss2kejSkZs09DMYJOYtq7n4PZ
-        e7H1QqCI4jo5lpC0mZrJZCo=
-X-Google-Smtp-Source: ABdhPJzeybE3KLlfLyt/wu1z/T750bC+P9qMn09ZZOMxoP6gjGB9PqzQN9GYsQPNUZIx73shhE86AQ==
-X-Received: by 2002:a17:902:8a93:: with SMTP id p19mr10489452plo.275.1595078806642;
-        Sat, 18 Jul 2020 06:26:46 -0700 (PDT)
-Received: from blackclown ([103.88.82.25])
-        by smtp.gmail.com with ESMTPSA id r6sm10381569pgn.65.2020.07.18.06.26.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jul 2020 06:26:45 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 18:56:32 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] staging: media: atomisp: Replace depracated MSI API.
-Message-ID: <20200718132632.GA11527@blackclown>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sat, 18 Jul 2020 09:28:54 -0400
+X-Greylist: delayed 1852 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Jul 2020 09:28:53 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=Nrs0U0+MFKKRAAU9Nt
+        Id3jHpjc4smynpnfde3x7aSUk=; b=BgxXTonA7plPDAUC85Kp910v4oOh1gXwiG
+        nrfars58K54KDSPLGQahbSaxqr27wAbgYbLPAJ/OcN2VKT9NM1Pw6DZLtS/88COm
+        UhBiflNDqTDlplijWcwzdQEvSg1M3KTyZ2VUaG6Z9xVe7VwAj/C0I7LcGx1MIVxG
+        UBNthTK2g=
+Received: from 192.168.137.249 (unknown [112.10.74.162])
+        by smtp1 (Coremail) with SMTP id C8mowAAnFFrD8RJfJrTAHg--.49366S3;
+        Sat, 18 Jul 2020 20:57:41 +0800 (CST)
+From:   Xianting Tian <xianting_tian@126.com>
+To:     tytso@mit.edu, jack@suse.com
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] jbd2: fix incorrect code style
+Date:   Sat, 18 Jul 2020 08:57:37 -0400
+Message-Id: <1595077057-8048-1-git-send-email-xianting_tian@126.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: C8mowAAnFFrD8RJfJrTAHg--.49366S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXF4fXw1UJw45AFyktF4ktFb_yoW5XrWfpw
+        1Utry8urW0vryUAa4vqF48GFWYgrWSyFW7KrsrC3WktanxGFnIvryIyF4DA3yqqFZ5W3W7
+        AFy8t397Cw4vkwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jiVyxUUUUU=
+X-Originating-IP: [112.10.74.162]
+X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbi9AVlpFpD+9igGwAAsx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove unnecessary blank.
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Replace depracated pci_enable_msi with pci_alloc_irq_vectors.
-And as a result modify how the returned value is handled.
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+Signed-off-by: Xianting Tian <xianting_tian@126.com>
 ---
- drivers/staging/media/atomisp/pci/atomisp_v4l2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/jbd2/journal.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/sta=
-ging/media/atomisp/pci/atomisp_v4l2.c
-index d36809a0182c..b824c6f78a9c 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-@@ -1735,8 +1735,8 @@ static int atomisp_pci_probe(struct pci_dev *dev,
- 	pci_set_master(dev);
- 	pci_set_drvdata(dev, isp);
-=20
--	err =3D pci_enable_msi(dev);
--	if (err) {
-+	err =3D pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_MSI);
-+	if (err < 0) {
- 		dev_err(&dev->dev, "Failed to enable msi (%d)\n", err);
- 		goto enable_msi_fail;
- 	}
---=20
-2.17.1
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index e494443..5eccf8c 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -1285,7 +1285,7 @@ journal_t *jbd2_journal_init_inode(struct inode *inode)
+  * superblock as being NULL to prevent the journal destroy from writing
+  * back a bogus superblock.
+  */
+-static void journal_fail_superblock (journal_t *journal)
++static void journal_fail_superblock(journal_t *journal)
+ {
+ 	struct buffer_head *bh = journal->j_sb_buffer;
+ 	brelse(bh);
+@@ -1815,7 +1815,7 @@ int jbd2_journal_destroy(journal_t *journal)
+ 
+ 
+ /**
+- *int jbd2_journal_check_used_features () - Check if features specified are used.
++ *int jbd2_journal_check_used_features() - Check if features specified are used.
+  * @journal: Journal to check.
+  * @compat: bitmask of compatible features
+  * @ro: bitmask of features that force read-only mount
+@@ -1825,7 +1825,7 @@ int jbd2_journal_destroy(journal_t *journal)
+  * features.  Return true (non-zero) if it does.
+  **/
+ 
+-int jbd2_journal_check_used_features (journal_t *journal, unsigned long compat,
++int jbd2_journal_check_used_features(journal_t *journal, unsigned long compat,
+ 				 unsigned long ro, unsigned long incompat)
+ {
+ 	journal_superblock_t *sb;
+@@ -1860,7 +1860,7 @@ int jbd2_journal_check_used_features (journal_t *journal, unsigned long compat,
+  * all of a given set of features on this journal.  Return true
+  * (non-zero) if it can. */
+ 
+-int jbd2_journal_check_available_features (journal_t *journal, unsigned long compat,
++int jbd2_journal_check_available_features(journal_t *journal, unsigned long compat,
+ 				      unsigned long ro, unsigned long incompat)
+ {
+ 	if (!compat && !ro && !incompat)
+@@ -1882,7 +1882,7 @@ int jbd2_journal_check_available_features (journal_t *journal, unsigned long com
+ }
+ 
+ /**
+- * int jbd2_journal_set_features () - Mark a given journal feature in the superblock
++ * int jbd2_journal_set_features() - Mark a given journal feature in the superblock
+  * @journal: Journal to act on.
+  * @compat: bitmask of compatible features
+  * @ro: bitmask of features that force read-only mount
+@@ -1893,7 +1893,7 @@ int jbd2_journal_check_available_features (journal_t *journal, unsigned long com
+  *
+  */
+ 
+-int jbd2_journal_set_features (journal_t *journal, unsigned long compat,
++int jbd2_journal_set_features(journal_t *journal, unsigned long compat,
+ 			  unsigned long ro, unsigned long incompat)
+ {
+ #define INCOMPAT_FEATURE_ON(f) \
+-- 
+1.8.3.1
 
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8S+IcACgkQ+gRsbIfe
-747Fmg/+Iujb0Dr/xwic1iWp0UM+FI1nN4E28i0EBw7trAm3ocK1bz9awuN2ieqf
-7jZKBvoBdYbCVdTkPqPpneXP9JAT/Gwv5JyUtuqk8TUyau5i8MUhjjuBf3LCdSmn
-UnoEoszx3VuNXp0n8jXL2TD/Od2CR0TAAG7/iGVdkHsQ5CAOKNk8MLCAz27DK7Zf
-NVfF+CqczCzrJDH2D7Ubyrv34bE2i42qt1TTHeSe26kdc3Wc0runexaU5Gzntdtl
-yO/5qxkbD6zFqrshu9GGv17Xa8RWi3leuPsoF4UWuKZHHUWxKSFmEy/dvbOlgAB2
-kDGDtaJgTo3POGjJ6eb2x2Pexxq2pc5uBtjve2l5FI1xcEOS2tltYjkvApg03Bmm
-wjAuEx/VLaHc24uU8CCQWRQCQRxfEBNH/sHgr67ZwZIvnaQmtiL8ufNatfiGY08K
-Bzr5XwfoZS4kOeApvomqY9qXOjwn9FQ6HS8lLpFOXgSYn/HV065NzJORNMzM4xGQ
-XLpCoq8ae8NQI3H5x/pPLG3jSLlhpNssynTXBgR+3QpDPM85xSIDDgL+JI4fQkti
-z0c4bdDppEz3w4+QNQtT6OuTRtVniRdeQLa2QmCAwzGort1stDX9P47cqtZ5k3wz
-pRTfmv7w4IcHpnhMiLcwHbrSzaqNmQ6FmFHIaV13kG4W7iUJld8=
-=aeBi
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
