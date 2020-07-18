@@ -2,95 +2,254 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37A0C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EBFC433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD87520691
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E9A20691
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgGRKa2 (ORCPT
+        id S1727021AbgGRKam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 06:30:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726507AbgGRKa1 (ORCPT
+        Sat, 18 Jul 2020 06:30:42 -0400
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:29492 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726507AbgGRKal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 06:30:27 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B223C0619D2;
-        Sat, 18 Jul 2020 03:30:27 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id F09D7BC053;
-        Sat, 18 Jul 2020 10:30:24 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     tklauser@distanz.ch, gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] serial: altera_jtaguart: Replace HTTP links with HTTPS ones
-Date:   Sat, 18 Jul 2020 12:30:18 +0200
-Message-Id: <20200718103018.3164-1-grandmaster@al2klimov.de>
+        Sat, 18 Jul 2020 06:30:41 -0400
+Received: from localhost.localdomain ([93.22.37.252])
+        by mwinf5d41 with ME
+        id 4aWa2300L5SQgGV03aWbBS; Sat, 18 Jul 2020 12:30:38 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 18 Jul 2020 12:30:38 +0200
+X-ME-IP: 93.22.37.252
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     isdn@linux-pingi.de, davem@davemloft.net,
+        sergey.senozhatsky@gmail.com, wangkefeng.wang@huawei.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] mISDN: switch from 'pci_' to 'dma_' API
+Date:   Sat, 18 Jul 2020 12:30:33 +0200
+Message-Id: <20200718103033.352247-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+When memory is allocated in 'setup_hw()' (hfcpci.c) GFP_KERNEL can be used
+because it is called from the probe function and no lock is taken.
+The call chain is:
+   hfc_probe()
+   --> setup_card()
+   --> setup_hw()
+
+When memory is allocated in 'inittiger()' (netjet.c) GFP_ATOMIC must be
+used because a spin_lock is taken by the caller (i.e. 'nj_init_card()')
+This is also consistent with the other allocations done in the function.
+
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
+
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
+
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
+
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/isdn/hardware/mISDN/hfcpci.c | 12 +++++++-----
+ drivers/isdn/hardware/mISDN/netjet.c |  8 ++++----
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
-
- drivers/tty/serial/altera_jtaguart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/altera_jtaguart.c b/drivers/tty/serial/altera_jtaguart.c
-index c90e503d6b57..d0ca9cf29b62 100644
---- a/drivers/tty/serial/altera_jtaguart.c
-+++ b/drivers/tty/serial/altera_jtaguart.c
-@@ -27,7 +27,7 @@
+diff --git a/drivers/isdn/hardware/mISDN/hfcpci.c b/drivers/isdn/hardware/mISDN/hfcpci.c
+index abdf787c1a71..904a4f4c5ff9 100644
+--- a/drivers/isdn/hardware/mISDN/hfcpci.c
++++ b/drivers/isdn/hardware/mISDN/hfcpci.c
+@@ -158,7 +158,8 @@ release_io_hfcpci(struct hfc_pci *hc)
+ 	/* disable memory mapped ports + busmaster */
+ 	pci_write_config_word(hc->pdev, PCI_COMMAND, 0);
+ 	del_timer(&hc->hw.timer);
+-	pci_free_consistent(hc->pdev, 0x8000, hc->hw.fifos, hc->hw.dmahandle);
++	dma_free_coherent(&hc->pdev->dev, 0x8000, hc->hw.fifos,
++			  hc->hw.dmahandle);
+ 	iounmap(hc->hw.pci_io);
+ }
  
- /*
-  * Altera JTAG UART register definitions according to the Altera JTAG UART
-- * datasheet: http://www.altera.com/literature/hb/nios2/n2cpu_nii51009.pdf
-+ * datasheet: https://www.altera.com/literature/hb/nios2/n2cpu_nii51009.pdf
-  */
+@@ -2004,8 +2005,9 @@ setup_hw(struct hfc_pci *hc)
+ 	}
+ 	/* Allocate memory for FIFOS */
+ 	/* the memory needs to be on a 32k boundary within the first 4G */
+-	pci_set_dma_mask(hc->pdev, 0xFFFF8000);
+-	buffer = pci_alloc_consistent(hc->pdev, 0x8000, &hc->hw.dmahandle);
++	dma_set_mask(&hc->pdev->dev, 0xFFFF8000);
++	buffer = dma_alloc_coherent(&hc->pdev->dev, 0x8000, &hc->hw.dmahandle,
++				    GFP_KERNEL);
+ 	/* We silently assume the address is okay if nonzero */
+ 	if (!buffer) {
+ 		printk(KERN_WARNING
+@@ -2018,8 +2020,8 @@ setup_hw(struct hfc_pci *hc)
+ 	if (unlikely(!hc->hw.pci_io)) {
+ 		printk(KERN_WARNING
+ 		       "HFC-PCI: Error in ioremap for PCI!\n");
+-		pci_free_consistent(hc->pdev, 0x8000, hc->hw.fifos,
+-				    hc->hw.dmahandle);
++		dma_free_coherent(&hc->pdev->dev, 0x8000, hc->hw.fifos,
++				  hc->hw.dmahandle);
+ 		return 1;
+ 	}
  
- #define ALTERA_JTAGUART_SIZE			8
+diff --git a/drivers/isdn/hardware/mISDN/netjet.c b/drivers/isdn/hardware/mISDN/netjet.c
+index 6aae97e827b7..ee925b58bbce 100644
+--- a/drivers/isdn/hardware/mISDN/netjet.c
++++ b/drivers/isdn/hardware/mISDN/netjet.c
+@@ -297,8 +297,8 @@ inittiger(struct tiger_hw *card)
+ {
+ 	int i;
+ 
+-	card->dma_p = pci_alloc_consistent(card->pdev, NJ_DMA_SIZE,
+-					   &card->dma);
++	card->dma_p = dma_alloc_coherent(&card->pdev->dev, NJ_DMA_SIZE,
++					 &card->dma, GFP_ATOMIC);
+ 	if (!card->dma_p) {
+ 		pr_info("%s: No DMA memory\n", card->name);
+ 		return -ENOMEM;
+@@ -965,8 +965,8 @@ nj_release(struct tiger_hw *card)
+ 		kfree(card->bc[i].hrbuf);
+ 	}
+ 	if (card->dma_p)
+-		pci_free_consistent(card->pdev, NJ_DMA_SIZE,
+-				    card->dma_p, card->dma);
++		dma_free_coherent(&card->pdev->dev, NJ_DMA_SIZE, card->dma_p,
++				  card->dma);
+ 	write_lock_irqsave(&card_lock, flags);
+ 	list_del(&card->list);
+ 	write_unlock_irqrestore(&card_lock, flags);
 -- 
-2.27.0
+2.25.1
 
