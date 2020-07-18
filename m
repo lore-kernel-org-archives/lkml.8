@@ -2,105 +2,96 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F85C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD4C82070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3EBC2074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qUgRCn6i"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rHSax3s5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgGRC61 (ORCPT
+        id S1728894AbgGRC64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 22:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgGRC61 (ORCPT
+        Fri, 17 Jul 2020 22:58:56 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:40875 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726262AbgGRC64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 22:58:27 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13543C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 19:58:27 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b185so10602162qkg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 19:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=t5vwVcGeID8q+Y3Mc+CoAuwJ6W/lykUXCUCPrO4IGFM=;
-        b=qUgRCn6iFhKJVmw56sibGFB/9uX/7DQOHLJh5iMqWy0UqTqQj3vnp2AykeX8HtxVpV
-         cnLWIv0vw3Lrs1NYYmJw6ktp1OaTi0MZ8Uirn7uAAEjvW/zOcK9bv9RXIWLIUhJwhY3Y
-         6jiEnSyGmXr4erRAPva5Bbo485s5NatDJjPIOK0E/4GqqCYCGtO1KUFGgrhhE/O5sQkI
-         cm8okqxlo6FfvKTeCq0/JaHcr6Hoa/0y+noYDWl3fiUitDkdTUt4hXjOSZSfdUVRm46q
-         0XJEBcKN4C48naX5fyxrUtyp9yofiKrVTurWtUQ3QnRwdq0kuuL0I5mIfVD+vGfb0ojI
-         B/mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t5vwVcGeID8q+Y3Mc+CoAuwJ6W/lykUXCUCPrO4IGFM=;
-        b=MWyvzi/syC+kJlpJfwwGL6YyU9l0+/ZwWGXdtmbfn8Ow0B5fnHFlAl0nsrwpG05D98
-         zmgDNEWzpni3OVIOnVyJwGlA9rZ0Dh2xoe3HFcCq19D3WgA+nW7/8Hmis39WpR41GQSj
-         oxVXoKl6sM9TxnGxTc4hVGoXh0LGPFqacLHEsuzsX2R2mIkdKzHi00f/bmShD43oOudR
-         tRJYpqpZy1M0xuLVFcopWFQRQML5/KSE896gyirLwVtOzwLMsgNuaxquBzji7E6q6BdJ
-         oZ1bWZAie3VIOir7kKyowDS0xql4bz4yia1t8wVbcH2HyZZF9USmA62+QPrF/I5DedQA
-         RO1g==
-X-Gm-Message-State: AOAM533DT7Ihkmtv98sT+7o/KkGdsY7yhu1g2/fGwjPyzLKjkv6qkX1q
-        DVzH+1BNdAxzLKr+wVBvzwSuRfDl
-X-Google-Smtp-Source: ABdhPJwj0fWFSuinqIE4OCioyHr1lUZ0E/fRxcvxTqdyOCmbwWCbVyX5ke4nLqTwxlqlnYSbFNawmQ==
-X-Received: by 2002:a05:620a:79a:: with SMTP id 26mr12135966qka.169.1595041106132;
-        Fri, 17 Jul 2020 19:58:26 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id w4sm13693815qtc.5.2020.07.17.19.58.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 19:58:25 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 19:58:23 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] clang: linux/compiler-clang.h: drop duplicated word in a
- comment
-Message-ID: <20200718025823.GA1188976@ubuntu-n2-xlarge-x86>
-References: <6a18c301-3505-742f-4dd7-0f38d0e537b9@infradead.org>
+        Fri, 17 Jul 2020 22:58:56 -0400
+X-UUID: 9aebe2b8f4c84eddab7362cb0c116591-20200718
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=6gkKHN2VVvizCwFgJMmDy6tc+BUb4z5fDOqpe6ABGnY=;
+        b=rHSax3s5IhGzQFxB5dxoiTLclQBbsrH+3cBki8T5WGt5sD5yXkT6LhHyHuOW2eeEJB9vUBx0BHj8GbQGQx7fG1yxgEAJXPljwoAo8k2o5of774lfHCT2rmz4eaTXYN+5D7kd08/p4EI2ktJUnW+YL5NCYlHidk5qL65R5OsZKdk=;
+X-UUID: 9aebe2b8f4c84eddab7362cb0c116591-20200718
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1493739415; Sat, 18 Jul 2020 10:58:54 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 18 Jul 2020 10:58:52 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 18 Jul 2020 10:58:52 +0800
+Message-ID: <1595041133.23887.4.camel@mtkswgap22>
+Subject: Re: [PATCH v2] usb: gadget: configfs: Fix use-after-free issue with
+ udc_name
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Eddie Hung <eddie.hung@mediatek.com>, <stable@vger.kernel.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>
+Date:   Sat, 18 Jul 2020 10:58:53 +0800
+In-Reply-To: <1595040303-23046-1-git-send-email-macpaul.lin@mediatek.com>
+References: <1594881666-8843-1-git-send-email-macpaul.lin@mediatek.com>
+         <1595040303-23046-1-git-send-email-macpaul.lin@mediatek.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a18c301-3505-742f-4dd7-0f38d0e537b9@infradead.org>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 07:55:02PM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Drop the doubled word "the" in a comment.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: clang-built-linux@googlegroups.com
+T24gU2F0LCAyMDIwLTA3LTE4IGF0IDEwOjQ1ICswODAwLCBNYWNwYXVsIExpbiB3cm90ZToNCj4g
+RnJvbTogRWRkaWUgSHVuZyA8ZWRkaWUuaHVuZ0BtZWRpYXRlay5jb20+DQo+IA0KDQpXZWxsLCBp
+dCdzIHN0cmFuZ2UsIEkgc2ltcGx5IHJlcGxhY2VkIHRoZSB1cGxvYWRlcidzIG5hbWUgdG8gbXkN
+CmNvbGxlYWd1ZSwgZ2l0IHNlbmQtZW1haWwgcG9wIHVwIHRoaXMgbGluZSBhdXRvbWF0aWNhbGx5
+Lg0KDQpTaG91bGRuJ3QgSSBkbyB0aGF0IGtpbmQgb2YgY2hhbmdlLiBJdCBkaWQgbm90IGhhcHBl
+bmVkIGJlZm9yZS4NCkRvIEkgbmVlZCB0byBjaGFuZ2UgaXQgYmFjayBhbmQgdXBkYXRlIHBhdGNo
+IHYzPw0KIA0KPiBUaGVyZSBpcyBhIHVzZS1hZnRlci1mcmVlIGlzc3VlLCBpZiBhY2Nlc3MgdWRj
+X25hbWUNCj4gaW4gZnVuY3Rpb24gZ2FkZ2V0X2Rldl9kZXNjX1VEQ19zdG9yZSBhZnRlciBhbm90
+aGVyIGNvbnRleHQNCj4gZnJlZSB1ZGNfbmFtZSBpbiBmdW5jdGlvbiB1bnJlZ2lzdGVyX2dhZGdl
+dC4NCj4gDQo+IENvbnRleHQgMToNCj4gZ2FkZ2V0X2Rldl9kZXNjX1VEQ19zdG9yZSgpLT51bnJl
+Z2lzdGVyX2dhZGdldCgpLT4NCj4gZnJlZSB1ZGNfbmFtZS0+c2V0IHVkY19uYW1lIHRvIE5VTEwN
+Cj4gDQo+IENvbnRleHQgMjoNCj4gZ2FkZ2V0X2Rldl9kZXNjX1VEQ19zaG93KCktPiBhY2Nlc3Mg
+dWRjX25hbWUNCj4gDQo+IENhbGwgdHJhY2U6DQo+IGR1bXBfYmFja3RyYWNlKzB4MC8weDM0MA0K
+PiBzaG93X3N0YWNrKzB4MTQvMHgxYw0KPiBkdW1wX3N0YWNrKzB4ZTQvMHgxMzQNCj4gcHJpbnRf
+YWRkcmVzc19kZXNjcmlwdGlvbisweDc4LzB4NDc4DQo+IF9fa2FzYW5fcmVwb3J0KzB4MjcwLzB4
+MmVjDQo+IGthc2FuX3JlcG9ydCsweDEwLzB4MTgNCj4gX19hc2FuX3JlcG9ydF9sb2FkMV9ub2Fi
+b3J0KzB4MTgvMHgyMA0KPiBzdHJpbmcrMHhmNC8weDEzOA0KPiB2c25wcmludGYrMHg0MjgvMHgx
+NGQwDQo+IHNwcmludGYrMHhlNC8weDEyYw0KPiBnYWRnZXRfZGV2X2Rlc2NfVURDX3Nob3crMHg1
+NC8weDY0DQo+IGNvbmZpZ2ZzX3JlYWRfZmlsZSsweDIxMC8weDNhMA0KPiBfX3Zmc19yZWFkKzB4
+ZjAvMHg0OWMNCj4gdmZzX3JlYWQrMHgxMzAvMHgyYjQNCj4gU3lTX3JlYWQrMHgxMTQvMHgyMDgN
+Cj4gZWwwX3N2Y19uYWtlZCsweDM0LzB4MzgNCj4gDQo+IEFkZCBtdXRleF9sb2NrIHRvIHByb3Rl
+Y3QgdGhpcyBraW5kIG9mIHNjZW5hcmlvLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRWRkaWUgSHVu
+ZyA8ZWRkaWUuaHVuZ0BtZWRpYXRlay5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IE1hY3BhdWwgTGlu
+IDxtYWNwYXVsLmxpbkBtZWRpYXRlay5jb20+DQo+IFJldmlld2VkLWJ5OiBQZXRlciBDaGVuIDxw
+ZXRlci5jaGVuQG54cC5jb20+DQo+IENjOiBzdGFibGVAdmdlci5rZXJuZWwub3JnDQo+IC0tLQ0K
+PiBDaGFuZ2VzIGZvciB2MjoNCj4gICAtIEZpeCB0eXBvICVzL2NvbnRleC9jb250ZXh0LCBUaGFu
+a3MgUGV0ZXIuDQo+IA0KPiAgZHJpdmVycy91c2IvZ2FkZ2V0L2NvbmZpZ2ZzLmMgfCAxMSArKysr
+KysrKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
+LSkNCg0KVGhhbmtzLg0KTWFjcGF1bCBMaW4NCg0K
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-
-> ---
->  include/linux/compiler-clang.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- linux-next-20200714.orig/include/linux/compiler-clang.h
-> +++ linux-next-20200714/include/linux/compiler-clang.h
-> @@ -40,7 +40,7 @@
->  #endif
->  
->  /*
-> - * Not all versions of clang implement the the type-generic versions
-> + * Not all versions of clang implement the type-generic versions
->   * of the builtin overflow checkers. Fortunately, clang implements
->   * __has_builtin allowing us to avoid awkward version
->   * checks. Unfortunately, we don't know which version of gcc clang
-> 
