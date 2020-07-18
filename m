@@ -7,39 +7,40 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B399C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2877C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1106D2070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8E72073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:24:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgGRLMW (ORCPT
+        id S1727106AbgGRLYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 07:12:22 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:46600 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726507AbgGRLMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 07:12:21 -0400
+        Sat, 18 Jul 2020 07:24:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbgGRLYO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 07:24:14 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE53C0619D2;
+        Sat, 18 Jul 2020 04:24:13 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 214F8BC073;
-        Sat, 18 Jul 2020 11:12:15 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id C090ABC07E;
+        Sat, 18 Jul 2020 11:24:09 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To:     peter.ujfalusi@ti.com, jarkko.nikula@bitmer.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] ASoC: fsl: Replace HTTP links with HTTPS ones
-Date:   Sat, 18 Jul 2020 13:12:09 +0200
-Message-Id: <20200718111209.11760-1-grandmaster@al2klimov.de>
+Subject: [PATCH] ASoC: omap: Replace HTTP links with HTTPS ones
+Date:   Sat, 18 Jul 2020 13:24:03 +0200
+Message-Id: <20200718112403.13709-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
+X-Spamd-Bar: +++++
 Authentication-Results: smtp.al2klimov.de;
         auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,38 +77,62 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  If you apply the patch, please let me know.
 
 
- sound/soc/fsl/imx-audmix.c | 4 ++--
- sound/soc/fsl/imx-audmux.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/ti/omap-hdmi.c    | 2 +-
+ sound/soc/ti/omap-twl4030.c | 2 +-
+ sound/soc/ti/sdma-pcm.c     | 2 +-
+ sound/soc/ti/sdma-pcm.h     | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/fsl/imx-audmix.c b/sound/soc/fsl/imx-audmix.c
-index e09b45de0efd..96980cb0497f 100644
---- a/sound/soc/fsl/imx-audmix.c
-+++ b/sound/soc/fsl/imx-audmix.c
-@@ -6,8 +6,8 @@
-  * License. You may obtain a copy of the GNU General Public License
-  * Version 2 or later at the following locations:
+diff --git a/sound/soc/ti/omap-hdmi.c b/sound/soc/ti/omap-hdmi.c
+index def2a0ce8886..3328c02f93c7 100644
+--- a/sound/soc/ti/omap-hdmi.c
++++ b/sound/soc/ti/omap-hdmi.c
+@@ -2,7 +2,7 @@
+ /*
+  * omap-hdmi-audio.c -- OMAP4+ DSS HDMI audio support library
   *
-- * http://www.opensource.org/licenses/gpl-license.html
-- * http://www.gnu.org/copyleft/gpl.html
-+ * https://www.opensource.org/licenses/gpl-license.html
-+ * https://www.gnu.org/copyleft/gpl.html
+- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com
+  *
+  * Author: Jyri Sarha <jsarha@ti.com>
+  */
+diff --git a/sound/soc/ti/omap-twl4030.c b/sound/soc/ti/omap-twl4030.c
+index 92dbe2c67290..4b408cec7a90 100644
+--- a/sound/soc/ti/omap-twl4030.c
++++ b/sound/soc/ti/omap-twl4030.c
+@@ -2,7 +2,7 @@
+ /*
+  * omap-twl4030.c  --  SoC audio for TI SoC based boards with twl4030 codec
+  *
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com
+  * All rights reserved.
+  *
+  * Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
+diff --git a/sound/soc/ti/sdma-pcm.c b/sound/soc/ti/sdma-pcm.c
+index 2b0bc234e1b6..9e7691103f05 100644
+--- a/sound/soc/ti/sdma-pcm.c
++++ b/sound/soc/ti/sdma-pcm.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- *  Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com
++ *  Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com
+  *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
   */
  
- #include <linux/module.h>
-diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
-index 3ce85a43e08f..25c18b9e348f 100644
---- a/sound/soc/fsl/imx-audmux.c
-+++ b/sound/soc/fsl/imx-audmux.c
-@@ -5,7 +5,7 @@
- // Copyright 2009 Pengutronix, Sascha Hauer <s.hauer@pengutronix.de>
- //
- // Initial development of this code was funded by
--// Phytec Messtechnik GmbH, http://www.phytec.de
-+// Phytec Messtechnik GmbH, https://www.phytec.de
+diff --git a/sound/soc/ti/sdma-pcm.h b/sound/soc/ti/sdma-pcm.h
+index cb0627c8dd34..c19efb4c043d 100644
+--- a/sound/soc/ti/sdma-pcm.h
++++ b/sound/soc/ti/sdma-pcm.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- *  Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com
++ *  Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com
+  *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
+  */
  
- #include <linux/clk.h>
- #include <linux/debugfs.h>
 -- 
 2.27.0
 
