@@ -2,132 +2,163 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC20C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21031C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB4392173E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:29:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595089783;
-	bh=89r/vzFa0Z0afnvQgRK8zBvAGeUyQXap6+PdGNRqtME=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Gj5sPwUdw/DmndRUW0puys8YAsS7r+3fppTY52ct6/a8X4o2C8HqaCkVCZSj6xX/X
-	 4E41j8afwxZcUQrQcn6FiPh54LFuoqIuqn0vTFXoioscXmGNdNWPV1Tg2QGolBvFT8
-	 hyL2ClKKCBPcqp9sJQNSrnWm3LcoxuB/63MyDZYU=
+	by mail.kernel.org (Postfix) with ESMTP id EBBEA2177B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="vgFNNGIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgGRQ3m (ORCPT
+        id S1728110AbgGRQcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 12:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbgGRQ3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 12:29:41 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E456E2080D;
-        Sat, 18 Jul 2020 16:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595089781;
-        bh=89r/vzFa0Z0afnvQgRK8zBvAGeUyQXap6+PdGNRqtME=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CnYV7GR4c9p5VrrTGH/ciCt/4e4mLRDogf8kqvj17IpZfXJoYlwL4CHn78D8db225
-         LqMHDhGz44GLZ/nkLMfHy9vc6oVaFUkxYzOJZhivpJCxKydTB0Veo3QvMiGv5/NUNR
-         nCa5mnUjHU3uxRll29sG37n2Xc5CY+ul43mWkT1E=
-Date:   Sat, 18 Jul 2020 17:29:37 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>
-Cc:     linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH] iio: light: stk3310: add chip id for STK3311-X variant
-Message-ID: <20200718172937.59f24822@archlinux>
-In-Reply-To: <20200714104441.nrnaauqunjst67ix@core.my.home>
-References: <20200703194406.110855-1-megous@megous.com>
-        <20200704172916.7a8a7359@archlinux>
-        <20200714104441.nrnaauqunjst67ix@core.my.home>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 Jul 2020 12:32:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbgGRQcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 12:32:21 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C26DC0619D2;
+        Sat, 18 Jul 2020 09:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=p0fHr0K6rdHB0oI4+clbEvxqPDehqkunizbx+oh2+FE=; b=vgFNNGIw5hDO9tszONcTVsz0mr
+        HL8bNBHBVC7wnGgRetVWq9UKMUr2t7wGM5a02nqbNfzgoeCnUQ3XI6urrjhR36ldHD6/soq4zQwJJ
+        PUFERU7WcDP4yRsBekucde3q1Lg4btbVR2VwmrItPc5H3JmLo2L/O6w5fjEA9Z/72zvxZrQ/eBVyw
+        atF0TiEkzxTKgwQvi1uS7FMRkBt7Xhwo2NerBiURyuKhGF5k8JIvdBhUyA8aEgOT9lat0aod+8Rnp
+        lXhxpg1exNKsomFrPfagSmgAtc4ZS+uvZM/BOrywvqh72DXSbylMuZ/kmQVHI2MvkVrvmGPPyN2uS
+        b/DVyHsg==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jwpl0-0000hS-GD; Sat, 18 Jul 2020 17:32:14 +0100
+Date:   Sat, 18 Jul 2020 17:32:14 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] net: dsa: qca8k: implement the port MTU callbacks
+Message-ID: <20200718163214.GA2634@earth.li>
+References: <20200718093555.GA12912@earth.li>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718093555.GA12912@earth.li>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 12:44:41 +0200
-Ond=C5=99ej Jirman <megous@megous.com> wrote:
+This switch has a single max frame size configuration register, so we
+track the requested MTU for each port and apply the largest.
 
-> Hello Jonathan,
->=20
-> On Sat, Jul 04, 2020 at 05:29:16PM +0100, Jonathan Cameron wrote:
-> > On Fri,  3 Jul 2020 21:44:05 +0200
-> > Ondrej Jirman <megous@megous.com> wrote:
-> >  =20
-> > > From: Icenowy Zheng <icenowy@aosc.io>
-> > >=20
-> > > The STK3311 chip has a variant called STK3311-X, which has a different
-> > > chip id of 0x12.
-> > >=20
-> > > Add the chip id to the driver.
-> > >=20
-> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com> =20
-> >=20
-> > Given this is clearly not quite compatible with the stk3311 probably
-> > best to also add a an id to the of id table.  Any idea what else
-> > is different? =20
->=20
-> I've looked at it more, and there's no stk3311 either. It always has
-> some suffix, like -sa -9 -a -wv -x, .... So I don't think a new
-> ID in the table is neccessary. The driver can differentiate based on
-> chip id, in case it will ever become necessary.
->=20
-Thanks for info.  In that case, applied to the togreg branch of iio.git
-and pushed out as testing for the autobuilders to poke at it.
+v2:
+- Address review feedback from Vladimir Oltean
 
-Thanks,
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+---
+ drivers/net/dsa/qca8k.c | 31 +++++++++++++++++++++++++++++++
+ drivers/net/dsa/qca8k.h |  3 +++
+ 2 files changed, 34 insertions(+)
 
-Jonathan
-
-> regards,
-> 	o.
->=20
-> > Thanks,
-> >=20
-> > Jonathan
-> >  =20
-> > > ---
-> > >  drivers/iio/light/stk3310.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >=20
-> > > diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
-> > > index 185c24a75ae6..1a8401d198a4 100644
-> > > --- a/drivers/iio/light/stk3310.c
-> > > +++ b/drivers/iio/light/stk3310.c
-> > > @@ -37,6 +37,7 @@
-> > > =20
-> > >  #define STK3310_CHIP_ID_VAL			0x13
-> > >  #define STK3311_CHIP_ID_VAL			0x1D
-> > > +#define STK3311X_CHIP_ID_VAL			0x12
-> > >  #define STK3335_CHIP_ID_VAL			0x51
-> > >  #define STK3310_PSINT_EN			0x01
-> > >  #define STK3310_PS_MAX_VAL			0xFFFF
-> > > @@ -453,6 +454,7 @@ static int stk3310_init(struct iio_dev *indio_dev)
-> > > =20
-> > >  	if (chipid !=3D STK3310_CHIP_ID_VAL &&
-> > >  	    chipid !=3D STK3311_CHIP_ID_VAL &&
-> > > +	    chipid !=3D STK3311X_CHIP_ID_VAL &&
-> > >  	    chipid !=3D STK3335_CHIP_ID_VAL) {
-> > >  		dev_err(&client->dev, "invalid chip id: 0x%x\n", chipid);
-> > >  		return -ENODEV; =20
-> >  =20
+diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+index 4acad5fa0c84..a5566de82853 100644
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -670,6 +670,11 @@ qca8k_setup(struct dsa_switch *ds)
+ 		}
+ 	}
+ 
++	/* Setup our port MTUs to match power on defaults */
++	for (i = 0; i < QCA8K_NUM_PORTS; i++)
++		priv->port_mtu[i] = ETH_FRAME_LEN + ETH_FCS_LEN;
++	qca8k_write(priv, QCA8K_MAX_FRAME_SIZE, ETH_FRAME_LEN + ETH_FCS_LEN);
++
+ 	/* Flush the FDB table */
+ 	qca8k_fdb_flush(priv);
+ 
+@@ -1098,6 +1103,30 @@ qca8k_port_disable(struct dsa_switch *ds, int port)
+ 	priv->port_sts[port].enabled = 0;
+ }
+ 
++static int
++qca8k_port_change_mtu(struct dsa_switch *ds, int port, int new_mtu)
++{
++	struct qca8k_priv *priv = ds->priv;
++	int i, mtu = 0;
++
++	priv->port_mtu[port] = new_mtu;
++
++	for (i = 0; i < QCA8K_NUM_PORTS; i++)
++		if (priv->port_mtu[port] > mtu)
++			mtu = priv->port_mtu[port];
++
++	/* Include L2 header / FCS length */
++	qca8k_write(priv, QCA8K_MAX_FRAME_SIZE, mtu + ETH_HLEN + ETH_FCS_LEN);
++
++	return 0;
++}
++
++static int
++qca8k_port_max_mtu(struct dsa_switch *ds, int port)
++{
++	return QCA8K_MAX_MTU;
++}
++
+ static int
+ qca8k_port_fdb_insert(struct qca8k_priv *priv, const u8 *addr,
+ 		      u16 port_mask, u16 vid)
+@@ -1174,6 +1203,8 @@ static const struct dsa_switch_ops qca8k_switch_ops = {
+ 	.set_mac_eee		= qca8k_set_mac_eee,
+ 	.port_enable		= qca8k_port_enable,
+ 	.port_disable		= qca8k_port_disable,
++	.port_change_mtu	= qca8k_port_change_mtu,
++	.port_max_mtu		= qca8k_port_max_mtu,
+ 	.port_stp_state_set	= qca8k_port_stp_state_set,
+ 	.port_bridge_join	= qca8k_port_bridge_join,
+ 	.port_bridge_leave	= qca8k_port_bridge_leave,
+diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
+index 10ef2bca2cde..31439396401c 100644
+--- a/drivers/net/dsa/qca8k.h
++++ b/drivers/net/dsa/qca8k.h
+@@ -13,6 +13,7 @@
+ #include <linux/gpio.h>
+ 
+ #define QCA8K_NUM_PORTS					7
++#define QCA8K_MAX_MTU					9000
+ 
+ #define PHY_ID_QCA8337					0x004dd036
+ #define QCA8K_ID_QCA8337				0x13
+@@ -58,6 +59,7 @@
+ #define   QCA8K_MDIO_MASTER_MAX_REG			32
+ #define QCA8K_GOL_MAC_ADDR0				0x60
+ #define QCA8K_GOL_MAC_ADDR1				0x64
++#define QCA8K_MAX_FRAME_SIZE				0x78
+ #define QCA8K_REG_PORT_STATUS(_i)			(0x07c + (_i) * 4)
+ #define   QCA8K_PORT_STATUS_SPEED			GENMASK(1, 0)
+ #define   QCA8K_PORT_STATUS_SPEED_10			0
+@@ -189,6 +191,7 @@ struct qca8k_priv {
+ 	struct device *dev;
+ 	struct dsa_switch_ops ops;
+ 	struct gpio_desc *reset_gpio;
++	unsigned int port_mtu[QCA8K_NUM_PORTS];
+ };
+ 
+ struct qca8k_mib_desc {
+-- 
+2.27.0
 
