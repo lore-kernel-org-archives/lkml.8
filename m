@@ -2,78 +2,120 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7353C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 03:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2605320809
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C5A20672
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 03:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QJlYHOeI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aL9xO1U5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgGRC5X (ORCPT
+        id S1728890AbgGRDFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 22:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46376 "EHLO
+        Fri, 17 Jul 2020 23:05:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgGRC5X (ORCPT
+        with ESMTP id S1726262AbgGRDFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 22:57:23 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32FAC0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 19:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=+2Uc220xiIEAAq1KTnqAalELI3crqv9FnpCqCw6dtXA=; b=QJlYHOeIFg+IXZPcJ5kaAln532
-        H276tMlaca5dXAJLi5lG1DR2gz0VjHMqWH7k0DyyyDtRzvLIrUC7yk9AGtlPPOutbmngoz3BcF/LD
-        8V5SqIjit1P+UEhSnQqRDFZnXPOiEDDap+g777gLIR1zZJt3hJNxnBKQGG21AvJFh+u/93FzoLyzp
-        iivKdnoczL1uttK4Uy2+eeMm67t0hY6DzouSdk36PsFkvwoaImqvYqlfXyptMAw816fm54tjZOzih
-        /cMw8J2nGmv2PYbNtz11mMzzqJ7OcU97mo7PCFpV/AcUuwcoQbyRPgqXWgi0nOhNDlE1rnAWXJlF2
-        EPzbBR0A==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwd2M-0006vg-OA; Sat, 18 Jul 2020 02:57:19 +0000
-Subject: Re: [PATCH] highmem: linux/highmem.h: drop duplicated word in a
- comment
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>
-References: <57b70139-4f2d-c520-0882-f310c2b64b65@infradead.org>
- <20200718025308.GT12769@casper.infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8c4dc787-b650-da92-51d8-f617a32c1e7b@infradead.org>
-Date:   Fri, 17 Jul 2020 19:57:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 17 Jul 2020 23:05:44 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53146C0619D2;
+        Fri, 17 Jul 2020 20:05:44 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p3so7565027pgh.3;
+        Fri, 17 Jul 2020 20:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1wY0lal+lBgSmtXPjk/0h/AXiG5Km+JSOehkqiKj28I=;
+        b=aL9xO1U5+1oyS5EnVLEdspMbDxMd+nLGaK6RVt2ZFIpZ5qGzllCK6p77x05aefD5Cp
+         XHATfOVMIMjq6tuKT6aHzlMZPAo6bnu0lACoyO/Iinn7b1N+HiAsAcOe/TWFDPX6z0kE
+         FwA3Q++xo87lUdOgKp8TPe6UsIQs83DxPTsRwpQerUtKS0O+bsG9B4gMYx6AGylYPJz1
+         UgIfGajInIE5YL/ffByhi7ABWfZxrjYvyyD56iH2yXab5wR2vW15A6REX3kGwXW9nhqW
+         QHk+lDEEutbo/lHTcd35FIuf8TwloVeCyvubnvS7K95TWYae8xX5sLnuWTrrAFNRQbg/
+         RK7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1wY0lal+lBgSmtXPjk/0h/AXiG5Km+JSOehkqiKj28I=;
+        b=Gt90d03RHiH1Isbq15uSuqaVjmc8O+qTdPZG+miMhkdqOSSYeXOQrwIljDNjOvw26+
+         DJWZQPDOAcDiJSnOkzYBcSV8DBjuPGbrYqCTUWdtAt1QIQqh5gjzvRgeunMypmCnYT8M
+         kV4qRjjnganeZYpthhrssEqHPYZHayWoIxIQ4GkGLqoEo/bjd10F3IuXNusZsLsoYiH2
+         wfcUZ8ZQS0butpThxcSNr8VeHwVgL5MWAteABsTLZOJbk+ygXEHAWaNhRWc1y640CVBE
+         IwD2MMStsrGrAfRtmGkKPJRDRXgEEul3wxfpxIK8kBHJHMTEQaLoa5O78LZN7jnOoRRr
+         NJGQ==
+X-Gm-Message-State: AOAM533oCbdenCBEf8sQLjPXtrwpnp02khO6dGowgQiaeFpirVa+tADP
+        orliT7WYXQQEpOn2VCrt0LVsfKuu
+X-Google-Smtp-Source: ABdhPJwD94kw0od1hhhoEN3xhoTw28B7cYDkEhzQRA34kmHvLYDu2rQaFLz5gE5NxSdQPhRWAR1m6w==
+X-Received: by 2002:a62:dd91:: with SMTP id w139mr10616214pff.40.1595041543329;
+        Fri, 17 Jul 2020 20:05:43 -0700 (PDT)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id c9sm617331pjr.35.2020.07.17.20.05.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 20:05:42 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next 0/4] net: dsa: Setup dsa_netdev_ops
+Date:   Fri, 17 Jul 2020 20:05:29 -0700
+Message-Id: <20200718030533.171556-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200718025308.GT12769@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/20 7:53 PM, Matthew Wilcox wrote:
-> On Fri, Jul 17, 2020 at 07:52:07PM -0700, Randy Dunlap wrote:
->>   *
->> - * However when holding an atomic kmap is is not legal to sleep, so atomic
->> + * However when holding an atomic kmap is not legal to sleep, so atomic
-> 
-> instead, s/is/it/
-> 
+Hi David, Jakub,
 
-Yes, will resend.
+This patch series addresses the overloading of a DSA CPU/management
+interface's netdev_ops for the purpose of providing useful information
+from the switch side.
 
-thanks.
+Up until now we had duplicated the existing netdev_ops structure and
+added specific function pointers to return information of interest. Here
+we have a more controlled way of doing this by involving the specific
+netdev_ops function pointers that we want to be patched, which is easier
+for auditing code in the future. As a byproduct we can now maintain
+netdev_ops pointer comparisons which would be failing before (no known
+in tree problems because of that though).
+
+Let me know if this approach looks reasonable to you and we might do the
+same with our ethtool_ops overloading as well.
+
+Thanks!
+
+Florian Fainelli (4):
+  net: Wrap ndo_do_ioctl() to prepare for DSA stacked ops
+  net: dsa: Add wrappers for overloaded ndo_ops
+  net: Call into DSA netdevice_ops wrappers
+  net: dsa: Setup dsa_netdev_ops
+
+ include/net/dsa.h    | 42 ++++++++++++++++++++++++++++++++++-
+ net/core/dev.c       |  5 +++++
+ net/core/dev_ioctl.c | 29 ++++++++++++++++++------
+ net/dsa/master.c     | 52 +++++++++++---------------------------------
+ 4 files changed, 81 insertions(+), 47 deletions(-)
+
 -- 
-~Randy
+2.25.1
 
