@@ -2,124 +2,109 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BDCC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55413C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD7652073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:01:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="UPVzKhW6"
+	by mail.kernel.org (Postfix) with ESMTP id 2ABD420684
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595077547;
+	bh=TlEuQav6MWP1U6kHwMge1AyrBV4gTI6XZdzmRQvJr+g=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=lJU+sm+Zs5y/7fjY4BhxMSTWyq7ml/1SSiFFI/AP7dpHpxbiiY/03Qd9CGMwYAdyF
+	 6tW8nkqpSjHq9D/alqeuxnTbnt5gWU8Mcu9frhiMOtPrWJQB6hAiHyOfKyVBfSiCUz
+	 UAuixNQf+h1mzk5mjyqlLqba1TJERblFW0cdjRL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgGRNBx (ORCPT
+        id S1726650AbgGRNFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:01:53 -0400
-Received: from ozlabs.org ([203.11.71.1]:36413 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgGRNBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:01:53 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B87Rg57KHz9sRR;
-        Sat, 18 Jul 2020 23:01:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1595077311;
-        bh=Tck+ElnB3vYA1eqWx+n2MI0v/mg4OzY5dIVkDQmoU40=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UPVzKhW6PQeX6tyxhgTTSD65yIeSWW4QV1ZqzeN/l+T9gIKLL/Wzm5luPQLV61k6t
-         QbAO5Iqbf/ng+r4nR3STK/dLIK38+Macs8+J48dcpad+0OMdogUqFXrNwBTJH/4F1V
-         Zr1xMjAqASlHxej1aDPF6rhWJniDXK8zWj04NwLNBuQnfgKjLJ2ZjV8SLeQMx7sV19
-         zhERgbfG/lBEMfTFMlHfDrI/Ot5XYfeUVoda/c8aF/fxGR9/YQ9o5S6AWNgQhOcSY0
-         Z2+WB7I+KtwLQ8imwEimvL3XJCY+asYaZB7qK0tOM6Q5VsV5zSNwhG6efNLW+NXzu4
-         uyUAqBsQQJyjg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     aneesh.kumar@linux.ibm.com, haren@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        sathnaga@linux.vnet.ibm.com
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.8-7 tag
-Date:   Sat, 18 Jul 2020 23:01:51 +1000
-Message-ID: <87k0z1t1s0.fsf@mpe.ellerman.id.au>
+        Sat, 18 Jul 2020 09:05:45 -0400
+Received: from mail-ej1-f44.google.com ([209.85.218.44]:40590 "EHLO
+        mail-ej1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbgGRNFp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 09:05:45 -0400
+Received: by mail-ej1-f44.google.com with SMTP id o18so13658317eje.7
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 06:05:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RQQRaX3pXuawLT/zNRNMYLJFYUSdiLn+MtY3ctdSgCU=;
+        b=iFam5tTwb7aipf769OYBOlC5FeLnGA62p7uDkSngUrTPklEffKoo2TZfoYZgU2YjE/
+         a7RFMR9ePUvMii2deL43Lf3+Vzd4ZOxEYkbVLRouFMmZALE6uq+S1SvFkVwROCeRBW47
+         sSO/1rPWijkgQoRihIOMCTNZehyqeQb87Pc/0l6E2+4EVMDUDi6V3gcHyRTbytzFf6AK
+         EpOMZ7FnFyFp+2WTR/QGT+wbybD3vT36iAmjIeYCCu/7gZFnILOJeX78OVT35K9/iPgi
+         G0Z8EPe3mkqk2TcJRctVyAGUiYx7cL9gvN0KxzJRmWK0qKIYxnc+EpCncgLIpSmZUrW+
+         5sug==
+X-Gm-Message-State: AOAM531rxM2BWwZLwF4c427KGCf/j9ufDNEZ/NzVXGg6yYwuvb2cPgff
+        enwdFcaayLyWV71oj+5XlaiUkPe5
+X-Google-Smtp-Source: ABdhPJxTy3+cb3JhadCFh36x5rXKTol8/nmnp1fvc0kg+N1AFhbxAm79I/UAdlps5R2M//F/e7JObw==
+X-Received: by 2002:a17:906:33ca:: with SMTP id w10mr13432397eja.171.1595077542689;
+        Sat, 18 Jul 2020 06:05:42 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id u19sm11326872edd.62.2020.07.18.06.05.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jul 2020 06:05:41 -0700 (PDT)
+Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>, christian@brauner.io,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+References: <6b253b55-586d-0bc4-9f58-c45c631abc60@kernel.org>
+ <5a8c4c38-7aeb-981a-8d3b-a7a5c8ca5564@kernel.org>
+ <20200717111203.f32s7r5vdvdn535u@wittgenstein>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Message-ID: <b923c34f-5765-756b-fdeb-f756a278b6a6@kernel.org>
+Date:   Sat, 18 Jul 2020 15:05:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200717111203.f32s7r5vdvdn535u@wittgenstein>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+On 17. 07. 20, 13:12, Christian Brauner wrote:
+> On Fri, Jul 17, 2020 at 01:04:38PM +0200, Jiri Slaby wrote:
+>> On 17. 07. 20, 12:45, Jiri Slaby wrote:
+>>> Hi,
+>>>
+>>> the strace testsuite triggers this on 5.8-rc4 and -rc5 both on x86_64
+>>> and i586:
+>>
+>> make check needs -jsomething, running is sequentially (-j1) doesn't
+>> trigger it. After the error, I cannot run anything. Like ps to find out
+>> what test caused the crash...
+>>
+>> 5.7 was fine.
+> 
+> Can you try and reproduce with
+> 
+> commit e91b48162332480f5840902268108bb7fb7a44c7
+> Author: Oleg Nesterov <oleg@redhat.com>
+> Date:   Tue Jun 30 17:32:54 2020 +0200
+> 
+>     task_work: teach task_work_add() to do signal_wake_up()
+> 
+> reverted, please?
 
-Hi Linus,
+I reverted these 3:
++This reverts commit b7db41c9e03b5189bc94993bd50e4506ac9e34c1.
++This reverts commit ce593a6c480a22acba08795be313c0c6d49dd35d.
++This reverts commit e91b48162332480f5840902268108bb7fb7a44c7.
 
-Please pull some more powerpc fixes for 5.8:
+But it still crashes.
 
-The following changes since commit 4557ac6b344b8cdf948ff8b007e8e1de34832f2e:
-
-  powerpc/64s/exception: Fix 0x1500 interrupt handler crash (2020-07-08 20:41:06 +1000)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.8-7
-
-for you to fetch changes up to f0479c4bcbd92d1a457d4a43bcab79f29d11334a:
-
-  selftests/powerpc: Use proper error code to check fault address (2020-07-15 23:10:17 +1000)
-
-- ------------------------------------------------------------------
-powerpc fixes for 5.8 #7
-
-A fix to the VAS code we merged this cycle, to report the proper error code to
-userspace for address translation failures. And a selftest update to match.
-
-Another fix for our pkey handling of PROT_EXEC mappings.
-
-A fix for a crash when booting a "secure VM" under an ultravisor with certain
-numbers of CPUs.
-
-Thanks to:
-  Aneesh Kumar K.V, Haren Myneni, Laurent Dufour, Sandipan Das, Satheesh
-  Rajendran, Thiago Jung Bauermann.
-
-- ------------------------------------------------------------------
-Aneesh Kumar K.V (1):
-      powerpc/book3s64/pkeys: Fix pkey_access_permitted() for execute disable pkey
-
-Haren Myneni (2):
-      powerpc/vas: Report proper error code for address translation failure
-      selftests/powerpc: Use proper error code to check fault address
-
-Satheesh Rajendran (1):
-      powerpc/pseries/svm: Fix incorrect check for shared_lppaca_size
-
-
- Documentation/powerpc/vas-api.rst                    |  2 +-
- arch/powerpc/include/asm/icswx.h                     |  2 ++
- arch/powerpc/kernel/paca.c                           |  2 +-
- arch/powerpc/mm/book3s64/pkeys.c                     | 12 +++++++-----
- arch/powerpc/platforms/powernv/vas-fault.c           |  2 +-
- tools/testing/selftests/powerpc/nx-gzip/gunz_test.c  |  4 ++--
- tools/testing/selftests/powerpc/nx-gzip/gzfht_test.c |  4 ++--
- 7 files changed, 16 insertions(+), 12 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl8S8nIACgkQUevqPMjh
-pYCxFQ//X8A9GN94Yj4AroV4WR1nhcYOGFJw++FBjWWIE/3HnUmYKKP0aZ2Vd9DW
-bjkJvhWLThV6P7lrDG2jOAp4g9ByDi6Syk0VbUxO0Vr2XMFqExoYe3hPSQysbvwM
-ajMZWsvyI3wndXgS0HL3/zSkio0DyMyDVqGAPd7G3V+U/B8OM2WvBkoEtoWlcu0t
-sFoqGPz02e9FX1jJsuVpBopWnaK2mtUX9CbPxeMQ9yxq7MXnkM/ynKIKdFHj5G7Q
-9s2f7Pe6hF+SMu+KqZBvtQ0U8u/YNxTZR305l6ymq1aOERSy51o+ft9vMCD8xrPN
-FCQpKqTk8LP0xYLLqZMEHLloYYBQ7R4eSmvleRNMKctodOca1ACMWGkT3otsGPUN
-li3HJd9ktaXWK9l9Pf2VZGJF2Ge9tudjSrPJjhZlnZIp1S9JvjqJKtlSaMMsVNrD
-doC9TAym2GLjaOTZ4qTiIEnO5ds2VvkRDdgsklpAyNJr8xrT8VYR2teInLro8sD9
-m0z7JYGXQAL0Tm5YcuzrVqFllwtFsaUtcLkxW9tfFijmVfdGL24pxvIm6M8X5Kko
-2eoa+M7DJzn+oWOFlVdzzq4zRxbUIHkzkvF1aROt7a/8G2bJb0J4ruwXJBnTsFi7
-uSuPDNc8dpYKh9WikiIioUhV4XEDdllWMqaEOA19muny/ui5iVM=
-=wk5N
------END PGP SIGNATURE-----
+thanks,
+-- 
+js
