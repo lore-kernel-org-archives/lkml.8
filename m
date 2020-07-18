@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D325207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D422076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595084496;
-	bh=gxH/xToLjTC3LMvZ+tQz8IzUaNEmHWP2nLAYUtM600o=;
+	s=default; t=1595084551;
+	bh=uPmy615wj1O+XHgWbWdN70//remefX009xQEmoQDO7c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=G6kR2g+ih5y3G75NaawM05c3rjrVcCY0F6XTnJ2gsM0n8IraAM1ANkiqN3foZE4cU
-	 oug7I3EWevF0FtwLHCl8Ui4c0a881xU9iWS1HlWW1VgHNyO8w3V7gbGXz6f4hgU/uo
-	 hacFDfsBznFTvU/xebiGBQQvK5s5bSe+Xc0LNXpA=
+	b=Xn/xNA5k6Gb/g4U/xtspmq0C4GDGR6jViPJlX9jpmkYKmA/U1ELSYIVBhReUcUSgz
+	 XDTQemngfdrESyHStN9E+AhLw42lptUB5qOQ2xLN2snki4SCu24lC4E1VLIWRglc7u
+	 /OM4kMU0FyZ5230RkWhMGcj2058nL+egoCSvMTs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgGRPBf (ORCPT
+        id S1727915AbgGRPCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 11:01:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35406 "EHLO mail.kernel.org"
+        Sat, 18 Jul 2020 11:02:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbgGRPBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 11:01:35 -0400
+        id S1726411AbgGRPC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 11:02:29 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E51A2065D;
-        Sat, 18 Jul 2020 15:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 988B12065D;
+        Sat, 18 Jul 2020 15:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595084494;
-        bh=gxH/xToLjTC3LMvZ+tQz8IzUaNEmHWP2nLAYUtM600o=;
+        s=default; t=1595084549;
+        bh=uPmy615wj1O+XHgWbWdN70//remefX009xQEmoQDO7c=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=o4wGFm9mDJiWP9mqG0uy85JzZXWAY6k/ZVV4N89iev5okfpeCMX6S6bMTxum7mefj
-         bNTFn7uKs5iIzY/Thh0UUc+Q/hj3S1uBa02z/zmcIcCD4Vmmzs2H+iYNuuH4FHG/NK
-         aVUsVJPeCS9cZj5EG+ZVbVQjw+qa+aLtKBIDHcWg=
-Date:   Sat, 18 Jul 2020 16:01:30 +0100
+        b=FywgDekd004YOLH9XanyY34r4zLpYpezSZ4ajm2euqNB3jnzLRlf+b5YFdeM+1bQ/
+         D0DBiTasduqKRPnrTsyE1PRMQ+Sr4OKEB4AM5pILa1MmDZ+wSvISCAUNPAG8znDFD5
+         ewZtEh11VZZXUI5z0OAPPmqiTfiScro2IKCDuxD8=
+Date:   Sat, 18 Jul 2020 16:02:24 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH 16/30] iio: adc: ad7887: Demote seemingly unintentional
- kerneldoc header
-Message-ID: <20200718160130.71f12545@archlinux>
-In-Reply-To: <20200716135928.1456727-17-lee.jones@linaro.org>
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 18/30] iio: dummy: iio_simple_dummy_buffer: Demote file
+ header and correct misspelling
+Message-ID: <20200718160224.3c28bc2c@archlinux>
+In-Reply-To: <20200716135928.1456727-19-lee.jones@linaro.org>
 References: <20200716135928.1456727-1-lee.jones@linaro.org>
-        <20200716135928.1456727-17-lee.jones@linaro.org>
+        <20200716135928.1456727-19-lee.jones@linaro.org>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -61,40 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 14:59:14 +0100
+On Thu, 16 Jul 2020 14:59:16 +0100
 Lee Jones <lee.jones@linaro.org> wrote:
 
-> This is the only use of function related kerneldoc in the sourcefile
-> and no descriptions are provided.
+> File headers are not good candidates for kerneldoc.
 > 
 > Fixes the following W=1 kernel build warning(s):
 > 
->  drivers/iio/adc/ad7887.c:119: warning: Function parameter or member 'irq' not described in 'ad7887_trigger_handler'
->  drivers/iio/adc/ad7887.c:119: warning: Function parameter or member 'p' not described in 'ad7887_trigger_handler'
+>  drivers/iio/dummy/iio_simple_dummy_buffer.c:27: warning: cannot understand function prototype: 'const s16 fakedata[] = '
+>  drivers/iio/dummy/iio_simple_dummy_buffer.c:185: warning: Function parameter or member 'indio_dev' not described in 'iio_simple_dummy_unconfigure_buffer'
+>  drivers/iio/dummy/iio_simple_dummy_buffer.c:185: warning: Excess function parameter 'indo_dev' description in 'iio_simple_dummy_unconfigure_buffer'
 > 
-> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Applied.
-
-Thanks,
 
 Jonathan
 
 > ---
->  drivers/iio/adc/ad7887.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/iio/dummy/iio_simple_dummy_buffer.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/ad7887.c b/drivers/iio/adc/ad7887.c
-> index c6a3428e950a9..bbaa0a3daea3c 100644
-> --- a/drivers/iio/adc/ad7887.c
-> +++ b/drivers/iio/adc/ad7887.c
-> @@ -109,7 +109,7 @@ static int ad7887_ring_postdisable(struct iio_dev *indio_dev)
->  	return spi_sync(st->spi, &st->msg[AD7887_CH0]);
->  }
->  
+> diff --git a/drivers/iio/dummy/iio_simple_dummy_buffer.c b/drivers/iio/dummy/iio_simple_dummy_buffer.c
+> index 17606eca42b43..40d30c0a60ce5 100644
+> --- a/drivers/iio/dummy/iio_simple_dummy_buffer.c
+> +++ b/drivers/iio/dummy/iio_simple_dummy_buffer.c
+> @@ -1,5 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
 > -/**
 > +/*
->   * ad7887_trigger_handler() bh of trigger launched polling to ring buffer
+>   * Copyright (c) 2011 Jonathan Cameron
 >   *
->   * Currently there is no option in this driver to disable the saving of
+>   * Buffer handling elements of industrial I/O reference driver.
+> @@ -179,7 +179,7 @@ int iio_simple_dummy_configure_buffer(struct iio_dev *indio_dev)
+>  
+>  /**
+>   * iio_simple_dummy_unconfigure_buffer() - release buffer resources
+> - * @indo_dev: device instance state
+> + * @indio_dev: device instance state
+>   */
+>  void iio_simple_dummy_unconfigure_buffer(struct iio_dev *indio_dev)
+>  {
 
