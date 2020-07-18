@@ -2,60 +2,120 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D52C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 967BB20717
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD44720717
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:32:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qpW/K+16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgGRBeb (ORCPT
+        id S1728072AbgGRBcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 21:34:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
+        Fri, 17 Jul 2020 21:32:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgGRBeb (ORCPT
+        with ESMTP id S1726710AbgGRBcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 21:34:31 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 178B5C0619D2;
-        Fri, 17 Jul 2020 18:34:31 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B3EB111E45910;
-        Fri, 17 Jul 2020 18:34:30 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 18:34:30 -0700 (PDT)
-Message-Id: <20200717.183430.1402481465462087135.davem@davemloft.net>
-To:     rdunlap@infradead.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        tgraf@suug.ch, herbert@gondor.apana.org.au
-Subject: Re: [PATCH] rhashtable: drop duplicated word in
- <linux/rhashtable.h>
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <392beaa8-f240-70b5-b04d-3be910ef68a3@infradead.org>
-References: <392beaa8-f240-70b5-b04d-3be910ef68a3@infradead.org>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jul 2020 18:34:30 -0700 (PDT)
+        Fri, 17 Jul 2020 21:32:18 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AB2C0619D2;
+        Fri, 17 Jul 2020 18:32:18 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B7r801fNHz9sSd;
+        Sat, 18 Jul 2020 11:32:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595035936;
+        bh=zbqPgE8v7ON2kH31+pvIfuRRd/Syn3vdJv6lvJRWYSY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qpW/K+16DKipBBvhuDO1XEIr7Q2RitPvywDHHcuSSFB3K3o0lf1Ha511qrwUZUpzU
+         mQhdYNiTZM++fABgsYxblhT0e++7SG7OnSOidZRn3roE/RHYflo5J8zUrndxs8y4b7
+         kZn1bP2Fc4y54zoHUR2t9xuRSvlY1bg1VOMcwuwj/12B8qm5Rg31jofCSCSsvAQf3w
+         6ZqT0evS2bQJsMPp5gztr9CX77bgmO9qv4YDqD8fWRV10nUvjnOpoTkkHF8yZVuJms
+         hex/GWpkJIMf8Ut9djV0GHbTJtObpVLyMxfoCBWc+b0+s8bKeWVMpbjS+GuToewrXu
+         Cer626C0CobFg==
+Date:   Sat, 18 Jul 2020 11:32:15 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org
+Subject: Re: mmotm 2020-07-16-22-52 uploaded (mm/hugetlb.c)
+Message-ID: <20200718113215.2099dab3@canb.auug.org.au>
+In-Reply-To: <267a50e8-b7b2-b095-d62e-6e95313bc4c2@infradead.org>
+References: <20200717055300.ObseZH9Vs%akpm@linux-foundation.org>
+        <267a50e8-b7b2-b095-d62e-6e95313bc4c2@infradead.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/MIM/s.l/+DRjtjirRvNy8b0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
-Date: Fri, 17 Jul 2020 16:37:25 -0700
+--Sig_/MIM/s.l/+DRjtjirRvNy8b0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Drop the doubled word "be" in a comment.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Hi Randy,
 
-Applied, thank you.
+On Fri, 17 Jul 2020 08:35:45 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
+te:
+>
+> on i386:
+> 6 of 10 builds failed with:
+>=20
+> ../mm/hugetlb.c:1302:20: error: redefinition of =E2=80=98destroy_compound=
+_gigantic_page=E2=80=99
+>  static inline void destroy_compound_gigantic_page(struct hstate *h,
+>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ../mm/hugetlb.c:1223:13: note: previous definition of =E2=80=98destroy_co=
+mpound_gigantic_page=E2=80=99 was here
+>  static void destroy_compound_gigantic_page(struct hstate *h, struct page=
+ *page,
+>              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Reported here: https://lore.kernel.org/lkml/20200717213127.3bd426e1@canb.au=
+ug.org.au/
+
+> ../mm/hugetlb.c:1223:13: warning: =E2=80=98destroy_compound_gigantic_page=
+=E2=80=99 defined but not used [-Wunused-function]
+> ../mm/hugetlb.c:50:https://lore.kernel.org/lkml/20200709191111.0b63f84d@c=
+anb.auug.org.au/20: warning: =E2=80=98hugetlb_cma=E2=80=99 defined but not =
+used [-Wunused-variable]
+>  static struct cma *hugetlb_cma[MAX_NUMNODES];
+>                     ^~~~~~~~~~~
+
+Reported here: https://lore.kernel.org/lkml/20200709191111.0b63f84d@canb.au=
+ug.org.au/
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/MIM/s.l/+DRjtjirRvNy8b0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8SUR8ACgkQAVBC80lX
+0Gw2BQgAlJRnzqsEMwMGbGxshd1VTQJzQfPAxyeaASZ7c0wyXS1gaxlaXqHhO93Q
+qsVKoYpqn8ZH2vZTyK5DcWS98nncrlu35W8yseL1DLep/2mSuCa7BEE049/madFh
+YY2YfT00oXifVMGBYx312bgou7D8fFc5j4RdXd/nUQYNJ8TUDeZZLA5K2IF3kyw7
+nrwE94xTxLBJNiSTS6hdQeVFLT5Wd0ZFlT3CLkwL2RMMwjIZkLGJ9ytkzlr/QgII
+MdYhZ/J10kcMbb0Y0VeFEJN9VBvK/IxZ8wIqB9+5UnmQARQE0sEmSadyJZQS0z34
+QWVUbzUGRcHDslowYETvaqiHW742mA==
+=FhKn
+-----END PGP SIGNATURE-----
+
+--Sig_/MIM/s.l/+DRjtjirRvNy8b0--
