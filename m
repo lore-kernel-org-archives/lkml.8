@@ -2,115 +2,66 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A681C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B34C433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 734DF2070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9194C20759
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:25:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595078712;
+	bh=054o/hzKh+fh2yMScP+42l+JRCfK/PUTSBscQr3uoXQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GscCH1cNoZPKrUnEnNcGoXA4zwoi4nIQRSHfoz6wcFtbhgMB2N30J16Ogm6o/VDke
+	 n5OrHxTA4w2QWPNhvPqp8Y0SdOhZOtEp07wMPwGNM3NwB9BtI9Q6k3gqxzFfDWqV1P
+	 XfEt+lgZdAy261QAynPqlm8EZ1imGfCcYiif2/Dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgGRNYy (ORCPT
+        id S1727086AbgGRNZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgGRNYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:24:53 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E41AC0619D2;
-        Sat, 18 Jul 2020 06:24:53 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 94017BC07E;
-        Sat, 18 Jul 2020 13:24:48 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     don.brace@microsemi.com, corbet@lwn.net,
-        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] scsi: smartpqi: Replace HTTP links with HTTPS ones
-Date:   Sat, 18 Jul 2020 15:24:42 +0200
-Message-Id: <20200718132442.24208-1-grandmaster@al2klimov.de>
+        Sat, 18 Jul 2020 09:25:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726569AbgGRNZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 09:25:10 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC5BC2070E;
+        Sat, 18 Jul 2020 13:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595078710;
+        bh=054o/hzKh+fh2yMScP+42l+JRCfK/PUTSBscQr3uoXQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s+lSXAvqJc0sp6x5v+IGz894qsOE9b7M2Z8yUzur0d11pQiLbJ5WwhWS+PztzwqEX
+         7T0xE19XqL6pueWWnhn0OqdkerI1OgLyus4g04qhuCFzGTBZwn64wjX1cmbhXm0Lcm
+         YaXVZ81M6yu38WaQMaRxv9cxODtevfzbGcKcEx+M=
+Date:   Sat, 18 Jul 2020 18:55:06 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Subject: Re: [PATCH] dmaengine: linux/dmaengine.h: drop duplicated word in a
+ comment
+Message-ID: <20200718132506.GN82923@vkoul-mobl>
+References: <06e64046-ebf1-15db-dbaf-73698de3b493@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06e64046-ebf1-15db-dbaf-73698de3b493@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On 17-07-20, 19:51, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Drop the doubled word "has" in a comment.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Applied, thanks
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- Documentation/scsi/smartpqi.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/scsi/smartpqi.rst b/Documentation/scsi/smartpqi.rst
-index a7de27352c6f..38dafc70b4cd 100644
---- a/Documentation/scsi/smartpqi.rst
-+++ b/Documentation/scsi/smartpqi.rst
-@@ -5,7 +5,7 @@ SMARTPQI - Microsemi Smart PQI Driver
- =====================================
- 
- This file describes the smartpqi SCSI driver for Microsemi
--(http://www.microsemi.com) PQI controllers. The smartpqi driver
-+(https://www.microsemi.com) PQI controllers. The smartpqi driver
- is the next generation SCSI driver for Microsemi Corp. The smartpqi
- driver is the first SCSI driver to implement the PQI queuing model.
- 
-@@ -19,8 +19,8 @@ when configuring the kernel.
- 
- For more information on the PQI Queuing Interface, please see:
- 
--- http://www.t10.org/drafts.htm
--- http://www.t10.org/members/w_pqi2.htm
-+- https://www.t10.org/drafts.htm
-+- https://www.t10.org/members/w_pqi2.htm
- 
- Supported devices
- =================
 -- 
-2.27.0
-
+~Vinod
