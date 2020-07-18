@@ -2,132 +2,63 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33440C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE55C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 111032070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595037615;
-	bh=I2Mq1wDqXWIAJrmNEz3XRIN/ncXHwMctELd7o7JBcUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fQIPAghbs7gTMSC71az1yJCc97SDIbHLDAhgWiy1OZyAVnPhJlS771jlSzb2b9E08
-	 rOk0zMmBw/jAa45ReYl04F8Xr7o5tABYw03T6Pi++X71iHHBkuttdi0bQAN4aPbrZ3
-	 lQHu7eLap36m5NQSgry1qfuF0o/87ejn5m6UHzmI=
+	by mail.kernel.org (Postfix) with ESMTP id 576CC2070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728411AbgGRCAO (ORCPT
+        id S1728753AbgGRCBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 22:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726665AbgGRCAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 22:00:12 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E9632070E;
-        Sat, 18 Jul 2020 02:00:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595037611;
-        bh=I2Mq1wDqXWIAJrmNEz3XRIN/ncXHwMctELd7o7JBcUM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nw/u3nWYES+vEAJm5OT9r+QAcWU7zPoxYs0q9VeXAdOAQ2klSRmYa7ociYSbAB78P
-         cU1Qx1y891hOdSbQNksLUzjOyxtbR9S4GEeSluWauAbeDCPLboMaATjDdE2D+mcTBU
-         UHM0jFrG/Xmj2F7uzPQKdTRgt87o2C3U57GaeMVg=
-Date:   Fri, 17 Jul 2020 19:00:09 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
-Message-ID: <20200718020009.GE2183@sol.localdomain>
-References: <20200717044427.68747-1-ebiggers@kernel.org>
- <20200717205340.GR7625@magnolia>
- <20200718005857.GB2183@sol.localdomain>
- <20200718012555.GA1168834@rowland.harvard.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200718012555.GA1168834@rowland.harvard.edu>
+        Fri, 17 Jul 2020 22:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726665AbgGRCBO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 22:01:14 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDDE0C0619D2;
+        Fri, 17 Jul 2020 19:01:13 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A472311E45917;
+        Fri, 17 Jul 2020 19:01:13 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 19:01:12 -0700 (PDT)
+Message-Id: <20200717.190112.517267615402058796.davem@davemloft.net>
+To:     mstarovoitov@marvell.com
+Cc:     kuba@kernel.org, irusskikh@marvell.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/2] net: atlantic: add support for FW 4.x
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200717180147.8854-1-mstarovoitov@marvell.com>
+References: <20200717180147.8854-1-mstarovoitov@marvell.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jul 2020 19:01:13 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 09:25:55PM -0400, Alan Stern wrote:
-> On Fri, Jul 17, 2020 at 05:58:57PM -0700, Eric Biggers wrote:
-> > On Fri, Jul 17, 2020 at 01:53:40PM -0700, Darrick J. Wong wrote:
-> > > > +There are also cases in which the smp_load_acquire() can be replaced by
-> > > > +the more lightweight READ_ONCE().  (smp_store_release() is still
-> > > > +required.)  Specifically, if all initialized memory is transitively
-> > > > +reachable from the pointer itself, then there is no control dependency
-> > > 
-> > > I don't quite understand what "transitively reachable from the pointer
-> > > itself" means?  Does that describe the situation where all the objects
-> > > reachable through the object that the global struct foo pointer points
-> > > at are /only/ reachable via that global pointer?
-> > > 
-> > 
-> > The intent is that "transitively reachable" means that all initialized memory
-> > can be reached by dereferencing the pointer in some way, e.g. p->a->b[5]->c.
-> > 
-> > It could also be the case that allocating the object initializes some global or
-> > static data, which isn't reachable in that way.  Access to that data would then
-> > be a control dependency, which a data dependency barrier wouldn't work for.
-> > 
-> > It's possible I misunderstood something.  (Note the next paragraph does say that
-> > using READ_ONCE() is discouraged, exactly for this reason -- it can be hard to
-> > tell whether it's correct.)  Suggestions of what to write here are appreciated.
-> 
-> Perhaps something like this:
-> 
-> 	Specifically, if the only way to reach the initialized memory 
-> 	involves dereferencing the pointer itself then READ_ONCE() is 
-> 	sufficient.  This is because there will be an address dependency 
-> 	between reading the pointer and accessing the memory, which will 
-> 	ensure proper ordering.  But if some of the initialized memory 
-> 	is reachable some other way (for example, if it is global or 
-> 	static data) then there need not be an address dependency, 
-> 	merely a control dependency (checking whether the pointer is 
-> 	non-NULL).  Control dependencies do not always ensure ordering 
-> 	-- certainly not for reads, and depending on the compiler, 
-> 	possibly not for some writes -- and therefore a load-acquire is 
-> 	necessary.
-> 
-> Perhaps this is more wordy than you want, but it does get the important 
-> ideas across.
-> 
+From: Mark Starovoytov <mstarovoitov@marvell.com>
+Date: Fri, 17 Jul 2020 21:01:45 +0300
 
-How about:
+> This patch set adds support for FW 4.x, which is about to get into the
+> production for some products.
+> 4.x is mostly compatible with 3.x, save for soft reset, which requires
+> the acquisition of 2 additional semaphores.
+> Other differences (e.g. absence of PTP support) are handled via
+> capabilities.
+> 
+> Note: 4.x targets specific products only. 3.x is still the main firmware
+> branch, which should be used by most users (at least for now).
 
-	There are also cases in which the smp_load_acquire() can be replaced by
-	the more lightweight READ_ONCE().  (smp_store_release() is still
-	required.)  Specifically, if the only way to reach the initialized
-	memory involves dereferencing the pointer itself, then the data
-	dependency barrier provided by READ_ONCE() is sufficient.  However, if
-	some of the initialized memory is reachable some other way (for example,
-	if it is global or static data) then there need not be an address
-	dependency, merely a control dependency (checking whether the pointer is
-	non-NULL).  READ_ONCE() is *not* sufficient in that case.
-
-	The optimization of replacing smp_load_acquire() with READ_ONCE() is
-	discouraged for nontrivial data structures, since it can be difficult to
-	determine if it is correct.  In particular, for complex data structures
-	the correctness of the READ_ONCE() optimization may depend on internal
-	implementation details of other kernel subsystems.
+Series applied, thanks.
