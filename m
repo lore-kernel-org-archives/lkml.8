@@ -2,135 +2,177 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BD0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BFEC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFD6207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DFF207FB
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="i02VSGc9"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="px2qUNzk";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="QmXITM4Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgGRF4c (ORCPT
+        id S1728064AbgGRGAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:56:32 -0400
-Received: from mout.web.de ([212.227.15.3]:42195 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgGRF4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:56:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1595051781;
-        bh=e8QEKjxgVOB4Tc+3b/KVzzEg9Z9l1jW6d/zTFip2qtk=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=i02VSGc9ba5W7cCQmSc+1h3gU/wLvs58xkVksQMYtF34BzHOAmHngzuzKE7O5+qNf
-         Ct2Y+a74xHxuP6YSOIE53bou5nElcx+vrj153V6K7WA/n93Rg+XN76AiorNim4f8S3
-         SpEVJyEHzqrEemYYdrYCHT9mCWhImE9+aLwSbjxc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.120.168]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mvbms-1knwhv2qOs-00sbjI; Sat, 18
- Jul 2020 07:56:21 +0200
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [v2 1/4] coccinelle: api: extend memdup_user transformation with
- GFP_USER
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Julia Lawall <julia.lawall@inria.fr>,
-        Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>
-Message-ID: <0b9f2c58-e124-22d2-d91d-62a6e831c880@web.de>
-Date:   Sat, 18 Jul 2020 07:56:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 18 Jul 2020 02:00:52 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:56342 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725920AbgGRGAv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 02:00:51 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06I5wve7009735;
+        Fri, 17 Jul 2020 23:00:34 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=muwaErU2+Q0d75UM6WA9YQvwQ3htnvQ1L+0WwpvLWr4=;
+ b=px2qUNzkrrfFy+NhSdfQemnhIa/hFNzDYWt9bktfUuaB2W1E6OqnHN2Fp1Fa3wDjb9Yz
+ F5oz5M6oc5sKPoufVL8I/DkD4JoG5IiO/EJAi88dUz/55yJtVrbaBVI2jv6zYNjYBJ3m
+ IsoqyKGNvdHmM1u5gt1dSAkNfV0iWrBcadU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32ax1veq6g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 17 Jul 2020 23:00:34 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 17 Jul 2020 23:00:32 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eSocK4PS8ZmIcOjZIEpbuZHyeFcTXS/COhy57k/VldTqW0h/n/TDIIBDegnmG151dv2oEsb+nj3Bhw3KppXMyVDu1s/kLtKjS2p4kZ+sSn7Gi9csCuzLNNvuW9VLT0mZjjlbxzferRy/Didvl/AgCW1/YW8k1vNttMdMtjSVaVrqroq7y0SYb0TldZOuP8JhUno5XJxbPQbUvu5DbXdwV5QzQP7Od9hxiirFSfOwJLRmOjZnkAevEd/9H8qBKLyUvL8jNyNQjc1ynviaiXMXXJPH30L0jLAxQCV0pR8vQMOZJ5xM6leYHxa06eept/ZBNFz2CoIjz0rqemBCtZGmaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=muwaErU2+Q0d75UM6WA9YQvwQ3htnvQ1L+0WwpvLWr4=;
+ b=LerXc6z9x+Z3wTYSbP7eeUe828D6SERhVfaEfQgPgkt3myfyYNuWWYLBcthDZPrG3njy9lRiuRUKzgYnSL4nRhdVL3SH3cdpkbh92XrS61PQonxCe0TKETEy/tZttgmWxjAF8/ZcwzrwtdiDoQPMO+Hc2vKzulaq+aTZsxs0N7cHMX+7XP+ixzOtq1ADVamqh6zg0hkxL7BdXuUQLC7p9IqiQkceT0REA4YKhCCH0GtzfdAJjSKD60W6YJ2TT2cJIMPizxAdd28Yz7RjwHL3cZ4Kndfg70NEwRibiNS1Y1ReztgRWxVBUD29rMRKM2xN21EaAFy9YMU2ahoZ1dffOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=muwaErU2+Q0d75UM6WA9YQvwQ3htnvQ1L+0WwpvLWr4=;
+ b=QmXITM4Q+gOQRj+RAvTtccUfZqTTELFV19KX+nyw96DSh9L2ViNz+154ZsB+MLKaZDcfEKjfNkVaW7enlyuW+aE2aCmbPwaQrmGKiXm6G2AYYtiZBgo1+aom7IHWXSorCbPAXt/lTQHCKF6wDJ3VPa/gazmhg43YOHUuY7zhbmY=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB2566.namprd15.prod.outlook.com (2603:10b6:a03:150::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Sat, 18 Jul
+ 2020 06:00:31 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3174.026; Sat, 18 Jul 2020
+ 06:00:31 +0000
+Subject: Re: [PATCH] libbpf bpf_helpers: Use __builtin_offsetof for offsetof
+ if available
+To:     Ian Rogers <irogers@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Stanislav Fomichev <sdf@google.com>
+References: <20200717072319.101302-1-irogers@google.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <a0a26308-a1d7-a57c-727c-000652a5d246@fb.com>
+Date:   Fri, 17 Jul 2020 23:00:29 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
+In-Reply-To: <20200717072319.101302-1-irogers@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR01CA0015.prod.exchangelabs.com (2603:10b6:a02:80::28)
+ To BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:lBF9CHro4HH8Xgnfi7mVEyT4v+iT2+U83uVQ2rSQJAeVhX3dGdX
- y4KWJ8M+Hv79xU7Woez+mddOryXD9dmFhFbxjh97YfWV8wIc1/ni4XmArkWk5cM/WEcqhxu
- 6NkPSGZmU20+4uXGp4xipAxwqZv1gJmuH1+RPbIVT1QSdjjl1qxl6L9k26gvdTXcqnS67wD
- B1zPSdzCNdo5z4Ltx43uA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kWAZzIxeGLA=:DOdUhXKTf/5Xiz5JER0x4R
- VlAcpfzAIJ2Pm1R2qez/ZByOFgdaM6LHG7TVmTUddS8hMrCg7wcEF7oBUN8Wej4Rw7Jj98+Q0
- DLtmUtEpZwOWsnPq1JN94WMN2JlEN7fvxH6Sxmd7ZuoH+oTZG3ya94k0/gUQEqmUzDLcBxTlU
- nuWvgdRMW+XvSVWjopTvL2b/002r5k0DXZMHERqkUBBrX/kmHfTX/24pqo9IVyF3RkpVs1rf1
- 9grN7J2rZiyNrGMNf+NzPG+5DKzG6IBPIDpzmUJosPAmvgkuUZRxEgAlp3VKiMvHDYfmkzwu8
- tLKW6MICZzLFC1nrZfSsD/Md2LS0IJ8OFks1+JBWtU0E9Z/d84xcKs6uhdj84BBVGPyoXnwi3
- iDceslnTsHpJ5KAI4Fm5oNwPzz3cSPV3aq21UHCigY1Q1FELzjmgQHcGYpJw3FmCIC+ibOp36
- ONeKbqPdXMu2ed68O107IBnONc37f0d9lahcHL4nJuVif3ale/DPnqMCl8EmDGiQrkzgQnh4w
- zmsQrPcVqjFrg1+WIsurN4Uk6X3kITcnrMMBplXmewkm28EA3iiwrQPjJr+2KtMy69Krb0hhQ
- 1S+PpKHBTX1kNidYAw8+pGlivhMFCEUTnacYFxiWvlCJm+uFMDlAWlLotzbuWvm1NIegSlggb
- cQPeDmY8opdgCXdKbbNfjHFp1qNbwANTk39iHaptICbW/+1As9xAnmaOEZQ7mgsz41nQ4kqmk
- TZhjBW9svo9DJrWUowQcMsB1K1Gz9eEW/rNB/XkzyLwdz9n+OCjABm9Nb/H3nrG5UtDSQ7/PO
- gBivfldedtKnFYwG2k/tCrwb1XevQIBws9mgPYPViwPj4W9T6/MOGOw7/hXgFn02OO3MVUPj6
- gtp5CLnBkXRN6SnaFA5mUI+vcsDCpzTrG10uCvau0kY32Sgx+zAkzca4YmJbVrtxXjGl0JO2Q
- +dmjlV43IkpUbsY2htcFvskzTMdRd8H+rd5pEZ/3Pmn6VWPRKeR5h8rw8fk3Vo3cx2piut21m
- 8L9A1HlGYJm6J1oHwhDT/W42a/AuVzQmT9IOFILhsFbnBIpK7MDa/MjYhMMw6Q5+zqPoXnD9P
- ifcNyMh7cJfYxVmWATCPfn2OkfyzysnmO95Qx8eIemKFi7Pj7Lx578ATjEaiydxFMShLUNTI+
- nUP5Y+agOZ1EL416LdU3h6V7jdKndbrNF0m/2mc1/2ZJOjmeB07zj+Ff9MYQYCSf5nV/5nvIb
- P1BRLwrPqyHjEid79uydcW3d25eRJ8pXD0oTI+g==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2620:10d:c085:21cf::1160] (2620:10d:c090:400::5:6f2d) by BYAPR01CA0015.prod.exchangelabs.com (2603:10b6:a02:80::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Sat, 18 Jul 2020 06:00:30 +0000
+X-Originating-IP: [2620:10d:c090:400::5:6f2d]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6a786fff-1278-466b-512f-08d82adfe0dd
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2566:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2566EF3329EE239D73143F0BD37D0@BYAPR15MB2566.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: G3JmIS1yLx+reOx+c7BOSXW6/MS2bh6GMo3eyRAb/Va0E0tWl8E7Yg4tyNCE+6dISxbiEWm2TL4c5LOkxOT9A1ahfGGDcQk6H+ENxvH/w0m8dlOA3hSMrSRAhm95DmSj2wIAnLQdbYbojrBD44E+HwDWvJwZLw6KNd8ijjzwLLKL+T16iFPNvhti1c8IIZCZNcYwxi+keW91KQ9aGv0dqlBFpe632JHuYFa68qGl53FLMXe7H6aEWB/yy8oDL3hF9olijCKypOncjORREfyTgg+2uX5OQd9AEDZLsC73VhnSPcww/f/yHpG25fXl+kYwpPIdpT3DL0nKbmGqXBeKypQ7KphoQe+U19yDDRXgsML7HuhbN+DT2IeSQ/CdDOZuN7MJuAX3IIXvm6p4Ry5F3g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(346002)(366004)(136003)(39860400002)(376002)(4326008)(2616005)(16526019)(8936002)(31696002)(31686004)(66946007)(66476007)(5660300002)(66556008)(478600001)(52116002)(316002)(2906002)(53546011)(36756003)(86362001)(8676002)(110136005)(186003)(6486002)(921003)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: OloaASI/Utwq52ta5oApyk+M7vmhLuH5idotBys0rCTWofDE7Xtsj4NfuPdIwMpvggzj5nu4IwpmLFBo7DAScrhZubGz6UqmtwCP6Ky2n1yIa2yCYaBPXAvvPwpQY4ZRPyqX1KJnfjCrsawqohGCOT0zo/+RJBZHI0JM5prfmIRL+IlKQVReAz2fAH3nDTBDDmNgVSOMm3TzMjkMMR0omMp9rIGhlMWO6QkrsWmEnpUf1hQd4gMfeOc4dAJ6TN2/CHbcB+YUOh+AJbVUriuE5kbHcN6ZsH4Ck0dM+7EEUX4+/RiH3clZjNJGFDXcjFCf6ZL95yRsrQGJ+Ogr1DNl5WuGkBozWWnbgbeYLUkkvolz6s7wEVc6U+/LUsaZ/pOFhZC/HYyncEkakAJyrcf7MSSS3NLNtq259ouNw0ywE44kZjdkDfCzsUeUBg7XUsb7SAHLEvfPx0+87nVQfQ267o3raq5SXkg25DJ5pC9slzN30QVE6xE1/jhTM70fJyiwPf4jbe1kVFBotO61GnDakQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a786fff-1278-466b-512f-08d82adfe0dd
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2020 06:00:31.7246
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tK/j2toB1494yxSXW/1sWTfgY8fsaLaRzxNuzGOcDC3P6hvA6ECyEX5hgMvFIT/U
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2566
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-18_01:2020-07-17,2020-07-18 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
+ clxscore=1011 impostorscore=0 suspectscore=0 spamscore=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 phishscore=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007180043
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Applied.
 
-Do you care for patch review concerns according to this SmPL script adjustment?
 
-* https://lore.kernel.org/cocci/5c0dae88-e172-3ba6-f86c-d1a6238bb4c4@web.de/
-  https://lkml.org/lkml/2020/6/9/568
+On 7/17/20 12:23 AM, Ian Rogers wrote:
+> The non-builtin route for offsetof has a dependency on size_t from
+> stdlib.h/stdint.h that is undeclared and may break targets.
+> The offsetof macro in bpf_helpers may disable the same macro in other
+> headers that have a #ifdef offsetof guard. Rather than add additional
+> dependencies improve the offsetof macro declared here to use the
+> builtin if available.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-* https://lore.kernel.org/cocci/c3464cad-e567-9ef5-b4e3-a01e3b11120b@web.de/
-  https://lkml.org/lkml/2020/6/8/637
+Thanks. I didn't pay attention to __builtin_offsetof() and clearly
+it is preferred. Ack the change with a nit below.
 
-Regards,
-Markus
+Acked-by: Yonghong Song <yhs@fb.com>
+
+> ---
+>   tools/lib/bpf/bpf_helpers.h | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/tools/lib/bpf/bpf_helpers.h b/tools/lib/bpf/bpf_helpers.h
+> index a510d8ed716f..ed2ac74fc515 100644
+> --- a/tools/lib/bpf/bpf_helpers.h
+> +++ b/tools/lib/bpf/bpf_helpers.h
+> @@ -40,8 +40,12 @@
+>    * Helper macro to manipulate data structures
+>    */
+>   #ifndef offsetof
+> +#if __has_builtin(__builtin_offsetof)
+> +#define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+
+The __builtin_offsetof is actually available at least since llvm 3.7,
+so it is safe to use it always.
+
+> +#else
+>   #define offsetof(TYPE, MEMBER)  ((size_t)&((TYPE *)0)->MEMBER)
+>   #endif
+> +#endif
+>   #ifndef container_of
+>   #define container_of(ptr, type, member)				\
+>   	({							\
+> 
