@@ -5,69 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FF1C433EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B707C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C771E2065E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14782207FB
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Je2dR1bA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtahkAlk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGRJU3 (ORCPT
+        id S1726592AbgGRJUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48358 "EHLO
+        Sat, 18 Jul 2020 05:20:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgGRJU3 (ORCPT
+        with ESMTP id S1726055AbgGRJUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 05:20:29 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC828C0619D2;
-        Sat, 18 Jul 2020 02:20:28 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t6so7856635pgq.1;
-        Sat, 18 Jul 2020 02:20:28 -0700 (PDT)
+        Sat, 18 Jul 2020 05:20:08 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5742CC0619D2;
+        Sat, 18 Jul 2020 02:20:08 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a23so4976447pfk.13;
+        Sat, 18 Jul 2020 02:20:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VPz9PqO9Fqan7fgK9F0BFc881ZLwxwDTW7XHlYlGQII=;
-        b=Je2dR1bAFL2DpRZeffZ72m+vvYqZGOkck7LsbrjSfzvVXDJRqBt4uPs1r5zzhI2Ehv
-         0bHZDbS9+/c4ZA4fVkm3VJnRpQRuJK4gpo5GzY2Qi9HEq1f0eQMvDADvH3a244sQfLbc
-         AtxS+NBQ27Shwf5FrJVWqenviRZCy91jCI96lGvqFofpZSqzlghNJrIwWPra85Oss4gM
-         XlYstoNOk88A/fNeyDfhjC1RVYzfef+b1eTUScYHRYk+qANfqK2xd8SRSJ6uJn8iRyM4
-         pWofsrOsFc31e1orAv95bfi8NQkO8wYN5EB17yihlRxzeCy7Rwfhj9ny+hWg0vhOm+42
-         1UUQ==
+        bh=C6pIxbOUMM4YIylpczsugjr/zEWMDNDTN7jorTB2vew=;
+        b=DtahkAlk/yirqNfs2QfZoR0gccv8wzxCzxD6lNl7+HNbxO0h46T1aeVLL1ukoKxDEA
+         eZGnEWL8w71b+DmxISg+4Z5Gc9dZ1BYJ6kwEqrruilgdg4p3Jot4PI3H5/+SopTASYsQ
+         fjDVxrW0YbjUUizzBNavxX8h+MTZGg484I3MYRqM8j74smNMX4GKSxF6MrddAuhyJsVe
+         FMZwx+bZ0Uiiyz59CuJWxhXnsCQBBVGhyTCHEEF+j1tGA/zCrcaU78gxJpct5MR27XZ8
+         bgPp4mfg/+fHYSrfaSKehnwr1d0Ag2GCJ5V5deIauyVQHbyqJZhPGiK724uGKTyRBGD7
+         gFQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=VPz9PqO9Fqan7fgK9F0BFc881ZLwxwDTW7XHlYlGQII=;
-        b=fwdgp/GFirYdDIE4wbvfMS5Da9Iuxu7bNmyK7+tmrw2cliQ5lZ3fZhZUAq0b1EIA0F
-         KAr5P9gLlc3/GDaBG0vSYgXJVQABNhzqOLaCr4eEHuIU2RkXCf9okUH7qfdkaTyv+Ovs
-         Fs0BOGGn41FT8KDAx25tXsd+L+AC4bIy7+akO9oBjbbFaborm8rGqLJ9KFSTnmPik/Xg
-         7jlE8UKK1S0RLXEjZSGcLbttnYFe+3P+n+lbjr5uqfA3zETuAf7iHwtfCohjJSJbyCXI
-         rUfb8jQzqHRWj0kLS2wkb2WbXqVKjNUhuR3UCoZqexNpMnf92/o3ci4BZ0qUucQzcZ/y
-         bRlA==
-X-Gm-Message-State: AOAM531gewpOAusC44uZPqhLbuaOs7CkemhFPrW9K/fO6k/0Uk7oRZPy
-        J/CeHPa6VSomR9UBnt+UOWs=
-X-Google-Smtp-Source: ABdhPJxeAlYCHfG6arM5pN4J/6BocT8Uxjj31ay2Co5u+K7ginHHumgJ+ahENZRQ1pUz+Y3suEN8ig==
-X-Received: by 2002:a63:df56:: with SMTP id h22mr11642652pgj.140.1595064028398;
-        Sat, 18 Jul 2020 02:20:28 -0700 (PDT)
+        bh=C6pIxbOUMM4YIylpczsugjr/zEWMDNDTN7jorTB2vew=;
+        b=b0kidRwTyZtYCEga9unPn8mqpeByAW3q5iLtLRwFbf7mKh0S3StdCDGlZ5iEyHJb1S
+         du3htDv0p+6Oz+QkZCbYahLO/3v0Y7hruDbuCSo2X5zOGDjsioMEYNnoRTZZu4WdLo9Z
+         4PZ3uTiqPZhkXAPkYpsiLfEhWBN6RjPYtB1Q3NMKMf6hCJH9igWAwMEG4O4/ecLf3zNI
+         IFoAUKBCWq/7clXPRjweuFzh4u2cU2lBROb2luj3v8KVQ4ne+r3ytrVESddBrdEbEi/V
+         6uUA0mokbhnF2KgzQbNvL0wvC6T25lGAoLZdhyHQTSXWUBVey6GNWiE8T4inNzD1FIVB
+         fYuQ==
+X-Gm-Message-State: AOAM532+3dXo86R5QveSLoh7o8nZHknoV6KobK7y03l8JIxFykgKeGt0
+        OPgaNYC1b4sMgIaVFcvE1c8=
+X-Google-Smtp-Source: ABdhPJwYGoouV0+zWdqRYkGRJ4iG5Nj5tVBnAIQUiOC+gcfl2J04HClefmVNd3KbGbDdJ13IO5aDTw==
+X-Received: by 2002:a63:3ec4:: with SMTP id l187mr11550281pga.371.1595064007723;
+        Sat, 18 Jul 2020 02:20:07 -0700 (PDT)
 Received: from localhost.localdomain ([182.69.248.222])
-        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.20.24
+        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.20.01
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 Jul 2020 02:20:27 -0700 (PDT)
+        Sat, 18 Jul 2020 02:20:07 -0700 (PDT)
 From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
+To:     andre.przywara@arm.com, afaerber@suse.de, vkoul@kernel.org,
         manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v6 05/10] arm64: dts: actions: limit address range for pinctrl node
-Date:   Sat, 18 Jul 2020 14:49:29 +0530
-Message-Id: <1595063974-24228-6-git-send-email-amittomer25@gmail.com>
+Subject: [PATCH v6 01/10] dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
+Date:   Sat, 18 Jul 2020 14:49:25 +0530
+Message-Id: <1595063974-24228-2-git-send-email-amittomer25@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
 References: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
@@ -76,62 +76,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for
-Actions Semi S700") following error has been observed while booting
-Linux on Cubieboard7-lite(based on S700 SoC).
+Converts the device tree bindings for the Actions Semi Owl SoCs DMA
+Controller over to YAML schemas.
 
-[    0.257415] pinctrl-s700 e01b0000.pinctrl: can't request region for
-resource [mem 0xe01b0000-0xe01b0fff]
-[    0.266902] pinctrl-s700: probe of e01b0000.pinctrl failed with error -16
+It also adds new compatible string "actions,s700-dma".
 
-This is due to the fact that memory range for "sps" power domain controller
-clashes with pinctrl.
-
-One way to fix it, is to limit pinctrl address range which is safe
-to do as current pinctrl driver uses address range only up to 0x100.
-
-This commit limits the pinctrl address range to 0x100 so that it doesn't
-conflict with sps range.
-
-Fixes: 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for Actions
-Semi S700")
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Suggested-by: Andre Przywara <andre.przywara@arm.com>
 Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 ---
 Changes since v5:
-	* Added Mani's Reviewed-by: tag.
+	* Removed Rob's Reviewed-by tag as his bot found errors
+	  running 'make dt_binding_check'.
+	* Fixed the errore reported by Rob's bot, adjusting the reg
+	  property in example.
 Changes since v4:
-        * Reordered it from 04/10 to 05/10.
+        * Added Rob's Reviewed-by tag.
+        * Re-order it from 05/10 to 01/10.
 Changes since v3:
         * No change.
 Changes since v2:
-        * this is no more don't merge and fixed
-          the broken S700 boot by limiting pinctrl
-          address range.
-        * Modified the subject to reflect the changes.
-Changes since v1:
-        * No change.
-Changes since RFC:
-        * kept as do not merge.
+        * Addressed Rob's comments:
+           - removed unnecessary description.
+           - added unevaluatedProperties
+           - added relevant information about
+             dma-channels and dma-request
+        * Added power-domain property.
+Change since v1:
+        * Updated the description field to reflect
+          only the necessary information.
+        * replaced the maxItems field with description for each
+          controller attribute(except interrupts).
+        * Replaced the clock macro with number to keep the example
+          as independent as possible.
 ---
- arch/arm64/boot/dts/actions/s700.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
+ Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
+ 2 files changed, 79 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
 
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 2006ad5424fa..f8eb72bb4125 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -231,7 +231,7 @@
- 
- 		pinctrl: pinctrl@e01b0000 {
- 			compatible = "actions,s700-pinctrl";
--			reg = <0x0 0xe01b0000 0x0 0x1000>;
-+			reg = <0x0 0xe01b0000 0x0 0x100>;
- 			clocks = <&cmu CLK_GPIO>;
- 			gpio-controller;
- 			gpio-ranges = <&pinctrl 0 0 136>;
+diff --git a/Documentation/devicetree/bindings/dma/owl-dma.txt b/Documentation/devicetree/bindings/dma/owl-dma.txt
+deleted file mode 100644
+index 03e9bb12b75f..000000000000
+--- a/Documentation/devicetree/bindings/dma/owl-dma.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-* Actions Semi Owl SoCs DMA controller
+-
+-This binding follows the generic DMA bindings defined in dma.txt.
+-
+-Required properties:
+-- compatible: Should be "actions,s900-dma".
+-- reg: Should contain DMA registers location and length.
+-- interrupts: Should contain 4 interrupts shared by all channel.
+-- #dma-cells: Must be <1>. Used to represent the number of integer
+-              cells in the dmas property of client device.
+-- dma-channels: Physical channels supported.
+-- dma-requests: Number of DMA request signals supported by the controller.
+-                Refer to Documentation/devicetree/bindings/dma/dma.txt
+-- clocks: Phandle and Specifier of the clock feeding the DMA controller.
+-
+-Example:
+-
+-Controller:
+-                dma: dma-controller@e0260000 {
+-                        compatible = "actions,s900-dma";
+-                        reg = <0x0 0xe0260000 0x0 0x1000>;
+-                        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+-                                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+-                                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+-                                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+-                        #dma-cells = <1>;
+-                        dma-channels = <12>;
+-                        dma-requests = <46>;
+-                        clocks = <&clock CLK_DMAC>;
+-                };
+-
+-Client:
+-
+-DMA clients connected to the Actions Semi Owl SoCs DMA controller must
+-use the format described in the dma.txt file, using a two-cell specifier
+-for each channel.
+-
+-The two cells in order are:
+-1. A phandle pointing to the DMA controller.
+-2. The channel id.
+-
+-uart5: serial@e012a000 {
+-        ...
+-        dma-names = "tx", "rx";
+-        dmas = <&dma 26>, <&dma 27>;
+-        ...
+-};
+diff --git a/Documentation/devicetree/bindings/dma/owl-dma.yaml b/Documentation/devicetree/bindings/dma/owl-dma.yaml
+new file mode 100644
+index 000000000000..256d62af2c64
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/owl-dma.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/owl-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Actions Semi Owl SoCs DMA controller
++
++description: |
++  The OWL DMA is a general-purpose direct memory access controller capable of
++  supporting 10 and 12 independent DMA channels for S700 and S900 SoCs
++  respectively.
++
++maintainers:
++  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - actions,s900-dma
++      - actions,s700-dma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      controller supports 4 interrupts, which are freely assignable to the
++      DMA channels.
++    maxItems: 4
++
++  "#dma-cells":
++    const: 1
++
++  dma-channels:
++    maximum: 12
++
++  dma-requests:
++    maximum: 46
++
++  clocks:
++    maxItems: 1
++    description:
++      Phandle and Specifier of the clock feeding the DMA controller.
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#dma-cells"
++  - dma-channels
++  - dma-requests
++  - clocks
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    dma: dma-controller@e0260000 {
++        compatible = "actions,s900-dma";
++        reg = <0xe0260000 0x1000>;
++        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
++        #dma-cells = <1>;
++        dma-channels = <12>;
++        dma-requests = <46>;
++        clocks = <&clock 22>;
++    };
++
++...
 -- 
 2.7.4
 
