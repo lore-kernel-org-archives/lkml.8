@@ -2,220 +2,211 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF56C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA52C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9F62073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022EC2073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="zJhihHko"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="qb5LQbET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgGRJOu (ORCPT
+        id S1726557AbgGRJQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:14:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgGRJOt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 05:14:49 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439A9C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 02:14:49 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id mn17so7624034pjb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 02:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=cKEpENRz6Co+TfaAIpmLq652jkpOnfh/vQOlcll5dLE=;
-        b=zJhihHkos9vaDBR1NxjLfxGiRdluMRMauT1pn/C2UAcGOQVfDGFtWKDErCsYB/CJsR
-         sbsS9X6kOuLNJ/Gv0iJrVo9CWjxRxasVJ7kYhhRPmBh2Ne7rwlnB8/q7CWz6GSfXZund
-         LizhfmigqKmg20Qz/CO3yxYPWCBXxHwqBmIuegiM8YmzJAmUj2UzevEwmcYjJTAFYXHT
-         /HOilfkZ5hahtLP8IzPwXZPqgkhsId6zT4Z2j/Lr9yVi/40iPkOwA2BFR8EX0JGWHry7
-         nN26pMy0SgOmjzK18oL2xrnPQc8f/URxMF6G0GTlQULUHqm5NINs5RIUR7wkZe33V1MM
-         zybw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=cKEpENRz6Co+TfaAIpmLq652jkpOnfh/vQOlcll5dLE=;
-        b=FvCoTthmiRvQweb3iK7uMHIJXBoox8VKVeL/CUJ6sFseEmpfeKK9rGCLaIWMf23ngz
-         M4XBlD5ZkwPMRV685sNXN6d6y2455cbq5ufL4Th48bIMPh+tTteBMbtmUlEoiAMtyMIR
-         4s/wVyuQ/zJ0UBoCO7+M3YJhtQk+GY3lLxdNd+wuomN7cNI1mpOhBpgHqUNnYjX73b4a
-         pAldsSbXhZdr3pdJ9QWcPjFQoMNOjUZ1gpf+dExtL4IT2fLeVjUJ8DFrf7YswohlCkuB
-         Rf6455f5r4ooKlPntNFVCoK8nNrtXm5k0M8ooaSH6A/RoyXfwTi6+VlcCC/g+06Ll+YY
-         0Y0Q==
-X-Gm-Message-State: AOAM532UwJy4RgKVqgUWxadDzXCJdS1AWS0gxl/l4Dh662771py3cIiL
-        QHh1QmNKKfOG0k555Dgr4FfNNXU0Lbw=
-X-Google-Smtp-Source: ABdhPJw6ja/5O5yRBq5e2Ea4nArJXAFPCBBMagd931AXnWOtYQEEWcFYLwOL6mpoHhHwShsW8ZT77g==
-X-Received: by 2002:a17:90b:33c2:: with SMTP id lk2mr5751576pjb.122.1595063688633;
-        Sat, 18 Jul 2020 02:14:48 -0700 (PDT)
-Received: from localhost ([2406:7400:73:207:8b43:3062:877d:c647])
-        by smtp.gmail.com with ESMTPSA id r8sm10220303pfg.147.2020.07.18.02.14.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 02:14:47 -0700 (PDT)
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Sat, 18 Jul 2020 05:14:42 -0400
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] staging: rtl8188eu: include: fixed multiple blank space
- coding style issues
-Message-ID: <20200718091442.xamnoawpguo42k7v@pesu-pes-edu>
+        Sat, 18 Jul 2020 05:16:23 -0400
+Received: from mout.web.de ([212.227.15.14]:39095 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbgGRJQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 05:16:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1595063772;
+        bh=G3d+RngEWuIQntAf7cEcSzMBapLG41kym5mlirB0PaA=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=qb5LQbETcvjZva3gUgwVu1LIu0BXV5mX3InI8euedf0XBA1OxICGFRDchWsD2wYCP
+         UcmraxoatY3emTLEqiNqx0J6QLWzq7OTc2CaYWpDmyiZX2/Chlu8fayD+6LO5FvCY3
+         GGwSDMh8r/Zf1hnNgWCRCZ6kiFo8ueGZYrxBdZV0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.120.168]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MJTHn-1jydpA3S2t-0033Jb; Sat, 18
+ Jul 2020 11:16:11 +0200
+Subject: Re: [v2 1/4] coccinelle: api: extend memdup_user transformation with
+ GFP_USER
+To:     Julia Lawall <julia.lawall@inria.fr>,
+        Denis Efremov <efremov@linux.com>,
+        Coccinelle <cocci@systeme.lip6.fr>
+Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <0b9f2c58-e124-22d2-d91d-62a6e831c880@web.de>
+ <alpine.DEB.2.22.394.2007180841520.2538@hadrien>
+ <fa0ec546-9aee-5c95-428c-a225a3521f6f@web.de>
+ <alpine.DEB.2.22.394.2007181034530.2538@hadrien>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <f77f6eb1-9a07-c38d-e6b9-c7cdca119f3b@web.de>
+Date:   Sat, 18 Jul 2020 11:16:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ocvxayynsj2aaq3w"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <alpine.DEB.2.22.394.2007181034530.2538@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:zYJyk8NQpn2E/HiuBb26U1nxdi8leQ40ukxxgsEDgwndICZt8M1
+ 0VDXOei73XlSwk6wZkR7FnDweA/klEKlACSA3PH90UjHyBDuucLPBI+88Kt3h9NmZxRHoeW
+ 9ztNybwpiCg/xrewhnqX3uUsMzb0Xqiy22YMllgSCL2fd3xjYWG46Oyl/xdFNReAxICxpOQ
+ /tesiJ7N6GUzmYXF+L5LQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iqzgbM0mFQg=:MxQCy2q/CJQlxQBrDGuBT5
+ fDvnsVFMU67DpQT1ndpPrIQwWrMxyUCBjszNtH21vbjizV/6CCfvHl1c6+ASqpLToCYH0U3ZQ
+ lpUZJJBZIl3LMprbXNfd8nhjp9xJg7ZaUk6Rn9E4CukH5MJlWIK872+2cOElY1Rat1VN7hShr
+ y+lWwiaxy8zCewmf838MvFn1K4YQljuevdk+n2jBrn+yRa6qywbC+1hENjHJEtvJ9ktIMP1dz
+ g06f7+IJ6ru6IO6JgtBVm9xmcwRy+ZBiHVCy8DU+qUzmDilojEmr0WCdGovAKuvYLU0nHeji6
+ zwx4lV15z/bsYOL6eEzPAvnOfKRdUa/GKT9xBVL5ZUNqTbVLVnJEYPNouk5Wr2pPtmvY4uTvj
+ aSSr+1S3nDmhScPocdf+Z5AnWQw/ipUf2AnTlUbSSFGkEsRfnOpBy4joJSq0JFE4ZZJq33Jza
+ wFUe/zUeUmE9s3WKbhY1Sk1sofGW6YeWaSo0znVweUbj4H3xWSEM+vPqWSQvMHhfXIHKbSJqJ
+ L/m5YcmpJ2OZ6y/7uTYisADiggH55oCEByVXrTdFukQ/YPNzjP8AIxWMQdvjghqBEzKohrYZJ
+ tgxep0pktxufCJzHPYN6M8neWWzXlpnlVOj9gJhfu/cUoq2WL0yAT1RM/vZADEW4afJRNE2C9
+ 0qjBLAkU43r1+oLVJXNWv0k7J7YUxMEMUtMvEHti3cz83j3KfAasbw51uPbVvkPdXOkze+d8U
+ CLPAUUfcWKKWclxC7nGAdscJnwdpuxZcWB68khEYiUKZtPGp3R2kPj6UFZCyuB0gHSblH2O/p
+ KEn1mD6aioPZpw/aACugp8fAsiQo/C3Tu+tkk8h6dwH87zTEjsJNs04LWYERDswEZT1Ogrkq8
+ ly+8/c5NZVfTGbFGWJIB+4JxYrWT7Ge8Jhn9TMm0RNm9L27gVUvR/TM48b2mEWYS9CYAIe5xK
+ tG6JyXjNTiv1DWn/cFin5Z+5IpV9rD84DzG1ruIPgmWEyuYWwtnh4OaAHmTH33q+WNv2ou/ll
+ UIUPECnEPkMbOKxHyIuWkx3KVWkuhJUeAMq1uMptLx+wOl31ToXHvo1vLYNfnuHluAOBdkKrt
+ xFtbotWhoKscZnLuWj9lozZie3+8Klb/93MMcRLXSOs5VquxHBiF6IUO80Yer7Fe2qQEjTTkk
+ 1w4X7CoWgL6FW9ODHBiNzM+1nzJrcHypONwnJEQSyeZ4uRLYzdpLsp5kznyGvou56cmzKnh4r
+ fRyaKw1dxcm77Hv4yW73j93cG59BDNjrIlRvGzg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>>>> * https://lore.kernel.org/cocci/5c0dae88-e172-3ba6-f86c-d1a6238bb4c4@=
+web.de/
+>>>>   https://lkml.org/lkml/2020/6/9/568
+>>>
+>>> This one it complete nonsense.
+>>
+>> I hope that different views can be clarified for such a software situat=
+ion
+>> in more constructive ways.
+>
+> You proposed essentially  \( A \| B \) \( | C \| \)
 
---ocvxayynsj2aaq3w
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I suggested also another adjustment.
 
-fixed multiple blank space coding style issues
-reported by checkpatch
-
-Signed-off-by: B K Karthik <karthik.bk2000@live.com>
----
- drivers/staging/rtl8188eu/include/hal_com.h       |  2 +-
- drivers/staging/rtl8188eu/include/osdep_service.h |  2 +-
- drivers/staging/rtl8188eu/include/rtl8188e_hal.h  |  2 +-
- drivers/staging/rtl8188eu/include/rtl8188e_xmit.h | 12 ++++++------
- drivers/staging/rtl8188eu/include/rtw_cmd.h       |  2 +-
- 5 files changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/staging/rtl8188eu/include/hal_com.h b/drivers/staging/=
-rtl8188eu/include/hal_com.h
-index 542e6e93ff8e..da772a6ebad3 100644
---- a/drivers/staging/rtl8188eu/include/hal_com.h
-+++ b/drivers/staging/rtl8188eu/include/hal_com.h
-@@ -81,7 +81,7 @@
- #define	RATE_ALL_OFDM_AG	(RATR_6M | RATR_9M | RATR_12M | RATR_18M | \
- 				 RATR_24M | RATR_36M | RATR_48M | RATR_54M)
- #define	RATE_ALL_OFDM_1SS	(RATR_MCS0 | RATR_MCS1 | RATR_MCS2 |	\
--				 RATR_MCS3 | RATR_MCS4 | RATR_MCS5|RATR_MCS6 | \
-+				 RATR_MCS3 | RATR_MCS4 | RATR_MCS5 | RATR_MCS6 | \
- 				 RATR_MCS7)
- #define	RATE_ALL_OFDM_2SS	(RATR_MCS8 | RATR_MCS9 | RATR_MCS10 | \
- 				 RATR_MCS11 | RATR_MCS12 | RATR_MCS13 | \
-diff --git a/drivers/staging/rtl8188eu/include/osdep_service.h b/drivers/st=
-aging/rtl8188eu/include/osdep_service.h
-index 0d3e4a6e7e85..31d897f1d21f 100644
---- a/drivers/staging/rtl8188eu/include/osdep_service.h
-+++ b/drivers/staging/rtl8188eu/include/osdep_service.h
-@@ -82,7 +82,7 @@ void rtw_free_netdev(struct net_device *netdev);
-=20
- /* Macros for handling unaligned memory accesses */
-=20
--#define RTW_GET_BE24(a) ((((u32)(a)[0]) << 16) | (((u32) (a)[1]) << 8) | \
-+#define RTW_GET_BE24(a) ((((u32)(a)[0]) << 16) | (((u32)(a)[1]) << 8) | \
- 			 ((u32)(a)[2]))
-=20
- void rtw_buf_free(u8 **buf, u32 *buf_len);
-diff --git a/drivers/staging/rtl8188eu/include/rtl8188e_hal.h b/drivers/sta=
-ging/rtl8188eu/include/rtl8188e_hal.h
-index ba7c98712934..3be28a6dbd49 100644
---- a/drivers/staging/rtl8188eu/include/rtl8188e_hal.h
-+++ b/drivers/staging/rtl8188eu/include/rtl8188e_hal.h
-@@ -104,7 +104,7 @@ enum usb_rx_agg_mode {
- 	(WMM_NORMAL_TX_TOTAL_PAGE_NUMBER + 1) /* 0xA9 */
-=20
- /* Chip specific */
--#define CHIP_BONDING_IDENTIFIER(_value)	(((_value)>>22)&0x3)
-+#define CHIP_BONDING_IDENTIFIER(_value)	(((_value) >> 22) & 0x3)
- #define CHIP_BONDING_92C_1T2R	0x1
- #define CHIP_BONDING_88C_USB_MCARD	0x2
- #define CHIP_BONDING_88C_USB_HP	0x1
-diff --git a/drivers/staging/rtl8188eu/include/rtl8188e_xmit.h b/drivers/st=
-aging/rtl8188eu/include/rtl8188e_xmit.h
-index 49884cceb349..1472c597cc53 100644
---- a/drivers/staging/rtl8188eu/include/rtl8188e_xmit.h
-+++ b/drivers/staging/rtl8188eu/include/rtl8188e_xmit.h
-@@ -30,11 +30,11 @@
- #define SET_EARLYMODE_LEN2_1(__pAddr, __Value)			\
- 	SET_BITS_TO_LE_4BYTE(__pAddr, 28, 4, __Value)
- #define SET_EARLYMODE_LEN2_2(__pAddr, __Value)			\
--	SET_BITS_TO_LE_4BYTE(__pAddr+4, 0, 8, __Value)
-+	SET_BITS_TO_LE_4BYTE(__pAddr + 4, 0, 8, __Value)
- #define SET_EARLYMODE_LEN3(__pAddr, __Value)			\
--	SET_BITS_TO_LE_4BYTE(__pAddr+4, 8, 12, __Value)
-+	SET_BITS_TO_LE_4BYTE(__pAddr + 4, 8, 12, __Value)
- #define SET_EARLYMODE_LEN4(__pAddr, __Value)			\
--	SET_BITS_TO_LE_4BYTE(__pAddr+4, 20, 12, __Value)
-+	SET_BITS_TO_LE_4BYTE(__pAddr + 4, 20, 12, __Value)
-=20
- /*  */
- /* defined for TX DESC Operation */
-@@ -100,7 +100,7 @@ enum TXDESC_SC {
-=20
- #define txdesc_set_ccx_sw_88e(txdesc, value) \
- 	do { \
--		((struct txdesc_88e *)(txdesc))->sw1 =3D (((value)>>8) & 0x0f); \
-+		((struct txdesc_88e *)(txdesc))->sw1 =3D (((value) >> 8) & 0x0f); \
- 		((struct txdesc_88e *)(txdesc))->sw0 =3D ((value) & 0xff); \
- 	} while (0)
-=20
-@@ -138,9 +138,9 @@ struct txrpt_ccx_88e {
- 	u8 sw0;
- };
-=20
--#define txrpt_ccx_sw_88e(txrpt_ccx) ((txrpt_ccx)->sw0 + ((txrpt_ccx)->sw1<=
-<8))
-+#define txrpt_ccx_sw_88e(txrpt_ccx) ((txrpt_ccx)->sw0 + ((txrpt_ccx)->sw1 =
-<< 8))
- #define txrpt_ccx_qtime_88e(txrpt_ccx)			\
--	((txrpt_ccx)->ccx_qtime0+((txrpt_ccx)->ccx_qtime1<<8))
-+	((txrpt_ccx)->ccx_qtime0 + ((txrpt_ccx)->ccx_qtime1 << 8))
-=20
- void rtl8188e_fill_fake_txdesc(struct adapter *padapter, u8 *pDesc,
- 			       u32 BufferLen, u8 IsPsPoll, u8 IsBTQosNull);
-diff --git a/drivers/staging/rtl8188eu/include/rtw_cmd.h b/drivers/staging/=
-rtl8188eu/include/rtw_cmd.h
-index fa5e212fc9e0..002a797c6d0a 100644
---- a/drivers/staging/rtl8188eu/include/rtw_cmd.h
-+++ b/drivers/staging/rtl8188eu/include/rtw_cmd.h
-@@ -115,7 +115,7 @@ struct	setopmode_parm {
-  */
-=20
- #define RTW_SSID_SCAN_AMOUNT 9 /*  for WEXT_CSCAN_AMOUNT 9 */
--#define RTW_CHANNEL_SCAN_AMOUNT (14+37)
-+#define RTW_CHANNEL_SCAN_AMOUNT (14 + 37)
- struct sitesurvey_parm {
- 	int scan_mode;	/* active: 1, passive: 0 */
- 	u8 ssid_num;
---=20
-2.20.1
+Can additional minus characters be avoided if such a source code search pa=
+ttern
+would be specified in a single line?
 
 
---ocvxayynsj2aaq3w
-Content-Type: application/pgp-signature; name="signature.asc"
+> This is not valid syntax in the semantic patch language.
 
------BEGIN PGP SIGNATURE-----
+I hope that a solution can be found by our discussion.
 
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl8SvYEACgkQ471Q5AHe
-Z2rH6gv+JB9f+nV+qCQ5xtnIgag9pexlAWAX4Oeq1xoikQAIHLjugaLCyThe4oAy
-AfuhaVgvFMBXIwCYACz7bZB0fDZFW9wBv6yhjQKDgOkXrHC1Zgnnb8MfA0rT9oDJ
-vwweeEs1XuURsFu9aq2nTFpFdKebD3GqSx5T4cyZpQf19ClKFDGhtF3pZjmn5xmk
-MB3qEzYs5h2zoY0TH/laeUL1TR7fzzLGFbnSGrkfSfYxShqlr9abIiYRsGmfkm+G
-OgLgniwYIXG1TVGCgwTucDdt1G8gBHqR+86NemvfSOdjiI577aWcBqcWUrCqlQZA
-BS9bcdKPlKVxq+ty60UeBJd+cKgfJdjZmhROpG3M9H8TQc9XNbn28vkua9bugG+r
-qBPMAlmmASKpYxz4zNa6zSRMw3Kf4MrJ3qug5JnxFnn1L58MN4CHE4SRWZrebOdN
-TM8Xa7pkRzOtmHfSyHD0L7Aozu7p9GarAfmSIY9EvrVz0JJPynMrwXjeyxBIzuPZ
-8xAlwBsJ
-=39RY
------END PGP SIGNATURE-----
 
---ocvxayynsj2aaq3w--
+> The branches of a \( \| \) have to be a valid expression, statement, typ=
+e, etc,
+
+Such information can become more interesting for safe application of
+SmPL disjunctions.
+
+
+> not some random string of tokens.
+
+I got further imaginations in this software area.
+
+Will the handling of optional transformation parameters be clarified bette=
+r?
+
+
+>> Patch reviews contain usual risks that suggestions are presented
+>> which can be still questionable.
+>
+> These are not "usual risks".  You can easily test out your suggestion by
+> yourself to see if it produces valid code.
+
+Such an expectation can be reasonable in some cases.
+
+
+> If it doesn't, then don't make the suggestion.
+
+Would software limitations hinder any more improvements then?
+
+
+>>> like that putting all of the virtual declarations on
+>>> the same line would save space (it does, but who cares),
+>>
+>> It seems that you admit a possibly desirable effect.
+>
+> No, I don't consider the effect to be desirable.
+
+I propose to take another look at variations around source code verbosity.
+
+
+>> Your change acceptance is varying to your development mood
+>> (and other factors), isn't it?
+>
+> Not really.  My "change acceptance" increases when the person reporting
+> them raises real problems that is blocking them in some work.
+
+I presented open issues accordingly.
+
+
+> And it decreases rapidly when the changes are almost all related to pres=
+umed
+> "efficiencies" that have no impact in practice.
+
+Change possibilities can get varying attention and corresponding developme=
+nt priorities.
+
+Regards,
+Markus
