@@ -2,141 +2,131 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA5DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 185E420768
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:02:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wu25cVGP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qz1YMA79"
+	by mail.kernel.org (Postfix) with ESMTP id 7856220759
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595030423;
+	bh=hbjLrFoHObjys+FD1IMtvEgoFEJ3mGB1Z3hlXq6o5FM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=njxGYH1DiujrQl876NIUm88Ts9znqiBPY4tHTel7ZLCqkew86ZwHrd+IXdGlBaefS
+	 RbgQR4xFSdXgJHFm3KCatx2NUfReBrgoz0Agve9vrGyRYMgK0Eopd/blOqPf7/iknU
+	 9fYRLXtgzjOcfJP9l3Tf7f2XB3c+qr40Yf935Cgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgGRAB7 (ORCPT
+        id S1728116AbgGRAAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 20:01:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44216 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgGRAB6 (ORCPT
+        Fri, 17 Jul 2020 20:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbgGRAAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 20:01:58 -0400
-Date:   Sat, 18 Jul 2020 00:01:55 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595030515;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8XpgUWIGgeUWH6liOxP7uwaShsbMbEpbQlEspkHv2+s=;
-        b=Wu25cVGPUIA0Le25qGbhqBsnhXRht5KcmaACd/8LWsm73vrsc6Q9kYdNul31fcN5jgtNYA
-        tIxtIcFcPpyOA+qxd8VvQQY/nCLNTnL8SnjoO+G2azcUlZLMDoqeBDdF7sATnGymoH5/um
-        0IQ/cL3qhpABDIgsLSNFoT5LKhmZLsMzudIMXPxydkXF5Ah2LjNOaggB02bNBwnRb6FmYn
-        PlcihFE1/epIvk1CNmJrrmjiTE99dnTXBmuNAIRi0oqpqpCuqe49hoEZvvFajrmydgdPZB
-        VNwxQ/BitjUyikAniwXDxcEnqHjqH5GM5hvVUbWqQtV5HfiPbvEVrjYc3nF2cg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595030515;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8XpgUWIGgeUWH6liOxP7uwaShsbMbEpbQlEspkHv2+s=;
-        b=Qz1YMA79CaC9glnKsxPfVOkM508HDBVnDpYUCA22s02nZfHOvJ3ea3YPuLsn6ScWd8R4vF
-        LfqX0ia9DsqocMBQ==
-From:   tip-bot2 for =?utf-8?q?Andr=C3=A9?= Almeida 
-        <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] futex: Consistently use fshared as boolean
-Cc:     andrealmeid@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200702202843.520764-5-andrealmeid@collabora.com>
-References: <20200702202843.520764-5-andrealmeid@collabora.com>
+        Fri, 17 Jul 2020 20:00:21 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D7D8C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:00:21 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h22so14611672lji.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LfDE4ruJhyC46Wi3RsJ/GllVHPpuqL5yVRuFbthLOuI=;
+        b=Asvu6yiFTH7mDWS3ok1hQi/vxghIf/ULfa8/lMbwgMAQlGqUqQ2Cwhu6VCvk/zsA+V
+         uN8GN3YZiywISGAvc0HpupYOQ101xF+mVckD8yWK+Y5Hty/bx0tsC7rFU6n6O0Vhiqbj
+         6SWfBdimEhqyIFp6vGDlFyYi6mUu6JLgQHR+o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LfDE4ruJhyC46Wi3RsJ/GllVHPpuqL5yVRuFbthLOuI=;
+        b=LazXLYfJikNRmp89VFQGMq8woB7X6PJoxzb8V3QgCUBvkfiU+oKDvhwIKio6Arv1XB
+         AzrpT+ZrEDrXoPJoOOe6sPT30kP7EfxzOFHykITMHyhFvYS2WrVFgB9rQSwNddcDfZoR
+         3r5z5lA8/rkVlkPT+DN6dAnN75lvNpGcxzkPYbND1RwMUG12jOygbDoh3hygtbR6eJUF
+         EWeUJxDmJ+/dMI6RexdDDr6q4VwJSrP2kXqAgGwj0LwWE1s8b/LgG1S1IQHGMBWUjGNC
+         Ecv4aHBrhc5nMDtbFenJytvXltFUJay/0fA/Fwqj2YWlBdmRT0GnYyDMpuBhevGPLTMp
+         acPg==
+X-Gm-Message-State: AOAM532odylGUgmsMZBehU6qcyagVLxPRHmNHGVrrp7RkHnkqiWe5XOH
+        KOuAj1ZJZhMg94jIoeGj3sIgu50yoZ0=
+X-Google-Smtp-Source: ABdhPJy3Hg2330W0RYSf1u85vwznr5p15B9p9EYsOhYBRXGlag7MfjSjCsR+72Pi8ag5VlWCqWKzxg==
+X-Received: by 2002:a05:651c:10f:: with SMTP id a15mr5139491ljb.192.1595030419018;
+        Fri, 17 Jul 2020 17:00:19 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id u7sm2547546lfi.45.2020.07.17.17.00.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 17:00:17 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id k15so7004943lfc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:00:17 -0700 (PDT)
+X-Received: by 2002:ac2:5093:: with SMTP id f19mr5794252lfm.10.1595030417179;
+ Fri, 17 Jul 2020 17:00:17 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159503051506.4006.14566660709766514564.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
+In-Reply-To: <20200717234818.8622-1-john.ogness@linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 17 Jul 2020 17:00:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
+Message-ID: <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] printk: reimplement LOG_CONT handling
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/core branch of tip:
+On Fri, Jul 17, 2020 at 4:48 PM John Ogness <john.ogness@linutronix.de> wrote:
+>
+> Using placeholders avoids tools such as systemd-journald from
+> erroneously reporting missed messages. However, it also means that
+> empty placeholder records are visible in systemd-journald logs and
+> displayed in tools such as dmesg.
 
-Commit-ID:     9261308598ad28b9a8a2237d881833e9f217244e
-Gitweb:        https://git.kernel.org/tip/9261308598ad28b9a8a2237d881833e9f21=
-7244e
-Author:        Andr=C3=A9 Almeida <andrealmeid@collabora.com>
-AuthorDate:    Thu, 02 Jul 2020 17:28:43 -03:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 18 Jul 2020 01:56:08 +02:00
+As long as the readers still reliably do the joining, this is fine.
 
-futex: Consistently use fshared as boolean
+HOWEVER.
 
-Since fshared is only conveying true/false values, declare it as bool.
+Make sure you test the case of "fast concurrent readers". The last
+time we did things like this, it was a disaster, because a concurrent
+reader would see and return the _incomplete_ line, and the next entry
+was still being generated on another CPU.
 
-In get_futex_key() the usage of fshared can be restricted to the first part
-of the function. If fshared is false the function is terminated early and
-the subsequent code can use a constant 'true' instead of the variable.
+The reader would then decide to return that incomplete line, because
+it had something.
 
-Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@collabora.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200702202843.520764-5-andrealmeid@collabora=
-.com
+And while in theory this could then be handled properly in user space,
+in practice it wasn't. So you'd see a lot of logging tools that would
+then report all those continuations as separate log events.
 
----
- kernel/futex.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Which is the whole point of LOG_CONT - for that *not* to happen.
 
-diff --git a/kernel/futex.c b/kernel/futex.c
-index 362fbca..cda9175 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -476,7 +476,7 @@ static u64 get_inode_sequence_number(struct inode *inode)
- /**
-  * get_futex_key() - Get parameters which are the keys for a futex
-  * @uaddr:	virtual address of the futex
-- * @fshared:	0 for a PROCESS_PRIVATE futex, 1 for PROCESS_SHARED
-+ * @fshared:	false for a PROCESS_PRIVATE futex, true for PROCESS_SHARED
-  * @key:	address where result is stored.
-  * @rw:		mapping needs to be read/write (values: FUTEX_READ,
-  *              FUTEX_WRITE)
-@@ -500,8 +500,8 @@ static u64 get_inode_sequence_number(struct inode *inode)
-  *
-  * lock_page() might sleep, the caller should not hold a spinlock.
-  */
--static int
--get_futex_key(u32 __user *uaddr, int fshared, union futex_key *key, enum fut=
-ex_access rw)
-+static int get_futex_key(u32 __user *uaddr, bool fshared, union futex_key *k=
-ey,
-+			 enum futex_access rw)
- {
- 	unsigned long address =3D (unsigned long)uaddr;
- 	struct mm_struct *mm =3D current->mm;
-@@ -538,7 +538,7 @@ get_futex_key(u32 __user *uaddr, int fshared, union futex=
-_key *key, enum futex_a
-=20
- again:
- 	/* Ignore any VERIFY_READ mapping (futex common case) */
--	if (unlikely(should_fail_futex(fshared)))
-+	if (unlikely(should_fail_futex(true)))
- 		return -EFAULT;
-=20
- 	err =3D get_user_pages_fast(address, 1, FOLL_WRITE, &page);
-@@ -626,7 +626,7 @@ again:
- 		 * A RO anonymous page will never change and thus doesn't make
- 		 * sense for futex operations.
- 		 */
--		if (unlikely(should_fail_futex(fshared)) || ro) {
-+		if (unlikely(should_fail_futex(true)) || ro) {
- 			err =3D -EFAULT;
- 			goto out;
- 		}
+So this is just a heads-up that I will not pull something that breaks
+LOG_CONT because it thinks "user space can handle it". No. User space
+does not handle it, and we need to handle it for the user.
+
+So as long as the kernel makes sure the joining does happen it at some
+point, it's all fine. It obviously doesn't have to happen at printk()
+time, just as long as incomplete records aren't exposed even to
+concurrent readers.
+
+A test-case with a short delay in between writes might be a good idea,
+although the last time this broke it was very clear in peoples syslogs
+and dmesg because it turns out there are lots of concurrent readers at
+boot time and _somebody_ will hit the race.
+
+             Linus
