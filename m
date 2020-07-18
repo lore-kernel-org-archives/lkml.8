@@ -8,123 +8,137 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0770C43457
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8793CC43446
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE79E2076D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60CBA20724
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r72XjXYG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MLVfAbEE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgGRG6Z (ORCPT
+        id S1729214AbgGRG6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54854 "EHLO
+        Sat, 18 Jul 2020 02:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729132AbgGRG6G (ORCPT
+        with ESMTP id S1729158AbgGRG6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 02:58:06 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A72ECC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 23:58:05 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b6so13213666wrs.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 23:58:05 -0700 (PDT)
+        Sat, 18 Jul 2020 02:58:09 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7654FC0619D2;
+        Fri, 17 Jul 2020 23:58:09 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f18so13287590wrs.0;
+        Fri, 17 Jul 2020 23:58:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TjgzLnntMqyR4iw5HYm5Wn13YkqCTneXtgN6zeUHap4=;
-        b=r72XjXYGJjf/KxWyAu0wVQikYmQ2VwI9NGj6g3nIE9OaYb8RV3SBjMyRky+Cho90Xe
-         cOKWmg4gzZJJTc6nLhNNi15qjiXSEUgNrjBwO6H3v3Y3CfozuBEKa2HQoAPBu5KpgcnC
-         K5bv1E3iXmB4y7KExMH8IbsfQ0agBH/XSz27WkaloayNrbKA05gbXvz1Ow6NTJ2oldJY
-         UjVhVbEo2D7t5k1dpXnisUFa37DslfxyO/6YcMpPvwqgzpbEDowyx1wASHBE/C0sWJG6
-         3cZ3gqQWEU/C3VydulDz+Io+EhBqZsDE/xUDF5ztfvcrFGVdUGP/Yrs5G5M0S6xZyUQn
-         mlvw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=+sbzGxZrB59pV6U+pYub8QGMoi1y6WlUsM0RAR+NpTo=;
+        b=MLVfAbEEt8OAz+5SAcw5V9iCQGbToqL+cmlSIIL8EpSA5td5CPH+5VRKLJ1yqXeMNK
+         SzgM3CMnrxFlqh42qGcDI48MkYDTAgACq+2sa/8OcFzSi097xlhleH7JcH25pC/h55QB
+         RS81OLa3zJ8ip/sWEf6dYPZBbdEylZpZjwDebRMra5YFEgliCzfnerO5rY8hvyMaRaqN
+         89DZCM2CS71AcUqH43J+kAeuGlS/jc+O7SIle0NI5gmVQb892V5Xentb5B5s7Qta3tQL
+         jGNXwoamC+JYy85rOlDgOAs+AEGuK+t6p4cYBtSLMAsDV+gO3ITZrbxyLInK1DRfLow+
+         tIJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TjgzLnntMqyR4iw5HYm5Wn13YkqCTneXtgN6zeUHap4=;
-        b=NGZV89gK1LBJB6iUY/r8lszBF8w+sSXKLTlje38P9T1dIkjwlgsavfwmAbv74Zx4mg
-         KtR2SeA34Xfm22P1n1lhfO8jYui8A5WdEFC5yIscs8dPTEQ/ihsodlOYgfGUtjcT7z9p
-         gBrnedIF3GeOgEIndTJtUfu3Wxvp+T9R8L590KQIjljAcZLwHrI/uK7rEmDPDhbZ2uMf
-         lAjgD5sNH5OOUN9Sf49MZ7oaoL/fGaXglPJGuRibRmJATkfnmN/nt2TO2itxU1mO5i7c
-         lnxyVwBzUQWIkh68g3cDaGOqNeMQU5uUqG3VAi0yf+QORvbDHC6X02ihSoO1vpNhvxbi
-         jNXg==
-X-Gm-Message-State: AOAM5323CkrKyERbncuQivneeMe+wzKEZImZzeMtfQnYXaDAXIlXrf3r
-        fi0+CyYpWEaEcH9QeHLprH5Lb81+
-X-Google-Smtp-Source: ABdhPJxr09Wle5letJhcuWVOT+IwP/rPKtKvkpvcjIDD2+ZMra8NjiVc9MN+EncWhfdTcNPjmeDJdQ==
-X-Received: by 2002:a5d:55c9:: with SMTP id i9mr128080wrw.31.1595055484444;
-        Fri, 17 Jul 2020 23:58:04 -0700 (PDT)
-Received: from localhost.localdomain (dslb-002-204-142-170.002.204.pools.vodafone-ip.de. [2.204.142.170])
-        by smtp.gmail.com with ESMTPSA id 32sm409015wrn.86.2020.07.17.23.58.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=+sbzGxZrB59pV6U+pYub8QGMoi1y6WlUsM0RAR+NpTo=;
+        b=RHJgZW54H84WJMalQhffmi/BL2//I0t05oq1mFe45OJ9h4J7JHxlXU4lbI7Mpf2Ann
+         GVctVLuLgqZPiWmYTzOtV9ylJVcjXvFAsaMX/aSKWgGgKQ6d3CKtXk0vD65eN7CwuE9f
+         ekm6xiel1TTDEUiurfsQGPskhktomj4pU93gR8NIsbdtkC9Ntc/EhV5gsKpKC4dwu8md
+         jj75wbfMUEQ5+W+hhHCV44agY1AbrO58jyQIYYle0iio1iNdzSZT15veqEV8TNWaxqbi
+         FteGzVrYc82ug5ykWLHZnrunZFCHbVpaprUU6siHolVTaA8KeoEznS9f4/3RZUGkx2jP
+         fJ+Q==
+X-Gm-Message-State: AOAM531+T7raE7tYVS7S8M1BpTUy06wtu85mY3lrsXMC31SJ4+y7bBBv
+        Oj1TBdQB0NXNKGU+VUkgh5s=
+X-Google-Smtp-Source: ABdhPJzzF7AVveOnVICfgyrqrnbw/GMJl08joyt9cIy/Hji+DY2GExCAGi3oh67Ji1N4fp8pOjJmyw==
+X-Received: by 2002:a5d:68c7:: with SMTP id p7mr14296531wrw.16.1595055488234;
+        Fri, 17 Jul 2020 23:58:08 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.58.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 23:58:03 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: clear tabstop style issues
-Date:   Sat, 18 Jul 2020 08:55:14 +0200
-Message-Id: <20200718065514.16289-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 17 Jul 2020 23:58:07 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH 11/12] arm64: dts: meson: add audio playback to wetek-hub
+Date:   Sat, 18 Jul 2020 06:57:38 +0000
+Message-Id: <20200718065739.7802-12-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200718065739.7802-1-christianshewitt@gmail.com>
+References: <20200718065739.7802-1-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clear tabstop style issues reported by checkpatch.
-WARNING: Statements should start on a tabstop
+Add initial audio support limited to HDMI i2s.
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- drivers/staging/rtl8188eu/core/rtw_ioctl_set.c    | 2 +-
- drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c | 2 +-
- drivers/staging/rtl8188eu/os_dep/ioctl_linux.c    | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c b/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
-index fa88e8b2852d..26e5193cfd6c 100644
---- a/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
-@@ -343,7 +343,7 @@ u8 rtw_set_802_11_infrastructure_mode(struct adapter *padapter,
- 		    *pold_state == Ndis802_11IBSS) {
- 			if (check_fwstate(pmlmepriv, _FW_LINKED))
- 				rtw_indicate_disconnect(padapter); /* will clr Linked_state; before this function, we must have checked whether  issue dis-assoc_cmd or not */
--	       }
-+		}
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+index 83b985bb015e..0c1570153842 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+@@ -7,10 +7,50 @@
+ /dts-v1/;
  
- 		*pold_state = networktype;
+ #include "meson-gxbb-wetek.dtsi"
++#include <dt-bindings/sound/meson-aiu.h>
  
-diff --git a/drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c b/drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c
-index 740004d71a15..2baef9a285c0 100644
---- a/drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c
-+++ b/drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c
-@@ -145,7 +145,7 @@ void rtw_hal_set_odm_var(struct adapter *Adapter, enum hal_odm_variable eVariabl
- 			} else {
- 				DBG_88E("### Clean STA_(%d) info\n", psta->mac_id);
- 				ODM_CmnInfoPtrArrayHook(podmpriv, ODM_CMNINFO_STA_STATUS, psta->mac_id, NULL);
--		       }
-+			}
- 		}
- 		break;
- 	case HAL_ODM_P2P_STATE:
-diff --git a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-index 5e6f7f0ed009..2e83d24fcb09 100644
---- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-@@ -811,7 +811,7 @@ static int rtw_wx_set_pmkid(struct net_device *dev,
- 				psecuritypriv->PMKIDList[j].bUsed = false;
- 				break;
- 			}
--	       }
-+		}
- 	} else if (pPMK->cmd == IW_PMKSA_FLUSH) {
- 		DBG_88E("[rtw_wx_set_pmkid] IW_PMKSA_FLUSH!\n");
- 		memset(&psecuritypriv->PMKIDList[0], 0x00, sizeof(struct rt_pmkid_list) * NUM_PMKID_CACHE);
+ / {
+ 	compatible = "wetek,hub", "amlogic,meson-gxbb";
+ 	model = "WeTek Hub";
++
++	sound {
++		compatible = "amlogic,gx-sound-card";
++		model = "GXBB-WETEK-HUB";
++		assigned-clocks = <&clkc CLKID_MPLL0>,
++				  <&clkc CLKID_MPLL1>,
++				  <&clkc CLKID_MPLL2>;
++		assigned-clock-parents = <0>, <0>, <0>;
++		assigned-clock-rates = <294912000>,
++				       <270950400>,
++				       <393216000>;
++		status = "okay";
++
++		dai-link-0 {
++			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
++		};
++
++		dai-link-1 {
++			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
++			dai-format = "i2s";
++			mclk-fs = <256>;
++
++			codec-0 {
++				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
++			};
++		};
++
++		dai-link-2 {
++			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
++
++			codec-0 {
++				sound-dai = <&hdmi_tx>;
++			};
++		};
++	};
++};
++
++&aiu {
++	status = "okay";
+ };
+ 
+ &ir {
 -- 
-2.27.0
+2.17.1
 
