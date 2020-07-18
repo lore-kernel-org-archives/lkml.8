@@ -2,202 +2,225 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F048C433EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD05C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA81F20759
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53892073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9QT3C2F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="royD6rEc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgGRJoL (ORCPT
+        id S1726683AbgGRJuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:44:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51982 "EHLO
+        Sat, 18 Jul 2020 05:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbgGRJoJ (ORCPT
+        with ESMTP id S1726262AbgGRJuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 05:44:09 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3462C0619D2;
-        Sat, 18 Jul 2020 02:44:08 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z2so13500512wrp.2;
-        Sat, 18 Jul 2020 02:44:08 -0700 (PDT)
+        Sat, 18 Jul 2020 05:50:12 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2065C0619D2;
+        Sat, 18 Jul 2020 02:50:11 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j19so7869725pgm.11;
+        Sat, 18 Jul 2020 02:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pJC59erINRP0bf+MfLFMFuLvKJR8XJ12i44RcGLpj2E=;
-        b=K9QT3C2Fo0BAUMHNyX3U4ftKh4xnp1K2XduPyzDaECoO/WN3zucjokxEjQ74cXkE60
-         s61JsdHudGJFaD/IxOROlIJov5QJuxZwH4Zz/9zNBgpb4mexzQzSBZUxLIH+qVo9HGgb
-         eg0+CEOWFF74Cj6KFiZ7gYPVc1ok1u2aG33K82gwBLIYjkho518oOXQEY7fgK5k+dbkO
-         SooVdg9hTTmK4rYEm7Csrb0eerIIwmrfqkEnOzbUao94HOcf0Qq+yCP8qeKBFCQVRByY
-         rVbCYEK628YdFtE1kBmT234CH+i4tg4whqPmwCZOn6BXxvnTaboa5ZYUuyzV8CZV0w8D
-         GqrQ==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=xlxaTRgUcycprIxIC16Wrlbz+yeEI7GCYkU1aIYSSMY=;
+        b=royD6rEcCO9MgTWFpNSMs1pIJkRFV0HXHNrp36wc3OySBrhME2KSjzaI0z1Wwl/RxN
+         coSN7n5Ua0HckYifxjuNfVFut4Lq1QlOz6P3j5iCV4Cgw290pgZ0vkQ++cuEHyfgG5nA
+         hPXSqCjXe1lFm0xP7+IQTAseT3xTelum/F4BZGJnK320+XdVRzXcuZrmJjC4FCpA5f7F
+         WXUtLfvZ4eYz6fBG1HAwwIf2wyehfLCiHm0WPP1Pj5QeH+dxQG/lHcLxp5kLBcCf74nC
+         QzEN+YmI+Ktfld+dAOar/ow8bVCWzk++fdg2fgoGUJZ15u8h/f4zunrviF99IkoEc99G
+         pr1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pJC59erINRP0bf+MfLFMFuLvKJR8XJ12i44RcGLpj2E=;
-        b=Cb5LvErwJ3/qbtW4viAbXlWdAH2ryevIUeDE3RRRP0sMwf67gd2ESqSGGu+SYIZlpH
-         rbQMSsYTszh9LTNJDFqWrVzFWtA4EnRYdFFXJ8yj2hPW7HTBPfUeZU53TcRBCLIOE/e7
-         zml4iuldVYSPre1LI8zwkkKOMYnDHlL8e/IU9Bmsj8MmaC+M0+q1I+LnE+DeBb4p72Dg
-         QoBnSffsVK0A+bcSz+6ykV2K+mWii3npNMCdphbrRNzL/U73hgNxNdTS6p5nCm6YfCe+
-         El0S6TIuq4AMHTcKzE1V3MH+OWIv5NQ0OeSE9Icg+GMKSQ/F0kE84jGJxr83seit70VF
-         GZWg==
-X-Gm-Message-State: AOAM530lQTW++YTALDj95ZQCgvxAyRl+tyABFXGSG/ZJNgnEZyXVTh4m
-        sjD2RLC6jyShpj83dAGVcQ4=
-X-Google-Smtp-Source: ABdhPJwpyc2BrlitG3628ecIb+6jNMA6OCTk8cqDcXSd/35mA/hDehcbPn/lMSDSvPbhB1SVauU1mA==
-X-Received: by 2002:a5d:420e:: with SMTP id n14mr14909876wrq.164.1595065447652;
-        Sat, 18 Jul 2020 02:44:07 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id v11sm16764554wmb.3.2020.07.18.02.44.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 02:44:07 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v2 2/2] arm64: dts: meson: add support for the WeTek Core 2
-Date:   Sat, 18 Jul 2020 09:44:00 +0000
-Message-Id: <20200718094400.1185-2-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200718094400.1185-1-christianshewitt@gmail.com>
-References: <20200718094400.1185-1-christianshewitt@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=xlxaTRgUcycprIxIC16Wrlbz+yeEI7GCYkU1aIYSSMY=;
+        b=dy0S7T6U0oaeUiwEAbGLV9KJWLG86ltMY7aEjve/f3HLK+E+pqVZ1zcuDvg/kg1GFC
+         zaRswUg108KS1JUH2aUczeV3IfWpdk0fZMufT+zAIywOPhmyOiF5Mv/kBKtR2FwNgajX
+         Iy3u5fSKe6OSiMy2C1i0FOLMLSSgAQWr4a8KHcXR7N8Gja1FFbQedzauXDqOcpnqHXoS
+         uMY46EEATck3kd2x6bzw+YPCnSUhhQ0V6JhZYrLXWsj220lKRHyBnhhJLeu/MrdGKgre
+         2st/ziDoOdHfsIKup8d1K3if0wnGNfyGLkYjeuv386pVVJAMLLKzc33k8Dd/hpTJBYcY
+         n10g==
+X-Gm-Message-State: AOAM533xLcS1OSsWdDYO+u2NIY0fjPRtVDpezP0fVPuyIhUE/11LkU06
+        37szGTmO5Afq6RYKUfAYLtHV38xZFtS3bQ==
+X-Google-Smtp-Source: ABdhPJy/+o046/URWTy2yUfFOcLQxN1dKZWNsA9EDQ51I/XG7Qw7RIwovUhWtlrc+8qpWF76E7FUNA==
+X-Received: by 2002:a62:e119:: with SMTP id q25mr11649516pfh.300.1595065811197;
+        Sat, 18 Jul 2020 02:50:11 -0700 (PDT)
+Received: from blackclown ([103.88.82.25])
+        by smtp.gmail.com with ESMTPSA id m3sm10414291pfk.171.2020.07.18.02.50.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 18 Jul 2020 02:50:10 -0700 (PDT)
+Date:   Sat, 18 Jul 2020 15:19:55 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, jejb@linux.ibm.com
+Cc:     MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: mpt3sas: Remove pci-dma-compat wrapper APIs.
+Message-ID: <20200718094955.GA2501@blackclown>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WeTek Core2 is a commercial device based on the Amlogic Q200 reference
-design but with the following differences:
 
-- 3GB RAM, 32GB eMMC
-- Blue and Red LEDs used to signal on/off status
-- uart_AO can be accessed after opening the case; soldering required
-- USB OTG is not accessible (inside the case)
-- Realtek RTL8152 Ethernet (internal USB connection)
+--5vNYLRcllDrimb99
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+The legacy API wrappers in include/linux/pci-dma-compat.h
+should go away as it creates unnecessary midlayering
+for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
+APIs directly.
+
+The patch has been generated with the coccinelle script below
+and compile-tested.
+
+@@@@
+- PCI_DMA_BIDIRECTIONAL
++ DMA_BIDIRECTIONAL
+
+@@@@
+- PCI_DMA_TODEVICE
++ DMA_TO_DEVICE
+
+@@@@
+- PCI_DMA_FROMDEVICE
++ DMA_FROM_DEVICE
+
+@@@@
+- PCI_DMA_NONE
++ DMA_NONE
+
+@@ expression E1, E2, E3; @@
+- pci_alloc_consistent(E1, E2, E3)
++ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
+
+@@ expression E1, E2, E3; @@
+- pci_zalloc_consistent(E1, E2, E3)
++ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_free_consistent(E1, E2, E3, E4)
++ dma_free_coherent(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_map_single(E1, E2, E3, E4)
++ dma_map_single(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_single(E1, E2, E3, E4)
++ dma_unmap_single(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4, E5; @@
+- pci_map_page(E1, E2, E3, E4, E5)
++ dma_map_page(&E1->dev, E2, E3, E4, E5)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_page(E1, E2, E3, E4)
++ dma_unmap_page(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_map_sg(E1, E2, E3, E4)
++ dma_map_sg(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_sg(E1, E2, E3, E4)
++ dma_unmap_sg(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
++ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_single_for_device(E1, E2, E3, E4)
++ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
++ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
++ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2; @@
+- pci_dma_mapping_error(E1, E2)
++ dma_mapping_error(&E1->dev, E2)
+
+@@ expression E1, E2; @@
+- pci_set_consistent_dma_mask(E1, E2)
++ dma_set_coherent_mask(&E1->dev, E2)
+
+@@ expression E1, E2; @@
+- pci_set_dma_mask(E1, E2)
++ dma_set_mask(&E1->dev, E2)
+
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/Makefile          |  1 +
- .../dts/amlogic/meson-gxm-wetek-core2.dts     | 87 +++++++++++++++++++
- 2 files changed, 88 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 5cac4d1d487d..4e2239ffcaa5 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -41,6 +41,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-libretech-pc.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxm-wetek-core2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-sei610.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-khadas-vim3l.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-odroid-c4.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
-new file mode 100644
-index 000000000000..b81f90015bd0
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
-@@ -0,0 +1,87 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020 Christian Hewitt <christianshewitt@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxm.dtsi"
-+#include "meson-gx-p23x-q20x.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+
-+/ {
-+	compatible = "wetek,core2", "amlogic,s912", "amlogic,meson-gxm";
-+	model = "WeTek Core 2";
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>; /* 2 GiB or 3 GiB */
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		blue {
-+			color = <LED_COLOR_ID_BLUE>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 0>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1710000>;
-+
-+		button-update {
-+			label = "update";
-+			linux,code = <KEY_VENDOR>;
-+			press-threshold-microvolt = <10000>;
-+		};
-+	};
-+
-+	gpio-keys-polled {
-+		compatible = "gpio-keys-polled";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		poll-interval = <100>;
-+
-+		button-power {
-+			label = "power";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+/* Disabled as Realtek RTL8152 USB provides Ethernet */
-+&ethmac {
-+	status = "disabled";
-+};
-+
-+&internal_phy {
-+	status = "disabled";
-+};
-+
-+&ir {
-+	linux,rc-map-name = "rc-wetek-play2";
-+};
-+
-+/* This is connected to the Bluetooth module: */
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		enable-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
-+		clocks = <&wifi32k>;
-+		clock-names = "lpo";
-+	};
-+};
--- 
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3=
+sas_ctl.c
+index 43260306668c..94698ad1cad7 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -3384,12 +3384,10 @@ host_trace_buffer_enable_store(struct device *cdev,
+ 			    &&
+ 			    (ioc->diag_buffer_status[MPI2_DIAG_BUF_TYPE_TRACE] &
+ 			    MPT3_DIAG_BUFFER_IS_APP_OWNED)) {
+-				pci_free_consistent(ioc->pdev,
+-				    ioc->diag_buffer_sz[
+-				    MPI2_DIAG_BUF_TYPE_TRACE],
+-				    ioc->diag_buffer[MPI2_DIAG_BUF_TYPE_TRACE],
+-				    ioc->diag_buffer_dma[
+-				    MPI2_DIAG_BUF_TYPE_TRACE]);
++				dma_free_coherent(&ioc->pdev->dev,
++						  ioc->diag_buffer_sz[MPI2_DIAG_BUF_TYPE_TRACE],
++						  ioc->diag_buffer[MPI2_DIAG_BUF_TYPE_TRACE],
++						  ioc->diag_buffer_dma[MPI2_DIAG_BUF_TYPE_TRACE]);
+ 				ioc->diag_buffer[MPI2_DIAG_BUF_TYPE_TRACE] =3D
+ 				    NULL;
+ 			}
+--=20
 2.17.1
 
+
+--5vNYLRcllDrimb99
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8SxcMACgkQ+gRsbIfe
+744EfA/7BwCwC71paqLkuktJey5G3tdgVQMtk+jka4iR2CB2xrjfHiP/ejxvUZC+
+f3R8n3Z1N0gu2bp+9gXDUHIp27o/bl0uTqeVcUlszChIbmHsvjIiG05aECXyTLGb
+Uwdb5aGX7Qah2XmZsaUAtMnbm9DOdZSepiUsnJ50YDPzc1Zt+ACi+dOicPxTl7H8
+FrLxq74ogL7GCXVZjwqVbutEJPpNACmMnwoyudUVruZKbm7kSyPwasGctBdqMj5x
++qXCOmvYgBaFVi8RI0cZDsEISFV8OIF8lXT2CshjzsYfAXK8CD0LTA3IoSWsvihD
+CoTI8rF08+/B9Vs/5Bm/7pC5OwUgou9AmaaCjVjOlSePpiQZJneel5ZmRWn3gHhq
+JLV4u9zwcJ5qP3kBttsa+Hc7r2+hkoJnSn0CeN7qp56FaMI40iIRFYD9JJVS1stm
+7xR9ZyMPmc24bid08G0Izvn1TE6YWmQU3oLhxEEeonJ2JYlDHccHIPAc2dNzQwPY
+/7QPpXic2sYcP7RqZ5HFWgRTC7Ru+R/k6czxoNgH4zKk7MS2YdX8RgNFGpEocXIP
+ccC5ooHrZ4U/L+cX8DIiHhiQmfGVbdTDul1v30JLneGjA5IZNhBD9w3KiL6/9wwX
+WhAVW1poXf1dJohXT8EOozCvXu994Rousf72BG/83ivfyhpCzB0=
+=/DxL
+-----END PGP SIGNATURE-----
+
+--5vNYLRcllDrimb99--
