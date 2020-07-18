@@ -2,94 +2,97 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A981C433EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFBEC433E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4A62083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CC38207FB
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:19:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcK8CL06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgGRFGw (ORCPT
+        id S1726570AbgGRFTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:06:52 -0400
-Received: from mga18.intel.com ([134.134.136.126]:7941 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgGRFGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:06:51 -0400
-IronPort-SDR: 7YftjD1FvMeh2cfhLU+Hl2Z19UHAwH4voI2BitVIuI/J9Dh24sj6d2cuBq5Vr4Rv5+msav1Td9
- Dd7iw7W5Prww==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="137184356"
-X-IronPort-AV: E=Sophos;i="5.75,365,1589266800"; 
-   d="scan'208";a="137184356"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 22:06:50 -0700
-IronPort-SDR: PY3XuV+vuuAtpY8rxRvZ+3vMP/33Vq1wquR8p4Yg18XVLAL6vT+hjMFvaGQsieLHuShfCSaRfd
- pufbVEiCB0pQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,365,1589266800"; 
-   d="scan'208";a="270979648"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Jul 2020 22:06:50 -0700
-Date:   Fri, 17 Jul 2020 22:06:50 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 12/17] memremap: Add zone device access protection
-Message-ID: <20200718050650.GT3008823@iweiny-DESK2.sc.intel.com>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-13-ira.weiny@intel.com>
- <20200717091053.GZ10769@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717091053.GZ10769@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Sat, 18 Jul 2020 01:19:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgGRFTD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 01:19:03 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB0BC0619D2;
+        Fri, 17 Jul 2020 22:19:03 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id p15so9027073ilh.13;
+        Fri, 17 Jul 2020 22:19:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kHjOURK4DhiFr+8WdSKVhameGC2lcUCFfkIT+BIwwgU=;
+        b=gcK8CL06wY2tNWr+KKELSMvOxlgr4rC7QHgJdD2X+vpa1mxZ359f7zLlNZ9rOMS9zg
+         CmD6KRazy4RD5REmOGr2aWy9/yZd0lUsyiruIv13bWoNK3AG34LmljY3t/F+AdiG4nNU
+         a9zhX0APo/dOj8oKITTs3incAnm+lZcmnhTh30/jE52USwn6naThShP6uZG1BgQ+Jkm5
+         NNDf3kuLNd++Og+6VmBI/xF5OggidLa+SdbFqybVllXUUhvV5wa1DPRwYXpkmsKeIK68
+         s010vwhnBXleNMKudUk8AmtEpBs4hXvvRwmM265O8dQrs1X2HXEpr0tHGevsLZWhkRIF
+         LEIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kHjOURK4DhiFr+8WdSKVhameGC2lcUCFfkIT+BIwwgU=;
+        b=uZVmNX5eYrfllaavMv+V1eYNbi04U3C2tsEiQbj67ZuPDWBEtZt2b89AaLILU/gcZJ
+         eqtPAO7/us2UNDxFGNFR38czWe/hMvVLVYVoxR9AJS4hIqX7x3cQqEl6cFbpMEtOGkft
+         9woG00uJhRR+jzcpeLjlHn71jYOw9CEZ4Lz/cWW/+IUe8vnaA79l/4Gtf9zygp9WGg/a
+         3KxQ1AKvsKjzcxZC+rklTUPS8ZXCLSMNb53fnaQGWlq3lz4rhnw8ldGPcEpJeGmHzulU
+         6+hj8M4dcP96G6MO34XMeIToF7WWuhg7we6imolkSXW+oFpVs7NaAEtPCwZ7SMLqUrcf
+         GPDw==
+X-Gm-Message-State: AOAM531RnERoqozsLKqOrGzyIqW+KkewwlNapgbr/EBk9Z7/KoXimBfW
+        EEAK1iGBiQ3BKOFlZxUplo0=
+X-Google-Smtp-Source: ABdhPJwzKbSELbyxuteloc9VHi/Z0kyifVe1tzB6XQ+ws4XwVvQDvLRJc8IBohUqFQc85hWaKbZ0Yw==
+X-Received: by 2002:a92:41d0:: with SMTP id o199mr13245377ila.205.1595049542477;
+        Fri, 17 Jul 2020 22:19:02 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [160.94.145.20])
+        by smtp.googlemail.com with ESMTPSA id a11sm5616559iow.26.2020.07.17.22.19.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 22:19:01 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Vishal Kulkarni <vishal@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] cxgb4: add missing release on skb in uld_send()
+Date:   Sat, 18 Jul 2020 00:18:43 -0500
+Message-Id: <20200718051845.10218-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 11:10:53AM +0200, Peter Zijlstra wrote:
-> On Fri, Jul 17, 2020 at 12:20:51AM -0700, ira.weiny@intel.com wrote:
-> > +static pgprot_t dev_protection_enable_get(struct dev_pagemap *pgmap, pgprot_t prot)
-> > +{
-> > +	if (pgmap->flags & PGMAP_PROT_ENABLED && dev_page_pkey != PKEY_INVALID) {
-> > +		pgprotval_t val = pgprot_val(prot);
-> > +
-> > +		static_branch_inc(&dev_protection_static_key);
-> > +		prot = __pgprot(val | _PAGE_PKEY(dev_page_pkey));
-> > +	}
-> > +	return prot;
-> > +}
-> 
-> Every other pgprot modifying function is called pgprot_*(), although I
-> suppose we have the exceptions phys_mem_access_prot() and dma_pgprot().
+In the implementation of uld_send(), the skb is consumed on all
+execution paths except one. Release skb when returning NET_XMIT_DROP.
 
-Yea...  this function kind of morphed.  The issue is that this is also a 'get'
-with a corresponding 'put'.  So I'm at a loss for what makes sense between the
-2 functions.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/net/ethernet/chelsio/cxgb4/sge.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> How about we call this one devm_pgprot() ?
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+index 32a45dc51ed7..d8c37fd4b808 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -2938,6 +2938,7 @@ static inline int uld_send(struct adapter *adap, struct sk_buff *skb,
+ 	txq_info = adap->sge.uld_txq_info[tx_uld_type];
+ 	if (unlikely(!txq_info)) {
+ 		WARN_ON(true);
++		consume_skb(skb);
+ 		return NET_XMIT_DROP;
+ 	}
+ 
+-- 
+2.17.1
 
-Dan Williams mentioned to me that the devm is not an appropriate prefix.  Thus
-the 'dev' prefix instead.
-
-How about dev_pgprot_{get,put}()?
-
-Ira
