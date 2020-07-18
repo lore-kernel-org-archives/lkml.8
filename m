@@ -2,299 +2,144 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239C4C433ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C706EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F295020702
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865E92073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ohhRbvQ0"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="mUJus+x1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgGRTfU (ORCPT
+        id S1727774AbgGRTtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 15:35:20 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14288 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728144AbgGRTfQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 15:35:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f134eb80000>; Sat, 18 Jul 2020 12:34:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 18 Jul 2020 12:35:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 18 Jul 2020 12:35:16 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 18 Jul
- 2020 19:35:12 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sat, 18 Jul 2020 19:35:11 +0000
-Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f134eee0000>; Sat, 18 Jul 2020 12:35:11 -0700
-From:   Krishna Reddy <vdumpa@nvidia.com>
-To:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
-        <robh+dt@kernel.org>, <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
-        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
-        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
-        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
-        <nicoleotsuka@gmail.com>, Krishna Reddy <vdumpa@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v11 5/5] iommu/arm-smmu: Add global/context fault implementation hooks
-Date:   Sat, 18 Jul 2020 12:34:57 -0700
-Message-ID: <20200718193457.30046-6-vdumpa@nvidia.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200718193457.30046-1-vdumpa@nvidia.com>
-References: <20200718193457.30046-1-vdumpa@nvidia.com>
+        Sat, 18 Jul 2020 15:49:10 -0400
+Received: from mail-eopbgr40080.outbound.protection.outlook.com ([40.107.4.80]:12769
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726346AbgGRTtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 15:49:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lGehW7tyolUBJYHeo3mf+kzBeRoTXt7bcKTfdmQOoG0t4NEMzHseeLi3OoPPlJ63wazXe0ciarkMIce8mb1bBYpmf3sSY3VUDmcjoAjGUO+RZCGctCmEQLpUKcJkxcjiZOnQCXoAAASUH6Bhac1fj4iL+ml51rizSIfD6ZAJc9LHgZ7/8PDhqhdsYhz6hpOcpilLUcPmwHCRSVMpt1AK1q8cLLYVMi6iUX0SAplCcaoek2ec31YUbRXqAUtwcIXXzSo8wX/APgrBNZzBTJvMoHOAkLu25+bLqLBY5Mb0TCNS/6glZ8S7JLzfw0Vs6OuAT/BUIjqGdwN4iP1LXAA8Tw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kf730q/ljStrk3mrtns+jHCvBJrGvrpLVbNsUphd71Y=;
+ b=KRO5+pAz1Og8xl4716lqFi0bgvQLDY0alHfmuedr4PubvIR+XINBhJJq9GmQvwrBSKW6iAva+3OkkKT7vpcC/L9s+0jktZRwfuth59/5rNWO7p/UuIag4EGZcdry/jyZhWiIlaw1fbdOlA88c6KJUKezKts12WHuUdyQv9Cup3gy6zww2xRixVM9Zrs5BtyqGMVFwfSyEiV7T/4qsRLMA9p+ZvDfRP6b1nnxHGIekOy8QdcEgvuuagbOc/Kk6rSnacCiLBVz6Ac3IrhYlZEGk9YFMXDCgpHG4zG7i81Tm23u5h6yG5vpFSCykxWn+m0EG4s7rK8dhvSgREByRjgBGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kf730q/ljStrk3mrtns+jHCvBJrGvrpLVbNsUphd71Y=;
+ b=mUJus+x1QFZq1nI1Dp/ZhKHMqczlthYXM9R8OgzGKrTl53L+9TKp3lMIH0RhM/T6a5wP7cGVa1x84L10N4c8P3L4/q8JdNgEKBht0AkzoVywhwCZaBSfwVYzFuW2AJ4yw/rluO/xFB7N+3rvcfRlNNYFYyGVwHPJvjkwD2+QqgM=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=mellanox.com;
+Received: from AM0PR05MB4786.eurprd05.prod.outlook.com (2603:10a6:208:b3::15)
+ by AM0PR05MB5137.eurprd05.prod.outlook.com (2603:10a6:208:e9::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Sat, 18 Jul
+ 2020 19:49:06 +0000
+Received: from AM0PR05MB4786.eurprd05.prod.outlook.com
+ ([fe80::e00a:324b:e95c:750f]) by AM0PR05MB4786.eurprd05.prod.outlook.com
+ ([fe80::e00a:324b:e95c:750f%7]) with mapi id 15.20.3174.029; Sat, 18 Jul 2020
+ 19:49:06 +0000
+Date:   Sat, 18 Jul 2020 22:49:02 +0300
+From:   Eli Cohen <eli@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, shahafs@mellanox.com,
+        saeedm@mellanox.com, Parav Pandit <parav@mellanox.com>
+Subject: Re: [PATCH vhost next 10/10] vdpa/mlx5: Add VDPA driver for
+ supported mlx5 devices
+Message-ID: <20200718194902.GA52765@mtl-vdi-166.wap.labs.mlnx>
+References: <20200716072327.5359-1-eli@mellanox.com>
+ <20200716072327.5359-11-eli@mellanox.com>
+ <454850cc-269b-72aa-4511-2bf793a215cc@redhat.com>
+ <20200716115428.GC186790@mtl-vdi-166.wap.labs.mlnx>
+ <b85ecb97-2120-f63f-f5f4-01d90f88d666@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b85ecb97-2120-f63f-f5f4-01d90f88d666@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-ClientProxiedBy: AM0PR02CA0015.eurprd02.prod.outlook.com
+ (2603:10a6:208:3e::28) To AM0PR05MB4786.eurprd05.prod.outlook.com
+ (2603:10a6:208:b3::15)
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595100856; bh=ONwZoXQE5AMEO16Cm8KQlZocmAK53VddF2Cq/qlwpNU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=ohhRbvQ0i3/JtheNy6WolRv2G0VqTqZ0h8kSk0nS5jqWYgaqFKAROCmv2S2pSJ5h7
-         KCpqJ6dQa+EY+mU3Lo3EBoBSBP9iZa0+5MACHHP/i2TCg5OBpvtbEwRF/zaMdDL7zy
-         TJ4ozaI+7R3CeqSwoUi6Gpad+AQC5K4B8kp7bYm1UAXKbGjz3YMo3Ri7mEr4XyoAub
-         dVH+x6Upg55cuYIxV5+kC5I8bRsmsTlefC5yCHixUIsJGa4cplQA+s0XFwUBdxV8jg
-         463jWnDqXK9XsW+7HAI/4Rs0jXvqZtC/SgG2dQIODQDhW0Se9PAQdvYRqvyGW+N0Pv
-         mCZOheXTRdZDg==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mtl-vdi-166.wap.labs.mlnx (94.188.199.18) by AM0PR02CA0015.eurprd02.prod.outlook.com (2603:10a6:208:3e::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Sat, 18 Jul 2020 19:49:05 +0000
+X-Originating-IP: [94.188.199.18]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 08d1acc5-f562-4337-9cbb-08d82b53a101
+X-MS-TrafficTypeDiagnostic: AM0PR05MB5137:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR05MB5137431AAAB5D0D872054826C57D0@AM0PR05MB5137.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9xNsSM99avMSEjDvDf1J8t0tdrLLrDQt4KDl9jxPsvaMld12a+lvdRSrA3gDNszSB3rIPneMAZ/GjQ/P3O2OoOku1co/qUaNCjZxcZGzBFMJ434OLFXslxhrc9rz4G7MPSaPapo9plRLzqqlc4LNQeZNh/S7PyNkOu+oM6oxbKOFcujdOMMPE/HvHdU3Ssn2gMSPT9qlHU+NFnQgRVG0AJ4+hcVVJK5+bXz4jhB7+Ocl2+MxSGRNXRKaqolZsyQlMiqZYtXKaM1wpFXSM98I+xTTn5kZqce0mvZy6+9tcszNhDsxcletZvhmemO7sPp4235io27dDieG7JybpJKepg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4786.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(346002)(376002)(366004)(39850400004)(107886003)(956004)(66556008)(6666004)(66946007)(66476007)(8936002)(478600001)(4326008)(316002)(8676002)(52116002)(7696005)(6506007)(26005)(6916009)(186003)(16526019)(2906002)(9686003)(86362001)(5660300002)(33656002)(1076003)(55016002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: K1x2qkqIlKY5c3vsRyQO6DoQrcK4KhPK5E1TUobKzvmZNrEXnWjbQyJSA1oc4kTX0AOYqBKSPViUq4SURorSfVl/X9rrRUzsBIV2KVLVwdi1h7tO9S2PP6caAj1hTLsFndwYYWQg1HRNGrF10qwfKK53+UBr3so90xIe/0ieEOshO1vnv/k9ZwVDcu4KfBRvGoGhyu64TEGwFPgkJWKIepTmJ3+P9c6HBdkf1iXcOQ981ZlCbNXB9XhxEYI/8Yrh4on3RX37P4ZiiGl2+OgZBer/ZZPJXtzDg+NKFHkvx81WHMMqzCRiygDlUEQTcRlM4ZiQ0Y8VKp2S8Be0gHMI6vYK+vox4Xf/DBUzpD/KXuWXm0YIHSMzoXlPyxuvTUXEFVDL+1xxt2jIGD2gkbPwZseZ+MY1bvWpkjnZYeF8JCOU/6tUq7AVzYQA8kj2pGgWZWfrUnU43E8VP/1oNxc2a4d/+ewi8wPkRPO1UVuQ2fY=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08d1acc5-f562-4337-9cbb-08d82b53a101
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4786.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2020 19:49:05.8811
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QVegIihsS/UwTIk53gaQRLoCr2Nf/w2dabM2TndzRE2hgHvj57UEuvOy9W/1qlNJrGgKv32Rlu4RtCiwEBdxWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add global/context fault hooks to allow vendor specific implementations
-override default fault interrupt handlers.
+On Fri, Jul 17, 2020 at 04:57:29PM +0800, Jason Wang wrote:
+> >Looks like checking intialized is enough. Will fix this.
+> >>>+
+> >>>+static void mlx5_vdpa_set_vq_ready(struct vdpa_device *vdev, u16 idx, bool ready)
+> >>>+{
+> >>>+	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
+> >>>+	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
+> >>>+	struct mlx5_vdpa_virtqueue *mvq = &ndev->vqs[idx];
+> >>>+	int err;
+> >>>+
+> >>>+	if (!mvq->ready && ready && mvq->fw_state != MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY) {
+> >>>+		err = modify_virtqueue(ndev, mvq, MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY);
+> >>>+		if (err) {
+> >>>+			mlx5_vdpa_warn(mvdev, "failed to modify virtqueue(%d)\n", err);
+> >>>+			return;
+> >>>+		}
+> >>>+	}
+> >>
+> >>I wonder what's the reason of changing vq state on the hardware
+> >>here. I think we can defer it to set_status().
+> >>
+> >I can defer this to set status.
+> >
+> >I just wonder if it is possible that the core vdpa driver may call this
+> >function with ready equals false and after some time call it with ready
+> >equals true.
+> 
+> 
+> Good point, so I think we can keep the logic. But looks like the
+> code can not work if ready equals false since it only tries to
+> modify vq state to RDY.
+>
 
-Update NVIDIA implementation to override the default global/context fault
-interrupt handlers and handle interrupts across the two ARM MMU-500s that
-are programmed identically.
+The point is that you cannot modify the virtqueue to "not ready". The
+only option is to destroy it and create a new one. This means that if I
+get ready equals false after the virtqueue has been created I need to
+teardown the driver and set it up again.
 
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Reviewed-by: Pritesh Raithatha <praithatha@nvidia.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Reviewed-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
----
- drivers/iommu/arm-smmu-nvidia.c | 99 +++++++++++++++++++++++++++++++++
- drivers/iommu/arm-smmu.c        | 17 +++++-
- drivers/iommu/arm-smmu.h        |  3 +
- 3 files changed, 117 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidi=
-a.c
-index 2f55e5793d34..31368057e9be 100644
---- a/drivers/iommu/arm-smmu-nvidia.c
-+++ b/drivers/iommu/arm-smmu-nvidia.c
-@@ -127,6 +127,103 @@ static int nvidia_smmu_reset(struct arm_smmu_device *=
-smmu)
- 	return 0;
- }
-=20
-+static irqreturn_t nvidia_smmu_global_fault_inst(int irq,
-+						 struct arm_smmu_device *smmu,
-+						 int inst)
-+{
-+	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
-+	void __iomem *gr0_base =3D nvidia_smmu_page(smmu, inst, 0);
-+
-+	gfsr =3D readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSR);
-+	if (!gfsr)
-+		return IRQ_NONE;
-+
-+	gfsynr0 =3D readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR0);
-+	gfsynr1 =3D readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR1);
-+	gfsynr2 =3D readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR2);
-+
-+	dev_err_ratelimited(smmu->dev,
-+			    "Unexpected global fault, this could be serious\n");
-+	dev_err_ratelimited(smmu->dev,
-+			    "\tGFSR 0x%08x, GFSYNR0 0x%08x, GFSYNR1 0x%08x, GFSYNR2 0x%08x\n",
-+			    gfsr, gfsynr0, gfsynr1, gfsynr2);
-+
-+	writel_relaxed(gfsr, gr0_base + ARM_SMMU_GR0_sGFSR);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t nvidia_smmu_global_fault(int irq, void *dev)
-+{
-+	unsigned int inst;
-+	irqreturn_t ret =3D IRQ_NONE;
-+	struct arm_smmu_device *smmu =3D dev;
-+
-+	for (inst =3D 0; inst < NUM_SMMU_INSTANCES; inst++) {
-+		irqreturn_t irq_ret;
-+
-+		irq_ret =3D nvidia_smmu_global_fault_inst(irq, smmu, inst);
-+		if (irq_ret =3D=3D IRQ_HANDLED)
-+			ret =3D IRQ_HANDLED;
-+	}
-+
-+	return ret;
-+}
-+
-+static irqreturn_t nvidia_smmu_context_fault_bank(int irq,
-+						  struct arm_smmu_device *smmu,
-+						  int idx, int inst)
-+{
-+	u32 fsr, fsynr, cbfrsynra;
-+	unsigned long iova;
-+	void __iomem *gr1_base =3D nvidia_smmu_page(smmu, inst, 1);
-+	void __iomem *cb_base =3D nvidia_smmu_page(smmu, inst, smmu->numpage + id=
-x);
-+
-+	fsr =3D readl_relaxed(cb_base + ARM_SMMU_CB_FSR);
-+	if (!(fsr & ARM_SMMU_FSR_FAULT))
-+		return IRQ_NONE;
-+
-+	fsynr =3D readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
-+	iova =3D readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
-+	cbfrsynra =3D readl_relaxed(gr1_base + ARM_SMMU_GR1_CBFRSYNRA(idx));
-+
-+	dev_err_ratelimited(smmu->dev,
-+			    "Unhandled context fault: fsr=3D0x%x, iova=3D0x%08lx, fsynr=3D0x%x,=
- cbfrsynra=3D0x%x, cb=3D%d\n",
-+			    fsr, iova, fsynr, cbfrsynra, idx);
-+
-+	writel_relaxed(fsr, cb_base + ARM_SMMU_CB_FSR);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t nvidia_smmu_context_fault(int irq, void *dev)
-+{
-+	int idx;
-+	unsigned int inst;
-+	irqreturn_t ret =3D IRQ_NONE;
-+	struct arm_smmu_device *smmu;
-+	struct iommu_domain *domain =3D dev;
-+	struct arm_smmu_domain *smmu_domain;
-+
-+	smmu_domain =3D container_of(domain, struct arm_smmu_domain, domain);
-+	smmu =3D smmu_domain->smmu;
-+
-+	for (inst =3D 0; inst < NUM_SMMU_INSTANCES; inst++) {
-+		irqreturn_t irq_ret;
-+
-+		/*
-+		 * Interrupt line is shared between all contexts.
-+		 * Check for faults across all contexts.
-+		 */
-+		for (idx =3D 0; idx < smmu->num_context_banks; idx++) {
-+			irq_ret =3D nvidia_smmu_context_fault_bank(irq, smmu,
-+								 idx, inst);
-+			if (irq_ret =3D=3D IRQ_HANDLED)
-+				ret =3D IRQ_HANDLED;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
- static const struct arm_smmu_impl nvidia_smmu_impl =3D {
- 	.read_reg =3D nvidia_smmu_read_reg,
- 	.write_reg =3D nvidia_smmu_write_reg,
-@@ -134,6 +231,8 @@ static const struct arm_smmu_impl nvidia_smmu_impl =3D =
-{
- 	.write_reg64 =3D nvidia_smmu_write_reg64,
- 	.reset =3D nvidia_smmu_reset,
- 	.tlb_sync =3D nvidia_smmu_tlb_sync,
-+	.global_fault =3D nvidia_smmu_global_fault,
-+	.context_fault =3D nvidia_smmu_context_fault,
- };
-=20
- struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu=
-)
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 35422a17f610..56b7103e1368 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -670,6 +670,7 @@ static int arm_smmu_init_domain_context(struct iommu_do=
-main *domain,
- 	enum io_pgtable_fmt fmt;
- 	struct arm_smmu_domain *smmu_domain =3D to_smmu_domain(domain);
- 	struct arm_smmu_cfg *cfg =3D &smmu_domain->cfg;
-+	irqreturn_t (*context_fault)(int irq, void *dev);
-=20
- 	mutex_lock(&smmu_domain->init_mutex);
- 	if (smmu_domain->smmu)
-@@ -832,7 +833,13 @@ static int arm_smmu_init_domain_context(struct iommu_d=
-omain *domain,
- 	 * handler seeing a half-initialised domain state.
- 	 */
- 	irq =3D smmu->irqs[smmu->num_global_irqs + cfg->irptndx];
--	ret =3D devm_request_irq(smmu->dev, irq, arm_smmu_context_fault,
-+
-+	if (smmu->impl && smmu->impl->context_fault)
-+		context_fault =3D smmu->impl->context_fault;
-+	else
-+		context_fault =3D arm_smmu_context_fault;
-+
-+	ret =3D devm_request_irq(smmu->dev, irq, context_fault,
- 			       IRQF_SHARED, "arm-smmu-context-fault", domain);
- 	if (ret < 0) {
- 		dev_err(smmu->dev, "failed to request context IRQ %d (%u)\n",
-@@ -2108,6 +2115,7 @@ static int arm_smmu_device_probe(struct platform_devi=
-ce *pdev)
- 	struct arm_smmu_device *smmu;
- 	struct device *dev =3D &pdev->dev;
- 	int num_irqs, i, err;
-+	irqreturn_t (*global_fault)(int irq, void *dev);
-=20
- 	smmu =3D devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
- 	if (!smmu) {
-@@ -2194,9 +2202,14 @@ static int arm_smmu_device_probe(struct platform_dev=
-ice *pdev)
- 		smmu->num_context_irqs =3D smmu->num_context_banks;
- 	}
-=20
-+	if (smmu->impl && smmu->impl->global_fault)
-+		global_fault =3D smmu->impl->global_fault;
-+	else
-+		global_fault =3D arm_smmu_global_fault;
-+
- 	for (i =3D 0; i < smmu->num_global_irqs; ++i) {
- 		err =3D devm_request_irq(smmu->dev, smmu->irqs[i],
--				       arm_smmu_global_fault,
-+				       global_fault,
- 				       IRQF_SHARED,
- 				       "arm-smmu global fault",
- 				       smmu);
-diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index fad63efa1a72..d890a4a968e8 100644
---- a/drivers/iommu/arm-smmu.h
-+++ b/drivers/iommu/arm-smmu.h
-@@ -18,6 +18,7 @@
- #include <linux/io-64-nonatomic-hi-lo.h>
- #include <linux/io-pgtable.h>
- #include <linux/iommu.h>
-+#include <linux/irqreturn.h>
- #include <linux/mutex.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
-@@ -389,6 +390,8 @@ struct arm_smmu_impl {
- 	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
- 			 int status);
- 	int (*def_domain_type)(struct device *dev);
-+	irqreturn_t (*global_fault)(int irq, void *dev);
-+	irqreturn_t (*context_fault)(int irq, void *dev);
- };
-=20
- static inline void __iomem *arm_smmu_page(struct arm_smmu_device *smmu, in=
-t n)
---=20
-2.26.2
+Given that, I think your original suggestion to defer this logic is
+reasonable.
 
