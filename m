@@ -2,237 +2,247 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43206C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DDEC433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 131832073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750C32065D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hm+g5/sm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YajpXcQu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgGRJUC (ORCPT
+        id S1726657AbgGRJUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:20:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48278 "EHLO
+        Sat, 18 Jul 2020 05:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgGRJUB (ORCPT
+        with ESMTP id S1726055AbgGRJUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 05:20:01 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D59CFC0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 02:20:01 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id j19so7827374pgm.11
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 02:20:01 -0700 (PDT)
+        Sat, 18 Jul 2020 05:20:18 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D17FC0619D2;
+        Sat, 18 Jul 2020 02:20:18 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id z5so7857189pgb.6;
+        Sat, 18 Jul 2020 02:20:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=U338VHoThvNJPZwMik9tJ+JNUnpedFqHLCjBcvVwnnU=;
-        b=Hm+g5/smtqsVoPwrg4tpepqvJBx+ogoR6B3BnZ+JosH2jfWJluaMl7XmGBFSvngilo
-         wa6TPUiKZy+Yt5jmI0B9ON7dPZmxzgN5Obw0XPNEmpfCKDKiB00Min+2hd7H1moITpxF
-         fV1R4mzNaFavymtBXXFHz/wA5b5neEe2a97X5YuSqE1zTBtNJuz0rx9nJbo5H72Ehp07
-         dU5VPDI6BXizT+esIwf6RnJytEvlfHuSiWf57Y71iPd6WbwPoFFA8bUqF7ZbNBDvCrJt
-         H8ZL2MM7hJqgmkC/OOVCzA7Oa88jeJ4193HSAQNNhFEDDHq4sw37D7gGJMffqIx2fBhh
-         sAfw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ThfhK7Ig6ERk1DuezDdwfEkh06U/LKqwI5r8Y3KMnK4=;
+        b=YajpXcQuO/MEKNybONUnecCl4iX4Qy5nqWHIebjQ+SEfjqKJmY75Zdu+KV4KkQoJKF
+         uA6/OXJLKriU5iJ2UQJvRF7iNLFgdcUk4xMpOUL/E/r8JTcr/POkEeeTavegWSLwiJXV
+         6jvme/Dal5utwFef+wXMxDwfB6l27appmyk/vbEsfqla6c2ckeAoDYMJw6SBtVs9NKV6
+         3jjqkNtXOKKKVAS/NzG/D7KKIRJzS9RJKxC/hB/04TDdZsNKZFWewUGh1kggPckX+pRE
+         tzm8hnnCxv5c+Id+Di1LAOtkYFe6ea12F6SNXkQZsNFfvr5CrbJoZXPgx9HqhdaMzYLl
+         Kg7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=U338VHoThvNJPZwMik9tJ+JNUnpedFqHLCjBcvVwnnU=;
-        b=FI9xajYmk+rmtEDk4KDEY4Ol1/mOtg+v8aezFjzTOleja7kmaGZYaiHqyYNSBV27+y
-         TzwxlYLENx7XOtqWgo2oh/KP01Mg0zc72JfoDN5DhF5U8LhRsawFK6G8yW5Ki41DXmQR
-         ASQ17FNgeqUlL4NRLgzIqX3HOHI00OyGOabDFtOTfk4J3pwUmt795iMxdWedMd3jlNeG
-         9i9nQWpUSbvr2hctx48qvr0s4JwnYwlscl1rFOJyXenh66vgVkvwsi6ugb9GdWxb8CnC
-         D449dMemWTIoMK2ZInWyQ/umDK7uKbLb8TbJ3IZGe4Qyi9JX4+o96L8zL9/VkQGPTxO6
-         5TCQ==
-X-Gm-Message-State: AOAM5322p1AWyQfI1/WJicGTZZlabW4MHLo9ACO0pcXt+jUrLe/mOvHD
-        zADfTA2l0jQ3cfoOG2WqJKQ=
-X-Google-Smtp-Source: ABdhPJzBCkIEE6W7u7t9MhWQy+uWLF4g83SUIMOkfnjWPQVDOmNRtMQ1/pZZLHTL+0bAO9T5XAYdPg==
-X-Received: by 2002:a63:3151:: with SMTP id x78mr12175925pgx.210.1595064001011;
-        Sat, 18 Jul 2020 02:20:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ThfhK7Ig6ERk1DuezDdwfEkh06U/LKqwI5r8Y3KMnK4=;
+        b=VrEnpuTOk+gzJCutp1gHffSRXbfDk3DIq8FZfZfHPXS/fNDYJqn/LGYOjqU0z6wX7i
+         PhOfsr7iCqgnLAByhfIvlvxMQOj6hBO/z813A9YwslmhWaYN/+IBun3CGUAbwJHJYHrs
+         96dffIJcIWnFiKfDibHJfDsn8dJnrrOUQcOQKo4UJ5l2goAO1q7eiJOdhrMqnTM+ppw6
+         sIwk1oe+BxL4rEQMVRPYeEYHHke49TFususkfjEkF7616rrJGfTHgzK11taSoIeGRvtY
+         DCnszfE3/OFY7TdW3PGoHEDdcy/yzJ8a/AyVBDAN4KDADmpaSnfWP/Jcqb5f38shThIu
+         jitg==
+X-Gm-Message-State: AOAM531Ro+xYZsdG9ROI7F02P8JS723OFMsgZlVWaV85/hhVgyKYh72Q
+        f9cYbYScSSLxTUp9YnDFR4I=
+X-Google-Smtp-Source: ABdhPJx/gNZxKzo89e/DrC0NlX7O/2iK2K2LdfBCaCF1Soqc46GdtHsrj5GdGHiShiGXy8822zi40Q==
+X-Received: by 2002:a63:4b44:: with SMTP id k4mr12303551pgl.305.1595064017900;
+        Sat, 18 Jul 2020 02:20:17 -0700 (PDT)
 Received: from localhost.localdomain ([182.69.248.222])
-        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.19.55
+        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.20.13
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 Jul 2020 02:20:00 -0700 (PDT)
+        Sat, 18 Jul 2020 02:20:17 -0700 (PDT)
 From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, vkoul@kernel.org,
-        sboyd@kernel.org, robh+dt@kernel.org
+To:     andre.przywara@arm.com, vkoul@kernel.org, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org
 Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-actions@lists.infradead.org
-Subject: [PATCH v6 00/10] Add MMC and DMA support for Actions S700
-Date:   Sat, 18 Jul 2020 14:49:24 +0530
-Message-Id: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
+Subject: [PATCH v6 03/10] dmaengine: Actions: Add support for S700 DMA engine
+Date:   Sat, 18 Jul 2020 14:49:27 +0530
+Message-Id: <1595063974-24228-4-git-send-email-amittomer25@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
+References: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This Series(v6) addressed the review comments from Rob and Mani,
-changes are made in patch 01/10 and 10/10.
+DMA controller present on S700 SoC is compatible with the one on S900
+(as most of registers are same), but it has different DMA descriptor
+structure where registers "fcnt" and "ctrlb" uses different encoding.
 
-Rob's bot reported an error for patch 01/10, and now it has been
-fixed by adjusting the reg property in example section.
+For instance, on S900 "fcnt" starts at offset 0x0c and uses upper 12
+bits whereas on S700, it starts at offset 0x1c and uses lower 12 bits.
 
-For patch 10/10 unnecessary regulators are removed as suggested by
-Mani. 
+This commit adds support for DMA controller present on S700.
 
-Serie is rebased on top of:
-https://github.com/torvalds/linux/commit/6a70f89cc58f2368efa055cbcbd8b37384f6c588
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+---
+Changes since v5:
+	* No change.
+Changes since v4:
+        * Reordered it from 02/10 to 03/10.
+        * Used of_device_get_match_data() instead of
+          of_match_device().
+        * Removed the uintptr_t used for typecast.
+Changes since v3:
+        * Added description for enum fields.
+        * Restored the old comment.
+        * Added detailed comment about, the way FLEN
+          and FCNT values are filled.
+Changes since v2:
+        * No change.
+Changes since v1:
+        * Defined macro for frame count value.
+        * Introduced llc_hw_flen() from patch 2/9.
+        * Removed the unnecessary line break.
+Changes since rfc:
+        * No change.
+---
+ drivers/dma/owl-dma.c | 57 +++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 42 insertions(+), 15 deletions(-)
 
---------------------------------------------------------------------
-
-Series(v5) addressed the review comments provided by Vinod, and
-patch 05/10 is moved to 01/10 so that documentation patch comes before
-driver.
-
-Apart from it, changes are made in patch 03/10(earlier it was 02/10)
-to replace of_match_device() with of_device_get_match_data() and
-removed uintptr_t from type-cast.
-
-This Series is rebased on top of 5.8.0-rc3.
-
----------------------------------------------------------------------
-
-Series(v4) addressed the review comments provided by Mani, and
-there are changes in patch 1/10, 2/10 and 6/10 for it.
-
-For first couple of patches , old comments are preserved and more
-details about how DMA descriptors fields are programmed is added.
-
-Apart from it, Typo is fixed patch 6/10 and placed the header file
-in alphabetical order.
-
-Also, this series fixes one compilation warning (reported by Kbuild)
-introduced by patch 2/10 using clang compiler.
-------------------------------------------------------------------------
-
-Series(v3) addressed the review comments provided by Rob, and 
-there are changes in patch 5/10 for it.
-
-Also, one of the important change for this series(v3) is about the way we 
-we handle address range conflict between pinctrl and sps node.
-
-In the last Series(v2), patch 4/10 was sent as *do not merge* but while
-discussing about some proper solution for it, we have come up with
-idea of limiting pinctrl address range(to 0x100) to avoid this conflict.
-This is safe to do as current pinctrl driver uses address range only
-up to 0x100 (even less than that?), and this would let sps to work properly.
-
-Since sps block is now enabled , we have to provide power-domain bit
-for dma to work properly and patch 6/10 has that change now.
-
-Looking forward have some comments for this series.
-
----------------------------------------------------------------------------
-
-Series(v2) addressed the review comments provided by Andre, and
-there are changes in patch 1/10, 2/10, 5/10 and 9/10.
-
-* Accessor function (to get the frame lenght) has moved from
-  patch 2/9 to patch 1/9 with inline removed.
-* Removed the unnecessary line break.
-* Added comments about the way DMA descriptor differs between S700
-  and S900.
-* Added a macro to define fcnt value.
-* Updated dma DT bindings.
-* Used SoC secific compatible string for MMC.
-
-Apart from it, a new patch 8/10 is added in this series to
-update mmc DT bindings.
-
-Series is rebased on 5.7.0-rc6.
-
------------------------------------------------------------------------------
-
-Series(v1) have following changes from the previous series.
-
-New patch(5/8) has been introduced that converts dma dt-binding
-for Actions OWL SoC from text format to yaml file.
-
-For patch(2/8) new accessor function is added to get the frame
-lenght which is common to both S900 and S700. Apart from it
-SoC check is removed from irq routine as it is not needed.
-
-Patch(4/8) which is an hack to prove our DMA and MMC works
-for S700 is now sent as *do not merge* patch.
+diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+index 948d1bead860..331c8d8b10a3 100644
+--- a/drivers/dma/owl-dma.c
++++ b/drivers/dma/owl-dma.c
+@@ -149,6 +149,11 @@ enum owl_dmadesc_offsets {
+ 	OWL_DMADESC_SIZE
+ };
  
-DMA is tested using dmatest with follwoing result:
-
-root@ubuntu:~# echo dma0chan1 > /sys/module/dmatest/parameters/channel
-root@ubuntu:~# echo 2000 > /sys/module/dmatest/parameters/timeout
-root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/iterations
-root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/run
-
-root@ubuntu:~# dmesg | tail
-[  303.362586] dmatest: Added 1 threads using dma0chan1
-[  317.258658] dmatest: Started 1 threads using dma0chan1
-[  317.259397] dmatest: dma0chan1-copy0: summary 1 tests, 0 failures 16129.03 iops 32258 KB/s (0)
-
--------------------------------------------------------------------------------
-
-The intention of RFC series is to enable uSD and DMA support for
-Cubieboard7 based on Actions S700 SoC, and on the way we found that
-it requires changes in dmaengine present on S700 as its different
-from what is present on S900.
-
-Patch(1/8) does provide a new way to describe DMA descriptor, idea is
-to remove the bit-fields as its less maintainable. It is only build
-tested and it would be great if this can be tested on S900 based
-hardware.
-
-Patch(2/8) adds S700 DMA engine support, there is new compatible
-string added for it, which means a changed bindings needed to submitted
-for this. I would plan to send it later the converted "owl-dma.yaml".
-
-Patch(4/8) disables the sps node as its memory range is conflicting
-pinctrl node and results in pinctrl proble failure.
-
-Rest of patches in the series adds DMA/MMC nodes for S700
-alone with binding constants and enables the uSD for Cubieboard7.
-
-This whole series is tested, by building/compiling Kernel on
-Cubieboard7-lite which was *almost* successful (OOM kicked in,
-while Linking due to less RAM present on hardware).
-
-Following is the mmc speed :
-
-ubuntu@ubuntu:~$ sudo hdparm -tT /dev/mmcblk0
-
-/dev/mmcblk0:
- Timing cached reads:   1310 MB in  2.00 seconds = 655.15 MB/sec
- Timing buffered disk reads:  62 MB in  3.05 seconds =  20.30 MB/sec
-
-Amit Singh Tomar (10):
-  dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
-  dmaengine: Actions: get rid of bit fields from dma descriptor
-  dmaengine: Actions: Add support for S700 DMA engine
-  clk: actions: Add MMC clock-register reset bits
-  arm64: dts: actions: limit address range for pinctrl node
-  arm64: dts: actions: Add DMA Controller for S700
-  dt-bindings: reset: s700: Add binding constants for mmc
-  dt-bindings: mmc: owl: add compatible string actions,s700-mmc
-  arm64: dts: actions: Add MMC controller support for S700
-  arm64: dts: actions: Add uSD support for Cubieboard7
-
- Documentation/devicetree/bindings/dma/owl-dma.txt  |  47 -------
- Documentation/devicetree/bindings/dma/owl-dma.yaml |  79 ++++++++++++
- Documentation/devicetree/bindings/mmc/owl-mmc.yaml |   6 +-
- arch/arm64/boot/dts/actions/s700-cubieboard7.dts   |  22 ++++
- arch/arm64/boot/dts/actions/s700.dtsi              |  51 +++++++-
- drivers/clk/actions/owl-s700.c                     |   3 +
- drivers/dma/owl-dma.c                              | 139 +++++++++++++--------
- include/dt-bindings/reset/actions,s700-reset.h     |   3 +
- 8 files changed, 252 insertions(+), 98 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
- create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
-
++enum owl_dma_id {
++	S900_DMA,
++	S700_DMA,
++};
++
+ /**
+  * struct owl_dma_lli - Link list for dma transfer
+  * @hw: hardware link list
+@@ -213,6 +218,7 @@ struct owl_dma_vchan {
+  * @pchans: array of data for the physical channels
+  * @nr_vchans: the number of physical channels
+  * @vchans: array of data for the physical channels
++ * @devid: device id based on OWL SoC
+  */
+ struct owl_dma {
+ 	struct dma_device	dma;
+@@ -227,6 +233,7 @@ struct owl_dma {
+ 
+ 	unsigned int		nr_vchans;
+ 	struct owl_dma_vchan	*vchans;
++	enum owl_dma_id		devid;
+ };
+ 
+ static void pchan_update(struct owl_dma_pchan *pchan, u32 reg,
+@@ -316,6 +323,10 @@ static inline u32 llc_hw_ctrlb(u32 int_ctl)
+ {
+ 	u32 ctl;
+ 
++	/*
++	 * Irrespective of the SoC, ctrlb value starts filling from
++	 * bit 18.
++	 */
+ 	ctl = BIT_FIELD(int_ctl, 7, 0, 18);
+ 
+ 	return ctl;
+@@ -372,6 +383,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+ 				  struct dma_slave_config *sconfig,
+ 				  bool is_cyclic)
+ {
++	struct owl_dma *od = to_owl_dma(vchan->vc.chan.device);
+ 	u32 mode, ctrlb;
+ 
+ 	mode = OWL_DMA_MODE_PW(0);
+@@ -427,14 +439,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+ 	lli->hw[OWL_DMADESC_DADDR] = dst;
+ 	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
+ 	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
+-	/*
+-	 * Word starts from offset 0xC is shared between frame length
+-	 * (max frame length is 1MB) and frame count, where first 20
+-	 * bits are for frame length and rest of 12 bits are for frame
+-	 * count.
+-	 */
+-	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
+-	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
++
++	if (od->devid == S700_DMA) {
++		/* Max frame length is 1MB */
++		lli->hw[OWL_DMADESC_FLEN] = len;
++		/*
++		 * On S700, word starts from offset 0x1C is shared between
++		 * frame count and ctrlb, where first 12 bits are for frame
++		 * count and rest of 20 bits are for ctrlb.
++		 */
++		lli->hw[OWL_DMADESC_CTRLB] = FCNT_VAL | ctrlb;
++	} else {
++		/*
++		 * On S900, word starts from offset 0xC is shared between
++		 * frame length (max frame length is 1MB) and frame count,
++		 * where first 20 bits are for frame length and rest of
++		 * 12 bits are for frame count.
++		 */
++		lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
++		lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
++	}
+ 
+ 	return 0;
+ }
+@@ -596,7 +620,7 @@ static irqreturn_t owl_dma_interrupt(int irq, void *dev_id)
+ 
+ 		global_irq_pending = dma_readl(od, OWL_DMA_IRQ_PD0);
+ 
+-		if (chan_irq_pending && !(global_irq_pending & BIT(i)))	{
++		if (chan_irq_pending && !(global_irq_pending & BIT(i))) {
+ 			dev_dbg(od->dma.dev,
+ 				"global and channel IRQ pending match err\n");
+ 
+@@ -1054,6 +1078,13 @@ static struct dma_chan *owl_dma_of_xlate(struct of_phandle_args *dma_spec,
+ 	return chan;
+ }
+ 
++static const struct of_device_id owl_dma_match[] = {
++	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
++	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, owl_dma_match);
++
+ static int owl_dma_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+@@ -1083,6 +1114,8 @@ static int owl_dma_probe(struct platform_device *pdev)
+ 	dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
+ 		 nr_channels, nr_requests);
+ 
++	od->devid = (enum owl_dma_id)of_device_get_match_data(&pdev->dev);
++
+ 	od->nr_pchans = nr_channels;
+ 	od->nr_vchans = nr_requests;
+ 
+@@ -1215,12 +1248,6 @@ static int owl_dma_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct of_device_id owl_dma_match[] = {
+-	{ .compatible = "actions,s900-dma", },
+-	{ /* sentinel */ }
+-};
+-MODULE_DEVICE_TABLE(of, owl_dma_match);
+-
+ static struct platform_driver owl_dma_driver = {
+ 	.probe	= owl_dma_probe,
+ 	.remove	= owl_dma_remove,
 -- 
 2.7.4
 
