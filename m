@@ -2,177 +2,108 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BFEC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FCAC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95DFF207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E76F2064B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="px2qUNzk";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="QmXITM4Q"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="0Ue1NG4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgGRGAw (ORCPT
+        id S1726567AbgGRGLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:00:52 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:56342 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725920AbgGRGAv (ORCPT
+        Sat, 18 Jul 2020 02:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgGRGLw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 02:00:51 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06I5wve7009735;
-        Fri, 17 Jul 2020 23:00:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=muwaErU2+Q0d75UM6WA9YQvwQ3htnvQ1L+0WwpvLWr4=;
- b=px2qUNzkrrfFy+NhSdfQemnhIa/hFNzDYWt9bktfUuaB2W1E6OqnHN2Fp1Fa3wDjb9Yz
- F5oz5M6oc5sKPoufVL8I/DkD4JoG5IiO/EJAi88dUz/55yJtVrbaBVI2jv6zYNjYBJ3m
- IsoqyKGNvdHmM1u5gt1dSAkNfV0iWrBcadU= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 32ax1veq6g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 17 Jul 2020 23:00:34 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 17 Jul 2020 23:00:32 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eSocK4PS8ZmIcOjZIEpbuZHyeFcTXS/COhy57k/VldTqW0h/n/TDIIBDegnmG151dv2oEsb+nj3Bhw3KppXMyVDu1s/kLtKjS2p4kZ+sSn7Gi9csCuzLNNvuW9VLT0mZjjlbxzferRy/Didvl/AgCW1/YW8k1vNttMdMtjSVaVrqroq7y0SYb0TldZOuP8JhUno5XJxbPQbUvu5DbXdwV5QzQP7Od9hxiirFSfOwJLRmOjZnkAevEd/9H8qBKLyUvL8jNyNQjc1ynviaiXMXXJPH30L0jLAxQCV0pR8vQMOZJ5xM6leYHxa06eept/ZBNFz2CoIjz0rqemBCtZGmaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=muwaErU2+Q0d75UM6WA9YQvwQ3htnvQ1L+0WwpvLWr4=;
- b=LerXc6z9x+Z3wTYSbP7eeUe828D6SERhVfaEfQgPgkt3myfyYNuWWYLBcthDZPrG3njy9lRiuRUKzgYnSL4nRhdVL3SH3cdpkbh92XrS61PQonxCe0TKETEy/tZttgmWxjAF8/ZcwzrwtdiDoQPMO+Hc2vKzulaq+aTZsxs0N7cHMX+7XP+ixzOtq1ADVamqh6zg0hkxL7BdXuUQLC7p9IqiQkceT0REA4YKhCCH0GtzfdAJjSKD60W6YJ2TT2cJIMPizxAdd28Yz7RjwHL3cZ4Kndfg70NEwRibiNS1Y1ReztgRWxVBUD29rMRKM2xN21EaAFy9YMU2ahoZ1dffOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=muwaErU2+Q0d75UM6WA9YQvwQ3htnvQ1L+0WwpvLWr4=;
- b=QmXITM4Q+gOQRj+RAvTtccUfZqTTELFV19KX+nyw96DSh9L2ViNz+154ZsB+MLKaZDcfEKjfNkVaW7enlyuW+aE2aCmbPwaQrmGKiXm6G2AYYtiZBgo1+aom7IHWXSorCbPAXt/lTQHCKF6wDJ3VPa/gazmhg43YOHUuY7zhbmY=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
- by BYAPR15MB2566.namprd15.prod.outlook.com (2603:10b6:a03:150::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Sat, 18 Jul
- 2020 06:00:31 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3174.026; Sat, 18 Jul 2020
- 06:00:31 +0000
-Subject: Re: [PATCH] libbpf bpf_helpers: Use __builtin_offsetof for offsetof
- if available
-To:     Ian Rogers <irogers@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Stanislav Fomichev <sdf@google.com>
-References: <20200717072319.101302-1-irogers@google.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <a0a26308-a1d7-a57c-727c-000652a5d246@fb.com>
-Date:   Fri, 17 Jul 2020 23:00:29 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
-In-Reply-To: <20200717072319.101302-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR01CA0015.prod.exchangelabs.com (2603:10b6:a02:80::28)
- To BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+        Sat, 18 Jul 2020 02:11:52 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D403CC0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 23:11:51 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id f16so7331005pjt.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 23:11:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kZ3lYn4N5LTEVuFwwOCCh5bU3lGrvl/lTLunodGrhio=;
+        b=0Ue1NG4Nr/0omehRUoC2r7ZxJlFG3ejDOuCBCzdD8GTf1Tr/wsnwyDHf2MRuHZrz+T
+         1I5VOw7h6+aAFYdu8ZrM24c3KdItMC+gkKwxXHN9NYh1gnUkGcb8A83/54jPfL8+Qy9C
+         y+PvnYm2HSF8AXNAT69YdmEqYSFrDJErji83dMCIq+yv0IAjs9Th9fXIhNsL6miPZVeK
+         lwmjg8H5wBaHGy8v6NYfI2k3IfIuQShDBkq60NSDJdeGMNMn86Zmrbd5lr3qH275WlfA
+         Uw04HxKp/x3MlBz5msarWEeKgrnQt+Lah0wAd0WkhmV80NXri1h4aZ5R9wTzxTVZE+bl
+         WwLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kZ3lYn4N5LTEVuFwwOCCh5bU3lGrvl/lTLunodGrhio=;
+        b=em6y2iTyHoc91OMKXPc687VFhmHoNICWN7V1WeKtZeVJdG8PM56IXauv2O6a8NJFnt
+         sn+bcYStpXKKp4A4cKjAZ9TzABCQwZ18PyihIPwmpMFzWe7+wbjgE/XWmkAv1FrdUekD
+         8nHU98RvHJrK20OyAVgBGK6cDOzcvVtM05JQfNjl4mL70j+xXsvJN4kQucEPR81Toji1
+         S++bASj1tpb/1uNskVvvtpeYB/PNNOpKkHtAw0tdqn14hIRO2bR0XnSCK3Y73HUiJmNN
+         eDunM9HPqXijnLcrGOosTfTMYH1riwoBfVtfb6lBF8T9ievuVzeU25RQ41d3grzN6Mvg
+         l+PA==
+X-Gm-Message-State: AOAM530m0sacYtCNhrRgyqW8QUjgMdTij2mtwQBDEGVJIs4W84DcJvfB
+        PsJ+U4Y8A3HgbIyu362QE0CYbQ==
+X-Google-Smtp-Source: ABdhPJxZnbHGFB6XrO5/kcADMjEZYbDuFFUgm9060g8U2jrHDepRRKH5fmrNUMyz5Dsb27NXy1nK0Q==
+X-Received: by 2002:a17:902:be17:: with SMTP id r23mr10294546pls.284.1595052711196;
+        Fri, 17 Jul 2020 23:11:51 -0700 (PDT)
+Received: from Smcdef-MBP.lan ([103.136.220.66])
+        by smtp.gmail.com with ESMTPSA id c188sm9587828pfc.143.2020.07.17.23.11.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jul 2020 23:11:50 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
+        bigeasy@linutronix.de, namit@vmware.com
+Cc:     linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH v2] smp: Fix a potential usage of stale nr_cpus
+Date:   Sat, 18 Jul 2020 14:11:44 +0800
+Message-Id: <20200718061144.56095-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2620:10d:c085:21cf::1160] (2620:10d:c090:400::5:6f2d) by BYAPR01CA0015.prod.exchangelabs.com (2603:10b6:a02:80::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Sat, 18 Jul 2020 06:00:30 +0000
-X-Originating-IP: [2620:10d:c090:400::5:6f2d]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6a786fff-1278-466b-512f-08d82adfe0dd
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2566:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2566EF3329EE239D73143F0BD37D0@BYAPR15MB2566.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: G3JmIS1yLx+reOx+c7BOSXW6/MS2bh6GMo3eyRAb/Va0E0tWl8E7Yg4tyNCE+6dISxbiEWm2TL4c5LOkxOT9A1ahfGGDcQk6H+ENxvH/w0m8dlOA3hSMrSRAhm95DmSj2wIAnLQdbYbojrBD44E+HwDWvJwZLw6KNd8ijjzwLLKL+T16iFPNvhti1c8IIZCZNcYwxi+keW91KQ9aGv0dqlBFpe632JHuYFa68qGl53FLMXe7H6aEWB/yy8oDL3hF9olijCKypOncjORREfyTgg+2uX5OQd9AEDZLsC73VhnSPcww/f/yHpG25fXl+kYwpPIdpT3DL0nKbmGqXBeKypQ7KphoQe+U19yDDRXgsML7HuhbN+DT2IeSQ/CdDOZuN7MJuAX3IIXvm6p4Ry5F3g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(346002)(366004)(136003)(39860400002)(376002)(4326008)(2616005)(16526019)(8936002)(31696002)(31686004)(66946007)(66476007)(5660300002)(66556008)(478600001)(52116002)(316002)(2906002)(53546011)(36756003)(86362001)(8676002)(110136005)(186003)(6486002)(921003)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: OloaASI/Utwq52ta5oApyk+M7vmhLuH5idotBys0rCTWofDE7Xtsj4NfuPdIwMpvggzj5nu4IwpmLFBo7DAScrhZubGz6UqmtwCP6Ky2n1yIa2yCYaBPXAvvPwpQY4ZRPyqX1KJnfjCrsawqohGCOT0zo/+RJBZHI0JM5prfmIRL+IlKQVReAz2fAH3nDTBDDmNgVSOMm3TzMjkMMR0omMp9rIGhlMWO6QkrsWmEnpUf1hQd4gMfeOc4dAJ6TN2/CHbcB+YUOh+AJbVUriuE5kbHcN6ZsH4Ck0dM+7EEUX4+/RiH3clZjNJGFDXcjFCf6ZL95yRsrQGJ+Ogr1DNl5WuGkBozWWnbgbeYLUkkvolz6s7wEVc6U+/LUsaZ/pOFhZC/HYyncEkakAJyrcf7MSSS3NLNtq259ouNw0ywE44kZjdkDfCzsUeUBg7XUsb7SAHLEvfPx0+87nVQfQ267o3raq5SXkg25DJ5pC9slzN30QVE6xE1/jhTM70fJyiwPf4jbe1kVFBotO61GnDakQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a786fff-1278-466b-512f-08d82adfe0dd
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2020 06:00:31.7246
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tK/j2toB1494yxSXW/1sWTfgY8fsaLaRzxNuzGOcDC3P6hvA6ECyEX5hgMvFIT/U
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2566
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-18_01:2020-07-17,2020-07-18 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- clxscore=1011 impostorscore=0 suspectscore=0 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 phishscore=0 malwarescore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007180043
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When the cmdline of "nr_cpus" is not valid, the @nr_cpu_ids is assigned
+a stale value. The nr_cpus is only valid when get_option() return 1. So
+check the return value to prevent this.
+
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+changelog in v2:
+ 1) Rework the commit log.
+ 2) Rework the return value check.
 
 
-On 7/17/20 12:23 AM, Ian Rogers wrote:
-> The non-builtin route for offsetof has a dependency on size_t from
-> stdlib.h/stdint.h that is undeclared and may break targets.
-> The offsetof macro in bpf_helpers may disable the same macro in other
-> headers that have a #ifdef offsetof guard. Rather than add additional
-> dependencies improve the offsetof macro declared here to use the
-> builtin if available.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+ kernel/smp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks. I didn't pay attention to __builtin_offsetof() and clearly
-it is preferred. Ack the change with a nit below.
+diff --git a/kernel/smp.c b/kernel/smp.c
+index a5a66fc28f4e..0bc260158047 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -772,8 +772,8 @@ static int __init nrcpus(char *str)
+ {
+ 	int nr_cpus;
+ 
+-	get_option(&str, &nr_cpus);
+-	if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
++	if ((get_option(&str, &nr_cpus) == 1) &&
++	    nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+ 		nr_cpu_ids = nr_cpus;
+ 
+ 	return 0;
+-- 
+2.11.0
 
-Acked-by: Yonghong Song <yhs@fb.com>
-
-> ---
->   tools/lib/bpf/bpf_helpers.h | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/tools/lib/bpf/bpf_helpers.h b/tools/lib/bpf/bpf_helpers.h
-> index a510d8ed716f..ed2ac74fc515 100644
-> --- a/tools/lib/bpf/bpf_helpers.h
-> +++ b/tools/lib/bpf/bpf_helpers.h
-> @@ -40,8 +40,12 @@
->    * Helper macro to manipulate data structures
->    */
->   #ifndef offsetof
-> +#if __has_builtin(__builtin_offsetof)
-> +#define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
-
-The __builtin_offsetof is actually available at least since llvm 3.7,
-so it is safe to use it always.
-
-> +#else
->   #define offsetof(TYPE, MEMBER)  ((size_t)&((TYPE *)0)->MEMBER)
->   #endif
-> +#endif
->   #ifndef container_of
->   #define container_of(ptr, type, member)				\
->   	({							\
-> 
