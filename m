@@ -2,68 +2,118 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69569C433E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEE0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC3B2073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FA32073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:40:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TW/I1cKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgGRBjP (ORCPT
+        id S1728795AbgGRBkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 21:39:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34378 "EHLO
+        Fri, 17 Jul 2020 21:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgGRBjO (ORCPT
+        with ESMTP id S1726710AbgGRBkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 21:39:14 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA5EC0619D2;
-        Fri, 17 Jul 2020 18:39:14 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 005E011E45910;
-        Fri, 17 Jul 2020 18:39:13 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 18:39:13 -0700 (PDT)
-Message-Id: <20200717.183913.1150846066923869608.davem@davemloft.net>
-To:     wanghai38@huawei.com
-Cc:     vishal@chelsio.com, kuba@kernel.org, jeff@garzik.org,
-        divy@chelsio.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: cxgb3: add missed destroy_workqueue in cxgb3
- probe failure
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200717062117.8941-1-wanghai38@huawei.com>
-References: <20200717062117.8941-1-wanghai38@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jul 2020 18:39:14 -0700 (PDT)
+        Fri, 17 Jul 2020 21:40:52 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418E6C0619D2;
+        Fri, 17 Jul 2020 18:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=z/LXzyQQvIbTaBiNEA7lgQw3JPPFGRlWt4h9R1rYhrg=; b=TW/I1cKuOLoHLOvAY6NeiZQoKd
+        Zz2vamGQF53yhMt6PyvGcRSJc2NCJiD8AoqZotSvdc5IfQQi3RarSXe0+gx/TrcCItHtOmrWo9qVD
+        hSWDbi8PLUGIcVHTKBVSin6QPQ0TmYJ9L83ixHQ/dnfUYOUhI0C6jF+x3q+ftwoA78tmPw0utlJYo
+        AXikpTIu3x3a7vkZWPeGKiaitOu9+2+GwAdXj493Fppw/gsg7RJpflX2FbkSZZ+4vfDkCPGYLps85
+        X1+TZzzOwYMb+6L0J8qB0DvdAZ9754djv/z+wkZUqFKfdF+SMT2frO01tVaf7p4UI/uCgjUwFFJfA
+        68q3E16A==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwbqH-00016U-IO; Sat, 18 Jul 2020 01:40:45 +0000
+Date:   Sat, 18 Jul 2020 02:40:45 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+Message-ID: <20200718014045.GR12769@casper.infradead.org>
+References: <20200717044427.68747-1-ebiggers@kernel.org>
+ <20200717205340.GR7625@magnolia>
+ <20200718005857.GB2183@sol.localdomain>
+ <20200718012555.GA1168834@rowland.harvard.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718012555.GA1168834@rowland.harvard.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
-Date: Fri, 17 Jul 2020 14:21:17 +0800
-
-> The driver forgets to call destroy_workqueue when cxgb3 probe fails.
-> Add the missed calls to fix it.
+On Fri, Jul 17, 2020 at 09:25:55PM -0400, Alan Stern wrote:
+> On Fri, Jul 17, 2020 at 05:58:57PM -0700, Eric Biggers wrote:
+> > On Fri, Jul 17, 2020 at 01:53:40PM -0700, Darrick J. Wong wrote:
+> > > > +There are also cases in which the smp_load_acquire() can be replaced by
+> > > > +the more lightweight READ_ONCE().  (smp_store_release() is still
+> > > > +required.)  Specifically, if all initialized memory is transitively
+> > > > +reachable from the pointer itself, then there is no control dependency
+> > > 
+> > > I don't quite understand what "transitively reachable from the pointer
+> > > itself" means?  Does that describe the situation where all the objects
+> > > reachable through the object that the global struct foo pointer points
+> > > at are /only/ reachable via that global pointer?
+> > > 
+> > 
+> > The intent is that "transitively reachable" means that all initialized memory
+> > can be reached by dereferencing the pointer in some way, e.g. p->a->b[5]->c.
+> > 
+> > It could also be the case that allocating the object initializes some global or
+> > static data, which isn't reachable in that way.  Access to that data would then
+> > be a control dependency, which a data dependency barrier wouldn't work for.
+> > 
+> > It's possible I misunderstood something.  (Note the next paragraph does say that
+> > using READ_ONCE() is discouraged, exactly for this reason -- it can be hard to
+> > tell whether it's correct.)  Suggestions of what to write here are appreciated.
 > 
-> Fixes: 4d22de3e6cc4 ("Add support for the latest 1G/10G Chelsio adapter, T3.")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+> Perhaps something like this:
+> 
+> 	Specifically, if the only way to reach the initialized memory 
+> 	involves dereferencing the pointer itself then READ_ONCE() is 
+> 	sufficient.  This is because there will be an address dependency 
+> 	between reading the pointer and accessing the memory, which will 
+> 	ensure proper ordering.  But if some of the initialized memory 
+> 	is reachable some other way (for example, if it is global or 
+> 	static data) then there need not be an address dependency, 
+> 	merely a control dependency (checking whether the pointer is 
+> 	non-NULL).  Control dependencies do not always ensure ordering 
+> 	-- certainly not for reads, and depending on the compiler, 
+> 	possibly not for some writes -- and therefore a load-acquire is 
+> 	necessary.
+> 
+> Perhaps this is more wordy than you want, but it does get the important 
+> ideas across.
 
-You have to handle the case that the probing of one or more devices
-fails yet one or more others succeed.
-
-And you can't know in advance how this will play out.
-
-This is why the workqueue is unconditionally created, and only destroyed
-on module remove.
+I don't think we should worry about wordsmithing this.  We should just
+say "Use the init_pointer_once API" and then people who want to worry
+about optimising the implementation of that API never have to talk to
+the people who want to use that API.
