@@ -2,136 +2,160 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CCCC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 597302070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C30F2070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZY3Y/FC1"
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="rTV+fN6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgGRNcz (ORCPT
+        id S1727770AbgGRNe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58562 "EHLO
+        Sat, 18 Jul 2020 09:34:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgGRNcy (ORCPT
+        with ESMTP id S1726569AbgGRNe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:32:54 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01C4C0619D2;
-        Sat, 18 Jul 2020 06:32:54 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id b92so7691439pjc.4;
-        Sat, 18 Jul 2020 06:32:54 -0700 (PDT)
+        Sat, 18 Jul 2020 09:34:28 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455A6C0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 06:34:28 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e8so15749263ljb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 06:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=GX7yez5X9ql9EcvciXmb6Gd1L93T6OzAX6ibX57rbPQ=;
-        b=ZY3Y/FC1Lwnkm6dQkh4u+0S0oXj0z4ncjsGsOMNjCdooJTh65GqHkedkCNP81WXS98
-         n2ejrZ8T8GFdCfiMQXNFXjwsTGbvk05p8Wmu+378uO1ilYuJ7zFsk/V0XU+haEgynerR
-         m5ot6W91v/QS0qoRXMS8C610RtIabaGvxd5X60icmDFmh6w4VqkIBZngSYyJn5IvxwDD
-         6Mpoklmvj44ICRM+SpKXWJ1fsuusy127z+EsEBnD+zVfe1gzP/RWMOQUnkMrgDzV0i8Z
-         459I+EtxMpt+KZ+mWMOGkxXjmXUk1k3oZnde42iH+ePyxQraB5+EQhtFERqOiGHAOl+0
-         /cxw==
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PV7hHvU5WTJVLxmjDtytdt4i+Ojp5k4NkU4sJzhexD0=;
+        b=rTV+fN6SCUZ/GEu9Vs6WW3JrFjNFu1XC/ZBSCEiNkL/2M5nt8jhGAJjafm4fYUq5kJ
+         yWTP4jBeYEnOEdR1GDNp4bn/zGngGh3Ln+nHKgI7miC7SbLtf2Ua4vxQA6WZ3nVAhdn5
+         BkCFvPNIO8zHhYDpw2mDUwZUFUEq1B/uhmZ3kuRRFmBeXP79l1ku7hTfsxg+Ru2u75Ur
+         +n76KOf+GwEMIQp11ZHZy4sz0Pi36YrfodmH8JpQJsqy7GaqggIDp5MKaiNpnsyN9ZAV
+         SFAOO4rVQCDhOyuAfJ7+qZr9YjYnoN5rtfr6G6utH1KKHLQQ8WGQBsx5Yyvp/ucQlRXP
+         EyIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=GX7yez5X9ql9EcvciXmb6Gd1L93T6OzAX6ibX57rbPQ=;
-        b=pVrgWJphcFVYPplPHwJ8Pcsq+9dHBuEYpFOAk0cQA0mb7xwqGs1sibWo9zE/ZwGAyQ
-         RK3rc2EPmt6DaHlRT/AS48QkFKnWcFXpsB3pB22niT9coEeR44Q0JXTF079v85MCdPdW
-         taEm2jT0JgTRFpOnXWkXWbUA9ZpI9BOJbgG4HdmJ2Qb+3WdZkAFL0wshxVaPCn01rQFn
-         4JWr9Y8ukIhAzlLPC9ik1/7eKagAYbSCAAyLrTmKgHQW04BaPg25RtD/dl2kmJ2e+P5j
-         UhyUyDVXHbbrMRdO2hTenwVmzyJxTQJ3WCjWM6O2jfqOe8W+1aP81ouOyHr738zQ839F
-         Dm3w==
-X-Gm-Message-State: AOAM53306L970Oai4+Qmt4nvDIkmApBhE7M/aw24Pm88wmCJ2Tcm2LQY
-        x5dXHY+vjzxktSGWxE7B7/o=
-X-Google-Smtp-Source: ABdhPJwyHspTs0owbnia19HlErjk8ONGVAAjGQH4tbwAhB81gov0I2Nas4/RWujZDESmokW6cBD3Tw==
-X-Received: by 2002:a17:90a:14a5:: with SMTP id k34mr15218415pja.37.1595079174064;
-        Sat, 18 Jul 2020 06:32:54 -0700 (PDT)
-Received: from blackclown ([103.88.82.25])
-        by smtp.gmail.com with ESMTPSA id 137sm10722296pgg.72.2020.07.18.06.32.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jul 2020 06:32:53 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 19:02:38 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     sakari.ailus@linux.intel.com, bingbu.cao@intel.com,
-        tian.shu.qiu@intel.com, mchehab@kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] staging: media: ipu3: Replace depracated MSI API.
-Message-ID: <20200718133238.GA11982@blackclown>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PV7hHvU5WTJVLxmjDtytdt4i+Ojp5k4NkU4sJzhexD0=;
+        b=iwtN3bhSAKjQ7k+mIISoFcJMggU7S6sas459F70ivqiwZCN4yEUYQzEISv8UNVO1Ct
+         6zBDMhKNBoQMBDDFMQIHI6cTRSDB/MF0QiCBU9jL4jWrQeIT4pfwaoI2o+KbuNlYJlf4
+         80Qe8nz5MQwS0V7UF1Bc5yUzX0c62Hc5yVeGeoThvwz7cgT7lRq//q4iXZ88SkLwqj3r
+         akPY+i/FolgyD3BySHR8YpTiW4/h2pFJwPbbk90ibgzziqGqLiN1xu6lqgjXrWJfv3Mp
+         oVrj1qpwx508lRgPnldVdP55zHGuFZAGccD3OHWDnEPJ6lPpyQE93J1HgRl8V05aWZb/
+         hvVw==
+X-Gm-Message-State: AOAM5331n3YIy7j+lgUqpmKOhItdfSciY9TvWkarh9dZyj634jJXc5Qs
+        qd/8Ryu5j0ClPpZeY1WFlNRkIZcDQyxwpMzGScULRw==
+X-Google-Smtp-Source: ABdhPJwJQoFDnmj8u12dbySuIPtpBhE37a9Y8QEazqGOg3WX/XNzDLTdbwZQqca/Uv3IRrV9tsnvXH+L2dU3ba0fKEs=
+X-Received: by 2002:a2e:9b92:: with SMTP id z18mr7058455lji.364.1595079266712;
+ Sat, 18 Jul 2020 06:34:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200718091857.quzs5sqvkjzngd6k@pesu-pes-edu> <560eeb7388164e58ac0e47277fe2aec798c45a5c.camel@perches.com>
+In-Reply-To: <560eeb7388164e58ac0e47277fe2aec798c45a5c.camel@perches.com>
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+Date:   Sat, 18 Jul 2020 09:34:15 -0400
+Message-ID: <CAAhDqq17xt5Q9JHPw9NDnFhbp=0gYS4PJWyRwvPYKXMrN_btPQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] staging: rtl8188eu: include: placed constant on the
+ right side of the test in comparisons
+To:     Joe Perches <joe@perches.com>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Straube <straube.linux@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 18, 2020 at 9:17 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Sat, 2020-07-18 at 05:18 -0400, B K Karthik wrote:
+> > placed constant on the right side of the test
+> > to fix warnings issued by checkpatch
+> []
+> > diff --git a/drivers/staging/rtl8188eu/include/wifi.h b/drivers/staging/rtl8188eu/include/wifi.h
+> []
+> > @@ -326,7 +326,7 @@ static inline unsigned char *get_hdr_bssid(unsigned char *pframe)
+> >
+> >  static inline int IsFrameTypeCtrl(unsigned char *pframe)
+> >  {
+> > -     if (WIFI_CTRL_TYPE == GetFrameType(pframe))
+> > +     if (GetFrameType(pframe) == WIFI_CTRL_TYPE)
+> >               return true;
+> >       else
+> >               return false;
+>
+> Always try to improve code instead of merely shutting
+> up checkpatch warnings.
+>
+> This function should likely be written:
+>
+> static inline bool IsFrameTypeCtrl(unsigned char *pframe)
+> {
+>         return GetFrameType(pframe) == WIFI_CTRL_TYPE;
+> }
+>
+> and given it's used only once, it might be expanded
+> in that place and removed altogether.
+>
+> Something like:
+>
+> (and the memcmp below could be ether_addr_equal instead
+>  but I'm too lazy to find out if the addresses are both
+>  guaranteed to be __aligned(2) which is likely)
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Alright, I will try to do that and send a v2 asap :)
+>
+> ---
+>  drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c | 8 +++++---
+>  drivers/staging/rtl8188eu/include/wifi.h        | 7 -------
+>  2 files changed, 5 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c b/drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c
+> index 7d0135fde795..a2994f9ecbde 100644
+> --- a/drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c
+> +++ b/drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c
+> @@ -144,10 +144,12 @@ void update_recvframe_phyinfo_88e(struct recv_frame *precvframe,
+>
+>         wlanhdr = precvframe->pkt->data;
+>
+> -       pkt_info.bPacketMatchBSSID = ((!IsFrameTypeCtrl(wlanhdr)) &&
+> -               !pattrib->icv_err && !pattrib->crc_err &&
+> +       pkt_info.bPacketMatchBSSID =
+> +               GetFrameType(wlanhdr) != WIFI_CTRL_TYPE &&
+> +               !pattrib->icv_err &&
+> +               !pattrib->crc_err &&
+>                 !memcmp(get_hdr_bssid(wlanhdr),
+> -                get_bssid(&padapter->mlmepriv), ETH_ALEN));
+> +                       get_bssid(&padapter->mlmepriv), ETH_ALEN);
+>
+>         pkt_info.bPacketToSelf = pkt_info.bPacketMatchBSSID &&
+>                                  (!memcmp(get_da(wlanhdr),
+> diff --git a/drivers/staging/rtl8188eu/include/wifi.h b/drivers/staging/rtl8188eu/include/wifi.h
+> index 791f287a546d..3998d5633860 100644
+> --- a/drivers/staging/rtl8188eu/include/wifi.h
+> +++ b/drivers/staging/rtl8188eu/include/wifi.h
+> @@ -324,13 +324,6 @@ static inline unsigned char *get_hdr_bssid(unsigned char *pframe)
+>         return sa;
+>  }
+>
+> -static inline int IsFrameTypeCtrl(unsigned char *pframe)
+> -{
+> -       if (WIFI_CTRL_TYPE == GetFrameType(pframe))
+> -               return true;
+> -       else
+> -               return false;
+> -}
+>  /*-----------------------------------------------------------------------------
+>                         Below is for the security related definition
+>  ------------------------------------------------------------------------------*/
 
-Replace depracated psi_enable_msi with pci_alloc_irq_vectors.
-And as a result modify how the returned value is handled.
+thank you for pointing me.
 
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- drivers/staging/media/ipu3/ipu3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/media/ipu3/ipu3.c b/drivers/staging/media/ipu3=
-/ipu3.c
-index ee1bba6bdcac..54690e7442be 100644
---- a/drivers/staging/media/ipu3/ipu3.c
-+++ b/drivers/staging/media/ipu3/ipu3.c
-@@ -602,9 +602,9 @@ static irqreturn_t imgu_isr(int irq, void *imgu_ptr)
- static int imgu_pci_config_setup(struct pci_dev *dev)
- {
- 	u16 pci_command;
--	int r =3D pci_enable_msi(dev);
-+	int r =3D pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_MSI);
-=20
--	if (r) {
-+	if (r < 0) {
- 		dev_err(&dev->dev, "failed to enable MSI (%d)\n", r);
- 		return r;
- 	}
---=20
-2.17.1
-
-
---1yeeQ81UyVL57Vl7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8S+fYACgkQ+gRsbIfe
-746prw/8C/HY3bZaEpdYpHHSDI6ZZC1gsQki6rnqZBb3KYtGG9YXeNOAxs64ddZa
-vV+ZFo4WNxCeR0tSIEsFbDb6XnVAg6yFWrnVfOjmjkOYMYMyLLBXLYadmH24TOPb
-Ty00ZSy3GXSZ2jTQOkUVXzedF8UuWv9Br9dUfJnF1xky2a2S79HBjFL6MzacKvSF
-CsGAqrZyF7Fn5JEcU1fY78E3ma2bdhp8M/didwaixH2w1Ya1ifbwJ44hlYEtrezU
-+E6DGUh8dZgx7TVa2dqgTLR6xkrW9gUM3/U4NZ+PsTTKEzD1g+iQZaAViktldXH2
-G1qSW6qR9W26MLKEmtGWe+uwM07jnIhKc0z4GZfZv9LRNXUvKJ88fm1fomPeLiEY
-CW6vV2V3BSBSXhmrI+jVhJij997QhXFNzdVSAZkkiDOvG7ml3+LnFc4EXRE0jXGV
-cxDbjTgS/xj9seOfwzqcEeDANWPPvNCN9SClptNU/XMew5+zfVaVx0BIWwzkZiLM
-j7aPMAuya0LKbRBRIqrWrDJEjPphlVQ8PQM1bcDlb/el/IYwYcvmIWcQKQUNihX2
-Kpz77+2ww8wbbGW80EORd149V8/Gw40OAQ3T/p8ve4vJL7dhabARwFZ9J7mHP1BF
-GFXkTShwUtTqVbivZ011N1mDCUb6YjjSUoYVZP431J2cMb17sos=
-=Fu6m
------END PGP SIGNATURE-----
-
---1yeeQ81UyVL57Vl7--
+karthik
