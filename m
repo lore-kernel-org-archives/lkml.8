@@ -2,228 +2,129 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F86C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A295EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFA02070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DAAB2073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:36:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tFNDGwtI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEGsFDVF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgGRNb5 (ORCPT
+        id S1727837AbgGRNgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:31:57 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:1526 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgGRNb4 (ORCPT
+        Sat, 18 Jul 2020 09:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgGRNgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:31:56 -0400
+        Sat, 18 Jul 2020 09:36:43 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD0BC0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 06:36:43 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u185so6796836pfu.1
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 06:36:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595079116; x=1626615116;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=ZWTinTDpyJv48FtzdgfCQgb3V++27qJZJZpINdu4JVM=;
-  b=tFNDGwtIR3YYpRCBugAqfqZ8+VAld8PDCi0xI1oWYjrgMO2UE5sDkgRw
-   JJPEGx68Y4EuMC6GNlToaECkq1chynNY30lEhdUgkfM6NJIDHq6tQtur+
-   wijuPfHPyLVRhD90pEx2AwCM9OJ5iGL3PUES7iBN2csqQFZHm7TN/txY4
-   k=;
-IronPort-SDR: krJH/h/cdwPHjEodCrYJ8eWlIbRiijS485C97GeaCDI19ic6DTngNqATvDNMcCECngWFWtTnD4
- xMwZJ2pDh7JQ==
-X-IronPort-AV: E=Sophos;i="5.75,367,1589241600"; 
-   d="scan'208";a="59529389"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 18 Jul 2020 13:31:50 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 08924A23E4;
-        Sat, 18 Jul 2020 13:31:38 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sat, 18 Jul 2020 13:31:37 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.221) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sat, 18 Jul 2020 13:31:21 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     SeongJae Park <sjpark@amazon.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        <Jonathan.Cameron@huawei.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Qian Cai <cai@lca.pw>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "David Hildenbrand" <david@redhat.com>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, Ian Rogers <irogers@google.com>,
-        <jolsa@redhat.com>, "Kirill A. Shutemov" <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, Mel Gorman <mgorman@suse.de>,
-        Minchan Kim <minchan@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, <namhyung@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, <rppt@kernel.org>,
-        <sblbir@amazon.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <snu@amazon.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Huang Ying <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        Linux MM <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v18 02/14] mm: Introduce Data Access MONitor (DAMON)
-Date:   Sat, 18 Jul 2020 15:31:06 +0200
-Message-ID: <20200718133106.4787-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CALvZod7MZaE52408O6eGNpGGW77xFTyr56YK0F7qjNH1HX98MQ@mail.gmail.com> (raw)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=hf1JlkYLKT1Z4ZHTIAJh4Na1qYAPsAkz6yljdjIDt2o=;
+        b=bEGsFDVFOa/GO/5dvpcQ3fnipAJp3/sVkjMbf3aLVvV8oGwggcXOvPkVWzNYHVm2zG
+         nvTY7VuRHwtUEXJ6QQPBkY4/pnJ76Rd8TQ2upkpObuL8XXVMKmxzrIJYG3AtzqL5FS8y
+         n+POXa9uGk5BddZTYrl14aZDSu0fnKYFkfFf0HVwxgRxDbU5HmseHF2LhWVZTr7OKj5K
+         HDm5mPq/APcpGCxmNUICfYFcs8u6tkM/xq/KpEx1vwN8ZoAjhhHGE6SYykrjpG2GVpIy
+         e8scs4rwExsnhqO29GtYjmhhUzHw9gi+OLRYIOtAK/cPqjnntOLvSdGJ5DmLIOEhpXmC
+         G8bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=hf1JlkYLKT1Z4ZHTIAJh4Na1qYAPsAkz6yljdjIDt2o=;
+        b=dje+y6M420emn1NW24XIIVF/wKeJ7jyhjDCCB74pDorjtXAfh1y9Bd+Qh8MhDNDnR0
+         Z9v++xjkYT3g6uULbacrcaNDXOShBnKIXYLq36veZKHZXTeolLpRuXVWCdvCN6dLL1lb
+         te/pRSxBprVWcQX7s+CyGSLDus0m6heFNZrzUMuByddyOzD0ZvA4/ulJEFl1sXXJAleN
+         iUfUYgEzNUowDra4YepxczH8Se/Uq+bsWXswxkp2npw1w6YGyNDTGCf4j9W1dU8rPxVe
+         uqRctchtg7LmCR/S82doZNFo+xpkxQJ9Hk6Tw53qt8oYtRulpgmLTL7PyqGO417jMb+U
+         nOMQ==
+X-Gm-Message-State: AOAM530YZvxVR1oNc5S4tht9QwVes6LOYSwSg6+hehTA39bBOjyEnRLy
+        Lazkksnc4wA8MyDQdRXDVEFhGwPnWGq7Cg==
+X-Google-Smtp-Source: ABdhPJy4LoGIB/Dskjj5ges98ogVIQLWn5k29RGdbXVt3GaSg15jfcqzNFbu+J6NHP3Ou6ZRJwr7ow==
+X-Received: by 2002:a65:67d9:: with SMTP id b25mr12728135pgs.311.1595079403038;
+        Sat, 18 Jul 2020 06:36:43 -0700 (PDT)
+Received: from blackclown ([103.88.82.25])
+        by smtp.gmail.com with ESMTPSA id m140sm10610952pfd.195.2020.07.18.06.36.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 18 Jul 2020 06:36:42 -0700 (PDT)
+Date:   Sat, 18 Jul 2020 19:06:29 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: kpc2000: Replace depracated MSI API.
+Message-ID: <20200718133629.GA12522@blackclown>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.221]
-X-ClientProxiedBy: EX13D15UWA001.ant.amazon.com (10.43.160.152) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 19:47:50 -0700 Shakeel Butt <shakeelb@google.com> wrote:
 
-> On Mon, Jul 13, 2020 at 1:43 AM SeongJae Park <sjpark@amazon.com> wrote:
-> >
-> > From: SeongJae Park <sjpark@amazon.de>
-> >
-> > DAMON is a data access monitoring framework subsystem for the Linux
-> > kernel.  The core mechanisms of DAMON make it
-> >
-> >  - accurate (the monitoring output is useful enough for DRAM level
-> >    memory management; It might not appropriate for CPU Cache levels,
-> >    though),
-> >  - light-weight (the monitoring overhead is low enough to be applied
-> >    online), and
-> >  - scalable (the upper-bound of the overhead is in constant range
-> >    regardless of the size of target workloads).
-> >
-> > Using this framework, therefore, the kernel's memory management
-> > mechanisms can make advanced decisions.  Experimental memory management
-> > optimization works that incurring high data accesses monitoring overhead
-> > could implemented again.  In user space, meanwhile, users who have some
-> > special workloads can write personalized applications for better
-> > understanding and optimizations of their workloads and systems.
-> >
-> > This commit is implementing only the stub for the module load/unload,
-> > basic data structures, and simple manipulation functions of the
-> > structures to keep the size of commit small.  The core mechanisms of
-> > DAMON will be implemented one by one by following commits.
-> >
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > Reviewed-by: Leonard Foerster <foersleo@amazon.de>
-> > Reviewed-by: Varad Gautam <vrd@amazon.de>
-> > ---
-> >  include/linux/damon.h |  63 ++++++++++++++
-> >  mm/Kconfig            |  12 +++
-> >  mm/Makefile           |   1 +
-> >  mm/damon.c            | 188 ++++++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 264 insertions(+)
-> >  create mode 100644 include/linux/damon.h
-> >  create mode 100644 mm/damon.c
-> >
-> > diff --git a/include/linux/damon.h b/include/linux/damon.h
-> > new file mode 100644
-> > index 000000000000..c8f8c1c41a45
-> > --- /dev/null
-> > +++ b/include/linux/damon.h
-> > @@ -0,0 +1,63 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * DAMON api
-> > + *
-> > + * Copyright 2019-2020 Amazon.com, Inc. or its affiliates.
-> > + *
-> > + * Author: SeongJae Park <sjpark@amazon.de>
-> > + */
-> > +
-[...]
-> > +
-> > +/**
-> > + * struct damon_task - Represents a monitoring target task.
-> > + * @pid:               Process id of the task.
-> > + * @regions_list:      Head of the monitoring target regions of this task.
-> > + * @list:              List head for siblings.
-> > + *
-> > + * If the monitoring target address space is task independent (e.g., physical
-> > + * memory address space monitoring), @pid should be '-1'.
-> > + */
-> > +struct damon_task {
-> > +       int pid;
-> 
-> Storing and accessing pid like this is racy. Why not save the "struct
-> pid" after getting the reference? I am still going over the usage,
-> maybe storing mm_struct would be an even better choice.
-> 
-> > +       struct list_head regions_list;
-> > +       struct list_head list;
-> > +};
-> > +
-[...]
-> > +
-> > +#define damon_get_task_struct(t) \
-> > +       (get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
-> 
-> You need at least rcu lock around find_vpid(). Also you need to be
-> careful about the context. If you accept my previous suggestion then
-> you just need to do this in the process context which is registering
-> the pid (no need to worry about the pid namespace).
-> 
-> I am wondering if there should be an interface to register processes
-> with DAMON using pidfd instead of integer pid.
+--LQksG6bCIzRHxTLp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Good points!  I will use pidfd for this purpose, instead.
+Replace depracated pci_enable_msi with pci_alloc_irq_vectors.
 
-BTW, 'struct damon_task' was introduced while DAMON supports only virtual
-address spaces and recently extended to support physical memory address
-monitoring case by defining an exceptional pid (-1) for such case.  I think it
-doesn't smoothly fit with the design.
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+---
+ drivers/staging/kpc2000/kpc2000/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Therefore, I would like to change it with more general named struct, e.g.,
-
-    struct damon_target {
-            void *id;
-            struct list_head regions_list;
-            struct list_head list;
-    };
-
-The 'id' field will be able to store or point pid_t, struct mm_struct, struct
-pid, or anything relevant, depending on the target address space.
-
-Only one part of the address space independent logics of DAMON, namely
-'kdamon_need_stop()', uses '->pid' of the 'struct damon_task'.  It will be
-introduced by the next patch ("mm/damon: Implement region based sampling").
-Therefore, the conversion will be easy.  For the part, I could add another
-callback, e.g.,
-
-    struct damon_ctx {
-            [...]
-            bool (*is_target_valid)(struct damon_target *t);
-    };
-
-And let the address space specific primitives to implement this.
-
-Then, damon_get_task_struct() and damon_get_mm() will be introduced by the
-sixth patch ("mm/damon: Implement callbacks for the virtual memory address
-spaces") as a part of the virtual address space specific primitives
-implementation.
-
-I gonna make the change in the next spin.  If you have some opinions on this,
-please let me know.
+diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc20=
+00/kpc2000/core.c
+index 358d7b2f4ad1..bf21cdc5546f 100644
+--- a/drivers/staging/kpc2000/kpc2000/core.c
++++ b/drivers/staging/kpc2000/kpc2000/core.c
+@@ -440,7 +440,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+ 	dev_dbg(&pcard->pdev->dev,
+ 		"Using DMA mask %0llx\n", dma_get_mask(PCARD_TO_DEV(pcard)));
+=20
+-	err =3D pci_enable_msi(pcard->pdev);
++	err =3D pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_MSI);
+ 	if (err < 0)
+ 		goto err_release_dma;
+=20
+--=20
+2.17.1
 
 
-Thanks,
-SeongJae Park
+--LQksG6bCIzRHxTLp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8S+twACgkQ+gRsbIfe
+747C9w/+N/0Qx9ZzK/dQGEasiWXA8l34Sqz1DL3FNxdPoCWAOC/zgQclA4BQWrF/
+hhfOcTJWPN7BbZigR57pWzHdAw2mCnHGFwS1IsWlY8UadYlHK6G5zkP8cxf0W9m4
+IKf550lcnd2D3Q3PUI9oZIfO+lBe5f+2mc9nagcP2PSxJbcv2xMp7CTFA/NPz/Lh
+BRL3bIxUodVdKu1X7GTwCR1OhqT8SY8Smyi5r2pp7QvPvIAk4FgyY78n4yBBGkvk
+KDmu46uHVHqn2JMzYvKPR3l32OeXsLVMtlABnpSGeO20RVWIZUmsEb215NYYTG+Q
+vpWv0+JkhsBZJrW5BcaCRj0dZ4KaVqJ4iHR9t77ZbGuu66BMw2szenbddiKfm8ls
++skEdCMsZjC6kH9RiRa7i/+6RueTr6rWu915ty+pRCEyLCsO1XDmZVVMGhkj2gnr
+W9EDcOzYFcHbH0WobOzyBnvD8iVCeXowjYKDZgLMCO5VUknCIKauaQOmi4is13w1
+Cgv1RQJK3IzZ3xmZcdaHt3BPcDrZe3KKgLORYUwTMxJ2Ba/FvDpDQeRi8t4CFMW1
+6JJP+arDwU4ygwnI5nxeLshbIktS03LaxVz1zNtlLDJY/3EGDJMN3Q3JkpsWvNsH
+NS+9kn6ELPx+PWYlM40Ggo0gBt/pL7JzrCNR8OuEFbPcemKdJZM=
+=zo+Z
+-----END PGP SIGNATURE-----
+
+--LQksG6bCIzRHxTLp--
