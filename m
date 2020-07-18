@@ -7,29 +7,30 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1063DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC14CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 12:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF89C2074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D171D2073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 12:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgGRL6I (ORCPT
+        id S1726687AbgGRMIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 07:58:08 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:55894 "EHLO smtp.al2klimov.de"
+        Sat, 18 Jul 2020 08:08:17 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:58068 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbgGRL6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 07:58:06 -0400
+        id S1726574AbgGRMIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 08:08:17 -0400
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 4D6ABBC063;
-        Sat, 18 Jul 2020 11:58:04 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id D30CFBC084;
+        Sat, 18 Jul 2020 12:08:13 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+To:     linus.walleij@linaro.org, colin.king@canonical.com,
+        tony@atomide.com, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] irqchip: crossbar: Replace HTTP links with HTTPS ones
-Date:   Sat, 18 Jul 2020 13:57:57 +0200
-Message-Id: <20200718115757.19644-1-grandmaster@al2klimov.de>
+Subject: [PATCH] pinctl: ti: iodelay: Replace HTTP links with HTTPS ones
+Date:   Sat, 18 Jul 2020 14:08:07 +0200
+Message-Id: <20200718120807.19714-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: +++++
@@ -79,22 +80,22 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- drivers/irqchip/irq-crossbar.c | 2 +-
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
-index a05a7501e107..9e1839966d1e 100644
---- a/drivers/irqchip/irq-crossbar.c
-+++ b/drivers/irqchip/irq-crossbar.c
+diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+index b522ca010332..cfb924228d87 100644
+--- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
++++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
 @@ -2,7 +2,7 @@
- /*
-  *  drivers/irqchip/irq-crossbar.c
+  * Support for configuration of IO Delay module found on Texas Instruments SoCs
+  * such as DRA7
   *
-- *  Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ *  Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  *  Author: Sricharan R <r.sricharan@ti.com>
-  */
- #include <linux/err.h>
+- * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2015-2017 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * This file is licensed under the terms of the GNU General Public
+  * License version 2. This program is licensed "as is" without any
 -- 
 2.27.0
 
