@@ -2,362 +2,108 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6589F2073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AA42073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:29:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZzHLgOEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgGRIVa (ORCPT
+        id S1728979AbgGRI32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 04:21:30 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2646 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726940AbgGRIV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 04:21:29 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 7538EBBDF60EC98ABCCC;
-        Sat, 18 Jul 2020 16:21:26 +0800 (CST)
-Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Sat, 18 Jul 2020 16:21:26 +0800
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Sat, 18 Jul 2020 16:21:25 +0800
-Subject: Re: [PATCH net-next v1 1/2] hinic: add support to handle hw abnormal
- event
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <chiqijun@huawei.com>
-References: <20200717083448.20936-1-luobin9@huawei.com>
- <20200717083448.20936-2-luobin9@huawei.com>
- <20200717121159.1729bb47@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <9dfefdc3-3271-a585-3a4d-ecb13dc64331@huawei.com>
-Date:   Sat, 18 Jul 2020 16:21:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sat, 18 Jul 2020 04:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbgGRI31 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 04:29:27 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F100EC0619D4
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 01:29:26 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u5so6495201pfn.7
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 01:29:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dPX5I2zvoaIfMrTJOaEVmZ8AJ80iRBsKVksO1GxJCNo=;
+        b=ZzHLgOEL6rfH/FrYghVSfVEQktV2G0Ir7o5GkPsQTPiSTXfAartacdCWERPApI4F4h
+         z/xNML4mDKErL7wVRlTVtBRcspOz9kDbKiYzv/yyiLNLwgvPEJoSN37amJBWnAxRy9V2
+         9hVGDkdUX8hOdVMJjPWlhR6l8UlkjZKc+fziFbkc/yru2iiCKqBHpaSOUK5RnZW2S/yn
+         Pn8cacEL/2XGSr+kepi8HbhO+UN1PagUSVAQCnGrKN9SjBqwzxGDJoQQDa/+JnKN6Shy
+         o1suzUkzCeetU7bWUPKA6K7RuhGSovE+CT7GHBU6X1HJ4Oh0B0JzqvprdhMf8kXfmmJ2
+         BA5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dPX5I2zvoaIfMrTJOaEVmZ8AJ80iRBsKVksO1GxJCNo=;
+        b=AiJY1wIDOlP/I1Q3/Xgr886AueS8YouF8A+nXVU/536sHPQzkaZWMWc/Xmq3AeLHyo
+         kRNzys9it8nVziiqns4Kx68g3LEf/rQ+jNSFYn2ECI0CXdIbvqc79iCBxCA6eXHsuFct
+         TFlbIwAdC+8qHKk+fRd81IHlKr++c+uUDhVXiKn30DeOgMfXgUrHiuVrff57E1QPCQX4
+         4dCU1DVUsuQR5KjkMvC605zBmkCInXjIo6ONKXoQJY9NezNJaibjLTKsZwmXFS47NVun
+         sHNIucB5A/tU3/Sm/9NuPiVtYyNselHKNDsJ+mjcxOrZqcsDcz2FtgR2qeXhsrQs0RX4
+         7bdA==
+X-Gm-Message-State: AOAM531R5LQF7SdGpml6ZLTo+5aGEGkRtMeET1m5Tffow30nt/N7YhQi
+        eVvq22XTCA93hgea1/FAqBAiQw==
+X-Google-Smtp-Source: ABdhPJxpkjlVoi1K6zt3TxppMxnpJwdAYknEnoLeYjpkZ5qIgAHhN1uKddV4rWohLA2QlS4I+GW9GA==
+X-Received: by 2002:a65:620e:: with SMTP id d14mr11477128pgv.360.1595060966415;
+        Sat, 18 Jul 2020 01:29:26 -0700 (PDT)
+Received: from localhost ([223.190.30.182])
+        by smtp.gmail.com with ESMTPSA id k100sm4874773pjb.57.2020.07.18.01.29.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 18 Jul 2020 01:29:25 -0700 (PDT)
+Date:   Sat, 18 Jul 2020 13:59:14 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Sumit Gupta <sumitg@nvidia.com>, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
+        mirq-linux@rere.qmqm.pl, devicetree@vger.kernel.org,
+        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
+        mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ PATCH v6 2/3] arm64: tegra: Add t194 ccplex
+ compatible and bpmp property
+Message-ID: <20200718082914.ecyngrsoir7j5q6y@vireshk-mac-ubuntu>
+References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
+ <1594819885-31016-3-git-send-email-sumitg@nvidia.com>
+ <20200716123715.GA535268@ulmo>
 MIME-Version: 1.0
-In-Reply-To: <20200717121159.1729bb47@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716123715.GA535268@ulmo>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/18 3:11, Jakub Kicinski wrote:
-> On Fri, 17 Jul 2020 16:34:47 +0800 Luo bin wrote:
->> add support to handle hw abnormal event such as hardware failure,
->> cable unplugged,link error
->>
->> Signed-off-by: Luo bin <luobin9@huawei.com>
->> Reported-by: kernel test robot <lkp@intel.com>
+On 16-07-20, 14:37, Thierry Reding wrote:
+> On Wed, Jul 15, 2020 at 07:01:24PM +0530, Sumit Gupta wrote:
+> > On Tegra194, data on valid operating points for the CPUs needs to be
+> > queried from BPMP. In T194, there is no node representing CPU complex.
+> > So, add compatible string to the 'cpus' node instead of using dummy
+> > node to bind cpufreq driver. Also, add reference to the BPMP instance
+> > for the CPU complex.
+> > 
+> > Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> > ---
+> >  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 2 ++
+> >  1 file changed, 2 insertions(+)
 > 
->> +static void hinic_comm_recv_mgmt_self_cmd_reg(struct hinic_pfhwdev *pfhwdev,
->> +					      u8 cmd,
->> +					      comm_mgmt_self_msg_proc proc)
->> +{
->> +	u8 cmd_idx;
->> +
->> +	cmd_idx = pfhwdev->proc.cmd_num;
->> +	if (cmd_idx >= HINIC_COMM_SELF_CMD_MAX) {
->> +		dev_err(&pfhwdev->hwdev.hwif->pdev->dev,
->> +			"Register recv mgmt process failed, cmd: 0x%x\n", cmd);
->> +		return;
->> +	}
->> +
->> +	pfhwdev->proc.info[cmd_idx].cmd = cmd;
->> +	pfhwdev->proc.info[cmd_idx].proc = proc;
->> +	pfhwdev->proc.cmd_num++;
->> +}
->> +
->> +static void hinic_comm_recv_mgmt_self_cmd_unreg(struct hinic_pfhwdev *pfhwdev,
->> +						u8 cmd)
->> +{
->> +	u8 cmd_idx;
->> +
->> +	cmd_idx = pfhwdev->proc.cmd_num;
->> +	if (cmd_idx >= HINIC_COMM_SELF_CMD_MAX) {
->> +		dev_err(&pfhwdev->hwdev.hwif->pdev->dev, "Unregister recv mgmt process failed, cmd: 0x%x\n",
->> +			cmd);
->> +		return;
->> +	}
->> +
->> +	for (cmd_idx = 0; cmd_idx < HINIC_COMM_SELF_CMD_MAX; cmd_idx++) {
->> +		if (cmd == pfhwdev->proc.info[cmd_idx].cmd) {
->> +			pfhwdev->proc.info[cmd_idx].cmd = 0;
->> +			pfhwdev->proc.info[cmd_idx].proc = NULL;
->> +			pfhwdev->proc.cmd_num--;
->> +		}
->> +	}
->> +}
->> +
->> +static void comm_mgmt_msg_handler(void *handle, u8 cmd, void *buf_in,
->> +				  u16 in_size, void *buf_out, u16 *out_size)
->> +{
->> +	struct hinic_pfhwdev *pfhwdev = handle;
->> +	u8 cmd_idx;
->> +
->> +	for (cmd_idx = 0; cmd_idx < pfhwdev->proc.cmd_num; cmd_idx++) {
->> +		if (cmd == pfhwdev->proc.info[cmd_idx].cmd) {
->> +			if (!pfhwdev->proc.info[cmd_idx].proc) {
->> +				dev_warn(&pfhwdev->hwdev.hwif->pdev->dev,
->> +					 "PF recv mgmt comm msg handle null, cmd: 0x%x\n",
->> +					 cmd);
->> +			} else {
->> +				pfhwdev->proc.info[cmd_idx].proc
->> +					(&pfhwdev->hwdev, buf_in, in_size,
->> +					 buf_out, out_size);
->> +			}
->> +
->> +			return;
->> +		}
->> +	}
->> +
->> +	dev_warn(&pfhwdev->hwdev.hwif->pdev->dev, "Received unknown mgmt cpu event: 0x%x\n",
->> +		 cmd);
->> +
->> +	*out_size = 0;
->> +}
->> +
->> +static void chip_fault_show(struct hinic_hwdev *hwdev,
->> +			    struct hinic_fault_event *event)
->> +{
->> +	char fault_level[FAULT_TYPE_MAX][FAULT_SHOW_STR_LEN + 1] = {
->> +		"fatal", "reset", "flr", "general", "suggestion"};
->> +	char level_str[FAULT_SHOW_STR_LEN + 1] = {0};
->> +	u8 level;
->> +
->> +	level = event->event.chip.err_level;
->> +	if (level < FAULT_LEVEL_MAX)
->> +		strncpy(level_str, fault_level[level],
->> +			FAULT_SHOW_STR_LEN);
->> +	else
->> +		strncpy(level_str, "Unknown", FAULT_SHOW_STR_LEN);
->> +
->> +	if (level == FAULT_LEVEL_SERIOUS_FLR)
->> +		dev_err(&hwdev->hwif->pdev->dev, "err_level: %d [%s], flr func_id: %d\n",
->> +			level, level_str, event->event.chip.func_id);
->> +
->> +	dev_err(&hwdev->hwif->pdev->dev, "Module_id: 0x%x, err_type: 0x%x, err_level: %d[%s], err_csr_addr: 0x%08x, err_csr_value: 0x%08x\n",
->> +		event->event.chip.node_id,
->> +		event->event.chip.err_type, level, level_str,
->> +		event->event.chip.err_csr_addr,
->> +		event->event.chip.err_csr_value);
->> +}
->> +
->> +static void fault_report_show(struct hinic_hwdev *hwdev,
->> +			      struct hinic_fault_event *event)
->> +{
->> +	char fault_type[FAULT_TYPE_MAX][FAULT_SHOW_STR_LEN + 1] = {
->> +		"chip", "ucode", "mem rd timeout", "mem wr timeout",
->> +		"reg rd timeout", "reg wr timeout", "phy fault"};
->> +	char type_str[FAULT_SHOW_STR_LEN + 1] = {0};
->> +
->> +	dev_err(&hwdev->hwif->pdev->dev, "Fault event report received, func_id: %d\n",
->> +		HINIC_HWIF_FUNC_IDX(hwdev->hwif));
->> +
->> +	if (event->type < FAULT_TYPE_MAX)
->> +		strncpy(type_str, fault_type[event->type], FAULT_SHOW_STR_LEN);
->> +	else
->> +		strncpy(type_str, "Unknown", FAULT_SHOW_STR_LEN);
->> +
->> +	dev_err(&hwdev->hwif->pdev->dev, "Fault type: %d [%s]\n", event->type,
->> +		type_str);
->> +	dev_err(&hwdev->hwif->pdev->dev,  "Fault val[0]: 0x%08x, val[1]: 0x%08x, val[2]: 0x%08x, val[3]: 0x%08x\n",
->> +		event->event.val[0], event->event.val[1], event->event.val[2],
->> +		event->event.val[3]);
->> +
->> +	switch (event->type) {
->> +	case FAULT_TYPE_CHIP:
->> +		chip_fault_show(hwdev, event);
->> +		break;
->> +	case FAULT_TYPE_UCODE:
->> +		dev_err(&hwdev->hwif->pdev->dev, "Cause_id: %d, core_id: %d, c_id: %d, epc: 0x%08x\n",
->> +			event->event.ucode.cause_id, event->event.ucode.core_id,
->> +			event->event.ucode.c_id, event->event.ucode.epc);
->> +		break;
->> +	case FAULT_TYPE_MEM_RD_TIMEOUT:
->> +	case FAULT_TYPE_MEM_WR_TIMEOUT:
->> +		dev_err(&hwdev->hwif->pdev->dev, "Err_csr_ctrl: 0x%08x, err_csr_data: 0x%08x, ctrl_tab: 0x%08x, mem_index: 0x%08x\n",
->> +			event->event.mem_timeout.err_csr_ctrl,
->> +			event->event.mem_timeout.err_csr_data,
->> +			event->event.mem_timeout.ctrl_tab,
->> +			event->event.mem_timeout.mem_index);
->> +		break;
->> +	case FAULT_TYPE_REG_RD_TIMEOUT:
->> +	case FAULT_TYPE_REG_WR_TIMEOUT:
->> +		dev_err(&hwdev->hwif->pdev->dev, "Err_csr: 0x%08x\n",
->> +			event->event.reg_timeout.err_csr);
->> +		break;
->> +	case FAULT_TYPE_PHY_FAULT:
->> +		dev_err(&hwdev->hwif->pdev->dev, "Op_type: %u, port_id: %u, dev_ad: %u, csr_addr: 0x%08x, op_data: 0x%08x\n",
->> +			event->event.phy_fault.op_type,
->> +			event->event.phy_fault.port_id,
->> +			event->event.phy_fault.dev_ad,
->> +			event->event.phy_fault.csr_addr,
->> +			event->event.phy_fault.op_data);
->> +		break;
->> +	default:
->> +		break;
->> +	}
->> +}
->> +
->> +/* pf fault report event */
->> +static void pf_fault_event_handler(void *hwdev, void *buf_in, u16 in_size,
->> +				   void *buf_out, u16 *out_size)
->> +{
->> +	struct hinic_cmd_fault_event *fault_event = buf_in;
->> +
->> +	fault_report_show(hwdev, &fault_event->event);
->> +}
->> +
->> +static void mgmt_watchdog_timeout_event_handler(void *dev,
->> +						void *buf_in, u16 in_size,
->> +						void *buf_out, u16 *out_size)
->> +{
->> +	struct hinic_mgmt_watchdog_info *watchdog_info = NULL;
->> +	struct hinic_hwdev *hwdev = dev;
->> +	u32 *dump_addr = NULL;
->> +	u32 stack_len, i, j;
->> +	u32 *reg = NULL;
->> +
->> +	if (in_size != sizeof(*watchdog_info)) {
->> +		dev_err(&hwdev->hwif->pdev->dev, "Invalid mgmt watchdog report, length: %d, should be %zu\n",
->> +			in_size, sizeof(*watchdog_info));
->> +		return;
->> +	}
->> +
->> +	watchdog_info = buf_in;
->> +
->> +	dev_err(&hwdev->hwif->pdev->dev, "Mgmt deadloop time: 0x%x 0x%x, task id: 0x%x, sp: 0x%x\n",
->> +		watchdog_info->curr_time_h, watchdog_info->curr_time_l,
->> +		watchdog_info->task_id, watchdog_info->sp);
->> +	dev_err(&hwdev->hwif->pdev->dev, "Stack current used: 0x%x, peak used: 0x%x, overflow flag: 0x%x, top: 0x%x, bottom: 0x%x\n",
->> +		watchdog_info->curr_used, watchdog_info->peak_used,
->> +		watchdog_info->is_overflow, watchdog_info->stack_top,
->> +		watchdog_info->stack_bottom);
->> +
->> +	dev_err(&hwdev->hwif->pdev->dev, "Mgmt pc: 0x%08x, lr: 0x%08x, cpsr:0x%08x\n",
->> +		watchdog_info->pc, watchdog_info->lr, watchdog_info->cpsr);
->> +
->> +	dev_err(&hwdev->hwif->pdev->dev, "Mgmt register info\n");
->> +
->> +	for (i = 0; i < 3; i++) {
->> +		reg = watchdog_info->reg + (u64)(u32)(4 * i);
->> +		dev_err(&hwdev->hwif->pdev->dev, "0x%08x 0x%08x 0x%08x 0x%08x\n",
->> +			*(reg), *(reg + 1), *(reg + 2), *(reg + 3));
->> +	}
->> +
->> +	dev_err(&hwdev->hwif->pdev->dev, "0x%08x\n", watchdog_info->reg[12]);
->> +
->> +	if (watchdog_info->stack_actlen <= 1024) {
->> +		stack_len = watchdog_info->stack_actlen;
->> +	} else {
->> +		dev_err(&hwdev->hwif->pdev->dev, "Oops stack length: 0x%x is wrong\n",
->> +			watchdog_info->stack_actlen);
->> +		stack_len = 1024;
->> +	}
->> +
->> +	dev_err(&hwdev->hwif->pdev->dev, "Mgmt dump stack, 16Bytes per line(start from sp)\n");
->> +	for (i = 0; i < (stack_len / 16); i++) {
->> +		dump_addr = (u32 *)(watchdog_info->data + ((u64)(u32)(i * 16)));
->> +		dev_err(&hwdev->hwif->pdev->dev, "0x%08x 0x%08x 0x%08x 0x%08x\n",
->> +			*dump_addr, *(dump_addr + 1), *(dump_addr + 2),
->> +			*(dump_addr + 3));
->> +	}
->> +
->> +	for (j = 0; j < ((stack_len % 16) / 4); j++) {
->> +		dump_addr = (u32 *)(watchdog_info->data +
->> +			    ((u64)(u32)(i * 16 + j * 4)));
->> +		dev_err(&hwdev->hwif->pdev->dev, "0x%08x ", *dump_addr);
->> +	}
->> +
->> +	*out_size = sizeof(*watchdog_info);
->> +	watchdog_info = buf_out;
->> +	watchdog_info->status = 0;
->> +}
+> Looks like the DT bindings are now done so I've applied this for v5.9.
 > 
-> These look like things which should be devlink health reporters.
-> 
-We need to know very detailed info about hw fault such as value of error status register which can't be showed
-through devlink health reporters and we can't dump these error status registers in case of some fatal hw fault.
-We'll implement interfaces of devlink health reporter later to show the general health state of hw to user.
+> Viresh, are you going to pick up the other patches, or do you want me
+> to pick them up and send you a pull request?
 
->> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
->> index c4c6f9c29f0e..98d2133a268b 100644
->> --- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
->> +++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
->> @@ -75,6 +75,10 @@ MODULE_PARM_DESC(rx_weight, "Number Rx packets for NAPI budget (default=64)");
->>  #define HINIC_DEAULT_TXRX_MSIX_COALESC_TIMER_CFG	32
->>  #define HINIC_DEAULT_TXRX_MSIX_RESEND_TIMER_CFG		7
->>  
->> +static const char *hinic_module_link_err[LINK_ERR_NUM] = {
->> +	"Unrecognized module",
->> +};
->> +
->>  static int change_mac_addr(struct net_device *netdev, const u8 *addr);
->>  
->>  static int set_features(struct hinic_dev *nic_dev,
->> @@ -971,6 +975,44 @@ static void link_status_event_handler(void *handle, void *buf_in, u16 in_size,
->>  	*out_size = sizeof(*ret_link_status);
->>  }
->>  
->> +static void cable_plug_event(void *handle,
->> +			     void *buf_in, u16 in_size,
->> +			     void *buf_out, u16 *out_size)
->> +{
->> +	struct hinic_cable_plug_event *plug_event = buf_in;
->> +	struct hinic_dev *nic_dev = handle;
->> +
->> +	netif_info(nic_dev, link, nic_dev->netdev,
->> +		   "Port module event: Cable %s\n",
->> +		   plug_event->plugged ? "plugged" : "unplugged");
->> +
->> +	*out_size = sizeof(*plug_event);
->> +	plug_event = buf_out;
->> +	plug_event->status = 0;
->> +}
->> +
->> +static void link_err_event(void *handle,
->> +			   void *buf_in, u16 in_size,
->> +			   void *buf_out, u16 *out_size)
->> +{
->> +	struct hinic_link_err_event *link_err = buf_in;
->> +	struct hinic_dev *nic_dev = handle;
->> +
->> +	if (link_err->err_type >= LINK_ERR_NUM)
->> +		netif_info(nic_dev, link, nic_dev->netdev,
->> +			   "Link failed, Unknown error type: 0x%x\n",
->> +			   link_err->err_type);
->> +	else
->> +		netif_info(nic_dev, link, nic_dev->netdev,
->> +			   "Link failed, error type: 0x%x: %s\n",
->> +			   link_err->err_type,
->> +			   hinic_module_link_err[link_err->err_type]);
->> +
->> +	*out_size = sizeof(*link_err);
->> +	link_err = buf_out;
->> +	link_err->status = 0;
->> +}
-> 
-> Please expose link error information via the infrastructure added in
-> commit ecc31c60240b ("ethtool: Add link extended state") rather than
-> printing it to the logs.
-Will fix. Thanks for your review.
-> .
-> 
+Applied the other two patches, Thanks.
+
+-- 
+viresh
