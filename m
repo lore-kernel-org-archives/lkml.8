@@ -2,230 +2,128 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80261C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2B020684
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:12:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JbxblSYf"
+	by mail.kernel.org (Postfix) with ESMTP id A10E120684
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgGRNMy (ORCPT
+        id S1726780AbgGRNLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:12:54 -0400
-Received: from crapouillou.net ([89.234.176.41]:45830 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbgGRNMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:12:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1595077971; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lwtrMVGsN8PxkJfANGzcJA7Rjlb0vvZkOcvOhQ+zmhs=;
-        b=JbxblSYfshTN2xRtlSX3kNeZAFF/lSbpQzokbBLp/s40f1O/L8GYhIB+1uCpKVxGZJyMc8
-        7DWEKDfdDuUoQNI0TusHLke+6pJBpazkFN+1T77yQgZPBvY2SQBZtt3blf4dvwXLUDdNOA
-        dEKNpL7WtdKIZkz8z/35r70YhfzCJ/U=
-Date:   Sat, 18 Jul 2020 15:12:41 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
- X1000 OST.
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, tglx@linutronix.de, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Message-Id: <512ODQ.64YN0BEY1JJG@crapouillou.net>
-In-Reply-To: <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
-References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
-        <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
-        <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
-        <f0dd2ea5-0627-35cf-5a58-aaff0bcb22cd@wanyeetech.com>
-        <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
+        Sat, 18 Jul 2020 09:11:25 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:40321 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbgGRNLY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 09:11:24 -0400
+Received: by mail-lj1-f175.google.com with SMTP id j11so15653130ljo.7
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 06:11:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oC2TdJ/dNnzxfgvFOaYpP2+hh2Unvt7vg9RJcLPpBys=;
+        b=OfkYQBkMIQusx9j0wyKmnD3ro+ziao48G0ZSNq+m7PybQZHy9qc+uVsLoQ+BBu1Vhf
+         S+E+7MdQjrn3lOvFmcoAaCq3MMY1Q5QrkRC621JAYQKMHQIBsN6neVDYhUMxU1t2ruiW
+         53Z6kuiVRgHFmewrb2fYl4FvZGgkeMOUpjhldAdImqtVgwzNPC+MyQIN2xP6B/uvYTtU
+         u1l0YL5CkylyP29IEmUk2GsPmxQchgoliOVMDnpQHEtSYjmjZ/B/6vNOaHzoaKKBgyav
+         8ike5W5EWtZlw1gavhX2TViNDrClIixh9cI3uEBRBmFq8vsOY2A1eVVEB5tfhApZZfGS
+         vK1g==
+X-Gm-Message-State: AOAM530OlngF8/jJbmkvjwsEs/hRiyekgcA1e+LT8F8VGhSH2DvNi2Rc
+        QDG0lg66hlb9DLzThwqEqE8DPe0MrTU=
+X-Google-Smtp-Source: ABdhPJwgWboWUPg7HqerSwva/+PCD3H8ibZPLK7u29IojxxDSR+TocpM3DDB1llkAYz1uSJa/te3JQ==
+X-Received: by 2002:a2e:a168:: with SMTP id u8mr5879183ljl.178.1595077881769;
+        Sat, 18 Jul 2020 06:11:21 -0700 (PDT)
+Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.gmail.com with ESMTPSA id w4sm2202676ljw.16.2020.07.18.06.11.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jul 2020 06:11:21 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [v2 1/4] coccinelle: api: extend memdup_user transformation with
+ GFP_USER
+To:     Julia Lawall <julia.lawall@inria.fr>,
+        Markus Elfring <Markus.Elfring@web.de>
+Cc:     Coccinelle <cocci@systeme.lip6.fr>, linux-kernel@vger.kernel.org
+References: <0b9f2c58-e124-22d2-d91d-62a6e831c880@web.de>
+ <alpine.DEB.2.22.394.2007180841520.2538@hadrien>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Message-ID: <cf2bd604-3094-f90a-52a8-ff5a44cf3850@linux.com>
+Date:   Sat, 18 Jul 2020 16:11:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <alpine.DEB.2.22.394.2007180841520.2538@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Hi,
 
-Le ven. 17 juil. 2020 =C3=A0 10:02, Daniel Lezcano=20
-<daniel.lezcano@linaro.org> a =C3=A9crit :
-> On 17/07/2020 08:13, Zhou Yanjie wrote:
->>  Hi Daniel,
->>=20
->>  =E5=9C=A8 2020/7/17 =E4=B8=8B=E5=8D=8812:20, Daniel Lezcano =E5=86=99=
-=E9=81=93:
->>>  On 10/07/2020 19:02, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) wrote:
->>>>  X1000 and SoCs after X1000 (such as X1500 and X1830) had a=20
->>>> separate
->>>>  OST, it no longer belongs to TCU. This driver will register both a
->>>>  clocksource and a sched_clock to the system.
->>>>=20
->>>>  Tested-by: =E5=91=A8=E6=AD=A3 (Zhou Zheng) <sernia.zhou@foxmail.com>
->>>>  Co-developed-by: =E6=BC=86=E9=B9=8F=E6=8C=AF (Qi Pengzhen) <aric.pzqi=
-@ingenic.com>
->>>>  Signed-off-by: =E6=BC=86=E9=B9=8F=E6=8C=AF (Qi Pengzhen) <aric.pzqi@i=
-ngenic.com>
->>>>  Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@=
-wanyeetech.com>
->>>>  Reviewed-by: Paul Cercueil <paul@crapouillou.net>
->>>>  ---
->>>>=20
->>>>  Notes:
->>>>       v1->v2:
->>>>       Fix compile warnings.
->>>>       Reported-by: kernel test robot <lkp@intel.com>
->>>>            v2->v3:
->>>>       No change.
->>>>            v3->v4:
->>>>       1.Rename "ost" to "sysost"
->>>>       1.Remove unrelated changes.
->>>>       2.Remove ost_clock_parent enum.
->>>>       3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
->>>>       4.Set up independent .recalc_rate/.set_rate for percpu/global
->>>>  timer.
->>>>       5.No longer call functions in variable declarations.
->>>>            v4->v5:
->>>>       Use "of_io_request_and_map()" instead "of_iomap()".
->>>>       Suggested-by: Paul Cercueil <paul@crapouillou.net>
->>>>            v5->v6:
->>>>       No change.
->>>>=20
->>>>    drivers/clocksource/Kconfig          |  11 +
->>>>    drivers/clocksource/Makefile         |   1 +
->>>>    drivers/clocksource/ingenic-sysost.c | 539
->>>>  +++++++++++++++++++++++++++++++++++
->>>>    3 files changed, 551 insertions(+)
->>>>    create mode 100644 drivers/clocksource/ingenic-sysost.c
->>>>=20
->>>>  diff --git a/drivers/clocksource/Kconfig=20
->>>> b/drivers/clocksource/Kconfig
->>>>  index 91418381fcd4..1bca8b8fb30f 100644
->>>>  --- a/drivers/clocksource/Kconfig
->>>>  +++ b/drivers/clocksource/Kconfig
->>>>  @@ -696,6 +696,17 @@ config INGENIC_TIMER
->>>>        help
->>>>          Support for the timer/counter unit of the Ingenic JZ SoCs.
->>>>    +config INGENIC_SYSOST
->>>>  +    bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
->>>  We usually use silent options and let the platform's Kconfig=20
->>> enable it.
->>>  We show up the option only when COMPILE_TEST is enabled.
->>>=20
->>>  Is there a reason to do it differently?
->>=20
->>=20
->>  Do you mean
->>=20
->>  bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
->>=20
->>  or
->>=20
->>  default MACH_INGENIC ?
->=20
-> Both, no default here.
->=20
-> eg.
->=20
-> bool "Clocksource/timer using the SYSOST in Ingenic X SoCs" if=20
-> COMPILE_TEST
->=20
-> and
->=20
-> in arch/mips/Kconfig in the config MACH_INGENIC section :
->=20
-> ...
-> select INGENIC_SYSOST
-> ...
+On 7/18/20 9:45 AM, Julia Lawall wrote:
+> This on is indeed a problem.  I think it was not detected in testing,
+> because in the current kernel the rule never applies.  But Denis, in
+> 
+> -  to = \(kmalloc\|kzalloc\)
+>                 (size,\(GFP_KERNEL\|GFP_USER\|
+>                       \(GFP_KERNEL\|GFP_USER\)|__GFP_NOWARN\));
+> 
+> you do indeed need to put - in front of the second and third lines as
+> well.
 
-Disagreed. That's not how we do things on MIPS. Selecting MACH_INGENIC=20
-means "this kernel will support Ingenic SoCs", but not that it will=20
-only support these. Hence the depends on MIPS / default MACH_INGENIC.
+Thanks, Markus, Julia. I will send v3. Julia, is it ok with you, if I will
+drop the last patch with "selfcheck" this time?
 
-As for the select INGENIC_SYSOST, this driver only applies to a few=20
-SoCs, I certainly don't want it to be force-enabled. I don't even wait=20
-it to be force-enabled on X1000, since it is optional there too.
-
-Cheers,
--Paul
-
->=20
->>  This driver has some origins from "INGENIC_TIMER" driver and
->>  "INGENIC_OST" driver.
->>  Early Ingenic processors used TCU (timer/counter unit, has 6 or 8
->>  generic timer channels) to provide clocksource and clockevent (both=20
->> with
->>  only 16bit precision). This part of the processor can only use
->>  "INGENIC_TIMER" driver.
->>=20
->>  Later processors provide an independent 32bit or 64bit timer channel
->>  (still under TCU, known as ost channel, this channel can not=20
->> generate
->>  interrupt) to provid higher precision clocksource. The "INGENIC_OST"
->>  driver is for this channel. These processors can use "INGENIC_TIMER"
->>  driver, but using "INGENIC_OST" driver to provide higher precision
->>  clocksource would be a better choice (clockevent still needs to be
->>  provided by generic timer channel of TCU, and still 16bit=20
->> precision).
->>=20
->>  And the recent processors provide a SYSOST components, it is=20
->> independent
->>  from TCU, including a 64bit timer channel for clocksource and a=20
->> 32bit
->>  timer channel for clockevent. Although these processors can also use
->>  "INGENIC_TIMER" driver, but the better choice is completely=20
->> independent
->>  use of "INGENIC_SYSOST" driver to provide higher precision=20
->> clocksource
->>  and clockevent.
->=20
-> Ok, the rating should do the job then.
->=20
-> Thanks for the explanation.
->=20
->>  You may have already noticed that this independent SYSOST component=20
->> is
->>  like an upgraded and streamlined TCU, which only retains one generic
->>  timer channel that can generate interrupts, upgrade it from 16bit to
->>  32bit, and then retain the 64bit ost channel. so the driver code and
->>  Kconfig code of this patch is largely referenced
->>  "INGENIC_TIMER" driver and "INGENIC_OST" driver.
->>=20
->>  Thanks and best regards!
->>=20
->>>>  +    default MACH_INGENIC
->>>>  +    depends on MIPS || COMPILE_TEST
->>>>  +    depends on COMMON_CLK
->>>>  +    select MFD_SYSCON
->>>>  +    select TIMER_OF
->>>>  +    select IRQ_DOMAIN
->>>>  +    help
->>>>  +      Support for the SYSOST of the Ingenic X Series SoCs.
->>>>  +
->>>  [ ... ]
->>>=20
->>>=20
->=20
->=20
-> --
-> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for AR=
-M=20
-> SoCs
->=20
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
-
-
+Regards,
+Denis
