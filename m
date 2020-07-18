@@ -2,175 +2,91 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CFBC433E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32743C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C34AE2076D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E6F2074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJkmroxR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hULWg5e/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbgGRHRA (ORCPT
+        id S1728975AbgGRHZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 03:17:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57730 "EHLO
+        Sat, 18 Jul 2020 03:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgGRHQz (ORCPT
+        with ESMTP id S1725983AbgGRHZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 03:16:55 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE90EC0619D6
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 00:16:54 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ch3so7497058pjb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 00:16:54 -0700 (PDT)
+        Sat, 18 Jul 2020 03:25:38 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1770CC0619D2;
+        Sat, 18 Jul 2020 00:25:38 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so13254825wrl.8;
+        Sat, 18 Jul 2020 00:25:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hfxUueH3QbeglEO7GeTZdxJkg4B3ud/EaO3dQbu1Hog=;
-        b=dJkmroxRnASHU49YmVLzvTRNRNDhNriN4AkQBH8Uh7RzLxxpddcTCglkk9C7OIlojz
-         Bg2I+4BZod7hZhFJb4dTzGDjGMFEAzCoAGZUxrohX87vux5J82jnWcq6xYuZqqIZ3t79
-         cudhKXbUTgB0WBVnong8BkqETzxZqazL+t9i2kcgBL6RMy0urpkLO/E8t6x13pCacSLr
-         M225oOctgnwDwEOeDN4cZe4Wa272TY4DFz43fF5ULxJ05rC4iKP8fPJzPgr23NjUEmoo
-         5n+E3W15gaB6ylvXHyqJcWF4Xpa405tbjktCA6vM+i1brDEedNMWDrOL8A6BPYA2lYLQ
-         9tRQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dKmmlTkJ/UK1rBdA5rLoQaKVO8RXmU6FeHJYL7jfrss=;
+        b=hULWg5e/Woha7mtNXrFt49+AHIYkexrt8rcI6w4zndMhKK47SrMHwi6pnrPAyK1Psu
+         kCLBz0xef4+bP40lXPyUiS5WCoAC/P2bsQweER7fSNS3iHXe9kxASVFcHgE6yOCB2wxj
+         GvEicGY4ef1tPo0UCkKgF2VctGxdbcE1RQ4VX/rMZm+NisDTDuonBBo6fDXCrdDVYXPB
+         vHIx/Qynek5hbd+rdZZBoGwnFej38me6BkyN5vgkDBrHIta2+avlzsV9PkWOVkJFT1xD
+         Pyq/9ZL1sKhbDPbzzwoUFVmQ5smIKvh9Z7KZ/73QJ7pkVnrcx+n3416O+y3AjFdBf0UN
+         WXsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hfxUueH3QbeglEO7GeTZdxJkg4B3ud/EaO3dQbu1Hog=;
-        b=o4z/p0ePkpTPu7na3wqzhGlXrPYnOk+ndniJoREJh4c84Osr0uYTg6fe+MHD+ZVoOO
-         nWVdVyz93M8XOMmhY0W+7ezFJFPRU0wMRlPvaZdIeW6RB0E1ArAVZxcfC12El2UKSVeu
-         20RzYAalJMgAf2bP/QBnOqDgORJCKfIpqUt//ZO/6Et1QabCQTEG1lqPCymUatDEundO
-         2w26tf6gx0sN8S+wOkQUN98oVWZ3hMnK+k6GNX+laaMt6jwFwSyWWSwa8mntClirwLqA
-         9YOutAnVZ3ZUbML3q7nAsK2xHu0b/YCcjtb3tWyZg7a797hDMCWGP2wUlGeoV/zBrh3U
-         ajOQ==
-X-Gm-Message-State: AOAM531yTLrC08NuUThPWjRcoYqp9aFIz/vLIRTN6JahJudEGzCLJNi9
-        Oj2MPFpKaArH/8X+js5ItLw9Wg==
-X-Google-Smtp-Source: ABdhPJw+e+O6DfxUZ/zVD14RmqoHO4q64ucdaV4e2CBHpcvf3lklVV+zwiNz4hv2SJez9BqpzI8uPg==
-X-Received: by 2002:a17:902:40a:: with SMTP id 10mr10822306ple.260.1595056613941;
-        Sat, 18 Jul 2020 00:16:53 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x9sm7088652pfq.11.2020.07.18.00.16.52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dKmmlTkJ/UK1rBdA5rLoQaKVO8RXmU6FeHJYL7jfrss=;
+        b=hg17IFN/Kgcmw1DH/TbXswEPfMTSaF7YncfCvFpnZJyutvhH3o3d70VgS0p7f3UN7u
+         tuSGPpAR65rAGxoho9jIDsX2bheHKNP2t3b9EDfkF4++YEiWNRL62U0rBgl7eNCGTTsK
+         6qrkRCe3C5QRSdZSCBFCsMBPPp3mNrf1JZ7I0Qy70xs/OLBCc/NjJBxoUJfW7xy8ZRgR
+         sVJfJkPV2f9+3htt49K95UB4SAQ6LTQ3ub5h4vnXb0t9WyyexIo3VAxB8bOeKB7pMBnQ
+         XPLWtHNmoT6uuXwkKEBAjbu1czAB8fTo23yPENtNamFFBPB9JZMZrM02CTgDaIhIJzT7
+         qPow==
+X-Gm-Message-State: AOAM532w0w9WYSPajDz6fZELpDJQQYTYBVn2s3UH8ryGbigteolpZmbL
+        bSXslhoCppfx0dGaCI3YTs0=
+X-Google-Smtp-Source: ABdhPJz6pZ2GZOEtBjMTXW3ONHReL3SZ/nRUksYF8p5JqWsqUrczP2SwHKfQ+DWsmLkyh+WFUFUZgA==
+X-Received: by 2002:a05:6000:d0:: with SMTP id q16mr14502799wrx.166.1595057136678;
+        Sat, 18 Jul 2020 00:25:36 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id c7sm19550192wrq.58.2020.07.18.00.25.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 00:16:53 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 00:16:50 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mka@chromium.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        Pradeep P V K <ppvk@codeaurora.org>
-Subject: Re: [PATCH V1] arm64: dts: qcom: Add bandwidth votes for eMMC and
- SDcard
-Message-ID: <20200718071650.GC61202@yoga>
-References: <1595054006-6803-1-git-send-email-sbhanu@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595054006-6803-1-git-send-email-sbhanu@codeaurora.org>
+        Sat, 18 Jul 2020 00:25:36 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH 0/2] arm64: dts: meson: add more SM1 soundcards
+Date:   Sat, 18 Jul 2020 07:25:30 +0000
+Message-Id: <20200718072532.8427-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17 Jul 23:33 PDT 2020, Shaik Sajida Bhanu wrote:
+This series adds basic support for LPCM audio over HDMI interfaces
+to the Khadas VIM3L (reusing the same config as the VIM3) and the
+HardKernel ODROID-C4 devices. I'm sure support can be extended to
+include other hardware but this gets the HDMI port working as a
+minimum capability. I have personally tested with both devices.
 
-Plase add "sc7180: " between "qcom:" and "Add"
+Christian Hewitt (2):
+  arm64: dts: meson: add audio playback to odroid-c4
+  arm64: dts: meson: add audio playback to khadas-vim3l
 
-> From: Pradeep P V K <ppvk@codeaurora.org>
-> 
-> Add the bandwidth domain supporting performance state and
-> the corresponding OPP tables for the sdhc device on sc7180.
-> 
+ .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 88 +++++++++++++++++++
+ .../boot/dts/amlogic/meson-sm1-odroid-c4.dts  | 88 +++++++++++++++++++
+ 2 files changed, 176 insertions(+)
 
-You need Pradeep's signed-off-by here before yours.
+-- 
+2.17.1
 
-> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> ---
-> This change is depends on the patch series
-> https://lkml.org/lkml/2020/6/30/1280
-> Also depends on documentation commit 557ed5f (Present on linux-next)
-
-Afaict both of these exists in linux-next, so no need to mention them.
-
-
-Would be nice to have Rajendra's ack/reviewed-by on this patch, as
-you're amending his. Please Cc him.
-
-The change itself looks good to me though.
-
-Regards,
-Bjorn
-
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 68f9894..d78a066 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -684,6 +684,9 @@
->  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
->  					<&gcc GCC_SDCC1_AHB_CLK>;
->  			clock-names = "core", "iface";
-> +			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
-> +				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
-> +			interconnect-names = "sdhc-ddr","cpu-sdhc";
->  			power-domains = <&rpmhpd SC7180_CX>;
->  			operating-points-v2 = <&sdhc1_opp_table>;
->  
-> @@ -704,11 +707,15 @@
->  				opp-100000000 {
->  					opp-hz = /bits/ 64 <100000000>;
->  					required-opps = <&rpmhpd_opp_low_svs>;
-> +					opp-peak-kBps = <100000 100000>;
-> +					opp-avg-kBps = <100000 50000>;
->  				};
->  
->  				opp-384000000 {
->  					opp-hz = /bits/ 64 <384000000>;
->  					required-opps = <&rpmhpd_opp_svs_l1>;
-> +					opp-peak-kBps = <600000 900000>;
-> +					opp-avg-kBps = <261438 300000>;
->  				};
->  			};
->  		};
-> @@ -2476,6 +2483,10 @@
->  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
->  					<&gcc GCC_SDCC2_AHB_CLK>;
->  			clock-names = "core", "iface";
-> +
-> +			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
-> +				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
-> +			interconnect-names = "sdhc-ddr","cpu-sdhc";
->  			power-domains = <&rpmhpd SC7180_CX>;
->  			operating-points-v2 = <&sdhc2_opp_table>;
->  
-> @@ -2489,11 +2500,15 @@
->  				opp-100000000 {
->  					opp-hz = /bits/ 64 <100000000>;
->  					required-opps = <&rpmhpd_opp_low_svs>;
-> +					opp-peak-kBps = <160000 100000>;
-> +					opp-avg-kBps = <80000 50000>;
->  				};
->  
->  				opp-202000000 {
->  					opp-hz = /bits/ 64 <202000000>;
->  					required-opps = <&rpmhpd_opp_svs_l1>;
-> +					opp-peak-kBps = <200000	120000>;
-> +					opp-avg-kBps = <100000 60000>;
->  				};
->  			};
->  		};
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
