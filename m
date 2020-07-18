@@ -2,86 +2,105 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFED8C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06CEA2064B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A986E2064B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595083285;
+	bh=dmEgNW5VbAFeNYVCYzm5DHh+GZ2HAhVpvEA/afSGYk8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=whTggWk2+fubdPzL4LEa/95q5Q8b7H/+iz1cOmGBO9fArKiHQBpwXTPEn5G6BmkIU
+	 nKk88rYR3xQatnoGaLBpcsleLOnOaO/GBf3Gj6z53i7b+J7kf8BRN0h73M+ZNYg+PC
+	 8D0Mpb5qYPTPH8sp3UU7foD+FQaXQlpwEbm/DQxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgGROky (ORCPT
+        id S1727955AbgGROlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 10:40:54 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:38918 "EHLO gloria.sntech.de"
+        Sat, 18 Jul 2020 10:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgGROkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 10:40:53 -0400
-Received: from x2f7f83e.dyn.telefonica.de ([2.247.248.62] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jwo0t-0007Eg-A6; Sat, 18 Jul 2020 16:40:31 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Johan Jonker <jbx6244@gmail.com>, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-rockchip@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Carlos de Paula <me@carlosedp.com>,
-        dmaengine@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 0/14] Patches to improve transfer efficiency for Rockchip SoCs.
-Date:   Sat, 18 Jul 2020 16:40:29 +0200
-Message-ID: <1883465.KieDo6KLrp@phil>
-In-Reply-To: <1593439555-68130-1-git-send-email-sugar.zhang@rock-chips.com>
-References: <1593439555-68130-1-git-send-email-sugar.zhang@rock-chips.com>
+        id S1726775AbgGROlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 10:41:23 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEC982064B
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 14:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595083283;
+        bh=dmEgNW5VbAFeNYVCYzm5DHh+GZ2HAhVpvEA/afSGYk8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=czALAJCOZ7586Awrv9GznRMNKeV/qdgPQJFCXCCfE15k5wnr8ifFsqlY3oV7mCnuO
+         Q4Byrexj0+FEgdcIrZDW46mzYt0GKGFxLsc13HJha2aWxv5/0ZyAwSifiXG+EkkYYw
+         6q8zsKSjIQOgjsaYChVhyEqPQnJBNzq4ogGdEHRY=
+Received: by mail-wm1-f43.google.com with SMTP id g75so18362869wme.5
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 07:41:22 -0700 (PDT)
+X-Gm-Message-State: AOAM533XoFQCl/7hY+DCKw7rNw8G/LihBGH0NnKM3YAuNghGj6MViWah
+        LuoBglB8PHx53cay2j+zGhl6aEvOchOBSYVIIywbxQ==
+X-Google-Smtp-Source: ABdhPJyW8HJzd/bIocRzxwAX14QSJxaW6VGWP36zZ9S5wOQEKzeQ9o9fEK2iENYr8TT19ujOO7fnUUtzTnjw/TsJqVI=
+X-Received: by 2002:a1c:e4d4:: with SMTP id b203mr14776945wmh.49.1595083281508;
+ Sat, 18 Jul 2020 07:41:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20200716182208.180916541@linutronix.de> <20200716185424.011950288@linutronix.de>
+ <202007161336.B993ED938@keescook> <87d04vt98w.fsf@nanos.tec.linutronix.de>
+ <202007171045.FB4A586F1D@keescook> <87mu3yq6sf.fsf@nanos.tec.linutronix.de>
+ <CALCETrXz_vEySQJ=f3MTPG9XjZS7U0P-diJE9j_+0KRa_Kie=Q@mail.gmail.com> <875zakq56t.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <875zakq56t.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 18 Jul 2020 07:41:09 -0700
+X-Gmail-Original-Message-ID: <CALCETrU-z_73BsKwNq0fTDEg7tVicd=jOEaq-6LnH24uNWShDg@mail.gmail.com>
+Message-ID: <CALCETrU-z_73BsKwNq0fTDEg7tVicd=jOEaq-6LnH24uNWShDg@mail.gmail.com>
+Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry functionality
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 29. Juni 2020, 16:05:41 CEST schrieb Sugar Zhang:
-> Changes in v3:
-> - rephrase commit message
-> - fix typos in commit message
-> - split the patch for [PATCH V2 1/14]
-> - reorder the patch series
-> 
-> Changes in v2:
-> - fix FATAL ERROR: Unable to parse input tree
-> 
-> Sugar Zhang (14):
->   dmaengine: pl330: Remove the burst limit for quirk 'NO-FLUSHP'
->   dmaengine: pl330: Improve transfer efficiency for the dregs
->   dt-bindings: dma: pl330: Document the quirk 'arm,pl330-periph-burst'
->   dmaengine: pl330: Add quirk 'arm,pl330-periph-burst'
->   ARM: dts: rk3036: Add 'arm,pl330-periph-burst' for dmac
->   ARM: dts: rk322x: Add 'arm,pl330-periph-burst' for dmac
->   ARM: dts: rk3288: Add 'arm,pl330-periph-burst' for dmac
->   ARM: dts: rk3xxx: Add 'arm,pl330-periph-burst' for dmac
->   ARM: dts: rv1108: Add 'arm,pl330-periph-burst' for dmac
->   arm64: dts: px30: Add 'arm,pl330-periph-burst' for dmac
->   arm64: dts: rk3308: Add 'arm,pl330-periph-burst' for dmac
->   arm64: dts: rk3328: Add 'arm,pl330-periph-burst' for dmac
->   arm64: dts: rk3368: Add 'arm,pl330-periph-burst' for dmac
->   arm64: dts: rk3399: Add 'arm,pl330-periph-burst' for dmac
+On Sat, Jul 18, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy Lutomirski <luto@kernel.org> writes:
+> > On Fri, Jul 17, 2020 at 12:29 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> The alternative is to play nasty games with TIF_IA32, TIF_ADDR32 and
+> >> TIF_X32 to free up bits for 32bit and make the flags field 64 bit on 64
+> >> bit kernels, but I prefer to do the above seperation.
+> >
+> > I'm all for cleaning it up, but I don't think any nasty games would be
+> > needed regardless.  IMO at least the following flags are nonsense and
+> > don't belong in TIF_anything at all:
+> >
+> > TIF_IA32, TIF_X32: can probably be deleted.  Someone would just need
+> > to finish the work.
+> > TIF_ADDR32: also probably removable, but I'm less confident.
+> > TIF_FORCED_TF: This is purely a ptrace artifact and could easily go
+> > somewhere else entirely.
+> >
+> > So getting those five bits back would be straightforward.
+> >
+> > FWIW, TIF_USER_RETURN_NOTIFY is a bit of an odd duck: it's an
+> > entry/exit word *and* a context switch word.  The latter is because
+> > it's logically a per-cpu flag, not a per-task flag, and the context
+> > switch code moves it around so it's always set on the running task.
+>
+> Gah, I missed the context switch thing of that. That stuff is hideous.
 
-applied the patches 5-14 but merged them into one for arm32
-and one for arm64 and did some slight reordering when the new
-property was added at the bottom of the node.
-
-Thanks
-Heiko
-
-
+It's also delightful because anything that screws up that dance (such
+as failure to do the exit-to-usermode path exactly right) likely
+results in an insta-root-hole.  If we fail to run user return
+notifiers, we can run user code with incorrect syscall MSRs, etc.
