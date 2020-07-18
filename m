@@ -2,55 +2,54 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75306C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FED9C433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 520BF2074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595054356;
-	bh=PlGnWeZ64UCGgBJ64oFmNq3H+fbgqLnYJU7wEq15Gx0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=J7zFj3eysjLMcJym1Dn5ArBgTQOzhlZjqU6zMIwRcPnsA9T1Ljq1WmDfsK9VVW+Em
-	 bGe5Sw2/F0U4R2aHmZJNcuFqZvSm0HmoiVHNknCuEOCTOuxGrL1JYg21k3HsMtLWDM
-	 RPG2fSkIHYYkIqHayBO6+bfUo3MWMiZ6egoozjHQ=
+	by mail.kernel.org (Postfix) with ESMTP id 499782074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbgGRGjP (ORCPT
+        id S1728928AbgGRGjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:39:15 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:60943 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbgGRGjO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 02:39:14 -0400
-Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 06I6cod9015918;
-        Sat, 18 Jul 2020 15:38:50 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 06I6cod9015918
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1595054331;
-        bh=XE6IhH9B+MTAazbdPx+nUYPzcg3JfBLMiZA4IYkdxLE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZyhUBpb7n26FFVNS1u8ymXCZapJ//JWl9qPSkizaFBISCvGu2wLriLdiz5nbCmf4k
-         BI8FCI22qMvPC5+fyEnLtrWarwUOxhseg2u6z6LQEdCfSOp7USAalp1jeVko2+7dNn
-         QRw5qVFfbPCX4oeEUfQaTLMluGulFeS4/zL1E7BWxfeaAJ7XNOcP9gWx1FKO6dJBFQ
-         Ng63q+aSQwTa0VRF8jbzTLnWOO/hOkGPby2Bdp5cOj9+sHkJ1cJIuZ7gamHWXO1JSS
-         cl4DCvcAWq8J6+EyYcazniNXDdqfKIiWBwTuhEY3avwllg80Bp2OiIaWIqnXQdUfKb
-         XbQ1Dtim/cTbg==
-X-Nifty-SrcIP: [126.25.67.101]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Sat, 18 Jul 2020 02:39:03 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30319 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726730AbgGRGjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 02:39:01 -0400
+IronPort-SDR: ev6P7L7z0mIVit7Iu2MSp7Uq3fJ74UOQDXLK8HbDSXwllsPqfbc6NukANXnSe/m+Ybxr06X48x
+ k2ZWmeWCPLGQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="151079554"
+X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
+   d="scan'208";a="151079554"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 23:39:00 -0700
+IronPort-SDR: 8qOsloI9kWxr5b75qRu2eShMkfvmVb62rKV9UZZPvWd7MKhoYZ+oh5ioxo8zaxMZKLUalUatoB
+ ObhfseBBj/Ag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
+   d="scan'208";a="486690952"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Jul 2020 23:39:00 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] kconfig: constify XPM data
-Date:   Sat, 18 Jul 2020 15:38:47 +0900
-Message-Id: <20200718063847.919599-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+Subject: [PATCH 2/7] KVM: x86: Read guest RIP from within the kvm_nested_vmexit tracepoint
+Date:   Fri, 17 Jul 2020 23:38:49 -0700
+Message-Id: <20200718063854.16017-3-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200718063854.16017-1-sean.j.christopherson@intel.com>
+References: <20200718063854.16017-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,195 +57,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Constify arrays as well as strings.
+Use kvm_rip_read() to read the guest's RIP for the nested VM-Exit
+tracepoint instead of having the caller pass in the tracepoint.  Params
+that are passed into a tracepoint are evaluated even if the tracepoint
+is disabled, i.e. passing in RIP for VMX incurs a VMREAD and retpoline
+to retrieve a value that may never be used, e.g. if the exit is due to a
+hardware interrupt.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
+ arch/x86/kvm/svm/svm.c    | 2 +-
+ arch/x86/kvm/trace.h      | 6 +++---
+ arch/x86/kvm/vmx/nested.c | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
- scripts/kconfig/images.c | 30 +++++++++++++++---------------
- scripts/kconfig/images.h | 30 +++++++++++++++---------------
- 2 files changed, 30 insertions(+), 30 deletions(-)
-
-diff --git a/scripts/kconfig/images.c b/scripts/kconfig/images.c
-index b4fa0e4a63a5..2f9afffa5d79 100644
---- a/scripts/kconfig/images.c
-+++ b/scripts/kconfig/images.c
-@@ -5,7 +5,7 @@
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 783330d0e7b88..1fea39ff33077 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -2943,7 +2943,7 @@ static int handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
+ 	if (is_guest_mode(vcpu)) {
+ 		int vmexit;
  
- #include "images.h"
+-		trace_kvm_nested_vmexit(svm->vmcb->save.rip, exit_code,
++		trace_kvm_nested_vmexit(vcpu, exit_code,
+ 					svm->vmcb->control.exit_info_1,
+ 					svm->vmcb->control.exit_info_2,
+ 					svm->vmcb->control.exit_int_info,
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index 9899ff0fa2534..00e567378ae1f 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -571,10 +571,10 @@ TRACE_EVENT(kvm_nested_intercepts,
+  * Tracepoint for #VMEXIT while nested
+  */
+ TRACE_EVENT(kvm_nested_vmexit,
+-	    TP_PROTO(__u64 rip, __u32 exit_code,
++	    TP_PROTO(struct kvm_vcpu *vcpu, __u32 exit_code,
+ 		     __u64 exit_info1, __u64 exit_info2,
+ 		     __u32 exit_int_info, __u32 exit_int_info_err, __u32 isa),
+-	    TP_ARGS(rip, exit_code, exit_info1, exit_info2,
++	    TP_ARGS(vcpu, exit_code, exit_info1, exit_info2,
+ 		    exit_int_info, exit_int_info_err, isa),
  
--const char *xpm_load[] = {
-+const char * const xpm_load[] = {
- "22 22 5 1",
- ". c None",
- "# c #000000",
-@@ -35,7 +35,7 @@ const char *xpm_load[] = {
- "###############.......",
- "......................"};
+ 	TP_STRUCT__entry(
+@@ -588,7 +588,7 @@ TRACE_EVENT(kvm_nested_vmexit,
+ 	),
  
--const char *xpm_save[] = {
-+const char * const xpm_save[] = {
- "22 22 5 1",
- ". c None",
- "# c #000000",
-@@ -65,7 +65,7 @@ const char *xpm_save[] = {
- "..##################..",
- "......................"};
+ 	TP_fast_assign(
+-		__entry->rip			= rip;
++		__entry->rip			= kvm_rip_read(vcpu);
+ 		__entry->exit_code		= exit_code;
+ 		__entry->exit_info1		= exit_info1;
+ 		__entry->exit_info2		= exit_info2;
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 4d561edf6f9ca..6f81097cbc794 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5912,7 +5912,7 @@ bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu)
+ 	exit_intr_info = vmx_get_intr_info(vcpu);
+ 	exit_qual = vmx_get_exit_qual(vcpu);
  
--const char *xpm_back[] = {
-+const char * const xpm_back[] = {
- "22 22 3 1",
- ". c None",
- "# c #000083",
-@@ -93,7 +93,7 @@ const char *xpm_back[] = {
- "......................",
- "......................"};
- 
--const char *xpm_tree_view[] = {
-+const char * const xpm_tree_view[] = {
- "22 22 2 1",
- ". c None",
- "# c #000000",
-@@ -120,7 +120,7 @@ const char *xpm_tree_view[] = {
- "......................",
- "......................"};
- 
--const char *xpm_single_view[] = {
-+const char * const xpm_single_view[] = {
- "22 22 2 1",
- ". c None",
- "# c #000000",
-@@ -147,7 +147,7 @@ const char *xpm_single_view[] = {
- "......................",
- "......................"};
- 
--const char *xpm_split_view[] = {
-+const char * const xpm_split_view[] = {
- "22 22 2 1",
- ". c None",
- "# c #000000",
-@@ -174,7 +174,7 @@ const char *xpm_split_view[] = {
- "......................",
- "......................"};
- 
--const char *xpm_symbol_no[] = {
-+const char * const xpm_symbol_no[] = {
- "12 12 2 1",
- "  c white",
- ". c black",
-@@ -191,7 +191,7 @@ const char *xpm_symbol_no[] = {
- " .......... ",
- "            "};
- 
--const char *xpm_symbol_mod[] = {
-+const char * const xpm_symbol_mod[] = {
- "12 12 2 1",
- "  c white",
- ". c black",
-@@ -208,7 +208,7 @@ const char *xpm_symbol_mod[] = {
- " .......... ",
- "            "};
- 
--const char *xpm_symbol_yes[] = {
-+const char * const xpm_symbol_yes[] = {
- "12 12 2 1",
- "  c white",
- ". c black",
-@@ -225,7 +225,7 @@ const char *xpm_symbol_yes[] = {
- " .......... ",
- "            "};
- 
--const char *xpm_choice_no[] = {
-+const char * const xpm_choice_no[] = {
- "12 12 2 1",
- "  c white",
- ". c black",
-@@ -242,7 +242,7 @@ const char *xpm_choice_no[] = {
- "    ....    ",
- "            "};
- 
--const char *xpm_choice_yes[] = {
-+const char * const xpm_choice_yes[] = {
- "12 12 2 1",
- "  c white",
- ". c black",
-@@ -259,7 +259,7 @@ const char *xpm_choice_yes[] = {
- "    ....    ",
- "            "};
- 
--const char *xpm_menu[] = {
-+const char * const xpm_menu[] = {
- "12 12 2 1",
- "  c white",
- ". c black",
-@@ -276,7 +276,7 @@ const char *xpm_menu[] = {
- " .......... ",
- "            "};
- 
--const char *xpm_menu_inv[] = {
-+const char * const xpm_menu_inv[] = {
- "12 12 2 1",
- "  c white",
- ". c black",
-@@ -293,7 +293,7 @@ const char *xpm_menu_inv[] = {
- " .......... ",
- "            "};
- 
--const char *xpm_menuback[] = {
-+const char * const xpm_menuback[] = {
- "12 12 2 1",
- "  c white",
- ". c black",
-@@ -310,7 +310,7 @@ const char *xpm_menuback[] = {
- " .......... ",
- "            "};
- 
--const char *xpm_void[] = {
-+const char * const xpm_void[] = {
- "12 12 2 1",
- "  c white",
- ". c black",
-diff --git a/scripts/kconfig/images.h b/scripts/kconfig/images.h
-index d8ff614bd087..7212dec2006c 100644
---- a/scripts/kconfig/images.h
-+++ b/scripts/kconfig/images.h
-@@ -10,21 +10,21 @@
- extern "C" {
- #endif
- 
--extern const char *xpm_load[];
--extern const char *xpm_save[];
--extern const char *xpm_back[];
--extern const char *xpm_tree_view[];
--extern const char *xpm_single_view[];
--extern const char *xpm_split_view[];
--extern const char *xpm_symbol_no[];
--extern const char *xpm_symbol_mod[];
--extern const char *xpm_symbol_yes[];
--extern const char *xpm_choice_no[];
--extern const char *xpm_choice_yes[];
--extern const char *xpm_menu[];
--extern const char *xpm_menu_inv[];
--extern const char *xpm_menuback[];
--extern const char *xpm_void[];
-+extern const char * const xpm_load[];
-+extern const char * const xpm_save[];
-+extern const char * const xpm_back[];
-+extern const char * const xpm_tree_view[];
-+extern const char * const xpm_single_view[];
-+extern const char * const xpm_split_view[];
-+extern const char * const xpm_symbol_no[];
-+extern const char * const xpm_symbol_mod[];
-+extern const char * const xpm_symbol_yes[];
-+extern const char * const xpm_choice_no[];
-+extern const char * const xpm_choice_yes[];
-+extern const char * const xpm_menu[];
-+extern const char * const xpm_menu_inv[];
-+extern const char * const xpm_menuback[];
-+extern const char * const xpm_void[];
- 
- #ifdef __cplusplus
- }
+-	trace_kvm_nested_vmexit(kvm_rip_read(vcpu), exit_reason, exit_qual,
++	trace_kvm_nested_vmexit(vcpu, exit_reason, exit_qual,
+ 				vmx->idt_vectoring_info, exit_intr_info,
+ 				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
+ 				KVM_ISA_VMX);
 -- 
-2.25.1
+2.26.0
 
