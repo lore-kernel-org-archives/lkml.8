@@ -2,140 +2,126 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE543C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B48C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE3332076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:44:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="L2K9eOv3"
+	by mail.kernel.org (Postfix) with ESMTP id A445B2076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595051105;
+	bh=67jWIKS/zl5m8xZ1j5EHfPadzqeIRyVrdwgqbz8Js/c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QwH5QEhcZFhFbu2SjB0Q+TSICiufsMS6wjXab6HU6u4R/iXZ4UtF6rCH+9IlKk9Tz
+	 DSHtmxZwlylFrJYAUlFepVtGHnaRz+KyjT1jA9PLMzfhH4xTrtOzw6TbRsEcKJVQPg
+	 +JME+uPKBlPwE85vwYCd08Q3LlBMphr47CrAyV5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgGRFoo (ORCPT
+        id S1726697AbgGRFpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgGRFom (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:44:42 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FF8DC0619D6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 22:44:42 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f139so20419651wmf.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 22:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Qx6HCNIEzxBJQ2LhKKaEe4hUhhin7nepsQjM7Mz50yk=;
-        b=L2K9eOv37PLZ5zzDhxyHvYXOmBZEIYSnPFvn+6M/BOSl30ZW2EmcNE6MbgBqKb6uAL
-         DtC6NoAq/Lz1bMtHCx2tiVONbDEwABL8RkFUc9xMjbVGZJJm6XNiIAqvSJj5Av9TjLxb
-         R1ALpiGmpn4tBv98T5o6rDx16T3mD1lUkHH8s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Qx6HCNIEzxBJQ2LhKKaEe4hUhhin7nepsQjM7Mz50yk=;
-        b=aRRe7T5EfhjiBqujosM4pNSHR8O0OL+Zc3/Uk1iJgslAyVTTT0skePcR12kErxeKii
-         cfvIXqG7+gw4s8QYQg8aPoXOW2AonDy4EpuKDrDn8vDRfMTBzhCHUwdV9m82M47gTUDk
-         9zJIqK+blP7m3E6i8hIV/pxoxMtkvU5qg3s/nNnvEKAH5xjidwxhuzWOxSs7jJSF3PKD
-         pWeQhggOEom0h+SEm4e30hqyieKll26EaSFUbExtxAmvljWYw+o66f0xf1Vb9mgyy/nv
-         fA1mODd0mybEmjFl42IkdHr+NB3iug55CijDjaaaPgK/KNBkhJ9cAhQQTl9sRe6YRyqm
-         wOzg==
-X-Gm-Message-State: AOAM531IIMRF1DFQFme/qkS94obMCt8Kx+1mPjjrVYBR1DN12Fdw8Blk
-        RUHh/Siz5HwFPD0ACNKgkaCxzj9bN93DoPBtJdict36QD1bNrM+vAlRQCH4ciOb/TvzgT8au570
-        fhD5lSfDZ7ty3A+3s4JvOg/nv4rVDSF5tF/AKQIbnFO1fod0jPCA/OVexXMtlYo6UAEdzSaGc7a
-        BnBYH+fQrn
-X-Google-Smtp-Source: ABdhPJw0ezTYJ55HknbzYtiAGiiPgg1mv3dIqbd4Ja9oCyuLV1RJ6FLoKAZoykHZXDrXk5gPDvEzIQ==
-X-Received: by 2002:a7b:c1cc:: with SMTP id a12mr12810017wmj.112.1595051080587;
-        Fri, 17 Jul 2020 22:44:40 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id w7sm17168898wmc.32.2020.07.17.22.44.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 22:44:39 -0700 (PDT)
-Subject: Re: [PATCH 06/13] fs/kernel_read_file: Remove redundant size argument
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        James Morris <jmorris@namei.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jessica Yu <jeyu@kernel.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <stephen.boyd@linaro.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200717174309.1164575-1-keescook@chromium.org>
- <20200717174309.1164575-7-keescook@chromium.org>
- <39b2d8af-812f-8c5e-3957-34543add0173@broadcom.com>
- <202007171502.22E12A4E9@keescook>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <99c58d32-da28-79ad-2fdb-83e0ca29660a@broadcom.com>
-Date:   Fri, 17 Jul 2020 22:44:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 18 Jul 2020 01:45:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbgGRFpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 01:45:03 -0400
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D827E21741
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 05:45:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595051103;
+        bh=67jWIKS/zl5m8xZ1j5EHfPadzqeIRyVrdwgqbz8Js/c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OSXLimAn5r4bfWppUfyc8T0cNYnzD87hNHFyhU0Uj/RctSOLoG918kvfiRp1Bm6Sf
+         Gk+uvVCxBmPshqTa+rThH0dAZHlDPFn1rVMmR/az/aYwUVAcXhLxpIvfnlLJH6nB2q
+         oUMFjZBbbqrz/DZUYoYoPFIdOhLw2qRNIV8Wy5Co=
+Received: by mail-ot1-f41.google.com with SMTP id n24so8426100otr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 22:45:02 -0700 (PDT)
+X-Gm-Message-State: AOAM531dPUjmeXB1Uo/aDB++zouh1frvHGDUYRzAt+pzrYhk3i0u8LHr
+        KpK+wE+1RZcmyhXJEA17g7/YQjSUU2c7FeKisJw=
+X-Google-Smtp-Source: ABdhPJxpf6WTfSSxsHSWfSbgugb4biJdYQ1JGVByBKGcuW/QUTC4izPNpFxX068mIC3eFJ3Xa9CM2aCxcIt9RIbg21M=
+X-Received: by 2002:a9d:7553:: with SMTP id b19mr12361891otl.77.1595051102201;
+ Fri, 17 Jul 2020 22:45:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202007171502.22E12A4E9@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200714023836.2310569-1-nivedita@alum.mit.edu>
+ <20200715004133.1430068-1-nivedita@alum.mit.edu> <20200717134654.GA3187880@rani.riverdale.lan>
+ <CAKwvOdnTbatx8VB-rJSzyFPwfYnkMYK28yLBn1G+hUu8dyfYRA@mail.gmail.com>
+In-Reply-To: <CAKwvOdnTbatx8VB-rJSzyFPwfYnkMYK28yLBn1G+hUu8dyfYRA@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 18 Jul 2020 08:44:50 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXGeSFXnuO7Y94pyBU9qfSgtsLvMoCZSfDk476BBs2ejcw@mail.gmail.com>
+Message-ID: <CAMj1kXGeSFXnuO7Y94pyBU9qfSgtsLvMoCZSfDk476BBs2ejcw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] x86/boot: Remove run-time relocations from
+ compressed kernel
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kees,
-
-On 2020-07-17 3:06 p.m., Kees Cook wrote:
-> On Fri, Jul 17, 2020 at 12:04:18PM -0700, Scott Branden wrote:
->> On 2020-07-17 10:43 a.m., Kees Cook wrote:
->>> In preparation for refactoring kernel_read_file*(), remove the redundant
->>> "size" argument which is not needed: it can be included in the return
->> I don't think the size argument is redundant though.
->> The existing kernel_read_file functions always read the whole file.
->> Now, what happens if the file is bigger than the buffer.
->> How does kernel_read_file know it read the whole file by looking at the
->> return value?
-> Yes; an entirely reasonable concern. This is why I add the file_size
-> output argument later in the series.
-There is something wrong with this patch.  I apply patches 1-5 and these 
-pass the kernel self test.
-Patch 6 does not pass the kernel-selftest/firmware/fw_run_tests.sh
-
->>> code, with callers adjusted. (VFS reads already cannot be larger than
->>> INT_MAX.)
->>> [...]
->>> -	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
->>> +	if (i_size > INT_MAX || (max_size > 0 && i_size > max_size)) {
->> Should this be SSIZE_MAX?
-> No, for two reasons: then we need to change the return value and likely
-> the callers need more careful checks, and more importantly, because the
-> VFS already limits single read actions to INT_MAX, so limits above this
-> make no sense. Win win! :)
+On Fri, 17 Jul 2020 at 21:17, Nick Desaulniers <ndesaulniers@google.com> wrote:
 >
+> On Fri, Jul 17, 2020 at 6:46 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Tue, Jul 14, 2020 at 08:41:26PM -0400, Arvind Sankar wrote:
+> > > The compressed kernel currently contains bogus run-time relocations in
+> > > the startup code in head_{32,64}.S, which are generated by the linker,
+> > > but must not actually be processed at run-time.
+> > >
+> > > This generates warnings when linking with the BFD linker, and errors
+> > > with LLD, which defaults to erroring on run-time relocations in read-only
+> > > sections. It also requires the -z noreloc-overflow hack for the 64-bit
+> > > kernel, which prevents us from linking it as -pie on an older BFD linker
+> > > (<= 2.26) or on LLD, because the locations that are to be apparently
+> > > relocated are only 32-bits in size and so cannot really have
+> > > R_X86_64_RELATIVE relocations.
+> > >
+> > > This series aims to get rid of these relocations. I've build- and
+> > > boot-tested with combinations of clang/gcc-10 with lld/bfd-2.34, and
+> > > gcc-4.9.0 with bfd-2.24, skipping clang on 32-bit because it currently
+> > > has other issues [0].
+> > >
+> >
+> > Hi Thomas, Ingo, Borislav, would you be able to take a look over this
+> > series in time for 5.9?
+>
+> Hi Arvind, thanks for the series; I'm behind on testing.  When I try
+> to apply this series on top of linux-next, I get a collision in
+> drivers/firmware/efi/libstub/Makefile:27 when applying "0002
+> x86/boot/compressed: Force hidden visibility for all symbol
+> references". Would you mind refreshing the series to avoid that
+> collision?
 
+That is not the right way to deal with conflicts against -next.
+
+This series targets the -tip tree, and applies fine against it. If you
+want to apply it on some other tree and test it, that is fine, and
+highly appreciated, but 'refreshing' the series against -next means it
+no longer applies to -tip, and may be based on unidentified conflict
+resolutions performed by Stephen that the maintainers will have to
+deal with.
+
+Boris, Ingo, Thomas,
+
+Mind taking v5 of this series? (With Nick's Tested-by) I think these
+patches have been simmering long enough. Do note there is a conflict
+against the kbuild tree, but the resolution should be straightforward.
