@@ -2,122 +2,128 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0385EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B50C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1D7E20738
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7A320738
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.unc.edu header.i=@cs.unc.edu header.b="IwWw+pOP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0LOPk3Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgGRUSK (ORCPT
+        id S1728102AbgGRUS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 16:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35760 "EHLO
+        Sat, 18 Jul 2020 16:18:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgGRUSK (ORCPT
+        with ESMTP id S1727096AbgGRUS2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 16:18:10 -0400
+        Sat, 18 Jul 2020 16:18:28 -0400
 Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7918C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 13:18:09 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id w27so10233304qtb.7
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 13:18:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 591B3C0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 13:18:28 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id i3so10209148qtq.13
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 13:18:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.unc.edu; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Wzy+cAnfVWyCNBRsbp4f96uaFuyezcnGy3p//wWBWlc=;
-        b=IwWw+pOP8iz9mglvw1oqstQ6ZxJyWkhps+nXR1W7C87271q704wKNliO3g40NlXtYX
-         FEdEP8H3UzLAiUjh7/U6V57lgeSPBgXJlgqoWmm5bZcj13guYXTbt1Ozrp2kuxt/U43T
-         SvA7YfgeZqrhMZDtgktMzQKvnW0QuTblDl0Qg=
+        d=gmail.com; s=20161025;
+        h=content-transfer-encoding:in-reply-to:date:subject:from:to:cc
+         :message-id;
+        bh=RN+57Sf0O1lrNGjq2DvkcxCavUydH1X+nGVJ8HA3O9E=;
+        b=i0LOPk3YceftGkAKJfdlGv9L1Txc057n49lmjFAWgQ//eQubRx6YdqVLUKKKyjwbKR
+         ck1QmijGben6UziIAQSPHbtMoAUZ0gGGQ2fmTrKlIDFxnKI1e0ZXzEQ/ogtlWm3aaSEH
+         w1k0eOFMcaIJ5f5bRUl2sDn5WPHfkxV5Ru2RHWguwFdcdULPnBv1XEq3rwd5yhYXnkjA
+         cUJV7aoCG92gl1AIeDl9lnGorilA82/bad0Wp0jV4SLSs+la8kt0miBnfIlFbKhTOguM
+         pyXSv/ArTg9sic4ckdiLpBoBL7MpM83cLSgmVKwO1QOj7nRS0xgV/C1GprC1IHpx7lEw
+         2m9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Wzy+cAnfVWyCNBRsbp4f96uaFuyezcnGy3p//wWBWlc=;
-        b=anesM7daDHY1DJpioNBSt+Pi5APTKlI/iz6wG0IgWjId0UTNshUHcmFyvlxzLv3v5b
-         v3NZonBfbEVqijdVRHVnph7RaVleoOjdif/CY2xpaSpDOnjytjMPQ5qRsJSOQPtF0xtv
-         6evj3Qc1J6Dnu/uKrz5WuHhow8TxL5hyxrB9f3bO9NcQhwwmbolphKfjE98p5zJF7d0w
-         sQ6USNidGK1htLm2sw+pL9eBNpc7P/qCQqZZgNnj/T4WA8F01mTtZWIQ28d+DWmNDucp
-         JH3Y3MGv5djuE1TQmAw55f2mM0yBfLYbiwz4pGqEGfVTztFj+C+cYEBcMeNSA8Q0bXS9
-         VPJQ==
-X-Gm-Message-State: AOAM531sgnQc4mFbNWEzAHNppH+ShVJGkRMaPxw0CG2GSu/3X2fIV/Si
-        cfiRXOUcCOsw5kpZcGdZlq/8jQ==
-X-Google-Smtp-Source: ABdhPJyssU1ufVTgBHVnmx0gim5lL4wHfPYijT9LtU6LhysR/mZAHBckC38fdgAQFzGckorO1LGo+g==
-X-Received: by 2002:aed:2723:: with SMTP id n32mr16929892qtd.109.1595103488923;
-        Sat, 18 Jul 2020 13:18:08 -0700 (PDT)
-Received: from pepe.local (71-142-124-255.lightspeed.rlghnc.sbcglobal.net. [71.142.124.255])
-        by smtp.gmail.com with ESMTPSA id p36sm15125718qte.90.2020.07.18.13.18.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jul 2020 13:18:08 -0700 (PDT)
-Subject: Re: Linux FSGSBASE testing
-To:     Andy Lutomirski <luto@amacapital.net>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Stas Sergeev <stsp@list.ru>, linux-sgx@vger.kernel.org
-References: <CALCETrU_O4AxcJeBO77uXt2j8woYVtjZd18-YV0BuCKRAu00eA@mail.gmail.com>
-From:   Don Porter <porter@cs.unc.edu>
-Message-ID: <6e3d25fc-9a67-8655-a00a-b3afbc360ff0@cs.unc.edu>
-Date:   Sat, 18 Jul 2020 16:18:06 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CALCETrU_O4AxcJeBO77uXt2j8woYVtjZd18-YV0BuCKRAu00eA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:content-transfer-encoding:in-reply-to:date
+         :subject:from:to:cc:message-id;
+        bh=RN+57Sf0O1lrNGjq2DvkcxCavUydH1X+nGVJ8HA3O9E=;
+        b=tZuvOO2iW/BmlOtncw9/nzNYgejGfWt51TEjODAMoUn1fOSDX96v3WpyT3XYzrTiPA
+         nQfi1AGfdJAm+D8rEFtoeuNNxOZcCXmSBvjI9MHUQz2DYZcUQurClo6DwEEL5+TJdoW4
+         EDbSBhS62KjB4uiDe+iGNMrP1YngRXTz7YGTJU9Bt7zGXpkdKlFAbRtSF1ICAN67zxEB
+         50O+Vqgu9ibSeTidBH39QUx8Olf2GQhS1/coIIV5ZDuYMCC8jn2DVFWtDyAYyltf4l6z
+         sdkfq9CC95cz8/HX3kGHes0kWQmU06yielkOYt1tIedbxS5RnjTIS8wpLvAvpKn/yOpt
+         4qhA==
+X-Gm-Message-State: AOAM533GMxUsbXX06NJyXEbr27YvDS7ln3xEKd4FDeHgzaj7iVh7bWtP
+        3m4yjgUDmJbcLA+xYCHfHbmNB8Y1vmM=
+X-Google-Smtp-Source: ABdhPJwelMgw6SWWTTG3yrsxL8bTVjtsq+EVpnyT7GQSA7IDYP3CUljmbSOVsKxOeiK2GFT0Nk9cDg==
+X-Received: by 2002:aed:3bb8:: with SMTP id r53mr16791934qte.58.1595103507625;
+        Sat, 18 Jul 2020 13:18:27 -0700 (PDT)
+Received: from localhost (198-48-202-89.cpe.pppoe.ca. [198.48.202.89])
+        by smtp.gmail.com with ESMTPSA id j45sm14841840qtk.31.2020.07.18.13.18.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Jul 2020 13:18:26 -0700 (PDT)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <202007150718.6LcA4qZN%lkp@intel.com>
+Date:   Sat, 18 Jul 2020 16:18:25 -0400
+Subject: Re: [PATCH v2 1/1] phy: tusb1210: use bitmasks to set
+ VENDOR_SPECIFIC2
+From:   "Liam Beguin" <liambeguin@gmail.com>
+To:     "kernel test robot" <lkp@intel.com>, <kishon@ti.com>,
+        <vkoul@kernel.org>
+Cc:     <kbuild-all@lists.01.org>, <linux-kernel@vger.kernel.org>
+Message-Id: <C4A102A7YC2W.1LPN6MZLYYUKV@atris>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/20 11:59 AM, Andy Lutomirski wrote:
-> Hi Stas-
-> 
-> FSGSBASE support is queued up for Linux 5.9.  Since you're one of the
-> more exotic users of segmentation on Linux, is there any chance you
-> could test it?  The code is here:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=x86/fsgsbase
-> 
-> There are two interesting cases to test:
-> 
-> 1. FSGSBASE on.  This is the default if you boot this kernel on Ivy
-> Bridge or newer hardware.
-> 
-> 2. FSGSBASE off on a patched kernel.  Boot the same kernel as in #1
-> but either pass nofsgsbase on the kernel command line or use pre-Ivy
-> Bridge hardware.  You will *
-> 
-> You can tell you have FSGSBASE enabled for test #1 by running
-> tools/testing/selftests/x86/fsgsbase_64 -- the first line of output
-> will be :FSGSBASE instructions are enabled".  You can build it by
-> cd-ing to tools/testing/selftests/x86 and running make.
-> 
-> If anything is broken for you, I'd like to know before this makes it
-> into a released kernel!
-> 
-> Thanks,
-> Andy
-> 
+On Wed Jul 15, 2020 at 7:48 AM kernel test robot wrote:
+> Hi Liam,
+>=20
+> Thank you for the patch! Yet something to improve:
+>=20
+> [auto build test ERROR on 8f3d9f354286745c751374f5f1fcafee6b3f3136]
+>=20
+> url:    https://github.com/0day-ci/linux/commits/Liam-Beguin/phy-tusb1210=
+-use-bitmasks-to-set-VENDOR_SPECIFIC2/20200715-003517
+> base:    8f3d9f354286745c751374f5f1fcafee6b3f3136
+> config: parisc-allyesconfig (attached as .config)
+> compiler: hppa-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=3D1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
+n/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dgcc-9.3.0 make.cros=
+s ARCH=3Dparisc=20
+>=20
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>=20
+> All errors (new ones prefixed by >>):
+>=20
+>    hppa-linux-ld: drivers/phy/ti/phy-tusb1210.o: in function `tusb1210_pr=
+obe':
+> >> (.text+0x2f4): undefined reference to `__cmpxchg_called_with_bad_point=
+er'
+> >> hppa-linux-ld: (.text+0x324): undefined reference to `__cmpxchg_called=
+_with_bad_pointer'
+>    hppa-linux-ld: (.text+0x354): undefined reference to `__cmpxchg_called=
+_with_bad_pointer'
+>=20
 
-FWIW, we tested this patch using Graphene under Case 1, both in our 
-standard CI pipelines, and with hand testing.  Everything looks good on 
-our end - no suspicious dmesg, no application-level issues.
+Hi,
 
-I also reran the stress test Andy suggested on a separate thread, which 
-also looks good:
-* Graphene running nginx pinned to core 0
-* infinite loop on core 0
-* perf top running
-* Exercised with non-SGX apache bench several times (~10 minutes of 
-testing time) also from core 0
+I sent another patch[1] to try to address this.
 
-All the best,
-Don
+The issue seems to come from the fact that the parisc architecture
+doesn't support cmpxchg on u8 pointers. cmpxchg is called by
+set_mask_bits.
+
+Thanks,
+Liam
+
+[1] https://lore.kernel.org/patchwork/patch/1272617/
+
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
