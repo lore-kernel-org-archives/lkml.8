@@ -2,139 +2,121 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F5CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13002C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7EA20684
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31AB2070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJpYIhhr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hraSxEa8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgGRNTL (ORCPT
+        id S1727065AbgGRNUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:19:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
+        Sat, 18 Jul 2020 09:20:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgGRNTK (ORCPT
+        with ESMTP id S1726566AbgGRNUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:19:10 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5CEC0619D2;
-        Sat, 18 Jul 2020 06:19:10 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a14so6773220pfi.2;
-        Sat, 18 Jul 2020 06:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=bW56Dq/EZQ7Q0OxXWw3lSP4NAzICRQndu6/ZLfdw/eU=;
-        b=lJpYIhhryLyntBJ0OGcZIbxju01m3oYcIhETi0dMSh5uePg0c0Q+y+BLuEvQ9ZQowu
-         2dFUjjhy24tQmuib5A/VMpjqurNaRbmiHGbpbt3kPgg0VN2XeNLXVq3tauUsAik4uIMg
-         4BwK7L8XSTIdcyRmoui4tpu9cydMpK8YEU0CLnVIaatENE+Y9kDNfcTxd9sGll45+g8P
-         6YIC1Pol3Eid2XdSikbBdAJMMAEOX/+ja48Z/JSgLjeG+UdoWcqSnm6A0j5OhK70ugZo
-         hMwXxSjYLVFsP1Hc/hHCTs+QzA3BxHPAJRByUTBHwZ2CQsD0sJNRZ7Hg7WlAsEVBBJlZ
-         Prmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=bW56Dq/EZQ7Q0OxXWw3lSP4NAzICRQndu6/ZLfdw/eU=;
-        b=hh32COq+6DbzqPfz8KrWYXIDivtuTs164wMXaM5rRfuc6TO4RNIuYqwCHAKPbitrVk
-         8YMgLMO26uEjZnGw0y9zlBgw/xTjYMMq59CcFMku/7UjpLzliPtCTGEdx8vI24cstLXY
-         oClg/10M7/qAJ1hZr6F3GQ2Hz30rkkB8ng04NpL1hNkcGzz+ysq9JPKyw3b4/EeysYPr
-         IgIg6okhlvkSA5VqrJIttDlfO28dopccW6JNHn12XYPGnipIph0oy93UqyY4swjlHzL7
-         e0wzguJ76PXzY9RZHfo1q/DbdhDK4E4ySc1TLkYMoeEXAPHkStwx5Eryoo/YaSJBZBu7
-         ACWA==
-X-Gm-Message-State: AOAM531FHqTyIounwjkje728saSgjT7DwOUQYRcZhlx4GTmzsDHaD+s8
-        JDKf/6MrTzQLTUHKH0WzZGs=
-X-Google-Smtp-Source: ABdhPJxceziaeE//any/1Ek+Lh/N/UukPxOOP9stjgcSoj2QsLa6Jau86qLHgQMAmF+rFxE81qUTKQ==
-X-Received: by 2002:a63:5619:: with SMTP id k25mr12218506pgb.139.1595078349459;
-        Sat, 18 Jul 2020 06:19:09 -0700 (PDT)
-Received: from blackclown ([103.88.82.25])
-        by smtp.gmail.com with ESMTPSA id 129sm10446524pfv.161.2020.07.18.06.19.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jul 2020 06:19:08 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 18:48:56 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] staging: rts5208: rtsx: Replace depracated MSI API
-Message-ID: <20200718131856.GA10837@blackclown>
+        Sat, 18 Jul 2020 09:20:22 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05149C0619D2;
+        Sat, 18 Jul 2020 06:20:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=u1Ta43l8ivno0FCtWUhrqwGXsKGzaaP+vzxnn7dCRs0=; b=hraSxEa8sSRapBAnEdTMHrFww
+        Ws8wbtC3pEWdiPCtvVN0dWA7gC8fH8K68gMZm2aBwDTQ5MLzW6PvXrytg2JhLfYosQs/XtjMQDNL/
+        om5EXahWcp7QwGUyvypqKNWgIhLEmxqjaVi+6vkHizFSWB4LCzL43ge1Hlr0AQvd4TBBqcGvoDsfe
+        duVMfvA2fCgIBQp/ZnN638bEdngPfn/rKugJasNr8X8Mw1me/J/PBHwly1Y7PCdQ0HBmEvSrnSx+K
+        fxva4v0RRLfMFh/UW8/WjxlHNtdT+1KCfUCT6Jrph84E3ik03Qg5Qjv3p0qjdadO2soOA0mda5ffC
+        2v1aC27bw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41078)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jwmlD-0001bu-P8; Sat, 18 Jul 2020 14:20:15 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jwml9-0002yE-BN; Sat, 18 Jul 2020 14:20:11 +0100
+Date:   Sat, 18 Jul 2020 14:20:11 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     John Crispin <john@phrozen.org>
+Cc:     Matthew Hagan <mnhagan88@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
+ properties
+Message-ID: <20200718132011.GQ1551@shell.armlinux.org.uk>
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+ <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+ <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <ac7f5f39-9f83-64c0-d8d5-9ea059619f67@gmail.com>
+ <53851852-0efe-722e-0254-8652cdfea8fc@phrozen.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <53851852-0efe-722e-0254-8652cdfea8fc@phrozen.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 17, 2020 at 10:44:19PM +0200, John Crispin wrote:
+> in regards to the sgmii clk skew. I never understood the electrics fully I
+> am afraid, but without the patch it simply does not work. my eletcric foo is
+> unfortunately is not sufficient to understand the "whys" I am afraid.
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Do you happen to know what frequency the clock is?  Is it 1.25GHz or
+625MHz?  It sounds like it may be 1.25GHz if the edge is important.
 
-Replace depracated pci_enable_msi with pci_alloc_irq_vectors.
+If the clock is 1.25GHz, the "why" is because of hazards (it has
+nothing to do with delays in RGMII being propagated to SGMII).
 
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- drivers/staging/rts5208/rtsx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Quite simply, a flip-flop suffers from metastability if the clock and
+data inputs change at about the same time.  Amongst the parametrics of
+flip-flops will be a data setup time, and a data hold time, referenced
+to the clock signal.
 
-diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
-index e28e162d004e..adc80e766412 100644
---- a/drivers/staging/rts5208/rtsx.c
-+++ b/drivers/staging/rts5208/rtsx.c
-@@ -310,7 +310,7 @@ static int __maybe_unused rtsx_resume(struct device *de=
-v_d)
- 	pci_set_master(pci);
-=20
- 	if (chip->msi_en) {
--		if (pci_enable_msi(pci) < 0)
-+		if (pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_MSI) < 0)
- 			chip->msi_en =3D 0;
- 	}
-=20
-@@ -881,7 +881,7 @@ static int rtsx_probe(struct pci_dev *pci,
- 	dev_info(&pci->dev, "pci->irq =3D %d\n", pci->irq);
-=20
- 	if (dev->chip->msi_en) {
--		if (pci_enable_msi(pci) < 0)
-+		if (pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_MSI) < 0)
- 			dev->chip->msi_en =3D 0;
- 	}
-=20
---=20
-2.17.1
+If the data changes within the setup and hold times of the clock
+changing, then the output of the flip-flop is unpredictable - it can
+latch a logic 1 or a logic 0, or oscillate between the two until
+settling on one state.
 
+So, if data is clocked out on the rising edge of a clock signal, and
+clocked in on the rising edge of a clock signal - and the data and
+clock edges arrive within the setup and hold times at the flip-flop
+that is clocking the data in, there is a metastability hazard, and
+the data bit that is latched is unpredictable.
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
+One way to solve this is to clock data out on one edge, and clock data
+in on the opposite edge - this is used on buses such as SPI.  Other
+buses such as I2C define minimum separation between transitions between
+the SDA and SCL signals.
 
------BEGIN PGP SIGNATURE-----
+These solutions don't work with RGMII - the RGMII TXC clocks data on
+both edges.  The only solution there is to ensure a delay is introduced
+between the data and clock changes seen at the receiver - which can be
+done by introducing delays at the transmitter or at the receiver, or by
+serpentine routing of the traces to induce delays to separate the clock
+and data transitions sufficiently to avoid metastability.
 
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8S9sAACgkQ+gRsbIfe
-747zJhAAnYwOribTqVdCoKelWsg/J1bRcpu3igKxafUf9i6Jdyk+XmaL4ZtRFsG4
-Gc5EQT8o6bhufzzW+We8doUAjusxMIpEBL4+TzN0vK0YdmNeN/Ebi8Be6JmsGa8U
-BEedBfiYtT6jVuRC2AdquNK3XJ3U4+8FXkSfG0NuGhwViwks0TzQHOAZJCxuS5Cq
-+XFhBNXpjK8E+IOXOFKEUB1cngLfwYKOZopITObQO182b7NND2yWLR5U7TLJlBHX
-rE8Nv3Ie7On89qoXSfDUrYNZ7jHok9FRO3K5D2L7v7Uzdcy9JoarwG9cwN3nsWXy
-A1l40jF8ctR+VhukddlrMs6cl/lGoIX3j6oBW/rm7MuW/TgLRnefZLKi9ffAmq5s
-29JyX9k2ZuqyWUcuXkSLxri/hzqGzKv66Zg4QeeKjPVdNWc1Lg15zAtiXnkLT2j9
-coiA8+9d6FfPonwPsYHxwxtMK+BYxUtnAzfbII3uIBHB0av6GVpjjgSIaMvsPcRZ
-R/XnG4XO8zqXyttXxJqzS82BhGvVUvEbtSK/wdqbMeYGrX/4HGjMv6wA4TrCU5wH
-2t0J/yEE+timKORy0b00Q7paKNTrKO4fiYE3yEg48AHFNzjOIOmuPOJDffX/9imb
-4RkGNUBQLqgvUr8fMvzhqmH2yL39UnGW9j50TBnwfXH0GetHv/o=
-=PY3U
------END PGP SIGNATURE-----
+If the clock is 625MHz (as with some Marvell devices for SGMII) then
+both clock edges are used, and both edges are used just like RGMII.
+Therefore, the same considerations as RGMII apply there to ensure that
+the data setup and hold times are not violated.
 
---a8Wt8u1KmwUX3Y2C--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
