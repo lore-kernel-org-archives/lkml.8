@@ -2,95 +2,80 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6E3C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1310C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 801D12070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:16:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZA0vBN+S";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Uz16ViUP"
+	by mail.kernel.org (Postfix) with ESMTP id 9587E2070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgGROQb (ORCPT
+        id S1727090AbgGROR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 10:16:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47236 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgGROQ3 (ORCPT
+        Sat, 18 Jul 2020 10:17:59 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:38127 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726574AbgGROR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 10:16:29 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595081787;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=InESnWhhE1Lyrbm8RqL/G1i0QjcPEbAb4abQNdrt+bc=;
-        b=ZA0vBN+SrOoNlxKj9fPmZs53XNpqeydqQ30JHCM1TiQIrq4FEa2B+ezj+nlrK2hW4pxtWS
-        DSwRQNtcOFWyUKw77m14YurY6WpoOQJnbiS35d7QbVmhGxve7Kqb2Y1DgPKGLXEpYDYOS4
-        oqoAziR7w2ayMO1EsUzU5G5BACkC3MkKzIC1mbbLKje8l038DFG8bJDFYWeHCPbvHLwrwD
-        wz0iSwrRqslMZ9r2cLvPT98eVAHvW1hONwSwROSMngHDku7tUSDjwHh60DIs6K9UIkN2Xg
-        T2JjpCXJmtonP5VWeUuROYj2AW4xVfxekliuTV2I2RTvtNy6yeEMXKfqzz9sxQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595081787;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=InESnWhhE1Lyrbm8RqL/G1i0QjcPEbAb4abQNdrt+bc=;
-        b=Uz16ViUPG75XGv0PA6hTKa6ol+KLikD/0YIRqc3DiZjEqyUo0xmOSZzbt8Vl5Wuc4l8wWf
-        vCyqhYdw8l3qFNAw==
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry functionality
-In-Reply-To: <CALCETrXz_vEySQJ=f3MTPG9XjZS7U0P-diJE9j_+0KRa_Kie=Q@mail.gmail.com>
-References: <20200716182208.180916541@linutronix.de> <20200716185424.011950288@linutronix.de> <202007161336.B993ED938@keescook> <87d04vt98w.fsf@nanos.tec.linutronix.de> <202007171045.FB4A586F1D@keescook> <87mu3yq6sf.fsf@nanos.tec.linutronix.de> <CALCETrXz_vEySQJ=f3MTPG9XjZS7U0P-diJE9j_+0KRa_Kie=Q@mail.gmail.com>
-Date:   Sat, 18 Jul 2020 16:16:26 +0200
-Message-ID: <875zakq56t.fsf@nanos.tec.linutronix.de>
+        Sat, 18 Jul 2020 10:17:58 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U33fhOh_1595081868;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U33fhOh_1595081868)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 18 Jul 2020 22:17:49 +0800
+Subject: Re: [PATCH v16 21/22] mm/pgdat: remove pgdat lru_lock
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1594429136-20002-22-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0UeK3c4NjoJ7MQMxU20Bu0AZKZh73Cj4P_g5OSL6KaONhQ@mail.gmail.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <5f162d78-2318-3d12-bbbb-1a47ed978bf7@linux.alibaba.com>
+Date:   Sat, 18 Jul 2020 22:17:48 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAKgT0UeK3c4NjoJ7MQMxU20Bu0AZKZh73Cj4P_g5OSL6KaONhQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Fri, Jul 17, 2020 at 12:29 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> The alternative is to play nasty games with TIF_IA32, TIF_ADDR32 and
->> TIF_X32 to free up bits for 32bit and make the flags field 64 bit on 64
->> bit kernels, but I prefer to do the above seperation.
->
-> I'm all for cleaning it up, but I don't think any nasty games would be
-> needed regardless.  IMO at least the following flags are nonsense and
-> don't belong in TIF_anything at all:
->
-> TIF_IA32, TIF_X32: can probably be deleted.  Someone would just need
-> to finish the work.
-> TIF_ADDR32: also probably removable, but I'm less confident.
-> TIF_FORCED_TF: This is purely a ptrace artifact and could easily go
-> somewhere else entirely.
->
-> So getting those five bits back would be straightforward.
->
-> FWIW, TIF_USER_RETURN_NOTIFY is a bit of an odd duck: it's an
-> entry/exit word *and* a context switch word.  The latter is because
-> it's logically a per-cpu flag, not a per-task flag, and the context
-> switch code moves it around so it's always set on the running task.
 
-Gah, I missed the context switch thing of that. That stuff is hideous.
 
-Thanks,
+在 2020/7/18 上午5:09, Alexander Duyck 写道:
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index e028b87ce294..4d7df42b32d6 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -6721,7 +6721,6 @@ static void __meminit pgdat_init_internals(struct pglist_data *pgdat)
+>>         init_waitqueue_head(&pgdat->pfmemalloc_wait);
+>>
+>>         pgdat_page_ext_init(pgdat);
+>> -       spin_lock_init(&pgdat->lru_lock);
+>>         lruvec_init(&pgdat->__lruvec);
+>>  }
+>>
+> This patch would probably make more sense as part of patch 18 since
+> you removed all of the users of this field there.
 
-       tglx
+
+yes, I just want to a bit of sense of ceremony to remove this huge big lock. :)
