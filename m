@@ -2,206 +2,211 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FB9C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA91BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1CB2074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:25:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ke+wmC2/"
+	by mail.kernel.org (Postfix) with ESMTP id CCD382074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgGRHZr (ORCPT
+        id S1729093AbgGRH2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 03:25:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729089AbgGRHZm (ORCPT
+        Sat, 18 Jul 2020 03:28:34 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:34110 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgGRH2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 03:25:42 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3887BC0619D2;
-        Sat, 18 Jul 2020 00:25:42 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g75so17766825wme.5;
-        Sat, 18 Jul 2020 00:25:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=keAVpGfsQcEDqnbHUMyN/ynnpJsp1LvUpjA6RoHC1Co=;
-        b=Ke+wmC2/T6ELScDbLkHP0eIT7W6dGZGXFAgyiQ/tHK+3jjRYLPqVh9oVmc1nhbz1to
-         t2Gt2E6s2AHP/wcmbsvvCuinTIs2EzumrzEYS7Gb+OTqR8sWS7BTh99PJ79znsf2f129
-         TsmhbcN+xnGHHJOrW6POeg3eR1xrYLIrGwg737I0ssgn2aPxXvJjg8+t6rwvxOJA+uRE
-         eCbsaJ/ZvqCyt7YULkfoZFfKJwFGQuTmnL7lN+/3QqS67IPYXl+62/HX9GeOw9reGJ5i
-         TbsA2uAEqBgKKsNFEGgKkgYAFIalYrwLXZgcGtFwFqzg5ZNt+wjkpfIGJNq29/x0SPho
-         YA9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=keAVpGfsQcEDqnbHUMyN/ynnpJsp1LvUpjA6RoHC1Co=;
-        b=Wo+AUZEbIOVlk/2rGDFaosQGdQc4mgjaX5gipojGHksmhqtyQvlkNhPvKv16QYNKKT
-         qZau0rKJfZrmEtVW6QJFfDXuPlC7GnO7dCA7b+Xv7xzcHxbLX5a8dCe8GMsHW4HesYp5
-         z7jlc2sIgEl/XOgi13dp7Qc9E2XgfBm+QOsXZZD46bjLYWnBOZQe81u9hgZcT+gYzmMB
-         WELTlfmTfGqEgn1iu0uDAZdUs83HrxEwpBNPQKYBg9gwj34cYSawAYiDhdBebb0ivrUG
-         ghbiwtf3MkCyx3/OEUEnG6AMolLFkg98aq1T0r3pJorAkP3vGWX9AI9+zM9zm1tr3wG0
-         oLwg==
-X-Gm-Message-State: AOAM533I/TXHXrt7RIkxY2Lbp9QWeFtux8o6sI/YtbuFcLaMOmEDc5Oq
-        dGISG0PVpjx5syI7mmDd0e0=
-X-Google-Smtp-Source: ABdhPJwRIuNiryqRIXEdnd8PCtYBUxhPz4wLgti+0y9CRAHUV42vcSY23IDGC39u1ZoKBGL9EYxFUQ==
-X-Received: by 2002:a1c:4b09:: with SMTP id y9mr13033409wma.46.1595057140962;
-        Sat, 18 Jul 2020 00:25:40 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id c7sm19550192wrq.58.2020.07.18.00.25.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 00:25:40 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: meson: add audio playback to khadas-vim3l
-Date:   Sat, 18 Jul 2020 07:25:32 +0000
-Message-Id: <20200718072532.8427-3-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200718072532.8427-1-christianshewitt@gmail.com>
-References: <20200718072532.8427-1-christianshewitt@gmail.com>
+        Sat, 18 Jul 2020 03:28:33 -0400
+Received: from localhost.localdomain ([93.22.133.66])
+        by mwinf5d03 with ME
+        id 4XUR2300B1S6l4V03XUSlz; Sat, 18 Jul 2020 09:28:30 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 18 Jul 2020 09:28:30 +0200
+X-ME-IP: 93.22.133.66
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] drm/i810: switch from 'pci_' to 'dma_' API
+Date:   Sat, 18 Jul 2020 09:28:22 +0200
+Message-Id: <20200718072822.339064-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial audio support limited to HDMI i2s, copying the config
-from the existing VIM3 device-tree.
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
+
+When memory is allocated in 'i810_dma_initialize()' GFP_KERNEL can be used
+because its only caller, 'i810_dma_init()', already use it and no lock is
+taken in the between.
+
+
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
+
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
+
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
+
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/gpu/drm/i810/i810_dma.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-index dbbf29a0dbf6..b104967dbef1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-@@ -8,6 +8,7 @@
+diff --git a/drivers/gpu/drm/i810/i810_dma.c b/drivers/gpu/drm/i810/i810_dma.c
+index b88c3d5f92b4..303c2d483c6e 100644
+--- a/drivers/gpu/drm/i810/i810_dma.c
++++ b/drivers/gpu/drm/i810/i810_dma.c
+@@ -220,9 +220,9 @@ static int i810_dma_cleanup(struct drm_device *dev)
+ 		if (dev_priv->ring.virtual_start)
+ 			drm_legacy_ioremapfree(&dev_priv->ring.map, dev);
+ 		if (dev_priv->hw_status_page) {
+-			pci_free_consistent(dev->pdev, PAGE_SIZE,
+-					    dev_priv->hw_status_page,
+-					    dev_priv->dma_status_page);
++			dma_free_coherent(&dev->pdev->dev, PAGE_SIZE,
++					  dev_priv->hw_status_page,
++					  dev_priv->dma_status_page);
+ 		}
+ 		kfree(dev->dev_private);
+ 		dev->dev_private = NULL;
+@@ -398,8 +398,8 @@ static int i810_dma_initialize(struct drm_device *dev,
  
- #include "meson-sm1.dtsi"
- #include "meson-khadas-vim3.dtsi"
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
- 	compatible = "khadas,vim3l", "amlogic,sm1";
-@@ -31,6 +32,69 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "SM1-KHADAS-VIM3L";
-+		audio-aux-devs = <&tdmout_a>;
-+		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
-+				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
-+				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
-+				"TDM_A Playback", "TDMOUT_A OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-3 {
-+			sound-dai = <&tdmif_a>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-4 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+&arb {
-+	status = "okay";
-+};
-+
-+&clkc_audio {
-+	status = "okay";
- };
- 
- &cpu0 {
-@@ -61,6 +125,18 @@
- 	clock-latency = <50000>;
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &pwm_AO_cd {
- 	pinctrl-0 = <&pwm_ao_d_e_pins>;
- 	pinctrl-names = "default";
-@@ -93,3 +169,15 @@
- 	phy-names = "usb2-phy0", "usb2-phy1";
- };
-  */
-+
-+&tdmif_a {
-+	status = "okay";
-+};
-+
-+&tdmout_a {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
+ 	/* Program Hardware Status Page */
+ 	dev_priv->hw_status_page =
+-		pci_zalloc_consistent(dev->pdev, PAGE_SIZE,
+-				      &dev_priv->dma_status_page);
++		dma_alloc_coherent(&dev->pdev->dev, PAGE_SIZE,
++				   &dev_priv->dma_status_page, GFP_KERNEL);
+ 	if (!dev_priv->hw_status_page) {
+ 		dev->dev_private = (void *)dev_priv;
+ 		i810_dma_cleanup(dev);
 -- 
-2.17.1
+2.25.1
 
