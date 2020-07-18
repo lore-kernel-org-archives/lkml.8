@@ -2,165 +2,92 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176ACC433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B30C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E94B32073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1EAA20717
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2s4NCYD"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TwFBPgNr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgGRIe4 (ORCPT
+        id S1729169AbgGRIfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 04:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41382 "EHLO
+        Sat, 18 Jul 2020 04:35:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729015AbgGRIev (ORCPT
+        with ESMTP id S1728129AbgGRIfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 04:34:51 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C62C0619D3;
-        Sat, 18 Jul 2020 01:34:50 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q7so15309077ljm.1;
-        Sat, 18 Jul 2020 01:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=QYsmohHX4ln1V0gQOEGp8gE+5TZzMMGOeU8S/vpgEPo=;
-        b=M2s4NCYDfJimKFQMOmTfY4Xvpulv2i8U+qQt4ANGT+CErJXdML4ivd78j/XVD9R77I
-         W4ajBPu2Ltwo45UJmlIgGXukRnpsrNcGdev+JoCiW/kSfIeS6AFCcYbsBOWs9+1Rlj0n
-         ig2imsD1/aLyTR5qqIiFIlNNwU0DOwCjqxfE3op/xPhoPFHDZfRmjvF/nPO0kJmfyhSJ
-         YYg2O/8NQFbmp//EeDUhMrY1iySIE2R0pJ54UdToBiXWd90aREXDDa65QxVcuK0ZH+fn
-         dScO79Xhmlp4LaRN9Yxpy/Ng9fiScLZIogznwO37C+4YwjFamjep0PluMJvYsnJUrNGP
-         Oh7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QYsmohHX4ln1V0gQOEGp8gE+5TZzMMGOeU8S/vpgEPo=;
-        b=N8AibMJ2cZSnUTfOjbaNhCGHJH1lK0/2RVW3UBAUYjBSpEqdo7y269RnSarLiyDjs3
-         XLOhZWYwbqudzSYx3+RGfuU7ToG+iMQo9YN+lPV863JzqY0U0AUZ1hR4/pUKw9puvf93
-         qMGUS/A2Ybsu2kb4SnmzMafZ1ZZ8zWKwGsEjD65I5SUDkTmZc6y13tXlbCyMbsbmb3kR
-         kmDIJ/pAQTj46nuPFDQ6c5hMfe4YaacN8TArlV5j5FCPR192fz6Xs5R6vKkRIn54/lPr
-         SnsU71KdZ0iHSn9Mprql1yvdfQ/69jUHl47itJx+rRgyGzpAFsYyYqiKfRs4d9TDnAUQ
-         51jw==
-X-Gm-Message-State: AOAM533y4T0qQ3VKG7B4Z6kduRVO+Qo55TtWqfjBQrs/ZXtIfgbIz0Nm
-        V8O6We36ucAGQ+s/jWVusTA/Qqyb
-X-Google-Smtp-Source: ABdhPJyQ5aDJMIiAzOmkliORJIVZKK6iYVcEk3DBcZzY7O/fEaLm3XtksjIeGlZuOczK5ku4yNiZ9A==
-X-Received: by 2002:a2e:9a0f:: with SMTP id o15mr6279795lji.450.1595061289390;
-        Sat, 18 Jul 2020 01:34:49 -0700 (PDT)
-Received: from localhost.localdomain ([82.209.196.123])
-        by smtp.gmail.com with ESMTPSA id u26sm2789226lfq.72.2020.07.18.01.34.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 01:34:48 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] io_uring: batch put_task_struct()
-Date:   Sat, 18 Jul 2020 11:32:52 +0300
-Message-Id: <8a0e399414ec362ee0c587f4bdca968d4fa04be7.1595021626.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1595021626.git.asml.silence@gmail.com>
-References: <cover.1595021626.git.asml.silence@gmail.com>
+        Sat, 18 Jul 2020 04:35:41 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CC4C0619D2;
+        Sat, 18 Jul 2020 01:35:40 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B81XS0Pbbz9sRN;
+        Sat, 18 Jul 2020 18:35:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595061337;
+        bh=/JC4+I9ojxORAlks9BSHvHNb9rXl2GhB0EH9eS44SGU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TwFBPgNrUtqA3FUCVFTV6wxvR3++SXhCWewYZJ8GzlGiRX9nmLJauDFj6nfze7/p+
+         x17eHHvAv4yXuWsTKwiJEfb/ECCLgt8o/0MZrr+PDuG4Jc5CE0zeAnaIZJeFJJiwNe
+         9fZb9jKM7jrTmhF5SzBxDGWsq3E6oWtcSXDViKUYwWqlZtR9z7hceWYt9rAYvBaq4N
+         6zocr+1trdr2LSxwfNxRB6V4DSm3WWoanii/upfG04IFVog5RK7wctUBdqdL9TroiN
+         KLk/C68SOeo2xKosrG4fr6p2a0siWR2jYHgJwi9JrDMq+K0QL/JWYWfrK3OnEEphxO
+         YvZqxdWhOs7aA==
+Date:   Sat, 18 Jul 2020 18:35:33 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the thermal tree
+Message-ID: <20200718183533.0145f682@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/GrjFDz344.hnVwSNhV3I3De";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As every iopoll request have a task ref, it becomes expensive to put
-them one by one, instead we can put several at once integrating that
-into io_req_free_batch().
+--Sig_/GrjFDz344.hnVwSNhV3I3De
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+Hi all,
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 57e1f26b6a6b..b52aa0d8b09d 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1543,7 +1543,6 @@ static void io_dismantle_req(struct io_kiocb *req)
- 		kfree(req->io);
- 	if (req->file)
- 		io_put_file(req, req->file, (req->flags & REQ_F_FIXED_FILE));
--	__io_put_req_task(req);
- 	io_req_clean_work(req);
- 
- 	if (req->flags & REQ_F_INFLIGHT) {
-@@ -1563,6 +1562,7 @@ static void __io_free_req(struct io_kiocb *req)
- 	struct io_ring_ctx *ctx;
- 
- 	io_dismantle_req(req);
-+	__io_put_req_task(req);
- 	ctx = req->ctx;
- 	if (likely(!io_is_fallback_req(req)))
- 		kmem_cache_free(req_cachep, req);
-@@ -1806,8 +1806,18 @@ static void io_free_req(struct io_kiocb *req)
- struct req_batch {
- 	void *reqs[IO_IOPOLL_BATCH];
- 	int to_free;
-+
-+	struct task_struct	*task;
-+	int			task_refs;
- };
- 
-+static inline void io_init_req_batch(struct req_batch *rb)
-+{
-+	rb->to_free = 0;
-+	rb->task_refs = 0;
-+	rb->task = NULL;
-+}
-+
- static void __io_req_free_batch_flush(struct io_ring_ctx *ctx,
- 				      struct req_batch *rb)
- {
-@@ -1821,6 +1831,10 @@ static void io_req_free_batch_finish(struct io_ring_ctx *ctx,
- {
- 	if (rb->to_free)
- 		__io_req_free_batch_flush(ctx, rb);
-+	if (rb->task) {
-+		put_task_struct_many(rb->task, rb->task_refs);
-+		rb->task = NULL;
-+	}
- }
- 
- static void io_req_free_batch(struct req_batch *rb, struct io_kiocb *req)
-@@ -1832,6 +1846,16 @@ static void io_req_free_batch(struct req_batch *rb, struct io_kiocb *req)
- 	if (req->flags & REQ_F_LINK_HEAD)
- 		io_queue_next(req);
- 
-+	if (req->flags & REQ_F_TASK_PINNED) {
-+		if (req->task != rb->task && rb->task) {
-+			put_task_struct_many(rb->task, rb->task_refs);
-+			rb->task = req->task;
-+			rb->task_refs = 0;
-+		}
-+		rb->task_refs++;
-+		req->flags &= ~REQ_F_TASK_PINNED;
-+	}
-+
- 	io_dismantle_req(req);
- 	rb->reqs[rb->to_free++] = req;
- 	if (unlikely(rb->to_free == ARRAY_SIZE(rb->reqs)))
-@@ -1977,7 +2001,7 @@ static void io_iopoll_complete(struct io_ring_ctx *ctx, unsigned int *nr_events,
- 	/* order with ->result store in io_complete_rw_iopoll() */
- 	smp_rmb();
- 
--	rb.to_free = 0;
-+	io_init_req_batch(&rb);
- 	while (!list_empty(done)) {
- 		int cflags = 0;
- 
--- 
-2.24.0
+Commit
 
+  130b31498517 ("thermal: core: remove redundant initialization of variable=
+ ret")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/GrjFDz344.hnVwSNhV3I3De
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8StFYACgkQAVBC80lX
+0Gy9xwgAhPMuhcn6Q7Xq2vaaGBU9oXwZeTkK0AyMIzQFEMabMLkNSiJDiJEYi9N4
+rM8guxfF6B6TwVQq4SndCo0DG41f1ekWHqbg+dJjlFZ0o3NRhEEk2KvVPl/KOHLM
+OZHBd9kaiJ3g16kb4tnk9yDJ/gTKC7dWJ9U2wlCyw2KH1yA7zee7jICu9D6ZInET
+mmLdml3FLiq/gf4Le+qTdGQESGy3rUY51AwLCvgEsDDQ3Nhn0KA0qHyLSSPNMgQN
+lJWgXzRcUeqb9EThTnvuPf0KR/3SD3k2xCOLtt1L1kCencC+ulopQGN7qfZZm0rx
+d6nZys0CXmfgRhV6XHGMmjQeEi6Rgw==
+=CPIu
+-----END PGP SIGNATURE-----
+
+--Sig_/GrjFDz344.hnVwSNhV3I3De--
