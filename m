@@ -2,158 +2,237 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69767C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43206C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AED720759
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131832073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="BPMOItQA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hm+g5/sm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgGRJTE (ORCPT
+        id S1726512AbgGRJUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48128 "EHLO
+        Sat, 18 Jul 2020 05:20:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgGRJTD (ORCPT
+        with ESMTP id S1726055AbgGRJUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 05:19:03 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97F28C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 02:19:03 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id gc15so4738831pjb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 02:19:03 -0700 (PDT)
+        Sat, 18 Jul 2020 05:20:01 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D59CFC0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 02:20:01 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j19so7827374pgm.11
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 02:20:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=I4G2b6oiLn56qyVJ03FL/mQFC6Pc1n0o7UjqfCoRgAY=;
-        b=BPMOItQAhvY6zTZ1HSTtEEfAlAI9uR1IILHlQbQBoU9OPVJVYSEXZQfgK7VWMYCqE2
-         bMJADR/POLnQ8HDQtIxvAExu4Xuw8Lo9o7S2vwTiwWqqWwuXmxp7SvPI7/Vw3lb6usD4
-         7EO0iNKYovcjekXGNuFlSWo/gDa4ub3QM9mTClHcr0U75KexMIl0ZuNa7xiPa5AMvMCH
-         DWcfRRlc+ce424pw6rp8jPvBz+bJqfTLH5VsdrTla/cJHB9PLcu6CdDjMVY3f2cF4qe+
-         CmiSZ5U9SrxxSKETeeVslFZvWWAqVb8xSCEh+1oO5GwB/j/DNcuEC2qb9dt0wMdJYnhG
-         4KFg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=U338VHoThvNJPZwMik9tJ+JNUnpedFqHLCjBcvVwnnU=;
+        b=Hm+g5/smtqsVoPwrg4tpepqvJBx+ogoR6B3BnZ+JosH2jfWJluaMl7XmGBFSvngilo
+         wa6TPUiKZy+Yt5jmI0B9ON7dPZmxzgN5Obw0XPNEmpfCKDKiB00Min+2hd7H1moITpxF
+         fV1R4mzNaFavymtBXXFHz/wA5b5neEe2a97X5YuSqE1zTBtNJuz0rx9nJbo5H72Ehp07
+         dU5VPDI6BXizT+esIwf6RnJytEvlfHuSiWf57Y71iPd6WbwPoFFA8bUqF7ZbNBDvCrJt
+         H8ZL2MM7hJqgmkC/OOVCzA7Oa88jeJ4193HSAQNNhFEDDHq4sw37D7gGJMffqIx2fBhh
+         sAfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=I4G2b6oiLn56qyVJ03FL/mQFC6Pc1n0o7UjqfCoRgAY=;
-        b=q3Q7wLycKqfVsCVM4YsqTSLPdk433t3LggjyAlsHNNrbLi07z4aeDEpFowyRycgpEJ
-         91e6VEhzmR+PzWlJFmFJZsoxCwnlgWlJxGoyZPLFfays5THSU6UcrHdhV77FsHaRZp3F
-         0z7BAIcG6o4W0RptuydnKR4Z8Qp6PGOhqO5d/QUWCKNdl5XtZQCebA27MYhXZik4vuz6
-         1kwHyRezAW2zyMuxN9wedhTHDvrKzBMgIf9pb102sRDicU8iFyAYS6AR2/8Hp/6njr3O
-         /PcIGRQE9FH64Uacjf6+zqSeaDCPGDoSiV85r7XwLW9AsY4PH9Pj7lkWch/3VBcH0q/A
-         rgww==
-X-Gm-Message-State: AOAM531G60YJVQBFZeEq6kWD9pCGuIYOJ3wfqyztB3mEnb9CBS7prt7L
-        IXNy2TTf5fS6ufeoM6k2skx0pQ==
-X-Google-Smtp-Source: ABdhPJz6xCqd+mSY3e2SdNv8u7rqS8LT9NQEm8Rqlozz2Sv8U2owqVag111ocm/k68phBDhiehEIOg==
-X-Received: by 2002:a17:90a:1b2c:: with SMTP id q41mr13784566pjq.195.1595063943120;
-        Sat, 18 Jul 2020 02:19:03 -0700 (PDT)
-Received: from localhost ([2406:7400:73:207:8b43:3062:877d:c647])
-        by smtp.gmail.com with ESMTPSA id s131sm9876087pgc.30.2020.07.18.02.19.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 02:19:02 -0700 (PDT)
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Sat, 18 Jul 2020 05:18:57 -0400
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] staging: rtl8188eu: include: placed constant on the
- right side of the test in comparisons
-Message-ID: <20200718091857.quzs5sqvkjzngd6k@pesu-pes-edu>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bqcc3kjngupm4gpm"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=U338VHoThvNJPZwMik9tJ+JNUnpedFqHLCjBcvVwnnU=;
+        b=FI9xajYmk+rmtEDk4KDEY4Ol1/mOtg+v8aezFjzTOleja7kmaGZYaiHqyYNSBV27+y
+         TzwxlYLENx7XOtqWgo2oh/KP01Mg0zc72JfoDN5DhF5U8LhRsawFK6G8yW5Ki41DXmQR
+         ASQ17FNgeqUlL4NRLgzIqX3HOHI00OyGOabDFtOTfk4J3pwUmt795iMxdWedMd3jlNeG
+         9i9nQWpUSbvr2hctx48qvr0s4JwnYwlscl1rFOJyXenh66vgVkvwsi6ugb9GdWxb8CnC
+         D449dMemWTIoMK2ZInWyQ/umDK7uKbLb8TbJ3IZGe4Qyi9JX4+o96L8zL9/VkQGPTxO6
+         5TCQ==
+X-Gm-Message-State: AOAM5322p1AWyQfI1/WJicGTZZlabW4MHLo9ACO0pcXt+jUrLe/mOvHD
+        zADfTA2l0jQ3cfoOG2WqJKQ=
+X-Google-Smtp-Source: ABdhPJzBCkIEE6W7u7t9MhWQy+uWLF4g83SUIMOkfnjWPQVDOmNRtMQ1/pZZLHTL+0bAO9T5XAYdPg==
+X-Received: by 2002:a63:3151:: with SMTP id x78mr12175925pgx.210.1595064001011;
+        Sat, 18 Jul 2020 02:20:01 -0700 (PDT)
+Received: from localhost.localdomain ([182.69.248.222])
+        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.19.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Jul 2020 02:20:00 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, vkoul@kernel.org,
+        sboyd@kernel.org, robh+dt@kernel.org
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v6 00/10] Add MMC and DMA support for Actions S700
+Date:   Sat, 18 Jul 2020 14:49:24 +0530
+Message-Id: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This Series(v6) addressed the review comments from Rob and Mani,
+changes are made in patch 01/10 and 10/10.
 
---bqcc3kjngupm4gpm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Rob's bot reported an error for patch 01/10, and now it has been
+fixed by adjusting the reg property in example section.
 
-placed constant on the right side of the test
-to fix warnings issued by checkpatch
+For patch 10/10 unnecessary regulators are removed as suggested by
+Mani. 
 
-Signed-off-by: B K Karthik <karthik.bk2000@live.com>
----
- drivers/staging/rtl8188eu/include/rtw_mlme.h | 4 ++--
- drivers/staging/rtl8188eu/include/wifi.h     | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Serie is rebased on top of:
+https://github.com/torvalds/linux/commit/6a70f89cc58f2368efa055cbcbd8b37384f6c588
 
-diff --git a/drivers/staging/rtl8188eu/include/rtw_mlme.h b/drivers/staging=
-/rtl8188eu/include/rtw_mlme.h
-index 010f0c42368a..1b74b32b8a81 100644
---- a/drivers/staging/rtl8188eu/include/rtw_mlme.h
-+++ b/drivers/staging/rtl8188eu/include/rtw_mlme.h
-@@ -266,7 +266,7 @@ static inline void set_fwstate(struct mlme_priv *pmlmep=
-riv, int state)
- {
- 	pmlmepriv->fw_state |=3D state;
- 	/* FOR HW integration */
--	if (_FW_UNDER_SURVEY =3D=3D state)
-+	if (state =3D=3D _FW_UNDER_SURVEY)
- 		pmlmepriv->bScanInProcess =3D true;
- }
-=20
-@@ -274,7 +274,7 @@ static inline void _clr_fwstate_(struct mlme_priv *pmlm=
-epriv, int state)
- {
- 	pmlmepriv->fw_state &=3D ~state;
- 	/* FOR HW integration */
--	if (_FW_UNDER_SURVEY =3D=3D state)
-+	if (state =3D=3D _FW_UNDER_SURVEY)
- 		pmlmepriv->bScanInProcess =3D false;
- }
-=20
-diff --git a/drivers/staging/rtl8188eu/include/wifi.h b/drivers/staging/rtl=
-8188eu/include/wifi.h
-index 677827900607..dcef3da21970 100644
---- a/drivers/staging/rtl8188eu/include/wifi.h
-+++ b/drivers/staging/rtl8188eu/include/wifi.h
-@@ -326,7 +326,7 @@ static inline unsigned char *get_hdr_bssid(unsigned cha=
-r *pframe)
-=20
- static inline int IsFrameTypeCtrl(unsigned char *pframe)
- {
--	if (WIFI_CTRL_TYPE =3D=3D GetFrameType(pframe))
-+	if (GetFrameType(pframe) =3D=3D WIFI_CTRL_TYPE)
- 		return true;
- 	else
- 		return false;
---=20
-2.20.1
+--------------------------------------------------------------------
 
+Series(v5) addressed the review comments provided by Vinod, and
+patch 05/10 is moved to 01/10 so that documentation patch comes before
+driver.
 
---bqcc3kjngupm4gpm
-Content-Type: application/pgp-signature; name="signature.asc"
+Apart from it, changes are made in patch 03/10(earlier it was 02/10)
+to replace of_match_device() with of_device_get_match_data() and
+removed uintptr_t from type-cast.
 
------BEGIN PGP SIGNATURE-----
+This Series is rebased on top of 5.8.0-rc3.
 
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl8SvoAACgkQ471Q5AHe
-Z2rNtgv9Hd8w71e1h+llsOzTFBkJmx/DbNSr2Jc1k4R+GzO/BtAa4Zak/iL+KZEb
-wI888iW7DKC6R68lzjQ1bRS3rGxxwEQK9rev/y8tzckdiZ0103kFjhmpdYmDxB7r
-mehKoABIH3aTK9G7StXCeDScgqWYwfU6HmqfEeSzr66+XpdiMo+pcPZZTmawXTtK
-Q26PV437be9J0PmX/ofCLJU5uCW/9YnVgCyKY/bqnT8Xg/wg66ZlhT0PhSzyIE61
-PRVWQRpWm0P/vvXogjdAmHTyMXvkUK1Tkr+mRCorUQkvJRe5T3fu7V3QzY2rcoRn
-1EI2dzpMmyCu68n7f2X+DNCffW9TBdxNLKi3kLfrHlQIjPAA16MJySzfulLguwPl
-88oPoBY2WYtI8Lv3vHYLEPabUneZ/WxlubZ9CZono5YYKQqsP+LZf9+cx+DI3Clu
-VKZHV9BRsS5i/ddZt7/XUdrR//cNZWSmSbOnxuI4qmjiDGlGo4kYR85853ly0Rfb
-JESky8Ar
-=DdPu
------END PGP SIGNATURE-----
+---------------------------------------------------------------------
 
---bqcc3kjngupm4gpm--
+Series(v4) addressed the review comments provided by Mani, and
+there are changes in patch 1/10, 2/10 and 6/10 for it.
+
+For first couple of patches , old comments are preserved and more
+details about how DMA descriptors fields are programmed is added.
+
+Apart from it, Typo is fixed patch 6/10 and placed the header file
+in alphabetical order.
+
+Also, this series fixes one compilation warning (reported by Kbuild)
+introduced by patch 2/10 using clang compiler.
+------------------------------------------------------------------------
+
+Series(v3) addressed the review comments provided by Rob, and 
+there are changes in patch 5/10 for it.
+
+Also, one of the important change for this series(v3) is about the way we 
+we handle address range conflict between pinctrl and sps node.
+
+In the last Series(v2), patch 4/10 was sent as *do not merge* but while
+discussing about some proper solution for it, we have come up with
+idea of limiting pinctrl address range(to 0x100) to avoid this conflict.
+This is safe to do as current pinctrl driver uses address range only
+up to 0x100 (even less than that?), and this would let sps to work properly.
+
+Since sps block is now enabled , we have to provide power-domain bit
+for dma to work properly and patch 6/10 has that change now.
+
+Looking forward have some comments for this series.
+
+---------------------------------------------------------------------------
+
+Series(v2) addressed the review comments provided by Andre, and
+there are changes in patch 1/10, 2/10, 5/10 and 9/10.
+
+* Accessor function (to get the frame lenght) has moved from
+  patch 2/9 to patch 1/9 with inline removed.
+* Removed the unnecessary line break.
+* Added comments about the way DMA descriptor differs between S700
+  and S900.
+* Added a macro to define fcnt value.
+* Updated dma DT bindings.
+* Used SoC secific compatible string for MMC.
+
+Apart from it, a new patch 8/10 is added in this series to
+update mmc DT bindings.
+
+Series is rebased on 5.7.0-rc6.
+
+-----------------------------------------------------------------------------
+
+Series(v1) have following changes from the previous series.
+
+New patch(5/8) has been introduced that converts dma dt-binding
+for Actions OWL SoC from text format to yaml file.
+
+For patch(2/8) new accessor function is added to get the frame
+lenght which is common to both S900 and S700. Apart from it
+SoC check is removed from irq routine as it is not needed.
+
+Patch(4/8) which is an hack to prove our DMA and MMC works
+for S700 is now sent as *do not merge* patch.
+ 
+DMA is tested using dmatest with follwoing result:
+
+root@ubuntu:~# echo dma0chan1 > /sys/module/dmatest/parameters/channel
+root@ubuntu:~# echo 2000 > /sys/module/dmatest/parameters/timeout
+root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/iterations
+root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/run
+
+root@ubuntu:~# dmesg | tail
+[  303.362586] dmatest: Added 1 threads using dma0chan1
+[  317.258658] dmatest: Started 1 threads using dma0chan1
+[  317.259397] dmatest: dma0chan1-copy0: summary 1 tests, 0 failures 16129.03 iops 32258 KB/s (0)
+
+-------------------------------------------------------------------------------
+
+The intention of RFC series is to enable uSD and DMA support for
+Cubieboard7 based on Actions S700 SoC, and on the way we found that
+it requires changes in dmaengine present on S700 as its different
+from what is present on S900.
+
+Patch(1/8) does provide a new way to describe DMA descriptor, idea is
+to remove the bit-fields as its less maintainable. It is only build
+tested and it would be great if this can be tested on S900 based
+hardware.
+
+Patch(2/8) adds S700 DMA engine support, there is new compatible
+string added for it, which means a changed bindings needed to submitted
+for this. I would plan to send it later the converted "owl-dma.yaml".
+
+Patch(4/8) disables the sps node as its memory range is conflicting
+pinctrl node and results in pinctrl proble failure.
+
+Rest of patches in the series adds DMA/MMC nodes for S700
+alone with binding constants and enables the uSD for Cubieboard7.
+
+This whole series is tested, by building/compiling Kernel on
+Cubieboard7-lite which was *almost* successful (OOM kicked in,
+while Linking due to less RAM present on hardware).
+
+Following is the mmc speed :
+
+ubuntu@ubuntu:~$ sudo hdparm -tT /dev/mmcblk0
+
+/dev/mmcblk0:
+ Timing cached reads:   1310 MB in  2.00 seconds = 655.15 MB/sec
+ Timing buffered disk reads:  62 MB in  3.05 seconds =  20.30 MB/sec
+
+Amit Singh Tomar (10):
+  dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
+  dmaengine: Actions: get rid of bit fields from dma descriptor
+  dmaengine: Actions: Add support for S700 DMA engine
+  clk: actions: Add MMC clock-register reset bits
+  arm64: dts: actions: limit address range for pinctrl node
+  arm64: dts: actions: Add DMA Controller for S700
+  dt-bindings: reset: s700: Add binding constants for mmc
+  dt-bindings: mmc: owl: add compatible string actions,s700-mmc
+  arm64: dts: actions: Add MMC controller support for S700
+  arm64: dts: actions: Add uSD support for Cubieboard7
+
+ Documentation/devicetree/bindings/dma/owl-dma.txt  |  47 -------
+ Documentation/devicetree/bindings/dma/owl-dma.yaml |  79 ++++++++++++
+ Documentation/devicetree/bindings/mmc/owl-mmc.yaml |   6 +-
+ arch/arm64/boot/dts/actions/s700-cubieboard7.dts   |  22 ++++
+ arch/arm64/boot/dts/actions/s700.dtsi              |  51 +++++++-
+ drivers/clk/actions/owl-s700.c                     |   3 +
+ drivers/dma/owl-dma.c                              | 139 +++++++++++++--------
+ include/dt-bindings/reset/actions,s700-reset.h     |   3 +
+ 8 files changed, 252 insertions(+), 98 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
+
+-- 
+2.7.4
+
