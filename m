@@ -2,147 +2,84 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CFCC433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 03:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 03:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45E3C2073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 03:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849BB2070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 03:04:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LyQgXwWe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BILag9yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgGRDFx (ORCPT
+        id S1728696AbgGRDEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 23:05:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47676 "EHLO
+        Fri, 17 Jul 2020 23:04:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgGRDFt (ORCPT
+        with ESMTP id S1726262AbgGRDEK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 23:05:49 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF58AC0619D2;
-        Fri, 17 Jul 2020 20:05:49 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id q17so6262124pfu.8;
-        Fri, 17 Jul 2020 20:05:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=s0bPXMdX/gLeZJkA8kYL9ZRzdQQF5fbDlom5NC+jb10=;
-        b=LyQgXwWeMz66AYtzZPLQN7XJ8zJJ7GIpcEuVShlLxAy10Ovh2OKkzQyq3iE0HcYmFR
-         pArR97N3ZWU2dQDJTd3+LAvkCO7VmsK0QkfQkGQkH7szDiz9nycdZXDBLsRu/MYNtxnu
-         c8uXaYmwVaSj+6+SN66vmBi51raoFnTg3OBezOa2XBPQyappXarOcgnkkL3EI9aDotxk
-         VXXSTO1sBPXqCSiBC5Dndi1h3jfX7tcdPUwVYUvV+qRYwdhLhunNefQ4GrD6DrwnQYG5
-         ua3W03pYYyRawCWfMwWVc3zINk+z03iq6G/U/2hjxjfbda5xaf5sIFQaWYo4thcYGF3E
-         lBuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=s0bPXMdX/gLeZJkA8kYL9ZRzdQQF5fbDlom5NC+jb10=;
-        b=pTtKbnNMCfnpQM3zYe7OrAj1wSLSJGLzZ6v7YmTxsJ7wYTvJp8UsrTNazfBRVxshgx
-         LSTFmP/yJzwZ19q1kLvjV2kYz7vXN06No05p2VRKde5W0P8jYNjcD3XMgNqAa5OSDdev
-         7VH1ldEnJnnsU+ASN7VPBRDXdBGXD4NlIbEUOZ82zep7jKusg54vLTip64RSOYA6yYCW
-         dvhgJs1Vpb/13awpRyjBneOKn7lMV41cc39I5I1dVptu3AkU4DHc+eS4/rGBdp9d7hCI
-         zl3v4WhLCqRvaxn6ysNTedsdrGIOwjHYP/7Me6oSdE3vW9SlX5BhOndy0aCiBFIgpAwq
-         b7hQ==
-X-Gm-Message-State: AOAM530N/r+TmKcqVXX1fTUXf9hvCqgMqnZX4vigh0GdW/lF9CeWBXf/
-        UnWWzJsruUDqyxQNVgIkCGtWk4jf
-X-Google-Smtp-Source: ABdhPJxb13oZtxiCIm6ZTbuuVOzEZAb1CZyNjdVipyblB6s1d4r3UsQcVirfl3YtRzRC7mCB7pwcyQ==
-X-Received: by 2002:a62:7e51:: with SMTP id z78mr10587547pfc.3.1595041548972;
-        Fri, 17 Jul 2020 20:05:48 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id c9sm617331pjr.35.2020.07.17.20.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 20:05:48 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 3/4] net: Call into DSA netdevice_ops wrappers
-Date:   Fri, 17 Jul 2020 20:05:32 -0700
-Message-Id: <20200718030533.171556-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200718030533.171556-1-f.fainelli@gmail.com>
-References: <20200718030533.171556-1-f.fainelli@gmail.com>
+        Fri, 17 Jul 2020 23:04:10 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD175C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 20:04:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=7RUTSYbxVy6xT6xvpnV+itvZ5yKCz5OATkrmrwQ0Q8M=; b=BILag9ywRcnycQlUa9wZ+kBpv3
+        nrm6vDjOdI71kAqgp4sGvi98p/tTueXBaf2xxjCy1zoW7cR3jhG4x+ngNwqCE/7GetjKGXPftYU/H
+        vVnmDbKXga0SliMkib9wyWY5/66rO82AXKjOkirz3P+O0ensca0fvRigmHuJl9KRUnz3QsnvletBp
+        j74tx2Y/MrAeAABIZZTXni9IgmPztidqyGucU1y9oAd8f6BSsb2XyH7f5Raj6cZiU88T5X/tod3ZG
+        G+1bABvp8+bM8ypeN7Voe8qsW9bR4F7ohVr5XIILhppLyeLQ8cHKcmUbyMOIATAl6Eh2QRb/gjHAX
+        jkWoIqzw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwd8v-0007bb-Ms; Sat, 18 Jul 2020 03:04:06 +0000
+To:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v2] highmem: linux/highmem.h: fix duplicated words in a
+ comment
+Message-ID: <ad605959-0083-4794-8d31-6b073300dd6f@infradead.org>
+Date:   Fri, 17 Jul 2020 20:04:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the core net_device code call into our ndo_do_ioctl() and
-ndo_get_phys_port_name() functions via the wrappers defined previously
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Change the doubled word "is" in a comment to "it is".
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
 ---
- net/core/dev.c       | 5 +++++
- net/core/dev_ioctl.c | 5 +++++
- 2 files changed, 10 insertions(+)
+v2: instead of dropping one "is", change to "it is" [thanks Willy]
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 062a00fdca9b..19f1abc26fcd 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -98,6 +98,7 @@
- #include <net/busy_poll.h>
- #include <linux/rtnetlink.h>
- #include <linux/stat.h>
-+#include <net/dsa.h>
- #include <net/dst.h>
- #include <net/dst_metadata.h>
- #include <net/pkt_sched.h>
-@@ -8602,6 +8603,10 @@ int dev_get_phys_port_name(struct net_device *dev,
- 	const struct net_device_ops *ops = dev->netdev_ops;
- 	int err;
- 
-+	err  = dsa_ndo_get_phys_port_name(dev, name, len);
-+	if (err == 0 || err != -EOPNOTSUPP)
-+		return err;
-+
- 	if (ops->ndo_get_phys_port_name) {
- 		err = ops->ndo_get_phys_port_name(dev, name, len);
- 		if (err != -EOPNOTSUPP)
-diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
-index a213c703c90a..b2cf9b7bb7b8 100644
---- a/net/core/dev_ioctl.c
-+++ b/net/core/dev_ioctl.c
-@@ -5,6 +5,7 @@
- #include <linux/rtnetlink.h>
- #include <linux/net_tstamp.h>
- #include <linux/wireless.h>
-+#include <net/dsa.h>
- #include <net/wext.h>
- 
- /*
-@@ -231,6 +232,10 @@ static int dev_do_ioctl(struct net_device *dev,
- 	const struct net_device_ops *ops = dev->netdev_ops;
- 	int err = -EOPNOTSUPP;
- 
-+	err = dsa_ndo_do_ioctl(dev, ifr, cmd);
-+	if (err == 0 || err != -EOPNOTSUPP)
-+		return err;
-+
- 	if (ops->ndo_do_ioctl) {
- 		if (netif_device_present(dev))
- 			err = ops->ndo_do_ioctl(dev, ifr, cmd);
--- 
-2.25.1
+ include/linux/highmem.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- linux-next-20200714.orig/include/linux/highmem.h
++++ linux-next-20200714/include/linux/highmem.h
+@@ -73,7 +73,7 @@ static inline void kunmap(struct page *p
+  * no global lock is needed and because the kmap code must perform a global TLB
+  * invalidation when the kmap pool wraps.
+  *
+- * However when holding an atomic kmap is is not legal to sleep, so atomic
++ * However when holding an atomic kmap it is not legal to sleep, so atomic
+  * kmaps are appropriate for short, tight code paths only.
+  *
+  * The use of kmap_atomic/kunmap_atomic is discouraged - kmap/kunmap
 
