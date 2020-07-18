@@ -2,134 +2,174 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D67C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 22:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D28FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 23:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED2421741
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 22:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6232176B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 23:06:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="SFUL0IhQ";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Z8CxMRz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgGRWlX (ORCPT
+        id S1726463AbgGRXEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 18:41:23 -0400
-Received: from mga07.intel.com ([134.134.136.100]:19167 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbgGRWlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 18:41:22 -0400
-IronPort-SDR: CnajUCU3tjqV4ooRvlOxzA/fSUVMT+/BmKrBE0WV8KuVcS1mvwPiQrBJSTW1lp3dcSYQLdCf6x
- 77apoKRVPNuQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9686"; a="214466712"
-X-IronPort-AV: E=Sophos;i="5.75,368,1589266800"; 
-   d="scan'208";a="214466712"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 15:41:22 -0700
-IronPort-SDR: 8Z20czbzkHF6PcKbBU6E26gGTv2MRTUA7rbSEBVFYwu/ZOVCemnJ6lulUX2UHhuo61+JlfykTv
- hmm9O4u3xQhA==
-X-IronPort-AV: E=Sophos;i="5.75,368,1589266800"; 
-   d="scan'208";a="461237003"
-Received: from jiewulu-mobl1.amr.corp.intel.com (HELO [10.255.0.53]) ([10.255.0.53])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 15:41:20 -0700
-Subject: Re: Random shadow stack pointer corruption
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Ingo Molnar <mingo@redhat.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <c2bfe1aa390777b10d810d2b76a35b97fbd32a1c.camel@intel.com>
- <CALCETrUBDUKTcmmYD7BpZkL3869ELvha1PqOcScw4M-B_DQdiA@mail.gmail.com>
- <7653c6c74a4eee18b8bdc8262e0c0b5b95f9d771.camel@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <d4b9d6a1-d413-b044-1d4a-512bbbf06d78@intel.com>
-Date:   Sat, 18 Jul 2020 15:41:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 18 Jul 2020 19:04:21 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:9670 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726330AbgGRXET (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 19:04:19 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06IMsV8b009030;
+        Sat, 18 Jul 2020 16:03:41 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=u+wz6cd4i9Wc6sm+OczvdNssnYW5V9ubaG2aV1VDkyU=;
+ b=SFUL0IhQScq2st2DZWNKqdT1/A58lRHHVxkYxZIBl1t90CiZL28xLlD3FKodh507WWRv
+ dbhKwk402KxQHitMmQ9gyDUsUxgsujsf2mJcfrIuts4KSkl71QzVd+JlwtoVzgF76wby
+ UJ5HnqouYshNCu2ZpTpTgxJLCBUPmAosWU8= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 32bx6ghqa1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 18 Jul 2020 16:03:41 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sat, 18 Jul 2020 16:03:40 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eQ1dN2Ox+So1dXHk+or5KEqL64sEKO/uH5EBvdCJ3H07CjXfnXozsf6FbNrvWdQhC8Zz2GOdsRZN0b1C5biy/HWAvIuGeGgWNeMpLA9wMcPK5vbH++YY8tusdVmE8/ePYYy/fp4btxDgqfmsjwNGqzIUW1wOIHLrk2c2tLZvYDxnS1KCMJz7si0WP+5F0uKKQjJb39JdWs9h+IPgukZy3za5HnV3EshYxQaQP16BG7ayID1iZOhgnyFLx3q/f0QikPeT5wc7cHut4D/rlLnC8BlYCL1JG1E8ajb/12owgXyE3XLSiWfHsSaGeV1FJQM8LK5amaNeaG1SWHyh9rQYdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u+wz6cd4i9Wc6sm+OczvdNssnYW5V9ubaG2aV1VDkyU=;
+ b=PTZYobyEwTgMTzvdgxxlOD184iPTez5HauffLeBDSEHcVjt2iC5vEnS2cVwvTzPjQUu5YR/Iry2cHJKc5FygVnIuvrCJ7rFysVboRIQHOx7K4IrSpzQqNWDwTiaT5RgZ9zbCzFxZrk7EqduLA09NcRUfS6tuTIVsKQ1c3oofLeSPwqn6eHZblAe50XZCCrBIk6XzPzZUckI+L6WDPnlWSWyimpGcGsRAfOCkbX4VYJ2kMRxYw3OP8msaCZ/dSkkZKc8mKzMCiLqf+YOpnN0mrtxRgleAvJ+DdlHIJ0Ip6vmobXz5tMH4/7/TRLugUVvqg4p+SPbW0yx0b577vURQYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u+wz6cd4i9Wc6sm+OczvdNssnYW5V9ubaG2aV1VDkyU=;
+ b=Z8CxMRz6Olinec/Zbo4AyurewHfXhCe6MCetTc/1f1GQ3wwx8d30slENfYsLQxb/R0NpQVkOzBtrcawf7yXTod4xUdl+IjBPutihs7A5gvk2d0jIHuQSRK0txbpBxDOwuRWMhi3/VhiX1UUUOH1AeG2dYF1XoPB5Lo8jYMR8Kyk=
+Authentication-Results: roeck-us.net; dkim=none (message not signed)
+ header.d=none;roeck-us.net; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2808.namprd15.prod.outlook.com (2603:10b6:a03:153::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Sat, 18 Jul
+ 2020 23:03:26 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3195.024; Sat, 18 Jul 2020
+ 23:03:26 +0000
+Date:   Sat, 18 Jul 2020 16:03:22 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 17/19] mm: memcg/slab: use a single set of kmem_caches
+ for all allocations
+Message-ID: <20200718230322.GB124789@carbon.DHCP.thefacebook.com>
+References: <20200623174037.3951353-1-guro@fb.com>
+ <20200623174037.3951353-18-guro@fb.com>
+ <20200718172449.GA48060@roeck-us.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718172449.GA48060@roeck-us.net>
+X-ClientProxiedBy: BY3PR04CA0021.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::26) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-In-Reply-To: <7653c6c74a4eee18b8bdc8262e0c0b5b95f9d771.camel@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:5229) by BY3PR04CA0021.namprd04.prod.outlook.com (2603:10b6:a03:217::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.19 via Frontend Transport; Sat, 18 Jul 2020 23:03:25 +0000
+X-Originating-IP: [2620:10d:c090:400::5:5229]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 284e5e91-40b2-49b2-8762-08d82b6ec6e8
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2808:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2808411ACEC2AA4BBAB721B2BE7D0@BYAPR15MB2808.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SSLxboMWC74+PcyHlpvDzdRqlFqisAyVU0Z9EnpPb3Cv9bD0esT3QYuS388AiNMKgoVeqFz0BA4A+YLYOgZiakaEaKDLCWYoQH9jyAVNiMtwQBt4ZcxzyvCl6wMCBcl+8q35x7LEMrnv5/KLH/adN4gaz0fYb22x/EwSILVOoLJgguVn4s0lnzWtk18tWa9gWL+TtrlDyeHYC9jn7UX13ht1D1bmIzEw5EqyWbwxbPyrYLv0Atcn6hRQ3bwLPCLNIU0GiGMs9mOzKlGvsEQh7T2ZlFhtUniwBxAyzttqRYO4t4mAHG9OUk4Rhm6LbS27PZcF6IKyLtJGReO8KDWrqQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(39860400002)(136003)(346002)(376002)(186003)(16526019)(8936002)(478600001)(66946007)(66476007)(52116002)(66556008)(8676002)(7696005)(6666004)(86362001)(6916009)(4326008)(316002)(55016002)(9686003)(2906002)(6506007)(54906003)(1076003)(5660300002)(33656002)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: ecclCZAT5h8G8jc2eH5LUelCc8iYNPm6bJlTDU6ce1Md66k+EtbT8txPmFk9VdRbrNgzk9CMLeqmkNqjH9cjg5+vsKgX5DUMHFfCt4Ac0RmoCos5WGh/Jw5U803Rys7o7UbSur+KTphfca68JZpAKgxGfqikBFipHVXQ+ViU5fRuR2MIXIsrGjeQhNW3xl9jcSqGDplcFyxnV6ruQTUpClo9ApNN+ukZJn7FEw9bqcTf9fGswKVHYZcs85UC5DM+ZXAwnGHop2DCAXYVamvbZ+b3T6QMMUAxBrb3nfDFFCa8ztPmsb3NBRPup/qbg34KvMMuRNWbo0C6QsH2TPkqGK7k8j/14KITKf14xg/UO911UkijKf5U9oZUJIZt1Umn4uvUB8c/MEzLs7tgk54JVNe0fMTq/T34HUcnqp6cQnP9KCJmDlPhDhN1DaV4KP2IdfXEyXitJcgaroKXvT+eaBmJ5wLlaa9DGA3a0atMQ/HTnqlBwnXSsiMOQ6PHIlcPfmTUr4qfZn5vMbtkcKOk9Q==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 284e5e91-40b2-49b2-8762-08d82b6ec6e8
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2020 23:03:26.0997
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XRz/62iDm/0kJgHLIqkHyyOmdNZPBtdPnDPSnCjbQGA9svkj7Cyj6zQEcSzwS2ge
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2808
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-18_12:2020-07-17,2020-07-18 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
+ impostorscore=0 malwarescore=0 phishscore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=1 bulkscore=0 spamscore=0 clxscore=1011
+ mlxlogscore=991 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007180180
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/18/20 11:24 AM, Yu-cheng Yu wrote:
-> On Sat, 2020-07-18 at 11:00 -0700, Andy Lutomirski wrote:
->> On Sat, Jul 18, 2020 at 10:58 AM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
->>> Hi,
->>>
->>> My shadow stack tests start to have random shadow stack pointer corruption after
->>> v5.7 (excluding).  The symptom looks like some locking issue or the kernel is
->>> confused about which CPU a task is on.  In later tip/master, this can be
->>> triggered by creating two tasks and each does continuous
->>> pthread_create()/pthread_join().  If the kernel has max_cpus=1, the issue goes
->>> away.  I also checked XSAVES/XRSTORS, but this does not seem to be an issue
->>> coming from there.
->>
->> What do you mean "shadow stack pointer corruption"?  Is SSP itself
->> corrupt while running in the kernel?  Is one of the MSRs getting
->> corrupted?  Is the memory to which the shadow stack points getting
->> corrupted? Is the CPU rejecting an attempt to change SSP?
+On Sat, Jul 18, 2020 at 10:24:49AM -0700, Guenter Roeck wrote:
+> On Tue, Jun 23, 2020 at 10:40:35AM -0700, Roman Gushchin wrote:
+> > Instead of having two sets of kmem_caches: one for system-wide and
+> > non-accounted allocations and the second one shared by all accounted
+> > allocations, we can use just one.
+> > 
+> > The idea is simple: space for obj_cgroup metadata can be allocated on
+> > demand and filled only for accounted allocations.
+> > 
+> > It allows to remove a bunch of code which is required to handle kmem_cache
+> > clones for accounted allocations.  There is no more need to create them,
+> > accumulate statistics, propagate attributes, etc.  It's a quite
+> > significant simplification.
+> > 
+> > Also, because the total number of slab_caches is reduced almost twice (not
+> > all kmem_caches have a memcg clone), some additional memory savings are
+> > expected.  On my devvm it additionally saves about 3.5% of slab memory.
+> > 
+> > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> > Reviewed-by: Shakeel Butt <shakeelb@google.com>
 > 
-> What I see is, a new thread after ret_from_fork() and iret back to ring-3, 
-> its shadow stack pointer (MSR_IA32_PL3_SSP) is corrupted.
+> This patch results in:
+> 
+> {standard input}: Assembler messages:
+> {standard input}:140: Warning: macro instruction expanded into multiple instructions
+> mm/slub.c: In function 'slab_alloc.constprop':
+> mm/slub.c:2897:30: error: inlining failed in call to always_inline 'slab_alloc.constprop': recursive inlining
+>  static __always_inline void *slab_alloc(struct kmem_cache *s,
+> 
+> and many similar messages when trying to build mips:64r6el_defconfig
+> or mips:defconfig. Bisect log attached.
 
-Does corrupt mean random?  Or is it a valid stack address, just not for
-_this_ thread?  Or NULL?  Or is it a kernel address?  Have you tried
-tracing *ALL* the WRMSR's and XRSTOR's that write to the MSR?
+Hello, Guenter!
+
+Thank you for reporting the problem!
+Actually, I've already fixed it, and Andrew pulled the fix yesterday.
+So in few days the fix should appear in the next tree.
+
+Sorry for the inconvenience and please let me know if the problem will persist
+after a couple of days.
+
+Roman
