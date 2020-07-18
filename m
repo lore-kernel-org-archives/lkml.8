@@ -2,171 +2,105 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F058C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2F92076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41142074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgGRG0R (ORCPT
+        id S1728943AbgGRGjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:26:17 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22552 "EHLO mga04.intel.com"
+        Sat, 18 Jul 2020 02:39:05 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30319 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726226AbgGRG0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 02:26:17 -0400
-IronPort-SDR: fY2kykY+AAORmRgaS39SPLCE/APBHopE7uaNj1d41CfmteB+DoAcHqlYcitVlX5D1rMN35n5pA
- ZceB+qlk0gRA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="147225078"
+        id S1728506AbgGRGjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 02:39:01 -0400
+IronPort-SDR: IKeC2cswCgh59Aowcvu5Rk5czzELqeIa0DZCqmogZ5c3i5g+RWbFGM0HBNS02/+fIdrYdHBCKQ
+ ECS4PAFSzyYw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="151079555"
 X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
-   d="scan'208";a="147225078"
+   d="scan'208";a="151079555"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 23:26:17 -0700
-IronPort-SDR: nWGQ3xw5hxzRm2IP2wTk4Mf4Czmn46dgV3odGhcZSeMrGzVLgmBhzd1Z4gziK0PkILDCigFdj1
- NczX6RnYpX1Q==
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 23:39:00 -0700
+IronPort-SDR: UzIsVVoq+ZrMut9wraWzRDxZelCQpt67gwPVdF1Rn1KSWmBr/u91AGRHNGnVwK5BPhVlz8Yh7Q
+ EC26xKINAlRg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
-   d="scan'208";a="431063231"
-Received: from lkp-server02.sh.intel.com (HELO 50058c6ee6fc) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 17 Jul 2020 23:26:15 -0700
-Received: from kbuild by 50058c6ee6fc with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jwgIY-0000eY-BQ; Sat, 18 Jul 2020 06:26:14 +0000
-Date:   Sat, 18 Jul 2020 14:24:44 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 01634f2bd42e6fdd2d2959d97c26fcfab36be02a
-Message-ID: <5f1295ac.IfxAixGUHnBXIbOu%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="486690959"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Jul 2020 23:39:00 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/7] KVM: VMX: Add a helper to test for a valid error code given an intr info
+Date:   Fri, 17 Jul 2020 23:38:50 -0700
+Message-Id: <20200718063854.16017-4-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200718063854.16017-1-sean.j.christopherson@intel.com>
+References: <20200718063854.16017-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 01634f2bd42e6fdd2d2959d97c26fcfab36be02a  Merge branch 'x86/urgent'
+Add a helper, is_exception_with_error_code(), to provide the simple but
+difficult to read code of checking for a valid exception with an error
+code given a vmcs.VM_EXIT_INTR_INFO value.  The helper will gain another
+user, vmx_get_exit_info(), in a future patch.
 
-elapsed time: 1074m
-
-configs tested: 100
-configs skipped: 1
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-nds32                             allnoconfig
-powerpc                      ppc64e_defconfig
-arm                           viper_defconfig
-ia64                             alldefconfig
-sh                           se7721_defconfig
-arm                           corgi_defconfig
-sh                        edosk7760_defconfig
-mips                        omega2p_defconfig
-powerpc                  storcenter_defconfig
-arm                           tegra_defconfig
-h8300                            allyesconfig
-powerpc                 linkstation_defconfig
-sparc                       sparc32_defconfig
-arm                          badge4_defconfig
-powerpc                      pmac32_defconfig
-riscv                          rv32_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a016-20200717
-i386                 randconfig-a011-20200717
-i386                 randconfig-a015-20200717
-i386                 randconfig-a012-20200717
-i386                 randconfig-a013-20200717
-i386                 randconfig-a014-20200717
-x86_64               randconfig-a005-20200717
-x86_64               randconfig-a006-20200717
-x86_64               randconfig-a002-20200717
-x86_64               randconfig-a001-20200717
-x86_64               randconfig-a003-20200717
-x86_64               randconfig-a004-20200717
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ arch/x86/kvm/vmx/nested.c | 4 +---
+ arch/x86/kvm/vmx/vmcs.h   | 7 +++++++
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 6f81097cbc794..fc70644b916ca 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5931,9 +5931,7 @@ bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu)
+ 	 * need to be synthesized by querying the in-kernel LAPIC, but external
+ 	 * interrupts are never reflected to L1 so it's a non-issue.
+ 	 */
+-	if ((exit_intr_info &
+-	     (INTR_INFO_VALID_MASK | INTR_INFO_DELIVER_CODE_MASK)) ==
+-	    (INTR_INFO_VALID_MASK | INTR_INFO_DELIVER_CODE_MASK)) {
++	if (is_exception_with_error_code(exit_intr_info)) {
+ 		struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+ 
+ 		vmcs12->vm_exit_intr_error_code =
+diff --git a/arch/x86/kvm/vmx/vmcs.h b/arch/x86/kvm/vmx/vmcs.h
+index 7a3675fddec20..1472c6c376f74 100644
+--- a/arch/x86/kvm/vmx/vmcs.h
++++ b/arch/x86/kvm/vmx/vmcs.h
+@@ -138,6 +138,13 @@ static inline bool is_external_intr(u32 intr_info)
+ 	return is_intr_type(intr_info, INTR_TYPE_EXT_INTR);
+ }
+ 
++static inline bool is_exception_with_error_code(u32 intr_info)
++{
++	const u32 mask = INTR_INFO_VALID_MASK | INTR_INFO_DELIVER_CODE_MASK;
++
++	return (intr_info & mask) == mask;
++}
++
+ enum vmcs_field_width {
+ 	VMCS_FIELD_WIDTH_U16 = 0,
+ 	VMCS_FIELD_WIDTH_U64 = 1,
+-- 
+2.26.0
+
