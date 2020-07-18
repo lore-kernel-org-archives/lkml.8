@@ -2,66 +2,134 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B34C433E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70062C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9194C20759
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595078712;
-	bh=054o/hzKh+fh2yMScP+42l+JRCfK/PUTSBscQr3uoXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GscCH1cNoZPKrUnEnNcGoXA4zwoi4nIQRSHfoz6wcFtbhgMB2N30J16Ogm6o/VDke
-	 n5OrHxTA4w2QWPNhvPqp8Y0SdOhZOtEp07wMPwGNM3NwB9BtI9Q6k3gqxzFfDWqV1P
-	 XfEt+lgZdAy261QAynPqlm8EZ1imGfCcYiif2/Dk=
+	by mail.kernel.org (Postfix) with ESMTP id 4A2E92070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:26:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vMdwLDXf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgGRNZL (ORCPT
+        id S1727768AbgGRN0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgGRNZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:25:10 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC5BC2070E;
-        Sat, 18 Jul 2020 13:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595078710;
-        bh=054o/hzKh+fh2yMScP+42l+JRCfK/PUTSBscQr3uoXQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s+lSXAvqJc0sp6x5v+IGz894qsOE9b7M2Z8yUzur0d11pQiLbJ5WwhWS+PztzwqEX
-         7T0xE19XqL6pueWWnhn0OqdkerI1OgLyus4g04qhuCFzGTBZwn64wjX1cmbhXm0Lcm
-         YaXVZ81M6yu38WaQMaRxv9cxODtevfzbGcKcEx+M=
-Date:   Sat, 18 Jul 2020 18:55:06 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: linux/dmaengine.h: drop duplicated word in a
- comment
-Message-ID: <20200718132506.GN82923@vkoul-mobl>
-References: <06e64046-ebf1-15db-dbaf-73698de3b493@infradead.org>
+        Sat, 18 Jul 2020 09:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgGRN0r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 09:26:47 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A479C0619D2;
+        Sat, 18 Jul 2020 06:26:47 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t6so6636085plo.3;
+        Sat, 18 Jul 2020 06:26:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=VqTT9IDO19+ZA5nv21Pkcu4zf3MDPeHk42EblBrQa6o=;
+        b=vMdwLDXf4i+qqdF9QRcnYNvVqSlfE3UZbAjpCea2Y0sRSKi72vS5GeC+Jx9gWKRa+P
+         Zld5FgXZylg48gUhK2zNTIa48Etg3GM8Ss0KeI8JxhyArKdjQ+jnXhhiobotZFvkQMMg
+         PoyNyG4/tb/bwlrMgc7qBvaJkIdOK2fi1aVNzOCQXPMj+eP/OyuD/q4rtehnQbetlCyY
+         US+7SZ5B9pYQPPs3oHQIsMucKEvn2TlDkXcngQTV+Fljq9EWBcOYRohnVyGRH0tQA5RH
+         cP1qsp0exsNvg2TANfA2mfZfmZG5kxD5ClubDHmFMMfE20zPZ+y0hlaaLmXKi96LL6fi
+         QzkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=VqTT9IDO19+ZA5nv21Pkcu4zf3MDPeHk42EblBrQa6o=;
+        b=UTkTegQy1dGW49lGEW2350sqmu8XgiGHtky4GRWqaGyjkTN4JIkceeljGQEQMrzdW/
+         xfVXPPuUCp2z8nC0IwyWGALh9RSJFqy9ChH2m3rMRvUge68IGr+Mtby+8AMazkcmdlqk
+         +WM2QTaz5WsJxoipchdGVLvORCz4IvUQl6diTFRmhMyh5wvPuc0CR10x7gBW71jST6M2
+         k2FEJaHP58FO2rSmu0Wh7KR/zGktKm/Wh4bffeeE4F5luwyi8hyenc0+zMZyQJe6IW78
+         mcm9wM7JRkOrM40xis3AX7R7naUyZpGQrWO+Y0l6rRGRYkO1D4VyKes/beW+l2wEaNZ3
+         7GFA==
+X-Gm-Message-State: AOAM531LhBBwGBdKqHlrdd1M/kpScA7Ss2kejSkZs09DMYJOYtq7n4PZ
+        e7H1QqCI4jo5lpC0mZrJZCo=
+X-Google-Smtp-Source: ABdhPJzeybE3KLlfLyt/wu1z/T750bC+P9qMn09ZZOMxoP6gjGB9PqzQN9GYsQPNUZIx73shhE86AQ==
+X-Received: by 2002:a17:902:8a93:: with SMTP id p19mr10489452plo.275.1595078806642;
+        Sat, 18 Jul 2020 06:26:46 -0700 (PDT)
+Received: from blackclown ([103.88.82.25])
+        by smtp.gmail.com with ESMTPSA id r6sm10381569pgn.65.2020.07.18.06.26.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 18 Jul 2020 06:26:45 -0700 (PDT)
+Date:   Sat, 18 Jul 2020 18:56:32 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] staging: media: atomisp: Replace depracated MSI API.
+Message-ID: <20200718132632.GA11527@blackclown>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
 Content-Disposition: inline
-In-Reply-To: <06e64046-ebf1-15db-dbaf-73698de3b493@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-07-20, 19:51, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Drop the doubled word "has" in a comment.
 
-Applied, thanks
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-~Vinod
+Replace depracated pci_enable_msi with pci_alloc_irq_vectors.
+And as a result modify how the returned value is handled.
+
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+---
+ drivers/staging/media/atomisp/pci/atomisp_v4l2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/sta=
+ging/media/atomisp/pci/atomisp_v4l2.c
+index d36809a0182c..b824c6f78a9c 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
+@@ -1735,8 +1735,8 @@ static int atomisp_pci_probe(struct pci_dev *dev,
+ 	pci_set_master(dev);
+ 	pci_set_drvdata(dev, isp);
+=20
+-	err =3D pci_enable_msi(dev);
+-	if (err) {
++	err =3D pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_MSI);
++	if (err < 0) {
+ 		dev_err(&dev->dev, "Failed to enable msi (%d)\n", err);
+ 		goto enable_msi_fail;
+ 	}
+--=20
+2.17.1
+
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8S+IcACgkQ+gRsbIfe
+747Fmg/+Iujb0Dr/xwic1iWp0UM+FI1nN4E28i0EBw7trAm3ocK1bz9awuN2ieqf
+7jZKBvoBdYbCVdTkPqPpneXP9JAT/Gwv5JyUtuqk8TUyau5i8MUhjjuBf3LCdSmn
+UnoEoszx3VuNXp0n8jXL2TD/Od2CR0TAAG7/iGVdkHsQ5CAOKNk8MLCAz27DK7Zf
+NVfF+CqczCzrJDH2D7Ubyrv34bE2i42qt1TTHeSe26kdc3Wc0runexaU5Gzntdtl
+yO/5qxkbD6zFqrshu9GGv17Xa8RWi3leuPsoF4UWuKZHHUWxKSFmEy/dvbOlgAB2
+kDGDtaJgTo3POGjJ6eb2x2Pexxq2pc5uBtjve2l5FI1xcEOS2tltYjkvApg03Bmm
+wjAuEx/VLaHc24uU8CCQWRQCQRxfEBNH/sHgr67ZwZIvnaQmtiL8ufNatfiGY08K
+Bzr5XwfoZS4kOeApvomqY9qXOjwn9FQ6HS8lLpFOXgSYn/HV065NzJORNMzM4xGQ
+XLpCoq8ae8NQI3H5x/pPLG3jSLlhpNssynTXBgR+3QpDPM85xSIDDgL+JI4fQkti
+z0c4bdDppEz3w4+QNQtT6OuTRtVniRdeQLa2QmCAwzGort1stDX9P47cqtZ5k3wz
+pRTfmv7w4IcHpnhMiLcwHbrSzaqNmQ6FmFHIaV13kG4W7iUJld8=
+=aeBi
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
