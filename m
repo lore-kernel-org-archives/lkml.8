@@ -2,100 +2,136 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0162CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBE9C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D485A2076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 447CB20829
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifh1Ra8d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCGB1hi0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgGRP6u (ORCPT
+        id S1728294AbgGRP6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 11:58:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52630 "EHLO
+        Sat, 18 Jul 2020 11:58:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgGRP6t (ORCPT
+        with ESMTP id S1726411AbgGRP6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 11:58:49 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A55F4C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 08:58:49 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id j10so9924428qtq.11
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 08:58:49 -0700 (PDT)
+        Sat, 18 Jul 2020 11:58:54 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 124B1C0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 08:58:54 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id l6so6722277plt.7
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 08:58:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Plzvh6H4Hj4vOwuOygDMUlL5YJQ5p6zhFN1IKlQxzyU=;
-        b=ifh1Ra8dpMd3QeCqbe0IeHUsUr+GMcVoPiANc+Cl0oz2CHrfUsRokRmGmQ2kfW39Jb
-         9jw3Q/Wv8BRh86YqbJyd5r99MRYJNQSGSe9XMrdmsfgydbSyicsEV74ipNbcfM99Gh1T
-         xHIdhn7KcErvRd3a+H//yxuCrb3bDh+lDTvfb96m/TKpjSO4m/qrMV87pQbF0OdLkgIv
-         calxHyi8+AlbGE4wiW3fMxNR8S2OQzr0W30u2ksvEh539k515LDNEGJGhO4yKb+GF9ua
-         Ee0XKlu12o1XOLIYfWpMOqJF6Hghk7H6PsOWc4Ox4uhciYW1v5nG29dn6I1bLigoKBeB
-         GyBg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s1UWpjWdsLNWPlgbdy02tqmEYswuYmQoob6quBB6g04=;
+        b=QCGB1hi0YESLSG6rF2XZhgypBDF9IneUM2cGfrQpqcYDNVV9K7SLbWVfXxBg4IRgbW
+         ym/Gfby5QUlRO53MnGwyyoqNzGv9jTXHFbFs8f9eiOf3glPygV4Ut9BOyY/0H6cJbQFM
+         nlUgd7cvNOFJKpBNP60HyUfRjdv8nQ4YEButGXbsfylTmkLCK+OWMtpvW4Y75Ze1NuSn
+         pHk09lKOQsO6FG1JZmJvaAULb46heVk/Kw5HkpChtgG/9ZrogvrBiRt3de+K+OMxQSC3
+         /tNnA91swimrnOVKZ1cIXqpiyCkvZv4MJ+fGHPs0JY3oKw7W34sifBakFMTfMi5+e8aF
+         SQRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Plzvh6H4Hj4vOwuOygDMUlL5YJQ5p6zhFN1IKlQxzyU=;
-        b=p+xZy0AScm8RRhvIiq3hRRoYOmHo5jKliIkrO4SIaX5tEl47OhXIhISQYicXsFSUWd
-         mRmcr0TUWXAmbh7OfrX5tfFt1wNMUEgn67Wcq0bOUblA/YkWOcXM7nWBi4Id9VY4KikW
-         ocplhxXjhey/wLLAnqr5VOyXbAwQ9DnkqjHtK430V9GAlvFLjgdDjC55ZwyJSBO+0YnL
-         ejUk16Vy7YHDkhQRIN0xD3dLrfm4avCEO7zbf8qjEvGw3bYvAUl7sqU5wS6Ob5MqzJTX
-         cUEwyTP0UzkqYgTAHuv/pxo0jw26STiOCleovZtGUDBK5eW6FV/GD+24SOOrRqwXuZsq
-         hzlA==
-X-Gm-Message-State: AOAM531vCsEELP/EuxUMPClUVwsND+82N6xSEALrjXWsC6Olm/6pT6Rq
-        JKZs4YsEAPh0RsIt/8IVj9U9z8gC
-X-Google-Smtp-Source: ABdhPJwufL7Syr0Ze2zYAD9sA8/9Z7unafxdgmSG5XDAziMwjIzM/9Slmurg9TendyyL16QJmAt2Vw==
-X-Received: by 2002:ac8:4788:: with SMTP id k8mr16491868qtq.120.1595087927730;
-        Sat, 18 Jul 2020 08:58:47 -0700 (PDT)
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
-        by smtp.gmail.com with ESMTPSA id h41sm15387296qtk.68.2020.07.18.08.58.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jul 2020 08:58:46 -0700 (PDT)
-Received: by mail-yb1-f171.google.com with SMTP id g6so6038452ybo.11
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 08:58:45 -0700 (PDT)
-X-Received: by 2002:a25:cc4e:: with SMTP id l75mr22783187ybf.165.1595087925354;
- Sat, 18 Jul 2020 08:58:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s1UWpjWdsLNWPlgbdy02tqmEYswuYmQoob6quBB6g04=;
+        b=rRTS1eEMHxXFFALb1tDP0WuInl++V+GKeSfD8dhMkoOKmZRDCZMm3G37EE63z8HuTm
+         mofiyUqNdiyh6i33hGtIcHD5FMHjNrOW2/hn2NtFKL7UUY6HNspZgvOrMChctSWIpFtD
+         SrPN+spvmsG1nYNmEc0La2usKJsk+NWlT32c1cGYlGETOBx3NvkYpBg81dO8GBTA1tnu
+         akMMAoT2lLdkfTcvUa3ELuZc/JayXpA83gGqTygMAC8dZR7TbZc9g6RgY5ksFxUdfcg1
+         Bhz1IM8HK0AJoDytQX1ICZ7B3Tofq3mDOfD5Y2QoazbCkn1Q7WZLYBvU5dotPGqldIU3
+         1r9Q==
+X-Gm-Message-State: AOAM532JB0s6R2CawjI1gUXXwO/akp11UnXFVzAxmm2SmeG9lWJteqb2
+        KmChSIPDNAtYdsqHKuHgd08=
+X-Google-Smtp-Source: ABdhPJwJ0PpQSHUZCXAZkdM2zvR/fLQPIt5NF9WZAzK5BadG8Usgow1YkN8XSCicaj4xZU6M/X811Q==
+X-Received: by 2002:a17:90a:1f06:: with SMTP id u6mr15009934pja.33.1595087933448;
+        Sat, 18 Jul 2020 08:58:53 -0700 (PDT)
+Received: from thinkpad.teksavvy.com ([69.172.171.109])
+        by smtp.gmail.com with ESMTPSA id bx18sm5837889pjb.49.2020.07.18.08.58.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jul 2020 08:58:52 -0700 (PDT)
+From:   Rustam Kovhaev <rkovhaev@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Rustam Kovhaev <rkovhaev@gmail.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Subject: [PATCH] staging: wlan-ng: properly check endpoint types
+Date:   Sat, 18 Jul 2020 08:58:36 -0700
+Message-Id: <20200718155836.86384-1-rkovhaev@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200718091732.8761-1-srirakr2@cisco.com>
-In-Reply-To: <20200718091732.8761-1-srirakr2@cisco.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Sat, 18 Jul 2020 11:58:09 -0400
-X-Gmail-Original-Message-ID: <CA+FuTSdfvctFD3AVMHzQV9efQERcKVE1TcYVD_T84eSgq9x4OA@mail.gmail.com>
-Message-ID: <CA+FuTSdfvctFD3AVMHzQV9efQERcKVE1TcYVD_T84eSgq9x4OA@mail.gmail.com>
-Subject: Re: [PATCH v2] AF_PACKET doesnt strip VLAN information
-To:     Sriram Krishnan <srirakr2@cisco.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 5:25 AM Sriram Krishnan <srirakr2@cisco.com> wrote:
->
-> When an application sends with AF_PACKET and places a vlan header on
-> the raw packet; then the AF_PACKET needs to move the tag into the skb
-> so that it gets processed normally through the rest of the transmit
-> path.
->
-> This is particularly a problem on Hyper-V where the host only allows
-> vlan in the offload info.
+As syzkaller detected, wlan-ng driver submits bulk urb without checking
+that the endpoint type is actually bulk, add usb_urb_ep_type_check()
 
-Shouldn't this be resolved in that driver, then?
+Reported-and-tested-by: syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=c2a1fa67c02faa0de723
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+---
+ drivers/staging/wlan-ng/hfa384x_usb.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Packet sockets are not the only way to introduce packets in the
-kernel. Tuntap would be another.
+diff --git a/drivers/staging/wlan-ng/hfa384x_usb.c b/drivers/staging/wlan-ng/hfa384x_usb.c
+index fa1bf8b069fd..7cde60ea68a2 100644
+--- a/drivers/staging/wlan-ng/hfa384x_usb.c
++++ b/drivers/staging/wlan-ng/hfa384x_usb.c
+@@ -339,6 +339,12 @@ static int submit_rx_urb(struct hfa384x *hw, gfp_t memflags)
+ 
+ 	hw->rx_urb_skb = skb;
+ 
++	result = usb_urb_ep_type_check(&hw->rx_urb);
++	if (result) {
++	       netdev_warn(hw->wlandev->netdev, "invalid rx endpoint");
++	       goto cleanup;
++	}
++
+ 	result = -ENOLINK;
+ 	if (!hw->wlandev->hwremoved &&
+ 	    !test_bit(WORK_RX_HALT, &hw->usb_flags)) {
+@@ -354,6 +360,7 @@ static int submit_rx_urb(struct hfa384x *hw, gfp_t memflags)
+ 		}
+ 	}
+ 
++cleanup:
+ 	/* Don't leak memory if anything should go wrong */
+ 	if (result != 0) {
+ 		dev_kfree_skb(skb);
+@@ -388,6 +395,12 @@ static int submit_tx_urb(struct hfa384x *hw, struct urb *tx_urb, gfp_t memflags)
+ 	struct net_device *netdev = hw->wlandev->netdev;
+ 	int result;
+ 
++	result = usb_urb_ep_type_check(&hw->tx_urb);
++	if (result) {
++	       netdev_warn(hw->wlandev->netdev, "invalid tx endpoint");
++	       goto done;
++	}
++
+ 	result = -ENOLINK;
+ 	if (netif_running(netdev)) {
+ 		if (!hw->wlandev->hwremoved &&
+@@ -407,6 +420,7 @@ static int submit_tx_urb(struct hfa384x *hw, struct urb *tx_urb, gfp_t memflags)
+ 		}
+ 	}
+ 
++done:
+ 	return result;
+ }
+ 
+-- 
+2.27.0
+
