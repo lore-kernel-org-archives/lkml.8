@@ -2,111 +2,120 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E203C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280E5C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A38C207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:54:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SXDFIQGt"
+	by mail.kernel.org (Postfix) with ESMTP id 057902083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:54:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595051675;
+	bh=bPNSxVMfse13AvxGlLLZIw7R+pi4nVlMn0Jl7sLXFpM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OkBOZSxnYv2rGL9hfidBmRHbusP0VBtkfJ98VqZLhn/6xImQ2+eKDuQDu5Y5g14et
+	 KVeG7ahB06bQjTr7T0r7CtMIzmgMsx6dcpp9k1lysogTWmM3dIpt9GJ/jmpvWezl2H
+	 j2+qmiBupp3EhpnSBz2InRPKXa9jib4MNcz2bv8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgGRFyD (ORCPT
+        id S1728552AbgGRFye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbgGRFyD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:54:03 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 180DEC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 22:54:03 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id o2so2693561qvk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 22:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2k6UGv1LDKKpRhcTlEeKxXx4KzYCC+1w+JKMjKrFRu0=;
-        b=SXDFIQGtPOO1FREUNIOxP6MWzaMjlwxoRi/POKmRyva84olDCacJCnT6XzOl2CHd0e
-         lhy7pO0N82TpMOaZeLnvII1AvtSwGFJaoUa+nM9xa5PtLR9S7S0tkkUdtr8LaNLKMUZS
-         E2ShrxF09uRjcuw01zNvHLn2t3Y1eA6X/ACLJ0K6QwKhNmbmb7ZIDCpvwWHXTQHkMv5T
-         YkiBGvie7c9VBGwQxISEcIstBcy1tQhcn0KV+3gHMhFuBr4UviapSSRWR0v5aX2X3tYd
-         3/NgYnHSAE2sD11wM7qOhkwof34OZm1jg43Gn3378JgC9YD7WtJGFiP+99yY4ANvOk17
-         7P6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2k6UGv1LDKKpRhcTlEeKxXx4KzYCC+1w+JKMjKrFRu0=;
-        b=fu2jY+tL0o9caUq1xISDhkm9dKla8CAtdS4uCZA8eRxlibLyH0KVez4ZRoI0k6kXx1
-         +0uLOOTskTShq0OuafRqFDBs7h/9s7BpizxAiKwoktZC5g1p8NtRl/FGBT20owrsDFNy
-         GXnQ+FdBQqYUswR0qPY1t74WNI3T2IAPiIiT9BdrBJTLI6AYbpPoKDLkfqj5qF72zZu2
-         XP9smtoAzYkdUKHgjcYbteAShbEY9nNieJSGnMoKTXGgIOS2UPaP/RZY+uMIx0jLxzIs
-         6tiRF3F2eiRJkoIvG9JhkydNp/WlY2iIV7QjNRMsUdfCHck7604pMDAjNTFxSNLmjXzf
-         lxFA==
-X-Gm-Message-State: AOAM530/kQtvguTUE+NZLSaMWVTSHceQxJ36vURSTo0QleWVbHUq6YDW
-        XwGqjfKQ7PpfICfnedsr3PrINFRo4tnQGACY+UDxag==
-X-Google-Smtp-Source: ABdhPJzLY74RMzYmgbkHsJNzGi49eeFA+weL5NWdPNyO+SUJBca0pFWb987AKAtIyclrDdJOZrLpaaNe82NgIZanLZY=
-X-Received: by 2002:a05:6214:14f4:: with SMTP id k20mr12441481qvw.231.1595051641884;
- Fri, 17 Jul 2020 22:54:01 -0700 (PDT)
+        Sat, 18 Jul 2020 01:54:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728045AbgGRFyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 01:54:33 -0400
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B58AC208E4;
+        Sat, 18 Jul 2020 05:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595051672;
+        bh=bPNSxVMfse13AvxGlLLZIw7R+pi4nVlMn0Jl7sLXFpM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BzPhhErGy2FBuNLHaD1AgUbWThJJkAreGMkQSuRHrnNiDKdDBd5Qmm48rf3w0fMKa
+         8GsCQV3sFR0g8wedaR1rVs+8UQ1fYeC1NPCpap+i5alVmWykSAeZ07N2lEvlOgA0lc
+         67g7KUgwvKQuN2NLYI53l1bwKdZ3Xv8bHry+4hZo=
+Received: by mail-oi1-f182.google.com with SMTP id w17so9870260oie.6;
+        Fri, 17 Jul 2020 22:54:32 -0700 (PDT)
+X-Gm-Message-State: AOAM533g1RvbBEBT7ojOkhNfFGoOqX4LWdV1rHijAUUjUaG23rM+6rZp
+        vF4I7ue+NWZAoWu+1FR+Mgu2G/xUEFi/1++vTnk=
+X-Google-Smtp-Source: ABdhPJzZ4NEtZfmmbnS+DfeLeAQt/womAFEBD7627IvgU9OJ3LHDBrAHbhh/sf/h/5YmTI3PYH2HhZbTKN3cyX0ygYM=
+X-Received: by 2002:aca:d643:: with SMTP id n64mr10242000oig.33.1595051671965;
+ Fri, 17 Jul 2020 22:54:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200718021331.940659-1-joshdon@google.com> <CALCETrXHEhwBS72_Fiv9LbPjsBGp_rMmU16oYMTZJFa=wTki8A@mail.gmail.com>
-In-Reply-To: <CALCETrXHEhwBS72_Fiv9LbPjsBGp_rMmU16oYMTZJFa=wTki8A@mail.gmail.com>
-From:   Josh Don <joshdon@google.com>
-Date:   Fri, 17 Jul 2020 22:53:50 -0700
-Message-ID: <CABk29NsN_3kH4xyY1v0FixMDuGb_rG_iUYDFtwd3U5n10LsjaA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] x86: optimization to avoid CAL+RES IPIs
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Paul Turner <pjt@google.com>
+References: <20200709132807.32232-1-ardb@kernel.org>
+In-Reply-To: <20200709132807.32232-1-ardb@kernel.org>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 18 Jul 2020 08:54:20 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXGHDS7PnuPsCnHWGDFdtcaJUuXboZUZQwowzw0LfrQ+pw@mail.gmail.com>
+Message-ID: <CAMj1kXGHDS7PnuPsCnHWGDFdtcaJUuXboZUZQwowzw0LfrQ+pw@mail.gmail.com>
+Subject: Re: [GIT PULL] EFI fixes for v5.8-rc
+To:     linux-efi <linux-efi@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Andy, thanks for taking a look.
+On Thu, 9 Jul 2020 at 16:28, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> The following changes since commit 2a55280a3675203496d302463b941834228b9875:
+>
+>   efi/libstub: arm: Print CPU boot mode and MMU state at boot (2020-06-17 15:29:11 +0200)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent-for-v5.8-rc4
+>
+> for you to fetch changes up to 769e0fe1171e95d90ea5a2d6d0b2bdc7d5d2e7b2:
+>
+>   efi: Revert "efi/x86: Fix build with gcc 4" (2020-07-09 10:14:29 +0300)
+>
+> ----------------------------------------------------------------
+> EFI fixes for v5.8-rc4:
+> - Fix the layering violation in the use of the EFI runtime services
+>   availability mask in users of the 'efivars' abstraction
+> - Revert build fix for GCC v4.8 which is no longer supported
+> - Some fixes for build issues found by Atish while working on RISC-V support
+> - Avoid --whole-archive when linking the stub on arm64
+> - Some x86 EFI stub cleanups from Arvind
+>
+> ----------------------------------------------------------------
+> Ard Biesheuvel (2):
+>       efi/efivars: Expose RT service availability via efivars abstraction
+>       efi: Revert "efi/x86: Fix build with gcc 4"
+>
+> Arvind Sankar (2):
+>       efi/x86: Remove unused variables
+>       efi/x86: Only copy upto the end of setup_header
+>
+> Atish Patra (2):
+>       efi/libstub: Fix gcc error around __umoddi3 for 32 bit builds
+>       efi/libstub: Move the function prototypes to header file
+>
+> Masahiro Yamada (1):
+>       efi/libstub/arm64: link stub lib.a conditionally
+>
+>  arch/arm64/Makefile                       |  2 +-
+>  drivers/firmware/efi/efi-pstore.c         |  5 +----
+>  drivers/firmware/efi/efi.c                | 12 ++++++++----
+>  drivers/firmware/efi/efivars.c            |  5 +----
+>  drivers/firmware/efi/libstub/Makefile     |  3 +--
+>  drivers/firmware/efi/libstub/alignedmem.c |  2 +-
+>  drivers/firmware/efi/libstub/efi-stub.c   | 17 -----------------
+>  drivers/firmware/efi/libstub/efistub.h    | 16 ++++++++++++++++
+>  drivers/firmware/efi/libstub/x86-stub.c   |  8 ++++----
+>  drivers/firmware/efi/vars.c               |  6 ++++++
+>  fs/efivarfs/super.c                       |  6 +++---
+>  include/linux/efi.h                       |  1 +
+>  12 files changed, 43 insertions(+), 40 deletions(-)
 
-On Fri, Jul 17, 2020 at 8:14 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> PeterZ and I fixed a whole series of bugs a few years ago, and remote
-> wakeups *should* already do this. Did we miss something?  Did it
-> regress?  Even the call_function_single path ought to go through this:
->
-> void send_call_function_single_ipi(int cpu)
-> {
->         struct rq *rq = cpu_rq(cpu);
->
->         if (!set_nr_if_polling(rq->idle))
->                 arch_send_call_function_single_ipi(cpu);
->         else
->                 trace_sched_wake_idle_without_ipi(cpu);
-> }
->
-
-Yep, I was sitting on this for a bit and raced with b2a02fc43a there.
-90b5363ac also got rid of the last smp_send_reschedule() that was
-triggering the ipiless handling.
-
-One of the nice parts of the patch was that it could blanket apply to
-all of the smp_call/reschedule.  However, with the above patches that
-isn't a concern; it makes more sense to keep the existing
-TIF_POLLING_NRFLAG logic.
+Ping?
