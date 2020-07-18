@@ -2,113 +2,140 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9834BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7179E2073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D7B20724
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5lAQfKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgGRKtS (ORCPT
+        id S1726859AbgGRKx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 06:49:18 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48182 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726490AbgGRKtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 06:49:17 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5AE354AD968F3CDAAEA0;
-        Sat, 18 Jul 2020 18:49:15 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.81) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Sat, 18 Jul 2020
- 18:49:12 +0800
-Subject: Re: [PATCH] net: dsa: felix: Make some symbols static
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     <UNGLinuxDriver@microchip.com>, <vladimir.oltean@nxp.com>,
-        <claudiu.manoil@nxp.com>, <alexandre.belloni@bootlin.com>,
-        <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
-        <f.fainelli@gmail.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-References: <20200718100158.31878-1-wanghai38@huawei.com>
- <20200718104027.ugsdw42jfcpewfl6@skbuf>
-From:   "wanghai (M)" <wanghai38@huawei.com>
-Message-ID: <dea3b332-8af7-b8db-6182-702b91ceeae4@huawei.com>
-Date:   Sat, 18 Jul 2020 18:49:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200718104027.ugsdw42jfcpewfl6@skbuf>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.81]
-X-CFilter-Loop: Reflected
+        Sat, 18 Jul 2020 06:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgGRKxw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 06:53:52 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E26C0619D2;
+        Sat, 18 Jul 2020 03:53:52 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id ga4so13459566ejb.11;
+        Sat, 18 Jul 2020 03:53:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zIs8U1AFp5oU7Cmugoi3AB4+ops3mMT+enEcajDUhwg=;
+        b=N5lAQfKS8Gbe8mgHP7atg2F/Fd0vQHeKM6ISEhazP33rstplU5A5hGe5QYDH+n8ZF9
+         QOn/rxmKkhnvWXEzBKq4mV9aoh2NeuOWc7NuaMDOy7TaC5ahcAw2JFc6KGby2b8+crRK
+         oRKz422Ut4VstmKSCmncObD+MR+xn1+k86QmLIqISs3k6s5jKhsEtfYiNJAZFmjG8gtt
+         O5IPLXJ8HRQpT5NQUvHvfWO52hFDnPHwveHCcEazAp1nPF2OYWfLpbhO87onOlHfUtkk
+         Kh31VOP+nh4kDl3hlhnImZ/gVIgpO3TU/AL1FnjKgJNXjGKqNIVCb7oLraMGMfrV7aS/
+         IJaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zIs8U1AFp5oU7Cmugoi3AB4+ops3mMT+enEcajDUhwg=;
+        b=sO8hinRq+z7aLDrHdmjw3HBHyFu/cl7OewTxFuwU37ORh8DvEAH+86ReKDTCLd4vb+
+         bjQIRPrIjv88h2RdIE9ZGo74DNSxOxMs8Kg9cjNpz80QmzoMLgqXfokp29RGBPJHdOQ3
+         TkVXTlJmkgiqRfvFxcznaPRbv3VgAbw96DyYOTbSEjdDaQFZ1KT2OALpreiu0Q7uintW
+         p38TegfyhJ0B0PPRqWHaSrbnHzZyAu41uXjDymvy9cDgIobmoUyaNR3ybebOogeabX04
+         5rlI/l0QS69RoBA8k9Hrm4LrocV/5pdPDLWz6oLBQkuW11bXLUmhbuDAXS2GwRkHVjSz
+         omOw==
+X-Gm-Message-State: AOAM533WsLBYyVyBdNoY1kbw3DLyRizLK+01aMgpSNMQbYShAhMQiAms
+        PpZ7/zChFOwovzMqN3P5CmA=
+X-Google-Smtp-Source: ABdhPJyfxdy8JnK3/GBka8Msg1fQrDtZ/be2IA9Dfboj9fwWCufUWM5B0aLmW2SVGzT+dZUHfmrwcg==
+X-Received: by 2002:a17:906:33c5:: with SMTP id w5mr12120922eja.275.1595069631178;
+        Sat, 18 Jul 2020 03:53:51 -0700 (PDT)
+Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id r19sm10776381edp.79.2020.07.18.03.53.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Jul 2020 03:53:50 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] rk3318 A95X Z2 board
+Date:   Sat, 18 Jul 2020 12:53:40 +0200
+Message-Id: <20200718105343.5152-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for reminding me, I'll do it.
+Add rk3318 A95X Z2 board.
 
-ÔÚ 2020/7/18 18:40, Vladimir Oltean Ð´µÀ:
-> On Sat, Jul 18, 2020 at 06:01:58PM +0800, Wang Hai wrote:
->> Fix sparse build warning:
->>
->> drivers/net/dsa/ocelot/felix_vsc9959.c:560:19: warning:
->>   symbol 'vsc9959_vcap_is2_keys' was not declared. Should it be static?
->> drivers/net/dsa/ocelot/felix_vsc9959.c:640:19: warning:
->>   symbol 'vsc9959_vcap_is2_actions' was not declared. Should it be static?
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: Wang Hai <wanghai38@huawei.com>
->> ---
-> Please update your tree.
->
-> commit 3ab4ceb6e9639e4e42d473e46ae7976c24187876
-> Author: Vladimir Oltean <vladimir.oltean@nxp.com>
-> Date:   Sat Jun 20 18:43:36 2020 +0300
->
->      net: dsa: felix: make vcap is2 keys and actions static
->
->      Get rid of some sparse warnings.
->
->      Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
->      Signed-off-by: David S. Miller <davem@davemloft.net>
->
->>   drivers/net/dsa/ocelot/felix_vsc9959.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
->> index 1dd9e348152d..2067776773f7 100644
->> --- a/drivers/net/dsa/ocelot/felix_vsc9959.c
->> +++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
->> @@ -557,7 +557,7 @@ static const struct ocelot_stat_layout vsc9959_stats_layout[] = {
->>   	{ .offset = 0x111,	.name = "drop_green_prio_7", },
->>   };
->>   
->> -struct vcap_field vsc9959_vcap_is2_keys[] = {
->> +static struct vcap_field vsc9959_vcap_is2_keys[] = {
->>   	/* Common: 41 bits */
->>   	[VCAP_IS2_TYPE]				= {  0,   4},
->>   	[VCAP_IS2_HK_FIRST]			= {  4,   1},
->> @@ -637,7 +637,7 @@ struct vcap_field vsc9959_vcap_is2_keys[] = {
->>   	[VCAP_IS2_HK_OAM_IS_Y1731]		= {182,   1},
->>   };
->>   
->> -struct vcap_field vsc9959_vcap_is2_actions[] = {
->> +static struct vcap_field vsc9959_vcap_is2_actions[] = {
->>   	[VCAP_IS2_ACT_HIT_ME_ONCE]		= {  0,  1},
->>   	[VCAP_IS2_ACT_CPU_COPY_ENA]		= {  1,  1},
->>   	[VCAP_IS2_ACT_CPU_QU_NUM]		= {  2,  3},
->> -- 
->> 2.17.1
->>
-> Thanks,
-> -Vladimir
->
-> .
->
+What works:
+ adc key
+ emmc
+ ethernet
+ hdmi
+ gpu
+ ir
+ mmc
+ sd card
+ vop
+ usb2
+ uart2
+
+Not tested:
+ av
+ uart0 / bt
+ spdif
+ wifi
+
+No support in mainline:
+ usb3 (works with manufacturer driver)
+ front display (works with custom gpio driver AD1628/HT1628)
+
+Problems:
+ U-boot only starts on emmc, then loads kernel from sd card or emmc.
+
+ Hdmi hotplug detects DVI modes, but marks them all BAD.
+ The dw-hdmi driver needs more pre_pll_cfg_table entries.
+ Slow boot behavior. Screen available way after boot. (no penguins)
+
+ GPU support for Debian is not up to date. (old version)
+ Use Github version instead.
+ Test with glmark2-es2-drm gives glmark2 Score: 29
+ Kernel log:
+  lima ff300000.gpu: pp pp0 reset time out
+  lima ff300000.gpu: pp pp1 reset time out
+ No mainline support for GPU thermal and voltage to frequency.
+ PWM1 supply connected to DMC, GPU and vcodec.
+
+ The box only has a model name. Vendor prefix not verified.
+
+ Etc.
+
+Changed V2:
+  add vendor prefix
+  changed compatible string
+  restyle
+  removed usb3 regulator node
+  changed led active high to active low
+
+Johan Jonker (3):
+  dt-bindings: Add vendor prefix for Shenzhen Zkmagic Technology Co.,
+    Ltd.
+  dt-bindings: arm: rockchip: add Zkmagic A95X Z2 description
+  arm64: dts: rockchip: add rk3318 A95X Z2 board
+
+ .../devicetree/bindings/arm/rockchip.yaml          |   5 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+ arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts    | 393 +++++++++++++++++++++
+ 4 files changed, 401 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
+
+--
+2.11.0
 
