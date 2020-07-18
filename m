@@ -2,107 +2,93 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E170FC433E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D41BC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF39120684
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:37:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="q2pKauGP"
+	by mail.kernel.org (Postfix) with ESMTP id 1DBB22080D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595083012;
+	bh=LOVA6bWlbvtzxOWrN1ippzAT/DsF8cYs8LZI8JmearI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=s6R4HsCtFXRX6jgdebBqF1Glm8viWuBNhzEuEcV1nNjtI5LL7PSSE1N6VJ+Ypft96
+	 GqQg2j8Y5loXsBEmZhcTM9Iv4jvt/NVmGoDr5rSgSIuj2hLlLeSoj7Qgr1qT+U22SX
+	 EkV6oHvrVf5v95QRDM1ezmGhuWDGhb3C2sBtH7EQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgGROhH (ORCPT
+        id S1727910AbgGROgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 10:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbgGROhH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 10:37:07 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBE3C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 07:37:07 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mn17so7888748pjb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 07:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=OBxVyEg3bdADV2OFLorxOQYOlQLEYNXuUZHrmed//Yw=;
-        b=q2pKauGPutsq7X/osxzAdP5R7jcR5hBKTkgNFUITBMeyRr7tGwBmdGB9kN2OFkPtVo
-         gC4XGaD+1zUxruSNgagkQNlrOkj0vn70BB/iKFO0RKgU3zU3jPVdgOnviczuueRHXohG
-         Y+6GFTAcJRjMeoZFOGGfkUpD8sAsx6enVEwELdO4zoPNdjxGCr6Ad0z4DxarEjMBlwBM
-         n9/vveTB0K+Dn4nbCUTi07m+MAQC3gMss5Iaa+sx/RA6IrYz9HBoiX7WAcj3lLQ6IJzi
-         QBpKtiGi/Lma/Vqhkkl/DUhrKgTFI188Ed2YhkainYCc8LisQ6magBWtWF/HAw+3loww
-         rKlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OBxVyEg3bdADV2OFLorxOQYOlQLEYNXuUZHrmed//Yw=;
-        b=L8F/CXI7V7p33NSAd1kO4LSbHRBgNr5gafbwCTqlqck1Eknb2rmmSJ3Dzkb+o6O0gL
-         63PhcGuJ25bv/Y+1Ww86YWP12D4/wnv8YtFEpRupR4G/RAIRt2XNa+0Exvqlw0B4haPT
-         3eck+mv/y5xKF7aJaZZ+S/S5+WaL2bbMjuHQzEckSIoNEAlmsRMceU4Si100HFn0gGUg
-         8jiq4n1g4U+yHHUMJnGgnunW2W0bBA2G3K9mPOtyyHuX2pvkI9qOVCdk3AoIu0Lr1cGM
-         PAr4ttRdQnJhQc4FQnYobNqQ6JaRaVMTz4rQ7q02G9QzUCGkxPsYG7nCB5ieD8s0U7Ne
-         LKZw==
-X-Gm-Message-State: AOAM5302ifnauOA/WYM69ebtd37Gp1LuLJs6mXikWG8kMt9SqDCFMMx7
-        FHeHn+x16Zzn5vRpQgaIWnAr60+Kr9q75Q==
-X-Google-Smtp-Source: ABdhPJwXzTRqkExLgXXpeJ9pKSnTxCd2wGCBsaRl6vw30r3m2wm8UvlbYoxwS/CEUBpUgKiBOWi6WA==
-X-Received: by 2002:a17:90a:ea05:: with SMTP id w5mr14758483pjy.175.1595083026148;
-        Sat, 18 Jul 2020 07:37:06 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id y18sm10841886pff.10.2020.07.18.07.37.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jul 2020 07:37:05 -0700 (PDT)
-Subject: Re: [PATCH 0/2] task_put batching
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1595021626.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <cf209c59-547e-0a69-244d-7c1fec00a978@kernel.dk>
-Date:   Sat, 18 Jul 2020 08:37:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 18 Jul 2020 10:36:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbgGROgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 10:36:50 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B86B120684;
+        Sat, 18 Jul 2020 14:36:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595083010;
+        bh=LOVA6bWlbvtzxOWrN1ippzAT/DsF8cYs8LZI8JmearI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=u8uEUPGnDZcv9pQ0uMO1h3KVXKrHSkOAud/4bHZZEWTldfBkO+9YpN4FppKE+1BxS
+         5oc6IwQPZAKvdwI6d1KJjQvySavV0S30c4fcI/PmmHCFawJQw91fqldd6+OB7j+Gf1
+         ejWrqZ7E++i0QsBXN34uW+BRp3YqnmD3hDIpp264=
+Date:   Sat, 18 Jul 2020 15:36:46 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH 08/30] iio: dac: ad5380: Fix kerneldoc attribute
+ formatting for 'lock'
+Message-ID: <20200718153646.1c076801@archlinux>
+In-Reply-To: <20200716135928.1456727-9-lee.jones@linaro.org>
+References: <20200716135928.1456727-1-lee.jones@linaro.org>
+        <20200716135928.1456727-9-lee.jones@linaro.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <cover.1595021626.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/18/20 2:32 AM, Pavel Begunkov wrote:
-> For my a bit exaggerated test case perf continues to show high CPU
-> cosumption by io_dismantle(), and so calling it io_iopoll_complete().
-> Even though the patch doesn't yield throughput increase for my setup,
-> probably because the effect is hidden behind polling, but it definitely
-> improves relative percentage. And the difference should only grow with
-> increasing number of CPUs. Another reason to have this is that atomics
-> may affect other parallel tasks (e.g. which doesn't use io_uring)
+On Thu, 16 Jul 2020 14:59:06 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
+
+> Kerneldoc expects attributes/parameters to be in '@*.: ' format.
 > 
-> before:
-> io_iopoll_complete: 5.29%
-> io_dismantle_req:   2.16%
+> Fixes the following W=1 kernel build warning(s):
 > 
-> after:
-> io_iopoll_complete: 3.39%
-> io_dismantle_req:   0.465%
+>  drivers/iio/dac/ad5380.c:64: warning: Function parameter or member 'lock' not described in 'ad5380_state'
+> 
+> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Applied.
 
-Still not seeing a win here, but it's clean and it _should_ work. For
-some reason I end up getting the offset in task ref put growing the
-fput_many(). Which doesn't (on the surface) make a lot of sense, but
-may just mean that we have some weird side effects.
-
-I have applied it, thanks.
-
--- 
-Jens Axboe
+> ---
+>  drivers/iio/dac/ad5380.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/dac/ad5380.c b/drivers/iio/dac/ad5380.c
+> index b37e5675f7162..fd3358cccc7c5 100644
+> --- a/drivers/iio/dac/ad5380.c
+> +++ b/drivers/iio/dac/ad5380.c
+> @@ -51,7 +51,7 @@ struct ad5380_chip_info {
+>   * @vref_reg:		vref supply regulator
+>   * @vref:		actual reference voltage used in uA
+>   * @pwr_down:		whether the chip is currently in power down mode
+> - * @lock		lock to protect the data buffer during regmap ops
+> + * @lock:		lock to protect the data buffer during regmap ops
+>   */
+>  
+>  struct ad5380_state {
 
