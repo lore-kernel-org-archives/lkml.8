@@ -2,182 +2,99 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 778BD2065E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8438E207FB
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595085406;
+	bh=35faZSalQB+cqTbX1R2VNGg6wNJC60ycGnCnnnSFeUw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QuS8Sza7wRRT9ci5UPisghiNjhE7VnBl8tiuZySzkWNtAaejAYbRcyzTWldt9D6ip
+	 +0a4J/gu016WnLDTegpbAQgUkkMNbG62ITCSJ/3NmVTWpxfgQNry4fD+LCuN0bjheF
+	 YaYtK4XCW873kX4N2nZ1nkj6M2ei7Vc7xVfPnbhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgGRPPn (ORCPT
+        id S1727817AbgGRPQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 11:15:43 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:59034 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgGRPPm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 11:15:42 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
+        Sat, 18 Jul 2020 11:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbgGRPQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 11:16:45 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 4310F80502;
-        Sat, 18 Jul 2020 17:15:37 +0200 (CEST)
-Date:   Sat, 18 Jul 2020 17:15:33 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Suraj Upadhyay <usuraj35@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: core: Convert device logging to drm_* functions.
-Message-ID: <20200718151533.GA3007351@ravnborg.org>
-References: <20200718145531.GA21897@blackclown>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DFFB2076A;
+        Sat, 18 Jul 2020 15:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595085404;
+        bh=35faZSalQB+cqTbX1R2VNGg6wNJC60ycGnCnnnSFeUw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GQXiioKh2xzlwlYfRQF87o/7SX0vTb0COerHrKePioeTcLwiMCHI9pKGO4hK4KK13
+         K36kr0J6TWfP5UOZhl8yQBDgk03QoKSbKcp38ghMznXE629HgwRZz2qKj4d7QepVVS
+         L7rGtEH+m/1HxvSwMVRpUN6Sf5x64qvmgFitTY1k=
+Date:   Sat, 18 Jul 2020 16:16:40 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, Daniel Baluta <daniel.baluta@intel.com>
+Subject: Re: [PATCH 28/30] iio: magnetometer: mmc35240: Fix function header
+ formatting
+Message-ID: <20200718161640.70fce581@archlinux>
+In-Reply-To: <20200716135928.1456727-29-lee.jones@linaro.org>
+References: <20200716135928.1456727-1-lee.jones@linaro.org>
+        <20200716135928.1456727-29-lee.jones@linaro.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200718145531.GA21897@blackclown>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=SuLMtiOAp9ftW2fYraIA:9
-        a=Qe7UkSug8rnrQVf-:21 a=GJaodiu0WKfRVPWh:21 a=CjuIK1q_8ugA:10
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suraj.
+On Thu, 16 Jul 2020 14:59:26 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
 
-On Sat, Jul 18, 2020 at 08:25:31PM +0530, Suraj Upadhyay wrote:
-> Convert device logging with dev_* functions into drm_* functions.
+> All lines in the header must start with " *".
 > 
-> The patch has been generated with the coccinelle script below.
-> The script focuses on instances of dev_* functions where the drm device
-> context is clearly visible in its arguments.
+> Fixes the following W=1 kernel build warning(s):
 > 
-> @@expression E1; expression list E2; @@
-> -dev_warn(E1->dev, E2)
-> +drm_warn(E1, E2)
+>  drivers/iio/magnetometer/mmc35240.c:304: warning: bad line:                             compensation for output value.
 > 
-> @@expression E1; expression list E2; @@
-> -dev_info(E1->dev, E2)
-> +drm_info(E1, E2)
-> 
-> @@expression E1; expression list E2; @@
-> -dev_err(E1->dev, E2)
-> +drm_err(E1, E2)
-> 
-> @@expression E1; expression list E2; @@
-> -dev_info_once(E1->dev, E2)
-> +drm_info_once(E1, E2)
-> 
-> @@expression E1; expression list E2; @@
-> -dev_notice_once(E1->dev, E2)
-> +drm_notice_once(E1, E2)
-> 
-> @@expression E1; expression list E2; @@
-> -dev_warn_once(E1->dev, E2)
-> +drm_warn_once(E1, E2)
-> 
-> @@expression E1; expression list E2; @@
-> -dev_err_once(E1->dev, E2)
-> +drm_err_once(E1, E2)
-> 
-> @@expression E1; expression list E2; @@
-> -dev_err_ratelimited(E1->dev, E2)
-> +drm_err_ratelimited(E1, E2)
-> 
-> @@expression E1; expression list E2; @@
-> -dev_dbg(E1->dev, E2)
-> +drm_dbg_(E1, E2)
-> 
-> Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+> Cc: Daniel Baluta <daniel.baluta@intel.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+I tweaked this one a tiny bit to drop the brackets you added.
+I remember looking this up recently and they are optional in the kernel-doc
+format.  Adds a very small amount of confusion perhaps to add them in here.
+
+Applied
+
+
 > ---
->  drivers/gpu/drm/drm_edid.c           | 6 ++----
->  drivers/gpu/drm/drm_gem_cma_helper.c | 4 ++--
->  drivers/gpu/drm/drm_mipi_dbi.c       | 7 +++----
->  3 files changed, 7 insertions(+), 10 deletions(-)
-
-Looks good, coccinelle is a reliable way for such mass conversion.
-
-When converting to new style logging then all logging should be
-converted in a file. Maybe, if too much, split in two patches.
-But for all three files there are logging remaining to be converted
-so we would end up in several patch-sets before done.
-Please try to extend the scripting to also cover DRM_ => drm_ logging.
-You may need some manual adjustments to cover it all.
-
-	Sam
-
+>  drivers/iio/magnetometer/mmc35240.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index 52b357e75c3d..6840f0530a38 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -1844,9 +1844,7 @@ static void connector_bad_edid(struct drm_connector *connector,
->  	if (connector->bad_edid_counter++ && !drm_debug_enabled(DRM_UT_KMS))
->  		return;
->  
-> -	dev_warn(connector->dev->dev,
-> -		 "%s: EDID is invalid:\n",
-> -		 connector->name);
-> +	drm_warn(connector->dev, "%s: EDID is invalid:\n", connector->name);
->  	for (i = 0; i < num_blocks; i++) {
->  		u8 *block = edid + i * EDID_LENGTH;
->  		char prefix[20];
-> @@ -5298,7 +5296,7 @@ int drm_add_edid_modes(struct drm_connector *connector, struct edid *edid)
->  	}
->  	if (!drm_edid_is_valid(edid)) {
->  		clear_eld(connector);
-> -		dev_warn(connector->dev->dev, "%s: EDID invalid.\n",
-> +		drm_warn(connector->dev, "%s: EDID invalid.\n",
->  			 connector->name);
->  		return 0;
->  	}
-> diff --git a/drivers/gpu/drm/drm_gem_cma_helper.c b/drivers/gpu/drm/drm_gem_cma_helper.c
-> index 06a5b9ee1fe0..8d7408a78aee 100644
-> --- a/drivers/gpu/drm/drm_gem_cma_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_cma_helper.c
-> @@ -105,8 +105,8 @@ struct drm_gem_cma_object *drm_gem_cma_create(struct drm_device *drm,
->  	cma_obj->vaddr = dma_alloc_wc(drm->dev, size, &cma_obj->paddr,
->  				      GFP_KERNEL | __GFP_NOWARN);
->  	if (!cma_obj->vaddr) {
-> -		dev_dbg(drm->dev, "failed to allocate buffer with size %zu\n",
-> -			size);
-> +		drm_dbg_(drm, "failed to allocate buffer with size %zu\n",
-> +			 size);
->  		ret = -ENOMEM;
->  		goto error;
->  	}
-> diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
-> index 0e55d8716e3d..a7a611894243 100644
-> --- a/drivers/gpu/drm/drm_mipi_dbi.c
-> +++ b/drivers/gpu/drm/drm_mipi_dbi.c
-> @@ -225,9 +225,8 @@ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
->  		drm_fb_xrgb8888_to_rgb565(dst, src, fb, clip, swap);
->  		break;
->  	default:
-> -		dev_err_once(fb->dev->dev, "Format is not supported: %s\n",
-> -			     drm_get_format_name(fb->format->format,
-> -						 &format_name));
-> +		drm_err_once(fb->dev, "Format is not supported: %s\n",
-> +			     drm_get_format_name(fb->format->format, &format_name));
->  		return -EINVAL;
->  	}
->  
-> @@ -295,7 +294,7 @@ static void mipi_dbi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
->  				   width * height * 2);
->  err_msg:
->  	if (ret)
-> -		dev_err_once(fb->dev->dev, "Failed to update display %d\n", ret);
-> +		drm_err_once(fb->dev, "Failed to update display %d\n", ret);
->  
->  	drm_dev_exit(idx);
+> diff --git a/drivers/iio/magnetometer/mmc35240.c b/drivers/iio/magnetometer/mmc35240.c
+> index 1787d656d0094..19e46b1f4ee81 100644
+> --- a/drivers/iio/magnetometer/mmc35240.c
+> +++ b/drivers/iio/magnetometer/mmc35240.c
+> @@ -300,8 +300,8 @@ static int mmc35240_read_measurement(struct mmc35240_data *data, __le16 buf[3])
 >  }
-> -- 
-> 2.17.1
-> 
-
+>  
+>  /**
+> - * mmc35240_raw_to_mgauss - convert raw readings to milli gauss. Also apply
+> -			    compensation for output value.
+> + * mmc35240_raw_to_mgauss() - convert raw readings to milli gauss. Also apply
+> + *			      compensation for output value.
+>   *
+>   * @data: device private data
+>   * @index: axis index for which we want the conversion
 
