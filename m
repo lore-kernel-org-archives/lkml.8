@@ -2,88 +2,101 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B09FC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 261EB20724
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:00:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595070012;
-	bh=v1VP/OxkJUoX6THkQa7EpUrUMR0lBDTUozKcV1kWebM=;
-	h=Subject:From:To:Date:In-Reply-To:References:List-ID:From;
-	b=uLFlK/hCsaeBT0gB3/xgucNntwtWJH2UD04kIJy6NepzGZ/8hEHHYnurSnnsAI4rb
-	 B9HVVdDnKmrTfluAAuomi3IsOmPzYDsyXB1L0mRxZdObUU92viTQWJvvrp9mqL6Tvz
-	 fYIzIfAqQiFLjEZtQfZ69OgxbPuKfyJOq0OW6GF0=
+	by mail.kernel.org (Postfix) with ESMTP id 79D932070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgGRLAI (ORCPT
+        id S1726994AbgGRLFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 07:00:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46198 "EHLO mail.kernel.org"
+        Sat, 18 Jul 2020 07:05:30 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:39908 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbgGRLAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 07:00:08 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D59420724;
-        Sat, 18 Jul 2020 11:00:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595070007;
-        bh=v1VP/OxkJUoX6THkQa7EpUrUMR0lBDTUozKcV1kWebM=;
-        h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=jkItOKJA11mSMNIHdihUjj6tsdxELc9YIEAE2GyFt/UdhaAHRNHTjXA/T+YH+BzKL
-         Ytkb7/Y/MhxMIR5AqRJqYFc/9BLNQu5p+dyNAhlNwtthjcfqmLnuWRNVbriAzmrsCB
-         sO8rYnPk1F2Yo47tPsjxAPIMBaBQ7gGF1zibI4Wo=
-Message-ID: <db5f0447a43c9820a020d1dfcb80637029e4e516.camel@kernel.org>
-Subject: Re: [PATCH] ceph: ceph_features.h: drop duplicated word in a comment
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org
-Date:   Sat, 18 Jul 2020 07:00:06 -0400
-In-Reply-To: <37c50064-e4ee-d79f-5a9f-2824479b01ca@infradead.org>
-References: <37c50064-e4ee-d79f-5a9f-2824479b01ca@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        id S1726507AbgGRLFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 07:05:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 7F632FB03;
+        Sat, 18 Jul 2020 13:05:27 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zmh5EomUl9RE; Sat, 18 Jul 2020 13:05:26 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id B06E842576; Sat, 18 Jul 2020 13:05:25 +0200 (CEST)
+Date:   Sat, 18 Jul 2020 13:05:25 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>, lukas@mntmn.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 2/4] drm/imx: Add initial support for DCSS on iMX8MQ
+Message-ID: <20200718110525.GA2827@bogon.m.sigxcpu.org>
+References: <20200717144132.2206-1-laurentiu.palcu@oss.nxp.com>
+ <20200717144132.2206-3-laurentiu.palcu@oss.nxp.com>
+ <20200717194849.GA2369507@ravnborg.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717194849.GA2369507@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-17 at 16:36 -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
+Hi,
+On Fri, Jul 17, 2020 at 09:48:49PM +0200, Sam Ravnborg wrote:
+> Hi Laurentiu.
 > 
-> Drop the doubled word "the" in a comment.
+> On Fri, Jul 17, 2020 at 05:41:27PM +0300, Laurentiu Palcu wrote:
+> > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > 
+> > This adds initial support for iMX8MQ's Display Controller Subsystem (DCSS).
+> > Some of its capabilities include:
+> >  * 4K@60fps;
+> >  * HDR10;
+> >  * one graphics and 2 video pipelines;
+> >  * on-the-fly decompression of compressed video and graphics;
+> > 
+> > The reference manual can be found here:
+> > https://www.nxp.com/webapp/Download?colCode=IMX8MDQLQRM
+> > 
+> > The current patch adds only basic functionality: one primary plane for
+> > graphics, linear, tiled and super-tiled buffers support (no graphics
+> > decompression yet), no HDR10 and no video planes.
+> > 
+> > Video planes support and HDR10 will be added in subsequent patches once
+> > per-plane de-gamma/CSC/gamma support is in.
+> > 
+> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> > ---
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Ilya Dryomov <idryomov@gmail.com>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: ceph-devel@vger.kernel.org
-> ---
->  include/linux/ceph/ceph_features.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> ....
+>         return drm_bridge_attach(encoder, bridge, NULL, 0);
+> ....
 > 
-> --- linux-next-20200714.orig/include/linux/ceph/ceph_features.h
-> +++ linux-next-20200714/include/linux/ceph/ceph_features.h
-> @@ -58,7 +58,7 @@
->   *    because 10.2.z (jewel) did not care if its peers advertised this
->   *    feature bit.
->   *
-> - *  - In the second phase we stop advertising the the bit and call it
-> + *  - In the second phase we stop advertising the bit and call it
->   *    RETIRED.  This can normally be done in the *next* major release
->   *    following the one in which we marked the feature DEPRECATED.  In
->   *    the above example, for 12.0.z (luminous) we can say:
+> The above code-snippet tells that the display-driver rely on the bridge
+> to create the connector.
+> Could this by any chance be updated to the new way where the display
+> driver creates the connector - and thus passing DRM_BRIDGE_ATTACH_NO_CONNECTOR
+> as the flags argument?
 > 
+> What bridges would be relevant?
+> To check that the reelvant bridges are already ported.
 
-Merged into the testing branch. Thanks, Randy!
--- 
-Jeff Layton <jlayton@kernel.org>
-
+I think that's mostly NWL atm since MHDP isn't mainline yet. Can you
+recommend a bridge driver to look at that does this right?
+Cheers,
+ -- Guido
