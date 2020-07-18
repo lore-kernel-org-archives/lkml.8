@@ -2,40 +2,39 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE14AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09169C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAD282074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFD22074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgGRGjm (ORCPT
+        id S1728151AbgGRGjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:39:42 -0400
+        Sat, 18 Jul 2020 02:39:01 -0400
 Received: from mga09.intel.com ([134.134.136.24]:30319 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbgGRGjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 02:39:01 -0400
-IronPort-SDR: r0A0JB1oajJ29rhhkVdRyhJiFNBkgkw5/bH233KOrzWx14QjfOLubZhuMWRCYV34j903P6tUU6
- sVcgXATOp2CA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="151079553"
+        id S1726466AbgGRGjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 02:39:00 -0400
+IronPort-SDR: VBG67egJ9LbN53sa4iL5V6/4uBaZBCqwsqPvXY92LRqJWSDSg8WM3EOb2wNvaPsT674WM//Tnj
+ xmMBSX/GChYA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="151079552"
 X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
-   d="scan'208";a="151079553"
+   d="scan'208";a="151079552"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 23:39:00 -0700
-IronPort-SDR: WqBGYgKWUBAFm9qTIPSxn35YWrWClTpoBhdGM4JL6q7BDnxWQbuQ5EZQ6LUvWOyYLPpnOrth1y
- wIfRME2nTG3A==
+IronPort-SDR: TshmekDtA3lv29or1uv6qeiETKNvK92+6aKC/H/JBGvbMLI+zj+9hscec/rKtRRuz7H13eO27l
+ gx5u7c+d7Awg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
-   d="scan'208";a="486690949"
+   d="scan'208";a="486690945"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Jul 2020 23:39:00 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 17 Jul 2020 23:38:59 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -44,12 +43,10 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] KVM: x86: Add RIP to the kvm_entry, i.e. VM-Enter, tracepoint
-Date:   Fri, 17 Jul 2020 23:38:48 -0700
-Message-Id: <20200718063854.16017-2-sean.j.christopherson@intel.com>
+Subject: [PATCH 0/7]  KVM: x86: Tracepoint improvements and fixes
+Date:   Fri, 17 Jul 2020 23:38:47 -0700
+Message-Id: <20200718063854.16017-1-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200718063854.16017-1-sean.j.christopherson@intel.com>
-References: <20200718063854.16017-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,61 +54,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add RIP to the kvm_entry tracepoint to help debug if the kvm_exit
-tracepoint is disable or if VM-Enter fails, in which case the kvm_exit
-tracepoint won't be hit.
+Various improvements and fixes for the kvm_entry, kvm_exit and
+kvm_nested_vmexit tracepoints.
 
-Read RIP from within the tracepoint itself to avoid a potential VMREAD
-and retpoline if the guest's RIP isn't available.
+  1. Capture the guest's RIP during kvm_entry for obvious reasons.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/trace.h | 10 ++++++----
- arch/x86/kvm/x86.c   |  2 +-
- 2 files changed, 7 insertions(+), 5 deletions(-)
+  2. Extend kvm_exit to report the same info as kvm_nested_vmexit, and
+     macrofy its definition to reuse it verbatim for nested exits.
 
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index b66432b015d2e..9899ff0fa2534 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -15,18 +15,20 @@
-  * Tracepoint for guest mode entry.
-  */
- TRACE_EVENT(kvm_entry,
--	TP_PROTO(unsigned int vcpu_id),
--	TP_ARGS(vcpu_id),
-+	TP_PROTO(struct kvm_vcpu *vcpu),
-+	TP_ARGS(vcpu),
- 
- 	TP_STRUCT__entry(
- 		__field(	unsigned int,	vcpu_id		)
-+		__field(	unsigned long,	rip		)
- 	),
- 
- 	TP_fast_assign(
--		__entry->vcpu_id	= vcpu_id;
-+		__entry->vcpu_id        = vcpu->vcpu_id;
-+		__entry->rip		= kvm_rip_read(vcpu);
- 	),
- 
--	TP_printk("vcpu %u", __entry->vcpu_id)
-+	TP_printk("vcpu %u, rip 0x%lx", __entry->vcpu_id, __entry->rip)
- );
- 
- /*
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5f526d94c33f3..3563359316d64 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8547,7 +8547,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		kvm_x86_ops.request_immediate_exit(vcpu);
- 	}
- 
--	trace_kvm_entry(vcpu->vcpu_id);
-+	trace_kvm_entry(vcpu);
- 
- 	fpregs_assert_state_consistent();
- 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+  3. Stop passing in params to kvm_nested_vmexit, and instead use the
+     same approach (and now code) as kvm_exit where the tracepoint uses a
+     dedicated kvm_x86_ops hook to retrieve the info.
+
+  4. Stop reading GUEST_RIP, EXIT_QUAL, INTR_INFO, and ERROR_CODE on
+     every VM-Exit from L2 (some of this comes in #3).  This saves ~100
+     cycles (150+ with retpolines) on VM-Exits from L2 that are handled
+     by L0, e.g. hardware interrupts.
+
+Sean Christopherson (7):
+  KVM: x86: Add RIP to the kvm_entry, i.e. VM-Enter, tracepoint
+  KVM: x86: Read guest RIP from within the kvm_nested_vmexit tracepoint
+  KVM: VMX: Add a helper to test for a valid error code given an intr
+    info
+  KVM: x86: Add intr/vectoring info and error code to kvm_exit
+    tracepoint
+  KVM: x86: Add macro wrapper for defining kvm_exit tracepoint
+  KVM: x86: Use common definition for kvm_nested_vmexit tracepoint
+  KVM: nVMX: Read EXIT_QUAL and INTR_INFO only when needed for nested
+    exit
+
+ arch/x86/include/asm/kvm_host.h |   7 ++-
+ arch/x86/kvm/svm/svm.c          |  16 ++---
+ arch/x86/kvm/trace.h            | 107 +++++++++++++-------------------
+ arch/x86/kvm/vmx/nested.c       |  14 ++---
+ arch/x86/kvm/vmx/vmcs.h         |   7 +++
+ arch/x86/kvm/vmx/vmx.c          |  18 +++++-
+ arch/x86/kvm/x86.c              |   2 +-
+ 7 files changed, 86 insertions(+), 85 deletions(-)
+
 -- 
 2.26.0
 
