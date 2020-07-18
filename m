@@ -2,201 +2,150 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4855AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDB5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5172074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:13:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HophwgPL"
+	by mail.kernel.org (Postfix) with ESMTP id B7DA02074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595038800;
+	bh=jieZerNaEIrmrC2Gh0cOoL/PFsXHKN2ktd0N0+s5C5A=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=fczXz0ottLh3GOcT/CKNnJ1FU7I05JekrjNrgDtwjMR8scd4WgKtjRogJu2uClbJ/
+	 c6UjdSwtmWYosLo+kYskFvo6PhLc7dov8w40G2mruw8/eXHW/+4K1QaPBacjKGaLYR
+	 lkDmqPgFrdWRpS1DCejnFI1GbYeGkeZRZ2EjTI7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgGRCNI (ORCPT
+        id S1727912AbgGRCT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 22:13:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726665AbgGRCNI (ORCPT
+        Fri, 17 Jul 2020 22:19:57 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42182 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbgGRCT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 22:13:08 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 080E0C0619D2;
-        Fri, 17 Jul 2020 19:13:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=b6Lq/lewhmuN9xzWi3dHd0xI6Cg0i4KUL37C2Kg1dS8=; b=HophwgPLXdiolehFqCeYvePvXL
-        mriM58eqE9tYcmpXbUWG10+WG8uvKd6NEuRdIlMGpFhQug0EDt90vDBzTAK9ytr9agSs9T6JwgQJA
-        enP39pgqZ1bPQn7D7t+Z8nSKdTfPKa18YImWxT3eb0xI91O9SF+5zZZBXnvstFoLvEqZ8zMu/q09t
-        yOMU0piavcn8/bXAmmrPHlQWBzKysq/eq3urOQKYfUxu7NbgW4Kr4unl4jmTiYDQzsWUojYpjD9A6
-        3x+xXINHbilI0enTEFRP5+/o4QC9Ee2KAI/TU7zj6Zk7a4fMvWVgOyJJ9H33/odet6gNXxM7nLxWw
-        9YOEbGMw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwcLY-0002fS-VR; Sat, 18 Jul 2020 02:13:05 +0000
-Date:   Sat, 18 Jul 2020 03:13:04 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
-Message-ID: <20200718021304.GS12769@casper.infradead.org>
-References: <20200717044427.68747-1-ebiggers@kernel.org>
- <20200717174750.GQ12769@casper.infradead.org>
- <20200718013839.GD2183@sol.localdomain>
+        Fri, 17 Jul 2020 22:19:56 -0400
+Received: by mail-pl1-f194.google.com with SMTP id q17so6165003pls.9;
+        Fri, 17 Jul 2020 19:19:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=hMo3RnVDHLfIgbhzSPhgmZoRSeQMkJc26fstu4GMgpI=;
+        b=jwQbYl1klINeHhqCIrAFMbBOq89nB6Sy7/u/yq1ilYGIzxuAhz+NOs07//gX4ThO7i
+         VvJkyaKXpbEEMX8ipYKX2ISO6abE1mAz6qvbtVG6m6wu/5bJXP4S07nBpKKZceuOY6LO
+         CgM+iU7mD5mWvWOoF7KzxD8+jSkeUzAiHN62w7YWDYVatUDnBAL3KBb9BdCN2B8YBMLr
+         Vw8kLwcnFuucOjyyT0PlMnyqu1tdN3ine0OVfom6kf2ijsbI2mlNE53zTBsFIvYAZ1cv
+         DIdZ+Lkt4O6BGFwUV+lggsOZ94N6rLaUe+O3cVjLy1i2fFfAnZULsD5p7YAzNMc6KXL/
+         OxQg==
+X-Gm-Message-State: AOAM533YVSzgoQMSJnqksvxYWaTRmzKurclDI5+zBIRse7XC36pB5q4C
+        Nrh+Yr8c8uzEmMA3v+EvP3Y=
+X-Google-Smtp-Source: ABdhPJy0fCz6ydpJxWLhNYxgvkgzQETsYJdF5tyvpO/Fw2Kg7Tb7d73qzy2TlAHuYYfoYR+JjqdKew==
+X-Received: by 2002:a17:902:8f92:: with SMTP id z18mr3402219plo.129.1595038795782;
+        Fri, 17 Jul 2020 19:19:55 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id g4sm9112230pgn.64.2020.07.17.19.19.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 19:19:55 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 19:19:54 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     gregkh@linuxfoundation.org
+Cc:     moritzf@google.com, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] FPGA Manager changes for 5.9-rc1
+Message-ID: <20200718021954.GA7272@epycbox.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200718013839.GD2183@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 06:38:39PM -0700, Eric Biggers wrote:
-> On Fri, Jul 17, 2020 at 06:47:50PM +0100, Matthew Wilcox wrote:
-> > On Thu, Jul 16, 2020 at 09:44:27PM -0700, Eric Biggers wrote:
-> > > +If that doesn't apply, you'll have to implement one-time init yourself.
-> > > +
-> > > +The simplest implementation just uses a mutex and an 'inited' flag.
-> > > +This implementation should be used where feasible:
-> > 
-> > I think some syntactic sugar should make it feasible for normal people
-> > to implement the most efficient version of this just like they use locks.
-> 
-> Note that the cmpxchg version is not necessarily the "most efficient".
-> 
-> If the one-time initialization is expensive, e.g. if it allocates a lot of
-> memory or if takes a long time, it could be better to use the mutex version so
-> that at most one task does it.
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
-Sure, but I think those are far less common than just allocating a single
-thing.
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
 
-> > How about something like this ...
-> > 
-> > once.h:
-> > 
-> > static struct init_once_pointer {
-> > 	void *p;
-> > };
-> > 
-> > static inline void *once_get(struct init_once_pointer *oncep)
-> > { ... }
-> > 
-> > static inline bool once_store(struct init_once_pointer *oncep, void *p)
-> > { ... }
-> > 
-> > --- foo.c ---
-> > 
-> > struct foo *get_foo(gfp_t gfp)
-> > {
-> > 	static struct init_once_pointer my_foo;
-> > 	struct foo *foop;
-> > 
-> > 	foop = once_get(&my_foo);
-> > 	if (foop)
-> > 		return foop;
-> > 
-> > 	foop = alloc_foo(gfp);
-> > 	if (!once_store(&my_foo, foop)) {
-> > 		free_foo(foop);
-> > 		foop = once_get(&my_foo);
-> > 	}
-> > 
-> > 	return foop;
-> > }
-> > 
-> > Any kernel programmer should be able to handle that pattern.  And no mutex!
-> 
-> I don't think this version would be worthwhile.  It eliminates type safety due
-> to the use of 'void *', and doesn't actually save any lines of code.  Nor does
-> it eliminate the need to correctly implement the cmpxchg failure case, which is
-> tricky (it must free the object and get the new one) and will be rarely tested.
+are available in the Git repository at:
 
-You're missing the point.  It prevents people from trying to optimise
-"can I use READ_ONCE() here, or do I need to use smp_rmb()?"  The type
-safety is provided by the get_foo() function.  I suppose somebody could
-play some games with _Generic or something, but there's really no need to.
-It's like using a list_head and casting to the container_of.
+  git://git.kernel.org/pub/scm/linux/kernel/git/mdf/linux-fpga.git tags/fpga-for-5.9
 
-> It also forces all users of the struct to use this helper function to access it.
-> That could be considered a good thing, but it's also bad because even with
-> one-time init there's still usually some sort of ordering of "initialization"
-> vs. "use".  Just taking a random example I'm familiar with, we do one-time init
-> of inode::i_crypt_info when we open an encrypted file, so we guarantee it's set
-> for all I/O to the file, where we then simply access ->i_crypt_info directly.
-> We don't want the code to read like it's initializing ->i_crypt_info in the
-> middle of ->writepages(), since that would be wrong.
+for you to fetch changes up to eacfbf589c904bf8362cbd2d6cac123b0230e272:
 
-Right, and I wouldn't use this pattern for that.  You can't get to
-writepages without having opened the file, so just initialising the
-pointer in open is fine.
+  fpga: dfl: pci: add device id for Intel FPGA PAC N3000 (2020-07-12 19:00:37 -0700)
 
-> An improvement might be to make once_store() take the free function as a
-> parameter so that it would handle the failure case for you:
-> 
-> struct foo *get_foo(gfp_t gfp)
-> {
-> 	static struct init_once_pointer my_foo;
-> 	struct foo *foop;
->  
->  	foop = once_get(&my_foo);
->  	if (!foop) {
-> 		foop = alloc_foo(gfp);
-> 		if (foop)
-> 			once_store(&my_foo, foop, free_foo);
+----------------------------------------------------------------
+FPGA Manager changes for 5.9-rc1
 
-Need to mark once_store as __must_check to avoid the bug you have here:
+Here is the (slightly larger than usual) patch set for the 5.9-rc1 merge
+window.
 
-			foop = once_store(&my_foo, foop, free_foo);
+DFL:
+- Xu's changes add support for AFU interrupt handling and puts them to
+  use for error handling.
+- Xu's other change also adds another device-id for the Intel FPGA PAC N3000.
+- John's change converts from using get_user_pages() to
+  pin_user_pages().
+- Gustavo's patch cleans up some of the allocation by using
+  struct_size().
 
-Maybe we could use a macro for once_store so we could write:
+Xilinx:
+- Luca's changes clean up the xilinx-spi and xilinx-slave-serial drivers
+  and updates the comments and dt-bindings to reflect the fact it also
+  supports 7 series devices.
 
-void *once_get(struct init_pointer_once *);
-int once_store(struct init_pointer_once *, void *);
+Core:
+- Tom cleaned up the fpga-bridge / fpga-mgr core by removing some
+  dead-stores.
 
-#define once_alloc(s, o_alloc, o_free) ({                               \
-        void *__p = o_alloc;                                            \
-        if (__p) {                                                      \
-                if (!once_store(s, __p)) {                              \
-                        o_free(__p);                                    \
-                        __p = once_get(s);                              \
-                }                                                       \
-        }                                                               \
-        __p;                                                            \
-})
+All patches have been reviewed on the mailing list, and have been in the
+last few linux-next releases (as part of my for-next branch) without issues.
 
----
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
 
-struct foo *alloc_foo(gfp_t);
-void free_foo(struct foo *);
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      fpga: dfl: Use struct_size() in kzalloc()
 
-struct foo *get_foo(gfp_t gfp)
-{
-        static struct init_pointer_once my_foo;
-        struct foo *foop;
+John Hubbard (1):
+      fpga: dfl: afu: convert get_user_pages() --> pin_user_pages()
 
-        foop = once_get(&my_foo);
-        if (!foop)
-                foop = once_alloc(&my_foo, alloc_foo(gfp), free_foo);
-        return foop;
-}
+Luca Ceresoli (5):
+      dt-bindings: fpga: xilinx-slave-serial: valid for the 7 Series too
+      fpga manager: xilinx-spi: valid for the 7 Series too
+      fpga manager: xilinx-spi: remove unneeded, mistyped variables
+      dt-bindings: fpga: xilinx-slave-serial: add optional INIT_B GPIO
+      fpga manager: xilinx-spi: check INIT_B pin during write_init
 
-That's pretty hard to misuse (I compile-tested it, and it works).
+Tom Rix (2):
+      fpga: Fix dead store fpga-mgr.c
+      fpga: Fix dead store in fpga-bridge.c
+
+Xu Yilun (8):
+      fpga: dfl: parse interrupt info for feature devices on enumeration
+      fpga: dfl: pci: add irq info for feature devices enumeration
+      fpga: dfl: introduce interrupt trigger setting API
+      fpga: dfl: afu: add interrupt support for port error reporting
+      fpga: dfl: fme: add interrupt support for global error reporting
+      fpga: dfl: afu: add AFU interrupt support
+      Documentation: fpga: dfl: add descriptions for interrupt related interfaces.
+      fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+
+ .../bindings/fpga/xilinx-slave-serial.txt          |  16 +-
+ Documentation/fpga/dfl.rst                         |  19 ++
+ drivers/fpga/dfl-afu-dma-region.c                  |  19 +-
+ drivers/fpga/dfl-afu-error.c                       |  17 ++
+ drivers/fpga/dfl-afu-main.c                        |  32 +++
+ drivers/fpga/dfl-fme-error.c                       |  18 ++
+ drivers/fpga/dfl-fme-main.c                        |   6 +
+ drivers/fpga/dfl-pci.c                             |  78 ++++-
+ drivers/fpga/dfl.c                                 | 313 ++++++++++++++++++++-
+ drivers/fpga/dfl.h                                 |  63 ++++-
+ drivers/fpga/fpga-bridge.c                         |   6 +-
+ drivers/fpga/fpga-mgr.c                            |   4 +-
+ drivers/fpga/xilinx-spi.c                          |  61 +++-
+ include/uapi/linux/fpga-dfl.h                      |  82 ++++++
+ 14 files changed, 687 insertions(+), 47 deletions(-)
