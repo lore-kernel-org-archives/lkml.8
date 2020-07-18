@@ -2,96 +2,69 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C860C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E742076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595083366;
-	bh=VvVela76WpcPnsaxcOthFFXOe4qU+WFy687zFKejYDI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hd1GVpScIXGZ1nHRSjiCKZ8cafWHP0VpXAFpKN4fsO5JNn4JGFv+yCjXZKB/od6c0
-	 bPK9gkrmoMtvGlfzGuDDS8c6Hoao2EcfFGv5SmZQ0pJad2gVVE9C4zFGLGGEeFN/XV
-	 HjU/WtjvxayOgCBhPnBss0Jeb0eJ7hfAFdNSMUlg=
+	by mail.kernel.org (Postfix) with ESMTP id 167BE2076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgGROmp (ORCPT
+        id S1727851AbgGROop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 10:42:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32780 "EHLO mail.kernel.org"
+        Sat, 18 Jul 2020 10:44:45 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42656 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbgGROmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 10:42:43 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3D8E2064B;
-        Sat, 18 Jul 2020 14:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595083363;
-        bh=VvVela76WpcPnsaxcOthFFXOe4qU+WFy687zFKejYDI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WxPfSiPWFZW1iNkTuw1T3WnEyRJSyXYU48HcD/BSQtVwOti3mueVWaJfCVfpwGQB3
-         ibc9XGNUy/bnWdfUzr8LQQ9AecFbhvMXkpttEYa8hWRA2OEUEYoOU5wGRR0qFhea7a
-         HqubmoHsNFMMWc200ZsjGa+/uVkdrd4+1enj4xts=
-Date:   Sat, 18 Jul 2020 15:42:39 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH 11/30] iio: dac: ad5421: Fix kerneldoc attribute
- formatting for 'lock'
-Message-ID: <20200718154239.1d5b121b@archlinux>
-In-Reply-To: <20200716135928.1456727-12-lee.jones@linaro.org>
-References: <20200716135928.1456727-1-lee.jones@linaro.org>
-        <20200716135928.1456727-12-lee.jones@linaro.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726574AbgGROoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 10:44:44 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jwo4p-005lvq-12; Sat, 18 Jul 2020 16:44:35 +0200
+Date:   Sat, 18 Jul 2020 16:44:35 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     John Crispin <john@phrozen.org>,
+        Matthew Hagan <mnhagan88@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
+ properties
+Message-ID: <20200718144435.GA1375379@lunn.ch>
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+ <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+ <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <ac7f5f39-9f83-64c0-d8d5-9ea059619f67@gmail.com>
+ <53851852-0efe-722e-0254-8652cdfea8fc@phrozen.org>
+ <20200718132011.GQ1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718132011.GQ1551@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 14:59:09 +0100
-Lee Jones <lee.jones@linaro.org> wrote:
-
-> Kerneldoc expects attributes/parameters to be in '@*.: ' format.
+On Sat, Jul 18, 2020 at 02:20:11PM +0100, Russell King - ARM Linux admin wrote:
+> On Fri, Jul 17, 2020 at 10:44:19PM +0200, John Crispin wrote:
+> > in regards to the sgmii clk skew. I never understood the electrics fully I
+> > am afraid, but without the patch it simply does not work. my eletcric foo is
+> > unfortunately is not sufficient to understand the "whys" I am afraid.
 > 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  drivers/iio/dac/ad5421.c:82: warning: Function parameter or member 'lock' not described in 'ad5421_state'
-> 
-> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Applied
+> Do you happen to know what frequency the clock is?  Is it 1.25GHz or
+> 625MHz?  It sounds like it may be 1.25GHz if the edge is important.
 
-Thanks,
+I'm also a bit clueless when it comes to these systems.
 
-J
-> ---
->  drivers/iio/dac/ad5421.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/dac/ad5421.c b/drivers/iio/dac/ad5421.c
-> index fec27764cea88..95466c86f207a 100644
-> --- a/drivers/iio/dac/ad5421.c
-> +++ b/drivers/iio/dac/ad5421.c
-> @@ -62,7 +62,7 @@
->   * @current_range:	current range which the device is configured for
->   * @data:		spi transfer buffers
->   * @fault_mask:		software masking of events
-> - * @lock	lock to protect the data buffer during SPI ops
-> + * @lock:		lock to protect the data buffer during SPI ops
->   */
->  struct ad5421_state {
->  	struct spi_device		*spi;
+I thought the clock was embedded into the SERDES signal? You recover
+it from the signal?
 
+Florian, does the switch have a separate clock input/output?
+
+   Andrew
