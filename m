@@ -2,95 +2,98 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6458C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5DAF2076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F85320809
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:20:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="oKdcHxt3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TtkM157+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbgGRHQz (ORCPT
+        id S1729061AbgGRHUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 03:16:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgGRHQz (ORCPT
+        Sat, 18 Jul 2020 03:20:10 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46035 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726672AbgGRHUK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 03:16:55 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A9AC0619D3
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 00:16:54 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o8so17760734wmh.4
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 00:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xHVnQvxmbGU9Ko0uL8p4tnJQ0J1CLCT6xz7M4Ccg8MQ=;
-        b=oKdcHxt3cYiLH9F6JeaENxb3L0suuIESYrWnz4LMdoxe18XhXLj8d43wOtim0uIAme
-         zPJVkdIlbZiiY72xPKODgFXZOO4UxfjZJ2SUbMkjOAAS6ptdt4+ntKvReVn4Z2SDdm2B
-         3yVGvFT9fXvAbYkt5QRFUB2AstxiC87gcclw4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xHVnQvxmbGU9Ko0uL8p4tnJQ0J1CLCT6xz7M4Ccg8MQ=;
-        b=Ol2hkKsV+3rwYJVxtpvULTeqTJxY6MOjTW0SSHxVOEUObstR4YcP/VdCyPHh2gUoVG
-         CkGPJ+V7knhJb03jb22ICaatgPLeJTXSuoerMGNHtHOV2LaJIESJd2V/0g6CzLCQQQ4O
-         PBVprF7IpF8ywnFc6g0pXS/HZ6mLxv+78rahwLhm5uwWn93cudub7/p7bzkIBeFVDzCk
-         2A3zQP81Ge+vbyDevRixiHXyAWYxyLO9+XUmyMb4Nck5gXdyZPTYI5r49zdjuFUpzgca
-         u9nNPqXeIdeAVNZizRFFr4OHTXFjUqkeretOi/THriILUpD6f8F8SHgXf3ARNZWH5ubV
-         gnFg==
-X-Gm-Message-State: AOAM533ZvqLLAXbA74BZ94v/fEh4dJWGqCC3HAOoiu9z6yxO2vXZJxLy
-        2MUvD4TeMUuL9O/EJZkdcgGR0g==
-X-Google-Smtp-Source: ABdhPJwDu/WXFihY/rK4j6j/qIbeQLSuG278GwIf99LSLS+GmPXKjvZGiqEP3BMycjQA3h2sqx5d7A==
-X-Received: by 2002:a1c:dd86:: with SMTP id u128mr12532502wmg.123.1595056613105;
-        Sat, 18 Jul 2020 00:16:53 -0700 (PDT)
-Received: from localhost ([195.68.125.34])
-        by smtp.gmail.com with ESMTPSA id 59sm19792133wrj.37.2020.07.18.00.16.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 00:16:52 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 09:16:51 +0200
-From:   Chris Down <chris@chrisdown.name>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH] memcontrol: drop duplicate word and fix spello in
- <linux/memcontrol.h>
-Message-ID: <20200718071651.GA467892@chrisdown.name>
-References: <b04aa2e4-7c95-12f0-599d-43d07fb28134@infradead.org>
+        Sat, 18 Jul 2020 03:20:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595056808;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=RRfV+030OZkI3mkNTShBE54pKgPBKNhenrspYRndL2o=;
+        b=TtkM157+FNS1ZhfUyXh0tvs2oY/i0piDjoGCQDBBZzBX15U9X+y6B/qPIXugiBOURAeVOY
+        VmYFDdoBsmlqteQ8P2jBJ5/7mtPFPE0Rv/YC9a0mlr9y8x0wu6PeQGiawiD7xl4BdXV42W
+        b/HqP/Q2it65C3Q9evvNeu0wR1pkVvU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-242-tlUefK-ENLeSOEMpVYwcQg-1; Sat, 18 Jul 2020 03:20:06 -0400
+X-MC-Unique: tlUefK-ENLeSOEMpVYwcQg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E27A107ACCA;
+        Sat, 18 Jul 2020 07:20:05 +0000 (UTC)
+Received: from f32-m1.lan (ovpn-112-21.phx2.redhat.com [10.3.112.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1938C6FEF7;
+        Sat, 18 Jul 2020 07:20:04 +0000 (UTC)
+Date:   Sat, 18 Jul 2020 00:20:03 -0700
+From:   Kevin Buettner <kevinb@redhat.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org
+Subject: [PATCH] copy_xstate_to_kernel: Fix typo which caused GDB regression
+Message-ID: <20200718002003.6e0a2aef@f32-m1.lan>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <b04aa2e4-7c95-12f0-599d-43d07fb28134@infradead.org>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Randy Dunlap writes:
->From: Randy Dunlap <rdunlap@infradead.org>
->
->Drop the doubled word "for" in a comment.
->Fix spello of "incremented".
->
->Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->Cc: Johannes Weiner <hannes@cmpxchg.org>
->Cc: Michal Hocko <mhocko@kernel.org>
->Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
->Cc: cgroups@vger.kernel.org
->Cc: linux-mm@kvack.org
->Cc: Andrew Morton <akpm@linux-foundation.org>
+This commit fixes a regression encountered while running the
+gdb.base/corefile.exp test in GDB's test suite.
 
-Acked-by: Chris Down <chris@chrisdown.name>
+In my testing, the typo prevented the sw_reserved field of struct
+fxregs_state from being output to the kernel XSAVES area.  Thus the
+correct mask corresponding to XCR0 was not present in the core file
+for GDB to interrogate, resulting in the following behavior:
+
+[kev@f32-1 gdb]$ ./gdb -q testsuite/outputs/gdb.base/corefile/corefile testsuite/outputs/gdb.base/corefile/corefile.core
+Reading symbols from testsuite/outputs/gdb.base/corefile/corefile...
+[New LWP 232880]
+
+warning: Unexpected size of section `.reg-xstate/232880' in core file.
+
+With the typo fixed, the test works again as expected.
+
+Signed-off-by: Kevin Buettner <kevinb@redhat.com>
+---
+ arch/x86/kernel/fpu/xstate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 6a54e83d5589..9cf40a7ff7ae 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -1022,7 +1022,7 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
+ 		copy_part(offsetof(struct fxregs_state, st_space), 128,
+ 			  &xsave->i387.st_space, &kbuf, &offset_start, &count);
+ 	if (header.xfeatures & XFEATURE_MASK_SSE)
+-		copy_part(xstate_offsets[XFEATURE_MASK_SSE], 256,
++		copy_part(xstate_offsets[XFEATURE_SSE], 256,
+ 			  &xsave->i387.xmm_space, &kbuf, &offset_start, &count);
+ 	/*
+ 	 * Fill xsave->i387.sw_reserved value for ptrace frame:
+-- 
+2.26.2
+
+
