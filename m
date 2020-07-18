@@ -2,331 +2,166 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF082C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63358C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EAB620684
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419B72074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSW/TUfD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="GYATEf+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgGRJfm (ORCPT
+        id S1726593AbgGRJgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50682 "EHLO
+        Sat, 18 Jul 2020 05:36:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgGRJfl (ORCPT
+        with ESMTP id S1726179AbgGRJgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 05:35:41 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D78C0619D2;
-        Sat, 18 Jul 2020 02:35:41 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k5so7525636pjg.3;
-        Sat, 18 Jul 2020 02:35:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=2NvG5DvW4nGU/Mk4ldCs8dltAByMdSmrH+ohJqnmURI=;
-        b=LSW/TUfDSKF8FNo/3zAnqv5qlR0KZP5tINQtMFl03LJj5QF/h+qIXJeN5W4I1rvpd5
-         9wyK6RLMM6Pg4uxSxWqvSzEuKyEOW0C71bJqA0Mer4jUwAsyHMvk2iiu1YNPhOivahzs
-         SA4sU4OGEKPqhXahTueHdHpF/kVu4pgGchY/TgHjte760jJhB05MLEnh5mHGf7LKzM4N
-         OkMSYeYnTdBkuF+9hxVexelSO8CA4Io6lgpAI2Z3M0LCgHbuNyZJgI2guiFQ6cac8R9a
-         H22eMvCAYZ2xwXnRRaRY/gwVhRqWkgiZ5EIShpY/+B2Paufyh2uv1Vx0FTe51HiFpJr6
-         RjDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=2NvG5DvW4nGU/Mk4ldCs8dltAByMdSmrH+ohJqnmURI=;
-        b=HNURcAU9DptTcCJzltmfpzw04pcz9+pP9mJHJe0pvnDQUpc09ZvXOwSQdCQ6nGKyYk
-         W+DPwrrmDrMOgdbPP2mJ5T58tsVqNNzFDeEcKFL6eSt2jcx2TApYzWYZmzlSiFyTNrTi
-         0tsNcY/GuinB4jS+ubeubMls3UlY2A+2gyV4T7qUh2GouAqIO9ptn7MSs9BRpggeyiZw
-         XG5XxeoVufjhSMHfmIx1JRU8QJfa3NGa19TfomB4/cJJ43k1uRPpnAh+BN1DQKYkVx4v
-         2SlGbQ6GgDgplsZt/yobtXCbkJCuOOUKOYLPk9KmmLi/KVxIPtwdtympv5T85jB9z8FP
-         zyXg==
-X-Gm-Message-State: AOAM530CmgNykpWWqpuEiak8GVYIqYraiTP3HIJRBBq2xgRXKzlQhUQ9
-        1r7YKDRBdQJ/FO6n31Wztow=
-X-Google-Smtp-Source: ABdhPJzDvqdldI4SMN9xDMucnkUYNi0IJcPuKFADkRx2/bdpsZpF3neRj2cCptvKY26ouMp38WD6Ow==
-X-Received: by 2002:a17:902:7441:: with SMTP id e1mr10585693plt.23.1595064940466;
-        Sat, 18 Jul 2020 02:35:40 -0700 (PDT)
-Received: from blackclown ([103.88.82.25])
-        by smtp.gmail.com with ESMTPSA id g12sm10141155pfb.190.2020.07.18.02.35.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jul 2020 02:35:39 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 15:05:26 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     jejb@linux.ibm.com, martin.peterson@oracle.com
-Cc:     aacraid@microsemi.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] scsi: aacraid: Remove pci-dma-compat wrapper APIs.
-Message-ID: <20200718093526.GA1628@blackclown>
+        Sat, 18 Jul 2020 05:36:06 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E61C0619D2;
+        Sat, 18 Jul 2020 02:36:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date:Sender:
+        Reply-To:Cc:Content-Transfer-Encoding:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=n6M3uYaBBg3QJs5py08kUgJ96GD6TYoEDaL5MAkdxpM=; b=GYATEf+nD/m0g+elAyFMX9QgjZ
+        VQ9wcfVZbrCgGaq1UkTUMxQ14H7yG+DKNj4dqlEhZ4sAtwh06KKcGCZJOskOUmNQryrC3aU4ipRQR
+        lvNA2kFl/kJYCdQ1VHlj5HEvSoMkfldqeFmx5SJQFPa10HSbMY+GI+6Oj3hSIfdd8/nfLV4/4akfF
+        2PFsmlV7lA8wq3GfzUW6kM72/bK4yVDlA160FOjnkUf3t6rAmMjeZy/SJYZqlen0o2NvKkuaGF7RN
+        pXMfKrl5cbLyXS85W/P1TbG7zYA8SCscfxXjyPoEmEbkg5ZEoF4uYH4nE7D3xiEY7IzSnZShWwYpw
+        YQriHf+g==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jwjG8-0003OJ-03; Sat, 18 Jul 2020 10:35:56 +0100
+Date:   Sat, 18 Jul 2020 10:35:55 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: dsa: qca8k: implement the port MTU callbacks
+Message-ID: <20200718093555.GA12912@earth.li>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This switch has a single max frame size configuration register, so we
+track the requested MTU for each port and apply the largest.
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-The legacy API wrappers in include/linux/pci-dma-compat.h
-should go away as it creates unnecessary midlayering
-for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
-APIs directly.
-
-The patch has been generated with the coccinelle script below
-and compile-tested.
-
-@@@@
-- PCI_DMA_BIDIRECTIONAL
-+ DMA_BIDIRECTIONAL
-
-@@@@
-- PCI_DMA_TODEVICE
-+ DMA_TO_DEVICE
-
-@@@@
-- PCI_DMA_FROMDEVICE
-+ DMA_FROM_DEVICE
-
-@@@@
-- PCI_DMA_NONE
-+ DMA_NONE
-
-@@ expression E1, E2, E3; @@
-- pci_alloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3; @@
-- pci_zalloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_free_consistent(E1, E2, E3, E4)
-+ dma_free_coherent(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_single(E1, E2, E3, E4)
-+ dma_map_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_single(E1, E2, E3, E4)
-+ dma_unmap_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4, E5; @@
-- pci_map_page(E1, E2, E3, E4, E5)
-+ dma_map_page(&E1->dev, E2, E3, E4, E5)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_page(E1, E2, E3, E4)
-+ dma_unmap_page(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_sg(E1, E2, E3, E4)
-+ dma_map_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_sg(E1, E2, E3, E4)
-+ dma_unmap_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
-+ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_device(E1, E2, E3, E4)
-+ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
-+ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
-+ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2; @@
-- pci_dma_mapping_error(E1, E2)
-+ dma_mapping_error(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_consistent_dma_mask(E1, E2)
-+ dma_set_coherent_mask(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_dma_mask(E1, E2)
-+ dma_set_mask(&E1->dev, E2)
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
 ---
- drivers/scsi/aacraid/aachba.c   |  4 ++--
- drivers/scsi/aacraid/commctrl.c | 15 ++++++---------
- drivers/scsi/aacraid/commsup.c  |  8 ++++----
- drivers/scsi/aacraid/linit.c    |  4 ++--
- 4 files changed, 14 insertions(+), 17 deletions(-)
+ drivers/net/dsa/qca8k.c | 38 ++++++++++++++++++++++++++++++++++++++
+ drivers/net/dsa/qca8k.h |  3 +++
+ 2 files changed, 41 insertions(+)
 
-diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
-index 769af4ca9ca9..959b3ae8a99e 100644
---- a/drivers/scsi/aacraid/aachba.c
-+++ b/drivers/scsi/aacraid/aachba.c
-@@ -2229,10 +2229,10 @@ int aac_get_adapter_info(struct aac_dev* dev)
+diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+index 4acad5fa0c84..3690f02aea3a 100644
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -670,6 +670,12 @@ qca8k_setup(struct dsa_switch *ds)
+ 		}
  	}
-=20
- 	if (dev->dac_support) {
--		if (!pci_set_dma_mask(dev->pdev, DMA_BIT_MASK(64))) {
-+		if (!dma_set_mask(&dev->pdev->dev, DMA_BIT_MASK(64))) {
- 			if (!dev->in_reset)
- 				dev_info(&dev->pdev->dev, "64 Bit DAC enabled\n");
--		} else if (!pci_set_dma_mask(dev->pdev, DMA_BIT_MASK(32))) {
-+		} else if (!dma_set_mask(&dev->pdev->dev, DMA_BIT_MASK(32))) {
- 			dev_info(&dev->pdev->dev, "DMA mask set failed, 64 Bit DAC disabled\n");
- 			dev->dac_support =3D 0;
- 		} else {
-diff --git a/drivers/scsi/aacraid/commctrl.c b/drivers/scsi/aacraid/commctr=
-l.c
-index 59e82a832042..a374273da12d 100644
---- a/drivers/scsi/aacraid/commctrl.c
-+++ b/drivers/scsi/aacraid/commctrl.c
-@@ -670,8 +670,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void _=
-_user * arg)
- 					goto cleanup;
- 				}
- 			}
--			addr =3D pci_map_single(dev->pdev, p, sg_count[i],
--						data_dir);
-+			addr =3D dma_map_single(&dev->pdev->dev, p, sg_count[i], data_dir);
- 			hbacmd->sge[i].addr_hi =3D cpu_to_le32((u32)(addr>>32));
- 			hbacmd->sge[i].addr_lo =3D cpu_to_le32(
- 						(u32)(addr & 0xffffffff));
-@@ -732,8 +731,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void _=
-_user * arg)
- 						goto cleanup;
- 					}
- 				}
--				addr =3D pci_map_single(dev->pdev, p,
--							sg_count[i], data_dir);
-+				addr =3D dma_map_single(&dev->pdev->dev, p, sg_count[i], data_dir);
-=20
- 				psg->sg[i].addr[0] =3D cpu_to_le32(addr & 0xffffffff);
- 				psg->sg[i].addr[1] =3D cpu_to_le32(addr>>32);
-@@ -788,8 +786,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void _=
-_user * arg)
- 						goto cleanup;
- 					}
- 				}
--				addr =3D pci_map_single(dev->pdev, p,
--							sg_count[i], data_dir);
-+				addr =3D dma_map_single(&dev->pdev->dev, p, sg_count[i], data_dir);
-=20
- 				psg->sg[i].addr[0] =3D cpu_to_le32(addr & 0xffffffff);
- 				psg->sg[i].addr[1] =3D cpu_to_le32(addr>>32);
-@@ -844,7 +841,8 @@ static int aac_send_raw_srb(struct aac_dev* dev, void _=
-_user * arg)
- 						goto cleanup;
- 					}
- 				}
--				addr =3D pci_map_single(dev->pdev, p, usg->sg[i].count, data_dir);
-+				addr =3D dma_map_single(&dev->pdev->dev, p,
-+						      usg->sg[i].count, data_dir);
-=20
- 				psg->sg[i].addr =3D cpu_to_le32(addr & 0xffffffff);
- 				byte_count +=3D usg->sg[i].count;
-@@ -883,8 +881,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void _=
-_user * arg)
- 						goto cleanup;
- 					}
- 				}
--				addr =3D pci_map_single(dev->pdev, p,
--					sg_count[i], data_dir);
-+				addr =3D dma_map_single(&dev->pdev->dev, p, sg_count[i], data_dir);
-=20
- 				psg->sg[i].addr =3D cpu_to_le32(addr);
- 				byte_count +=3D sg_count[i];
-diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
-index adbdc3b7c7a7..7c0710417d37 100644
---- a/drivers/scsi/aacraid/commsup.c
-+++ b/drivers/scsi/aacraid/commsup.c
-@@ -1561,15 +1561,15 @@ static int _aac_reset_adapter(struct aac_dev *aac, =
-int forced, u8 reset_type)
- 	dmamask =3D DMA_BIT_MASK(32);
- 	quirks =3D aac_get_driver_ident(index)->quirks;
- 	if (quirks & AAC_QUIRK_31BIT)
--		retval =3D pci_set_dma_mask(aac->pdev, dmamask);
-+		retval =3D dma_set_mask(&aac->pdev->dev, dmamask);
- 	else if (!(quirks & AAC_QUIRK_SRC))
--		retval =3D pci_set_dma_mask(aac->pdev, dmamask);
-+		retval =3D dma_set_mask(&aac->pdev->dev, dmamask);
- 	else
--		retval =3D pci_set_consistent_dma_mask(aac->pdev, dmamask);
-+		retval =3D dma_set_coherent_mask(&aac->pdev->dev, dmamask);
-=20
- 	if (quirks & AAC_QUIRK_31BIT && !retval) {
- 		dmamask =3D DMA_BIT_MASK(31);
--		retval =3D pci_set_consistent_dma_mask(aac->pdev, dmamask);
-+		retval =3D dma_set_coherent_mask(&aac->pdev->dev, dmamask);
- 	}
-=20
- 	if (retval)
-diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
-index 8588da0a0655..7d99f7155a13 100644
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -1659,7 +1659,7 @@ static int aac_probe_one(struct pci_dev *pdev, const =
-struct pci_device_id *id)
- 		goto out;
-=20
- 	if (!(aac_drivers[index].quirks & AAC_QUIRK_SRC)) {
--		error =3D pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-+		error =3D dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
- 		if (error) {
- 			dev_err(&pdev->dev, "PCI 32 BIT dma mask set failed");
- 			goto out_disable_pdev;
-@@ -1678,7 +1678,7 @@ static int aac_probe_one(struct pci_dev *pdev, const =
-struct pci_device_id *id)
- 		mask_bits =3D 32;
- 	}
-=20
--	error =3D pci_set_consistent_dma_mask(pdev, dmamask);
-+	error =3D dma_set_coherent_mask(&pdev->dev, dmamask);
- 	if (error) {
- 		dev_err(&pdev->dev, "PCI %d B consistent dma mask set failed\n"
- 				, mask_bits);
---=20
-2.17.1
+ 
++	/* Setup our port MTUs to match power on defaults */
++	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
++		priv->port_mtu[i] = ETH_FRAME_LEN + ETH_FCS_LEN;
++	}
++	qca8k_write(priv, QCA8K_MAX_FRAME_SIZE, ETH_FRAME_LEN + ETH_FCS_LEN);
++
+ 	/* Flush the FDB table */
+ 	qca8k_fdb_flush(priv);
+ 
+@@ -1098,6 +1104,36 @@ qca8k_port_disable(struct dsa_switch *ds, int port)
+ 	priv->port_sts[port].enabled = 0;
+ }
+ 
++static int
++qca8k_port_change_mtu(struct dsa_switch *ds, int port, int new_mtu)
++{
++	struct qca8k_priv *priv = ds->priv;
++	int i, mtu;
++
++	if ((new_mtu < ETH_MIN_MTU) || (new_mtu > QCA8K_MAX_MTU)) {
++		return -EINVAL;
++	}
++
++	priv->port_mtu[port] = new_mtu;
++
++	mtu = 0;
++	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
++		if (priv->port_mtu[port] > mtu)
++			mtu = priv->port_mtu[port];
++	}
++
++	/* Include L2 header / FCS length */
++	qca8k_write(priv, QCA8K_MAX_FRAME_SIZE, mtu + ETH_HLEN + ETH_FCS_LEN);
++
++	return 0;
++}
++
++static int
++qca8k_port_max_mtu(struct dsa_switch *ds, int port)
++{
++	return QCA8K_MAX_MTU;
++}
++
+ static int
+ qca8k_port_fdb_insert(struct qca8k_priv *priv, const u8 *addr,
+ 		      u16 port_mask, u16 vid)
+@@ -1174,6 +1210,8 @@ static const struct dsa_switch_ops qca8k_switch_ops = {
+ 	.set_mac_eee		= qca8k_set_mac_eee,
+ 	.port_enable		= qca8k_port_enable,
+ 	.port_disable		= qca8k_port_disable,
++	.port_change_mtu	= qca8k_port_change_mtu,
++	.port_max_mtu		= qca8k_port_max_mtu,
+ 	.port_stp_state_set	= qca8k_port_stp_state_set,
+ 	.port_bridge_join	= qca8k_port_bridge_join,
+ 	.port_bridge_leave	= qca8k_port_bridge_leave,
+diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
+index 10ef2bca2cde..31439396401c 100644
+--- a/drivers/net/dsa/qca8k.h
++++ b/drivers/net/dsa/qca8k.h
+@@ -13,6 +13,7 @@
+ #include <linux/gpio.h>
+ 
+ #define QCA8K_NUM_PORTS					7
++#define QCA8K_MAX_MTU					9000
+ 
+ #define PHY_ID_QCA8337					0x004dd036
+ #define QCA8K_ID_QCA8337				0x13
+@@ -58,6 +59,7 @@
+ #define   QCA8K_MDIO_MASTER_MAX_REG			32
+ #define QCA8K_GOL_MAC_ADDR0				0x60
+ #define QCA8K_GOL_MAC_ADDR1				0x64
++#define QCA8K_MAX_FRAME_SIZE				0x78
+ #define QCA8K_REG_PORT_STATUS(_i)			(0x07c + (_i) * 4)
+ #define   QCA8K_PORT_STATUS_SPEED			GENMASK(1, 0)
+ #define   QCA8K_PORT_STATUS_SPEED_10			0
+@@ -189,6 +191,7 @@ struct qca8k_priv {
+ 	struct device *dev;
+ 	struct dsa_switch_ops ops;
+ 	struct gpio_desc *reset_gpio;
++	unsigned int port_mtu[QCA8K_NUM_PORTS];
+ };
+ 
+ struct qca8k_mib_desc {
+-- 
+2.27.0
 
-
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8Swl4ACgkQ+gRsbIfe
-744DTw/9EyFyGAd8FmA4qRvIIvrPGOowxXn+QLBK6weURjOu2ctBWl0eEd4hj3P8
-6XRUVFKNzUl64hJl6JCWTJUpWK36vDDMSLaLCin7yz5YSyQoDocs8DaOvtcAEmu/
-NmfdVEYYVCCKOiNRWNAgYo89Xn1xD6xBIh0/2mAycjUk8eS0JfuxanBWIC4MNnwC
-u4c6Ck/Ephi2yHUeuChqvxWVZncYLC2y9SFR0TUpSxkd3WolSsosq8PPBc3CHeVP
-QqXv4q0C3svL2civkWkQeq3MoY8BNBgoAaBMNexOzpDoE/K7cfwrMBFEzXR62QZr
-MR4hpEtgeFXAk9ISma0lSXolhJywCMo+TB+52x8ccSjilP4rHxgl7Jf1POH1KQOT
-K/wk4bCiPzXG7DUJCnR0cOCB7pj9wD0FQw8otLHnmqwLU1yWo5MzogWtK5RJ5ySX
-8Biq+s7ytrVihvKVjInuoQICK674wHyTBAh/y4U1tLaG1gGdEeyJ4fY4MpYSBW1M
-gB29ctjHn9paBu1dsQJxqddX3VllNCnN2PCI93VFSV3Y3c6s/G84m3YFR7Ovo+58
-Sq9kW+jB1MEoYXRog93snAfpwa9y9MvghSTbUDAmuFiLW1inp64Dq/2cj3AJS0zs
-RrAE1TZzMpAGjFkZowXwR2C5Zv/I/g/pkIEFKSQg/99C0Olq2do=
-=E6V6
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
