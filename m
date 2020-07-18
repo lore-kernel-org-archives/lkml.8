@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E0BC433E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76D5C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03FE92076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963632076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:40:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rl90+3Ww"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNEe8AGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgGRFpL (ORCPT
+        id S1726576AbgGRFkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43698 "EHLO
+        Sat, 18 Jul 2020 01:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgGRFpL (ORCPT
+        with ESMTP id S1726207AbgGRFkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:45:11 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE52CC0619D2;
-        Fri, 17 Jul 2020 22:45:10 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id 88so2880130wrh.3;
-        Fri, 17 Jul 2020 22:45:10 -0700 (PDT)
+        Sat, 18 Jul 2020 01:40:46 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19801C0619D2;
+        Fri, 17 Jul 2020 22:40:46 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 17so20411935wmo.1;
+        Fri, 17 Jul 2020 22:40:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=3oYWHEmLW5s7KbA+l575vtPAkEWPi2PPTZYrMFMNqDQ=;
-        b=rl90+3WwRZrv/R9/B5pJfTLLA76r1jpsCq5y/2hvR3rfIgQQtX72aqr4C6jru4K2U2
-         z9i9D6dmVSJkFJJRGe2PW1BrfewDTXF4ST7Z16K6Lqw3HU3Aafq5U2UxBTNfNzAybxs4
-         vkT8nXzXkd7PBTrmPIH0rAcBRkduxh3z7Md9yaf4MAMd+g2656B7Sb66MVPSULdp8s5v
-         mZPGOm89Fis2QPrOhskoZYeo3ZT9Qd+0nYQQXu+nyVSVvVJhkbXYso7gv+AJ2wzKkBMr
-         oyAsR70Htl9MiM66aqQnoLlF9LJ8QBgxjmdh4rbWkoQwarn9lsfyeywWx1vUNQhZ1tWs
-         BWNQ==
+        bh=pHFn3qli/TjcBYDvPYIZphMr/9QXXE2rgKtRBMGR0ZI=;
+        b=ZNEe8AGalV3orNvMIKrPzBzMHPZqcNzooMpw9EXGTVPWf/dHyyk7xaLEQngOcZya/D
+         pThmZNBRstvLjKQ6tm4kOiP/1sIOh229jlklB8JcibilNTBrjJc9e3KYMA1+6BFLzWpa
+         gLkz1wib73q5Mc75eqngEnfubM/dTp4/7zHe4dwdtRaFLzQFGe+UxqqWfVZqqXZRts+7
+         oWvf7g4Cq4q5ssPwTbKzqfDULdOREybSIRkN54yO6yUcoDK9n5uEePTDgPNkeEfML/U0
+         Hp2cLap8SdlW1XwjSjiIQySVC/qRDXnlgkMPcgzzozT6Mf0N0hGyLETi+1EwLUb2Cz8O
+         NOPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3oYWHEmLW5s7KbA+l575vtPAkEWPi2PPTZYrMFMNqDQ=;
-        b=Bm0GA+FBvGrH2RC+oOchyht4QVmD7NzcnxkVjg2rhUDM81O2dUFo/cz3J3PCW2Wegj
-         vMQt8s6CiOGsmSWvqav3i4Zo+vsxTUABqHu4NnYQkC9eINezWOi9xXve3xvLEPzmql3x
-         R3Nw8GKgjvaBrnFwh303xtt0P14Xb7+bBasbMQkHQ6dUESY2XMqW81tfCxd5QzhuJdXM
-         M+wvku+YVtvPWHjOv9vWO8IJVFM5S4ev/MHZfsIKJSWGy+hrExrJouaCKDKlRcOplgAq
-         qQX2DQMB4HpasTmHb89iOAE3S6vrpF4Ooiwv1Pd4Yjtt8nka40UnAo78vTZJ9XrmKR3x
-         G5/w==
-X-Gm-Message-State: AOAM530rtm0HftSLzoJl3IUehAQMNQSp3CNJHUuGHXCVE5tjSz8BG+07
-        1F9UrJi3ZNVsOLIGRLfKzD3W/9d/
-X-Google-Smtp-Source: ABdhPJyaiTeH7lXyaFaxsJ1ijc2hXhd94evVQetqFIWG5Q8KwT+medqxNHw8dGjRnsXqi+3Q5EOgQg==
-X-Received: by 2002:a5d:6a90:: with SMTP id s16mr13075188wru.8.1595051109672;
-        Fri, 17 Jul 2020 22:45:09 -0700 (PDT)
+        bh=pHFn3qli/TjcBYDvPYIZphMr/9QXXE2rgKtRBMGR0ZI=;
+        b=VG/nDghgGTcHZVdaPn3v152K+7vQZIq28oTYPW91K8b4LBIdGYXP6mLqpkITl7WZ3x
+         G2LaoY6seZiQGRd3FoHPn2jsHiPXzu0HumdnfC/VZg3CQyrrCEyhHoHTdNE31Rz7vBnt
+         KeZnxwNRcKRTVWEwvEFlN8ir5E5H2coXzS0EQ44zFcv9eEbdnTkC55aWiPacKMiGMsXL
+         +Unx8fjvhcHGy/1NGMPDCTSut6S6OlxpPHKL6yvywmsvABrqRlngzj+SFDcIKWx9dG2t
+         sSG7zLU9bcHzcA90CJP8H0K68t4zv3ih61n/Vof9uUmFGcGbP6VqxhRk9WBmDSEd4mHt
+         IeMg==
+X-Gm-Message-State: AOAM531sMZRKBjciApM0OrNrcuqOvE/VW41S9WTTSNQUyGbadcXIBxZ5
+        4d6Wg2SdSoPA68wGes5hCKY=
+X-Google-Smtp-Source: ABdhPJz14TbNNNBW+nTTvXOaLTqyKPD9qyFpCxpQurtQUWxPrmzmSQhDYHvM1885ty1C+zFmLOaYTw==
+X-Received: by 2002:a7b:c185:: with SMTP id y5mr12739965wmi.85.1595050844672;
+        Fri, 17 Jul 2020 22:40:44 -0700 (PDT)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id d13sm18735481wrn.61.2020.07.17.22.45.07
+        by smtp.gmail.com with ESMTPSA id 59sm19361711wrj.37.2020.07.17.22.40.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 22:45:09 -0700 (PDT)
+        Fri, 17 Jul 2020 22:40:44 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -65,37 +65,60 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson: update spifc node name on Khadas VIM3/VIM3L
-Date:   Sat, 18 Jul 2020 05:45:05 +0000
-Message-Id: <20200718054505.4165-1-christianshewitt@gmail.com>
+Subject: [PATCH] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
+Date:   Sat, 18 Jul 2020 05:40:40 +0000
+Message-Id: <20200718054040.3996-1-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VIM3/VIM3L Boards use w25q128 not w25q32 - this is a cosmetic change
-only - the device probes fine with the current device-tree.
+Similar to other G12B devices using the W400 dtsi, I see reports of mmc0
+tuning errors on VIM3 after a few hours uptime:
 
-Fixes: 0e1610e726d3 ("arm64: dts: khadas-vim3: add SPIFC controller node")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+[12483.917391] mmc0: tuning execution failed: -5
+[30535.551221] mmc0: tuning execution failed: -5
+[35359.953671] mmc0: tuning execution failed: -5
+[35561.875332] mmc0: tuning execution failed: -5
+[61733.348709] mmc0: tuning execution failed: -5
+
+I do not see the same on VIM3L, so remove sd-uhs-sdr50 from the common dtsi
+to silence the error, then (re)add it to the VIM3L dts.
+
+Signed-off-by: Chrisitan Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi     | 1 -
+ arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts | 4 ++++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 27408c10a811..6b75157265e1 100644
+index 27408c10a811..ddfd52b88002 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -360,7 +360,7 @@
- 	pinctrl-0 = <&nor_pins>;
- 	pinctrl-names = "default";
+@@ -293,7 +293,6 @@
  
--	w25q32: spi-flash@0 {
-+	w25q128: spi-flash@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "winbond,w25q128fw", "jedec,spi-nor";
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+-	sd-uhs-sdr50;
+ 	max-frequency = <100000000>;
+ 
+ 	non-removable;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+index dbbf29a0dbf6..026b21708b07 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+@@ -88,6 +88,10 @@
+ 	status = "okay";
+ };
+ 
++&sd_emmc_a {
++	sd-uhs-sdr50;
++};
++
+ &usb {
+ 	phys = <&usb2_phy0>, <&usb2_phy1>;
+ 	phy-names = "usb2-phy0", "usb2-phy1";
 -- 
 2.17.1
 
