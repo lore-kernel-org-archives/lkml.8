@@ -2,150 +2,113 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93416C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ADF220734
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:34:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4HGS84S"
+	by mail.kernel.org (Postfix) with ESMTP id C2DF620829
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595086505;
+	bh=i3s5qsN8oGO2RhsqEffAuh7jFlthT0t8q6DEOLMh30I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jLGFLdLWMNidofk4L/VeuqA+/GkMHmIptJ8Br7aWhSKiK0hg5nNfJRjRAQ4yRA3uk
+	 I2K5Lp5YJXI/fo2awPfdj+QSRADW9FWhKJvZvfpVlVEm7bGnCkfHfS5VHcEzvkqrp4
+	 srXGiamcNWdsCgS6BUHHx/734Cs8+ndnfOkDAZk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgGRPeu (ORCPT
+        id S1728182AbgGRPfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 11:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48984 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgGRPet (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 11:34:49 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E07C0619D2;
-        Sat, 18 Jul 2020 08:34:48 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r12so13856208wrj.13;
-        Sat, 18 Jul 2020 08:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hBiMsuFe9qS+uJq7UIKcZk6FkuYL7XB/UG3CgD34+TI=;
-        b=Y4HGS84SKg8wqgkKwgITyr1IA+dW2QqnEmVi0+ydnHU9g0mVqkM3CK28/7KEXEZ75c
-         ueLhvL7ASfrjmthDGBkYt3rvXW84iOACB3jvV3mlQCnz2YMxAWPF7aZe5BeQV5rJ8LHW
-         lEzY33wbW2ukah+/fUMVtckgtXg3LW1/+h12sCI/EBq66MFUtzL1oeJoMZC8M5QSLATj
-         JgFJVN4gPdO5TtJOWQfo6kFy4XbG8AEjfBvsO+Kx+DEgwFQCAboPccIre7ZWa4gzGljs
-         mDkazBLi/PeoOK61nc9f7OpP6GebKbsDriPf0Uqq1t80stgpod8Naq+KLArP/BEq45Ci
-         uSyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hBiMsuFe9qS+uJq7UIKcZk6FkuYL7XB/UG3CgD34+TI=;
-        b=JvWg9iIijN6HLNsSXktXMg7UClzAQDxRFFQw3ZsMbKkKUeUt8aBTgCOopGcM9UMy7M
-         sH2PGlhe+DhUv1Z+ex6jUZZHj1752KDxPcveIwUsUb8pZ0JJWB6yzlOdnQOcAuqjBqsh
-         VypL7cavuEEQZRha3ZEGV/sPxxszQWzlQt51DDSindglPzptCJjiUdjBz0/62KcihbPq
-         GlxuNoY72m8uZA3vfQJ8CEy8CjtADTUEaMhHZjv2SiF+qCAv2unEHxdG/OxWOJivhYa6
-         liWLeAazGhPTYSE/qitz4f9EIYryd/uI7s+mYPbN/OOwEvLli04qJcMeWEVnCytnDQtN
-         dTJg==
-X-Gm-Message-State: AOAM532toUZ+QCePceKxBhoNn6rpKQT07Q0WDms+EdoQStujEYZkU1pD
-        KuD5SjuYs/rKbxT7thwHV+No8Gr9
-X-Google-Smtp-Source: ABdhPJwJi/58yjikmGAm/Hoe5pQPqpLqAQMa/XfBZQ+4JDl0QMOo56uZsOtOBmHkBgh6/bt1cr5tog==
-X-Received: by 2002:adf:8462:: with SMTP id 89mr14678211wrf.420.1595086486774;
-        Sat, 18 Jul 2020 08:34:46 -0700 (PDT)
-Received: from localhost.localdomain (haganm.plus.com. [212.159.108.31])
-        by smtp.gmail.com with ESMTPSA id p8sm8336627wrq.9.2020.07.18.08.34.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jul 2020 08:34:46 -0700 (PDT)
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        John Crispin <john@phrozen.org>
-Cc:     Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
- <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
- <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <ac7f5f39-9f83-64c0-d8d5-9ea059619f67@gmail.com>
- <53851852-0efe-722e-0254-8652cdfea8fc@phrozen.org>
- <20200718132011.GQ1551@shell.armlinux.org.uk>
-From:   Matthew Hagan <mnhagan88@gmail.com>
-Message-ID: <0f541643-dc74-634f-30e5-c109d041d915@gmail.com>
-Date:   Sat, 18 Jul 2020 16:34:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 18 Jul 2020 11:35:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbgGRPfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 11:35:03 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D0C420734;
+        Sat, 18 Jul 2020 15:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595086502;
+        bh=i3s5qsN8oGO2RhsqEffAuh7jFlthT0t8q6DEOLMh30I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CGgVsSg/Y3Ai04wkO4Chk+Q/J/Y8kFiLQVNMDRPSPKE0PSvpP0yM509ozseDL+LYm
+         bmzfiFsDGJJFSvJpyg1CWBwwvxAU4p4wbgm+ya/HfVOP+ojef8iN3EwV0mSstjLArr
+         e56tzK0gsyTWI/zDlmJPm6MKC8Ac4v8Z9MmJFC2s=
+Date:   Sat, 18 Jul 2020 16:34:58 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, Josef Gajdusek <atx@atx.name>
+Subject: Re: [PATCH 04/30] iio: magnetometer: hmc5843: 'hmc5843_pm_ops' is
+ unused in 1 of 3 files including hmc5843_core.h
+Message-ID: <20200718163458.458ea23d@archlinux>
+In-Reply-To: <20200717165538.3275050-5-lee.jones@linaro.org>
+References: <20200717165538.3275050-1-lee.jones@linaro.org>
+        <20200717165538.3275050-5-lee.jones@linaro.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200718132011.GQ1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 17 Jul 2020 17:55:12 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
 
+> We know that it's okay for 'hmc5843_pm_ops' to be unused here.
+>=20
+> Fixes the following W=3D1 kernel build warning(s):
+>=20
+>  In file included from include/linux/device.h:25,
+>  from include/linux/iio/iio.h:10,
+>  from drivers/iio/magnetometer/hmc5843_core.c:16:
+>  drivers/iio/magnetometer/hmc5843.h:55:26: warning: =E2=80=98hmc5843_pm_o=
+ps=E2=80=99 defined but not used [-Wunused-const-variable=3D]
+>  55 | static SIMPLE_DEV_PM_OPS(hmc5843_pm_ops,
+>  | ^~~~~~~~~~~~~~
+>  include/linux/pm.h:354:25: note: in definition of macro =E2=80=98SIMPLE_=
+DEV_PM_OPS=E2=80=99
+>  354 | const struct dev_pm_ops name =3D { | ^~~~
+>=20
+> Cc: Josef Gajdusek <atx@atx.name>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Seems like a sensible solution to me.
 
-On 18/07/2020 14:20, Russell King - ARM Linux admin wrote:
-> On Fri, Jul 17, 2020 at 10:44:19PM +0200, John Crispin wrote:
->> in regards to the sgmii clk skew. I never understood the electrics fully I
->> am afraid, but without the patch it simply does not work. my eletcric foo is
->> unfortunately is not sufficient to understand the "whys" I am afraid.
-> 
-> Do you happen to know what frequency the clock is?  Is it 1.25GHz or
-> 625MHz?  It sounds like it may be 1.25GHz if the edge is important.
-> 
-> If the clock is 1.25GHz, the "why" is because of hazards (it has
-> nothing to do with delays in RGMII being propagated to SGMII).
-> 
-> Quite simply, a flip-flop suffers from metastability if the clock and
-> data inputs change at about the same time.  Amongst the parametrics of
-> flip-flops will be a data setup time, and a data hold time, referenced
-> to the clock signal.
-> 
-> If the data changes within the setup and hold times of the clock
-> changing, then the output of the flip-flop is unpredictable - it can
-> latch a logic 1 or a logic 0, or oscillate between the two until
-> settling on one state.
-> 
-> So, if data is clocked out on the rising edge of a clock signal, and
-> clocked in on the rising edge of a clock signal - and the data and
-> clock edges arrive within the setup and hold times at the flip-flop
-> that is clocking the data in, there is a metastability hazard, and
-> the data bit that is latched is unpredictable.
->
-With default settings, in my case, the device will work at first, though
-eventually problems arise with loss of connectivity, but constant
-activity on the individual port led.
+Applied to the togreg branch of iio.git an pushed out as testing to see if
+we missed anything.
 
-> One way to solve this is to clock data out on one edge, and clock data
-> in on the opposite edge - this is used on buses such as SPI.  Other
-> buses such as I2C define minimum separation between transitions between
-> the SDA and SCL signals.
-> 
-Is there any case where it would matter which way round the clocks are,
-or is it only relevant that they are on opposite edges? Why not do this
-by default for qca8k devices?
+Thanks,
 
-> These solutions don't work with RGMII - the RGMII TXC clocks data on
-> both edges.  The only solution there is to ensure a delay is introduced
-> between the data and clock changes seen at the receiver - which can be
-> done by introducing delays at the transmitter or at the receiver, or by
-> serpentine routing of the traces to induce delays to separate the clock
-> and data transitions sufficiently to avoid metastability.
-> 
-> If the clock is 625MHz (as with some Marvell devices for SGMII) then
-> both clock edges are used, and both edges are used just like RGMII.
-> Therefore, the same considerations as RGMII apply there to ensure that
-> the data setup and hold times are not violated.
-> 
-By default, both tx and rx are set to rising edge.
+Jonathan
 
-Matthew
+> ---
+>  drivers/iio/magnetometer/hmc5843.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/iio/magnetometer/hmc5843.h b/drivers/iio/magnetomete=
+r/hmc5843.h
+> index b0dee87a8b20e..3f6c0b6629415 100644
+> --- a/drivers/iio/magnetometer/hmc5843.h
+> +++ b/drivers/iio/magnetometer/hmc5843.h
+> @@ -52,9 +52,9 @@ int hmc5843_common_suspend(struct device *dev);
+>  int hmc5843_common_resume(struct device *dev);
+> =20
+>  #ifdef CONFIG_PM_SLEEP
+> -static SIMPLE_DEV_PM_OPS(hmc5843_pm_ops,
+> -		hmc5843_common_suspend,
+> -		hmc5843_common_resume);
+> +static __maybe_unused SIMPLE_DEV_PM_OPS(hmc5843_pm_ops,
+> +					hmc5843_common_suspend,
+> +					hmc5843_common_resume);
+>  #define HMC5843_PM_OPS (&hmc5843_pm_ops)
+>  #else
+>  #define HMC5843_PM_OPS NULL
+
