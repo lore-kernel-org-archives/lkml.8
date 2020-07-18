@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B55BC433E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5805C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB57E2070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA262074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:51:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="DNopG01W"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="JKdJdOWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgGRAub (ORCPT
+        id S1728069AbgGRAvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 20:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55204 "EHLO
+        Fri, 17 Jul 2020 20:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbgGRAua (ORCPT
+        with ESMTP id S1726742AbgGRAvq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 20:50:30 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA0F5C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:50:30 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id h18so5045043qvl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:50:30 -0700 (PDT)
+        Fri, 17 Jul 2020 20:51:46 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D761C0619D2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:51:46 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id 11so971927qkn.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=massaru-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ropALfHo2IvR5T23vKKGhsuUheVbO2NjXVQ5Zr9SRlU=;
-        b=DNopG01WNl07mIZ+CvyOYvXSwX6B5gomk7j5uvYELm20sKi8Svy3hdKCSl+Vpm0Uom
-         QYpu9kdBfFL9JpMddqyjBWeRjqm1GBAExwWrBQJnjwnov+oML1QwUfLx28P7OqmnbpF0
-         vSZJ4QHTDqFHCJZV31fhHPcwzNJLc9UTlyWFZ2orEpVgp+h/6oPDeIUjrbg9ldeucZwb
-         EDY/fr7UXbukdksP59SF4Phzqc0lIRjfw9RQ2NpIJYLuH3XAxXbnkRk1BYqF09HiM2oW
-         A9hn3NeLOQN0o8Crwb1ehHgQzdwcGQxhE+/uuwVUWzG2rbRwZIptEbCQv0nPZKTy6RO2
-         i8og==
+        bh=4lR3PL+tlav6Sd3AKsZVkdyRuT1gdsNfBg2d9bO4Ybw=;
+        b=JKdJdOWoLbE63zmjfhu9UnfMu+KTlFFcste0tnpG53kEQSd+TyAuBDwTYKyLJnj/9Q
+         7YdpDHel5BWIE0wV8SMcrbCxBxy5ZNhfOCR3hDbL+nS4U1HQynZZXcM3nDI/HMzWkfHk
+         wxFzuoPHjpN7WpTOS2yHO1N/z+f1NnmzUaD7PMXpep9XdiR2e3xeZhgNQ8BBowRxGRi5
+         4QGnA2ev/gV/A5QkI4xyIiUeH39t+h78XlqhClCrhMspeR/mJ97nweM27pBNojAoSRC8
+         vElpGEzvULRIUidS+/Ckxe8n/AhXzkrHlZZ+VIBqpZrFlcM6KhM4oFFA9Fng02ERJHT8
+         EmiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ropALfHo2IvR5T23vKKGhsuUheVbO2NjXVQ5Zr9SRlU=;
-        b=CZCdV7Tg6ETbAyeMfm1l/2+sCsHnLTgw88+JXB7QVQpLQdXR7o8BxxZK4WGGHJClg9
-         I9uO88ziZKoMXMTLo2Ow34rVHsVMbdig9eM4ulMpGm3rx9QXUZZNcG8C2P28DNdw6GLn
-         st0Th5gjuGkGn0oIs09B7YpxAa2Vf3gBuBIlJTgIpm05pXAycyiAcUTaeuPNcmrRLXYE
-         QAwfrNCjQLlhs8XWq5EwYlQxx0HWCGaTh5vbOyosIdu9OeNuvx7+2yowaOQvGNVE4/gC
-         acbxFjZddhDpQBSOMe3vPp/Zxl6Xb6+3OM6mDB2boSpAWUa84nn9lbADAI3CEhb0vdIm
-         ag4w==
-X-Gm-Message-State: AOAM5329hZfz874vXUo1KCGUkcQVNpEhub10ys8hJuYKuICrdUfPEnso
-        MUiwzS7+YTcHV9fdpIsJ/3NJCw==
-X-Google-Smtp-Source: ABdhPJx5XDgTw11dxiZmyPzYo9WK/A9Pl4KUZEYxlSuz2+9IjL5NjwcrfpBRTD6O2zO9SFrxTpPSuQ==
-X-Received: by 2002:a05:6214:289:: with SMTP id l9mr11698857qvv.238.1595033429865;
-        Fri, 17 Jul 2020 17:50:29 -0700 (PDT)
+        bh=4lR3PL+tlav6Sd3AKsZVkdyRuT1gdsNfBg2d9bO4Ybw=;
+        b=MrtsgAn2pmZRhFaZjh5Su8Nw5PiNDj6rTsl4vy3BJOjmRkzYDis0FnT4VXmIdjYFfP
+         mVg6g8rgRo24SDsEIoUWIh2HuPcR4MQb8dLEj55wh/nAyznvSyhKWuDwUk2chZJvAQFE
+         kg43KIKI2vpy0mRz2YUKM4nIefJIGim40nKg+cs62w15kGBhuij1jTFiymHM7VyIphL/
+         xi9T1j2H3FJ/KtwTH160mVWC+5en1pNNU5kdELyvjveYOcrhcmXf6oSsRolhtugXUS3p
+         YkzO/OV8dlMTWgRGqH7UIZmdsouuuVisOBu50D9h9odh63/AiHlcS1F7R+J0ipS8e4Qv
+         yDaA==
+X-Gm-Message-State: AOAM531FFZi3dCnA6G/NLg/qhQPzToHpZ/7r3yDcD2w1V7571ITEXZsa
+        Z9WQYV498/3RDObcvVI8Xq45mQ==
+X-Google-Smtp-Source: ABdhPJyL15m0TxuDLsuYT9qyN02p4DwZ4mgfiDhARFqC9WoQENmBgtZ6gZRbT76CZf0OhAjlASlZyw==
+X-Received: by 2002:a05:620a:79a:: with SMTP id 26mr11825826qka.169.1595033505432;
+        Fri, 17 Jul 2020 17:51:45 -0700 (PDT)
 Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id q65sm4003557qkf.50.2020.07.17.17.50.27
+        by smtp.gmail.com with ESMTPSA id 79sm11998188qkd.134.2020.07.17.17.51.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 17:50:29 -0700 (PDT)
+        Fri, 17 Jul 2020 17:51:44 -0700 (PDT)
 From:   Vitor Massaru Iha <vitor@massaru.org>
 To:     kunit-dev@googlegroups.com
 Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
         brendanhiggins@google.com, keescook@chromium.org,
         davidgow@google.com, skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v2] lib: kunit: Provides a userspace memory context when tests are compiled as module
-Date:   Fri, 17 Jul 2020 21:50:25 -0300
-Message-Id: <20200718005025.440320-1-vitor@massaru.org>
+Subject: [PATCH v2] lib: Convert test_user_copy to KUnit test
+Date:   Fri, 17 Jul 2020 21:51:41 -0300
+Message-Id: <20200718005141.440405-1-vitor@massaru.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -76,15 +76,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KUnit test cases run on kthreads, and kthreads don't have an
-adddress space (current->mm is NULL), but processes have mm.
-
-The purpose of this patch is to allow to borrow mm to KUnit kthread
-after userspace is brought up, because we know that there are processes
-running, at least the process that loaded the module to borrow mm.
-
-This allows, for example, tests such as user_copy_kunit, which uses
-vm_mmap, which needs current->mm.
+This adds the conversion of the runtime tests of test_user_copy fuctions,
+from `lib/test_user_copy.c` to KUnit tests.
 
 Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
 ---
@@ -94,111 +87,201 @@ v2:
         - Provides an userspace memory context when tests are compiled
           as module;
         - Convert test_user_copy to KUnit test;
-    * added documentation;
-    * added more explanation;
-    * tested a pointer;
-    * released mput();
+    * removed entry for CONFIG_TEST_USER_COPY;
+    * replaced pr_warn to KUNIT_EXPECT_FALSE_MSG in test macro to
+      decrease the diff;
 ---
- Documentation/dev-tools/kunit/usage.rst | 14 ++++++++++++++
- include/kunit/test.h                    | 12 ++++++++++++
- lib/kunit/try-catch.c                   | 15 ++++++++++++++-
- 3 files changed, 40 insertions(+), 1 deletion(-)
+ lib/Kconfig.debug                           | 28 ++++++++------
+ lib/Makefile                                |  2 +-
+ lib/{test_user_copy.c => user_copy_kunit.c} | 42 +++++++++------------
+ 3 files changed, 35 insertions(+), 37 deletions(-)
+ rename lib/{test_user_copy.c => user_copy_kunit.c} (91%)
 
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index 3c3fe8b5fecc..9f909157be34 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -448,6 +448,20 @@ We can now use it to test ``struct eeprom_buffer``:
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9ad9210d70a1..f699a3624ae7 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2078,18 +2078,6 @@ config TEST_VMALLOC
  
- .. _kunit-on-non-uml:
+ 	  If unsure, say N.
  
-+User-space context
-+------------------
-+
-+I case you need a user-space context, for now this is only possible through
-+tests compiled as a module. And it will be necessary to use a root filesystem
-+and uml_utilities.
-+
-+Example:
-+
-+.. code-block:: bash
-+
-+   ./tools/testing/kunit/kunit.py run --timeout=60 --uml_rootfs_dir=.uml_rootfs
-+
-+
- KUnit on non-UML architectures
- ==============================
- 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 59f3144f009a..ae3337139c65 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -222,6 +222,18 @@ struct kunit {
- 	 * protect it with some type of lock.
- 	 */
- 	struct list_head resources; /* Protected by lock. */
-+	/*
-+	 * KUnit test cases run on kthreads, and kthreads don't have an
-+	 * adddress space (current->mm is NULL), but processes have mm.
-+	 *
-+	 * The purpose of this mm_struct is to allow to borrow mm to KUnit kthread
-+	 * after userspace is brought up, because we know that there are processes
-+	 * running, at least the process that loaded the module to borrow mm.
-+	 * 
-+	 * This allows, for example, tests such as user_copy_kunit, which uses
-+	 * vm_mmap, which needs current->mm.
-+	 */
-+	struct mm_struct *mm;
- };
- 
- void kunit_init_test(struct kunit *test, const char *name, char *log);
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 0dd434e40487..d03e2093985b 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -11,7 +11,8 @@
- #include <linux/completion.h>
- #include <linux/kernel.h>
- #include <linux/kthread.h>
+-config TEST_USER_COPY
+-	tristate "Test user/kernel boundary protections"
+-	depends on m
+-	help
+-	  This builds the "test_user_copy" module that runs sanity checks
+-	  on the copy_to/from_user infrastructure, making sure basic
+-	  user/kernel boundary testing is working. If it fails to load,
+-	  a regression has been detected in the user/kernel memory boundary
+-	  protections.
 -
-+#include <linux/sched/mm.h>
-+#include <linux/sched/task.h>
- #include "try-catch-impl.h"
+-	  If unsure, say N.
+-
+ config TEST_BPF
+ 	tristate "Test BPF filter functionality"
+ 	depends on m && NET
+@@ -2154,6 +2142,22 @@ config SYSCTL_KUNIT_TEST
  
- void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
-@@ -24,8 +25,17 @@ EXPORT_SYMBOL_GPL(kunit_try_catch_throw);
- static int kunit_generic_run_threadfn_adapter(void *data)
- {
- 	struct kunit_try_catch *try_catch = data;
-+	struct kunit *test = try_catch->test;
-+	
-+	if (test != NULL && test->mm != NULL)
-+		kthread_use_mm(test->mm);
+ 	  If unsure, say N.
  
- 	try_catch->try(try_catch->context);
-+	if (test != NULL && test->mm != NULL) {
-+		kthread_unuse_mm(test->mm);
-+		mmput(test->mm);
-+		test->mm = NULL;
-+	}
++config USER_COPY_KUNIT
++	tristate "KUnit Test for user/kernel boundary protections"
++	depends on KUNIT
++	depends on m
++	help
++	  This builds the "user_copy_kunit" module that runs sanity checks
++	  on the copy_to/from_user infrastructure, making sure basic
++	  user/kernel boundary testing is working. If it fails to load,
++	  a regression has been detected in the user/kernel memory boundary
++	  protections.
++
++	  For more information on KUnit and unit tests in general please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
++
+ config LIST_KUNIT_TEST
+ 	tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_ALL_TESTS
+ 	depends on KUNIT
+diff --git a/lib/Makefile b/lib/Makefile
+index b1c42c10073b..8c145f85accc 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -78,7 +78,6 @@ obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+ obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
+ obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+ obj-$(CONFIG_TEST_SORT) += test_sort.o
+-obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+ obj-$(CONFIG_TEST_PRINTF) += test_printf.o
+@@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+ # KUnit tests
+ obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+ obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
++obj-$(CONFIG_USER_COPY_KUNIT) += user_copy_kunit.o
+diff --git a/lib/test_user_copy.c b/lib/user_copy_kunit.c
+similarity index 91%
+rename from lib/test_user_copy.c
+rename to lib/user_copy_kunit.c
+index 5ff04d8fe971..a10ddd15b4cd 100644
+--- a/lib/test_user_copy.c
++++ b/lib/user_copy_kunit.c
+@@ -16,6 +16,7 @@
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ #include <linux/vmalloc.h>
++#include <kunit/test.h>
  
- 	complete_and_exit(try_catch->try_completion, 0);
+ /*
+  * Several 32-bit architectures support 64-bit {get,put}_user() calls.
+@@ -35,7 +36,7 @@
+ ({									\
+ 	int cond = (condition);						\
+ 	if (cond)							\
+-		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
++		KUNIT_EXPECT_FALSE_MSG(test, cond, msg, ##__VA_ARGS__);	\
+ 	cond;								\
+ })
+ 
+@@ -44,7 +45,7 @@ static bool is_zeroed(void *from, size_t size)
+ 	return memchr_inv(from, 0x0, size) == NULL;
  }
-@@ -65,6 +75,9 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 	try_catch->context = context;
- 	try_catch->try_completion = &try_completion;
- 	try_catch->try_result = 0;
-+
-+	test->mm = get_task_mm(current);
-+
- 	task_struct = kthread_run(kunit_generic_run_threadfn_adapter,
- 				  try_catch,
- 				  "kunit_try_catch_thread");
+ 
+-static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
++static int test_check_nonzero_user(struct kunit *test, char *kmem, char __user *umem, size_t size)
+ {
+ 	int ret = 0;
+ 	size_t start, end, i, zero_start, zero_end;
+@@ -102,7 +103,7 @@ static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
+ 	return ret;
+ }
+ 
+-static int test_copy_struct_from_user(char *kmem, char __user *umem,
++static int test_copy_struct_from_user(struct kunit *test, char *kmem, char __user *umem,
+ 				      size_t size)
+ {
+ 	int ret = 0;
+@@ -177,7 +178,7 @@ static int test_copy_struct_from_user(char *kmem, char __user *umem,
+ 	return ret;
+ }
+ 
+-static int __init test_user_copy_init(void)
++static void user_copy_test(struct kunit *test)
+ {
+ 	int ret = 0;
+ 	char *kmem;
+@@ -192,16 +193,14 @@ static int __init test_user_copy_init(void)
+ #endif
+ 
+ 	kmem = kmalloc(PAGE_SIZE * 2, GFP_KERNEL);
+-	if (!kmem)
+-		return -ENOMEM;
++	KUNIT_EXPECT_FALSE_MSG(test, kmem == NULL, "kmalloc failed");
+ 
+ 	user_addr = vm_mmap(NULL, 0, PAGE_SIZE * 2,
+ 			    PROT_READ | PROT_WRITE | PROT_EXEC,
+ 			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
+ 	if (user_addr >= (unsigned long)(TASK_SIZE)) {
+-		pr_warn("Failed to allocate user memory\n");
+ 		kfree(kmem);
+-		return -ENOMEM;
++		KUNIT_FAIL(test, "Failed to allocate user memory");
+ 	}
+ 
+ 	usermem = (char __user *)user_addr;
+@@ -245,9 +244,9 @@ static int __init test_user_copy_init(void)
+ #undef test_legit
+ 
+ 	/* Test usage of check_nonzero_user(). */
+-	ret |= test_check_nonzero_user(kmem, usermem, 2 * PAGE_SIZE);
++	ret |= test_check_nonzero_user(test, kmem, usermem, 2 * PAGE_SIZE);
+ 	/* Test usage of copy_struct_from_user(). */
+-	ret |= test_copy_struct_from_user(kmem, usermem, 2 * PAGE_SIZE);
++	ret |= test_copy_struct_from_user(test, kmem, usermem, 2 * PAGE_SIZE);
+ 
+ 	/*
+ 	 * Invalid usage: none of these copies should succeed.
+@@ -309,23 +308,18 @@ static int __init test_user_copy_init(void)
+ 
+ 	vm_munmap(user_addr, PAGE_SIZE * 2);
+ 	kfree(kmem);
+-
+-	if (ret == 0) {
+-		pr_info("tests passed.\n");
+-		return 0;
+-	}
+-
+-	return -EINVAL;
+ }
+ 
+-module_init(test_user_copy_init);
+-
+-static void __exit test_user_copy_exit(void)
+-{
+-	pr_info("unloaded.\n");
+-}
++static struct kunit_case user_copy_test_cases[] = {
++	KUNIT_CASE(user_copy_test),
++	{}
++};
+ 
+-module_exit(test_user_copy_exit);
++static struct kunit_suite user_copy_test_suite = {
++	.name = "user_copy",
++	.test_cases = user_copy_test_cases,
++};
+ 
++kunit_test_suites(&user_copy_test_suite);
+ MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
+ MODULE_LICENSE("GPL");
 
 base-commit: 725aca9585956676687c4cb803e88f770b0df2b2
 prerequisite-patch-id: 5e5f9a8a05c5680fda1b04c9ab1b95ce91dc88b2
 prerequisite-patch-id: 4d997940f4a9f303424af9bac412de1af861f9d9
 prerequisite-patch-id: 582b6d9d28ce4b71628890ec832df6522ca68de0
+prerequisite-patch-id: 5cd745ed9bbb0b36010c5de8adc19bfa86ad8be0
+prerequisite-patch-id: 42f17b389ec15baf50dd1c43f6e30b8d2dff7964
 -- 
 2.26.2
 
