@@ -2,221 +2,124 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8031F20724
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:35:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595057753;
-	bh=rt7r8XiIxEkqFJ0t2gUyj37btoYwlDfLnXTwW+Dcn+Q=;
-	h=From:Cc:Subject:Date:To:List-ID:From;
-	b=s3ebCI5KrhJc6nTTQ5qHwG8C94rV4rB2xf15oTFZPzk2hBFpDJ1m90ltaIjBbnIA7
-	 7vp67M+9pgSkW+E590M+tnR2rp4D2ZqvtRJD9gLN6lgcqkBZwRBIdB6gd62Kk5n6Rp
-	 NOLFlM+JA3vKqGlK90z0SMWEIsrflOU3ET9Y8QMA=
+	by mail.kernel.org (Postfix) with ESMTP id 9B5732070A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 07:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbgGRHfw (ORCPT
+        id S1729185AbgGRHvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 03:35:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725983AbgGRHfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 03:35:51 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C89B420775;
-        Sat, 18 Jul 2020 07:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595057751;
-        bh=rt7r8XiIxEkqFJ0t2gUyj37btoYwlDfLnXTwW+Dcn+Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=h5cmUHdpdOrsBqM2cZyRpJyKxqMw36AviFE5rkcmgeK/EH20yZgw4eUeHdadxl4cN
-         Fa81ywvUr/OlLbzh5RTuKiqsrxyhorBB+tkMQDiXT+LEVv+ITp30X2I8OsjYvslRHl
-         l5jD1utOp96F4jSyQWWO4c7EBysaEOjpGC+4lMS0=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jwhNs-005EPN-J1; Sat, 18 Jul 2020 09:35:48 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] media: atomisp: get rid of some unused static vars
-Date:   Sat, 18 Jul 2020 09:35:45 +0200
-Message-Id: <06a617f163762cd60474fde9c88fde72dca447f4.1595057709.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Sat, 18 Jul 2020 03:51:03 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:32964 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728936AbgGRHvC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 03:51:02 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k22so10026857oib.0
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 00:51:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KEEvd4u3UvGoBQRrd8r0flfbXnRfcEtkikuqiW2DLRE=;
+        b=VdTIISXYSJnmOV2gsSCROT3wTZXARF83gJrNzaUzgyN1WMKHb297dFeCI+3jbL0sWQ
+         kvKJ2ZphK6B8ZFRg/cBAwF8XGIPG0unxVid8XzW+dpRhVDsHGatlBvsb1PeyuWTfAyhs
+         tERnrcjCJoAtKrZ5jgvHb9tcY+ndaPj5X8xe8CxlVRDJPa2SHyJ7vexUkgHSFsiX+YCF
+         4yaEss/1lTfZt8HofrkoiFvkiGGMQCj5GWrd/xNtRMLvPtxLes9uICvMfy+9NLIh6TM8
+         mvAJvDUCd1fCkoykBiCveBtYfwuM8bMGmWv9v0IDy6Q6LCFZEykGEAsyIRufCQtGqSrh
+         BG9w==
+X-Gm-Message-State: AOAM531mzzAHRJb8U55+OUyPGKi8TfFAc7e+6hnghfOnepRuv50xOlTY
+        pdU24h+K6qVv6vN8V+tzUR3Olrj+KRBRtDWDYF4=
+X-Google-Smtp-Source: ABdhPJxokjFbAWf+q0y5gqswRgTgqjSY2nJ72G0Xlm5f/Wi/zUxXQcPf5Sb1C4Z8wFeq+35XMwAnzo2pM2Pox1D/rpY=
+X-Received: by 2002:a05:6808:64a:: with SMTP id z10mr10530650oih.54.1595058661714;
+ Sat, 18 Jul 2020 00:51:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200624035920.835571-1-natechancellor@gmail.com>
+In-Reply-To: <20200624035920.835571-1-natechancellor@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 18 Jul 2020 09:50:50 +0200
+Message-ID: <CAMuHMdU_KfQ-RT_nev5LgN=Vj_P97Fn=nwRoC6ZREFLa3Ysj7w@mail.gmail.com>
+Subject: Re: [PATCH] powerpc/boot: Use address-of operator on section symbols
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Geoff Levand <geoff@infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several static vars declared inside the
-system local headers. This causes lots of warnings when W=1.
+Hi Nathan,
 
-Remove the unused ones.
+On Wed, Jun 24, 2020 at 6:02 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+> arch/powerpc/boot/main.c:107:18: warning: array comparison always
+> evaluates to a constant [-Wtautological-compare]
+>         if (_initrd_end > _initrd_start) {
+>                         ^
+> arch/powerpc/boot/main.c:155:20: warning: array comparison always
+> evaluates to a constant [-Wtautological-compare]
+>         if (_esm_blob_end <= _esm_blob_start)
+>                           ^
+> 2 warnings generated.
+>
+> These are not true arrays, they are linker defined symbols, which are
+> just addresses.  Using the address of operator silences the warning
+> and does not change the resulting assembly with either clang/ld.lld
+> or gcc/ld (tested with diff + objdump -Dr).
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/212
+> Reported-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  arch/powerpc/boot/main.c | 4 ++--
+>  arch/powerpc/boot/ps3.c  | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/powerpc/boot/main.c b/arch/powerpc/boot/main.c
+> index a9d209135975..cae31a6e8f02 100644
+> --- a/arch/powerpc/boot/main.c
+> +++ b/arch/powerpc/boot/main.c
+> @@ -104,7 +104,7 @@ static struct addr_range prep_initrd(struct addr_range vmlinux, void *chosen,
+>  {
+>         /* If we have an image attached to us, it overrides anything
+>          * supplied by the loader. */
+> -       if (_initrd_end > _initrd_start) {
+> +       if (&_initrd_end > &_initrd_start) {
+>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../media/atomisp/pci/isp2400_system_local.h  | 38 -------------------
- .../media/atomisp/pci/isp2401_system_local.h  | 30 ---------------
- 2 files changed, 68 deletions(-)
+Are you sure that fix is correct?
 
-diff --git a/drivers/staging/media/atomisp/pci/isp2400_system_local.h b/drivers/staging/media/atomisp/pci/isp2400_system_local.h
-index 675b8e5bdcc1..f889b7bf8f2d 100644
---- a/drivers/staging/media/atomisp/pci/isp2400_system_local.h
-+++ b/drivers/staging/media/atomisp/pci/isp2400_system_local.h
-@@ -38,11 +38,6 @@
- 
- #define GP_FIFO_BASE   ((hrt_address)0x0000000000090104)		/* This is NOT a base address */
- 
--/* DDR */
--static const hrt_address DDR_BASE[N_DDR_ID] = {
--	(hrt_address)0x0000000120000000ULL
--};
--
- /* ISP */
- static const hrt_address ISP_CTRL_BASE[N_ISP_ID] = {
- 	(hrt_address)0x0000000000020000ULL
-@@ -56,16 +51,6 @@ static const hrt_address ISP_BAMEM_BASE[N_BAMEM_ID] = {
- 	(hrt_address)0x0000000000100000ULL
- };
- 
--static const hrt_address ISP_VAMEM_BASE[N_VAMEM_ID] = {
--	(hrt_address)0x00000000001C0000ULL,
--	(hrt_address)0x00000000001D0000ULL,
--	(hrt_address)0x00000000001E0000ULL
--};
--
--static const hrt_address ISP_HMEM_BASE[N_HMEM_ID] = {
--	(hrt_address)0x00000000001F0000ULL
--};
--
- /* SP */
- static const hrt_address SP_CTRL_BASE[N_SP_ID] = {
- 	(hrt_address)0x0000000000010000ULL
-@@ -75,10 +60,6 @@ static const hrt_address SP_DMEM_BASE[N_SP_ID] = {
- 	(hrt_address)0x0000000000300000ULL
- };
- 
--static const hrt_address SP_PMEM_BASE[N_SP_ID] = {
--	(hrt_address)0x00000000000B0000ULL
--};
--
- /* MMU */
- /*
-  * MMU0_ID: The data MMU
-@@ -177,11 +158,6 @@ static const hrt_address RX_BASE[N_RX_ID] = {
- 
- #define GP_FIFO_BASE   ((hrt_address)0x00090104)		/* This is NOT a base address */
- 
--/* DDR : Attention, this value not defined in 32-bit */
--static const hrt_address DDR_BASE[N_DDR_ID] = {
--	(hrt_address)0x00000000UL
--};
--
- /* ISP */
- static const hrt_address ISP_CTRL_BASE[N_ISP_ID] = {
- 	(hrt_address)0x00020000UL
-@@ -195,16 +171,6 @@ static const hrt_address ISP_BAMEM_BASE[N_BAMEM_ID] = {
- 	(hrt_address)0x100000UL
- };
- 
--static const hrt_address ISP_VAMEM_BASE[N_VAMEM_ID] = {
--	(hrt_address)0xffffffffUL,
--	(hrt_address)0xffffffffUL,
--	(hrt_address)0xffffffffUL
--};
--
--static const hrt_address ISP_HMEM_BASE[N_HMEM_ID] = {
--	(hrt_address)0xffffffffUL
--};
--
- /* SP */
- static const hrt_address SP_CTRL_BASE[N_SP_ID] = {
- 	(hrt_address)0x00010000UL
-@@ -214,10 +180,6 @@ static const hrt_address SP_DMEM_BASE[N_SP_ID] = {
- 	(hrt_address)0x00300000UL
- };
- 
--static const hrt_address SP_PMEM_BASE[N_SP_ID] = {
--	(hrt_address)0x000B0000UL
--};
--
- /* MMU */
- /*
-  * MMU0_ID: The data MMU
-diff --git a/drivers/staging/media/atomisp/pci/isp2401_system_local.h b/drivers/staging/media/atomisp/pci/isp2401_system_local.h
-index b09f8faadb13..1bb01e627cd7 100644
---- a/drivers/staging/media/atomisp/pci/isp2401_system_local.h
-+++ b/drivers/staging/media/atomisp/pci/isp2401_system_local.h
-@@ -36,11 +36,6 @@
- 
- #define GP_FIFO_BASE   ((hrt_address)0x0000000000090104)		/* This is NOT a base address */
- 
--/* DDR */
--static const hrt_address DDR_BASE[N_DDR_ID] = {
--	0x0000000120000000ULL
--};
--
- /* ISP */
- static const hrt_address ISP_CTRL_BASE[N_ISP_ID] = {
- 	0x0000000000020000ULL
-@@ -54,16 +49,6 @@ static const hrt_address ISP_BAMEM_BASE[N_BAMEM_ID] = {
- 	0x0000000000100000ULL
- };
- 
--static const hrt_address ISP_VAMEM_BASE[N_VAMEM_ID] = {
--	0x00000000001C0000ULL,
--	0x00000000001D0000ULL,
--	0x00000000001E0000ULL
--};
--
--static const hrt_address ISP_HMEM_BASE[N_HMEM_ID] = {
--	0x00000000001F0000ULL
--};
--
- /* SP */
- static const hrt_address SP_CTRL_BASE[N_SP_ID] = {
- 	0x0000000000010000ULL
-@@ -217,11 +202,6 @@ static const hrt_address STREAM2MMIO_CTRL_BASE[N_STREAM2MMIO_ID] = {
- 
- #define GP_FIFO_BASE   ((hrt_address)0x00090104)		/* This is NOT a base address */
- 
--/* DDR : Attention, this value not defined in 32-bit */
--static const hrt_address DDR_BASE[N_DDR_ID] = {
--	0x00000000UL
--};
--
- /* ISP */
- static const hrt_address ISP_CTRL_BASE[N_ISP_ID] = {
- 	0x00020000UL
-@@ -235,16 +215,6 @@ static const hrt_address ISP_BAMEM_BASE[N_BAMEM_ID] = {
- 	0xffffffffUL
- };
- 
--static const hrt_address ISP_VAMEM_BASE[N_VAMEM_ID] = {
--	0xffffffffUL,
--	0xffffffffUL,
--	0xffffffffUL
--};
--
--static const hrt_address ISP_HMEM_BASE[N_HMEM_ID] = {
--	0xffffffffUL
--};
--
- /* SP */
- static const hrt_address SP_CTRL_BASE[N_SP_ID] = {
- 	0x00010000UL
+    extern char _initrd_start[];
+    extern char _initrd_end[];
+    extern char _esm_blob_start[];
+    extern char _esm_blob_end[];
+
+Of course the result of their comparison is a constant, as the addresses
+are constant.  If clangs warns about it, perhaps that warning should be moved
+to W=1?
+
+But adding "&" is not correct, according to C.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.26.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
