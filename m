@@ -2,160 +2,156 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E066BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1743C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBC8B20724
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61AA20724
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 19:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="h5UClVI5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQcIEmy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgGRTZ4 (ORCPT
+        id S1728044AbgGRTYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 15:25:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbgGRTZ4 (ORCPT
+        Sat, 18 Jul 2020 15:24:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46268 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727986AbgGRTYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 15:25:56 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A2E1C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 12:25:56 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m9so7035070pfh.0
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 12:25:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=IUuO59HPOhmBxerlGrYcaRptbgM0uZnsf5CqGWahS/Q=;
-        b=h5UClVI5adBPz6tYw3fU49YKvdDMVv1U6O8LRIExeg98jNqeK15rMydsvli5+Vd97F
-         3Z3/EJ2Q4VCNrzwbu0JeKqUOIkekxjeJnivsOIN1q4Z3AV5JWUBmo21ea1L5Fjc5B6Cf
-         RtswAIUdXBK3sjHzv8Z6tbDquWeMl2mzFPKOjBSaQxzWfiIM0vaknNBpfKmoVpOGTeL5
-         1eKa8oBzCv/qXUkPgEoUtHkuqEMMWAsjz5OJUY3ZYnQFyf6eJYayKg/T7wCF9vyf2Ty5
-         +39WxPLIOYV39XepXX5w1+/HbIg7dxtllERI7QK/v36pdsEDFWGjVM88VuppXwYjFhHF
-         E8lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=IUuO59HPOhmBxerlGrYcaRptbgM0uZnsf5CqGWahS/Q=;
-        b=a4x6DqnB7pn7J8W8UWwvrKBfsSGpPiz7MZLyMIVq7gFGEIJuHedge3bOx5wfBf6nGs
-         AiLyrw+yUKckYIvDlgCF/XmKRfbrOLcRZay4uqQdYQgjF0Bul14asBeXIdOPGULLhXGQ
-         vzS6QonmR08l6m7F0cBykRojMnWH4FfPhiq9GDSTxI2NL30t/UloJd2dvF2EovEW6dsJ
-         MwcoY4aDxPRz2I57M0o01rf5JwIXtpWCG67Vd5nvAgsXzpbtLW59sNameyC6+cjxmsRp
-         p0FJAGb2GjI+qT4NNVoq9hAEl78qDOWLaoV3LlI25fo9uOWedvkESU6QFDQEA2NwmQTp
-         4JdA==
-X-Gm-Message-State: AOAM532ZW99ZB7bBvlB4BesypG2aX7lGXcttEk7L5OfY4coFBECGS7wQ
-        +KcMtnslNgU2uzJpIi6tLk6R4FEz3mmiHg==
-X-Google-Smtp-Source: ABdhPJyaVNNy8aVMTzNXB9e1dfav1DtEjLaSW0pIevxCJg2Sq7bR9lR6zeVDREsg8sZjq+1Gxswwpg==
-X-Received: by 2002:a63:3308:: with SMTP id z8mr13049944pgz.409.1595100355358;
-        Sat, 18 Jul 2020 12:25:55 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:e0ba:42b5:b0b0:d1a? ([2601:646:c200:1ef2:e0ba:42b5:b0b0:d1a])
-        by smtp.gmail.com with ESMTPSA id m9sm6505426pjs.18.2020.07.18.12.25.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jul 2020 12:25:54 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] x86/idt: Make sure idt_table takes a whole page
-Date:   Sat, 18 Jul 2020 12:25:46 -0700
-Message-Id: <7FB389D0-77D4-482E-8A21-8662DDB00268@amacapital.net>
-References: <0CEC6A66-FD50-4B6B-9521-A40E5B9DA10F@zytor.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        joro@8bytes.org
-In-Reply-To: <0CEC6A66-FD50-4B6B-9521-A40E5B9DA10F@zytor.com>
-To:     hpa@zytor.com
-X-Mailer: iPhone Mail (17F80)
+        Sat, 18 Jul 2020 15:24:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595100270;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u6ND5MXNI3pG9DIwaU62hTv7ycSOCT4u+y0Yy4U0d3Q=;
+        b=PQcIEmy3sGFnKM6gxlUmYa6pX/vijD9uwlmTNqBnwhBwXqwUq8anpl3ShGLsTVhq2oiruW
+        1ImhV/IDq+D8PUFGbNOP8POHoguwhg/6/FeaUo0Os6xxhAO5nz7ZDxHRnRjOsgz0OJoefV
+        mgGwp2vLPza8lOW5YnIXzq6YevtLJxo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-247-sEQ4OMhIPpK3vZmIDfDdtA-1; Sat, 18 Jul 2020 15:24:28 -0400
+X-MC-Unique: sEQ4OMhIPpK3vZmIDfDdtA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2EA9E1800D42;
+        Sat, 18 Jul 2020 19:24:27 +0000 (UTC)
+Received: from starship (unknown [10.35.206.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D96BC75573;
+        Sat, 18 Jul 2020 19:24:25 +0000 (UTC)
+Message-ID: <e73f817c5274789d7aa59080455cf24b62acf50a.camel@redhat.com>
+Subject: Re: [PATCH v3 6/7] kconfig: qconf: don't show goback button on
+ splitMode
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 18 Jul 2020 22:24:24 +0300
+In-Reply-To: <d0a5ad7ddf090ff50aa486d874a8e5ab3840ea11.1593498345.git.mchehab+huawei@kernel.org>
+References: <cover.1593498345.git.mchehab+huawei@kernel.org>
+         <d0a5ad7ddf090ff50aa486d874a8e5ab3840ea11.1593498345.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2020-06-30 at 08:26 +0200, Mauro Carvalho Chehab wrote:
+> the goback button does nothing on splitMode. So, why display
+> it?
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  scripts/kconfig/qconf.cc | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+> index e43fe4dcd4e7..6a327b69ff5f 100644
+> --- a/scripts/kconfig/qconf.cc
+> +++ b/scripts/kconfig/qconf.cc
+> @@ -437,9 +437,10 @@ void ConfigList::updateList(ConfigItem* item)
+>  	if (rootEntry != &rootmenu && (mode == singleMode ||
+>  	    (mode == symbolMode && rootEntry->parent != &rootmenu))) {
+>  		item = (ConfigItem *)topLevelItem(0);
+> -		if (!item)
+> +		if (!item && mode != symbolMode) {
+>  			item = new ConfigItem(this, 0, true);
+> -		last = item;
+> +			last = item;
+> +		}
+>  	}
+>  	if ((mode == singleMode || (mode == symbolMode && !(rootEntry->flags & MENU_ROOT))) &&
+>  	    rootEntry->sym && rootEntry->prompt) {
 
-> On Jul 18, 2020, at 10:57 AM, hpa@zytor.com wrote:
->=20
-> =EF=BB=BFOn July 9, 2020 3:33:55 AM PDT, Joerg Roedel <joro@8bytes.org> wr=
-ote:
->> From: Joerg Roedel <jroedel@suse.de>
->>=20
->> On x86-32 the idt_table with 256 entries needs only 2048 bytes. It is
->> page-aligned, but the end of the .bss..page_aligned section is not
->> guaranteed to be page-aligned.
->>=20
->> As a result, symbols from other .bss sections may end up on the same
->> 4k page as the idt_table, and will accidentially get mapped read-only
->> during boot, causing unexpected page-faults when the kernel writes to
->> them.
->>=20
->> Avoid this by making the idt_table 4kb in size even on x86-32. On
->> x86-64 the idt_table is already 4kb large, so nothing changes there.
->>=20
->> Fixes: 3e77abda65b1c ("x86/idt: Consolidate idt functionality")
->> Signed-off-by: Joerg Roedel <jroedel@suse.de>
->> ---
->> arch/x86/kernel/idt.c | 12 ++++++++++--
->> 1 file changed, 10 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
->> index 0db21206f2f3..83e24f837127 100644
->> --- a/arch/x86/kernel/idt.c
->> +++ b/arch/x86/kernel/idt.c
->> @@ -157,8 +157,13 @@ static const __initconst struct idt_data
->> apic_idts[] =3D {
->> #endif
->> };
->>=20
->> -/* Must be page-aligned because the real IDT is used in the cpu entry
->> area */
->> -static gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
->> +/*
->> + * Must be page-aligned because the real IDT is used in the cpu entry
->> area.
->> + * Allocate more entries than needed so that idt_table takes a whole
->> page, so it
->> + * is safe to map the idt_table read-only and into the user-space
->> page-table.
->> + */
->> +#define IDT_ENTRIES_ALLOCATED    (PAGE_SIZE / sizeof(gate_desc))
->> +static gate_desc idt_table[IDT_ENTRIES_ALLOCATED] __page_aligned_bss;
->>=20
->> struct desc_ptr idt_descr __ro_after_init =3D {
->>    .size        =3D IDT_TABLE_SIZE - 1,
->> @@ -335,6 +340,9 @@ void __init idt_setup_apic_and_irq_gates(void)
->>    idt_map_in_cea();
->>    load_idt(&idt_descr);
->>=20
->> +    BUILD_BUG_ON(IDT_ENTRIES_ALLOCATED < IDT_ENTRIES);
->> +    BUILD_BUG_ON(sizeof(idt_table) !=3D PAGE_SIZE);
->> +
->>    /* Make the IDT table read only */
->>    set_memory_ro((unsigned long)&idt_table, 1);
->>=20
->=20
-> NAK... this isn't the right way to fix this and just really kicks the can d=
-own the road. The reason is that you aren't fixing the module that actually h=
-as a problem.
->=20
-> The Right Way[TM] is to figure out which module(s) lack the proper alignme=
-nt for this section. A script using objdump -h or readelf -SW running over t=
-he .o files looking for alignment less than 2**12 should spot the modules th=
-at are missing the proper .balign directives.
+I finally found some time to debug this.
 
-I don=E2=80=99t see the problem. If we are going to treat an object as thoug=
-h it=E2=80=99s 4096 bytes, making C think it=E2=80=99s 4096 bytes seems enti=
-rely reasonable to me.
+This patch make xconfig crash when you try to select a menu that opens a submenu.
 
-> --=20
+This is the backtrace:
 
-> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+#0  0x000000000041d196 in ConfigItem::testUpdateMenu(bool) ()
+#1  0x000000000041e2f8 in ConfigList::updateList(ConfigItem*) ()
+#2  0x0000000000420e3a in ConfigList::setRootMenu(menu*) ()
+#3  0x00007ffff7
+0f1fb0 in void doActivate<false>(QObject*, int, void**) () at /lib64/libQt5Core.so.5
+#4  0x000000000041bd22 in ConfigList::menuSelected(menu*) ()
+#5  0x0000000000425eb0 in
+ConfigList::mouseDoubleClickEvent(QMouseEvent*) ()
+#6  0x00007ffff7a9fcd1 in QWidget::event(QEvent*) () at /lib64/libQt5Widgets.so.5
+#7  0x00007ffff7b483b2 in QFrame::event(QEvent*) () at
+/lib64/libQt5Widgets.so.5
+#8  0x00007ffff70c2d2e in QCoreApplicationPrivate::sendThroughObjectEventFilters(QObject*, QEvent*) () at /lib64/libQt5Core.so.5
+#9  0x00007ffff7a5e052 in
+QApplicationPrivate::notify_helper(QObject*, QEvent*) () at /lib64/libQt5Widgets.so.5
+#10 0x00007ffff7a63891 in QApplication::notify(QObject*, QEvent*) () at /lib64/libQt5Widgets.so.5
+#11
+0x00007ffff70c2fc0 in QCoreApplication::notifyInternal2(QObject*, QEvent*) () at /lib64/libQt5Core.so.5
+#12 0x00007ffff7a6278a in QApplicationPrivate::sendMouseEvent(QWidget*, QMouseEvent*, QWidget*,
+QWidget*, QWidget**, QPointer<QWidget>&, bool, bool) ()
+    at /lib64/libQt5Widgets.so.5
+#13 0x00007ffff7ab7f82 in QWidgetWindow::handleMouseEvent(QMouseEvent*) () at /lib64/libQt5Widgets.so.5
+#14
+0x00007ffff7abadde in QWidgetWindow::event(QEvent*) () at /lib64/libQt5Widgets.so.5
+#15 0x00007ffff7a5e063 in QApplicationPrivate::notify_helper(QObject*, QEvent*) () at /lib64/libQt5Widgets.so.5
+#16
+0x00007ffff70c2fc0 in QCoreApplication::notifyInternal2(QObject*, QEvent*) () at /lib64/libQt5Core.so.5
+#17 0x00007ffff74a7142 in
+QGuiApplicationPrivate::processMouseEvent(QWindowSystemInterfacePrivate::MouseEvent*) () at /lib64/libQt5Gui.so.5
+#18 0x00007ffff748915b in
+QWindowSystemInterface::sendWindowSystemEvents(QFlags<QEventLoop::ProcessEventsFlag>) () at /lib64/libQt5Gui.so.5
+#19 0x00007fffe6ecdc9e in xcbSourceDispatch(_GSource*, int (*)(void*), void*) () at
+/lib64/libQt5XcbQpa.so.5
+#20 0x00007ffff605b7af in g_main_context_dispatch () at /lib64/libglib-2.0.so.0
+#21 0x00007ffff605bb38 in g_main_context_iterate.constprop () at /lib64/libglib-2.0.so.0
+#22
+0x00007ffff605bc03 in g_main_context_iteration () at /lib64/libglib-2.0.so.0
+#23 0x00007ffff710eb73 in QEventDispatcherGlib::processEvents(QFlags<QEventLoop::ProcessEventsFlag>) () at
+/lib64/libQt5Core.so.5
+#24 0x00007ffff70c191b in QEventLoop::exec(QFlags<QEventLoop::ProcessEventsFlag>) () at /lib64/libQt5Core.so.5
+#25 0x00007ffff70c95a6 in QCoreApplication::exec() () at
+/lib64/libQt5Core.so.5
+#26 0x000000000040e553 in main ()
+
+
+
+
+For example:
+'Input device support'->'Keyboards'
+
+Maybe we shoudld just revert it? I tried to understand the code a little bit,
+but no luck yet to understand how the whole thing works.
+
+Best regards,
+	Maxim Levitsky
+
+
