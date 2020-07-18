@@ -2,261 +2,247 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8542C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAC0520656
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355AB2073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AoBL/jaB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="QBh0o5M1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgGRLZS (ORCPT
+        id S1727040AbgGRLVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 07:25:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
+        Sat, 18 Jul 2020 07:21:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgGRLZR (ORCPT
+        with ESMTP id S1726566AbgGRLVJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 07:25:17 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC458C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 04:25:16 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id q5so13598521wru.6
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 04:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gtD9uKJBbPuci8eUnuLDa1jmT1WN4pKr1PsXFys2SCU=;
-        b=AoBL/jaBxLSoxnh9Kk7p2BpiimQG2gAoYwnoGgscefCs+WpD955QSeirQ0uqQt146c
-         zI9vFr+FPfPZRNBmSr8gJdy6+FineJgsx8GDReFMMNOrha08artiVWZgOq0g6upyzx+x
-         YEb+qmv/WkjPao4kHBuTGdJVvCU0Ob5xR3Vg2Ci7B2Shbe2OjCF489fgJeYvH9Nr+EIV
-         ErBqWNHtq5YW77cB43WtAkrhvBKJp3JSyRcdSDHaJJxfr5bFngZCDo9lt3/n4M1O3Ipb
-         ktW1WihG6RNVTNkGejgLC4XWWYna+sEAgt6kJ8hUbtkmU/wN10rUR3iNoEiQTHTRiM7I
-         Z2nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gtD9uKJBbPuci8eUnuLDa1jmT1WN4pKr1PsXFys2SCU=;
-        b=hRscKSFVytO6DIotE1emaysku/EAjGs/7PW3f42X1EtzO7w352bISiF+kfPH/zvRav
-         n40RPg4qWtpE9fDvWz6yH/tJ49ZBwKPGwEz8L8R9Sx/yWydYZ0BXLcTShKyugFYELaKM
-         x7U/twCAk4a8Az3Jz5EfwH3xy6XEAqdwnR1tCoPlAJNvOs5Xple1/4roK5vlDfG77zj9
-         2OiPpOF21GcxpQ0j7vNaTKIi6Awv0mlImVtALnpAko7+k+Y5r+td/s0mMbNF7CdwVJb7
-         gIKOtaqdW5D9dgjFW/XW8jaoIGyv2LCUylAMeIa8L98gSSXwHlDZIh+kLpNmADQgxOJN
-         2Gpw==
-X-Gm-Message-State: AOAM530kCPSVPsUWbjOjIJE+A1y4CVpruhX/rDU8vdjFLQW+RINsS05H
-        uSUqlJHxlx3grbEgdWg+xko=
-X-Google-Smtp-Source: ABdhPJwI7kQICk8XY7bf8rlBafoVHH1tIolEgaPBrPZjoqUEcCzrp7RDrBCLiMKFblaa9WhzGdEamg==
-X-Received: by 2002:a5d:4d8b:: with SMTP id b11mr14422337wru.341.1595071515487;
-        Sat, 18 Jul 2020 04:25:15 -0700 (PDT)
-Received: from luca020400-arch.lan ([2001:b07:5d33:19f:d537:6bdb:9442:dd28])
-        by smtp.googlemail.com with ESMTPSA id a22sm18044950wmb.4.2020.07.18.04.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 04:25:14 -0700 (PDT)
-From:   Luca Stefani <luca.stefani.ge1@gmail.com>
-Cc:     akpm@linux-foundation.org,
-        Luca Stefani <luca.stefani.ge1@gmail.com>,
-        freak07 <michalechner92@googlemail.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        linux-ntfs-dev@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH v2] ntfs: Fix ntfs_test_inode and ntfs_init_locked_inode function type
-Date:   Sat, 18 Jul 2020 13:25:13 +0200
-Message-Id: <20200718112513.533800-1-luca.stefani.ge1@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200627190230.1191796-1-luca.stefani.ge1@gmail.com>
-References: <20200627190230.1191796-1-luca.stefani.ge1@gmail.com>
+        Sat, 18 Jul 2020 07:21:09 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB3D3C0619D2;
+        Sat, 18 Jul 2020 04:21:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=dCGpUxkIfKHHwj840SN3vXyjVZKmEAte11yhOcdbYIQ=; b=QBh0o5M19Sg5kwLfZF8Tu8V+1q
+        clDdPqLY5NqxjFbVdlXuabmV794WIxRhLzfKq7f2iqxw0jTQe2XCFSX5hL0nMOpT0yjYRa6JQamHz
+        xhBGOjACnGy+6pXINNSPNE3JSSf0cm4VpNIjf+nwScop03dsIfFw2n3qJiUyX7ygtbou1Ls+9qhTh
+        pVD2EdjBcrj8eR4ffEEHt7iAf6I6xrmUDLmYfTcnKk1YUee9Clu37bfhuwQisEwxIkbrYkEy1zliI
+        VP9vT93xqOx3hK8rC9wfllZ9EWRCs/bvUAwg7GeXUmFmuvNc7+youc7I4NHT818j6pSqqMqrJ+rKV
+        ywbiWX7A==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jwktq-00072H-6H; Sat, 18 Jul 2020 12:21:02 +0100
+Date:   Sat, 18 Jul 2020 12:21:02 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: dsa: qca8k: implement the port MTU callbacks
+Message-ID: <20200718112102.GJ23489@earth.li>
+References: <20200718093555.GA12912@earth.li>
+ <20200718103808.6wj5dlwtuxmwjvt5@skbuf>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718103808.6wj5dlwtuxmwjvt5@skbuf>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang's Control Flow Integrity (CFI) is a security mechanism that can
-help prevent JOP chains, deployed extensively in downstream kernels
-used in Android.
+On Sat, Jul 18, 2020 at 01:38:08PM +0300, Vladimir Oltean wrote:
+> On Sat, Jul 18, 2020 at 10:35:55AM +0100, Jonathan McDowell wrote:
+> > This switch has a single max frame size configuration register, so we
+> > track the requested MTU for each port and apply the largest.
+> > 
+> > Signed-off-by: Jonathan McDowell <noodles@earth.li>
+> > ---
+> >  drivers/net/dsa/qca8k.c | 38 ++++++++++++++++++++++++++++++++++++++
+> >  drivers/net/dsa/qca8k.h |  3 +++
+> >  2 files changed, 41 insertions(+)
+> > 
+> > diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+> > index 4acad5fa0c84..3690f02aea3a 100644
+> > --- a/drivers/net/dsa/qca8k.c
+> > +++ b/drivers/net/dsa/qca8k.c
+> > @@ -670,6 +670,12 @@ qca8k_setup(struct dsa_switch *ds)
+> >  		}
+> >  	}
+> >  
+> > +	/* Setup our port MTUs to match power on defaults */
+> > +	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
+> > +		priv->port_mtu[i] = ETH_FRAME_LEN + ETH_FCS_LEN;
+> > +	}
+> 
+> I am not quite sure the curly brackets are needed. And nowhere else in
+> qca8k.c is this convention being used.
 
-It's deployment is hindered by mismatches in function signatures.  For
-this case, we make callbacks match their intended function signature,
-and cast parameters within them rather than casting the callback when
-passed as a parameter.
+Good point; force of habit from coding standards elsewhere. Fixed (and
+also the instance below).
 
-When running `mount -t ntfs ...` we observe the following trace:
+> > +	qca8k_write(priv, QCA8K_MAX_FRAME_SIZE, ETH_FRAME_LEN + ETH_FCS_LEN);
+> > +
+> >  	/* Flush the FDB table */
+> >  	qca8k_fdb_flush(priv);
+> >  
+> > @@ -1098,6 +1104,36 @@ qca8k_port_disable(struct dsa_switch *ds, int port)
+> >  	priv->port_sts[port].enabled = 0;
+> >  }
+> >  
+> > +static int
+> > +qca8k_port_change_mtu(struct dsa_switch *ds, int port, int new_mtu)
+> > +{
+> > +	struct qca8k_priv *priv = ds->priv;
+> > +	int i, mtu;
+> > +
+> > +	if ((new_mtu < ETH_MIN_MTU) || (new_mtu > QCA8K_MAX_MTU)) {
+> > +		return -EINVAL;
+> > +	}
+> 
+> I'm pretty sure this check should not be needed.
+> The only reason why slave_dev->min_mtu is 0 seems to be:
+> 
+> commit 8b1efc0f83f1f75b8f85c70d2211007de8fd7633
+> Author: Jarod Wilson <jarod@redhat.com>
+> Date:   Thu Oct 20 23:25:27 2016 -0400
+> 
+>     net: remove MTU limits on a few ether_setup callers
+> 
+>     These few drivers call ether_setup(), but have no ndo_change_mtu, and thus
+>     were overlooked for changes to MTU range checking behavior. They
+>     previously had no range checks, so for feature-parity, set their min_mtu
+>     to 0 and max_mtu to ETH_MAX_MTU (65535), instead of the 68 and 1500
+>     inherited from the ether_setup() changes. Fine-tuning can come after we get
+>     back to full feature-parity here.
+> 
+>     CC: netdev@vger.kernel.org
+>     Reported-by: Asbjoern Sloth Toennesen <asbjorn@asbjorn.st>
+>     CC: Asbjoern Sloth Toennesen <asbjorn@asbjorn.st>
+>     CC: R Parameswaran <parameswaran.r7@gmail.com>
+>     Signed-off-by: Jarod Wilson <jarod@redhat.com>
+>     Signed-off-by: David S. Miller <davem@davemloft.net>
+> 
+> which is an oversight on my part. Since now DSA supports
+> ndo_change_mtu(), the "slave_dev->min_mtu = 0;" line in net/dsa/slave.c
+> can be removed and so can this check.
 
-Call trace:
-__cfi_check_fail+0x1c/0x24
-name_to_dev_t+0x0/0x404
-iget5_locked+0x594/0x5e8
-ntfs_fill_super+0xbfc/0x43ec
-mount_bdev+0x30c/0x3cc
-ntfs_mount+0x18/0x24
-mount_fs+0x1b0/0x380
-vfs_kern_mount+0x90/0x398
-do_mount+0x5d8/0x1a10
-SyS_mount+0x108/0x144
-el0_svc_naked+0x34/0x38
+Ok.
 
-Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
-Tested-by: freak07 <michalechner92@googlemail.com>
-Acked-by: Anton Altaparmakov <anton@tuxera.com>
----
- fs/ntfs/dir.c   |  2 +-
- fs/ntfs/inode.c | 27 ++++++++++++++-------------
- fs/ntfs/inode.h |  4 +---
- fs/ntfs/mft.c   |  4 ++--
- 4 files changed, 18 insertions(+), 19 deletions(-)
+> > +
+> > +	priv->port_mtu[port] = new_mtu;
+> > +
+> > +	mtu = 0;
+> 
+> I think it's more typical to initialize mtu to 0 at declaration time.
 
-diff --git a/fs/ntfs/dir.c b/fs/ntfs/dir.c
-index 3c4811469ae8..e278bfc5ee7f 100644
---- a/fs/ntfs/dir.c
-+++ b/fs/ntfs/dir.c
-@@ -1503,7 +1503,7 @@ static int ntfs_dir_fsync(struct file *filp, loff_t start, loff_t end,
- 	na.type = AT_BITMAP;
- 	na.name = I30;
- 	na.name_len = 4;
--	bmp_vi = ilookup5(vi->i_sb, vi->i_ino, (test_t)ntfs_test_inode, &na);
-+	bmp_vi = ilookup5(vi->i_sb, vi->i_ino, ntfs_test_inode, &na);
- 	if (bmp_vi) {
-  		write_inode_now(bmp_vi, !datasync);
- 		iput(bmp_vi);
-diff --git a/fs/ntfs/inode.c b/fs/ntfs/inode.c
-index d4359a1df3d5..9bb9f0952b18 100644
---- a/fs/ntfs/inode.c
-+++ b/fs/ntfs/inode.c
-@@ -30,10 +30,10 @@
- /**
-  * ntfs_test_inode - compare two (possibly fake) inodes for equality
-  * @vi:		vfs inode which to test
-- * @na:		ntfs attribute which is being tested with
-+ * @data:	data which is being tested with
-  *
-  * Compare the ntfs attribute embedded in the ntfs specific part of the vfs
-- * inode @vi for equality with the ntfs attribute @na.
-+ * inode @vi for equality with the ntfs attribute @data.
-  *
-  * If searching for the normal file/directory inode, set @na->type to AT_UNUSED.
-  * @na->name and @na->name_len are then ignored.
-@@ -43,8 +43,9 @@
-  * NOTE: This function runs with the inode_hash_lock spin lock held so it is not
-  * allowed to sleep.
-  */
--int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
-+int ntfs_test_inode(struct inode *vi, void *data)
- {
-+	ntfs_attr *na = (ntfs_attr *)data;
- 	ntfs_inode *ni;
- 
- 	if (vi->i_ino != na->mft_no)
-@@ -72,9 +73,9 @@ int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
- /**
-  * ntfs_init_locked_inode - initialize an inode
-  * @vi:		vfs inode to initialize
-- * @na:		ntfs attribute which to initialize @vi to
-+ * @data:	data which to initialize @vi to
-  *
-- * Initialize the vfs inode @vi with the values from the ntfs attribute @na in
-+ * Initialize the vfs inode @vi with the values from the ntfs attribute @data in
-  * order to enable ntfs_test_inode() to do its work.
-  *
-  * If initializing the normal file/directory inode, set @na->type to AT_UNUSED.
-@@ -87,8 +88,9 @@ int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
-  * NOTE: This function runs with the inode->i_lock spin lock held so it is not
-  * allowed to sleep. (Hence the GFP_ATOMIC allocation.)
-  */
--static int ntfs_init_locked_inode(struct inode *vi, ntfs_attr *na)
-+static int ntfs_init_locked_inode(struct inode *vi, void *data)
- {
-+	ntfs_attr *na = (ntfs_attr *)data;
- 	ntfs_inode *ni = NTFS_I(vi);
- 
- 	vi->i_ino = na->mft_no;
-@@ -131,7 +133,6 @@ static int ntfs_init_locked_inode(struct inode *vi, ntfs_attr *na)
- 	return 0;
- }
- 
--typedef int (*set_t)(struct inode *, void *);
- static int ntfs_read_locked_inode(struct inode *vi);
- static int ntfs_read_locked_attr_inode(struct inode *base_vi, struct inode *vi);
- static int ntfs_read_locked_index_inode(struct inode *base_vi,
-@@ -164,8 +165,8 @@ struct inode *ntfs_iget(struct super_block *sb, unsigned long mft_no)
- 	na.name = NULL;
- 	na.name_len = 0;
- 
--	vi = iget5_locked(sb, mft_no, (test_t)ntfs_test_inode,
--			(set_t)ntfs_init_locked_inode, &na);
-+	vi = iget5_locked(sb, mft_no, ntfs_test_inode,
-+			ntfs_init_locked_inode, &na);
- 	if (unlikely(!vi))
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -225,8 +226,8 @@ struct inode *ntfs_attr_iget(struct inode *base_vi, ATTR_TYPE type,
- 	na.name = name;
- 	na.name_len = name_len;
- 
--	vi = iget5_locked(base_vi->i_sb, na.mft_no, (test_t)ntfs_test_inode,
--			(set_t)ntfs_init_locked_inode, &na);
-+	vi = iget5_locked(base_vi->i_sb, na.mft_no, ntfs_test_inode,
-+			ntfs_init_locked_inode, &na);
- 	if (unlikely(!vi))
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -280,8 +281,8 @@ struct inode *ntfs_index_iget(struct inode *base_vi, ntfschar *name,
- 	na.name = name;
- 	na.name_len = name_len;
- 
--	vi = iget5_locked(base_vi->i_sb, na.mft_no, (test_t)ntfs_test_inode,
--			(set_t)ntfs_init_locked_inode, &na);
-+	vi = iget5_locked(base_vi->i_sb, na.mft_no, ntfs_test_inode,
-+			ntfs_init_locked_inode, &na);
- 	if (unlikely(!vi))
- 		return ERR_PTR(-ENOMEM);
- 
-diff --git a/fs/ntfs/inode.h b/fs/ntfs/inode.h
-index 98e670fbdd31..363e4e820673 100644
---- a/fs/ntfs/inode.h
-+++ b/fs/ntfs/inode.h
-@@ -253,9 +253,7 @@ typedef struct {
- 	ATTR_TYPE type;
- } ntfs_attr;
- 
--typedef int (*test_t)(struct inode *, void *);
--
--extern int ntfs_test_inode(struct inode *vi, ntfs_attr *na);
-+extern int ntfs_test_inode(struct inode *vi, void *data);
- 
- extern struct inode *ntfs_iget(struct super_block *sb, unsigned long mft_no);
- extern struct inode *ntfs_attr_iget(struct inode *base_vi, ATTR_TYPE type,
-diff --git a/fs/ntfs/mft.c b/fs/ntfs/mft.c
-index fbb9f1bc623d..0d62cd5bb7f8 100644
---- a/fs/ntfs/mft.c
-+++ b/fs/ntfs/mft.c
-@@ -958,7 +958,7 @@ bool ntfs_may_write_mft_record(ntfs_volume *vol, const unsigned long mft_no,
- 		 * dirty code path of the inode dirty code path when writing
- 		 * $MFT occurs.
- 		 */
--		vi = ilookup5_nowait(sb, mft_no, (test_t)ntfs_test_inode, &na);
-+		vi = ilookup5_nowait(sb, mft_no, ntfs_test_inode, &na);
- 	}
- 	if (vi) {
- 		ntfs_debug("Base inode 0x%lx is in icache.", mft_no);
-@@ -1019,7 +1019,7 @@ bool ntfs_may_write_mft_record(ntfs_volume *vol, const unsigned long mft_no,
- 		vi = igrab(mft_vi);
- 		BUG_ON(vi != mft_vi);
- 	} else
--		vi = ilookup5_nowait(sb, na.mft_no, (test_t)ntfs_test_inode,
-+		vi = ilookup5_nowait(sb, na.mft_no, ntfs_test_inode,
- 				&na);
- 	if (!vi) {
- 		/*
+Sure, fixed.
+
+> > +	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
+> > +		if (priv->port_mtu[port] > mtu)
+> > +			mtu = priv->port_mtu[port];
+> > +	}
+> 
+> Again, curly brackets are not needed here, although some might feel it
+> aids readability.
+> 
+> > +
+> > +	/* Include L2 header / FCS length */
+> > +	qca8k_write(priv, QCA8K_MAX_FRAME_SIZE, mtu + ETH_HLEN + ETH_FCS_LEN);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int
+> > +qca8k_port_max_mtu(struct dsa_switch *ds, int port)
+> > +{
+> > +	return QCA8K_MAX_MTU;
+> 
+> So what is the maximum value that you can write into
+> QCA8K_MAX_FRAME_SIZE? 9000 or 9018? If it's 9000, you should report a
+> max MTU of 8982, and let the network stack do the range check for you,
+> that's why this callback exists in the first place.
+
+9018 (including header + fcs), hence returning QCA8K_MAX_MTU here.
+
+> Do you know how are VLAN tags accounted for (i.e. does iperf3 TCP work
+> over a VLAN sub-interface after your patch)? There are 2 options:
+> - The ports automatically increase the maximum accepted frame size by 4
+>   (or 8, in case of double tag) bytes if they see VLAN tagged traffic.
+>   Case in which you don't need to do anything.
+> - You need to manually account for the possibility that VLAN-tagged
+>   traffic will be received, since the 802.1Q header is not part of the
+>   SDU whose max length is measured by the MTU. So you might want to
+>   write a value to QCA8K_MAX_FRAME_SIZE that is either "mtu +
+>   VLAN_ETH_HLEN + ETH_FCS_LEN", or "mtu + ETH_HLEN + 2 * VLAN_HLEN +
+>   ETH_FCS_LEN", depending on whether you foresee double-tagging being
+>   used.
+
+The value is for a normal packet; the switch accounts for VLAN / double
+VLAN / the switch tagging header size itself.
+
+> > +}
+> > +
+> >  static int
+> >  qca8k_port_fdb_insert(struct qca8k_priv *priv, const u8 *addr,
+> >  		      u16 port_mask, u16 vid)
+> > @@ -1174,6 +1210,8 @@ static const struct dsa_switch_ops qca8k_switch_ops = {
+> >  	.set_mac_eee		= qca8k_set_mac_eee,
+> >  	.port_enable		= qca8k_port_enable,
+> >  	.port_disable		= qca8k_port_disable,
+> > +	.port_change_mtu	= qca8k_port_change_mtu,
+> > +	.port_max_mtu		= qca8k_port_max_mtu,
+> >  	.port_stp_state_set	= qca8k_port_stp_state_set,
+> >  	.port_bridge_join	= qca8k_port_bridge_join,
+> >  	.port_bridge_leave	= qca8k_port_bridge_leave,
+> > diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
+> > index 10ef2bca2cde..31439396401c 100644
+> > --- a/drivers/net/dsa/qca8k.h
+> > +++ b/drivers/net/dsa/qca8k.h
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/gpio.h>
+> >  
+> >  #define QCA8K_NUM_PORTS					7
+> > +#define QCA8K_MAX_MTU					9000
+> >  
+> >  #define PHY_ID_QCA8337					0x004dd036
+> >  #define QCA8K_ID_QCA8337				0x13
+> > @@ -58,6 +59,7 @@
+> >  #define   QCA8K_MDIO_MASTER_MAX_REG			32
+> >  #define QCA8K_GOL_MAC_ADDR0				0x60
+> >  #define QCA8K_GOL_MAC_ADDR1				0x64
+> > +#define QCA8K_MAX_FRAME_SIZE				0x78
+> >  #define QCA8K_REG_PORT_STATUS(_i)			(0x07c + (_i) * 4)
+> >  #define   QCA8K_PORT_STATUS_SPEED			GENMASK(1, 0)
+> >  #define   QCA8K_PORT_STATUS_SPEED_10			0
+> > @@ -189,6 +191,7 @@ struct qca8k_priv {
+> >  	struct device *dev;
+> >  	struct dsa_switch_ops ops;
+> >  	struct gpio_desc *reset_gpio;
+> > +	unsigned int port_mtu[QCA8K_NUM_PORTS];
+> >  };
+> >  
+> >  struct qca8k_mib_desc {
+> > -- 
+> > 2.27.0
+
+J.
+
 -- 
-2.27.0
-
+/-\                             | 101 things you can't have too much
+|@/  Debian GNU/Linux Developer |       of : 19 - A Good Thing.
+\-                              |
