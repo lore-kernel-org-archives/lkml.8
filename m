@@ -8,91 +8,92 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFBEC433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC38207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9892076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcK8CL06"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cT3ae4B/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgGRFTD (ORCPT
+        id S1726577AbgGRFXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39688 "EHLO
+        Sat, 18 Jul 2020 01:23:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgGRFTD (ORCPT
+        with ESMTP id S1725887AbgGRFXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:19:03 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB0BC0619D2;
-        Fri, 17 Jul 2020 22:19:03 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id p15so9027073ilh.13;
-        Fri, 17 Jul 2020 22:19:03 -0700 (PDT)
+        Sat, 18 Jul 2020 01:23:04 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D54C0619D2;
+        Fri, 17 Jul 2020 22:23:04 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q5so13140791wru.6;
+        Fri, 17 Jul 2020 22:23:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=kHjOURK4DhiFr+8WdSKVhameGC2lcUCFfkIT+BIwwgU=;
-        b=gcK8CL06wY2tNWr+KKELSMvOxlgr4rC7QHgJdD2X+vpa1mxZ359f7zLlNZ9rOMS9zg
-         CmD6KRazy4RD5REmOGr2aWy9/yZd0lUsyiruIv13bWoNK3AG34LmljY3t/F+AdiG4nNU
-         a9zhX0APo/dOj8oKITTs3incAnm+lZcmnhTh30/jE52USwn6naThShP6uZG1BgQ+Jkm5
-         NNDf3kuLNd++Og+6VmBI/xF5OggidLa+SdbFqybVllXUUhvV5wa1DPRwYXpkmsKeIK68
-         s010vwhnBXleNMKudUk8AmtEpBs4hXvvRwmM265O8dQrs1X2HXEpr0tHGevsLZWhkRIF
-         LEIw==
+        bh=68XVIKJYC51HwphePdTA9Lwzvvw+s3PKoRyB8S+VPNI=;
+        b=cT3ae4B/9OU66h0+rkwDY8k47sIDc5dudndIC/G5UXIUUsAcygze5S3w750uxyVDwS
+         +M/5SpQMP9H6WNj0zXtwEb7i8HeRczJfv3WJNjOcVV5zAKV8hj1oPTNY37psbPQ7X86I
+         zmlFiDQOg8ICG8V4rM37eB+nIm0nI4IGKKtHlx7hjDntLmYAoo1i+dS6/E+hUMtvLn2u
+         gE1SjsK2V1t5bRTptUNZoya0Tb/gdFklNhpYcDAt+ulK1Y51dXitN9jg1f0oaRgG8mm0
+         v7BlAiuho/oII5ptg8HDc6MFOadOQoYEWqPu5CwyONYACPTeTCtscIyQawMVpBNxPnbH
+         y9Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kHjOURK4DhiFr+8WdSKVhameGC2lcUCFfkIT+BIwwgU=;
-        b=uZVmNX5eYrfllaavMv+V1eYNbi04U3C2tsEiQbj67ZuPDWBEtZt2b89AaLILU/gcZJ
-         eqtPAO7/us2UNDxFGNFR38czWe/hMvVLVYVoxR9AJS4hIqX7x3cQqEl6cFbpMEtOGkft
-         9woG00uJhRR+jzcpeLjlHn71jYOw9CEZ4Lz/cWW/+IUe8vnaA79l/4Gtf9zygp9WGg/a
-         3KxQ1AKvsKjzcxZC+rklTUPS8ZXCLSMNb53fnaQGWlq3lz4rhnw8ldGPcEpJeGmHzulU
-         6+hj8M4dcP96G6MO34XMeIToF7WWuhg7we6imolkSXW+oFpVs7NaAEtPCwZ7SMLqUrcf
-         GPDw==
-X-Gm-Message-State: AOAM531RnERoqozsLKqOrGzyIqW+KkewwlNapgbr/EBk9Z7/KoXimBfW
-        EEAK1iGBiQ3BKOFlZxUplo0=
-X-Google-Smtp-Source: ABdhPJwzKbSELbyxuteloc9VHi/Z0kyifVe1tzB6XQ+ws4XwVvQDvLRJc8IBohUqFQc85hWaKbZ0Yw==
-X-Received: by 2002:a92:41d0:: with SMTP id o199mr13245377ila.205.1595049542477;
-        Fri, 17 Jul 2020 22:19:02 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [160.94.145.20])
-        by smtp.googlemail.com with ESMTPSA id a11sm5616559iow.26.2020.07.17.22.19.01
+        bh=68XVIKJYC51HwphePdTA9Lwzvvw+s3PKoRyB8S+VPNI=;
+        b=EJt+LPoVUrIJjY3o15ilOPDTwGjo6QQFnrnGEZ0Ny+oP3IwHonxMf4v5THk8es5BHs
+         p6o0H21hrOtNbE7e3pK5m/m+heluR68urTbzx0J/4WRSJw1R8bPEOhE79H57KeJVidq8
+         6+ddNcuhbcU2Kl3+yJy4/x/O69PxrFT45MOtUE58UFQDyHlG0MXvwaMETOsPqZPW/AT2
+         1NjexjKDK1xP3D8HfgHjIiOachbjhqXjlnJubcyBSfIzgvqy61t6prbWrBk+H0p/4KCi
+         Dla/GWAl8YPNPTZhOXRDHRvnjf80epA8uJ82xOHJ1HXqFGujSNGftd6OpCH/Fum3RO9V
+         7xUw==
+X-Gm-Message-State: AOAM532m7WoPez86pYd24st1kKXRLDqY38sLSqmIguhMMx/YVwuI793i
+        iJOZyfMNmr4DoH4vfkwC30w=
+X-Google-Smtp-Source: ABdhPJwFA04O0Vo827+TYXELnidVX5qxVKJEDLQCoYfwdm8pKzam0cDcrr0PdyGYzXfqhn/u8xJ3fg==
+X-Received: by 2002:adf:f34e:: with SMTP id e14mr13158030wrp.299.1595049782582;
+        Fri, 17 Jul 2020 22:23:02 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id f16sm17536608wmf.17.2020.07.17.22.23.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 22:19:01 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Vishal Kulkarni <vishal@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] cxgb4: add missing release on skb in uld_send()
-Date:   Sat, 18 Jul 2020 00:18:43 -0500
-Message-Id: <20200718051845.10218-1-navid.emamdoost@gmail.com>
+        Fri, 17 Jul 2020 22:23:02 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: arm: amlogic: add support for the Beelink GS-King-X
+Date:   Sat, 18 Jul 2020 05:22:57 +0000
+Message-Id: <20200718052258.2890-1-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the implementation of uld_send(), the skb is consumed on all
-execution paths except one. Release skb when returning NET_XMIT_DROP.
+The Shenzen AZW (Beelink) GS-King-X is based on the Amlogic W400 reference
+board with an S922X-H chip.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- drivers/net/ethernet/chelsio/cxgb4/sge.c | 1 +
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-index 32a45dc51ed7..d8c37fd4b808 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-@@ -2938,6 +2938,7 @@ static inline int uld_send(struct adapter *adap, struct sk_buff *skb,
- 	txq_info = adap->sge.uld_txq_info[tx_uld_type];
- 	if (unlikely(!txq_info)) {
- 		WARN_ON(true);
-+		consume_skb(skb);
- 		return NET_XMIT_DROP;
- 	}
- 
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 378229fa8310..8711fa57ee25 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -149,6 +149,7 @@ properties:
+       - description: Boards with the Amlogic Meson G12B S922X SoC
+         items:
+           - enum:
++              - azw,gsking-x
+               - azw,gtking
+               - azw,gtking-pro
+               - hardkernel,odroid-n2
 -- 
 2.17.1
 
