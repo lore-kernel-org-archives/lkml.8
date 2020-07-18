@@ -8,66 +8,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56DAC433E8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DDCC433E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF732065D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0802065D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qF1a1WZq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L14smzfn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgGRJUZ (ORCPT
+        id S1726620AbgGRJUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48346 "EHLO
+        Sat, 18 Jul 2020 05:20:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgGRJUY (ORCPT
+        with ESMTP id S1726055AbgGRJUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 05:20:24 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9153C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 02:20:24 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z3so6563874pfn.12
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 02:20:24 -0700 (PDT)
+        Sat, 18 Jul 2020 05:20:14 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0FCCC0619D2;
+        Sat, 18 Jul 2020 02:20:13 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w2so7842526pgg.10;
+        Sat, 18 Jul 2020 02:20:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0LdVF4Wtif0/2NJuxoxJqSPIuVVPOku/Ym0I0U/TYRQ=;
-        b=qF1a1WZqxZb+/GM7u9xwaCK8MPhe+9C27Lg/Z1kC+uAUQJEk1giMzh9GDXGvCzcWJP
-         mcblQmc75BaJmzdim//KiDAJjR17Xo5NkB1n2ow3GpFxPtbppz3XeFm9jD8pOJqNdDVI
-         ncI7ZTIsdeviSOEx+9hneHaYxHa+xjwMPWbae938fTO1XxFvuZqdZB4gxs2aMcsT49at
-         w6Uaw/hbDDn+JKCrv2cGXfRGhXL2C6noOqF9R5HcethWFAN36B3HFejrh6rVgVYJp8HK
-         Sf3sPg4MCDRJL4Ty1d7WeSu52f3wt7x6eY7PYznwL3DxR4OFKT91qPSues7/DAk2oHt4
-         wMzQ==
+        bh=UaC1El4svTPWWv/qHlp1y2AKMj6GXHYb+T5pK1WKkD0=;
+        b=L14smzfnFCwhYPdckJw1ERr9pnwQ1X2QgfyZtLnI/VU7uxipFLFAckYA2bH4ZCZE/5
+         p1YbDjpy2xOaadfugYZ1tRbwkawRceI0zTQ0T+lAO2AtWVClbauh1mTDgJ2A+lBEbQAn
+         qtkdCnMQTuItjL65slHTH30Zd/Xopow92YMZ1XnobFMU0rPw+R5Th3tfRMs6FxyBkWzr
+         icOJQTuWtlTUsAXLX+NHRsyED6RcKEQb7OlQ4nYY/Sw4zc8KTiJH7MH3Bp1YWEOvwqXF
+         HazJZELjrYZRzTvbxa7G8U0t4/VF0sYADR4COzuvdEyqbIegfK94THRidBbPt32iaM9b
+         JSdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0LdVF4Wtif0/2NJuxoxJqSPIuVVPOku/Ym0I0U/TYRQ=;
-        b=M3MYZDJ/yxRtBdCYJMJQH5HXH9D6ANBL/smFL5f5ZVGgprBM0i8qjIKjE74pWMREse
-         En/J16KTomUdOV52fY79O/uLCpo1LUxw1neJhSeWVLhEoyCy+72Ty0pCtPQcPevyd1tl
-         S0JfTXfI49JZVHgZLNv398DE7SiMpT4hra+DPD+05YPzEerBAj2/Jb1TGNhJSwg6UANs
-         SQzthIXCT9o+bU3CA2pmaewV74WGTXQdjJeOPDKwHx4aMDeqCAQ7hf73D5kaETW37lFo
-         ANMhvlt1F+DnDeT6Lb06KfznWm/J9bMWlylEHswDzKBs6evCNtUQbicUCU9ofwripNaY
-         kEdw==
-X-Gm-Message-State: AOAM5312mKSv0o08CHDEe0fskd2eTIghPaFhqAfMXkxIdSkf8VfwzXHh
-        NRHcByR4eFBdSu7YGcbaqwk=
-X-Google-Smtp-Source: ABdhPJzXlgDDgAarFKF/M3MQ/+1yvjbOWQ2P7FE4Yd0ZiZlwbj5GhM+qTN7HOgWFj8IVulEyyltn5A==
-X-Received: by 2002:a63:6486:: with SMTP id y128mr11297854pgb.82.1595064024179;
-        Sat, 18 Jul 2020 02:20:24 -0700 (PDT)
+        bh=UaC1El4svTPWWv/qHlp1y2AKMj6GXHYb+T5pK1WKkD0=;
+        b=QBVkJQofE0OT5WWYlP8Wb41CDCLzNPkLpsqZvoh3cmYLI8NhYaqJv+1qRepr0F6GnW
+         VDU0zP/CKzkD4Rnc0vJVJ5MsPS2ewdn9tHeMIo66MRhGe/Qkb8pSTKBne1mH6sjZCaNl
+         z2TY0CC0kLiq8zQO06VZQMWEJHCe+f8SoJWGh3lZBDBH+QdtcsBmTtJbteB7kdtxxWEK
+         KKKiUyyRmrBjI2C/oiLJ+vbhTYB7K0IlDoHg/1NKffOCgDHH9mCCK9mG1uqne+2eK1Y1
+         CWjBI6y1ThK6eVxArDCtz1Ns2xIuescTrovLDZWvzCWq1AGomDQrwZI8f9ELxbdyWCPv
+         bKsA==
+X-Gm-Message-State: AOAM531FgF+YZtNvHHYNCLlQeqDsqcfwgni3xOlrC+2MV9DSCQ/Dgp5j
+        OPiALZLzxaBBdV86W/9TUVGLtw+trP8n2g==
+X-Google-Smtp-Source: ABdhPJz/W3yRXHPyauUdYC/FsxYDovzlozVs4hgnmAHQldZHD7l6yGzJSZVwRjvK/UY71mNBWKInww==
+X-Received: by 2002:a63:3151:: with SMTP id x78mr12176358pgx.210.1595064013260;
+        Sat, 18 Jul 2020 02:20:13 -0700 (PDT)
 Received: from localhost.localdomain ([182.69.248.222])
-        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.20.18
+        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.20.08
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 Jul 2020 02:20:23 -0700 (PDT)
+        Sat, 18 Jul 2020 02:20:12 -0700 (PDT)
 From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, sboyd@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
+To:     andre.przywara@arm.com, vkoul@kernel.org, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-actions@lists.infradead.org
-Subject: [PATCH v6 04/10] clk: actions: Add MMC clock-register reset bits
-Date:   Sat, 18 Jul 2020 14:49:28 +0530
-Message-Id: <1595063974-24228-5-git-send-email-amittomer25@gmail.com>
+Subject: [PATCH v6 02/10] dmaengine: Actions: get rid of bit fields from dma descriptor
+Date:   Sat, 18 Jul 2020 14:49:26 +0530
+Message-Id: <1595063974-24228-3-git-send-email-amittomer25@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
 References: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
@@ -76,42 +77,203 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds reset bits needed for MMC clock registers present
-on Actions S700 SoC.
+At the moment, Driver uses bit fields to describe registers of the DMA
+descriptor structure that makes it less portable and maintainable, and
+Andre suugested(and even sketched important bits for it) to make use of
+array to describe this DMA descriptors instead. It gives the flexibility
+while extending support for other platform such as Actions S700.
+
+This commit removes the "owl_dma_lli_hw" (that includes bit-fields) and
+uses array to describe DMA descriptor.
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Suggested-by: Andre Przywara <andre.przywara@arm.com>
 Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 ---
 Changes since v5:
-        * Added Mani's Reviewed-by: tag.
-Changes from v4:
-        * Reordered it from 03/10 to 04/10.
-Changes from v3:
-        * NO change.
-Changes from v2:
+	* Added Mani's Reviewed-by: tag.
+Changes since v4:
+        * Reordered it from 01/10 to 02/10.
+Changes since v3:
+        * Added description for enum fields.
+        * Restored the old comment.
+        * Added detailed comment about, the way FLEN
+          and FCNT values are filled.
+Changes since v2:
         * No change.
-Changes from v1:
-        * No change.
-Changes from RFC:
+Changes since v1:
+        * Defined macro for frame count value.
+        * Introduced llc_hw_flen() from patch 2/9.
+        * Removed the unnecessary line break.
+Changes since rfc:
         * No change.
 ---
- drivers/clk/actions/owl-s700.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/owl-dma.c | 98 +++++++++++++++++++++++++++++----------------------
+ 1 file changed, 56 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/clk/actions/owl-s700.c b/drivers/clk/actions/owl-s700.c
-index a2f34d13fb54..cd60eca7727d 100644
---- a/drivers/clk/actions/owl-s700.c
-+++ b/drivers/clk/actions/owl-s700.c
-@@ -577,6 +577,9 @@ static const struct owl_reset_map s700_resets[] = {
- 	[RESET_DSI]	= { CMU_DEVRST0, BIT(2) },
- 	[RESET_CSI]	= { CMU_DEVRST0, BIT(13) },
- 	[RESET_SI]	= { CMU_DEVRST0, BIT(14) },
-+	[RESET_SD0]     = { CMU_DEVRST0, BIT(22) },
-+	[RESET_SD1]     = { CMU_DEVRST0, BIT(23) },
-+	[RESET_SD2]     = { CMU_DEVRST0, BIT(24) },
- 	[RESET_I2C0]	= { CMU_DEVRST1, BIT(0) },
- 	[RESET_I2C1]	= { CMU_DEVRST1, BIT(1) },
- 	[RESET_I2C2]	= { CMU_DEVRST1, BIT(2) },
+diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+index 66ef70b00ec0..948d1bead860 100644
+--- a/drivers/dma/owl-dma.c
++++ b/drivers/dma/owl-dma.c
+@@ -120,30 +120,33 @@
+ #define BIT_FIELD(val, width, shift, newshift)	\
+ 		((((val) >> (shift)) & ((BIT(width)) - 1)) << (newshift))
+ 
++/* Frame count value is fixed as 1 */
++#define FCNT_VAL				0x1
++
+ /**
+- * struct owl_dma_lli_hw - Hardware link list for dma transfer
+- * @next_lli: physical address of the next link list
+- * @saddr: source physical address
+- * @daddr: destination physical address
+- * @flen: frame length
+- * @fcnt: frame count
+- * @src_stride: source stride
+- * @dst_stride: destination stride
+- * @ctrla: dma_mode and linklist ctrl config
+- * @ctrlb: interrupt config
+- * @const_num: data for constant fill
++ * owl_dmadesc_offsets - Describe DMA descriptor, hardware link
++ * list for dma transfer
++ * @OWL_DMADESC_NEXT_LLI: physical address of the next link list
++ * @OWL_DMADESC_SADDR: source physical address
++ * @OWL_DMADESC_DADDR: destination physical address
++ * @OWL_DMADESC_FLEN: frame length
++ * @OWL_DMADESC_SRC_STRIDE: source stride
++ * @OWL_DMADESC_DST_STRIDE: destination stride
++ * @OWL_DMADESC_CTRLA: dma_mode and linklist ctrl config
++ * @OWL_DMADESC_CTRLB: interrupt config
++ * @OWL_DMADESC_CONST_NUM: data for constant fill
+  */
+-struct owl_dma_lli_hw {
+-	u32	next_lli;
+-	u32	saddr;
+-	u32	daddr;
+-	u32	flen:20;
+-	u32	fcnt:12;
+-	u32	src_stride;
+-	u32	dst_stride;
+-	u32	ctrla;
+-	u32	ctrlb;
+-	u32	const_num;
++enum owl_dmadesc_offsets {
++	OWL_DMADESC_NEXT_LLI = 0,
++	OWL_DMADESC_SADDR,
++	OWL_DMADESC_DADDR,
++	OWL_DMADESC_FLEN,
++	OWL_DMADESC_SRC_STRIDE,
++	OWL_DMADESC_DST_STRIDE,
++	OWL_DMADESC_CTRLA,
++	OWL_DMADESC_CTRLB,
++	OWL_DMADESC_CONST_NUM,
++	OWL_DMADESC_SIZE
+ };
+ 
+ /**
+@@ -153,7 +156,7 @@ struct owl_dma_lli_hw {
+  * @node: node for txd's lli_list
+  */
+ struct owl_dma_lli {
+-	struct  owl_dma_lli_hw	hw;
++	u32			hw[OWL_DMADESC_SIZE];
+ 	dma_addr_t		phys;
+ 	struct list_head	node;
+ };
+@@ -318,6 +321,11 @@ static inline u32 llc_hw_ctrlb(u32 int_ctl)
+ 	return ctl;
+ }
+ 
++static u32 llc_hw_flen(struct owl_dma_lli *lli)
++{
++	return lli->hw[OWL_DMADESC_FLEN] & GENMASK(19, 0);
++}
++
+ static void owl_dma_free_lli(struct owl_dma *od,
+ 			     struct owl_dma_lli *lli)
+ {
+@@ -349,8 +357,9 @@ static struct owl_dma_lli *owl_dma_add_lli(struct owl_dma_txd *txd,
+ 		list_add_tail(&next->node, &txd->lli_list);
+ 
+ 	if (prev) {
+-		prev->hw.next_lli = next->phys;
+-		prev->hw.ctrla |= llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
++		prev->hw[OWL_DMADESC_NEXT_LLI] = next->phys;
++		prev->hw[OWL_DMADESC_CTRLA] |=
++					llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
+ 	}
+ 
+ 	return next;
+@@ -363,8 +372,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+ 				  struct dma_slave_config *sconfig,
+ 				  bool is_cyclic)
+ {
+-	struct owl_dma_lli_hw *hw = &lli->hw;
+-	u32 mode;
++	u32 mode, ctrlb;
+ 
+ 	mode = OWL_DMA_MODE_PW(0);
+ 
+@@ -405,22 +413,28 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+ 		return -EINVAL;
+ 	}
+ 
+-	hw->next_lli = 0; /* One link list by default */
+-	hw->saddr = src;
+-	hw->daddr = dst;
+-
+-	hw->fcnt = 1; /* Frame count fixed as 1 */
+-	hw->flen = len; /* Max frame length is 1MB */
+-	hw->src_stride = 0;
+-	hw->dst_stride = 0;
+-	hw->ctrla = llc_hw_ctrla(mode,
+-				 OWL_DMA_LLC_SAV_LOAD_NEXT |
+-				 OWL_DMA_LLC_DAV_LOAD_NEXT);
++	lli->hw[OWL_DMADESC_CTRLA] = llc_hw_ctrla(mode,
++						  OWL_DMA_LLC_SAV_LOAD_NEXT |
++						  OWL_DMA_LLC_DAV_LOAD_NEXT);
+ 
+ 	if (is_cyclic)
+-		hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
++		ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
+ 	else
+-		hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
++		ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
++
++	lli->hw[OWL_DMADESC_NEXT_LLI] = 0; /* One link list by default */
++	lli->hw[OWL_DMADESC_SADDR] = src;
++	lli->hw[OWL_DMADESC_DADDR] = dst;
++	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
++	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
++	/*
++	 * Word starts from offset 0xC is shared between frame length
++	 * (max frame length is 1MB) and frame count, where first 20
++	 * bits are for frame length and rest of 12 bits are for frame
++	 * count.
++	 */
++	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
++	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+ 
+ 	return 0;
+ }
+@@ -752,7 +766,7 @@ static u32 owl_dma_getbytes_chan(struct owl_dma_vchan *vchan)
+ 			/* Start from the next active node */
+ 			if (lli->phys == next_lli_phy) {
+ 				list_for_each_entry(lli, &txd->lli_list, node)
+-					bytes += lli->hw.flen;
++					bytes += llc_hw_flen(lli);
+ 				break;
+ 			}
+ 		}
+@@ -783,7 +797,7 @@ static enum dma_status owl_dma_tx_status(struct dma_chan *chan,
+ 	if (vd) {
+ 		txd = to_owl_txd(&vd->tx);
+ 		list_for_each_entry(lli, &txd->lli_list, node)
+-			bytes += lli->hw.flen;
++			bytes += llc_hw_flen(lli);
+ 	} else {
+ 		bytes = owl_dma_getbytes_chan(vchan);
+ 	}
 -- 
 2.7.4
 
