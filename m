@@ -2,229 +2,112 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8309DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B90CC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3972074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:37:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VclUBqVS"
+	by mail.kernel.org (Postfix) with ESMTP id 3A0F920759
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:40:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgGRJhp (ORCPT
+        id S1726446AbgGRJkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:37:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgGRJho (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 05:37:44 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5F2C0619D2;
-        Sat, 18 Jul 2020 02:37:44 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id b9so6490198plx.6;
-        Sat, 18 Jul 2020 02:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=5Mrg12/HL/hoE1p76y3YAFgAZs+CqAOXZGJhSsgV5K0=;
-        b=VclUBqVS8eF0H3eatXjPiM8526M98jWkVSnRjwmQCR7hO9uwqmm5f1f016R9hS3EZg
-         miJT+f9drVrqwMa7xmVDpY6oEskTG3MIS9AV+HwjU+kd3nq531GJLM8q4KzVlns2lsC6
-         aue1N7/hdvNWUZAFVg0CzyiqoO4oV1atHAvshk822RCHbXb1FF4PTSpjZM4U5xzQmC0f
-         p8oMv6IRWdKfVXzWXxf+JdY4NLaWefmal5AZmzEyfuVD/uvDFveX5+PIPpmdRtIrdWxJ
-         4xUcBnv66rzKtkYHDYGXcAV7DpY5aeVH3a2SalsQX88TVfP3vFPcJ3EJkTldn4v2BRAA
-         6K/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=5Mrg12/HL/hoE1p76y3YAFgAZs+CqAOXZGJhSsgV5K0=;
-        b=ucsH9ZKey9qf8bwB0jcBvE+cugLqTzyS132aR7dDMrVMmnV85HkGeTfTfme8Lqj3s5
-         IK5oxoXwMPCKvLdzeHgkPtRN0akhGj+s2us4ZognVhHVz59nEWhcmmwA+p3K6N9VnjQ0
-         /yKt8RcmT1GHJnnj6xeNPgM7lXDSay7ZyX6K/ZgHanRx7w+Wq2wIcZcez9fiwqcEPsdz
-         XK2oeobcwk/smpAM6bppSQNmTVKNMq+uA8iMBoDhFj7+71YVLe/RiMwbsuJLQ+vH7lBN
-         KlCgMBwrHfNSZtNpWKt3X8taUvZUrOWW5plX3L3l+V+RLBmtbAIsKmadEw6A+PsMUMub
-         wS7A==
-X-Gm-Message-State: AOAM532+0dhalg982wPSFn0ejR9/rHAAsu/y93SA/kGreErLTTdrq4zS
-        QToQxp66HJIA1S+mNCS//N4=
-X-Google-Smtp-Source: ABdhPJzIdLn3TVe6xrExcAZ/VE2xHbH8kBHXPdtOsuz7cLJLczqt4+XptS/Co748Wvmme6xStdPpqg==
-X-Received: by 2002:a17:902:fe04:: with SMTP id g4mr10730780plj.66.1595065064040;
-        Sat, 18 Jul 2020 02:37:44 -0700 (PDT)
-Received: from blackclown ([103.88.82.25])
-        by smtp.gmail.com with ESMTPSA id d4sm10086129pgf.9.2020.07.18.02.37.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jul 2020 02:37:43 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 15:07:30 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     hare@suse.com, jejb@linux.ibm.com, martin.peterson@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: aic7xxx: Remove pci-dma-compat wrapper APIs.
-Message-ID: <20200718093730.GA1854@blackclown>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sat, 18 Jul 2020 05:40:02 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:53172 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726179AbgGRJkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 05:40:02 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP2ZZwxJfPMkAAA--.893S2;
+        Sat, 18 Jul 2020 17:39:37 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v5] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for bridge_class_quirk()
+Date:   Sat, 18 Jul 2020 17:39:36 +0800
+Message-Id: <1595065176-460-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxP2ZZwxJfPMkAAA--.893S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr17tFykJF1xCr1kZr18Xwb_yoW8uF4Dpa
+        45Aa17KF4FqFWDAw1DWrWDWa45uF9xCa48Ca9a9w129asxXa4UWrZrKa4Fvr4UJrWkXay8
+        XayDCw48Ca1Dur7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+        8cxan2IY04v7MxkIecxEwVAFwVW8uwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+        WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+        67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
+        IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1l
+        IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+        C2KfnxnUUI43ZEXa7VUjaLvtUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+According to the datasheet of Loongson LS7A bridge chip, the old version
+of Loongson LS7A PCIE port has a wrong value about PCI class which is
+0x060000, the correct value should be 0x060400, this bug can be fixed by
+"dev->class = PCI_CLASS_BRIDGE_PCI << 8;" at the software level. As far
+as I know, the latest version of LS7A has already fixed the value at the
+hardware level.
 
---cWoXeonUoKmBZSoM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In order to maintain downward compatibility, use DECLARE_PCI_FIXUP_EARLY
+instead of DECLARE_PCI_FIXUP_HEADER for bridge_class_quirk() to fix it as
+early as possible.
 
-The legacy API wrappers in include/linux/pci-dma-compat.h
-should go away as it creates unnecessary midlayering
-for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
-APIs directly.
+Otherwise, in the function pci_setup_device(), the related code about
+"dev->class" such as "class = dev->class >> 8;" and "dev->transparent
+= ((dev->class & 0xff) == 1);" maybe get wrong value without EARLY fixup.
 
-The patch has been generated with the coccinelle script below
-and has been hand modified to replace GFP_ with correct flag.
-
-Compile-tested only.
-
-@@@@
-- PCI_DMA_BIDIRECTIONAL
-+ DMA_BIDIRECTIONAL
-
-@@@@
-- PCI_DMA_TODEVICE
-+ DMA_TO_DEVICE
-
-@@@@
-- PCI_DMA_FROMDEVICE
-+ DMA_FROM_DEVICE
-
-@@@@
-- PCI_DMA_NONE
-+ DMA_NONE
-
-@@ expression E1, E2, E3; @@
-- pci_alloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3; @@
-- pci_zalloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_free_consistent(E1, E2, E3, E4)
-+ dma_free_coherent(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_single(E1, E2, E3, E4)
-+ dma_map_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_single(E1, E2, E3, E4)
-+ dma_unmap_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4, E5; @@
-- pci_map_page(E1, E2, E3, E4, E5)
-+ dma_map_page(&E1->dev, E2, E3, E4, E5)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_page(E1, E2, E3, E4)
-+ dma_unmap_page(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_sg(E1, E2, E3, E4)
-+ dma_map_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_sg(E1, E2, E3, E4)
-+ dma_unmap_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
-+ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_device(E1, E2, E3, E4)
-+ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
-+ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
-+ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2; @@
-- pci_dma_mapping_error(E1, E2)
-+ dma_mapping_error(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_consistent_dma_mask(E1, E2)
-+ dma_set_coherent_mask(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_dma_mask(E1, E2)
-+ dma_set_mask(&E1->dev, E2)
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/scsi/aic7xxx/aic79xx_osm.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/aic7xxx/aic79xx_osm.c b/drivers/scsi/aic7xxx/aic7=
-9xx_osm.c
-index 3782a20d5888..2998d70e1987 100644
---- a/drivers/scsi/aic7xxx/aic79xx_osm.c
-+++ b/drivers/scsi/aic7xxx/aic79xx_osm.c
-@@ -952,8 +952,8 @@ int
- ahd_dmamem_alloc(struct ahd_softc *ahd, bus_dma_tag_t dmat, void** vaddr,
- 		 int flags, bus_dmamap_t *mapp)
+v2: Modify the patch subject used with lower case "loongson"
+
+v3: Update the commit message
+
+v4: Update the commit message to describe the bug
+
+v5: Remove "due to" in the commit message suggested by Sergei Shtylyov
+
+ drivers/pci/controller/pci-loongson.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index 459009c..58b862a 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
  {
--	*vaddr =3D pci_alloc_consistent(ahd->dev_softc,
--				      dmat->maxsize, mapp);
-+	*vaddr =3D dma_alloc_coherent(&ahd->dev_softc->dev, dmat->maxsize, mapp,
-+				    GFP_ATOMIC);
- 	if (*vaddr =3D=3D NULL)
- 		return (ENOMEM);
- 	return(0);
-@@ -963,8 +963,7 @@ void
- ahd_dmamem_free(struct ahd_softc *ahd, bus_dma_tag_t dmat,
- 		void* vaddr, bus_dmamap_t map)
- {
--	pci_free_consistent(ahd->dev_softc, dmat->maxsize,
--			    vaddr, map);
-+	dma_free_coherent(&ahd->dev_softc->dev, dmat->maxsize, vaddr, map);
+ 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
  }
-=20
- int
---=20
-2.17.1
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_0, bridge_class_quirk);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_1, bridge_class_quirk);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_2, bridge_class_quirk);
+ 
+ static void system_bus_quirk(struct pci_dev *pdev)
+-- 
+2.1.0
 
-
---cWoXeonUoKmBZSoM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8SwtoACgkQ+gRsbIfe
-74571xAAsWKxCds8TztPG6rsT6k4eG9fyhbdAQNUdPqKfXGVi6OtA0ViAgVyUMtg
-SyxF6SYuGQIyv6Y37ehfcFjgeMuf5wHEDgPgF5Nl5O7eJtssji2DpRzT2N9yC39A
-qZeWjOz5efNApgk8BYpQ/h6LKZVfmpFVGaVt7WOVfbTrwg8dr8BqdU3k5bsudSkW
-7R749fKfRZatZsJD9DRo/o9G544hzCXZVR9iSzpgVCUSMBdx+1yKN9jthNkBPav1
-2tdRW169wFif02WKybsuKBrxZMm4BlZIY6QbaLD/o2qYNETe4O6uPhN1wJUEWohB
-5CW90Y6d1kpIMl/41Cz3SpI1AgJVW8n2oCURu9ijYgNH3OV/+526krjE8w5jipuK
-YjAHzpUOtu9ua+PvjdBsKLHo7g17O4U2qvDTUfMzO03/Tn969aT/2kjEW7cgK6Rw
-VLazCvQi5zTE3J5zTtDRRhIq9L9fjb2kR9XpX7bbBMN0Tu41B5kJo9mg2g4dBsZa
-uxVzUYwb8muKzGVZOz/83xT4C/D6O9mnjc4hQY16ZAXrvErRhq6aHG3usru9avO9
-DHniSlZRvlurVOimWpJK3QHOX/i5nH9nCuFkh300qSmO7Ns2KyiI3zZ8TQ2+GUpo
-cGy4kv50TAnJlWYt0/Exjq06P1pLHFPMtX82uSMafuCvvuexeqU=
-=a7X8
------END PGP SIGNATURE-----
-
---cWoXeonUoKmBZSoM--
