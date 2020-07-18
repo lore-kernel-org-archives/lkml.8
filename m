@@ -2,96 +2,131 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09169C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A443BC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBFD22074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2712074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595054788;
+	bh=cQVAtXCp05Y5pu1NLBnjCDHoEK5RO8u7KrRXc0+x69c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yFZvZXeDCwIab69y/AuJHi4EuP33VSjRseU3ECU9RAQ/1IJZ1wG53C0iSRPZVfyOz
+	 mRM7oh0WxZOFDzHkqsVbXhYpriTaxULj2V51VTodJuDyxYhS0gV7N2SJxZxSBEjHxW
+	 FYQIAtccmHKWJAD77shLjkAEDAMOuV0cq86ebR3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbgGRGjB (ORCPT
+        id S1728506AbgGRGq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:39:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30319 "EHLO mga09.intel.com"
+        Sat, 18 Jul 2020 02:46:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbgGRGjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 02:39:00 -0400
-IronPort-SDR: VBG67egJ9LbN53sa4iL5V6/4uBaZBCqwsqPvXY92LRqJWSDSg8WM3EOb2wNvaPsT674WM//Tnj
- xmMBSX/GChYA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="151079552"
-X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
-   d="scan'208";a="151079552"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 23:39:00 -0700
-IronPort-SDR: TshmekDtA3lv29or1uv6qeiETKNvK92+6aKC/H/JBGvbMLI+zj+9hscec/rKtRRuz7H13eO27l
- gx5u7c+d7Awg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
-   d="scan'208";a="486690945"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Jul 2020 23:38:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/7]  KVM: x86: Tracepoint improvements and fixes
-Date:   Fri, 17 Jul 2020 23:38:47 -0700
-Message-Id: <20200718063854.16017-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        id S1725983AbgGRGq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 02:46:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B20D2074B;
+        Sat, 18 Jul 2020 06:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595054786;
+        bh=cQVAtXCp05Y5pu1NLBnjCDHoEK5RO8u7KrRXc0+x69c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mf59OVyrh5LrVxT/XtprL0bF7QFKAHLsXz9/fCDE8J4du6gB/aXFEklFa6DZF5ecV
+         8rFLE06B20SmX68R5WXeY9fNJ5cHq396D5HoGnNLHVCG6spSqz3CzbTzc8SxjdmzyU
+         VHxNXHH6P0pl31Uy2TgfQwjEBeL95hpB4yiudHEc=
+Date:   Sat, 18 Jul 2020 08:46:23 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Eads, Gage" <gage.eads@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        "Topel, Bjorn" <bjorn.topel@intel.com>
+Subject: Re: [PATCH 01/20] dlb2: add skeleton for DLB 2.0 driver
+Message-ID: <20200718064623.GA245355@kroah.com>
+References: <20200712134331.8169-1-gage.eads@intel.com>
+ <20200712134331.8169-2-gage.eads@intel.com>
+ <20200712155631.GB186665@kroah.com>
+ <SN6PR11MB25742456A7DA3C99F88FA77FF67C0@SN6PR11MB2574.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR11MB25742456A7DA3C99F88FA77FF67C0@SN6PR11MB2574.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Various improvements and fixes for the kvm_entry, kvm_exit and
-kvm_nested_vmexit tracepoints.
+On Fri, Jul 17, 2020 at 06:19:14PM +0000, Eads, Gage wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Sent: Sunday, July 12, 2020 10:57 AM
+> > To: Eads, Gage <gage.eads@intel.com>
+> > Cc: linux-kernel@vger.kernel.org; arnd@arndb.de; Karlsson, Magnus
+> > <magnus.karlsson@intel.com>; Topel, Bjorn <bjorn.topel@intel.com>
+> > Subject: Re: [PATCH 01/20] dlb2: add skeleton for DLB 2.0 driver
+> > 
+> > On Sun, Jul 12, 2020 at 08:43:12AM -0500, Gage Eads wrote:
+> > > +config INTEL_DLB2
+> > > +       tristate "Intel(R) Dynamic Load Balancer 2.0 Driver"
+> > > +       depends on 64BIT && PCI && X86
+> > 
+> > Why just that platform?  What about CONFIG_TEST for everything else?
+> 
+> This device will only appear on an x86 platform. CONFIG_COMPILE_TEST won't work, since the driver uses the x86-only function iosubmit_cmds512().
 
-  1. Capture the guest's RIP during kvm_entry for obvious reasons.
+Please wrap your lines correctly...
 
-  2. Extend kvm_exit to report the same info as kvm_nested_vmexit, and
-     macrofy its definition to reuse it verbatim for nested exits.
+Anyway, there is no config option for that function that you can trigger
+off of?
 
-  3. Stop passing in params to kvm_nested_vmexit, and instead use the
-     same approach (and now code) as kvm_exit where the tracepoint uses a
-     dedicated kvm_x86_ops hook to retrieve the info.
+> > > +       help
+> > > +         This driver supports the Intel(R) Dynamic Load Balancer 2.0 (DLB 2.0)
+> > > +         device.
+> > 
+> > Are you sure you need the (R) in Kconfig texts everywhere?
+> 
+> The second is probably overkill. Just the first one is required.
 
-  4. Stop reading GUEST_RIP, EXIT_QUAL, INTR_INFO, and ERROR_CODE on
-     every VM-Exit from L2 (some of this comes in #3).  This saves ~100
-     cycles (150+ with retpolines) on VM-Exits from L2 that are handled
-     by L0, e.g. hardware interrupts.
+Really?  I would just drop it.  Unless you get a signed-off-by from a
+lawyer saying it is required :)
 
-Sean Christopherson (7):
-  KVM: x86: Add RIP to the kvm_entry, i.e. VM-Enter, tracepoint
-  KVM: x86: Read guest RIP from within the kvm_nested_vmexit tracepoint
-  KVM: VMX: Add a helper to test for a valid error code given an intr
-    info
-  KVM: x86: Add intr/vectoring info and error code to kvm_exit
-    tracepoint
-  KVM: x86: Add macro wrapper for defining kvm_exit tracepoint
-  KVM: x86: Use common definition for kvm_nested_vmexit tracepoint
-  KVM: nVMX: Read EXIT_QUAL and INTR_INFO only when needed for nested
-    exit
+> > And a bit more info here would be nice, as no one knows if they have this or
+> > not, right?
+> 
+> Intel hasn't yet announced more information that I can include here. For now, "lspci -d 8086:2710" will tell the user if this device is present.
 
- arch/x86/include/asm/kvm_host.h |   7 ++-
- arch/x86/kvm/svm/svm.c          |  16 ++---
- arch/x86/kvm/trace.h            | 107 +++++++++++++-------------------
- arch/x86/kvm/vmx/nested.c       |  14 ++---
- arch/x86/kvm/vmx/vmcs.h         |   7 +++
- arch/x86/kvm/vmx/vmx.c          |  18 +++++-
- arch/x86/kvm/x86.c              |   2 +-
- 7 files changed, 86 insertions(+), 85 deletions(-)
+That's fine, but we can't take a 1 sentance help text, that means
+nothing.
 
--- 
-2.26.0
+> > > --- /dev/null
+> > > +++ b/drivers/misc/dlb2/dlb2_hw_types.h
+> > > @@ -0,0 +1,29 @@
+> > > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+> > 
+> > Why dual licensed?  I thought that Intel told me they were not going to do
+> > that anymore for any kernel code going forward as it was just such a pain and
+> > never actually helped anything.  Has that changed?
+> > 
+> 
+> The driver is mostly GPLv2-only, but a subset constitutes a "hardware access library" that is almost completely OS-independent. "almost" because it has calls to non-GPL symbols like kmalloc() and kfree(). This dual-licensed portion can be ported to other environments that need the more permissive BSD license.
 
+Then put that "OS independant" part as a separate file, with a separate
+license.  You all know how to do this properly, don't mix this stuff up.
+
+But even then, I would drop such a library as that's not going to make a
+good Linux driver, we do not like, or need, such things in the kernel.
+
+> For the broader policy question, Intel's open source team will get back to you on this.
+
+Wonderful, when will that happen?
+
+thanks,
+
+greg k-h
