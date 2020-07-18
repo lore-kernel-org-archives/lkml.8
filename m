@@ -2,126 +2,140 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49CAC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8166C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7D32076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:28:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNKJrMPr"
+	by mail.kernel.org (Postfix) with ESMTP id A02202080D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595086264;
+	bh=1wuiIPUiXSmhjJ5LdQ20PRNh28jticm8GjYJ/lQO3C4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DpT2yPGtrUkC+lYY8P+KmSGvjDW51lv4dVgyIRpG048vLHqPeK3O5cDrHVs9bJLxh
+	 1ZHfHk+Ah+8ETpg0RlfPvoLB7I+jyD9nSn0E7NiAcw56tlz6AvRIkV1K7fEsvjQP9A
+	 LlSGxOVPALC7W0bu4fZvwoZZ3ZtEL3AIjg/MssMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgGRP2d (ORCPT
+        id S1728083AbgGRPbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 11:28:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgGRP2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 11:28:32 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65514C0619D2;
-        Sat, 18 Jul 2020 08:28:32 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t15so7770015pjq.5;
-        Sat, 18 Jul 2020 08:28:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vLBlOX+xCLFwdjKITjGT3edrjFz/FA4boYyh19CkJFA=;
-        b=qNKJrMPr9yz1jbbMLZbNdtaHYc8S4EHw8na7QRR9KksofNV4GcRJWNzT5F9Z7sh0rH
-         ukBiGKYh81DAU2gDQfKQE5qEFrQLWcbgA2+dazm7wTPdkcSTbfy1yJOO15Qzij2ob1xo
-         gRj/61bmmX4do0FvyItVowGSAfQkRxuLtf2mMVft1FhfUyOqu0NsqvJ4aeiZb3KvUl4M
-         NxcFL+x8bG21OFcKpLCGhlk7ttIM2ML5tSgT8WbepY+ghbLSemqxqTZL+v4RQmIl8Wvd
-         XtgOEEVpmeBOr1iR59m+yY3Yk1x5uDgwG9zxU4DlpwethOFjl4UMuTZ42xuYhUe58FKa
-         0hgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vLBlOX+xCLFwdjKITjGT3edrjFz/FA4boYyh19CkJFA=;
-        b=g19DssC31uYlJoYm+0LKLRCtNtmw2RyLRzg0neZfmqsZA5XwbUAF8pjSLeoc1gysqb
-         mweOYgfG0kcYoI04jzvrXdwFiEqAFPt/CO90v2nIVbLyvA8cskdaokUcc9+bE1Jr+sVw
-         Fu+LK0Ej5z4Nto0U/bGicY58rRv/igkAOHTQRLGw0jBu3Dft32kBWkHV/7BMSEbDs7Ww
-         tggnZZNPmwGqZXGyTRjqLeSaVeu/5R2/NuwKhRpQfxmxOe/osg/WPfnepCxu3fA4ZJxa
-         lCGN/Eo1YhAc7Z/XJ0is2F/Uf/+5eMQWO9UQaFwpYdoSWdFh5qip755lFTbtYDZXz8w+
-         gn8w==
-X-Gm-Message-State: AOAM530yqO3eXcgbIe1Uc9jvj1zxoqcEK+Cad1SAduzMYMnUDSySKoqB
-        DQp1rTOz/bOUZP+xvHv+Np0=
-X-Google-Smtp-Source: ABdhPJxOu1A/jf62yQLZrubZtMFq2ZrWFJbfkEiZVzR7IiTNpim+NYbtMllpN4nyoyihT0LM/6oeAw==
-X-Received: by 2002:a17:90a:43c3:: with SMTP id r61mr16006132pjg.216.1595086111658;
-        Sat, 18 Jul 2020 08:28:31 -0700 (PDT)
-Received: from blackclown ([103.88.82.25])
-        by smtp.gmail.com with ESMTPSA id j5sm9898096pgi.42.2020.07.18.08.28.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jul 2020 08:28:31 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 20:58:26 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] staging: rts5208: rtsx: Replace depracated MSI API
-Message-ID: <20200718152826.GE26780@blackclown>
-References: <20200718131856.GA10837@blackclown>
+        Sat, 18 Jul 2020 11:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbgGRPbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 11:31:03 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44A7C2076A;
+        Sat, 18 Jul 2020 15:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595086262;
+        bh=1wuiIPUiXSmhjJ5LdQ20PRNh28jticm8GjYJ/lQO3C4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fMTm3kuucoTH3NtXiv5VTUCkKBXs3MWRPXJRPJw3UaljOi4yp7wXS33ggotopxQ/L
+         p1RM113L0ROPs434YgDq8uwqjNSnRZWjCyVrDLbeVBRefDpZOvwirW5r8ExBsnfcuq
+         GbDHpRL2WUUkfzVz1lLDYKMlJ3Yooe/bYh06IaH4=
+Date:   Sat, 18 Jul 2020 16:30:58 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, Rachna Patil <rachna@ti.com>
+Subject: Re: [PATCH 01/30] iio: adc: ti_am335x_adc: Remove a couple of
+ unused 'read' variables
+Message-ID: <20200718163058.672b6362@archlinux>
+In-Reply-To: <20200717165538.3275050-2-lee.jones@linaro.org>
+References: <20200717165538.3275050-1-lee.jones@linaro.org>
+        <20200717165538.3275050-2-lee.jones@linaro.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200718131856.GA10837@blackclown>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 06:48:56PM +0530, Suraj Upadhyay wrote:
-> Replace depracated pci_enable_msi with pci_alloc_irq_vectors.
-> 
-> Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
-> ---
->  drivers/staging/rts5208/rtsx.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
-> index e28e162d004e..adc80e766412 100644
-> --- a/drivers/staging/rts5208/rtsx.c
-> +++ b/drivers/staging/rts5208/rtsx.c
-> @@ -310,7 +310,7 @@ static int __maybe_unused rtsx_resume(struct device *dev_d)
->  	pci_set_master(pci);
->  
->  	if (chip->msi_en) {
-> -		if (pci_enable_msi(pci) < 0)
-> +		if (pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_MSI) < 0)
-The conversion is buggy, It changes variable name.
+On Fri, 17 Jul 2020 17:55:09 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
 
->  			chip->msi_en = 0;
->  	}
->  
-> @@ -881,7 +881,7 @@ static int rtsx_probe(struct pci_dev *pci,
->  	dev_info(&pci->dev, "pci->irq = %d\n", pci->irq);
->  
->  	if (dev->chip->msi_en) {
-> -		if (pci_enable_msi(pci) < 0)
-> +		if (pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_MSI) < 0)
-
-This has the same mistake.
-
->  			dev->chip->msi_en = 0;
->  	}
->  
-> -- 
-> 2.17.1
-> 
-
-Resending this patch.
-I hope this wasn't an annoyance.
+> Fixes the following W=3D1 kernel build warning(s):
+>=20
+>  drivers/iio/adc/ti_am335x_adc.c: In function =E2=80=98tiadc_buffer_preen=
+able=E2=80=99:
+>  drivers/iio/adc/ti_am335x_adc.c:297:21: warning: variable =E2=80=98read=
+=E2=80=99 set but not used [-Wunused-but-set-variable]
+>  297 | int i, fifo1count, read;
+>  | ^~~~
+>  drivers/iio/adc/ti_am335x_adc.c: In function =E2=80=98tiadc_buffer_predi=
+sable=E2=80=99:
+>  drivers/iio/adc/ti_am335x_adc.c:346:21: warning: variable =E2=80=98read=
+=E2=80=99 set but not used [-Wunused-but-set-variable]
+>  346 | int fifo1count, i, read;
+>  | ^~~~
+>=20
+> Cc: Rachna Patil <rachna@ti.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Applied to the togreg branch of iio.git which will get pushed out as testin=
+g for
+the autobuilders to poke at these changes.
+Still time or anyone one else to comment. I'm picking these up as they are
+all noops and appear straight forward.
 
 Thanks,
 
-Suraj Upadhyay
+Jonathan
 
+> ---
+>  drivers/iio/adc/ti_am335x_adc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_=
+adc.c
+> index 9d984f2a8ba74..93b67bb165044 100644
+> --- a/drivers/iio/adc/ti_am335x_adc.c
+> +++ b/drivers/iio/adc/ti_am335x_adc.c
+> @@ -294,7 +294,7 @@ static int tiadc_start_dma(struct iio_dev *indio_dev)
+>  static int tiadc_buffer_preenable(struct iio_dev *indio_dev)
+>  {
+>  	struct tiadc_device *adc_dev =3D iio_priv(indio_dev);
+> -	int i, fifo1count, read;
+> +	int i, fifo1count;
+> =20
+>  	tiadc_writel(adc_dev, REG_IRQCLR, (IRQENB_FIFO1THRES |
+>  				IRQENB_FIFO1OVRRUN |
+> @@ -303,7 +303,7 @@ static int tiadc_buffer_preenable(struct iio_dev *ind=
+io_dev)
+>  	/* Flush FIFO. Needed in corner cases in simultaneous tsc/adc use */
+>  	fifo1count =3D tiadc_readl(adc_dev, REG_FIFO1CNT);
+>  	for (i =3D 0; i < fifo1count; i++)
+> -		read =3D tiadc_readl(adc_dev, REG_FIFO1);
+> +		tiadc_readl(adc_dev, REG_FIFO1);
+> =20
+>  	return 0;
+>  }
+> @@ -343,7 +343,7 @@ static int tiadc_buffer_predisable(struct iio_dev *in=
+dio_dev)
+>  {
+>  	struct tiadc_device *adc_dev =3D iio_priv(indio_dev);
+>  	struct tiadc_dma *dma =3D &adc_dev->dma;
+> -	int fifo1count, i, read;
+> +	int fifo1count, i;
+> =20
+>  	tiadc_writel(adc_dev, REG_IRQCLR, (IRQENB_FIFO1THRES |
+>  				IRQENB_FIFO1OVRRUN | IRQENB_FIFO1UNDRFLW));
+> @@ -358,7 +358,7 @@ static int tiadc_buffer_predisable(struct iio_dev *in=
+dio_dev)
+>  	/* Flush FIFO of leftover data in the time it takes to disable adc */
+>  	fifo1count =3D tiadc_readl(adc_dev, REG_FIFO1CNT);
+>  	for (i =3D 0; i < fifo1count; i++)
+> -		read =3D tiadc_readl(adc_dev, REG_FIFO1);
+> +		tiadc_readl(adc_dev, REG_FIFO1);
+> =20
+>  	return 0;
+>  }
 
