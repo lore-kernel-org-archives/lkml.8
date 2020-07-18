@@ -2,120 +2,135 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280E5C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BD0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 057902083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595051675;
-	bh=bPNSxVMfse13AvxGlLLZIw7R+pi4nVlMn0Jl7sLXFpM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OkBOZSxnYv2rGL9hfidBmRHbusP0VBtkfJ98VqZLhn/6xImQ2+eKDuQDu5Y5g14et
-	 KVeG7ahB06bQjTr7T0r7CtMIzmgMsx6dcpp9k1lysogTWmM3dIpt9GJ/jmpvWezl2H
-	 j2+qmiBupp3EhpnSBz2InRPKXa9jib4MNcz2bv8w=
+	by mail.kernel.org (Postfix) with ESMTP id 5BFD6207FB
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="i02VSGc9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbgGRFye (ORCPT
+        id S1728768AbgGRF4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:54:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51162 "EHLO mail.kernel.org"
+        Sat, 18 Jul 2020 01:56:32 -0400
+Received: from mout.web.de ([212.227.15.3]:42195 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728045AbgGRFyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:54:33 -0400
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B58AC208E4;
-        Sat, 18 Jul 2020 05:54:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595051672;
-        bh=bPNSxVMfse13AvxGlLLZIw7R+pi4nVlMn0Jl7sLXFpM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BzPhhErGy2FBuNLHaD1AgUbWThJJkAreGMkQSuRHrnNiDKdDBd5Qmm48rf3w0fMKa
-         8GsCQV3sFR0g8wedaR1rVs+8UQ1fYeC1NPCpap+i5alVmWykSAeZ07N2lEvlOgA0lc
-         67g7KUgwvKQuN2NLYI53l1bwKdZ3Xv8bHry+4hZo=
-Received: by mail-oi1-f182.google.com with SMTP id w17so9870260oie.6;
-        Fri, 17 Jul 2020 22:54:32 -0700 (PDT)
-X-Gm-Message-State: AOAM533g1RvbBEBT7ojOkhNfFGoOqX4LWdV1rHijAUUjUaG23rM+6rZp
-        vF4I7ue+NWZAoWu+1FR+Mgu2G/xUEFi/1++vTnk=
-X-Google-Smtp-Source: ABdhPJzZ4NEtZfmmbnS+DfeLeAQt/womAFEBD7627IvgU9OJ3LHDBrAHbhh/sf/h/5YmTI3PYH2HhZbTKN3cyX0ygYM=
-X-Received: by 2002:aca:d643:: with SMTP id n64mr10242000oig.33.1595051671965;
- Fri, 17 Jul 2020 22:54:31 -0700 (PDT)
+        id S1726518AbgGRF4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 01:56:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1595051781;
+        bh=e8QEKjxgVOB4Tc+3b/KVzzEg9Z9l1jW6d/zTFip2qtk=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=i02VSGc9ba5W7cCQmSc+1h3gU/wLvs58xkVksQMYtF34BzHOAmHngzuzKE7O5+qNf
+         Ct2Y+a74xHxuP6YSOIE53bou5nElcx+vrj153V6K7WA/n93Rg+XN76AiorNim4f8S3
+         SpEVJyEHzqrEemYYdrYCHT9mCWhImE9+aLwSbjxc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.120.168]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mvbms-1knwhv2qOs-00sbjI; Sat, 18
+ Jul 2020 07:56:21 +0200
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [v2 1/4] coccinelle: api: extend memdup_user transformation with
+ GFP_USER
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Julia Lawall <julia.lawall@inria.fr>,
+        Denis Efremov <efremov@linux.com>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+Message-ID: <0b9f2c58-e124-22d2-d91d-62a6e831c880@web.de>
+Date:   Sat, 18 Jul 2020 07:56:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200709132807.32232-1-ardb@kernel.org>
-In-Reply-To: <20200709132807.32232-1-ardb@kernel.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 18 Jul 2020 08:54:20 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXGHDS7PnuPsCnHWGDFdtcaJUuXboZUZQwowzw0LfrQ+pw@mail.gmail.com>
-Message-ID: <CAMj1kXGHDS7PnuPsCnHWGDFdtcaJUuXboZUZQwowzw0LfrQ+pw@mail.gmail.com>
-Subject: Re: [GIT PULL] EFI fixes for v5.8-rc
-To:     linux-efi <linux-efi@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:lBF9CHro4HH8Xgnfi7mVEyT4v+iT2+U83uVQ2rSQJAeVhX3dGdX
+ y4KWJ8M+Hv79xU7Woez+mddOryXD9dmFhFbxjh97YfWV8wIc1/ni4XmArkWk5cM/WEcqhxu
+ 6NkPSGZmU20+4uXGp4xipAxwqZv1gJmuH1+RPbIVT1QSdjjl1qxl6L9k26gvdTXcqnS67wD
+ B1zPSdzCNdo5z4Ltx43uA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kWAZzIxeGLA=:DOdUhXKTf/5Xiz5JER0x4R
+ VlAcpfzAIJ2Pm1R2qez/ZByOFgdaM6LHG7TVmTUddS8hMrCg7wcEF7oBUN8Wej4Rw7Jj98+Q0
+ DLtmUtEpZwOWsnPq1JN94WMN2JlEN7fvxH6Sxmd7ZuoH+oTZG3ya94k0/gUQEqmUzDLcBxTlU
+ nuWvgdRMW+XvSVWjopTvL2b/002r5k0DXZMHERqkUBBrX/kmHfTX/24pqo9IVyF3RkpVs1rf1
+ 9grN7J2rZiyNrGMNf+NzPG+5DKzG6IBPIDpzmUJosPAmvgkuUZRxEgAlp3VKiMvHDYfmkzwu8
+ tLKW6MICZzLFC1nrZfSsD/Md2LS0IJ8OFks1+JBWtU0E9Z/d84xcKs6uhdj84BBVGPyoXnwi3
+ iDceslnTsHpJ5KAI4Fm5oNwPzz3cSPV3aq21UHCigY1Q1FELzjmgQHcGYpJw3FmCIC+ibOp36
+ ONeKbqPdXMu2ed68O107IBnONc37f0d9lahcHL4nJuVif3ale/DPnqMCl8EmDGiQrkzgQnh4w
+ zmsQrPcVqjFrg1+WIsurN4Uk6X3kITcnrMMBplXmewkm28EA3iiwrQPjJr+2KtMy69Krb0hhQ
+ 1S+PpKHBTX1kNidYAw8+pGlivhMFCEUTnacYFxiWvlCJm+uFMDlAWlLotzbuWvm1NIegSlggb
+ cQPeDmY8opdgCXdKbbNfjHFp1qNbwANTk39iHaptICbW/+1As9xAnmaOEZQ7mgsz41nQ4kqmk
+ TZhjBW9svo9DJrWUowQcMsB1K1Gz9eEW/rNB/XkzyLwdz9n+OCjABm9Nb/H3nrG5UtDSQ7/PO
+ gBivfldedtKnFYwG2k/tCrwb1XevQIBws9mgPYPViwPj4W9T6/MOGOw7/hXgFn02OO3MVUPj6
+ gtp5CLnBkXRN6SnaFA5mUI+vcsDCpzTrG10uCvau0kY32Sgx+zAkzca4YmJbVrtxXjGl0JO2Q
+ +dmjlV43IkpUbsY2htcFvskzTMdRd8H+rd5pEZ/3Pmn6VWPRKeR5h8rw8fk3Vo3cx2piut21m
+ 8L9A1HlGYJm6J1oHwhDT/W42a/AuVzQmT9IOFILhsFbnBIpK7MDa/MjYhMMw6Q5+zqPoXnD9P
+ ifcNyMh7cJfYxVmWATCPfn2OkfyzysnmO95Qx8eIemKFi7Pj7Lx578ATjEaiydxFMShLUNTI+
+ nUP5Y+agOZ1EL416LdU3h6V7jdKndbrNF0m/2mc1/2ZJOjmeB07zj+Ff9MYQYCSf5nV/5nvIb
+ P1BRLwrPqyHjEid79uydcW3d25eRJ8pXD0oTI+g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 at 16:28, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> The following changes since commit 2a55280a3675203496d302463b941834228b9875:
->
->   efi/libstub: arm: Print CPU boot mode and MMU state at boot (2020-06-17 15:29:11 +0200)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent-for-v5.8-rc4
->
-> for you to fetch changes up to 769e0fe1171e95d90ea5a2d6d0b2bdc7d5d2e7b2:
->
->   efi: Revert "efi/x86: Fix build with gcc 4" (2020-07-09 10:14:29 +0300)
->
-> ----------------------------------------------------------------
-> EFI fixes for v5.8-rc4:
-> - Fix the layering violation in the use of the EFI runtime services
->   availability mask in users of the 'efivars' abstraction
-> - Revert build fix for GCC v4.8 which is no longer supported
-> - Some fixes for build issues found by Atish while working on RISC-V support
-> - Avoid --whole-archive when linking the stub on arm64
-> - Some x86 EFI stub cleanups from Arvind
->
-> ----------------------------------------------------------------
-> Ard Biesheuvel (2):
->       efi/efivars: Expose RT service availability via efivars abstraction
->       efi: Revert "efi/x86: Fix build with gcc 4"
->
-> Arvind Sankar (2):
->       efi/x86: Remove unused variables
->       efi/x86: Only copy upto the end of setup_header
->
-> Atish Patra (2):
->       efi/libstub: Fix gcc error around __umoddi3 for 32 bit builds
->       efi/libstub: Move the function prototypes to header file
->
-> Masahiro Yamada (1):
->       efi/libstub/arm64: link stub lib.a conditionally
->
->  arch/arm64/Makefile                       |  2 +-
->  drivers/firmware/efi/efi-pstore.c         |  5 +----
->  drivers/firmware/efi/efi.c                | 12 ++++++++----
->  drivers/firmware/efi/efivars.c            |  5 +----
->  drivers/firmware/efi/libstub/Makefile     |  3 +--
->  drivers/firmware/efi/libstub/alignedmem.c |  2 +-
->  drivers/firmware/efi/libstub/efi-stub.c   | 17 -----------------
->  drivers/firmware/efi/libstub/efistub.h    | 16 ++++++++++++++++
->  drivers/firmware/efi/libstub/x86-stub.c   |  8 ++++----
->  drivers/firmware/efi/vars.c               |  6 ++++++
->  fs/efivarfs/super.c                       |  6 +++---
->  include/linux/efi.h                       |  1 +
->  12 files changed, 43 insertions(+), 40 deletions(-)
+> Applied.
 
-Ping?
+Do you care for patch review concerns according to this SmPL script adjustment?
+
+* https://lore.kernel.org/cocci/5c0dae88-e172-3ba6-f86c-d1a6238bb4c4@web.de/
+  https://lkml.org/lkml/2020/6/9/568
+
+* https://lore.kernel.org/cocci/c3464cad-e567-9ef5-b4e3-a01e3b11120b@web.de/
+  https://lkml.org/lkml/2020/6/8/637
+
+Regards,
+Markus
