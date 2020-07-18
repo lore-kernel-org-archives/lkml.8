@@ -2,145 +2,163 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC06C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A95C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6642070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:06:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="a1k3Xi0l"
+	by mail.kernel.org (Postfix) with ESMTP id 1646120672
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgGROGD (ORCPT
+        id S1726945AbgGROPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 10:06:03 -0400
-Received: from m15114.mail.126.com ([220.181.15.114]:58765 "EHLO
-        m15114.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbgGROGD (ORCPT
+        Sat, 18 Jul 2020 10:15:12 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:60592 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726574AbgGROPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 10:06:03 -0400
-X-Greylist: delayed 2067 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Jul 2020 10:05:34 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=+amZxSkpaPypl7S/BB
-        uMS43KAmapgCGLbADtQmMNmIU=; b=a1k3Xi0lsO1K2GRFtDo/ic08FjRs9t7nTW
-        DwslJ8eQw91bwFptXF4QO83gJ5Hbn1ENxtjOQ3O5ILoDM6kbMPeVuyFGzX4KfbXP
-        U5hVLZw0dtcBgmg37OTxizb7kZWl85GOW4J1PJ02x0k+i2OU2nDsygo4jyaSoHw0
-        C0tJsRgjs=
-Received: from 192.168.137.249 (unknown [112.10.74.162])
-        by smtp7 (Coremail) with SMTP id DsmowAB3KBDj+BJfSO3mHQ--.56553S3;
-        Sat, 18 Jul 2020 21:28:05 +0800 (CST)
-From:   Xianting Tian <xianting_tian@126.com>
-To:     tytso@mit.edu, jack@suse.com
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] jbd2: check bh2jh() before accessing it
-Date:   Sat, 18 Jul 2020 09:28:03 -0400
-Message-Id: <1595078883-8647-1-git-send-email-xianting_tian@126.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: DsmowAB3KBDj+BJfSO3mHQ--.56553S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZrW8ArW7Gw1rWw1fWw18uFg_yoW7JryUpr
-        y5G348urWvvFnxZr1kJF45CrWUXw1FyayUGw1I9r1v9a1UGw1ftFW5JFs8Ga4DZFsxC3W2
-        qr4DXws5Kw1UtaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j3fHUUUUUU=
-X-Originating-IP: [112.10.74.162]
-X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbi3AVlpFpD-NvKkAAAs8
+        Sat, 18 Jul 2020 10:15:12 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U33hZjf_1595081706;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U33hZjf_1595081706)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 18 Jul 2020 22:15:06 +0800
+Subject: Re: [PATCH v16 18/22] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Rong Chen <rong.a.chen@intel.com>
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1594429136-20002-19-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0Ud+Dj-Q8Sxv8eDQhjM3fFHwnU_ZFEVG54debBennUmxAg@mail.gmail.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <62dfd262-a7ac-d18e-216a-2988c690b256@linux.alibaba.com>
+Date:   Sat, 18 Jul 2020 22:15:02 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAKgT0Ud+Dj-Q8Sxv8eDQhjM3fFHwnU_ZFEVG54debBennUmxAg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We met a crash issue when testing nbd device on kernel 4.14.0-115,
-the scenario of the issue is "nbd device disconnected before unmounting
-ext4 filesystem".
-The call trace of the crash as below:
-[346961.426274] block nbd2: Connection timed out
-[346961.426943] EXT4-fs warning (device nbd2): ext4_end_bio:323: I/O error 10 writing to inode 5768758
-			(offset 155926528 size 8192 starting block 8998070)
-[346961.426957] Aborting journal on device nbd2-8.
-[346961.427027] EXT4-fs error (device nbd2) in __ext4_new_inode:927: Readonly filesystem
- ... ...
-[346961.437288] Buffer I/O error on dev nbd2, logical block 13139968, lost sync page write
-[346961.437878] JBD2: Error -5 detected when updating journal superblock for nbd2-8.
-[346961.438478] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-[346961.452495] RIP: 0010:jbd2_journal_grab_journal_head+0x1e/0x40 [jbd2]  <== crash code offset is 0x1e(30)
-[346961.453457] RSP: 0018:ffffc9000ffbbca8 EFLAGS: 00010206
-[346961.454414] RAX: 0000000000000000 RBX: ffff881dafe04960 RCX: ffff881aee5b0ac8
-[346961.455378] RDX: ffff881df7768690 RSI: ffff88100a5e9800 RDI: ffff880a22593d40
-[346961.456360] RBP: ffffc9000ffbbca8 R08: ffff881dafe04960 R09: 000000018040001c
-[346961.457332] R10: 000000002fe92601 R11: ffff88202fe90700 R12: ffff88100a5e9800
-[346961.458302] R13: 0000000000000000 R14: ffff880a22593d40 R15: ffff881dafe04960
-[346961.459269] FS:  0000000000000000(0000) GS:ffff88103e5c0000(0000) knlGS:0000000000000000
-[346961.460250] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[346961.461216] CR2: 0000000000000008 CR3: 0000000001c09004 CR4: 00000000007606e0
-[346961.462201] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[346961.463164] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[346961.465047] Call Trace:
-[346961.465981]  __jbd2_journal_insert_checkpoint+0x28/0x80 [jbd2]
-[346961.466907]  jbd2_journal_commit_transaction+0x1185/0x1a20 [jbd2]
-[346961.467862]  ? lock_timer_base+0x7d/0xa0
-[346961.468794]  kjournald2+0xd2/0x260 [jbd2]
-[346961.469717]  ? remove_wait_queue+0x60/0x60
-[346961.470630]  kthread+0x109/0x140
-[346961.471533]  ? commit_timeout+0x10/0x10 [jbd2]
-[346961.472438]  ? kthread_park+0x60/0x60
-[346961.473521]  ? do_syscall_64+0x182/0x1b0
-[346961.474546]  ret_from_fork+0x25/0x30
 
-Analysis of the crash code as below:
-struct journal_head *jbd2_journal_grab_journal_head(struct buffer_head *bh)
-{
-        struct journal_head *jh = NULL;
 
-        jbd_lock_bh_journal_head(bh);
-        if (buffer_jbd(bh)) {
-                jh = bh2jh(bh); <== jh is NULL (bh->b_private = NULL)
-                jh->b_jcount++; <== crash here!!!
-				    b_jcount offset in 'struct journal_head' is 0x8
-        }
-        jbd_unlock_bh_journal_head(bh);
-        return jh;
-}
+在 2020/7/18 上午5:38, Alexander Duyck 写道:
+>> +               return locked_lruvec;
+>> +
+>> +       if (locked_lruvec)
+>> +               unlock_page_lruvec_irqrestore(locked_lruvec, *flags);
+>> +
+>> +       return lock_page_lruvec_irqsave(page, flags);
+>> +}
+>> +
+> These relock functions have no users in this patch. It might make
+> sense and push this code to patch 19 in your series since that is
+> where they are first used. In addition they don't seem very efficient
+> as you already had to call mem_cgroup_page_lruvec once, why do it
+> again when you could just store the value and lock the new lruvec if
+> needed?
 
-crash> dis -l jbd2_journal_grab_journal_head
-0xffffffffa00b6050 <jbd2_journal_grab_journal_head>:    nopl   0x0(%rax,%rax,1) [FTRACE NOP]
-0xffffffffa00b6055 <jbd2_journal_grab_journal_head+5>:  push   %rbp
-0xffffffffa00b6056 <jbd2_journal_grab_journal_head+6>:  mov    %rsp,%rbp
-0xffffffffa00b6059 <jbd2_journal_grab_journal_head+9>:  lock btsl $0x18,(%rdi)
-0xffffffffa00b605e <jbd2_journal_grab_journal_head+14>: jb     0xffffffffa00b6079 <jbd2_journal_grab_journal_head+41>
-0xffffffffa00b6060 <jbd2_journal_grab_journal_head+16>: mov    (%rdi),%rax
-0xffffffffa00b6063 <jbd2_journal_grab_journal_head+19>: test   $0x20000,%eax
-0xffffffffa00b6068 <jbd2_journal_grab_journal_head+24>: je     0xffffffffa00b6087 <jbd2_journal_grab_journal_head+55>
-0xffffffffa00b606a <jbd2_journal_grab_journal_head+26>: mov    0x40(%rdi),%rax  <== jh is NULL(b_private's offset in 'struct buffer_head' is 0x40)
-0xffffffffa00b606e <jbd2_journal_grab_journal_head+30>: addl   $0x1,0x8(%rax)  <== "jh->b_jcount++" crash!!!
+Right, it's better to move for late patch.
 
-According to the logical in above code, buffer_head has an attached
-journal_head("buffer_jbd(bh)" is true), but buffer_head doesn't record
-it(bh->b_private is NULL).
-So testing if "buffer_jbd(bh)" is true can't guarantee "bh->b_private"
-is not NULL under the abnormal test case.
+As to call the func again, mainly it's for code neat.
 
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
----
- fs/jbd2/journal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks!
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index e494443..cb661d4 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2535,7 +2535,7 @@ struct journal_head *jbd2_journal_grab_journal_head(struct buffer_head *bh)
- 	struct journal_head *jh = NULL;
- 
- 	jbd_lock_bh_journal_head(bh);
--	if (buffer_jbd(bh)) {
-+	if (buffer_jbd(bh) && bh2jh(bh)) {
- 		jh = bh2jh(bh);
- 		jh->b_jcount++;
- 	}
--- 
-1.8.3.1
+> 
+>>  #ifdef CONFIG_CGROUP_WRITEBACK
+>>
+>>  struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
+>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>> index 14c668b7e793..36c1680efd90 100644
+>> --- a/include/linux/mmzone.h
+>> +++ b/include/linux/mmzone.h
+>> @@ -261,6 +261,8 @@ struct lruvec {
+>>         atomic_long_t                   nonresident_age;
+>>         /* Refaults at the time of last reclaim cycle */
+>>         unsigned long                   refaults;
+>> +       /* per lruvec lru_lock for memcg */
+>> +       spinlock_t                      lru_lock;
+>>         /* Various lruvec state flags (enum lruvec_flags) */
+>>         unsigned long                   flags;
+> Any reason for placing this here instead of at the end of the
+> structure? From what I can tell it looks like lruvec is already 128B
+> long so placing the lock on the end would put it into the next
+> cacheline which may provide some performance benefit since it is
+> likely to be bounced quite a bit.
 
+Rong Chen(Cced) once reported a performance regression when the lock at
+the end of struct, and move here could remove it.
+Although I can't not reproduce. But I trust his report.
+
+...
+
+>>  putback:
+>> -               spin_unlock_irq(&zone->zone_pgdat->lru_lock);
+>>                 pagevec_add(&pvec_putback, pvec->pages[i]);
+>>                 pvec->pages[i] = NULL;
+>>         }
+>> -       /* tempary disable irq, will remove later */
+>> -       local_irq_disable();
+>>         __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
+>> -       local_irq_enable();
+>> +       if (lruvec)
+>> +               unlock_page_lruvec_irq(lruvec);
+> So I am not a fan of this change. You went to all the trouble of
+> reducing the lock scope just to bring it back out here again. In
+> addition it implies there is a path where you might try to update the
+> page state without disabling interrupts.
+
+Right. but any idea to avoid this except a extra local_irq_disable?
+
+...
+
+>>                 if (PageLRU(page)) {
+>> -                       struct pglist_data *pgdat = page_pgdat(page);
+>> +                       struct lruvec *new_lruvec;
+>>
+>> -                       if (pgdat != locked_pgdat) {
+>> -                               if (locked_pgdat)
+>> -                                       spin_unlock_irqrestore(&locked_pgdat->lru_lock,
+>> +                       new_lruvec = mem_cgroup_page_lruvec(page,
+>> +                                                       page_pgdat(page));
+>> +                       if (new_lruvec != lruvec) {
+>> +                               if (lruvec)
+>> +                                       unlock_page_lruvec_irqrestore(lruvec,
+>>                                                                         flags);
+>>                                 lock_batch = 0;
+>> -                               locked_pgdat = pgdat;
+>> -                               spin_lock_irqsave(&locked_pgdat->lru_lock, flags);
+>> +                               lruvec = lock_page_lruvec_irqsave(page, &flags);
+>>                         }
+> This just kind of seems ugly to me. I am not a fan of having to fetch
+> the lruvec twice when you already have it in new_lruvec. I suppose it
+> is fine though since you are just going to be replacing it later
+> anyway.
+> 
+
+yes, it will be reproduce later.
+
+Thanks
+Alex
