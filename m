@@ -2,101 +2,152 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03601C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 17:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 17:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B78892073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 17:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A022073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 17:44:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="F/LJ87qm"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="hs7atBAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgGRRfu (ORCPT
+        id S1726973AbgGRRmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 13:35:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgGRRft (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 13:35:49 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E8CC0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 10:35:49 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x9so6796579plr.2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 10:35:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:cc:from:to:message-id;
-        bh=l2FZ7oR0iH+dV0VFe8SLUNQFAZ2SW0iIFMXf/4eW8nY=;
-        b=F/LJ87qmPPTO72ZK++07I1iiJQOdrA97yTEzY7B88gKPqBo30ZJ0PWT57aqxfrYGW3
-         QpUdY9qGjazdDiSZUuOR7+cSDDULQWid4lWd8vtlnuPDo729B8HJnSRu0L80cGUUJHvx
-         ah4gkAEuIRYw9IT9e1Kzv/0xxnOOxBnaQ3m/Pr2LXckuCjCWFgEoXI67GZv5mBail87k
-         k6pZShvqHbbg1d1HQtNbZ1Q63nqYQKgAeZP46r9TFlFaIYXFfZvsB4zbS66O5f8x5iMA
-         tY1V9rmShtaQ92XJrALN73cVrgebvm+3zmlm5UUN14e/lQtdqMfvVhQ0KrjmrdBDXrCA
-         0+iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:cc:from:to:message-id;
-        bh=l2FZ7oR0iH+dV0VFe8SLUNQFAZ2SW0iIFMXf/4eW8nY=;
-        b=YO2Ov5ETOUzJZfhm/tj0ouWphYiKXXyOLLIESQzWKIK3U1cEa1PVjr7uiMafeIYVJa
-         OCcWj1X7k4Pu9s23RRAM4JypqOK3ZxyzasNGTspHFtrYh1fd26vpxz7ZV/BzE0oLcgWi
-         p0mPWgMyps6rb6TfaAbNAWH+6hpu+vYc4UUZWaDfxzBPXdCiRnLEKX/5+segBdgn3yuZ
-         PBsg7Psus1ItfUdL63Kn96SrOBQBZekySQm+8FrfISWZapHPaZyMgauKsGjYV+M4gA12
-         HcbkSECOFP7Amn/JFgXV18I2fCll1EBjAkUJo3SzRqzUTWm22Rh/b6Ey0frGU7csBp09
-         XrLA==
-X-Gm-Message-State: AOAM530PozdnJnRJdajkNrmjwX8ThPBJINmaN7Jl6BVf+VqVek0STYPx
-        axclbIKSwQZ6oyhBCAHs0urVB9ON+9M=
-X-Google-Smtp-Source: ABdhPJyM+7tjQzDyzZwemOxPVfXva4sA20bASkMza4n2t3bzqdHihtcvvhJf6uB4UNbxcHgdnz0ydA==
-X-Received: by 2002:a17:902:7b90:: with SMTP id w16mr11167369pll.253.1595093748890;
-        Sat, 18 Jul 2020 10:35:48 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id r25sm6434604pgv.88.2020.07.18.10.35.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 10:35:48 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 10:35:48 -0700 (PDT)
-X-Google-Original-Date: Sat, 18 Jul 2020 10:35:45 PDT (-0700)
-Subject: [GIT PULL] RISC-V Fixes for 5.8-rc6
-CC:         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <mhng-8419056a-6b67-4a07-b5a2-6ca837bb9b9d@palmerdabbelt-glaptop1>
+        Sat, 18 Jul 2020 13:42:19 -0400
+Received: from vps.xff.cz ([195.181.215.36]:42368 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbgGRRmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 13:42:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1595094136; bh=f00AuFPGY+rLOuWwPL06wPWVJed68+DRaP3u0RP0c2c=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=hs7atBAxH/fITeB5hr2J/7wADtYv0weGQOMSo1ZnF3NVUAKmOmunM8QK5MR9jMoGO
+         JcEMp/KQ5yrlMBhwIHLESCsASDcQV5Tb/MBgItbA7OJsuaITf/A7tRHP5oIc2e53rm
+         aMDpaHxwrn2KQqcLMIZfGAij8zXP/E/8l3nX7u8Q=
+Date:   Sat, 18 Jul 2020 19:42:15 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Samuel Holland <samuel@sholland.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Fix st7703 panel initialization failures
+Message-ID: <20200718174215.mgjl3klytfa3nf3t@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Fabio Estevam <festevam@gmail.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Samuel Holland <samuel@sholland.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200716123753.3552425-1-megous@megous.com>
+ <20200716140843.GA359122@bogon.m.sigxcpu.org>
+ <20200716143209.ud6ote4q545bo2c7@core.my.home>
+ <20200718173124.GA88021@bogon.m.sigxcpu.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200718173124.GA88021@bogon.m.sigxcpu.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 11ba468877bb23f28956a35e896356252d63c983:
+Hello,
 
-  Linux 5.8-rc5 (2020-07-12 16:34:50 -0700)
+On Sat, Jul 18, 2020 at 07:31:24PM +0200, Guido Günther wrote:
+> Hi,
+> On Thu, Jul 16, 2020 at 04:32:09PM +0200, Ondřej Jirman wrote:
+> > Hi Guido,
+> > 
+> > On Thu, Jul 16, 2020 at 04:08:43PM +0200, Guido Günther wrote:
+> > > Hi Ondrej,
+> > > On Thu, Jul 16, 2020 at 02:37:51PM +0200, Ondrej Jirman wrote:
+> > > > When extending the driver for xbd599 panel support I tried to do minimal
+> > > > changes and keep the existing initialization timing.
+> > > > 
+> > > > It turned out that it's not good enough and the existing init sequence
+> > > > is too aggressive and doesn't follow the specification. On PinePhone
+> > > > panel is being powered down/up during suspend/resume and with current
+> > > > timings this frequently leads to corrupted display.
+> > > 
+> > > Given the amount of ST7703 look alikes i don't think you can go by the
+> > > datasheet and hope not to break other panels. The current sleeps cater
+> > > for the rocktech panel (which suffered from similar issues you describe
+> > > when we took other parameters) so you need to make those panel specific.
+> > 
+> > It should work on rocktech too. The patch mostly increases/reorders the delays
+> > slightly, to match the controller documentation. I don't see a reason to
+> > complicate the driver with per panel special delays, unless these patches don't
+> > work on your panel.
+> 
+> That's why i brought it up. It breaks the rocktech panel on
+> blank/unblank loops where it just stays blank and then starts hitting
+> DSI command timeouts.
 
-are available in the Git repository at:
+Good to know. Does keeping the msleep(20); after init sequence and before sleep
+exit make it work?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.8-rc6
+thank you and regards,
+	o.
 
-for you to fetch changes up to 38b7c2a3ffb1fce8358ddc6006cfe5c038ff9963:
-
-  RISC-V: Upgrade smp_mb__after_spinlock() to iorw,iorw (2020-07-17 09:28:35 -0700)
-
-----------------------------------------------------------------
-RISC-V Fixes for 5.8-rc6
-
-I have two fixes:
-
-* 16KiB kernel stacks on rv64, which fixes a lot of crashes.
-* Rolling an mmiowb() into the scheduled, which when combined with Will's fix
-  to the mmiowb()-on-spinlock should fix the PREEMPT issues we've been seeing.
-
-----------------------------------------------------------------
-Andreas Schwab (1):
-      riscv: use 16KB kernel stack on 64-bit
-
-Palmer Dabbelt (1):
-      RISC-V: Upgrade smp_mb__after_spinlock() to iorw,iorw
-
- arch/riscv/include/asm/barrier.h     | 10 +++++++++-
- arch/riscv/include/asm/thread_info.h |  4 ++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+> Cheers,
+>  -- Guido
+> 
+> > 
+> > The init sequence is still suboptimal, and doesn't follow the kernel docs
+> > completely, even after these patches. Controller spec also talks about adding
+> > some delay before enabling the backlight to avoid visual glitches.
+> > 
+> > Which is what enable callback is documented to be for. Currently part of the
+> > initialization that belongs to prepare callback is also done in enable callback.
+> > 
+> > I see the glitch (small vertical shift of the image on powerup), but personally
+> > don't care much to introduce even more delays to the driver, just for the
+> > cosmetic issue.
+> > 
+> > regards,
+> > 	o.
+> > 
+> > > Cheers,
+> > >  -- Guido
+> > > 
+> > > > 
+> > > > This patch series fixes the problems.
+> > > > 
+> > > > The issue was reported by Samuel Holland.
+> > > > 
+> > > > Relevant screenshots from the datasheet:
+> > > > 
+> > > >   Power on timing: https://megous.com/dl/tmp/35b72e674ce0ca27.png
+> > > >   Power off timing: https://megous.com/dl/tmp/dea195517106ff17.png
+> > > >   More optimal reset on poweron: https://megous.com/dl/tmp/a9e5caf14e1b0dc6.png
+> > > >   Less optimal reset on poweron: https://megous.com/dl/tmp/246761039283c4cf.png
+> > > >   Datasheet: https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
+> > > > 
+> > > > Please take a look.
+> > > > 
+> > > > thank you and regards,
+> > > >   Ondrej Jirman
+> > > > 
+> > > > Ondrej Jirman (2):
+> > > >   drm/panel: st7703: Make the sleep exit timing match the spec
+> > > >   drm/panel: st7703: Fix the power up sequence of the panel
+> > > > 
+> > > >  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 29 ++++++++++---------
+> > > >  1 file changed, 15 insertions(+), 14 deletions(-)
+> > > > 
+> > > > -- 
+> > > > 2.27.0
+> > > > 
+> > 
