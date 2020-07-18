@@ -2,129 +2,134 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5127C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E15C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8036722B49
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="JxoOm75V"
+	by mail.kernel.org (Postfix) with ESMTP id 2460020717
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:41:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgGRIkI (ORCPT
+        id S1726530AbgGRIlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 04:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgGRIkH (ORCPT
+        Sat, 18 Jul 2020 04:41:50 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:24658 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726221AbgGRIlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 04:40:07 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC1DC0619D3
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 01:40:06 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b25so15254624ljp.6
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 01:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=grHudVuxTrujFcMeBbNEzFtggMnTeKfPICDDWvNm5qQ=;
-        b=JxoOm75VPiSO3PvPhBOYKhjkYBPSzOkEGNvBKzzVHYb9Rjpd/2lw8isqYnFTqXaE21
-         C+3CgK+K5piqQQKYelN5pmjLyYxqfc5aAi0ULmEU0tzBzcQGldVFhG63xZeEbru+b2c5
-         7kXb1Htwvi29RZbiOF+DtZw68CeC9tM32rQ4yyzttv9Gfu0We7eglDXlTwOoWSHj7iaG
-         uFdKHbZ4suTw2Kj1YExnw/5V9FAso4O5mejSjADC/gVT0AAkQZ+Rc2Jyl0rPZXgwLOzm
-         A8yMggODuGPwRx4MTTd/izM2d1i01Iv5Xdj7Z4nCrMtmW+0gIqCPyKiutLZojfM6ClVd
-         Ui0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=grHudVuxTrujFcMeBbNEzFtggMnTeKfPICDDWvNm5qQ=;
-        b=UuSR6Xy8Wc+C+xcrcMfUgFfIudKiW7zD7aPRY/51009i0/0lFSRdjie9nz/Ba/1RoQ
-         ZCUlCkncLUgWacUMATrI/volL4WQoDywxO0B1EL9Mqegt6m91GpYc4tXbCo3yKSlsGFf
-         chFVVXtWs/6o8FuM7LtE5FqG7Ri5t1/vnV8R0SIRVLeio9/fcsRsjoCUUu6bO6yRA9oM
-         YUmZyp2cZ8+okecxcSQZgJYF8a7xbYTOPEXi4UbiWN5ouuoqesBVa1poEHvShWuecqSK
-         H0+zyGGZNAkCJyO6Cvwc6naBSdlBCAsXMIMiXj9QKh125XuuKeyBSh5+HFFvL9SDIOMN
-         hCtA==
-X-Gm-Message-State: AOAM532PTCxoj67k6RzJPRYQsU+xYgIIc9qam8R1bB+1rIDEMpGQnD4L
-        Qv37Z2juD8N5RtitMKdlQExs21GK2p/l6Q==
-X-Google-Smtp-Source: ABdhPJywOSyHHy2bJZqi1NPJYnFaaf9Tq+T0dfJMvzvTJxykDZd2Oa2LCdCG8Yl4tfAw3QfOH7Ll9w==
-X-Received: by 2002:a05:651c:217:: with SMTP id y23mr6450848ljn.447.1595061604957;
-        Sat, 18 Jul 2020 01:40:04 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:42e3:6011:c93:75dd:e99a:5259? ([2a00:1fa0:42e3:6011:c93:75dd:e99a:5259])
-        by smtp.gmail.com with ESMTPSA id e9sm2083043ljn.61.2020.07.18.01.40.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jul 2020 01:40:04 -0700 (PDT)
-Subject: Re: [PATCH v7 3/5] MIPS: Ingenic: Let the Kconfig of platform enable
- the clocksource driver.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, daniel.lezcano@linaro.org,
-        tsbogend@alpha.franken.de, robh+dt@kernel.org
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, tglx@linutronix.de,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-References: <20200717165947.56158-1-zhouyanjie@wanyeetech.com>
- <20200717165947.56158-4-zhouyanjie@wanyeetech.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <4903f4ba-6ecb-5c38-aa5a-4f20bd473124@cogentembedded.com>
-Date:   Sat, 18 Jul 2020 11:39:59 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 18 Jul 2020 04:41:49 -0400
+X-IronPort-AV: E=Sophos;i="5.75,366,1589234400"; 
+   d="scan'208";a="460290487"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 10:41:47 +0200
+Date:   Sat, 18 Jul 2020 10:41:47 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Julia Lawall <julia.lawall@inria.fr>,
+        Denis Efremov <efremov@linux.com>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [v2 1/4] coccinelle: api: extend memdup_user transformation with
+ GFP_USER
+In-Reply-To: <fa0ec546-9aee-5c95-428c-a225a3521f6f@web.de>
+Message-ID: <alpine.DEB.2.22.394.2007181034530.2538@hadrien>
+References: <0b9f2c58-e124-22d2-d91d-62a6e831c880@web.de> <alpine.DEB.2.22.394.2007180841520.2538@hadrien> <fa0ec546-9aee-5c95-428c-a225a3521f6f@web.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-In-Reply-To: <20200717165947.56158-4-zhouyanjie@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-1044091524-1595061708=:2538"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 17.07.2020 19:59, 周琰杰 (Zhou Yanjie) wrote:
+--8323329-1044091524-1595061708=:2538
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-> The previous clocksource patch in this series ([2/3]) has remove
 
-   Removed.
 
-> "default MACH_INGENIC" and make option silent, so we need to
+On Sat, 18 Jul 2020, Markus Elfring wrote:
 
-   Made?
+> >>> Applied.
+> >>
+> >> Do you care for patch review concerns according to this SmPL script adjustment?
+> >>
+> >> * https://lore.kernel.org/cocci/5c0dae88-e172-3ba6-f86c-d1a6238bb4c4@web.de/
+> >>   https://lkml.org/lkml/2020/6/9/568
+> >
+> > This one it complete nonsense.
+>
+> I hope that different views can be clarified for such a software situation
+> in more constructive ways.
 
-> enable the corresponding driver in the platform's Kconfig.
-> 
-> Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
-> 
-> Notes:
->      v7:
->      New patch.
-> 
->   arch/mips/jz4740/Kconfig | 7 +++++++
->   1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-> index 6c065dcaeff8..5ad60998702e 100644
-> --- a/arch/mips/jz4740/Kconfig
-> +++ b/arch/mips/jz4740/Kconfig
-> @@ -36,27 +36,34 @@ endchoice
->   config MACH_JZ4740
->   	bool
->   	select SYS_HAS_CPU_MIPS32_R1
-> +    select INGENIC_TIMER
+You proposed essentially  \( A \| B \) \( | C \| \)
 
-    Please use tab instead of spaces here an below.
+This is not valid syntax in the semantic patch language.  The branches of
+a \( \| \) have to be a valid expression, statement, type, etc, not some
+random string of tokens.
 
-[...]
+> >> * https://lore.kernel.org/cocci/c3464cad-e567-9ef5-b4e3-a01e3b11120b@web.de/
+> >>   https://lkml.org/lkml/2020/6/8/637
+> >
+> > This on is indeed a problem.
+>
+> I find this feedback interesting.
+>
+> * How does it fit to your response “Applied”?
+>
+> * Will it trigger any more consequences?
+>
+>
+> > Markus, if you would limit your comments to suggesting SmPL code
+> > that is actually correct, ie that you have tested,
+>
+> Patch reviews contain usual risks that suggestions are presented
+> which can be still questionable.
 
-MBR, Sergei
+These are not "usual risks".  You can easily test out your suggestion by
+yourself to see if it produces valid code.  If it doesn't, then don't make
+the suggestion.
+
+>
+>
+> > and 2) stop suggesting stupid things over and over
+>
+> We come along different development views.
+
+Whenever you propose the same thing say 10 times or more and it is
+rejected every time, I thikn you should be able to conclude that if you
+propose the same thing again it will be rejected.
+
+>
+> > like that putting all of the virtual declarations on
+> > the same line would save space (it does, but who cares),
+>
+> It seems that you admit a possibly desirable effect.
+
+No, I don't consider the effect to be desirable.
+
+> Will any more developers care also for SmPL coding style aspects?
+>
+>
+> > then I would take your suggestions more seriously.
+>
+> Your change acceptance is varying to your development mood
+> (and other factors), isn't it?
+
+Not really.  My "change acceptance" increases when the person reporting
+them raises real problems that is blocking them in some work.  And it
+decreases rapidly when the changes are almost all related to presumed
+"efficiencies" that have no impact in practice.
+
+julia
+--8323329-1044091524-1595061708=:2538--
