@@ -2,205 +2,200 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33318C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A252076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2MHOb96"
+	by mail.kernel.org (Postfix) with ESMTP id 9EDB62083E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:06:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595048763;
+	bh=ojj7GnqfqGS8LAnmrju8sV2OmdDNvXHUPH2FlYIO4dQ=;
+	h=From:Cc:Subject:Date:To:List-ID:From;
+	b=BwS3QcMMv1l8yytQH8rYZEYfPRz0Zw/L/+nD+Y2YVg4mGgR6sqYIkDEzLEoEMraIb
+	 W2UeG0hBLlbbKOlGvfqiPBKXKbFWk2yq0DWU/pV7LdrHduPd+crVOl7wlEd1r3PFvI
+	 nE9dI7p7b4ejE6tTQwm8lg6fU4CNj+VDHUJQagfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgGRFBE (ORCPT
+        id S1726552AbgGRFGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:01:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgGRFBD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:01:03 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68101C0619D2;
-        Fri, 17 Jul 2020 22:01:03 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z13so13117554wrw.5;
-        Fri, 17 Jul 2020 22:01:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pdW+Mjjnec0fSYPYQpDNjTJP81EjQ4GG3syPqnLR7Sc=;
-        b=T2MHOb96zwRInfSLZlWUZTvE51GWOTjRoEfY/e1F9wRGBHS7xuq7BpVecTZUTEUF1W
-         n/zz0kXeHWfy5gWgr6M45vy3Bd8cWRXlj9YUMZVSAUNDjp1tO1wE3yEEJVR8WTAyTX/o
-         t8jKPqv0RoK1WJow8GD155dFpuO+hbSH7rjJvhHTAq0mqfm00ZEEFPHtaUk73oDZcZ1m
-         QBigDfwRfa9diYYtY3k6bz9p5hwvOGbxjl/uQs5YoSxb50ktVsQDgOa5LtldlXPx84RM
-         qdsFTenMH212uwVF4PaJJmKp5aAZt/9UKAltbrdc7V9ypwy06/UavuAfp9wi2FCThowM
-         DZeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pdW+Mjjnec0fSYPYQpDNjTJP81EjQ4GG3syPqnLR7Sc=;
-        b=Uwk0vhiJ0bf2YxkpEx3EL1mlE8m3HKUG9WbkQpTCQBGuVVMJ7ncCtREoit7cOx0O4r
-         3dppFPRbZ0iMwJcFYG8g5iVJI4nuDQvTNTEfacLyPtYnAlbwyDwpxatWMdP77bazH0wX
-         E2TdleUv7zJ/IG2mMgjtEAIATUVO87eOqiRul33RcK9MeJiWw0rGXuEM/reF8kW9ma05
-         xiqFrSaFItcp11SDW13ARcK27hJp0JnUhtrpXxOxnoDzzw6zmmxhTi5X+Fazz2az3ZFu
-         OEH1+/SKq9DqbgBiAUrz5rBApCJc5MKV4aJ1nsXRyP7eRDkA8K5swXi3HLubJVJqVxL0
-         CXNQ==
-X-Gm-Message-State: AOAM5332eEuKNffQy2WCv2ysMCSuonptdWBHOCv1D7qh9bmh/Tlg/dD7
-        avd0FeDzuNLSwa3UfPaN2No=
-X-Google-Smtp-Source: ABdhPJxHRWHgh67kxq9xkuW198zVtS8jYB21lXDt27XPbgKgq2mt1y4z1UjeejNofF1NYKxGFZ/d9w==
-X-Received: by 2002:a5d:4b45:: with SMTP id w5mr12527495wrs.4.1595048462119;
-        Fri, 17 Jul 2020 22:01:02 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id 68sm18179815wmz.40.2020.07.17.22.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 22:01:01 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: meson: add support for the WeTek Core 2
-Date:   Sat, 18 Jul 2020 05:00:56 +0000
-Message-Id: <20200718050056.1713-2-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200718050056.1713-1-christianshewitt@gmail.com>
-References: <20200718050056.1713-1-christianshewitt@gmail.com>
+        Sat, 18 Jul 2020 01:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725963AbgGRFGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 01:06:01 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 606FF2083B;
+        Sat, 18 Jul 2020 05:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595048760;
+        bh=ojj7GnqfqGS8LAnmrju8sV2OmdDNvXHUPH2FlYIO4dQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VxImCxYxvE6Y5kSxGVPCpAs3DXYtIuvhVkcD5RizdYIlzBruoFMaKsLoSmYkUAKHO
+         0aOKkUXcjAMTp5IMD+h+gIpmT6Ri4lQ5wE0gDGR2WTeIait8cmHUdOsAnO8hWmAwn7
+         C2rMUERvbG12v7m6qQqMq95mreQSf9CUSrz+6RjA=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jwf2r-003EDt-S8; Sat, 18 Jul 2020 07:05:57 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Jonas Karlman <jonas@kwiboo.se>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Subject: [PATCH 1/3] media: rkvdec: Fix H264 scaling list order
+Date:   Sat, 18 Jul 2020 07:05:54 +0200
+Message-Id: <2630e1bb0948c3134c6f22ad275ae27cc6023532.1595048742.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WeTek Core2 is a commercial device based on the Amlogic Q200 reference
-design but with the following differences:
+From: Jonas Karlman <jonas@kwiboo.se>
 
-- 3GB RAM, 32GB eMMC
-- Blue and Red LEDs used to signal on/off status
-- uart_AO can be accessed after opening the case; soldering required
-- USB OTG is not accessible (inside the case)
-- Realtek RTL8152 Ethernet (internal USB connection)
+The Rockchip Video Decoder driver is expecting that the values in a
+scaling list are in zig-zag order and applies the inverse scanning process
+to get the values in matrix order.
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Commit 0b0393d59eb4 ("media: uapi: h264: clarify expected
+scaling_list_4x4/8x8 order") clarified that the values in the scaling list
+should already be in matrix order.
+
+Fix this by removing the reordering and change to use two memcpy.
+
+Fixes: cd33c830448b ("media: rkvdec: Add the rkvdec driver")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+[hverkuil-cisco@xs4all.nl: rkvdec_scaling_matrix -> rkvdec_h264_scaling_list]
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/Makefile          |  1 +
- .../dts/amlogic/meson-gxm-wetek-core2.dts     | 90 +++++++++++++++++++
- 2 files changed, 91 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
+ drivers/staging/media/rkvdec/rkvdec-h264.c | 66 +++++++---------------
+ 1 file changed, 20 insertions(+), 46 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 5cac4d1d487d..4e2239ffcaa5 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -41,6 +41,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-libretech-pc.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxm-wetek-core2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-sei610.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-khadas-vim3l.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-odroid-c4.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
-new file mode 100644
-index 000000000000..44fc5ea38dc0
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
-@@ -0,0 +1,90 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020 Christian Hewitt <christianshewitt@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxm.dtsi"
-+#include "meson-gx-p23x-q20x.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+
-+/ {
-+	compatible = "wetek,core2", "amlogic,s912", "amlogic,meson-gxm";
-+	model = "WeTek Core 2";
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>; /* 2 GiB or 3 GiB */
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		blue {
-+			color = <LED_COLOR_ID_BLUE>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 0>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1710000>;
-+
-+		button-update {
-+			label = "update";
-+			linux,code = <KEY_VENDOR>;
-+			press-threshold-microvolt = <10000>;
-+		};
-+	};
-+
-+	gpio-keys-polled {
-+		compatible = "gpio-keys-polled";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		poll-interval = <100>;
-+
-+		button-power {
-+			label = "power";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
-+		};
-+	};
+diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
+index cd4980d06be7..7b66e2743a4f 100644
+--- a/drivers/staging/media/rkvdec/rkvdec-h264.c
++++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
+@@ -18,11 +18,16 @@
+ /* Size with u32 units. */
+ #define RKV_CABAC_INIT_BUFFER_SIZE	(3680 + 128)
+ #define RKV_RPS_SIZE			((128 + 128) / 4)
+-#define RKV_SCALING_LIST_SIZE		(6 * 16 + 6 * 64 + 128)
+ #define RKV_ERROR_INFO_SIZE		(256 * 144 * 4)
+ 
+ #define RKVDEC_NUM_REFLIST		3
+ 
++struct rkvdec_h264_scaling_list {
++	u8 scaling_list_4x4[6][16];
++	u8 scaling_list_8x8[6][64];
++	u8 padding[128];
 +};
 +
-+/* This is disabled as Realtek RTL8152 USB provides Ethernet */
-+&ethmac {
-+	status = "disabled";
-+	phy-mode = "rmii";
-+	phy-handle = <&internal_phy>;
-+};
-+
-+&internal_phy {
-+	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&ir {
-+	linux,rc-map-name = "rc-wetek-play2";
-+};
-+
-+/* This is connected to the Bluetooth module: */
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		enable-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
-+		clocks = <&wifi32k>;
-+		clock-names = "lpo";
-+	};
-+};
+ struct rkvdec_sps_pps_packet {
+ 	u32 info[8];
+ };
+@@ -86,7 +91,7 @@ struct rkvdec_ps_field {
+ /* Data structure describing auxiliary buffer format. */
+ struct rkvdec_h264_priv_tbl {
+ 	s8 cabac_table[4][464][2];
+-	u8 scaling_list[RKV_SCALING_LIST_SIZE];
++	struct rkvdec_h264_scaling_list scaling_list;
+ 	u32 rps[RKV_RPS_SIZE];
+ 	struct rkvdec_sps_pps_packet param_set[256];
+ 	u8 err_info[RKV_ERROR_INFO_SIZE];
+@@ -785,56 +790,25 @@ static void assemble_hw_rps(struct rkvdec_ctx *ctx,
+ 	}
+ }
+ 
+-/*
+- * NOTE: The values in a scaling list are in zig-zag order, apply inverse
+- * scanning process to get the values in matrix order.
+- */
+-static const u32 zig_zag_4x4[16] = {
+-	0, 1, 4, 8, 5, 2, 3, 6, 9, 12, 13, 10, 7, 11, 14, 15
+-};
+-
+-static const u32 zig_zag_8x8[64] = {
+-	0,  1,  8, 16,  9,  2,  3, 10, 17, 24, 32, 25, 18, 11,  4,  5,
+-	12, 19, 26, 33, 40, 48, 41, 34, 27, 20, 13,  6,  7, 14, 21, 28,
+-	35, 42, 49, 56, 57, 50, 43, 36, 29, 22, 15, 23, 30, 37, 44, 51,
+-	58, 59, 52, 45, 38, 31, 39, 46, 53, 60, 61, 54, 47, 55, 62, 63
+-};
+-
+-static void reorder_scaling_list(struct rkvdec_ctx *ctx,
+-				 struct rkvdec_h264_run *run)
++static void assemble_hw_scaling_list(struct rkvdec_ctx *ctx,
++				     struct rkvdec_h264_run *run)
+ {
+ 	const struct v4l2_ctrl_h264_scaling_matrix *scaling = run->scaling_matrix;
+-	const size_t num_list_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4);
+-	const size_t list_len_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4[0]);
+-	const size_t num_list_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8);
+-	const size_t list_len_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8[0]);
+ 	struct rkvdec_h264_ctx *h264_ctx = ctx->priv;
+ 	struct rkvdec_h264_priv_tbl *tbl = h264_ctx->priv_tbl.cpu;
+-	u8 *dst = tbl->scaling_list;
+-	const u8 *src;
+-	int i, j;
+ 
+-	BUILD_BUG_ON(ARRAY_SIZE(zig_zag_4x4) != list_len_4x4);
+-	BUILD_BUG_ON(ARRAY_SIZE(zig_zag_8x8) != list_len_8x8);
+-	BUILD_BUG_ON(ARRAY_SIZE(tbl->scaling_list) <
+-		     num_list_4x4 * list_len_4x4 +
+-		     num_list_8x8 * list_len_8x8);
++	BUILD_BUG_ON(sizeof(tbl->scaling_list.scaling_list_4x4) !=
++		     sizeof(scaling->scaling_list_4x4));
++	BUILD_BUG_ON(sizeof(tbl->scaling_list.scaling_list_8x8) !=
++		     sizeof(scaling->scaling_list_8x8));
+ 
+-	src = &scaling->scaling_list_4x4[0][0];
+-	for (i = 0; i < num_list_4x4; ++i) {
+-		for (j = 0; j < list_len_4x4; ++j)
+-			dst[zig_zag_4x4[j]] = src[j];
+-		src += list_len_4x4;
+-		dst += list_len_4x4;
+-	}
++	memcpy(tbl->scaling_list.scaling_list_4x4,
++	       scaling->scaling_list_4x4,
++	       sizeof(scaling->scaling_list_4x4));
+ 
+-	src = &scaling->scaling_list_8x8[0][0];
+-	for (i = 0; i < num_list_8x8; ++i) {
+-		for (j = 0; j < list_len_8x8; ++j)
+-			dst[zig_zag_8x8[j]] = src[j];
+-		src += list_len_8x8;
+-		dst += list_len_8x8;
+-	}
++	memcpy(tbl->scaling_list.scaling_list_8x8,
++	       scaling->scaling_list_8x8,
++	       sizeof(scaling->scaling_list_8x8));
+ }
+ 
+ /*
+@@ -1126,7 +1100,7 @@ static int rkvdec_h264_run(struct rkvdec_ctx *ctx)
+ 	v4l2_h264_build_b_ref_lists(&reflist_builder, h264_ctx->reflists.b0,
+ 				    h264_ctx->reflists.b1);
+ 
+-	reorder_scaling_list(ctx, &run);
++	assemble_hw_scaling_list(ctx, &run);
+ 	assemble_hw_pps(ctx, &run);
+ 	assemble_hw_rps(ctx, &run);
+ 	config_registers(ctx, &run);
 -- 
-2.17.1
+2.26.2
 
