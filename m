@@ -2,134 +2,114 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E15C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2460020717
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0021C21775
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:44:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Lw3x1xub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgGRIlu (ORCPT
+        id S1726248AbgGRIoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 04:41:50 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:24658 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726221AbgGRIlt (ORCPT
+        Sat, 18 Jul 2020 04:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgGRIob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 04:41:49 -0400
-X-IronPort-AV: E=Sophos;i="5.75,366,1589234400"; 
-   d="scan'208";a="460290487"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 10:41:47 +0200
-Date:   Sat, 18 Jul 2020 10:41:47 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Julia Lawall <julia.lawall@inria.fr>,
-        Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [v2 1/4] coccinelle: api: extend memdup_user transformation with
- GFP_USER
-In-Reply-To: <fa0ec546-9aee-5c95-428c-a225a3521f6f@web.de>
-Message-ID: <alpine.DEB.2.22.394.2007181034530.2538@hadrien>
-References: <0b9f2c58-e124-22d2-d91d-62a6e831c880@web.de> <alpine.DEB.2.22.394.2007180841520.2538@hadrien> <fa0ec546-9aee-5c95-428c-a225a3521f6f@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Sat, 18 Jul 2020 04:44:31 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA15C0619D3
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 01:44:31 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s9so15252231ljm.11
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 01:44:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bjE+dCvxgE0tlMMZLFwfonoavKmjK5fkX5+I71udzRw=;
+        b=Lw3x1xub/THf0lSfQiJLlYPDEeLqTRfWGY1OSES/r9EWhLdZ/OwMUm17mmqb9cXSAj
+         a0Q7tFEG6di06ImL47HCTr8cC1xh7u5JdmmLgQQEGUOaq1PL/e+0MpLgvqO8+yQ4so6p
+         V7wYvcSXVkXtZFW004PAwBCJlrHTe0Wb42SUR7GkZINg/22/eCy/11e0gWLdwfFsZcQx
+         3mxtU4Me1jb2j+W0r0BKZnqWwTT/XFyhZGTz8Ze0E52XTH8w4biUSIAbi5skzZCqtzW+
+         t6/tCcKUad/PMx/fE64be9uvxnDRZbj9q8QeHSvLvlWOQqXcva+e2R12H4AUAIo/ZxEO
+         aURg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bjE+dCvxgE0tlMMZLFwfonoavKmjK5fkX5+I71udzRw=;
+        b=GMJkWrrEr4Zrme/0QmbTS9kpGysEKir5OJN8oni0pbuuEaz9oa9W1GtUiAjT9wnah3
+         65CWfw9N/3VKo7vx1ZyxG/Sqyr1GIr5j0c5Xxrjc7nEP7Jpvkq4xrkpkHhWQ8CoQHWa2
+         ZtxZcWXwBPfSwi3T4zsLcVu9u3V3H/npQlVYAgfNh8vjtAgZdsljtMu5dR3EDX6tVa12
+         190mibP+M9FBCO0l3uN7BYHOXNMSXrf4m0+L1omuv9eMtyxXUrkVeb0XHpEcK2gaWTrV
+         2XQ+gV7QUQo156/4lvgY+dlGrUzmUomPck3jfHlhUbm+czK3vSSolu4sgFT4f4roqf5B
+         yWdQ==
+X-Gm-Message-State: AOAM530LqVKqDI8Sn8TUsW96ab/cJt33U5Y+WSP9+sOria5NpJu7V5Tu
+        shjmiu/qMqIKFivk/WWif/Ukmg==
+X-Google-Smtp-Source: ABdhPJwONy7CQ3+lzmfZHBf4GOW7ycRwqd8UaqFKCa7tofUgz7n4M6q65+GFFCWQpyC9xM0RpLPW+Q==
+X-Received: by 2002:a2e:b16c:: with SMTP id a12mr6041241ljm.146.1595061869662;
+        Sat, 18 Jul 2020 01:44:29 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:42e3:6011:c93:75dd:e99a:5259? ([2a00:1fa0:42e3:6011:c93:75dd:e99a:5259])
+        by smtp.gmail.com with ESMTPSA id h18sm2087863ljk.7.2020.07.18.01.44.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jul 2020 01:44:28 -0700 (PDT)
+Subject: Re: [PATCH v4] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for
+ bridge_class_quirk()
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+References: <1595061424-27701-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <5a173967-098a-9e40-1373-5502506488f4@cogentembedded.com>
+Date:   Sat, 18 Jul 2020 11:44:25 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1044091524-1595061708=:2538"
+In-Reply-To: <1595061424-27701-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 18.07.2020 11:37, Tiezhu Yang wrote:
 
---8323329-1044091524-1595061708=:2538
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+> According to the datasheet of Loongson LS7A bridge chip, the old version
+> of Loongson LS7A PCIE port has a wrong value about PCI class which is
+> 0x060000, the correct value should be 0x060400, this bug can be fixed by
+> "dev->class = PCI_CLASS_BRIDGE_PCI << 8;" at the software level. As far
+> as I know, the latest version of LS7A has already fixed the value at the
+> hardware level.
+> 
+> In order to maintain downward compatibility, use DECLARE_PCI_FIXUP_EARLY
+> instead of DECLARE_PCI_FIXUP_HEADER for bridge_class_quirk() to fix it as
+> early as possible.
+> 
+> Otherwise, in the function pci_setup_device(), the related code about
+> "dev->class" such as "class = dev->class >> 8;" and "dev->transparent
+> = ((dev->class & 0xff) == 1);" maybe get wrong value due to without
 
+    "Due to" not needed there.
 
+> EARLY fixup.
+> 
+> Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+[...]
 
-On Sat, 18 Jul 2020, Markus Elfring wrote:
-
-> >>> Applied.
-> >>
-> >> Do you care for patch review concerns according to this SmPL script adjustment?
-> >>
-> >> * https://lore.kernel.org/cocci/5c0dae88-e172-3ba6-f86c-d1a6238bb4c4@web.de/
-> >>   https://lkml.org/lkml/2020/6/9/568
-> >
-> > This one it complete nonsense.
->
-> I hope that different views can be clarified for such a software situation
-> in more constructive ways.
-
-You proposed essentially  \( A \| B \) \( | C \| \)
-
-This is not valid syntax in the semantic patch language.  The branches of
-a \( \| \) have to be a valid expression, statement, type, etc, not some
-random string of tokens.
-
-> >> * https://lore.kernel.org/cocci/c3464cad-e567-9ef5-b4e3-a01e3b11120b@web.de/
-> >>   https://lkml.org/lkml/2020/6/8/637
-> >
-> > This on is indeed a problem.
->
-> I find this feedback interesting.
->
-> * How does it fit to your response “Applied”?
->
-> * Will it trigger any more consequences?
->
->
-> > Markus, if you would limit your comments to suggesting SmPL code
-> > that is actually correct, ie that you have tested,
->
-> Patch reviews contain usual risks that suggestions are presented
-> which can be still questionable.
-
-These are not "usual risks".  You can easily test out your suggestion by
-yourself to see if it produces valid code.  If it doesn't, then don't make
-the suggestion.
-
->
->
-> > and 2) stop suggesting stupid things over and over
->
-> We come along different development views.
-
-Whenever you propose the same thing say 10 times or more and it is
-rejected every time, I thikn you should be able to conclude that if you
-propose the same thing again it will be rejected.
-
->
-> > like that putting all of the virtual declarations on
-> > the same line would save space (it does, but who cares),
->
-> It seems that you admit a possibly desirable effect.
-
-No, I don't consider the effect to be desirable.
-
-> Will any more developers care also for SmPL coding style aspects?
->
->
-> > then I would take your suggestions more seriously.
->
-> Your change acceptance is varying to your development mood
-> (and other factors), isn't it?
-
-Not really.  My "change acceptance" increases when the person reporting
-them raises real problems that is blocking them in some work.  And it
-decreases rapidly when the changes are almost all related to presumed
-"efficiencies" that have no impact in practice.
-
-julia
---8323329-1044091524-1595061708=:2538--
+MBR, Sergei
