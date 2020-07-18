@@ -2,165 +2,113 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C6AC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4D62073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7179E2073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgGRKr3 (ORCPT
+        id S1726894AbgGRKtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 06:47:29 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:40956 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbgGRKr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 06:47:29 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 283D1BC06F;
-        Sat, 18 Jul 2020 10:47:23 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     tomasz.figa@gmail.com, krzk@kernel.org, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, kgene@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] pinctrl: samsung: Replace HTTP links with HTTPS ones
-Date:   Sat, 18 Jul 2020 12:47:17 +0200
-Message-Id: <20200718104717.7493-1-grandmaster@al2klimov.de>
+        Sat, 18 Jul 2020 06:49:18 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48182 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726490AbgGRKtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 06:49:17 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5AE354AD968F3CDAAEA0;
+        Sat, 18 Jul 2020 18:49:15 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.81) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Sat, 18 Jul 2020
+ 18:49:12 +0800
+Subject: Re: [PATCH] net: dsa: felix: Make some symbols static
+To:     Vladimir Oltean <olteanv@gmail.com>
+CC:     <UNGLinuxDriver@microchip.com>, <vladimir.oltean@nxp.com>,
+        <claudiu.manoil@nxp.com>, <alexandre.belloni@bootlin.com>,
+        <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
+        <f.fainelli@gmail.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+References: <20200718100158.31878-1-wanghai38@huawei.com>
+ <20200718104027.ugsdw42jfcpewfl6@skbuf>
+From:   "wanghai (M)" <wanghai38@huawei.com>
+Message-ID: <dea3b332-8af7-b8db-6182-702b91ceeae4@huawei.com>
+Date:   Sat, 18 Jul 2020 18:49:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200718104027.ugsdw42jfcpewfl6@skbuf>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+X-Originating-IP: [10.174.179.81]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Thanks for reminding me, I'll do it.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
-
- drivers/pinctrl/samsung/pinctrl-exynos-arm.c   | 2 +-
- drivers/pinctrl/samsung/pinctrl-exynos-arm64.c | 2 +-
- drivers/pinctrl/samsung/pinctrl-exynos.c       | 2 +-
- drivers/pinctrl/samsung/pinctrl-exynos.h       | 2 +-
- drivers/pinctrl/samsung/pinctrl-samsung.c      | 2 +-
- drivers/pinctrl/samsung/pinctrl-samsung.h      | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-index 85ddf49a5188..6b3b60157bf9 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-@@ -5,7 +5,7 @@
- // Copyright (c) 2012 Samsung Electronics Co., Ltd.
- //		http://www.samsung.com
- // Copyright (c) 2012 Linaro Ltd
--//		http://www.linaro.org
-+//		https://www.linaro.org
- //
- // Author: Thomas Abraham <thomas.ab@samsung.com>
- //
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-index b6e56422a700..d96ae32bb66d 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-@@ -6,7 +6,7 @@
- // Copyright (c) 2012 Samsung Electronics Co., Ltd.
- //		http://www.samsung.com
- // Copyright (c) 2012 Linaro Ltd
--//		http://www.linaro.org
-+//		https://www.linaro.org
- // Copyright (c) 2017 Krzysztof Kozlowski <krzk@kernel.org>
- //
- // This file contains the Samsung Exynos specific information required by the
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index 84501c785473..72752cb51771 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -5,7 +5,7 @@
- // Copyright (c) 2012 Samsung Electronics Co., Ltd.
- //		http://www.samsung.com
- // Copyright (c) 2012 Linaro Ltd
--//		http://www.linaro.org
-+//		https://www.linaro.org
- //
- // Author: Thomas Abraham <thomas.ab@samsung.com>
- //
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/samsung/pinctrl-exynos.h
-index da1ec13697e7..aad7b69f1287 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.h
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
-@@ -5,7 +5,7 @@
-  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-  * Copyright (c) 2012 Linaro Ltd
-- *		http://www.linaro.org
-+ *		https://www.linaro.org
-  *
-  * This file contains the Exynos specific definitions for the Samsung
-  * pinctrl/gpiolib interface drivers.
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index f26574ef234a..9eac799c541e 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -5,7 +5,7 @@
- // Copyright (c) 2012 Samsung Electronics Co., Ltd.
- //		http://www.samsung.com
- // Copyright (c) 2012 Linaro Ltd
--//		http://www.linaro.org
-+//		https://www.linaro.org
- //
- // Author: Thomas Abraham <thomas.ab@samsung.com>
- //
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
-index 379f34a9a482..c4c5356d696a 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -5,7 +5,7 @@
-  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-  * Copyright (c) 2012 Linaro Ltd
-- *		http://www.linaro.org
-+ *		https://www.linaro.org
-  *
-  * Author: Thomas Abraham <thomas.ab@samsung.com>
-  */
--- 
-2.27.0
+ÔÚ 2020/7/18 18:40, Vladimir Oltean Ð´µÀ:
+> On Sat, Jul 18, 2020 at 06:01:58PM +0800, Wang Hai wrote:
+>> Fix sparse build warning:
+>>
+>> drivers/net/dsa/ocelot/felix_vsc9959.c:560:19: warning:
+>>   symbol 'vsc9959_vcap_is2_keys' was not declared. Should it be static?
+>> drivers/net/dsa/ocelot/felix_vsc9959.c:640:19: warning:
+>>   symbol 'vsc9959_vcap_is2_actions' was not declared. Should it be static?
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+>> ---
+> Please update your tree.
+>
+> commit 3ab4ceb6e9639e4e42d473e46ae7976c24187876
+> Author: Vladimir Oltean <vladimir.oltean@nxp.com>
+> Date:   Sat Jun 20 18:43:36 2020 +0300
+>
+>      net: dsa: felix: make vcap is2 keys and actions static
+>
+>      Get rid of some sparse warnings.
+>
+>      Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+>      Signed-off-by: David S. Miller <davem@davemloft.net>
+>
+>>   drivers/net/dsa/ocelot/felix_vsc9959.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
+>> index 1dd9e348152d..2067776773f7 100644
+>> --- a/drivers/net/dsa/ocelot/felix_vsc9959.c
+>> +++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
+>> @@ -557,7 +557,7 @@ static const struct ocelot_stat_layout vsc9959_stats_layout[] = {
+>>   	{ .offset = 0x111,	.name = "drop_green_prio_7", },
+>>   };
+>>   
+>> -struct vcap_field vsc9959_vcap_is2_keys[] = {
+>> +static struct vcap_field vsc9959_vcap_is2_keys[] = {
+>>   	/* Common: 41 bits */
+>>   	[VCAP_IS2_TYPE]				= {  0,   4},
+>>   	[VCAP_IS2_HK_FIRST]			= {  4,   1},
+>> @@ -637,7 +637,7 @@ struct vcap_field vsc9959_vcap_is2_keys[] = {
+>>   	[VCAP_IS2_HK_OAM_IS_Y1731]		= {182,   1},
+>>   };
+>>   
+>> -struct vcap_field vsc9959_vcap_is2_actions[] = {
+>> +static struct vcap_field vsc9959_vcap_is2_actions[] = {
+>>   	[VCAP_IS2_ACT_HIT_ME_ONCE]		= {  0,  1},
+>>   	[VCAP_IS2_ACT_CPU_COPY_ENA]		= {  1,  1},
+>>   	[VCAP_IS2_ACT_CPU_QU_NUM]		= {  2,  3},
+>> -- 
+>> 2.17.1
+>>
+> Thanks,
+> -Vladimir
+>
+> .
+>
 
