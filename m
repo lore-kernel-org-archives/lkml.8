@@ -8,66 +8,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402C2C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85FBC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B55B2176B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5A321741
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClIGS0yT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DFjF8NYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgGRQv1 (ORCPT
+        id S1728145AbgGRQvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 12:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60728 "EHLO
+        Sat, 18 Jul 2020 12:51:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727055AbgGRQv0 (ORCPT
+        with ESMTP id S1728121AbgGRQvd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 12:51:26 -0400
-Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E094DC0619D2;
-        Sat, 18 Jul 2020 09:51:25 -0700 (PDT)
-Received: by mail-qk1-x72b.google.com with SMTP id b185so11604228qkg.1;
-        Sat, 18 Jul 2020 09:51:25 -0700 (PDT)
+        Sat, 18 Jul 2020 12:51:33 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8DC1C0619D2;
+        Sat, 18 Jul 2020 09:51:33 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c139so11557758qkg.12;
+        Sat, 18 Jul 2020 09:51:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=V9YXkfG4mae7D/kQPuWy1/wziMNrDLom8h0lx0qxbpY=;
-        b=ClIGS0yTVQUP9UjBPM38xmFMOUmn04jnItF9s1DYLC8K64D8rV9Pz63EtBv0B7KMYo
-         dtoNzWBNMZB3dFD992kQ93fLUuJOVakIq3fJi2okYfwiJSVhyXuznp8Kils4tL+314q2
-         icC5zVIL6dwr/ydP9HHDQBlH9OXBfzrq0LIP5CCS++9S8F19MJ5EBAmKimdnWLiTq5FA
-         1rFp9uoJyTQ2wKeHuuOapUr99uekPhwdnWFhQ3Bxclvc/l5pjpYU8Sx3vdto0uKr079T
-         Z7A6OhbsjPiS4nEQ9AIv00ziv8h8D6b0bZOkSMAR6xu9US+gQKUUOdnFhcvS6L0U5jiC
-         zLlQ==
+        bh=hqR7nLeOqkrR3dVNUU/FhC4bdCZMzx2L+6QAslHtlsQ=;
+        b=DFjF8NYGokKEuca5gVne/BU6ev+jAXmZC8vkvF40trG8KBCQj2IuitF8i2dKhnc4el
+         8ebIO8K5+Io8YIMTM3QOH1Ty9pvqDyCR7PmZOjhx13RLl+SWZyxj7KXmryF79XcTpWqv
+         Y3RIuMtMJz9cGZsgQwIsXjVLGEsb0pjPk6z9mdhDPmN0waF9DrOOwQHxhgCpQSyPkTSN
+         j0oSSaStmJZRkPc1RXed+l1BUPjlFjO/6cHQbAXUZKTQOrT9R/MYY0STG1zX2qm3SAxT
+         cu+OxqW5DcrKd9EjXurKLKAeO4XG8U8PbTW3WHIBQ/qatGnNK77Xz+IOU6QLWzzY2xGj
+         SYhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=V9YXkfG4mae7D/kQPuWy1/wziMNrDLom8h0lx0qxbpY=;
-        b=VGBhW3Pwu7GzuNtYWN+RzGVmjgSIFj7FWHk1UGsoV/rsY/m80G+5Z14WGPiY2BWA6s
-         KxkmbnlIMU2PR4KrVWdRsPEWoYY2wI+K7J5riDNL/hPZsgnOcfy5OMDe26v6ZIXwMDHL
-         1H3p95bLkedbqcxEpAuzNEhugIPdIKBTuztL5GBES3HZJTfKLpBOfj6q50cSvlfCqoyW
-         CsYG0MlnixDPmt/gzs0U3jIM3M7D/p04DaUQIt7pmF1kpi5jQmlSpY1CzEbM9zdfTVTT
-         aanZNGG1yJ/+hiQt9AMRhv1KwVHCKCOp4/LteKCHtX8N3OXARRKl7p+ME3xOYJo+ZVCk
-         P4WQ==
-X-Gm-Message-State: AOAM533SPTNBD6vMErcYm8c/3jrgxvQx8C6AwwPZdTbdz8QgGjHCHtTs
-        m1+2msCrOxEYUQJP+gIpTooIO5wc
-X-Google-Smtp-Source: ABdhPJzdZNP/o5fBHD0pspMNziAHHlaWNZ4Lp185t93jzxIgXOnPLThIOS4fTWaR7iUnjVLJYE+QbQ==
-X-Received: by 2002:a37:b941:: with SMTP id j62mr13845168qkf.233.1595091085112;
-        Sat, 18 Jul 2020 09:51:25 -0700 (PDT)
+        bh=hqR7nLeOqkrR3dVNUU/FhC4bdCZMzx2L+6QAslHtlsQ=;
+        b=nwKjwf7uGjdeQ1Y2gKteg3G5wYomxvFnZgP25ll3M++sLtX8bR06gHBLNEKPudMnAM
+         x1Czhgflvvam7pZrpxwjytL4wJm3e12jo2OPK0Pr11QN5I3C/Mxz7vNnELFGnYFzZNMA
+         epAc5WhZVsq048fKuYioR2+KV1iCCDe2VV+Q+IpkJTXFuhb71hAtPzZswYqowewd2zDJ
+         K3vwAzUHnxqH1ifYqzSjoERP5U6n/f9CXyU4X5i7LQrUhcEZ1ItaiqFlSmNLg4lqcNFL
+         nu3+NKLUGJlcDYzoZw7zv/YM7KFVYuoy5RkxSNdx7Q7nCNRyoWxdxuX50Fx4zXto/ioz
+         YTkA==
+X-Gm-Message-State: AOAM532LluyBY/dZKJdD5/k3TZwU9GqE4oJWeG5Uo5b+G/zPqUVD+zwq
+        Oeu5utVchAaHaqzrd4lgUZ16wk4IW7c=
+X-Google-Smtp-Source: ABdhPJx4OBz50AX++OUHQwarmICKgScFdPYbfGjT3BFeP61zcQz8/KYLgD5oBuXSokDMzyM+ceEzeQ==
+X-Received: by 2002:a37:9d82:: with SMTP id g124mr13978054qke.456.1595091092872;
+        Sat, 18 Jul 2020 09:51:32 -0700 (PDT)
 Received: from localhost.localdomain ([2804:18:602d:16d:d038:1a92:190d:65d2])
-        by smtp.gmail.com with ESMTPSA id q5sm15361801qtf.12.2020.07.18.09.51.22
+        by smtp.gmail.com with ESMTPSA id q5sm15361801qtf.12.2020.07.18.09.51.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 09:51:24 -0700 (PDT)
+        Sat, 18 Jul 2020 09:51:32 -0700 (PDT)
 From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 X-Google-Original-From: Daniel W. S. Almeida
-To:     corbet@lwn.net
+To:     corbet@lwn.net, jens.wiklander@linaro.org
 Cc:     "Daniel W . S . Almeida" <dwlsalmeida@gmail.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: watch_queue.rst: fix malformed inline literal
-Date:   Sat, 18 Jul 2020 13:50:56 -0300
-Message-Id: <20200718165107.625847-2-dwlsalmeida@gmail.com>
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        op-tee@lists.trustedfirmware.org
+Subject: [PATCH] docs: staging/tee.rst: convert into definition list
+Date:   Sat, 18 Jul 2020 13:50:58 -0300
+Message-Id: <20200718165107.625847-4-dwlsalmeida@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200718165107.625847-1-dwlsalmeida@gmail.com>
 References: <20200718165107.625847-1-dwlsalmeida@gmail.com>
@@ -82,52 +83,47 @@ From: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 
 Fix the following warnings:
 
-watch_queue.rst:107: WARNING: Inline literal start-string
-without end-string.
+tee.rst:65: WARNING: Unexpected indentation.
 
-watch_queue.rst:107: WARNING: Inline emphasis start-string
-without end-string
+tee.rst:69: WARNING: Block quote ends without a
+blank line; unexpected unindent.
 
-watch_queue.rst:184: WARNING: Inline literal start-string
-without end-string.
-
-watch_queue.rst:184: WARNING: Inline emphasis start-string
-without end-string
-
-Multiline inline literals are not supported.
+By switching to the 'definition list' syntax.
 
 Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 ---
- Documentation/watch_queue.rst | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ Documentation/staging/tee.rst | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/watch_queue.rst b/Documentation/watch_queue.rst
-index 81d9d322b1c8b..d98af4f11804e 100644
---- a/Documentation/watch_queue.rst
-+++ b/Documentation/watch_queue.rst
-@@ -106,8 +106,7 @@ watch that specific key).
+diff --git a/Documentation/staging/tee.rst b/Documentation/staging/tee.rst
+index 62e8ba64d04f9..4d4b5f8896032 100644
+--- a/Documentation/staging/tee.rst
++++ b/Documentation/staging/tee.rst
+@@ -61,13 +61,17 @@ represented as a device identified via Universally Unique Identifier (UUID) and
+ client drivers register a table of supported device UUIDs.
  
- To manage a watch list, the following functions are provided:
+ TEE bus infrastructure registers following APIs:
+--  match(): iterates over the client driver UUID table to find a corresponding
+-   match for device UUID. If a match is found, then this particular device is
+-   probed via corresponding probe API registered by the client driver. This
+-   process happens whenever a device or a client driver is registered with TEE
+-   bus.
+--  uevent(): notifies user-space (udev) whenever a new device is registered on
+-   TEE bus for auto-loading of modularized client drivers.
++
++match():
++  iterates over the client driver UUID table to find a corresponding
++  match for device UUID. If a match is found, then this particular device is
++  probed via corresponding probe API registered by the client driver. This
++  process happens whenever a device or a client driver is registered with TEE
++  bus.
++
++uevent():
++  notifies user-space (udev) whenever a new device is registered on
++  TEE bus for auto-loading of modularized client drivers.
  
--  * ``void init_watch_list(struct watch_list *wlist,
--			   void (*release_watch)(struct watch *wlist));``
-+  * ``void init_watch_list(struct watch_list *wlist, void (*release_watch)(struct watch *wlist));``
- 
-     Initialise a watch list.  If ``release_watch`` is not NULL, then this
-     indicates a function that should be called when the watch_list object is
-@@ -182,9 +181,9 @@ The following functions are provided to manage watches:
-     driver-settable fields in the watch struct must have been set before this
-     is called.
- 
--  * ``int remove_watch_from_object(struct watch_list *wlist,
--				   struct watch_queue *wqueue,
--				   u64 id, false);``
-+  * ``int remove_watch_from_object(struct watch_list *wlist,``
-+				 ``struct watch_queue *wqueue,``
-+				 ``u64 id, false);``
- 
-     Remove a watch from a watch list, where the watch must match the specified
-     watch queue (``wqueue``) and object identifier (``id``).  A notification
+ TEE bus device enumeration is specific to underlying TEE implementation, so it
+ is left open for TEE drivers to provide corresponding implementation.
 -- 
 2.27.0
 
