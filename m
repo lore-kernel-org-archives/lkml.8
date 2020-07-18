@@ -2,179 +2,94 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4F2C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A981C433EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE8A2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:06:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595048770;
-	bh=e1eezy0qbKZGztYdUiT19QjjP8dhZk+Lch7S4Ef94IU=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=nExZwo+5MlzC9C7p13ul/7r5wRaTSL5RMpyrmTg4RsE6HdXFrV68m+alfRurj+Y4D
-	 VMK47gkCfteDFddAfQ77d8QWOvQVK452WZQ3Ry/z5UO41O4Fv/w8duJlPvqz3wPhOm
-	 nG7DBHpOiienzngXQppshheaWGljNY4Ab3uZblTI=
+	by mail.kernel.org (Postfix) with ESMTP id 0B4A62083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgGRFGC (ORCPT
+        id S1726623AbgGRFGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44050 "EHLO mail.kernel.org"
+        Sat, 18 Jul 2020 01:06:52 -0400
+Received: from mga18.intel.com ([134.134.136.126]:7941 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbgGRFGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:06:01 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 684672083E;
-        Sat, 18 Jul 2020 05:06:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595048760;
-        bh=e1eezy0qbKZGztYdUiT19QjjP8dhZk+Lch7S4Ef94IU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=czWTPA7pjOvsKOFODsS8lNOMVRS/ywdcqC4F1UcLvT2YjOBcA8T+u6nFQkI6VfQEK
-         R05P4hhst9jaiJc72TTBcfYU6e8LgWKQ1ChYkyqflt43RUYVq0XbrM1+s7983BixWh
-         APzCTxBQLd+Ul1WeKrGkRzFn9FjHIz4uN2W6f9UI=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jwf2r-003EDw-To; Sat, 18 Jul 2020 07:05:57 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] media: atomisp: fix the handling of clock number
-Date:   Sat, 18 Jul 2020 07:05:55 +0200
-Message-Id: <c2942c4363ceb8bbce12c2db8f42d8bbbf5bb0ef.1595048742.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <2630e1bb0948c3134c6f22ad275ae27cc6023532.1595048742.git.mchehab+huawei@kernel.org>
-References: <2630e1bb0948c3134c6f22ad275ae27cc6023532.1595048742.git.mchehab+huawei@kernel.org>
+        id S1725887AbgGRFGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 01:06:51 -0400
+IronPort-SDR: 7YftjD1FvMeh2cfhLU+Hl2Z19UHAwH4voI2BitVIuI/J9Dh24sj6d2cuBq5Vr4Rv5+msav1Td9
+ Dd7iw7W5Prww==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="137184356"
+X-IronPort-AV: E=Sophos;i="5.75,365,1589266800"; 
+   d="scan'208";a="137184356"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 22:06:50 -0700
+IronPort-SDR: PY3XuV+vuuAtpY8rxRvZ+3vMP/33Vq1wquR8p4Yg18XVLAL6vT+hjMFvaGQsieLHuShfCSaRfd
+ pufbVEiCB0pQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,365,1589266800"; 
+   d="scan'208";a="270979648"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Jul 2020 22:06:50 -0700
+Date:   Fri, 17 Jul 2020 22:06:50 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 12/17] memremap: Add zone device access protection
+Message-ID: <20200718050650.GT3008823@iweiny-DESK2.sc.intel.com>
+References: <20200717072056.73134-1-ira.weiny@intel.com>
+ <20200717072056.73134-13-ira.weiny@intel.com>
+ <20200717091053.GZ10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717091053.GZ10769@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now, the driver is not doing the right thing to detect
-the clock like used by the sensor, at least on devices
-without the gmin's EFI vars.
+On Fri, Jul 17, 2020 at 11:10:53AM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 17, 2020 at 12:20:51AM -0700, ira.weiny@intel.com wrote:
+> > +static pgprot_t dev_protection_enable_get(struct dev_pagemap *pgmap, pgprot_t prot)
+> > +{
+> > +	if (pgmap->flags & PGMAP_PROT_ENABLED && dev_page_pkey != PKEY_INVALID) {
+> > +		pgprotval_t val = pgprot_val(prot);
+> > +
+> > +		static_branch_inc(&dev_protection_static_key);
+> > +		prot = __pgprot(val | _PAGE_PKEY(dev_page_pkey));
+> > +	}
+> > +	return prot;
+> > +}
+> 
+> Every other pgprot modifying function is called pgprot_*(), although I
+> suppose we have the exceptions phys_mem_access_prot() and dma_pgprot().
 
-Add some notes at the code to explain why and skip the wrong
-value provided by the _DSM table.
+Yea...  this function kind of morphed.  The issue is that this is also a 'get'
+with a corresponding 'put'.  So I'm at a loss for what makes sense between the
+2 functions.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../media/atomisp/pci/atomisp_gmin_platform.c | 49 ++++++++++++++++---
- 1 file changed, 42 insertions(+), 7 deletions(-)
+> 
+> How about we call this one devm_pgprot() ?
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-index 1af9da8acf4c..cb360b8399e5 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-@@ -26,6 +26,9 @@ enum clock_rate {
- #define CLK_RATE_19_2MHZ	19200000
- #define CLK_RATE_25_0MHZ	25000000
- 
-+/* Valid clock number range from 0 to 5 */
-+#define MAX_CLK_COUNT                   5
-+
- /* X-Powers AXP288 register set */
- #define ALDO1_SEL_REG	0x28
- #define ALDO1_CTRL3_REG	0x13
-@@ -61,7 +64,6 @@ enum clock_rate {
- 
- struct gmin_subdev {
- 	struct v4l2_subdev *subdev;
--	int clock_num;
- 	enum clock_rate clock_src;
- 	bool clock_on;
- 	struct clk *pmc_clk;
-@@ -447,7 +449,7 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 	struct acpi_device *adev;
- 	acpi_handle handle;
- 	struct device *dev;
--	int i, ret;
-+	int i, ret, clock_num;
- 
- 	if (!client)
- 		return NULL;
-@@ -492,17 +494,37 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 	}
- 
- 	gmin_subdevs[i].subdev = subdev;
--	gmin_subdevs[i].clock_num = gmin_get_var_int(dev, false, "CamClk", 0);
-+
- 	/*WA:CHT requires XTAL clock as PLL is not stable.*/
- 	gmin_subdevs[i].clock_src = gmin_get_var_int(dev, false, "ClkSrc",
- 				    VLV2_CLK_PLL_19P2MHZ);
- 	gmin_subdevs[i].csi_port = gmin_get_var_int(dev, false, "CsiPort", 0);
- 	gmin_subdevs[i].csi_lanes = gmin_get_var_int(dev, false, "CsiLanes", 1);
- 
--	/* get PMC clock with clock framework */
--	snprintf(gmin_pmc_clk_name,
--		 sizeof(gmin_pmc_clk_name),
--		 "%s_%d", "pmc_plt_clk", gmin_subdevs[i].clock_num);
-+	/*
-+	 * FIXME:
-+	 *
-+	 * According with :
-+	 *   https://github.com/projectceladon/hardware-intel-kernelflinger/blob/master/doc/fastboot.md
-+	 *
-+	 * The "CamClk" EFI var is set via fastboot on some Android devices,
-+	 * and seems to contain the number of the clock used to feed the
-+	 * sensor.
-+	 *
-+	 * On systems with a proper ACPI table, this is given via the _PR0
-+	 * power resource table. The logic below should first check if there
-+	 * is a power resource already, falling back to the EFI vars detection
-+	 * otherwise.
-+	 */
-+	clock_num = gmin_get_var_int(dev, false, "CamClk", -1);
-+
-+	if (clock_num < 0 || clock_num > MAX_CLK_COUNT) {
-+		dev_err(dev, "Invalid clock number\n");
-+		return NULL;
-+	}
-+
-+	snprintf(gmin_pmc_clk_name, sizeof(gmin_pmc_clk_name),
-+		 "%s_%d", "pmc_plt_clk", clock_num);
- 
- 	gmin_subdevs[i].pmc_clk = devm_clk_get(dev, gmin_pmc_clk_name);
- 	if (IS_ERR(gmin_subdevs[i].pmc_clk)) {
-@@ -515,6 +537,7 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
- 
- 		return NULL;
- 	}
-+	dev_info(dev, "Will use CLK%d (%s)\n", clock_num, gmin_pmc_clk_name);
- 
- 	/*
- 	 * The firmware might enable the clock at
-@@ -957,6 +980,18 @@ static int gmin_get_config_dsm_var(struct device *dev,
- 	union acpi_object *obj, *cur = NULL;
- 	int i;
- 
-+	/*
-+	 * The data reported by "CamClk" seems to be either 0 or 1 at the
-+	 * _DSM table.
-+	 *
-+	 * At the ACPI tables we looked so far, this is not related to the
-+	 * actual clock source for the sensor, which is given by the
-+	 * _PR0 ACPI table. So, ignore it, as otherwise this will be
-+	 * set to a wrong value.
-+	 */
-+	if (!strcmp(var, "CamClk"))
-+		return -EINVAL;
-+
- 	obj = acpi_evaluate_dsm(handle, &atomisp_dsm_guid, 0, 0, NULL);
- 	if (!obj) {
- 		dev_info_once(dev, "Didn't find ACPI _DSM table.\n");
--- 
-2.26.2
+Dan Williams mentioned to me that the devm is not an appropriate prefix.  Thus
+the 'dev' prefix instead.
 
+How about dev_pgprot_{get,put}()?
+
+Ira
