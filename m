@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A15C433EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8260F2065E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504BC2065E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rT4nc9Lh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WK4t+VZY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgGRJUe (ORCPT
+        id S1726821AbgGRJUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:20:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48370 "EHLO
+        Sat, 18 Jul 2020 05:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgGRJUd (ORCPT
+        with ESMTP id S1726055AbgGRJUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 05:20:33 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760A8C0619D2;
-        Sat, 18 Jul 2020 02:20:33 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id g67so7849412pgc.8;
-        Sat, 18 Jul 2020 02:20:33 -0700 (PDT)
+        Sat, 18 Jul 2020 05:20:38 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D13F5C0619D2;
+        Sat, 18 Jul 2020 02:20:38 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id cv18so4738854pjb.1;
+        Sat, 18 Jul 2020 02:20:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dlgQtSt8lmQHKVQg6Y2+SUeJ48KeaI0kz4R/u3ja4Go=;
-        b=rT4nc9LhZf6o8r8DUb8OM8Dx4gE+t+VXyWau1AEUJKS04IPpleeNFd+PZ3JXWFU0lx
-         1KOOr+XvZyaqKWWove1xqYC9wWcozkLeT5JD96K6Y/3ZgU+CeaJBjrhpZP18qRveaEA6
-         sXpgAUKGFKYIzeauWupC5CuqUj1lWZN9yf6k8virMsuGlDKUgKLag7DyeG4PY6h1wVo3
-         7ZZNX+KjJEmCH6NVCAV85RJyD1LZVTd7avAUVjTIVLlWgOLUdOMcqjgMWr8SpXq2rCWn
-         IQAC/j+fioOB990PVb/B7V6+NPSECuJKiMV6eFdSNy0UamETDGmYl6KS4zGT6atCU6zC
-         IjaQ==
+        bh=o09yAv6DGamGaLfCecq9vHf5FNi8bhrG0BGxeRszaDs=;
+        b=WK4t+VZYA/s/PJCSDuB64W5TgPkysfZ118jsgNhbs/uLYuaw/jaPR0FPMmEUEV1Cm0
+         RkImogV35WsKx3gSejqjLonxKtBxhZYWkM+/twm+W8a3JP2qq6Nc5gT430myXHeSqeHf
+         PvrQZFUmxnbbuaRbqsA3pT+3jEYBUmc8siw1ycBjV/KSkz4cbny+/n/57TR+lfZJY7mH
+         Wd2yqRkm8PMNcfTBLgRKinKT+hJWHZ5JCxZaRhnMoLQAaPSbBa0OSZnYAqnCEpZxmAxW
+         geOMD12f2AfSqFEYgn3+/QByYJcWGZ8jUGprO9p3IdtD/4KHsW9wZF7l9Z/Opd6oyZzK
+         6/PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=dlgQtSt8lmQHKVQg6Y2+SUeJ48KeaI0kz4R/u3ja4Go=;
-        b=eOP6L2LU+cP26phWeXxMiDt3X/S5FbQghQsq7FPc7TU+SMcahPRnTYJV+J9rZmuVQF
-         f8JTjk4kuNI2wwylS+hOwvEq/BSaU237gY3JQNEHo4djxJn8JIelDo6qLo4JPMd0FcOV
-         dlva/oyHIMgPAuJzkNlpd+OiuMs+hjQpY8kC/2PQhc88VLkAI/Vy1G5Qv3RoorfaXyzP
-         i1cvgak3PyWa6Nteh/p52TU4+SqgqD5MH2CL4e/rzH1AdQ9nVXOiAbnWRu7qwLUvehl0
-         96RBdm6qh38n2jbKAyaXFCsrN0XbAhbg0+hZi7qHFjVZUtgDvdXStjnfmJp9tVE/vkti
-         F1Mg==
-X-Gm-Message-State: AOAM533cEsc08m+mFVV8J+Z6XNnZPBhi/c6aV6+0yk2P+7+DWvnjRXA1
-        deadhoD4OI5vak+cqzwIM70=
-X-Google-Smtp-Source: ABdhPJwjkcJmrfPAlIMSO40Q1P0k8mY5xfVxo61WhQtpkjDIG98DhjqaaoFyfr5HNiQLHsL1LNwG5A==
-X-Received: by 2002:aa7:8651:: with SMTP id a17mr11823677pfo.48.1595064032954;
-        Sat, 18 Jul 2020 02:20:32 -0700 (PDT)
+        bh=o09yAv6DGamGaLfCecq9vHf5FNi8bhrG0BGxeRszaDs=;
+        b=jKjzM4QAr00XmmeTamGIMCOwwpHjfESRUWvKiNJiQdozm5+NBq2yaO5c6VZ4aZAeB4
+         3J8WNkeEq193yG97yrzOjniEg9N4SM1bqTzMW7T+ZohqyQx7L1WQLrByTrjK2gBAA80t
+         kdmKb53Xsy9wld+MWrD9L5fHVU1XWsJX94pQW3qRwiHnzAYEcOW7RqjLZABBWsfb08wI
+         JWUAyzb9LFcLRsDLeYADDDkldk3QuF15ZCb5bQYYRfLFSWF6JJHRjrGj9BqtJgaiNn7y
+         QJb8/JqmgAlMOPOYVDmPC94FR737pavdKzAWnh81AOOLXH1HlGOLr++tQBsy7SMsi2qp
+         QC2A==
+X-Gm-Message-State: AOAM530cfCnit+U+Ngw7Yz66mBWIAIu8v1ZZb5c8H1cYDprHsCCcU2Ea
+        jkc3w9md38XSaZ+UmE6PC04=
+X-Google-Smtp-Source: ABdhPJxHZREFEienqrTnze3kAwYqdAn0t+Ay4f37mE6l3zXJ3uks4pYJXW6rThhYrfX4DdbMCZly1w==
+X-Received: by 2002:a17:902:7790:: with SMTP id o16mr9943628pll.299.1595064038360;
+        Sat, 18 Jul 2020 02:20:38 -0700 (PDT)
 Received: from localhost.localdomain ([182.69.248.222])
-        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.20.28
+        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.20.33
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 Jul 2020 02:20:32 -0700 (PDT)
+        Sat, 18 Jul 2020 02:20:37 -0700 (PDT)
 From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de, vkoul@kernel.org,
+To:     andre.przywara@arm.com, afaerber@suse.de,
         manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v6 06/10] arm64: dts: actions: Add DMA Controller for S700
-Date:   Sat, 18 Jul 2020 14:49:30 +0530
-Message-Id: <1595063974-24228-7-git-send-email-amittomer25@gmail.com>
+Subject: [PATCH v6 07/10] dt-bindings: reset: s700: Add binding constants for mmc
+Date:   Sat, 18 Jul 2020 14:49:31 +0530
+Message-Id: <1595063974-24228-8-git-send-email-amittomer25@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
 References: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
@@ -76,10 +76,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds DMA controller present on Actions S700, it differs from
-S900 in terms of number of dma channels and requests.
+This commit adds device tree binding reset constants for mmc controller
+present on Actions S700 Soc.
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 ---
 Changes since v5:
@@ -87,51 +88,30 @@ Changes since v5:
 Changes since v4:
         * No change.
 Changes since v3:
-        * Fixed typo in commit message.
-        * Placed owl-s700-powergate.h in alphabetical order.
+        * No change.
 Changes since v2:
-        * added power-domain property as sps
-          is enabled now and DMA needs it.
+        * No change.
 Changes since v1:
-        * No Change.
+        * No change.
 Changes since RFC:
-        * No Change.
+        * added Rob's acked-by tag
 ---
- arch/arm64/boot/dts/actions/s700.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ include/dt-bindings/reset/actions,s700-reset.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index f8eb72bb4125..2c78caebf515 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -5,6 +5,7 @@
+diff --git a/include/dt-bindings/reset/actions,s700-reset.h b/include/dt-bindings/reset/actions,s700-reset.h
+index 5e3b16b8ef53..a3118de6d7aa 100644
+--- a/include/dt-bindings/reset/actions,s700-reset.h
++++ b/include/dt-bindings/reset/actions,s700-reset.h
+@@ -30,5 +30,8 @@
+ #define RESET_UART4				20
+ #define RESET_UART5				21
+ #define RESET_UART6				22
++#define RESET_SD0				23
++#define RESET_SD1				24
++#define RESET_SD2				25
  
- #include <dt-bindings/clock/actions,s700-cmu.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/owl-s700-powergate.h>
- #include <dt-bindings/reset/actions,s700-reset.h>
- 
- / {
-@@ -244,5 +245,19 @@
- 				     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-+
-+		dma: dma-controller@e0230000 {
-+			compatible = "actions,s700-dma";
-+			reg = <0x0 0xe0230000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			dma-channels = <10>;
-+			dma-requests = <44>;
-+			clocks = <&cmu CLK_DMAC>;
-+			power-domains = <&sps S700_PD_DMA>;
-+		};
- 	};
- };
+ #endif /* __DT_BINDINGS_ACTIONS_S700_RESET_H */
 -- 
 2.7.4
 
