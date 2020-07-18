@@ -2,92 +2,86 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA3AC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AB3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5C020829
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595083206;
-	bh=nvn1jkxHHeYYWEQoAjKg5uofe3fLSd64oTcVeFIWWM0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qtbDqFBs68mPrbY8em0uXrNL5Wwc2oZ7YgjB2ZfCD2l2GGGSF3K7cdptxxvWIXbHR
-	 9N9QqtgWu7Uety5+Fayt+sC3YMQVT1DeRgyGY1EuxsEvwqtVyqtqSx1Xu/xzrQIK7r
-	 3iizUAB9yukoHYdHmiP+FB+Z1NkOhxcjPl8Y/YYI=
+	by mail.kernel.org (Postfix) with ESMTP id 06CEA2064B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 14:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgGROkE (ORCPT
+        id S1727905AbgGROky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 10:40:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60180 "EHLO mail.kernel.org"
+        Sat, 18 Jul 2020 10:40:54 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38918 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgGROkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 10:40:04 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C858520684;
-        Sat, 18 Jul 2020 14:40:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595083204;
-        bh=nvn1jkxHHeYYWEQoAjKg5uofe3fLSd64oTcVeFIWWM0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=o8r+0ObtPAJmTRvOUxAuMKPAjOpO9G/4WFhdifT4R1z0WEhSQg2L2Act7vwLMmG6P
-         zUGOKsPNNUybqCaKFFHlF75HePtOM6ljxenhS5uULWbSxfLiwH1kaFoGsfgc6JxQpX
-         DRPK0a+c19ZfYQnNh5WhGtnpaH8ytxiBVCmXjBVM=
-Date:   Sat, 18 Jul 2020 15:40:00 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 10/30] iio: dummy: iio_simple_dummy: Add newline after
- function-end
-Message-ID: <20200718154000.60e04716@archlinux>
-In-Reply-To: <20200716135928.1456727-11-lee.jones@linaro.org>
-References: <20200716135928.1456727-1-lee.jones@linaro.org>
-        <20200716135928.1456727-11-lee.jones@linaro.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726798AbgGROkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 10:40:53 -0400
+Received: from x2f7f83e.dyn.telefonica.de ([2.247.248.62] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jwo0t-0007Eg-A6; Sat, 18 Jul 2020 16:40:31 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Johan Jonker <jbx6244@gmail.com>, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-rockchip@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Carlos de Paula <me@carlosedp.com>,
+        dmaengine@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 0/14] Patches to improve transfer efficiency for Rockchip SoCs.
+Date:   Sat, 18 Jul 2020 16:40:29 +0200
+Message-ID: <1883465.KieDo6KLrp@phil>
+In-Reply-To: <1593439555-68130-1-git-send-email-sugar.zhang@rock-chips.com>
+References: <1593439555-68130-1-git-send-email-sugar.zhang@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 14:59:08 +0100
-Lee Jones <lee.jones@linaro.org> wrote:
+Am Montag, 29. Juni 2020, 16:05:41 CEST schrieb Sugar Zhang:
+> Changes in v3:
+> - rephrase commit message
+> - fix typos in commit message
+> - split the patch for [PATCH V2 1/14]
+> - reorder the patch series
+> 
+> Changes in v2:
+> - fix FATAL ERROR: Unable to parse input tree
+> 
+> Sugar Zhang (14):
+>   dmaengine: pl330: Remove the burst limit for quirk 'NO-FLUSHP'
+>   dmaengine: pl330: Improve transfer efficiency for the dregs
+>   dt-bindings: dma: pl330: Document the quirk 'arm,pl330-periph-burst'
+>   dmaengine: pl330: Add quirk 'arm,pl330-periph-burst'
+>   ARM: dts: rk3036: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rk322x: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rk3288: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rk3xxx: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rv1108: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: px30: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3308: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3328: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3368: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3399: Add 'arm,pl330-periph-burst' for dmac
 
-> Fixes the following checkpatch.pl warning(s):
-> 
->  CHECK: Please use a blank line after function/struct/union/enum declarations
->  #46: FILE: drivers/iio/dummy/iio_simple_dummy.c:690:
->   }
->  +/*
->  total: 0 errors, 0 warnings, 1 checks, 22 lines checked
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Applied
+applied the patches 5-14 but merged them into one for arm32
+and one for arm64 and did some slight reordering when the new
+property was added at the bottom of the node.
 
-> ---
->  drivers/iio/dummy/iio_simple_dummy.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/iio/dummy/iio_simple_dummy.c b/drivers/iio/dummy/iio_simple_dummy.c
-> index be66b26373723..cc4335963d0cf 100644
-> --- a/drivers/iio/dummy/iio_simple_dummy.c
-> +++ b/drivers/iio/dummy/iio_simple_dummy.c
-> @@ -687,6 +687,7 @@ static int iio_dummy_remove(struct iio_sw_device *swd)
->  
->  	return 0;
->  }
-> +
->  /*
->   * module_iio_sw_device_driver() -  device driver registration
->   *
+Thanks
+Heiko
+
 
