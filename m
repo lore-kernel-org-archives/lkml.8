@@ -2,211 +2,201 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E651C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17A5A20691
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D50B2074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqScysbg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f7sz0tga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgGRAFI (ORCPT
+        id S1728671AbgGRAGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 20:05:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48306 "EHLO
+        Fri, 17 Jul 2020 20:06:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgGRAFI (ORCPT
+        with ESMTP id S1727981AbgGRAGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 20:05:08 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABE4C0619D2;
-        Fri, 17 Jul 2020 17:05:07 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id u12so8940794qth.12;
-        Fri, 17 Jul 2020 17:05:07 -0700 (PDT)
+        Fri, 17 Jul 2020 20:06:43 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903F3C0619D4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:06:43 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id r25so7436044qtj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 17:06:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m19mjNVg9Yx5LiqHjNrg1ffuzvD3ZOm9O2XkGj5bSOs=;
-        b=VqScysbg9M/NbSpemXlxIgPmx1EIs50vcUg/xtRIr+5MkK/a48zx+eKxFNaL27K1st
-         PPU7y3crCxIc/b9aGCsmQTzSMfvd3yWRNYnJrXdcrCu6pqsgv2s5fB3Mp1JK1JjvxHLI
-         i/AsDWnuhm9hs4UttfX2+aGmYFgVcj7GLc4Y0KkFC5glchKwGvlVx3gzwsy6zj4KIbZI
-         zltIsNisuic3lPRW/A7rY2at21PiUIuJaduHFrzAQl8rkYE6IMoO0Sz10BIDjda29m3h
-         1YKa5qaiklw0Dki08JBRUaOz3vd8bQoRk905x2MmH4/dpf0OLs6jXbKe9JbHrj5f4t+H
-         9tWw==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=lZV5LJ2D+3d5c6Q1RBEHt+umrHrDQPYow79ie/sqGoo=;
+        b=f7sz0tgaClL14NdE7pJITVXQTObuFddTT6emyjS08ZgPsh5vLij6r8Zr0bdr8nmJRz
+         HLP+EdNTkpLXbcL5dYajxBaRik3Dw2bErrgNidiApzncVpOsTCt+bfjEJ1gVY0MTCIK3
+         0Zj3UzcABE83gfPsE1DrmmHS203F++mP+Ysu29KDC3/FnR95F8F0v9dVnsnN06FinAji
+         R+vJDBGn3CsQ/h9XHm9VCIoUqnaEcHwJCaJu1fQd1sLUv6WgSaZZBj2zHrk05K23z0/T
+         ByzcbObDgfus2zOMoNbaOXd15ySmQzPlMHtexdlMoydVKP8BFo62ExGirBtJUN7Nx3Ji
+         FLNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m19mjNVg9Yx5LiqHjNrg1ffuzvD3ZOm9O2XkGj5bSOs=;
-        b=NG5rMae6CippXqhDJ/111Lq3UUaLdiKqMcBGebG3qo7kTRhMLkcRHVznK2w4qRz2oX
-         AA1WhfRik7dLz6WcOzulQHkpXpiBhtDQ5jaWBOKYQSXGTG0padJxEvnfbj9fe0vZ8QQb
-         I1Cs6GSzAxnhhWmDpxxUMOEM2L64qc4F0KfODyMX1iJlFntNwiJEONPo7TaTZBrPsyUU
-         pPycNJPllTD2Tzi4+CbBq31uy9bLMCDMsDlWJKlmWJIQbyaeElQIYnj222D8Kdlo6mU3
-         vwWZEK2U7ecn+LHoeWVufeM8+dbtG3uKkQ6zxk2wtTYnLKjV+94ambHsnzAs3cCVkZvs
-         Z2xg==
-X-Gm-Message-State: AOAM533CAA/zX6zhWSt5SieR9JlcXt2AX4ygylIiMGPojzUZ8gU4TKMl
-        ZDQ1E03mwnhiNurA08RG11ByaL1rnquH0VpIGX0=
-X-Google-Smtp-Source: ABdhPJyFE6PJVO4nWUGfPDazWP393Pl2OWxj5b3M9aVKcbgwpVidiBe4D8NO4edItTdr4l/mRiirWoL/5e4G5iXNJZ4=
-X-Received: by 2002:ac8:744a:: with SMTP id h10mr13573943qtr.241.1595030706825;
- Fri, 17 Jul 2020 17:05:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn>
- <alpine.LFD.2.21.2007072043250.31807@redsun52.ssa.fujisawa.hgst.com>
- <b62c76c5-3548-c3d5-ad3e-5664c463a52f@loongson.cn> <alpine.LFD.2.21.2007171044320.24175@redsun52.ssa.fujisawa.hgst.com>
-In-Reply-To: <alpine.LFD.2.21.2007171044320.24175@redsun52.ssa.fujisawa.hgst.com>
-From:   YunQiang Su <wzssyqa@gmail.com>
-Date:   Sat, 18 Jul 2020 08:04:55 +0800
-Message-ID: <CAKcpw6XGhtifErTKyxCigyDGJBa01c7NALutJrdgyD_oX1u-LQ@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: Prevent READ_IMPLIES_EXEC propagation
-To:     "Maciej W. Rozycki" <macro@wdc.com>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=lZV5LJ2D+3d5c6Q1RBEHt+umrHrDQPYow79ie/sqGoo=;
+        b=tRjoej4EB5iHlO6z2Q1P7WWp7TuPzIQB9WB+UOY1dOH1Lc1KxXso1dPNtyjcIMNOsc
+         o3ZUp+junmzxK2FVpmLUQaLHO6mdo73iX9UP0Ul4bi8TzmEh1sVuuY5G4CkuLx1rLZby
+         zACWWgdTai6BBt1b+yR9y4pUzzYxsrN1YKJ6doNbaFTEdCpgoCPy9N8kRorEU4DWm7WS
+         oZtxDgev3pJA+7TnlYvwtzjMoC6tIOomhjNYkvT5wm7mC4jMnyF3q2WpIIr83rhr993K
+         AjbW6r6qk9PRGZz5w6SPvNrtcvtyOjldhBA0xvDFtG/vKCKIbtXqmaQtgfslYAVhBJti
+         5/wA==
+X-Gm-Message-State: AOAM530gMXij/fAQaXTl4/iY2vmlvVwvVl6zkcrxYAhiA9gdhZeAVGzu
+        4FMS7XQNUK2SlHzymwbOYaGRSertXyZpw9I=
+X-Google-Smtp-Source: ABdhPJxJ7FCreyEpq5UXSDryBArlKlpzEz07QUPpT9WWRT3kKQejA5X0pbgSsPqzz1OI15cxmhDDFZUj4PyeZpY=
+X-Received: by 2002:a05:6214:8f4:: with SMTP id dr20mr10977278qvb.228.1595030802697;
+ Fri, 17 Jul 2020 17:06:42 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 17:06:34 -0700
+In-Reply-To: <20200718000637.3632841-1-saravanak@google.com>
+Message-Id: <20200718000637.3632841-2-saravanak@google.com>
+Mime-Version: 1.0
+References: <20200718000637.3632841-1-saravanak@google.com>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+Subject: [PATCH v3 1/4] irqchip: Add IRQCHIP_PLATFORM_DRIVER_BEGIN/END and
+ IRQCHIP_MATCH helper macros
+From:   Saravana Kannan <saravanak@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        John Stultz <john.stultz@linaro.org>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maciej W. Rozycki <macro@wdc.com> =E4=BA=8E2020=E5=B9=B47=E6=9C=8817=E6=97=
-=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=886:00=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Wed, 8 Jul 2020, Tiezhu Yang wrote:
->
-> > >> In the MIPS architecture, we should clear the security-relevant
-> > >> flag READ_IMPLIES_EXEC in the function SET_PERSONALITY2() of the
-> > >> file arch/mips/include/asm/elf.h.
-> > >>
-> > >> Otherwise, with this flag set, PROT_READ implies PROT_EXEC for
-> > >> mmap to make memory executable that is not safe, because this
-> > >> condition allows an attacker to simply jump to and execute bytes
-> > >> that are considered to be just data [1].
-> > >   Why isn't the arrangement made with `mips_elf_read_implies_exec'
-> > > sufficient?
-> >
-> > We inherit the READ_IMPLIES_EXEC personality flag across fork().
-> > If we do not explicitly clear this flag in SET_PERSONALITY2(),
-> > PROT_READ implies PROT_EXEC for mmap to make memory executable
-> > even if used with the GCC option "-z noexecstack" when compile.
+Compiling an irqchip driver as a platform driver needs to bunch of
+things to be done right:
+- Making sure the parent domain is initialized first
+- Making sure the device can't be unbound from sysfs
+- Disallowing module unload if it's built as a module
+- Finding the parent node
+- Etc.
 
-With next-20200717 with this patch on a Loongson 3A 4000 machine is
-AMDGPU video card it get
+Instead of trying to make sure all future irqchip platform drivers get
+this right, provide boilerplate macros that take care of all of this.
 
-[   25.019868] [drm] Fence fallback timer expired on ring comp_1.1.1
-         Starting Network Manager Script Dispatcher Service...
-[  OK  ] Started Network Manager Script Dispatcher Service.
-[   25.551110] [drm] Fence fallback timer expired on ring comp_1.2.1
-[   26.082351] [drm] Fence fallback timer expired on ring comp_1.3.1
-[   26.613601] [drm] Fence fallback timer expired on ring sdma0
-[   27.144859] [drm] Fence fallback timer expired on ring sdma1
-[   27.707351] [drm] Fence fallback timer expired on ring uvd
-[   28.238600] [drm] Fence fallback timer expired on ring uvd_enc0
-[   28.769850] [drm] Fence fallback timer expired on ring uvd_enc1
-[   29.051639] igb 0000:03:00.0 enp3s0: igb: enp3s0 NIC Link is Up
-1000 Mbps Full Duplex, Flow Control: RX/TX
-[   29.061605] IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
-[  OK  ] Finished Network Manager Wait Online.
-[  OK  ] Reached target Network is Online.
-         Mounting /home/syq/sbuild...
-[   29.156613] Key type dns_resolver registered
-[   29.167111] NFS: Registering the id_resolver key type
-[   29.172173] Key type id_resolver registered
-[   29.176337] Key type id_legacy registered
-[   29.180686] NFS4: Couldn't follow remote path
-[   29.185475] NFS4: Couldn't follow remote path
-[   29.394860] [drm] Fence fallback timer expired on ring vce0
-[   32.269979] NFS4: Couldn't follow remote path
-[   35.363774] NFS4: Couldn't follow remote path
-[   38.457413] NFS4: Couldn't follow remote path
-[   39.051103] ------------[ cut here ]------------
-[   39.055697] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:443
-dev_watchdog+0x31c/0x328
-[   39.063914] NETDEV WATCHDOG: enp3s0 (igb): transmit queue 0 timed out
-[   39.070313] Modules linked in: auth_rpcgss nfsv4 dns_resolver nfs
-lockd grace rfkill snd_hda_codec_generic ledtrig_audio led_class
-binfmt_misc vfat fat snd_hda_intel snd_intel_dspcfg snd_hda_codd
-[   39.107286] CPU: 1 PID: 0 Comm: swapper/1 Not tainted
-5.8.0-rc5-next-20200717+ #66
-[   39.114808] Hardware name: Lemote
-LEMOTE-LS3A4000-7A1000-1w-V0.1-pc/LEMOTE-LS3A4000-7A1000-1w-V01-pc,
-BIOS Kunlun-A1901-V4.1.0 03/06/2020
-[   39.127082] Stack : 000003e000000400 35c940b50177d66d
-0000000000000001 35c940b50177d66d
-[   39.135043]         35c940b50177d66d 0000000000000000
-980000027d067bd8 ffffffff80be28d0
-[   39.143003]         980000027d067a60 0000000000000001
-980000027d067aa8 0000000000000000
-[   39.150962]         0000000000000000 c0000000ffffefff
-0000000005f5e100 980000027d067a98
-[   39.158922]         0000000000000001 ffffffff80c80000
-0000000000000000 0000000000000000
-[   39.166882]         ffffffff80be0000 ffffffff80bf3b48
-0000000000200000 0000000000000000
-[   39.174842]         9800000005fcc828 0000000000000000
-ffffffff80657e78 0000000000000008
-[   39.182802]         ffffffff80e60008 980000027d158000
-980000027d067bd0 0000000000000122
-[   39.190762]         ffffffff805a06fc 0000000000000000
-0000000000000000 0000000000000000
-[   39.198721]         0000000000000000 0000000000000000
-ffffffff8020efe0 35c940b50177d66d
-[   39.206681]         ...
-[   39.209107] Call Trace:
-[   39.211536] [<ffffffff8020efe0>] show_stack+0x40/0x128
-[   39.216644] [<ffffffff805a06fc>] dump_stack+0xac/0xf0
-[   39.221663] [<ffffffff80233330>] __warn+0xc0/0xe8
-[   39.226335] [<ffffffff80233400>] warn_slowpath_fmt+0xa8/0xe8
-[   39.231957] [<ffffffff8091d6d4>] dev_watchdog+0x31c/0x328
-[   39.237323] [<ffffffff802ad744>] call_timer_fn.isra.30+0x24/0x98
-[   39.243290] [<ffffffff802adea4>] run_timer_softirq+0x44c/0x470
-[   39.249087] [<ffffffff80a46708>] __do_softirq+0x180/0x350
-[   39.254451] [<ffffffff80239da4>] irq_exit+0xc4/0xf0
-[   39.259297] [<ffffffff805bf124>] plat_irq_dispatch+0x64/0x100
-[   39.265005] [<ffffffff80208e60>] handle_int+0x140/0x14c
-[   39.270195] [<ffffffff80208ce0>] __r4k_wait+0x20/0x40
-[   39.275214] ---[ end trace 084e32ee82ee2ecd ]---
-[   39.279962] igb 0000:03:00.0 enp3s0: Reset adapter
-[   44.051629] igb 0000:03:00.0 enp3s0: igb: enp3s0 NIC Link is Up
-1000 Mbps Full Duplex, Flow Control: RX/TX
-[   45.551211] NFS4: Couldn't follow remote path
-[***   ] A start job is running for /home/syq/sbuild (32s / 1min 38s)
-[   ***] A start job is running for /home/syq/sbuild (36s / 1min 38s)
-[  *** ] A start job is running for /home/syq/sbuild (36s / 1min 38s)
-[***   ] A start job is running for /home/syq/sbuild (46s / 1min 38s)
-[ ***  ] A start job is running for /home/syq/sbuild (47s / 1min 38s)
+An example use would look something like this. Where acme_foo_init and
+acme_bar_init are similar to what would be passed to IRQCHIP_DECLARE.
 
-Revert this patch can solve this problem.
-I think that we need a wide test before have a so fundamental change.
+IRQCHIP_PLATFORM_DRIVER_BEGIN(acme_irq)
+IRQCHIP_MATCH("acme,foo", acme_foo_init)
+IRQCHIP_MATCH("acme,bar", acme_bar_init)
+IRQCHIP_PLATFORM_DRIVER_END(acme_irq)
 
->
->  It makes no sense to me to repeat this across all the architectures, and
-> even less so to do it individually one by one as people rediscover this
-> issue.
->
->  Why don't we maintain the flag globally in `fs/binfmt_elf.c' which is
-> where we already set it?  E.g.:
->
->         SET_PERSONALITY2(*elf_ex, &arch_state);
->         if (elf_read_implies_exec(*elf_ex, executable_stack))
->                 current->personality |=3D READ_IMPLIES_EXEC;
->         else
->                 current->personality &=3D ~READ_IMPLIES_EXEC;
->
->   Maciej
+Cc: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/irqchip/irqchip.c | 29 +++++++++++++++++++++++++++++
+ include/linux/irqchip.h   | 23 +++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
 
+diff --git a/drivers/irqchip/irqchip.c b/drivers/irqchip/irqchip.c
+index 2b35e68bea82..1bb0e36c2bf3 100644
+--- a/drivers/irqchip/irqchip.c
++++ b/drivers/irqchip/irqchip.c
+@@ -10,8 +10,10 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/init.h>
++#include <linux/of_device.h>
+ #include <linux/of_irq.h>
+ #include <linux/irqchip.h>
++#include <linux/platform_device.h>
+ 
+ /*
+  * This special of_device_id is the sentinel at the end of the
+@@ -29,3 +31,30 @@ void __init irqchip_init(void)
+ 	of_irq_init(__irqchip_of_table);
+ 	acpi_probe_device_table(irqchip);
+ }
++
++int platform_irqchip_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *par_np = of_irq_find_parent(np);
++	of_irq_init_cb_t irq_init_cb = of_device_get_match_data(&pdev->dev);
++
++	if (!irq_init_cb)
++		return -EINVAL;
++
++	if (par_np == np)
++		par_np = NULL;
++
++	/*
++	 * If there's a parent interrupt controller and  none of the parent irq
++	 * domains have been registered, that means the parent interrupt
++	 * controller has not been initialized yet.  it's not time for this
++	 * interrupt controller to initialize. So, defer probe of this
++	 * interrupt controller. The actual initialization callback of this
++	 * interrupt controller can check for specific domains as necessary.
++	 */
++	if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
++		return -EPROBE_DEFER;
++
++	return irq_init_cb(np, par_np);
++}
++EXPORT_SYMBOL_GPL(platform_irqchip_probe);
+diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
+index 447f22880a69..8e754d8b8155 100644
+--- a/include/linux/irqchip.h
++++ b/include/linux/irqchip.h
+@@ -13,6 +13,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/of.h>
++#include <linux/platform_device.h>
+ 
+ /*
+  * This macro must be used by the different irqchip drivers to declare
+@@ -26,6 +27,28 @@
+  */
+ #define IRQCHIP_DECLARE(name, compat, fn) OF_DECLARE_2(irqchip, name, compat, fn)
+ 
++extern int platform_irqchip_probe(struct platform_device *pdev);
++
++#define IRQCHIP_PLATFORM_DRIVER_BEGIN(drv_name) \
++static const struct of_device_id drv_name##_irqchip_match_table[] = {
++
++#define IRQCHIP_MATCH(compat, fn) { .compatible = compat, .data = fn },
++
++#define IRQCHIP_PLATFORM_DRIVER_END(drv_name)				\
++	{},								\
++};									\
++MODULE_DEVICE_TABLE(of, drv_name##_irqchip_match_table);		\
++static struct platform_driver drv_name##_driver = {		\
++	.probe  = platform_irqchip_probe,				\
++	.driver = {							\
++		.name = #drv_name,					\
++		.owner = THIS_MODULE,					\
++		.of_match_table = drv_name##_irqchip_match_table,	\
++		.suppress_bind_attrs = true,				\
++	},								\
++};									\
++builtin_platform_driver(drv_name##_driver)
++
+ /*
+  * This macro must be used by the different irqchip drivers to declare
+  * the association between their version and their initialization function.
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
 
-
---=20
-YunQiang Su
