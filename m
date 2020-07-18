@@ -2,100 +2,126 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 12:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25361C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 12:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79D6320724
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 12:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9842070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 12:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbgGRMdz (ORCPT
+        id S1726763AbgGRMiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 08:33:55 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8324 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726566AbgGRMdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 08:33:55 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 75F173633CE5EAE1F994;
-        Sat, 18 Jul 2020 20:33:49 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Sat, 18 Jul 2020
- 20:33:47 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <aacraid@microsemi.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] scsi: dpt_i2o: remove some not needed memset
-Date:   Sat, 18 Jul 2020 20:32:24 +0800
-Message-ID: <20200718123224.1202-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 18 Jul 2020 08:38:52 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:36322 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726493AbgGRMiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 08:38:51 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id A58C4BC064;
+        Sat, 18 Jul 2020 12:38:46 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        josh@joshtriplett.org, jbrasen@nvidia.com, krzk@kernel.org,
+        kai.heng.feng@canonical.com, tbogendoerfer@suse.de,
+        masahiroy@kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] tty: serial: Replace HTTP links with HTTPS ones
+Date:   Sat, 18 Jul 2020 14:38:40 +0200
+Message-Id: <20200718123840.19957-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-./drivers/scsi/dpt_i2o.c:3070:11-29: WARNING:
- dma_alloc_coherent use in sys_tbl already zeroes out memory, so memset is not needed
-./drivers/scsi/dpt_i2o.c:2780:10-28: WARNING:
- dma_alloc_coherent use in status already zeroes out memory, so memset is not needed
-./drivers/scsi/dpt_i2o.c:2834:20-38: WARNING:
- dma_alloc_coherent use in pHba -> reply_pool already zeroes out memory, so memset is not needed
-./drivers/scsi/dpt_i2o.c:1328:10-28: WARNING:
- dma_alloc_coherent use in status already zeroes out memory, so memset is not needed
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- drivers/scsi/dpt_i2o.c | 4 ----
- 1 file changed, 4 deletions(-)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
-index 0497ef6a9453..f654ad8a3d69 100644
---- a/drivers/scsi/dpt_i2o.c
-+++ b/drivers/scsi/dpt_i2o.c
-@@ -1331,7 +1331,6 @@ static s32 adpt_i2o_reset_hba(adpt_hba* pHba)
- 		printk(KERN_ERR"IOP reset failed - no free memory.\n");
- 		return -ENOMEM;
- 	}
--	memset(status,0,4);
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/tty/serial/8250/Kconfig     | 4 ++--
+ drivers/tty/serial/jsm/jsm_driver.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
+index d2ae033aea40..603137da4736 100644
+--- a/drivers/tty/serial/8250/Kconfig
++++ b/drivers/tty/serial/8250/Kconfig
+@@ -222,7 +222,7 @@ config SERIAL_8250_MANY_PORTS
+ 	  Say Y here if you have dumb serial boards other than the four
+ 	  standard COM 1/2/3/4 ports. This may happen if you have an AST
+ 	  FourPort, Accent Async, Boca (read the Boca mini-HOWTO, available
+-	  from <http://www.tldp.org/docs.html#howto>), or other custom
++	  from <https://www.tldp.org/docs.html#howto>), or other custom
+ 	  serial port hardware which acts similar to standard serial port
+ 	  hardware. If you only use the standard COM 1/2/3/4 ports, you can
+ 	  say N here to save some memory. You can also say Y if you have an
+@@ -266,7 +266,7 @@ config SERIAL_8250_BOCA
+ 	depends on SERIAL_8250 != n && ISA && SERIAL_8250_MANY_PORTS
+ 	help
+ 	  Say Y here if you have a Boca serial board.  Please read the Boca
+-	  mini-HOWTO, available from <http://www.tldp.org/docs.html#howto>
++	  mini-HOWTO, available from <https://www.tldp.org/docs.html#howto>
  
- 	msg[0]=EIGHT_WORD_MSG_SIZE|SGL_OFFSET_0;
- 	msg[1]=I2O_CMD_ADAPTER_RESET<<24|HOST_TID<<12|ADAPTER_TID;
-@@ -2784,7 +2783,6 @@ static s32 adpt_i2o_init_outbound_q(adpt_hba* pHba)
- 			pHba->name);
- 		return -ENOMEM;
- 	}
--	memset(status, 0, 4);
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called 8250_boca.
+diff --git a/drivers/tty/serial/jsm/jsm_driver.c b/drivers/tty/serial/jsm/jsm_driver.c
+index 592e51d8944e..cd30da0ef083 100644
+--- a/drivers/tty/serial/jsm/jsm_driver.c
++++ b/drivers/tty/serial/jsm/jsm_driver.c
+@@ -16,7 +16,7 @@
  
- 	writel(EIGHT_WORD_MSG_SIZE| SGL_OFFSET_6, &msg[0]);
- 	writel(I2O_CMD_OUTBOUND_INIT<<24 | HOST_TID<<12 | ADAPTER_TID, &msg[1]);
-@@ -2838,7 +2836,6 @@ static s32 adpt_i2o_init_outbound_q(adpt_hba* pHba)
- 		printk(KERN_ERR "%s: Could not allocate reply pool\n", pHba->name);
- 		return -ENOMEM;
- 	}
--	memset(pHba->reply_pool, 0 , pHba->reply_fifo_size * REPLY_FRAME_SIZE * 4);
+ #include "jsm.h"
  
- 	for(i = 0; i < pHba->reply_fifo_size; i++) {
- 		writel(pHba->reply_pool_pa + (i * REPLY_FRAME_SIZE * 4),
-@@ -3073,7 +3070,6 @@ static int adpt_i2o_build_sys_table(void)
- 		printk(KERN_WARNING "SysTab Set failed. Out of memory.\n");	
- 		return -ENOMEM;
- 	}
--	memset(sys_tbl, 0, sys_tbl_len);
- 
- 	sys_tbl->num_entries = hba_count;
- 	sys_tbl->version = I2OVERSION;
+-MODULE_AUTHOR("Digi International, http://www.digi.com");
++MODULE_AUTHOR("Digi International, https://www.digi.com");
+ MODULE_DESCRIPTION("Driver for the Digi International Neo and Classic PCI based product line");
+ MODULE_LICENSE("GPL");
+ MODULE_SUPPORTED_DEVICE("jsm");
 -- 
-2.17.1
+2.27.0
 
