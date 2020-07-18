@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF0CC433FC
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD8DC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0077E22B4D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29B42176B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 20:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgGRUvV (ORCPT
+        id S1728437AbgGRUvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 16:51:21 -0400
-Received: from v6.sk ([167.172.42.174]:37684 "EHLO v6.sk"
+        Sat, 18 Jul 2020 16:51:19 -0400
+Received: from v6.sk ([167.172.42.174]:37672 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727869AbgGRUvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726863AbgGRUvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 18 Jul 2020 16:51:18 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 451C260D3A;
-        Sat, 18 Jul 2020 20:51:17 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id D51A960D2F;
+        Sat, 18 Jul 2020 20:50:46 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: <soc.lore.kernel.org>
 Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 13/13] ARM: dts: mmp3-dell-ariel: Enable the GPU
-Date:   Sat, 18 Jul 2020 22:50:19 +0200
-Message-Id: <20200718205019.184927-14-lkundrak@v3.sk>
+Subject: [PATCH v2 04/13] ARM: dts: mmp2: Extend the MPMU reg range
+Date:   Sat, 18 Jul 2020 22:50:10 +0200
+Message-Id: <20200718205019.184927-5-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200718205019.184927-1-lkundrak@v3.sk>
 References: <20200718205019.184927-1-lkundrak@v3.sk>
@@ -42,33 +42,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the 2D (GC300) and the 3D (GC2000) GPUs cores.
+The ACGR register is at the offset of 0x1024, beyond the 4k originally
+assigned to the MPMU range.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
 ---
-Changes since v1:
-- s/GC200/GC2000/ in patch description (pointed out by Pavel Machek)
+ arch/arm/boot/dts/mmp2.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arm/boot/dts/mmp3-dell-ariel.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/mmp3-dell-ariel.dts b/arch/arm/boot/dts/mmp3-dell-ariel.dts
-index b0ec14c421641..fe3b1cd695eeb 100644
---- a/arch/arm/boot/dts/mmp3-dell-ariel.dts
-+++ b/arch/arm/boot/dts/mmp3-dell-ariel.dts
-@@ -114,3 +114,11 @@ &ssp2 {
- 	cs-gpios = <&gpio 56 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
-+
-+&gpu_2d {
-+	status = "okay";
-+};
-+
-+&gpu_3d {
-+	status = "okay";
-+};
+diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+index 9b8a156cf73e5..9e77f685fb188 100644
+--- a/arch/arm/boot/dts/mmp2.dtsi
++++ b/arch/arm/boot/dts/mmp2.dtsi
+@@ -415,7 +415,7 @@ ssp4: spi@d4039000 {
+ 
+ 		soc_clocks: clocks {
+ 			compatible = "marvell,mmp2-clock";
+-			reg = <0xd4050000 0x1000>,
++			reg = <0xd4050000 0x2000>,
+ 			      <0xd4282800 0x400>,
+ 			      <0xd4015000 0x1000>;
+ 			reg-names = "mpmu", "apmu", "apbc";
 -- 
 2.26.2
 
