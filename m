@@ -2,156 +2,334 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 12:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 12:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6B52073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 12:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pSeRxcIY"
+	by mail.kernel.org (Postfix) with ESMTP id B40D520724
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 12:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgGRMPe (ORCPT
+        id S1726730AbgGRM2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 08:15:34 -0400
-Received: from mout.web.de ([212.227.17.11]:34373 "EHLO mout.web.de"
+        Sat, 18 Jul 2020 08:28:39 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:33980 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgGRMPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 08:15:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1595074468;
-        bh=U65LMVBBoufD+55SxpSXNUDIDOZN957aglckxFtMk7M=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=pSeRxcIYUW6U1C1hF51L23RJN3Fz1nRdEDoQCT94kgtP4FNL/qEiAOlj7S+1Dqs76
-         8UFXNoRWyN/i7ld/W07Nb6o/Z2K90XEjKq2MKM4Guzbi/zPADwZOOMpPRkDngYG7Is
-         K+qJbkzuoyOttHdj/aHSQkPgoIVg5G3OhFqrNFw8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.120.168]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MVtxM-1kKtG0021o-00X2EL; Sat, 18
- Jul 2020 14:14:28 +0200
-Subject: Re: [v2 1/4] coccinelle: api: extend memdup_user transformation with
- GFP_USER
-To:     Julia Lawall <julia.lawall@inria.fr>,
-        Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <0b9f2c58-e124-22d2-d91d-62a6e831c880@web.de>
- <alpine.DEB.2.22.394.2007180841520.2538@hadrien>
- <fa0ec546-9aee-5c95-428c-a225a3521f6f@web.de>
- <alpine.DEB.2.22.394.2007181034530.2538@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <0a961d1e-6bd2-45fd-113e-9258fe00a16a@web.de>
-Date:   Sat, 18 Jul 2020 14:14:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726493AbgGRM2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 08:28:39 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2108ABC062;
+        Sat, 18 Jul 2020 12:28:33 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        don.brace@microsemi.com, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, vigneshr@ti.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, esc.storagedev@microsemi.com
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] scsi: Replace HTTP links with HTTPS ones
+Date:   Sat, 18 Jul 2020 14:28:27 +0200
+Message-Id: <20200718122827.19884-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2007181034530.2538@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xRL2D+hWXFUp6yx33y+vyQ1zbck9m34U56qu9vxGBg4dbDNQTh5
- T4shAnnxdLykE39XxSayFgaNXsYwpihRRNly/eWM9S32je5qMD0bw5ZETuKOSm/ucjqYMNk
- I5Y/F1FX0hoLeEOQKA0IxCK6RtExjAQ9qiiogHzntt7JCKpt00ZHi6Wo3GL8Y4E0LZ8s2v0
- 7hCoBAJXBKrOIdocKkQfg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:se6+j1wCtLM=:GeJacnAQ8PPSdFrECjC7Pf
- nDj34N9QqNU/+zU72XoRwVvZ61S/jabptyrFNj9GcoPgTGOj0jx1hMgdiE420QHX+zkzD39jj
- 0sbO3f3zR+R4DH3TubMrIYucH6t6MPb3CAWXbRxgiJsUctKiEka0WBckzPAmXPr0tgHaIFtqx
- FF2Q01ZcOM7zlbZeKWOEu9vlr8AH0aN4L24RrD8lwgTIIKBuEAuW7ElGUqvoVcem54EvlQs2e
- Y8w7KEbuT96gniZPMBRtrOit0mSnH6QPQrwq68y2VYSrzOdbZkDP74r4KfZSxC7hZhNsaMeDm
- r40SSzP8f0nMUP2MD0W8F35loGSQwrp33DxMjEJwrJhrcW/2edZ7Yi2GreBVuQzJxTEl633Vr
- AW/OHss7ZyqYVs4ZuhIEzXAAVIqTTDl6iHfOv84ZZLhKFx04jui7aUunNCFO4wAZgS1I/0TpO
- EAei0iUaVDqRF/F51+2DWNaCuDubqLdwMa71sPcLKKP3geFNq+sV9zRzyBvQPQ8BPphPJ4OJQ
- qjTHTHcUXyH35xSVEWSj7i3VYZU7iYZmy5Zh9D7gFX3w/OcRgMF61bAneGc7oB3d0nempDqzz
- +N+cEmxMoP6ke4ypof3MX8uCG7DkgJnpVjdGlvl60o4MMf7JbcXhCdoXbwwMYCuVFcw6HQqA5
- T/CUXIjATulPC8QaNB5Dto8jH1o99uAhYyWGlqCoUwhtwQaktI0p6a6NO+vl1GBlaAyU/7NmT
- D6PBYJHpPJotn0lqSMQEU+BBqMOnlTTquHI39oPpUuHLn0FgQWGPNRyP51XsZqgzq16TUzG9r
- lNvTvS8Gx9mOrZMo0uNKsR9z84/2kgN85MwFIgjvZSVgCGXDDX+dIM70sWlCu0rHQNamydwBY
- dbKF1h51s5KIdH0jRkS86XPVzgTTlm0RTDv66hdGz/PJpkQLOhu3p0JHImJ3D+vgPOYNJCZbG
- zUq2Y9MyvsqJZ/gntzikt34q8hsLNUZuBKCpOUQSPSx8cAJpWC+SwmjW92VC8uSckIAglXmg3
- m5xx1LMCZiyxNr/0PmWDr4U0B1UTfRLJDjAfovwPfDhQ3+ULAKioo3tud8d6K7ZclShGS5GF0
- MNgeFdT8Mr3madUMDJmZthp7AQlRs9M4GnULnQPhkJotYhgl0VyGgsUAovdncaDkAu5s2r20y
- FGScgTOrESEL9TbEDW5Ce5V6iFPqlwWGkhnUmUW68LKSco46URA/t0g4M63xHPLh/Y4ZPptwO
- 5ly3dGM4Z3cKRTOjFdNpdoCnxsYl6zFzVsci76g==
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> You proposed essentially  \( A \| B \) \( | C \| \)
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Will the software development attention grow for a topic
-like =E2=80=9CExtend support for handling of optional source code parts=E2=
-=80=9D?
-https://github.com/coccinelle/coccinelle/issues/53
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-How do you think about another tiny example script for the semantic patch =
-language?
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-@display@
-constant A, B;
-@@
-*A
-?| B
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-elfring@Sonne:~/Projekte/Coccinelle/Probe> spatch --parse-cocci optional_d=
-isjunction_test3-20200718.cocci
-=E2=80=A6
-warning: incompatible arity found on line 4
-incompatible minus and plus code starting on lines 4 and 4
+ drivers/scsi/Kconfig                  | 40 +++++++++++++--------------
+ drivers/scsi/hptiop.h                 |  2 +-
+ drivers/scsi/sense_codes.h            |  2 +-
+ drivers/scsi/smartpqi/Kconfig         |  2 +-
+ drivers/scsi/smartpqi/smartpqi_init.c |  2 +-
+ drivers/scsi/ufs/ti-j721e-ufs.c       |  2 +-
+ 6 files changed, 25 insertions(+), 25 deletions(-)
 
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index e9ff4cd5fbe9..87b0d56c0f61 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -75,7 +75,7 @@ config BLK_DEV_SD
+ 	  USB storage or the SCSI or parallel port version of
+ 	  the IOMEGA ZIP drive, say Y and read the SCSI-HOWTO,
+ 	  the Disk-HOWTO and the Multi-Disk-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>. This is NOT for SCSI
++	  <https://www.tldp.org/docs.html#howto>. This is NOT for SCSI
+ 	  CD-ROMs.
+ 
+ 	  To compile this driver as a module, choose M here and read
+@@ -93,7 +93,7 @@ config CHR_DEV_ST
+ 	help
+ 	  If you want to use a SCSI tape drive under Linux, say Y and read the
+ 	  SCSI-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>, and
++	  <https://www.tldp.org/docs.html#howto>, and
+ 	  <file:Documentation/scsi/st.rst> in the kernel source.  This is NOT
+ 	  for SCSI CD-ROMs.
+ 
+@@ -107,7 +107,7 @@ config BLK_DEV_SR
+ 	help
+ 	  If you want to use a CD or DVD drive attached to your computer
+ 	  by SCSI, FireWire, USB or ATAPI, say Y and read the SCSI-HOWTO
+-	  and the CDROM-HOWTO at <http://www.tldp.org/docs.html#howto>.
++	  and the CDROM-HOWTO at <https://www.tldp.org/docs.html#howto>.
+ 
+ 	  Make sure to say Y or M to "ISO 9660 CD-ROM file system support".
+ 
+@@ -130,7 +130,7 @@ config CHR_DEV_SG
+ 	  (<http://cdrtools.sourceforge.net/>)
+ 	  and for burning a "disk at once": CDRDAO
+ 	  (<http://cdrdao.sourceforge.net/>). Cdparanoia is a high
+-	  quality digital reader of audio CDs (<http://www.xiph.org/paranoia/>).
++	  quality digital reader of audio CDs (<https://www.xiph.org/paranoia/>).
+ 	  For other devices, it's possible that you'll have to write the
+ 	  driver software yourself. Please read the file
+ 	  <file:Documentation/scsi/scsi-generic.rst> for more information.
+@@ -382,7 +382,7 @@ config SCSI_AHA152X
+ 	  must be manually specified in this case.
+ 
+ 	  It is explained in section 3.3 of the SCSI-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>. You might also want to
++	  <https://www.tldp.org/docs.html#howto>. You might also want to
+ 	  read the file <file:Documentation/scsi/aha152x.rst>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+@@ -394,7 +394,7 @@ config SCSI_AHA1542
+ 	help
+ 	  This is support for a SCSI host adapter.  It is explained in section
+ 	  3.4 of the SCSI-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.  Note that Trantor was
++	  <https://www.tldp.org/docs.html#howto>.  Note that Trantor was
+ 	  purchased by Adaptec, and some former Trantor products are being
+ 	  sold under the Adaptec name.  If it doesn't work out of the box, you
+ 	  may have to change some settings in <file:drivers/scsi/aha1542.h>.
+@@ -408,7 +408,7 @@ config SCSI_AHA1740
+ 	help
+ 	  This is support for a SCSI host adapter.  It is explained in section
+ 	  3.5 of the SCSI-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.  If it doesn't work out
++	  <https://www.tldp.org/docs.html#howto>.  If it doesn't work out
+ 	  of the box, you may have to change some settings in
+ 	  <file:drivers/scsi/aha1740.h>.
+ 
+@@ -474,7 +474,7 @@ config SCSI_ARCMSR
+ 	  This is an ARECA-maintained driver by Erich Chen.
+ 	  If you have any problems, please mail to: <erich@areca.com.tw>.
+ 	  Areca supports Linux RAID config tools.
+-	  Please link <http://www.areca.com.tw>
++	  Please link <https://www.areca.com.tw>
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called arcmsr (modprobe arcmsr).
+@@ -501,7 +501,7 @@ config SCSI_BUSLOGIC
+ 	help
+ 	  This is support for BusLogic MultiMaster and FlashPoint SCSI Host
+ 	  Adapters. Consult the SCSI-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>, and the files
++	  <https://www.tldp.org/docs.html#howto>, and the files
+ 	  <file:Documentation/scsi/BusLogic.rst> and
+ 	  <file:Documentation/scsi/FlashPoint.rst> for more information.
+ 	  Note that support for FlashPoint is only available for 32-bit
+@@ -710,8 +710,8 @@ config SCSI_IPS
+ 	depends on PCI && SCSI
+ 	help
+ 	  This is support for the IBM ServeRAID hardware RAID controllers.
+-	  See <http://www.developer.ibm.com/welcome/netfinity/serveraid.html>
+-	  and <http://www-947.ibm.com/support/entry/portal/docdisplay?brand=5000008&lndocid=SERV-RAID>
++	  See <https://www.developer.ibm.com/welcome/netfinity/serveraid.html>
++	  and <https://www-947.ibm.com/support/entry/portal/docdisplay?brand=5000008&lndocid=SERV-RAID>
+ 	  for more information.  If this driver does not work correctly
+ 	  without modification please contact the author by email at
+ 	  <ipslinux@adaptec.com>.
+@@ -771,7 +771,7 @@ config SCSI_INITIO
+ 	help
+ 	  This is support for the Initio 91XXU(W) SCSI host adapter.  Please
+ 	  read the SCSI-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.
++	  <https://www.tldp.org/docs.html#howto>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called initio.
+@@ -782,7 +782,7 @@ config SCSI_INIA100
+ 	help
+ 	  This is support for the Initio INI-A100U2W SCSI host adapter.
+ 	  Please read the SCSI-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.
++	  <https://www.tldp.org/docs.html#howto>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called a100u2w.
+@@ -806,7 +806,7 @@ config SCSI_PPA
+ 	  For more information about this driver and how to use it you should
+ 	  read the file <file:Documentation/scsi/ppa.rst>.  You should also read
+ 	  the SCSI-HOWTO, which is available from
+-	  <http://www.tldp.org/docs.html#howto>.  If you use this driver,
++	  <https://www.tldp.org/docs.html#howto>.  If you use this driver,
+ 	  you will still be able to use the parallel port for other tasks,
+ 	  such as a printer; it is safe to compile both drivers into the
+ 	  kernel.
+@@ -833,7 +833,7 @@ config SCSI_IMM
+ 	  For more information about this driver and how to use it you should
+ 	  read the file <file:Documentation/scsi/ppa.rst>.  You should also read
+ 	  the SCSI-HOWTO, which is available from
+-	  <http://www.tldp.org/docs.html#howto>.  If you use this driver,
++	  <https://www.tldp.org/docs.html#howto>.  If you use this driver,
+ 	  you will still be able to use the parallel port for other tasks,
+ 	  such as a printer; it is safe to compile both drivers into the
+ 	  kernel.
+@@ -900,7 +900,7 @@ config SCSI_STEX
+ 	  This driver supports Promise SuperTrak EX series storage controllers.
+ 
+ 	  Promise provides Linux RAID configuration utility for these
+-	  controllers. Please visit <http://www.promise.com> to download.
++	  controllers. Please visit <https://www.promise.com> to download.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called stex.
+@@ -1120,7 +1120,7 @@ config SCSI_QLOGIC_FAS
+ 	  Information about this driver is contained in
+ 	  <file:Documentation/scsi/qlogicfas.rst>.  You should also read the
+ 	  SCSI-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.
++	  <https://www.tldp.org/docs.html#howto>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called qlogicfas.
+@@ -1215,7 +1215,7 @@ config SCSI_NSP32
+ 	help
+ 	  This is support for the Workbit NinjaSCSI-32Bi/UDE PCI/Cardbus
+ 	  SCSI host adapter. Please read the SCSI-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.
++	  <https://www.tldp.org/docs.html#howto>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called nsp32.
+@@ -1350,7 +1350,7 @@ config SCSI_ZORRO7XX
+ 	    - the Amiga 4091 Zorro III SCSI-2 controller,
+ 	    - the MacroSystem Development's WarpEngine Amiga SCSI-2 controller
+ 	      (info at
+-	      <http://www.lysator.liu.se/amiga/ar/guide/ar310.guide?FEATURE5>),
++	      <https://www.lysator.liu.se/amiga/ar/guide/ar310.guide?FEATURE5>),
+ 	    - the SCSI controller on the Phase5 Blizzard PowerUP 603e+
+ 	      accelerator card for the Amiga 1200,
+ 	    - the SCSI controller on the GVP Turbo 040/060 accelerator.
+@@ -1396,7 +1396,7 @@ config MAC_SCSI
+ 	  This is the NCR 5380 SCSI controller included on most of the 68030
+ 	  based Macintoshes.  If you have one of these say Y and read the
+ 	  SCSI-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.
++	  <https://www.tldp.org/docs.html#howto>.
+ 
+ config SCSI_MAC_ESP
+ 	tristate "Macintosh NCR53c9[46] SCSI"
+diff --git a/drivers/scsi/hptiop.h b/drivers/scsi/hptiop.h
+index 35184c2008af..44df5b0f0ac5 100644
+--- a/drivers/scsi/hptiop.h
++++ b/drivers/scsi/hptiop.h
+@@ -5,7 +5,7 @@
+  *
+  * Please report bugs/comments/suggestions to linux@highpoint-tech.com
+  *
+- * For more information, visit http://www.highpoint-tech.com
++ * For more information, visit https://www.highpoint-tech.com
+  */
+ #ifndef _HPTIOP_H_
+ #define _HPTIOP_H_
+diff --git a/drivers/scsi/sense_codes.h b/drivers/scsi/sense_codes.h
+index 201a536688de..6a2d3c7de5ee 100644
+--- a/drivers/scsi/sense_codes.h
++++ b/drivers/scsi/sense_codes.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * The canonical list of T10 Additional Sense Codes is available at:
+- * http://www.t10.org/lists/asc-num.txt [most recent: 20141221]
++ * https://www.t10.org/lists/asc-num.txt [most recent: 20141221]
+  */
+ 
+ SENSE_CODE(0x0000, "No additional sense information")
+diff --git a/drivers/scsi/smartpqi/Kconfig b/drivers/scsi/smartpqi/Kconfig
+index 8eec241f074b..8709e938702c 100644
+--- a/drivers/scsi/smartpqi/Kconfig
++++ b/drivers/scsi/smartpqi/Kconfig
+@@ -45,7 +45,7 @@ config SCSI_SMARTPQI
+ 	help
+ 	This driver supports Microsemi PQI controllers.
+ 
+-	<http://www.microsemi.com>
++	<https://www.microsemi.com>
+ 
+ 	To compile this driver as a module, choose M here: the
+ 	module will be called smartpqi.
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index cd157f11eb22..6b21989b5745 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -2773,7 +2773,7 @@ static void pqi_process_raid_io_error(struct pqi_io_request *io_request)
+ 				host_byte = DID_NO_CONNECT;
+ 				break;
+ 
+-			default: /* See http://www.t10.org/lists/asc-num.htm#ASC_3E */
++			default: /* See https://www.t10.org/lists/asc-num.htm#ASC_3E */
+ 				if (printk_ratelimit())
+ 					scmd_printk(KERN_ERR, scmd, "received unhandled error %d from controller for scsi %d:%d:%d:%d\n",
+ 						sshdr.ascq, ctrl_info->scsi_host->host_no, device->bus, device->target, device->lun);
+diff --git a/drivers/scsi/ufs/ti-j721e-ufs.c b/drivers/scsi/ufs/ti-j721e-ufs.c
+index 46bb905b4d6a..b031113b07c9 100644
+--- a/drivers/scsi/ufs/ti-j721e-ufs.c
++++ b/drivers/scsi/ufs/ti-j721e-ufs.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ //
+-// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++// Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
+ //
+ 
+ #include <linux/clk.h>
+-- 
+2.27.0
 
-Regards,
-Markus
