@@ -2,148 +2,104 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA695C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F54C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 957E82073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526A42067D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 02:45:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="ZDyrRic8"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="h6JqILvm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgGRC3t (ORCPT
+        id S1728430AbgGRCpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 22:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbgGRC3s (ORCPT
+        Fri, 17 Jul 2020 22:45:17 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:56016 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726742AbgGRCpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 22:29:48 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 868C2C0619D2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 19:29:47 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p3so7538484pgh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 19:29:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jKRXb8NO4VDe7xli2FLvlxbzvfxHX+po/Q2oKaDoEEA=;
-        b=ZDyrRic8jiij82oO0amZce4xu0dchvZ8O2XAEEr82oIwwUInQuyET2E40t3Y+ZaK/r
-         YM77OaPtAXyEXWkEr+NtloGMKT4tzDbUfxFmP3sIiDpW74ob1nIq++5twng3fuk5mc6n
-         msgLaKV4Rm6c34L+0OGRd4BUHyEAWp8c2681y3ta+518Y5jD7ah4qMCc4xX7HdoKweAJ
-         Gg9W96X3nHG99pvu2jvBm7lsgsYRib/IhqnurMSQsbcqzwiRJ2UF9OCuCK8+gdSV8jZo
-         hS+G3vpuKo1DCM03k9ZiyUx2FrXlF229nur+Dp2ymur5uwUCVS6o41y/4UlVjWlnOUCX
-         ieMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jKRXb8NO4VDe7xli2FLvlxbzvfxHX+po/Q2oKaDoEEA=;
-        b=kHFmLRMbS+2jlS7W/LLxp+FyoRRVC4SSp697RzWjvpq6yTsg4ctfAmU3BoYDahW8is
-         1N76fpDR/DqhrnOrw6rNtab7CEiOBaZm9XrqFkP0vSWFtiH3ANSu1waGhmj2h6wxFLdq
-         fT3Zx+NjyGeE4dUjppYhqoHbQbAgpLtGOpY8wp6SYd2qiqus8HfKJefyPgrSGnuo9PhA
-         S3eMIOOR3ykN3lIAzt3h9xXIayqagRLLdf4/Fecz12AqCnoNBEisB+x/Mj8EYS9kvW1h
-         +D7ySM0lVcHm4UkO2XYgODuX5BN9kddap0cmZ92JH8sgG+6ENt2icsKPwHDEBwp5OMfJ
-         IOXA==
-X-Gm-Message-State: AOAM530R4MNC/dInBZqO6OsRxGC06drchEyskpUFwN1t5Wlcyw9xASlp
-        NFh3HYUzVllov/Ms2R6UHM4n4Ychm8MutI4P+VjCoA==
-X-Google-Smtp-Source: ABdhPJz7d+BdHEWqPHXdZ3Umda2/5FpmJgMTQzQAQ9nnBLUb8hkA5dIQel1eCTAdxM0DthU302KyK8qovjW6Apz0pWM=
-X-Received: by 2002:a63:6884:: with SMTP id d126mr10661799pgc.341.1595039386980;
- Fri, 17 Jul 2020 19:29:46 -0700 (PDT)
+        Fri, 17 Jul 2020 22:45:17 -0400
+X-UUID: f2b1f400fbb7493d8e2f8c85de7bd2f1-20200718
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=JJ5o+WFe3CVKnlVdykIeEjsdjGfkUl9MSJCZgz3eF2c=;
+        b=h6JqILvmrVsxfhR1S5A3n9e/L1cwpXlmhF1eG/kO4ynP2Bsx/fIlOHDXdBLAQkOw2EwU0vFwTMHCjmRSr7EwZo3tuVoF+zFb+S9B95qrIj+wFoko8Kk6EBa+XonE2kfVGf852Uz/da6Cp377oyfkC6c+VdPZR4b4UaU0bJoA4OU=;
+X-UUID: f2b1f400fbb7493d8e2f8c85de7bd2f1-20200718
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1127202755; Sat, 18 Jul 2020 10:45:12 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 18 Jul 2020 10:45:09 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 18 Jul 2020 10:45:10 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        Eddie Hung <eddie.hung@mediatek.com>, <stable@vger.kernel.org>
+Subject: [PATCH v2] usb: gadget: configfs: Fix use-after-free issue with udc_name
+Date:   Sat, 18 Jul 2020 10:45:03 +0800
+Message-ID: <1595040303-23046-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1594881666-8843-1-git-send-email-macpaul.lin@mediatek.com>
+References: <1594881666-8843-1-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
-References: <20200716070457.53255-1-songmuchun@bytedance.com> <87k0z1rj89.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87k0z1rj89.fsf@nanos.tec.linutronix.de>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Sat, 18 Jul 2020 10:29:11 +0800
-Message-ID: <CAMZfGtX7gxky5MVFwz3k=BN7p1tL+PKN43TENbuCfa+AkSbzZg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH RESEND] smp: Fix a potential usage of stale nr_cpus
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        bigeasy@linutronix.de, namit@vmware.com,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 7A91C36DAFF4860455E96955268D0533348A3C2AFE1C668A6C271346DB2534C92000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 4:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Muchun,
->
-> Muchun Song <songmuchun@bytedance.com> writes:
->
-> > The get_option() maybe return 0, it means that the nr_cpus is
-> > not initialized.
->
-> Good catch, but see below.
->
-> > Then we will use the stale nr_cpus to initialize
->
-> We use nothing. Please describe your changes in technical neutral
-> language.
->
-> > the nr_cpu_ids. So fix it.
->
-> 'So fix it.' is not much valuable information. What about:
->
->     Check the return value to prevent this.
->
-> Hmm?
+RnJvbTogRWRkaWUgSHVuZyA8ZWRkaWUuaHVuZ0BtZWRpYXRlay5jb20+DQoNClRoZXJlIGlzIGEg
+dXNlLWFmdGVyLWZyZWUgaXNzdWUsIGlmIGFjY2VzcyB1ZGNfbmFtZQ0KaW4gZnVuY3Rpb24gZ2Fk
+Z2V0X2Rldl9kZXNjX1VEQ19zdG9yZSBhZnRlciBhbm90aGVyIGNvbnRleHQNCmZyZWUgdWRjX25h
+bWUgaW4gZnVuY3Rpb24gdW5yZWdpc3Rlcl9nYWRnZXQuDQoNCkNvbnRleHQgMToNCmdhZGdldF9k
+ZXZfZGVzY19VRENfc3RvcmUoKS0+dW5yZWdpc3Rlcl9nYWRnZXQoKS0+DQpmcmVlIHVkY19uYW1l
+LT5zZXQgdWRjX25hbWUgdG8gTlVMTA0KDQpDb250ZXh0IDI6DQpnYWRnZXRfZGV2X2Rlc2NfVURD
+X3Nob3coKS0+IGFjY2VzcyB1ZGNfbmFtZQ0KDQpDYWxsIHRyYWNlOg0KZHVtcF9iYWNrdHJhY2Ur
+MHgwLzB4MzQwDQpzaG93X3N0YWNrKzB4MTQvMHgxYw0KZHVtcF9zdGFjaysweGU0LzB4MTM0DQpw
+cmludF9hZGRyZXNzX2Rlc2NyaXB0aW9uKzB4NzgvMHg0NzgNCl9fa2FzYW5fcmVwb3J0KzB4Mjcw
+LzB4MmVjDQprYXNhbl9yZXBvcnQrMHgxMC8weDE4DQpfX2FzYW5fcmVwb3J0X2xvYWQxX25vYWJv
+cnQrMHgxOC8weDIwDQpzdHJpbmcrMHhmNC8weDEzOA0KdnNucHJpbnRmKzB4NDI4LzB4MTRkMA0K
+c3ByaW50ZisweGU0LzB4MTJjDQpnYWRnZXRfZGV2X2Rlc2NfVURDX3Nob3crMHg1NC8weDY0DQpj
+b25maWdmc19yZWFkX2ZpbGUrMHgyMTAvMHgzYTANCl9fdmZzX3JlYWQrMHhmMC8weDQ5Yw0KdmZz
+X3JlYWQrMHgxMzAvMHgyYjQNClN5U19yZWFkKzB4MTE0LzB4MjA4DQplbDBfc3ZjX25ha2VkKzB4
+MzQvMHgzOA0KDQpBZGQgbXV0ZXhfbG9jayB0byBwcm90ZWN0IHRoaXMga2luZCBvZiBzY2VuYXJp
+by4NCg0KU2lnbmVkLW9mZi1ieTogRWRkaWUgSHVuZyA8ZWRkaWUuaHVuZ0BtZWRpYXRlay5jb20+
+DQpTaWduZWQtb2ZmLWJ5OiBNYWNwYXVsIExpbiA8bWFjcGF1bC5saW5AbWVkaWF0ZWsuY29tPg0K
+UmV2aWV3ZWQtYnk6IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT4NCkNjOiBzdGFibGVA
+dmdlci5rZXJuZWwub3JnDQotLS0NCkNoYW5nZXMgZm9yIHYyOg0KICAtIEZpeCB0eXBvICVzL2Nv
+bnRleC9jb250ZXh0LCBUaGFua3MgUGV0ZXIuDQoNCiBkcml2ZXJzL3VzYi9nYWRnZXQvY29uZmln
+ZnMuYyB8IDExICsrKysrKysrKy0tDQogMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwg
+MiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2dhZGdldC9jb25maWdm
+cy5jIGIvZHJpdmVycy91c2IvZ2FkZ2V0L2NvbmZpZ2ZzLmMNCmluZGV4IDlkYzA2YTRlMWIzMC4u
+MjExMTBiMjg2NWI5IDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZ2FkZ2V0L2NvbmZpZ2ZzLmMN
+CisrKyBiL2RyaXZlcnMvdXNiL2dhZGdldC9jb25maWdmcy5jDQpAQCAtMjIxLDkgKzIyMSwxNiBA
+QCBzdGF0aWMgc3NpemVfdCBnYWRnZXRfZGV2X2Rlc2NfYmNkVVNCX3N0b3JlKHN0cnVjdCBjb25m
+aWdfaXRlbSAqaXRlbSwNCiANCiBzdGF0aWMgc3NpemVfdCBnYWRnZXRfZGV2X2Rlc2NfVURDX3No
+b3coc3RydWN0IGNvbmZpZ19pdGVtICppdGVtLCBjaGFyICpwYWdlKQ0KIHsNCi0JY2hhciAqdWRj
+X25hbWUgPSB0b19nYWRnZXRfaW5mbyhpdGVtKS0+Y29tcG9zaXRlLmdhZGdldF9kcml2ZXIudWRj
+X25hbWU7DQorCXN0cnVjdCBnYWRnZXRfaW5mbyAqZ2kgPSB0b19nYWRnZXRfaW5mbyhpdGVtKTsN
+CisJY2hhciAqdWRjX25hbWU7DQorCWludCByZXQ7DQorDQorCW11dGV4X2xvY2soJmdpLT5sb2Nr
+KTsNCisJdWRjX25hbWUgPSBnaS0+Y29tcG9zaXRlLmdhZGdldF9kcml2ZXIudWRjX25hbWU7DQor
+CXJldCA9IHNwcmludGYocGFnZSwgIiVzXG4iLCB1ZGNfbmFtZSA/OiAiIik7DQorCW11dGV4X3Vu
+bG9jaygmZ2ktPmxvY2spOw0KIA0KLQlyZXR1cm4gc3ByaW50ZihwYWdlLCAiJXNcbiIsIHVkY19u
+YW1lID86ICIiKTsNCisJcmV0dXJuIHJldDsNCiB9DQogDQogc3RhdGljIGludCB1bnJlZ2lzdGVy
+X2dhZGdldChzdHJ1Y3QgZ2FkZ2V0X2luZm8gKmdpKQ0KLS0gDQoyLjE4LjANCg==
 
-Looks fine to me. Thanks.
-
->
-> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > ---
-> >  kernel/smp.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/smp.c b/kernel/smp.c
-> > index 472c2b274c65..2a9a04acf123 100644
-> > --- a/kernel/smp.c
-> > +++ b/kernel/smp.c
-> > @@ -634,8 +634,7 @@ static int __init nrcpus(char *str)
-> >  {
-> >       int nr_cpus;
-> >
-> > -     get_option(&str, &nr_cpus);
-> > -     if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
-> > +     if (get_option(&str, &nr_cpus) && nr_cpus > 0 && nr_cpus < nr_cpu_ids)
-> >               nr_cpu_ids = nr_cpus;
-> >
-> >       return 0;
->
-> get_option() can return 0 - 3:
->
->  *      0 - no int in string
->  *      1 - int found, no subsequent comma
->  *      2 - int found including a subsequent comma
->  *      3 - hyphen found to denote a range
->
-> For this parameter exists only one valid format: '1 - int found, no comma',
-> right?
-
-Yeah.
-
->
-> So why fixing it just half and why returning '0' aka success if the
-> parameter is bogus?
-
-Thanks. Will fix it.
-
->
-> Thanks,
->
->         tglx
-
-
-
--- 
-Yours,
-Muchun
