@@ -2,118 +2,126 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 23:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B662BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 23:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB0422CA1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 23:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB3C2076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 23:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JovRvs53"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/CMfwOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgGRXFY (ORCPT
+        id S1726485AbgGRXNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 19:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32954 "EHLO
+        Sat, 18 Jul 2020 19:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726256AbgGRXFY (ORCPT
+        with ESMTP id S1726256AbgGRXNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 19:05:24 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA01C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 16:05:23 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id i4so13951185iov.11
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 16:05:23 -0700 (PDT)
+        Sat, 18 Jul 2020 19:13:51 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFEFC0619D2;
+        Sat, 18 Jul 2020 16:13:51 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l23so4253369qkk.0;
+        Sat, 18 Jul 2020 16:13:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5rC17XUacjqtPIcpgNQKRp4muU4y2Y7PtonE6EZs65Y=;
-        b=JovRvs53vS3LhD4wT75SBuQ0IxMgWyEcioHUxjf0RlgV6RsWK/e1mccgRNHD9f8Rvy
-         NJDRvU5IlhaBXje4zlnPg/9DeDEEMljRrriD0n7Ib0xmNr71T/MoVMAGEZUolnaTIFnF
-         r4uQPLCSmbtSxjmRKa2qUv/fUr9QeWMubZ8TVxEdVP6/UCuj+ONm9Cp9Fy2XcAqrSW3z
-         kc0UOEbigR6Q7S7bx4djCfpIJaZsrX7Vh9jiWo84uScielx+B9mlsfPBv+fd7q79jR00
-         IH2JOHs7UoQQnw8qpH7dN3WEnlNO2pgxXdhRJ2C19ym0QNouoTEyL9sRfNbGgWyif5+4
-         CFvg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JR52wllqEcVbigAnzPQp6schXz+q2ggaNIrnkwe/pus=;
+        b=G/CMfwOQ1tJWt20onssCm1mlA/3Watsw6BWBn2KcUuOsAkGQ/SEcj0R+9nbQIoBOnP
+         TRcf86OV6YVbtqdgNRJQ1YDAtks6iXYjhQ8HhTBvo9Dh81uBzDD+Tt4uAjmwPpnKpN1I
+         IbzPvzrpcW/FIjArvecktUXHiJjweNAbW3VBNfH9k9NM+0w7rFNpPkH9qS9J90ab7wPv
+         j9691qrmFh4FGsSmxkRX+oCNMuFv8QBZG4/rmKH9ixSkqhcFI4ItI4ew4whnKfBv1e9g
+         EsqZv3QCdd4kt+8mmChTzkCbSANlBvn7kpQ/jhTrWUD+9FrNilr1+CF7ILcuYbn1d92Q
+         ClJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5rC17XUacjqtPIcpgNQKRp4muU4y2Y7PtonE6EZs65Y=;
-        b=NqvTb1HhABdyu11HxfZiUuoZNuvNxNsz/+ZbpgRABtoioH6lhMxouHug7ONSYu95hH
-         KsL2uPQIiE7VCNaS6ea2XhNmiDG+vaU1v8jNRBVKvpHkxw2nshXwKzXOjLdc8Ftkq0eU
-         je4BD0oZnD9cZTgdo9yuE7DKCHHkzotR9owZdo9L7R8SaIrDWMGOBtHzFTPgUsAr3wKV
-         2YHvaBd6atrHRbkXqZf30pqt6xXFHyEr01WlEzOtcT6VWUYBVysimoFQeSDdZAJg+t+S
-         Bq48HMy6OQV4wmG8U4aaSKI64IeOeVUbkqkL0H/Nufc7AM4dODdssy54p7cJf07t/tEk
-         4H3Q==
-X-Gm-Message-State: AOAM530JSSfJl3E/510NIBXXBw7OK9A/CxuxBfqc6J1Ic6Q+0lrZZB6m
-        7XMHXBFhR9cXjfGOTMq9ugy3WaSS+Dxy7rccxFY=
-X-Google-Smtp-Source: ABdhPJyHh9vzoWe7M7iy5AffSOIJUq+wYiN/f4CSywoc1sNJVCI5IymnE1WQD1egSa8s1kfqEx4FL+cYL9VEKVHhRfs=
-X-Received: by 2002:a05:6638:1187:: with SMTP id f7mr18520540jas.58.1595113522233;
- Sat, 18 Jul 2020 16:05:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JR52wllqEcVbigAnzPQp6schXz+q2ggaNIrnkwe/pus=;
+        b=ld3mLwSl3MrlH38VGksnNZjcRAshQ4rUA9XzFJKmCMl66K3WGwyPRvtAHnQ29yQnFG
+         kr/2TTg59lEaWzqgRuzmJ1ATRFYOXXzxRZTy/tT0Vmg7PsclvSSfsS03kpQhFMbNrcbF
+         PXBg6xKCbnxkocDxNGbDai/7CAdBxhyCQ1z95P63RYcy4RFUn79XHICXcqtp1FylEmQP
+         7i/HACkMDt+zH6bQvla7LIrvyv56rWcbOUYQaSA4xn8d3F+E/z2xVV+KiC5I8jfOo8uA
+         NrjaZLcpIg8PZ/qytMw2JxX2VfAxipweUSYqpKiu9GcFEp1hqrg5Ql59lmqD5MQHiIFW
+         lx+w==
+X-Gm-Message-State: AOAM5305zgdCexPRO/ddITXXETbZbakbIeDBmgwqcTcNCcJaH3YGgz5y
+        AnsfeaNKJkAYe/QSCnr9Xg==
+X-Google-Smtp-Source: ABdhPJxr+mxv1zNImr7SJejb20D1SraPf6Y3xVHqBzITtkhVUKed/JmubAzYGZcbI+wxuYp7mSBfdw==
+X-Received: by 2002:a37:b56:: with SMTP id 83mr14515911qkl.362.1595114030225;
+        Sat, 18 Jul 2020 16:13:50 -0700 (PDT)
+Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id w44sm15998462qtj.86.2020.07.18.16.13.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jul 2020 16:13:49 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH v1] usbhid: Fix slab-out-of-bounds write in hiddev_ioctl_usage()
+Date:   Sat, 18 Jul 2020 19:12:18 -0400
+Message-Id: <20200718231218.170730-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <c2bfe1aa390777b10d810d2b76a35b97fbd32a1c.camel@intel.com>
- <CALCETrUBDUKTcmmYD7BpZkL3869ELvha1PqOcScw4M-B_DQdiA@mail.gmail.com>
- <7653c6c74a4eee18b8bdc8262e0c0b5b95f9d771.camel@intel.com> <d4b9d6a1-d413-b044-1d4a-512bbbf06d78@intel.com>
-In-Reply-To: <d4b9d6a1-d413-b044-1d4a-512bbbf06d78@intel.com>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Sat, 18 Jul 2020 16:04:46 -0700
-Message-ID: <CAMe9rOo9ivMP4b4qYGWvtEzKT-h68iPecjqp3wZzQCpVqE9FsA@mail.gmail.com>
-Subject: Re: Random shadow stack pointer corruption
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 3:41 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 7/18/20 11:24 AM, Yu-cheng Yu wrote:
-> > On Sat, 2020-07-18 at 11:00 -0700, Andy Lutomirski wrote:
-> >> On Sat, Jul 18, 2020 at 10:58 AM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
-> >>> Hi,
-> >>>
-> >>> My shadow stack tests start to have random shadow stack pointer corruption after
-> >>> v5.7 (excluding).  The symptom looks like some locking issue or the kernel is
-> >>> confused about which CPU a task is on.  In later tip/master, this can be
-> >>> triggered by creating two tasks and each does continuous
-> >>> pthread_create()/pthread_join().  If the kernel has max_cpus=1, the issue goes
-> >>> away.  I also checked XSAVES/XRSTORS, but this does not seem to be an issue
-> >>> coming from there.
-> >>
-> >> What do you mean "shadow stack pointer corruption"?  Is SSP itself
-> >> corrupt while running in the kernel?  Is one of the MSRs getting
-> >> corrupted?  Is the memory to which the shadow stack points getting
-> >> corrupted? Is the CPU rejecting an attempt to change SSP?
-> >
-> > What I see is, a new thread after ret_from_fork() and iret back to ring-3,
-> > its shadow stack pointer (MSR_IA32_PL3_SSP) is corrupted.
->
-> Does corrupt mean random?  Or is it a valid stack address, just not for
-> _this_ thread?  Or NULL?  Or is it a kernel address?  Have you tried
-> tracing *ALL* the WRMSR's and XRSTOR's that write to the MSR?
+`uref->usage_index` is not always being properly checked, causing
+hiddev_ioctl_usage() to go out of bounds under some cases. Fix it.
 
-Another data point.  When memory corruption happened, there was no
-core dump at all.  We verified that core dump was enabled and we did
-get core dump for other programs.
+This patch fixes the following syzbot bug:
 
+    https://syzkaller.appspot.com/bug?id=f2aebe90b8c56806b050a20b36f51ed6acabe802
 
+Reported-by: syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+This patch fixes the bug, but in an ugly way. Checks on `uref` are already
+being done in this code:
+
+			if (cmd == HIDIOCGCOLLECTIONINDEX) {
+				if (uref->usage_index >= field->maxusage)
+					goto inval;
+				uref->usage_index =
+					array_index_nospec(uref->usage_index,
+							   field->maxusage);
+			} else if (uref->usage_index >= field->report_count)
+				goto inval;
+
+However it did not catch this bug since it's in an `else` bracket. Should
+we move the above code out of the bracket? Would like to hear your opinion.
+Thank you!
+
+ drivers/hid/usbhid/hiddev.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
+index 4140dea693e9..c63d07caacef 100644
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -525,6 +525,8 @@ static noinline int hiddev_ioctl_usage(struct hiddev *hiddev, unsigned int cmd,
+ 			goto goodreturn;
+ 
+ 		case HIDIOCSUSAGE:
++			if (uref->usage_index >= field->report_count)
++				goto inval;
+ 			field->value[uref->usage_index] = uref->value;
+ 			goto goodreturn;
+ 
 -- 
-H.J.
+2.25.1
+
