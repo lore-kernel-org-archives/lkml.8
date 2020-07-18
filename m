@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E92DC433F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F66C433EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753BF2076D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612602076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WENSboNW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9q4k/1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgGRG6I (ORCPT
+        id S1729076AbgGRG6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
+        Sat, 18 Jul 2020 02:58:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729098AbgGRG6D (ORCPT
+        with ESMTP id S1729030AbgGRG54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 02:58:03 -0400
+        Sat, 18 Jul 2020 02:57:56 -0400
 Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F013DC0619D2;
-        Fri, 17 Jul 2020 23:58:02 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so20467581wml.3;
-        Fri, 17 Jul 2020 23:58:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0DCC0619D2;
+        Fri, 17 Jul 2020 23:57:56 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g75so17733672wme.5;
+        Fri, 17 Jul 2020 23:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DR+MN9yI45B0CbPas30C2sDxsoxmrDbz6ZTE82Yi1YU=;
-        b=WENSboNWqFEFKMhQ1tpuQelRMJAoIzuNKBQN5XrO86dudVwcu92a3aNhzf/hlGc70C
-         99QuqYIR8SsFjoVQgDKKzVGUrP4+ay/lkffYF0gtdz02LOYtjut8md2FNXS04mJsRS2o
-         FKK5iZs2FO/SJGqeip0SksH48C2emf6ivIjUSa9R48xoh6LzVmZyv0BwFC4VDA/ow4un
-         S8tOWLsQGbZ5UNLWIWQIZo6hoXZwjY0XIcLO4XR/kj/wM/FZ9KF1x+/ryHYkCYaTQJIT
-         mvGkLlP4D3O7uBc2jdIoLUW+EmFLc1FEDftrBQzCMOxAXBkFyApgX3u020lCf+QzlV+u
-         92ow==
+        bh=6vYF1uN6y1MEmfx/aSCmf3xT19pRJOVeWursMQGhdC8=;
+        b=r9q4k/1UmOpnNBFOhm8kzTNUat2F0iPzWuggKmToYGhPmp4mQRg8S0msDjtyjs+qYm
+         b4DwLCCVNLlFSgL3gQ52FWkH69J6TOE2SPbhNNgvV9q+JEWpU8a5cxRzIT6sW/nbALXX
+         QI291noBxQ43LnnDHCvUmvSie9eHV73krHsCkYf8YeNxYxnTOJCG3OFEuH0bHKTOpk9u
+         Vzh9JWpKWOoKIz5p4BpUnEtMsqVt6MJ3Pi09bpg8xiOqwpH8UGv+uagQIDNi0NjwVRM7
+         wv+pRjtzGbD327/2zzmCwMTfDwaCJ67CzeNnT0370VkOlPMd2Ps+MSQzYLpSvUHYEO4J
+         2PVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=DR+MN9yI45B0CbPas30C2sDxsoxmrDbz6ZTE82Yi1YU=;
-        b=eVuucsUH92CqtaGhQeI6NXpuPhQjnn8rPDC73W6O6/UGp5g4yIraL4cprjgYxHtcV1
-         nOOi9IPrKNrOkIQys2I32Wrbu1RRYn7JEm7r6jS2w/TyX3naOmiM6hlpGWKlQS0lv9Tw
-         1Gpm+vkbSONgfs3ZgyOUWQFJh11JexkyzA04t2IBqZrsnB8F6mw6WoCJsDDW6zuUsaeF
-         4lOE7Nph0yg3U0griMqIIWh1vQzXWZx5nWEicv1/igTaC39niGBOioF26hURr3pE+4FV
-         pGTqS04K9pVSiAXzJfaDYLQD3n5QqU0AxTMsccFmAiMtk7IixLDgZ2TYpLuu3RB0LDFC
-         t5iw==
-X-Gm-Message-State: AOAM532FlqjrOcAGd2xhbu032O/0EVpzZL/TSyR5uCnFLwu/YJfXG7cJ
-        bygibEoAQbufadc+etYjC2Bg3aNO
-X-Google-Smtp-Source: ABdhPJweouzzfuZ/Hx+GE+ZOtOp3U/VJVa4dJNLXiSlFEcR7hnZHpn2pOAOKEreYUvRVMOyapB6v0A==
-X-Received: by 2002:a1c:dfd6:: with SMTP id w205mr13231447wmg.118.1595055481607;
-        Fri, 17 Jul 2020 23:58:01 -0700 (PDT)
+        bh=6vYF1uN6y1MEmfx/aSCmf3xT19pRJOVeWursMQGhdC8=;
+        b=infjwM69fHwHBuoh6rI/VcdAr6XA2vCNbn3V1NoLs/CUUkBDB7BpPWbKxJdwz8H0+F
+         +JzYuvecwVknGU9eF7ZcbwKafMXzvG1fY6mdEK/+4nqhQcMQfwulwXJmukV4cf4cAkVA
+         WJUgEG42s5tAq5G9M2GKYvQIMv1tC8vpB3K5M6ESRmvD4pIgjCt/Cdv9NBqh62JEv1eB
+         LHLsasnGw5jNFdAg0E3ixfrG8jwzyjmuXNgz/c++BWvsOK7FNyODnrvdDLnChJCxTo1o
+         9Ibq0M4l/W95ulllsFaVBm80DRZHtx8mt7S1g5qSHq7ijuxDQvVyN3XlgJ7S6vGjx5yK
+         ajrw==
+X-Gm-Message-State: AOAM532NCsnqS546Ytj6vKTigeHgm2qnqtjdkvpU5sqF6B9/rMLhMeqU
+        iybV/KJGFn+fXp940Y9g5OA=
+X-Google-Smtp-Source: ABdhPJxdylbi50zUlqb1YYOa/Ff6SMhJbfn7P8x62EDO+8C6uMeUywN98DVmiDvFARfD4Pn7nGRWdA==
+X-Received: by 2002:a1c:2183:: with SMTP id h125mr13322903wmh.83.1595055475237;
+        Fri, 17 Jul 2020 23:57:55 -0700 (PDT)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.57.59
+        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.57.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 23:58:01 -0700 (PDT)
+        Fri, 17 Jul 2020 23:57:54 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -66,9 +66,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 08/12] arm64: dts: meson: add audio playback to p212-s905x dtsi
-Date:   Sat, 18 Jul 2020 06:57:35 +0000
-Message-Id: <20200718065739.7802-9-christianshewitt@gmail.com>
+Subject: [PATCH 05/12] arm64: dts: meson: add audio playback to odroid-c2
+Date:   Sat, 18 Jul 2020 06:57:32 +0000
+Message-Id: <20200718065739.7802-6-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200718065739.7802-1-christianshewitt@gmail.com>
 References: <20200718065739.7802-1-christianshewitt@gmail.com>
@@ -81,29 +81,29 @@ Add initial audio support limited to HDMI i2s.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- .../dts/amlogic/meson-gxl-s905x-p212.dtsi     | 40 +++++++++++++++++++
+ .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 40 +++++++++++++++++++
  1 file changed, 40 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-index 05cb2f5e5c36..40776d42bf8e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-@@ -11,6 +11,7 @@
- /* Common DTSI for devices which are based on the P212 reference board. */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 70fcfb7b0683..9d8c919c6e19 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -9,6 +9,7 @@
  
- #include "meson-gxl-s905x.dtsi"
+ #include "meson-gxbb.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
 +#include <dt-bindings/sound/meson-aiu.h>
  
  / {
- 	aliases {
-@@ -85,6 +86,45 @@
- 		clocks = <&wifi32k>;
- 		clock-names = "ext_clock";
+ 	compatible = "hardkernel,odroid-c2", "amlogic,meson-gxbb";
+@@ -172,6 +173,45 @@
+ 			};
+ 		};
  	};
 +
 +	sound {
 +		compatible = "amlogic,gx-sound-card";
-+		model = "GXL-S905X-P212";
++		model = "GXBB-ODROID-C2";
 +		assigned-clocks = <&clkc CLKID_MPLL0>,
 +				  <&clkc CLKID_MPLL1>,
 +				  <&clkc CLKID_MPLL2>;
@@ -141,7 +141,7 @@ index 05cb2f5e5c36..40776d42bf8e 100644
 +	status = "okay";
  };
  
- &ethmac {
+ &cec_AO {
 -- 
 2.17.1
 
