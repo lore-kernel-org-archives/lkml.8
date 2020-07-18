@@ -2,95 +2,193 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29819C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 21:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D722C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 21:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0560D22D0B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 21:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A0B22CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 21:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgGRVHd convert rfc822-to-8bit (ORCPT
+        id S1728033AbgGRVIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 17:07:33 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:46481 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgGRVHd (ORCPT
+        Sat, 18 Jul 2020 17:08:52 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48267 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgGRVIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 17:07:33 -0400
+        Sat, 18 Jul 2020 17:08:52 -0400
+X-Originating-IP: 91.175.115.186
 Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
         (Authenticated sender: gregory.clement@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 15AD2200004;
-        Sat, 18 Jul 2020 21:07:29 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 60014240005;
+        Sat, 18 Jul 2020 21:08:48 +0000 (UTC)
 From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Marcin Wojtas <mw@semihalf.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, joro@8bytes.org,
-        Tomasz Nowicki <tn@semihalf.com>,
-        Hanna Hawa <hannah@marvell.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, kernel-team@android.com,
-        nadavh@marvell.com, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 0/4] Add system mmu support for Armada-806
-In-Reply-To: <CAPv3WKc5hNhDCjgrX8uuJJm9MRS520QcD1NYTY1LWFHEBqJMfg@mail.gmail.com>
-References: <20200715070649.18733-1-tn@semihalf.com> <159488817559.3788855.4350396507732052751.b4-ty@kernel.org> <20200716120202.GA7485@willie-the-truck> <CAPv3WKc5hNhDCjgrX8uuJJm9MRS520QcD1NYTY1LWFHEBqJMfg@mail.gmail.com>
-Date:   Sat, 18 Jul 2020 23:07:29 +0200
-Message-ID: <87mu3w352m.fsf@FE-laptop>
+To:     Tomasz Nowicki <tn@semihalf.com>, will@kernel.org,
+        robin.murphy@arm.com, joro@8bytes.org, robh+dt@kernel.org,
+        hannah@marvell.com
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, catalin.marinas@arm.com,
+        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
+        mw@semihalf.com, Tomasz Nowicki <tn@semihalf.com>
+Subject: Re: [PATCH v4 4/4] arm64: dts: marvell: add SMMU support
+In-Reply-To: <20200715070649.18733-5-tn@semihalf.com>
+References: <20200715070649.18733-1-tn@semihalf.com> <20200715070649.18733-5-tn@semihalf.com>
+Date:   Sat, 18 Jul 2020 23:08:48 +0200
+Message-ID: <87k0z0350f.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Tomasz Nowicki <tn@semihalf.com> writes:
 
-> czw., 16 lip 2020 o 14:02 Will Deacon <will@kernel.org> napisał(a):
->>
->> On Thu, Jul 16, 2020 at 01:00:43PM +0100, Will Deacon wrote:
->> > On Wed, 15 Jul 2020 09:06:45 +0200, Tomasz Nowicki wrote:
->> > > The series is meant to support SMMU for AP806 and a workaround
->> > > for accessing ARM SMMU 64bit registers is the gist of it.
->> > >
->> > > For the record, AP-806 can't access SMMU registers with 64bit width.
->> > > This patches split the readq/writeq into two 32bit accesses instead
->> > > and update DT bindings.
->> > >
->> > > [...]
->> >
->> > Applied to will (for-joerg/arm-smmu/updates), thanks!
->> >
->> > [1/3] iommu/arm-smmu: Call configuration impl hook before consuming features
->> >       https://git.kernel.org/will/c/6a79a5a3842b
->> > [2/3] iommu/arm-smmu: Workaround for Marvell Armada-AP806 SoC erratum #582743
->> >       https://git.kernel.org/will/c/f2d9848aeb9f
->> > [3/3] dt-bindings: arm-smmu: add compatible string for Marvell Armada-AP806 SMMU-500
->> >       https://git.kernel.org/will/c/e85e84d19b9d
->>
->> (note that I left patch 4 for arm-soc, as that's just updating .dts files)
->>
+> From: Marcin Wojtas <mw@semihalf.com>
 >
-> Hi Gregory,
+> Add IOMMU node for Marvell AP806 based SoCs together with platform
+> and PCI device Stream ID mapping.
 >
-> Can you please help with the review/merge of patch #4?
+> Signed-off-by: Marcin Wojtas <mw@semihalf.com>
+> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
 
-Sure!
+Applied on mvebu/dt64
 
-I've followed the series since the v1 even if I didn't commetn and I am
-happy that it finally managed to be merged. I can now remove it from
-my TODO list! :)
+Thanks,
 
 Gregory
-
-
+> ---
+>  arch/arm64/boot/dts/marvell/armada-7040.dtsi  | 28 +++++++++++++
+>  arch/arm64/boot/dts/marvell/armada-8040.dtsi  | 40 +++++++++++++++++++
+>  arch/arm64/boot/dts/marvell/armada-ap80x.dtsi | 18 +++++++++
+>  3 files changed, 86 insertions(+)
 >
-> Best regards,
-> Marcin
+> diff --git a/arch/arm64/boot/dts/marvell/armada-7040.dtsi b/arch/arm64/boot/dts/marvell/armada-7040.dtsi
+> index 47247215770d..7a3198cd7a07 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-7040.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-7040.dtsi
+> @@ -14,3 +14,31 @@
+>  	compatible = "marvell,armada7040", "marvell,armada-ap806-quad",
+>  		     "marvell,armada-ap806";
+>  };
+> +
+> +&smmu {
+> +	status = "okay";
+> +};
+> +
+> +&cp0_pcie0 {
+> +	iommu-map =
+> +		<0x0   &smmu 0x480 0x20>,
+> +		<0x100 &smmu 0x4a0 0x20>,
+> +		<0x200 &smmu 0x4c0 0x20>;
+> +	iommu-map-mask = <0x031f>;
+> +};
+> +
+> +&cp0_sata0 {
+> +	iommus = <&smmu 0x444>;
+> +};
+> +
+> +&cp0_sdhci0 {
+> +	iommus = <&smmu 0x445>;
+> +};
+> +
+> +&cp0_usb3_0 {
+> +	iommus = <&smmu 0x440>;
+> +};
+> +
+> +&cp0_usb3_1 {
+> +	iommus = <&smmu 0x441>;
+> +};
+> diff --git a/arch/arm64/boot/dts/marvell/armada-8040.dtsi b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
+> index 7699b19224c2..79e8ce59baa8 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-8040.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
+> @@ -15,6 +15,18 @@
+>  		     "marvell,armada-ap806";
+>  };
+>  
+> +&smmu {
+> +	status = "okay";
+> +};
+> +
+> +&cp0_pcie0 {
+> +	iommu-map =
+> +		<0x0   &smmu 0x480 0x20>,
+> +		<0x100 &smmu 0x4a0 0x20>,
+> +		<0x200 &smmu 0x4c0 0x20>;
+> +	iommu-map-mask = <0x031f>;
+> +};
+> +
+>  /* The RTC requires external oscillator. But on Aramda 80x0, the RTC clock
+>   * in CP master is not connected (by package) to the oscillator. So
+>   * disable it. However, the RTC clock in CP slave is connected to the
+> @@ -23,3 +35,31 @@
+>  &cp0_rtc {
+>  	status = "disabled";
+>  };
+> +
+> +&cp0_sata0 {
+> +	iommus = <&smmu 0x444>;
+> +};
+> +
+> +&cp0_sdhci0 {
+> +	iommus = <&smmu 0x445>;
+> +};
+> +
+> +&cp0_usb3_0 {
+> +	iommus = <&smmu 0x440>;
+> +};
+> +
+> +&cp0_usb3_1 {
+> +	iommus = <&smmu 0x441>;
+> +};
+> +
+> +&cp1_sata0 {
+> +	iommus = <&smmu 0x454>;
+> +};
+> +
+> +&cp1_usb3_0 {
+> +	iommus = <&smmu 0x450>;
+> +};
+> +
+> +&cp1_usb3_1 {
+> +	iommus = <&smmu 0x451>;
+> +};
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
+> index 7f9b9a647717..12e477f1aeb9 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
+> @@ -56,6 +56,24 @@
+>  			compatible = "simple-bus";
+>  			ranges = <0x0 0x0 0xf0000000 0x1000000>;
+>  
+> +			smmu: iommu@5000000 {
+> +				compatible = "marvell,ap806-smmu-500", "arm,mmu-500";
+> +				reg = <0x100000 0x100000>;
+> +				dma-coherent;
+> +				#iommu-cells = <1>;
+> +				#global-interrupts = <1>;
+> +				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +
+>  			gic: interrupt-controller@210000 {
+>  				compatible = "arm,gic-400";
+>  				#interrupt-cells = <3>;
+> -- 
+> 2.17.1
+>
 
 -- 
 Gregory Clement, Bootlin
