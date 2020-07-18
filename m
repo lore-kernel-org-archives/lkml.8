@@ -2,92 +2,124 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57F6C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB36B2080D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="RmXTjFH1"
+	by mail.kernel.org (Postfix) with ESMTP id A99EA2080D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 16:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgGRQg5 (ORCPT
+        id S1727037AbgGRQgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 12:36:57 -0400
-Received: from www381.your-server.de ([78.46.137.84]:50708 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgGRQg5 (ORCPT
+        Sat, 18 Jul 2020 12:36:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbgGRQgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 12:36:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MuAF07/PLYpW3vDGuXu6XLibaUuocTYnjLIQeyAsQI0=; b=RmXTjFH1+pOtSPwnYZcb2DsfUK
-        jf1gsQQBazFVX/Ntfzfa1iptZXdb3uRKHeLwDQioklHhFkemG+QC1un/iVZixXYHfHFZMc9ZPg9wf
-        tMF95BGfusRR6Ki2PkAOSPVPPLtp7XCuXbI8jIDU23VQH/NSsQ1bSKOKASDpTHy2devf1AScVT717
-        N2+Ynnae8wHjGrEip6nQ5q57Gc81vhbS4LUd86cJ2u1O4BXWZ/57Gv4VKSgFGPTmcdRYugmFMyPem
-        VEXDLk7Pur/Spky6Uxlge+mkcBbQZoPWw7CSoYtQcVQkqj5lo2I5aV4yYTUMVRwbcOBmBzJe/e0Kt
-        hXXEBlKQ==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jwppU-0002Yl-8e; Sat, 18 Jul 2020 18:36:52 +0200
-Received: from [62.216.206.120] (helo=[192.168.178.20])
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jwppU-0005jj-4K; Sat, 18 Jul 2020 18:36:52 +0200
-Subject: Re: [PATCH] iio: trigger: Staticise stub functions
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200714142456.67054-1-alexandru.ardelean@analog.com>
- <20200718172501.4ba58924@archlinux>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <017b33b1-b6f9-107b-b9c4-8c0abd0d6a3b@metafoo.de>
-Date:   Sat, 18 Jul 2020 18:36:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 18 Jul 2020 12:36:03 -0400
+X-Greylist: delayed 594 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 18 Jul 2020 09:36:03 PDT
+Received: from saturn.retrosnub.co.uk (saturn.retrosnub.co.uk [IPv6:2a00:1098:86::1:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4477CC0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 09:36:03 -0700 (PDT)
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id C67F99E0030;
+        Sat, 18 Jul 2020 17:26:05 +0100 (BST)
+Date:   Sat, 18 Jul 2020 17:26:04 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Tachici, Alexandru" <Alexandru.Tachici@analog.com>
+Subject: Re: [PATCH v4 2/2] iio: adc: ad7192: move ad7192_of_match table
+ closer to the end of the file
+Message-ID: <20200718172604.4257a4f8@archlinux>
+In-Reply-To: <191e9880ea3dd0e127b102f006c208f31d57c421.camel@analog.com>
+References: <20200415055804.17971-1-alexandru.ardelean@analog.com>
+        <20200415055804.17971-2-alexandru.ardelean@analog.com>
+        <191e9880ea3dd0e127b102f006c208f31d57c421.camel@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200718172501.4ba58924@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25877/Sat Jul 18 16:24:08 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/18/20 6:25 PM, Jonathan Cameron wrote:
-> On Tue, 14 Jul 2020 17:24:56 +0300
-> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
->
->> From: Lars-Peter Clausen <lars@metafoo.de>
->>
->> Make sure that the trigger function stubs are all static inline. Otherwise
->> we'll get linker errors due to multiple definitions of the same function.
->>
->> Fixes f8c6f4e9a40d4: ("iio: trigger: Staticise stub functions")
->> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
->> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> I'm curious on what the actual build error is?  Static functions should
-> result in independent implementations in each C file that includes
-> them. Inline is normally considered a hint.  Hence what am I missing?
+On Mon, 13 Jul 2020 16:11:39 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-It's a bad commit message, my fault. This should have been
+> On Wed, 2020-04-15 at 08:58 +0300, Alexandru Ardelean wrote:
+> > The change is more cosmetic. There is no need to reference this table in
+> > the probe function since 'of_device_get_match_data' is used, which
+> > obtains
+> > this information from the driver object.  
+> 
+> This looks like it could be applied now.
+> The iio/testing branch seems to have patch [1/2].
+Thanks.
 
-Make sure that the trigger function stubs are all static inline. 
-Otherwise we might see compiler warnings about declared but unused 
-functions.
+Applied.
 
+Jonathan
+
+> 
+> Thanks
+> Alex
+> 
+> > 
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > ---
+> >  drivers/iio/adc/ad7192.c | 18 +++++++++---------
+> >  1 file changed, 9 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+> > index 1431f555daa6..fd89a5115c55 100644
+> > --- a/drivers/iio/adc/ad7192.c
+> > +++ b/drivers/iio/adc/ad7192.c
+> > @@ -908,15 +908,6 @@ static int ad7192_channels_config(struct iio_dev
+> > *indio_dev)
+> >  	return 0;
+> >  }
+> >  
+> > -static const struct of_device_id ad7192_of_match[] = {
+> > -	{ .compatible = "adi,ad7190", .data =
+> > &ad7192_chip_info_tbl[ID_AD7190] },
+> > -	{ .compatible = "adi,ad7192", .data =
+> > &ad7192_chip_info_tbl[ID_AD7192] },
+> > -	{ .compatible = "adi,ad7193", .data =
+> > &ad7192_chip_info_tbl[ID_AD7193] },
+> > -	{ .compatible = "adi,ad7195", .data =
+> > &ad7192_chip_info_tbl[ID_AD7195] },
+> > -	{}
+> > -};
+> > -MODULE_DEVICE_TABLE(of, ad7192_of_match);
+> > -
+> >  static int ad7192_probe(struct spi_device *spi)
+> >  {
+> >  	struct ad7192_state *st;
+> > @@ -1050,6 +1041,15 @@ static int ad7192_remove(struct spi_device *spi)
+> >  	return 0;
+> >  }
+> >  
+> > +static const struct of_device_id ad7192_of_match[] = {
+> > +	{ .compatible = "adi,ad7190", .data =
+> > &ad7192_chip_info_tbl[ID_AD7190] },
+> > +	{ .compatible = "adi,ad7192", .data =
+> > &ad7192_chip_info_tbl[ID_AD7192] },
+> > +	{ .compatible = "adi,ad7193", .data =
+> > &ad7192_chip_info_tbl[ID_AD7193] },
+> > +	{ .compatible = "adi,ad7195", .data =
+> > &ad7192_chip_info_tbl[ID_AD7195] },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ad7192_of_match);
+> > +
+> >  static struct spi_driver ad7192_driver = {
+> >  	.driver = {
+> >  		.name	= "ad7192",  
 
