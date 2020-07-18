@@ -2,58 +2,104 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E540EC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE38FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEDB42067D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D012076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 15:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595085288;
+	bh=VbJ/FjM6srdfm9TONP3k9sR+5joZdjbsflcnTl3rH1Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Tz7FXyheSKx0dbvjuLS2Kjvq4HZoqhMQxNY0mG564ewfveL3SqA8YDqFTzKGXP1X9
+	 9C4Bj7FOsLyGl+WZIuBolBeudmn9lyrFPM8M9dAgsncroqWO0C80TMMwTNDjFxSUNe
+	 Uyog5Mo8lgjZ+IjFTFtxLX9tIZMFJxypjf9JBxS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgGRPOU (ORCPT
+        id S1728016AbgGRPOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 11:14:20 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39290 "EHLO gloria.sntech.de"
+        Sat, 18 Jul 2020 11:14:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbgGRPOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 11:14:20 -0400
-Received: from x2f7f83e.dyn.telefonica.de ([2.247.248.62] helo=phil.sntech)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jwoXY-0007lj-G9; Sat, 18 Jul 2020 17:14:16 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Michael Trimarchi <michael@amarulasolutions.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: rockchip: Fix VBUS on rk3288-vyasa
-Date:   Sat, 18 Jul 2020 17:14:14 +0200
-Message-Id: <159508524658.17330.14380421061218290244.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200707101214.2301768-1-michael@amarulasolutions.com>
-References: <20200707101214.2301768-1-michael@amarulasolutions.com>
+        id S1726155AbgGRPOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 11:14:47 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 799D22067D;
+        Sat, 18 Jul 2020 15:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595085286;
+        bh=VbJ/FjM6srdfm9TONP3k9sR+5joZdjbsflcnTl3rH1Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uOI1UXkqGZ5r9R/TwB6u/GrHCTCR9aqk3AoaSKK+2+Itynmb/Xcb6Tl5tDl6vgQdf
+         OM14EqNXpJt39PAx9ZxSSI84f9rAZBWYWr94nmmIb8XxnjWWNmY8nruVTKpPk9mD/e
+         qZunj0rzJ7QjVuIyw/c/Zg21PJ6ZO5R12hUKPN4A=
+Date:   Sat, 18 Jul 2020 16:14:42 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, Kevin Tsai <ktsai@capellamicro.com>
+Subject: Re: [PATCH 27/30] iio: light: cm32181: Fix formatting and docrot
+ issues in cm32181_acpi_get_cpm()
+Message-ID: <20200718161442.1bd79612@archlinux>
+In-Reply-To: <20200716135928.1456727-28-lee.jones@linaro.org>
+References: <20200716135928.1456727-1-lee.jones@linaro.org>
+        <20200716135928.1456727-28-lee.jones@linaro.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jul 2020 12:12:14 +0200, Michael Trimarchi wrote:
-> Connect the voltage regulator of vbus to the otg connector.
-> Depending on the current mode this is enabled (in "host" mode")
-> or disabled (in "peripheral" mode). The regulator must be updated
-> if the controller is configured in "otg" mode and the status changes
-> between "host" and "peripheral".
+On Thu, 16 Jul 2020 14:59:25 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
 
-Applied, thanks!
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/iio/light/cm32181.c:107: warning: Function parameter or member 'dev' not described in 'cm32181_acpi_get_cpm'
+>  drivers/iio/light/cm32181.c:107: warning: Function parameter or member 'obj_name' not described in 'cm32181_acpi_get_cpm'
+>  drivers/iio/light/cm32181.c:107: warning: Function parameter or member 'values' not described in 'cm32181_acpi_get_cpm'
+>  drivers/iio/light/cm32181.c:107: warning: Function parameter or member 'count' not described in 'cm32181_acpi_get_cpm'
+> 
+> Cc: Kevin Tsai <ktsai@capellamicro.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-[1/1] ARM: dts: rockchip: Fix VBUS on rk3288-vyasa
-      commit: 719646b76a41b8a482f8701825b635e9710ab329
+Thanks,
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+Jonathan
+
+> ---
+>  drivers/iio/light/cm32181.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+> index 160eb3f99795e..9764099faef9a 100644
+> --- a/drivers/iio/light/cm32181.c
+> +++ b/drivers/iio/light/cm32181.c
+> @@ -93,10 +93,10 @@ static int cm32181_read_als_it(struct cm32181_chip *cm32181, int *val2);
+>  #ifdef CONFIG_ACPI
+>  /**
+>   * cm32181_acpi_get_cpm() - Get CPM object from ACPI
+> - * @client	pointer of struct i2c_client.
+> - * @obj_name	pointer of ACPI object name.
+> - * @count	maximum size of return array.
+> - * @vals	pointer of array for return elements.
+> + * @dev:	pointer of struct device.
+> + * @obj_name:	pointer of ACPI object name.
+> + * @values:	pointer of array for return elements.
+> + * @count:	maximum size of return array.
+>   *
+>   * Convert ACPI CPM table to array.
+>   *
+
