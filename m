@@ -2,126 +2,100 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B48C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E0BC433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A445B2076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595051105;
-	bh=67jWIKS/zl5m8xZ1j5EHfPadzqeIRyVrdwgqbz8Js/c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QwH5QEhcZFhFbu2SjB0Q+TSICiufsMS6wjXab6HU6u4R/iXZ4UtF6rCH+9IlKk9Tz
-	 DSHtmxZwlylFrJYAUlFepVtGHnaRz+KyjT1jA9PLMzfhH4xTrtOzw6TbRsEcKJVQPg
-	 +JME+uPKBlPwE85vwYCd08Q3LlBMphr47CrAyV5w=
+	by mail.kernel.org (Postfix) with ESMTP id 03FE92076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:45:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rl90+3Ww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgGRFpE (ORCPT
+        id S1726731AbgGRFpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:45:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgGRFpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:45:03 -0400
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D827E21741
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 05:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595051103;
-        bh=67jWIKS/zl5m8xZ1j5EHfPadzqeIRyVrdwgqbz8Js/c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OSXLimAn5r4bfWppUfyc8T0cNYnzD87hNHFyhU0Uj/RctSOLoG918kvfiRp1Bm6Sf
-         Gk+uvVCxBmPshqTa+rThH0dAZHlDPFn1rVMmR/az/aYwUVAcXhLxpIvfnlLJH6nB2q
-         oUMFjZBbbqrz/DZUYoYoPFIdOhLw2qRNIV8Wy5Co=
-Received: by mail-ot1-f41.google.com with SMTP id n24so8426100otr.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jul 2020 22:45:02 -0700 (PDT)
-X-Gm-Message-State: AOAM531dPUjmeXB1Uo/aDB++zouh1frvHGDUYRzAt+pzrYhk3i0u8LHr
-        KpK+wE+1RZcmyhXJEA17g7/YQjSUU2c7FeKisJw=
-X-Google-Smtp-Source: ABdhPJxpf6WTfSSxsHSWfSbgugb4biJdYQ1JGVByBKGcuW/QUTC4izPNpFxX068mIC3eFJ3Xa9CM2aCxcIt9RIbg21M=
-X-Received: by 2002:a9d:7553:: with SMTP id b19mr12361891otl.77.1595051102201;
- Fri, 17 Jul 2020 22:45:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200714023836.2310569-1-nivedita@alum.mit.edu>
- <20200715004133.1430068-1-nivedita@alum.mit.edu> <20200717134654.GA3187880@rani.riverdale.lan>
- <CAKwvOdnTbatx8VB-rJSzyFPwfYnkMYK28yLBn1G+hUu8dyfYRA@mail.gmail.com>
-In-Reply-To: <CAKwvOdnTbatx8VB-rJSzyFPwfYnkMYK28yLBn1G+hUu8dyfYRA@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 18 Jul 2020 08:44:50 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXGeSFXnuO7Y94pyBU9qfSgtsLvMoCZSfDk476BBs2ejcw@mail.gmail.com>
-Message-ID: <CAMj1kXGeSFXnuO7Y94pyBU9qfSgtsLvMoCZSfDk476BBs2ejcw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] x86/boot: Remove run-time relocations from
- compressed kernel
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 18 Jul 2020 01:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgGRFpL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 01:45:11 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE52CC0619D2;
+        Fri, 17 Jul 2020 22:45:10 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 88so2880130wrh.3;
+        Fri, 17 Jul 2020 22:45:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3oYWHEmLW5s7KbA+l575vtPAkEWPi2PPTZYrMFMNqDQ=;
+        b=rl90+3WwRZrv/R9/B5pJfTLLA76r1jpsCq5y/2hvR3rfIgQQtX72aqr4C6jru4K2U2
+         z9i9D6dmVSJkFJJRGe2PW1BrfewDTXF4ST7Z16K6Lqw3HU3Aafq5U2UxBTNfNzAybxs4
+         vkT8nXzXkd7PBTrmPIH0rAcBRkduxh3z7Md9yaf4MAMd+g2656B7Sb66MVPSULdp8s5v
+         mZPGOm89Fis2QPrOhskoZYeo3ZT9Qd+0nYQQXu+nyVSVvVJhkbXYso7gv+AJ2wzKkBMr
+         oyAsR70Htl9MiM66aqQnoLlF9LJ8QBgxjmdh4rbWkoQwarn9lsfyeywWx1vUNQhZ1tWs
+         BWNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3oYWHEmLW5s7KbA+l575vtPAkEWPi2PPTZYrMFMNqDQ=;
+        b=Bm0GA+FBvGrH2RC+oOchyht4QVmD7NzcnxkVjg2rhUDM81O2dUFo/cz3J3PCW2Wegj
+         vMQt8s6CiOGsmSWvqav3i4Zo+vsxTUABqHu4NnYQkC9eINezWOi9xXve3xvLEPzmql3x
+         R3Nw8GKgjvaBrnFwh303xtt0P14Xb7+bBasbMQkHQ6dUESY2XMqW81tfCxd5QzhuJdXM
+         M+wvku+YVtvPWHjOv9vWO8IJVFM5S4ev/MHZfsIKJSWGy+hrExrJouaCKDKlRcOplgAq
+         qQX2DQMB4HpasTmHb89iOAE3S6vrpF4Ooiwv1Pd4Yjtt8nka40UnAo78vTZJ9XrmKR3x
+         G5/w==
+X-Gm-Message-State: AOAM530rtm0HftSLzoJl3IUehAQMNQSp3CNJHUuGHXCVE5tjSz8BG+07
+        1F9UrJi3ZNVsOLIGRLfKzD3W/9d/
+X-Google-Smtp-Source: ABdhPJyaiTeH7lXyaFaxsJ1ijc2hXhd94evVQetqFIWG5Q8KwT+medqxNHw8dGjRnsXqi+3Q5EOgQg==
+X-Received: by 2002:a5d:6a90:: with SMTP id s16mr13075188wru.8.1595051109672;
+        Fri, 17 Jul 2020 22:45:09 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id d13sm18735481wrn.61.2020.07.17.22.45.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 22:45:09 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] arm64: dts: meson: update spifc node name on Khadas VIM3/VIM3L
+Date:   Sat, 18 Jul 2020 05:45:05 +0000
+Message-Id: <20200718054505.4165-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 at 21:17, Nick Desaulniers <ndesaulniers@google.com> wrote:
->
-> On Fri, Jul 17, 2020 at 6:46 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Tue, Jul 14, 2020 at 08:41:26PM -0400, Arvind Sankar wrote:
-> > > The compressed kernel currently contains bogus run-time relocations in
-> > > the startup code in head_{32,64}.S, which are generated by the linker,
-> > > but must not actually be processed at run-time.
-> > >
-> > > This generates warnings when linking with the BFD linker, and errors
-> > > with LLD, which defaults to erroring on run-time relocations in read-only
-> > > sections. It also requires the -z noreloc-overflow hack for the 64-bit
-> > > kernel, which prevents us from linking it as -pie on an older BFD linker
-> > > (<= 2.26) or on LLD, because the locations that are to be apparently
-> > > relocated are only 32-bits in size and so cannot really have
-> > > R_X86_64_RELATIVE relocations.
-> > >
-> > > This series aims to get rid of these relocations. I've build- and
-> > > boot-tested with combinations of clang/gcc-10 with lld/bfd-2.34, and
-> > > gcc-4.9.0 with bfd-2.24, skipping clang on 32-bit because it currently
-> > > has other issues [0].
-> > >
-> >
-> > Hi Thomas, Ingo, Borislav, would you be able to take a look over this
-> > series in time for 5.9?
->
-> Hi Arvind, thanks for the series; I'm behind on testing.  When I try
-> to apply this series on top of linux-next, I get a collision in
-> drivers/firmware/efi/libstub/Makefile:27 when applying "0002
-> x86/boot/compressed: Force hidden visibility for all symbol
-> references". Would you mind refreshing the series to avoid that
-> collision?
+The VIM3/VIM3L Boards use w25q128 not w25q32 - this is a cosmetic change
+only - the device probes fine with the current device-tree.
 
-That is not the right way to deal with conflicts against -next.
+Fixes: 0e1610e726d3 ("arm64: dts: khadas-vim3: add SPIFC controller node")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This series targets the -tip tree, and applies fine against it. If you
-want to apply it on some other tree and test it, that is fine, and
-highly appreciated, but 'refreshing' the series against -next means it
-no longer applies to -tip, and may be based on unidentified conflict
-resolutions performed by Stephen that the maintainers will have to
-deal with.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 27408c10a811..6b75157265e1 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -360,7 +360,7 @@
+ 	pinctrl-0 = <&nor_pins>;
+ 	pinctrl-names = "default";
+ 
+-	w25q32: spi-flash@0 {
++	w25q128: spi-flash@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "winbond,w25q128fw", "jedec,spi-nor";
+-- 
+2.17.1
 
-Boris, Ingo, Thomas,
-
-Mind taking v5 of this series? (With Nick's Tested-by) I think these
-patches have been simmering long enough. Do note there is a conflict
-against the kbuild tree, but the resolution should be straightforward.
