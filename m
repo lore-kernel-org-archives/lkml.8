@@ -2,122 +2,67 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69CF52070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:28:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="BgxXTonA"
+	by mail.kernel.org (Postfix) with ESMTP id 055912070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgGRN2z (ORCPT
+        id S1727058AbgGRNaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:28:55 -0400
-Received: from m15111.mail.126.com ([220.181.15.111]:52017 "EHLO
-        m15111.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgGRN2y (ORCPT
+        Sat, 18 Jul 2020 09:30:00 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:8426 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726569AbgGRNaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:28:54 -0400
-X-Greylist: delayed 1852 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Jul 2020 09:28:53 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=Nrs0U0+MFKKRAAU9Nt
-        Id3jHpjc4smynpnfde3x7aSUk=; b=BgxXTonA7plPDAUC85Kp910v4oOh1gXwiG
-        nrfars58K54KDSPLGQahbSaxqr27wAbgYbLPAJ/OcN2VKT9NM1Pw6DZLtS/88COm
-        UhBiflNDqTDlplijWcwzdQEvSg1M3KTyZ2VUaG6Z9xVe7VwAj/C0I7LcGx1MIVxG
-        UBNthTK2g=
-Received: from 192.168.137.249 (unknown [112.10.74.162])
-        by smtp1 (Coremail) with SMTP id C8mowAAnFFrD8RJfJrTAHg--.49366S3;
-        Sat, 18 Jul 2020 20:57:41 +0800 (CST)
-From:   Xianting Tian <xianting_tian@126.com>
-To:     tytso@mit.edu, jack@suse.com
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] jbd2: fix incorrect code style
-Date:   Sat, 18 Jul 2020 08:57:37 -0400
-Message-Id: <1595077057-8048-1-git-send-email-xianting_tian@126.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: C8mowAAnFFrD8RJfJrTAHg--.49366S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXF4fXw1UJw45AFyktF4ktFb_yoW5XrWfpw
-        1Utry8urW0vryUAa4vqF48GFWYgrWSyFW7KrsrC3WktanxGFnIvryIyF4DA3yqqFZ5W3W7
-        AFy8t397Cw4vkwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jiVyxUUUUU=
-X-Originating-IP: [112.10.74.162]
-X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbi9AVlpFpD+9igGwAAsx
+        Sat, 18 Jul 2020 09:30:00 -0400
+X-IronPort-AV: E=Sophos;i="5.75,367,1589234400"; 
+   d="scan'208";a="460306961"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 15:29:58 +0200
+Date:   Sat, 18 Jul 2020 15:29:58 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>
+cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Coccinelle <cocci@systeme.lip6.fr>, linux-kernel@vger.kernel.org
+Subject: Re: [v2 1/4] coccinelle: api: extend memdup_user transformation with
+ GFP_USER
+In-Reply-To: <cf2bd604-3094-f90a-52a8-ff5a44cf3850@linux.com>
+Message-ID: <alpine.DEB.2.22.394.2007181529460.2538@hadrien>
+References: <0b9f2c58-e124-22d2-d91d-62a6e831c880@web.de> <alpine.DEB.2.22.394.2007180841520.2538@hadrien> <cf2bd604-3094-f90a-52a8-ff5a44cf3850@linux.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary blank.
 
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
----
- fs/jbd2/journal.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index e494443..5eccf8c 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1285,7 +1285,7 @@ journal_t *jbd2_journal_init_inode(struct inode *inode)
-  * superblock as being NULL to prevent the journal destroy from writing
-  * back a bogus superblock.
-  */
--static void journal_fail_superblock (journal_t *journal)
-+static void journal_fail_superblock(journal_t *journal)
- {
- 	struct buffer_head *bh = journal->j_sb_buffer;
- 	brelse(bh);
-@@ -1815,7 +1815,7 @@ int jbd2_journal_destroy(journal_t *journal)
- 
- 
- /**
-- *int jbd2_journal_check_used_features () - Check if features specified are used.
-+ *int jbd2_journal_check_used_features() - Check if features specified are used.
-  * @journal: Journal to check.
-  * @compat: bitmask of compatible features
-  * @ro: bitmask of features that force read-only mount
-@@ -1825,7 +1825,7 @@ int jbd2_journal_destroy(journal_t *journal)
-  * features.  Return true (non-zero) if it does.
-  **/
- 
--int jbd2_journal_check_used_features (journal_t *journal, unsigned long compat,
-+int jbd2_journal_check_used_features(journal_t *journal, unsigned long compat,
- 				 unsigned long ro, unsigned long incompat)
- {
- 	journal_superblock_t *sb;
-@@ -1860,7 +1860,7 @@ int jbd2_journal_check_used_features (journal_t *journal, unsigned long compat,
-  * all of a given set of features on this journal.  Return true
-  * (non-zero) if it can. */
- 
--int jbd2_journal_check_available_features (journal_t *journal, unsigned long compat,
-+int jbd2_journal_check_available_features(journal_t *journal, unsigned long compat,
- 				      unsigned long ro, unsigned long incompat)
- {
- 	if (!compat && !ro && !incompat)
-@@ -1882,7 +1882,7 @@ int jbd2_journal_check_available_features (journal_t *journal, unsigned long com
- }
- 
- /**
-- * int jbd2_journal_set_features () - Mark a given journal feature in the superblock
-+ * int jbd2_journal_set_features() - Mark a given journal feature in the superblock
-  * @journal: Journal to act on.
-  * @compat: bitmask of compatible features
-  * @ro: bitmask of features that force read-only mount
-@@ -1893,7 +1893,7 @@ int jbd2_journal_check_available_features (journal_t *journal, unsigned long com
-  *
-  */
- 
--int jbd2_journal_set_features (journal_t *journal, unsigned long compat,
-+int jbd2_journal_set_features(journal_t *journal, unsigned long compat,
- 			  unsigned long ro, unsigned long incompat)
- {
- #define INCOMPAT_FEATURE_ON(f) \
--- 
-1.8.3.1
+On Sat, 18 Jul 2020, Denis Efremov wrote:
 
+> Hi,
+>
+> On 7/18/20 9:45 AM, Julia Lawall wrote:
+> > This on is indeed a problem.  I think it was not detected in testing,
+> > because in the current kernel the rule never applies.  But Denis, in
+> >
+> > -  to = \(kmalloc\|kzalloc\)
+> >                 (size,\(GFP_KERNEL\|GFP_USER\|
+> >                       \(GFP_KERNEL\|GFP_USER\)|__GFP_NOWARN\));
+> >
+> > you do indeed need to put - in front of the second and third lines as
+> > well.
+>
+> Thanks, Markus, Julia. I will send v3. Julia, is it ok with you, if I will
+> drop the last patch with "selfcheck" this time?
+
+That would be perfect, thanks.
+
+julia
