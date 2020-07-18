@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED35DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACC2C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B50207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D6F20691
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 10:30:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGRK37 (ORCPT
+        id S1726817AbgGRK36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 06:29:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:27971 "EHLO mga06.intel.com"
+        Sat, 18 Jul 2020 06:29:58 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32105 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgGRK3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726563AbgGRK3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 18 Jul 2020 06:29:55 -0400
-IronPort-SDR: MRkyOZmun7qviCHwI5gbcwZVCFEBPGcFBNCqVfB4upmrS3cJSUwT6e6LJCzjlf/RENiPxpOJVJ
- FaEdoCFXD7hA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="211275648"
+IronPort-SDR: cgJbtZ1E89Nw5Ual1FXg3TnIgWHAfIeqsC87vrjpsSlbHFPzLVVsje7pAHbP/PQecG0rEMlVbQ
+ LxOyhmldxgfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="234586414"
 X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
-   d="scan'208";a="211275648"
+   d="scan'208";a="234586414"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 03:29:55 -0700
-IronPort-SDR: KU8nkyyRZC2SHh9n/bqbbxQHWIk2ihXXwlMk71XUvRQzKp3XgC2FBBfO17xWNGkDE24EnKG5Fa
- Ts44MYeaBPkA==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 03:29:55 -0700
+IronPort-SDR: s/rg10fvR+/dDLU07k54yrCkRvY3F5IvaNBibNCwp8m2bYvcJMhfCtM/Dyk4Ir30/aW/JUl0Jd
+ N6rygt0XoR3w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,366,1589266800"; 
-   d="scan'208";a="461126755"
+   d="scan'208";a="391613066"
 Received: from lkp-server02.sh.intel.com (HELO 50058c6ee6fc) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 18 Jul 2020 03:29:53 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 18 Jul 2020 03:29:53 -0700
 Received: from kbuild by 50058c6ee6fc with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jwk6L-0000k1-9i; Sat, 18 Jul 2020 10:29:53 +0000
-Date:   Sat, 18 Jul 2020 18:28:02 +0800
+        id 1jwk6L-0000jy-9G; Sat, 18 Jul 2020 10:29:53 +0000
+Date:   Sat, 18 Jul 2020 18:27:59 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:core/debugobjects] BUILD SUCCESS
- 0f85c4805184765ff35e0079b3241ee8f25d1b2b
-Message-ID: <5f12ceb2.V3sDrbmYo+bZtAIZ%lkp@intel.com>
+Subject: [tip:irq/urgent] BUILD SUCCESS
+ baedb87d1b53532f81b4bd0387f83b05d4f7eb9a
+Message-ID: <5f12ceaf.ES2l6FWOyatcn8u8%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -55,13 +55,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  core/debugobjects
-branch HEAD: 0f85c4805184765ff35e0079b3241ee8f25d1b2b  debugobjects: Convert to DEFINE_SHOW_ATTRIBUTE
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  irq/urgent
+branch HEAD: baedb87d1b53532f81b4bd0387f83b05d4f7eb9a  genirq/affinity: Handle affinity setting on inactive interrupts correctly
 
 elapsed time: 726m
 
-configs tested: 115
-configs skipped: 2
+configs tested: 112
+configs skipped: 1
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -84,21 +84,16 @@ sh                        edosk7760_defconfig
 mips                        omega2p_defconfig
 powerpc                  storcenter_defconfig
 arm                           tegra_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-ia64                          tiger_defconfig
-mips                        jmr3927_defconfig
-arm                            xcep_defconfig
 h8300                            allyesconfig
 powerpc                 linkstation_defconfig
 sparc                       sparc32_defconfig
 arm                          badge4_defconfig
 powerpc                      pmac32_defconfig
 riscv                          rv32_defconfig
+i386                              allnoconfig
 i386                             allyesconfig
 i386                                defconfig
 i386                              debian-10.3
-i386                              allnoconfig
 ia64                             allmodconfig
 ia64                                defconfig
 ia64                              allnoconfig
@@ -108,17 +103,17 @@ m68k                              allnoconfig
 m68k                           sun3_defconfig
 m68k                                defconfig
 m68k                             allyesconfig
+nds32                               defconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
 nios2                               defconfig
 nios2                            allyesconfig
 openrisc                            defconfig
 c6x                              allyesconfig
 c6x                               allnoconfig
 openrisc                         allyesconfig
-nds32                               defconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
 xtensa                           allyesconfig
 h8300                            allmodconfig
 xtensa                              defconfig
@@ -134,29 +129,29 @@ parisc                            allnoconfig
 parisc                              defconfig
 parisc                           allyesconfig
 parisc                           allmodconfig
-powerpc                             defconfig
 powerpc                          allyesconfig
 powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
+powerpc                             defconfig
 i386                 randconfig-a001-20200717
 i386                 randconfig-a005-20200717
 i386                 randconfig-a002-20200717
 i386                 randconfig-a006-20200717
 i386                 randconfig-a003-20200717
 i386                 randconfig-a004-20200717
-x86_64               randconfig-a012-20200716
-x86_64               randconfig-a011-20200716
-x86_64               randconfig-a016-20200716
-x86_64               randconfig-a014-20200716
-x86_64               randconfig-a013-20200716
-x86_64               randconfig-a015-20200716
 x86_64               randconfig-a005-20200717
 x86_64               randconfig-a006-20200717
 x86_64               randconfig-a002-20200717
 x86_64               randconfig-a001-20200717
 x86_64               randconfig-a003-20200717
 x86_64               randconfig-a004-20200717
+x86_64               randconfig-a012-20200716
+x86_64               randconfig-a011-20200716
+x86_64               randconfig-a016-20200716
+x86_64               randconfig-a014-20200716
+x86_64               randconfig-a013-20200716
+x86_64               randconfig-a015-20200716
 i386                 randconfig-a016-20200717
 i386                 randconfig-a011-20200717
 i386                 randconfig-a015-20200717
@@ -171,6 +166,8 @@ s390                             allyesconfig
 s390                              allnoconfig
 s390                             allmodconfig
 s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
 sparc64                             defconfig
 sparc64                           allnoconfig
 sparc64                          allyesconfig
