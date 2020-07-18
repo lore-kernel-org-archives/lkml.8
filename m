@@ -2,146 +2,158 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D537EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 21:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 21:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03BA20734
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 21:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C001122C7B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 21:24:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="E2lkvmrg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ndRnP7VR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDJkjoZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgGRVYr (ORCPT
+        id S1727942AbgGRVSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 17:24:47 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:39507 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726863AbgGRVYq (ORCPT
+        Sat, 18 Jul 2020 17:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgGRVSK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 17:24:46 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7116D5810DE;
-        Sat, 18 Jul 2020 17:24:45 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sat, 18 Jul 2020 17:24:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=s
-        HEwXJQUgU9S74Ll25+cHaTeMsTz76blspps5t8z770=; b=E2lkvmrgmOhg6jvxZ
-        ksiN+QjHqFz/aIR5jIEQu4nKeAaiJdOPbXWO6+PWp3K69+C4IZUNNOq0RNNfqpNb
-        vaIua9I/YeKqqjqEd3kVsd/rSOh72aLo+EfAufByyHWWwoguCJGe3PAFk3RND2q8
-        FPSRRRdLNRwSCs9utPGA8fZFDHdd237fUhUpMhI1KMR9zMsz3+nPhahCUX75B10O
-        ZglYNZGbvF84mP8a/FjtwBpIz8oPgfM7fCeu3JAgdZAUI4NJN03EY8uj77q07aT5
-        IM4lmy1upV6Mq75UT6WIYcKAOoQsOQfbZOHZL2vdI1Sp/eLQ5nJxXh3EQrdphiLT
-        yn08w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=sHEwXJQUgU9S74Ll25+cHaTeMsTz76blspps5t8z7
-        70=; b=ndRnP7VRrrfY+m17sgAqH47arpZhXSq2xK9XmX28JS35JQE8hwGh0dWFg
-        WINdnjad5cNeC+xYLsMhbfWNXjCXQt4d4N5d7FS+rKnwXnRN560/Q6u+AHKW+JLi
-        NBqkK9WsY0ixtEp357eD/0HXDWsOsfVpqXxlXsPvl7vZwwqT3OzWsQ21/B2zp4vq
-        X0TTYjTAqOXbzk8ntrJdBILYye4Qt7oCUPJ0htcb/sLiarYddrlzw7uJ8PdBFaa8
-        03XR9nZDmQCjWrrHjDzbOE/Qt6a2E8EGv3mvovf9sUTCLLcRF3oJ9m+nEu/uSThE
-        Kcy9xNhfKCJfH7JX+8qdsSXxcgA6A==
-X-ME-Sender: <xms:m2gTXz-fuC_JfmSyq9uxHla6nqomR1SOEbyQk66F5pBseFK203AWsQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrfeelgdduieduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepgfelkeduveejtdejhfeiledvhfeggeeiieeklefhfeefffffffeg
-    udetteelieejnecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgr
-    nhgurdhorhhg
-X-ME-Proxy: <xmx:m2gTX_uDuOjWGzDr24tL4I-q4DAwPx1gAej0zW-tQysaXRVx6mdAsQ>
-    <xmx:m2gTXxAM6CnlPiBfNzSGdHxAvfUhMGnVRWhQTfz8KE9gSZetpY8b2A>
-    <xmx:m2gTX_fuRpYCj37uezXant-OtPA7zgCa3Suf5DCVOmEUr0y-9XT4JA>
-    <xmx:nWgTXxn6mUUtuAVJOAqDwh3m_y3x3oeWioYGomxGkhsscAEyFIrKww>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DA0DF3280059;
-        Sat, 18 Jul 2020 17:24:42 -0400 (EDT)
-Subject: Re: [linux-sunxi] [PATCH 10/16] arm: dts: sunxi: h3/h5: Add DAI node
- for HDMI
-To:     peron.clem@gmail.com, Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20200704113902.336911-1-peron.clem@gmail.com>
- <20200704113902.336911-11-peron.clem@gmail.com>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <290468b2-8e4f-3881-1bc5-7a154c74e2a6@sholland.org>
-Date:   Sat, 18 Jul 2020 16:24:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 18 Jul 2020 17:18:10 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 397CAC0619D2;
+        Sat, 18 Jul 2020 14:18:10 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id bm28so10243550edb.2;
+        Sat, 18 Jul 2020 14:18:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uZKlO7KE7NPBfJKLatbBaFgDsUNFCwc7y6QjYB+o7aA=;
+        b=EDJkjoZr5B0HaatSqwYBvtzUnmr1Cbrq04DgKjFr44LODpl4tTK0zwcG01Rh73Vtjm
+         jg5kwj9rDtbnby+y905jVjBtvoCB8lB5lrjxEVsVpT9XAQZM9hn55NciFZqPz9k1d440
+         RPJ3qVRIQbIw+YkcrgcrP/6QIQi8IQzlszmRx4jPBCR9Wd444fZ60LmAfUINGaBgXYXO
+         Ww8VLK1ZBlygztbHl69+Dfhxn2X0sXysWrFZxHddZd+x8NwRTHr7FcvxAS0Jo0/7pUSj
+         7YwzCRZoBEMXDUXv8Th3TynBr9yED+WSnTWVeco3yWDzNoNFRUqyDxm2EG/bnCWMhM8Q
+         uGiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uZKlO7KE7NPBfJKLatbBaFgDsUNFCwc7y6QjYB+o7aA=;
+        b=SDU2r+JbHGo6fwAimf1iE6HiNYbasSPdftYWHkN5vuA0RsaOsCx0gR++kMbXqoi3og
+         01NTGk7nZrJKdq5n9l9udgQZwK8coGlGaYp3V7MhGwmIRS2phWBHPyDBDc/V9xzNLjzg
+         LqkYZSphr+joZqFQtDun2s8zvSuQOnXBFJlOKL9y7KbNQZ+j1jAag9Tt84IcjiF1zDTj
+         DInTSeBkoHIMiv1b2dJy4PMmEekXKwuY/ynQz989AnP0SGjd/pq6mGIfTFKOz6BH4Buk
+         GSxFVkqYxum3pAF/RnDgHpXdDA4kjgZ2pqKT9r9/Rx54bn4WrkIzzWSysNL6LeCiUj7n
+         N3Tg==
+X-Gm-Message-State: AOAM532E782vidZbnbrguPtZiPeLhZ4zezTKuiMI+T/NHfJclafAI+zr
+        xYUyzKNZ16e6VNkkFg7MJD4=
+X-Google-Smtp-Source: ABdhPJwWUlcYyuEUK1nTkGL/dHCbS50ZEhMNgrg4hj3fKq2NG/57OlOgono6kdvQ52hbSF9KuMyO6g==
+X-Received: by 2002:aa7:d049:: with SMTP id n9mr15683837edo.39.1595107088743;
+        Sat, 18 Jul 2020 14:18:08 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id m13sm11426599ejc.1.2020.07.18.14.18.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jul 2020 14:18:08 -0700 (PDT)
+Date:   Sun, 19 Jul 2020 00:18:05 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 3/4] net: Call into DSA netdevice_ops wrappers
+Message-ID: <20200718211805.3yyckq23udacz4sa@skbuf>
+References: <20200718030533.171556-1-f.fainelli@gmail.com>
+ <20200718030533.171556-4-f.fainelli@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200704113902.336911-11-peron.clem@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718030533.171556-4-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clément,
-
-On 7/4/20 6:38 AM, Clément Péron wrote:
-> From: Marcus Cooper <codekipper@gmail.com>
+On Fri, Jul 17, 2020 at 08:05:32PM -0700, Florian Fainelli wrote:
+> Make the core net_device code call into our ndo_do_ioctl() and
+> ndo_get_phys_port_name() functions via the wrappers defined previously
 > 
-> Add the new DAI block for I2S2 which is used for HDMI audio.
-> 
-> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  net/core/dev.c       | 5 +++++
+>  net/core/dev_ioctl.c | 5 +++++
+>  2 files changed, 10 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> index 22d533d18992..9be13378d4df 100644
-> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> @@ -662,6 +662,19 @@ i2s1: i2s@1c22400 {
->  			status = "disabled";
->  		};
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 062a00fdca9b..19f1abc26fcd 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -98,6 +98,7 @@
+>  #include <net/busy_poll.h>
+>  #include <linux/rtnetlink.h>
+>  #include <linux/stat.h>
+> +#include <net/dsa.h>
+>  #include <net/dst.h>
+>  #include <net/dst_metadata.h>
+>  #include <net/pkt_sched.h>
+> @@ -8602,6 +8603,10 @@ int dev_get_phys_port_name(struct net_device *dev,
+>  	const struct net_device_ops *ops = dev->netdev_ops;
+>  	int err;
 >  
-> +		i2s2: i2s@1c22800 {
-> +			#sound-dai-cells = <0>;
-> +			compatible = "allwinner,sun8i-h3-i2s";
-> +			reg = <0x01c22800 0x400>;
-> +			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2S2>, <&ccu CLK_I2S2>;
-> +			clock-names = "apb", "mod";
-> +			dmas = <&dma 27>;
-> +			resets = <&ccu RST_BUS_I2S2>;
-> +			dma-names = "tx";
+> +	err  = dsa_ndo_get_phys_port_name(dev, name, len);
 
-`make dtbs_check` reports:
+Stupid question, but why must these be calls to an inline function whose
+name is derived through macro concatenation and hardcoded for 2
+arguments, then pass through an additional function pointer found in a
+DSA-specific lookup table, and why cannot DSA instead simply export
+these 2 symbols (with a static inline EOPNOTSUPP fallback), and simply
+provide the implementation inside those?
 
-i2s@1c22800: dma-names:0: 'rx' was expected
-i2s@1c22800: dma-names: ['tx'] is too short
-i2s@1c22800: dmas: [[28, 27]] is too short
-
-Regards,
-Samuel
-
-> +			status = "disabled";
-> +		};
+> +	if (err == 0 || err != -EOPNOTSUPP)
+> +		return err;
 > +
->  		codec: codec@1c22c00 {
->  			#sound-dai-cells = <0>;
->  			compatible = "allwinner,sun8i-h3-codec";
+>  	if (ops->ndo_get_phys_port_name) {
+>  		err = ops->ndo_get_phys_port_name(dev, name, len);
+>  		if (err != -EOPNOTSUPP)
+> diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
+> index a213c703c90a..b2cf9b7bb7b8 100644
+> --- a/net/core/dev_ioctl.c
+> +++ b/net/core/dev_ioctl.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/rtnetlink.h>
+>  #include <linux/net_tstamp.h>
+>  #include <linux/wireless.h>
+> +#include <net/dsa.h>
+>  #include <net/wext.h>
+>  
+>  /*
+> @@ -231,6 +232,10 @@ static int dev_do_ioctl(struct net_device *dev,
+>  	const struct net_device_ops *ops = dev->netdev_ops;
+>  	int err = -EOPNOTSUPP;
+>  
+> +	err = dsa_ndo_do_ioctl(dev, ifr, cmd);
+> +	if (err == 0 || err != -EOPNOTSUPP)
+> +		return err;
+> +
+>  	if (ops->ndo_do_ioctl) {
+>  		if (netif_device_present(dev))
+>  			err = ops->ndo_do_ioctl(dev, ifr, cmd);
+> -- 
+> 2.25.1
 > 
 
+Thanks,
+-Vladimir
