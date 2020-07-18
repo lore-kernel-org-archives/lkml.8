@@ -2,85 +2,70 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D434AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 18:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31809C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 18:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA7C32076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 18:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149362076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 18:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgGRSZq (ORCPT
+        id S1728153AbgGRS0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 14:25:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:11190 "EHLO mga12.intel.com"
+        Sat, 18 Jul 2020 14:26:41 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:46630 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbgGRSZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 14:25:46 -0400
-IronPort-SDR: bbN7OR4XaR26f14rby1XG+wn+bv6osQb36L4Fe/FqBS/Ee5G0js6sWWM7ciJp1fJpGKsT+hd8C
- 1TaY7ZZ2xTjQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9686"; a="129329899"
-X-IronPort-AV: E=Sophos;i="5.75,368,1589266800"; 
-   d="scan'208";a="129329899"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 11:25:45 -0700
-IronPort-SDR: +eHksomJLOqJFT06ZTaBV+u767nsCH5699QZCgbJdeU5Yt1OnkSEjrz4DmyxZZ9civoXbQBcmr
- 4UPOWpf2hQdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,368,1589266800"; 
-   d="scan'208";a="317633312"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga008.jf.intel.com with ESMTP; 18 Jul 2020 11:25:45 -0700
-Message-ID: <7653c6c74a4eee18b8bdc8262e0c0b5b95f9d771.camel@intel.com>
-Subject: Re: Random shadow stack pointer corruption
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Ingo Molnar <mingo@redhat.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Date:   Sat, 18 Jul 2020 11:24:46 -0700
-In-Reply-To: <CALCETrUBDUKTcmmYD7BpZkL3869ELvha1PqOcScw4M-B_DQdiA@mail.gmail.com>
-References: <c2bfe1aa390777b10d810d2b76a35b97fbd32a1c.camel@intel.com>
-         <CALCETrUBDUKTcmmYD7BpZkL3869ELvha1PqOcScw4M-B_DQdiA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        id S1726690AbgGRS0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 14:26:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 5C641FB04;
+        Sat, 18 Jul 2020 20:26:39 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9ntX7PWNyZs1; Sat, 18 Jul 2020 20:26:38 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 833FE42576; Sat, 18 Jul 2020 20:26:37 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v1 0/1] drm/bridge: nwl-dsi: Drop DRM_BRIDGE_ATTACH_NO_CONNECTOR check.
+Date:   Sat, 18 Jul 2020 20:26:36 +0200
+Message-Id: <cover.1595096667.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-07-18 at 11:00 -0700, Andy Lutomirski wrote:
-> On Sat, Jul 18, 2020 at 10:58 AM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
-> > Hi,
-> > 
-> > My shadow stack tests start to have random shadow stack pointer corruption after
-> > v5.7 (excluding).  The symptom looks like some locking issue or the kernel is
-> > confused about which CPU a task is on.  In later tip/master, this can be
-> > triggered by creating two tasks and each does continuous
-> > pthread_create()/pthread_join().  If the kernel has max_cpus=1, the issue goes
-> > away.  I also checked XSAVES/XRSTORS, but this does not seem to be an issue
-> > coming from there.
-> 
-> What do you mean "shadow stack pointer corruption"?  Is SSP itself
-> corrupt while running in the kernel?  Is one of the MSRs getting
-> corrupted?  Is the memory to which the shadow stack points getting
-> corrupted? Is the CPU rejecting an attempt to change SSP?
 
-What I see is, a new thread after ret_from_fork() and iret back to ring-3, 
-its shadow stack pointer (MSR_IA32_PL3_SSP) is corrupted.
+We don't create a connector but let panel_bridge handle that so there's
+no point in rejecting DRM_BRIDGE_ATTACH_NO_CONNECTOR.
 
+This was prompted by Sam in
+https://lore.kernel.org/dri-devel/20200718115734.GA2989793@ravnborg.org/
 
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+
+Guido Günther (1):
+  drm/bridge: nwl-dsi: Drop DRM_BRIDGE_ATTACH_NO_CONNECTOR check.
+
+ drivers/gpu/drm/bridge/nwl-dsi.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+-- 
+2.26.2
 
