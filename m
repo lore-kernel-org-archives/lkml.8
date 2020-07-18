@@ -7,36 +7,34 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2088EC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B11C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00B2C205CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784BF20724
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 11:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgGRLa2 (ORCPT
+        id S1726666AbgGRLr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 07:30:28 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:50464 "EHLO smtp.al2klimov.de"
+        Sat, 18 Jul 2020 07:47:59 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:53816 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbgGRLa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 07:30:27 -0400
+        id S1726493AbgGRLr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 07:47:59 -0400
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id D8FD5BC095;
-        Sat, 18 Jul 2020 11:30:22 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 31814BC053;
+        Sat, 18 Jul 2020 11:47:56 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     linux@highpoint-tech.com, corbet@lwn.net, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] scsi: hptiop: Replace HTTP links with HTTPS ones
-Date:   Sat, 18 Jul 2020 13:30:16 +0200
-Message-Id: <20200718113016.15647-1-grandmaster@al2klimov.de>
+Subject: [PATCH] HID: Replace HTTP links with HTTPS ones
+Date:   Sat, 18 Jul 2020 13:47:49 +0200
+Message-Id: <20200718114749.19561-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
+X-Spamd-Bar: +++++
 Authentication-Results: smtp.al2klimov.de;
         auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,6 +59,7 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
  Continuing my work started at 93431e0607e5.
  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
  If there are any URLs to be removed completely
  or at least not (just) HTTPSified:
@@ -72,34 +71,44 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
  If you apply the patch, please let me know.
 
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
- Documentation/scsi/hptiop.rst | 2 +-
- drivers/scsi/hptiop.c         | 2 +-
+
+ drivers/hid/Kconfig      | 2 +-
+ drivers/hid/hid-cp2112.c | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/scsi/hptiop.rst b/Documentation/scsi/hptiop.rst
-index 23ae7ae36971..1a6900b456c0 100644
---- a/Documentation/scsi/hptiop.rst
-+++ b/Documentation/scsi/hptiop.rst
-@@ -212,4 +212,4 @@ Copyright |copy| 2006-2012 HighPoint Technologies, Inc. All Rights Reserved.
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 45e87dc59d4e..05315b434276 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -20,7 +20,7 @@ config HID
+ 	  removed from the HID bus by the transport-layer drivers, such as
+ 	  usbhid (USB_HID) and hidp (BT_HIDP).
  
-   linux@highpoint-tech.com
+-	  For docs and specs, see http://www.usb.org/developers/hidpage/
++	  For docs and specs, see https://www.usb.org/developers/hidpage/
  
--  http://www.highpoint-tech.com
-+  https://www.highpoint-tech.com
-diff --git a/drivers/scsi/hptiop.c b/drivers/scsi/hptiop.c
-index 6a2561f26e38..3299624e41ce 100644
---- a/drivers/scsi/hptiop.c
-+++ b/drivers/scsi/hptiop.c
-@@ -5,7 +5,7 @@
+ 	  If unsure, say Y.
+ 
+diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
+index db1b55df0d13..f64517bc33e2 100644
+--- a/drivers/hid/hid-cp2112.c
++++ b/drivers/hid/hid-cp2112.c
+@@ -11,7 +11,7 @@
+  * host communicates with the CP2112 via raw HID reports.
   *
-  * Please report bugs/comments/suggestions to linux@highpoint-tech.com
-  *
-- * For more information, visit http://www.highpoint-tech.com
-+ * For more information, visit https://www.highpoint-tech.com
+  * Data Sheet:
+- *   http://www.silabs.com/Support%20Documents/TechnicalDocs/CP2112.pdf
++ *   https://www.silabs.com/Support%20Documents/TechnicalDocs/CP2112.pdf
+  * Programming Interface Specification:
+  *   https://www.silabs.com/documents/public/application-notes/an495-cp2112-interface-specification.pdf
   */
- #include <linux/module.h>
- #include <linux/types.h>
 -- 
 2.27.0
 
