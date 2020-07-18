@@ -2,153 +2,124 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB23C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BDCC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4502073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7652073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 13:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWs6+JA6"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="UPVzKhW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgGRNAy (ORCPT
+        id S1727044AbgGRNBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:00:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgGRNAx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:00:53 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C16DC0619D2;
-        Sat, 18 Jul 2020 06:00:53 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id by13so9699406edb.11;
-        Sat, 18 Jul 2020 06:00:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wvwI7PG7u4WygVMxMuxpjuz1VVodNa3mr+jTYDKQqdY=;
-        b=PWs6+JA67ELakxN1UAnD7KrD3/Q2cHKbsFKL6dvuaAid/KCFX9VN9x8FJXQpB6HRlO
-         b6e19bzchrCJTDbAofYwDuqGFtpIiUOCETcX5X06oTkK3EfBog5n3GVsYwe/SY0IeD6R
-         JfaIePYi1MpapOQFdAqSCr+KMJ57aX0+6PSYxeyk8Wop/15FyLxSd77jBAjyJlHC9hjc
-         W5BGzFKV5Z9faFiLUvLHGb2u2q6siGMbj7MgeyK/ozVPHJiLFP9Krzh5CftJOzEx9tcT
-         m1wJ1D0/uOJYCDnc4IBqNxXyXjlitdZr646tO763+CYA6pW2W+SdYjKdeaxoQn4ang6D
-         7IUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wvwI7PG7u4WygVMxMuxpjuz1VVodNa3mr+jTYDKQqdY=;
-        b=aPsQ6sdhw5VfczrtBltcLkSlTkemgYzW3+j4R2dCpgcjxWxQSPp+dUYvosh273FrIx
-         C8PTBj0pd/JTZbLOOKbWQzsQxHTWThQxxDpOebxtOFCDZBjqK28ycSjxI/FDRHnAslC9
-         cnYrBZep/dkRnMmYQYu0ux+L3m8EyFofZKoZku7xzmws8kuDarxBcLn5F7Z5a7BkhWIX
-         F0T2D3ETLftqZiGkr3WtMD6CuSIOxIdBtSl4sOuRY1SklG4IUKZtFKh2B43IKq3MKg4W
-         7fBbATVn2k9J5OrTk8oTFbUlWX0WC5PCRRaUAH7jNuDaMYRfMmqHHFvipOaosedPVq+C
-         cZnA==
-X-Gm-Message-State: AOAM532VbVHkPvbdwUrYtJfJQzDiFAjowItCRCFDfC2HbJ4mUYplDvHu
-        npiHhyd0D0sLZxpiTcJoyg4=
-X-Google-Smtp-Source: ABdhPJw0Kl7gozpb1AQjDyQgdbl42lLMCXrk/7ZBjHyU3aFA6pKgUij6b5WufeoN2GveZETwcfVc+w==
-X-Received: by 2002:a50:e689:: with SMTP id z9mr13702222edm.131.1595077252055;
-        Sat, 18 Jul 2020 06:00:52 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id t2sm11191692eds.60.2020.07.18.06.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 06:00:51 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 16:00:49 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Matthew Hagan <mnhagan88@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-Message-ID: <20200718130049.jqw4ckfmnld5jcdd@skbuf>
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
- <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
- <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200716223236.GA1314837@lunn.ch>
- <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
+        Sat, 18 Jul 2020 09:01:53 -0400
+Received: from ozlabs.org ([203.11.71.1]:36413 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726569AbgGRNBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 09:01:53 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B87Rg57KHz9sRR;
+        Sat, 18 Jul 2020 23:01:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1595077311;
+        bh=Tck+ElnB3vYA1eqWx+n2MI0v/mg4OzY5dIVkDQmoU40=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UPVzKhW6PQeX6tyxhgTTSD65yIeSWW4QV1ZqzeN/l+T9gIKLL/Wzm5luPQLV61k6t
+         QbAO5Iqbf/ng+r4nR3STK/dLIK38+Macs8+J48dcpad+0OMdogUqFXrNwBTJH/4F1V
+         Zr1xMjAqASlHxej1aDPF6rhWJniDXK8zWj04NwLNBuQnfgKjLJ2ZjV8SLeQMx7sV19
+         zhERgbfG/lBEMfTFMlHfDrI/Ot5XYfeUVoda/c8aF/fxGR9/YQ9o5S6AWNgQhOcSY0
+         Z2+WB7I+KtwLQ8imwEimvL3XJCY+asYaZB7qK0tOM6Q5VsV5zSNwhG6efNLW+NXzu4
+         uyUAqBsQQJyjg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     aneesh.kumar@linux.ibm.com, haren@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sathnaga@linux.vnet.ibm.com
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.8-7 tag
+Date:   Sat, 18 Jul 2020 23:01:51 +1000
+Message-ID: <87k0z1t1s0.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 08:26:02PM +0100, Matthew Hagan wrote:
-> 
-> 
-> On 16/07/2020 23:32, Andrew Lunn wrote:
-> > On Thu, Jul 16, 2020 at 03:09:25PM -0700, Jakub Kicinski wrote:
-> >> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
-> >>> Add names and decriptions of additional PORT0_PAD_CTRL properties.
-> >>>
-> >>> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
-> >>>  1 file changed, 8 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> >>> index ccbc6d89325d..3d34c4f2e891 100644
-> >>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> >>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> >>> @@ -13,6 +13,14 @@ Optional properties:
-> >>>  
-> >>>  - reset-gpios: GPIO to be used to reset the whole device
-> >>>  
-> >>> +Optional MAC configuration properties:
-> >>> +
-> >>> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
-> >>
-> >> Perhaps we can say a little more here?
-> >>
-> >>> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
-> >>> +				falling edge.
-> >>> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
-> >>> +				falling edge.
-> >>
-> >> These are not something that other vendors may implement and therefore
-> >> something we may want to make generic? Andrew?
-> > 
-> > I've never seen any other vendor implement this. Which to me makes me
-> > think this is a vendor extension, to Ciscos vendor extension of
-> > 1000BaseX.
-> > 
-> > Matthew, do you have a real use cases of these? I don't see a DT patch
-> > making use of them. And if you do, what is the PHY on the other end
-> > which also allows you to invert the clocks?
-> > 
-> The use case I am working on is the Cisco Meraki MX65 which requires bit
-> 18 set (qca,sgmii-txclk-falling-edge). On the other side is a BCM58625
-> SRAB with ports 4 and 5 in SGMII mode. There is no special polarity
-> configuration set on this side though I do have very limited info on
-> what is available. The settings I have replicate the vendor
-> configuration extracted from the device.
-> 
-> The qca,sgmii-rxclk-falling-edge option (bit 19) is commonly used
-> according to the device trees found in the OpenWrt, which is still using
-> the ar8216 driver. With a count through the ar8327-initvals I see bit 19
-> set on 18 of 22 devices using SGMII on MAC0.
-> >        Andrew
-> > 
-> 
-> Matthew
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-Let's say I'm a user. When would I need to set
-qca,sgmii-txclk-falling-edge and/or qca,sgmii-rxclk-falling-edge, and
-wwhen would I need not to?
+Hi Linus,
 
-Thanks,
--Vladimir
+Please pull some more powerpc fixes for 5.8:
+
+The following changes since commit 4557ac6b344b8cdf948ff8b007e8e1de34832f2e:
+
+  powerpc/64s/exception: Fix 0x1500 interrupt handler crash (2020-07-08 20:41:06 +1000)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.8-7
+
+for you to fetch changes up to f0479c4bcbd92d1a457d4a43bcab79f29d11334a:
+
+  selftests/powerpc: Use proper error code to check fault address (2020-07-15 23:10:17 +1000)
+
+- ------------------------------------------------------------------
+powerpc fixes for 5.8 #7
+
+A fix to the VAS code we merged this cycle, to report the proper error code to
+userspace for address translation failures. And a selftest update to match.
+
+Another fix for our pkey handling of PROT_EXEC mappings.
+
+A fix for a crash when booting a "secure VM" under an ultravisor with certain
+numbers of CPUs.
+
+Thanks to:
+  Aneesh Kumar K.V, Haren Myneni, Laurent Dufour, Sandipan Das, Satheesh
+  Rajendran, Thiago Jung Bauermann.
+
+- ------------------------------------------------------------------
+Aneesh Kumar K.V (1):
+      powerpc/book3s64/pkeys: Fix pkey_access_permitted() for execute disable pkey
+
+Haren Myneni (2):
+      powerpc/vas: Report proper error code for address translation failure
+      selftests/powerpc: Use proper error code to check fault address
+
+Satheesh Rajendran (1):
+      powerpc/pseries/svm: Fix incorrect check for shared_lppaca_size
+
+
+ Documentation/powerpc/vas-api.rst                    |  2 +-
+ arch/powerpc/include/asm/icswx.h                     |  2 ++
+ arch/powerpc/kernel/paca.c                           |  2 +-
+ arch/powerpc/mm/book3s64/pkeys.c                     | 12 +++++++-----
+ arch/powerpc/platforms/powernv/vas-fault.c           |  2 +-
+ tools/testing/selftests/powerpc/nx-gzip/gunz_test.c  |  4 ++--
+ tools/testing/selftests/powerpc/nx-gzip/gzfht_test.c |  4 ++--
+ 7 files changed, 16 insertions(+), 12 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl8S8nIACgkQUevqPMjh
+pYCxFQ//X8A9GN94Yj4AroV4WR1nhcYOGFJw++FBjWWIE/3HnUmYKKP0aZ2Vd9DW
+bjkJvhWLThV6P7lrDG2jOAp4g9ByDi6Syk0VbUxO0Vr2XMFqExoYe3hPSQysbvwM
+ajMZWsvyI3wndXgS0HL3/zSkio0DyMyDVqGAPd7G3V+U/B8OM2WvBkoEtoWlcu0t
+sFoqGPz02e9FX1jJsuVpBopWnaK2mtUX9CbPxeMQ9yxq7MXnkM/ynKIKdFHj5G7Q
+9s2f7Pe6hF+SMu+KqZBvtQ0U8u/YNxTZR305l6ymq1aOERSy51o+ft9vMCD8xrPN
+FCQpKqTk8LP0xYLLqZMEHLloYYBQ7R4eSmvleRNMKctodOca1ACMWGkT3otsGPUN
+li3HJd9ktaXWK9l9Pf2VZGJF2Ge9tudjSrPJjhZlnZIp1S9JvjqJKtlSaMMsVNrD
+doC9TAym2GLjaOTZ4qTiIEnO5ds2VvkRDdgsklpAyNJr8xrT8VYR2teInLro8sD9
+m0z7JYGXQAL0Tm5YcuzrVqFllwtFsaUtcLkxW9tfFijmVfdGL24pxvIm6M8X5Kko
+2eoa+M7DJzn+oWOFlVdzzq4zRxbUIHkzkvF1aROt7a/8G2bJb0J4ruwXJBnTsFi7
+uSuPDNc8dpYKh9WikiIioUhV4XEDdllWMqaEOA19muny/ui5iVM=
+=wk5N
+-----END PGP SIGNATURE-----
