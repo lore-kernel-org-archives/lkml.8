@@ -2,88 +2,111 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AC7C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A34E1C433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1932D20717
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EIRb29Ic"
+	by mail.kernel.org (Postfix) with ESMTP id 89E3B20717
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 08:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgGRIhT (ORCPT
+        id S1727026AbgGRIhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 04:37:19 -0400
-Received: from ozlabs.org ([203.11.71.1]:47675 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbgGRIhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 04:37:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B81ZN4Bfwz9sRN;
-        Sat, 18 Jul 2020 18:37:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595061436;
-        bh=gTeSEd/BlloWxyCEUk/UQCF++X75mENXYoBi+3X6SUQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EIRb29Ic6syzqhHvZfNbcE6JhtQ6Q9g4OE6j5gNZxlJHlf21u/VwrwCn3/EotlIyg
-         A5J/6wjqYM45VV28I4NYs4qi3NaZw912nMWLKYJ7rALX2DIcQ0Tkh/GaYSFBk2GPVF
-         eJ1z5IBpJdmyBIGJnNnM+TnG4qiFcxPp+/UWu8yoUKvuJwjzRm4E5ZIzpGDWYeKZBS
-         8Da6NKSvDVcTPJqLHtQgvWU0wWK1M7x7pkGpqFuK+uZILCmtsS2vG8WVtrV5AlQW7O
-         fmN0JTuroTuP18/M/HhtBPoBL5ujgbn25j9eT0qU3OEIbxQO5qyRrN3vVcmJ8IMnaX
-         Qn+2nwt2hlepg==
-Date:   Sat, 18 Jul 2020 18:37:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: linux-next: Signed-off-by missing for commit in the net-next tree
-Message-ID: <20200718183715.45af4cea@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=dxtHhDdfCq/NMU.EBieV4L";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Sat, 18 Jul 2020 04:37:39 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:45526 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726418AbgGRIhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 04:37:39 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxKuSwtBJf6MMAAA--.13S2;
+        Sat, 18 Jul 2020 16:37:05 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v4] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for bridge_class_quirk()
+Date:   Sat, 18 Jul 2020 16:37:04 +0800
+Message-Id: <1595061424-27701-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxKuSwtBJf6MMAAA--.13S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr17tFykJF1xCr1kZr18Xwb_yoW8Zw1Dpa
+        45Aa17KF4FqFWDAw1DWrWDWa45uF9rCa48Ca929wnF9asxX3WUWr9rKa4Fvr4UJrWkXayU
+        XayDCr48Ca1Duw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
+        628vn2kIc2xKxwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+        1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+        AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0D
+        MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+        VFxhVjvjDU0xZFpf9x0JUSeHgUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=dxtHhDdfCq/NMU.EBieV4L
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+According to the datasheet of Loongson LS7A bridge chip, the old version
+of Loongson LS7A PCIE port has a wrong value about PCI class which is
+0x060000, the correct value should be 0x060400, this bug can be fixed by
+"dev->class = PCI_CLASS_BRIDGE_PCI << 8;" at the software level. As far
+as I know, the latest version of LS7A has already fixed the value at the
+hardware level.
 
-Hi all,
+In order to maintain downward compatibility, use DECLARE_PCI_FIXUP_EARLY
+instead of DECLARE_PCI_FIXUP_HEADER for bridge_class_quirk() to fix it as
+early as possible.
 
-Commit
+Otherwise, in the function pci_setup_device(), the related code about
+"dev->class" such as "class = dev->class >> 8;" and "dev->transparent
+= ((dev->class & 0xff) == 1);" maybe get wrong value due to without
+EARLY fixup.
 
-  1315971fea66 ("net/mlx5e: Fix missing switch_id for representors")
+Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-is missing a Signed-off-by from its committer.
+v2: Modify the patch subject used with lower case "loongson"
 
---=20
-Cheers,
-Stephen Rothwell
+v3: Update the commit message
 
---Sig_/=dxtHhDdfCq/NMU.EBieV4L
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+v4: Update the commit message
 
------BEGIN PGP SIGNATURE-----
+ drivers/pci/controller/pci-loongson.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8StLsACgkQAVBC80lX
-0Gw5Zgf9FzV6F/5dA843iqyrVSt1hR15cASs1y0CTI56ISyDu0oBlHjcNkybjBod
-y7G1171Ro4KXyy1oQMEiXbZqNmDFkoZ+85pVWJ3ESeSe5v8Uwji/Bkiqbru2Jo7y
-/Ph0rB9liFwAaEk3KaC3fp/bnky+ijUaNk6DlKAR/mUqu+N5YHJyg8hVwIlPBjCM
-omay03PsyW8Zqdmnrx0emqVcT9Z5NpkgbNOxaUlSj0tPVDhNTOVnzh5NerTOXBHZ
-ZQByEWSx912m34HA68PPR2C+hl4sDZVXc/K+ZFDSv2irsX+kJAABLZvPyjjXlWr5
-IhtZCQOXpNRfUO71UtMiTqv2FUFP9Q==
-=ZhWK
------END PGP SIGNATURE-----
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index 459009c..58b862a 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
+ {
+ 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+ }
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_0, bridge_class_quirk);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_1, bridge_class_quirk);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_2, bridge_class_quirk);
+ 
+ static void system_bus_quirk(struct pci_dev *pdev)
+-- 
+2.1.0
 
---Sig_/=dxtHhDdfCq/NMU.EBieV4L--
