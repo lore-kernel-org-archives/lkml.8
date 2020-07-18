@@ -8,114 +8,91 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2E2C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A930C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59EA820809
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D08B2076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 05:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ht7EAniV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tPI8bHuM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgGRF35 (ORCPT
+        id S1726654AbgGRFcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:29:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41338 "EHLO
+        Sat, 18 Jul 2020 01:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgGRF34 (ORCPT
+        with ESMTP id S1726087AbgGRFcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 01:29:56 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4344CC0619D2;
-        Fri, 17 Jul 2020 22:29:56 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id 88so2864711wrh.3;
-        Fri, 17 Jul 2020 22:29:56 -0700 (PDT)
+        Sat, 18 Jul 2020 01:32:08 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0C6C0619D2;
+        Fri, 17 Jul 2020 22:32:08 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id e18so9086138ilr.7;
+        Fri, 17 Jul 2020 22:32:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=rqatcQsvNnH489JiyTckIeyzp1Uk83CW3W6g2HlZiXI=;
-        b=ht7EAniV2VwVIjDt2coFsLdF0qOfytsvxoXCTyI68FZcWBFnZV300S80lysLs4n0/+
-         9ps8caWmmP+IDjMuoM2YfPIlp/seCkFSd9vRYPfeY+VY0dT9liPagwLbsw9QFD5fUdGN
-         Hinf5h8xRRFDUWQRV6lKNror4mZr6gZHD+ra1HNxrXKylhJ7S31dsHk1YlB7fkkyhOCW
-         iOVmoYngzhC/rx0jDxoI0EGrnrr26r0hvMLWpAzRXu+bC4yg9kxVf0WNL1KfEB5iKIg1
-         67JBj/hcm4AxRHm96doGfMU1Rt4FS+UM7KMuZOAQaCtzbRWC/izujaAmBhtJsnVhDo68
-         M85w==
+        bh=Q91gtO58hCq0wdQ/qvG+6bdBUzXulWzjoOklqz06aB4=;
+        b=tPI8bHuM7O1/hnnerKenngBwMqp2su1gAdMivuob9EcL4wNLpcBkR2ybiBj0u49weN
+         ZKuNZzV7kJPt4mDVHYB0zb+CPx99m47mddbHkgJLyeQDXhRZJaV/46K8ZpH9SP33Mv7t
+         JjZF0/ZI/5vJVUAo28HEArPh+175VeGJQUGW6Lj3t2Tvl41ZCHq3FTaXThbFcgZZiZqB
+         IUp8dQiKenlN+U4miqSgkLAsdzlVZ2zq8Ew+5qIlPAqzVh4JTAC4bWdHXPp3N++eRTF5
+         J+MV67J+r1lJ/r1R680Cjya6H8eNrU7FVKfmwezPG8T/ZwXY3E8LSxkOFFF3rvRYpqBo
+         sKmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rqatcQsvNnH489JiyTckIeyzp1Uk83CW3W6g2HlZiXI=;
-        b=QA9zmFdEdXqYGRQDOLP2LUsBBfdpu514cHOBHbkAqTIk/4p7cxpevwwrR85CDjPvnc
-         8cDDsrMdkBslbY2UTqFeemhaMcQOv1PHNqI4zQuFSyL+OCLEUElwySLix89TNVzEDlSf
-         emUM1dLXFJBTHih0emdpmk7ZUvRZe9IoNnGaZ0QC0qyZDsFvtBMw2vkXxT6KBLNVApsX
-         g1yO34XicJTKgzHvvQU9C4LEocnCenI31kCsI+4dLGyjL1qAcavpbXOSpfIIY83jDczk
-         lTmRevTOvjpgDyMeumN+XPHolcz4Plh/QRlHQlKsl3heupS0HxRy3ZU42UEVQ7Sf1K6D
-         on1g==
-X-Gm-Message-State: AOAM533lWYAt+KTYKkFRkN9UeJVUqqHlmS9gQLyAgKxDHxtcm5LBG+gS
-        6jfeQJF6x8P7Tl826xSjoUO8+nY9
-X-Google-Smtp-Source: ABdhPJxIZIk8IpaHWGoqT3B44PSmWmajAlSFxLC+YGacclYjd9J4ahr2meIk1JK0DS4HW7oSiVnXww==
-X-Received: by 2002:a5d:444e:: with SMTP id x14mr12526132wrr.279.1595050194874;
-        Fri, 17 Jul 2020 22:29:54 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id r10sm18393722wrm.17.2020.07.17.22.29.52
+        bh=Q91gtO58hCq0wdQ/qvG+6bdBUzXulWzjoOklqz06aB4=;
+        b=e790aQ3cn7wavss1AJOa0WGYYK+OnkaYzyrzrFA5IHCl6MnPmcTzAeDyQuq1NLsxSH
+         9VJeXdrWucqfV6XOlvKZlKBWy0oYYfML8l84zTdx81eRYxD8Jfv6+QluX1W4v/o0Svk6
+         1QmR3LUzLsiq7DIwOghoDduzGZBg+4bKKKpmdGiPPVrGt80F1nSKj6GSCiSiwtS7AGoc
+         RFl9KxnIWJoXXI5XdUGzUc6wSU/z3UQciup+PkXhrhut8qqhzDwSznQC/zCqQM/XFTBu
+         XDIjqRz9CBc9csSrb6MhiJxecgLOmCt9LaPK/hkFp3cUu3afLww3iuTg7upeWy9W0cnb
+         KBvA==
+X-Gm-Message-State: AOAM533sDqQdnGHaof8DYOUMU16Kg1jk5xLcPLnxuPJ0zvL770Osweao
+        z1IHA4iz8wi2AkG39bOPZRX98iXc+bs=
+X-Google-Smtp-Source: ABdhPJy3kHWp7oPphW6RdeZY/qdTQ0MDgUPNCS0Bvi4QCg37oB54GPB5SdgAjCgdbL4tohm7nMze8A==
+X-Received: by 2002:a92:db44:: with SMTP id w4mr12509517ilq.306.1595050327391;
+        Fri, 17 Jul 2020 22:32:07 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [160.94.145.20])
+        by smtp.googlemail.com with ESMTPSA id t67sm2165163ill.88.2020.07.17.22.32.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 22:29:54 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson: misc fixups for w400 dtsi
-Date:   Sat, 18 Jul 2020 05:29:50 +0000
-Message-Id: <20200718052950.3707-1-christianshewitt@gmail.com>
+        Fri, 17 Jul 2020 22:32:06 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Robert Baldyga <r.baldyga@samsung.com>,
+        Krzysztof Opasiak <k.opasiak@samsung.com>,
+        linux-nfc@lists.01.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
+Date:   Sat, 18 Jul 2020 00:31:49 -0500
+Message-Id: <20200718053150.11555-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current devices using the W400 dtsi show mmc tuning errors:
+The implementation of s3fwrn5_recv_frame() is supposed to consume skb on
+all execution paths. Release skb before returning -ENODEV.
 
-[12483.917391] mmc0: tuning execution failed: -5
-[30535.551221] mmc0: tuning execution failed: -5
-[35359.953671] mmc0: tuning execution failed: -5
-[35561.875332] mmc0: tuning execution failed: -5
-[61733.348709] mmc0: tuning execution failed: -5
-
-Removing "sd-uhs-sdr50" from the SDIO node prevents this. We also add
-keep-power-in-suspend to the SDIO node and fix an indentation.
-
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/nfc/s3fwrn5/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
-index 98b70d216a6f..2802ddbb83ac 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
-@@ -336,9 +336,11 @@
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
--	sd-uhs-sdr50;
- 	max-frequency = <100000000>;
- 
-+	/* WiFi firmware requires power to be kept while in suspend */
-+	keep-power-in-suspend;
-+
- 	non-removable;
- 	disable-wp;
- 
-@@ -398,7 +400,7 @@
- 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
- 		max-speed = <2000000>;
- 		clocks = <&wifi32k>;
--	clock-names = "lpo";
-+		clock-names = "lpo";
- 	};
- };
- 
+diff --git a/drivers/nfc/s3fwrn5/core.c b/drivers/nfc/s3fwrn5/core.c
+index 91d4d5b28a7d..ba6c486d6465 100644
+--- a/drivers/nfc/s3fwrn5/core.c
++++ b/drivers/nfc/s3fwrn5/core.c
+@@ -198,6 +198,7 @@ int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
+ 	case S3FWRN5_MODE_FW:
+ 		return s3fwrn5_fw_recv_frame(ndev, skb);
+ 	default:
++		kfree_skb(skb);
+ 		return -ENODEV;
+ 	}
+ }
 -- 
 2.17.1
 
