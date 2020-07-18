@@ -2,133 +2,134 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74417C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE406C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5057220759
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2742076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 00:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WHGKiTFz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQEI3Q3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgGRAlF (ORCPT
+        id S1727873AbgGRAoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 20:41:05 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:12935 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbgGRAlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 20:41:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595032863; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=iNKJj+TLzkBnI4NSsc5gA6qzfp4yaENwEEBOKVBFHZM=; b=WHGKiTFz37FpUq/nLAZiwwbROQNX4hbLfeg5omPUZlvOMvtB7TSg/prKfWuzqb5LLmdSSxzu
- LCReocvCezUPjQzkT6ryIOAX4lndbT2bbDQLn6GXBwgIVqy0MGFE07WYqgkTMOnBPuFX91AD
- 6cDwwL39Jow56r1lzVtSlKYL2a4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5f12451fe3bee125108f0b54 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 18 Jul 2020 00:41:03
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C3AFEC433CB; Sat, 18 Jul 2020 00:41:02 +0000 (UTC)
-Received: from [192.168.1.117] (ip70-179-20-127.sd.sd.cox.net [70.179.20.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 17 Jul 2020 20:44:05 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53503 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726629AbgGRAoD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jul 2020 20:44:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595033042;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4RDizrADsr1teVTJWa21lf+xcmimjV5s89rIjc/EFXo=;
+        b=hQEI3Q3voHy/YXXh3+KwGXCt+H2lAktPNAB63uWRzXZAeIn8PFGhRK6Pc2b/bO9Lu+VLZN
+        LFk5lSqbP4gmRouvY76aQmooFPsCH03/xaSPiUYNmwF12hjY9KbNJGqT/gFVA0wcajsmWx
+        rrd8tT/HU3BTnYvJfe2dyK48LxgVr0k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-342-VX9MMhEsMhm6M_EWCIB_HA-1; Fri, 17 Jul 2020 20:43:58 -0400
+X-MC-Unique: VX9MMhEsMhm6M_EWCIB_HA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BF392C433C9;
-        Sat, 18 Jul 2020 00:41:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BF392C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: interconnect: Add property to set BCM
- TCS wait behavior
-To:     Rob Herring <robh@kernel.org>
-Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200710015652.19206-1-mdtipton@codeaurora.org>
- <20200710015652.19206-3-mdtipton@codeaurora.org>
- <20200710163119.GA2753833@bogus>
-From:   Mike Tipton <mdtipton@codeaurora.org>
-Message-ID: <43a0638a-ea3d-eb96-16d0-524148f86bc3@codeaurora.org>
-Date:   Fri, 17 Jul 2020 17:41:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE7D2100A8E8;
+        Sat, 18 Jul 2020 00:43:56 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AD2427B42B;
+        Sat, 18 Jul 2020 00:43:44 +0000 (UTC)
+Date:   Fri, 17 Jul 2020 20:43:41 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V9 08/13] audit: add containerid support for user
+ records
+Message-ID: <20200718004341.ruyre5xhlu3ps2tr@madcap2.tricolour.ca>
+References: <cover.1593198710.git.rgb@redhat.com>
+ <4a5019ed3cfab416aeb6549b791ac6d8cc9fb8b7.1593198710.git.rgb@redhat.com>
+ <CAHC9VhSwMEZrq0dnaXmPi=bu0NgUtWPuw-2UGDrQa6TwxWkZtw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200710163119.GA2753833@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhSwMEZrq0dnaXmPi=bu0NgUtWPuw-2UGDrQa6TwxWkZtw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/2020 9:31 AM, Rob Herring wrote:
-> On Thu, Jul 09, 2020 at 06:56:48PM -0700, Mike Tipton wrote:
->> Add "qcom,tcs-wait" property to set which TCS should wait for completion
->> when triggering.
->>
->> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
->> ---
->>   .../bindings/interconnect/qcom,bcm-voter.yaml       | 13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->> index 5971fc1df08d..f0c3d6b01831 100644
->> --- a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->> @@ -21,6 +21,16 @@ properties:
->>       enum:
->>         - qcom,bcm-voter
->>   
->> +  qcom,tcs-wait:
->> +    description: |
->> +      Optional mask of which TCSs (Triggered Command Sets) wait for completion
->> +      upon triggering. In most cases, it's necessary to wait in both the AMC
->> +      and WAKE sets to ensure resources are available before use. If a specific
->> +      RSC and its use cases can ensure sufficient delay by other means, then
->> +      this can be overridden to reduce latencies.
+On 2020-07-05 11:11, Paul Moore wrote:
+> On Sat, Jun 27, 2020 at 9:23 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > Add audit container identifier auxiliary record to user event standalone
+> > records.
+> >
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > ---
+> >  kernel/audit.c | 19 ++++++++++++-------
+> >  1 file changed, 12 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index 54dd2cb69402..997c34178ee8 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -1507,6 +1504,14 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+> >                                 audit_log_n_untrustedstring(ab, str, data_len);
+> >                         }
+> >                         audit_log_end(ab);
+> > +                       rcu_read_lock();
+> > +                       cont = _audit_contobj_get(current);
+> > +                       rcu_read_unlock();
+> > +                       audit_log_container_id(context, cont);
+> > +                       rcu_read_lock();
+> > +                       _audit_contobj_put(cont);
+> > +                       rcu_read_unlock();
+> > +                       audit_free_context(context);
 > 
-> I have no idea what any of this means to provide any meaningful comment.
-> 
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    default: QCOM_ICC_TAG_ACTIVE_ONLY
-> 
-> Can't use defines here.
+> I haven't searched the entire patchset, but it seems like the pattern
+> above happens a couple of times in this patchset, yes?  If so would it
+> make sense to wrap the above get/log/put in a helper function?
 
-What's the recommended alternative? The meaning isn't obvious as a raw 
-number (3). We expect the defines to be used in the dt files themselves 
-(see example below). Is this just a restriction for the `default` 
-documentation specifically? I could just mention the default behavior in 
-the description I suppose, but that seems to defeat the purpose of 
-having a separate `default` key.
+I've redone the locking with an rcu lock around the get and a spinlock
+around the put.  It occurs to me that putting an rcu lock around the
+whole thing and doing a get without the refcount increment would save
+us the spinlock and put and be fine since we'd be fine with stale but
+consistent information traversing the contobj list from this point to
+report it.  Problem with that is needing to use GFP_ATOMIC due to the
+rcu lock.  If I stick with the spinlock around the put then I can use
+GFP_KERNEL and just grab the spinlock while traversing the contobj list.
 
-> 
->> +
->>   required:
->>     - compatible
->>   
->> @@ -39,7 +49,10 @@ examples:
->>     # as defined in Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
->>     - |
->>   
->> +    #include <dt-bindings/interconnect/qcom,icc.h>
->> +
->>       disp_bcm_voter: bcm_voter {
->>           compatible = "qcom,bcm-voter";
->> +        qcom,tcs-wait = <QCOM_ICC_TAG_AMC>;
->>       };
->>   ...
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
+> Not a big deal either way, I'm pretty neutral on it at this point in
+> the patchset but thought it might be worth mentioning in case you
+> noticed the same and were on the fence.
+
+There is only one other place this is used, in audit_log_exit in
+auditsc.c.  I had noted the pattern but wasn't sure it was worth it.
+Inline or not?  Should we just let the compiler decide?
+
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
