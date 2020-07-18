@@ -2,116 +2,64 @@ Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09160C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE227C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD45E20768
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:27:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JOo7strT"
+	by mail.kernel.org (Postfix) with ESMTP id A21D520717
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 01:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgGRB1c (ORCPT
+        id S1728265AbgGRBc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jul 2020 21:27:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60808 "EHLO
+        Fri, 17 Jul 2020 21:32:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgGRB1c (ORCPT
+        with ESMTP id S1726710AbgGRBc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jul 2020 21:27:32 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D339BC0619D2;
-        Fri, 17 Jul 2020 18:27:31 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B7r2P6Vgdz9sRN;
-        Sat, 18 Jul 2020 11:27:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595035649;
-        bh=o2jh73wY/BEWuyLoEG0bvrwZazd7N4PFTPPub5B2atU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JOo7strTfjmVttCTTxg9WE902GNbyorNyCSRtpe1qJcuy5IqV/2Rravo2f6wEteQ5
-         LZXtc0XRKfrQ5lqks/rhkF08X8yzJb6NCgE3UMuhMVCN2vJImqGGQGLGNEs/GMjW/C
-         jA+hprzlBI2C8N98g1vKn7UCCHfKKsKRXnYAxvlIlO6dDh6Y94UynyB2i8mtajsNMT
-         2yXaMZvciqHGpD/KpMVg0UA17oThSqKRZqwXzO8aLjO90RYkWP2k3y6uFVL5bh09Bn
-         hNNQ2sgK0BGCQ0kNRS18vS1c1TLGR2xCENTlVSKSPN53z4mFQ5oVkFUE7Qo+wHxNgB
-         UX8/Bv/a+ENRw==
-Date:   Sat, 18 Jul 2020 11:27:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Julian Anastasov <ja@ssi.bg>, lvs-devel@vger.kernel.org,
-        Andrew Sy Kim <kim.andrewsy@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: Re: mmotm 2020-07-16-22-52 uploaded (net: IPVS)
-Message-ID: <20200718112724.7942017c@canb.auug.org.au>
-In-Reply-To: <88196a8a-2778-0324-8005-d63bfee86c4e@infradead.org>
-References: <20200717055300.ObseZH9Vs%akpm@linux-foundation.org>
-        <88196a8a-2778-0324-8005-d63bfee86c4e@infradead.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6ak9qiB1pzNzTN7Qt/ByRlc";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Fri, 17 Jul 2020 21:32:56 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DD89C0619D2;
+        Fri, 17 Jul 2020 18:32:56 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7D9C111E45910;
+        Fri, 17 Jul 2020 18:32:55 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 18:32:54 -0700 (PDT)
+Message-Id: <20200717.183254.1462145544224960495.davem@davemloft.net>
+To:     alexandre.belloni@bootlin.com
+Cc:     nicolas.ferre@microchip.com, kuba@kernel.org, andrew@lunn.ch,
+        philippe.schenker@toradex.com, linux@rempel-privat.de,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: macb: use phy_interface_mode_is_rgmii
+ everywhere
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200717233221.840294-1-alexandre.belloni@bootlin.com>
+References: <20200717233221.840294-1-alexandre.belloni@bootlin.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jul 2020 18:32:55 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6ak9qiB1pzNzTN7Qt/ByRlc
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Date: Sat, 18 Jul 2020 01:32:21 +0200
 
-Hi all,
+> There is one RGMII check not using the phy_interface_mode_is_rgmii()
+> helper. This prevents the driver from configuring the MAC properly when
+> using a phy-mode that is not just rgmii, e.g. rgmii-rxid. This became an
+> issue on sama5d3 xplained since the ksz9031 driver is hadling phy-mode
+> properly and the phy-mode has to be set to rgmii-rxid.
+> 
+> Fixes: bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-On Fri, 17 Jul 2020 08:30:04 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
->
-> (also in linux-next)
->=20
-> Many of these errors:
->=20
-> In file included from ../net/netfilter/ipvs/ip_vs_conn.c:37:0:
-> ../include/net/ip_vs.h: In function =E2=80=98ip_vs_enqueue_expire_nodest_=
-conns=E2=80=99:
-> ../include/net/ip_vs.h:1536:61: error: parameter name omitted
->  static inline void ip_vs_enqueue_expire_nodest_conns(struct netns_ipvs) =
-{}
-
-Caused by commit
-
-  04231e52d355 ("ipvs: queue delayed work to expire no destination connecti=
-ons if expire_nodest_conn=3D1")
-
-from the netfilter-next tree.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6ak9qiB1pzNzTN7Qt/ByRlc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ST/wACgkQAVBC80lX
-0GwhJAf/WDhQQAL1Uga5wpadcYayjYDyaTpTRnOgRLnpg48OnZPko+sV0eWpp0IB
-mqaR3TDlbrHjUet2nRQM31RYJ233lU1qd7aIUGqM5w0bQz1pkKlusyjXj+Hv2+HT
-XHbG6JSr7bqjGPVQYGAaopAT66JMBkpR7esgV6XsRN5HtaIeHilMC5YJxwTuROrO
-33rn4uwH0yQ1biSFtsdhvZ9ZKs760KdZz5i1a2lqimdU/3nbGAduwIWsaFnHlckP
-MxYLfVff2IQPwr7hmMSMs3qUmc0Kx4vbY1YqU0gG6LeZAtQX6qEEnMG+/PymZp5C
-7WZCeYid/h3KZNZWWo4ohCAwycwDkw==
-=YDgM
------END PGP SIGNATURE-----
-
---Sig_/6ak9qiB1pzNzTN7Qt/ByRlc--
+Applied, thank you.
