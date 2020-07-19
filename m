@@ -2,91 +2,102 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11881C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57D1C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF5D6207DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q8WBW4lp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/icnqJkw"
+	by mail.kernel.org (Postfix) with ESMTP id C382120734
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgGSKRN (ORCPT
+        id S1726543AbgGSKYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 06:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgGSKRN (ORCPT
+        Sun, 19 Jul 2020 06:24:01 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:52098 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgGSKYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 06:17:13 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC79FC0619D2;
-        Sun, 19 Jul 2020 03:17:12 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595153827;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Klowtb+zpu2upHcc0/al6Z+g7rUSuNatngTABmSqQks=;
-        b=q8WBW4lphpZf+Rpq1Cbtq7QgWkuGOkQnhsp20yFar8wiTi3gddfIDm+NyjZXpS2fG6rA+q
-        nG+u1+A8/GifDOyHJe4mxZ6pq0OhvKaPDIOBpYTOIKKvcrn/YoixV5P5iwYLHRsu/SHrbB
-        oabbWpe0eEH+8X31+lECGS4HW3og5wKDFwN9HWV0zdIh6E2oS5i9Ch6BOhIPYksPf0PS59
-        HSzEz5B0gio3gV1tM43uyUPe2j/HmyVv99lFkpdKIIS5CZWoOK3Y3KH6ULxF3cL7tz/OT5
-        Ye5LMOV4/wPXxTLQxm83eV6glbq19TpIa9HyJMKOa/DSXSJg/LWwwe+6zZl2oA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595153827;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Klowtb+zpu2upHcc0/al6Z+g7rUSuNatngTABmSqQks=;
-        b=/icnqJkwLN5zSzDGZYcXzpGR7LI1HSuX35hwBCDMz7GGGc6gotQIlS2LCnsQLZ+UvWAWqy
-        jn0fn49/bZ1nRjAQ==
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry functionality
-In-Reply-To: <CALCETrU-z_73BsKwNq0fTDEg7tVicd=jOEaq-6LnH24uNWShDg@mail.gmail.com>
-References: <20200716182208.180916541@linutronix.de> <20200716185424.011950288@linutronix.de> <202007161336.B993ED938@keescook> <87d04vt98w.fsf@nanos.tec.linutronix.de> <202007171045.FB4A586F1D@keescook> <87mu3yq6sf.fsf@nanos.tec.linutronix.de> <CALCETrXz_vEySQJ=f3MTPG9XjZS7U0P-diJE9j_+0KRa_Kie=Q@mail.gmail.com> <875zakq56t.fsf@nanos.tec.linutronix.de> <CALCETrU-z_73BsKwNq0fTDEg7tVicd=jOEaq-6LnH24uNWShDg@mail.gmail.com>
-Date:   Sun, 19 Jul 2020 12:17:07 +0200
-Message-ID: <87v9ijollo.fsf@nanos.tec.linutronix.de>
+        Sun, 19 Jul 2020 06:24:01 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 2772C8051D;
+        Sun, 19 Jul 2020 12:23:56 +0200 (CEST)
+Date:   Sun, 19 Jul 2020 12:23:54 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        od@zcrc.me, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/ingenic: Silence uninitialized-variable warning
+Message-ID: <20200719102354.GA20692@ravnborg.org>
+References: <20200719093834.14084-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200719093834.14084-1-paul@crapouillou.net>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8
+        a=xnlXP8Hkb89yI6koaScA:9 a=+jEqtf1s3R9VXZ0wqowq2kgwd+I=:19
+        a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Sat, Jul 18, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->> Andy Lutomirski <luto@kernel.org> writes:
->> > FWIW, TIF_USER_RETURN_NOTIFY is a bit of an odd duck: it's an
->> > entry/exit word *and* a context switch word.  The latter is because
->> > it's logically a per-cpu flag, not a per-task flag, and the context
->> > switch code moves it around so it's always set on the running task.
->>
->> Gah, I missed the context switch thing of that. That stuff is hideous.
->
-> It's also delightful because anything that screws up that dance (such
-> as failure to do the exit-to-usermode path exactly right) likely
-> results in an insta-root-hole.  If we fail to run user return
-> notifiers, we can run user code with incorrect syscall MSRs, etc.
+Hi Paul.
 
-Looking at it deeper, having that thing in the loop is a pointless
-exercise. This really wants to be done _after_ the loop.
+On Sun, Jul 19, 2020 at 11:38:34AM +0200, Paul Cercueil wrote:
+> Silence compiler warning about used but uninitialized 'ipu_state'
+> variable. In practice, the variable would never be used when
+> uninitialized, but the compiler cannot know that 'priv->ipu_plane' will
+> always be NULL if CONFIG_INGENIC_IPU is disabled.
+> 
+> Silence the warning by initializing the value to NULL.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Patch looks good. Had to dig into the code to understand the
+change to the no_vblank flag.
+So:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-Thanks,
+I expect you to commit the patch.
 
-        tglx
+Looking at the code I noticed that the return value of
+drm_atomic_get_plane_state() is not checked.
+Can you try to look into this.
+
+	Sam
+
+> ---
+>  drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+> index b6d946fbeaf5..ada990a7f911 100644
+> --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+> +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+> @@ -198,7 +198,7 @@ static int ingenic_drm_crtc_atomic_check(struct drm_crtc *crtc,
+>  					 struct drm_crtc_state *state)
+>  {
+>  	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
+> -	struct drm_plane_state *f1_state, *f0_state, *ipu_state;
+> +	struct drm_plane_state *f1_state, *f0_state, *ipu_state = NULL;
+>  	long rate;
+>  
+>  	if (!drm_atomic_crtc_needs_modeset(state))
+> @@ -229,7 +229,7 @@ static int ingenic_drm_crtc_atomic_check(struct drm_crtc *crtc,
+>  
+>  		/* If all the planes are disabled, we won't get a VBLANK IRQ */
+>  		priv->no_vblank = !f1_state->fb && !f0_state->fb &&
+> -				  !(priv->ipu_plane && ipu_state->fb);
+> +				  !(ipu_state && ipu_state->fb);
+>  	}
+>  
+>  	return 0;
+> -- 
+> 2.27.0
