@@ -2,164 +2,79 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921E5C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80621C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71FE92073A
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:17:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDU5WjfK"
+	by mail.kernel.org (Postfix) with ESMTP id 5E364208DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgGSLRP (ORCPT
+        id S1726388AbgGSLSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 07:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgGSLRO (ORCPT
+        Sun, 19 Jul 2020 07:18:09 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:34517 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgGSLSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 07:17:14 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF129C0619D2;
-        Sun, 19 Jul 2020 04:17:13 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 17so22463602wmo.1;
-        Sun, 19 Jul 2020 04:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YV6aWfSNIZGkcvE4CuOe8cgC1NWSfoopwY+bhDebPSU=;
-        b=HDU5WjfKAJt7VWQ0ijGLE4JHFJU6Zk2TZO3CJ/J+baoVskBjRvxKP3T7u7ihUW+IXV
-         3ud8iNgEqZHd+ue1JDYkqB5ThUTDX+ES4LRjj7PY/eOVA4M8ouYnHaphGFbGO/I+J4fB
-         eFkBh4Y6we9UlPJlBElAXyFscUmyd3EM7orE82L1a2k/XBquqB4yyLcgmlSYcIHtytZm
-         LpxuHqPrhUAKL2LHAleSOTg3SUcjIzP6N7MJUKKS1HO1DSfWGvRelCFRYG3kTp8tnxiK
-         8xXmiR3KVA6m9VOh7GbtIKQE0iJAwS3LOXroPNg3bAbnnp5cdvqAz5cezv41EkZLk0P1
-         UhLQ==
+        Sun, 19 Jul 2020 07:18:08 -0400
+Received: by mail-il1-f197.google.com with SMTP id y3so8950972ily.1
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 04:18:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YV6aWfSNIZGkcvE4CuOe8cgC1NWSfoopwY+bhDebPSU=;
-        b=HeKWjnFBOQWZ8efyzyhm0E6rPIEubySZSCMYsTNyjDOCNC063XnK+qF4+LOfQDv3/c
-         HRs88d2dmLU1OVch4nzDOd91go6z7bMxL50Rn7ergwxvTGzeAnBcO+uxsAsQxXBL5N9F
-         jep0zV/a8ghx5UCp1ARGt4xkgM9HGk67puzx5tdZSmK+AIKsdEfHD6pqmiMccZ/lNvRn
-         XhO7mCKv+on0TNAAsDZ2SwqCkkPyiVclpO6pZfaU+c57u27yVA6p20LEQ3hHtnHl0uYG
-         z8f01ccgXpGlrmvBlrNcbTnIjkD0r8B6umuk+aNe9i95zZ5OVfufi7Luo656rx3vUtCT
-         Ue3w==
-X-Gm-Message-State: AOAM530g0GRsVNUrRXwJXMeRVv0gUozrpNd2B8tKVi8RPxn7sB0QsM3F
-        TSljYbJNYFGpvcdj2WPQHaXv64pQ
-X-Google-Smtp-Source: ABdhPJzKMj/R0LDr0WKCYTl2kSsfEcYY4T2K6tjj2zM7h49lks2k6J1K3T28Ik4mIkUrQzA2efFXCw==
-X-Received: by 2002:a1c:2392:: with SMTP id j140mr16847369wmj.6.1595157432062;
-        Sun, 19 Jul 2020 04:17:12 -0700 (PDT)
-Received: from [192.168.43.23] ([5.100.193.69])
-        by smtp.gmail.com with ESMTPSA id t141sm26724688wmt.26.2020.07.19.04.17.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Jul 2020 04:17:11 -0700 (PDT)
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1595021626.git.asml.silence@gmail.com>
- <cf209c59-547e-0a69-244d-7c1fec00a978@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH 0/2] task_put batching
-Message-ID: <edd8e7e4-efcf-0af1-c5d6-104635b65eb3@gmail.com>
-Date:   Sun, 19 Jul 2020 14:15:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=VyO5STFmnVvO9DvN7eCLqjZBvvoFWMGC3SxiQbso7po=;
+        b=ifpB3RbrNLoLD6X3125WEtLxNIRtF2vPqzAHiVrtLw0GOJjiHgNecnjCHBk2e2C/zY
+         SSxa7Zhvi+6/V7EtcYJohPs54y01SOvO9IWhuFJsxDpXCAA6z8jw+PIDrtquJiHd79pl
+         9qBim26rSxPpbt4Rv6vx1Jb5Z8purl4g6hBkbVtGlQGq3LfKDYHwX7Qid42BQGuZwla1
+         sR+e6QP7D21f/F91C7pMkqfpr9CEtw4dQTztRk2o9AHrjxUg7q2Re/sqP0BF8874KEef
+         5igDhswoTqTbre5FFv9YHg1v20BOa9K2vClpgk7rCZbHyL3CxoAKgRXxy/Pzt8FD8VWy
+         x05g==
+X-Gm-Message-State: AOAM5332zOpWCm8aMiZ0KYPcS893/FhScHNVtjN8Bx39KJLEmUma75Gs
+        SKPQILx8KhSiTPxXXMp8lC+O6hnHbYNifGpxT7u3K8tLlWAC
+X-Google-Smtp-Source: ABdhPJzN017k94AQ4JkwHlIiCPM6i7N8XKcvfwgy3aNk8yE7/wZ8vtYocUkUUv41lSt8g45qQwCeZF6Sahc4C+Lvrm1HNhfd3B+A
 MIME-Version: 1.0
-In-Reply-To: <cf209c59-547e-0a69-244d-7c1fec00a978@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:d48a:: with SMTP id p10mr18445285ilg.230.1595157487462;
+ Sun, 19 Jul 2020 04:18:07 -0700 (PDT)
+Date:   Sun, 19 Jul 2020 04:18:07 -0700
+In-Reply-To: <0000000000009f4ecd05a9d4dd9f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000066afb205aac98b9d@google.com>
+Subject: Re: INFO: rcu detected stall in iterate_cleanup_work (2)
+From:   syzbot <syzbot+cc8495ea4052b9b79b72@syzkaller.appspotmail.com>
+To:     Markus.Elfring@web.de, davem@davemloft.net, hdanton@sina.com,
+        jhs@mojatatu.com, jiri@resnulli.us, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vinicius.gomes@intel.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/07/2020 17:37, Jens Axboe wrote:
-> On 7/18/20 2:32 AM, Pavel Begunkov wrote:
->> For my a bit exaggerated test case perf continues to show high CPU
->> cosumption by io_dismantle(), and so calling it io_iopoll_complete().
->> Even though the patch doesn't yield throughput increase for my setup,
->> probably because the effect is hidden behind polling, but it definitely
->> improves relative percentage. And the difference should only grow with
->> increasing number of CPUs. Another reason to have this is that atomics
->> may affect other parallel tasks (e.g. which doesn't use io_uring)
->>
->> before:
->> io_iopoll_complete: 5.29%
->> io_dismantle_req:   2.16%
->>
->> after:
->> io_iopoll_complete: 3.39%
->> io_dismantle_req:   0.465%
-> 
-> Still not seeing a win here, but it's clean and it _should_ work. For
+syzbot has bisected this issue to:
 
-Well, if this thing is useful, it'd be hard to quantify, because active
-polling would hide it. I think, it'd need to apply a lot of isolated
-pressure on cache synchronisation (e.g. spam with barriers), or try to
-create and measure an atomic heavy task pinned to another core. Don't
-worth the effort IMHO.
-`
-Just out of curiosity, let me ask how do you test it?
-- is it a VM?
-- how many cores and threads do you use?
-- how many io_uring instances you have? Per thread?
-- Is it all goes to a single NVMe SSD?
+commit 5a781ccbd19e4664babcbe4b4ead7aa2b9283d22
+Author: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Date:   Sat Sep 29 00:59:43 2018 +0000
 
-> some reason I end up getting the offset in task ref put growing the
-> fput_many(). Which doesn't (on the surface) make a lot of sense, but
-> may just mean that we have some weird side effects.
+    tc: Add support for configuring the taprio scheduler
 
-I'll take a look whether I can reproduce.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=141ed087100000
+start commit:   cd77006e Merge tag 'hyperv-fixes-signed' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=121ed087100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
+dashboard link: https://syzkaller.appspot.com/bug?extid=cc8495ea4052b9b79b72
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e567e5100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=126ffccd100000
 
--- 
-Pavel Begunkov
+Reported-by: syzbot+cc8495ea4052b9b79b72@syzkaller.appspotmail.com
+Fixes: 5a781ccbd19e ("tc: Add support for configuring the taprio scheduler")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
