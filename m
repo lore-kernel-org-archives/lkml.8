@@ -2,112 +2,106 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD65C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4835C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85CA02080D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E2E22B4E
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595163738;
+	bh=Id77zpyFsJHytkt8QiavJBPJpLwSIW2/srv55L169SE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Q99IHer/sYf7QTlEseJlZyOXxgvuYV+P1IRE5+j8TnJ074LxWuWDR6R0PD6P7L8dg
+	 FRbM/wxxcmT5h96MMIRPPQmy6/0O/8PV/ExBW0oakQHM8gz5gPkfHazmiMnDGmpYly
+	 5x7v+JAKrHX6OyZ1BQmBbC+cOLGnwfSB5zaqKk9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbgGSMcx (ORCPT
+        id S1726177AbgGSNCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 08:32:53 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:60104 "EHLO smtp.al2klimov.de"
+        Sun, 19 Jul 2020 09:02:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgGSMcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 08:32:53 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 0C98ABC06E;
-        Sun, 19 Jul 2020 12:32:50 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] staging: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 14:32:44 +0200
-Message-Id: <20200719123244.58718-1-grandmaster@al2klimov.de>
+        id S1725836AbgGSNCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 09:02:16 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFD8A22B4D;
+        Sun, 19 Jul 2020 13:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595163736;
+        bh=Id77zpyFsJHytkt8QiavJBPJpLwSIW2/srv55L169SE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1dOQW/LdsFiyQM4tBMjdwsLSYCpwnmHPoMHCz1KVNnlNhVU53V5cmN0BBFp5GhIUN
+         AlJwbSF+s2dfs3ijby55wS6uxxPWo9K7GPv4JO6p24zEr0EknrKEEWFL7/AXluVQ+X
+         43qiq0UfAt+77gqp8KdtUZhl4nKUliQ9D1OOwhx8=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf/urgent improvements and fixes
+Date:   Sun, 19 Jul 2020 10:02:05 -0300
+Message-Id: <20200719130205.2430019-1-acme@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Hi Linus,
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+	Please consider pulling,
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Best regards,
 
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+- Arnaldo
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+The following changes since commit 8882572675c1bb1cc544f4e229a11661f1fc52e4:
 
- If you apply the patch, please let me know.
+  Merge tag 'drm-fixes-2020-07-17-1' of git://anongit.freedesktop.org/drm/drm into master (2020-07-16 21:39:51 -0700)
 
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-2020-07-19
 
- drivers/staging/clocking-wizard/dt-binding.txt | 2 +-
- drivers/staging/gs_fpgaboot/README             | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+for you to fetch changes up to 25d4e7f513d4f8afcf81cb6f00edf1248b0ff8fc:
 
-diff --git a/drivers/staging/clocking-wizard/dt-binding.txt b/drivers/staging/clocking-wizard/dt-binding.txt
-index 723271e93316..efb67ff9f76c 100644
---- a/drivers/staging/clocking-wizard/dt-binding.txt
-+++ b/drivers/staging/clocking-wizard/dt-binding.txt
-@@ -5,7 +5,7 @@ found in the product guide[2].
- 
- [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
- [2] Clocking Wizard Product Guide
--http://www.xilinx.com/support/documentation/ip_documentation/clk_wiz/v5_1/pg065-clk-wiz.pdf
-+https://www.xilinx.com/support/documentation/ip_documentation/clk_wiz/v5_1/pg065-clk-wiz.pdf
- 
- Required properties:
-  - compatible: Must be 'xlnx,clocking-wizard'
-diff --git a/drivers/staging/gs_fpgaboot/README b/drivers/staging/gs_fpgaboot/README
-index 8d793c1769b0..b85a76849fc4 100644
---- a/drivers/staging/gs_fpgaboot/README
-+++ b/drivers/staging/gs_fpgaboot/README
-@@ -65,6 +65,6 @@ TABLE OF CONTENTS.
- 6. REFERENCE
- 
- 	1. Xilinx APP NOTE XAPP583:
--	  http://www.xilinx.com/support/documentation/application_notes/xapp583-fpga-configuration.pdf
-+	  https://www.xilinx.com/support/documentation/application_notes/xapp583-fpga-configuration.pdf
- 	2. bitstream file info:
- 	  http://home.earthlink.net/~davesullins/software/bitinfo.html
+  tools arch kvm: Sync kvm headers with the kernel sources (2020-07-17 09:39:16 -0300)
+
+----------------------------------------------------------------
+Third batch of perf tooling fixes for 5.8:
+
+- Update hashmap.h from libbpf and kvm.h from x86's kernel UAPI,
+  silencing build warnings.
+
+- Set opt->set in libsubcmd's OPT_CALLBACK_SET(). Fixes
+  'perf record --switch-output-event event-name' usage.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Arnaldo Carvalho de Melo (2):
+  perf tools: Sync hashmap.h with libbpf's
+  tools arch kvm: Sync kvm headers with the kernel sources
+
+Ravi Bangoria (1):
+  libsubcmd: Fix OPT_CALLBACK_SET()
+
+ tools/arch/x86/include/uapi/asm/kvm.h |  5 +++--
+ tools/lib/subcmd/parse-options.c      |  3 +++
+ tools/perf/util/hashmap.h             | 12 ++++++++----
+ 3 files changed, 14 insertions(+), 6 deletions(-)
+
 -- 
-2.27.0
-
+2.26.2
