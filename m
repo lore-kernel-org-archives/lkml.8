@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4BFC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 05:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5180CC433E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 05:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E184207EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 05:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29106208B3
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 05:11:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IJTgaVQw"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CASNUZBk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgGSFKt (ORCPT
+        id S1726508AbgGSFLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 01:10:49 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18187 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgGSFKs (ORCPT
+        Sun, 19 Jul 2020 01:11:05 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4652 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgGSFLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 01:10:48 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f13d5cc0000>; Sat, 18 Jul 2020 22:10:36 -0700
+        Sun, 19 Jul 2020 01:11:04 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f13d5ab0000>; Sat, 18 Jul 2020 22:10:03 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 18 Jul 2020 22:10:48 -0700
+  Sat, 18 Jul 2020 22:11:04 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 18 Jul 2020 22:10:48 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 19 Jul
- 2020 05:10:48 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 19 Jul 2020 05:10:48 +0000
+        by hqpgpgate101.nvidia.com on Sat, 18 Jul 2020 22:11:04 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 19 Jul
+ 2020 05:11:03 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sun, 19 Jul 2020 05:11:04 +0000
 Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f13d5d30000>; Sat, 18 Jul 2020 22:10:47 -0700
+        id <B5f13d5e30000>; Sat, 18 Jul 2020 22:11:03 -0700
 From:   Sameer Pujar <spujar@nvidia.com>
 To:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
         <kuninori.morimoto.gx@renesas.com>, <robh+dt@kernel.org>,
@@ -50,9 +50,9 @@ CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <atalambedu@nvidia.com>, <nwartikar@nvidia.com>,
         <swarren@nvidia.com>, <nicoleotsuka@gmail.com>,
         Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH 02/10] ASoC: audio-graph: Use of_node and DAI for DPCM DAI link names
-Date:   Sun, 19 Jul 2020 10:40:09 +0530
-Message-ID: <1595135417-16589-3-git-send-email-spujar@nvidia.com>
+Subject: [PATCH 05/10] ASoC: audio-graph: Identify 'no_pcm' DAI links for DPCM
+Date:   Sun, 19 Jul 2020 10:40:12 +0530
+Message-ID: <1595135417-16589-6-git-send-email-spujar@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595135417-16589-1-git-send-email-spujar@nvidia.com>
 References: <1595135417-16589-1-git-send-email-spujar@nvidia.com>
@@ -60,55 +60,74 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595135436; bh=VCqQyFvsC42bD01qDtx7VomZ3rPYcT/ToygIVRhfO88=;
+        t=1595135403; bh=CN3aeoKnSLU0Sh/hr4/p656z+IRsSzvsM2rh1hzS2m0=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=IJTgaVQw5bFtkhvnekZZfHhEYGzVlXuimVGna6X1ObsCKAiSwisB4VgULC1Kpr6L4
-         gLvfnSjHs4Wpsu/w2xpVb1DNhJ4bSnAqJUzuiZ9vic3ArYJxEFB94KWvMPeorUYH9K
-         OZRKscxqyiJWkaSvOuEaVsJHbabBM36wk2xmHChEnVt0BZTiHzpeSG8wTG1Ezyrn7S
-         A08QMAaXVDRbVtC+1mydFLyVFjZctGRIS98Y0Sqf81aDAqAn5vFOkRLFpFxev1Gtya
-         Wz9jUuQJQBshw25Y/kh6rquMsQaG/hEwplyWJOrxYR/np5v3vBV2GmvvFSf398izWv
-         v2mufBgnCc81g==
+        b=CASNUZBkkajwmtcTi5r6rIBrBJlsmejiJJtjS4UjAcroI4DoeuTiyl7RBkQJkyK4T
+         SrQ2pPRg96T5gTwr5Q+aPz6j5m36AQVcYOtoxRgZyUrcKcSdeiwq4ydYA52Ek0xCxg
+         QoA10N/nHHJAeZtUQM9CLxHg31Prj6rnHSqVAjZZPFm/TAyim4ZskXvTWm1fQxAPL7
+         ielueNMBjODQARx/we97e6z8QkjY1zxE2gVwh39wpgyjcF/nDQRc4KrZtaz5thPLj6
+         yB1jgyuSJt1DO90v/6ENrLjtobt8r3FJdNLXk14fAWzimwr4Z3399RHU+jbvJzg5k4
+         xDIna5rgCXvZw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For multiple instances of components, using DAI name alone for DAI links
-is causing conflicts. Components can define multiple DAIs and hence using
-just a device name won't help either. Thus DT device node reference and
-DAI names are used to uniquely represent DAI link names.
+PCM devices are created for FE dai links with 'no-pcm' flag as '0'.
+Such DAI links have CPU component which implement either pcm_construct()
+or pcm_new() at component or dai level respectively. Based on this,
+current patch exposes a helper function to identify such components
+and populate 'no_pcm' flag for DPCM DAI link.
+
+This helps to have BE<->BE component links where PCM devices need
+not be created for CPU component involved in such links.
 
 Signed-off-by: Sameer Pujar <spujar@nvidia.com>
 ---
- sound/soc/generic/audio-graph-card.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/soc/generic/audio-graph-card.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
-index 97b4f54..1e20562 100644
+index caa8a77..82d8c740 100644
 --- a/sound/soc/generic/audio-graph-card.c
 +++ b/sound/soc/generic/audio-graph-card.c
-@@ -253,7 +253,8 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
- 			goto out_put_node;
+@@ -111,6 +111,17 @@ static int graph_get_dai_id(struct device_node *ep)
+ 	return id;
+ }
  
- 		ret = asoc_simple_set_dailink_name(dev, dai_link,
--						   "fe.%s",
-+						   "fe.%pOFP.%s",
-+						   cpus->of_node,
- 						   cpus->dai_name);
++static bool soc_component_is_pcm(struct snd_soc_dai_link_component *dlc)
++{
++	struct snd_soc_dai *dai = snd_soc_find_dai(dlc);
++
++	if (dai && (dai->component->driver->pcm_construct ||
++		    dai->driver->pcm_new))
++		return true;
++
++	return false;
++}
++
+ static int asoc_simple_parse_dai(struct device_node *ep,
+ 				 struct snd_soc_dai_link_component *dlc,
+ 				 int *is_single_link)
+@@ -262,6 +273,16 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
  		if (ret < 0)
  			goto out_put_node;
-@@ -287,7 +288,8 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
- 			goto out_put_node;
  
- 		ret = asoc_simple_set_dailink_name(dev, dai_link,
--						   "be.%s",
-+						   "be.%pOFP.%s",
-+						   codecs->of_node,
- 						   codecs->dai_name);
- 		if (ret < 0)
- 			goto out_put_node;
++		/*
++		 * In BE<->BE connections it is not required to create
++		 * PCM devices at CPU end of the dai link and thus 'no_pcm'
++		 * flag needs to be set. It is useful when there are many
++		 * BE components and some of these have to be connected to
++		 * form a valid audio path.
++		 */
++		if (!soc_component_is_pcm(cpus))
++			dai_link->no_pcm = 1;
++
+ 		/* card->num_links includes Codec */
+ 		asoc_simple_canonicalize_cpu(dai_link, is_single_links);
+ 	} else {
 -- 
 2.7.4
 
