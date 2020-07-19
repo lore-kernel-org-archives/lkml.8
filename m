@@ -2,135 +2,125 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16547C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E890FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C90232080D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74072080D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="OGddoAhu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQUNuyKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgGSN66 (ORCPT
+        id S1726596AbgGSN7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 09:58:58 -0400
-Received: from mail-bn8nam11on2087.outbound.protection.outlook.com ([40.107.236.87]:45128
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725988AbgGSN65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 09:58:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mu9g+koS9AulitpDFni71kAmRfNx8inWLner5zaBv72r8tle84jh7GcC9w9ugcwUzoLIDo/Q0r4Cb8Va90/6VhIkMRiDCnTpsV3/NeS0QfRT1fdb7A8eOwwWoKHnJ8txK/GW7hcSIWvG3ZHbm7erZ2YtvOxurU8Y1KOJT1e/sn5TKuVHYQS+OuwgokF9k8By2OV6rnKZN3OlwZm4OfdLh4w23yGSlVDOyVLeYM1Cz5Y3nFDkEjYiAaujNUPU/k+svPrV0po+WBB6vSImanthxPUAIPbbumQkrCaO7Dpv0IEMdz9rxpl6HRPC9xdZZ8mdCU906lGwpWDpum2pqBNOrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jLDZWVuBZIH/QKd0zVXc6J1JIuPV3uAfkRk4ld4Zi84=;
- b=a1YEwiQkSVBUXmYQk6xUKABqLcmwWIPx8BHwq6cnRsVaZkLUQWG6xwaaJHc8Aj6kP969AVyQ5yhxJneK6INFAVMQykRbag3XzUsQK3+JAQ49cdeATC5zt3udguZbnOJdkZ9E1Jz76+aoV/g6jH+heoGDBoJgWtnixZ0dZIIeDJtxd3rN9aYEZLuxy+I7vvavL6CUFqs9ZRzYSHWFTyoP1Fx16Vz/lvssLKUw5bpZWTY6lY8YdT2mPn9CWnzD5DbQLXC5ergGhZhaz6zOjPfZJX+lD+U0NJIxyu8ZEWl6hwCHd9rcNb65ucutiO+gZL9kWGXaFC4AJFGQ19ZSWq68jw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+        Sun, 19 Jul 2020 09:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgGSN7l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 09:59:41 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2108C0619D2;
+        Sun, 19 Jul 2020 06:59:40 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id m22so9045784pgv.9;
+        Sun, 19 Jul 2020 06:59:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jLDZWVuBZIH/QKd0zVXc6J1JIuPV3uAfkRk4ld4Zi84=;
- b=OGddoAhuLdjnfnQiTHbPkXj4JJpJds8RmQY8Rorz89K3pM7GDY2HzVBJU/lgCDqT8Km7UV33vRfFJHv0ygrFP6U/n1GM02ul4LY9ypOij7DcjayY4uhqDOYDEciRNl3EQ0k53U3UShVFNoPEh3LOuao1ZxtTbDdlueEgjfMGgSw=
-Authentication-Results: zeniv.linux.org.uk; dkim=none (message not signed)
- header.d=none;zeniv.linux.org.uk; dmarc=none action=none
- header.from=windriver.com;
-Received: from BY5PR11MB4241.namprd11.prod.outlook.com (2603:10b6:a03:1ca::13)
- by BYAPR11MB3029.namprd11.prod.outlook.com (2603:10b6:a03:8e::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Sun, 19 Jul
- 2020 13:58:52 +0000
-Received: from BY5PR11MB4241.namprd11.prod.outlook.com
- ([fe80::6892:dd68:8b6b:c702]) by BY5PR11MB4241.namprd11.prod.outlook.com
- ([fe80::6892:dd68:8b6b:c702%4]) with mapi id 15.20.3195.025; Sun, 19 Jul 2020
- 13:58:52 +0000
-Subject: Re: [PATCH] userfaultfd: avoid the duplicated release for
- userfaultfd_ctx
-From:   "Xu, Yanfei" <yanfei.xu@windriver.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20200714161203.31879-1-yanfei.xu@windriver.com>
-Message-ID: <e3cbdb26-9bfb-55e7-c9a7-deb7f8831754@windriver.com>
-Date:   Sun, 19 Jul 2020 21:58:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-In-Reply-To: <20200714161203.31879-1-yanfei.xu@windriver.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: HKAPR04CA0009.apcprd04.prod.outlook.com
- (2603:1096:203:d0::19) To BY5PR11MB4241.namprd11.prod.outlook.com
- (2603:10b6:a03:1ca::13)
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eAMuwrdgZT+muWB0jbfvOv3S8Lq4I5ca8nN0yy/ukz0=;
+        b=gQUNuyKuer2aVg+6zju4B6jW7FIv2GqsAgJ+M8TgSIPMdHFHkBjH1FGBEOtK3hR6fR
+         OA8w7cGg9AMlxtp1fign1fIN7Ez5zjqP+qpCVvCgvKnx4Vj7IgZzMUciGtTkX1jgOC+o
+         +1ae8Dw7u7tKH7O3VuTB0hP5ZJt2zcppNmiBRQCr5C7BYTP7UskNINiPTL3EYF+a2S+d
+         K0HVaUuftzhK4lyu/QwKa78yeAQ+IIgZiitzKNxJpc3GIWUteYIJ5dW4nOKTPAu5bDOL
+         zMeGzYozRgLB851TiCD1HLvFFblkR4j1WQlZYrdVm0mgO8eNR3BQ2LEqrZ1jhyAl5P0Z
+         goNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eAMuwrdgZT+muWB0jbfvOv3S8Lq4I5ca8nN0yy/ukz0=;
+        b=c1zh4R40VYT9Sa50a8NxGPHGYZyeOzyWP/JLlc6u2/G1z2tlUeYYzTo8xhNVjKJ75Q
+         FXMAkQW8uTjYJjzjVK5P2ruKacNhG3fEQj2vE/gWKxUUbImHV5GGUTgKQL9/NQyxzDDk
+         2A+JuI8AKmrv3UOsNo1i41YuRkf/+HaeT65BGrxyJYPRdUllnymrgx7kqYBjxSLOE+r3
+         TZEZerVwD96TWJlS3JOYeNcyZm9Du8n5flrb32iK5J/qEEqIUsXsa3HJIQsZOM9FzS4r
+         Ne4IBDvFaW7Itz95/hVSmK+oYb8O4fANBAkSg0fThahY5ffKFiCrjXB1GBYTlZ8iY/2s
+         kORg==
+X-Gm-Message-State: AOAM533TpjDqUblOUpURbuaKKnAIbOeYXhNfV2NiglIO/g2YPRktK7y9
+        knXJaRbu2W6bwb2VYx2RBQU=
+X-Google-Smtp-Source: ABdhPJzAcSGTRrLFOmP79A7ggudrEJgXuKyu8xMVkv0QQMyCBYdTZ/AamCIx35vhcp1GbD6dWOo6aA==
+X-Received: by 2002:a62:ce83:: with SMTP id y125mr14969637pfg.181.1595167180458;
+        Sun, 19 Jul 2020 06:59:40 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y24sm14438897pfp.217.2020.07.19.06.59.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 Jul 2020 06:59:40 -0700 (PDT)
+Date:   Sun, 19 Jul 2020 06:59:39 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 16/20] dt-bindings: watchdog: renesas,wdt: Document
+ r8a774e1 support
+Message-ID: <20200719135939.GA37256@roeck-us.net>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [128.224.162.160] (60.247.85.82) by HKAPR04CA0009.apcprd04.prod.outlook.com (2603:1096:203:d0::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Sun, 19 Jul 2020 13:58:51 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 71e07e3a-d304-4a13-f8e8-08d82bebde50
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3029:
-X-Microsoft-Antispam-PRVS: <BYAPR11MB3029D519F03CD58FA0D6C7BAE47A0@BYAPR11MB3029.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sVf+fsFkLAcer+M1ovaBqwit0W1zsXhsHpWbyiF4GnWkGv2Em7NIPTbTzNFDi7G1c+xktPI+lr0GNHi+G1Euf2Luyc3Rcdd0DCek4mrSKEhqoRYRycGJog8CJn/c0PuUGQVPCuEu5rBX4bJzAaN3JThUsLb2gP1MPsl50OcV56L7Xkj9MQc52FL+5emwhtxLTSyiLAVMsg7BejQfYzCElIQjgdSFPPc1OGLAfGIMa6/Hv4rBQLuPVACxYPnXAwA1xc2s21aNvNHDhVZlbtrJDG4mYyez2P/jCIqp+xaz4wZuF1wZcXlN6tHGIzzWIHCg6ghhJfp70pwviw1lhlevfi/dIanfEu4QO4R2mPQrRuxqUIbR1v4bKOkUOqk7z+wkRVDCVdM3KQzwXN5CRy02uKeCdT5EBKaZupJ6zVhYfCyyWGK+RPzXp8pimpeYRXz0
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4241.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39840400004)(376002)(346002)(136003)(366004)(396003)(6706004)(31686004)(316002)(16576012)(53546011)(26005)(8676002)(8936002)(52116002)(36756003)(6486002)(478600001)(2906002)(6916009)(5660300002)(6666004)(31696002)(66476007)(66556008)(66946007)(86362001)(956004)(2616005)(16526019)(186003)(83380400001)(78286006)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: yAgN9Jcf//OhpBzrK/ZHuwTKaI1SFGNEHHtB4xfZBvDQUoIPFrPBHXajyl7cxr9hVsklg64NEhVwJ7Jh96c+QcmoZU4tzwLMXpb1wgaJMq4KhEFM5/fORW7il6eVqzbKezkxxFpMPkxcwRJguBniQnbkqw/Urmzo6paE+oLvUJAAko7XRgvdq6OwZquBlhehPBB6cDMMcvXDexOEeavuvouFukcUwp2ipOq/uYZn0fwQpsiv/WVGOqDYUQ/MDLuxlyvuHEc9QmkmalKXXdw1kch6oN8RyZNRu0p8DGbN8vlHir6IOkvMEBcJezAo/Jxl/2hpCzG/9H8XqwGi1ZlP+jbZnJ2RgXq4LegmCtaBoV1V5IXhMn0oZ7NXDAse7Y47nnwNXR08eRVrk4RhfGecxIT/kX06QvbI4DJi9ywxRw7z/UM4+imXiW/eN5QCqZfihW8CxE8v1DNO8di5zo9OUSrmutLAZwXD43IUODISa7s=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71e07e3a-d304-4a13-f8e8-08d82bebde50
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4241.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2020 13:58:52.2201
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tfRbn3oHJQ/AKbXfVOrr2wQ7OIk1dFoyVR2YJgYjRXNsXNZQrNN5pDif8lmq1jGmaEK4IVP9gUw9QkQu66bacw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3029
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594811350-14066-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping Al Viro
-
-Could you please help to review this patch? Thanks a lot.
-
-Yanfei
-
-On 7/15/20 12:12 AM, yanfei.xu@windriver.com wrote:
-> From: Yanfei Xu <yanfei.xu@windriver.com>
+On Wed, Jul 15, 2020 at 12:09:06PM +0100, Lad Prabhakar wrote:
+> RZ/G2H (a.k.a. R8A774E1) watchdog implementation is compatible
+> with R-Car Gen3, therefore add the relevant documentation.
 > 
-> when get_unused_fd_flags gets failure, userfaultfd_ctx_cachep will
-> be freed by userfaultfd_fops's release function which is the
-> userfaultfd_release. So we could return directly after fput().
-> 
-> userfaultfd_release()->userfaultfd_ctx_put(ctx)
-> 
-> Fixes: d08ac70b1e0d (Wire UFFD up to SELinux)
-> Reported-by: syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-> Signed-off-by: Yanfei Xu <yanfei.xu@windriver.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
 > ---
->   fs/userfaultfd.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index 3a4d6ac5a81a..e98317c15530 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -2049,7 +2049,7 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
->   	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
->   	if (fd < 0) {
->   		fput(file);
-> -		goto out;
-> +		return fd;
->   	}
->   
->   	ctx->owner = file_inode(file);
-> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
+> index 572f4c912fef..6933005b52bd 100644
+> --- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
+> @@ -41,6 +41,7 @@ properties:
+>                - renesas,r8a774a1-wdt     # RZ/G2M
+>                - renesas,r8a774b1-wdt     # RZ/G2N
+>                - renesas,r8a774c0-wdt     # RZ/G2E
+> +              - renesas,r8a774e1-wdt     # RZ/G2H
+>                - renesas,r8a7795-wdt      # R-Car H3
+>                - renesas,r8a7796-wdt      # R-Car M3-W
+>                - renesas,r8a77961-wdt     # R-Car M3-W+
