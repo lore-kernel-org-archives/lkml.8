@@ -2,70 +2,167 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DDDC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C35F5207EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7808A20B1F
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:06:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PxlSaHQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgGSQEt (ORCPT
+        id S1726564AbgGSQGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 12:04:49 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43630 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgGSQEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 12:04:49 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jxBnt-005tGV-9f; Sun, 19 Jul 2020 18:04:41 +0200
-Date:   Sun, 19 Jul 2020 18:04:41 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 3/4] net: Call into DSA netdevice_ops wrappers
-Message-ID: <20200719160441.GK1383417@lunn.ch>
-References: <20200718030533.171556-1-f.fainelli@gmail.com>
- <20200718030533.171556-4-f.fainelli@gmail.com>
- <20200718211805.3yyckq23udacz4sa@skbuf>
- <d3a11ef5-3e4e-0c4a-790b-63da94a1545c@gmail.com>
+        Sun, 19 Jul 2020 12:06:18 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49326 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726135AbgGSQGR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 12:06:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595174775;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qvn7ah9yf4ty3GXyVniTDmRhC/pcWFvbVoRwSMY5+K0=;
+        b=PxlSaHQgPaJZMhUhB/ERIK4y6pavVRlBcWYXtvKNtRNJ73sHhVv4nkos/F2zsBgtm+NcCE
+        +5rsoOdvQQDjWiJn7a0KiKutg06yZzQwcMan5qsPBqr1mpmtE6Bdklny3asgUi+uZ9PDfM
+        0FFROadcd5wigd7FjDL+/X+dZWx16OM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-474-Oax_5lNPP8a5oDpzki4syg-1; Sun, 19 Jul 2020 12:06:13 -0400
+X-MC-Unique: Oax_5lNPP8a5oDpzki4syg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5984A1005504;
+        Sun, 19 Jul 2020 16:06:11 +0000 (UTC)
+Received: from [10.36.115.54] (ovpn-115-54.ams2.redhat.com [10.36.115.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 398A472E45;
+        Sun, 19 Jul 2020 16:06:02 +0000 (UTC)
+Subject: Re: [PATCH v5 09/15] iommu/vt-d: Check ownership for PASIDs from
+ user-space
+To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
+        stefanha@gmail.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
+ <1594552870-55687-10-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <b55a09f7-c0ce-f2ff-a725-87a8e042ab80@redhat.com>
+Date:   Sun, 19 Jul 2020 18:06:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d3a11ef5-3e4e-0c4a-790b-63da94a1545c@gmail.com>
+In-Reply-To: <1594552870-55687-10-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> If we have the core network stack reference DSA as a module then we
-> force DSA to be either built-in or not, which is not very practical,
-> people would still want a modular choice to be possible. The static
-> inline only wraps indirect function pointer calls using definitions
-> available at build time and actual function pointer substitution at run
-> time, so we avoid that problem entirely that way.
+Hi Yi,
 
-Hi Florian
+On 7/12/20 1:21 PM, Liu Yi L wrote:
+> When an IOMMU domain with nesting attribute is used for guest SVA, a
+> system-wide PASID is allocated for binding with the device and the domain.
+> For security reason, we need to check the PASID passsed from user-space.
+passed
+> e.g. page table bind/unbind and PASID related cache invalidation.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel/iommu.c | 10 ++++++++++
+>  drivers/iommu/intel/svm.c   |  7 +++++--
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 4d54198..a9504cb 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -5436,6 +5436,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  		int granu = 0;
+>  		u64 pasid = 0;
+>  		u64 addr = 0;
+> +		void *pdata;
+>  
+>  		granu = to_vtd_granularity(cache_type, inv_info->granularity);
+>  		if (granu == -EINVAL) {
+> @@ -5456,6 +5457,15 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  			 (inv_info->granu.addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
+>  			pasid = inv_info->granu.addr_info.pasid;
+>  
+> +		pdata = ioasid_find(dmar_domain->ioasid_sid, pasid, NULL);
+> +		if (!pdata) {
+> +			ret = -EINVAL;
+> +			goto out_unlock;
+> +		} else if (IS_ERR(pdata)) {
+> +			ret = PTR_ERR(pdata);
+> +			goto out_unlock;
+> +		}
+> +
+>  		switch (BIT(cache_type)) {
+>  		case IOMMU_CACHE_INV_TYPE_IOTLB:
+>  			/* HW will ignore LSB bits based on address mask */
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index d2c0e1a..212dee0 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -319,7 +319,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+>  	dmar_domain = to_dmar_domain(domain);
+>  
+>  	mutex_lock(&pasid_mutex);
+> -	svm = ioasid_find(INVALID_IOASID_SET, data->hpasid, NULL);
+I do not get what the call was supposed to do before that patch?
+> +	svm = ioasid_find(dmar_domain->ioasid_sid, data->hpasid, NULL);
+>  	if (IS_ERR(svm)) {
+>  		ret = PTR_ERR(svm);
+>  		goto out;
+> @@ -436,6 +436,7 @@ int intel_svm_unbind_gpasid(struct iommu_domain *domain,
+>  			    struct device *dev, ioasid_t pasid)
+>  {
+>  	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> +	struct dmar_domain *dmar_domain;
+>  	struct intel_svm_dev *sdev;
+>  	struct intel_svm *svm;
+>  	int ret = -EINVAL;
+> @@ -443,8 +444,10 @@ int intel_svm_unbind_gpasid(struct iommu_domain *domain,
+>  	if (WARN_ON(!iommu))
+>  		return -EINVAL;
+>  
+> +	dmar_domain = to_dmar_domain(domain);
+> +
+>  	mutex_lock(&pasid_mutex);
+> -	svm = ioasid_find(INVALID_IOASID_SET, pasid, NULL);
+> +	svm = ioasid_find(dmar_domain->ioasid_sid, pasid, NULL);
+just to make sure, about the locking, can't domain->ioasid_sid change
+under the hood?
 
-The jumping through the pointer avoids the inbuilt vs module problems.
+Thanks
 
-The helpers themselves could be in a net/core/*.c file, rather than
-static inline in a header. Is it worth adding a net/core/dsa.c for
-code which must always be built in? At the moment, probably not.  But
-if we have more such redirect, maybe it would be?
+Eric
+>  	if (!svm) {
+>  		ret = -EINVAL;
+>  		goto out;
+> 
 
-     Andrew
