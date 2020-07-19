@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19370C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 00:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A341C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 00:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF15121775
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 00:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E912522BF5
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 00:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qJfTGxJH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hKeREWNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgGSAcC (ORCPT
+        id S1726601AbgGSAcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 20:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46464 "EHLO
+        Sat, 18 Jul 2020 20:32:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbgGSAcB (ORCPT
+        with ESMTP id S1726424AbgGSAcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 20:32:01 -0400
+        Sat, 18 Jul 2020 20:32:15 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F59DC0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 17:32:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D43C0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 17:32:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
         Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=qvXy4k9bhHOdfjshhjvQgkxfOWcS9CHZYJ8mc1rdLys=; b=qJfTGxJHl8DyJzFA9fR1SGo7Xs
-        ZGmFuc78SoTV4iOqC7CwIsqh33dVEV7L99ASc+V1Mty8GtUVJ5NBPC964saE9LtMk+qeKuNI5yTDz
-        +ntSjvSXH8SJpPjZPM5mThwHFkNfu1ieyIE/FuV2ZsuiuczpXLn/sGJ7igYQSzOhgv2dw+5i2yNER
-        97QrNE1PUL4LGarUKhTGc08ztKwdITIC2r7+kpLYJ8OwZNKL/qn852xkoATVkTUcqGgKKue2PXArr
-        Jj6Ml9JxYVBCuTrkMCiAnAALlIb3kKQlUuu6gBPsqKh4c5rbZALwYpe/jhepq5C1u73nfthCmg9j1
-        WfAOB86Q==;
+        bh=ti1yf0IJvGWu/NgMq8i9V7IajAX4x4lywIexARBwC+A=; b=hKeREWNIvM68c6YYNXEVmgMduY
+        ExldPVqPqyZJNzxPeGWbHYmr6oTem7idlcp7nJzwDqoTRoYkr3c9v9wYwnlEN/vJZ6gBlwT1Psh1/
+        WIl+dwfA3DylVu8XHgmXHft0d/YtXMnCNiWWJJdK6VFEBpdyz/eugFh1riZujJy9wd+mpHIHOetM4
+        SQoHiPa77ZKQyyfl8hABnURNSCuqhvigMJiqfNNAgYSf/+ZhiVGDBI3UML+AakKwIvwXrLr0HFzR/
+        xEXZ2rFT4gqiGvsBt7EbG9tq0S9ZfPDfpRCrXEj/6yAB1hrmbTEbYQulNCImWfVGUwRNLImUpPzcG
+        04HtPThg==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwxFH-0002yU-7s; Sun, 19 Jul 2020 00:31:59 +0000
+        id 1jwxFU-0002zR-MC; Sun, 19 Jul 2020 00:32:13 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH] STM: <linux/stm.h>: drop a duplicated word
-Date:   Sat, 18 Jul 2020 17:31:55 -0700
-Message-Id: <20200719003155.21150-1-rdunlap@infradead.org>
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org
+Subject: [PATCH] MTD: mtd-abi.h: drop a duplicated word
+Date:   Sat, 18 Jul 2020 17:32:08 -0700
+Message-Id: <20200719003208.21200-1-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -54,22 +57,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the repeated word "the" in a comment.
+Drop the repeated word "mode" in a comment.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org
 ---
- include/linux/stm.h |    2 +-
+ include/uapi/mtd/mtd-abi.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200717.orig/include/linux/stm.h
-+++ linux-next-20200717/include/linux/stm.h
-@@ -57,7 +57,7 @@ struct stm_device;
+--- linux-next-20200717.orig/include/uapi/mtd/mtd-abi.h
++++ linux-next-20200717/include/uapi/mtd/mtd-abi.h
+@@ -262,7 +262,7 @@ struct mtd_ecc_stats {
+  * @MTD_FILE_MODE_OTP_USER:	OTP enabled in user mode
+  * @MTD_FILE_MODE_RAW:		OTP disabled, ECC disabled
   *
-  * Normally, an STM device will have a range of masters available to software
-  * and the rest being statically assigned to various hardware trace sources.
-- * The former is defined by the the range [@sw_start..@sw_end] of the device
-+ * The former is defined by the range [@sw_start..@sw_end] of the device
-  * description. That is, the lowest master that can be allocated to software
-  * writers is @sw_start and data from this writer will appear is @sw_start
-  * master in the STP stream.
+- * These modes can be set via ioctl(MTDFILEMODE). The mode mode will be retained
++ * These modes can be set via ioctl(MTDFILEMODE). The mode will be retained
+  * separately for each open file descriptor.
+  *
+  * Note: %MTD_FILE_MODE_RAW provides the same functionality as %MTD_OPS_RAW -
