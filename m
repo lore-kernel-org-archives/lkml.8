@@ -1,119 +1,78 @@
-Return-Path: <SRS0=rxDU=A5=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B539AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 23:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABABDC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 00:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 948F421775
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jul 2020 23:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8842D208B3
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 00:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Kksg74EW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xd/xfXfE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgGRXkL (ORCPT
+        id S1726512AbgGSA1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 19:40:11 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:48330 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgGRXkL (ORCPT
+        Sat, 18 Jul 2020 20:27:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbgGSA1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 19:40:11 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1046)
-        id 5FA3A20B4909; Sat, 18 Jul 2020 16:40:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5FA3A20B4909
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595115610;
-        bh=9xRlxmh/3mioap28Q8NNX9lHocf7lk8i9TYkoBpJhu0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Kksg74EWJmJ6r2UVnQydY7kG0/YUWOkTIwAO2fIiFxOM46xbZzJBMRzk4qrMDURcy
-         EyLHWp6K7hP5S9+cBEXfv7x2KsfkiBi3vadRtwS7+NTH3gCHHx0aCE4xpKXkl+UJHS
-         zBrrD7PLvxZ1q+AMwOX/SY9exw0BnrtC0XJFZvkQ=
-From:   Dhananjay Phadke <dphadke@linux.microsoft.com>
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>
-Cc:     Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com,
-        Dhananjay Phadke <dphadke@linux.microsoft.com>
-Subject: [PATCH] i2c: iproc: fix race between client unreg and isr
-Date:   Sat, 18 Jul 2020 16:39:59 -0700
-Message-Id: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sat, 18 Jul 2020 20:27:03 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDFAC0619D2;
+        Sat, 18 Jul 2020 17:27:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=MKnRSn9ikggE7UY557Wd06+HvUOU7pMMUIJgzPPPakE=; b=Xd/xfXfEpCib5FjYLFIKtdmNeN
+        FPqt78GL88bzKCk0QExzVcvGoYw7jazk08V9OHPR+qInKRdMEqxRKFnJFq5cqmsjMpf7c1NTWvEmb
+        79ulqK7rL5ezpIa3b5bqnbsvG7Fh9CV4eJvMWFVYAv4SP8tZO4OqBmITGOn1ZEBidy2IzKpEzE8kO
+        Q4TK8BbcSUHlafDChsKfMsS2VG0kF2f3lFpIoqQC7rW5lYxM8qHb20x0U/MVihAyEHLdNhz30Rzsb
+        eE5EdjSlY0vo2sSNBFAWANRtMyCvrerxIxgzPEKNlvuFDtKUbmzCLALI5xDuyivL8vaCzKtxHJCD3
+        u9GiiNug==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwxAQ-0002TO-Bo; Sun, 19 Jul 2020 00:27:00 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH] ACPI: actypes.h: drop a duplicated word
+Date:   Sat, 18 Jul 2020 17:26:52 -0700
+Message-Id: <20200719002652.20155-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When i2c client unregisters, synchronize irq before setting
-iproc_i2c->slave to NULL.
+Drop the repeated word "an" in a comment.
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
-
-[  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
-[  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
-[  371.030309] sp : ffff800010003e40
-[  371.033727] x29: ffff800010003e40 x28: 0000000000000060
-[  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
-[  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
-[  371.050165] x23: 0000000000000003 x22: 0000000001600000
-[  371.055645] x21: ffff800010f18888 x20: 0000000001600000
-[  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
-[  371.066603] x17: 0000000000000000 x16: 0000000000000000
-[  371.072082] x15: 0000000000000000 x14: 0000000000000000
-[  371.077561] x13: 0000000000000000 x12: 0000000000000001
-[  371.083040] x11: 0000000000000000 x10: 0000000000000040
-[  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
-[  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
-[  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
-[  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
-[  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
-
-[  371.115916] Call trace:
-[  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
-[  371.122754]  __handle_irq_event_percpu+0x6c/0x170
-[  371.127606]  handle_irq_event_percpu+0x34/0x88
-[  371.132189]  handle_irq_event+0x40/0x120
-[  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
-[  371.140459]  generic_handle_irq+0x24/0x38
-[  371.144594]  __handle_domain_irq+0x60/0xb8
-[  371.148820]  gic_handle_irq+0xc0/0x158
-[  371.152687]  el1_irq+0xb8/0x140
-[  371.155927]  arch_cpu_idle+0x10/0x18
-[  371.159615]  do_idle+0x204/0x290
-[  371.162943]  cpu_startup_entry+0x24/0x60
-[  371.166990]  rest_init+0xb0/0xbc
-[  371.170322]  arch_call_rest_init+0xc/0x14
-[  371.174458]  start_kernel+0x404/0x430
-
-Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
-Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-acpi@vger.kernel.org
 ---
- drivers/i2c/busses/i2c-bcm-iproc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/acpi/actypes.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index b58224b7b..37d2a79e7 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -1074,14 +1074,15 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
- 	if (!iproc_i2c->slave)
- 		return -EINVAL;
- 
--	iproc_i2c->slave = NULL;
--
- 	/* disable all slave interrupts */
- 	tmp = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
- 	tmp &= ~(IE_S_ALL_INTERRUPT_MASK <<
- 			IE_S_ALL_INTERRUPT_SHIFT);
- 	iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, tmp);
- 
-+	synchronize_irq(iproc_i2c->irq);
-+	iproc_i2c->slave = NULL;
-+
- 	/* Erase the slave address programmed */
- 	tmp = iproc_i2c_rd_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET);
- 	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+--- linux-next-20200717.orig/include/acpi/actypes.h
++++ linux-next-20200717/include/acpi/actypes.h
+@@ -824,7 +824,7 @@ typedef u8 acpi_adr_space_type;
+  *
+  * Note: A Data Table region is a special type of operation region
+  * that has its own AML opcode. However, internally, the AML
+- * interpreter simply creates an operation region with an an address
++ * interpreter simply creates an operation region with an address
+  * space type of ACPI_ADR_SPACE_DATA_TABLE.
+  */
+ #define ACPI_ADR_SPACE_DATA_TABLE       (acpi_adr_space_type) 0x7E	/* Internal to ACPICA only */
