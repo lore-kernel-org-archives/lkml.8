@@ -2,130 +2,152 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F85C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 09:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 09:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8D022073A
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 09:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B4F207FC
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 09:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595150080;
+	bh=nF9Kk0fsiiHxdM0DX/V1NeZbZVFr0e0LyaXMRk/e5W8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=DvUmhFd7GmqaLZ1Hsi5PYw8p2jejcqGYqMe9Oa/Xt8Ch+jcq/02Gq+BiRtsecdLxe
+	 NYmFRUVnj9QW5ndRdiVoaeMBWyk8WIJJkEVMKbptuzOgd/4pY/2FlatlbRFNXLTscT
+	 TJHjCQEmvdO8kIIEiZFiFKGz9H8fAgjKT4HaM6W0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgGSJMl (ORCPT
+        id S1726446AbgGSJOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 05:12:41 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:46584 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725836AbgGSJMl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 05:12:41 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U37udgA_1595149946;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U37udgA_1595149946)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 19 Jul 2020 17:12:27 +0800
-Subject: Re: [PATCH v16 18/22] mm/lru: replace pgdat lru_lock with lruvec lock
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
+        Sun, 19 Jul 2020 05:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbgGSJOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 05:14:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FA272073A;
+        Sun, 19 Jul 2020 09:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595150075;
+        bh=nF9Kk0fsiiHxdM0DX/V1NeZbZVFr0e0LyaXMRk/e5W8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LPtb6vMEOV4QH7ZWqkVex4vT5AAZYTqjvZof9ETRhDuDmu3398k6+lrzqqVGO2pxP
+         mal1JY0QydEBpPCvvEIbGQ31PgfiMkCCLZl7WFrEBGH6iNuktN3NGYwJq4sSZ7Q/1N
+         /lctXREGFQYHBmQDXAabZQZdY3mvc1mHteoDTNnQ=
+Date:   Sun, 19 Jul 2020 11:14:47 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Rong Chen <rong.a.chen@intel.com>
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
- <1594429136-20002-19-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0Ud+Dj-Q8Sxv8eDQhjM3fFHwnU_ZFEVG54debBennUmxAg@mail.gmail.com>
- <62dfd262-a7ac-d18e-216a-2988c690b256@linux.alibaba.com>
-Message-ID: <c339f46e-ae04-4e65-2713-a5c8be56051a@linux.alibaba.com>
-Date:   Sun, 19 Jul 2020 17:12:23 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [GIT PULL] USB driver fixes for 5.8-rc6
+Message-ID: <20200719091447.GA157963@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <62dfd262-a7ac-d18e-216a-2988c690b256@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
 
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
 
-在 2020/7/18 下午10:15, Alex Shi 写道:
->>>
->>>  struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
->>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->>> index 14c668b7e793..36c1680efd90 100644
->>> --- a/include/linux/mmzone.h
->>> +++ b/include/linux/mmzone.h
->>> @@ -261,6 +261,8 @@ struct lruvec {
->>>         atomic_long_t                   nonresident_age;
->>>         /* Refaults at the time of last reclaim cycle */
->>>         unsigned long                   refaults;
->>> +       /* per lruvec lru_lock for memcg */
->>> +       spinlock_t                      lru_lock;
->>>         /* Various lruvec state flags (enum lruvec_flags) */
->>>         unsigned long                   flags;
->> Any reason for placing this here instead of at the end of the
->> structure? From what I can tell it looks like lruvec is already 128B
->> long so placing the lock on the end would put it into the next
->> cacheline which may provide some performance benefit since it is
->> likely to be bounced quite a bit.
-> Rong Chen(Cced) once reported a performance regression when the lock at
-> the end of struct, and move here could remove it.
-> Although I can't not reproduce. But I trust his report.
-> 
-Oops, Rong's report is on another member which is different with current
-struct. 
+are available in the Git repository at:
 
-Compare to move to tail, how about to move it to head of struct, which is
-close to lru list? Did you have some data of the place change?
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.8-rc6
 
-Thanks
-Alex
+for you to fetch changes up to c7300cdf8f683ae00cf74616b5fd14ffac327979:
 
- 
-> ...
-> 
->>>  putback:
->>> -               spin_unlock_irq(&zone->zone_pgdat->lru_lock);
->>>                 pagevec_add(&pvec_putback, pvec->pages[i]);
->>>                 pvec->pages[i] = NULL;
->>>         }
->>> -       /* tempary disable irq, will remove later */
->>> -       local_irq_disable();
->>>         __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
->>> -       local_irq_enable();
->>> +       if (lruvec)
->>> +               unlock_page_lruvec_irq(lruvec);
->> So I am not a fan of this change. You went to all the trouble of
->> reducing the lock scope just to bring it back out here again. In
->> addition it implies there is a path where you might try to update the
->> page state without disabling interrupts.
-> Right. but any idea to avoid this except a extra local_irq_disable?
-> 
+  Merge tag 'usb-serial-5.8-rc6' of https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial into usb-linus (2020-07-16 17:30:59 +0200)
 
-The following changes would resolve the problem. Is this ok?
-@@ -324,7 +322,8 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
-                pagevec_add(&pvec_putback, pvec->pages[i]);
-                pvec->pages[i] = NULL;
-        }
--       __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
-+       if (delta_munlocked)
-+               __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
-        if (lruvec)
-                unlock_page_lruvec_irq(lruvec);
+----------------------------------------------------------------
+USB fixes for 5.8-rc6
+
+Here are a few small USB fixes, and one thunderbolt fix, for 5.8-rc6.
+
+Nothing huge in here, just the normal collection of gadget, dwc2/3,
+serial, and other minor USB driver fixes and id additions.  Full details
+are in the shortlog.
+
+All of these have been in linux-next for a while with no reported
+issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+AceLan Kao (1):
+      USB: serial: option: add Quectel EG95 LTE modem
+
+Evgeny Novikov (1):
+      usb: gadget: udc: gr_udc: fix memleak on error handling path in gr_ep_init()
+
+Greg Kroah-Hartman (4):
+      Merge tag 'thunderbolt-fix-for-v5.8-rc4' of git://git.kernel.org/.../westeri/thunderbolt into usb-linus
+      Merge tag 'usb-serial-5.8-rc5' of https://git.kernel.org/.../johan/usb-serial into usb-linus
+      Merge tag 'fixes-for-v5.8-rc3' of git://git.kernel.org/.../balbi/usb into usb-linus
+      Merge tag 'usb-serial-5.8-rc6' of https://git.kernel.org/.../johan/usb-serial into usb-linus
+
+Heikki Krogerus (2):
+      usb: dwc3: pci: add support for the Intel Tiger Lake PCH -H variant
+      usb: dwc3: pci: add support for the Intel Jasper Lake
+
+Igor Moura (1):
+      USB: serial: ch341: add new Product ID for CH340
+
+James Hilliard (1):
+      USB: serial: cypress_m8: enable Simply Automated UPB PIM
+
+Johan Hovold (1):
+      USB: serial: iuu_phoenix: fix memory corruption
+
+Jörgen Storvist (1):
+      USB: serial: option: add GosunCn GM500 series
+
+Michał Mirosław (2):
+      usb: gadget: udc: atmel: remove outdated comment in usba_ep_disable()
+      usb: gadget: udc: atmel: fix uninitialized read in debug printk
+
+Mika Westerberg (1):
+      thunderbolt: Fix path indices used in USB3 tunnel discovery
+
+Minas Harutyunyan (1):
+      usb: dwc2: Fix shutdown callback in platform
+
+Peter Chen (3):
+      usb: chipidea: core: add wakeup support for extcon
+      usb: cdns3: ep0: fix some endian issues
+      usb: cdns3: trace: fix some endian issues
+
+Randy Dunlap (1):
+      usb: gadget: fix langid kernel-doc warning in usbstring.c
+
+Tom Rix (1):
+      USB: c67x00: fix use after free in c67x00_giveback_urb
+
+Zhang Qiang (1):
+      usb: gadget: function: fix missing spinlock in f_uac1_legacy
+
+ drivers/thunderbolt/tunnel.c                | 12 ++++++------
+ drivers/usb/c67x00/c67x00-sched.c           |  2 +-
+ drivers/usb/cdns3/ep0.c                     | 30 ++++++++++++++---------------
+ drivers/usb/cdns3/trace.h                   |  6 +++---
+ drivers/usb/chipidea/core.c                 | 24 +++++++++++++++++++++++
+ drivers/usb/dwc2/platform.c                 |  3 ++-
+ drivers/usb/dwc3/dwc3-pci.c                 |  8 ++++++++
+ drivers/usb/gadget/function/f_uac1_legacy.c |  2 ++
+ drivers/usb/gadget/udc/atmel_usba_udc.c     | 10 ++--------
+ drivers/usb/gadget/udc/gr_udc.c             |  7 +++++--
+ drivers/usb/gadget/usbstring.c              |  2 +-
+ drivers/usb/serial/ch341.c                  |  1 +
+ drivers/usb/serial/cypress_m8.c             |  2 ++
+ drivers/usb/serial/cypress_m8.h             |  3 +++
+ drivers/usb/serial/iuu_phoenix.c            |  8 +++++---
+ drivers/usb/serial/option.c                 |  6 ++++++
+ 16 files changed, 86 insertions(+), 40 deletions(-)
