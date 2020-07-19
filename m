@@ -2,122 +2,82 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6296C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00339C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6329207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D035C207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:23:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z3NKGYHb"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Ydea2avL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgGSMW7 (ORCPT
+        id S1726531AbgGSMXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 08:22:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgGSMW6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 08:22:58 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB58C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 05:22:58 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id k15so8333179lfc.4
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 05:22:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WujZ/7jho1fGoHN1cxPxG4EtZF1JYD29nSTtD3mfiTI=;
-        b=Z3NKGYHbByVNND6TEr1PvZw2+i2FuU6IdWaDdBS6ScSxzk5cjT//fNt1hUxNDPkSw0
-         FXuLvFP9PwMdml6Sxti2Ms5+ap+rwrp95GzzTfaUN3h7s4l7PLxO22xQI24VdT9fJp/2
-         P1jp4fIfcrdi0oVjI4lt45ERxxj/h0G77Mq5bz6/lZ4hZ1mgUHbafiwHqCgwIEU1g+uK
-         Cmv02LKa+rghpupsCicTz3ERrUIAWPN7o4y9twvr7m7fGqOvcN9KAkpYp3UsgdhXqb5I
-         u6maFfi/l0T7pjjrEDcxAzOTdEZ8Pv8HMOVAikbQ1XukhxEataY0hsp0F3yzX1pu2Zrc
-         9wnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WujZ/7jho1fGoHN1cxPxG4EtZF1JYD29nSTtD3mfiTI=;
-        b=EsiN9FXFrkFkNUoyU42CKxuroMLQXarpZb1c2KmjG/ogIRKbjddoKZg1+428EF4+2x
-         dz2fqy7xo/HWD1NabBMed1l1lWR/52gda6WwhqG4dCD80Tnfqn7dAl974Lt9IouFNUnL
-         jycIcj55UCQcw/UJGK+Tw9bc+9p/N5d64l+2eZTI/fQDpz0IeZpl2o8N3rgGDVrnkgQB
-         CL31gueejV89kBVEp3c2GCYHypcPzCUNGiZrJJu8NhWIKy2g58i41WS0SPUJCKy4aOew
-         HnXkgXg0zsThdkNPLOH5QWEjYlV2SCwqn6X8UxFPW/JIvO7AvnvIU6v4gDdBIwPU53G6
-         QGuQ==
-X-Gm-Message-State: AOAM530yPoViwd2OEe3u29qPGnBHBQnGuuaKqeY0ML05tin4uGE918wS
-        ydiVIVuDhp9uJZuvlerlz5exKzD40VMumCi43myJ1Q==
-X-Google-Smtp-Source: ABdhPJy6emGfmf/9lRBLLDOFNbaaEr1iR97/eYQylRnx0qjqmuhyKlX/PtXMK8DwtCQ71KPW+GxR2WtI7IlzFc5AD9Y=
-X-Received: by 2002:a19:e45:: with SMTP id 66mr5284234lfo.82.1595161376814;
- Sun, 19 Jul 2020 05:22:56 -0700 (PDT)
+        Sun, 19 Jul 2020 08:23:55 -0400
+Received: from m12-12.163.com ([220.181.12.12]:44173 "EHLO m12-12.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726021AbgGSMXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 08:23:55 -0400
+X-Greylist: delayed 2708 seconds by postgrey-1.27 at vger.kernel.org; Sun, 19 Jul 2020 08:23:51 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=euji8
+        3kgaRZ1o5ZfGEIqaM5nKxpg0EB9wV1jv0YgH7w=; b=Ydea2avLlvl0mS1ydElyA
+        r0Jxm0kC2nwrW9KyJUvcGqu9lulRCwcC3G/tBELk1Iahkaxw7UI61SwR3NnMso4H
+        9X0bD+0kAiG8V5wyGD83ruW43ASvYtUk9oEko0biMWUyVCfent+XY8NBB+ydSiUT
+        CiQ+IexfPbfw5hTMf550F8=
+Received: from localhost.localdomain (unknown [125.82.8.121])
+        by smtp8 (Coremail) with SMTP id DMCowAA3NS1iJRRfAc7rEg--.39456S4;
+        Sun, 19 Jul 2020 18:50:14 +0800 (CST)
+From:   Hu Haowen <xianfengting221@163.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org
+Cc:     tglx@linutronix.de, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, notify@kernel.org,
+        Hu Haowen <xianfengting221@163.com>
+Subject: [PATCH] x86/perf: Fix a typo
+Date:   Sun, 19 Jul 2020 18:50:07 +0800
+Message-Id: <20200719105007.57649-1-xianfengting221@163.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
- <20200712131003.23271-2-madhuparnabhowmik10@gmail.com> <20200712160856.GW9247@paulmck-ThinkPad-P72>
- <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
- <CAA42JLY2L6xFju_qZsVguGtXvDMqfCKbO_h1K9NJPjmqJEav=Q@mail.gmail.com>
- <20200717170747.GW9247@paulmck-ThinkPad-P72> <CA+G9fYvtYr0ri6j-auNOTs98xVj-a1AoZtUfwokwnvuFFWtFdQ@mail.gmail.com>
- <20200718001259.GY9247@paulmck-ThinkPad-P72>
-In-Reply-To: <20200718001259.GY9247@paulmck-ThinkPad-P72>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sun, 19 Jul 2020 17:52:44 +0530
-Message-ID: <CA+G9fYs7s34mmtard-ETjH2r94psgQFLDJWayznvN6UTvMYh5g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     madhuparnabhowmik10@gmail.com,
-        Dexuan-Linux Cui <dexuan.linux@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, rcu@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
-        frextrite@gmail.com, lkft-triage@lists.linaro.org,
-        Dexuan Cui <decui@microsoft.com>, juhlee@microsoft.com,
-        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: DMCowAA3NS1iJRRfAc7rEg--.39456S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7JrWxJry5XFWkGFWUtFyfXrb_yoWxAFg_A3
+        W8JayDZr1Fy3s2q395uay5t3Z3A3yFvw45Gr4fAFyUt345t3W5CFyUWwsak345WF9xZrWI
+        yFZ3KFyYqw13ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRNFAp7UUUUU==
+X-Originating-IP: [125.82.8.121]
+X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/xtbBDwBZAFPAMoZQfAABsc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jul 2020 at 05:43, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Sat, Jul 18, 2020 at 12:35:12AM +0530, Naresh Kamboju wrote:
-> > Hi Paul,
-> >
-> > > I am not seeing this here.
-> >
-> > Do you notice any warnings while building linux next master
-> > for x86_64 architecture ?
->
-> Idiot here was failing to enable building of KVM.  With that, I do see
-> the error.  The patch resolves it for me.  Does it help for you?
+The word "Zhoaxin" is incorrect and the right one is "Zhaoxin".
 
-yes.
-The below patch applied on top of linux -next 20200717 tag
-and build pass.
+Signed-off-by: Hu Haowen <xianfengting221@163.com>
+---
+ arch/x86/events/zhaoxin/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
->                                                         Thanx, Paul
->
-> ------------------------------------------------------------------------
->
-> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> index de9385b..f8633d3 100644
-> --- a/include/linux/rculist.h
-> +++ b/include/linux/rculist.h
-> @@ -73,7 +73,7 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
->  #define __list_check_rcu(dummy, cond, extra...)                                \
->         ({ check_arg_count_one(extra); })
->
-> -#define __list_check_srcu(cond) true
-> +#define __list_check_srcu(cond) ({ })
->  #endif
->
->  /*
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
+index 898fa1ae9ceb..e68827e604ad 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Zhoaxin PMU; like Intel Architectural PerfMon-v2
++ * Zhaoxin PMU; like Intel Architectural PerfMon-v2
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-- 
+2.25.1
 
-- Naresh
+
