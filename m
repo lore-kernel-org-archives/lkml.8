@@ -2,88 +2,117 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 22:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 22:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9679208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 22:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 596EB208B3
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 22:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYKhSqvg"
+	dkim=pass (2048-bit key) header.d=hmh.eng.br header.i=@hmh.eng.br header.b="McO54vqP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p9REiXXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGSWr4 (ORCPT
+        id S1726689AbgGSW45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 18:47:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgGSWr4 (ORCPT
+        Sun, 19 Jul 2020 18:56:57 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:35049 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726156AbgGSW45 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 18:47:56 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8727C0619D2;
-        Sun, 19 Jul 2020 15:47:55 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q3so11708194ilt.8;
-        Sun, 19 Jul 2020 15:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=752GIqWb7TeflmfvTlvXG4lE85m80lDi3OdyHGBoGE4=;
-        b=SYKhSqvg0eRjLfsoeBoocA3N8uY4CC49g8HYKV4q1YUiDsWzl5zJ7I011lkNHPOvb2
-         WJXrXr7Nu+vSqqNGStE1BrRAlT6/pRpdtRbk3/8pM5CalsGjmJdtwRQj/1IASfmxaFWK
-         L7C65KMmIMFp8dUFFeW06R6FnhD3sQemF08kVNr2rxq/xsT5fTOsLOD4XTPkbLtZ4Obp
-         pNAiTQ5HJHzL/+Qw5E1EpyMaXKt1cZ3IMCK8DdkGo8uenP0pXXIL9u0OZZVe85POo0Xf
-         wuS3LWoBkDXLcE2w56JAOlu6jxOWK2rdeaLChOUEWPi+nk0GnVC5Lt1MZapCNcjkrIA8
-         6flQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=752GIqWb7TeflmfvTlvXG4lE85m80lDi3OdyHGBoGE4=;
-        b=juswCXNC+se51HY+TwUKGu24hoWnJ4Du/vL/dp1ZTGGWqhyWXxpCPOIb7xXef1XvT6
-         8cy5cySsAm88Pl25y7UAO8WglPwXw62pZS7XL35RMqqFg2/QyY9FcD7QKccKgsIjkQlI
-         DHnoP18TWhwJWOiYiLv1Uh0uo3pb6IMLrwRwGGhVPbR4W0mqvxBstKZI7LINLHiT19ph
-         LM9T9hV1NK/iq+uaHKs0G7KgqXPw5iiLYMN9rJPbdfdbWa8/Obud7NmjwGVstzTi6SQ9
-         S5gBeDKOtJS+CQB7HXYAvJuSxsslCfFi1pszSjO3Qc6y7EMh9GP/GB3g4p5XlaxSRE3F
-         edBA==
-X-Gm-Message-State: AOAM5314Z/3fLI8fy8wKXR+pFN8t0BYZ4zlLOgg638rXP/8CPLSJ5JRz
-        Cd0RcXMJ+XQuMHqoOr1MsoFHNs+xFTEOkjmjx7A=
-X-Google-Smtp-Source: ABdhPJxQq5vcDCcmYHgb5SHeEoGyf/RBEQJNp1ljNaDlfoLHRjDkfUgM8yK5bYY1GVTkQEoYTf5yNC21RRfTGe3fHpw=
-X-Received: by 2002:a92:8b11:: with SMTP id i17mr20118496ild.212.1595198874273;
- Sun, 19 Jul 2020 15:47:54 -0700 (PDT)
+        Sun, 19 Jul 2020 18:56:57 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailnew.west.internal (Postfix) with ESMTP id C49B062D;
+        Sun, 19 Jul 2020 18:56:55 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Sun, 19 Jul 2020 18:56:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmh.eng.br; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=IwtTVMIULxX/8K188g/bQylmehW
+        oNdWkoM/BtdvK8s4=; b=McO54vqPKpp3i4TymYJyPzHE6suA/Ha+Gtm1pcuPyKd
+        OmzBb4cSbP2aLZvpWhSAit3VyKsiZk+iYAqV71kN26mOZmJLxIXMRcvX4gT/1l0K
+        D78xO72NkOcblsZuCLl3SYNR2Zpncbkp0ZJjxza8yVZCF9uKGgSizqNjKjVqC5lC
+        3QpGKistYD4Ws8D9e+tc9XE3vFWpgE9DeXMApyMClpwfQxIsNzM0/M7FBTBd02QW
+        1Gda/v+80dlESKRds6msxIlRT3TAfdd7cV2RFoWSl1SfF3868TuuYZHvO7ZofTzt
+        u4f/cC/DgEQOM05ucNFNfgnFDarwoAPl96IgakfE3Tw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=IwtTVM
+        IULxX/8K188g/bQylmehWoNdWkoM/BtdvK8s4=; b=p9REiXXDrvECxf/4tEloLp
+        +yuLotcZLXqfLuaBQhPWvR4UNITcmu5L70JHSvVPZYuRxSClmE4G2JCRoq7nZXvw
+        dPREyoLrEabJZFZCkJ3o2chv/aSCm3HtJTKrRy9wVN5Z9dJOnXFRdshMGlwa4gmC
+        CIU8PF7BIJckdvBqrbKv4fq6bTSqByPKp0mihB4u7mjntHWb3tolfLaVYg0+xti8
+        31qokuKawvnbkvYLJjmgmjPHmKI3Sst9CRTyf9iDtAGmSjuLTaGb3mC9pXQKGaaQ
+        GD2oqWeB6pMIbfgBYYf9s+ZpYG9OFRFdSJpliHbrq5NtAtzNpbhEm6CJ9fYRtIJg
+        ==
+X-ME-Sender: <xms:ts8UX57DyB59CZO1_9wfWwhpU55JAa_RpVhMKctuwGvDdAg__4fmyQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrgedvgddujecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttddttddtredvnecuhfhrohhmpefjvghnrhhi
+    qhhuvgcuuggvucfoohhrrggvshcujfholhhstghhuhhhuceohhhmhheshhhmhhdrvghngh
+    drsghrqeenucggtffrrghtthgvrhhnpeevudetjeegiedufeeugfeiheeljeekfeduhfej
+    feegkeehkedvvdehheelgeevieenucfkphepudejjedrudelgedrjedrfedvnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhephhhmhheshhhmhhdr
+    vghnghdrsghr
+X-ME-Proxy: <xmx:ts8UX25a2Rxv-l3E6odDrb-GSpKcVCyBDi2uqt2zGT2VW3WWO5fcSg>
+    <xmx:ts8UXwetkkhLpObLgZj48LpI3rARhmNQ_4IZXJFFzMl6jRkvKkrKgQ>
+    <xmx:ts8UXyJiP4eB8UMlKJ9Le1lcloefVKc4KrMA5UpdwCbHqBypAmkTvA>
+    <xmx:t88UXypcJjK3c-SYqoOp-TZJnpATrawdAtCDUHUJ7X3xQmkqxYO57J672lA>
+Received: from khazad-dum.debian.net (unknown [177.194.7.32])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6CBD330600A3;
+        Sun, 19 Jul 2020 18:56:54 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by localhost.khazad-dum.debian.net (Postfix) with ESMTP id 8C2603400161;
+        Sun, 19 Jul 2020 19:56:52 -0300 (-03)
+X-Virus-Scanned: Debian amavisd-new at khazad-dum.debian.net
+Received: from khazad-dum.debian.net ([127.0.0.1])
+        by localhost (khazad-dum2.khazad-dum.debian.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id HREs72AK_48Y; Sun, 19 Jul 2020 19:56:49 -0300 (-03)
+Received: by khazad-dum.debian.net (Postfix, from userid 1000)
+        id D1B3D340015F; Sun, 19 Jul 2020 19:56:49 -0300 (-03)
+Date:   Sun, 19 Jul 2020 19:56:49 -0300
+From:   Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        linux-input@vger.kernel.org,
+        Marco Trevisan <marco.trevisan@canonical.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on
+ new Lenovo Thinkpads
+Message-ID: <20200719225649.GA4341@khazad-dum.debian.net>
+References: <20200717114155.56222-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <CGME20200512081526epcas1p364393ddc6bae354db5aaaae9b09ffbff@epcas1p3.samsung.com>
- <000201d62835$7ddafe50$7990faf0$@samsung.com> <CA+icZUUjcyrVsDNQ4gHVMYWkLLX9oscme3PmXUnfnc5DojkqVA@mail.gmail.com>
- <CANFS6bbandOzMxFk-VHbHR1FXqbVJSE_Dr3=miQSwwDcJO-v0A@mail.gmail.com> <CA+icZUUiOqP5=1i6QtorSbjsyaQRe1thwcp36qfTdDUnKKqmJA@mail.gmail.com>
-In-Reply-To: <CA+icZUUiOqP5=1i6QtorSbjsyaQRe1thwcp36qfTdDUnKKqmJA@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 20 Jul 2020 00:47:43 +0200
-Message-ID: <CA+icZUV1AtKYt-K21mc4daQr4avA_PLs21LOxctWEP6r_cRhcw@mail.gmail.com>
-Subject: Re: exfatprogs-1.0.3 version released
-To:     Hyunchul Lee <hyc.lee@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Eric Sandeen <sandeen@sandeen.net>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Nicolas Boos <nicolas.boos@wanadoo.fr>,
-        Sven Hoexter <hoexter@debian.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717114155.56222-1-hdegoede@redhat.com>
+X-GPG-Fingerprint1: 4096R/0x0BD9E81139CB4807: C467 A717 507B BAFE D3C1  6092
+ 0BD9 E811 39CB 4807
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ CC Sven Hoexter (Debian maintainer of exfatprogs ]
+On Fri, 17 Jul 2020, Hans de Goede wrote:
+> This is a simple patch-series adding support for 3 new hotkeys found
+> on various new Lenovo Thinkpad models.
 
-Just wanted to let you know Debian has an exfatprogs package in their
-official repositories.
+For all three patches, pending an ack for the new keycodes by the input
+maintainers:
 
-- Sedat -
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-[1] https://packages.debian.org/sid/exfatprogs
-[2] http://sven.stormbind.net/blog/posts/deb_debian_and_exfat/
+-- 
+  Henrique Holschuh
