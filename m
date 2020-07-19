@@ -2,138 +2,322 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE81C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E91C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76C3F21741
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMD3+YRT"
+	by mail.kernel.org (Postfix) with ESMTP id 521F420B1F
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgGSQKu (ORCPT
+        id S1726177AbgGSQTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 12:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48232 "EHLO
+        Sun, 19 Jul 2020 12:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgGSQKt (ORCPT
+        with ESMTP id S1726024AbgGSQTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 12:10:49 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F271C0619D2;
-        Sun, 19 Jul 2020 09:10:49 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 207so7850053pfu.3;
-        Sun, 19 Jul 2020 09:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IQJ2lp1aWlzAuTQVmicrunbxGhlr+LmtlAWLDGnu94E=;
-        b=eMD3+YRT3HEcXSwAjmG2pBhJcK64phOCRXKocUN8jVCyY+Yl1RjQMqnCflBxdDtKwr
-         dnWvYBsdatEp6N4hdYsf6qokYLN9Fp6v1khuhSxNwL6OdmNQlYHPV7ieARzag6Zwhnpe
-         kAIgC2ex6QsD6tCu5hy/FIBmJdxAj9U7ZgL/Ic4CLmkLwx/Nahi2ZVj5P1jTfUMSqY8k
-         VhNVmbFfNZ6F0bo+aDpKDEghH1oKtg2xCsbybYnyXBC46r6bFzhC4di7fQzq+ptT0TLJ
-         4kjqQYs98hZswbszwaDWWQqDhoFarnib00F7Zkycvz9u740o/RmtyUmwy1JPNvdnNBzt
-         tUeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IQJ2lp1aWlzAuTQVmicrunbxGhlr+LmtlAWLDGnu94E=;
-        b=gsxoAhA/RFHO/K/86p28OokFhwAR+WltEywuh8AB6+t4xcMxsKTsZk0GjHovUjYj61
-         52IhQDl72+38UaApPOuShk5Ru4hJU6KJkH6hy9GJJFa02D/waRcEalEj1ZvZqSIPAQhV
-         EQYefYrmz0uaY+cz6qEx5/mkMnUPpu4A0cKJzCiDmG2rWRUsLxmd56lDcVHWVjW21Uqt
-         iaD+dUYQSeg72CUCCCP4H5XVCSCZUyC+TWqU1x0vtNE8i1yJdvjvAB49Nin/4pIG56Cu
-         1vvxSwWAACU3fWI3tx1qIQLv0+oFVLhfEch5NtzZ7D1wJiA17SW1PdRFqX843kHTIw9a
-         079w==
-X-Gm-Message-State: AOAM532mLYCb0LRJkyXKj02frvjV9a+SNjXKmptjZBm9jXqC/UnaGXRK
-        Wgt1YW1B7FeDoO1DU3hLHTHj+Ks3
-X-Google-Smtp-Source: ABdhPJyjAV599gzgfuPVyU0Ji+Oy1DYIgS60m4PG6yOhRzZxuUTjR7zNL/0Ve8HdlduPhQ8roQ2Dhw==
-X-Received: by 2002:aa7:860f:: with SMTP id p15mr16116841pfn.59.1595175048522;
-        Sun, 19 Jul 2020 09:10:48 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id y27sm13494240pgc.56.2020.07.19.09.10.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Jul 2020 09:10:47 -0700 (PDT)
-Subject: Re: [PATCH net-next 2/4] net: dsa: Add wrappers for overloaded
- ndo_ops
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200718030533.171556-1-f.fainelli@gmail.com>
- <20200718030533.171556-3-f.fainelli@gmail.com>
- <20200719154014.GJ1383417@lunn.ch>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <90674456-cacf-09a7-9e0f-fe292e039811@gmail.com>
-Date:   Sun, 19 Jul 2020 09:10:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Sun, 19 Jul 2020 12:19:31 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B7BAC0619D2;
+        Sun, 19 Jul 2020 09:19:30 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 42349BC062;
+        Sun, 19 Jul 2020 16:19:27 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     johan@kernel.org, gregkh@linuxfoundation.org, corbet@lwn.net,
+        linux-usb@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] USB: serial: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 18:19:20 +0200
+Message-Id: <20200719161920.60087-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200719154014.GJ1383417@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
+
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-On 7/19/2020 8:40 AM, Andrew Lunn wrote:
->> +#if IS_ENABLED(CONFIG_NET_DSA)
->> +#define dsa_build_ndo_op(name, arg1_type, arg1_name, arg2_type, arg2_name) \
->> +static int inline dsa_##name(struct net_device *dev, arg1_type arg1_name, \
->> +			     arg2_type arg2_name)	\
->> +{							\
->> +	const struct dsa_netdevice_ops *ops;		\
->> +	int err = -EOPNOTSUPP;				\
->> +							\
->> +	if (!dev->dsa_ptr)				\
->> +		return err;				\
->> +							\
->> +	ops = dev->dsa_ptr->netdev_ops;			\
->> +	if (!ops || !ops->name)				\
->> +		return err;				\
->> +							\
->> +	return ops->name(dev, arg1_name, arg2_name);	\
->> +}
->> +#else
->> +#define dsa_build_ndo_op(name, ...)			\
->> +static inline int dsa_##name(struct net_device *dev, ...) \
->> +{							\
->> +	return -EOPNOTSUPP;				\
->> +}
->> +#endif
->> +
->> +dsa_build_ndo_op(ndo_do_ioctl, struct ifreq *, ifr, int, cmd);
->> +dsa_build_ndo_op(ndo_get_phys_port_name, char *, name, size_t, len);
-> 
-> Hi Florian
-> 
-> I tend to avoid this sort of macro magic. Tools like
-> https://elixir.bootlin.com/ and other cross references have trouble
-> following it. The current macros only handle calls with two
-> parameters. And i doubt it is actually saving many lines of code, if
-> there are only two invocations.
+ Documentation/usb/usb-serial.rst  |  2 +-
+ drivers/usb/serial/cyberjack.c    |  2 +-
+ drivers/usb/serial/ftdi_sio.h     |  4 ++--
+ drivers/usb/serial/ftdi_sio_ids.h | 34 +++++++++++++++----------------
+ drivers/usb/serial/kobil_sct.c    |  2 +-
+ drivers/usb/serial/metro-usb.c    |  2 +-
+ 6 files changed, 23 insertions(+), 23 deletions(-)
 
-It saves about 20 lines of code for each new function that is added.
-Since the boilerplate logic is always the same, if you prefer I could
-provide it as a separate helper function and avoid the macro to generate
-the function body, yes let's do that.
+diff --git a/Documentation/usb/usb-serial.rst b/Documentation/usb/usb-serial.rst
+index 8fa7dbd3da9a..0a2071953691 100644
+--- a/Documentation/usb/usb-serial.rst
++++ b/Documentation/usb/usb-serial.rst
+@@ -202,7 +202,7 @@ Keyspan USA-series Serial Adapters
+ 
+   More information is available at:
+ 
+-        http://www.carnationsoftware.com/carnation/Keyspan.html
++        https://www.carnationsoftware.com/carnation/Keyspan.html
+ 
+   For any questions or problems with this driver, please contact Hugh
+   Blemings at hugh@misc.nu
+diff --git a/drivers/usb/serial/cyberjack.c b/drivers/usb/serial/cyberjack.c
+index 821970609695..ec9dd7925a51 100644
+--- a/drivers/usb/serial/cyberjack.c
++++ b/drivers/usb/serial/cyberjack.c
+@@ -20,7 +20,7 @@
+  *  Please note that later models of the cyberjack reader family are
+  *  supported by a libusb-based userspace device driver.
+  *
+- *  Homepage: http://www.reiner-sct.de/support/treiber_cyberjack.php#linux
++ *  Homepage: https://www.reiner-sct.de/support/treiber_cyberjack.php#linux
+  */
+ 
+ 
+diff --git a/drivers/usb/serial/ftdi_sio.h b/drivers/usb/serial/ftdi_sio.h
+index a79a1325b4d9..818d4c7de661 100644
+--- a/drivers/usb/serial/ftdi_sio.h
++++ b/drivers/usb/serial/ftdi_sio.h
+@@ -14,7 +14,7 @@
+  * The device is based on the FTDI FT8U100AX chip. It has a DB25 on one side,
+  * USB on the other.
+  *
+- * Thanx to FTDI (http://www.ftdichip.com) for so kindly providing details
++ * Thanx to FTDI (https://www.ftdichip.com) for so kindly providing details
+  * of the protocol required to talk to the device and ongoing assistence
+  * during development.
+  *
+@@ -452,7 +452,7 @@ enum ftdi_sio_baudrate {
+  * FTDI_SIO_READ_EEPROM
+  *
+  * EEPROM format found in FTDI AN_201, "FT-X MTP memory Configuration",
+- * http://www.ftdichip.com/Support/Documents/AppNotes/AN_201_FT-X%20MTP%20Memory%20Configuration.pdf
++ * https://www.ftdichip.com/Support/Documents/AppNotes/AN_201_FT-X%20MTP%20Memory%20Configuration.pdf
+  */
+ #define FTDI_SIO_READ_EEPROM_REQUEST_TYPE 0xc0
+ #define FTDI_SIO_READ_EEPROM_REQUEST FTDI_SIO_READ_EEPROM
+diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_sio_ids.h
+index e8373528264c..a5bf2b974813 100644
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -60,14 +60,14 @@
+ /*
+  * Texas Instruments XDS100v2 JTAG / BeagleBone A3
+  * http://processors.wiki.ti.com/index.php/XDS100
+- * http://beagleboard.org/bone
++ * https://beagleboard.org/bone
+  */
+ #define TI_XDS100V2_PID		0xa6d0
+ 
+ #define FTDI_NXTCAM_PID		0xABB8 /* NXTCam for Mindstorms NXT */
+ #define FTDI_EV3CON_PID		0xABB9 /* Mindstorms EV3 Console Adapter */
+ 
+-/* US Interface Navigator (http://www.usinterface.com/) */
++/* US Interface Navigator (https://www.usinterface.com/) */
+ #define FTDI_USINT_CAT_PID	0xb810	/* Navigator CAT and 2nd PTT lines */
+ #define FTDI_USINT_WKEY_PID	0xb811	/* Navigator WKEY and FSK lines */
+ #define FTDI_USINT_RS232_PID	0xb812	/* Navigator RS232 and CONFIG lines */
+@@ -92,11 +92,11 @@
+ #define FTDI_OPENDCC_GBM_PID	0xBFDC
+ #define FTDI_OPENDCC_GBM_BOOST_PID	0xBFDD
+ 
+-/* NZR SEM 16+ USB (http://www.nzr.de) */
++/* NZR SEM 16+ USB (https://www.nzr.de) */
+ #define FTDI_NZR_SEM_USB_PID	0xC1E0	/* NZR SEM-LOG16+ */
+ 
+ /*
+- * RR-CirKits LocoBuffer USB (http://www.rr-cirkits.com)
++ * RR-CirKits LocoBuffer USB (https://www.rr-cirkits.com)
+  */
+ #define FTDI_RRCIRKITS_LOCOBUFFER_PID	0xc7d0	/* LocoBuffer USB */
+ 
+@@ -122,7 +122,7 @@
+ 
+ #define FTDI_DISTORTEC_JTAG_LOCK_PICK_PID	0xCFF8
+ 
+-/* SCS HF Radio Modems PID's (http://www.scs-ptc.com) */
++/* SCS HF Radio Modems PID's (https://www.scs-ptc.com) */
+ /* the VID is the standard ftdi vid (FTDI_VID) */
+ #define FTDI_SCS_DEVICE_0_PID 0xD010    /* SCS PTC-IIusb */
+ #define FTDI_SCS_DEVICE_1_PID 0xD011    /* SCS Tracker / DSP TNC */
+@@ -138,7 +138,7 @@
+ #define FTDI_IPLUS2_PID 0xD071 /* Product Id */
+ 
+ /*
+- * Gamma Scout (http://gamma-scout.com/). Submitted by rsc@runtux.com.
++ * Gamma Scout (https://gamma-scout.com/). Submitted by rsc@runtux.com.
+  */
+ #define FTDI_GAMMA_SCOUT_PID		0xD678	/* Gamma Scout online */
+ 
+@@ -153,7 +153,7 @@
+ #define FTDI_VARDAAN_PID	0xF070
+ 
+ /*
+- * Xsens Technologies BV products (http://www.xsens.com).
++ * Xsens Technologies BV products (https://www.xsens.com).
+  */
+ #define XSENS_VID		0x2639
+ #define XSENS_AWINDA_STATION_PID 0x0101
+@@ -360,7 +360,7 @@
+ #define FTDI_MAXSTREAM_PID	0xEE18	/* Xbee PKG-U Module */
+ 
+ /*
+- * microHAM product IDs (http://www.microham.com).
++ * microHAM product IDs (https://www.microham.com).
+  * Submitted by Justin Burket (KL1RL) <zorton@jtan.com>
+  * and Mike Studer (K6EEP) <k6eep@hamsoftware.org>.
+  * Ian Abbott <abbotti@mev.co.uk> added a few more from the driver INF file.
+@@ -576,7 +576,7 @@
+ 
+ /*
+  * Synapse Wireless product ids (FTDI_VID)
+- * http://www.synapse-wireless.com
++ * https://www.synapse-wireless.com
+  */
+ #define FTDI_SYNAPSE_SS200_PID 0x9090 /* SS200 - SNAP Stick 200 */
+ 
+@@ -630,7 +630,7 @@
+  * applications.  The VID/PID has also been used in firmware
+  * emulating FTDI serial chips by:
+  * Hornby Elite - Digital Command Control Console
+- * http://www.hornby.com/hornby-dcc/controllers/
++ * https://www.hornby.com/hornby-dcc/controllers/
+  */
+ #define MICROCHIP_VID		0x04D8
+ #define MICROCHIP_USB_BOARD_PID	0x000A /* CDC RS-232 Emulation Demo */
+@@ -746,7 +746,7 @@
+ #define ICOM_ID_RP2KVR_PID	0x0013 /* ID-RP2000V Receive config port */
+ 
+ /*
+- * GN Otometrics (http://www.otometrics.com)
++ * GN Otometrics (https://www.otometrics.com)
+  * Submitted by Ville Sundberg.
+  */
+ #define GN_OTOMETRICS_VID	0x0c33	/* Vendor ID */
+@@ -969,7 +969,7 @@
+ 
+ /*
+  * Physik Instrumente
+- * http://www.physikinstrumente.com/en/products/
++ * https://www.physikinstrumente.com/en/products/
+  */
+ /* These two devices use the VID of FTDI */
+ #define PI_C865_PID	0xe0a0  /* PI C-865 Piezomotor Controller */
+@@ -1399,7 +1399,7 @@
+ #define MJSG_HD_RADIO_PID	0x937C
+ 
+ /*
+- * D.O.Tec products (http://www.directout.eu)
++ * D.O.Tec products (https://www.directout.eu)
+  */
+ #define FTDI_DOTEC_PID 0x9868
+ 
+@@ -1419,7 +1419,7 @@
+ 
+ 
+ /*
+- * Accesio USB Data Acquisition products (http://www.accesio.com/)
++ * Accesio USB Data Acquisition products (https://www.accesio.com/)
+  */
+ #define ACCESIO_COM4SM_PID 	0xD578
+ 
+@@ -1435,7 +1435,7 @@
+ #define MILKYMISTONE_JTAGSERIAL_PID	0x0713
+ 
+ /*
+- * CTI GmbH RS485 Converter http://www.cti-lean.com/
++ * CTI GmbH RS485 Converter https://www.cti-lean.com/
+  */
+ /* USB-485-Mini*/
+ #define FTDI_CTI_MINI_PID	0xF608
+@@ -1443,7 +1443,7 @@
+ #define FTDI_CTI_NANO_PID	0xF60B
+ 
+ /*
+- * ZeitControl cardsystems GmbH rfid-readers http://zeitcontrol.de
++ * ZeitControl cardsystems GmbH rfid-readers https://zeitcontrol.de
+  */
+ /* TagTracer MIFARE*/
+ #define FTDI_ZEITCONTROL_TAGTRACE_MIFARE_PID	0xF7C0
+@@ -1523,7 +1523,7 @@
+ #define BRAINBOXES_US_160_8_PID		0x9008 /* US-160 16xRS232 1Mbaud Port 15 and 16 */
+ 
+ /*
+- * ekey biometric systems GmbH (http://ekey.net/)
++ * ekey biometric systems GmbH (https://ekey.net/)
+  */
+ #define FTDI_EKEY_CONV_USB_PID		0xCB08	/* Converter USB */
+ 
+diff --git a/drivers/usb/serial/kobil_sct.c b/drivers/usb/serial/kobil_sct.c
+index e9882ba20933..c1b24bdd30bc 100644
+--- a/drivers/usb/serial/kobil_sct.c
++++ b/drivers/usb/serial/kobil_sct.c
+@@ -33,7 +33,7 @@
+ #include <linux/ioctl.h>
+ #include "kobil_sct.h"
+ 
+-#define DRIVER_AUTHOR "KOBIL Systems GmbH - http://www.kobil.com"
++#define DRIVER_AUTHOR "KOBIL Systems GmbH - https://www.kobil.com"
+ #define DRIVER_DESC "KOBIL USB Smart Card Terminal Driver (experimental)"
+ 
+ #define KOBIL_VENDOR_ID			0x0D46
+diff --git a/drivers/usb/serial/metro-usb.c b/drivers/usb/serial/metro-usb.c
+index e63cea02cfd8..afd72c09c7fe 100644
+--- a/drivers/usb/serial/metro-usb.c
++++ b/drivers/usb/serial/metro-usb.c
+@@ -4,7 +4,7 @@
+   distributed with Linux.
+ 
+   Copyright:	2007 Metrologic Instruments. All rights reserved.
+-  Copyright:	2011 Azimut Ltd. <http://azimutrzn.ru/>
++  Copyright:	2011 Azimut Ltd. <https://azimutrzn.ru/>
+ */
+ 
+ #include <linux/kernel.h>
 -- 
-Florian
+2.27.0
+
