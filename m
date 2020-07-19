@@ -2,181 +2,97 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 02:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 02:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB7B207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 02:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CD720738
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 02:45:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xm5JNULg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgGSCaG (ORCPT
+        id S1726535AbgGSCpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 22:30:06 -0400
-Received: from mga04.intel.com ([192.55.52.120]:5164 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbgGSCaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 22:30:05 -0400
-IronPort-SDR: xvFeyC43uA2lW6UQh9PgjYWI2EDE28NXnie7aPq7rT8VE0RZxqcbz5COChQMs0osdltAGF/laJ
- SrIigK0oHkSQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9686"; a="147280826"
-X-IronPort-AV: E=Sophos;i="5.75,369,1589266800"; 
-   d="scan'208";a="147280826"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 19:30:05 -0700
-IronPort-SDR: /kTK814oxi+sM4nrMDXIBaTcaxtMJtVHuYcku2WYpgac900uPx0yFJxL+F8XBnFsxbt+hiLjng
- 3oWcX7rVPdqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,369,1589266800"; 
-   d="scan'208";a="317687877"
-Received: from lkp-server02.sh.intel.com (HELO 50058c6ee6fc) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 18 Jul 2020 19:30:03 -0700
-Received: from kbuild by 50058c6ee6fc with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jwz5X-00011D-2P; Sun, 19 Jul 2020 02:30:03 +0000
-Date:   Sun, 19 Jul 2020 10:29:17 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Damien Le Moal <damien.lemoal@wdc.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>
-Subject: fs/zonefs/super.c:1110:6: warning: Variable 'ret' is reassigned a
- value before the old one has been used.
-Message-ID: <202007191013.4IvvVjHl%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 18 Jul 2020 22:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgGSCpy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jul 2020 22:45:54 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49EF8C0619D2;
+        Sat, 18 Jul 2020 19:45:54 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so21911157wml.3;
+        Sat, 18 Jul 2020 19:45:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KYbiuW9akHYr4iGm+mhAKAzYf50rap2sHQ/b1EeZvQE=;
+        b=Xm5JNULgk+HvV4lgvqpxTOveb26IsydL5sSDuPK0E1GVOb+NGB6SaTXc0TGUReH8jc
+         7+m2kBC/t4nvRSWEp0wms+TbeI2UGSdKj3hDwHrZkKXoqfcLkQ4UJyWf8sRfMxi2lA3c
+         6cQFq6qqy56dloeFcH57da/Uqg7U2pCv8t2aogBTCAqj4NW3euw06yLWzLNHSOMPG38w
+         SOIPAcC/SNq2dAiVijmo2DOPH5qtB93CmHdVTIkLuyBQeBSwtaftisObpMQQ2O1n94fl
+         vSR5A1TUYPp+OswW8zxeZaUJ2brIdvEV7IHtOImUAEC7CiUh4PRiEYfKsUhudbl7r/5Q
+         DIjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KYbiuW9akHYr4iGm+mhAKAzYf50rap2sHQ/b1EeZvQE=;
+        b=tZaIVReV4kS3ZRXRY5A5TvQEZXECNfYC2kt5QJTsqfmjqiu6nCYAze+ff/J7MFqrsI
+         FFozUMOAHTs4xklBaj/MYs8W3pQiaSFFE3nHjHUBgrPv2Co2N/TRmGfEpOKKqADCHUvS
+         Tf0+DGQyXIyvB9I2dFAMkV8a8rRUIVZgBZ8V0OyLZzKIgFN5Pb6c+V5FyTeWhPe5jFxM
+         u1rVOu8BfCdLluMq1krIqikqGwXCSvquH9uFJNtjuaql2Zx9lBKnJDjEktzr02HB2QUY
+         +2qKRB7CxIxrJo0SsVHo/yGboOx4WBhC9gdHuLs4FZ48NTHNkGZ2tKYOlpFqkNPo/1eP
+         kiiw==
+X-Gm-Message-State: AOAM532HpfPSi2DxbREqHXjMr1c4A1jEosyAGHbpXSKu9v2ANhhc3SUs
+        N1u4tAp3q5lX0wNcf9Sk+JU=
+X-Google-Smtp-Source: ABdhPJyQ5SsSC6XvJcXlOahk61Svf/sAlbNZHZmBPNv0Ob764zWHfiQXHNOoK5Z3xOmT5d/aq77zkQ==
+X-Received: by 2002:a05:600c:2058:: with SMTP id p24mr15573644wmg.74.1595126752945;
+        Sat, 18 Jul 2020 19:45:52 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id e5sm5176242wrc.37.2020.07.18.19.45.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jul 2020 19:45:52 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v2 0/3] arm64: dts: meson: add more G12/SM1 soundcards
+Date:   Sun, 19 Jul 2020 02:45:45 +0000
+Message-Id: <20200719024548.8940-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   6cf7ccba29dcf39ab27630c383a3844078a6d5cd
-commit: 8dcc1a9d90c10fa4143e5c17821082e5e60e46a1 fs: New zonefs file system
-date:   5 months ago
-compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
+This series adds basic support for LPCM audio over HDMI interfaces
+to the Khadas VIM3L (reusing the same config as the VIM3) and the
+HardKernel ODROID-C4 devices, and HDMI + S/PDIF on U200 reference
+board (reusing the config from the X96-Max box), I'm sure support
+can be extended to include other hardware but this gets the HDMI
+port working as a minimum capability. I have tested with VIM3L/C4
+devices and a no-name S905X2 box.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+v2 changes - include u200
 
+Christian Hewitt (3):
+  arm64: dts: meson: add audio playback to odroid-c4
+  arm64: dts: meson: add audio playback to khadas-vim3l
+  arm64: dts: meson: add audio playback to u200
 
-cppcheck warnings: (new ones prefixed by >>)
+ .../boot/dts/amlogic/meson-g12a-u200.dts      | 131 ++++++++++++++++++
+ .../dts/amlogic/meson-sm1-khadas-vim3l.dts    |  88 ++++++++++++
+ .../boot/dts/amlogic/meson-sm1-odroid-c4.dts  |  88 ++++++++++++
+ 3 files changed, 307 insertions(+)
 
->> fs/zonefs/super.c:1110:6: warning: Variable 'ret' is reassigned a value before the old one has been used. [redundantAssignment]
-    ret = 0;
-        ^
-   fs/zonefs/super.c:1045:0: note: Variable 'ret' is reassigned a value before the old one has been used.
-    int ret = -ENOMEM;
-   ^
-   fs/zonefs/super.c:1110:6: note: Variable 'ret' is reassigned a value before the old one has been used.
-    ret = 0;
-        ^
-   fs/zonefs/super.c:1257:6: warning: Variable 'ret' is reassigned a value before the old one has been used. [redundantAssignment]
-    ret = 0;
-        ^
-   fs/zonefs/super.c:1210:6: note: Variable 'ret' is reassigned a value before the old one has been used.
-    ret = -EINVAL;
-        ^
-   fs/zonefs/super.c:1257:6: note: Variable 'ret' is reassigned a value before the old one has been used.
-    ret = 0;
-        ^
+-- 
+2.17.1
 
-vim +/ret +1110 fs/zonefs/super.c
-
-  1031	
-  1032	/*
-  1033	 * Create a zone group and populate it with zone files.
-  1034	 */
-  1035	static int zonefs_create_zgroup(struct zonefs_zone_data *zd,
-  1036					enum zonefs_ztype type)
-  1037	{
-  1038		struct super_block *sb = zd->sb;
-  1039		struct zonefs_sb_info *sbi = ZONEFS_SB(sb);
-  1040		struct blk_zone *zone, *next, *end;
-  1041		const char *zgroup_name;
-  1042		char *file_name;
-  1043		struct dentry *dir;
-  1044		unsigned int n = 0;
-  1045		int ret = -ENOMEM;
-  1046	
-  1047		/* If the group is empty, there is nothing to do */
-  1048		if (!zd->nr_zones[type])
-  1049			return 0;
-  1050	
-  1051		file_name = kmalloc(ZONEFS_NAME_MAX, GFP_KERNEL);
-  1052		if (!file_name)
-  1053			return -ENOMEM;
-  1054	
-  1055		if (type == ZONEFS_ZTYPE_CNV)
-  1056			zgroup_name = "cnv";
-  1057		else
-  1058			zgroup_name = "seq";
-  1059	
-  1060		dir = zonefs_create_inode(sb->s_root, zgroup_name, NULL, type);
-  1061		if (!dir)
-  1062			goto free;
-  1063	
-  1064		/*
-  1065		 * The first zone contains the super block: skip it.
-  1066		 */
-  1067		end = zd->zones + blkdev_nr_zones(sb->s_bdev->bd_disk);
-  1068		for (zone = &zd->zones[1]; zone < end; zone = next) {
-  1069	
-  1070			next = zone + 1;
-  1071			if (zonefs_zone_type(zone) != type)
-  1072				continue;
-  1073	
-  1074			/*
-  1075			 * For conventional zones, contiguous zones can be aggregated
-  1076			 * together to form larger files. Note that this overwrites the
-  1077			 * length of the first zone of the set of contiguous zones
-  1078			 * aggregated together. If one offline or read-only zone is
-  1079			 * found, assume that all zones aggregated have the same
-  1080			 * condition.
-  1081			 */
-  1082			if (type == ZONEFS_ZTYPE_CNV &&
-  1083			    (sbi->s_features & ZONEFS_F_AGGRCNV)) {
-  1084				for (; next < end; next++) {
-  1085					if (zonefs_zone_type(next) != type)
-  1086						break;
-  1087					zone->len += next->len;
-  1088					if (next->cond == BLK_ZONE_COND_READONLY &&
-  1089					    zone->cond != BLK_ZONE_COND_OFFLINE)
-  1090						zone->cond = BLK_ZONE_COND_READONLY;
-  1091					else if (next->cond == BLK_ZONE_COND_OFFLINE)
-  1092						zone->cond = BLK_ZONE_COND_OFFLINE;
-  1093				}
-  1094			}
-  1095	
-  1096			/*
-  1097			 * Use the file number within its group as file name.
-  1098			 */
-  1099			snprintf(file_name, ZONEFS_NAME_MAX - 1, "%u", n);
-  1100			if (!zonefs_create_inode(dir, file_name, zone, type))
-  1101				goto free;
-  1102	
-  1103			n++;
-  1104		}
-  1105	
-  1106		zonefs_info(sb, "Zone group \"%s\" has %u file%s\n",
-  1107			    zgroup_name, n, n > 1 ? "s" : "");
-  1108	
-  1109		sbi->s_nr_files[type] = n;
-> 1110		ret = 0;
-  1111	
-  1112	free:
-  1113		kfree(file_name);
-  1114	
-  1115		return ret;
-  1116	}
-  1117	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
