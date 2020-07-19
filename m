@@ -2,101 +2,76 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70723C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E404C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5336820B1F
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5C0208DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:55:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgGSRpK (ORCPT
+        id S1726126AbgGSRzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 13:45:10 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:39866 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgGSRpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 13:45:10 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id DFBE7BC078;
-        Sun, 19 Jul 2020 17:45:03 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        paul.walmsley@sifive.com, krzk@kernel.org, sboyd@kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] dt-bindings: drm/bridge: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 19:44:57 +0200
-Message-Id: <20200719174457.60674-1-grandmaster@al2klimov.de>
+        Sun, 19 Jul 2020 13:55:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38660 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgGSRzN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 13:55:13 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jxDWl-0001P4-0X; Sun, 19 Jul 2020 17:55:07 +0000
+Date:   Sun, 19 Jul 2020 19:55:06 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Michael Kerrisk <mtk.manpages@gmail.com>
+Subject: Re: [PATCH 0/4] fs: add mount_setattr()
+Message-ID: <20200719175506.fwxsb6r6pfrdhvxb@wittgenstein>
+References: <20200714161415.3886463-1-christian.brauner@ubuntu.com>
+ <20200719171054.GK2786714@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200719171054.GK2786714@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Sun, Jul 19, 2020 at 06:10:54PM +0100, Al Viro wrote:
+> On Tue, Jul 14, 2020 at 06:14:11PM +0200, Christian Brauner wrote:
+> 
+> > mount_setattr() can be expected to grow over time and is designed with
+> > extensibility in mind. It follows the extensible syscall pattern we have
+> > used with other syscalls such as openat2(), clone3(),
+> > sched_{set,get}attr(), and others.
+> 
+> I.e. it's a likely crap insertion vector; any patches around that thing
+> will require the same level of review as addition of a brand new syscall.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Which is just how we should and hopefully treat any meaningful
+extension, yes. Otherwise let's just never add a flag argument to any
+syscall and only have dup()- and accept()-like syscalls.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+> And they will be harder to spot - consider the likely subjects for such
+> patches and compare to open addition of a new syscall...
 
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+In the new revision I have dropped the atime argument because David
+already plumbed setting atime into fsmount() via flags and making
+userspace jump through more hoops by adding more constants seems
+pointless. So the additional arguments can be moved up because we're
+below the 6 syscall args limit.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+Though I really want to stress that while I see the worry it is less a
+technial argument but one for our review process where we should treat
+extensions to syscalls as strict as syscall additions. Which yes, very
+much so.
 
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- .../devicetree/bindings/display/bridge/ti,sn65dsi86.txt         | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-index 8ec4a7f2623a..4b4b08dadc9e 100644
---- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-@@ -2,7 +2,7 @@ SN65DSI86 DSI to eDP bridge chip
- --------------------------------
- 
- This is the binding for Texas Instruments SN65DSI86 bridge.
--http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
-+https://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
- 
- Required properties:
- - compatible: Must be "ti,sn65dsi86"
--- 
-2.27.0
-
+Thanks!
+Christian
