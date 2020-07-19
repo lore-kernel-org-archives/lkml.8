@@ -2,102 +2,127 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C76C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 09:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEBBF207DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 09:52:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KTNUbDob"
+	by mail.kernel.org (Postfix) with ESMTP id 836ED2073A
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgGSJwF (ORCPT
+        id S1726468AbgGSKAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 05:52:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20337 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725988AbgGSJwD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 05:52:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595152322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mknWuDNTSPVA5tuUznaF/9X4S4nuMwQxpbXQ5+3goe4=;
-        b=KTNUbDob46tg9SJK7KzWkduacmY2eOFp9p4cWPefWh8xV/H29cBNiB36A068Zcny5RdTeK
-        y9gpO9xNrG1oTtDOnP2Pv1Pcn4CAGvNeRpNgWqThWxYnMIOrGBKHZJCemWPx7anQQIvN/p
-        rryJvEu+SWR9hPemHmiDTseufKW+MAU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-nURWLhFwNNyG7fNENd1CWQ-1; Sun, 19 Jul 2020 05:52:00 -0400
-X-MC-Unique: nURWLhFwNNyG7fNENd1CWQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 940D580183C;
-        Sun, 19 Jul 2020 09:51:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F9481A90F;
-        Sun, 19 Jul 2020 09:51:52 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-In-Reply-To: <20200719014436.GG2786714@ZenIV.linux.org.uk>
-References: <20200719014436.GG2786714@ZenIV.linux.org.uk> <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk> <159465785214.1376674.6062549291411362531.stgit@warthog.procyon.org.uk>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/32] iov_iter: Add ITER_MAPPING
-From:   David Howells <dhowells@redhat.com>
+        Sun, 19 Jul 2020 06:00:09 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:53764 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgGSKAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 06:00:08 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2A33ABC06F;
+        Sun, 19 Jul 2020 10:00:04 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
+        kernel@pengutronix.de, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] ARM: dts: efm32: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 11:59:58 +0200
+Message-Id: <20200719095958.57555-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3417.1595152311.1@warthog.procyon.org.uk>
-Date:   Sun, 19 Jul 2020 10:51:51 +0100
-Message-ID: <3418.1595152311@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> wrote:
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-> My main problem here is that your iterate_mapping() assumes that STEP is
-> safe under rcu_read_lock(), with no visible mentioning of that fact.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Yeah, that's probably the biggest objection to this.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-> Note, BTW, that iov_iter_for_each_range() quietly calls user-supplied
-> callback in such context.
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-And calls kmap(), but should probably use kmap_atomic().  git grep doesn't
-show any users of this, so can it be removed?
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-> Incidentally, do you ever have different steps for bvec and mapping?
+ If you apply the patch, please let me know.
 
-Yes:
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
-	csum_and_copy_from_iter_full()
-	iov_iter_npages()
-	iov_iter_get_pages()
-	iov_iter_get_pages_alloc()
 
-But I've tried to use the internal representation struct for bvec where I can
-rather than inventing a new one.
+ arch/arm/boot/dts/efm32gg-dk3750.dts | 2 +-
+ arch/arm/boot/dts/efm32gg.dtsi       | 2 +-
+ arch/arm/mach-efm32/Makefile.boot    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-David
+diff --git a/arch/arm/boot/dts/efm32gg-dk3750.dts b/arch/arm/boot/dts/efm32gg-dk3750.dts
+index adfa559a488b..f310a8191ce5 100644
+--- a/arch/arm/boot/dts/efm32gg-dk3750.dts
++++ b/arch/arm/boot/dts/efm32gg-dk3750.dts
+@@ -3,7 +3,7 @@
+  * Device tree for EFM32GG-DK3750 development board.
+  *
+  * Documentation available from
+- * http://www.silabs.com/Support%20Documents/TechnicalDocs/efm32gg-dk3750-ug.pdf
++ * https://www.silabs.com/Support%20Documents/TechnicalDocs/efm32gg-dk3750-ug.pdf
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/efm32gg.dtsi b/arch/arm/boot/dts/efm32gg.dtsi
+index 8a58e49144cc..633c7b0809ed 100644
+--- a/arch/arm/boot/dts/efm32gg.dtsi
++++ b/arch/arm/boot/dts/efm32gg.dtsi
+@@ -3,7 +3,7 @@
+  * Device tree for Energy Micro EFM32 Giant Gecko SoC.
+  *
+  * Documentation available from
+- * http://www.silabs.com/Support%20Documents/TechnicalDocs/EFM32GG-RM.pdf
++ * https://www.silabs.com/Support%20Documents/TechnicalDocs/EFM32GG-RM.pdf
+  */
+ 
+ #include "armv7-m.dtsi"
+diff --git a/arch/arm/mach-efm32/Makefile.boot b/arch/arm/mach-efm32/Makefile.boot
+index cec195d4fcba..5dde7328a7a9 100644
+--- a/arch/arm/mach-efm32/Makefile.boot
++++ b/arch/arm/mach-efm32/Makefile.boot
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ # Empty file waiting for deletion once Makefile.boot isn't needed any more.
+ # Patch waits for application at
+-# http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
++# https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
+-- 
+2.27.0
 
