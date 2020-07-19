@@ -2,116 +2,87 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3A2C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B05C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBDF2207DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44BC12173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595156671;
+	bh=rUyPqN7o8n11Cuq/SsXI7IA/ehdlS6u9JPo8pQ6obYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dveKg72Gq6n7kwJqWwTRvsiozHvafOEQP2udBkg2w35U0c8GCiTMaUzwDppcbxwGw
+	 9ubPc2ETaRZ3hOiNF2xfPp7zuq45sJcrA7GK6ZSUXwPIUUC93KJXuxl+51KJuaA0Cf
+	 k6t9EziFCT/7HzHlpAQDWejL242OI4swY3hpiu44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgGSLCs (ORCPT
+        id S1726156AbgGSLE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 07:02:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24682 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725988AbgGSLCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 07:02:47 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06JB2W16014314;
-        Sun, 19 Jul 2020 07:02:34 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32bw7y757y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 19 Jul 2020 07:02:34 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06JB2YWp014459;
-        Sun, 19 Jul 2020 07:02:34 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32bw7y752t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 19 Jul 2020 07:02:34 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06JB0ZJ2021800;
-        Sun, 19 Jul 2020 11:02:11 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma05fra.de.ibm.com with ESMTP id 32brq80mhu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 19 Jul 2020 11:02:10 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06JB28MX29557122
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 19 Jul 2020 11:02:08 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 789F6A4051;
-        Sun, 19 Jul 2020 11:02:08 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22C19A405D;
-        Sun, 19 Jul 2020 11:02:07 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.150.54])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 19 Jul 2020 11:02:07 +0000 (GMT)
-Message-ID: <1595156526.27397.67.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 01/12] ima: Have the LSM free its audit rule
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Nayna <nayna@linux.vnet.ibm.com>
-Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Date:   Sun, 19 Jul 2020 07:02:06 -0400
-In-Reply-To: <20200717192447.GO3673@sequoia>
-References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
-         <20200709061911.954326-2-tyhicks@linux.microsoft.com>
-         <5ee27a51-7ff9-5763-c85f-e99e62458657@linux.vnet.ibm.com>
-         <20200717192447.GO3673@sequoia>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-19_01:2020-07-17,2020-07-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- spamscore=0 bulkscore=0 impostorscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007190080
+        Sun, 19 Jul 2020 07:04:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbgGSLE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 07:04:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D291C207DF;
+        Sun, 19 Jul 2020 11:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595156668;
+        bh=rUyPqN7o8n11Cuq/SsXI7IA/ehdlS6u9JPo8pQ6obYo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zsX/3lfsy1Ub36Jau67UPnKyl3DBRtw/vDoLXbFs+/bIzT3vcaVvCxsyEs3k8/JC6
+         YQKw9FHPotTJoQdwx70r+lXlJoXnZziDrI498/XX9IfDGfpNM8NqsE4BlthPREqGZd
+         mjpgNrLOCCnUXjkNTHstbrZKuSo0sI8uYz38FBjM=
+Date:   Sun, 19 Jul 2020 13:04:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     B K Karthik <bkkarthik@pesu.pes.edu>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Re: [PATCH 2/4] staging: rtl8188eu: include: fixed multiple
+ parentheses coding style issues
+Message-ID: <20200719110439.GA266150@kroah.com>
+References: <20200718091626.uflhdcgkmhqij5b7@pesu-pes-edu>
+ <20200719092652.GA257887@kroah.com>
+ <CAAhDqq1LNQ=UfCaNojZ+wf2+njQ+7jD8Yvr1AG1TSrcByfMo+g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhDqq1LNQ=UfCaNojZ+wf2+njQ+7jD8Yvr1AG1TSrcByfMo+g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-17 at 14:24 -0500, Tyler Hicks wrote:
-> On 2020-07-17 15:20:22, Nayna wrote:
-> > 
-> > On 7/9/20 2:19 AM, Tyler Hicks wrote:
-> > > Ask the LSM to free its audit rule rather than directly calling kfree().
-> > 
-> > Is it to be called audit rule or filter rule ?  Likewise in subject line.
-> gt
-> The security hooks call this "audit rule" but Mimi explained the
-> reasoning for IMA referring to this as an "audit filter" here:
+On Sun, Jul 19, 2020 at 05:35:04AM -0400, B K Karthik wrote:
+> On Sun, Jul 19, 2020 at 5:26 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Sat, Jul 18, 2020 at 05:16:26AM -0400, B K Karthik wrote:
+> > > fixed multiple parentheses coding style issues reported by checkpatch.
+> > >
+> > > Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+> > > ---
+> > >  drivers/staging/rtl8188eu/include/ieee80211.h |  4 +--
+> > >  .../staging/rtl8188eu/include/osdep_service.h |  4 +--
+> > >  drivers/staging/rtl8188eu/include/wifi.h      | 34 +++++++++----------
+> > >  3 files changed, 21 insertions(+), 21 deletions(-)
+> >
+> > You can never add warnings to the build, like this patch did.  Always
+> > test-build your patches at the very least...
 > 
->  https://lore.kernel.org/lkml/1593466203.5085.62.camel@linux.ibm.com/
-> 
-> I would be fine with her renaming/rewording this patch, accordingly, in
-> next-integrity-testing.
+> understood, I will definitely do that.
+> but these warnings are (mostly) [-Wunused-value] and [-Wformat].
+> that should not have (?) occurred due to the usage of parentheses.
 
-Both here and "ima: AppArmor satisfies the audit rule requirements",
-the subject is AppArmor/LSM, which do refer to the rules as "audit"
-rules.  In the "ima: Rename internal audit rule functions" case, the
-rule rename is internal to IMA.  Here it makes sense to replace
-"audit" with "filter".  Tyler, I've gone ahead and made the change.
+They are not there _before_ your patch, and only show up _after_ your
+patch, so perhaps your patch is wrong?  :)
 
-Mimi
+thanks,
 
+greg k-h
