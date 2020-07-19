@@ -2,105 +2,122 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6296C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C44A207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6329207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:23:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z3NKGYHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgGSMWn (ORCPT
+        id S1726486AbgGSMW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 08:22:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
+        Sun, 19 Jul 2020 08:22:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgGSMWn (ORCPT
+        with ESMTP id S1725836AbgGSMW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 08:22:43 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B09C0619D2;
-        Sun, 19 Jul 2020 05:22:42 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id F351DBC063;
-        Sun, 19 Jul 2020 12:22:38 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     toke@toke.dk, jhs@mojatatu.com, xiyou.wangcong@gmail.com,
-        jiri@resnulli.us, davem@davemloft.net, kuba@kernel.org,
-        cake@lists.bufferbloat.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] sch_cake: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 14:22:32 +0200
-Message-Id: <20200719122232.58647-1-grandmaster@al2klimov.de>
+        Sun, 19 Jul 2020 08:22:58 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB58C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 05:22:58 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id k15so8333179lfc.4
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 05:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WujZ/7jho1fGoHN1cxPxG4EtZF1JYD29nSTtD3mfiTI=;
+        b=Z3NKGYHbByVNND6TEr1PvZw2+i2FuU6IdWaDdBS6ScSxzk5cjT//fNt1hUxNDPkSw0
+         FXuLvFP9PwMdml6Sxti2Ms5+ap+rwrp95GzzTfaUN3h7s4l7PLxO22xQI24VdT9fJp/2
+         P1jp4fIfcrdi0oVjI4lt45ERxxj/h0G77Mq5bz6/lZ4hZ1mgUHbafiwHqCgwIEU1g+uK
+         Cmv02LKa+rghpupsCicTz3ERrUIAWPN7o4y9twvr7m7fGqOvcN9KAkpYp3UsgdhXqb5I
+         u6maFfi/l0T7pjjrEDcxAzOTdEZ8Pv8HMOVAikbQ1XukhxEataY0hsp0F3yzX1pu2Zrc
+         9wnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WujZ/7jho1fGoHN1cxPxG4EtZF1JYD29nSTtD3mfiTI=;
+        b=EsiN9FXFrkFkNUoyU42CKxuroMLQXarpZb1c2KmjG/ogIRKbjddoKZg1+428EF4+2x
+         dz2fqy7xo/HWD1NabBMed1l1lWR/52gda6WwhqG4dCD80Tnfqn7dAl974Lt9IouFNUnL
+         jycIcj55UCQcw/UJGK+Tw9bc+9p/N5d64l+2eZTI/fQDpz0IeZpl2o8N3rgGDVrnkgQB
+         CL31gueejV89kBVEp3c2GCYHypcPzCUNGiZrJJu8NhWIKy2g58i41WS0SPUJCKy4aOew
+         HnXkgXg0zsThdkNPLOH5QWEjYlV2SCwqn6X8UxFPW/JIvO7AvnvIU6v4gDdBIwPU53G6
+         QGuQ==
+X-Gm-Message-State: AOAM530yPoViwd2OEe3u29qPGnBHBQnGuuaKqeY0ML05tin4uGE918wS
+        ydiVIVuDhp9uJZuvlerlz5exKzD40VMumCi43myJ1Q==
+X-Google-Smtp-Source: ABdhPJy6emGfmf/9lRBLLDOFNbaaEr1iR97/eYQylRnx0qjqmuhyKlX/PtXMK8DwtCQ71KPW+GxR2WtI7IlzFc5AD9Y=
+X-Received: by 2002:a19:e45:: with SMTP id 66mr5284234lfo.82.1595161376814;
+ Sun, 19 Jul 2020 05:22:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+References: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
+ <20200712131003.23271-2-madhuparnabhowmik10@gmail.com> <20200712160856.GW9247@paulmck-ThinkPad-P72>
+ <CA+G9fYuVmTcttBpVtegwPbKxufupPOtk_WqEtOdS+HDQi7WS9Q@mail.gmail.com>
+ <CAA42JLY2L6xFju_qZsVguGtXvDMqfCKbO_h1K9NJPjmqJEav=Q@mail.gmail.com>
+ <20200717170747.GW9247@paulmck-ThinkPad-P72> <CA+G9fYvtYr0ri6j-auNOTs98xVj-a1AoZtUfwokwnvuFFWtFdQ@mail.gmail.com>
+ <20200718001259.GY9247@paulmck-ThinkPad-P72>
+In-Reply-To: <20200718001259.GY9247@paulmck-ThinkPad-P72>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sun, 19 Jul 2020 17:52:44 +0530
+Message-ID: <CA+G9fYs7s34mmtard-ETjH2r94psgQFLDJWayznvN6UTvMYh5g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     madhuparnabhowmik10@gmail.com,
+        Dexuan-Linux Cui <dexuan.linux@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, rcu@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
+        frextrite@gmail.com, lkft-triage@lists.linaro.org,
+        Dexuan Cui <decui@microsoft.com>, juhlee@microsoft.com,
+        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Sat, 18 Jul 2020 at 05:43, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Sat, Jul 18, 2020 at 12:35:12AM +0530, Naresh Kamboju wrote:
+> > Hi Paul,
+> >
+> > > I am not seeing this here.
+> >
+> > Do you notice any warnings while building linux next master
+> > for x86_64 architecture ?
+>
+> Idiot here was failing to enable building of KVM.  With that, I do see
+> the error.  The patch resolves it for me.  Does it help for you?
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+yes.
+The below patch applied on top of linux -next 20200717 tag
+and build pass.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+>
+>                                                         Thanx, Paul
+>
+> ------------------------------------------------------------------------
+>
+> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> index de9385b..f8633d3 100644
+> --- a/include/linux/rculist.h
+> +++ b/include/linux/rculist.h
+> @@ -73,7 +73,7 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+>  #define __list_check_rcu(dummy, cond, extra...)                                \
+>         ({ check_arg_count_one(extra); })
+>
+> -#define __list_check_srcu(cond) true
+> +#define __list_check_srcu(cond) ({ })
+>  #endif
+>
+>  /*
 
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- net/sched/sch_cake.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
-index ebaeec1e5c82..2f6c0daa2337 100644
---- a/net/sched/sch_cake.c
-+++ b/net/sched/sch_cake.c
-@@ -363,7 +363,7 @@ static const u8 bulk_order[] = {1, 0, 2, 3};
- #define REC_INV_SQRT_CACHE (16)
- static u32 cobalt_rec_inv_sqrt_cache[REC_INV_SQRT_CACHE] = {0};
- 
--/* http://en.wikipedia.org/wiki/Methods_of_computing_square_roots
-+/* https://en.wikipedia.org/wiki/Methods_of_computing_square_roots
-  * new_invsqrt = (invsqrt / 2) * (3 - count * invsqrt^2)
-  *
-  * Here, invsqrt is a fixed point number (< 1.0), 32bit mantissa, aka Q0.32
--- 
-2.27.0
-
+- Naresh
