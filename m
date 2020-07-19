@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF32BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 21:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92676C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 21:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 861EC20B1F
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 21:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A57420B1F
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 21:42:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lo5n2LqU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XGsay3fe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgGSVq1 (ORCPT
+        id S1726650AbgGSVmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 17:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42858 "EHLO
+        Sun, 19 Jul 2020 17:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgGSVqZ (ORCPT
+        with ESMTP id S1726126AbgGSVl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 17:46:25 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097A0C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 14:46:25 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f2so15941425wrp.7
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 14:46:24 -0700 (PDT)
+        Sun, 19 Jul 2020 17:41:59 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D41EC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 14:41:59 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l2so23338875wmf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 14:41:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=U15DiQpwwrkjUs3TnpndJYI5QOKyEAdlj16sEd+GPwU=;
-        b=Lo5n2LqU/WaJJ1Zy9GhRri4FbP7iC/VzyAlwQlCTIhSkPaoYfYGtFzOXy5Hnhbh6X+
-         PCtguRRmdGE7qpxc7iZ3Z8dV21k4rTe6s7RaS8KIbg4xYuwCIGPWTDekoanOCKXIMTT0
-         PB76bRasSuaR/cN9uq1u1INrHdmcckHEjlJ0IXv9IYK7FtyntJ1BzpZ4NB95I+zkqZVD
-         a/5Bc63Ra7U+9aIS8WJNA8z/FtDYtDdKx0mDEI841Jy9Rq9uvtrSWi76CKmR0/FBvWMn
-         0F6g+99gETc68qJqbpXuSqBylka85akX5PJ1uwPYOAvGRidAhIliBcz2oKT5rtWe+UKC
-         Z4qw==
+        bh=70xFn8Ujt0CHfBd1Ffveh7ykNdf7NdjhgiX2kc3YNug=;
+        b=XGsay3fecHCsZTO63QS67vk30jV4Bg3aXHhhVnjqpQjB/yYIhO4k3bx3+4bAfGB8hl
+         XSjRo/2J+0301IC3895klDDGtMugJ5MKHF1+eYiaKsMQoVrFfviorLr1QjdIX1+GWSVB
+         0pWpWcbVS6EYQ4knlu5Uxl8/Rml4MEfbpktbiOUK068xlbSyyxMaKRkju1CSt32ydLGA
+         gqWsS8adbAcv6VOXh1TbvUkYL+v1CXoIENHeluVOxhF9+3UYlIpH6PZs4FomG9eY+fky
+         iT1nSZhb2vWLtg4RrFK/0rnNuEZZnjeWbNfA5WMzY9dxKWkYVUz0e/X8uRMjJXvmy3SW
+         2Gzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=U15DiQpwwrkjUs3TnpndJYI5QOKyEAdlj16sEd+GPwU=;
-        b=JYx7c9BF5ff1gcfpCPWWRfXeMGDgQwfMC4YBZ7jvj2YezELSKKeCgAEtDfcKmHbacw
-         MRKoXJk0gXKJ0cYnCzVtQlajXd4y+cj54Kw9cIDtpicZV1YTEqp62aM2fqici6IgL8UT
-         RWKKG5UzYZHlT6S+hwd93VzHfBZY4io3Vy7i6pFW+kJkM9tHWqjpMXY7yyhG7o+Jthpo
-         ONhY0bVrWY7BatwpDcyW1Al5COR1wIpfH6g+bZ0FRZ4ofcRue8oXsDyjpqZlvJxIt8T7
-         Vy0WHhScF4x3o/EsSgZExoFLMe0Zba34vJ7s0iW9LQMBLjAwW2h/tImoWWNvetTBNq4q
-         wyRg==
-X-Gm-Message-State: AOAM5316ch6FJ3Rqb2dJNykS9iMeuZHfm3HM54sQIOVCd9HtT0zxsj1Y
-        3kLXKEyriytGu1rF2Sx4SzGJSs5g7ExukNMMYsJHaw==
-X-Google-Smtp-Source: ABdhPJzvNyHIxThNV7RYQAZr6s5+RUe9PCDZ47rJHXP9HkSEmEgdbeGP6k1VbS0vtyiYk7+7P/aAAxZtDEdkYCgutxU=
-X-Received: by 2002:a5d:4bd2:: with SMTP id l18mr18783458wrt.119.1595195183485;
- Sun, 19 Jul 2020 14:46:23 -0700 (PDT)
+        bh=70xFn8Ujt0CHfBd1Ffveh7ykNdf7NdjhgiX2kc3YNug=;
+        b=oHlVvla4CU3EcjHSsty1ZZ6y9yVlfy64UuHpHPzKqXaVwwrxoPMHgB8ZeCoY4Phnje
+         MhhImjW2OFsgAqu+qd92b+nQxRNM2IXYxK0z5dsEsondxPltPEAleju3aInz7Q0nCfe4
+         WESpuTEhRImv81zWIjl4k3p++u32gc774OHfH4zYQm66PGaczBGPtHrsPXHktpLK1V+Y
+         jAhl6iawczOEbzj53nYpzk8QnfEcX+t+BnO0uqvvH2rND333IAuTzvXpPxcK9SMW+GaS
+         kKICw+Xd6Vg42kdEA2yrQguF7QOQmzVXaqJKNixgPgqE7AwZtH4rv64QUAjm3UcRHNqi
+         PIhw==
+X-Gm-Message-State: AOAM531ohuEEdbHDg1Ia7pfEZXtuZElIpw4bqV6y3mke4s6b7OD3quwu
+        OdmEckg5Zi5hP2CPpoAel+E6iKOQLK2zMw7m4Awemg==
+X-Google-Smtp-Source: ABdhPJzaOAKfdrLFPS6Xq0cujLktwm/v2Ah4JoSoOxAuH49LuvzJl1uZ+VCUdbX/hehm6D+4de3DhMjS5lPSOf3/pgM=
+X-Received: by 2002:a1c:19c5:: with SMTP id 188mr18760375wmz.124.1595194917640;
+ Sun, 19 Jul 2020 14:41:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200719181320.785305-1-jolsa@kernel.org> <20200719181320.785305-6-jolsa@kernel.org>
-In-Reply-To: <20200719181320.785305-6-jolsa@kernel.org>
+References: <20200719181320.785305-1-jolsa@kernel.org> <20200719181320.785305-2-jolsa@kernel.org>
+In-Reply-To: <20200719181320.785305-2-jolsa@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 19 Jul 2020 14:46:12 -0700
-Message-ID: <CAP-5=fWYOjCSruJ1=c6896zjJe-e-EMKJTrOUcoeo0fED3tk2A@mail.gmail.com>
-Subject: Re: [PATCH 05/19] perf metric: Add macros for iterating map events
+Date:   Sun, 19 Jul 2020 14:41:46 -0700
+Message-ID: <CAP-5=fWdgFCBj0r4nVgEXnwOpckCXOb-FSTqexuDw=YiNnH+9Q@mail.gmail.com>
+Subject: Re: [PATCH 01/19] perf metric: Fix memory leak in expr__add_id function
 To:     Jiri Olsa <jolsa@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         lkml <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -83,127 +84,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, Jul 19, 2020 at 11:13 AM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> Adding following macros to iterate events and metric:
->   map_for_each_event(__pe, __idx, __map)
->     - iterates over all pmu_events_map events
->   map_for_each_metric(__pe, __idx, __map, __metric)
->     - iterates over all metrics that match __metric argument
+> Arnaldo found that we don't release value data in case the
+> hashmap__set fails. Releasing it in case of an error.
 >
-> and use it in metricgroup__add_metric function. Macros
-> will be be used from other places in following changes.
->
+> Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
 Acked-by: Ian Rogers <irogers@google.com>
 
-Thanks!
-Ian
-
 > ---
->  tools/perf/util/metricgroup.c | 77 ++++++++++++++++++-----------------
->  1 file changed, 40 insertions(+), 37 deletions(-)
+>  tools/perf/util/expr.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index df0356ec120d..b37008fc253c 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -614,6 +614,17 @@ static int __metricgroup__add_metric(struct list_head *group_list,
->         return 0;
->  }
->
-> +#define map_for_each_event(__pe, __idx, __map)                         \
-> +       for (__idx = 0, __pe = &__map->table[__idx];                    \
-> +            __pe->name || __pe->metric_group || __pe->metric_name;     \
-> +            __pe = &__map->table[++__idx])
-> +
-> +#define map_for_each_metric(__pe, __idx, __map, __metric)              \
-> +       map_for_each_event(__pe, __idx, __map)                          \
-> +               if (__pe->metric_expr &&                                \
-> +                   (match_metric(__pe->metric_group, __metric) ||      \
-> +                    match_metric(__pe->metric_name, __metric)))
-> +
->  static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->                                    struct strbuf *events,
->                                    struct list_head *group_list,
-> @@ -624,49 +635,41 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->         int i, ret;
->         bool has_match = false;
->
-> -       for (i = 0; ; i++) {
-> -               pe = &map->table[i];
-> -
-> -               if (!pe->name && !pe->metric_group && !pe->metric_name) {
-> -                       /* End of pmu events. */
-> -                       if (!has_match)
-> -                               return -EINVAL;
-> -                       break;
-> -               }
-> -               if (!pe->metric_expr)
-> -                       continue;
-> -               if (match_metric(pe->metric_group, metric) ||
-> -                   match_metric(pe->metric_name, metric)) {
-> -                       has_match = true;
-> -                       pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
-> -
-> -                       if (!strstr(pe->metric_expr, "?")) {
-> -                               ret = __metricgroup__add_metric(group_list,
-> -                                                               pe,
-> -                                                               metric_no_group,
-> -                                                               1);
-> -                               if (ret)
-> -                                       return ret;
-> -                       } else {
-> -                               int j, count;
-> +       map_for_each_metric(pe, i, map, metric) {
-> +               pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
-> +               has_match = true;
-> +
-> +               if (!strstr(pe->metric_expr, "?")) {
-> +                       ret = __metricgroup__add_metric(group_list,
-> +                                                       pe,
-> +                                                       metric_no_group,
-> +                                                       1);
-> +                       if (ret)
-> +                               return ret;
-> +               } else {
-> +                       int j, count;
->
-> -                               count = arch_get_runtimeparam();
-> +                       count = arch_get_runtimeparam();
->
-> -                               /* This loop is added to create multiple
-> -                                * events depend on count value and add
-> -                                * those events to group_list.
-> -                                */
-> +                       /* This loop is added to create multiple
-> +                        * events depend on count value and add
-> +                        * those events to group_list.
-> +                        */
->
-> -                               for (j = 0; j < count; j++) {
-> -                                       ret = __metricgroup__add_metric(
-> -                                               group_list, pe,
-> -                                               metric_no_group, j);
-> -                                       if (ret)
-> -                                               return ret;
-> -                               }
-> +                       for (j = 0; j < count; j++) {
-> +                               ret = __metricgroup__add_metric(
-> +                                       group_list, pe,
-> +                                       metric_no_group, j);
-> +                               if (ret)
-> +                                       return ret;
->                         }
->                 }
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index 5d05f9765ed8..578a173d4873 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -47,6 +47,8 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
 >         }
-> +
-> +       /* End of pmu events. */
-> +       if (!has_match)
-> +               return -EINVAL;
-> +
->         list_for_each_entry(eg, group_list, nd) {
->                 if (events->len > 0)
->                         strbuf_addf(events, ",");
+>         ret = hashmap__set(&ctx->ids, id, data_ptr,
+>                            (const void **)&old_key, (void **)&old_data);
+> +       if (ret)
+> +               free(data_ptr);
+>         free(old_key);
+>         free(old_data);
+>         return ret;
 > --
 > 2.25.4
 >
