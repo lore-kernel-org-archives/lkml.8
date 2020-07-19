@@ -2,49 +2,49 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA7FC433E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54087C433F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CEC020717
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFDF207DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJbec9db"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="acny7JgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgGSKFl (ORCPT
+        id S1726696AbgGSKF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 06:05:41 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29225 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725988AbgGSKFl (ORCPT
+        Sun, 19 Jul 2020 06:05:59 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52902 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726673AbgGSKF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 06:05:41 -0400
+        Sun, 19 Jul 2020 06:05:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595153140;
+        s=mimecast20190719; t=1595153156;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NbPxR4TVDcC0Ku2kk12oKUacqGRmxbuSazKnt/BagKU=;
-        b=TJbec9dbSlXkGD/QjZoqRLkxan5QI0cfJ33NGURivUqRXEloPaqsmGOwh+l4kLhStqjTJl
-        3NR+En4RTGNSXahicpdXWLV47oSRLc56flHSTVzFC0Bi0BFh8SLnDLyvi1VHUDVef3RLAx
-        m+DxQkMYucdJsVbz0LUE9ZShZJZnoqg=
+        bh=QpLyxw8wQAuIcbhaRs4wVIjovAuQu5U0BsAVT1HBuI4=;
+        b=acny7JgT8qlV+4ZK0vs1hNqNzoZ+vTd5UOO3b8FKOWdl4b0h5rTXPW1C9U73kRQpQEVIGF
+        qyu8zNy+iO51euN6VjjKeR66k0bqDdJMxhqsVuXCO+rxdxZy4pVbUApFwupuZ874xQXdsj
+        DIGDkkBw+i2zjju/aoyD6Cyw/sjnuXo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-9wc_40KVP2ulbVINa3Q-nQ-1; Sun, 19 Jul 2020 06:05:36 -0400
-X-MC-Unique: 9wc_40KVP2ulbVINa3Q-nQ-1
+ us-mta-194-635876xIOHG7FbqLCuCeYQ-1; Sun, 19 Jul 2020 06:05:54 -0400
+X-MC-Unique: 635876xIOHG7FbqLCuCeYQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 269481080;
-        Sun, 19 Jul 2020 10:05:34 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CE54107ACCA;
+        Sun, 19 Jul 2020 10:05:52 +0000 (UTC)
 Received: from dcbz.redhat.com (ovpn-112-10.ams2.redhat.com [10.36.112.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3F757710A8;
-        Sun, 19 Jul 2020 10:05:29 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D059573044;
+        Sun, 19 Jul 2020 10:05:47 +0000 (UTC)
 From:   Adrian Reber <areber@redhat.com>
 To:     Christian Brauner <christian.brauner@ubuntu.com>,
         Eric Biederman <ebiederm@xmission.com>,
@@ -70,9 +70,9 @@ Cc:     Mike Rapoport <rppt@linux.ibm.com>,
         linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
         Eric Paris <eparis@parisplace.org>,
         Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v6 1/7] capabilities: Introduce CAP_CHECKPOINT_RESTORE
-Date:   Sun, 19 Jul 2020 12:04:11 +0200
-Message-Id: <20200719100418.2112740-2-areber@redhat.com>
+Subject: [PATCH v6 3/7] pid_namespace: use checkpoint_restore_ns_capable() for ns_last_pid
+Date:   Sun, 19 Jul 2020 12:04:13 +0200
+Message-Id: <20200719100418.2112740-4-areber@redhat.com>
 In-Reply-To: <20200719100418.2112740-1-areber@redhat.com>
 References: <20200719100418.2112740-1-areber@redhat.com>
 MIME-Version: 1.0
@@ -83,124 +83,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces CAP_CHECKPOINT_RESTORE, a new capability facilitating
-checkpoint/restore for non-root users.
-
-Over the last years, The CRIU (Checkpoint/Restore In Userspace) team has
-been asked numerous times if it is possible to checkpoint/restore a
-process as non-root. The answer usually was: 'almost'.
-
-The main blocker to restore a process as non-root was to control the PID
-of the restored process. This feature available via the clone3 system
-call, or via /proc/sys/kernel/ns_last_pid is unfortunately guarded by
-CAP_SYS_ADMIN.
-
-In the past two years, requests for non-root checkpoint/restore have
-increased due to the following use cases:
-* Checkpoint/Restore in an HPC environment in combination with a
-  resource manager distributing jobs where users are always running as
-  non-root. There is a desire to provide a way to checkpoint and
-  restore long running jobs.
-* Container migration as non-root
-* We have been in contact with JVM developers who are integrating
-  CRIU into a Java VM to decrease the startup time. These
-  checkpoint/restore applications are not meant to be running with
-  CAP_SYS_ADMIN.
-
-We have seen the following workarounds:
-* Use a setuid wrapper around CRIU:
-  See https://github.com/FredHutch/slurm-examples/blob/master/checkpointer/lib/checkpointer/checkpointer-suid.c
-* Use a setuid helper that writes to ns_last_pid.
-  Unfortunately, this helper delegation technique is impossible to use
-  with clone3, and is thus prone to races.
-  See https://github.com/twosigma/set_ns_last_pid
-* Cycle through PIDs with fork() until the desired PID is reached:
-  This has been demonstrated to work with cycling rates of 100,000 PIDs/s
-  See https://github.com/twosigma/set_ns_last_pid
-* Patch out the CAP_SYS_ADMIN check from the kernel
-* Run the desired application in a new user and PID namespace to provide
-  a local CAP_SYS_ADMIN for controlling PIDs. This technique has limited
-  use in typical container environments (e.g., Kubernetes) as /proc is
-  typically protected with read-only layers (e.g., /proc/sys) for
-  hardening purposes. Read-only layers prevent additional /proc mounts
-  (due to proc's SB_I_USERNS_VISIBLE property), making the use of new
-  PID namespaces limited as certain applications need access to /proc
-  matching their PID namespace.
-
-The introduced capability allows to:
-* Control PIDs when the current user is CAP_CHECKPOINT_RESTORE capable
-  for the corresponding PID namespace via ns_last_pid/clone3.
-* Open files in /proc/pid/map_files when the current user is
-  CAP_CHECKPOINT_RESTORE capable in the root namespace, useful for
-  recovering files that are unreachable via the file system such as
-  deleted files, or memfd files.
-
-See corresponding selftest for an example with clone3().
+Use the newly introduced capability CAP_CHECKPOINT_RESTORE to allow
+writing to ns_last_pid.
 
 Signed-off-by: Adrian Reber <areber@redhat.com>
 Signed-off-by: Nicolas Viennot <Nicolas.Viennot@twosigma.com>
 Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 Reviewed-by: Serge Hallyn <serge@hallyn.com>
 ---
- include/linux/capability.h          | 6 ++++++
- include/uapi/linux/capability.h     | 9 ++++++++-
- security/selinux/include/classmap.h | 5 +++--
- 3 files changed, 17 insertions(+), 3 deletions(-)
+ kernel/pid_namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/capability.h b/include/linux/capability.h
-index b4345b38a6be..1e7fe311cabe 100644
---- a/include/linux/capability.h
-+++ b/include/linux/capability.h
-@@ -261,6 +261,12 @@ static inline bool bpf_capable(void)
- 	return capable(CAP_BPF) || capable(CAP_SYS_ADMIN);
- }
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index 0e5ac162c3a8..ac135bd600eb 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -269,7 +269,7 @@ static int pid_ns_ctl_handler(struct ctl_table *table, int write,
+ 	struct ctl_table tmp = *table;
+ 	int ret, next;
  
-+static inline bool checkpoint_restore_ns_capable(struct user_namespace *ns)
-+{
-+	return ns_capable(ns, CAP_CHECKPOINT_RESTORE) ||
-+		ns_capable(ns, CAP_SYS_ADMIN);
-+}
-+
- /* audit system wants to get cap info from files as well */
- extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
+-	if (write && !ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
++	if (write && !checkpoint_restore_ns_capable(pid_ns->user_ns))
+ 		return -EPERM;
  
-diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-index 48ff0757ae5e..395dd0df8d08 100644
---- a/include/uapi/linux/capability.h
-+++ b/include/uapi/linux/capability.h
-@@ -408,7 +408,14 @@ struct vfs_ns_cap_data {
-  */
- #define CAP_BPF			39
- 
--#define CAP_LAST_CAP         CAP_BPF
-+
-+/* Allow checkpoint/restore related operations */
-+/* Allow PID selection during clone3() */
-+/* Allow writing to ns_last_pid */
-+
-+#define CAP_CHECKPOINT_RESTORE	40
-+
-+#define CAP_LAST_CAP         CAP_CHECKPOINT_RESTORE
- 
- #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
- 
-diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-index e54d62d529f1..ba2e01a6955c 100644
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -27,9 +27,10 @@
- 	    "audit_control", "setfcap"
- 
- #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
--		"wake_alarm", "block_suspend", "audit_read", "perfmon", "bpf"
-+		"wake_alarm", "block_suspend", "audit_read", "perfmon", "bpf", \
-+		"checkpoint_restore"
- 
--#if CAP_LAST_CAP > CAP_BPF
-+#if CAP_LAST_CAP > CAP_CHECKPOINT_RESTORE
- #error New capability defined, please update COMMON_CAP2_PERMS.
- #endif
- 
+ 	/*
 -- 
 2.26.2
 
