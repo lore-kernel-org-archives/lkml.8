@@ -2,250 +2,179 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BD0C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC68AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5FAF21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595182481;
-	bh=ClAVY5Qt9Qhd6omlBQ7aagKuOHwDq1gl9Ol0BjOdFkQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B7rwFHBgrDEHPufHULnTC0jCq4bwzzx5yo++ioHHXudx5tncahZQRu/F5Mw3BHuF7
-	 MwblgJIjMNFkCPsXVwRkGTsGROL8c8q4a3UQsSxQxMi/vL+yX0WofKr9ahGa2DHCff
-	 y+Ws0ovF8+l8acu73Cb+h7Af/boX0U/z1MZuP4Ho=
+	by mail.kernel.org (Postfix) with ESMTP id BB6A020684
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgGSSOk convert rfc822-to-8bit (ORCPT
+        id S1726543AbgGSSPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 14:14:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52139 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726959AbgGSSOe (ORCPT
+        Sun, 19 Jul 2020 14:15:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgGSSPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 14:14:34 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-yt021HRGMG6mL4rgCiouxQ-1; Sun, 19 Jul 2020 14:14:29 -0400
-X-MC-Unique: yt021HRGMG6mL4rgCiouxQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1E70106B242;
-        Sun, 19 Jul 2020 18:14:27 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.192.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E739174F6C;
-        Sun, 19 Jul 2020 18:14:24 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Subject: [PATCH 19/19] perf metric: Rename group_list to metric_list
-Date:   Sun, 19 Jul 2020 20:13:20 +0200
-Message-Id: <20200719181320.785305-20-jolsa@kernel.org>
-In-Reply-To: <20200719181320.785305-1-jolsa@kernel.org>
-References: <20200719181320.785305-1-jolsa@kernel.org>
+        Sun, 19 Jul 2020 14:15:41 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE63C0619D2;
+        Sun, 19 Jul 2020 11:15:40 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 1F613BC084;
+        Sun, 19 Jul 2020 18:15:36 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net,
+        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] hwmon: (ina2xx) Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 20:15:30 +0200
+Message-Id: <20200719181530.60878-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following the previous change that rename egroup
-to metric, there's no reason to call the list
-'group_list' anymore, renaming it to metric_list.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- tools/perf/util/metricgroup.c | 42 +++++++++++++++++------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 9d5fff36042d..6f179b9903a0 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -639,7 +639,7 @@ int __weak arch_get_runtimeparam(void)
- 	return 1;
- }
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/hwmon/ina2xx.rst | 10 +++++-----
+ drivers/hwmon/ina2xx.c         | 10 +++++-----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/hwmon/ina2xx.rst b/Documentation/hwmon/ina2xx.rst
+index ed81f5416331..f78a5cd44c4c 100644
+--- a/Documentation/hwmon/ina2xx.rst
++++ b/Documentation/hwmon/ina2xx.rst
+@@ -11,7 +11,7 @@ Supported chips:
  
--static int __add_metric(struct list_head *group_list,
-+static int __add_metric(struct list_head *metric_list,
- 			struct pmu_event *pe,
- 			bool metric_no_group,
- 			int runtime,
-@@ -726,13 +726,13 @@ static int __add_metric(struct list_head *group_list,
- 	if (m->metric_refs_cnt)
- 		return 0;
+     Datasheet: Publicly available at the Texas Instruments website
  
--	if (list_empty(group_list))
--		list_add(&m->nd, group_list);
-+	if (list_empty(metric_list))
-+		list_add(&m->nd, metric_list);
- 	else {
- 		struct list_head *pos;
+-	       http://www.ti.com/
++	       https://www.ti.com/
  
- 		/* Place the largest groups at the front. */
--		list_for_each_prev(pos, group_list) {
-+		list_for_each_prev(pos, metric_list) {
- 			struct metric *old = list_entry(pos, struct metric, nd);
+   * Texas Instruments INA220
  
- 			if (hashmap__size(&m->pctx.ids) <=
-@@ -813,7 +813,7 @@ static int recursion_check(struct metric *m, const char *id, struct expr_id **pa
- 	return p->id ? 0 : -ENOMEM;
- }
+@@ -21,7 +21,7 @@ Supported chips:
  
--static int add_metric(struct list_head *group_list,
-+static int add_metric(struct list_head *metric_list,
- 		      struct pmu_event *pe,
- 		      bool metric_no_group,
- 		      struct metric **mp,
-@@ -822,7 +822,7 @@ static int add_metric(struct list_head *group_list,
+     Datasheet: Publicly available at the Texas Instruments website
  
- static int resolve_metric(struct metric *m,
- 			  bool metric_no_group,
--			  struct list_head *group_list,
-+			  struct list_head *metric_list,
- 			  struct pmu_events_map *map,
- 			  struct expr_ids *ids)
- {
-@@ -854,7 +854,7 @@ static int resolve_metric(struct metric *m,
- 			expr__del_id(&m->pctx, cur->key);
+-	       http://www.ti.com/
++	       https://www.ti.com/
  
- 			/* ... and it gets resolved to the parent context. */
--			ret = add_metric(group_list, pe, metric_no_group, &m, parent, ids);
-+			ret = add_metric(metric_list, pe, metric_no_group, &m, parent, ids);
- 			if (ret)
- 				return ret;
+   * Texas Instruments INA226
  
-@@ -869,7 +869,7 @@ static int resolve_metric(struct metric *m,
- 	return 0;
- }
+@@ -31,7 +31,7 @@ Supported chips:
  
--static int add_metric(struct list_head *group_list,
-+static int add_metric(struct list_head *metric_list,
- 		      struct pmu_event *pe,
- 		      bool metric_no_group,
- 		      struct metric **m,
-@@ -881,7 +881,7 @@ static int add_metric(struct list_head *group_list,
- 	pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+     Datasheet: Publicly available at the Texas Instruments website
  
- 	if (!strstr(pe->metric_expr, "?")) {
--		ret = __add_metric(group_list, pe, metric_no_group, 1, m, parent, ids);
-+		ret = __add_metric(metric_list, pe, metric_no_group, 1, m, parent, ids);
- 	} else {
- 		int j, count;
+-	       http://www.ti.com/
++	       https://www.ti.com/
  
-@@ -889,11 +889,11 @@ static int add_metric(struct list_head *group_list,
+   * Texas Instruments INA230
  
- 		/* This loop is added to create multiple
- 		 * events depend on count value and add
--		 * those events to group_list.
-+		 * those events to metric_list.
- 		 */
+@@ -41,7 +41,7 @@ Supported chips:
  
- 		for (j = 0; j < count && !ret; j++) {
--			ret = __add_metric(group_list, pe, metric_no_group, j, m, parent, ids);
-+			ret = __add_metric(metric_list, pe, metric_no_group, j, m, parent, ids);
- 		}
- 	}
+     Datasheet: Publicly available at the Texas Instruments website
  
-@@ -902,7 +902,7 @@ static int add_metric(struct list_head *group_list,
+-	       http://www.ti.com/
++	       https://www.ti.com/
  
- static int metricgroup__add_metric(const char *metric, bool metric_no_group,
- 				   struct strbuf *events,
--				   struct list_head *group_list,
-+				   struct list_head *metric_list,
- 				   struct pmu_events_map *map)
+   * Texas Instruments INA231
  
- {
-@@ -948,14 +948,14 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
- 		}
- 	}
+@@ -51,7 +51,7 @@ Supported chips:
  
--	list_splice(&list, group_list);
-+	list_splice(&list, metric_list);
- 	expr_ids__exit(&ids);
- 	return 0;
- }
+     Datasheet: Publicly available at the Texas Instruments website
  
- static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
- 					struct strbuf *events,
--					struct list_head *group_list,
-+					struct list_head *metric_list,
- 					struct pmu_events_map *map)
- {
- 	char *llist, *nlist, *p;
-@@ -971,7 +971,7 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+-	       http://www.ti.com/
++	       https://www.ti.com/
  
- 	while ((p = strsep(&llist, ",")) != NULL) {
- 		ret = metricgroup__add_metric(p, metric_no_group, events,
--					      group_list, map);
-+					      metric_list, map);
- 		if (ret == -EINVAL) {
- 			fprintf(stderr, "Cannot find metric or group `%s'\n",
- 					p);
-@@ -996,11 +996,11 @@ static void metric__free_refs(struct metric *metric)
- 	}
- }
+ Author: Lothar Felten <lothar.felten@gmail.com>
  
--static void metricgroup__free_metrics(struct list_head *group_list)
-+static void metricgroup__free_metrics(struct list_head *metric_list)
- {
- 	struct metric *m, *tmp;
- 
--	list_for_each_entry_safe (m, tmp, group_list, nd) {
-+	list_for_each_entry_safe (m, tmp, metric_list, nd) {
- 		metric__free_refs(m);
- 		expr__ctx_clear(&m->pctx);
- 		list_del_init(&m->nd);
-@@ -1017,13 +1017,13 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- {
- 	struct parse_events_error parse_error;
- 	struct strbuf extra_events;
--	LIST_HEAD(group_list);
-+	LIST_HEAD(metric_list);
- 	int ret;
- 
- 	if (metric_events->nr_entries == 0)
- 		metricgroup__rblist_init(metric_events);
- 	ret = metricgroup__add_metric_list(str, metric_no_group,
--					   &extra_events, &group_list, map);
-+					   &extra_events, &metric_list, map);
- 	if (ret)
- 		return ret;
- 	pr_debug("adding %s\n", extra_events.buf);
-@@ -1034,10 +1034,10 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 		goto out;
- 	}
- 	strbuf_release(&extra_events);
--	ret = metricgroup__setup_events(&group_list, metric_no_merge,
-+	ret = metricgroup__setup_events(&metric_list, metric_no_merge,
- 					perf_evlist, metric_events);
- out:
--	metricgroup__free_metrics(&group_list);
-+	metricgroup__free_metrics(&metric_list);
- 	return ret;
- }
+diff --git a/drivers/hwmon/ina2xx.c b/drivers/hwmon/ina2xx.c
+index 55d474ec7c35..0fc6d5857993 100644
+--- a/drivers/hwmon/ina2xx.c
++++ b/drivers/hwmon/ina2xx.c
+@@ -4,19 +4,19 @@
+  *
+  * INA219:
+  * Zero Drift Bi-Directional Current/Power Monitor with I2C Interface
+- * Datasheet: http://www.ti.com/product/ina219
++ * Datasheet: https://www.ti.com/product/ina219
+  *
+  * INA220:
+  * Bi-Directional Current/Power Monitor with I2C Interface
+- * Datasheet: http://www.ti.com/product/ina220
++ * Datasheet: https://www.ti.com/product/ina220
+  *
+  * INA226:
+  * Bi-Directional Current/Power Monitor with I2C Interface
+- * Datasheet: http://www.ti.com/product/ina226
++ * Datasheet: https://www.ti.com/product/ina226
+  *
+  * INA230:
+  * Bi-directional Current/Power Monitor with I2C Interface
+- * Datasheet: http://www.ti.com/product/ina230
++ * Datasheet: https://www.ti.com/product/ina230
+  *
+  * Copyright (C) 2012 Lothar Felten <lothar.felten@gmail.com>
+  * Thanks to Jan Volkering
+@@ -148,7 +148,7 @@ static const struct ina2xx_config ina2xx_config[] = {
+  * Available averaging rates for ina226. The indices correspond with
+  * the bit values expected by the chip (according to the ina226 datasheet,
+  * table 3 AVG bit settings, found at
+- * http://www.ti.com/lit/ds/symlink/ina226.pdf.
++ * https://www.ti.com/lit/ds/symlink/ina226.pdf.
+  */
+ static const int ina226_avg_tab[] = { 1, 4, 16, 64, 128, 256, 512, 1024 };
  
 -- 
-2.25.4
+2.27.0
 
