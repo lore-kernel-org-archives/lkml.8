@@ -7,30 +7,34 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE01C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB1520717
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E290921744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:25:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgGSTPp (ORCPT
+        id S1726161AbgGSTZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 15:15:45 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:57588 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgGSTPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 15:15:45 -0400
+        Sun, 19 Jul 2020 15:25:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgGSTZy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 15:25:54 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7962C0619D2;
+        Sun, 19 Jul 2020 12:25:53 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 10D43BC063;
-        Sun, 19 Jul 2020 19:15:41 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id ACDF2BC085;
+        Sun, 19 Jul 2020 19:25:50 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
 To:     linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net,
         linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] hwmon: (lm95234) Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 21:15:34 +0200
-Message-Id: <20200719191534.61181-1-grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] hwmon: (tmp401) Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 21:25:44 +0200
+Message-Id: <20200719192544.61247-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
@@ -81,30 +85,21 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- Documentation/hwmon/lm95234.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/hwmon/tmp401.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/hwmon/lm95234.rst b/Documentation/hwmon/lm95234.rst
-index e4c14bea5efd..a44e8f529826 100644
---- a/Documentation/hwmon/lm95234.rst
-+++ b/Documentation/hwmon/lm95234.rst
-@@ -9,7 +9,7 @@ Supported chips:
+diff --git a/Documentation/hwmon/tmp401.rst b/Documentation/hwmon/tmp401.rst
+index 6a05a0719bc7..14bf1fbf4493 100644
+--- a/Documentation/hwmon/tmp401.rst
++++ b/Documentation/hwmon/tmp401.rst
+@@ -47,7 +47,7 @@ Supported chips:
  
-     Datasheet: Publicly available at the Texas Instruments website
+     Prefix: 'tmp461'
  
--	       http://www.ti.com/product/lm95233
-+	       https://www.ti.com/product/lm95233
+-    Datasheet: http://www.ti.com/product/tmp461
++    Datasheet: https://www.ti.com/product/tmp461
  
-   * National Semiconductor / Texas Instruments LM95234
  
-@@ -17,7 +17,7 @@ Supported chips:
- 
-     Datasheet: Publicly available at the Texas Instruments website
- 
--	       http://www.ti.com/product/lm95234
-+	       https://www.ti.com/product/lm95234
- 
- Author: Guenter Roeck <linux@roeck-us.net>
  
 -- 
 2.27.0
