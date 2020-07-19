@@ -2,307 +2,180 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84868C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA3AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8042176B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:42:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595187764;
-	bh=6LTJUnGLZ6tds7pPsCSEsRZ75739WQiyjsg9sK+Q+R0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nWKgDXPryprcTHaY5V5MJMZ+BjWWwYXicrMc0bw9bsLus8bly9LCwH8+EWxtoNpTG
-	 ZwmRGaQ8Pgmo6hpC664gVZ1wJc13ukAY/osD9Bhup1tq6I4Br65Oh0doXdOIuKKQQM
-	 6+tY+71Ux6R3gMjFHfHWhmF1GNr5JE2mPc8L8du0=
+	by mail.kernel.org (Postfix) with ESMTP id 1361C207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgGSTmn (ORCPT
+        id S1726529AbgGSTqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 15:42:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgGSTmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 15:42:42 -0400
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87B382176B;
-        Sun, 19 Jul 2020 19:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595187760;
-        bh=6LTJUnGLZ6tds7pPsCSEsRZ75739WQiyjsg9sK+Q+R0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jnPjTmr4OeQdxFZcOKzaZ/dMvJ/LwsWXTD0ASOn20uWifE1pRjioapM8beqJqBlc7
-         9E+/aoGBgHyL7078fPI6Rp0jfLwXt7G/XX+YmLL9TltBodPy/TnkzteNWZLR4nm4r8
-         TM1YJX9cqnb+zPKhgx+PKc5Wy9GbNA1dPxrv7xxs=
-Received: by mail-oi1-f179.google.com with SMTP id k4so12762267oik.2;
-        Sun, 19 Jul 2020 12:42:40 -0700 (PDT)
-X-Gm-Message-State: AOAM531dqsiRR+I6sR2Q25eWjDXwmaJXZCQsS0CzjT+fu7HOfht9PW62
-        PrNWoIQ60jjDSfIb1fRKF1O6tK0CKDaJQw44nKA=
-X-Google-Smtp-Source: ABdhPJzLkJPj6LZsMFUVkScIOAd/UVcB+Mwuta/LAEAGxpYSmiu0pBlzFJgLo7PEkf4xOnyaRWGpaEJi5BUdrbmkdis=
-X-Received: by 2002:aca:f257:: with SMTP id q84mr15941187oih.174.1595187759808;
- Sun, 19 Jul 2020 12:42:39 -0700 (PDT)
+        Sun, 19 Jul 2020 15:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgGSTqM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 15:46:12 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EC82C0619D2;
+        Sun, 19 Jul 2020 12:46:11 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 594B4BC086;
+        Sun, 19 Jul 2020 19:46:08 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     masahiroy@kernel.org, michal.lkml@markovi.net, corbet@lwn.net,
+        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] kbuild: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 21:46:02 +0200
+Message-Id: <20200719194602.61387-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200719162938.60161-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200719162938.60161-1-grandmaster@al2klimov.de>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sun, 19 Jul 2020 22:42:28 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXEzaa3BtNF9kgB=UGMx-uvosGwcUbdT3O2qZ1K0XhyUiQ@mail.gmail.com>
-Message-ID: <CAMj1kXEzaa3BtNF9kgB=UGMx-uvosGwcUbdT3O2qZ1K0XhyUiQ@mail.gmail.com>
-Subject: Re: [PATCH for v5.9] arm64: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Brown <broonie@kernel.org>, hankecai@bbktel.com,
-        hankecai@vivo.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Jul 2020 at 19:29, Alexander A. Klimov
-<grandmaster@al2klimov.de> wrote:
->
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Please do not modify  .S_shipped files or the .pl file that generates
-them - they were taken from other projects, and should remain in sync
-with their upstream counterparts.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
->
->  If there are any URLs to be removed completely
->  or at least not (just) HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
->
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
->
->  If you apply the patch, please let me know.
->
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
->
->
->  Documentation/arm64/arm-acpi.rst        | 2 +-
->  arch/arm64/crypto/sha256-core.S_shipped | 2 +-
->  arch/arm64/crypto/sha512-armv8.pl       | 2 +-
->  arch/arm64/crypto/sha512-core.S_shipped | 2 +-
->  arch/arm64/lib/copy_template.S          | 2 +-
->  arch/arm64/lib/memcmp.S                 | 2 +-
->  arch/arm64/lib/memcpy.S                 | 2 +-
->  arch/arm64/lib/memmove.S                | 2 +-
->  arch/arm64/lib/memset.S                 | 2 +-
->  arch/arm64/lib/strcmp.S                 | 2 +-
->  arch/arm64/lib/strlen.S                 | 2 +-
->  arch/arm64/lib/strncmp.S                | 2 +-
->  arch/arm64/lib/strnlen.S                | 2 +-
->  13 files changed, 13 insertions(+), 13 deletions(-)
->
-> diff --git a/Documentation/arm64/arm-acpi.rst b/Documentation/arm64/arm-acpi.rst
-> index 872dbbc73d4a..8f675c38c244 100644
-> --- a/Documentation/arm64/arm-acpi.rst
-> +++ b/Documentation/arm64/arm-acpi.rst
-> @@ -273,7 +273,7 @@ only use the _DSD Device Properties UUID [5]:
->
->     - UUID: daffd814-6eba-4d8c-8a91-bc9bbf4aa301
->
-> -   - http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
-> +   - https://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
->
->  The UEFI Forum provides a mechanism for registering device properties [4]
->  so that they may be used across all operating systems supporting ACPI.
-> diff --git a/arch/arm64/crypto/sha256-core.S_shipped b/arch/arm64/crypto/sha256-core.S_shipped
-> index 7c7ce2e3bad6..dd4867742a2e 100644
-> --- a/arch/arm64/crypto/sha256-core.S_shipped
-> +++ b/arch/arm64/crypto/sha256-core.S_shipped
-> @@ -19,7 +19,7 @@
->  // Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
->  // project. The module is, however, dual licensed under OpenSSL and
->  // CRYPTOGAMS licenses depending on where you obtain it. For further
-> -// details see http://www.openssl.org/~appro/cryptogams/.
-> +// details see https://www.openssl.org/~appro/cryptogams/.
->  // ====================================================================
->  //
->  // SHA256/512 for ARMv8.
-> diff --git a/arch/arm64/crypto/sha512-armv8.pl b/arch/arm64/crypto/sha512-armv8.pl
-> index 2d8655d5b1af..48c9da50b7ec 100644
-> --- a/arch/arm64/crypto/sha512-armv8.pl
-> +++ b/arch/arm64/crypto/sha512-armv8.pl
-> @@ -20,7 +20,7 @@
->  # Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
->  # project. The module is, however, dual licensed under OpenSSL and
->  # CRYPTOGAMS licenses depending on where you obtain it. For further
-> -# details see http://www.openssl.org/~appro/cryptogams/.
-> +# details see https://www.openssl.org/~appro/cryptogams/.
->  # ====================================================================
->  #
->  # SHA256/512 for ARMv8.
-> diff --git a/arch/arm64/crypto/sha512-core.S_shipped b/arch/arm64/crypto/sha512-core.S_shipped
-> index e063a6106720..421cb9977d39 100644
-> --- a/arch/arm64/crypto/sha512-core.S_shipped
-> +++ b/arch/arm64/crypto/sha512-core.S_shipped
-> @@ -19,7 +19,7 @@
->  // Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
->  // project. The module is, however, dual licensed under OpenSSL and
->  // CRYPTOGAMS licenses depending on where you obtain it. For further
-> -// details see http://www.openssl.org/~appro/cryptogams/.
-> +// details see https://www.openssl.org/~appro/cryptogams/.
->  // ====================================================================
->  //
->  // SHA256/512 for ARMv8.
-> diff --git a/arch/arm64/lib/copy_template.S b/arch/arm64/lib/copy_template.S
-> index 488df234c49a..fce1e070c13a 100644
-> --- a/arch/arm64/lib/copy_template.S
-> +++ b/arch/arm64/lib/copy_template.S
-> @@ -6,7 +6,7 @@
->   * This code is based on glibc cortex strings work originally authored by Linaro
->   * be found @
->   *
-> - * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-> + * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
->   * files/head:/src/aarch64/
->   */
->
-> diff --git a/arch/arm64/lib/memcmp.S b/arch/arm64/lib/memcmp.S
-> index c0671e793ea9..8b7c94917f98 100644
-> --- a/arch/arm64/lib/memcmp.S
-> +++ b/arch/arm64/lib/memcmp.S
-> @@ -6,7 +6,7 @@
->   * This code is based on glibc cortex strings work originally authored by Linaro
->   * be found @
->   *
-> - * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-> + * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
->   * files/head:/src/aarch64/
->   */
->
-> diff --git a/arch/arm64/lib/memcpy.S b/arch/arm64/lib/memcpy.S
-> index e0bf83d556f2..dc816480cebd 100644
-> --- a/arch/arm64/lib/memcpy.S
-> +++ b/arch/arm64/lib/memcpy.S
-> @@ -6,7 +6,7 @@
->   * This code is based on glibc cortex strings work originally authored by Linaro
->   * be found @
->   *
-> - * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-> + * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
->   * files/head:/src/aarch64/
->   */
->
-> diff --git a/arch/arm64/lib/memmove.S b/arch/arm64/lib/memmove.S
-> index 02cda2e33bde..3cd7ba7311e5 100644
-> --- a/arch/arm64/lib/memmove.S
-> +++ b/arch/arm64/lib/memmove.S
-> @@ -6,7 +6,7 @@
->   * This code is based on glibc cortex strings work originally authored by Linaro
->   * be found @
->   *
-> - * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-> + * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
->   * files/head:/src/aarch64/
->   */
->
-> diff --git a/arch/arm64/lib/memset.S b/arch/arm64/lib/memset.S
-> index 77c3c7ba0084..ff1e38b96d1c 100644
-> --- a/arch/arm64/lib/memset.S
-> +++ b/arch/arm64/lib/memset.S
-> @@ -6,7 +6,7 @@
->   * This code is based on glibc cortex strings work originally authored by Linaro
->   * be found @
->   *
-> - * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-> + * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
->   * files/head:/src/aarch64/
->   */
->
-> diff --git a/arch/arm64/lib/strcmp.S b/arch/arm64/lib/strcmp.S
-> index 4e79566726c8..9dab831b1558 100644
-> --- a/arch/arm64/lib/strcmp.S
-> +++ b/arch/arm64/lib/strcmp.S
-> @@ -6,7 +6,7 @@
->   * This code is based on glibc cortex strings work originally authored by Linaro
->   * be found @
->   *
-> - * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-> + * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
->   * files/head:/src/aarch64/
->   */
->
-> diff --git a/arch/arm64/lib/strlen.S b/arch/arm64/lib/strlen.S
-> index ee3ed882dd79..f981b639d549 100644
-> --- a/arch/arm64/lib/strlen.S
-> +++ b/arch/arm64/lib/strlen.S
-> @@ -6,7 +6,7 @@
->   * This code is based on glibc cortex strings work originally authored by Linaro
->   * be found @
->   *
-> - * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-> + * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
->   * files/head:/src/aarch64/
->   */
->
-> diff --git a/arch/arm64/lib/strncmp.S b/arch/arm64/lib/strncmp.S
-> index 2a7ee949ed47..0243547021b2 100644
-> --- a/arch/arm64/lib/strncmp.S
-> +++ b/arch/arm64/lib/strncmp.S
-> @@ -6,7 +6,7 @@
->   * This code is based on glibc cortex strings work originally authored by Linaro
->   * be found @
->   *
-> - * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-> + * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
->   * files/head:/src/aarch64/
->   */
->
-> diff --git a/arch/arm64/lib/strnlen.S b/arch/arm64/lib/strnlen.S
-> index b72913a99038..ffe5ba5a3387 100644
-> --- a/arch/arm64/lib/strnlen.S
-> +++ b/arch/arm64/lib/strnlen.S
-> @@ -6,7 +6,7 @@
->   * This code is based on glibc cortex strings work originally authored by Linaro
->   * be found @
->   *
-> - * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-> + * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
->   * files/head:/src/aarch64/
->   */
->
-> --
-> 2.27.0
->
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/kbuild/Kconfig.recursion-issue-02 |  2 +-
+ Documentation/kbuild/kconfig-language.rst       | 14 +++++++-------
+ Documentation/kbuild/llvm.rst                   |  2 +-
+ scripts/package/mkdebian                        |  2 +-
+ scripts/package/mkspec                          |  2 +-
+ 5 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/kbuild/Kconfig.recursion-issue-02 b/Documentation/kbuild/Kconfig.recursion-issue-02
+index b9fd56c4b57e..df245fd7670d 100644
+--- a/Documentation/kbuild/Kconfig.recursion-issue-02
++++ b/Documentation/kbuild/Kconfig.recursion-issue-02
+@@ -42,7 +42,7 @@
+ # "select FW_LOADER" [0], in the end the simple alternative solution to this
+ # problem consisted on matching semantics with newly introduced features.
+ #
+-# [0] http://lkml.kernel.org/r/1432241149-8762-1-git-send-email-mcgrof@do-not-panic.com
++# [0] https://lkml.kernel.org/r/1432241149-8762-1-git-send-email-mcgrof@do-not-panic.com
+ 
+ mainmenu "Simple example to demo cumulative kconfig recursive dependency implication"
+ 
+diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+index a1601ec3317b..41bee6a171e3 100644
+--- a/Documentation/kbuild/kconfig-language.rst
++++ b/Documentation/kbuild/kconfig-language.rst
+@@ -688,10 +688,10 @@ and real world requirements were not well understood. As it stands though
+ only reverse engineering techniques have been used to deduce semantics from
+ variability modeling languages such as Kconfig [3]_.
+ 
+-.. [0] http://www.eng.uwaterloo.ca/~shshe/kconfig_semantics.pdf
+-.. [1] http://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
+-.. [2] http://gsd.uwaterloo.ca/sites/default/files/ase241-berger_0.pdf
+-.. [3] http://gsd.uwaterloo.ca/sites/default/files/icse2011.pdf
++.. [0] https://www.eng.uwaterloo.ca/~shshe/kconfig_semantics.pdf
++.. [1] https://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
++.. [2] https://gsd.uwaterloo.ca/sites/default/files/ase241-berger_0.pdf
++.. [3] https://gsd.uwaterloo.ca/sites/default/files/icse2011.pdf
+ 
+ Full SAT solver for Kconfig
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@@ -710,10 +710,10 @@ such efforts somehow on Kconfig. There is enough interest from mentors of
+ existing projects to not only help advise how to integrate this work upstream
+ but also help maintain it long term. Interested developers should visit:
+ 
+-http://kernelnewbies.org/KernelProjects/kconfig-sat
++https://kernelnewbies.org/KernelProjects/kconfig-sat
+ 
+-.. [4] http://www.cs.cornell.edu/~sabhar/chapters/SATSolvers-KR-Handbook.pdf
+-.. [5] http://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
++.. [4] https://www.cs.cornell.edu/~sabhar/chapters/SATSolvers-KR-Handbook.pdf
++.. [5] https://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
+ .. [6] https://cados.cs.fau.de
+ .. [7] https://vamos.cs.fau.de
+ .. [8] https://undertaker.cs.fau.de
+diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+index c776b6eee969..2aac50b97921 100644
+--- a/Documentation/kbuild/llvm.rst
++++ b/Documentation/kbuild/llvm.rst
+@@ -76,7 +76,7 @@ Getting Help
+ Getting LLVM
+ -------------
+ 
+-- http://releases.llvm.org/download.html
++- https://releases.llvm.org/download.html
+ - https://github.com/llvm/llvm-project
+ - https://llvm.org/docs/GettingStarted.html
+ - https://llvm.org/docs/CMake.html
+diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+index df1adbfb8ead..48fbd3d0284a 100755
+--- a/scripts/package/mkdebian
++++ b/scripts/package/mkdebian
+@@ -175,7 +175,7 @@ Section: kernel
+ Priority: optional
+ Maintainer: $maintainer
+ Build-Depends: bc, rsync, kmod, cpio, bison, flex | flex:native $extra_build_depends
+-Homepage: http://www.kernel.org/
++Homepage: https://www.kernel.org/
+ 
+ Package: $packagename
+ Architecture: $debarch
+diff --git a/scripts/package/mkspec b/scripts/package/mkspec
+index 8640c278f1aa..7c477ca7dc98 100755
+--- a/scripts/package/mkspec
++++ b/scripts/package/mkspec
+@@ -46,7 +46,7 @@ sed -e '/^DEL/d' -e 's/^\t*//' <<EOF
+ 	License: GPL
+ 	Group: System Environment/Kernel
+ 	Vendor: The Linux Community
+-	URL: http://www.kernel.org
++	URL: https://www.kernel.org
+ $S	Source: kernel-$__KERNELRELEASE.tar.gz
+ 	Provides: $PROVIDES
+ 	%define __spec_install_post /usr/lib/rpm/brp-compress || :
+-- 
+2.27.0
+
