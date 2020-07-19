@@ -2,121 +2,70 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5664C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 845E8208B3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595174619;
-	bh=/pbAZENBPjrMYXorA52W5HNHDodFxjYnJsIpzouhsGY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=huFbOTlK7Gu4SB22Gv3vP5B1d9hmpTDHKuBxBfYYbMobE0otiESd3D1G/cGNYSxwK
-	 FvtXudnacbuj5Vp6kX7oEuetEq/6JAyh15JD2bSANZw+GtkwuSv8Vf8eUCv0wU1lwF
-	 zTlKx1+A3K+AiBIJ9zboB2P/tvkCvEFJiLOZI3vc=
+	by mail.kernel.org (Postfix) with ESMTP id C35F5207EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgGSQDi (ORCPT
+        id S1726543AbgGSQEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 12:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36710 "EHLO mail.kernel.org"
+        Sun, 19 Jul 2020 12:04:49 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:43630 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgGSQDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 12:03:37 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49FFF207EA;
-        Sun, 19 Jul 2020 16:03:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595174617;
-        bh=/pbAZENBPjrMYXorA52W5HNHDodFxjYnJsIpzouhsGY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1GP6P1/lo8ECz85mykPgihU5psB+Nx4RgKc1A48vqIllfPQ+RjjRLI2pGnplDzuuA
-         FOfsJRDQ6x8Rui1L9osCVzIUHkYkGes37dZADDIys5iTqZEB/4ddZy7mPi5Qg+MARK
-         aoK8eMdc1LUCb+sOLlWmy6LXv5MKl/ooRzJ7gUbU=
-Date:   Sun, 19 Jul 2020 21:33:32 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v5 0/4] Add LT9611 DSI to HDMI bridge
-Message-ID: <20200719160332.GA12965@vkoul-mobl>
-References: <20200708103559.132300-1-vkoul@kernel.org>
+        id S1726038AbgGSQEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 12:04:49 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jxBnt-005tGV-9f; Sun, 19 Jul 2020 18:04:41 +0200
+Date:   Sun, 19 Jul 2020 18:04:41 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 3/4] net: Call into DSA netdevice_ops wrappers
+Message-ID: <20200719160441.GK1383417@lunn.ch>
+References: <20200718030533.171556-1-f.fainelli@gmail.com>
+ <20200718030533.171556-4-f.fainelli@gmail.com>
+ <20200718211805.3yyckq23udacz4sa@skbuf>
+ <d3a11ef5-3e4e-0c4a-790b-63da94a1545c@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708103559.132300-1-vkoul@kernel.org>
+In-Reply-To: <d3a11ef5-3e4e-0c4a-790b-63da94a1545c@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> If we have the core network stack reference DSA as a module then we
+> force DSA to be either built-in or not, which is not very practical,
+> people would still want a modular choice to be possible. The static
+> inline only wraps indirect function pointer calls using definitions
+> available at build time and actual function pointer substitution at run
+> time, so we avoid that problem entirely that way.
 
-On 08-07-20, 16:05, Vinod Koul wrote:
-> Hi,
-> 
-> This series adds driver and bindings for Lontium LT9611 bridge chip which
-> takes MIPI DSI as input and HDMI as output.
-> 
-> This chip can be found in 96boards RB3 platform [1] commonly called DB845c.
+Hi Florian
 
-Any feedback on this series?
+The jumping through the pointer avoids the inbuilt vs module problems.
 
-> 
-> [1]: https://www.96boards.org/product/rb3-platform/
-> 
-> Changes in v5:
->  - make symbol static, reported by kbuild-bot
-> 
-> Changes in v4:
->  - Add msm/dsi patch to create connector and support DRM_BRIDGE_ATTACH_NO_CONNECTOR
->  - Fix comments provided by Sam
-> 
-> Changes in v3:
->  - fix kbuild reported error
->  - rebase on v5.8-rc1
-> 
-> Changes in v2:
->  - Add acks by Rob
->  - Fix comments reported by Emil and rename the file to lontium-lt9611.c
->  - Fix comments reported by Laurent on binding and driver
->  - Add HDMI audio support
-> 
-> Vinod Koul (4):
->   dt-bindings: vendor-prefixes: Add Lontium vendor prefix
->   dt-bindings: display: bridge: Add documentation for LT9611
->   drm/bridge: Introduce LT9611 DSI to HDMI bridge
->   drm/msm/dsi: attach external bridge with
->     DRM_BRIDGE_ATTACH_NO_CONNECTOR
-> 
->  .../display/bridge/lontium,lt9611.yaml        |  176 +++
->  .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
->  drivers/gpu/drm/bridge/Kconfig                |   13 +
->  drivers/gpu/drm/bridge/Makefile               |    1 +
->  drivers/gpu/drm/bridge/lontium-lt9611.c       | 1142 +++++++++++++++++
->  drivers/gpu/drm/msm/dsi/dsi.c                 |    7 +-
->  drivers/gpu/drm/msm/dsi/dsi_manager.c         |   27 +-
->  7 files changed, 1348 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
->  create mode 100644 drivers/gpu/drm/bridge/lontium-lt9611.c
-> 
-> -- 
-> 2.26.2
+The helpers themselves could be in a net/core/*.c file, rather than
+static inline in a header. Is it worth adding a net/core/dsa.c for
+code which must always be built in? At the moment, probably not.  But
+if we have more such redirect, maybe it would be?
 
--- 
-~Vinod
+     Andrew
