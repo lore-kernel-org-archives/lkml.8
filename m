@@ -2,335 +2,135 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD61C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16547C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FBB82080D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90232080D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:58:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFiQAMp9"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="OGddoAhu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgGSN4O (ORCPT
+        id S1726510AbgGSN66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 09:56:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGSN4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 09:56:14 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9688C0619D2;
-        Sun, 19 Jul 2020 06:56:13 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id p1so7488117pls.4;
-        Sun, 19 Jul 2020 06:56:13 -0700 (PDT)
+        Sun, 19 Jul 2020 09:58:58 -0400
+Received: from mail-bn8nam11on2087.outbound.protection.outlook.com ([40.107.236.87]:45128
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725988AbgGSN65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 09:58:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Mu9g+koS9AulitpDFni71kAmRfNx8inWLner5zaBv72r8tle84jh7GcC9w9ugcwUzoLIDo/Q0r4Cb8Va90/6VhIkMRiDCnTpsV3/NeS0QfRT1fdb7A8eOwwWoKHnJ8txK/GW7hcSIWvG3ZHbm7erZ2YtvOxurU8Y1KOJT1e/sn5TKuVHYQS+OuwgokF9k8By2OV6rnKZN3OlwZm4OfdLh4w23yGSlVDOyVLeYM1Cz5Y3nFDkEjYiAaujNUPU/k+svPrV0po+WBB6vSImanthxPUAIPbbumQkrCaO7Dpv0IEMdz9rxpl6HRPC9xdZZ8mdCU906lGwpWDpum2pqBNOrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jLDZWVuBZIH/QKd0zVXc6J1JIuPV3uAfkRk4ld4Zi84=;
+ b=a1YEwiQkSVBUXmYQk6xUKABqLcmwWIPx8BHwq6cnRsVaZkLUQWG6xwaaJHc8Aj6kP969AVyQ5yhxJneK6INFAVMQykRbag3XzUsQK3+JAQ49cdeATC5zt3udguZbnOJdkZ9E1Jz76+aoV/g6jH+heoGDBoJgWtnixZ0dZIIeDJtxd3rN9aYEZLuxy+I7vvavL6CUFqs9ZRzYSHWFTyoP1Fx16Vz/lvssLKUw5bpZWTY6lY8YdT2mPn9CWnzD5DbQLXC5ergGhZhaz6zOjPfZJX+lD+U0NJIxyu8ZEWl6hwCHd9rcNb65ucutiO+gZL9kWGXaFC4AJFGQ19ZSWq68jw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UgldB4wGcq1fUnLz6Vxctj8j+9cNDnU87erHnoDl4AA=;
-        b=gFiQAMp9vaE1h9NNuH0HtjbwSwKuZekC+BTsKF87Ln2lB4MIAu6ECudR9uTfRkoUw6
-         jF3U3tiqjUvL82jeDcI71Xcb66cSu3q6oFitOzeZYfArrVuZP667kxzXwAnxomzTGRPW
-         j5Ptr+xtCXpx77erU9rQfNHQXThWYS2QQBEeMY/wsxjvgxKJEb91q3bJsqCKlAtAEos3
-         riNDai3QsANIcj8E4GtEqq2tMFgDpDJh/FLZQDi1eYnPK1qt6dYJ4uMLuA8mmhoKTR4+
-         ewiVS7pdhPuziesBncgWgYId3Hr3oa7JBgySeLT/farMiZTsVwwfZo8jfa4QMziGBjxn
-         npXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=UgldB4wGcq1fUnLz6Vxctj8j+9cNDnU87erHnoDl4AA=;
-        b=U26tCeE/Eg75pgWeQbMqtVERgJmZsvHxubXX4FlGbnLIIt1i5rP/EyIWQG2lQPoq6O
-         XvG+mYsJBah4t6AcJV0GYxSMPUiO6WDeTK45fXxNYiXv9x2t08FnIYbK75JQ3AEFlYx5
-         NpGYNaSFUcpD2YopbZ2gZcDCwqikyxYmyz/3oFD0hVJsTeLrc8sGGHJFJP+TjiGIT0uI
-         F9jSfGIfngswdOP6LeWTSpK2HN6BbRigAwGiyFrrLOtCEGNZGzBJ4ekcH7lgvKo+g8/P
-         oF7GJwZPRNXkIW4XPkZgkuYH28gy+5uiAsDWjLnHkE079sZhi3QFJCV+UwKFuY/GFO3H
-         5fDA==
-X-Gm-Message-State: AOAM530X/tJgYFSI17Bgk5kjps02uUxZjkHncJY/kp3cI59iuT2Nkfyj
-        vJIL3NGJWHnxzLlGBdQM+38=
-X-Google-Smtp-Source: ABdhPJxWVSuvX6r+XR354iXj8g34eI7uXHaZFnqUlEn/tiDc5TcGsFIpRFN4lJL44NcHJGtlf4yzNA==
-X-Received: by 2002:a17:902:8681:: with SMTP id g1mr14923298plo.303.1595166973340;
-        Sun, 19 Jul 2020 06:56:13 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n15sm8776089pjf.12.2020.07.19.06.56.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Jul 2020 06:56:12 -0700 (PDT)
-Subject: Re: [PATCHv4 3/4] watchdog: rti-wdt: attach to running watchdog
- during probe
-To:     Tero Kristo <t-kristo@ti.com>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, jan.kiszka@siemens.com
-References: <20200717132958.14304-1-t-kristo@ti.com>
- <20200717132958.14304-4-t-kristo@ti.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <51c30a7c-a0e3-fc0b-2550-64749480a5fb@roeck-us.net>
-Date:   Sun, 19 Jul 2020 06:56:11 -0700
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jLDZWVuBZIH/QKd0zVXc6J1JIuPV3uAfkRk4ld4Zi84=;
+ b=OGddoAhuLdjnfnQiTHbPkXj4JJpJds8RmQY8Rorz89K3pM7GDY2HzVBJU/lgCDqT8Km7UV33vRfFJHv0ygrFP6U/n1GM02ul4LY9ypOij7DcjayY4uhqDOYDEciRNl3EQ0k53U3UShVFNoPEh3LOuao1ZxtTbDdlueEgjfMGgSw=
+Authentication-Results: zeniv.linux.org.uk; dkim=none (message not signed)
+ header.d=none;zeniv.linux.org.uk; dmarc=none action=none
+ header.from=windriver.com;
+Received: from BY5PR11MB4241.namprd11.prod.outlook.com (2603:10b6:a03:1ca::13)
+ by BYAPR11MB3029.namprd11.prod.outlook.com (2603:10b6:a03:8e::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Sun, 19 Jul
+ 2020 13:58:52 +0000
+Received: from BY5PR11MB4241.namprd11.prod.outlook.com
+ ([fe80::6892:dd68:8b6b:c702]) by BY5PR11MB4241.namprd11.prod.outlook.com
+ ([fe80::6892:dd68:8b6b:c702%4]) with mapi id 15.20.3195.025; Sun, 19 Jul 2020
+ 13:58:52 +0000
+Subject: Re: [PATCH] userfaultfd: avoid the duplicated release for
+ userfaultfd_ctx
+From:   "Xu, Yanfei" <yanfei.xu@windriver.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20200714161203.31879-1-yanfei.xu@windriver.com>
+Message-ID: <e3cbdb26-9bfb-55e7-c9a7-deb7f8831754@windriver.com>
+Date:   Sun, 19 Jul 2020 21:58:34 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200717132958.14304-4-t-kristo@ti.com>
-Content-Type: text/plain; charset=utf-8
+ Thunderbird/68.7.0
+In-Reply-To: <20200714161203.31879-1-yanfei.xu@windriver.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HKAPR04CA0009.apcprd04.prod.outlook.com
+ (2603:1096:203:d0::19) To BY5PR11MB4241.namprd11.prod.outlook.com
+ (2603:10b6:a03:1ca::13)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [128.224.162.160] (60.247.85.82) by HKAPR04CA0009.apcprd04.prod.outlook.com (2603:1096:203:d0::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Sun, 19 Jul 2020 13:58:51 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 71e07e3a-d304-4a13-f8e8-08d82bebde50
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3029:
+X-Microsoft-Antispam-PRVS: <BYAPR11MB3029D519F03CD58FA0D6C7BAE47A0@BYAPR11MB3029.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sVf+fsFkLAcer+M1ovaBqwit0W1zsXhsHpWbyiF4GnWkGv2Em7NIPTbTzNFDi7G1c+xktPI+lr0GNHi+G1Euf2Luyc3Rcdd0DCek4mrSKEhqoRYRycGJog8CJn/c0PuUGQVPCuEu5rBX4bJzAaN3JThUsLb2gP1MPsl50OcV56L7Xkj9MQc52FL+5emwhtxLTSyiLAVMsg7BejQfYzCElIQjgdSFPPc1OGLAfGIMa6/Hv4rBQLuPVACxYPnXAwA1xc2s21aNvNHDhVZlbtrJDG4mYyez2P/jCIqp+xaz4wZuF1wZcXlN6tHGIzzWIHCg6ghhJfp70pwviw1lhlevfi/dIanfEu4QO4R2mPQrRuxqUIbR1v4bKOkUOqk7z+wkRVDCVdM3KQzwXN5CRy02uKeCdT5EBKaZupJ6zVhYfCyyWGK+RPzXp8pimpeYRXz0
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4241.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39840400004)(376002)(346002)(136003)(366004)(396003)(6706004)(31686004)(316002)(16576012)(53546011)(26005)(8676002)(8936002)(52116002)(36756003)(6486002)(478600001)(2906002)(6916009)(5660300002)(6666004)(31696002)(66476007)(66556008)(66946007)(86362001)(956004)(2616005)(16526019)(186003)(83380400001)(78286006)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: yAgN9Jcf//OhpBzrK/ZHuwTKaI1SFGNEHHtB4xfZBvDQUoIPFrPBHXajyl7cxr9hVsklg64NEhVwJ7Jh96c+QcmoZU4tzwLMXpb1wgaJMq4KhEFM5/fORW7il6eVqzbKezkxxFpMPkxcwRJguBniQnbkqw/Urmzo6paE+oLvUJAAko7XRgvdq6OwZquBlhehPBB6cDMMcvXDexOEeavuvouFukcUwp2ipOq/uYZn0fwQpsiv/WVGOqDYUQ/MDLuxlyvuHEc9QmkmalKXXdw1kch6oN8RyZNRu0p8DGbN8vlHir6IOkvMEBcJezAo/Jxl/2hpCzG/9H8XqwGi1ZlP+jbZnJ2RgXq4LegmCtaBoV1V5IXhMn0oZ7NXDAse7Y47nnwNXR08eRVrk4RhfGecxIT/kX06QvbI4DJi9ywxRw7z/UM4+imXiW/eN5QCqZfihW8CxE8v1DNO8di5zo9OUSrmutLAZwXD43IUODISa7s=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71e07e3a-d304-4a13-f8e8-08d82bebde50
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4241.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2020 13:58:52.2201
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tfRbn3oHJQ/AKbXfVOrr2wQ7OIk1dFoyVR2YJgYjRXNsXNZQrNN5pDif8lmq1jGmaEK4IVP9gUw9QkQu66bacw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/20 6:29 AM, Tero Kristo wrote:
-> If the RTI watchdog is running already during probe, the driver must
-> configure itself to match the HW. Window size and timeout is probed from
-> hardware, and the last keepalive ping is adjusted to match it also.
+ping Al Viro
+
+Could you please help to review this patch? Thanks a lot.
+
+Yanfei
+
+On 7/15/20 12:12 AM, yanfei.xu@windriver.com wrote:
+> From: Yanfei Xu <yanfei.xu@windriver.com>
 > 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
+> when get_unused_fd_flags gets failure, userfaultfd_ctx_cachep will
+> be freed by userfaultfd_fops's release function which is the
+> userfaultfd_release. So we could return directly after fput().
+> 
+> userfaultfd_release()->userfaultfd_ctx_put(ctx)
+> 
+> Fixes: d08ac70b1e0d (Wire UFFD up to SELinux)
+> Reported-by: syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
+> Signed-off-by: Yanfei Xu <yanfei.xu@windriver.com>
 > ---
->  drivers/watchdog/rti_wdt.c | 112 +++++++++++++++++++++++++++++++++----
->  1 file changed, 102 insertions(+), 10 deletions(-)
+>   fs/userfaultfd.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
-> index d456dd72d99a..7cbdc178ffe8 100644
-> --- a/drivers/watchdog/rti_wdt.c
-> +++ b/drivers/watchdog/rti_wdt.c
-> @@ -35,7 +35,11 @@
->  
->  #define RTIWWDRX_NMI	0xa
->  
-> -#define RTIWWDSIZE_50P	0x50
-> +#define RTIWWDSIZE_50P		0x50
-> +#define RTIWWDSIZE_25P		0x500
-> +#define RTIWWDSIZE_12P5		0x5000
-> +#define RTIWWDSIZE_6P25		0x50000
-> +#define RTIWWDSIZE_3P125	0x500000
->  
->  #define WDENABLE_KEY	0xa98559da
->  
-> @@ -48,7 +52,7 @@
->  
->  #define DWDST			BIT(1)
->  
-> -static int heartbeat;
-> +static int heartbeat = DEFAULT_HEARTBEAT;
->  
->  /*
->   * struct to hold data for each WDT device
-> @@ -79,11 +83,9 @@ static int rti_wdt_start(struct watchdog_device *wdd)
->  	 * be petted during the open window; not too early or not too late.
->  	 * The HW configuration options only allow for the open window size
->  	 * to be 50% or less than that; we obviouly want to configure the open
-> -	 * window as large as possible so we select the 50% option. To avoid
-> -	 * any glitches, we accommodate 5% safety margin also, so we setup
-> -	 * the min_hw_hearbeat at 55% of the timeout period.
-> +	 * window as large as possible so we select the 50% option.
->  	 */
-> -	wdd->min_hw_heartbeat_ms = 11 * wdd->timeout * 1000 / 20;
-> +	wdd->min_hw_heartbeat_ms = 500 * wdd->timeout;
->  
->  	/* Generate NMI when wdt expires */
->  	writel_relaxed(RTIWWDRX_NMI, wdt->base + RTIWWDRXCTRL);
-> @@ -110,7 +112,48 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
->  	return 0;
->  }
->  
-> -static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
-> +static int rti_wdt_setup_hw_hb(struct watchdog_device *wdd, u32 wsize)
-> +{
-> +	/*
-> +	 * RTI only supports a windowed mode, where the watchdog can only
-> +	 * be petted during the open window; not too early or not too late.
-> +	 * The HW configuration options only allow for the open window size
-> +	 * to be 50% or less than that.
-> +	 */
-> +	switch (wsize) {
-> +	case RTIWWDSIZE_50P:
-> +		/* 50% open window => 50% min heartbeat */
-> +		wdd->min_hw_heartbeat_ms = 500 * heartbeat;
-> +		break;
-> +
-> +	case RTIWWDSIZE_25P:
-> +		/* 25% open window => 75% min heartbeat */
-> +		wdd->min_hw_heartbeat_ms = 750 * heartbeat;
-> +		break;
-> +
-> +	case RTIWWDSIZE_12P5:
-> +		/* 12.5% open window => 87.5% min heartbeat */
-> +		wdd->min_hw_heartbeat_ms = 875 * heartbeat;
-> +		break;
-> +
-> +	case RTIWWDSIZE_6P25:
-> +		/* 6.5% open window => 93.5% min heartbeat */
-> +		wdd->min_hw_heartbeat_ms = 935 * heartbeat;
-> +		break;
-> +
-> +	case RTIWWDSIZE_3P125:
-> +		/* 3.125% open window => 96.9% min heartbeat */
-> +		wdd->min_hw_heartbeat_ms = 969 * heartbeat;
-> +		break;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static unsigned int rti_wdt_get_timeleft_ms(struct watchdog_device *wdd)
->  {
->  	u64 timer_counter;
->  	u32 val;
-> @@ -123,11 +166,18 @@ static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
->  
->  	timer_counter = readl_relaxed(wdt->base + RTIDWDCNTR);
->  
-> +	timer_counter *= 1000;
-> +
->  	do_div(timer_counter, wdt->freq);
->  
->  	return timer_counter;
->  }
->  
-> +static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
-> +{
-> +	return rti_wdt_get_timeleft_ms(wdd) / 1000;
-> +}
-> +
->  static const struct watchdog_info rti_wdt_info = {
->  	.options = WDIOF_KEEPALIVEPING,
->  	.identity = "K3 RTI Watchdog",
-> @@ -148,6 +198,7 @@ static int rti_wdt_probe(struct platform_device *pdev)
->  	struct watchdog_device *wdd;
->  	struct rti_wdt_device *wdt;
->  	struct clk *clk;
-> +	u32 last_ping = 0;
->  
->  	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
->  	if (!wdt)
-> @@ -169,6 +220,14 @@ static int rti_wdt_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
->  
-> +	/*
-> +	 * If watchdog is running at 32k clock, it is not accurate.
-> +	 * Adjust frequency down in this case so that we don't pet
-> +	 * the watchdog too often.
-> +	 */
-> +	if (wdt->freq < 32768)
-> +		wdt->freq = wdt->freq * 9 / 10;
-> +
->  	pm_runtime_enable(dev);
->  	ret = pm_runtime_get_sync(dev);
->  	if (ret) {
-> @@ -185,11 +244,8 @@ static int rti_wdt_probe(struct platform_device *pdev)
->  	wdd->min_timeout = 1;
->  	wdd->max_hw_heartbeat_ms = (WDT_PRELOAD_MAX << WDT_PRELOAD_SHIFT) /
->  		wdt->freq * 1000;
-> -	wdd->timeout = DEFAULT_HEARTBEAT;
->  	wdd->parent = dev;
->  
-> -	watchdog_init_timeout(wdd, heartbeat, dev);
-> -
->  	watchdog_set_drvdata(wdd, wdt);
->  	watchdog_set_nowayout(wdd, 1);
->  	watchdog_set_restart_priority(wdd, 128);
-> @@ -201,12 +257,48 @@ static int rti_wdt_probe(struct platform_device *pdev)
->  		goto err_iomap;
->  	}
->  
-> +	if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
-> +		u32 time_left_ms;
-> +		u64 heartbeat_ms;
-> +		u32 wsize;
-> +
-> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
-> +		time_left_ms = rti_wdt_get_timeleft_ms(wdd);
-> +		heartbeat_ms = readl(wdt->base + RTIDWDPRLD);
-> +		heartbeat_ms <<= WDT_PRELOAD_SHIFT;
-> +		heartbeat_ms *= 1000;
-> +		do_div(heartbeat_ms, wdt->freq);
-> +		if (heartbeat_ms != heartbeat * 1000)
-> +			dev_warn(dev, "watchdog already running, ignoring heartbeat config!\n");
-> +
-> +		heartbeat = heartbeat_ms;
-> +		heartbeat /= 1000;
-> +
-> +		wsize = readl(wdt->base + RTIWWDSIZECTRL);
-> +		ret = rti_wdt_setup_hw_hb(wdd, wsize);
-> +		if (ret) {
-> +			dev_err(dev, "bad window size.\n");
-> +			goto err_iomap;
-> +		}
-> +
-> +		last_ping = heartbeat_ms - time_left_ms;
-> +		if (time_left_ms > heartbeat_ms) {
-> +			dev_warn(dev, "time_left > heartbeat? Assuming last ping just before now.\n");
-> +			last_ping = 0;
-> +		}
-> +	}
-> +
-> +	watchdog_init_timeout(wdd, heartbeat, dev);
-> +
->  	ret = watchdog_register_device(wdd);
->  	if (ret) {
->  		dev_err(dev, "cannot register watchdog device\n");
->  		goto err_iomap;
->  	}
->  
-> +	if (last_ping)
-> +		watchdog_set_last_hw_keepalive(wdd, last_ping);
-> +
->  	return 0;
->  
->  err_iomap:
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index 3a4d6ac5a81a..e98317c15530 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -2049,7 +2049,7 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
+>   	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
+>   	if (fd < 0) {
+>   		fput(file);
+> -		goto out;
+> +		return fd;
+>   	}
+>   
+>   	ctx->owner = file_inode(file);
 > 
-
