@@ -7,23 +7,26 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67D1C433E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20FBC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B11BF22CA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E162173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aR1gXZAF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ObeCLGfw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B46ErlI/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z2+gDbB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgGSLIy (ORCPT
+        id S1726530AbgGSLIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 07:08:54 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51114 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbgGSLIu (ORCPT
+        Sun, 19 Jul 2020 07:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbgGSLIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 19 Jul 2020 07:08:50 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9AF3C0619D2;
+        Sun, 19 Jul 2020 04:08:49 -0700 (PDT)
 Date:   Sun, 19 Jul 2020 11:08:46 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1595156927;
@@ -32,12 +35,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zDqW2b2XMZ5wAfg7sHuZmu/331vudy3InpUCbJNlWrM=;
-        b=aR1gXZAFaI1Q39Drw77XkX4Q8wvHew5oB9eXK6JaGK9m7/DfgGOFfhaw+tM1GbgcejdrLs
-        7+MqznXKrD+n1kEztcGVIxOHxvqDlpyJ1rOoj7ijemTU7qoJg8TTzUzbh5yjw8Xuji1hEk
-        m5EPSjWCP0qF3DIQyxuSL5d9jmX40Ir9Rrp6qk3ksWJISuI9/V7v3L4pPerR3Sre4eDx/S
-        lwJYGoYnBKgmVbwjn6WXB/H3c5faI7PFkfnpz2RC9nogrt4Zo3oP0Eomwq9zTaas9lZB15
-        M0E9sucVeEfrceRqgYO4Xo4vG+UWFuDT315JUjKfuMJ2iK0W7vNfjG1lXCerAg==
+        bh=W7KpxnjlF09zH8K4byK41OC5OazMD869zEXDUxnGD+c=;
+        b=B46ErlI/Dj1WPJ0azblXDcK4TCUHIcYGlb9XRDHoNrp3+hnT3Hvd7wbRsNnrT5sbiIF6CN
+        LbxHYpRiqKjaaoCuoTdH87iuPMZXIPWTg4XsEvUpmOzu8Kv14qqTZEwQcS8wxo2+8KwUxP
+        588Fr81mPF4Eb+bSu5Tyd/bAnyzf5/eIF5QeHIbAOst0C+MxQzadaTeWwQaxijb3tL8GRX
+        lmJlni9uFUMV9z+2JCCY+fFft3bMGmiRJIgrwU4Wke6b//UYUD6VHJGXfib24fjE6Fya51
+        Pwx26Eo0oUG/ESGZPuKwmUQlxkCXP15x0wxtEdy4ylUHF1VeyGczLmWDyWK/qw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1595156927;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -45,22 +48,20 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zDqW2b2XMZ5wAfg7sHuZmu/331vudy3InpUCbJNlWrM=;
-        b=ObeCLGfw56kpNeC70VXK280Blxlc3PkyyI0XWrA7BRQk7UK8WMqd/GwkAd8barjNIz1lVn
-        wSMJN27fqVqobmAQ==
-From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
+        bh=W7KpxnjlF09zH8K4byK41OC5OazMD869zEXDUxnGD+c=;
+        b=Z2+gDbB3Tw0zjTilfvEXIdNAX1tzFCCbxQtP70Gln0TgvOPlfYldzR4uWdksdARaaOcLqj
+        Hk/Va5cO2YPp3aBw==
+From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/boot: Don't add the EFI stub to targets
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: x86/urgent] x86/entry: Actually disable stack protector
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200715032631.1562882-1-nivedita@alum.mit.edu>
-References: <20200715032631.1562882-1-nivedita@alum.mit.edu>
+In-Reply-To: <202006261333.585319CA6B@keescook>
+References: <202006261333.585319CA6B@keescook>
 MIME-Version: 1.0
-Message-ID: <159515692603.4006.6720081328208221414.tip-bot2@tip-bot2>
+Message-ID: <159515692670.4006.16427533642222007723.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -72,60 +73,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     da05b143a308bd6a7a444401f9732678ae63fc70
-Gitweb:        https://git.kernel.org/tip/da05b143a308bd6a7a444401f9732678ae63fc70
-Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Tue, 14 Jul 2020 23:26:31 -04:00
+Commit-ID:     58ac3154b83938515129c20aa76d456a4c9202a8
+Gitweb:        https://git.kernel.org/tip/58ac3154b83938515129c20aa76d456a4c9202a8
+Author:        Kees Cook <keescook@chromium.org>
+AuthorDate:    Fri, 26 Jun 2020 13:34:25 -07:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sun, 19 Jul 2020 13:07:11 +02:00
+CommitterDate: Sun, 19 Jul 2020 13:07:10 +02:00
 
-x86/boot: Don't add the EFI stub to targets
+x86/entry: Actually disable stack protector
 
-vmlinux-objs-y is added to targets, which currently means that the EFI
-stub gets added to the targets as well. It shouldn't be added since it
-is built elsewhere.
+Some builds of GCC enable stack protector by default. Simply removing
+the arguments is not sufficient to disable stack protector, as the stack
+protector for those GCC builds must be explicitly disabled. Remove the
+argument removals and add -fno-stack-protector. Additionally include
+missed x32 argument updates, and adjust whitespace for readability.
 
-This confuses Makefile.build which interprets the EFI stub as a target
-	$(obj)/$(objtree)/drivers/firmware/efi/libstub/lib.a
-and will create drivers/firmware/efi/libstub/ underneath
-arch/x86/boot/compressed, to hold this supposed target, if building
-out-of-tree. [0]
-
-Fix this by pulling the stub out of vmlinux-objs-y into efi-obj-y.
-
-[0] See scripts/Makefile.build near the end:
-    # Create directories for object files if they do not exist
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Fixes: 20355e5f73a7 ("x86/entry: Exclude low level entry code from sanitizing")
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Link: https://lkml.kernel.org/r/20200715032631.1562882-1-nivedita@alum.mit.edu
+Link: https://lkml.kernel.org/r/202006261333.585319CA6B@keescook
 
 ---
- arch/x86/boot/compressed/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/entry/Makefile | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 7619742..5a828fd 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -90,8 +90,8 @@ endif
+diff --git a/arch/x86/entry/Makefile b/arch/x86/entry/Makefile
+index b7a5790..08bf95d 100644
+--- a/arch/x86/entry/Makefile
++++ b/arch/x86/entry/Makefile
+@@ -7,12 +7,20 @@ KASAN_SANITIZE := n
+ UBSAN_SANITIZE := n
+ KCOV_INSTRUMENT := n
  
- vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+-CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+-CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
+-CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
++CFLAGS_REMOVE_common.o		= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_syscall_64.o	= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_syscall_32.o	= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_syscall_x32.o	= $(CC_FLAGS_FTRACE)
++
++CFLAGS_common.o			+= -fno-stack-protector
++CFLAGS_syscall_64.o		+= -fno-stack-protector
++CFLAGS_syscall_32.o		+= -fno-stack-protector
++CFLAGS_syscall_x32.o		+= -fno-stack-protector
  
--vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
- vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
-+efi-obj-$(CONFIG_EFI_STUB) = $(objtree)/drivers/firmware/efi/libstub/lib.a
+ CFLAGS_syscall_64.o		+= $(call cc-option,-Wno-override-init,)
+ CFLAGS_syscall_32.o		+= $(call cc-option,-Wno-override-init,)
++CFLAGS_syscall_x32.o		+= $(call cc-option,-Wno-override-init,)
++
+ obj-y				:= entry_$(BITS).o thunk_$(BITS).o syscall_$(BITS).o
+ obj-y				+= common.o
  
- # The compressed kernel is built with -fPIC/-fPIE so that a boot loader
- # can place it anywhere in memory and it will still run. However, since
-@@ -115,7 +115,7 @@ endef
- quiet_cmd_check-and-link-vmlinux = LD      $@
-       cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
- 
--$(obj)/vmlinux: $(vmlinux-objs-y) FORCE
-+$(obj)/vmlinux: $(vmlinux-objs-y) $(efi-obj-y) FORCE
- 	$(call if_changed,check-and-link-vmlinux)
- 
- OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
