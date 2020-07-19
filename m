@@ -4,38 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A4FC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 09:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 09:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E19AB207DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 09:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9676207DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 09:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgGSJjt (ORCPT
+        id S1726419AbgGSJt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 05:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45184 "EHLO
+        Sun, 19 Jul 2020 05:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGSJjt (ORCPT
+        with ESMTP id S1725988AbgGSJt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 05:39:49 -0400
+        Sun, 19 Jul 2020 05:49:58 -0400
 Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2A8C0619D2;
-        Sun, 19 Jul 2020 02:39:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF4AC0619D2;
+        Sun, 19 Jul 2020 02:49:58 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id A8817BC073;
-        Sun, 19 Jul 2020 09:39:45 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id A182EBC07E;
+        Sun, 19 Jul 2020 09:49:54 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     robh+dt@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux@armlinux.org.uk, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     linux@armlinux.org.uk, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] ARM: SAMSUNG: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 11:39:39 +0200
-Message-Id: <20200719093939.57412-1-grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] ARM: STM32: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 11:49:48 +0200
+Message-Id: <20200719094948.57487-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
@@ -86,92 +87,51 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- arch/arm/boot/dts/exynos5410-pinctrl.dtsi | 2 +-
- arch/arm/mach-s3c24xx/Kconfig             | 2 +-
- arch/arm/mach-s3c24xx/mach-h1940.c        | 2 +-
- arch/arm/mach-s3c24xx/mach-mini2440.c     | 2 +-
- arch/arm/mach-s3c24xx/mach-n30.c          | 2 +-
- arch/arm/mach-s3c24xx/mach-rx3715.c       | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/mach-stm32/Makefile.boot | 2 +-
+ crypto/testmgr.h                  | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
-index 369a8a7f2105..e5d0a2a4f648 100644
---- a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
-@@ -3,7 +3,7 @@
-  * Exynos5410 SoC pin-mux and pin-config device tree source
+diff --git a/arch/arm/mach-stm32/Makefile.boot b/arch/arm/mach-stm32/Makefile.boot
+index cec195d4fcba..5dde7328a7a9 100644
+--- a/arch/arm/mach-stm32/Makefile.boot
++++ b/arch/arm/mach-stm32/Makefile.boot
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ # Empty file waiting for deletion once Makefile.boot isn't needed any more.
+ # Patch waits for application at
+-# http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
++# https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
+diff --git a/crypto/testmgr.h b/crypto/testmgr.h
+index d29983908c38..cdcf0d2fe40d 100644
+--- a/crypto/testmgr.h
++++ b/crypto/testmgr.h
+@@ -16231,7 +16231,7 @@ static const struct cipher_testvec aes_lrw_tv_template[] = {
+ 			  "\xe9\x5d\x48\x92\x54\x63\x4e\xb8",
+ 		.len	= 48,
+ 	}, {
+-/* http://www.mail-archive.com/stds-p1619@listserv.ieee.org/msg00173.html */
++/* https://www.mail-archive.com/stds-p1619@listserv.ieee.org/msg00173.html */
+ 		.key    = "\xf8\xd4\x76\xff\xd6\x46\xee\x6c"
+ 			  "\x23\x84\xcb\x1c\x77\xd6\x19\x5d"
+ 			  "\xfe\xf1\xa9\xf3\x7b\xbc\x8d\x21"
+@@ -21096,7 +21096,7 @@ static const struct aead_testvec aegis128_tv_template[] = {
+ 
+ /*
+  * All key wrapping test vectors taken from
+- * http://csrc.nist.gov/groups/STM/cavp/documents/mac/kwtestvectors.zip
++ * https://csrc.nist.gov/groups/STM/cavp/documents/mac/kwtestvectors.zip
   *
-  * Copyright (c) 2013 Hardkernel Co., Ltd.
-- *              http://www.hardkernel.com
-+ *              https://www.hardkernel.com
+  * Note: as documented in keywrap.c, the ivout for encryption is the first
+  * semiblock of the ciphertext from the test vector. For decryption, iv is
+@@ -22825,7 +22825,7 @@ static const struct cipher_testvec xeta_tv_template[] = {
+  * FCrypt test vectors
   */
- 
- #include <dt-bindings/pinctrl/samsung.h>
-diff --git a/arch/arm/mach-s3c24xx/Kconfig b/arch/arm/mach-s3c24xx/Kconfig
-index c5c06d98b147..7673dde9671a 100644
---- a/arch/arm/mach-s3c24xx/Kconfig
-+++ b/arch/arm/mach-s3c24xx/Kconfig
-@@ -267,7 +267,7 @@ config MACH_TCT_HAMMER
- 	select S3C_DEV_USB_HOST
- 	help
- 	  Say Y here if you are using the TinCanTools Hammer Board
--	  <http://www.tincantools.com>
-+	  <https://www.tincantools.com>
- 
- config MACH_VR1000
- 	bool "Thorcom VR1000"
-diff --git a/arch/arm/mach-s3c24xx/mach-h1940.c b/arch/arm/mach-s3c24xx/mach-h1940.c
-index e1c372e5447b..f4710052843a 100644
---- a/arch/arm/mach-s3c24xx/mach-h1940.c
-+++ b/arch/arm/mach-s3c24xx/mach-h1940.c
-@@ -3,7 +3,7 @@
- // Copyright (c) 2003-2005 Simtec Electronics
- //   Ben Dooks <ben@simtec.co.uk>
- //
--// http://www.handhelds.org/projects/h1940.html
-+// https://www.handhelds.org/projects/h1940.html
- 
- #include <linux/kernel.h>
- #include <linux/types.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-mini2440.c b/arch/arm/mach-s3c24xx/mach-mini2440.c
-index 9035f868fb34..113b69ba4921 100644
---- a/arch/arm/mach-s3c24xx/mach-mini2440.c
-+++ b/arch/arm/mach-s3c24xx/mach-mini2440.c
-@@ -6,7 +6,7 @@
- //      Weibing <http://weibing.blogbus.com> and
- //      Michel Pollet <buserror@gmail.com>
- //
--// For product information, visit http://code.google.com/p/mini2440/
-+// For product information, visit https://code.google.com/p/mini2440/
- 
- #include <linux/kernel.h>
- #include <linux/types.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-n30.c b/arch/arm/mach-s3c24xx/mach-n30.c
-index d856f23939af..9ebde6dc6169 100644
---- a/arch/arm/mach-s3c24xx/mach-n30.c
-+++ b/arch/arm/mach-s3c24xx/mach-n30.c
-@@ -9,7 +9,7 @@
- // Copyright (c) 2005-2008 Christer Weinigel <christer@weinigel.se>
- //
- // There is a wiki with more information about the n30 port at
--// http://handhelds.org/moin/moin.cgi/AcerN30Documentation .
-+// https://handhelds.org/moin/moin.cgi/AcerN30Documentation .
- 
- #include <linux/kernel.h>
- #include <linux/types.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-rx3715.c b/arch/arm/mach-s3c24xx/mach-rx3715.c
-index 529c6faf862f..995f1ff34a1b 100644
---- a/arch/arm/mach-s3c24xx/mach-rx3715.c
-+++ b/arch/arm/mach-s3c24xx/mach-rx3715.c
-@@ -3,7 +3,7 @@
- // Copyright (c) 2003-2004 Simtec Electronics
- //	Ben Dooks <ben@simtec.co.uk>
- //
--// http://www.handhelds.org/projects/rx3715.html
-+// https://www.handhelds.org/projects/rx3715.html
- 
- #include <linux/kernel.h>
- #include <linux/types.h>
+ static const struct cipher_testvec fcrypt_pcbc_tv_template[] = {
+-	{ /* http://www.openafs.org/pipermail/openafs-devel/2000-December/005320.html */
++	{ /* https://www.openafs.org/pipermail/openafs-devel/2000-December/005320.html */
+ 		.key	= "\x00\x00\x00\x00\x00\x00\x00\x00",
+ 		.klen	= 8,
+ 		.iv	= "\x00\x00\x00\x00\x00\x00\x00\x00",
 -- 
 2.27.0
 
