@@ -7,36 +7,41 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD901C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4999A207EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA30207EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgGSRYt (ORCPT
+        id S1726127AbgGSRe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 13:24:49 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:35492 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgGSRYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 13:24:49 -0400
+        Sun, 19 Jul 2020 13:34:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgGSRe6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 13:34:58 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 060C7C0619D2;
+        Sun, 19 Jul 2020 10:34:57 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 5B174BC078;
-        Sun, 19 Jul 2020 17:24:45 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 3CB09BC063;
+        Sun, 19 Jul 2020 17:34:54 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jsarha@ti.com, tomi.valkeinen@ti.com, airlied@linux.ie,
-        daniel@ffwll.ch, robh+dt@kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+To:     lee.jones@linaro.org, robh+dt@kernel.org, joel@jms.id.au,
+        andrew@aj.id.au, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] drm/tilcdc: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 19:24:38 +0200
-Message-Id: <20200719172438.60536-1-grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] dt-bindings: aspeed-lpc: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 19:34:47 +0200
+Message-Id: <20200719173447.60603-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
+X-Spamd-Bar: ++++++
 Authentication-Results: smtp.al2klimov.de;
         auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -81,22 +86,25 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mfd/aspeed-lpc.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-index aac617acb64f..8b2a71395647 100644
---- a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-+++ b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-@@ -46,7 +46,7 @@ Optional nodes:
-     crossed and LCD_DATA[0:4] is for Red[3:7] and LCD_DATA[11:15] is
-     for Blue[3-7]. For more details see section 3.1.1 in AM335x
-     Silicon Errata:
--    http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=sprz360
-+    https://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=sprz360
+diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+index 86446074e206..4f3cf91b3b7f 100644
+--- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
++++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+@@ -35,9 +35,9 @@ Additionally the state of the LPC controller influences the pinmux
+ configuration, therefore the host portion of the controller is exposed as a
+ syscon as a means to arbitrate access.
  
- Example:
+-[0] http://www.intel.com/design/chipsets/industry/25128901.pdf
++[0] https://www.intel.com/design/chipsets/industry/25128901.pdf
+ [1] https://www.renesas.com/en-sg/doc/products/mpumcu/001/rej09b0078_h8s2168.pdf?key=7c88837454702128622bee53acbda8f4
+-[2] http://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/ipmi-second-gen-interface-spec-v2-rev1-1.pdf
++[2] https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/ipmi-second-gen-interface-spec-v2-rev1-1.pdf
+ [3] https://en.wikipedia.org/wiki/Super_I/O
  
+ Required properties
 -- 
 2.27.0
 
