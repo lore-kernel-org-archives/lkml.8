@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DB0C433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 05:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79114C433E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 05:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B929208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 05:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CD4208DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 05:11:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lpY4PtPC"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="c6Y2RE15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgGSFLU (ORCPT
+        id S1726666AbgGSFLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 01:11:20 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4662 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgGSFLU (ORCPT
+        Sun, 19 Jul 2020 01:11:31 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18228 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgGSFLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 01:11:20 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f13d5bb0000>; Sat, 18 Jul 2020 22:10:19 -0700
+        Sun, 19 Jul 2020 01:11:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f13d5f50000>; Sat, 18 Jul 2020 22:11:17 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 18 Jul 2020 22:11:19 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 18 Jul 2020 22:11:30 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 18 Jul 2020 22:11:19 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 19 Jul
- 2020 05:11:19 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 19 Jul 2020 05:11:19 +0000
+        by hqpgpgate101.nvidia.com on Sat, 18 Jul 2020 22:11:30 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 19 Jul
+ 2020 05:11:30 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sun, 19 Jul 2020 05:11:30 +0000
 Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f13d5f20000>; Sat, 18 Jul 2020 22:11:19 -0700
+        id <B5f13d5fd0000>; Sat, 18 Jul 2020 22:11:29 -0700
 From:   Sameer Pujar <spujar@nvidia.com>
 To:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
         <kuninori.morimoto.gx@renesas.com>, <robh+dt@kernel.org>,
@@ -50,9 +50,9 @@ CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <atalambedu@nvidia.com>, <nwartikar@nvidia.com>,
         <swarren@nvidia.com>, <nicoleotsuka@gmail.com>,
         Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH 08/10] ASoC: audio-graph: Add support for component chaining
-Date:   Sun, 19 Jul 2020 10:40:15 +0530
-Message-ID: <1595135417-16589-9-git-send-email-spujar@nvidia.com>
+Subject: [PATCH 10/10] arm64: tegra: Audio graph sound card for Jetson Nano and TX1
+Date:   Sun, 19 Jul 2020 10:40:17 +0530
+Message-ID: <1595135417-16589-11-git-send-email-spujar@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595135417-16589-1-git-send-email-spujar@nvidia.com>
 References: <1595135417-16589-1-git-send-email-spujar@nvidia.com>
@@ -60,122 +60,372 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595135419; bh=AiqEdZ6kbQEZN+yKxns+eeEbpHyNEjylXXmbVfA2vRc=;
+        t=1595135477; bh=7jOO8qtQ+67irHoTVwSaVNxkwxk1t+NtkaWFSQHqTpA=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=lpY4PtPC1RCmN21Y3KqN8JKVhYJV4xeUAbttKd8y05KYyRojl4UH86cw5GrZBlTez
-         XCxZdKgDIvx8MVoBL/q28pjVuzOW5GNT5dC962U4K59YMjD/jBm8Gjd53eSaWWnioa
-         av4IQh29lOPc9tAk4UbBMlGVA6mFwh6994MXW17dQAW6uKMX92UoHsEZ8w4Mcg7+MW
-         P11WoMkVQ6eqyfpF11/V1KpmAmrtUbsw/Q4zEsWTh0rGym2l3Vqgax9JEwVEa7vs9p
-         mFw5FtE+BdfWZIzVThRrneuskaRvTRB03ljG1jYgUMFibq2fumiZnN4WIXYvf0rgZi
-         KOje/Hd3e7JzA==
+        b=c6Y2RE15QRDjlXsVjo+wXE1ds/7X7mlHRx8RZ7b+Cy2QJws9dW2HhD7ICvhgsprCe
+         bdP+0PHdJAqFDUJbxDLAXQDd70wF0iK6YreWfWlFcvJY8QOcTmlayr18YMmtaROrP1
+         gFSijCQ4gmajz98AjBxyOURG/xm6HB9Fv5MXHi3LXurUSxCqF47s3vJF/dnaAS/5Xq
+         AvO9vNOZtK1yWkHSReRi/ZtMD/FgNe+bb/7Nl56TKnnbO8Y6qhYLLo0Y3WrZEJUq6m
+         I3Ngg4VPhN1GQ+bq1GdLUTgZ8VCaToZEVz2krsnydoqs58dDzoChhhTvtpURIyANDl
+         dQxFVCuR5PKSQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The audio-graph driver supports both normal and DPCM DAI links. The
-sound cards requiring DPCM DAI link support, use DPCM_SELECTABLE flag
-and DAI links are treated as DPCM links depending on the number of
-child nodes in a given DAI link.
+Enable support for audio-graph based sound card on Jetson-Nano and
+Jetson-TX1. Depending on the platform, required I/O interfaces are
+enabled.
 
-There is another requirement where multiple ASoC components need to
-be connected together in a chained fashion in a component model. This
-patch sets 'component_chaining' flag for such sound cards where FE<->BE
-and multiple BE<->BE component connections are required. Hence support
-for such sound cards is added under 'audio-graph-cc-card' compatible.
-All DAI links under this are treated as DPCM links.
+ * Jetson-Nano: Enable I2S3, I2S4, DMIC1 and DMIC2.
+ * Jetson-TX1: Enable all I2S and DMIC interfaces.
 
 Signed-off-by: Sameer Pujar <spujar@nvidia.com>
 ---
- sound/soc/generic/audio-graph-card.c | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 196 +++++++++++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 110 ++++++++++++
+ 2 files changed, 306 insertions(+)
 
-diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
-index 82d8c740..ccfcf5f 100644
---- a/sound/soc/generic/audio-graph-card.c
-+++ b/sound/soc/generic/audio-graph-card.c
-@@ -20,10 +20,13 @@
- #include <linux/string.h>
- #include <sound/simple_card_utils.h>
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
+index 56adf28..d228f02 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
+@@ -3,6 +3,7 @@
  
--#define DPCM_SELECTABLE 1
--
- #define PREFIX	"audio-graph-card,"
+ #include "tegra210-p2180.dtsi"
+ #include "tegra210-p2597.dtsi"
++#include "tegra210-audio-graph.dtsi"
  
-+struct asoc_simple_soc_data {
-+	unsigned int dpcm_selectable:1;
-+	unsigned int component_chaining:1;
+ / {
+ 	model = "NVIDIA Jetson TX1 Developer Kit";
+@@ -126,4 +127,199 @@
+ 			status = "okay";
+ 		};
+ 	};
++
++	tegra_sound {
++		status = "okay";
++
++		dais = /* FE */
++		       <&admaif_port>,
++		       /* Router */
++		       <&xbar_port>,
++		       /* I/O DAP Ports */
++		       <&i2s1_port>, <&i2s2_port>, <&i2s3_port>, <&i2s4_port>, <&i2s5_port>,
++		       <&dmic1_port>, <&dmic2_port>, <&dmic3_port>;
++
++		label = "jetson-tx1-ape";
++	};
 +};
 +
- static int graph_outdrv_event(struct snd_soc_dapm_widget *w,
- 			      struct snd_kcontrol *kcontrol,
- 			      int event)
-@@ -449,7 +452,7 @@ static int graph_for_each_link(struct asoc_simple_priv *priv,
- 	struct device_node *codec_ep;
- 	struct device_node *codec_port;
- 	struct asoc_simple_data adata;
--	uintptr_t dpcm_selectable = (uintptr_t)of_device_get_match_data(dev);
-+	const struct asoc_simple_soc_data *data = of_device_get_match_data(dev);
- 	int rc, ret;
- 
- 	/* loop for all listed CPU port */
-@@ -476,10 +479,12 @@ static int graph_for_each_link(struct asoc_simple_priv *priv,
- 			 * It is DPCM
- 			 * if Codec port has many endpoints,
- 			 * or has convert-xxx property
-+			 * or component chaining is used
- 			 */
--			if (dpcm_selectable &&
-+			if (data && data->dpcm_selectable &&
- 			    ((of_get_child_count(codec_port) > 1) ||
--			     adata.convert_rate || adata.convert_channels))
-+			     adata.convert_rate || adata.convert_channels ||
-+			     data->component_chaining))
- 				ret = func_dpcm(priv, cpu_ep, codec_ep, li);
- 			/* else normal sound */
- 			else
-@@ -650,6 +655,7 @@ static int graph_probe(struct platform_device *pdev)
- {
- 	struct asoc_simple_priv *priv;
- 	struct device *dev = &pdev->dev;
-+	const struct asoc_simple_soc_data *data = of_device_get_match_data(dev);
- 	struct snd_soc_card *card;
- 	struct link_info li;
- 	int ret;
-@@ -666,6 +672,9 @@ static int graph_probe(struct platform_device *pdev)
- 	card->num_dapm_widgets	= ARRAY_SIZE(graph_dapm_widgets);
- 	card->probe		= graph_card_probe;
- 
-+	if (data)
-+		card->component_chaining = data->component_chaining;
-+
- 	memset(&li, 0, sizeof(li));
- 	graph_get_dais_count(priv, &li);
- 	if (!li.link || !li.dais)
-@@ -711,10 +720,19 @@ static int graph_remove(struct platform_device *pdev)
- 	return asoc_simple_clean_reference(card);
- }
- 
-+static const struct asoc_simple_soc_data scu_card_data = {
-+	.dpcm_selectable = 1,
++&tegra_admaif {
++	status = "okay";
 +};
 +
-+static const struct asoc_simple_soc_data cc_card_data = {
-+	.dpcm_selectable = 1,
-+	.component_chaining = 1,
++&tegra_ahub {
++	status = "okay";
++
++	port@1 {
++		xbar_i2s1: endpoint@a {
++			reg = <0xa>;
++			remote-endpoint = <&i2s1_cif>;
++		};
++		xbar_i2s2: endpoint@b {
++			reg = <0xb>;
++			remote-endpoint = <&i2s2_cif>;
++		};
++		xbar_i2s3: endpoint@c {
++			reg = <0xc>;
++			remote-endpoint = <&i2s3_cif>;
++		};
++		xbar_i2s4: endpoint@d {
++			reg = <0xd>;
++			remote-endpoint = <&i2s4_cif>;
++		};
++		xbar_i2s5: endpoint@e {
++			reg = <0xe>;
++			remote-endpoint = <&i2s5_cif>;
++		};
++		xbar_dmic1: endpoint@f {
++			reg = <0xf>;
++			remote-endpoint = <&dmic1_cif>;
++		};
++		xbar_dmic2: endpoint@10 {
++			reg = <0x10>;
++			remote-endpoint = <&dmic2_cif>;
++		};
++		xbar_dmic3: endpoint@11 {
++			reg = <0x11>;
++			remote-endpoint = <&dmic3_cif>;
++		};
++	};
 +};
 +
- static const struct of_device_id graph_of_match[] = {
- 	{ .compatible = "audio-graph-card", },
--	{ .compatible = "audio-graph-scu-card",
--	  .data = (void *)DPCM_SELECTABLE },
-+	{ .compatible = "audio-graph-scu-card", .data = &scu_card_data, },
-+	{ .compatible = "audio-graph-cc-card", .data = &cc_card_data, },
- 	{},
++&tegra_i2s1 {
++	status = "okay";
++
++	port@0 {
++		i2s1_cif: endpoint@0 {
++			remote-endpoint = <&xbar_i2s1>;
++		};
++	};
++
++	i2s1_port: port@1 {
++		i2s1_dap: endpoint@0 {
++			dai-format = "i2s";
++
++			/* Placeholder for external Codec */
++		};
++	};
++};
++
++&tegra_i2s2 {
++	status = "okay";
++
++	port@0 {
++		i2s2_cif: endpoint@0 {
++			remote-endpoint = <&xbar_i2s2>;
++		};
++	};
++
++	i2s2_port: port@1 {
++		i2s2_dap: endpoint@0 {
++			dai-format = "i2s";
++
++			/* Placeholder for external Codec */
++		};
++	};
++};
++
++&tegra_i2s3 {
++	status = "okay";
++
++	port@0 {
++		i2s3_cif: endpoint@0 {
++			remote-endpoint = <&xbar_i2s3>;
++		};
++	};
++
++	i2s3_port: port@1 {
++		i2s3_dap: endpoint@0 {
++			dai-format = "i2s";
++
++			/* Placeholder for external Codec */
++		};
++	};
++};
++
++&tegra_i2s4 {
++	status = "okay";
++
++	port@0 {
++		i2s4_cif: endpoint@0 {
++			remote-endpoint = <&xbar_i2s4>;
++		};
++	};
++
++	i2s4_port: port@1 {
++		i2s4_dap: endpoint@0 {
++			dai-format = "i2s";
++
++			/* Placeholder for external Codec */
++		};
++	};
++};
++
++&tegra_i2s5 {
++	status = "okay";
++
++	port@0 {
++		i2s5_cif: endpoint@0 {
++			remote-endpoint = <&xbar_i2s5>;
++		};
++	};
++
++	i2s5_port: port@1 {
++		i2s5_dap: endpoint@0 {
++			dai-format = "i2s";
++
++			/* Placeholder for external Codec */
++		};
++	};
++};
++
++&tegra_dmic1 {
++	status = "okay";
++
++	port@0 {
++		dmic1_cif: endpoint@0 {
++			remote-endpoint = <&xbar_dmic1>;
++		};
++	};
++
++	dmic1_port: port@1 {
++		dmic1_dap: endpoint@0 {
++			/* Placeholder for external Codec */
++		};
++	};
++};
++
++&tegra_dmic2 {
++	status = "okay";
++
++	port@0 {
++		dmic2_cif: endpoint@0 {
++			remote-endpoint = <&xbar_dmic2>;
++		};
++	};
++
++	dmic2_port: port@1 {
++		dmic2_dap: endpoint@0 {
++			/* Placeholder for external Codec */
++		};
++	};
++};
++
++&tegra_dmic3 {
++	status = "okay";
++
++	port@0 {
++		dmic3_cif: endpoint@0 {
++			remote-endpoint = <&xbar_dmic3>;
++		};
++	};
++
++	dmic3_port: port@1 {
++		dmic3_dap: endpoint@0 {
++			/* Placeholder for external Codec */
++		};
++	};
  };
- MODULE_DEVICE_TABLE(of, graph_of_match);
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+index 0325fc0..0226297 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+@@ -6,6 +6,7 @@
+ #include <dt-bindings/mfd/max77620.h>
+ 
+ #include "tegra210.dtsi"
++#include "tegra210-audio-graph.dtsi"
+ 
+ / {
+ 	model = "NVIDIA Jetson Nano Developer Kit";
+@@ -818,4 +819,113 @@
+ 			status = "okay";
+ 		};
+ 	};
++
++	tegra_sound {
++		status = "okay";
++
++		dais = /* FE */
++		       <&admaif_port>,
++		       /* Router */
++		       <&xbar_port>,
++		       /* I/O DAP Ports */
++		       <&i2s3_port>, <&i2s4_port>,
++		       <&dmic1_port>, <&dmic2_port>;
++
++		label = "jetson-nano-ape";
++	};
++};
++
++&tegra_admaif {
++	status = "okay";
++};
++
++&tegra_ahub {
++	status = "okay";
++
++	port@1 {
++		xbar_i2s3: endpoint@c {
++			reg = <0xc>;
++			remote-endpoint = <&i2s3_cif>;
++		};
++		xbar_i2s4: endpoint@d {
++			reg = <0xd>;
++			remote-endpoint = <&i2s4_cif>;
++		};
++		xbar_dmic1: endpoint@f {
++			reg = <0xf>;
++			remote-endpoint = <&dmic1_cif>;
++		};
++		xbar_dmic2: endpoint@10 {
++			reg = <0x10>;
++			remote-endpoint = <&dmic2_cif>;
++		};
++	};
++};
++
++&tegra_i2s3 {
++	status = "okay";
++
++	port@0 {
++		i2s3_cif: endpoint@0 {
++			remote-endpoint = <&xbar_i2s3>;
++		};
++	};
++
++	i2s3_port: port@1 {
++		i2s3_dap: endpoint@0 {
++			dai-format = "i2s";
++
++			/* Placeholder for external Codec */
++		};
++	};
++};
++
++&tegra_i2s4 {
++	status = "okay";
++
++	port@0 {
++		i2s4_cif: endpoint@0 {
++			remote-endpoint = <&xbar_i2s4>;
++		};
++	};
++
++	i2s4_port: port@1 {
++		i2s4_dap: endpoint@0 {
++			dai-format = "i2s";
++
++			/* Placeholder for external Codec */
++		};
++	};
++};
++
++&tegra_dmic1 {
++	status = "okay";
++
++	port@0 {
++		dmic1_cif: endpoint@0 {
++			remote-endpoint = <&xbar_dmic1>;
++		};
++	};
++
++	dmic1_port: port@1 {
++		dmic1_dap: endpoint@0 {
++			/* Placeholder for external Codec */
++		};
++	};
++};
++
++&tegra_dmic2 {
++	status = "okay";
++
++	port@0 {
++		dmic2_cif: endpoint@0 {
++			remote-endpoint = <&xbar_dmic2>;
++		};
++	};
++
++	dmic2_port: port@1 {
++		dmic2_dap: endpoint@0 {
++			/* Placeholder for external Codec */
++		};
++	};
+ };
 -- 
 2.7.4
 
