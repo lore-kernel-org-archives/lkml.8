@@ -2,95 +2,91 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F291C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DB1C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 04:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3AF207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926C420684
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 04:07:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="YN+yV8+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgGSD7n (ORCPT
+        id S1725988AbgGSEGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 23:59:43 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:56930 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726284AbgGSD7m (ORCPT
+        Sun, 19 Jul 2020 00:06:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgGSEGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 23:59:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U36eCsi_1595131176;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U36eCsi_1595131176)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 19 Jul 2020 11:59:37 +0800
-Subject: Re: [PATCH v16 15/22] mm/compaction: do page isolation first in
- compaction
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
- <1594429136-20002-16-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0Ue72SfAmxCS+tay1NjioW9WBOvVgrhwUtVPz2aDCrcHPQ@mail.gmail.com>
- <e724c44b-4135-3302-16fa-1df624fa81fa@linux.alibaba.com>
- <CAKgT0UcbvTid8RqDgsZjewdEo1wTD8BDjPHo59UX9gKQEkZUtA@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <dd0a75b5-c8b2-8b66-79b9-0f6ce259e227@linux.alibaba.com>
-Date:   Sun, 19 Jul 2020 11:59:36 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Sun, 19 Jul 2020 00:06:40 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11E6CC0619D4
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 21:06:40 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id v8so14313829iox.2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 21:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ihKeSQeLv7BBxInfCJI8ZRk0YjhCHk5lYGDi1OJs57k=;
+        b=YN+yV8+92VHbOUHL0HTyo5JNlm0zk+zZ0D57uInpIH9RnDoAIgBQIeKKdSuXadAb3/
+         qeA9TZEqiX/maRX4jLkStfPgYILKEI3eedN9CJXP991d15Qnhgwdm9R3rpXGoRQGd8XK
+         q6UcbKVbPO726Dsdu1TyHnYDmNQzOMwUlYUAM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ihKeSQeLv7BBxInfCJI8ZRk0YjhCHk5lYGDi1OJs57k=;
+        b=ImdIaZdZ/WsVBtRAu2iFsq53iMTCEWXHMVkYfIbKosRoK5ilOT+Ep+/tBORY79sxmk
+         Y+hu0jQslM8BwY65weztt7GrllSNXMNDjzj9w4GBth4g/WcZZQrv0rSbrOhh7+Dsogb1
+         o34Vrwa25WWUbdOQ8XpQXde9H6Gz6BZUwJ0dNxeyA4mb1oXVfaiHIz1BaBxT2yz2pCLh
+         zmmOAsVO/tK9CxUUcALlnZB31/XaCXGp34NepZB9YB0fRwDX6qDqZP3QtXHUTbkWqNJB
+         cVHd6Nd8+URVwGmmzveVjNiLicxt6K2YFzFihFq0FnNfI9PdJ+JIMh/iQmV3KkOqdkgk
+         l3tw==
+X-Gm-Message-State: AOAM532fB5LIcWH3L6Yhd5WiHDe6w8zVMTOeKc1OdJi/p0PW89erUIe4
+        /iaOQHZAn1fvhiUAcIBCgHZu4aLKh/JacZ/eOmRBKgWCCqA=
+X-Google-Smtp-Source: ABdhPJxrziSRaJdKhJ3sXR1kDEShPsgwAGaKXwtBtn0FUhDvAOM+vhDazqqIdVifwpKuJODJXGmMvpWYuqQ25uFPhec=
+X-Received: by 2002:a05:6638:1504:: with SMTP id b4mr16212035jat.23.1595131599242;
+ Sat, 18 Jul 2020 21:06:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UcbvTid8RqDgsZjewdEo1wTD8BDjPHo59UX9gKQEkZUtA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200719035518.2386828-1-joel@joelfernandes.org>
+In-Reply-To: <20200719035518.2386828-1-joel@joelfernandes.org>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Sun, 19 Jul 2020 00:06:28 -0400
+Message-ID: <CAEXW_YQhYiYQZOJ95dqBcu_fAZ_6k7HGbrw53eTgPrgXU+5few@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] rcu/segcblist: Add counters to segcblist datastructure
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 18, 2020 at 11:55 PM Joel Fernandes (Google)
+<joel@joelfernandes.org> wrote:
+[...]
+>         /* If no callbacks moved, nothing more need be done. */
+> @@ -419,10 +494,9 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
+>          * callbacks.  The overall effect is to copy down the later pointers
+>          * into the gap that was created by the now-ready segments.
+>          */
+> -       for (j = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL; i++, j++) {
+> -               if (rsclp->tails[j] == rsclp->tails[RCU_NEXT_TAIL])
+> -                       break;  /* No more callbacks. */
+> +       for (j = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL && j < RCU_NEXT_TAIL; i++, j++) {
+>                 WRITE_ONCE(rsclp->tails[j], rsclp->tails[i]);
+> +               rcu_segcblist_move_seglen(rsclp, i, j);
+>                 rsclp->gp_seq[j] = rsclp->gp_seq[i];
+>         }
 
-
-在 2020/7/18 上午12:09, Alexander Duyck 写道:
->>> I wonder if it wouldn't make sense to combine these two atomic ops
->>> with tests and the put_page into a single inline function? Then it
->>> could be possible to just do one check and if succeeds you do the
->>> block of code below, otherwise you just fall-through into the -EBUSY
->>> case.
->>>
->> Uh, since get_page changes page->_refcount, TestClearPageLRU changes page->flags,
->> So I don't know how to combine them, could you make it more clear with code?
-> Actually it is pretty straight forward. Something like this:
-> static inline bool get_page_unless_zero_or_nonlru(struct page *page)
-> {
->     if (get_page_unless_zero(page)) {
->         if (TestClearPageLRU(page))
->             return true;
->         put_page(page);
->     }
->     return false;
-> }
-> 
-> You can then add comments as necessary. The general idea is you are
-> having to do this in two different spots anyway so why not combine the
-> logic? Although it does assume you can change the ordering of the
-> other test above.
-
-
-It doesn't look different with original code, does it?
-
-Thanks
-Alex
+Unfortunately I broke this code, _sigh_.  I need to reinstate the
+if (rsclp->tails[j] == rsclp->tails[RCU_NEXT_TAIL]) , I completely
+misunderstood that.
