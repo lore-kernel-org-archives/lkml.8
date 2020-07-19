@@ -2,106 +2,121 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296DDC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F4FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0869B207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB29B207DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:52:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hb/74Vi3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6zbQL2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgGSDnQ (ORCPT
+        id S1726559AbgGSDwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 23:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47258 "EHLO
+        Sat, 18 Jul 2020 23:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgGSDnP (ORCPT
+        with ESMTP id S1726330AbgGSDwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 23:43:15 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90BBC0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 20:43:14 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ch3so8422415pjb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 20:43:14 -0700 (PDT)
+        Sat, 18 Jul 2020 23:52:39 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC6C4C0619D2;
+        Sat, 18 Jul 2020 20:52:38 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id di5so5980171qvb.11;
+        Sat, 18 Jul 2020 20:52:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1T+jh3W0scfcnuMl49PwBnYGAGM1oxS7ItKUJQINCeQ=;
-        b=hb/74Vi3K6fWinqsDmMmRpLg0iU4bTITUl88+EjkSaYsj1wAgJuZG4vRaHVdmKWdG0
-         oEOF3tamNVmX5GkgGKnMtxsg+xGCpLue5v3p0akz+ph3pvyYk2hr6Zbnft5a+gk2Sopw
-         7w5L7l3pUQ4ot7ZuMZzzaKPROB/PwGHrqkl2qXAQ5bL7pI3RiHXnvpiXvoNFl9Bm5uC/
-         HLjfipCUu6vBKMr8K+a4C8tQtPf6PWVr9Nycwzk7284HtBdo9LlLMjiJa8O+f6hZZaYt
-         DMAm4+uoJvrbdcStt9c7zAFwrZ2T5d6nCGXfYyXRHNHQIvN0R2FPRo9TXuLg3yj+EfQw
-         l2kQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HH+LFV8ckb7MRgw6RiflBdfDfAcUZi2F+LZQ/h34g2E=;
+        b=G6zbQL2BdKZN9zkB9eB/o8yJ1EIuO+inpr88GMjZB2FDXt5swCzdtRzjJsONVnjI1Z
+         /uaXMPqLb+Sa1/IT3S70pz2QEcc3khjTDHzwZeDNzvR2czU6SuTlLDP1A+gkj4q/Y4dn
+         KQ7JRn9Z2iLYrMLl5mfkpR/KKja9gZDK3PgmttJ6RK5tNxMlB3bwIyO4TUGxHxHctlzO
+         AqVMdbDeeCPJ6NJWNnD7gybR+cj45qigTVKspkuA/scFO/NorDHf7zPI3uUtoDFmUOx5
+         1arRJxN3lo+IKOlENRwknFt4eip52AQSPK/7IHJfYkdZB/hNUjHRZdZiy0k1P8kd5w05
+         r5GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1T+jh3W0scfcnuMl49PwBnYGAGM1oxS7ItKUJQINCeQ=;
-        b=OdRODhaZigo2LGF5vJZ4lKaWyMjldEEVODtu3J2BELZ+44c2ctmP4vZja/5p8ddXjC
-         PmAzY5oJ3Jtv6hEAHKpIpYHOhiXAc4bScQQJhlI2e6Y1A9lNLXeXp3RsXrzetDRRwn5M
-         AUcMDbOOhdMZdX1Rk978QZpF6jDJ01+P8FO6P7wjAo3DhOWjB167wB4lmx5YwpsMDceu
-         Vlp0jK/AYWFbKwg3LeVyT+YKdKiIiuBywVzhg7wSk7ohkH55Mh2CzifHZKdmaW9A50R4
-         VY3Eo/MOPjwe//0hNlf9in7CdsocPaWuCLcKX/rzQClhZCcf1xyq90Ew40mJic4inpsp
-         VnJA==
-X-Gm-Message-State: AOAM532qyLx0zjPvDRVe7geD849TSceQnpBTRhRw1ydmfxYVlFM2RyIg
-        6yXt9pnoEQXUuBbYowZeZXU=
-X-Google-Smtp-Source: ABdhPJwOzfXrGodK4X9wqgPOinhduh1qLcO2IjhVoI8/76munxpfiVXlFyQSgGn4Vpa9eAPnyzMqpQ==
-X-Received: by 2002:a17:902:9042:: with SMTP id w2mr13073419plz.8.1595130194284;
-        Sat, 18 Jul 2020 20:43:14 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id cv7sm6752345pjb.9.2020.07.18.20.43.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 20:43:13 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 12:43:12 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Marco Elver <elver@google.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] printk: use the lockless ringbuffer
-Message-ID: <20200719034312.GA566736@jagdpanzerIV.localdomain>
-References: <20200709132344.760-1-john.ogness@linutronix.de>
- <20200709132344.760-5-john.ogness@linutronix.de>
- <20200718121053.GA691245@elver.google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HH+LFV8ckb7MRgw6RiflBdfDfAcUZi2F+LZQ/h34g2E=;
+        b=OGJ4xzw7InvqDaZxJzKU0o44ZsnAqYH1tx1kbdMJgUh4JIQKJG+Ur5haOP4Y1qmz8w
+         ZJCVF41CdXSGEmt+E6XXZxaed04SgrIMcsD03IDeMUP7fmNRi4TZGm8tEvFTvSM/VNg5
+         Cf8qVzDCMPFTQMCHfjq1J0GTUk69k46zIk5Zdsf2U4vbSs4fpWazNcr0WeiWQrHah0I7
+         KOzVpwpEXKgRxnjco+V0GjTVxeUblaMq90TEt7lZ2VDStr6zgrrr09PkyJEoG0GBfc0+
+         2ReaD8yVElRhGIQVTZ2TYF1r44b2mL7gl4cbZcBzmNinPW56je1i72Tq5vSvy2kkr1dX
+         +aXg==
+X-Gm-Message-State: AOAM531KyMkLDdOgNyAOdXNqhr6b82Pm20N76aNVyjNM1i0yLnQ8tXXo
+        2mCJsK6OA89aED2DNJGwXiQHHOFiDjzMG46OieY=
+X-Google-Smtp-Source: ABdhPJxVfFTd4fl3vlr8dWi+hOaHpZfcw5bPem+4YNYL19k5vZ//gCbkSWsPxcwnw/YxRXCDwsl7jUSt0whKIikfnjw=
+X-Received: by 2002:a05:6214:946:: with SMTP id dn6mr15722853qvb.224.1595130758033;
+ Sat, 18 Jul 2020 20:52:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200718121053.GA691245@elver.google.com>
+References: <20200717072319.101302-1-irogers@google.com>
+In-Reply-To: <20200717072319.101302-1-irogers@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Sat, 18 Jul 2020 20:52:27 -0700
+Message-ID: <CAEf4BzbAAzOL-7dqLnvmuhm3HZ_sNH5UWMTwzk2xbWkNggzY+g@mail.gmail.com>
+Subject: Re: [PATCH] libbpf bpf_helpers: Use __builtin_offsetof for offsetof
+ if available
+To:     Ian Rogers <irogers@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Stanislav Fomichev <sdf@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marco,
+On Fri, Jul 17, 2020 at 12:24 AM Ian Rogers <irogers@google.com> wrote:
+>
+> The non-builtin route for offsetof has a dependency on size_t from
+> stdlib.h/stdint.h that is undeclared and may break targets.
+> The offsetof macro in bpf_helpers may disable the same macro in other
+> headers that have a #ifdef offsetof guard. Rather than add additional
+> dependencies improve the offsetof macro declared here to use the
+> builtin if available.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/bpf/bpf_helpers.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/tools/lib/bpf/bpf_helpers.h b/tools/lib/bpf/bpf_helpers.h
+> index a510d8ed716f..ed2ac74fc515 100644
+> --- a/tools/lib/bpf/bpf_helpers.h
+> +++ b/tools/lib/bpf/bpf_helpers.h
+> @@ -40,8 +40,12 @@
+>   * Helper macro to manipulate data structures
+>   */
+>  #ifndef offsetof
+> +#if __has_builtin(__builtin_offsetof)
+> +#define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+> +#else
+>  #define offsetof(TYPE, MEMBER)  ((size_t)&((TYPE *)0)->MEMBER)
 
-On (20/07/18 14:10), Marco Elver wrote:
-> 
-> It seems this causes a regression observed at least with newline-only
-> printks. I noticed this during -next testing because various debugging
-> tools (K*SAN, lockdep, etc.) use e.g. pr_{err,warn,info}("\n") to format
-> reports.
-> 
-> Without wanting to wait for a report from one of these debugging tools,
-> a simple reproducer is below. Without this patch, the expected newline
-> is printed.
+Let's either always use __builtin_offsetof (as Yonghong mentioned, it
+should always be available on relevant LLVM versions). Or instead of
+size_t, just cast to (unsigned long), I think it will have absolutely
+the same effect as size_t casting?
 
-Empty/blank lines carry no valuable payload, could you please explain
-why do you consider this to be a regression?
-
-	-ss
+>  #endif
+> +#endif
+>  #ifndef container_of
+>  #define container_of(ptr, type, member)                                \
+>         ({                                                      \
+> --
+> 2.28.0.rc0.105.gf9edc3c819-goog
+>
