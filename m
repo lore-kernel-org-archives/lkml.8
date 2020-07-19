@@ -2,80 +2,88 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00911C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B79CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDB2821775
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07CCA22B4E
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595171594;
+	bh=TlXTSAsSOac8Qtiptyjyh5/Vm+YFyJhPk0Qrt97Ikf4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lwN/AgTcX8lgkNuhXYzr0YMuP8QrMaExJAFOoTqQUg385QIM2n0442zEQzU18qBPq
+	 g+tn/8Mey+IQD/PpO3ixGhKKbAx/psJkyKdjX87iJi2FsBuE6Jc58gCaAiA22nPihq
+	 Cogb5j6MYKe4TwUKmv591duDx4rQW3brtJOWsptA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgGSPFC (ORCPT
+        id S1726404AbgGSPM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 11:05:02 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43512 "EHLO vps0.lunn.ch"
+        Sun, 19 Jul 2020 11:12:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbgGSPFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 11:05:02 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jxAs1-005srb-NY; Sun, 19 Jul 2020 17:04:53 +0200
-Date:   Sun, 19 Jul 2020 17:04:53 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH net-next v1] net: phy: at803x: add mdix configuration
- support for AR9331 and AR8035
-Message-ID: <20200719150453.GE1383417@lunn.ch>
-References: <20200719080530.24370-1-o.rempel@pengutronix.de>
+        id S1726024AbgGSPM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 11:12:59 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7517E22BEF
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 15:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595171578;
+        bh=TlXTSAsSOac8Qtiptyjyh5/Vm+YFyJhPk0Qrt97Ikf4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cYLErWbIB9SWIWZf/b/i10t54A4cXxsR9IPnWDQ9B6koCU//6tH1ygGScYq5UY7m5
+         ZrmhpH0dCqT8uEpeQlfXEvwwu6idH9F/Nh8BXxQRiqepDRtCAYwU+WY7zTKPRnX1SQ
+         8ww5BjC44E2h6jeKZ/FCUed9HmvBcIKS+6BQk0e8=
+Received: by mail-wm1-f48.google.com with SMTP id 22so19968457wmg.1
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 08:12:58 -0700 (PDT)
+X-Gm-Message-State: AOAM532eMW3GWfaa9N2r9lajTcxvsjwu/CT/Tb2hdUYaW/HkEn5SdMz/
+        6wI/9DjlCeko0NMjr8h3yQPGyxgRDtMnUZBYFaHbvA==
+X-Google-Smtp-Source: ABdhPJy3sP1MKHyJa8dHCmnkj1CZ7ULf6bUubt98uthTUuEgQoBUMN2KuV52xPp/kfGPODxApq1EKeXT3K5gbycS/as=
+X-Received: by 2002:a7b:c92e:: with SMTP id h14mr17167909wml.36.1595171576997;
+ Sun, 19 Jul 2020 08:12:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200719080530.24370-1-o.rempel@pengutronix.de>
+References: <000000000000bd4f7305aac6870d@google.com>
+In-Reply-To: <000000000000bd4f7305aac6870d@google.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 19 Jul 2020 08:12:45 -0700
+X-Gmail-Original-Message-ID: <CALCETrXreVrWEsBBYX8KS=-DFW=5RB7SAKcgcdPtzJtML6n7UQ@mail.gmail.com>
+Message-ID: <CALCETrXreVrWEsBBYX8KS=-DFW=5RB7SAKcgcdPtzJtML6n7UQ@mail.gmail.com>
+Subject: Re: WARNING in do_syscall_64
+To:     syzbot <syzbot+29454675f5fe94137999@syzkaller.appspotmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs@googlegroups.com,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 10:05:30AM +0200, Oleksij Rempel wrote:
-> This patch add MDIX configuration ability for AR9331 and AR8035. Theoretically
-> it should work on other Atheros PHYs, but I was able to test only this
-> two.
-> 
-> Since I have no certified reference HW able to detect or configure MDIX, this
-> functionality was confirmed by oscilloscope.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  drivers/net/phy/at803x.c | 78 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 78 insertions(+)
-> 
-> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-> index 96c61aa75bd7..101651b2de54 100644
-> --- a/drivers/net/phy/at803x.c
-> +++ b/drivers/net/phy/at803x.c
-> @@ -21,6 +21,17 @@
->  #include <linux/regulator/consumer.h>
->  #include <dt-bindings/net/qca-ar803x.h>
->  
-> +#define AT803X_SPECIFIC_FUNCTION_CONTROL	0x10
-> +#define AT803X_SFC_ASSERT_CRS			BIT(11)
-> +#define AT803X_SFC_FORCE_LINK			BIT(10)
-> +#define AT803X_SFC_MDI_CROSSOVER_MODE_M		GENMASK(6, 5)
-> +#define AT803X_SFC_AUTOMATIC_CROSSOVER		0x3
-> +#define AT803X_SFC_MANUAL_MDIX			0x1
-> +#define AT803X_SFC_MANUAL_MDI			0x0
+On Sun, Jul 19, 2020 at 12:42 AM syzbot
+<syzbot+29454675f5fe94137999@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    e9919e11 Merge branch 'for-linus' of git://git.kernel.org/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11dca4cf100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e944500a36bc4d55
+> dashboard link: https://syzkaller.appspot.com/bug?extid=29454675f5fe94137999
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+>
+> Unfortunately, I don't have any reproducer for this issue yet.
 
-Interestingly, these are the same bits as for the Marvell PHY. I had a
-quick look at 802.3. The functionality is standardized, but not the
-registers.
+On a brief inspection, the only way I can see this happening is if the
+syscall flags msr got corrupted.  There's not much code between the
+actual hardware entry and this warning.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+--Andy
