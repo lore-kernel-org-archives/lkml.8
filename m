@@ -2,237 +2,212 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38DAC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE58C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2B1B22B4D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581A620738
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:23:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iIuQudLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgGSPRR (ORCPT
+        id S1726307AbgGSPXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 11:17:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40086 "EHLO
+        Sun, 19 Jul 2020 11:23:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgGSPRQ (ORCPT
+        with ESMTP id S1726024AbgGSPXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 11:17:16 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A72C0619D2;
-        Sun, 19 Jul 2020 08:17:16 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 17AF3BC084;
-        Sun, 19 Jul 2020 15:17:11 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     perex@perex.cz, tiwai@suse.com, corbet@lwn.net,
-        gustavo@embeddedor.com, chris@boyle.name, andrew@adoakley.name,
-        alsa-devel@alsa-project.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] ALSA: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 17:17:05 +0200
-Message-Id: <20200719151705.59624-1-grandmaster@al2klimov.de>
+        Sun, 19 Jul 2020 11:23:32 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1899FC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 08:23:32 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id n24so10322461otr.13
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 08:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=npp/93Tw/UNG7wuun0xJ8aEfrE13mxMIaC451NaQlRA=;
+        b=iIuQudLo0HnETmx/BDnV8c5T1wpkk40S8JmHxCI8QCrihJssRJAoA4LAc1g1Sv56+u
+         +7Uxy/PX8+jpIV2AVoY72uTHc9VfxdqUCaKT2s2HX68YF2WAo36dtuzTM+yl+CL2sz9e
+         HSymh8fwhiCqjKNOGM8uGrD9VIEoFZQWX+a6PKUM01TVkqgmbiNVzf34s40CFlUfUzVO
+         mL7EXsnW9lMe/4KpIgCNUnd0rx5bUokjAI4nM7u67Ctl95KfH40HXALe7bVgFfyqiHAC
+         NXqhfuoPNx64Fw6u9wdLe8J4ReWZh2Z+sM6DHwSQ3/RPAMhWcA5sTic67FmHgeSKoCzM
+         5Szw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=npp/93Tw/UNG7wuun0xJ8aEfrE13mxMIaC451NaQlRA=;
+        b=cOkKQC1TnckWJ3FYVubEHlN0CtgjcRKbEH9a30ApzLXMexl5hbaH1Sfu2UrTmxRrt5
+         s16OusV2rZzBt6ziGSrMPm5GWfOoQ4GURkvLggWlx4esdjxLuiGRUwipR7HW6EtNfhiE
+         7IkioodAVB8hJdI3chFgUULMZN+gibP59IHbRuFh55XnAjJXZBtz57621FVw80FgeH5E
+         B0UUgiXEBWNU10ErrBSU+vDrcfmRNBAdLhm4DBI+UMZ9fCPgtpgUQ/4S8jNHJnzZz6n+
+         D7PHsvXTPY3/rlOwzxg/sc+sYud5wbXNyBhPLIijuPaRoMbSLyKOC3/5ahGECGtmcyn9
+         vNgg==
+X-Gm-Message-State: AOAM530Aw2fFIqcbusvvtOn7wVbc31lHhlBbpf3/4zpq/DXgFAG7x91m
+        /pGbEC53OX6D9SEUErI0/C+unA==
+X-Google-Smtp-Source: ABdhPJyPPT7Nza9zb9cdBb8Qzd97v1BOwbuy5GgTZqNIaIhES3Xc2VtIjVjErb8UB+Cm/QaIrlvbRQ==
+X-Received: by 2002:a05:6830:441:: with SMTP id d1mr15232229otc.6.1595172211014;
+        Sun, 19 Jul 2020 08:23:31 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id h16sm3019869otr.10.2020.07.19.08.23.28
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Sun, 19 Jul 2020 08:23:29 -0700 (PDT)
+Date:   Sun, 19 Jul 2020 08:23:14 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [PATCH v16 00/22] per memcg lru_lock
+In-Reply-To: <57c619e7-da7e-198e-3de8-530bf19b9450@linux.alibaba.com>
+Message-ID: <alpine.LSU.2.11.2007190801490.3521@eggly.anvils>
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com> <CAKgT0UcKVyTXQ=tGv_uMV+fSvoH_-cuG9zA_zhE+S8Ou11gt=w@mail.gmail.com> <57c619e7-da7e-198e-3de8-530bf19b9450@linux.alibaba.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: MULTIPART/MIXED; BOUNDARY="0-1711634045-1595172209=:3521"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+--0-1711634045-1595172209=:3521
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+On Fri, 17 Jul 2020, Alex Shi wrote:
+> =E5=9C=A8 2020/7/16 =E4=B8=8B=E5=8D=8810:11, Alexander Duyck =E5=86=99=E9=
+=81=93:
+> >> Thanks for Testing support from Intel 0day and Rong Chen, Fengguang Wu=
+,
+> >> and Yun Wang. Hugh Dickins also shared his kbuild-swap case. Thanks!
+> > Hi Alex,
+> >=20
+> > I think I am seeing a regression with this patch set when I run the
+> > will-it-scale/page_fault3 test. Specifically the processes result is
+> > dropping from 56371083 to 43127382 when I apply these patches.
+> >=20
+> > I haven't had a chance to bisect and figure out what is causing it,
+> > and wanted to let you know in case you are aware of anything specific
+> > that may be causing this.
+>=20
+>=20
+> Thanks a lot for the info!
+>=20
+> Actually, the patch 17th, and patch 13th may changed performance a little=
+,
+> like the 17th, intel LKP found vm-scalability.throughput 68.0% improvemen=
+t,
+> and stress-ng.remap.ops_per_sec -76.3% regression, or stress-ng.memfd.ops=
+_per_sec
+>  +23.2%. etc.
+>=20
+> This kind performance interference is known and acceptable.
+
+That may be too blithe a response.
+
+I can see that I've lots of other mails to reply to, from you and from
+others - I got held up for a week in advancing from gcc 4.8 on my test
+machines. But I'd better rush this to you before reading further, because
+what I was hunting the last few days rather invalidates earlier testing.
+And I'm glad that I held back from volunteering a Tested-by - though,
+yes, v13 and later are stable where the older versions were unstable.
+
+I noticed that 5.8-rc5, with lrulock v16 applied, took significantly
+longer to run loads than without it applied, when there should have been
+only slight differences in system time. Comparing /proc/vmstat, something
+that stood out was "pgrotated 0" for the patched kernels, which led here:
+
+If pagevec_lru_move_fn() is now to TestClearPageLRU (I have still not
+decided whether that's good or not, but assume here that it is good),
+then functions called though it must be changed not to expect PageLRU!
+
+Signed-off-by: Hugh Dickins <hughd@google.com>
 ---
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
 
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+ mm/swap.c |   14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+--- 5.8-rc5-lru16/mm/swap.c=092020-07-15 21:03:42.781236769 -0700
++++ linux/mm/swap.c=092020-07-18 13:28:14.000000000 -0700
+@@ -227,7 +227,7 @@ static void pagevec_lru_move_fn(struct p
+=20
+ static void pagevec_move_tail_fn(struct page *page, struct lruvec *lruvec)
+ {
+-=09if (PageLRU(page) && !PageUnevictable(page)) {
++=09if (!PageUnevictable(page)) {
+ =09=09del_page_from_lru_list(page, lruvec, page_lru(page));
+ =09=09ClearPageActive(page);
+ =09=09add_page_to_lru_list_tail(page, lruvec, page_lru(page));
+@@ -300,7 +300,7 @@ void lru_note_cost_page(struct page *pag
+=20
+ static void __activate_page(struct page *page, struct lruvec *lruvec)
+ {
+-=09if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
++=09if (!PageActive(page) && !PageUnevictable(page)) {
+ =09=09int lru =3D page_lru_base_type(page);
+ =09=09int nr_pages =3D hpage_nr_pages(page);
+=20
+@@ -357,7 +357,8 @@ void activate_page(struct page *page)
+=20
+ =09page =3D compound_head(page);
+ =09lruvec =3D lock_page_lruvec_irq(page);
+-=09__activate_page(page, lruvec);
++=09if (PageLRU(page))
++=09=09__activate_page(page, lruvec);
+ =09unlock_page_lruvec_irq(lruvec);
+ }
+ #endif
+@@ -515,9 +516,6 @@ static void lru_deactivate_file_fn(struc
+ =09bool active;
+ =09int nr_pages =3D hpage_nr_pages(page);
+=20
+-=09if (!PageLRU(page))
+-=09=09return;
+-
+ =09if (PageUnevictable(page))
+ =09=09return;
+=20
+@@ -558,7 +556,7 @@ static void lru_deactivate_file_fn(struc
+=20
+ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec)
+ {
+-=09if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
++=09if (PageActive(page) && !PageUnevictable(page)) {
+ =09=09int lru =3D page_lru_base_type(page);
+ =09=09int nr_pages =3D hpage_nr_pages(page);
+=20
+@@ -575,7 +573,7 @@ static void lru_deactivate_fn(struct pag
+=20
+ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec)
+ {
+-=09if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
++=09if (PageAnon(page) && PageSwapBacked(page) &&
+ =09    !PageSwapCache(page) && !PageUnevictable(page)) {
+ =09=09bool active =3D PageActive(page);
+ =09=09int nr_pages =3D hpage_nr_pages(page);
 
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- Documentation/sound/alsa-configuration.rst  | 6 +++---
- Documentation/sound/cards/audigy-mixer.rst  | 2 +-
- Documentation/sound/cards/sb-live-mixer.rst | 2 +-
- Documentation/sound/hd-audio/notes.rst      | 6 +++---
- include/sound/hdmi-codec.h                  | 2 +-
- include/sound/omap-hdmi-audio.h             | 2 +-
- sound/isa/Kconfig                           | 2 +-
- sound/sparc/dbri.c                          | 2 +-
- sound/usb/mixer_maps.c                      | 2 +-
- 9 files changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/Documentation/sound/alsa-configuration.rst b/Documentation/sound/alsa-configuration.rst
-index 72f97d4b01a7..c755b1c5e16f 100644
---- a/Documentation/sound/alsa-configuration.rst
-+++ b/Documentation/sound/alsa-configuration.rst
-@@ -309,7 +309,7 @@ pcifix
- This module supports all ADB PCM channels, ac97 mixer, SPDIF, hardware
- EQ, mpu401, gameport. A3D and wavetable support are still in development.
- Development and reverse engineering work is being coordinated at
--http://savannah.nongnu.org/projects/openvortex/
-+https://savannah.nongnu.org/projects/openvortex/
- SPDIF output has a copy of the AC97 codec output, unless you use the
- ``spdif`` pcm device, which allows raw data passthru.
- The hardware EQ hardware and SPDIF is only present in the Vortex2 and 
-@@ -1575,7 +1575,7 @@ See Documentation/sound/cards/multisound.sh for important information
- about this driver.  Note that it has been discontinued, but the 
- Voyetra Turtle Beach knowledge base entry for it is still available
- at
--http://www.turtlebeach.com
-+https://www.turtlebeach.com
- 
- Module snd-msnd-pinnacle
- ------------------------
-@@ -2703,4 +2703,4 @@ Kernel Bugzilla
- ALSA Developers ML
-     mailto:alsa-devel@alsa-project.org
- alsa-info.sh script
--    http://www.alsa-project.org/alsa-info.sh
-+    https://www.alsa-project.org/alsa-info.sh
-diff --git a/Documentation/sound/cards/audigy-mixer.rst b/Documentation/sound/cards/audigy-mixer.rst
-index 86213234435f..998f76e19cdd 100644
---- a/Documentation/sound/cards/audigy-mixer.rst
-+++ b/Documentation/sound/cards/audigy-mixer.rst
-@@ -331,7 +331,7 @@ WO 9901953 (A1)
-         Execution and Audio Data Sequencing (Jan. 14, 1999)
- 
- 
--US Patents (http://www.uspto.gov/)
-+US Patents (https://www.uspto.gov/)
- ----------------------------------
- 
- US 5925841
-diff --git a/Documentation/sound/cards/sb-live-mixer.rst b/Documentation/sound/cards/sb-live-mixer.rst
-index bcb62fc99bbb..eccb0f0ffd0f 100644
---- a/Documentation/sound/cards/sb-live-mixer.rst
-+++ b/Documentation/sound/cards/sb-live-mixer.rst
-@@ -336,7 +336,7 @@ WO 9901953 (A1)
-         Execution and Audio Data Sequencing (Jan. 14, 1999)
- 
- 
--US Patents (http://www.uspto.gov/)
-+US Patents (https://www.uspto.gov/)
- ----------------------------------
- 
- US 5925841
-diff --git a/Documentation/sound/hd-audio/notes.rst b/Documentation/sound/hd-audio/notes.rst
-index 0f3109d9abc8..cf4d7158af78 100644
---- a/Documentation/sound/hd-audio/notes.rst
-+++ b/Documentation/sound/hd-audio/notes.rst
-@@ -42,7 +42,7 @@ If you are interested in the deep debugging of HD-audio, read the
- HD-audio specification at first.  The specification is found on
- Intel's web page, for example:
- 
--* http://www.intel.com/standards/hdaudio/
-+* https://www.intel.com/standards/hdaudio/
- 
- 
- HD-Audio Controller
-@@ -728,7 +728,7 @@ version can be found on git repository:
- 
- The script can be fetched directly from the following URL, too:
- 
--* http://www.alsa-project.org/alsa-info.sh
-+* https://www.alsa-project.org/alsa-info.sh
- 
- Run this script as root, and it will gather the important information
- such as the module lists, module parameters, proc file contents
-@@ -818,7 +818,7 @@ proc-compatible output.
- 
- The hda-analyzer:
- 
--* http://git.alsa-project.org/?p=alsa.git;a=tree;f=hda-analyzer
-+* https://git.alsa-project.org/?p=alsa.git;a=tree;f=hda-analyzer
- 
- is a part of alsa.git repository in alsa-project.org:
- 
-diff --git a/include/sound/hdmi-codec.h b/include/sound/hdmi-codec.h
-index 83b17682e01c..cc0b29bbcde3 100644
---- a/include/sound/hdmi-codec.h
-+++ b/include/sound/hdmi-codec.h
-@@ -2,7 +2,7 @@
- /*
-  * hdmi-codec.h - HDMI Codec driver API
-  *
-- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Author: Jyri Sarha <jsarha@ti.com>
-  */
-diff --git a/include/sound/omap-hdmi-audio.h b/include/sound/omap-hdmi-audio.h
-index 16c007b651f4..e5f82044a404 100644
---- a/include/sound/omap-hdmi-audio.h
-+++ b/include/sound/omap-hdmi-audio.h
-@@ -2,7 +2,7 @@
- /*
-  * hdmi-audio.c -- OMAP4+ DSS HDMI audio support library
-  *
-- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Author: Jyri Sarha <jsarha@ti.com>
-  */
-diff --git a/sound/sparc/dbri.c b/sound/sparc/dbri.c
-index cf7049999261..2d0144562173 100644
---- a/sound/sparc/dbri.c
-+++ b/sound/sparc/dbri.c
-@@ -22,7 +22,7 @@
-  *   - Data sheet of the T7903, a newer but very similar ISA bus equivalent
-  *     available from the Lucent (formerly AT&T microelectronics) home
-  *     page.
-- *   - http://www.freesoft.org/Linux/DBRI/
-+ *   - https://www.freesoft.org/Linux/DBRI/
-  * - MMCODEC: Crystal Semiconductor CS4215 16 bit Multimedia Audio Codec
-  *   Interfaces: CHI, Audio In & Out, 2 bits parallel
-  *   Documentation: from the Crystal Semiconductor home page.
-diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
-index 9af7aa93f6fa..2ec484655201 100644
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -233,7 +233,7 @@ static const struct usbmix_name_map maya44_map[] = {
- };
- 
- /* Section "justlink_map" below added by James Courtier-Dutton <James@superbug.demon.co.uk>
-- * sourced from Maplin Electronics (http://www.maplin.co.uk), part number A56AK
-+ * sourced from Maplin Electronics (https://www.maplin.co.uk), part number A56AK
-  * Part has 2 connectors that act as a single output. (TOSLINK Optical for digital out, and 3.5mm Jack for Analogue out.)
-  * The USB Mixer publishes a Microphone and extra Volume controls for it, but none exist on the device,
-  * so this map removes all unwanted sliders from alsamixer
--- 
-2.27.0
-
+--0-1711634045-1595172209=:3521--
