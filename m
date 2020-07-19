@@ -2,98 +2,114 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NO_DNS_FOR_FROM,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83341C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 02:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B76C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60E0E2065E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 02:55:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilL28ZpC"
+	by mail.kernel.org (Postfix) with ESMTP id E2BE520775
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbgGSCze (ORCPT
+        id S1726576AbgGSDRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 22:55:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40036 "EHLO
+        Sat, 18 Jul 2020 23:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgGSCze (ORCPT
+        with ESMTP id S1726463AbgGSDRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 22:55:34 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D357EC0619D2;
-        Sat, 18 Jul 2020 19:55:33 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id m16so7104819pls.5;
-        Sat, 18 Jul 2020 19:55:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2M4Qa2olyORresQsut8Cp6qPC+IrwWwUiFJ6Jo6XIQ4=;
-        b=ilL28ZpCZZIN10B8hkLVLHZwMKbw7ud+IGVnFxfHrCaO8ebpPjWndBZXoiEuduWCQI
-         G4tCN+8HlZQXOXg50AOnvdfCO763MM8hjyj1pEOcfLbwP3EbXofh5ffTUBJZ1CYs4dxh
-         KcMeklHj21U6zBdWkMQJtE7S1/0nO9T1tK4xDoazfVPwXJ8URj0LKfcYee1K1olL2AMN
-         OYdSOD/s0Qflsr6Bc6NMg89MF3qhx6ocJZEDna1g4KonLcHkzMv62FGGR1kLlgppvjXJ
-         10weG/3HYIqSh/SNDZgriy43ghQzx7gH/7jfmeWk/PfwjMV6/wGbCDN6WrEHQpzuqZRw
-         m1nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2M4Qa2olyORresQsut8Cp6qPC+IrwWwUiFJ6Jo6XIQ4=;
-        b=uEPDWb2ztBzyqMW5EVOT7FiwzWrOaDfWYvrl6nQA/rvfv+RiLeC1YOxi89iSDJ8asI
-         WMXy9JtSOUe7hcdud26e9LWylXguS0mToqAV/whi+pVTtcrHGFcqHEYfkMUx37qJ8STe
-         4EohnRIxjq3bUk+a2Wa9jjw6x79NxL+/nyxqSSosnBsebkE1fpPU/ND2qZZPFgtrocdS
-         XUaLUtYstCNQLsV4/kg0J/jsFZ3lZZ2tK/56i1ATXIUqEaGcNcImeAmsRmaAltuJBLx9
-         lbejorq6X7atmEgAiFNVg0gknvVhyHV2lPklpjfP2x89aEoRM2IeO1GImX5LxCezj5Dm
-         hYMQ==
-X-Gm-Message-State: AOAM530FZRAhF06rBCR40oSVRKl52OESwrGPjHbMNg/H4ywahPf6sIY3
-        hkmdgS69yXQK54lfMUwT2cA=
-X-Google-Smtp-Source: ABdhPJy8IEnys6yHlW+aHSX4G8axatKfXu9OmTIvh22OsdueHa0AbEfGj3bKWWxH/KWy0PAWE66d7g==
-X-Received: by 2002:a17:90a:20ad:: with SMTP id f42mr16368847pjg.96.1595127333231;
-        Sat, 18 Jul 2020 19:55:33 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id q14sm11289958pgk.86.2020.07.18.19.55.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 19:55:32 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Sun, 19 Jul 2020 11:55:30 +0900
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     corbet@lwn.net, pmladek@suse.com, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] docs: core-api/printk-formats.rst: use literal block
- syntax
-Message-ID: <20200719025530.GA70571@jagdpanzerIV.localdomain>
-References: <20200718165107.625847-1-dwlsalmeida@gmail.com>
- <20200718165107.625847-8-dwlsalmeida@gmail.com>
+        Sat, 18 Jul 2020 23:17:36 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF3DDC0619D2;
+        Sat, 18 Jul 2020 20:17:35 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwzpV-00FQNz-EZ; Sun, 19 Jul 2020 03:17:33 +0000
+Date:   Sun, 19 Jul 2020 04:17:33 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC] raw_copy_from_user() semantics
+Message-ID: <20200719031733.GI2786714@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200718165107.625847-8-dwlsalmeida@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/07/18 13:51), Daniel W. S. Almeida wrote:
-> Fix the following warning:
-> 
-> WARNING: Definition list ends without a blank line;
-> unexpected unindent.
-> 
-> By switching to the literal block syntax.
-> 
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+	Back in 2017 I'd made a bogus promise regarding raw_copy_from_user().
+ Namely, that in case of short copy it will copy at least something unless
+nothing could've been read at all.
 
-Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+	Such property could've been used by code that would want to squeeze
+every byte, by doing copy_from_user() in a loop, advancing the source and
+destination by the amount copied until we stop getting any progress.
 
-	-ss
+	There are two problems with that.  First of all, the promise was
+bogus - there are architectures where it is simply not true.  E.g. ppc
+(or alpha, or sparc, or...)  can have copy_from_user() called with source
+one word prior to an unmapped page, fetch that word, fail to fetch the next
+one and bugger off without doing any stores.
+
+	So any byte-squeezing loop of that sort would break on a bunch
+of architectures.  Another problem is that we simply don't have a lot
+of such loops.	Looking through the mainline kernel has found only two
+such beasts - one in vcs_write() and another in iomap_dio_inline_actor().
+Both are in write(2) and write(2) has never made any warranties regarding
+the situation when a part of buffer we want to write is unreadable.
+In particular, it does *not* squeeze every last byte out - not for
+regular files on local filesystems, not for NFS, not for pipes, not for
+sockets, etc.
+
+	E.g. in case of generic_perform_write() we treat "nothing has
+been copied" as "try to fault in, fail if that's not possible, retry the
+attempt to copy otherwise"; we have to, since we are doing the copying
+with pagefaults disabled, so a failure to copy anything may be simply
+due to a page evicted by memory pressure.  And if we have an evicted page
+followed by genuinely unreadable one, we can very well have fault-in fail
+(and write stop) while we still have a couple of kilobytes worth of data
+yet to be copied from the evicted page.
+
+	We could try to make the promise true; that would mean messing
+with a lot of unpleasant asm code (in exception handlers, at that) and
+I don't believe it's worth the bother.  We could add a "squeeze every
+last byte" helper, but I don't see any valid users for it right now.
+
+	BTW, "do copy_from_user() in a loop" is not a good way to do such
+helper anyway - if we stop copying on a fault and lose some data already
+fetched, that data is not going to be more than a few registers worth,
+so it's better to have this helper do a byte-by-byte get_user() loop
+for dealing with that case.
+
+	IMO we should simply remove the bogus promise, document the real
+situation and if somebody needs the "squeeze every last byte" helper,
+let them say so.  Audit of the current mainline shows only two places
+that might be trying something like that and AFAICS both are accidental.
+
+	Does anybody object against the following?
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 7bcadca22100..083fda6aa384 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -30,10 +30,11 @@
+  * starting at from.  All data past to + size - N must be left unmodified.
+  *
+  * If copying succeeds, the return value must be 0.  If some data cannot be
+- * fetched, it is permitted to copy less than had been fetched; the only
+- * hard requirement is that not storing anything at all (i.e. returning size)
+- * should happen only when nothing could be copied.  In other words, you don't
+- * have to squeeze as much as possible - it is allowed, but not necessary.
++ * fetched, it is permitted to copy less than had been fetched.  In other
++ * words, you don't have to squeeze as much as possible - it is allowed, but
++ * not necessary.  In particular, it is possible to have some bytes fetched
++ * and nothing copied, so do _not_ assume that doing copies until we get to
++ * "nothing copied" will copy every byte that can be fetched.
+  *
+  * For raw_copy_from_user() to always points to kernel memory and no faults
+  * on store should happen.  Interpretation of from is affected by set_fs().
