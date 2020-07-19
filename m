@@ -2,80 +2,156 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F813C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41535C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC8621741
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F753208B3
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgGSRQI (ORCPT
+        id S1726154AbgGSRSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 13:16:08 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:52290 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgGSRQH (ORCPT
+        Sun, 19 Jul 2020 13:18:14 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:38242 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgGSRSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 13:16:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id k12so9754679iom.19
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 10:16:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=uWsaInl6El+/D5enNDY+jTmOBPyNvNc8dNA1QiA0S0c=;
-        b=fRMQRKwDi5qgkF8eA5PHas/4QMcOXl63QM7VtiBIvkgLEEadq0864r7r7UXIbuB5BJ
-         8MSB2A+zD4wnC1e/Cwda4SaaGDoOMtzgVPdR3ZRVn0Gu+JzHrHTTBQRwEPfFu607Z9qV
-         tRNSFA9o8ff/ERGj8k0e3n+akUnQlJ/Hbdc5qsAFnuGS9Nrzfze6ivFbyrX0FUASR49t
-         vILESY+iWcvXsdqb8YZTtnHggSRg2LnYs6HhMcgB1N0QZ+txUdiequAjLmBNqN+eFdEm
-         DFVxyj2jaMu3WrVu6g3ilhfhS909nGZjCWs4XxVR0lwPbGM4Ow4d1rNpvcWZjL7+xYD4
-         lGLA==
-X-Gm-Message-State: AOAM531gRdNSHxNdeTiDp+vZxTUZRwLpm+OYwStqcWyZOOKRceOkdSiw
-        vdKpbxtSZmACTn+fUGj60GJaxYr2GQFH4vs2P9yasXnUYQA7
-X-Google-Smtp-Source: ABdhPJyqtWSRK+J0kwgjyR9dCgOB/4uCy+2pVK5gDCT/d7MyHs2xxFLVTglqQ0deuai/N8yljwZPA1Qoe/b/OkExASNGKUx+4h19
+        Sun, 19 Jul 2020 13:18:13 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id CE31220026;
+        Sun, 19 Jul 2020 19:18:07 +0200 (CEST)
+Date:   Sun, 19 Jul 2020 19:18:06 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v5 3/4] drm/bridge: Introduce LT9611 DSI to HDMI bridge
+Message-ID: <20200719171806.GA55541@ravnborg.org>
+References: <20200708103559.132300-1-vkoul@kernel.org>
+ <20200708103559.132300-4-vkoul@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:58d6:: with SMTP id z83mr19077343ilf.186.1595178967166;
- Sun, 19 Jul 2020 10:16:07 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 10:16:07 -0700
-In-Reply-To: <000000000000418fc105aa4243aa@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b0fb8b05aace8b8e@google.com>
-Subject: Re: INFO: rcu detected stall in sys_clock_settime
-From:   syzbot <syzbot+f3bd350a4124f10acdae@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, davem@davemloft.net, jhs@mojatatu.com,
-        jiri@resnulli.us, linux-kernel@vger.kernel.org, mingo@elte.hu,
-        netdev@vger.kernel.org, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vinicius.gomes@intel.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708103559.132300-4-vkoul@kernel.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8
+        a=fbRPyE8KL9-ZYcdT3u0A:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=cvBusfyB2V15izCimMoJ:22 a=AjGcO6oz07-iQ99wixmX:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
+Hi Vinod.
 
-commit 5a781ccbd19e4664babcbe4b4ead7aa2b9283d22
-Author: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Date:   Sat Sep 29 00:59:43 2018 +0000
+Three trivial points below.
+The rest looks good.
 
-    tc: Add support for configuring the taprio scheduler
+With these fixed you can add:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=167142f0900000
-start commit:   e9919e11 Merge branch 'for-linus' of git://git.kernel.org/..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=157142f0900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=117142f0900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a160d1053fc89af5
-dashboard link: https://syzkaller.appspot.com/bug?extid=f3bd350a4124f10acdae
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1353c420900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=130f8ef7100000
+	Sam
 
-Reported-by: syzbot+f3bd350a4124f10acdae@syzkaller.appspotmail.com
-Fixes: 5a781ccbd19e ("tc: Add support for configuring the taprio scheduler")
+On Wed, Jul 08, 2020 at 04:05:58PM +0530, Vinod Koul wrote:
+> Lontium Lt9611 is a DSI to HDMI bridge which supports two DSI ports and
+> I2S port as an input and HDMI port as output
+> 
+> Co-developed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Co-developed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Tested-by: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  drivers/gpu/drm/bridge/Kconfig          |   13 +
+>  drivers/gpu/drm/bridge/Makefile         |    1 +
+>  drivers/gpu/drm/bridge/lontium-lt9611.c | 1142 +++++++++++++++++++++++
+>  3 files changed, 1156 insertions(+)
+>  create mode 100644 drivers/gpu/drm/bridge/lontium-lt9611.c
+> 
+> +
+> +#include <drm/drm_probe_helper.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_bridge.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_print.h>
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+In alphabetical order. drm_probe_helper needs to be moved.
+
+> +
+> +#define EDID_SEG_SIZE	256
+> +#define EDID_LEN	32
+> +#define EDID_LOOP	8
+> +#define KEY_DDC_ACCS_DONE 0x02
+> +#define DDC_NO_ACK	0x50
+> +
+
+
+> +static void lt9611_pcr_setup(struct lt9611 *lt9611, const struct drm_display_mode *mode)
+> +{
+> +	const struct reg_sequence reg_cfg[] = {
+> +		{ 0x830b, 0x01 },
+> +		{ 0x830c, 0x10 },
+> +		{ 0x8348, 0x00 },
+> +		{ 0x8349, 0x81 },
+> +
+> +		/* stage 1 */
+> +		{ 0x8321, 0x4a },
+> +		{ 0x8324, 0x71 },
+> +		{ 0x8325, 0x30 },
+> +		{ 0x832a, 0x01 },
+> +
+> +		/* stage 2 */
+> +		{ 0x834a, 0x40 },
+> +		{ 0x831d, 0x10 },
+> +
+> +		/* MK limit */
+> +		{ 0x832d, 0x38 },
+> +		{ 0x8331, 0x08 },
+> +	};
+> +	const struct reg_sequence reg_cfg2[] = {
+> +			{ 0x830b, 0x03 },
+> +			{ 0x830c, 0xd0 },
+> +			{ 0x8348, 0x03 },
+> +			{ 0x8349, 0xe0 },
+> +			{ 0x8324, 0x72 },
+> +			{ 0x8325, 0x00 },
+> +			{ 0x832a, 0x01 },
+> +			{ 0x834a, 0x10 },
+> +			{ 0x831d, 0x10 },
+> +			{ 0x8326, 0x37 },
+Block above is indented one tab too much.
+
+> +static int lt9611_bridge_attach(struct drm_bridge *bridge,
+> +				enum drm_bridge_attach_flags flags)
+> +{
+> +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
+> +	int ret;
+> +
+> +	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
+> +		dev_err(lt9611->dev, "Fix bridge driver to make connector optional!");
+> +		return -EINVAL;
+> +	}
+This should say that the display driver should be fixed.
+If a display driver expects this bridge to create the connector
+it would not work.
+
+
