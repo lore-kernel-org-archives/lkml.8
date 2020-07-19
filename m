@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B05C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 286FB20809
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4EE20809
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qRJjKVSg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sQC86ok7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgGSSIB (ORCPT
+        id S1726620AbgGSSIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 14:08:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37844 "EHLO
+        Sun, 19 Jul 2020 14:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgGSSIB (ORCPT
+        with ESMTP id S1725783AbgGSSIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 14:08:01 -0400
+        Sun, 19 Jul 2020 14:08:20 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C3FFC0619D2;
-        Sun, 19 Jul 2020 11:08:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D589C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 11:08:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=D+bIWePhzHxSHXZqtVGQdIeUuY0Gtn/vgiCXs1nMm0U=; b=qRJjKVSg3rFTpnQjTdm+K/NV9M
-        pJxC/+Nv+asalBUxA1v/4XU9hXw/GM788pLjmHY1sCqnuBlUKRZQ8fxaHhrYOibnGUrjt2dadEABA
-        ByFAkeNo6cF3bqo2vHFBc4jhhvVUFwiHKt7p4vBqyV4BEfDTLyRmhalUspcdgLiS6VIwWX1hsXc9E
-        LKxlcFczoFA9u8ngoGMm5otEaF5fK4iitC++O+u7Gki0FryUvs4Bp7m21m90TI5OmsigwJDXiERLI
-        XzYi66T+i3PgoqD4lK9wXyQ8sWikRjjQ0T6fKcdevXY/WsoGS0VDsohV7A+6SI83IfGy+xMhVwjxr
-        pPlCAk5Q==;
+        bh=PAx/+9RU+aVAmEL3qldgG4FzyQkJ920RlAj2ob/fuxM=; b=sQC86ok7JRwckcLcDsUe1AIDVz
+        wMX5LDzPuVNH5f/HVaQdwuEwRzw/y1SOgd5xTDC88o4Ny6p6vn2wVwdt4ptD1vUw7VhxFn2kkJdy6
+        Nx5Ss4u4TC9j5GP5i3Eu/UDhdq8esrZLqzy3CQgfRYclsFYUp+qvNt3Ok39556LKlrlreQX+aDXPs
+        Oz8i3nhvllRgNdb9x6Tv1DyL26qcsOgMJjSgeu91pY5WxSe/zgDfw40Fqti1I4hrLUgAjttRsL3Cf
+        r2oDX1pKvkvZieVAsxEBJvx1C7HsHWWbR5KI5/ekY24uXeP0LFifMQmYImHyfnRPcGoo9tiofXFFj
+        bBEHrxIg==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxDj7-00069C-QF; Sun, 19 Jul 2020 18:07:55 +0000
+        id 1jxDjS-0006AC-G9; Sun, 19 Jul 2020 18:08:16 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH] crypto: testmgr.h: delete duplicated words
-Date:   Sun, 19 Jul 2020 11:07:50 -0700
-Message-Id: <20200719180750.11862-1-rdunlap@infradead.org>
+        Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antonio Quartulli <a@unstable.cc>,
+        Sven Eckelmann <sven@narfation.org>,
+        b.a.t.m.a.n@lists.open-mesh.org
+Subject: [PATCH] net: batman-adv: types.h: delete duplicated words
+Date:   Sun, 19 Jul 2020 11:08:11 -0700
+Message-Id: <20200719180811.11964-1-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -56,60 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Delete the doubled word "from" in multiple places.
+Delete the doubled word "time" in a comment.
+Delete the doubled word "address" in a comment.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org
+Cc: Marek Lindner <mareklindner@neomailbox.ch>
+Cc: Simon Wunderlich <sw@simonwunderlich.de>
+Cc: Antonio Quartulli <a@unstable.cc>
+Cc: Sven Eckelmann <sven@narfation.org>
+Cc: b.a.t.m.a.n@lists.open-mesh.org
 ---
- crypto/testmgr.h |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ net/batman-adv/types.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- linux-next-20200717.orig/crypto/testmgr.h
-+++ linux-next-20200717/crypto/testmgr.h
-@@ -3916,7 +3916,7 @@ static const struct hash_testvec hmac_sm
- };
+--- linux-next-20200717.orig/net/batman-adv/types.h
++++ linux-next-20200717/net/batman-adv/types.h
+@@ -1492,7 +1492,7 @@ struct batadv_tp_vars {
+ 	/** @unacked_lock: protect unacked_list */
+ 	spinlock_t unacked_lock;
  
- /*
-- * SHA1 test vectors  from from FIPS PUB 180-1
-+ * SHA1 test vectors from FIPS PUB 180-1
-  * Long vector from CAVS 5.0
+-	/** @last_recv_time: time time (jiffies) a msg was received */
++	/** @last_recv_time: time (jiffies) a msg was received */
+ 	unsigned long last_recv_time;
+ 
+ 	/** @refcount: number of context where the object is used */
+@@ -1996,7 +1996,7 @@ struct batadv_tt_change_node {
   */
- static const struct hash_testvec sha1_tv_template[] = {
-@@ -4103,7 +4103,7 @@ static const struct hash_testvec sha1_tv
+ struct batadv_tt_req_node {
+ 	/**
+-	 * @addr: mac address address of the originator this request was sent to
++	 * @addr: mac address of the originator this request was sent to
+ 	 */
+ 	u8 addr[ETH_ALEN];
  
- 
- /*
-- * SHA224 test vectors from from FIPS PUB 180-2
-+ * SHA224 test vectors from FIPS PUB 180-2
-  */
- static const struct hash_testvec sha224_tv_template[] = {
- 	{
-@@ -4273,7 +4273,7 @@ static const struct hash_testvec sha224_
- };
- 
- /*
-- * SHA256 test vectors from from NIST
-+ * SHA256 test vectors from NIST
-  */
- static const struct hash_testvec sha256_tv_template[] = {
- 	{
-@@ -4442,7 +4442,7 @@ static const struct hash_testvec sha256_
- };
- 
- /*
-- * SHA384 test vectors from from NIST and kerneli
-+ * SHA384 test vectors from NIST and kerneli
-  */
- static const struct hash_testvec sha384_tv_template[] = {
- 	{
-@@ -4632,7 +4632,7 @@ static const struct hash_testvec sha384_
- };
- 
- /*
-- * SHA512 test vectors from from NIST and kerneli
-+ * SHA512 test vectors from NIST and kerneli
-  */
- static const struct hash_testvec sha512_tv_template[] = {
- 	{
