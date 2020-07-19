@@ -7,64 +7,68 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B469C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DA5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0992E208B3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E050C22CAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="xjRq7OvE";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="PVgbZv72"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="eiG6FIV1";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="P8jCNWOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgGSRMH (ORCPT
+        id S1726173AbgGSROc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 13:12:07 -0400
-Received: from relay3.mymailcheap.com ([217.182.66.161]:33616 "EHLO
-        relay3.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgGSRMH (ORCPT
+        Sun, 19 Jul 2020 13:14:32 -0400
+Received: from relay5.mymailcheap.com ([159.100.241.64]:55625 "EHLO
+        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgGSROb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 13:12:07 -0400
+        Sun, 19 Jul 2020 13:14:31 -0400
+X-Greylist: delayed 517 seconds by postgrey-1.27 at vger.kernel.org; Sun, 19 Jul 2020 13:14:29 EDT
+Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
+        by relay5.mymailcheap.com (Postfix) with ESMTPS id 2D16F200DB;
+        Sun, 19 Jul 2020 17:05:51 +0000 (UTC)
 Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
-        by relay3.mymailcheap.com (Postfix) with ESMTPS id 69AB23ECDF;
-        Sun, 19 Jul 2020 19:12:05 +0200 (CEST)
+        by relay3.mymailcheap.com (Postfix) with ESMTPS id 3E3EF3ECDF;
+        Sun, 19 Jul 2020 19:05:49 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by filter1.mymailcheap.com (Postfix) with ESMTP id ACAFD2A354;
-        Sun, 19 Jul 2020 13:12:04 -0400 (EDT)
+        by filter1.mymailcheap.com (Postfix) with ESMTP id 6C07D2A3B7;
+        Sun, 19 Jul 2020 13:05:48 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1595178724;
-        bh=FV+wR9CULgMQqlgDNOjT69yBHwivGDyAlFaoqfduitg=;
+        s=default; t=1595178348;
+        bh=ELid77VVNx1YqQOuhBe9RsMJyM8XGB3o70MJQYb+aSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xjRq7OvEaFLeXZv+/7n4rBzF8vXU6RnULYcxdyK9axzD3ITmr6j+8nqxSPeGERhPL
-         wKOs2PwMCgUoIjNFJUBPArtoJcPN5RUukZQ0butZfZuu7tEPMs83WQhwVqF8dVlKsl
-         fYKZWwfZwQ4hNPt/9Cu9Jbf7s1UGvP38QBIb/1ao=
+        b=eiG6FIV1vosAbrlmJwsm/wKN0XpWi3TSovx82MTQ4k/EfDix9FaxUK3eFKXyGqmei
+         yh+0qWrr8pTshIrTeETpmqrXAfAFW2R61uw8Rxw27uDTinnWGOGkmKPI+AnFPvko2g
+         AVaT2Z7YlKtZCNugYyU3wxIGL7qMShLYNtS4N+fQ=
 X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
 Received: from filter1.mymailcheap.com ([127.0.0.1])
         by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lZL9LLXvAdRh; Sun, 19 Jul 2020 13:12:03 -0400 (EDT)
+        with ESMTP id nThCY5Q6kNSb; Sun, 19 Jul 2020 13:05:47 -0400 (EDT)
 Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
         (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         by filter1.mymailcheap.com (Postfix) with ESMTPS;
-        Sun, 19 Jul 2020 13:12:03 -0400 (EDT)
+        Sun, 19 Jul 2020 13:05:47 -0400 (EDT)
 Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id E323240854;
-        Sun, 19 Jul 2020 17:12:02 +0000 (UTC)
+        by mail20.mymailcheap.com (Postfix) with ESMTP id 405A540B41;
+        Sun, 19 Jul 2020 17:05:46 +0000 (UTC)
 Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=aosc.io header.i=@aosc.io header.b="PVgbZv72";
+        dkim=pass (1024-bit key; unprotected) header.d=aosc.io header.i=@aosc.io header.b="P8jCNWOJ";
         dkim-atps=neutral
 AI-Spam-Status: Not processed
 Received: from ice-e5v2.lan (unknown [59.41.163.116])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id B42D140854;
-        Sun, 19 Jul 2020 17:11:52 +0000 (UTC)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 74C9440856;
+        Sun, 19 Jul 2020 17:04:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-        t=1595178718; bh=FV+wR9CULgMQqlgDNOjT69yBHwivGDyAlFaoqfduitg=;
+        t=1595178276; bh=ELid77VVNx1YqQOuhBe9RsMJyM8XGB3o70MJQYb+aSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PVgbZv72Q+weuV5/PjECAIuV/ZgPjm9ZKkOB4wDSetLzo+KgVLrVxjG/SAdpEFbum
-         tO8wTIgn3D2p8o3yKBmN9Zq4zlKcEoKiZw5ORf/RM8xVBfss45gvOsVPTBQigCUXX8
-         8WPhTHvLsW56+aMqSfHc+uChV9S9E43b+2a/o234=
+        b=P8jCNWOJReR+5ws3sHnR5DPKdnVjun1ZNOfRVIoUjIRq4asnZDvDvMS0pgQ1Mh46h
+         4JqkGsxyUxGZ7UrHgB3QvQabO/61SqqJVIv/g/7hWN846TWF2qfpzOjtuB5sHHuDR1
+         AFZ8lcQMXf75aablWf8Si0LzjnX52wUxYwfIViZs=
 From:   Icenowy Zheng <icenowy@aosc.io>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -72,15 +76,15 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 4/4] [DO NOT MERGE] arm64: allwinner: dts: a64: enable K101-IM2BYL02 panel for PineTab
-Date:   Mon, 20 Jul 2020 01:11:34 +0800
-Message-Id: <20200719171134.276652-1-icenowy@aosc.io>
+Subject: [PATCH 1/4] drm/panel: ilitek-ili9881c: prepare for adding support for extra panels
+Date:   Mon, 20 Jul 2020 01:04:07 +0800
+Message-Id: <20200719170411.275812-2-icenowy@aosc.io>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200719170411.275812-1-icenowy@aosc.io>
 References: <20200719170411.275812-1-icenowy@aosc.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: E323240854
+X-Rspamd-Queue-Id: 405A540B41
 X-Spamd-Result: default: False [6.40 / 20.00];
          RCVD_VIA_SMTP_AUTH(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -104,7 +108,6 @@ X-Spamd-Result: default: False [6.40 / 20.00];
          TAGGED_RCPT(0.00)[];
          MIME_GOOD(-0.10)[text/plain];
          DMARC_NA(0.00)[aosc.io];
-         DBL_PROHIBIT(0.00)[0.0.0.0:email];
          MID_CONTAINS_FROM(1.00)[];
          HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1];
          RCVD_COUNT_TWO(0.00)[2];
@@ -115,40 +118,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newer PineTab may switch to K101-IM2BYL02.
+There're more panels with ILI9881C controller than the Bananapi one
+supported by this driver.
+
+Extract the mode and init sequence part, to prepare the driver for
+adding new panels.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/panel/panel-ilitek-ili9881c.c | 56 ++++++++++++-------
+ 1 file changed, 37 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts
-index dc4ab6b434f97..15c4f5b5b17a7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts
-@@ -152,6 +152,7 @@ &dsi {
- 	vcc-dsi-supply = <&reg_dldo1>;
- 	status = "okay";
+diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
+index 3ed8635a6fbdf..4f8e6865029f1 100644
+--- a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
++++ b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
+@@ -10,6 +10,7 @@
+ #include <linux/fb.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
  
-+#if 0
- 	panel@0 {
- 		compatible = "feixin,k101-im2ba02";
- 		reg = <0>;
-@@ -161,6 +162,15 @@ panel@0 {
- 		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
- 		backlight = <&backlight>;
- 	};
-+#endif
-+
-+	panel@0 {
-+		compatible = "feixin,k101-im2byl02";
-+		reg = <0>;
-+		power-supply = <&reg_dc1sw>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-+		backlight = <&backlight>;
-+	};
+ #include <linux/gpio/consumer.h>
+ #include <linux/regulator/consumer.h>
+@@ -20,14 +21,6 @@
+ 
+ #include <video/mipi_display.h>
+ 
+-struct ili9881c {
+-	struct drm_panel	panel;
+-	struct mipi_dsi_device	*dsi;
+-
+-	struct regulator	*power;
+-	struct gpio_desc	*reset;
+-};
+-
+ enum ili9881c_op {
+ 	ILI9881C_SWITCH_PAGE,
+ 	ILI9881C_COMMAND,
+@@ -45,6 +38,21 @@ struct ili9881c_instr {
+ 	} arg;
  };
  
- &ehci0 {
++struct ili9881c_desc {
++	const struct ili9881c_instr *init;
++	const size_t init_length;
++	const struct drm_display_mode *mode;
++};
++
++struct ili9881c {
++	struct drm_panel	panel;
++	struct mipi_dsi_device	*dsi;
++	const struct ili9881c_desc	*desc;
++
++	struct regulator	*power;
++	struct gpio_desc	*reset;
++};
++
+ #define ILI9881C_SWITCH_PAGE_INSTR(_page)	\
+ 	{					\
+ 		.op = ILI9881C_SWITCH_PAGE,	\
+@@ -64,7 +72,7 @@ struct ili9881c_instr {
+ 		},					\
+ 	}
+ 
+-static const struct ili9881c_instr ili9881c_init[] = {
++static const struct ili9881c_instr lhr050h41_init[] = {
+ 	ILI9881C_SWITCH_PAGE_INSTR(3),
+ 	ILI9881C_COMMAND_INSTR(0x01, 0x00),
+ 	ILI9881C_COMMAND_INSTR(0x02, 0x00),
+@@ -311,8 +319,8 @@ static int ili9881c_prepare(struct drm_panel *panel)
+ 	gpiod_set_value(ctx->reset, 0);
+ 	msleep(20);
+ 
+-	for (i = 0; i < ARRAY_SIZE(ili9881c_init); i++) {
+-		const struct ili9881c_instr *instr = &ili9881c_init[i];
++	for (i = 0; i < ctx->desc->init_length; i++) {
++		const struct ili9881c_instr *instr = &ctx->desc->init[i];
+ 
+ 		if (instr->op == ILI9881C_SWITCH_PAGE)
+ 			ret = ili9881c_switch_page(ctx, instr->arg.page);
+@@ -368,7 +376,7 @@ static int ili9881c_unprepare(struct drm_panel *panel)
+ 	return 0;
+ }
+ 
+-static const struct drm_display_mode bananapi_default_mode = {
++static const struct drm_display_mode lhr050h41_default_mode = {
+ 	.clock		= 62000,
+ 
+ 	.hdisplay	= 720,
+@@ -380,6 +388,9 @@ static const struct drm_display_mode bananapi_default_mode = {
+ 	.vsync_start	= 1280 + 10,
+ 	.vsync_end	= 1280 + 10 + 10,
+ 	.vtotal		= 1280 + 10 + 10 + 20,
++
++	.width_mm	= 62,
++	.height_mm	= 110,
+ };
+ 
+ static int ili9881c_get_modes(struct drm_panel *panel,
+@@ -388,12 +399,12 @@ static int ili9881c_get_modes(struct drm_panel *panel,
+ 	struct ili9881c *ctx = panel_to_ili9881c(panel);
+ 	struct drm_display_mode *mode;
+ 
+-	mode = drm_mode_duplicate(connector->dev, &bananapi_default_mode);
++	mode = drm_mode_duplicate(connector->dev, ctx->desc->mode);
+ 	if (!mode) {
+ 		dev_err(&ctx->dsi->dev, "failed to add mode %ux%ux@%u\n",
+-			bananapi_default_mode.hdisplay,
+-			bananapi_default_mode.vdisplay,
+-			drm_mode_vrefresh(&bananapi_default_mode));
++			ctx->desc->mode->hdisplay,
++			ctx->desc->mode->vdisplay,
++			drm_mode_vrefresh(ctx->desc->mode));
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -402,8 +413,8 @@ static int ili9881c_get_modes(struct drm_panel *panel,
+ 	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+ 	drm_mode_probed_add(connector, mode);
+ 
+-	connector->display_info.width_mm = 62;
+-	connector->display_info.height_mm = 110;
++	connector->display_info.width_mm = mode->width_mm;
++	connector->display_info.height_mm = mode->height_mm;
+ 
+ 	return 1;
+ }
+@@ -426,6 +437,7 @@ static int ili9881c_dsi_probe(struct mipi_dsi_device *dsi)
+ 		return -ENOMEM;
+ 	mipi_dsi_set_drvdata(dsi, ctx);
+ 	ctx->dsi = dsi;
++	ctx->desc = of_device_get_match_data(&dsi->dev);
+ 
+ 	drm_panel_init(&ctx->panel, &dsi->dev, &ili9881c_funcs,
+ 		       DRM_MODE_CONNECTOR_DSI);
+@@ -467,8 +479,14 @@ static int ili9881c_dsi_remove(struct mipi_dsi_device *dsi)
+ 	return 0;
+ }
+ 
++static const struct ili9881c_desc lhr050h41_desc = {
++	.init = lhr050h41_init,
++	.init_length = ARRAY_SIZE(lhr050h41_init),
++	.mode = &lhr050h41_default_mode,
++};
++
+ static const struct of_device_id ili9881c_of_match[] = {
+-	{ .compatible = "bananapi,lhr050h41" },
++	{ .compatible = "bananapi,lhr050h41", .data = &lhr050h41_desc },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, ili9881c_of_match);
 -- 
 2.27.0
