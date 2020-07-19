@@ -2,88 +2,169 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B79CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07CCA22B4E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595171594;
-	bh=TlXTSAsSOac8Qtiptyjyh5/Vm+YFyJhPk0Qrt97Ikf4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lwN/AgTcX8lgkNuhXYzr0YMuP8QrMaExJAFOoTqQUg385QIM2n0442zEQzU18qBPq
-	 g+tn/8Mey+IQD/PpO3ixGhKKbAx/psJkyKdjX87iJi2FsBuE6Jc58gCaAiA22nPihq
-	 Cogb5j6MYKe4TwUKmv591duDx4rQW3brtJOWsptA=
+	by mail.kernel.org (Postfix) with ESMTP id E45D422B4E
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:15:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6e1D4mO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbgGSPM7 (ORCPT
+        id S1726503AbgGSPPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 11:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbgGSPM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 11:12:59 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7517E22BEF
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 15:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595171578;
-        bh=TlXTSAsSOac8Qtiptyjyh5/Vm+YFyJhPk0Qrt97Ikf4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cYLErWbIB9SWIWZf/b/i10t54A4cXxsR9IPnWDQ9B6koCU//6tH1ygGScYq5UY7m5
-         ZrmhpH0dCqT8uEpeQlfXEvwwu6idH9F/Nh8BXxQRiqepDRtCAYwU+WY7zTKPRnX1SQ
-         8ww5BjC44E2h6jeKZ/FCUed9HmvBcIKS+6BQk0e8=
-Received: by mail-wm1-f48.google.com with SMTP id 22so19968457wmg.1
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 08:12:58 -0700 (PDT)
-X-Gm-Message-State: AOAM532eMW3GWfaa9N2r9lajTcxvsjwu/CT/Tb2hdUYaW/HkEn5SdMz/
-        6wI/9DjlCeko0NMjr8h3yQPGyxgRDtMnUZBYFaHbvA==
-X-Google-Smtp-Source: ABdhPJy3sP1MKHyJa8dHCmnkj1CZ7ULf6bUubt98uthTUuEgQoBUMN2KuV52xPp/kfGPODxApq1EKeXT3K5gbycS/as=
-X-Received: by 2002:a7b:c92e:: with SMTP id h14mr17167909wml.36.1595171576997;
- Sun, 19 Jul 2020 08:12:56 -0700 (PDT)
+        Sun, 19 Jul 2020 11:15:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbgGSPPD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 11:15:03 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C498C0619D2;
+        Sun, 19 Jul 2020 08:15:03 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id v6so15073840iob.4;
+        Sun, 19 Jul 2020 08:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KD0HIaFZq56OVyDZqxH1qgBh9ALce1H+dJs/b8P0iG0=;
+        b=D6e1D4mOo+HLSCzvFU92E3OgGKo/Y61GaP1Wsc1D9JDCraHobxyAqr7b2k5RHTNtA8
+         SuHImDHowt8DtGQZWdkWX8rZ/2f7WbVDBw7XOomMwhDYKNGBJSankHuY2+RSUJcO0rbe
+         F5c7K0OS5FY/DCtJYYKNlzoTY6b3Ud+RIgyArS/8CSzNbN47Sg+JLniSPFJHt8RkFBAC
+         Js8uZkZBezaWHjXQ9GPf+Fv/77op2/GgPox6RZBCykSZrYEYPf2mdPcOr0WIuE5euVBT
+         BhNObptsociXZSrF6MVSnoMUNWMSBw22lnBh+77SWx7h+dC0ckBsrH3jwnYm8sFf9sGu
+         dSpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KD0HIaFZq56OVyDZqxH1qgBh9ALce1H+dJs/b8P0iG0=;
+        b=q1RXMVGgop9iZcGJIiStUD1J6LjAXHa0zIGERSw4YogfqL5voXpFSMxBR2gXOLzc5s
+         dzrEVsgc7B+yELYQDYnAo+GSS2ecSiN6S8DWw9U6xp+b6V2gLxACC2hKbNFcDJYx05Sy
+         SQdn9zMA9P0H4JHiGki7IP/NVt+VDaQTRHE1CtdERFKUopv7OvY73o+Q4Etl6MkxLHYs
+         hpr3Ct5aNdX5vnByO18mFB/4ghAuj8LujxHzUheNY1ph9G/YfPsOISwYU4h6Emookv67
+         XAshakmoI+nMx/p9BeDltmzMylxsS8O9eqWZqj5j7a+m9Rt8xK9KX1wPnw0s96l1nY1J
+         IQIA==
+X-Gm-Message-State: AOAM533LKwbuvEb2krnHyha7qwEBDqH9qi3yexjLjluAizFusJ6ZVF3W
+        OnmCUCSgzhyCYAfwldkIh32gJjUtbxGQfDJ+rZA=
+X-Google-Smtp-Source: ABdhPJymgyDPyMdeD8uxZwZ1LaX+vaX916vvWmJJ2i8kjwFluQvTlmR/w8nldof2PRq0yYUzpIyN0OEnA/iSW31GTpE=
+X-Received: by 2002:a05:6638:771:: with SMTP id y17mr21105986jad.96.1595171701844;
+ Sun, 19 Jul 2020 08:15:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000bd4f7305aac6870d@google.com>
-In-Reply-To: <000000000000bd4f7305aac6870d@google.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 19 Jul 2020 08:12:45 -0700
-X-Gmail-Original-Message-ID: <CALCETrXreVrWEsBBYX8KS=-DFW=5RB7SAKcgcdPtzJtML6n7UQ@mail.gmail.com>
-Message-ID: <CALCETrXreVrWEsBBYX8KS=-DFW=5RB7SAKcgcdPtzJtML6n7UQ@mail.gmail.com>
-Subject: Re: WARNING in do_syscall_64
-To:     syzbot <syzbot+29454675f5fe94137999@syzkaller.appspotmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1594429136-20002-19-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0Ud+Dj-Q8Sxv8eDQhjM3fFHwnU_ZFEVG54debBennUmxAg@mail.gmail.com>
+ <62dfd262-a7ac-d18e-216a-2988c690b256@linux.alibaba.com> <c339f46e-ae04-4e65-2713-a5c8be56051a@linux.alibaba.com>
+In-Reply-To: <c339f46e-ae04-4e65-2713-a5c8be56051a@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Sun, 19 Jul 2020 08:14:50 -0700
+Message-ID: <CAKgT0UestD7cU+3aqg3a9JT4bTXVYQpjGbwoC2-bOBHPY5xn6A@mail.gmail.com>
+Subject: Re: [PATCH v16 18/22] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Rong Chen <rong.a.chen@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 12:42 AM syzbot
-<syzbot+29454675f5fe94137999@syzkaller.appspotmail.com> wrote:
+On Sun, Jul 19, 2020 at 2:12 AM Alex Shi <alex.shi@linux.alibaba.com> wrote=
+:
 >
-> Hello,
 >
-> syzbot found the following issue on:
 >
-> HEAD commit:    e9919e11 Merge branch 'for-linus' of git://git.kernel.org/..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11dca4cf100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=e944500a36bc4d55
-> dashboard link: https://syzkaller.appspot.com/bug?extid=29454675f5fe94137999
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> =E5=9C=A8 2020/7/18 =E4=B8=8B=E5=8D=8810:15, Alex Shi =E5=86=99=E9=81=93:
+> >>>
+> >>>  struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
+> >>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> >>> index 14c668b7e793..36c1680efd90 100644
+> >>> --- a/include/linux/mmzone.h
+> >>> +++ b/include/linux/mmzone.h
+> >>> @@ -261,6 +261,8 @@ struct lruvec {
+> >>>         atomic_long_t                   nonresident_age;
+> >>>         /* Refaults at the time of last reclaim cycle */
+> >>>         unsigned long                   refaults;
+> >>> +       /* per lruvec lru_lock for memcg */
+> >>> +       spinlock_t                      lru_lock;
+> >>>         /* Various lruvec state flags (enum lruvec_flags) */
+> >>>         unsigned long                   flags;
+> >> Any reason for placing this here instead of at the end of the
+> >> structure? From what I can tell it looks like lruvec is already 128B
+> >> long so placing the lock on the end would put it into the next
+> >> cacheline which may provide some performance benefit since it is
+> >> likely to be bounced quite a bit.
+> > Rong Chen(Cced) once reported a performance regression when the lock at
+> > the end of struct, and move here could remove it.
+> > Although I can't not reproduce. But I trust his report.
+> >
+> Oops, Rong's report is on another member which is different with current
+> struct.
 >
-> Unfortunately, I don't have any reproducer for this issue yet.
+> Compare to move to tail, how about to move it to head of struct, which is
+> close to lru list? Did you have some data of the place change?
 
-On a brief inspection, the only way I can see this happening is if the
-syscall flags msr got corrupted.  There's not much code between the
-actual hardware entry and this warning.
+I don't have specific data, just anecdotal evidence from the past that
+usually you want to keep locks away from read-mostly items since they
+cause obvious cache thrash. My concern was more with the other fields
+in the structure such as pgdat since it should be a static value and
+having it evicted would likely be more expensive than just leaving the
+cacheline as it is.
 
---Andy
+> > ...
+> >
+> >>>  putback:
+> >>> -               spin_unlock_irq(&zone->zone_pgdat->lru_lock);
+> >>>                 pagevec_add(&pvec_putback, pvec->pages[i]);
+> >>>                 pvec->pages[i] =3D NULL;
+> >>>         }
+> >>> -       /* tempary disable irq, will remove later */
+> >>> -       local_irq_disable();
+> >>>         __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
+> >>> -       local_irq_enable();
+> >>> +       if (lruvec)
+> >>> +               unlock_page_lruvec_irq(lruvec);
+> >> So I am not a fan of this change. You went to all the trouble of
+> >> reducing the lock scope just to bring it back out here again. In
+> >> addition it implies there is a path where you might try to update the
+> >> page state without disabling interrupts.
+> > Right. but any idea to avoid this except a extra local_irq_disable?
+> >
+>
+> The following changes would resolve the problem. Is this ok?
+> @@ -324,7 +322,8 @@ static void __munlock_pagevec(struct pagevec *pvec, s=
+truct zone *zone)
+>                 pagevec_add(&pvec_putback, pvec->pages[i]);
+>                 pvec->pages[i] =3D NULL;
+>         }
+> -       __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
+> +       if (delta_munlocked)
+> +               __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
+>         if (lruvec)
+>                 unlock_page_lruvec_irq(lruvec);
+
+Why not just wrap the entire thing in a check for "lruvec"? Yes you
+could theoretically be modding with a value of 0, but it avoids a
+secondary unnecessary check and branching.
