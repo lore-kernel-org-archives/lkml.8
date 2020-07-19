@@ -2,118 +2,199 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E091C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 08:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF99C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 08:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22D8A20738
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 08:00:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="YO7vvYr0"
+	by mail.kernel.org (Postfix) with ESMTP id 958CD207DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 08:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726235AbgGSIAP (ORCPT
+        id S1726161AbgGSIFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 04:00:15 -0400
-Received: from mail-eopbgr40094.outbound.protection.outlook.com ([40.107.4.94]:40930
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725988AbgGSIAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 04:00:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=deyVSXqbMOekOFpYrhEcOeMeegyS0lVkfXQoo88jfxcMzzSj8PPpZ/yA8sIiAPN34pWhopVVA2f2bjfQ+ZhPu3G6xC1LqKDCyx5rj0n6G0So3i5HuTuKat5dNKtdBU65CQfUiQ1WnvW7KPWo1MZ+yQdLvEvnI3KBF0Mz4Uu8J9Ml1ZWjnI/nkQnvEImVEA1PafEkRcO2XOInQNpxYym8v351fmOpSB1md/BgOlnljpU2EELJp4oj0kZeLvF0ap7JQWLxeAk8M2FsCLy8ieVor6Bo6OfDM8wXnIHnxQu99dRyKr4FKMYuUEEASBmYfnggHwMa8g7qh6YQQOn6cjFqWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j/d0vnu7/mCXMwdnbSjpZvp3rtnDvyPj9MvSuF0CA6M=;
- b=dAyeA4L0UbOx43bWjnPi48IDSrx9eTOJebkJNsVayVA3pq979bA5bthrksFjlpwFsVRBY0Bp1JM2j9mJyg39gKaKJt0uksJYk/9ynGua3CxoTc+DBw9yNcge3DzLrB5y0lM7ByFUbIOe3jinvv0ksh27xLO5fuxuNRWnAccboZ/ue0GNlcxsrnrLhjpXZBh+v2tSof2MZ7VtHTejIX8op0Z4ZfCAcylsujo3zfgXAXjlDYL6Yu1SXYLKVTJoOd5HdtMnNR+zT7YCosSEyJKhoqB8ow1BcUu1lLvpQzxgVxJ2LfCMovOYmrrT46Ss/145I3NXNttGu8Kp9p1LnGuvAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j/d0vnu7/mCXMwdnbSjpZvp3rtnDvyPj9MvSuF0CA6M=;
- b=YO7vvYr0Ly4kksrbiVltTwaQWkE/Er1wTMys/aadKnRsn1ZZ0kWBHvbeiOlSFSGs+rmJ1mGgOTAWzBBd+SNOYBHDsPZcidWJ/t7+qpbMyrpa4eBAB39qH8lotr2kh9FhuXz6b7nL/lUC22OndOFu5Bi0tBMk7Iud/IQbQp5Haw8=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (2603:10a6:10:ef::22)
- by DB6PR02MB3238.eurprd02.prod.outlook.com (2603:10a6:6:23::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Sun, 19 Jul
- 2020 08:00:11 +0000
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::68d4:6b:d077:19a9]) by DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::68d4:6b:d077:19a9%4]) with mapi id 15.20.3195.023; Sun, 19 Jul 2020
- 08:00:11 +0000
-From:   Tomer Tayar <ttayar@habana.ai>
-To:     oded.gabbay@gmail.com
-Cc:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Subject: [PATCH] habanalabs: use no flags on MMU cache invalidation
-Date:   Sun, 19 Jul 2020 11:00:03 +0300
-Message-Id: <20200719080003.19692-1-ttayar@habana.ai>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR10CA0075.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:15::28) To DB8PR02MB5468.eurprd02.prod.outlook.com
- (2603:10a6:10:ef::22)
+        Sun, 19 Jul 2020 04:05:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgGSIFn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 04:05:43 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70C6CC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 01:05:43 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jx4KG-0001EV-Ab; Sun, 19 Jul 2020 10:05:36 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jx4KB-0006Mt-J3; Sun, 19 Jul 2020 10:05:31 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>
+Subject: [PATCH net-next v1] net: phy: at803x: add mdix configuration support for AR9331 and AR8035
+Date:   Sun, 19 Jul 2020 10:05:30 +0200
+Message-Id: <20200719080530.24370-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ttayar-VM.habana-labs.com (213.57.90.10) by AM0PR10CA0075.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Sun, 19 Jul 2020 08:00:10 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [213.57.90.10]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 19c2c3f8-91ce-413f-4bc6-08d82bb9c2c4
-X-MS-TrafficTypeDiagnostic: DB6PR02MB3238:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR02MB32388A9BF5F0AB9327A6001FD27A0@DB6PR02MB3238.eurprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1KvKwbL9cgF20jkllt6TAKloUH7HyQAE4nUXg9aBYNoBpKPCV7apP9/ZhPH7Y7KPRGBRERt6cKlUs9lxY3S05Nw4xxRwxjrfLDCumyF/USDYPU6Wn161s/dPL7KJP/rvf/wK4hNqka+zt0y2RU3jGp+MUOcvdZwKvSTUPG/5OMj5Zx+DwFxHrDoGqztopT8+3I3l0+cD/BiGAP0ARf2w0ZvlRqhVHciOgU1w3KtToYgrg0yjinzujpbi6ibwih6o/4vPet3Gjmnbjb52UQ7LDf9sxdmNxsOGuOAtVGdmvkIX0dCPgDALZAAWrGIV4Du/
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5468.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(366004)(376002)(346002)(39840400004)(396003)(8936002)(83380400001)(2906002)(316002)(5660300002)(956004)(55236004)(36756003)(2616005)(6506007)(478600001)(107886003)(6916009)(86362001)(186003)(4326008)(26005)(16526019)(52116002)(6666004)(1076003)(4744005)(8676002)(6512007)(66556008)(66476007)(66946007)(6486002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: wVSa6xICJoYEN2kExaJsQrgdBHtODSqHc+K6eYQpmWQs2VUdJ0MhckqcCS1Rn5mQDRVPvQvDgOJ2jPP3ZsRVNI04L8dplnlIhn1t7Un/Atn18u1B2sydXBv4uAbD40KF0SZwuKKKvEJH/bAINUagzhfLMQr2UvmHg1R1zKXmp1ebViHNTMQlRlRF9mTMK+g8K0yclFyCwslucmiyy0+DEu3P/gj0w66/2iZ6IGkUU7SK0ETE2GuGFJVplY7da4n9il3OpHBN9joIBrxPajXgDerjRVvv0KYfhmSZBjIFmEaNSeuVm+J/6MLgujMiNGiWdlUw1xZ8E8BkhDiQgO7AK4DUEumoTiNelmVswia3rf58UwIsFDmVFVO3MRXvZ6QVGQ5PDI2U9qkh1aqKTgsTschCpW7a1NBuMHqA8pC0zqaNs6+aFqxhQXS+VU+1K98e9PfFflb76rrQR9Cky32OIg5nPTEaurSf3lAkplOFukY=
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19c2c3f8-91ce-413f-4bc6-08d82bb9c2c4
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5468.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2020 08:00:11.1292
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZmrLVwwJM4hsG8Ni2q5TRCBZyuR9u7fDJLnKdqFs6vWIELF1Ot0eP5kQR+fqL5kR+l6ycDHGEEsd7/Rwr6fQMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR02MB3238
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gaudi_mmu_invalidate_cache() doesn't use the flags parameter, and thus
-it can be set to 0 when the function is called in the gaudi only files.
+This patch add MDIX configuration ability for AR9331 and AR8035. Theoretically
+it should work on other Atheros PHYs, but I was able to test only this
+two.
 
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+Since I have no certified reference HW able to detect or configure MDIX, this
+functionality was confirmed by oscilloscope.
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/misc/habanalabs/gaudi/gaudi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/phy/at803x.c | 78 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
-index 86cfaf73ad74..4a1a52608fc0 100644
---- a/drivers/misc/habanalabs/gaudi/gaudi.c
-+++ b/drivers/misc/habanalabs/gaudi/gaudi.c
-@@ -2646,8 +2646,7 @@ static int gaudi_mmu_init(struct hl_device *hdev)
- 	WREG32(mmSTLB_CACHE_INV_BASE_39_8, MMU_CACHE_MNG_ADDR >> 8);
- 	WREG32(mmSTLB_CACHE_INV_BASE_49_40, MMU_CACHE_MNG_ADDR >> 40);
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index 96c61aa75bd7..101651b2de54 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -21,6 +21,17 @@
+ #include <linux/regulator/consumer.h>
+ #include <dt-bindings/net/qca-ar803x.h>
  
--	hdev->asic_funcs->mmu_invalidate_cache(hdev, true,
--					VM_TYPE_USERPTR | VM_TYPE_PHYS_PACK);
-+	hdev->asic_funcs->mmu_invalidate_cache(hdev, true, 0);
++#define AT803X_SPECIFIC_FUNCTION_CONTROL	0x10
++#define AT803X_SFC_ASSERT_CRS			BIT(11)
++#define AT803X_SFC_FORCE_LINK			BIT(10)
++#define AT803X_SFC_MDI_CROSSOVER_MODE_M		GENMASK(6, 5)
++#define AT803X_SFC_AUTOMATIC_CROSSOVER		0x3
++#define AT803X_SFC_MANUAL_MDIX			0x1
++#define AT803X_SFC_MANUAL_MDI			0x0
++#define AT803X_SFC_SQE_TEST			BIT(2)
++#define AT803X_SFC_POLARITY_REVERSAL		BIT(1)
++#define AT803X_SFC_DISABLE_JABBER		BIT(0)
++
+ #define AT803X_SPECIFIC_STATUS			0x11
+ #define AT803X_SS_SPEED_MASK			(3 << 14)
+ #define AT803X_SS_SPEED_1000			(2 << 14)
+@@ -703,6 +714,12 @@ static int at803x_read_status(struct phy_device *phydev)
+ 		return ss;
  
- 	WREG32(mmMMU_UP_MMU_ENABLE, 1);
- 	WREG32(mmMMU_UP_SPI_MASK, 0xF);
+ 	if (ss & AT803X_SS_SPEED_DUPLEX_RESOLVED) {
++		int sfc;
++
++		sfc = phy_read(phydev, AT803X_SPECIFIC_FUNCTION_CONTROL);
++		if (sfc < 0)
++			return sfc;
++
+ 		switch (ss & AT803X_SS_SPEED_MASK) {
+ 		case AT803X_SS_SPEED_10:
+ 			phydev->speed = SPEED_10;
+@@ -718,10 +735,23 @@ static int at803x_read_status(struct phy_device *phydev)
+ 			phydev->duplex = DUPLEX_FULL;
+ 		else
+ 			phydev->duplex = DUPLEX_HALF;
++
+ 		if (ss & AT803X_SS_MDIX)
+ 			phydev->mdix = ETH_TP_MDI_X;
+ 		else
+ 			phydev->mdix = ETH_TP_MDI;
++
++		switch (FIELD_GET(AT803X_SFC_MDI_CROSSOVER_MODE_M, sfc)) {
++		case AT803X_SFC_MANUAL_MDI:
++			phydev->mdix_ctrl = ETH_TP_MDI;
++			break;
++		case AT803X_SFC_MANUAL_MDIX:
++			phydev->mdix_ctrl = ETH_TP_MDI_X;
++			break;
++		case AT803X_SFC_AUTOMATIC_CROSSOVER:
++			phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
++			break;
++		}
+ 	}
+ 
+ 	if (phydev->autoneg == AUTONEG_ENABLE && phydev->autoneg_complete)
+@@ -730,6 +760,50 @@ static int at803x_read_status(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++static int at803x_config_mdix(struct phy_device *phydev, u8 ctrl)
++{
++	u16 val;
++
++	switch (ctrl) {
++	case ETH_TP_MDI:
++		val = AT803X_SFC_MANUAL_MDI;
++		break;
++	case ETH_TP_MDI_X:
++		val = AT803X_SFC_MANUAL_MDIX;
++		break;
++	case ETH_TP_MDI_AUTO:
++		val = AT803X_SFC_AUTOMATIC_CROSSOVER;
++		break;
++	default:
++		return 0;
++	}
++
++	return phy_modify_changed(phydev, AT803X_SPECIFIC_FUNCTION_CONTROL,
++			  AT803X_SFC_MDI_CROSSOVER_MODE_M,
++			  FIELD_PREP(AT803X_SFC_MDI_CROSSOVER_MODE_M, val));
++}
++
++static int at803x_config_aneg(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = at803x_config_mdix(phydev, phydev->mdix_ctrl);
++	if (ret < 0)
++		return ret;
++
++	/* Changes of the midx bits are disruptive to the normal operation;
++	 * therefore any changes to these registers must be followed by a
++	 * software reset to take effect.
++	 */
++	if (ret == 1) {
++		ret = genphy_soft_reset(phydev);
++		if (ret < 0)
++			return ret;
++	}
++
++	return genphy_config_aneg(phydev);
++}
++
+ static int at803x_get_downshift(struct phy_device *phydev, u8 *d)
+ {
+ 	int val;
+@@ -979,6 +1053,7 @@ static struct phy_driver at803x_driver[] = {
+ 	.flags			= PHY_POLL_CABLE_TEST,
+ 	.probe			= at803x_probe,
+ 	.remove			= at803x_remove,
++	.config_aneg		= at803x_config_aneg,
+ 	.config_init		= at803x_config_init,
+ 	.soft_reset		= genphy_soft_reset,
+ 	.set_wol		= at803x_set_wol,
+@@ -1061,6 +1136,9 @@ static struct phy_driver at803x_driver[] = {
+ 	.config_intr		= &at803x_config_intr,
+ 	.cable_test_start	= at803x_cable_test_start,
+ 	.cable_test_get_status	= at803x_cable_test_get_status,
++	.read_status		= at803x_read_status,
++	.soft_reset		= genphy_soft_reset,
++	.config_aneg		= at803x_config_aneg,
+ } };
+ 
+ module_phy_driver(at803x_driver);
 -- 
-2.17.1
+2.27.0
 
