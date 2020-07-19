@@ -5,114 +5,113 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAECC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 04:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 04:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21F320738
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 04:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B3220656
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 04:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9RLTERa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shNpNfD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgGSEgs (ORCPT
+        id S1726085AbgGSEdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 00:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55420 "EHLO
+        Sun, 19 Jul 2020 00:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgGSEgr (ORCPT
+        with ESMTP id S1725272AbgGSEdo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 00:36:47 -0400
+        Sun, 19 Jul 2020 00:33:44 -0400
 Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4303C0619D2;
-        Sat, 18 Jul 2020 21:36:47 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x72so7389808pfc.6;
-        Sat, 18 Jul 2020 21:36:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E62CEC0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 21:33:43 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 207so7387967pfu.3
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 21:33:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=QrQwgA++IOo4LAbcYYksL7Rv2htpSKEdPqiaKrOyg+U=;
-        b=D9RLTERalHTdng6E2AnMA0kajdkrfc7hEjZ63ZMEm9vrc4xZuQ3HY/9f9CX2b5MshI
-         Uo4zusEBuz8eHFgu2r+cR/oUjC3h1DBJmYmeYbjDPE3V431OfTDkHGxb7mnsrSjY3dxF
-         wIReA+tze3YtIczU1uNrgwNuLckBg4eWWQbkuCjv4r0NxkhgW0v79HTK4ywpii0Kx9RY
-         jA+FnOZx2vKhz9TLoxhJSl/DX9vvHsRV5I8/CxD4Kt49Op6flhXASSc9L6XkLYHTKRMF
-         n2oP6YxhQmuXzMkzgZLGK+w1IuSVFS7gqV9bynXdbBYwEcuRTthw8BMSDwkfDBQ0QbJ1
-         ddaw==
+        bh=NMnuLh+n2hjqR5MnJLBU8rHuDpwc8jSXNcEkAGw08r0=;
+        b=shNpNfD7ydknC+2m8bihpNOtvb4urvKd9/86e2kcEaXXeB4oSt3iYJ4S6Ri0Ts7fYC
+         D5QmjRh1QkEdVPL70XfAEStJ0MvcigrrqJvCCFSxB1tiYER0rWojGwXJNu7k/Y5VpLmZ
+         4uZ2KezgDGTcAj59w4wPz44oxlKCFCnp+4vSNXHbzzoRaCMBKikeSASc5+F4mwUgdvZp
+         mkGDJNp89MA16FM05n/8JA1xdHNV6ZsONqoIzhQv0ASJZw46b7w0rl+7wGgvfEAWvx/U
+         xNX8lqzdncZ09m7AfmGRAZMv7c3dpRyDbjyoM+wcLJIGD1QjjoGINkYegB7MZ5R8c0VZ
+         BVzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QrQwgA++IOo4LAbcYYksL7Rv2htpSKEdPqiaKrOyg+U=;
-        b=Ew30VEjD77tjLqipQ/bniJ+7pzDHrQX3bTgl2IUe+QHBAozBjCK5M6Ys+8C9kk3dDF
-         a1w/Opn/i+YfrWPr2m7/Xze66lXYqYxdCuFF6ATi2k0g0MrOqKsKwNzQt8HWcw1Z4NcN
-         v2rwerubK+0HTiT+hxVEm0WKuH2Z0nwANDRktM/Urimi4Wm8spO/vQHad1uEWHp6vJk7
-         mF3/JcKf8hX8jUk+IBG+mQjOyQUe46YA5S3XZepV9XO1wv9p25YHIKbmAr35OH711u+H
-         k/UYNP2z11zMP6XMHTeZjoWsxy5py0758LnML8rseIDGosuveKVgjRuUfxCcGGsJiW9H
-         lWLg==
-X-Gm-Message-State: AOAM532EOwtQfLdsWoB0LrdAO8WqYyoN9uISm/8YF/jZfIYSDTfEN8Px
-        O0WcKdVhMdeD6xXaUWbglBY=
-X-Google-Smtp-Source: ABdhPJw22bGnp1N+Em/LFoDNlxfAACLdz2BntWRH2Dp57FTKacaKyq2nroMxWR06hs5KO8UaeZhXNA==
-X-Received: by 2002:a63:b511:: with SMTP id y17mr14136438pge.425.1595133407527;
-        Sat, 18 Jul 2020 21:36:47 -0700 (PDT)
+        bh=NMnuLh+n2hjqR5MnJLBU8rHuDpwc8jSXNcEkAGw08r0=;
+        b=gd/vqKEXKXfE432oJlllP5E9b7WEJZIeo8DSq3K71kGPMeOyvYi+6PM+KSQsynOWDm
+         nG+jFxDm3sCMwt6FF0xMDEEFDml36wiDgrlXbHefuaC5HyS8ZCGkKsDWaULjP0nLp7WW
+         gEZaaXbtkQHvP/ZVLlE2bhRiUzj34uVNWcwmfHzbMstv3ydB3V00Z7FHA/Ng7IkyQbON
+         kr/V7wZhkWGY5OKJkSDFUFV5rBqCguZQlyYoqg+TOZASle53RHWnmF8CyfGbNTe2BzT+
+         W0UZu3Q0sdc2z/hDmERN4y/boQOrWfsdVC7394SoJcRFrs9TVAm2VXUjXILtJ0kATriq
+         lYXw==
+X-Gm-Message-State: AOAM531fqtzrX5nK112QJCf0dn/u33Qwkf8xUAN5IpbxXB8yRy7+qWXI
+        zqVtiDCbGzXDORCNlqBSnZvjCfRMZ/BTqA==
+X-Google-Smtp-Source: ABdhPJzJHKMcXcrP4HWoI82Bip3+QWOih5BY3UYhF0neGE8ul+At8jy/Vsx9mAekGGJvYsaIiTEp2w==
+X-Received: by 2002:a63:8dc4:: with SMTP id z187mr12971922pgd.199.1595133223417;
+        Sat, 18 Jul 2020 21:33:43 -0700 (PDT)
 Received: from blackclown ([2405:204:219:61b6:3945:8436:8c57:56d5])
-        by smtp.gmail.com with ESMTPSA id n18sm12475472pfd.99.2020.07.18.21.36.42
+        by smtp.gmail.com with ESMTPSA id o129sm12684414pfg.14.2020.07.18.21.33.40
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jul 2020 21:36:47 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 10:06:38 +0530
+        Sat, 18 Jul 2020 21:33:42 -0700 (PDT)
+Date:   Sun, 19 Jul 2020 10:03:24 +0530
 From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] staging: media: atomisp: Replace depracated MSI API.
-Message-ID: <20200719043638.GC28510@blackclown>
-References: <20200718132632.GA11527@blackclown>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] staging: kpc2000: Replace depracated MSI API.
+Message-ID: <20200719043324.GA28510@blackclown>
+References: <20200718154951.GA28857@blackclown>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200718132632.GA11527@blackclown>
+In-Reply-To: <20200718154951.GA28857@blackclown>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 06:56:32PM +0530, Suraj Upadhyay wrote:
+On Sat, Jul 18, 2020 at 09:19:51PM +0530, Suraj Upadhyay wrote:
 > Replace depracated pci_enable_msi with pci_alloc_irq_vectors.
 > And as a result modify how the returned value is handled.
 > 
 > Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
 > ---
->  drivers/staging/media/atomisp/pci/atomisp_v4l2.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Changes:
+> 	v2: Removed the undefined variable.
+> 	    Reported by kernel-bot.
 > 
-Hii,
-Please don't merge this patch.
-It is still incomplete.
-It doesn't replace pci_disable_msi.
-I hope this wasn't an annoyance.
+Don't merge it.
+This patch is incomplete.
+I have to replce pci_disable_msi too.
+I hope this didn't cause any annoyances.
 
 Thanks,
 
 Suraj Upadhyay.
 
-> diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-> index d36809a0182c..b824c6f78a9c 100644
-> --- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-> @@ -1735,8 +1735,8 @@ static int atomisp_pci_probe(struct pci_dev *dev,
->  	pci_set_master(dev);
->  	pci_set_drvdata(dev, isp);
+>  drivers/staging/kpc2000/kpc2000/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
+> index 358d7b2f4ad1..8339026ffb41 100644
+> --- a/drivers/staging/kpc2000/kpc2000/core.c
+> +++ b/drivers/staging/kpc2000/kpc2000/core.c
+> @@ -440,7 +440,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+>  	dev_dbg(&pcard->pdev->dev,
+>  		"Using DMA mask %0llx\n", dma_get_mask(PCARD_TO_DEV(pcard)));
 >  
-> -	err = pci_enable_msi(dev);
-> -	if (err) {
-> +	err = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_MSI);
-> +	if (err < 0) {
->  		dev_err(&dev->dev, "Failed to enable msi (%d)\n", err);
->  		goto enable_msi_fail;
->  	}
+> -	err = pci_enable_msi(pcard->pdev);
+> +	err = pci_alloc_irq_vectors(pcard->pdev, 1, 1, PCI_IRQ_MSI);
+>  	if (err < 0)
+>  		goto err_release_dma;
+>  
 > -- 
 > 2.17.1
 > 
