@@ -2,73 +2,75 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C44C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 02:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91622C433E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 02:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE02221741
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 02:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6F22176B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 02:17:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIpg0Ll9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0w/Q3ab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgGSCRC (ORCPT
+        id S1726715AbgGSCRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 22:17:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34192 "EHLO
+        Sat, 18 Jul 2020 22:17:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbgGSCRB (ORCPT
+        with ESMTP id S1726284AbgGSCRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 22:17:01 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B18C0619D2;
-        Sat, 18 Jul 2020 19:17:01 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 207so7310481pfu.3;
-        Sat, 18 Jul 2020 19:17:01 -0700 (PDT)
+        Sat, 18 Jul 2020 22:17:04 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB66FC0619D2;
+        Sat, 18 Jul 2020 19:17:03 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id l63so8604307pge.12;
+        Sat, 18 Jul 2020 19:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QM6lwvVyYd4T8B0+uW+YnPRkMUj3R5Nyhyg6SYyEzuk=;
-        b=hIpg0Ll9yZxRGxf6GH8H2E/zPabJqjA8GQJcWAXolZaWgCWxG73f4X1hCu6XLjkdVN
-         W3EOLpvWvbPvEdTwe5uTSz/u/bGGt9g7OTPpCw9tMGvMsapnOgDqT4aoWs+a/P4O1+6D
-         DQQ0xIBwNnhWdFTylqNZFGZrNRcDeo9hpYvfKaMXvSmHbukEdqF0xkBWzUMJwAqbl7wT
-         8ESYZutpwtwMaTi8f2fPHr0E5AMVemklvnRLmWozkNXOCVpiDS/rr4snQcvRC+J/rg8b
-         whFmrLQNS7ylBReNWjBYB+EQjbgHu+QSiQbXah5FOU5X+HU4IL9Q5zvBvzPtOwOIgOHz
-         rCIw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=kl14Oyojnz7qNzdRV9kI+oI9qkQq4W7peOgG+/MweoU=;
+        b=S0w/Q3abVzMaa0Pd0coBL4i43B8ZKc9v9Yen8P4muuNJs1guw3MlR5AoFEWgL7DKe4
+         xo8SGd9JNLlv5siZ13SDqNooEUp2Zwrb4InjZmNlUWu2IMuUEy8lJnPo2NGskEoY11pp
+         7nZiKEJ2jLrsSrtZ1X4G4fwMYEW5IVF3WDWQVA47Nl2D7D4mm7OrMySqtSraOUkIC3Ow
+         KBNllHlDpR6zZ+8FP1zOKCDi2rAXfF/G9K2R5E8QVAGWWXq0a0g62wLeykkeZAtO+z0K
+         wYpVTSv9Uwd+PDuhYi+RCpGJd/z7gpUB8yYxEJDKrXTL1o2Sl5UmL8UU/roe6+fHw/c9
+         EWoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QM6lwvVyYd4T8B0+uW+YnPRkMUj3R5Nyhyg6SYyEzuk=;
-        b=cT2ytzC5OOt1PW5fopUjbhn2IlUnj2Uw86Z8nyailw6J3Bnv2iU4TrU4WpMGtllWG8
-         +dRV/hnmH0VSQVMvgAtS7+ng2RUKbu1Xy0au0gqTbkMhxkSgJlBvvOMPRMgnXegIgxM8
-         btaGbPQO0WmWe1BgskpmXMvlFC6VHFU0FUOL3E1l2qRaw1lKJxhjaVqL91/i1xMQfCUs
-         GaefG2JYm2WSDrA+P6DvR/RQ0vIkcLlwUZpuNpmH51/zDrs/7/jFNMY+EzB0fv7PqY9Z
-         Ryl1chspSo8U+N3Cc8FYilLOQDduHGKIn29WeugIDASjzSfWXLdHljAzEAnUj8Rj6zM0
-         rWgA==
-X-Gm-Message-State: AOAM531XUOrxiWhoAAkRqQuuClHqw11DDig0wZRQ7SdSSwz2As50HYHG
-        Opy9tUgEVsikQPP6nn3+hlNJzmrY
-X-Google-Smtp-Source: ABdhPJzEVypf4YCwvhByvDVA676j0GBMtNyQSzchcKBsvcNQ+Ikfqzm8fiYPDq4RZFbZc/Rl6vNgpQ==
-X-Received: by 2002:a63:3cc:: with SMTP id 195mr13628525pgd.296.1595125020975;
-        Sat, 18 Jul 2020 19:17:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kl14Oyojnz7qNzdRV9kI+oI9qkQq4W7peOgG+/MweoU=;
+        b=Ij6nvO5eGKe8MSlklKOk/PCi2RvGkxFub86DzGaOazavPYbHiZlMz1FSH2gB1Utzo6
+         fdU+JfM6OEGMrYkoNMjJ2IBx3OsM6CrUfBcLwG3pMjrW7IknWb4fvD4rhPIFXaCUHy6N
+         sVD1uKWq+a9tJf5yFOtn0hAsjS/FItRzqjCIKdEx1GuFQl62oOzkdHoQm21IIBv9bKi4
+         SJNwwBXu3C2lYnyP5A2dbfdT4ntRTMiSZdIVDb/CDMDlmLyyj81B+h6wvZFBgbjZrjQv
+         aVR4u7x3hzs7Vpay5pMGWntC1kVU5oAKvZLEjHF8vT3XcCvu/GdI4WXfD0qAvKVt7/24
+         /p8w==
+X-Gm-Message-State: AOAM531Tq8pxhkJiM97APlJ4atnSjrisT32hXlxYsIHdYDw4BiTctVkK
+        qtWQr7U6kv8eYcZhSwNj9Ik=
+X-Google-Smtp-Source: ABdhPJzTUABuF2Vzp+Y9Usd6Hjkm7rZDYp+mvf/3yQZOoG7CAfvk2coMFaxyRLh2S+YAc0Z4L3XduQ==
+X-Received: by 2002:a62:834c:: with SMTP id h73mr14490407pfe.221.1595125023447;
+        Sat, 18 Jul 2020 19:17:03 -0700 (PDT)
 Received: from octofox.hsd1.ca.comcast.net ([2601:641:400:e00:19b7:f650:7bbe:a7fb])
-        by smtp.gmail.com with ESMTPSA id a68sm6891159pje.35.2020.07.18.19.17.00
+        by smtp.gmail.com with ESMTPSA id a68sm6891159pje.35.2020.07.18.19.17.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 19:17:00 -0700 (PDT)
+        Sat, 18 Jul 2020 19:17:03 -0700 (PDT)
 From:   Max Filippov <jcmvbkbc@gmail.com>
 To:     linux-xtensa@linux-xtensa.org
 Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
         bpf@vger.kernel.org, netdev@vger.kernel.org,
         linux-kselftest@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 0/3] xtensa: add seccomp support
-Date:   Sat, 18 Jul 2020 19:16:51 -0700
-Message-Id: <20200719021654.25922-1-jcmvbkbc@gmail.com>
+Subject: [PATCH 3/3] selftests/seccomp: add xtensa support
+Date:   Sat, 18 Jul 2020 19:16:54 -0700
+Message-Id: <20200719021654.25922-4-jcmvbkbc@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200719021654.25922-1-jcmvbkbc@gmail.com>
+References: <20200719021654.25922-1-jcmvbkbc@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,25 +78,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Xtensa returns syscall number can be obtained and changed through the
+struct user_pt_regs. Syscall return value register is fixed relatively
+to the current register window in the user_pt_regs, so it needs a bit of
+special treatment.
 
-this series adds support for seccomp filter on xtensa and updates
-selftests/seccomp.
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+---
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-Max Filippov (3):
-  xtensa: expose syscall through user_pt_regs
-  xtensa: add seccomp support
-  selftests/seccomp: add xtensa support
-
- .../seccomp/seccomp-filter/arch-support.txt      |  2 +-
- arch/xtensa/Kconfig                              | 15 +++++++++++++++
- arch/xtensa/include/asm/Kbuild                   |  1 +
- arch/xtensa/include/asm/thread_info.h            |  5 ++++-
- arch/xtensa/include/uapi/asm/ptrace.h            |  3 ++-
- arch/xtensa/kernel/ptrace.c                      |  8 +++++++-
- tools/testing/selftests/seccomp/seccomp_bpf.c    | 16 +++++++++++++++-
- 7 files changed, 45 insertions(+), 5 deletions(-)
-
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 252140a52553..1b445c2e7fbe 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -122,6 +122,8 @@ struct seccomp_data {
+ #  define __NR_seccomp 358
+ # elif defined(__s390__)
+ #  define __NR_seccomp 348
++# elif defined(__xtensa__)
++#  define __NR_seccomp 337
+ # else
+ #  warning "seccomp syscall number unknown for this architecture"
+ #  define __NR_seccomp 0xffff
+@@ -1622,6 +1624,14 @@ TEST_F(TRACE_poke, getpid_runs_normally)
+ # define SYSCALL_SYSCALL_NUM regs[4]
+ # define SYSCALL_RET	regs[2]
+ # define SYSCALL_NUM_RET_SHARE_REG
++#elif defined(__xtensa__)
++# define ARCH_REGS	struct user_pt_regs
++# define SYSCALL_NUM	syscall
++/*
++ * On xtensa syscall return value is in the register
++ * a2 of the current window which is not fixed.
++ */
++#define SYSCALL_RET(reg) a[(reg).windowbase * 4 + 2]
+ #else
+ # error "Do not know how to find your architecture's registers and syscalls"
+ #endif
+@@ -1693,7 +1703,8 @@ void change_syscall(struct __test_metadata *_metadata,
+ 	EXPECT_EQ(0, ret) {}
+ 
+ #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) || \
+-	defined(__s390__) || defined(__hppa__) || defined(__riscv)
++	defined(__s390__) || defined(__hppa__) || defined(__riscv) || \
++	defined(__xtensa__)
+ 	{
+ 		regs.SYSCALL_NUM = syscall;
+ 	}
+@@ -1736,6 +1747,9 @@ void change_syscall(struct __test_metadata *_metadata,
+ 	if (syscall == -1)
+ #ifdef SYSCALL_NUM_RET_SHARE_REG
+ 		TH_LOG("Can't modify syscall return on this architecture");
++
++#elif defined(__xtensa__)
++		regs.SYSCALL_RET(regs) = result;
+ #else
+ 		regs.SYSCALL_RET = result;
+ #endif
 -- 
 2.20.1
 
