@@ -2,114 +2,319 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NO_DNS_FOR_FROM,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B76C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12051C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2BE520775
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3F62076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:43:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="gh6Ak5mD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgGSDRg (ORCPT
+        id S1726552AbgGSDmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 23:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
+        Sat, 18 Jul 2020 23:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgGSDRg (ORCPT
+        with ESMTP id S1726359AbgGSDmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 23:17:36 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF3DDC0619D2;
-        Sat, 18 Jul 2020 20:17:35 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwzpV-00FQNz-EZ; Sun, 19 Jul 2020 03:17:33 +0000
-Date:   Sun, 19 Jul 2020 04:17:33 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC] raw_copy_from_user() semantics
-Message-ID: <20200719031733.GI2786714@ZenIV.linux.org.uk>
+        Sat, 18 Jul 2020 23:42:21 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDAB5C0619D4
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 20:42:20 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id z15so5581476qki.10
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 20:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fY9o1t8e8sG+JO7jEG+2eTqOGSQI+xJHynD2kEHDWCw=;
+        b=gh6Ak5mDuEglr56h5ylgIon14jSInTer3CxXVkSMSNRKZ14Epu+ntUJf2INM7ogyDF
+         1xMO7aXBBDO9DJqGYmoWKpFlyPhG2K0m4Bv50OlXpGLL0rE/HZ8nTpPTbD9a0mteBzj8
+         FoxDLUC2IK+Pq1LoF5XSPOd6MpI/wxYNC1IwQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fY9o1t8e8sG+JO7jEG+2eTqOGSQI+xJHynD2kEHDWCw=;
+        b=BDkyAU3ie37QjSC+yj83Hoh+8xidTt+k8BR1I6igAtGKKavcN+d+w1RwqbDx+9Lman
+         T2NiLNtwC2Jebmtna3VCgwl/rAe79ksFYLbiZ8jII1obhY6Ge04IcPWsUkumua7nfhyn
+         i2GmeD+8j4aIJM+j4UhaPokaYk1zwD+cvxc7OC4FfTKMgsjRRmer0yeeXZP9lZYmemgR
+         yLp/LO0isD4GZGrMXdG/lpmsZX0t9Ih86SR8xMBa0wbhPTDP5ShVYq5GkTYrJp6mS9gw
+         VrOzFhETYA08j2N2mn2MDNRiukdoBvyRX+TC28WB5rWhgJQIwYyQoQv7saRRxfASwA61
+         EQAA==
+X-Gm-Message-State: AOAM532nMyA0to6Lo8Ne7C9NpcNZqPxRDdiWBRsp2MWObvEy3C+Ypbi4
+        V2+hApQ6junD71lTCnaETXgB/0P0sqE=
+X-Google-Smtp-Source: ABdhPJyx7jDtrgjWcFzFlbvM7mzEXGf5sucOy8BduR0/xI3KGjiQGkbYhC9dovQGSAIVUbXRE3Yq4A==
+X-Received: by 2002:a05:620a:79a:: with SMTP id 26mr16279539qka.169.1595130139716;
+        Sat, 18 Jul 2020 20:42:19 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id a203sm1261550qkg.30.2020.07.18.20.42.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jul 2020 20:42:19 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Subject: [PATCH RFC] rcu/segcblist: Add counters to segcblist datastructure
+Date:   Sat, 18 Jul 2020 23:42:10 -0400
+Message-Id: <20200719034210.2382053-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Back in 2017 I'd made a bogus promise regarding raw_copy_from_user().
- Namely, that in case of short copy it will copy at least something unless
-nothing could've been read at all.
+From: Joel Fernandes <joelaf@google.com>
 
-	Such property could've been used by code that would want to squeeze
-every byte, by doing copy_from_user() in a loop, advancing the source and
-destination by the amount copied until we stop getting any progress.
+Add counting of segment lengths of segmented callback list.
 
-	There are two problems with that.  First of all, the promise was
-bogus - there are architectures where it is simply not true.  E.g. ppc
-(or alpha, or sparc, or...)  can have copy_from_user() called with source
-one word prior to an unmapped page, fetch that word, fail to fetch the next
-one and bugger off without doing any stores.
+This will be useful for a number of things such as knowing how big the
+ready-to-execute segment have gotten. The immediate benefit is ability
+to trace how the callbacks in the segmented callback list change.
 
-	So any byte-squeezing loop of that sort would break on a bunch
-of architectures.  Another problem is that we simply don't have a lot
-of such loops.	Looking through the mainline kernel has found only two
-such beasts - one in vcs_write() and another in iomap_dio_inline_actor().
-Both are in write(2) and write(2) has never made any warranties regarding
-the situation when a part of buffer we want to write is unreadable.
-In particular, it does *not* squeeze every last byte out - not for
-regular files on local filesystems, not for NFS, not for pipes, not for
-sockets, etc.
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-	E.g. in case of generic_perform_write() we treat "nothing has
-been copied" as "try to fault in, fail if that's not possible, retry the
-attempt to copy otherwise"; we have to, since we are doing the copying
-with pagefaults disabled, so a failure to copy anything may be simply
-due to a page evicted by memory pressure.  And if we have an evicted page
-followed by genuinely unreadable one, we can very well have fault-in fail
-(and write stop) while we still have a couple of kilobytes worth of data
-yet to be copied from the evicted page.
-
-	We could try to make the promise true; that would mean messing
-with a lot of unpleasant asm code (in exception handlers, at that) and
-I don't believe it's worth the bother.  We could add a "squeeze every
-last byte" helper, but I don't see any valid users for it right now.
-
-	BTW, "do copy_from_user() in a loop" is not a good way to do such
-helper anyway - if we stop copying on a fault and lose some data already
-fetched, that data is not going to be more than a few registers worth,
-so it's better to have this helper do a byte-by-byte get_user() loop
-for dealing with that case.
-
-	IMO we should simply remove the bogus promise, document the real
-situation and if somebody needs the "squeeze every last byte" helper,
-let them say so.  Audit of the current mainline shows only two places
-that might be trying something like that and AFAICS both are accidental.
-
-	Does anybody object against the following?
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 7bcadca22100..083fda6aa384 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -30,10 +30,11 @@
-  * starting at from.  All data past to + size - N must be left unmodified.
-  *
-  * If copying succeeds, the return value must be 0.  If some data cannot be
-- * fetched, it is permitted to copy less than had been fetched; the only
-- * hard requirement is that not storing anything at all (i.e. returning size)
-- * should happen only when nothing could be copied.  In other words, you don't
-- * have to squeeze as much as possible - it is allowed, but not necessary.
-+ * fetched, it is permitted to copy less than had been fetched.  In other
-+ * words, you don't have to squeeze as much as possible - it is allowed, but
-+ * not necessary.  In particular, it is possible to have some bytes fetched
-+ * and nothing copied, so do _not_ assume that doing copies until we get to
-+ * "nothing copied" will copy every byte that can be fetched.
-  *
-  * For raw_copy_from_user() to always points to kernel memory and no faults
-  * on store should happen.  Interpretation of from is affected by set_fs().
+ include/linux/rcu_segcblist.h |  2 +
+ kernel/rcu/rcu_segcblist.c    | 96 +++++++++++++++++++++++++++++++----
+ 2 files changed, 89 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
+index b36afe7b22c9..d462ae5e340a 100644
+--- a/include/linux/rcu_segcblist.h
++++ b/include/linux/rcu_segcblist.h
+@@ -69,8 +69,10 @@ struct rcu_segcblist {
+ 	unsigned long gp_seq[RCU_CBLIST_NSEGS];
+ #ifdef CONFIG_RCU_NOCB_CPU
+ 	atomic_long_t len;
++	atomic_long_t seglen[RCU_CBLIST_NSEGS];
+ #else
+ 	long len;
++	long seglen[RCU_CBLIST_NSEGS];
+ #endif
+ 	u8 enabled;
+ 	u8 offloaded;
+diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+index 9a0f66133b4b..8d4ade6523b8 100644
+--- a/kernel/rcu/rcu_segcblist.c
++++ b/kernel/rcu/rcu_segcblist.c
+@@ -79,15 +79,66 @@ struct rcu_head *rcu_cblist_dequeue(struct rcu_cblist *rclp)
+ }
+ 
+ /* Set the length of an rcu_segcblist structure. */
+-static void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
++void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
+ {
+ #ifdef CONFIG_RCU_NOCB_CPU
+-	atomic_long_set(&rsclp->len, v);
++       atomic_long_set(&rsclp->len, v);
+ #else
+-	WRITE_ONCE(rsclp->len, v);
++       WRITE_ONCE(rsclp->len, v);
++#endif
++}
++
++/* Get the length of a segment of the rcu_segcblist structure. */
++static long rcu_segcblist_get_seglen(struct rcu_segcblist *rsclp, int seg)
++{
++#ifdef CONFIG_RCU_NOCB_CPU
++	return atomic_long_read(&rsclp->seglen[seg]);
++#else
++	return READ_ONCE(rsclp->seglen[seg]);
++#endif
++}
++
++/* Set the length of a segment of the rcu_segcblist structure. */
++static void rcu_segcblist_set_seglen(struct rcu_segcblist *rsclp, int seg, long v)
++{
++#ifdef CONFIG_RCU_NOCB_CPU
++	atomic_long_set(&rsclp->seglen[seg], v);
++#else
++	WRITE_ONCE(rsclp->seglen[seg], v);
++#endif
++}
++
++/* Return number of callbacks in a segment of the segmented callback list. */
++static void rcu_segcblist_add_seglen(struct rcu_segcblist *rsclp, int seg, long v)
++{
++#ifdef CONFIG_RCU_NOCB_CPU
++	smp_mb__before_atomic(); /* Up to the caller! */
++	atomic_long_add(v, &rsclp->seglen[seg]);
++	smp_mb__after_atomic(); /* Up to the caller! */
++#else
++	smp_mb(); /* Up to the caller! */
++	WRITE_ONCE(rsclp->seglen[seg], rsclp->seglen[seg] + v);
++	smp_mb(); /* Up to the caller! */
+ #endif
+ }
+ 
++/* Move from's segment length to to's segment. */
++static void rcu_segcblist_move_seglen(struct rcu_segcblist *rsclp, int from, int to)
++{
++	long len = rcu_segcblist_get_seglen(rsclp, from);
++
++	if (!len || from == to)
++		return;
++	rcu_segcblist_add_seglen(rsclp, to, len);
++	rcu_segcblist_set_seglen(rsclp, from, 0);
++}
++
++/* Increment segment's length. */
++static void rcu_segcblist_inc_seglen(struct rcu_segcblist *rsclp, int seg)
++{
++	rcu_segcblist_add_seglen(rsclp, seg, 1);
++}
++
+ /*
+  * Increase the numeric length of an rcu_segcblist structure by the
+  * specified amount, which can be negative.  This can cause the ->len
+@@ -149,8 +200,11 @@ void rcu_segcblist_init(struct rcu_segcblist *rsclp)
+ 	BUILD_BUG_ON(RCU_NEXT_TAIL + 1 != ARRAY_SIZE(rsclp->gp_seq));
+ 	BUILD_BUG_ON(ARRAY_SIZE(rsclp->tails) != ARRAY_SIZE(rsclp->gp_seq));
+ 	rsclp->head = NULL;
+-	for (i = 0; i < RCU_CBLIST_NSEGS; i++)
++	for (i = 0; i < RCU_CBLIST_NSEGS; i++) {
+ 		rsclp->tails[i] = &rsclp->head;
++		rcu_segcblist_set_seglen(rsclp, i, 0);
++	}
++
+ 	rcu_segcblist_set_len(rsclp, 0);
+ 	rsclp->enabled = 1;
+ }
+@@ -245,6 +299,7 @@ void rcu_segcblist_enqueue(struct rcu_segcblist *rsclp,
+ 			   struct rcu_head *rhp)
+ {
+ 	rcu_segcblist_inc_len(rsclp);
++	rcu_segcblist_inc_seglen(rsclp, RCU_NEXT_TAIL);
+ 	smp_mb(); /* Ensure counts are updated before callback is enqueued. */
+ 	rhp->next = NULL;
+ 	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rhp);
+@@ -274,6 +329,7 @@ bool rcu_segcblist_entrain(struct rcu_segcblist *rsclp,
+ 	for (i = RCU_NEXT_TAIL; i > RCU_DONE_TAIL; i--)
+ 		if (rsclp->tails[i] != rsclp->tails[i - 1])
+ 			break;
++	rcu_segcblist_inc_seglen(rsclp, i);
+ 	WRITE_ONCE(*rsclp->tails[i], rhp);
+ 	for (; i <= RCU_NEXT_TAIL; i++)
+ 		WRITE_ONCE(rsclp->tails[i], &rhp->next);
+@@ -307,6 +363,9 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
+ 
+ 	if (!rcu_segcblist_ready_cbs(rsclp))
+ 		return; /* Nothing to do. */
++
++	rclp->len = rcu_segcblist_get_seglen(rsclp, RCU_DONE_TAIL);
++
+ 	*rclp->tail = rsclp->head;
+ 	WRITE_ONCE(rsclp->head, *rsclp->tails[RCU_DONE_TAIL]);
+ 	WRITE_ONCE(*rsclp->tails[RCU_DONE_TAIL], NULL);
+@@ -314,6 +373,8 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
+ 	for (i = RCU_CBLIST_NSEGS - 1; i >= RCU_DONE_TAIL; i--)
+ 		if (rsclp->tails[i] == rsclp->tails[RCU_DONE_TAIL])
+ 			WRITE_ONCE(rsclp->tails[i], &rsclp->head);
++
++	rcu_segcblist_set_seglen(rsclp, RCU_DONE_TAIL, 0);
+ }
+ 
+ /*
+@@ -330,11 +391,19 @@ void rcu_segcblist_extract_pend_cbs(struct rcu_segcblist *rsclp,
+ 
+ 	if (!rcu_segcblist_pend_cbs(rsclp))
+ 		return; /* Nothing to do. */
++
++	rclp->len = rcu_segcblist_get_seglen(rsclp, RCU_WAIT_TAIL) +
++		    rcu_segcblist_get_seglen(rsclp, RCU_NEXT_READY_TAIL) +
++		    rcu_segcblist_get_seglen(rsclp, RCU_NEXT_TAIL);
++
+ 	*rclp->tail = *rsclp->tails[RCU_DONE_TAIL];
+ 	rclp->tail = rsclp->tails[RCU_NEXT_TAIL];
++
+ 	WRITE_ONCE(*rsclp->tails[RCU_DONE_TAIL], NULL);
+-	for (i = RCU_DONE_TAIL + 1; i < RCU_CBLIST_NSEGS; i++)
++	for (i = RCU_DONE_TAIL + 1; i < RCU_CBLIST_NSEGS; i++) {
+ 		WRITE_ONCE(rsclp->tails[i], rsclp->tails[RCU_DONE_TAIL]);
++		rcu_segcblist_set_seglen(rsclp, i, 0);
++	}
+ }
+ 
+ /*
+@@ -359,8 +428,11 @@ void rcu_segcblist_insert_done_cbs(struct rcu_segcblist *rsclp,
+ 
+ 	if (!rclp->head)
+ 		return; /* No callbacks to move. */
++
++	rcu_segcblist_add_seglen(rsclp, RCU_DONE_TAIL, rclp->len);
+ 	*rclp->tail = rsclp->head;
+ 	WRITE_ONCE(rsclp->head, rclp->head);
++
+ 	for (i = RCU_DONE_TAIL; i < RCU_CBLIST_NSEGS; i++)
+ 		if (&rsclp->head == rsclp->tails[i])
+ 			WRITE_ONCE(rsclp->tails[i], rclp->tail);
+@@ -379,6 +451,8 @@ void rcu_segcblist_insert_pend_cbs(struct rcu_segcblist *rsclp,
+ {
+ 	if (!rclp->head)
+ 		return; /* Nothing to do. */
++
++	rcu_segcblist_add_seglen(rsclp, RCU_NEXT_TAIL, rclp->len);
+ 	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rclp->head);
+ 	WRITE_ONCE(rsclp->tails[RCU_NEXT_TAIL], rclp->tail);
+ }
+@@ -403,6 +477,7 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
+ 		if (ULONG_CMP_LT(seq, rsclp->gp_seq[i]))
+ 			break;
+ 		WRITE_ONCE(rsclp->tails[RCU_DONE_TAIL], rsclp->tails[i]);
++		rcu_segcblist_move_seglen(rsclp, i, RCU_DONE_TAIL);
+ 	}
+ 
+ 	/* If no callbacks moved, nothing more need be done. */
+@@ -419,10 +494,9 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
+ 	 * callbacks.  The overall effect is to copy down the later pointers
+ 	 * into the gap that was created by the now-ready segments.
+ 	 */
+-	for (j = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL; i++, j++) {
+-		if (rsclp->tails[j] == rsclp->tails[RCU_NEXT_TAIL])
+-			break;  /* No more callbacks. */
++	for (j = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL && j < RCU_NEXT_TAIL; i++, j++) {
+ 		WRITE_ONCE(rsclp->tails[j], rsclp->tails[i]);
++		rcu_segcblist_move_seglen(rsclp, i, j);
+ 		rsclp->gp_seq[j] = rsclp->gp_seq[i];
+ 	}
+ }
+@@ -444,7 +518,7 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
+  */
+ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
+ {
+-	int i;
++	int i, j;
+ 
+ 	WARN_ON_ONCE(!rcu_segcblist_is_enabled(rsclp));
+ 	if (rcu_segcblist_restempty(rsclp, RCU_DONE_TAIL))
+@@ -479,6 +553,10 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
+ 	if (++i >= RCU_NEXT_TAIL)
+ 		return false;
+ 
++	/* Accounting: everything below i is about to get merged into i. */
++	for (j = i; j <= RCU_NEXT_TAIL; j++)
++		rcu_segcblist_move_seglen(rsclp, j, i);
++
+ 	/*
+ 	 * Merge all later callbacks, including newly arrived callbacks,
+ 	 * into the segment located by the for-loop above.  Assign "seq"
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
+
