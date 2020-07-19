@@ -2,210 +2,180 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD91C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 14:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 14:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 277C622B4D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 14:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E2422B4E
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 14:34:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JV5FjxVF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UL8uP2hC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgGSOdj (ORCPT
+        id S1726284AbgGSOeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 10:33:39 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38442 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725988AbgGSOdj (ORCPT
+        Sun, 19 Jul 2020 10:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgGSOeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 10:33:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595169216;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=FyiYf7saiQ+lnFL+5g2tZxRVLu1/jpY1NSVk9IVEuBg=;
-        b=JV5FjxVFkenlMweenDW9bmciAMeg2VCle2PvkYrXSi6SNb7hUeyAZreJ4Th32Rc2+x+Mzs
-        JMjbZwqGwsmjY6i7z//uk+tMGfuowZ23LpwY80o235VGPdmCZJwi978salD7V7Dwk5jz8C
-        XmsmkmOPCi/9GxN9ad/0iPQU1qdG0kM=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-440-wN2nx_odMR-KG7M6nfvgFA-1; Sun, 19 Jul 2020 10:33:33 -0400
-X-MC-Unique: wN2nx_odMR-KG7M6nfvgFA-1
-Received: by mail-qv1-f69.google.com with SMTP id v10so8489806qvm.17
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 07:33:33 -0700 (PDT)
+        Sun, 19 Jul 2020 10:34:16 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89420C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 07:34:16 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id z5so9097514pgb.6
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 07:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=cGafgwhjZbI9rRStyay6bRCQergbF17/kauj57yW04s=;
+        b=UL8uP2hCYUdNNJlk+Vzx7IM76dw+syvmMrQLtsEY8DyaRA2aNYZHbQO8UAj/LrBR8B
+         jNDSJyEzSXLWNC5VCdh3uXt3X89nuo6YnvD0qfPhbBD3QxhiDOEKF2L/i2bWtkO6fboW
+         5yfV/p6fswda0gvCTBX953g6rr6CUgO3OiIXXzF0nzA8wx/Jawdjl/iakEyv6B8fsTJC
+         Jhd9pOrQuFIuf8ndWPyda/ArxyPDwFraPSuJZdd//OmCeT1HDBk2CCgOuW0QbeRnaD1m
+         He8RsEj3Kz8kHCzAdKUSsKJQ/bFJ4Vdw8T+DzF2k4Kk+94ExoY9Wn6wItnznUuE1w9Bb
+         rXVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FyiYf7saiQ+lnFL+5g2tZxRVLu1/jpY1NSVk9IVEuBg=;
-        b=a6qWUsDehPTQeDJSsbq4/wTxPAgBQ7MDa+vxaWP2dcWOxCMAQhyc5CTfDG80QGMVtx
-         XgJgr+logfumz3sJEbOxQ02Q47CXGf+aLaDzfjsq2uLX2DnZXPvq4HFsg5xbyLFjneUT
-         ijhsV7IZDMlyu4Y7f5PHAzeIJpV7dGEiLAU3FVnxvoC3xiJMqXyXnD+DTVpyzSbhaEHA
-         4vrG8+Hr2a3BrVeDtJcWSeXplTOh0IW9HW9Jz05Vm5IAe7ydTx+qTeDIFVYX6khfmwz+
-         xCBJ6IyRFW6tBW1LYdhTK6kSUD+HRc+F+SlR4vGOq/FhHOnxagIUmuyVrC4tIWa0kY6i
-         VYUQ==
-X-Gm-Message-State: AOAM531bfIxcP+rDEjJdbqbz9u1drOUYjW5lzu8c0MvQhNuahlODY94G
-        RUkWm3UpaD5eY7EQtudqsmAdIJQJnAgtzfFlOUtIUaH5gFxz0Lr9aa4o0QxYVoq6SYuO2OdItXQ
-        nRmZD9qCV6Wv4b09cpnx0Kxei
-X-Received: by 2002:ad4:4f09:: with SMTP id fb9mr17250531qvb.20.1595169212884;
-        Sun, 19 Jul 2020 07:33:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzi7p1xDCZGMj4FKiOdczP97V5VcHle0hQN2BLGNy3t4tTkTZgtftdVso1X5/6IzyIR935qBA==
-X-Received: by 2002:ad4:4f09:: with SMTP id fb9mr17250486qvb.20.1595169212266;
-        Sun, 19 Jul 2020 07:33:32 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id t187sm7504970qkf.73.2020.07.19.07.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 07:33:31 -0700 (PDT)
-From:   trix@redhat.com
-To:     marek.vasut@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
-        aford173@gmail.com
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] clk: vc5: Fix use after free in vc5_probe
-Date:   Sun, 19 Jul 2020 07:33:24 -0700
-Message-Id: <20200719143324.25695-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=cGafgwhjZbI9rRStyay6bRCQergbF17/kauj57yW04s=;
+        b=JEho50uZ5t8ogoFvV+zNOAyGIRhnUJUCW5GZZaN9UqD22omgwmd0vqO2HKNmygWoeh
+         7nS6lfgc+g2DV/P0zf/txIwr2q7SPbL6JmoE/9xd7G/CH9XyxoW270yNrA0+755u3oEh
+         Ya62X17/N5jeXNIu1v4AuE5Ql4lMzAW0bZHQgkCl4jPdL0ZhxQ+UnPwfesl3Cn/TswFj
+         jW85UTW1YoPywIW2em22BuQH8UkjUHPPEIAbPo/5P7U4o5o7oIpcUWLCFdMIalke0G57
+         SgaUzzCGrklftoezxBCUSNGklhPLNK3cKkprK26t3BCs4f53IP6c+6xXw5ok43fAVLaS
+         2oKg==
+X-Gm-Message-State: AOAM5315KHjANNooYkt9G1tOIKxRKlV8eA0EDggBxXTykohxZdtmvVs+
+        U2GqNUgXClGhm29dDRrqM8o=
+X-Google-Smtp-Source: ABdhPJxXJjkwTcPp6ikYmK99x//73VrfJdDZCPGlg20GSKcaUL3PeUoxwD7FkLb3tKUipNNE9KbStw==
+X-Received: by 2002:a63:7cf:: with SMTP id 198mr3899359pgh.309.1595169256065;
+        Sun, 19 Jul 2020 07:34:16 -0700 (PDT)
+Received: from blackclown ([103.88.82.25])
+        by smtp.gmail.com with ESMTPSA id y24sm14524807pfp.217.2020.07.19.07.34.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 Jul 2020 07:34:15 -0700 (PDT)
+Date:   Sun, 19 Jul 2020 20:04:04 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: rts5208: rtsx: Replace depracated MSI API
+Message-ID: <20200719143404.GA32519@blackclown>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
 
-clang static analysis reports this error
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-clk-versaclock5.c:887:3: warning: Use of memory after it is freed
-  [unix.Malloc]
-      dev_err(&client->dev, "unable to register %s\n", init.name);
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Replace depracated MSI IRQ enablers and disablers
+with pci_alloc_irq_vectors and pci_free_irq_vectors respectively.
+Compile tested.
 
-A representative problem block of code is
-
-ret = devm_clk_hw_register(&client->dev, &vc5->clk_mux);
-kfree(init.name);	/* clock framework made a copy of the name */
-if (ret) {
-	dev_err(&client->dev, "unable to register %s\n", init.name);
-	goto err_clk;
-}
-
-init.name is freed and then used.
-
-So reorder the free.
-
-Fixes: f491276a5168 ("clk: vc5: Allow Versaclock driver to support multiple instances")
-
-Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
 ---
- drivers/clk/clk-versaclock5.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+Changes:
+	v2: Replace MSI IRQ disablers too.
+---
+ drivers/staging/rts5208/rtsx.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
-index 9a5fb3834b9a..72c9ae460a01 100644
---- a/drivers/clk/clk-versaclock5.c
-+++ b/drivers/clk/clk-versaclock5.c
-@@ -882,11 +882,12 @@ static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	init.parent_names = parent_names;
- 	vc5->clk_mux.init = &init;
- 	ret = devm_clk_hw_register(&client->dev, &vc5->clk_mux);
--	kfree(init.name);	/* clock framework made a copy of the name */
- 	if (ret) {
- 		dev_err(&client->dev, "unable to register %s\n", init.name);
-+		kfree(init.name);
- 		goto err_clk;
+diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
+index e28e162d004e..898add4d1fc8 100644
+--- a/drivers/staging/rts5208/rtsx.c
++++ b/drivers/staging/rts5208/rtsx.c
+@@ -283,7 +283,7 @@ static int __maybe_unused rtsx_suspend(struct device *d=
+ev_d)
  	}
-+	kfree(init.name);	/* clock framework made a copy of the name */
- 
- 	if (vc5->chip_info->flags & VC5_HAS_PFD_FREQ_DBL) {
- 		/* Register frequency doubler */
-@@ -900,12 +901,13 @@ static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		init.num_parents = 1;
- 		vc5->clk_mul.init = &init;
- 		ret = devm_clk_hw_register(&client->dev, &vc5->clk_mul);
--		kfree(init.name); /* clock framework made a copy of the name */
- 		if (ret) {
- 			dev_err(&client->dev, "unable to register %s\n",
- 				init.name);
-+			kfree(init.name);
- 			goto err_clk;
- 		}
-+		kfree(init.name); /* clock framework made a copy of the name */
+=20
+ 	if (chip->msi_en)
+-		pci_disable_msi(pci);
++		pci_free_irq_vectors(pci);
+=20
+ 	device_wakeup_enable(dev_d);
+=20
+@@ -310,7 +310,7 @@ static int __maybe_unused rtsx_resume(struct device *de=
+v_d)
+ 	pci_set_master(pci);
+=20
+ 	if (chip->msi_en) {
+-		if (pci_enable_msi(pci) < 0)
++		if (pci_alloc_irq_vectors(pci, 1, 1, PCI_IRQ_MSI) < 0)
+ 			chip->msi_en =3D 0;
  	}
- 
- 	/* Register PFD */
-@@ -921,11 +923,12 @@ static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	init.num_parents = 1;
- 	vc5->clk_pfd.init = &init;
- 	ret = devm_clk_hw_register(&client->dev, &vc5->clk_pfd);
--	kfree(init.name);	/* clock framework made a copy of the name */
- 	if (ret) {
- 		dev_err(&client->dev, "unable to register %s\n", init.name);
-+		kfree(init.name);
- 		goto err_clk;
+=20
+@@ -347,7 +347,7 @@ static void rtsx_shutdown(struct pci_dev *pci)
  	}
-+	kfree(init.name);	/* clock framework made a copy of the name */
- 
- 	/* Register PLL */
- 	memset(&init, 0, sizeof(init));
-@@ -939,11 +942,12 @@ static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	vc5->clk_pll.vc5 = vc5;
- 	vc5->clk_pll.hw.init = &init;
- 	ret = devm_clk_hw_register(&client->dev, &vc5->clk_pll.hw);
--	kfree(init.name); /* clock framework made a copy of the name */
- 	if (ret) {
- 		dev_err(&client->dev, "unable to register %s\n", init.name);
-+		kfree(init.name);
- 		goto err_clk;
+=20
+ 	if (chip->msi_en)
+-		pci_disable_msi(pci);
++		pci_free_irq_vectors(pci);
+=20
+ 	pci_disable_device(pci);
+ }
+@@ -594,7 +594,7 @@ static void rtsx_release_resources(struct rtsx_dev *dev)
+ 	if (dev->irq > 0)
+ 		free_irq(dev->irq, (void *)dev);
+ 	if (dev->chip->msi_en)
+-		pci_disable_msi(dev->pci);
++		pci_free_irq_vectors(dev->pci);
+ 	if (dev->remap_addr)
+ 		iounmap(dev->remap_addr);
+=20
+@@ -881,7 +881,7 @@ static int rtsx_probe(struct pci_dev *pci,
+ 	dev_info(&pci->dev, "pci->irq =3D %d\n", pci->irq);
+=20
+ 	if (dev->chip->msi_en) {
+-		if (pci_enable_msi(pci) < 0)
++		if (pci_alloc_irq_vectors(pci, 1, 1, PCI_IRQ_MSI) < 0)
+ 			dev->chip->msi_en =3D 0;
  	}
-+	kfree(init.name); /* clock framework made a copy of the name */
- 
- 	/* Register FODs */
- 	for (n = 0; n < vc5->chip_info->clk_fod_cnt; n++) {
-@@ -960,12 +964,13 @@ static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		vc5->clk_fod[n].vc5 = vc5;
- 		vc5->clk_fod[n].hw.init = &init;
- 		ret = devm_clk_hw_register(&client->dev, &vc5->clk_fod[n].hw);
--		kfree(init.name); /* clock framework made a copy of the name */
- 		if (ret) {
- 			dev_err(&client->dev, "unable to register %s\n",
- 				init.name);
-+			kfree(init.name);
- 			goto err_clk;
- 		}
-+		kfree(init.name); /* clock framework made a copy of the name */
- 	}
- 
- 	/* Register MUX-connected OUT0_I2C_SELB output */
-@@ -981,11 +986,12 @@ static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	vc5->clk_out[0].vc5 = vc5;
- 	vc5->clk_out[0].hw.init = &init;
- 	ret = devm_clk_hw_register(&client->dev, &vc5->clk_out[0].hw);
--	kfree(init.name);	/* clock framework made a copy of the name */
- 	if (ret) {
- 		dev_err(&client->dev, "unable to register %s\n", init.name);
-+		kfree(init.name);
- 		goto err_clk;
- 	}
-+	kfree(init.name); /* clock framework made a copy of the name */
- 
- 	/* Register FOD-connected OUTx outputs */
- 	for (n = 1; n < vc5->chip_info->clk_out_cnt; n++) {
-@@ -1008,12 +1014,13 @@ static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		vc5->clk_out[n].vc5 = vc5;
- 		vc5->clk_out[n].hw.init = &init;
- 		ret = devm_clk_hw_register(&client->dev, &vc5->clk_out[n].hw);
--		kfree(init.name); /* clock framework made a copy of the name */
- 		if (ret) {
- 			dev_err(&client->dev, "unable to register %s\n",
- 				init.name);
-+			kfree(init.name);
- 			goto err_clk;
- 		}
-+		kfree(init.name); /* clock framework made a copy of the name */
- 
- 		/* Fetch Clock Output configuration from DT (if specified) */
- 		ret = vc5_get_output_config(client, &vc5->clk_out[n]);
--- 
-2.18.1
+=20
+@@ -952,7 +952,7 @@ static int rtsx_probe(struct pci_dev *pci,
+ 	dev->chip->host_cmds_ptr =3D NULL;
+ 	dev->chip->host_sg_tbl_ptr =3D NULL;
+ 	if (dev->chip->msi_en)
+-		pci_disable_msi(dev->pci);
++		pci_free_irq_vectors(dev->pci);
+ dma_alloc_fail:
+ 	iounmap(dev->remap_addr);
+ ioremap_fail:
+--=20
+2.17.1
 
+
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8UWdsACgkQ+gRsbIfe
+744d6w//V5XT/RC+qOEq6QsxtGsxYRx/LbqqSuE8iTOoLupVtMnl+yuxzxOEFS4c
+i/UVpZfWWd5WVSad0XoIcRfZuZwm8zxSA7/gp9CdBqHDJ3EYaqHfvxKt5443/lG2
+pX/6OHWXiv2Pgh6C0wt3PzdA4BHjWh9PSLnbXACllDsFKYVLaeK7F68GrlhGbBi6
+lPyPAX4B/LwqA7A12SwBs4YR0GA4uFzuK3L3MDwP+q5zNVrHA3D3BqOxitBuXUXi
+RHmr67BzOUeXq2YOvRBNbZXV/JII4Csk0c3/SHxHejFV/zdriPyd6oEWl5x5VB7m
+C44S0kRV712AVvw67GELkFoD58M0XRmu0pfvCyaVLnOOdkcq3ZmoZFzxa8lZX0Fq
+6+SKuYAXV+debQgW/lkUcsSq70Dmgcj7YW57cJFy7N1mzBGQXln5X1OY5GrkjXMR
+3E85kq5SzYJ0fQu2QDkcvzSAx0u1yY46yo1Zc80MBpvM+DQUKpfjNWaOR16L5Zmu
+2A7CK0LYArcp59oEONt89F2qekAj0J8qFrkVKIzQhTGFq2YPbCjQTHh9DDoBhW/+
+PKZ8mCgk91NRACZTPQAzXzzS2TWHtnWDEI3zS2J81HVG3VAq8MjuIFKBgy+IdKHN
+1o2fNqVux1uqpuoiE9s6VnKlJ/BQc3nrOflDoSbAzbeYFBK+Gp0=
+=2Oqc
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
