@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1311C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 00:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC03C433E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 00:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91703208B3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 00:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7ED3208B3
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 00:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YNv4rELC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nW9c81cD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgGSA2t (ORCPT
+        id S1726689AbgGSA3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 20:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45944 "EHLO
+        Sat, 18 Jul 2020 20:29:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbgGSA2t (ORCPT
+        with ESMTP id S1726242AbgGSA3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 20:28:49 -0400
+        Sat, 18 Jul 2020 20:29:01 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE39C0619D2;
-        Sat, 18 Jul 2020 17:28:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 370D1C0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 17:29:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
         Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=63jCr+SCeOP67cD87Ufv+yP7Y+AW/h262jPGrG3odrY=; b=YNv4rELCMJK1Zk/pg46gSXJ78R
-        uzxV0wSgCMEZX60aujeGwAJHKzRpKrfEhdLfCp22+NFicbFTMVuzPaftwwHG0v0qCS7hkFjqsQFsH
-        s8GGuoBanWsv02rWybxrNqvd0Jp58q10UxjHCijneu1s6iZOhSLw4646esovee5CmrXyGosY1D/fW
-        ExPxvNxj8gvuKm/uUW2uu9Vnn2Cuq/eCSZhF4t1fobS5AkYsmWoXY6pRH/K1Rmd/1YmjZe+gWi2Mb
-        E0LGzKvf7JHjHELfYa1oq3RhYGKtOld73AjCaL9ocxctET12V2Hen3i3x8S3yDg74O/E7oo03QJZO
-        mz+7i19A==;
+        bh=F/Dr1NlrrHa9o/NMjBr8owHWHpYMtGHINOmgco5x/Xo=; b=nW9c81cDU9Vwv2XoaDXz8lbMyn
+        3Wa4R/dXw6GJqq8r2qR3FDNWStc7F5mvjSzYJ2xaLljW0D9xPDOTBZ9aETPaKOXJmhoDebRRghCid
+        QWYdPKlbAbcVpncEjC5Q66xMAkI1xzPZKshuiN8uoheeCsqluzwvIe7wiUPJoSLCVr7O4NaaPVeyJ
+        dlbUYx3rxaHKG9zTd2X5KBGvIrOk+od8M1o3TBn5Vw8iFZjn6gQibz4u615q/zk8dncCYkGWfnxMe
+        QsWgyw6CyPukdOvNIoFPiBjpc93/R/VpuGCmXt+rh751q+l+OTC/C62lsLItVLwbdX7WpalaBZ9iN
+        cCXk5O9g==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwxCA-0002hT-Cc; Sun, 19 Jul 2020 00:28:46 +0000
+        id 1jwxCL-0002iR-5r; Sun, 19 Jul 2020 00:28:57 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH] hyperv: hyperv.h: drop a duplicated word
-Date:   Sat, 18 Jul 2020 17:28:41 -0700
-Message-Id: <20200719002841.20369-1-rdunlap@infradead.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH] irqchip: irq-bcm2836.h: drop a duplicated word
+Date:   Sat, 18 Jul 2020 17:28:53 -0700
+Message-Id: <20200719002853.20419-1-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -60,23 +59,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Drop the repeated word "the" in a comment.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: linux-hyperv@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <maz@kernel.org>
 ---
- include/uapi/linux/hyperv.h |    2 +-
+ include/linux/irqchip/irq-bcm2836.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200717.orig/include/uapi/linux/hyperv.h
-+++ linux-next-20200717/include/uapi/linux/hyperv.h
-@@ -219,7 +219,7 @@ struct hv_do_fcopy {
-  * kernel and user-level daemon communicate using a connector channel.
-  *
-  * The user mode component first registers with the
-- * the kernel component. Subsequently, the kernel component requests, data
-+ * kernel component. Subsequently, the kernel component requests, data
-  * for the specified keys. In response to this message the user mode component
-  * fills in the value corresponding to the specified key. We overload the
-  * sequence field in the cn_msg header to define our KVP message types.
+--- linux-next-20200717.orig/include/linux/irqchip/irq-bcm2836.h
++++ linux-next-20200717/include/linux/irqchip/irq-bcm2836.h
+@@ -30,7 +30,7 @@
+  */
+ #define LOCAL_MAILBOX_INT_CONTROL0	0x050
+ /*
+- * The CPU's interrupt status register.  Bits are defined by the the
++ * The CPU's interrupt status register.  Bits are defined by the
+  * LOCAL_IRQ_* bits below.
+  */
+ #define LOCAL_IRQ_PENDING0		0x060
