@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 22:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 22:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37B98208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 22:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2F82177B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 22:41:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ORfdGJdo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ChKxTZja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgGSWmU (ORCPT
+        id S1726842AbgGSWl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 18:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
+        Sun, 19 Jul 2020 18:41:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgGSWmU (ORCPT
+        with ESMTP id S1726126AbgGSWl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 18:42:20 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAB7C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 15:42:19 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id o8so20506946wmh.4
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 15:42:19 -0700 (PDT)
+        Sun, 19 Jul 2020 18:41:28 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CEDC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 15:41:27 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l2so23401452wmf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 15:41:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=InNAb5u7mYNRF2NZXJcSDpG408C3Is27+csdtIXrcwQ=;
-        b=ORfdGJdovIxIlTbNSYkvJoqFnFkxMjS5bbDp+8ksHwqo80zCo0MywZ5bHNlzBdwO2a
-         Hpkv4pLhJRqKXxut+f7IMpBE5P2+YY4B2tPRiT2GFK/UO6JN50l6XDIMPBAVsDUwf3mw
-         XDl0pZZHqIwUTABLHipFnWB3pWOCBD/adkeVhWu4mcX0DHUJfFMRsxv3bkWUZJ1YjPZU
-         PAMfvukvpwovKXEKpJPgmfqoguYPtHa0jHvirgbRLOc0D50qyhqUgAWMLpfPEUf/a+qx
-         zcWO+Rx0je6oBYMsXMxrnJOzAQ2HCXi2BGDBb5KoUlwtds3uYQiAiTRj+xW6ttGHTFeu
-         8WpQ==
+        bh=FxLrNPglbF9ncB8sc8qthtbpXbbVljTEGzUXDQggf7U=;
+        b=ChKxTZjaqei0REZFZ4Axj/G5mIwXDNhB1JF3DPC6IZC1d3KvYyxnQd/NcwC7ZH/6Tu
+         DinqFfjhjDhadtAzoLIWDbIhZiQkcIab139S4A60rhCgZPBmAW6i/jetC2EKXlQ3Xgk/
+         emUPxryINuySyKF07LDzKM2rx7tOCxR80nd29yRSdSpMEo2I/N12xPJmOYd6cntJttvX
+         r70Q5VkC0EVBHXIPwxRvs1Yr9TdBCzW0WRmQG4DJASq0r4Gr53dxYd3sbIlie0RnFYgu
+         LaqFDZilWfyBFaNukMoQalobMCQKrDeoRom5wJ3nh99Foz3yxUSmZO1LOKptncK/kuab
+         Q8Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=InNAb5u7mYNRF2NZXJcSDpG408C3Is27+csdtIXrcwQ=;
-        b=ouxBQdDMNGIjYRmzIKgsE4DXM2MD2LNlqWECcVovD7yMzEDm/TxcEqNDf+OdSuyFLl
-         nC6ZyYMfrxwn1vpRJCE1ZFc1EwUnUbpExFMKenLGsX+vaVCA5DATUydGtJ59lZaPPECP
-         mIGp2VLsN8Igfeq9BNRPNd06w5OgBBJRGaR9piQmnAUWQeg86EmbsvTzju2E+NmV2VEU
-         I5XfxvC24tmLUQj0mZwBMt2ig+xjOfO3wGwnGJifElWcA/podxqRpjOI9Tlk/YRfM245
-         6e8LRc4ZqXbDVj4l9ubzjUgxagZthkLw3vv1JlFxzQNuBm/kgndvmB6hlDXU1WhjkRZt
-         ETZA==
-X-Gm-Message-State: AOAM5304Ca1WHOL5amZ/GGvbq0ZtWbr+nVjbObx8yHJYp+wGOWh7tIVJ
-        lgUmHwmllCNCRexK512j1UifEhUFXU3nY5rR1t76cQ==
-X-Google-Smtp-Source: ABdhPJx6sQUrDHyUJ6iORPD32DWs/BrywP3VeLt5EU3015H+zLMc9tpR8nay6OsnRdGQiwm58nQeECu4UAwvMn+iMF8=
-X-Received: by 2002:a05:600c:2295:: with SMTP id 21mr18319081wmf.87.1595198538141;
- Sun, 19 Jul 2020 15:42:18 -0700 (PDT)
+        bh=FxLrNPglbF9ncB8sc8qthtbpXbbVljTEGzUXDQggf7U=;
+        b=CGG4BzUcfFLwvXh6EzfLNh4Dws2XOojqDBcjPp6EBZ7KkOPciH8rT4sr9ERlzQZ1QY
+         0jtKNedga7LiTtkUR4Lbo+vH36/rZMkkqXMXl1c7yw+8LT3rMOpLZKIMvpQkVSan969U
+         t00hrQhJZfZmyTQdFrqIdJWEL3WP0omZheKBL2glBEIoRy6oDcqSIxn11pbvf7IgQhQk
+         z12xpw0oXH+q6QJ3BrB/gcMSS9nSKNA3rayRmM0flE+6CxmHdjKniWZRFFBOYfIJPQ6k
+         AgbBRH4fA4Lhfzk3eiF91PSkxIJoNO6YpfqOx8uoDeeU6OJvHisWpKDb7klj83VqskGe
+         nlHQ==
+X-Gm-Message-State: AOAM533DA54YVAsvhrcEADD7RaT32PFatgX62+UseKWK4QjM3wjTK3DY
+        dgDGrdpN8PBaApfNCJ4AC0XrPStPAMYt3/13Wi63DA==
+X-Google-Smtp-Source: ABdhPJyzyjJnV9Vn6Hv/ivhglamob4TAIGejshKTLTYYdkX7/HfrjA6aHf3QmP7VU2ptMdyYKNg2/3UXTFqmTbVmA8g=
+X-Received: by 2002:a1c:4e08:: with SMTP id g8mr19606936wmh.77.1595198486224;
+ Sun, 19 Jul 2020 15:41:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200719181320.785305-1-jolsa@kernel.org> <20200719181320.785305-20-jolsa@kernel.org>
-In-Reply-To: <20200719181320.785305-20-jolsa@kernel.org>
+References: <20200719181320.785305-1-jolsa@kernel.org> <20200719181320.785305-18-jolsa@kernel.org>
+In-Reply-To: <20200719181320.785305-18-jolsa@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 19 Jul 2020 15:42:06 -0700
-Message-ID: <CAP-5=fXie3Vf7NwEAUPMCGP1R4SVFZr=y0z4yp1iomjqCja0Yg@mail.gmail.com>
-Subject: Re: [PATCH 19/19] perf metric: Rename group_list to metric_list
+Date:   Sun, 19 Jul 2020 15:41:14 -0700
+Message-ID: <CAP-5=fWmm5pvH-hwkaAKV=__7Ocbc-4Qj8OCJWz_xi4pc65A=Q@mail.gmail.com>
+Subject: Re: [PATCH 17/19] perf metric: Add metric group test
 To:     Jiri Olsa <jolsa@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         lkml <linux-kernel@vger.kernel.org>,
@@ -83,9 +83,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, Jul 19, 2020 at 11:14 AM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> Following the previous change that rename egroup
-> to metric, there's no reason to call the list
-> 'group_list' anymore, renaming it to metric_list.
+> Adding test for metric group plus compute_metric_group
+> function to get metrics values within the group.
 >
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
@@ -95,176 +94,109 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/metricgroup.c | 42 +++++++++++++++++------------------
->  1 file changed, 21 insertions(+), 21 deletions(-)
+>  tools/perf/tests/parse-metric.c | 48 +++++++++++++++++++++++++++++++--
+>  1 file changed, 46 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 9d5fff36042d..6f179b9903a0 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -639,7 +639,7 @@ int __weak arch_get_runtimeparam(void)
->         return 1;
->  }
->
-> -static int __add_metric(struct list_head *group_list,
-> +static int __add_metric(struct list_head *metric_list,
->                         struct pmu_event *pe,
->                         bool metric_no_group,
->                         int runtime,
-> @@ -726,13 +726,13 @@ static int __add_metric(struct list_head *group_list,
->         if (m->metric_refs_cnt)
->                 return 0;
->
-> -       if (list_empty(group_list))
-> -               list_add(&m->nd, group_list);
-> +       if (list_empty(metric_list))
-> +               list_add(&m->nd, metric_list);
->         else {
->                 struct list_head *pos;
->
->                 /* Place the largest groups at the front. */
-> -               list_for_each_prev(pos, group_list) {
-> +               list_for_each_prev(pos, metric_list) {
->                         struct metric *old = list_entry(pos, struct metric, nd);
->
->                         if (hashmap__size(&m->pctx.ids) <=
-> @@ -813,7 +813,7 @@ static int recursion_check(struct metric *m, const char *id, struct expr_id **pa
->         return p->id ? 0 : -ENOMEM;
->  }
->
-> -static int add_metric(struct list_head *group_list,
-> +static int add_metric(struct list_head *metric_list,
->                       struct pmu_event *pe,
->                       bool metric_no_group,
->                       struct metric **mp,
-> @@ -822,7 +822,7 @@ static int add_metric(struct list_head *group_list,
->
->  static int resolve_metric(struct metric *m,
->                           bool metric_no_group,
-> -                         struct list_head *group_list,
-> +                         struct list_head *metric_list,
->                           struct pmu_events_map *map,
->                           struct expr_ids *ids)
+> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+> index 5ac32f80f8ea..f2ba5b2c5557 100644
+> --- a/tools/perf/tests/parse-metric.c
+> +++ b/tools/perf/tests/parse-metric.c
+> @@ -18,6 +18,7 @@ static struct pmu_event pme_test[] = {
 >  {
-> @@ -854,7 +854,7 @@ static int resolve_metric(struct metric *m,
->                         expr__del_id(&m->pctx, cur->key);
+>         .metric_expr    = "inst_retired.any / cpu_clk_unhalted.thread",
+>         .metric_name    = "IPC",
+> +       .metric_group   = "group1",
+>  },
+>  {
+>         .metric_expr    = "idq_uops_not_delivered.core / (4 * (( ( cpu_clk_unhalted.thread / 2 ) * "
+> @@ -35,6 +36,7 @@ static struct pmu_event pme_test[] = {
+>  {
+>         .metric_expr    = "(dcache_miss_cpi + icache_miss_cycles)",
+>         .metric_name    = "cache_miss_cycles",
+> +       .metric_group   = "group1",
+>  },
+>  {
+>         .metric_expr    = "l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit",
+> @@ -127,7 +129,9 @@ static double compute_single(struct rblist *metric_events, struct evlist *evlist
+>         return 0.;
+>  }
 >
->                         /* ... and it gets resolved to the parent context. */
-> -                       ret = add_metric(group_list, pe, metric_no_group, &m, parent, ids);
-> +                       ret = add_metric(metric_list, pe, metric_no_group, &m, parent, ids);
->                         if (ret)
->                                 return ret;
+> -static int compute_metric(const char *name, struct value *vals, double *ratio)
+> +static int __compute_metric(const char *name, struct value *vals,
+> +                           const char *name1, double *ratio1,
+> +                           const char *name2, double *ratio2)
+>  {
+>         struct rblist metric_events = {
+>                 .nr_entries = 0,
+> @@ -166,7 +170,10 @@ static int compute_metric(const char *name, struct value *vals, double *ratio)
+>         load_runtime_stat(&st, evlist, vals);
 >
-> @@ -869,7 +869,7 @@ static int resolve_metric(struct metric *m,
+>         /* And execute the metric */
+> -       *ratio = compute_single(&metric_events, evlist, &st, name);
+> +       if (name1 && ratio1)
+> +               *ratio1 = compute_single(&metric_events, evlist, &st, name1);
+> +       if (name2 && ratio2)
+> +               *ratio2 = compute_single(&metric_events, evlist, &st, name2);
+>
+>         /* ... clenup. */
+>         metricgroup__rblist_exit(&metric_events);
+> @@ -177,6 +184,18 @@ static int compute_metric(const char *name, struct value *vals, double *ratio)
 >         return 0;
 >  }
 >
-> -static int add_metric(struct list_head *group_list,
-> +static int add_metric(struct list_head *metric_list,
->                       struct pmu_event *pe,
->                       bool metric_no_group,
->                       struct metric **m,
-> @@ -881,7 +881,7 @@ static int add_metric(struct list_head *group_list,
->         pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
->
->         if (!strstr(pe->metric_expr, "?")) {
-> -               ret = __add_metric(group_list, pe, metric_no_group, 1, m, parent, ids);
-> +               ret = __add_metric(metric_list, pe, metric_no_group, 1, m, parent, ids);
->         } else {
->                 int j, count;
->
-> @@ -889,11 +889,11 @@ static int add_metric(struct list_head *group_list,
->
->                 /* This loop is added to create multiple
->                  * events depend on count value and add
-> -                * those events to group_list.
-> +                * those events to metric_list.
->                  */
->
->                 for (j = 0; j < count && !ret; j++) {
-> -                       ret = __add_metric(group_list, pe, metric_no_group, j, m, parent, ids);
-> +                       ret = __add_metric(metric_list, pe, metric_no_group, j, m, parent, ids);
->                 }
->         }
->
-> @@ -902,7 +902,7 @@ static int add_metric(struct list_head *group_list,
->
->  static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->                                    struct strbuf *events,
-> -                                  struct list_head *group_list,
-> +                                  struct list_head *metric_list,
->                                    struct pmu_events_map *map)
->
+> +static int compute_metric(const char *name, struct value *vals, double *ratio)
+> +{
+> +       return __compute_metric(name, vals, name, ratio, NULL, NULL);
+> +}
+> +
+> +static int compute_metric_group(const char *name, struct value *vals,
+> +                               const char *name1, double *ratio1,
+> +                               const char *name2, double *ratio2)
+> +{
+> +       return __compute_metric(name, vals, name1, ratio1, name2, ratio2);
+> +}
+> +
+>  static int test_ipc(void)
 >  {
-> @@ -948,14 +948,14 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->                 }
->         }
->
-> -       list_splice(&list, group_list);
-> +       list_splice(&list, metric_list);
->         expr_ids__exit(&ids);
+>         double ratio;
+> @@ -297,6 +316,30 @@ static int test_recursion_fail(void)
 >         return 0;
 >  }
 >
->  static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
->                                         struct strbuf *events,
-> -                                       struct list_head *group_list,
-> +                                       struct list_head *metric_list,
->                                         struct pmu_events_map *map)
+> +static int test_metric_group(void)
+> +{
+> +       double ratio1, ratio2;
+> +       struct value vals[] = {
+> +               { .event = "cpu_clk_unhalted.thread", .val = 200 },
+> +               { .event = "l1d-loads-misses",        .val = 300 },
+> +               { .event = "l1i-loads-misses",        .val = 200 },
+> +               { .event = "inst_retired.any",        .val = 400 },
+> +               { 0 },
+> +       };
+> +
+> +       TEST_ASSERT_VAL("failed to find recursion",
+> +                       compute_metric_group("group1", vals,
+> +                                            "IPC", &ratio1,
+> +                                            "cache_miss_cycles", &ratio2) == 0);
+> +
+> +       TEST_ASSERT_VAL("group IPC failed, wrong ratio",
+> +                       ratio1 == 2.0);
+> +
+> +       TEST_ASSERT_VAL("group cache_miss_cycles failed, wrong ratio",
+> +                       ratio2 == 1.25);
+> +       return 0;
+> +}
+> +
+>  int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
 >  {
->         char *llist, *nlist, *p;
-> @@ -971,7 +971,7 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
->
->         while ((p = strsep(&llist, ",")) != NULL) {
->                 ret = metricgroup__add_metric(p, metric_no_group, events,
-> -                                             group_list, map);
-> +                                             metric_list, map);
->                 if (ret == -EINVAL) {
->                         fprintf(stderr, "Cannot find metric or group `%s'\n",
->                                         p);
-> @@ -996,11 +996,11 @@ static void metric__free_refs(struct metric *metric)
->         }
+>         TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
+> @@ -304,5 +347,6 @@ int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unu
+>         TEST_ASSERT_VAL("cache_miss_cycles failed", test_cache_miss_cycles() == 0);
+>         TEST_ASSERT_VAL("DCache_L2 failed", test_dcache_l2() == 0);
+>         TEST_ASSERT_VAL("recursion fail failed", test_recursion_fail() == 0);
+> +       TEST_ASSERT_VAL("test metric group", test_metric_group() == 0);
+>         return 0;
 >  }
->
-> -static void metricgroup__free_metrics(struct list_head *group_list)
-> +static void metricgroup__free_metrics(struct list_head *metric_list)
->  {
->         struct metric *m, *tmp;
->
-> -       list_for_each_entry_safe (m, tmp, group_list, nd) {
-> +       list_for_each_entry_safe (m, tmp, metric_list, nd) {
->                 metric__free_refs(m);
->                 expr__ctx_clear(&m->pctx);
->                 list_del_init(&m->nd);
-> @@ -1017,13 +1017,13 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
->  {
->         struct parse_events_error parse_error;
->         struct strbuf extra_events;
-> -       LIST_HEAD(group_list);
-> +       LIST_HEAD(metric_list);
->         int ret;
->
->         if (metric_events->nr_entries == 0)
->                 metricgroup__rblist_init(metric_events);
->         ret = metricgroup__add_metric_list(str, metric_no_group,
-> -                                          &extra_events, &group_list, map);
-> +                                          &extra_events, &metric_list, map);
->         if (ret)
->                 return ret;
->         pr_debug("adding %s\n", extra_events.buf);
-> @@ -1034,10 +1034,10 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
->                 goto out;
->         }
->         strbuf_release(&extra_events);
-> -       ret = metricgroup__setup_events(&group_list, metric_no_merge,
-> +       ret = metricgroup__setup_events(&metric_list, metric_no_merge,
->                                         perf_evlist, metric_events);
->  out:
-> -       metricgroup__free_metrics(&group_list);
-> +       metricgroup__free_metrics(&metric_list);
->         return ret;
->  }
->
 > --
 > 2.25.4
 >
