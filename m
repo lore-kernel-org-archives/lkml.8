@@ -2,108 +2,146 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD46C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E069CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD088208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:34:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595187273;
-	bh=R1UXRHTwM8Zx9NbZ4PSmOXer/srICcLrUQzdI0mdCY4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wQ7fd3B2XpkNBcAzucYaMmh4DV/IPTVbjPK4Ct97I159BnHLeXDc64b/ucOnnDabU
-	 9LP8dVoO+iyhR5TetfuIdWaT844yeN9qJZWWgB8FMFlfQDAKVEPTQ2uk1E8sGtPC0b
-	 +c7AlzQY4/HZlV3D42LULX7Drj0Owat8Dcvvn2WU=
+	by mail.kernel.org (Postfix) with ESMTP id CC958207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 19:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgGSTec (ORCPT
+        id S1726503AbgGSTgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 15:34:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51024 "EHLO
+        Sun, 19 Jul 2020 15:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgGSTea (ORCPT
+        with ESMTP id S1726073AbgGSTgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 15:34:30 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2B4C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 12:34:29 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id g2so8627288lfb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 12:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s4iaAa1pJ3/vUXL+G0FL5XOVaOaVeIOdKQBxEAvPWUk=;
-        b=hUj5SJIJp5WpT8tiJdx2CMecsKcJEqVlqdlhW6MORlAWnybeCPezD07typEeY2pzH4
-         /ZktAwoD/GooFQ3xUbb7QJ97bNKTNjYZ7xG6wQxdrZPzrm5qDk9TlDrmtLv7I80qPdDB
-         t+i7Jg3uGh63h0eUENt4UYDEoycbXbz0ouzRQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s4iaAa1pJ3/vUXL+G0FL5XOVaOaVeIOdKQBxEAvPWUk=;
-        b=NWBQcfFLnKzA2CXKtFgQOYshmQV/a3Z1m2XuQS3yyNz1vOR9hJp3/vz382YEoo72ja
-         jgYgi1OVX92bCY1Y5XbtYK7JwiemneOWQHBiu3vOeEdZGhq+xNDnHAVLfvHo6JtoNR5W
-         PVSw+WtINoV5tHWSyjuZN4puYYpBNn6Sq5GsDZ7/0K/pRRlPePRZlyKhrITAEUUN23v9
-         Sl9Rl537pFhLI0wiNjSxfjpJkNs8WU9a2KRxszzw1ncUGi0fxWNPeHl/72j2qoGDoifx
-         fQYhHRzxrR6tFP19SAB4NWun0RoTNlknQr3f1q22S5RNOCWwhA0gxOvPt1+kyHmkBQ8g
-         duLw==
-X-Gm-Message-State: AOAM532Tw0HKoa7nGn9GChtN1R3TdfJ1zCGXRgiG1TT0gyhQzXDv5q5p
-        ZAk+DoJi/fzpN4THxPVZe9QT2WOSt7A=
-X-Google-Smtp-Source: ABdhPJzmOg/kdm8tB+/n5R1CDu/e0RrpADIAmjdmYLWPP8ZLCLCWIh2xSm+nFWLIl7jx4aLTO/6eRA==
-X-Received: by 2002:a19:4a90:: with SMTP id x138mr4054315lfa.68.1595187268033;
-        Sun, 19 Jul 2020 12:34:28 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id a17sm3307950lfo.73.2020.07.19.12.34.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Jul 2020 12:34:27 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id h22so17970755lji.9
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 12:34:27 -0700 (PDT)
-X-Received: by 2002:a2e:991:: with SMTP id 139mr8453344ljj.314.1595187266940;
- Sun, 19 Jul 2020 12:34:26 -0700 (PDT)
+        Sun, 19 Jul 2020 15:36:02 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E4BC0619D2;
+        Sun, 19 Jul 2020 12:36:02 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id AA300BC065;
+        Sun, 19 Jul 2020 19:35:59 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jdelvare@suse.com, wsa@kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] i2c: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 21:35:53 +0200
+Message-Id: <20200719193553.61319-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200719031733.GI2786714@ZenIV.linux.org.uk> <CAHk-=wi7f5vG+s=aFsskzcTRs+f7MVHK9yJFZtUEfndy6ScKRQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wi7f5vG+s=aFsskzcTRs+f7MVHK9yJFZtUEfndy6ScKRQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 19 Jul 2020 12:34:11 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wirA7zJJB17KJPCE-V9pKwn8VKxXTeiaM+F+Sa1Xd2SWA@mail.gmail.com>
-Message-ID: <CAHk-=wirA7zJJB17KJPCE-V9pKwn8VKxXTeiaM+F+Sa1Xd2SWA@mail.gmail.com>
-Subject: Re: [RFC] raw_copy_from_user() semantics
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 12:28 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> I think we should try to get rid of the exact semantics.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Side note: I think one of the historical reasons for the exact
-semantics was that we used to do things like the mount option copying
-with a "copy_from_user()" iirc.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-And that could take a fault at the end of the stack etc, because
-"copy_mount_options()" is nasty and doesn't get a size, and just
-copies "up to 4kB" of data.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-It's a mistake in the interface, but it is what it is. But we've
-always handled the inexact count there anyway by originally doing byte
-accesses, and at some point you optimized it to just look at where
-page boundaries might be..
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-I think that was the only truly _valid_ case of "we actually copy data
-from user space, and we might need to handle a partial case", and
-exactly because of that, it had already long avoided the whole "assume
-copy_from_user gives us byte-accurate data before the fault".
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-              Linus
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/i2c/busses/i2c-ali1535.rst | 2 +-
+ Documentation/i2c/busses/i2c-ali15x3.rst | 2 +-
+ Documentation/i2c/busses/i2c-piix4.rst   | 4 ++--
+ drivers/i2c/busses/i2c-ali1535.c         | 2 +-
+ drivers/i2c/busses/i2c-ali15x3.c         | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/i2c/busses/i2c-ali1535.rst b/Documentation/i2c/busses/i2c-ali1535.rst
+index 6941064730dc..3fe2bad63597 100644
+--- a/Documentation/i2c/busses/i2c-ali1535.rst
++++ b/Documentation/i2c/busses/i2c-ali1535.rst
+@@ -28,7 +28,7 @@ Additionally, the sequencing of the SMBus transactions has been modified to
+ be more consistent with the sequencing recommended by the manufacturer and
+ observed through testing.  These changes are reflected in this driver and
+ can be identified by comparing this driver to the i2c-ali15x3 driver. For
+-an overview of these chips see http://www.acerlabs.com
++an overview of these chips see https://www.acerlabs.com
+ 
+ The SMB controller is part of the M7101 device, which is an ACPI-compliant
+ Power Management Unit (PMU).
+diff --git a/Documentation/i2c/busses/i2c-ali15x3.rst b/Documentation/i2c/busses/i2c-ali15x3.rst
+index d4c1a2a419cb..4e67715c0b1f 100644
+--- a/Documentation/i2c/busses/i2c-ali15x3.rst
++++ b/Documentation/i2c/busses/i2c-ali15x3.rst
+@@ -67,7 +67,7 @@ They are part of the following ALI chipsets:
+   * "Aladdin IV" includes the M1541 Socket 7 North bridge
+     with host bus up to 83.3 MHz.
+ 
+-For an overview of these chips see http://www.acerlabs.com. At this time the
++For an overview of these chips see https://www.acerlabs.com. At this time the
+ full data sheets on the web site are password protected, however if you
+ contact the ALI office in San Jose they may give you the password.
+ 
+diff --git a/drivers/i2c/busses/i2c-ali1535.c b/drivers/i2c/busses/i2c-ali1535.c
+index a43deea390f5..9600d98296fa 100644
+--- a/drivers/i2c/busses/i2c-ali1535.c
++++ b/drivers/i2c/busses/i2c-ali1535.c
+@@ -20,7 +20,7 @@
+     the manufacturer and observed through testing.  These
+     changes are reflected in this driver and can be identified
+     by comparing this driver to the i2c-ali15x3 driver.
+-    For an overview of these chips see http://www.acerlabs.com
++    For an overview of these chips see https://www.acerlabs.com
+ 
+     The SMB controller is part of the 7101 device, which is an
+     ACPI-compliant Power Management Unit (PMU).
+diff --git a/drivers/i2c/busses/i2c-ali15x3.c b/drivers/i2c/busses/i2c-ali15x3.c
+index 02185a1cfa77..7156499df800 100644
+--- a/drivers/i2c/busses/i2c-ali15x3.c
++++ b/drivers/i2c/busses/i2c-ali15x3.c
+@@ -19,7 +19,7 @@
+        with AGP and 100MHz CPU Front Side bus
+        "Aladdin IV": Includes the M1541 Socket 7 North bridge
+        with host bus up to 83.3 MHz.
+-    For an overview of these chips see http://www.acerlabs.com
++    For an overview of these chips see https://www.acerlabs.com
+ 
+     The M1533/M1543C devices appear as FOUR separate devices
+     on the PCI bus. An output of lspci will show something similar
+-- 
+2.27.0
+
