@@ -2,141 +2,290 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A2DC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5950120B1F
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:04:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="YSp5HYd2";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="dELVP1rf"
+	by mail.kernel.org (Postfix) with ESMTP id 604C320B1F
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgGSREr (ORCPT
+        id S1726225AbgGSREc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 13:04:47 -0400
-Received: from relay5.mymailcheap.com ([159.100.248.207]:40753 "EHLO
-        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgGSREq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 13:04:46 -0400
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
-        by relay5.mymailcheap.com (Postfix) with ESMTPS id 926B226207;
-        Sun, 19 Jul 2020 17:04:43 +0000 (UTC)
-Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
-        by relay2.mymailcheap.com (Postfix) with ESMTPS id 40EBE3EDEC;
-        Sun, 19 Jul 2020 19:04:41 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter2.mymailcheap.com (Postfix) with ESMTP id 209F12A6D5;
-        Sun, 19 Jul 2020 19:04:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1595178281;
-        bh=osOYVWjBgvnZfBvRnCBhngvsXrIwFrLGFgseB6Kbr8M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YSp5HYd2xSeFOyiw9Clx6R1EP3lQBKhlSLfh7SW6fMLcyeo58Cb1R9lZqnVNjjfdt
-         w+lvjHIzwCA0tZorz1p8cNOw2ezplhdlTEp1QX4zn1Enu8z5iQyLgHs4ciEwi6zlVU
-         dHlE5DlqApjYe55n6EODr+5V46TEAE76kRZZ9UnI=
-X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
-Received: from filter2.mymailcheap.com ([127.0.0.1])
-        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id h4fQaNZ63w1v; Sun, 19 Jul 2020 19:04:40 +0200 (CEST)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter2.mymailcheap.com (Postfix) with ESMTPS;
-        Sun, 19 Jul 2020 19:04:40 +0200 (CEST)
-Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 35FA840856;
-        Sun, 19 Jul 2020 17:04:39 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=aosc.io header.i=@aosc.io header.b="dELVP1rf";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from ice-e5v2.lan (unknown [59.41.163.116])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 726D240856;
-        Sun, 19 Jul 2020 17:04:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-        t=1595178270; bh=osOYVWjBgvnZfBvRnCBhngvsXrIwFrLGFgseB6Kbr8M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dELVP1rfpxCKnJXBbSFQScCMFzIyvjoVyNtU4cGpk/qFe/70Cve2OT83eNeyS0As/
-         0cWAwLEIUa8uFIK3OQTMUZ5Ek4baF7IObNp8wLO2w0mHxE976aGMjMIF3q3oRFrDKK
-         TkUfnhONd1bvQmVTrNOXrDHCNHhABB8I9XOBF9vo=
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 0/4] Add support for Feixin K101-IM2BYL02 panel
-Date:   Mon, 20 Jul 2020 01:04:06 +0800
-Message-Id: <20200719170411.275812-1-icenowy@aosc.io>
-X-Mailer: git-send-email 2.27.0
+        Sun, 19 Jul 2020 13:04:32 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:59404 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgGSREc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 13:04:32 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 68921BC062;
+        Sun, 19 Jul 2020 17:04:26 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net,
+        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] docs: hwmon: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 19:04:20 +0200
+Message-Id: <20200719170420.60399-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 35FA840856
-X-Spamd-Result: default: False [6.40 / 20.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         ML_SERVERS(-3.10)[213.133.102.83];
-         DKIM_TRACE(0.00)[aosc.io:+];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         FREEMAIL_TO(0.00)[gmail.com,ravnborg.org,kernel.org];
-         RCVD_NO_TLS_LAST(0.10)[];
-         RECEIVED_SPAMHAUS_PBL(0.00)[59.41.163.116:received];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[aosc.io:s=default];
-         FROM_HAS_DN(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DMARC_NA(0.00)[aosc.io];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
-         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1];
-         RCVD_COUNT_TWO(0.00)[2];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The controller chip of Feixin K101-IM2BA02 is going to be discontinued,
-so Feixin start to provide K101-IM2BYL02 panel as a replacement, which
-utilizes Ilitek ILI9881C controller.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Add support for K101-IM2BYL02 panel.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-By the way, is there a way that can try both kind of panels in the same
-kernel/DTB combo? K101-IM2BYL02 has the same pinout with K101-IM2BA02,
-and PineTab schedule to switch to it w/o modifying the mainboard.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-Icenowy Zheng (4):
-  drm/panel: ilitek-ili9881c: prepare for adding support for extra
-    panels
-  dt-bindings: ili9881c: add compatible string for Feixin K101-IM2BYL02
-  drm/panel: ilitek-ili9881c: add support for Feixin K101-IM2BYL02 panel
-  [DO NOT MERGE] arm64: allwinner: dts: a64: enable K101-IM2BYL02 panel
-    for PineTab
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
- .../display/panel/ilitek,ili9881c.yaml        |   1 +
- .../boot/dts/allwinner/sun50i-a64-pinetab.dts |  10 +
- drivers/gpu/drm/panel/panel-ilitek-ili9881c.c | 273 ++++++++++++++++--
- 3 files changed, 265 insertions(+), 19 deletions(-)
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/hwmon/adm1275.rst  |  2 +-
+ Documentation/hwmon/lm25066.rst  |  6 +++---
+ Documentation/hwmon/ltc2978.rst  |  6 +++---
+ Documentation/hwmon/max20751.rst |  4 ++--
+ Documentation/hwmon/max34440.rst | 12 ++++++------
+ Documentation/hwmon/pmbus.rst    | 18 +++++++++---------
+ Documentation/hwmon/tps40422.rst |  2 +-
+ 7 files changed, 25 insertions(+), 25 deletions(-)
+
+diff --git a/Documentation/hwmon/adm1275.rst b/Documentation/hwmon/adm1275.rst
+index 49966ed70ec6..ce6528f90e4a 100644
+--- a/Documentation/hwmon/adm1275.rst
++++ b/Documentation/hwmon/adm1275.rst
+@@ -49,7 +49,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://www.analog.com/media/en/technical-documentation/data-sheets/ADM1293_1294.pdf
++    Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1293_1294.pdf
+ 
+ Author: Guenter Roeck <linux@roeck-us.net>
+ 
+diff --git a/Documentation/hwmon/lm25066.rst b/Documentation/hwmon/lm25066.rst
+index 30e6e77fb3c8..9f1d7e4d3ca1 100644
+--- a/Documentation/hwmon/lm25066.rst
++++ b/Documentation/hwmon/lm25066.rst
+@@ -11,9 +11,9 @@ Supported chips:
+ 
+     Datasheets:
+ 
+-	http://www.ti.com/lit/gpn/lm25056
++	https://www.ti.com/lit/gpn/lm25056
+ 
+-	http://www.ti.com/lit/gpn/lm25056a
++	https://www.ti.com/lit/gpn/lm25056a
+ 
+   * National Semiconductor LM25066
+ 
+@@ -55,7 +55,7 @@ Supported chips:
+ 
+ 	Datasheet:
+ 
+-    http://www.ti.com/product/LM5066I
++    https://www.ti.com/product/LM5066I
+ 
+ 
+ Author: Guenter Roeck <linux@roeck-us.net>
+diff --git a/Documentation/hwmon/ltc2978.rst b/Documentation/hwmon/ltc2978.rst
+index bc5270e5a477..b99a63965cfb 100644
+--- a/Documentation/hwmon/ltc2978.rst
++++ b/Documentation/hwmon/ltc2978.rst
+@@ -179,7 +179,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://www.analog.com/ltm4680
++    Datasheet: https://www.analog.com/ltm4680
+ 
+   * Analog Devices LTM4686
+ 
+@@ -187,7 +187,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://www.analog.com/ltm4686
++    Datasheet: https://www.analog.com/ltm4686
+ 
+   * Analog Devices LTM4700
+ 
+@@ -195,7 +195,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://www.analog.com/ltm4700
++    Datasheet: https://www.analog.com/ltm4700
+ 
+ 
+ 
+diff --git a/Documentation/hwmon/max20751.rst b/Documentation/hwmon/max20751.rst
+index fe701e07eaf5..f9febefce02d 100644
+--- a/Documentation/hwmon/max20751.rst
++++ b/Documentation/hwmon/max20751.rst
+@@ -9,9 +9,9 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://datasheets.maximintegrated.com/en/ds/MAX20751.pdf
++    Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX20751.pdf
+ 
+-    Application note: http://pdfserv.maximintegrated.com/en/an/AN5941.pdf
++    Application note: https://pdfserv.maximintegrated.com/en/an/AN5941.pdf
+ 
+ Author: Guenter Roeck <linux@roeck-us.net>
+ 
+diff --git a/Documentation/hwmon/max34440.rst b/Documentation/hwmon/max34440.rst
+index 5744df100a5d..162d289f0814 100644
+--- a/Documentation/hwmon/max34440.rst
++++ b/Documentation/hwmon/max34440.rst
+@@ -9,7 +9,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://datasheets.maximintegrated.com/en/ds/MAX34440.pdf
++    Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX34440.pdf
+ 
+   * Maxim MAX34441
+ 
+@@ -19,7 +19,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://datasheets.maximintegrated.com/en/ds/MAX34441.pdf
++    Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX34441.pdf
+ 
+   * Maxim MAX34446
+ 
+@@ -29,7 +29,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://datasheets.maximintegrated.com/en/ds/MAX34446.pdf
++    Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX34446.pdf
+ 
+   * Maxim MAX34451
+ 
+@@ -39,7 +39,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://datasheets.maximintegrated.com/en/ds/MAX34451.pdf
++    Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX34451.pdf
+ 
+   * Maxim MAX34460
+ 
+@@ -49,7 +49,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://datasheets.maximintegrated.com/en/ds/MAX34460.pdf
++    Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX34460.pdf
+ 
+   * Maxim MAX34461
+ 
+@@ -59,7 +59,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://datasheets.maximintegrated.com/en/ds/MAX34461.pdf
++    Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX34461.pdf
+ 
+ Author: Guenter Roeck <linux@roeck-us.net>
+ 
+diff --git a/Documentation/hwmon/pmbus.rst b/Documentation/hwmon/pmbus.rst
+index 2658ddee70eb..ea2b9b081391 100644
+--- a/Documentation/hwmon/pmbus.rst
++++ b/Documentation/hwmon/pmbus.rst
+@@ -21,11 +21,11 @@ Supported chips:
+ 
+     Datasheets:
+ 
+-	http://www.onsemi.com/pub_link/Collateral/ADP4000-D.PDF
++	https://www.onsemi.com/pub_link/Collateral/ADP4000-D.PDF
+ 
+-	http://www.onsemi.com/pub_link/Collateral/NCP4200-D.PDF
++	https://www.onsemi.com/pub_link/Collateral/NCP4200-D.PDF
+ 
+-	http://www.onsemi.com/pub_link/Collateral/JUNE%202009-%20REV.%200.PDF
++	https://www.onsemi.com/pub_link/Collateral/JUNE%202009-%20REV.%200.PDF
+ 
+   * Lineage Power
+ 
+@@ -53,15 +53,15 @@ Supported chips:
+ 
+     Datasheets:
+ 
+-	http://www.ti.com/lit/gpn/tps40400
++	https://www.ti.com/lit/gpn/tps40400
+ 
+-	http://www.ti.com/lit/gpn/tps544b20
++	https://www.ti.com/lit/gpn/tps544b20
+ 
+-	http://www.ti.com/lit/gpn/tps544b25
++	https://www.ti.com/lit/gpn/tps544b25
+ 
+-	http://www.ti.com/lit/gpn/tps544c20
++	https://www.ti.com/lit/gpn/tps544c20
+ 
+-	http://www.ti.com/lit/gpn/tps544c25
++	https://www.ti.com/lit/gpn/tps544c25
+ 
+   * Maxim MAX20796
+ 
+diff --git a/Documentation/hwmon/tps40422.rst b/Documentation/hwmon/tps40422.rst
+index 8fe3e1c3572e..32a62ccea192 100644
+--- a/Documentation/hwmon/tps40422.rst
++++ b/Documentation/hwmon/tps40422.rst
+@@ -9,7 +9,7 @@ Supported chips:
+ 
+     Addresses scanned: -
+ 
+-    Datasheet: http://www.ti.com/lit/gpn/tps40422
++    Datasheet: https://www.ti.com/lit/gpn/tps40422
+ 
+ Author: Zhu Laiwen <richard.zhu@nsn.com>
+ 
 -- 
 2.27.0
+
