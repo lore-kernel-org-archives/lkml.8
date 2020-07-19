@@ -7,39 +7,41 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D26EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1548CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7008A20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF80920734
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgGSLVn (ORCPT
+        id S1726165AbgGSLbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 07:21:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60714 "EHLO
+        Sun, 19 Jul 2020 07:31:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGSLVn (ORCPT
+        with ESMTP id S1726012AbgGSLbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 07:21:43 -0400
+        Sun, 19 Jul 2020 07:31:52 -0400
 Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D508C0619D2;
-        Sun, 19 Jul 2020 04:21:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A7CC0619D2;
+        Sun, 19 Jul 2020 04:31:51 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 0257CBC06E;
-        Sun, 19 Jul 2020 11:21:39 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 59B4DBC063;
+        Sun, 19 Jul 2020 11:31:48 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+To:     michael.hennerich@analog.com, alex.aring@gmail.com,
+        stefan@datenfreihafen.org, davem@davemloft.net, kuba@kernel.org,
+        linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] media: omap: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 13:21:33 +0200
-Message-Id: <20200719112133.58236-1-grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] net: ieee802154: adf7242: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 13:31:42 +0200
+Message-Id: <20200719113142.58304-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
+X-Spamd-Bar: ++++++
 Authentication-Results: smtp.al2klimov.de;
         auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -84,36 +86,22 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- drivers/media/platform/omap3isp/isp.c | 2 +-
- drivers/staging/media/omap4iss/iss.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ieee802154/adf7242.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
-index b91e472ee764..74fa67082e09 100644
---- a/drivers/media/platform/omap3isp/isp.c
-+++ b/drivers/media/platform/omap3isp/isp.c
-@@ -142,7 +142,7 @@ static struct isp_reg isp_reg_list[] = {
-  * readback the same register, in this case the revision register.
+diff --git a/drivers/net/ieee802154/adf7242.c b/drivers/net/ieee802154/adf7242.c
+index 5a37514e4234..60a016a6806a 100644
+--- a/drivers/net/ieee802154/adf7242.c
++++ b/drivers/net/ieee802154/adf7242.c
+@@ -4,7 +4,7 @@
   *
-  * See this link for reference:
-- *   http://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
-+ *   https://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
-  */
- void omap3isp_flush(struct isp_device *isp)
- {
-diff --git a/drivers/staging/media/omap4iss/iss.c b/drivers/staging/media/omap4iss/iss.c
-index 6fb60b58447a..e06ea7ea1e50 100644
---- a/drivers/staging/media/omap4iss/iss.c
-+++ b/drivers/staging/media/omap4iss/iss.c
-@@ -55,7 +55,7 @@ static void iss_print_status(struct iss_device *iss)
-  * readback the same register, in this case the revision register.
+  * Copyright 2009-2017 Analog Devices Inc.
   *
-  * See this link for reference:
-- *   http://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
-+ *   https://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
+- * http://www.analog.com/ADF7242
++ * https://www.analog.com/ADF7242
   */
- static void omap4iss_flush(struct iss_device *iss)
- {
+ 
+ #include <linux/kernel.h>
 -- 
 2.27.0
 
