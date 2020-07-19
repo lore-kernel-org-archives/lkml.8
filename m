@@ -6,61 +6,68 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CBBC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 20:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 20:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B26522CA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 20:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E452176B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 20:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595188810;
-	bh=XSHHctdJjzm7uGuOOu6wyhlio5IM0Ddk19axRNIfP6s=;
+	s=default; t=1595188808;
+	bh=z/g+wCEJr8g3uzhDuU3oIBSzRLMwVEcdTJMQ4orva7A=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=IW2Rx2I9DB37jJw7qEYcUxHLQeH29pDgB4sWOr9LdSEWB4KFwFEsg6yK+sG+3r8Ry
-	 I5nLIyjM12eqkqNyUX7k73b/6evjmaGUYsauNaczP5F8Bdklh4sxfgQEoSADvVrbzF
-	 7Po8bjKMqhn7ZMZfarpF+2ClJf0QSfmOTe7W9pXU=
+	b=r0vqDTmn8OMLOZXYoyYZ+yETIneWRw+Zn0FV7rPWp12+i0cRg1suMTVxO3I5mH3iW
+	 yn2vjlNoWW9A/bqojC/RHh9ge7fry4vsfLJHomi9Dr0YhWDnHygr+4yWrII3j9t/3o
+	 rCz2fmH8+qdaf4yTPIOBxi9bw+qZUL9I3gf0jUWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgGSUAI (ORCPT
+        id S1726697AbgGSUAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 16:00:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46260 "EHLO mail.kernel.org"
+        Sun, 19 Jul 2020 16:00:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgGSUAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 16:00:04 -0400
-Subject: Re: [GIT PULL] USB driver fixes for 5.8-rc6
+        id S1726668AbgGSUAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 16:00:05 -0400
+Subject: Re: [GIT PULL] perf/urgent improvements and fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1595188804;
-        bh=XSHHctdJjzm7uGuOOu6wyhlio5IM0Ddk19axRNIfP6s=;
+        bh=z/g+wCEJr8g3uzhDuU3oIBSzRLMwVEcdTJMQ4orva7A=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=uxg7p24Ur36QBkgoayJ0h42GlVAI2qnv0idS5iqEDfDOHB2DqZwDul3akrUeiusfy
-         7xl5KpFcQf+XnN7sbZIysybSsDsAqiJ8X0yLXQNGh9huvqZjKIwl/bMIPUyFF1d4Di
-         bNOBV85j3iHBNydU8n9iN6WLoMzPgHLKS6txV3jQ=
+        b=srbcNChHh2o5pw1b7Lxw1DSiELjdR2E73DZEn8lYilXgAJr2mFJbDrmpQwvLDJbH6
+         LY3ndCvFRfhtvCvKTrmVOo/UUqTTM3NgfJH6zXDHB5lO/E5h3AKknucueh6DaJDIW7
+         WJ3EQ3XPOHcuKI5zUUy5E5t5qx1bEkI5U+qB4GTI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200719091447.GA157963@kroah.com>
-References: <20200719091447.GA157963@kroah.com>
+In-Reply-To: <20200719130205.2430019-1-acme@kernel.org>
+References: <20200719130205.2430019-1-acme@kernel.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200719091447.GA157963@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.8-rc6
-X-PR-Tracked-Commit-Id: c7300cdf8f683ae00cf74616b5fd14ffac327979
+X-PR-Tracked-Message-Id: <20200719130205.2430019-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+ tags/perf-tools-fixes-2020-07-19
+X-PR-Tracked-Commit-Id: 25d4e7f513d4f8afcf81cb6f00edf1248b0ff8fc
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ce20d7bf6e00997496d8d5322b1253584d2a0908
-Message-Id: <159518880442.26827.3257229150899500793.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 92188b41f1394d5e4399fcb28c13a2933f255255
+Message-Id: <159518880470.26827.6862364227829609113.pr-tracker-bot@kernel.org>
 Date:   Sun, 19 Jul 2020 20:00:04 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 19 Jul 2020 11:14:47 +0200:
+The pull request you sent on Sun, 19 Jul 2020 10:02:05 -0300:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.8-rc6
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-2020-07-19
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ce20d7bf6e00997496d8d5322b1253584d2a0908
+https://git.kernel.org/torvalds/c/92188b41f1394d5e4399fcb28c13a2933f255255
 
 Thank you!
 
