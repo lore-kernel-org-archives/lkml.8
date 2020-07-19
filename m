@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D25FC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 23:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE275C433E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 23:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 383E521744
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 23:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896402177B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 23:11:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qxzm9I4s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ModsBH2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGSXL1 (ORCPT
+        id S1727038AbgGSXLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 19:11:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55824 "EHLO
+        Sun, 19 Jul 2020 19:11:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgGSXLY (ORCPT
+        with ESMTP id S1726996AbgGSXLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 19:11:24 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B23D9C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 16:11:24 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 5so10772698oty.11
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 16:11:24 -0700 (PDT)
+        Sun, 19 Jul 2020 19:11:37 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E39FC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 16:11:37 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id t4so12995649oij.9
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 16:11:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OdduJRvvO41BBsXIW4nBk8PEuA6Cgs/J61E0o3z8Q+o=;
-        b=Qxzm9I4s44cGLSqsfTIsJC+fPSglQdk2B16vQkKCWqjvm1sCV+ZYzUyz7VgmAebkTr
-         md97As9FZw0Ps6kaSJZD5mIKRGOL56NzuzcH266k1/ajLgX7nNNGjPW9sOyx4tRE5T9I
-         IFSXuwClxkZiWudtbMtgX3puqlb9vWkHgJYYUSIIbti+RAwYjJ1R84vGYHzmaJ0fcoiY
-         5sGMjVcLnrqE7y2/05tGR6a89AJnGWuKOAYBcjV5StUAU4gd30SdccVRd12YG6zU0A8A
-         Nu+TjO6z1rVqu571vY1/TQAg4HTfcO0IS1XGvMgRxriAgSQbuUdt7FnvHpGoDTYRvinF
-         oKTQ==
+        bh=5dxLGInHWnF0fsK6AxTnYzixhFSHss/CD5LDV/6gHL4=;
+        b=ModsBH2fmSAIozyWyRpog6ScetmIJCaHqmR1jW3ObJoEZv4h67LVRYFOsByXw5BUK0
+         iEZQhKyf+tPggGrirG+NOTJsnOdTNqQNeDncrit98VmvZchkgWHKize3EIJxM8uWqNZM
+         ihpXmCTPl/L0VWms5O4YSiHjhbzcBaNwAapkgEWL3TYSF58vQNQu01uN7rkpDniz42md
+         5cz1ZLRJPNZpcXBURAvt9LWEwhFCoMcgMu1pQ0nwhwHCev55Cf0wVT4Oi3JSBH5qiYMi
+         8XCVTv2mm24Yk/ybs9uDOO/d9y7KH+u1BHR1f+acGx67UhX/sjZVKuDsHXjhZFA34dsD
+         +DsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OdduJRvvO41BBsXIW4nBk8PEuA6Cgs/J61E0o3z8Q+o=;
-        b=e8ofIkYBiX/79zfmXadFLUQl8flHyG43/jWmiGq/gJTzMc0KUlK/w9jeSoI1sVb9YE
-         j59FmBaZYq3lL5icSpUwicJMG4BsDrx93vUWfC9eBsEs5ssyJmYmhwAYZAWzVpeIZa3M
-         eQEFehV89qMbdr6j4KMVskJiMvx4nGKPoSHJOgmOxl56HMdMo3RFpJ6ws5wLwU8n0WF8
-         s1lKO8pkU7Gn7nJhGEK1GJdiXl3vYt0wfAT4z1vuz14nfLHmDYxRMFxMnRt9fIDu90xn
-         H3Y1/u7jGmZ2IOOkdVs3Wkt8xFKxr6GyCI3vtcqMyzgmedYiGxNVCU7esGs0vKFF+37j
-         /1wA==
-X-Gm-Message-State: AOAM530rvTAk3s5M0VwitHXSKusCyF9llkRJjskYvSZUxavewiCaftdd
-        8lCjq0Py0KbaicjR8AtoxDvejqrfhTE=
-X-Google-Smtp-Source: ABdhPJxeMYavsSkyg4nQCUc6xX8uMG8axiPAKWcOfN00LVs26/Y2lLO4rsf/HvUDCLzNsoLLpoK8HQ==
-X-Received: by 2002:a9d:424:: with SMTP id 33mr17070162otc.76.1595200284143;
-        Sun, 19 Jul 2020 16:11:24 -0700 (PDT)
+        bh=5dxLGInHWnF0fsK6AxTnYzixhFSHss/CD5LDV/6gHL4=;
+        b=IdqaPMDOcwpqYxPiogncbBTJduZjN5ZBDv3FKDk7g9+uqDOKePAUrjkccPInNDtMRU
+         EoVGk6B7y+ICqlJLYHWy2XzUiJe6wQdxPxlH6Isd6DyOoOYylkxiIARSfrmmq3M0wAeJ
+         mVyjb+KESuOce77SZfSPj3c2JJIrHa9oHX5qUNRqBqew3+FA7zSFqOjLPicbinBZZzID
+         67eQTGABGuf4H6efJB8KR7yT1iVm6/JiW74wRm8mkoF6vD70/mqTIj7kURbE2cA97VSX
+         m7pu8VsBsgfMZYpPnCNKl+R0Oja53FWUWptij/UOjkTm1IYSFPr4JWRDYhTm37VzY2bC
+         1STQ==
+X-Gm-Message-State: AOAM533+zI7In2CRSYqvtu/OMeDZ2CrVbRiUwqXVO/jl/G2h/N8K4cbg
+        tcYQvh6Va4XprAhpksG7J6hAyjT4Ylg=
+X-Google-Smtp-Source: ABdhPJx3Dx6/OZRiByI1yuCbb2Oji60eBo3MYKSE5e9vGicjfafrEL3EAVxjY0ZpPnNbRfJXlEOa0g==
+X-Received: by 2002:aca:544d:: with SMTP id i74mr16523297oib.105.1595200296706;
+        Sun, 19 Jul 2020 16:11:36 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::5e16])
-        by smtp.googlemail.com with ESMTPSA id q19sm2394680ooi.14.2020.07.19.16.11.23
+        by smtp.googlemail.com with ESMTPSA id q19sm2394680ooi.14.2020.07.19.16.11.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 16:11:23 -0700 (PDT)
+        Sun, 19 Jul 2020 16:11:36 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
         akpm@linuxfoundation.org, gregkh@linuxfoundation.org
 Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v5 03/18] dyndbg: drop obsolete comment on ddebug_proc_open
-Date:   Sun, 19 Jul 2020 17:10:43 -0600
-Message-Id: <20200719231058.1586423-4-jim.cromie@gmail.com>
+Subject: [PATCH v5 09/18] dyndbg: prefer declarative init in caller, to memset in callee
+Date:   Sun, 19 Jul 2020 17:10:49 -0600
+Message-Id: <20200719231058.1586423-10-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200719231058.1586423-1-jim.cromie@gmail.com>
 References: <20200719231058.1586423-1-jim.cromie@gmail.com>
@@ -77,35 +77,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 4bad78c55002 ("lib/dynamic_debug.c: use seq_open_private() instead of seq_open()")'
-
-The commit was one of a tree-wide set which replaced open-coded
-boilerplate with a single tail-call.  It therefore obsoleted the
-comment about that boilerplate, clean that up now.
+ddebug_exec_query declares an auto var, and passes it to
+ddebug_parse_query, which memsets it before using it.  Drop that
+memset, instead initialize the variable in the caller; let the
+compiler decide how to do it.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 7 -------
- 1 file changed, 7 deletions(-)
+ lib/dynamic_debug.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 321437bbf87d..2989a590ce9a 100644
+index 1d25a846553b..da3ed54a6521 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -853,13 +853,6 @@ static const struct seq_operations ddebug_proc_seqops = {
- 	.stop = ddebug_proc_stop
- };
+@@ -330,7 +330,6 @@ static int ddebug_parse_query(char *words[], int nwords,
+ 		pr_err("expecting pairs of match-spec <value>\n");
+ 		return -EINVAL;
+ 	}
+-	memset(query, 0, sizeof(*query));
  
--/*
-- * File_ops->open method for <debugfs>/dynamic_debug/control.  Does
-- * the seq_file setup dance, and also creates an iterator to walk the
-- * _ddebugs.  Note that we create a seq_file always, even for O_WRONLY
-- * files where it's not needed, as doing so simplifies the ->release
-- * method.
-- */
- static int ddebug_proc_open(struct inode *inode, struct file *file)
+ 	if (modname)
+ 		/* support $modname.dyndbg=<multiple queries> */
+@@ -448,7 +447,7 @@ static int ddebug_parse_flags(const char *str, unsigned int *flagsp,
+ static int ddebug_exec_query(char *query_string, const char *modname)
  {
- 	vpr_info("called\n");
+ 	unsigned int flags = 0, mask = 0;
+-	struct ddebug_query query;
++	struct ddebug_query query = {};
+ #define MAXWORDS 9
+ 	int nwords, nfound;
+ 	char *words[MAXWORDS];
 -- 
 2.26.2
 
