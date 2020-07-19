@@ -2,154 +2,67 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C991C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9210C433E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8CD207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595158996;
-	bh=MNiZtjoNqIAb18wSLVO/N9FDwkqMPyC3q0R6CU/CKTU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LXn5V6YK8IRhLFOZ8GKApBf6Y1KlFvPMuZ5bDDi86KjEW+chOiH5QgTdajJ/0LQBD
-	 ciCqm8CGYcmQZqyDsrFNgJ65xxvT0qOlhNowzl601E4gdUi50ovLz07jaLO8mCc7iY
-	 NMxgkUbLtTdqq51Auf/yUPhi+wqTOxu88Y87i/P8=
+	by mail.kernel.org (Postfix) with ESMTP id A30F2207DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbgGSLnM (ORCPT
+        id S1726508AbgGSLn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 07:43:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40152 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGSLnL (ORCPT
+        Sun, 19 Jul 2020 07:43:28 -0400
+Received: from out28-101.mail.aliyun.com ([115.124.28.101]:33391 "EHLO
+        out28-101.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgGSLn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 07:43:11 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c25so10125347otf.7;
-        Sun, 19 Jul 2020 04:43:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qjnIe1TJ50gLn+p9kXcfYDqIZQuO/sCSJOJdD/xzjx0=;
-        b=X6psrmqSkI7JFgKASbjz/rFUxtXiLUPBeOxXS9ZgO736vtLJJrNKGc5m638ITzi7Da
-         58zxYFcPEdGbtilVWS8Ks4TuB0+WbU8yvTdReNAlWZzgiYJxyyEiDevFaOCBeptYEJq5
-         ukwYDCbFVqMP/jMgcP1UXebs8nHa2xK74FW5FFwgcGedW32FG734dfcCgf1H2F6w/ABO
-         k55aDjFmQdcunRiRguPH5BYCthZYTSpKNVRXEMXXkbQCPQk5A3vgg2QtjJNgsGQUKiz1
-         uT4x8v5rbN4gJmeXof4tjHLyqzuJ82VVCQCQkF4jpswYFoM0C+MWpQTlELQTqgD5HeE6
-         SzSw==
-X-Gm-Message-State: AOAM531fOjF/fYcSU/T7eXVqpCfgky+vNNl9OfdyF5FHlr6JNkpANS+Z
-        J2zgRTfAXpt/Wg2ilH7O1FjTJSJJL7yez7oImDU=
-X-Google-Smtp-Source: ABdhPJxrVwgTX8eq+bgwXf+Nz2z5hRxNnikw7DU/gnXd1DP0all26S5yyODzsfs23Hf3e46sRHhV1LyHhMsG15j5jYo=
-X-Received: by 2002:a05:6830:30ba:: with SMTP id g26mr15288802ots.118.1595158990718;
- Sun, 19 Jul 2020 04:43:10 -0700 (PDT)
+        Sun, 19 Jul 2020 07:43:28 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.27405|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_social|0.0135836-0.000174014-0.986242;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I4GuTvT_1595158995;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I4GuTvT_1595158995)
+          by smtp.aliyun-inc.com(10.147.41.120);
+          Sun, 19 Jul 2020 19:43:23 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     daniel.lezcano@linaro.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tglx@linutronix.de, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, paul@crapouillou.net
+Subject: Add support for the OST in Ingenic X1000.
+Date:   Sun, 19 Jul 2020 19:42:45 +0800
+Message-Id: <20200719114247.56100-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-References: <3955470.QvD6XneCf3@kreacher> <000f01d65ae8$0c607990$25216cb0$@net>
- <CAJZ5v0jGbfqfqqoPLjneFD5HLb20Yv9p25juNTzaumL70iFogg@mail.gmail.com> <001201d65c3f$6e2371c0$4a6a5540$@net>
-In-Reply-To: <001201d65c3f$6e2371c0$4a6a5540$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 19 Jul 2020 13:42:59 +0200
-Message-ID: <CAJZ5v0j+gziYE0t+d2bBMZ3+4Daa0L_OiX+CeTtNU8Mkv0bCBA@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Francisco Jerez <francisco.jerez.plata@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
+v7->v8:
+Revert the changes made in v7, remove the "default MACH_INGENIC"
+in SYSOST, and modify the bool description in OST to make it
+consistent with the style of TCU and SYSOST.
 
-On Fri, Jul 17, 2020 at 3:37 PM Doug Smythies <dsmythies@telus.net> wrote:
->
-> Hi Rafael,
->
-> Thank you for your reply.
->
-> On 2020.07.16 05:08 Rafael J. Wysocki wrote:
-> > On Wed, Jul 15, 2020 at 10:39 PM Doug Smythies <dsmythies@telus.net> wrote:
-> >> On 2020.07.14 11:16 Rafael J. Wysocki wrote:
-> >> >
-> >> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >> ...
-> >> > Since the passive mode hasn't worked with HWP at all, and it is not going to
-> >> > the default for HWP systems anyway, I don't see any drawbacks related to making
-> >> > this change, so I would consider this as 5.9 material unless there are any
-> >> > serious objections.
-> >>
-> >> Good point.
->
-> Actually, for those users that default to passive mode upon boot,
-> this would mean they would find themselves using this.
-> Also, it isn't obvious, from the typical "what driver and what governor"
-> inquiry.
+周琰杰 (Zhou Yanjie) (2):
+  dt-bindings: timer: Add Ingenic X1000 OST bindings.
+  clocksource: Ingenic: Add support for the Ingenic X1000 OST.
 
-So the change in behavior is that after this patch
-intel_pstate=passive doesn't imply no_hwp any more.
+ .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
+ drivers/clocksource/Kconfig                        |  12 +-
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/ingenic-sysost.c               | 539 +++++++++++++++++++++
+ include/dt-bindings/clock/ingenic,sysost.h         |  12 +
+ 5 files changed, 626 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+ create mode 100644 drivers/clocksource/ingenic-sysost.c
+ create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
 
-That's a very minor difference though and I'm not aware of any adverse
-effects it can cause on HWP systems anyway.
+-- 
+2.11.0
 
-The "what governor" is straightforward in the passive mode: that's
-whatever cpufreq governor has been selected.
-
-The driver is "intel_cpufreq" which means that the processor is
-requested to run at a frequency selected by the governor or higher,
-unless in the turbo range.  This works similarly in both the HWP and
-non-HWP cases, except that in the HWP case it is possible to adjust
-the EPP (through the additional sysfs knob) and the base frequency is
-exported (the latter two things can be used to distinguish between the
-two cases just fine IMO).
-
-> >> Some of the tests I do involve labour intensive post processing of data.
-> >> I want to automate some of that work, and it will take time.
-> >> We might be into the 5.9-rc series before I have detailed feedback.
-> >>
-> >> However, so far:
-> >>
-> >> Inverse impulse response test [1]:
-> >>
-> >> High level test, i5-9600K, HWP-passive (this patch), ondemand:
-> >> 3101 tests. 0 failures. (GOOD)
-> >>
-> >> From [1], re-stated:
-> >> > . High level: i5-9600K: 2453 tests, 60 failures, 2.45% fail rate. (HWP-active - powersave)
-> >> > . Verify acpi-cpufreq/ondemand works fine: i5-9600K: 8975 tests. 0 failures.
-> >>
-> >> My version of that cool Alexander named pipe test [2] serialized workflow:
-> >>
-> >> HWP-passive (this patch), performance: PASS.
-> >>
-> >> From [2], re-stated, and also re-tested.
-> >> HWP-disabled passive - performance: FAIL.
-> >
-> > But I'm not quite sure how this is related to this patch?
->
-> It isn't. The point being that it is different.
-
-It is different, but kind of in a positive way IMO.
-
-> But yes, that failure is because of our other discussion [3].
-
-OK
-
-> >
-> > This test would still fail without the patch if the kernel was started
-> > with intel_pstate=passive in the kernel command line, wouldn't it.
->
-> Yes.
-
-OK
-
-Thanks!
