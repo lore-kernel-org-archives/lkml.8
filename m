@@ -7,32 +7,34 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD17C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A83CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42313208B3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31768207EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 16:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbgGSQ3v (ORCPT
+        id S1726161AbgGSQj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 12:29:51 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:52162 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgGSQ3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 12:29:51 -0400
+        Sun, 19 Jul 2020 12:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgGSQj7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 12:39:59 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3692C0619D2;
+        Sun, 19 Jul 2020 09:39:58 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 09F3CBC053;
-        Sun, 19 Jul 2020 16:29:44 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id E2448BC086;
+        Sun, 19 Jul 2020 16:39:54 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     catalin.marinas@arm.com, will@kernel.org, corbet@lwn.net,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        broonie@kernel.org, hankecai@bbktel.com, hankecai@vivo.com,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+To:     jreuter@yaina.de, davem@davemloft.net, kuba@kernel.org,
+        corbet@lwn.net, linux-hams@vger.kernel.org, netdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] arm64: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 18:29:38 +0200
-Message-Id: <20200719162938.60161-1-grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] ax25: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 18:39:48 +0200
+Message-Id: <20200719163948.60227-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: +++++
@@ -82,190 +84,42 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- Documentation/arm64/arm-acpi.rst        | 2 +-
- arch/arm64/crypto/sha256-core.S_shipped | 2 +-
- arch/arm64/crypto/sha512-armv8.pl       | 2 +-
- arch/arm64/crypto/sha512-core.S_shipped | 2 +-
- arch/arm64/lib/copy_template.S          | 2 +-
- arch/arm64/lib/memcmp.S                 | 2 +-
- arch/arm64/lib/memcpy.S                 | 2 +-
- arch/arm64/lib/memmove.S                | 2 +-
- arch/arm64/lib/memset.S                 | 2 +-
- arch/arm64/lib/strcmp.S                 | 2 +-
- arch/arm64/lib/strlen.S                 | 2 +-
- arch/arm64/lib/strncmp.S                | 2 +-
- arch/arm64/lib/strnlen.S                | 2 +-
- 13 files changed, 13 insertions(+), 13 deletions(-)
+ Documentation/networking/z8530drv.rst | 4 ++--
+ drivers/net/hamradio/scc.c            | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/arm64/arm-acpi.rst b/Documentation/arm64/arm-acpi.rst
-index 872dbbc73d4a..8f675c38c244 100644
---- a/Documentation/arm64/arm-acpi.rst
-+++ b/Documentation/arm64/arm-acpi.rst
-@@ -273,7 +273,7 @@ only use the _DSD Device Properties UUID [5]:
+diff --git a/Documentation/networking/z8530drv.rst b/Documentation/networking/z8530drv.rst
+index d2942760f167..79c7f72f32c8 100644
+--- a/Documentation/networking/z8530drv.rst
++++ b/Documentation/networking/z8530drv.rst
+@@ -18,7 +18,7 @@ Internet:
+ Please note that the information in this document may be hopelessly outdated.
+ A new version of the documentation, along with links to other important
+ Linux Kernel AX.25 documentation and programs, is available on
+-http://yaina.de/jreuter
++https://yaina.de/jreuter
  
-    - UUID: daffd814-6eba-4d8c-8a91-bc9bbf4aa301
+ Copyright |copy| 1993,2000 by Joerg Reuter DL1BKE <jreuter@yaina.de>
  
--   - http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
-+   - https://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
+@@ -683,4 +683,4 @@ in the Linux standard distribution and their support.
+ 	Joerg Reuter	ampr-net: dl1bke@db0pra.ampr.org
+ 			AX-25   : DL1BKE @ DB0ABH.#BAY.DEU.EU
+ 			Internet: jreuter@yaina.de
+-			WWW     : http://yaina.de/jreuter
++			WWW     : https://yaina.de/jreuter
+diff --git a/drivers/net/hamradio/scc.c b/drivers/net/hamradio/scc.c
+index 33fdd55c6122..875d9262ef78 100644
+--- a/drivers/net/hamradio/scc.c
++++ b/drivers/net/hamradio/scc.c
+@@ -131,7 +131,7 @@
+    Joerg Reuter	ampr-net: dl1bke@db0pra.ampr.org
+ 		AX-25   : DL1BKE @ DB0ABH.#BAY.DEU.EU
+ 		Internet: jreuter@yaina.de
+-		www     : http://yaina.de/jreuter
++		www     : https://yaina.de/jreuter
+ */
  
- The UEFI Forum provides a mechanism for registering device properties [4]
- so that they may be used across all operating systems supporting ACPI.
-diff --git a/arch/arm64/crypto/sha256-core.S_shipped b/arch/arm64/crypto/sha256-core.S_shipped
-index 7c7ce2e3bad6..dd4867742a2e 100644
---- a/arch/arm64/crypto/sha256-core.S_shipped
-+++ b/arch/arm64/crypto/sha256-core.S_shipped
-@@ -19,7 +19,7 @@
- // Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
- // project. The module is, however, dual licensed under OpenSSL and
- // CRYPTOGAMS licenses depending on where you obtain it. For further
--// details see http://www.openssl.org/~appro/cryptogams/.
-+// details see https://www.openssl.org/~appro/cryptogams/.
- // ====================================================================
- //
- // SHA256/512 for ARMv8.
-diff --git a/arch/arm64/crypto/sha512-armv8.pl b/arch/arm64/crypto/sha512-armv8.pl
-index 2d8655d5b1af..48c9da50b7ec 100644
---- a/arch/arm64/crypto/sha512-armv8.pl
-+++ b/arch/arm64/crypto/sha512-armv8.pl
-@@ -20,7 +20,7 @@
- # Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
- # project. The module is, however, dual licensed under OpenSSL and
- # CRYPTOGAMS licenses depending on where you obtain it. For further
--# details see http://www.openssl.org/~appro/cryptogams/.
-+# details see https://www.openssl.org/~appro/cryptogams/.
- # ====================================================================
- #
- # SHA256/512 for ARMv8.
-diff --git a/arch/arm64/crypto/sha512-core.S_shipped b/arch/arm64/crypto/sha512-core.S_shipped
-index e063a6106720..421cb9977d39 100644
---- a/arch/arm64/crypto/sha512-core.S_shipped
-+++ b/arch/arm64/crypto/sha512-core.S_shipped
-@@ -19,7 +19,7 @@
- // Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
- // project. The module is, however, dual licensed under OpenSSL and
- // CRYPTOGAMS licenses depending on where you obtain it. For further
--// details see http://www.openssl.org/~appro/cryptogams/.
-+// details see https://www.openssl.org/~appro/cryptogams/.
- // ====================================================================
- //
- // SHA256/512 for ARMv8.
-diff --git a/arch/arm64/lib/copy_template.S b/arch/arm64/lib/copy_template.S
-index 488df234c49a..fce1e070c13a 100644
---- a/arch/arm64/lib/copy_template.S
-+++ b/arch/arm64/lib/copy_template.S
-@@ -6,7 +6,7 @@
-  * This code is based on glibc cortex strings work originally authored by Linaro
-  * be found @
-  *
-- * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-+ * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-  * files/head:/src/aarch64/
-  */
- 
-diff --git a/arch/arm64/lib/memcmp.S b/arch/arm64/lib/memcmp.S
-index c0671e793ea9..8b7c94917f98 100644
---- a/arch/arm64/lib/memcmp.S
-+++ b/arch/arm64/lib/memcmp.S
-@@ -6,7 +6,7 @@
-  * This code is based on glibc cortex strings work originally authored by Linaro
-  * be found @
-  *
-- * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-+ * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-  * files/head:/src/aarch64/
-  */
- 
-diff --git a/arch/arm64/lib/memcpy.S b/arch/arm64/lib/memcpy.S
-index e0bf83d556f2..dc816480cebd 100644
---- a/arch/arm64/lib/memcpy.S
-+++ b/arch/arm64/lib/memcpy.S
-@@ -6,7 +6,7 @@
-  * This code is based on glibc cortex strings work originally authored by Linaro
-  * be found @
-  *
-- * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-+ * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-  * files/head:/src/aarch64/
-  */
- 
-diff --git a/arch/arm64/lib/memmove.S b/arch/arm64/lib/memmove.S
-index 02cda2e33bde..3cd7ba7311e5 100644
---- a/arch/arm64/lib/memmove.S
-+++ b/arch/arm64/lib/memmove.S
-@@ -6,7 +6,7 @@
-  * This code is based on glibc cortex strings work originally authored by Linaro
-  * be found @
-  *
-- * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-+ * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-  * files/head:/src/aarch64/
-  */
- 
-diff --git a/arch/arm64/lib/memset.S b/arch/arm64/lib/memset.S
-index 77c3c7ba0084..ff1e38b96d1c 100644
---- a/arch/arm64/lib/memset.S
-+++ b/arch/arm64/lib/memset.S
-@@ -6,7 +6,7 @@
-  * This code is based on glibc cortex strings work originally authored by Linaro
-  * be found @
-  *
-- * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-+ * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-  * files/head:/src/aarch64/
-  */
- 
-diff --git a/arch/arm64/lib/strcmp.S b/arch/arm64/lib/strcmp.S
-index 4e79566726c8..9dab831b1558 100644
---- a/arch/arm64/lib/strcmp.S
-+++ b/arch/arm64/lib/strcmp.S
-@@ -6,7 +6,7 @@
-  * This code is based on glibc cortex strings work originally authored by Linaro
-  * be found @
-  *
-- * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-+ * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-  * files/head:/src/aarch64/
-  */
- 
-diff --git a/arch/arm64/lib/strlen.S b/arch/arm64/lib/strlen.S
-index ee3ed882dd79..f981b639d549 100644
---- a/arch/arm64/lib/strlen.S
-+++ b/arch/arm64/lib/strlen.S
-@@ -6,7 +6,7 @@
-  * This code is based on glibc cortex strings work originally authored by Linaro
-  * be found @
-  *
-- * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-+ * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-  * files/head:/src/aarch64/
-  */
- 
-diff --git a/arch/arm64/lib/strncmp.S b/arch/arm64/lib/strncmp.S
-index 2a7ee949ed47..0243547021b2 100644
---- a/arch/arm64/lib/strncmp.S
-+++ b/arch/arm64/lib/strncmp.S
-@@ -6,7 +6,7 @@
-  * This code is based on glibc cortex strings work originally authored by Linaro
-  * be found @
-  *
-- * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-+ * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-  * files/head:/src/aarch64/
-  */
- 
-diff --git a/arch/arm64/lib/strnlen.S b/arch/arm64/lib/strnlen.S
-index b72913a99038..ffe5ba5a3387 100644
---- a/arch/arm64/lib/strnlen.S
-+++ b/arch/arm64/lib/strnlen.S
-@@ -6,7 +6,7 @@
-  * This code is based on glibc cortex strings work originally authored by Linaro
-  * be found @
-  *
-- * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-+ * https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
-  * files/head:/src/aarch64/
-  */
- 
+ /* ----------------------------------------------------------------------- */
 -- 
 2.27.0
 
