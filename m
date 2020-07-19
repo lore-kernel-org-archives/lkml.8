@@ -2,79 +2,142 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80621C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62579C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E364208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D7BC20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 11:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgGSLSJ (ORCPT
+        id S1726235AbgGSLYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 07:18:09 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:34517 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgGSLSI (ORCPT
+        Sun, 19 Jul 2020 07:24:17 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:33998 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725988AbgGSLYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 07:18:08 -0400
-Received: by mail-il1-f197.google.com with SMTP id y3so8950972ily.1
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 04:18:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=VyO5STFmnVvO9DvN7eCLqjZBvvoFWMGC3SxiQbso7po=;
-        b=ifpB3RbrNLoLD6X3125WEtLxNIRtF2vPqzAHiVrtLw0GOJjiHgNecnjCHBk2e2C/zY
-         SSxa7Zhvi+6/V7EtcYJohPs54y01SOvO9IWhuFJsxDpXCAA6z8jw+PIDrtquJiHd79pl
-         9qBim26rSxPpbt4Rv6vx1Jb5Z8purl4g6hBkbVtGlQGq3LfKDYHwX7Qid42BQGuZwla1
-         sR+e6QP7D21f/F91C7pMkqfpr9CEtw4dQTztRk2o9AHrjxUg7q2Re/sqP0BF8874KEef
-         5igDhswoTqTbre5FFv9YHg1v20BOa9K2vClpgk7rCZbHyL3CxoAKgRXxy/Pzt8FD8VWy
-         x05g==
-X-Gm-Message-State: AOAM5332zOpWCm8aMiZ0KYPcS893/FhScHNVtjN8Bx39KJLEmUma75Gs
-        SKPQILx8KhSiTPxXXMp8lC+O6hnHbYNifGpxT7u3K8tLlWAC
-X-Google-Smtp-Source: ABdhPJzN017k94AQ4JkwHlIiCPM6i7N8XKcvfwgy3aNk8yE7/wZ8vtYocUkUUv41lSt8g45qQwCeZF6Sahc4C+Lvrm1HNhfd3B+A
+        Sun, 19 Jul 2020 07:24:16 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0U38ILvo_1595157849;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U38ILvo_1595157849)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 19 Jul 2020 19:24:09 +0800
+Subject: Re: [PATCH v16 13/22] mm/lru: introduce TestClearPageLRU
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1594429136-20002-14-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0UfLbVRQ4+TOw-XnjuyZqoVmRmWb5_rbEZZ0povYv-n_Lg@mail.gmail.com>
+ <072b39ac-b95a-94f1-67a2-3293d4550ff8@linux.alibaba.com>
+ <CAKgT0UdDQp_bptKAjG4A4fJQgS5gJuvu6D7LJfKw_wETLtLG_w@mail.gmail.com>
+ <530c222e-dfd4-f78e-e9d4-315fad6f816a@linux.alibaba.com>
+Message-ID: <c189ebf6-47a8-bb8f-2c99-a7ddb159b9c9@linux.alibaba.com>
+Date:   Sun, 19 Jul 2020 19:24:06 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:d48a:: with SMTP id p10mr18445285ilg.230.1595157487462;
- Sun, 19 Jul 2020 04:18:07 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 04:18:07 -0700
-In-Reply-To: <0000000000009f4ecd05a9d4dd9f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000066afb205aac98b9d@google.com>
-Subject: Re: INFO: rcu detected stall in iterate_cleanup_work (2)
-From:   syzbot <syzbot+cc8495ea4052b9b79b72@syzkaller.appspotmail.com>
-To:     Markus.Elfring@web.de, davem@davemloft.net, hdanton@sina.com,
-        jhs@mojatatu.com, jiri@resnulli.us, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vinicius.gomes@intel.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <530c222e-dfd4-f78e-e9d4-315fad6f816a@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
 
-commit 5a781ccbd19e4664babcbe4b4ead7aa2b9283d22
-Author: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Date:   Sat Sep 29 00:59:43 2018 +0000
 
-    tc: Add support for configuring the taprio scheduler
+在 2020/7/19 下午12:45, Alex Shi 写道:
+>>>
+>>>> It might make it more readable to pull in the later patch that
+>>>> modifies isolate_lru_pages that has it using TestClearPageLRU.
+>>> As to this change, It has to do in this patch, since any TestClearPageLRU may
+>>> cause lru bit miss in the lru list, so the precondication check has to
+>>> removed here.
+>> So I think some of my cognitive dissonance is from the fact that you
+>> really are doing two different things here. You aren't really
+>> implementing the full TestClearPageLRU until patch 15. So this patch
+>> is doing part of 2a and 2b, and then patch 15 is following up and
+>> completing the 2a cases. I still think it might make more sense to
+>> pull out the pieces related to 2b and move them into a patch before
+>> this with documentation explaining that there should be no competition
+>> for the LRU flag because the page has transitioned to a reference
+>> count of zero. Then take the remaining bits and combine them with
+>> patch 15 since the description for the two is pretty similar.
+>>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=141ed087100000
-start commit:   cd77006e Merge tag 'hyperv-fixes-signed' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=121ed087100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
-dashboard link: https://syzkaller.appspot.com/bug?extid=cc8495ea4052b9b79b72
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e567e5100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=126ffccd100000
 
-Reported-by: syzbot+cc8495ea4052b9b79b72@syzkaller.appspotmail.com
-Fixes: 5a781ccbd19e ("tc: Add support for configuring the taprio scheduler")
+As to the patch split suggest, actually, Hugh and I talked about a few weeks 
+ago when he give me these changes. We both thought keep these changes in this
+patch looks better at that time.
+If it make you confuse, don't know a changed commit log make it better?
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Thanks
+Alex
+
+    mm/lru: introduce TestClearPageLRU
+
+    Currently lru_lock still guards both lru list and page's lru bit, that's
+    ok. but if we want to use specific lruvec lock on the page, we need to
+    pin down the page's lruvec/memcg during locking. Just taking lruvec
+    lock first may be undermined by the page's memcg charge/migration. To
+    fix this problem, we could take out the page's lru bit clear and use
+    it as pin down action to block the memcg changes. That's the reason
+    for new atomic func TestClearPageLRU. So now isolating a page need both
+    actions: TestClearPageLRU and hold the lru_lock.
+
+    This patch combines PageLRU check and ClearPageLRU into a macro func
+    TestClearPageLRU. This function will be used as page isolation
+    precondition to prevent other isolations some where else.
+    Then there are may non PageLRU page on lru list, need to remove BUG
+    checking accordingly.
+
+    There 2 rules for lru bit:
+    1, the lru bit still indicate if a page on lru list, just
+    in some temporary moment(isolating), the page may have no lru bit when
+    it's on lru list.  but the page still must be on lru list when the
+    lru bit is set.
+    2, have to remove lru bit before delete it from lru list.
+
+    Hugh Dickins pointed that when a page is in freeing path and no one is
+    possible to take it, non atomic lru bit clearing is better, like in
+    __page_cache_release and release_pages.
+    ANd no need get_page() before lru bit clear in isolate_lru_page,
+    since it '(1) Must be called with an elevated refcount on the page'.
+
+    As Andrew Morton mentioned this change would dirty cacheline for page
+    isn't on LRU. But the lost would be acceptable with Rong Chen
+    <rong.a.chen@intel.com> report:
+    https://lkml.org/lkml/2020/3/4/173
+
+    Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+    Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+    Cc: Hugh Dickins <hughd@google.com>
+    Cc: Johannes Weiner <hannes@cmpxchg.org>
+    Cc: Michal Hocko <mhocko@kernel.org>
+    Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+    Cc: Andrew Morton <akpm@linux-foundation.org>
+    Cc: linux-kernel@vger.kernel.org
+    Cc: cgroups@vger.kernel.org
+    Cc: linux-mm@kvack.org
+
+
