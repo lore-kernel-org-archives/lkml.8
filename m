@@ -2,300 +2,314 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC2BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74FE3207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:55:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="SGVKapeg"
+	by mail.kernel.org (Postfix) with ESMTP id A2369207DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 03:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgGSDzY (ORCPT
+        id S1726611AbgGSDz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jul 2020 23:55:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbgGSDzY (ORCPT
+        Sat, 18 Jul 2020 23:55:56 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:47538 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726284AbgGSDzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jul 2020 23:55:24 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BACC0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 20:55:23 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id o2so3473663qvk.6
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jul 2020 20:55:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dQ3oFrVQ8o2SM3JjsOtITv2iPbIsye8cfERR0ry0HMU=;
-        b=SGVKapeg/9GF3Moqs3Rl3CTweVg+h2h/j/4B1CPHf/0WW6m7lh/TBkM5LtD4HwXtP2
-         pLjyyFUGCRbiDacODl7EO1n6dDPiMYlG2upoqHhLgnTTvLcFu3pFgXzlYaJuw57R3OFB
-         IOtzJZ1x5W4WNrtEnaO6hRbjdpxG3fX6507gQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dQ3oFrVQ8o2SM3JjsOtITv2iPbIsye8cfERR0ry0HMU=;
-        b=cl9cUU6ZQ4U8PwafPWjeQUEQBaVrwd6SedyBw1POABIvxkfAwqPexXaH1ycCclI28R
-         Gsk81LW3WycmGQs5vL/+4vq5y+XdbwyYIvUeYPMROdPTMAzaa4Z6vZcA9xPqtCAYY0fV
-         HzDdKUD21Mr9e8hALEaNAP8F3YybXaK+ReT7+2LjMUvY8uPpXPIaIWdXxZK5xWskl2NR
-         FEyp8Zf619KaWGIR5firhZ9EhI784iANpYBnGIdI+fEVBgm25A7s6McHAc4SQ7+zj6Ey
-         cPVp1CSz8SX54pQgihrmjit2vG78/8MhjLTIkxXy/9UHFWPuS5Kmk7E53iJEPBQsIvZg
-         XgxA==
-X-Gm-Message-State: AOAM531k36mUJAoCXqbygvpOFkRlPSK8/d32i2NlXCyNLzsoOg35US9r
-        FtSSybWmwjEA+FuZEzAbw/exOQV7fWU=
-X-Google-Smtp-Source: ABdhPJzXMyL1F0I63P7nT3ePfe2u2PlTLi8+6iyuI2pITSGMl+ca7L+KNc4d016wgG6kEio2TyxANw==
-X-Received: by 2002:ad4:4105:: with SMTP id i5mr15634630qvp.170.1595130922605;
-        Sat, 18 Jul 2020 20:55:22 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id c22sm2894437qke.2.2020.07.18.20.55.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 20:55:22 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH RFC v2] rcu/segcblist: Add counters to segcblist datastructure
-Date:   Sat, 18 Jul 2020 23:55:18 -0400
-Message-Id: <20200719035518.2386828-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+        Sat, 18 Jul 2020 23:55:55 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U36kxME_1595130948;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U36kxME_1595130948)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 19 Jul 2020 11:55:49 +0800
+Subject: Re: [PATCH v16 16/22] mm/mlock: reorder isolation sequence during
+ munlock
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1594429136-20002-17-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0Udcry01samXT54RkurNqFKnVmv-686ZFHF+iw4b+12T_A@mail.gmail.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <6e37ee32-c6c5-fcc5-3cad-74f7ae41fb67@linux.alibaba.com>
+Date:   Sun, 19 Jul 2020 11:55:45 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAKgT0Udcry01samXT54RkurNqFKnVmv-686ZFHF+iw4b+12T_A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add counting of segment lengths of segmented callback list.
 
-This will be useful for a number of things such as knowing how big the
-ready-to-execute segment have gotten. The immediate benefit is ability
-to trace how the callbacks in the segmented callback list change.
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
-v1->v2: minor nits.
+在 2020/7/18 上午4:30, Alexander Duyck 写道:
+> On Fri, Jul 10, 2020 at 5:59 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>>
+>> This patch reorder the isolation steps during munlock, move the lru lock
+>> to guard each pages, unfold __munlock_isolate_lru_page func, to do the
+>> preparation for lru lock change.
+>>
+>> __split_huge_page_refcount doesn't exist, but we still have to guard
+>> PageMlocked and PageLRU for tail page in __split_huge_page_tail.
+>>
+>> [lkp@intel.com: found a sleeping function bug ... at mm/rmap.c]
+>> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+>> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>  mm/mlock.c | 93 ++++++++++++++++++++++++++++++++++----------------------------
+>>  1 file changed, 51 insertions(+), 42 deletions(-)
+>>
+>> diff --git a/mm/mlock.c b/mm/mlock.c
+>> index 228ba5a8e0a5..0bdde88b4438 100644
+>> --- a/mm/mlock.c
+>> +++ b/mm/mlock.c
+>> @@ -103,25 +103,6 @@ void mlock_vma_page(struct page *page)
+>>  }
+>>
+>>  /*
+>> - * Isolate a page from LRU with optional get_page() pin.
+>> - * Assumes lru_lock already held and page already pinned.
+>> - */
+>> -static bool __munlock_isolate_lru_page(struct page *page, bool getpage)
+>> -{
+>> -       if (TestClearPageLRU(page)) {
+>> -               struct lruvec *lruvec;
+>> -
+>> -               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+>> -               if (getpage)
+>> -                       get_page(page);
+>> -               del_page_from_lru_list(page, lruvec, page_lru(page));
+>> -               return true;
+>> -       }
+>> -
+>> -       return false;
+>> -}
+>> -
+>> -/*
+>>   * Finish munlock after successful page isolation
+>>   *
+>>   * Page must be locked. This is a wrapper for try_to_munlock()
+>> @@ -181,6 +162,7 @@ static void __munlock_isolation_failed(struct page *page)
+>>  unsigned int munlock_vma_page(struct page *page)
+>>  {
+>>         int nr_pages;
+>> +       bool clearlru = false;
+>>         pg_data_t *pgdat = page_pgdat(page);
+>>
+>>         /* For try_to_munlock() and to serialize with page migration */
+>> @@ -189,32 +171,42 @@ unsigned int munlock_vma_page(struct page *page)
+>>         VM_BUG_ON_PAGE(PageTail(page), page);
+>>
+>>         /*
+>> -        * Serialize with any parallel __split_huge_page_refcount() which
+>> +        * Serialize split tail pages in __split_huge_page_tail() which
+>>          * might otherwise copy PageMlocked to part of the tail pages before
+>>          * we clear it in the head page. It also stabilizes hpage_nr_pages().
+>>          */
+>> +       get_page(page);
+> 
+> I don't think this get_page() call needs to be up here. It could be
+> left down before we delete the page from the LRU list as it is really
+> needed to take a reference on the page before we call
+> __munlock_isolated_page(), or at least that is the way it looks to me.
+> By doing that you can avoid a bunch of cleanup in these exception
+> cases.
 
- include/linux/rcu_segcblist.h |  2 +
- kernel/rcu/rcu_segcblist.c    | 90 ++++++++++++++++++++++++++++++++---
- 2 files changed, 86 insertions(+), 6 deletions(-)
+Uh, It seems unlikely for !page->_refcount, and then got to release_pages(),
+if so, get_page do could move down.
+Thanks
 
-diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
-index b36afe7b22c9..d462ae5e340a 100644
---- a/include/linux/rcu_segcblist.h
-+++ b/include/linux/rcu_segcblist.h
-@@ -69,8 +69,10 @@ struct rcu_segcblist {
- 	unsigned long gp_seq[RCU_CBLIST_NSEGS];
- #ifdef CONFIG_RCU_NOCB_CPU
- 	atomic_long_t len;
-+	atomic_long_t seglen[RCU_CBLIST_NSEGS];
- #else
- 	long len;
-+	long seglen[RCU_CBLIST_NSEGS];
- #endif
- 	u8 enabled;
- 	u8 offloaded;
-diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-index 9a0f66133b4b..e55135297e52 100644
---- a/kernel/rcu/rcu_segcblist.c
-+++ b/kernel/rcu/rcu_segcblist.c
-@@ -88,6 +88,57 @@ static void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
- #endif
- }
- 
-+/* Get the length of a segment of the rcu_segcblist structure. */
-+static long rcu_segcblist_get_seglen(struct rcu_segcblist *rsclp, int seg)
-+{
-+#ifdef CONFIG_RCU_NOCB_CPU
-+	return atomic_long_read(&rsclp->seglen[seg]);
-+#else
-+	return READ_ONCE(rsclp->seglen[seg]);
-+#endif
-+}
-+
-+/* Set the length of a segment of the rcu_segcblist structure. */
-+static void rcu_segcblist_set_seglen(struct rcu_segcblist *rsclp, int seg, long v)
-+{
-+#ifdef CONFIG_RCU_NOCB_CPU
-+	atomic_long_set(&rsclp->seglen[seg], v);
-+#else
-+	WRITE_ONCE(rsclp->seglen[seg], v);
-+#endif
-+}
-+
-+/* Return number of callbacks in a segment of the segmented callback list. */
-+static void rcu_segcblist_add_seglen(struct rcu_segcblist *rsclp, int seg, long v)
-+{
-+#ifdef CONFIG_RCU_NOCB_CPU
-+	smp_mb__before_atomic(); /* Up to the caller! */
-+	atomic_long_add(v, &rsclp->seglen[seg]);
-+	smp_mb__after_atomic(); /* Up to the caller! */
-+#else
-+	smp_mb(); /* Up to the caller! */
-+	WRITE_ONCE(rsclp->seglen[seg], rsclp->seglen[seg] + v);
-+	smp_mb(); /* Up to the caller! */
-+#endif
-+}
-+
-+/* Move from's segment length to to's segment. */
-+static void rcu_segcblist_move_seglen(struct rcu_segcblist *rsclp, int from, int to)
-+{
-+	long len = rcu_segcblist_get_seglen(rsclp, from);
-+
-+	if (!len || from == to)
-+		return;
-+	rcu_segcblist_add_seglen(rsclp, to, len);
-+	rcu_segcblist_set_seglen(rsclp, from, 0);
-+}
-+
-+/* Increment segment's length. */
-+static void rcu_segcblist_inc_seglen(struct rcu_segcblist *rsclp, int seg)
-+{
-+	rcu_segcblist_add_seglen(rsclp, seg, 1);
-+}
-+
- /*
-  * Increase the numeric length of an rcu_segcblist structure by the
-  * specified amount, which can be negative.  This can cause the ->len
-@@ -149,8 +200,11 @@ void rcu_segcblist_init(struct rcu_segcblist *rsclp)
- 	BUILD_BUG_ON(RCU_NEXT_TAIL + 1 != ARRAY_SIZE(rsclp->gp_seq));
- 	BUILD_BUG_ON(ARRAY_SIZE(rsclp->tails) != ARRAY_SIZE(rsclp->gp_seq));
- 	rsclp->head = NULL;
--	for (i = 0; i < RCU_CBLIST_NSEGS; i++)
-+	for (i = 0; i < RCU_CBLIST_NSEGS; i++) {
- 		rsclp->tails[i] = &rsclp->head;
-+		rcu_segcblist_set_seglen(rsclp, i, 0);
-+	}
-+
- 	rcu_segcblist_set_len(rsclp, 0);
- 	rsclp->enabled = 1;
- }
-@@ -245,6 +299,7 @@ void rcu_segcblist_enqueue(struct rcu_segcblist *rsclp,
- 			   struct rcu_head *rhp)
- {
- 	rcu_segcblist_inc_len(rsclp);
-+	rcu_segcblist_inc_seglen(rsclp, RCU_NEXT_TAIL);
- 	smp_mb(); /* Ensure counts are updated before callback is enqueued. */
- 	rhp->next = NULL;
- 	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rhp);
-@@ -274,6 +329,7 @@ bool rcu_segcblist_entrain(struct rcu_segcblist *rsclp,
- 	for (i = RCU_NEXT_TAIL; i > RCU_DONE_TAIL; i--)
- 		if (rsclp->tails[i] != rsclp->tails[i - 1])
- 			break;
-+	rcu_segcblist_inc_seglen(rsclp, i);
- 	WRITE_ONCE(*rsclp->tails[i], rhp);
- 	for (; i <= RCU_NEXT_TAIL; i++)
- 		WRITE_ONCE(rsclp->tails[i], &rhp->next);
-@@ -307,6 +363,9 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
- 
- 	if (!rcu_segcblist_ready_cbs(rsclp))
- 		return; /* Nothing to do. */
-+
-+	rclp->len = rcu_segcblist_get_seglen(rsclp, RCU_DONE_TAIL);
-+
- 	*rclp->tail = rsclp->head;
- 	WRITE_ONCE(rsclp->head, *rsclp->tails[RCU_DONE_TAIL]);
- 	WRITE_ONCE(*rsclp->tails[RCU_DONE_TAIL], NULL);
-@@ -314,6 +373,8 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
- 	for (i = RCU_CBLIST_NSEGS - 1; i >= RCU_DONE_TAIL; i--)
- 		if (rsclp->tails[i] == rsclp->tails[RCU_DONE_TAIL])
- 			WRITE_ONCE(rsclp->tails[i], &rsclp->head);
-+
-+	rcu_segcblist_set_seglen(rsclp, RCU_DONE_TAIL, 0);
- }
- 
- /*
-@@ -330,11 +391,19 @@ void rcu_segcblist_extract_pend_cbs(struct rcu_segcblist *rsclp,
- 
- 	if (!rcu_segcblist_pend_cbs(rsclp))
- 		return; /* Nothing to do. */
-+
-+	rclp->len = rcu_segcblist_get_seglen(rsclp, RCU_WAIT_TAIL) +
-+		    rcu_segcblist_get_seglen(rsclp, RCU_NEXT_READY_TAIL) +
-+		    rcu_segcblist_get_seglen(rsclp, RCU_NEXT_TAIL);
-+
- 	*rclp->tail = *rsclp->tails[RCU_DONE_TAIL];
- 	rclp->tail = rsclp->tails[RCU_NEXT_TAIL];
-+
- 	WRITE_ONCE(*rsclp->tails[RCU_DONE_TAIL], NULL);
--	for (i = RCU_DONE_TAIL + 1; i < RCU_CBLIST_NSEGS; i++)
-+	for (i = RCU_DONE_TAIL + 1; i < RCU_CBLIST_NSEGS; i++) {
- 		WRITE_ONCE(rsclp->tails[i], rsclp->tails[RCU_DONE_TAIL]);
-+		rcu_segcblist_set_seglen(rsclp, i, 0);
-+	}
- }
- 
- /*
-@@ -359,8 +428,11 @@ void rcu_segcblist_insert_done_cbs(struct rcu_segcblist *rsclp,
- 
- 	if (!rclp->head)
- 		return; /* No callbacks to move. */
-+
-+	rcu_segcblist_add_seglen(rsclp, RCU_DONE_TAIL, rclp->len);
- 	*rclp->tail = rsclp->head;
- 	WRITE_ONCE(rsclp->head, rclp->head);
-+
- 	for (i = RCU_DONE_TAIL; i < RCU_CBLIST_NSEGS; i++)
- 		if (&rsclp->head == rsclp->tails[i])
- 			WRITE_ONCE(rsclp->tails[i], rclp->tail);
-@@ -379,6 +451,8 @@ void rcu_segcblist_insert_pend_cbs(struct rcu_segcblist *rsclp,
- {
- 	if (!rclp->head)
- 		return; /* Nothing to do. */
-+
-+	rcu_segcblist_add_seglen(rsclp, RCU_NEXT_TAIL, rclp->len);
- 	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rclp->head);
- 	WRITE_ONCE(rsclp->tails[RCU_NEXT_TAIL], rclp->tail);
- }
-@@ -403,6 +477,7 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
- 		if (ULONG_CMP_LT(seq, rsclp->gp_seq[i]))
- 			break;
- 		WRITE_ONCE(rsclp->tails[RCU_DONE_TAIL], rsclp->tails[i]);
-+		rcu_segcblist_move_seglen(rsclp, i, RCU_DONE_TAIL);
- 	}
- 
- 	/* If no callbacks moved, nothing more need be done. */
-@@ -419,10 +494,9 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
- 	 * callbacks.  The overall effect is to copy down the later pointers
- 	 * into the gap that was created by the now-ready segments.
- 	 */
--	for (j = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL; i++, j++) {
--		if (rsclp->tails[j] == rsclp->tails[RCU_NEXT_TAIL])
--			break;  /* No more callbacks. */
-+	for (j = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL && j < RCU_NEXT_TAIL; i++, j++) {
- 		WRITE_ONCE(rsclp->tails[j], rsclp->tails[i]);
-+		rcu_segcblist_move_seglen(rsclp, i, j);
- 		rsclp->gp_seq[j] = rsclp->gp_seq[i];
- 	}
- }
-@@ -444,7 +518,7 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
-  */
- bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
- {
--	int i;
-+	int i, j;
- 
- 	WARN_ON_ONCE(!rcu_segcblist_is_enabled(rsclp));
- 	if (rcu_segcblist_restempty(rsclp, RCU_DONE_TAIL))
-@@ -479,6 +553,10 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
- 	if (++i >= RCU_NEXT_TAIL)
- 		return false;
- 
-+	/* Accounting: everything below i is about to get merged into i. */
-+	for (j = i + 1; j <= RCU_NEXT_TAIL; j++)
-+		rcu_segcblist_move_seglen(rsclp, j, i);
-+
- 	/*
- 	 * Merge all later callbacks, including newly arrived callbacks,
- 	 * into the segment located by the for-loop above.  Assign "seq"
--- 
-2.28.0.rc0.105.gf9edc3c819-goog
+> 
+>> +       clearlru = TestClearPageLRU(page);
+> 
+> I'm not sure I fully understand the reason for moving this here. By
+> clearing this flag before you clear Mlocked does this give you some
+> sort of extra protection? I don't see how since Mlocked doesn't
+> necessarily imply the page is on LRU.
+> 
+
+Above comments give a reason for the lru_lock usage,
+>> +        * Serialize split tail pages in __split_huge_page_tail() which
+>>          * might otherwise copy PageMlocked to part of the tail pages before
+>>          * we clear it in the head page. It also stabilizes hpage_nr_pages().
+
+Look into the __split_huge_page_tail, there is a tiny gap between tail page
+get PG_mlocked, and it is added into lru list.
+The TestClearPageLRU could blocked memcg changes of the page from stopping
+isolate_lru_page.
+
+
+>>         spin_lock_irq(&pgdat->lru_lock);
+>>
+>>         if (!TestClearPageMlocked(page)) {
+>> -               /* Potentially, PTE-mapped THP: do not skip the rest PTEs */
+>> -               nr_pages = 1;
+>> -               goto unlock_out;
+>> +               if (clearlru)
+>> +                       SetPageLRU(page);
+>> +               /*
+>> +                * Potentially, PTE-mapped THP: do not skip the rest PTEs
+>> +                * Reuse lock as memory barrier for release_pages racing.
+>> +                */
+>> +               spin_unlock_irq(&pgdat->lru_lock);
+>> +               put_page(page);
+>> +               return 0;
+>>         }
+>>
+>>         nr_pages = hpage_nr_pages(page);
+>>         __mod_zone_page_state(page_zone(page), NR_MLOCK, -nr_pages);
+>>
+>> -       if (__munlock_isolate_lru_page(page, true)) {
+>> +       if (clearlru) {
+>> +               struct lruvec *lruvec;
+>> +
+> 
+> You could just place the get_page() call here.
+> 
+>> +               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+>> +               del_page_from_lru_list(page, lruvec, page_lru(page));
+>>                 spin_unlock_irq(&pgdat->lru_lock);
+>>                 __munlock_isolated_page(page);
+>> -               goto out;
+>> +       } else {
+>> +               spin_unlock_irq(&pgdat->lru_lock);
+>> +               put_page(page);
+>> +               __munlock_isolation_failed(page);
+> 
+> If you move the get_page() as I suggested above there wouldn't be a
+> need for the put_page(). It then becomes possible to simplify the code
+> a bit by merging the unlock paths and doing an if/else with the
+> __munlock functions like so:
+> if (clearlru) {
+>     ...
+>     del_page_from_lru..
+> }
+> 
+> spin_unlock_irq()
+> 
+> if (clearlru)
+>     __munlock_isolated_page();
+> else
+>     __munlock_isolated_failed();
+> 
+>>         }
+>> -       __munlock_isolation_failed(page);
+>> -
+>> -unlock_out:
+>> -       spin_unlock_irq(&pgdat->lru_lock);
+>>
+>> -out:
+>>         return nr_pages - 1;
+>>  }
+>>
+>> @@ -297,34 +289,51 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+>>         pagevec_init(&pvec_putback);
+>>
+>>         /* Phase 1: page isolation */
+>> -       spin_lock_irq(&zone->zone_pgdat->lru_lock);
+>>         for (i = 0; i < nr; i++) {
+>>                 struct page *page = pvec->pages[i];
+>> +               struct lruvec *lruvec;
+>> +               bool clearlru;
+>>
+>> -               if (TestClearPageMlocked(page)) {
+>> -                       /*
+>> -                        * We already have pin from follow_page_mask()
+>> -                        * so we can spare the get_page() here.
+>> -                        */
+>> -                       if (__munlock_isolate_lru_page(page, false))
+>> -                               continue;
+>> -                       else
+>> -                               __munlock_isolation_failed(page);
+>> -               } else {
+>> +               clearlru = TestClearPageLRU(page);
+>> +               spin_lock_irq(&zone->zone_pgdat->lru_lock);
+> 
+> I still don't see what you are gaining by moving the bit test up to
+> this point. Seems like it would be better left below with the lock
+> just being used to prevent a possible race while you are pulling the
+> page out of the LRU list.
+> 
+
+the same reason as above comments mentained __split_huge_page_tail() 
+issue.
+
+>> +
+>> +               if (!TestClearPageMlocked(page)) {
+>>                         delta_munlocked++;
+>> +                       if (clearlru)
+>> +                               SetPageLRU(page);
+>> +                       goto putback;
+>> +               }
+>> +
+>> +               if (!clearlru) {
+>> +                       __munlock_isolation_failed(page);
+>> +                       goto putback;
+>>                 }
+> 
+> With the other function you were processing this outside of the lock,
+> here you are doing it inside. It would probably make more sense here
+> to follow similar logic and take care of the del_page_from_lru_list
+> ifr clealru is set, unlock, and then if clearlru is set continue else
+> track the isolation failure. That way you can avoid having to use as
+> many jump labels.
+> 
+>>                 /*
+>> +                * Isolate this page.
+>> +                * We already have pin from follow_page_mask()
+>> +                * so we can spare the get_page() here.
+>> +                */
+>> +               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+>> +               del_page_from_lru_list(page, lruvec, page_lru(page));
+>> +               spin_unlock_irq(&zone->zone_pgdat->lru_lock);
+>> +               continue;
+>> +
+>> +               /*
+>>                  * We won't be munlocking this page in the next phase
+>>                  * but we still need to release the follow_page_mask()
+>>                  * pin. We cannot do it under lru_lock however. If it's
+>>                  * the last pin, __page_cache_release() would deadlock.
+>>                  */
+>> +putback:
+>> +               spin_unlock_irq(&zone->zone_pgdat->lru_lock);
+>>                 pagevec_add(&pvec_putback, pvec->pages[i]);
+>>                 pvec->pages[i] = NULL;
+>>         }
+>> +       /* tempary disable irq, will remove later */
+>> +       local_irq_disable();
+>>         __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
+>> -       spin_unlock_irq(&zone->zone_pgdat->lru_lock);
+>> +       local_irq_enable();
+>>
+>>         /* Now we can release pins of pages that we are not munlocking */
+>>         pagevec_release(&pvec_putback);
+>> --
+>> 1.8.3.1
+>>
+>>
