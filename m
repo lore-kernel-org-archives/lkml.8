@@ -2,280 +2,91 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C55CC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11881C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E200F208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5D6207DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:17:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q8WBW4lp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/icnqJkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgGSKUb (ORCPT
+        id S1726529AbgGSKRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 06:20:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51384 "EHLO
+        Sun, 19 Jul 2020 06:17:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGSKUb (ORCPT
+        with ESMTP id S1725836AbgGSKRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 06:20:31 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0153C0619D2;
-        Sun, 19 Jul 2020 03:20:30 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 339CDBC062;
-        Sun, 19 Jul 2020 10:20:27 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     nsekhar@ti.com, bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] ARM: mach-davinci: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 12:20:20 +0200
-Message-Id: <20200719102020.57779-1-grandmaster@al2klimov.de>
+        Sun, 19 Jul 2020 06:17:13 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC79FC0619D2;
+        Sun, 19 Jul 2020 03:17:12 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595153827;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Klowtb+zpu2upHcc0/al6Z+g7rUSuNatngTABmSqQks=;
+        b=q8WBW4lphpZf+Rpq1Cbtq7QgWkuGOkQnhsp20yFar8wiTi3gddfIDm+NyjZXpS2fG6rA+q
+        nG+u1+A8/GifDOyHJe4mxZ6pq0OhvKaPDIOBpYTOIKKvcrn/YoixV5P5iwYLHRsu/SHrbB
+        oabbWpe0eEH+8X31+lECGS4HW3og5wKDFwN9HWV0zdIh6E2oS5i9Ch6BOhIPYksPf0PS59
+        HSzEz5B0gio3gV1tM43uyUPe2j/HmyVv99lFkpdKIIS5CZWoOK3Y3KH6ULxF3cL7tz/OT5
+        Ye5LMOV4/wPXxTLQxm83eV6glbq19TpIa9HyJMKOa/DSXSJg/LWwwe+6zZl2oA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595153827;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Klowtb+zpu2upHcc0/al6Z+g7rUSuNatngTABmSqQks=;
+        b=/icnqJkwLN5zSzDGZYcXzpGR7LI1HSuX35hwBCDMz7GGGc6gotQIlS2LCnsQLZ+UvWAWqy
+        jn0fn49/bZ1nRjAQ==
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry functionality
+In-Reply-To: <CALCETrU-z_73BsKwNq0fTDEg7tVicd=jOEaq-6LnH24uNWShDg@mail.gmail.com>
+References: <20200716182208.180916541@linutronix.de> <20200716185424.011950288@linutronix.de> <202007161336.B993ED938@keescook> <87d04vt98w.fsf@nanos.tec.linutronix.de> <202007171045.FB4A586F1D@keescook> <87mu3yq6sf.fsf@nanos.tec.linutronix.de> <CALCETrXz_vEySQJ=f3MTPG9XjZS7U0P-diJE9j_+0KRa_Kie=Q@mail.gmail.com> <875zakq56t.fsf@nanos.tec.linutronix.de> <CALCETrU-z_73BsKwNq0fTDEg7tVicd=jOEaq-6LnH24uNWShDg@mail.gmail.com>
+Date:   Sun, 19 Jul 2020 12:17:07 +0200
+Message-ID: <87v9ijollo.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Andy Lutomirski <luto@kernel.org> writes:
+> On Sat, Jul 18, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> Andy Lutomirski <luto@kernel.org> writes:
+>> > FWIW, TIF_USER_RETURN_NOTIFY is a bit of an odd duck: it's an
+>> > entry/exit word *and* a context switch word.  The latter is because
+>> > it's logically a per-cpu flag, not a per-task flag, and the context
+>> > switch code moves it around so it's always set on the running task.
+>>
+>> Gah, I missed the context switch thing of that. That stuff is hideous.
+>
+> It's also delightful because anything that screws up that dance (such
+> as failure to do the exit-to-usermode path exactly right) likely
+> results in an insta-root-hole.  If we fail to run user return
+> notifiers, we can run user code with incorrect syscall MSRs, etc.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Looking at it deeper, having that thing in the loop is a pointless
+exercise. This really wants to be done _after_ the loop.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Thanks,
 
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- arch/arm/boot/dts/da850-evm.dts             | 2 +-
- arch/arm/mach-davinci/Kconfig               | 4 ++--
- arch/arm/mach-davinci/board-da850-evm.c     | 2 +-
- arch/arm/mach-davinci/board-mityomapl138.c  | 2 +-
- arch/arm/mach-davinci/board-neuros-osd2.c   | 2 +-
- arch/arm/mach-davinci/board-omapl138-hawk.c | 2 +-
- arch/arm/mach-davinci/cpuidle.c             | 2 +-
- arch/arm/mach-davinci/cpuidle.h             | 2 +-
- arch/arm/mach-davinci/da850.c               | 2 +-
- arch/arm/mach-davinci/da8xx-dt.c            | 2 +-
- arch/arm/mach-davinci/include/mach/pm.h     | 2 +-
- arch/arm/mach-davinci/pm.c                  | 2 +-
- arch/arm/mach-davinci/sleep.S               | 2 +-
- 13 files changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index f2e7609e5346..87c517d65f62 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree for DA850 EVM board
-  *
-- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
-  */
- /dts-v1/;
- #include "da850.dtsi"
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index d028d38a44bf..5b0125f1265c 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -201,7 +201,7 @@ config MACH_MITYOMAPL138
- 	help
- 	  Say Y here to select the Critical Link MityDSP-L138/MityARM-1808
- 	  System on Module.  Information on this SoM may be found at
--	  http://www.mitydsp.com
-+	  https://www.mitydsp.com
- 
- config MACH_OMAPL138_HAWKBOARD
- 	bool "TI AM1808 / OMAPL-138 Hawkboard platform"
-@@ -209,7 +209,7 @@ config MACH_OMAPL138_HAWKBOARD
- 	help
- 	  Say Y here to select the TI AM1808 / OMAPL-138 Hawkboard platform .
- 	  Information of this board may be found at
--	  http://www.hawkboard.org/
-+	  https://www.hawkboard.org/
- 
- config DAVINCI_MUX
- 	bool "DAVINCI multiplexing support"
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 5b3549f1236c..6751292e5f8f 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -1,7 +1,7 @@
- /*
-  * TI DA850/OMAP-L138 EVM board
-  *
-- * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
-  *
-  * Derived from: arch/arm/mach-davinci/board-da830-evm.c
-  * Original Copyrights follow:
-diff --git a/arch/arm/mach-davinci/board-mityomapl138.c b/arch/arm/mach-davinci/board-mityomapl138.c
-index dfce421c0579..3382b93d9a2a 100644
---- a/arch/arm/mach-davinci/board-mityomapl138.c
-+++ b/arch/arm/mach-davinci/board-mityomapl138.c
-@@ -1,7 +1,7 @@
- /*
-  * Critical Link MityOMAP-L138 SoM
-  *
-- * Copyright (C) 2010 Critical Link LLC - http://www.criticallink.com
-+ * Copyright (C) 2010 Critical Link LLC - https://www.criticallink.com
-  *
-  * This file is licensed under the terms of the GNU General Public License
-  * version 2. This program is licensed "as is" without any warranty of
-diff --git a/arch/arm/mach-davinci/board-neuros-osd2.c b/arch/arm/mach-davinci/board-neuros-osd2.c
-index ce99f782811a..6cf46bbc7e1d 100644
---- a/arch/arm/mach-davinci/board-neuros-osd2.c
-+++ b/arch/arm/mach-davinci/board-neuros-osd2.c
-@@ -214,7 +214,7 @@ static __init void davinci_ntosd2_init(void)
- 	 * Mux the pins to be GPIOs, VLYNQEN is already done at startup.
- 	 * The AEAWx are five new AEAW pins that can be muxed by separately.
- 	 * They are a bitmask for GPIO management. According TI
--	 * documentation (http://www.ti.com/lit/gpn/tms320dm6446) to employ
-+	 * documentation (https://www.ti.com/lit/gpn/tms320dm6446) to employ
- 	 * gpio(10,11,12,13) for leds any combination of bits works except
- 	 * four last. So we are to reset all five.
- 	 */
-diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
-index 5390a8630cf0..6c79039002c9 100644
---- a/arch/arm/mach-davinci/board-omapl138-hawk.c
-+++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
-@@ -3,7 +3,7 @@
-  *
-  * Initial code: Syed Mohammed Khasim
-  *
-- * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * This file is licensed under the terms of the GNU General Public License
-  * version 2. This program is licensed "as is" without any warranty of
-diff --git a/arch/arm/mach-davinci/cpuidle.c b/arch/arm/mach-davinci/cpuidle.c
-index b795f671bd03..dd38785536d5 100644
---- a/arch/arm/mach-davinci/cpuidle.c
-+++ b/arch/arm/mach-davinci/cpuidle.c
-@@ -2,7 +2,7 @@
- /*
-  * CPU idle for DaVinci SoCs
-  *
-- * Copyright (C) 2009 Texas Instruments Incorporated. http://www.ti.com/
-+ * Copyright (C) 2009 Texas Instruments Incorporated. https://www.ti.com/
-  *
-  * Derived from Marvell Kirkwood CPU idle code
-  * (arch/arm/mach-kirkwood/cpuidle.c)
-diff --git a/arch/arm/mach-davinci/cpuidle.h b/arch/arm/mach-davinci/cpuidle.h
-index 74f088b0edfb..0d9193aefab5 100644
---- a/arch/arm/mach-davinci/cpuidle.h
-+++ b/arch/arm/mach-davinci/cpuidle.h
-@@ -1,7 +1,7 @@
- /*
-  * TI DaVinci cpuidle platform support
-  *
-- * 2009 (C) Texas Instruments, Inc. http://www.ti.com/
-+ * 2009 (C) Texas Instruments, Inc. https://www.ti.com/
-  *
-  * This file is licensed under the terms of the GNU General Public License
-  * version 2. This program is licensed "as is" without any warranty of any
-diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-index 73b7cc53f966..68156e7239a6 100644
---- a/arch/arm/mach-davinci/da850.c
-+++ b/arch/arm/mach-davinci/da850.c
-@@ -1,7 +1,7 @@
- /*
-  * TI DA850/OMAP-L138 chip specific setup
-  *
-- * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
-  *
-  * Derived from: arch/arm/mach-davinci/da830.c
-  * Original Copyrights follow:
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index 9c0dd028d5ad..0cd2f30aeb9c 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
-  *
-  * Modified from mach-omap/omap2/board-generic.c
-  */
-diff --git a/arch/arm/mach-davinci/include/mach/pm.h b/arch/arm/mach-davinci/include/mach/pm.h
-index 37b19bf35a85..5a5f0ecc0704 100644
---- a/arch/arm/mach-davinci/include/mach/pm.h
-+++ b/arch/arm/mach-davinci/include/mach/pm.h
-@@ -1,7 +1,7 @@
- /*
-  * TI DaVinci platform support for power management.
-  *
-- * Copyright (C) 2009 Texas Instruments, Inc. http://www.ti.com/
-+ * Copyright (C) 2009 Texas Instruments, Inc. https://www.ti.com/
-  *
-  * This program is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU General Public License as
-diff --git a/arch/arm/mach-davinci/pm.c b/arch/arm/mach-davinci/pm.c
-index e33c6bcb4598..323ee4e657c4 100644
---- a/arch/arm/mach-davinci/pm.c
-+++ b/arch/arm/mach-davinci/pm.c
-@@ -2,7 +2,7 @@
- /*
-  * DaVinci Power Management Routines
-  *
-- * Copyright (C) 2009 Texas Instruments, Inc. http://www.ti.com/
-+ * Copyright (C) 2009 Texas Instruments, Inc. https://www.ti.com/
-  */
- 
- #include <linux/pm.h>
-diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
-index 71262dcdbca3..d5affab4396d 100644
---- a/arch/arm/mach-davinci/sleep.S
-+++ b/arch/arm/mach-davinci/sleep.S
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * (C) Copyright 2009, Texas Instruments, Inc. http://www.ti.com/
-+ * (C) Copyright 2009, Texas Instruments, Inc. https://www.ti.com/
-  */
- 
- /* replicated define because linux/bitops.h cannot be included in assembly */
--- 
-2.27.0
-
+        tglx
