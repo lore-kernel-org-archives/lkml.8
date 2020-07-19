@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C802C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 23:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F861C433ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 23:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B58B2177B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 23:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DCF2177B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 23:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmaw3dQR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rH5LHoBG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgGSXLn (ORCPT
+        id S1727779AbgGSXLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 19:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55872 "EHLO
+        Sun, 19 Jul 2020 19:11:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbgGSXLi (ORCPT
+        with ESMTP id S1727093AbgGSXLs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 19:11:38 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E459C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 16:11:38 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 5so10772973oty.11
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 16:11:38 -0700 (PDT)
+        Sun, 19 Jul 2020 19:11:48 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB704C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 16:11:47 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id t18so10816891otq.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 16:11:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HhcAoXPW7ZRiM/8Q3ygWBvgF6djv95EaVmKQGesqI94=;
-        b=cmaw3dQRAtHMt+2E+yl1tYZBdRQ/3msUFsLjOBj1nxVBkJxkMO/oU8xv9yaUFqRWlR
-         xv/kniDCmSFzA4e/Ae5vqMW1t2akWTcculKNbONbzY8FmjERGRdoNUIV9odsmrs2MvzS
-         67o+/QNEYB8sRC9SV9DB82+2PtiUnuTzqPPQW0Tj1Gw/aV/SQdvghhDlyisyVyAGoJOi
-         hGQ7/5vBuzkfQwYTeIJEhlOvchVecBPfZz0MONEtcSsUD+w9rSTmUszmKeDRVkgEkk3g
-         8h2Mzos++eYMjzRYKItQ9Xktmd+xLpzPjscH6egKLiNWS4Sfj4wR/7zu/Kb8YKJ2RceS
-         jJfw==
+        bh=4kK1E0vrnaopAH59gFVu/eR8mRLRCxGqAtmR4UyqSQU=;
+        b=rH5LHoBGuI+oJg93txp6j617wjh6vHHYT4w4O0ENJbKSjdJXwWGAwMrZfgBgGJcVlm
+         40D/2FEou/egiLG1XgSI6ZeX0HkNbHR2jjlV7+YppDBlrfdnv8muTL+TX3jZAamUgvOt
+         Mha8ceockeGtHWFDZENDunMXPz4lrV/jSKxTAlelAf2m+kyz8XqKMa6SJbKHeHu68ynA
+         3uF36AG31LGF7++z6YQEAJPtDBB3k5r4DrnHNeDRoEJgUVVVpbXhpx90hibD0C+Sgoon
+         jlbFlFHtkftGZsWwbbJhImDJEB6/A9XEBL0GJmmwIoYMcCsxlbunsKqgXKupXELXIWce
+         Lbvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HhcAoXPW7ZRiM/8Q3ygWBvgF6djv95EaVmKQGesqI94=;
-        b=kLzogMLbqOM+qrcGcPNJp56FI/Qzub6zVxwImqHDCIrofGhMkdDoeOA+iY/ivAbG4U
-         W+bV3d/6Wu5M6gVDABq0M4z8h1dpaVlseypcT8yGde+GD7snYXhLo7UVP8K485//TTGg
-         V21jWWGPZ24lScpAt6O+FonyLslXyAW91XmYXfwl4n5mKFD6s+aNE/O33vIbNEk3auW6
-         PPxrLZUbHZp0SnW0k+0rh19+zeYMMRdzgDdXLDQe6hGPFftmpV+ch6eQoqBk60ty7mGn
-         UbD+Qp+TuN5uqRn2Z7yzd/drfoLwEU8zKVaGZpBu+gA2CXTvemjS13k+2mTBRuKYWtTs
-         8aPw==
-X-Gm-Message-State: AOAM532/WYAq+MerY4DT38xcUJ2N+jmFlSVxTSsjomkVEm5Qu4IuHvOo
-        86EoSAC1RdQSXTcfRJuFDto=
-X-Google-Smtp-Source: ABdhPJybVuqaC7ItywiUhGXX6BbHSHRfnorRn8ln1t7pxqqVvDu78o/Mx1oD3gPJ6/nsAJtRnOximQ==
-X-Received: by 2002:a05:6830:18f6:: with SMTP id d22mr17701947otf.243.1595200297880;
-        Sun, 19 Jul 2020 16:11:37 -0700 (PDT)
+        bh=4kK1E0vrnaopAH59gFVu/eR8mRLRCxGqAtmR4UyqSQU=;
+        b=G5SNWnHuOcJ32u+tEuvpPAirFmkYJCMszwhSFwsNp6DCXhD3SS72ET9AOGz7+Op3rS
+         W06DJSAt9/Om88uLMpltjMs8cK92M4i406AEdHIfq3N2pcw9hHlfOjbTuH50G28nm049
+         i4hcWp+4myO2po6B1XLsRpe9RVJtb5TZWciP81y+m7RTdaJ8dRWNc3fJC9FuFF91yeNy
+         7+INQlmdQ94kmayE2oJxsnQWau+tkmQrG4Eq8dkwuGq+g1FZKIbA0/Grltuu3dt4k/GO
+         0qe4jmA9JaFepwOl6t3bmKWqje07j1xWyeRd5nCJKR+JTHH8Tfu8aXzd70sVwFdyDU0u
+         Mt3g==
+X-Gm-Message-State: AOAM531jq9ThnTQum78dm5BlEmUjSQEBHM2SDW/Dm2WV/1LblyNAZLlk
+        Y1jej+kADUaiLsU9oY4Ti5E=
+X-Google-Smtp-Source: ABdhPJx48aPexkw+FtsxgCHUWtEFbvwxGmdpE03ij9c4r7i2cgkD6lNLdDw81Z+kbcaw1VqOt/EmXQ==
+X-Received: by 2002:a9d:3f66:: with SMTP id m93mr18465055otc.49.1595200307285;
+        Sun, 19 Jul 2020 16:11:47 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::5e16])
-        by smtp.googlemail.com with ESMTPSA id q19sm2394680ooi.14.2020.07.19.16.11.36
+        by smtp.googlemail.com with ESMTPSA id q19sm2394680ooi.14.2020.07.19.16.11.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 16:11:37 -0700 (PDT)
+        Sun, 19 Jul 2020 16:11:46 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
         akpm@linuxfoundation.org, gregkh@linuxfoundation.org
 Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v5 10/18] dyndbg: make ddebug_tables list LIFO for add/remove_module
-Date:   Sun, 19 Jul 2020 17:10:50 -0600
-Message-Id: <20200719231058.1586423-11-jim.cromie@gmail.com>
+Subject: [PATCH v5 16/18] dyndbg: allow anchored match on format query term
+Date:   Sun, 19 Jul 2020 17:10:56 -0600
+Message-Id: <20200719231058.1586423-17-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200719231058.1586423-1-jim.cromie@gmail.com>
 References: <20200719231058.1586423-1-jim.cromie@gmail.com>
@@ -77,29 +77,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-loadable modules are the last in on this list, and are the only
-modules that could be removed.  ddebug_remove_module() searches from
-head, but ddebug_add_module() uses list_add_tail().  Change it to
-list_add() for a micro-optimization.
+This should work:
+
+  echo module=amd* format=^[IF_TRACE]: +p  >/proc/dynamic_debug/control
+
+consider drivers/gpu/drm/amd/display/include/logger_types.h:
+It has 11 defines like:
+
+  #define DC_LOG_IF_TRACE(...) pr_debug("[IF_TRACE]:"__VA_ARGS__)
+
+These defines are used 804 times at recent count; they are a good use
+case to evaluate existing format-message based classifications of
+*pr_debug*.  Those macros prefix the supplied format with a fixed
+string, I'd expect most existing message classification schemes to do
+something similar.
+
+Hence we want to be able to anchor our match to the beginning of the
+format string, allowing easy construction of clear and precise
+queries, leveraging the existing classification scheme to enable and
+disable those callsites.
+
+Note that unlike other search terms, formats are implicitly floating
+substring matches, without the need for explicit wildcards.
+
+This makes no attempt at wider regex features, just the one we need.
+
+TLDR: Using the anchor also means the []s are less helpful for
+disamiguating the prefix from a random in-message occurrence, allowing
+shorter prefixes.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/dynamic_debug.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index da3ed54a6521..e879af4e66e0 100644
+index c983049e986d..c72bb4d2eb7e 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -895,7 +895,7 @@ int ddebug_add_module(struct _ddebug *tab, unsigned int n,
- 	dt->ddebugs = tab;
+@@ -181,9 +181,16 @@ static int ddebug_change(const struct ddebug_query *query,
+ 				continue;
  
- 	mutex_lock(&ddebug_lock);
--	list_add_tail(&dt->link, &ddebug_tables);
-+	list_add(&dt->link, &ddebug_tables);
- 	mutex_unlock(&ddebug_lock);
+ 			/* match against the format */
+-			if (query->format &&
+-			    !strstr(dp->format, query->format))
+-				continue;
++			if (query->format) {
++				if (*query->format == '^') {
++					char *p;
++					/* anchored search. match must be at beginning */
++					p = strstr(dp->format, query->format+1);
++					if (p != dp->format)
++						continue;
++				} else if (!strstr(dp->format, query->format))
++					continue;
++			}
  
- 	v2pr_info("%u debug prints in module %s\n", n, dt->mod_name);
+ 			/* match against the line number range */
+ 			if (query->first_lineno &&
 -- 
 2.26.2
 
