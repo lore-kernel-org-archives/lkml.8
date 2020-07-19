@@ -4,38 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ADFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A5AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7443F21775
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D5F207EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 15:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgGSPsq (ORCPT
+        id S1726508AbgGSP65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 11:48:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgGSPsq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 11:48:46 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC47EC0619D2;
-        Sun, 19 Jul 2020 08:48:45 -0700 (PDT)
+        Sun, 19 Jul 2020 11:58:57 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:45416 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbgGSP64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 11:58:56 -0400
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 613A3BC062;
-        Sun, 19 Jul 2020 15:48:42 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id B5FACBC069;
+        Sun, 19 Jul 2020 15:58:51 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net, kuba@kernel.org,
-        corbet@lwn.net, intel-wired-lan@lists.osuosl.org,
-        netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+To:     santosh.shilimkar@oracle.com, davem@davemloft.net, kuba@kernel.org,
+        corbet@lwn.net, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] Documentation: intel: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 17:48:36 +0200
-Message-Id: <20200719154836.59873-1-grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] RDS: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 17:58:45 +0200
+Message-Id: <20200719155845.59947-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: +++++
@@ -85,115 +81,22 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- Documentation/networking/device_drivers/intel/e100.rst  | 4 ++--
- Documentation/networking/device_drivers/intel/e1000.rst | 2 +-
- Documentation/networking/device_drivers/intel/fm10k.rst | 2 +-
- Documentation/networking/device_drivers/intel/iavf.rst  | 2 +-
- Documentation/networking/device_drivers/intel/igb.rst   | 2 +-
- Documentation/networking/device_drivers/intel/igbvf.rst | 2 +-
- Documentation/networking/device_drivers/intel/ixgb.rst  | 2 +-
- 7 files changed, 8 insertions(+), 8 deletions(-)
+ Documentation/networking/rds.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/networking/device_drivers/intel/e100.rst b/Documentation/networking/device_drivers/intel/e100.rst
-index 3ac21e7119a7..3d4a9ba21946 100644
---- a/Documentation/networking/device_drivers/intel/e100.rst
-+++ b/Documentation/networking/device_drivers/intel/e100.rst
-@@ -41,7 +41,7 @@ Identifying Your Adapter
+diff --git a/Documentation/networking/rds.rst b/Documentation/networking/rds.rst
+index 44936c27ab3a..c80d832509e2 100644
+--- a/Documentation/networking/rds.rst
++++ b/Documentation/networking/rds.rst
+@@ -11,7 +11,7 @@ This readme tries to provide some background on the hows and whys of RDS,
+ and will hopefully help you find your way around the code.
  
- For information on how to identify your adapter, and for the latest Intel
- network drivers, refer to the Intel Support website:
--http://www.intel.com/support
-+https://www.intel.com/support
+ In addition, please see this email about RDS origins:
+-http://oss.oracle.com/pipermail/rds-devel/2007-November/000228.html
++https://oss.oracle.com/pipermail/rds-devel/2007-November/000228.html
  
- Driver Configuration Parameters
- ===============================
-@@ -179,7 +179,7 @@ filtering by
- Support
- =======
- For general information, go to the Intel support website at:
--http://www.intel.com/support/
-+https://www.intel.com/support/
- 
- or the Intel Wired Networking project hosted by Sourceforge at:
- http://sourceforge.net/projects/e1000
-diff --git a/Documentation/networking/device_drivers/intel/e1000.rst b/Documentation/networking/device_drivers/intel/e1000.rst
-index 4aaae0f7d6ba..9d99ff15d737 100644
---- a/Documentation/networking/device_drivers/intel/e1000.rst
-+++ b/Documentation/networking/device_drivers/intel/e1000.rst
-@@ -44,7 +44,7 @@ NOTES:
-         For more information about the InterruptThrottleRate,
-         RxIntDelay, TxIntDelay, RxAbsIntDelay, and TxAbsIntDelay
-         parameters, see the application note at:
--        http://www.intel.com/design/network/applnots/ap450.htm
-+        https://www.intel.com/design/network/applnots/ap450.htm
- 
- AutoNeg
- -------
-diff --git a/Documentation/networking/device_drivers/intel/fm10k.rst b/Documentation/networking/device_drivers/intel/fm10k.rst
-index 4d279e64e221..9258ef6f515c 100644
---- a/Documentation/networking/device_drivers/intel/fm10k.rst
-+++ b/Documentation/networking/device_drivers/intel/fm10k.rst
-@@ -22,7 +22,7 @@ Ethernet Multi-host Controller.
- 
- For information on how to identify your adapter, and for the latest Intel
- network drivers, refer to the Intel Support website:
--http://www.intel.com/support
-+https://www.intel.com/support
- 
- 
- Flow Control
-diff --git a/Documentation/networking/device_drivers/intel/iavf.rst b/Documentation/networking/device_drivers/intel/iavf.rst
-index 84ac7e75f363..52e037b11c97 100644
---- a/Documentation/networking/device_drivers/intel/iavf.rst
-+++ b/Documentation/networking/device_drivers/intel/iavf.rst
-@@ -43,7 +43,7 @@ device.
- 
- For information on how to identify your adapter, and for the latest NVM/FW
- images and Intel network drivers, refer to the Intel Support website:
--http://www.intel.com/support
-+https://www.intel.com/support
- 
- 
- Additional Features and Configurations
-diff --git a/Documentation/networking/device_drivers/intel/igb.rst b/Documentation/networking/device_drivers/intel/igb.rst
-index 87e560fe5eaa..d46289e182cf 100644
---- a/Documentation/networking/device_drivers/intel/igb.rst
-+++ b/Documentation/networking/device_drivers/intel/igb.rst
-@@ -20,7 +20,7 @@ Identifying Your Adapter
- ========================
- For information on how to identify your adapter, and for the latest Intel
- network drivers, refer to the Intel Support website:
--http://www.intel.com/support
-+https://www.intel.com/support
- 
- 
- Command Line Parameters
-diff --git a/Documentation/networking/device_drivers/intel/igbvf.rst b/Documentation/networking/device_drivers/intel/igbvf.rst
-index 557fc020ef31..40fa210c5e14 100644
---- a/Documentation/networking/device_drivers/intel/igbvf.rst
-+++ b/Documentation/networking/device_drivers/intel/igbvf.rst
-@@ -35,7 +35,7 @@ Identifying Your Adapter
- ========================
- For information on how to identify your adapter, and for the latest Intel
- network drivers, refer to the Intel Support website:
--http://www.intel.com/support
-+https://www.intel.com/support
- 
- 
- Additional Features and Configurations
-diff --git a/Documentation/networking/device_drivers/intel/ixgb.rst b/Documentation/networking/device_drivers/intel/ixgb.rst
-index ab624f1a44a8..c6a233e68ad6 100644
---- a/Documentation/networking/device_drivers/intel/ixgb.rst
-+++ b/Documentation/networking/device_drivers/intel/ixgb.rst
-@@ -203,7 +203,7 @@ With the 10 Gigabit server adapters, the default Linux configuration will
- very likely limit the total available throughput artificially.  There is a set
- of configuration changes that, when applied together, will increase the ability
- of Linux to transmit and receive data.  The following enhancements were
--originally acquired from settings published at http://www.spec.org/web99/ for
-+originally acquired from settings published at https://www.spec.org/web99/ for
- various submitted results using Linux.
- 
- NOTE:
+ RDS Architecture
+ ================
 -- 
 2.27.0
 
