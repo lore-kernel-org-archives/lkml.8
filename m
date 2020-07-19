@@ -2,82 +2,112 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00339C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD65C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D035C207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:23:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Ydea2avL"
+	by mail.kernel.org (Postfix) with ESMTP id 85CA02080D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 12:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgGSMXz (ORCPT
+        id S1726126AbgGSMcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 08:23:55 -0400
-Received: from m12-12.163.com ([220.181.12.12]:44173 "EHLO m12-12.163.com"
+        Sun, 19 Jul 2020 08:32:53 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:60104 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726021AbgGSMXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 08:23:55 -0400
-X-Greylist: delayed 2708 seconds by postgrey-1.27 at vger.kernel.org; Sun, 19 Jul 2020 08:23:51 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=euji8
-        3kgaRZ1o5ZfGEIqaM5nKxpg0EB9wV1jv0YgH7w=; b=Ydea2avLlvl0mS1ydElyA
-        r0Jxm0kC2nwrW9KyJUvcGqu9lulRCwcC3G/tBELk1Iahkaxw7UI61SwR3NnMso4H
-        9X0bD+0kAiG8V5wyGD83ruW43ASvYtUk9oEko0biMWUyVCfent+XY8NBB+ydSiUT
-        CiQ+IexfPbfw5hTMf550F8=
-Received: from localhost.localdomain (unknown [125.82.8.121])
-        by smtp8 (Coremail) with SMTP id DMCowAA3NS1iJRRfAc7rEg--.39456S4;
-        Sun, 19 Jul 2020 18:50:14 +0800 (CST)
-From:   Hu Haowen <xianfengting221@163.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org
-Cc:     tglx@linutronix.de, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, notify@kernel.org,
-        Hu Haowen <xianfengting221@163.com>
-Subject: [PATCH] x86/perf: Fix a typo
-Date:   Sun, 19 Jul 2020 18:50:07 +0800
-Message-Id: <20200719105007.57649-1-xianfengting221@163.com>
-X-Mailer: git-send-email 2.25.1
+        id S1725836AbgGSMcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 08:32:53 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 0C98ABC06E;
+        Sun, 19 Jul 2020 12:32:50 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] staging: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 14:32:44 +0200
+Message-Id: <20200719123244.58718-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: DMCowAA3NS1iJRRfAc7rEg--.39456S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7JrWxJry5XFWkGFWUtFyfXrb_yoWxAFg_A3
-        W8JayDZr1Fy3s2q395uay5t3Z3A3yFvw45Gr4fAFyUt345t3W5CFyUWwsak345WF9xZrWI
-        yFZ3KFyYqw13ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRNFAp7UUUUU==
-X-Originating-IP: [125.82.8.121]
-X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/xtbBDwBZAFPAMoZQfAABsc
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The word "Zhoaxin" is incorrect and the right one is "Zhaoxin".
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Signed-off-by: Hu Haowen <xianfengting221@163.com>
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- arch/x86/events/zhaoxin/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
-index 898fa1ae9ceb..e68827e604ad 100644
---- a/arch/x86/events/zhaoxin/core.c
-+++ b/arch/x86/events/zhaoxin/core.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Zhoaxin PMU; like Intel Architectural PerfMon-v2
-+ * Zhaoxin PMU; like Intel Architectural PerfMon-v2
-  */
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/staging/clocking-wizard/dt-binding.txt | 2 +-
+ drivers/staging/gs_fpgaboot/README             | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/clocking-wizard/dt-binding.txt b/drivers/staging/clocking-wizard/dt-binding.txt
+index 723271e93316..efb67ff9f76c 100644
+--- a/drivers/staging/clocking-wizard/dt-binding.txt
++++ b/drivers/staging/clocking-wizard/dt-binding.txt
+@@ -5,7 +5,7 @@ found in the product guide[2].
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+ [2] Clocking Wizard Product Guide
+-http://www.xilinx.com/support/documentation/ip_documentation/clk_wiz/v5_1/pg065-clk-wiz.pdf
++https://www.xilinx.com/support/documentation/ip_documentation/clk_wiz/v5_1/pg065-clk-wiz.pdf
+ 
+ Required properties:
+  - compatible: Must be 'xlnx,clocking-wizard'
+diff --git a/drivers/staging/gs_fpgaboot/README b/drivers/staging/gs_fpgaboot/README
+index 8d793c1769b0..b85a76849fc4 100644
+--- a/drivers/staging/gs_fpgaboot/README
++++ b/drivers/staging/gs_fpgaboot/README
+@@ -65,6 +65,6 @@ TABLE OF CONTENTS.
+ 6. REFERENCE
+ 
+ 	1. Xilinx APP NOTE XAPP583:
+-	  http://www.xilinx.com/support/documentation/application_notes/xapp583-fpga-configuration.pdf
++	  https://www.xilinx.com/support/documentation/application_notes/xapp583-fpga-configuration.pdf
+ 	2. bitstream file info:
+ 	  http://home.earthlink.net/~davesullins/software/bitinfo.html
 -- 
-2.25.1
-
+2.27.0
 
