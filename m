@@ -2,137 +2,101 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3436C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1EAA207DF
+	by mail.kernel.org (Postfix) with ESMTP id F085E208DB
 	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 10:51:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/U2OuR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726123AbgGSKvA (ORCPT
+        id S1726274AbgGSKvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 06:51:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgGSKvA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 06:51:00 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 095F9C0619D2;
-        Sun, 19 Jul 2020 03:51:00 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t15so8520851pjq.5;
-        Sun, 19 Jul 2020 03:50:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=i5Q3QT1Ih4QGY3ZrYvsBBkkl/Y6OC9HOiRLycKPMyv8=;
-        b=Q/U2OuR8FUMLPV4JNzeDvDGLhB8qtVYlbq3MFF3Zy+OG0TevEHTh4sbfXupBifHqeJ
-         slbGZtvl/tgTGV9N3g4UghhQ8zX63tfiptwUodDMKn6tb61tBmuWJDgdJAXKrJy9hLEu
-         UPvIcB5ftGb6VVbgyxhcEOthTR4gqL4PGy6YRdDJ0KcI7FObRzpWozz/jbYPO+bq+8k/
-         kzu5cL+ETR4TJbBZBxYVMgToVnrc8FSmSS1cIBRJL1R0yFVW2jk3XkHevoYTNt6xjCeO
-         ZXgN+wgHNOt02iVR7ULgoTc5EM8CiTO4ZbjIORUW+voM3ux5MemNJdwKH2QBye/y8vj2
-         VIgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=i5Q3QT1Ih4QGY3ZrYvsBBkkl/Y6OC9HOiRLycKPMyv8=;
-        b=rht+xu7V5ZmSt2mazZS4nprEICQnyo8i6+Zd15ejO814LWRDa/PZXxMVEy4FY4sgKW
-         C47xei8o1luhtmlEJr8y9qpwbZf9mdD80UDK3dc103+DsAHnjq1OMlQdMtPBv3RuqJbQ
-         9mlhZl5y1tU0uSRbBaljNrH4kcoaOk2I779fZmuNVbeiSIOGaLvA+c8pR0vomXnoSOJd
-         /+NTWxrX2a9PYyUjSgnFz/sFcJ8g5phKM1biTkhNTwnioAZxXw31eoFgCjQ2cLRgyR9I
-         Tmj3CHXvZS4MqsbmIkZgloY8Mg/hgi6LqjViR4oDyNcUnjhDtUj5UkBboW+MBknGez49
-         g6bA==
-X-Gm-Message-State: AOAM533tyx6WeKAdFIYxz4Jwr1FckyNWl/AmJefLn6KhlKK9h6IC6DVH
-        RON5U1UCaW9CJaah0Nr/5sV+8boQEKZY1A==
-X-Google-Smtp-Source: ABdhPJzHR8KcnFKbnPTv23C4skECP0GcpbH1f/DfXLdEXdEmj6WA6juq0sdc+xbr0d0Ay3oMvn4pNA==
-X-Received: by 2002:a17:902:6506:: with SMTP id b6mr13367278plk.13.1595155859086;
-        Sun, 19 Jul 2020 03:50:59 -0700 (PDT)
-Received: from blackclown ([2405:204:219:61b6:3945:8436:8c57:56d5])
-        by smtp.gmail.com with ESMTPSA id 83sm13150442pfu.60.2020.07.19.03.50.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 Jul 2020 03:50:58 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 16:20:37 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     paulmck@kernel.org, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, madhuparnabhowmik10@gmail.com
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rculist: Silence unused-value warning.
-Message-ID: <20200719105037.GA21010@blackclown>
+        Sun, 19 Jul 2020 06:51:02 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:37060 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbgGSKvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 06:51:02 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 39543BC078;
+        Sun, 19 Jul 2020 10:50:58 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     ath9k-devel@qca.qualcomm.com, kvalo@codeaurora.org,
+        davem@davemloft.net, kuba@kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] ath9k: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 12:50:52 +0200
+Message-Id: <20200719105052.57997-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-The macro __list_check_srcu is used as a statement inside a for loop.
-
-__list_check_srcu becomes "true" when CONFIG_PROVE_RCU_LIST is not defined.
-This results in compiler warning about an unused value ("true").
-
-Silence the compiler warning about the unused value "true"
-by replacing it with an empty expression.
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- include/linux/rculist.h | 2 +-
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/net/wireless/ath/ath9k/ani.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index de9385b9158e..8b8e0584c473 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -73,7 +73,7 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *l=
-ist)
- #define __list_check_rcu(dummy, cond, extra...)				\
- 	({ check_arg_count_one(extra); })
-=20
--#define __list_check_srcu(cond) true
-+#define __list_check_srcu(cond) ({})
- #endif
-=20
- /*
---=20
-2.17.1
+diff --git a/drivers/net/wireless/ath/ath9k/ani.c b/drivers/net/wireless/ath/ath9k/ani.c
+index 5214dd7a3936..41d192709e8e 100644
+--- a/drivers/net/wireless/ath/ath9k/ani.c
++++ b/drivers/net/wireless/ath/ath9k/ani.c
+@@ -74,7 +74,7 @@ static const struct ani_ofdm_level_entry ofdm_level_table[] = {
+  * Regardless of alignment in time, the antenna signals add constructively after
+  * FFT and improve your reception. For more information:
+  *
+- * http://en.wikipedia.org/wiki/Maximal-ratio_combining
++ * https://en.wikipedia.org/wiki/Maximal-ratio_combining
+  */
+ 
+ struct ani_cck_level_entry {
+-- 
+2.27.0
 
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8UJXwACgkQ+gRsbIfe
-74547A//eomBoSRcErXxtOyLJNattd6CO5iwalDPMtutCPgLCNih1Eb48svoyLh5
-7aXtvXfyYaIsXilVifGxEznFDSIAAQp0wROmJ9eI61zUV407xLcOh1KWU7EN1tzz
-dZ/Szq3v4v/8tbYqZb2IDIRbX3QCj0eIQvJ+kR3veBmOETRnEZAFn91XGna/LFOq
-mcbTh53WY9e2C/NqsioiQ6rfdMgTawYa4JrgsEzNhF8g5lPGipH/f73B6PI7oc/q
-fnKduWqyq4wON2BUUU47Uvzo6wOI4G+YkUAiB34bqLDv44UXzETuRKijzgJdKhSa
-A6//xSEq3Am29T/ekgZIojUJyE3M62GEFSUFiS1Wo4Dqcqxmqb1dG8CMol9mtl06
-TbWx6FYRsCos+vHUj9FBrd7Pa3fb0iWgiIzJgWhClwA8oskDuvomax0YQ9S41Vu8
-SvULgxZyqDFaqBawnzuyCWFsB12XA7GXPUW3HayXEtz/GIesV7VuDTB4EsTZaZt/
-unqQHNRcCDkO4w0kemZRJXL/wDmzT1meW9RbrexgtptH2BSE7OyOEtptIrgWs9Gt
-eeE/IB8b6/fCuVKLXQtOpIjB+JP2JfY97Pb4EqDufXXNgKykOya2HU8IbCbj7nUu
-Luta2BZlj/PA1g16IWb5ErE+Mobh66qir2KRQPO/lR6UJ0154BI=
-=Kftb
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
