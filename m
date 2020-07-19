@@ -2,156 +2,101 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41535C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F753208B3
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4999A207EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 17:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgGSRSO (ORCPT
+        id S1726284AbgGSRYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 13:18:14 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:38242 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgGSRSN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 13:18:13 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id CE31220026;
-        Sun, 19 Jul 2020 19:18:07 +0200 (CEST)
-Date:   Sun, 19 Jul 2020 19:18:06 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v5 3/4] drm/bridge: Introduce LT9611 DSI to HDMI bridge
-Message-ID: <20200719171806.GA55541@ravnborg.org>
-References: <20200708103559.132300-1-vkoul@kernel.org>
- <20200708103559.132300-4-vkoul@kernel.org>
+        Sun, 19 Jul 2020 13:24:49 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:35492 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgGSRYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 13:24:49 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 5B174BC078;
+        Sun, 19 Jul 2020 17:24:45 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jsarha@ti.com, tomi.valkeinen@ti.com, airlied@linux.ie,
+        daniel@ffwll.ch, robh+dt@kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] drm/tilcdc: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 19:24:38 +0200
+Message-Id: <20200719172438.60536-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708103559.132300-4-vkoul@kernel.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8
-        a=fbRPyE8KL9-ZYcdT3u0A:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=cvBusfyB2V15izCimMoJ:22 a=AjGcO6oz07-iQ99wixmX:22
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Three trivial points below.
-The rest looks good.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-With these fixed you can add:
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-	Sam
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-On Wed, Jul 08, 2020 at 04:05:58PM +0530, Vinod Koul wrote:
-> Lontium Lt9611 is a DSI to HDMI bridge which supports two DSI ports and
-> I2S port as an input and HDMI port as output
-> 
-> Co-developed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Co-developed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Tested-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  drivers/gpu/drm/bridge/Kconfig          |   13 +
->  drivers/gpu/drm/bridge/Makefile         |    1 +
->  drivers/gpu/drm/bridge/lontium-lt9611.c | 1142 +++++++++++++++++++++++
->  3 files changed, 1156 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/lontium-lt9611.c
-> 
-> +
-> +#include <drm/drm_probe_helper.h>
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_bridge.h>
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_print.h>
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-In alphabetical order. drm_probe_helper needs to be moved.
+ If you apply the patch, please let me know.
 
-> +
-> +#define EDID_SEG_SIZE	256
-> +#define EDID_LEN	32
-> +#define EDID_LOOP	8
-> +#define KEY_DDC_ACCS_DONE 0x02
-> +#define DDC_NO_ACK	0x50
-> +
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-> +static void lt9611_pcr_setup(struct lt9611 *lt9611, const struct drm_display_mode *mode)
-> +{
-> +	const struct reg_sequence reg_cfg[] = {
-> +		{ 0x830b, 0x01 },
-> +		{ 0x830c, 0x10 },
-> +		{ 0x8348, 0x00 },
-> +		{ 0x8349, 0x81 },
-> +
-> +		/* stage 1 */
-> +		{ 0x8321, 0x4a },
-> +		{ 0x8324, 0x71 },
-> +		{ 0x8325, 0x30 },
-> +		{ 0x832a, 0x01 },
-> +
-> +		/* stage 2 */
-> +		{ 0x834a, 0x40 },
-> +		{ 0x831d, 0x10 },
-> +
-> +		/* MK limit */
-> +		{ 0x832d, 0x38 },
-> +		{ 0x8331, 0x08 },
-> +	};
-> +	const struct reg_sequence reg_cfg2[] = {
-> +			{ 0x830b, 0x03 },
-> +			{ 0x830c, 0xd0 },
-> +			{ 0x8348, 0x03 },
-> +			{ 0x8349, 0xe0 },
-> +			{ 0x8324, 0x72 },
-> +			{ 0x8325, 0x00 },
-> +			{ 0x832a, 0x01 },
-> +			{ 0x834a, 0x10 },
-> +			{ 0x831d, 0x10 },
-> +			{ 0x8326, 0x37 },
-Block above is indented one tab too much.
+ Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +static int lt9611_bridge_attach(struct drm_bridge *bridge,
-> +				enum drm_bridge_attach_flags flags)
-> +{
-> +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
-> +	int ret;
-> +
-> +	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
-> +		dev_err(lt9611->dev, "Fix bridge driver to make connector optional!");
-> +		return -EINVAL;
-> +	}
-This should say that the display driver should be fixed.
-If a display driver expects this bridge to create the connector
-it would not work.
-
+diff --git a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
+index aac617acb64f..8b2a71395647 100644
+--- a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
++++ b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
+@@ -46,7 +46,7 @@ Optional nodes:
+     crossed and LCD_DATA[0:4] is for Red[3:7] and LCD_DATA[11:15] is
+     for Blue[3-7]. For more details see section 3.1.1 in AM335x
+     Silicon Errata:
+-    http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=sprz360
++    https://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=sprz360
+ 
+ Example:
+ 
+-- 
+2.27.0
 
