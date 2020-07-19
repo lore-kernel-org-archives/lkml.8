@@ -2,115 +2,80 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B23C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E997C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7365220717
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA9120734
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 18:07:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EVwqtxmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgGSSFd (ORCPT
+        id S1726463AbgGSSHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 14:05:33 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:43978 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgGSSFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 14:05:33 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 09DAABC078;
-        Sun, 19 Jul 2020 18:05:27 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net,
-        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] hwmon: (ina209) Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 20:05:21 +0200
-Message-Id: <20200719180521.60811-1-grandmaster@al2klimov.de>
+        Sun, 19 Jul 2020 14:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgGSSHn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jul 2020 14:07:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01394C0619D2;
+        Sun, 19 Jul 2020 11:07:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=LwD3BNTWqy9VVz68hNXVzjmhjKffQZa+hKRUppd1yDw=; b=EVwqtxmvFiYl64oIY8smrDCVX/
+        LpvQEQTEHbRQ7rkw2sxnpxDBLmLEkV7g/uhAZByLn+LQCz75IbfjKkwDpNmQAmuAvyvDU5jL/7mxm
+        pyNRbycl8HWMtCql4tqykFUkbiSdIQiz1269NznuQiEC+RbxV7VdBI83QUmCb7foli1CLYW7gaaux
+        dQyP1XQSP2ZLM8IffXn8lLs/xIK0Vsjbj3uVKE2XxuyZe//ZnjUROcBlCwVaP/gjpoYWc+nz06pEW
+        t/VbtjRvmipJshBPviJR9yjApN3Jn+RRvcOix6M7Q7/EFrApq4Jgvf5VWQU7jseQRTY6WhXaIcmFY
+        BIjCgixQ==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxDit-00068u-1e; Sun, 19 Jul 2020 18:07:40 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org
+Subject: [PATCH] crypto: asymmetric_keys: fix some comments in pkcs7_parser.h
+Date:   Sun, 19 Jul 2020 11:07:34 -0700
+Message-Id: <20200719180734.11812-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Drop the doubled word "the" in a comment.
+Change "THis" to "This".
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: keyrings@vger.kernel.org
 ---
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+ crypto/asymmetric_keys/pkcs7_parser.h |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- Documentation/hwmon/ina209.rst | 2 +-
- drivers/hwmon/ina209.c         | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/hwmon/ina209.rst b/Documentation/hwmon/ina209.rst
-index 64322075a145..162256131517 100644
---- a/Documentation/hwmon/ina209.rst
-+++ b/Documentation/hwmon/ina209.rst
-@@ -10,7 +10,7 @@ Supported chips:
-     Addresses scanned: -
- 
-     Datasheet:
--	http://www.ti.com/lit/gpn/ina209
-+	https://www.ti.com/lit/gpn/ina209
- 
- Author:
- 	- Paul Hays <Paul.Hays@cattail.ca>
-diff --git a/drivers/hwmon/ina209.c b/drivers/hwmon/ina209.c
-index 70ad1efcb3de..08ee3a64a026 100644
---- a/drivers/hwmon/ina209.c
-+++ b/drivers/hwmon/ina209.c
-@@ -14,7 +14,7 @@
-  *	Thanks to Jan Volkering
-  *
-  * Datasheet:
-- * http://www.ti.com/lit/gpn/ina209
-+ * https://www.ti.com/lit/gpn/ina209
-  */
- 
- #include <linux/kernel.h>
--- 
-2.27.0
-
+--- linux-next-20200717.orig/crypto/asymmetric_keys/pkcs7_parser.h
++++ linux-next-20200717/crypto/asymmetric_keys/pkcs7_parser.h
+@@ -41,10 +41,9 @@ struct pkcs7_signed_info {
+ 	 *
+ 	 * This contains the generated digest of _either_ the Content Data or
+ 	 * the Authenticated Attributes [RFC2315 9.3].  If the latter, one of
+-	 * the attributes contains the digest of the the Content Data within
+-	 * it.
++	 * the attributes contains the digest of the Content Data within it.
+ 	 *
+-	 * THis also contains the issuing cert serial number and issuer's name
++	 * This also contains the issuing cert serial number and issuer's name
+ 	 * [PKCS#7 or CMS ver 1] or issuing cert's SKID [CMS ver 3].
+ 	 */
+ 	struct public_key_signature *sig;
