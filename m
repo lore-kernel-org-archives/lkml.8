@@ -2,156 +2,220 @@ Return-Path: <SRS0=EKp2=A6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C325BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEB6C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D48B21775
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89E72080D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jul 2020 13:54:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="qq2X6pJo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jay6ibvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgGSN2e (ORCPT
+        id S1726330AbgGSNy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 09:28:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51742 "EHLO
+        Sun, 19 Jul 2020 09:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgGSN2d (ORCPT
+        with ESMTP id S1725988AbgGSNy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 09:28:33 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C84C0619D5
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 06:28:33 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so15372460wrs.0
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 06:28:33 -0700 (PDT)
+        Sun, 19 Jul 2020 09:54:26 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46E8C0619D2;
+        Sun, 19 Jul 2020 06:54:26 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l63so9050007pge.12;
+        Sun, 19 Jul 2020 06:54:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lAL171R7FWvnItt0pyTGhPJVrw/3gmfccUaVuzdFF1w=;
-        b=qq2X6pJovyuShPg22rh7bgNxH7KFHAhIe6SsjzPlmIvww3vrw3tmdIA/MuozQjgBSr
-         dBBNX5g7JTX21gjkS+qKKFqm4Qsfz1Ap3AGqVR2MmlvxryPsjLVT4V7mxhNX07NXob5I
-         F+/UHulx1mVvvVgFf2CTBZL06oTj4QPSubUgtRwYOVvoCd8+imFYcILnRg6Isuen1oTj
-         0rLOUPbemknvOwdgdwhYjiPJKoa3ZXJ+4zsOpRxdPWtcDJsBk9PV2UwS3BtuPoG9DrVW
-         6h2w061ygzf/gydHGu4E3v+Plyc2itr2C2am18LBCQkYCOfeAOQok1o/ozcyGO8xjbXd
-         3PBg==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3CzsjyjZQhFjPGGo53NfDrHBR7v2mLrGKgzuY2qbhO8=;
+        b=Jay6ibvzDvHGKrdjfgX0Nzd1sOxpjj0gx3AFftAiltq0RVsID/tUrEfPEfpM2XPG83
+         hCGZe8vmACiXXGuYtZzX8X1QQ/Vi7YBcSBHQbjkgRbU13kVv0RXnKaSY9LEnenc3pzAt
+         46iCWB6RKm8G0fCqPUnJX5d3KcEpEzMMllFT9povlQc6fHiHIi5Bl+pSlVtXrg9xOvb2
+         1be+C9NvCv6GmCuEysKnqBSheZja3VetUEcngcJotOZcLu06BfIAnaePGRUB+81ozepU
+         /boCtsfQG5i/WhvpUVeoD/oIv+vTYDzrQkAgBRTV1eod3pdsolH+8/dKQ9Tg7zkum3zp
+         Vvjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lAL171R7FWvnItt0pyTGhPJVrw/3gmfccUaVuzdFF1w=;
-        b=VV+5QRNFvsULFKjisDvxKEZmdlFpY1Vwc9TOBr3ZydQd9+IRONWukLkNsM/vSsgLMH
-         bW0Po2oIZqIuvL8u9EX2ijwD8MRGwKnJzhZX6LUa141I3+QlfJ13ilx7Qs2/EYdbp6ZC
-         TxCawFydggcao/yncmxw/BSlqsV9fA/tXirvSw1igF5jPymn9NMNcZVTraxDd3ERf/Yv
-         kG2dwejJS5fCrx0t1JmdrGxx/V3Q2865CAisbKbgtugZsZO9goGPJw5tL2gkF3R1P+FN
-         QMEnHt5dnO3oUNPUeXZUo0Fp36Bs/gFy+8fp2oSo92bFS4m8Mo38wJn+bnfBkxaGUcJX
-         iRng==
-X-Gm-Message-State: AOAM53149AJ2HN0Pw0L6AqqoKYHBVzODPwmKwZ0DH0/Y89fUxwdLKfVc
-        jINnO/EBYOFrnTWy1cUlrn526A==
-X-Google-Smtp-Source: ABdhPJxvKQGmztR8Ra15sC4eQ7wSJuWpUlXPah+4JvFLaUmu6Qz3ilRXBrNkNqt6ZsPZj1rikbf/bw==
-X-Received: by 2002:adf:ded0:: with SMTP id i16mr3396771wrn.389.1595165311846;
-        Sun, 19 Jul 2020 06:28:31 -0700 (PDT)
-Received: from x1 (188.29.165.134.threembb.co.uk. [188.29.165.134])
-        by smtp.gmail.com with ESMTPSA id l18sm27068013wrm.52.2020.07.19.06.28.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 06:28:31 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 15:28:26 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH v2] pinctrl: core: print gpio in pins debugfs file
-Message-ID: <20200719132826.GA1883492@x1>
-References: <20200719132200.1878265-1-drew@beagleboard.org>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3CzsjyjZQhFjPGGo53NfDrHBR7v2mLrGKgzuY2qbhO8=;
+        b=iFajG6CMCROlHPOFMN6hq/aTxDscp8byR3HX/R31IS1XKx7t9Ny2Yualt+g/Oyzw71
+         bhe3ISuvR3HNqAEJ6u7ZwNRwRBrlRBqwTdiio8j7eElMWI0WSfrWQIzTUCZ4n2a26tGz
+         HntMOnNIV3nYuRgNce02CrWZIGDCNw7Xo3D+HPBN5bYmlwsUDu7aV9Zu/UFoFc2dBdL4
+         dDraGHfB0VZiIWiAn8YLRn0sUl5DmRS1l1m/e6ws3q8YyAVbSP91xBOSnCszUjfVFxuA
+         AafSVrmMX8cOj0e2hETcwOB0fTYKjS7KZEleTjoYFpWLXA1jaHmK3BpBwqJobAwESXUn
+         5wJQ==
+X-Gm-Message-State: AOAM5314j/3eQB6FRC229SMghKYpjunB/QQ1iRVj/hkcd3PYRz1ACPyM
+        020Ap/YMmV14g2xhRQ0i5Dbj74rK
+X-Google-Smtp-Source: ABdhPJxXxzuAFURPjst6ZfNy/BHjNSPduPzgEq2q7ZpUyi4UphFa+JB496X3e1eZbli3PjG/2QXzDA==
+X-Received: by 2002:a62:1ccb:: with SMTP id c194mr15999065pfc.277.1595166866060;
+        Sun, 19 Jul 2020 06:54:26 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z5sm13690395pfn.117.2020.07.19.06.54.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Jul 2020 06:54:25 -0700 (PDT)
+Subject: Re: [PATCHv4 2/4] watchdog: add support for adjusting last known HW
+ keepalive time
+To:     Tero Kristo <t-kristo@ti.com>, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, jan.kiszka@siemens.com
+References: <20200717132958.14304-1-t-kristo@ti.com>
+ <20200717132958.14304-3-t-kristo@ti.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <4dce870f-c125-359d-3101-0e31e7ba0421@roeck-us.net>
+Date:   Sun, 19 Jul 2020 06:54:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200719132200.1878265-1-drew@beagleboard.org>
+In-Reply-To: <20200717132958.14304-3-t-kristo@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 03:22:01PM +0200, Drew Fustini wrote:
-> If there is a gpio range mapping for the pin, then print out the gpio
-> number for the pin in the debugfs 'pins' file.
+On 7/17/20 6:29 AM, Tero Kristo wrote:
+> Certain watchdogs require the watchdog only to be pinged within a
+> specific time window, pinging too early or too late cause the watchdog
+> to fire. In cases where this sort of watchdog has been started before
+> kernel comes up, we must adjust the watchdog keepalive window to match
+> the actually running timer, so add a new driver API for this purpose.
 > 
-> Here is an example output on the BeagleBone Black from:
-> /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
-> 
-> pin 103 (PIN103) GPIO-113 44e1099c 00000027 pinctrl-single
-> pin 104 (PIN104) GPIO-114 44e109a0 0000002c pinctrl-single
-> pin 105 (PIN105) GPIO-115 44e109a4 00000027 pinctrl-single
-> pin 106 (PIN106) GPIO-116 44e109a8 00000027 pinctrl-single
-> pin 107 (PIN107) GPIO-117 44e109ac 00000027 pinctrl-single
-> pin 108 (PIN108) GPIO-19 44e109b0 00000027 pinctrl-single
-> pin 109 (PIN109) GPIO-20 44e109b4 00000027 pinctrl-single
-> pin 110 (PIN110) NA 44e109b8 00000030 pinctrl-single
-> pin 111 (PIN111) NA 44e109bc 00000028 pinctrl-single
-> pin 112 (PIN112) NA 44e109c0 00000030 pinctrl-single
-> pin 113 (PIN113) NA 44e109c4 00000028 pinctrl-single
-> pin 114 (PIN114) NA 44e109c8 00000028 pinctrl-single
-> 
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Suggested-by: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
 > ---
->  drivers/pinctrl/core.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  .../watchdog/watchdog-kernel-api.rst          | 12 ++++++++
+>  drivers/watchdog/watchdog_dev.c               | 30 +++++++++++++++++++
+>  include/linux/watchdog.h                      |  2 ++
+>  3 files changed, 44 insertions(+)
 > 
-> v2 changes:
-> - print 'NA' if pin does not have a GPIO number
-> - change gpio_num from unsigned to unsigned int per checkpatch
-> 
-> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-> index 821242bb4b16..8478025926a2 100644
-> --- a/drivers/pinctrl/core.c
-> +++ b/drivers/pinctrl/core.c
-> @@ -1601,6 +1601,8 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
->  	struct pinctrl_dev *pctldev = s->private;
->  	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
->  	unsigned i, pin;
-> +	struct pinctrl_gpio_range *range;
-> +	unsigned int gpio_num;
->  
->  	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
->  
-> @@ -1618,6 +1620,18 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
->  
->  		seq_printf(s, "pin %d (%s) ", pin, desc->name);
->  
-> +		gpio_num = 0;
-> +		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
-> +			if ((pin >= range->pin_base) &&
-> +			    (pin < (range->pin_base + range->npins)))
-> +				gpio_num = range->base + (pin - range->pin_base);
-> +		}
+> diff --git a/Documentation/watchdog/watchdog-kernel-api.rst b/Documentation/watchdog/watchdog-kernel-api.rst
+> index 068a55ee0d4a..baf44e986b07 100644
+> --- a/Documentation/watchdog/watchdog-kernel-api.rst
+> +++ b/Documentation/watchdog/watchdog-kernel-api.rst
+> @@ -336,3 +336,15 @@ an action is taken by a preconfigured pretimeout governor preassigned to
+>  the watchdog device. If watchdog pretimeout governor framework is not
+>  enabled, watchdog_notify_pretimeout() prints a notification message to
+>  the kernel log buffer.
 > +
-> +		if (gpio_num > 0)
-> +			seq_printf(s, "GPIO-%u ", gpio_num);
-> +		else
-> +			seq_puts(s, "NA ");
+> +To set the last known HW keepalive time for a watchdog, the following function
+> +should be used::
 > +
->  		/* Driver-specific info per pin */
->  		if (ops->pin_dbg_show)
->  			ops->pin_dbg_show(pctldev, s, pin);
-> -- 
-> 2.25.1
+> +  int watchdog_set_last_hw_keepalive(struct watchdog_device *wdd,
+> +                                     unsigned int last_ping_ms)
+> +
+> +This function must be called immediately after watchdog registration. It
+> +sets the last known hardware heartbeat to have happened last_ping_ms before
+> +current time. Calling this is only needed if the watchdog is already running
+> +when probe is called, and the watchdog can only be pinged after the
+> +min_hw_heartbeat_ms time has passed from the last ping.
+> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+> index bc1cfa288553..e74a0c6811b5 100644
+> --- a/drivers/watchdog/watchdog_dev.c
+> +++ b/drivers/watchdog/watchdog_dev.c
+> @@ -1138,6 +1138,36 @@ void watchdog_dev_unregister(struct watchdog_device *wdd)
+>  	watchdog_cdev_unregister(wdd);
+>  }
+>  
+> +/*
+> + *	watchdog_set_last_hw_keepalive: set last HW keepalive time for watchdog
+> + *	@wdd: watchdog device
+> + *	@last_ping_ms: time since last HW heartbeat
+> + *
+> + *	Adjusts the last known HW keepalive time for a watchdog timer.
+> + *	This is needed if the watchdog is already running when the probe
+> + *	function is called, and it can't be pinged immediately. This
+> + *	function must be called immediately after watchdog registration,
+> + *	and min_hw_heartbeat_ms must be set for this to be useful.
+> + */
+> +int watchdog_set_last_hw_keepalive(struct watchdog_device *wdd,
+> +				   unsigned int last_ping_ms)
+> +{
+> +	struct watchdog_core_data *wd_data;
+> +	ktime_t now;
+> +
+> +	if (!wdd)
+> +		return -EINVAL;
+> +
+> +	wd_data = wdd->wd_data;
+> +
+> +	now = ktime_get();
+> +
+> +	wd_data->last_hw_keepalive = ktime_sub(now, ms_to_ktime(last_ping_ms));
+> +
+> +	return __watchdog_ping(wdd);
+> +}
+> +EXPORT_SYMBOL_GPL(watchdog_set_last_hw_keepalive);
+> +
+>  /*
+>   *	watchdog_dev_init: init dev part of watchdog core
+>   *
+> diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+> index 1464ce6ffa31..9b19e6bb68b5 100644
+> --- a/include/linux/watchdog.h
+> +++ b/include/linux/watchdog.h
+> @@ -210,6 +210,8 @@ extern int watchdog_init_timeout(struct watchdog_device *wdd,
+>  extern int watchdog_register_device(struct watchdog_device *);
+>  extern void watchdog_unregister_device(struct watchdog_device *);
+>  
+> +int watchdog_set_last_hw_keepalive(struct watchdog_device *, unsigned int);
+> +
+>  /* devres register variant */
+>  int devm_watchdog_register_device(struct device *dev, struct watchdog_device *);
+>  
 > 
 
-Linus - would it better if I printed the gpio chip and line number
-instead of the GPIO number?
-
-If so, any advice on how to best convert the gpio number to the gpio
-descriptor inside pinctrl_pins_show()?
-
-Thanks,
-Drew
