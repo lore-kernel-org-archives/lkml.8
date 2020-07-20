@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E2FC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6E4F2065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C6F22CB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259751;
-	bh=cw/uHopQLaHGZ+bt3FCOnyLeaBw5PWCWOI3Yy/3TjPY=;
+	s=default; t=1595259756;
+	bh=hC4pvOV0218MlFHhrKJk2sI41gTgfZF5zc1K89z40po=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FRN2HAh2N9swlabNJ3xfK4KiHercCuflRsQhn34yJ+rf6PIwBFwMlZWQNO2QDMr/7
-	 ja9rOe8AifB/HdwgDDpdYKSSwtrq+N9NHK7Fhlnvx0NYpuE/3XQpCrvKA3vG8G2Dc0
-	 VHe4fnMr/D5QDo+SbKCKA2N6X06AEJmSCSckNebQ=
+	b=lD2tz3NcstujaXgTN+d2dt0w4V7zeedRkFt2cYBrjpfxQI7/9J45rxkOT7mKCtJxJ
+	 tmLQAkd3rf1mJl+3/FwMuuILofHunK/E8/Bt+HBhtLIyhMfZVolGJMUhY/+sIHzMOl
+	 CAQ7JoMJXj6m+ShwDFd8qFHuxX+YfOxIItyH8nu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbgGTPma (ORCPT
+        id S1730099AbgGTPmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:42:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35380 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:42:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730079AbgGTPm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:42:28 -0400
+        id S1730094AbgGTPmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:42:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C6882065E;
-        Mon, 20 Jul 2020 15:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C75120773;
+        Mon, 20 Jul 2020 15:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259747;
-        bh=cw/uHopQLaHGZ+bt3FCOnyLeaBw5PWCWOI3Yy/3TjPY=;
+        s=default; t=1595259750;
+        bh=hC4pvOV0218MlFHhrKJk2sI41gTgfZF5zc1K89z40po=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jXVgehtb3TNtikXGRGZIK+C4ILymAHMA/fmIUDwTZwhRnEClxpT1Gmmg9dI0P1Cam
-         CjJK6mV4/NE7iUHKjbuUDVRYCKo4O2R281EeaYf+AxJ8bt79ygJHJhGTUHTjBeNDBr
-         6Dt9Jis28tSqCOI/Fz58PYlmFYhWfuA56OwimO/g=
+        b=GPiSaUPO3tqtF9BmUsvfTGvJa4jvpNOqI+iXaqvJ8cCC3zash0PrCFtwU2RV8mc6S
+         3+YdU28e0c0ubykBEqBVmL3kmOW5vHzJ/TW61DYeCw3Kcz/XKHnYxkx4o4JEAOuM1S
+         LMf2K06n1Gezx4yksdONtM7/t+sq2ZO/Mopd1PAw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Wang <weiwan@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Florian Westphal <fw@strlen.de>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 35/86] tcp: make sure listeners dont initialize congestion-control state
-Date:   Mon, 20 Jul 2020 17:36:31 +0200
-Message-Id: <20200720152754.930710977@linuxfoundation.org>
+Subject: [PATCH 4.9 36/86] tcp: md5: do not send silly options in SYNCOOKIES
+Date:   Mon, 20 Jul 2020 17:36:32 +0200
+Message-Id: <20200720152754.980513276@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -61,145 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Paasch <cpaasch@apple.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit ce69e563b325f620863830c246a8698ccea52048 ]
+[ Upstream commit e114e1e8ac9d31f25b9dd873bab5d80c1fc482ca ]
 
-syzkaller found its way into setsockopt with TCP_CONGESTION "cdg".
-tcp_cdg_init() does a kcalloc to store the gradients. As sk_clone_lock
-just copies all the memory, the allocated pointer will be copied as
-well, if the app called setsockopt(..., TCP_CONGESTION) on the listener.
-If now the socket will be destroyed before the congestion-control
-has properly been initialized (through a call to tcp_init_transfer), we
-will end up freeing memory that does not belong to that particular
-socket, opening the door to a double-free:
+Whenever cookie_init_timestamp() has been used to encode
+ECN,SACK,WSCALE options, we can not remove the TS option in the SYNACK.
 
-[   11.413102] ==================================================================
-[   11.414181] BUG: KASAN: double-free or invalid-free in tcp_cleanup_congestion_control+0x58/0xd0
-[   11.415329]
-[   11.415560] CPU: 3 PID: 4884 Comm: syz-executor.5 Not tainted 5.8.0-rc2 #80
-[   11.416544] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-[   11.418148] Call Trace:
-[   11.418534]  <IRQ>
-[   11.418834]  dump_stack+0x7d/0xb0
-[   11.419297]  print_address_description.constprop.0+0x1a/0x210
-[   11.422079]  kasan_report_invalid_free+0x51/0x80
-[   11.423433]  __kasan_slab_free+0x15e/0x170
-[   11.424761]  kfree+0x8c/0x230
-[   11.425157]  tcp_cleanup_congestion_control+0x58/0xd0
-[   11.425872]  tcp_v4_destroy_sock+0x57/0x5a0
-[   11.426493]  inet_csk_destroy_sock+0x153/0x2c0
-[   11.427093]  tcp_v4_syn_recv_sock+0xb29/0x1100
-[   11.427731]  tcp_get_cookie_sock+0xc3/0x4a0
-[   11.429457]  cookie_v4_check+0x13d0/0x2500
-[   11.433189]  tcp_v4_do_rcv+0x60e/0x780
-[   11.433727]  tcp_v4_rcv+0x2869/0x2e10
-[   11.437143]  ip_protocol_deliver_rcu+0x23/0x190
-[   11.437810]  ip_local_deliver+0x294/0x350
-[   11.439566]  __netif_receive_skb_one_core+0x15d/0x1a0
-[   11.441995]  process_backlog+0x1b1/0x6b0
-[   11.443148]  net_rx_action+0x37e/0xc40
-[   11.445361]  __do_softirq+0x18c/0x61a
-[   11.445881]  asm_call_on_stack+0x12/0x20
-[   11.446409]  </IRQ>
-[   11.446716]  do_softirq_own_stack+0x34/0x40
-[   11.447259]  do_softirq.part.0+0x26/0x30
-[   11.447827]  __local_bh_enable_ip+0x46/0x50
-[   11.448406]  ip_finish_output2+0x60f/0x1bc0
-[   11.450109]  __ip_queue_xmit+0x71c/0x1b60
-[   11.451861]  __tcp_transmit_skb+0x1727/0x3bb0
-[   11.453789]  tcp_rcv_state_process+0x3070/0x4d3a
-[   11.456810]  tcp_v4_do_rcv+0x2ad/0x780
-[   11.457995]  __release_sock+0x14b/0x2c0
-[   11.458529]  release_sock+0x4a/0x170
-[   11.459005]  __inet_stream_connect+0x467/0xc80
-[   11.461435]  inet_stream_connect+0x4e/0xa0
-[   11.462043]  __sys_connect+0x204/0x270
-[   11.465515]  __x64_sys_connect+0x6a/0xb0
-[   11.466088]  do_syscall_64+0x3e/0x70
-[   11.466617]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   11.467341] RIP: 0033:0x7f56046dc469
-[   11.467844] Code: Bad RIP value.
-[   11.468282] RSP: 002b:00007f5604dccdd8 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-[   11.469326] RAX: ffffffffffffffda RBX: 000000000068bf00 RCX: 00007f56046dc469
-[   11.470379] RDX: 0000000000000010 RSI: 0000000020000000 RDI: 0000000000000004
-[   11.471311] RBP: 00000000ffffffff R08: 0000000000000000 R09: 0000000000000000
-[   11.472286] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[   11.473341] R13: 000000000041427c R14: 00007f5604dcd5c0 R15: 0000000000000003
-[   11.474321]
-[   11.474527] Allocated by task 4884:
-[   11.475031]  save_stack+0x1b/0x40
-[   11.475548]  __kasan_kmalloc.constprop.0+0xc2/0xd0
-[   11.476182]  tcp_cdg_init+0xf0/0x150
-[   11.476744]  tcp_init_congestion_control+0x9b/0x3a0
-[   11.477435]  tcp_set_congestion_control+0x270/0x32f
-[   11.478088]  do_tcp_setsockopt.isra.0+0x521/0x1a00
-[   11.478744]  __sys_setsockopt+0xff/0x1e0
-[   11.479259]  __x64_sys_setsockopt+0xb5/0x150
-[   11.479895]  do_syscall_64+0x3e/0x70
-[   11.480395]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   11.481097]
-[   11.481321] Freed by task 4872:
-[   11.481783]  save_stack+0x1b/0x40
-[   11.482230]  __kasan_slab_free+0x12c/0x170
-[   11.482839]  kfree+0x8c/0x230
-[   11.483240]  tcp_cleanup_congestion_control+0x58/0xd0
-[   11.483948]  tcp_v4_destroy_sock+0x57/0x5a0
-[   11.484502]  inet_csk_destroy_sock+0x153/0x2c0
-[   11.485144]  tcp_close+0x932/0xfe0
-[   11.485642]  inet_release+0xc1/0x1c0
-[   11.486131]  __sock_release+0xc0/0x270
-[   11.486697]  sock_close+0xc/0x10
-[   11.487145]  __fput+0x277/0x780
-[   11.487632]  task_work_run+0xeb/0x180
-[   11.488118]  __prepare_exit_to_usermode+0x15a/0x160
-[   11.488834]  do_syscall_64+0x4a/0x70
-[   11.489326]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Otherwise, tcp_synack_options() will still advertize options like WSCALE
+that we can not deduce later when receiving the packet from the client
+to complete 3WHS.
 
-Wei Wang fixed a part of these CDG-malloc issues with commit c12014440750
-("tcp: memset ca_priv data to 0 properly").
+Note that modern linux TCP stacks wont use MD5+TS+SACK in a SYN packet,
+but we can not know for sure that all TCP stacks have the same logic.
 
-This patch here fixes the listener-scenario: We make sure that listeners
-setting the congestion-control through setsockopt won't initialize it
-(thus CDG never allocates on listeners). For those who use AF_UNSPEC to
-reuse a socket, tcp_disconnect() is changed to cleanup afterwards.
+Before the fix a tcpdump would exhibit this wrong exchange :
 
-(The issue can be reproduced at least down to v4.4.x.)
+10:12:15.464591 IP C > S: Flags [S], seq 4202415601, win 65535, options [nop,nop,md5 valid,mss 1400,sackOK,TS val 456965269 ecr 0,nop,wscale 8], length 0
+10:12:15.464602 IP S > C: Flags [S.], seq 253516766, ack 4202415602, win 65535, options [nop,nop,md5 valid,mss 1400,nop,nop,sackOK,nop,wscale 8], length 0
+10:12:15.464611 IP C > S: Flags [.], ack 1, win 256, options [nop,nop,md5 valid], length 0
+10:12:15.464678 IP C > S: Flags [P.], seq 1:13, ack 1, win 256, options [nop,nop,md5 valid], length 12
+10:12:15.464685 IP S > C: Flags [.], ack 13, win 65535, options [nop,nop,md5 valid], length 0
 
-Cc: Wei Wang <weiwan@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Fixes: 2b0a8c9eee81 ("tcp: add CDG congestion control")
-Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+After this patch the exchange looks saner :
+
+11:59:59.882990 IP C > S: Flags [S], seq 517075944, win 65535, options [nop,nop,md5 valid,mss 1400,sackOK,TS val 1751508483 ecr 0,nop,wscale 8], length 0
+11:59:59.883002 IP S > C: Flags [S.], seq 1902939253, ack 517075945, win 65535, options [nop,nop,md5 valid,mss 1400,sackOK,TS val 1751508479 ecr 1751508483,nop,wscale 8], length 0
+11:59:59.883012 IP C > S: Flags [.], ack 1, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508483 ecr 1751508479], length 0
+11:59:59.883114 IP C > S: Flags [P.], seq 1:13, ack 1, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508483 ecr 1751508479], length 12
+11:59:59.883122 IP S > C: Flags [.], ack 13, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508483 ecr 1751508483], length 0
+11:59:59.883152 IP S > C: Flags [P.], seq 1:13, ack 13, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508484 ecr 1751508483], length 12
+11:59:59.883170 IP C > S: Flags [.], ack 13, win 256, options [nop,nop,md5 valid,nop,nop,TS val 1751508484 ecr 1751508484], length 0
+
+Of course, no SACK block will ever be added later, but nothing should break.
+Technically, we could remove the 4 nops included in MD5+TS options,
+but again some stacks could break seeing not conventional alignment.
+
+Fixes: 4957faade11b ("TCPCT part 1g: Responder Cookie => Initiator")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Florian Westphal <fw@strlen.de>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c      |    3 +++
- net/ipv4/tcp_cong.c |    2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ net/ipv4/tcp_output.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2299,6 +2299,9 @@ int tcp_disconnect(struct sock *sk, int
- 	tp->snd_cwnd_cnt = 0;
- 	tp->window_clamp = 0;
- 	tp->delivered = 0;
-+	if (icsk->icsk_ca_ops->release)
-+		icsk->icsk_ca_ops->release(sk);
-+	memset(icsk->icsk_ca_priv, 0, sizeof(icsk->icsk_ca_priv));
- 	tcp_set_ca_state(sk, TCP_CA_Open);
- 	tp->is_sack_reneg = 0;
- 	tcp_clear_retrans(tp);
---- a/net/ipv4/tcp_cong.c
-+++ b/net/ipv4/tcp_cong.c
-@@ -198,7 +198,7 @@ static void tcp_reinit_congestion_contro
- 	icsk->icsk_ca_setsockopt = 1;
- 	memset(icsk->icsk_ca_priv, 0, sizeof(icsk->icsk_ca_priv));
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -615,7 +615,8 @@ static unsigned int tcp_synack_options(s
+ 				       unsigned int mss, struct sk_buff *skb,
+ 				       struct tcp_out_options *opts,
+ 				       const struct tcp_md5sig_key *md5,
+-				       struct tcp_fastopen_cookie *foc)
++				       struct tcp_fastopen_cookie *foc,
++				       enum tcp_synack_type synack_type)
+ {
+ 	struct inet_request_sock *ireq = inet_rsk(req);
+ 	unsigned int remaining = MAX_TCP_OPTION_SPACE;
+@@ -630,7 +631,8 @@ static unsigned int tcp_synack_options(s
+ 		 * rather than TS in order to fit in better with old,
+ 		 * buggy kernels, but that was deemed to be unnecessary.
+ 		 */
+-		ireq->tstamp_ok &= !ireq->sack_ok;
++		if (synack_type != TCP_SYNACK_COOKIE)
++			ireq->tstamp_ok &= !ireq->sack_ok;
+ 	}
+ #endif
  
--	if (sk->sk_state != TCP_CLOSE)
-+	if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)))
- 		tcp_init_congestion_control(sk);
- }
+@@ -3165,8 +3167,8 @@ struct sk_buff *tcp_make_synack(const st
+ 	md5 = tcp_rsk(req)->af_specific->req_md5_lookup(sk, req_to_sk(req));
+ #endif
+ 	skb_set_hash(skb, tcp_rsk(req)->txhash, PKT_HASH_TYPE_L4);
+-	tcp_header_size = tcp_synack_options(req, mss, skb, &opts, md5, foc) +
+-			  sizeof(*th);
++	tcp_header_size = tcp_synack_options(req, mss, skb, &opts, md5,
++					     foc, synack_type) + sizeof(*th);
  
+ 	skb_push(skb, tcp_header_size);
+ 	skb_reset_transport_header(skb);
 
 
