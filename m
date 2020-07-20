@@ -2,120 +2,172 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12520C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 864282068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3672068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 10:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="R3xW78P+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q7yDDGuO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgGTK7f (ORCPT
+        id S1728481AbgGTK7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:59:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52028 "EHLO
+        Mon, 20 Jul 2020 06:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728232AbgGTK7e (ORCPT
+        with ESMTP id S1728232AbgGTK7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 06:59:34 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD3FC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:59:34 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gc9so10048883pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NV2nv0m/i4PWrK4r7Y/F/y8REceyZBWN4KHSSee/EVw=;
-        b=R3xW78P+619xgW437IQlUC8v2vkTtoeUwA6HMKwDMcXthJEOLbHGKWBHScwB9ymMRF
-         pHJ3Fkq0QWbkPqaGk6ZcI7yblpdUkQk3WFwiB4Yr6UOuN4EPanK3hXNR1I3Wa58FZeEB
-         3u+ALj8+OMP0m7hTLIhtKhhjQcS3SO/C0EdIA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NV2nv0m/i4PWrK4r7Y/F/y8REceyZBWN4KHSSee/EVw=;
-        b=giiENvii5qeLyIr4sWfoX83G1htGqzYa5XBUtBE1mZ2I0VjTlrrA6q/+L00gZRKkC2
-         ahWEDQIAeyJB0q1XLiiWogR1oVxAPqsgvyABvuz+Htvz+vAlkC0gmnrQ7Sd6qQ1zlROh
-         mdjD0aQBBDDguKNy2cZALzhufgy8HedKTky1lL0DQbqticB09MNqqrPVnnkci2uNO8gt
-         zEK7nmRZPl7ZxXduTuo28lwkN700ctenxJ3sZO95KR6S2txmQGHeLMwLxCb5g27QYKP1
-         FPVY6CkN/IUsPvhWrSLRLRpFNfJBp/ykxNJVK2iIZ2QJqqC7imBhLllPxvrNAFSuSSsL
-         OreQ==
-X-Gm-Message-State: AOAM533ARUdBUuh2P1zDHdJ4CAS/sElk2vIaqqDgn9yLXbzWaZZ0Ysuo
-        fA6D968akXVxOLtDmFwanb2mvw==
-X-Google-Smtp-Source: ABdhPJzFvPMmvpy2zrXoDgPh7VwnXAfVEjNvw+4sm45X9CkVVdWN+xdzon3EKx0JIi+K87Pj4k16ZA==
-X-Received: by 2002:a17:90a:f6d8:: with SMTP id er24mr21704466pjb.203.1595242774120;
-        Mon, 20 Jul 2020 03:59:34 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:8c21:db7b:4558:fba3])
-        by smtp.gmail.com with ESMTPSA id b8sm10817049pjd.5.2020.07.20.03.59.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 03:59:32 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        William Wu <william.wu@rock-chips.com>
-Subject: [PATCH v3] ARM: dts: rockchip: Add usb host0 ohci node for rk3288
-Date:   Mon, 20 Jul 2020 16:28:46 +0530
-Message-Id: <20200720105846.367776-1-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 20 Jul 2020 06:59:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09476C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 03:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=WkI8Ve7E4cYmGfDgoDIy+3v2c4Cg5HucNSZPRMZX6+M=; b=Q7yDDGuOyd/y4alAGQtdNMRItV
+        AG8KGwE8L00CMSu2DUcoO1LsiULwNuSQOktbO3J1a9swL6dnK4Jnp8siDi3caDIiibOi7VJ4TuaIh
+        gLYzmq0BGuCTnXnEsckOt1Ab/5S7T1J9MPDkseAI3b2SQjNsX+bP0HZVKP4mjUsA7HLIAWB20Ibn8
+        p7S/l4LTVsOlNEbi4nX4jVT9v49GEUrRzgMESJxbgsXiMW7nVgfewIlaqii2sW7WwHYSOBNuPrRgD
+        +j1Mdn/3zDs3HtPw+pQT6BJgjpwAGdPhaJ8w8hJWr2YpDxxr0kLSF2p8jrF8LRZvSsN74Jipd+H5G
+        qN//LZiQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxTW3-00072M-Uy; Mon, 20 Jul 2020 10:59:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0682E300446;
+        Mon, 20 Jul 2020 12:59:24 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E1BF1200D4EAD; Mon, 20 Jul 2020 12:59:24 +0200 (CEST)
+Date:   Mon, 20 Jul 2020 12:59:24 +0200
+From:   peterz@infradead.org
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Jiri Slaby <jirislaby@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        christian@brauner.io, "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Dave Jones <davej@codemonkey.org.uk>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: 5.8-rc*: kernel BUG at kernel/signal.c:1917
+Message-ID: <20200720105924.GE43129@hirez.programming.kicks-ass.net>
+References: <5a8c4c38-7aeb-981a-8d3b-a7a5c8ca5564@kernel.org>
+ <20200717122651.GA6067@redhat.com>
+ <20200717124017.GB6067@redhat.com>
+ <2c8ef23c-43b4-39d4-8e84-92769c948da9@kernel.org>
+ <20200718171406.GB16791@redhat.com>
+ <20200718174448.4btbjcvp6wbbdgts@wittgenstein>
+ <badcb9d5-f628-2be1-7a72-902cf08010bd@kernel.org>
+ <20200720064326.GA6612@redhat.com>
+ <20200720082657.GC6612@redhat.com>
+ <20200720084106.GJ10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720084106.GJ10769@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rk3288 and rk3288w have a usb host0 ohci controller.
+On Mon, Jul 20, 2020 at 10:41:06AM +0200, Peter Zijlstra wrote:
+> On Mon, Jul 20, 2020 at 10:26:58AM +0200, Oleg Nesterov wrote:
+> > Peter,
+> > 
+> > Let me add another note. TASK_TRACED/TASK_STOPPED was always protected by
+> > ->siglock. In particular, ttwu(__TASK_TRACED) must be always called with
+> > ->siglock held. That is why ptrace_freeze_traced() assumes it can safely
+> > do s/TASK_TRACED/__TASK_TRACED/ under spin_lock(siglock).
+> > 
+> > Can this change race with
+> > 
+> > 		if (signal_pending_state(prev->state, prev)) {
+> > 			prev->state = TASK_RUNNING;
+> > 		}
+> > 
+> > in __schedule() ? Hopefully not, signal-state is protected by siglock too.
+> > 
+> > So I think this logic was correct even if it doesn't look nice. But "doesn't
+> > look nice" is true for the whole ptrace code ;)
+> 
+> *groan*... another bit of obscure magic :-(
+> 
+> let me go try and wake up and figure out how best to deal with this.
 
-Although rk3288 ohci doesn't actually work on hardware, but
-rk3288w ohci can work well.
+So clearly I'm still missing something, the below results in:
 
-So add usb host0 ohci node in rk3288 dtsi and the quirk in
-ohci platform driver will disable ohci on rk3288.
+[   63.760863] ------------[ cut here ]------------
+[   63.766019] !(tmp_state & __TASK_TRACED)
+[   63.766030] WARNING: CPU: 33 PID: 33801 at kernel/sched/core.c:4158 __schedule+0x6bd/0x8e0
 
-Cc: William Wu <william.wu@rock-chips.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Also, is there any way to not have ptrace do this? How performance
+critical is this ptrace path? Because I really hate having to add code
+to __schedule() to deal with this horrible thing.
+
+
 ---
-Changes for v3:
-- none
-
- arch/arm/boot/dts/rk3288.dtsi | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 0cd88774db95..f0774d9afb67 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -614,7 +614,16 @@ usb_host0_ehci: usb@ff500000 {
- 		status = "disabled";
- 	};
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e15543cb84812..f65a801d268b6 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4100,9 +4100,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+  */
+ static void __sched notrace __schedule(bool preempt)
+ {
++	unsigned long prev_state, tmp_state;
+ 	struct task_struct *prev, *next;
+ 	unsigned long *switch_count;
+-	unsigned long prev_state;
+ 	struct rq_flags rf;
+ 	struct rq *rq;
+ 	int cpu;
+@@ -4140,16 +4140,38 @@ static void __sched notrace __schedule(bool preempt)
+ 	rq_lock(rq, &rf);
+ 	smp_mb__after_spinlock();
  
--	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
-+	/* NOTE: doesn't work on RK3288, but fixed on RK3288W */
-+	usb_host0_ohci: usb@ff520000 {
-+		compatible = "generic-ohci";
-+		reg = <0x0 0xff520000 0x0 0x100>;
-+		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_USBHOST0>;
-+		phys = <&usbphy1>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
++	/*
++	 * We must re-load prev->state in case ttwu_remote() changed it
++	 * before we acquired rq->lock.
++	 */
++	tmp_state = prev->state;
++	if (unlikely(prev_state != tmp_state)) {
++		if (prev_state & __TASK_TRACED) {
++			/*
++			 * ptrace_{,un}freeze_traced() think it is cool
++			 * to change ->state around behind our backs
++			 * between TASK_TRACED and __TASK_TRACED.
++			 *
++			 * Luckily this transformation doesn't affect
++			 * sched_contributes_to_load.
++			 */
++			SCHED_WARN_ON(!(tmp_state & __TASK_TRACED));
++		} else {
++			/*
++			 * For any other case, a changed prev_state
++			 * must be to TASK_RUNNING, such that...
++			 */
++			SCHED_WARN_ON(tmp_state != TASK_RUNNING);
++		}
++		prev_state = tmp_state;
++	}
++
+ 	/* Promote REQ to ACT */
+ 	rq->clock_update_flags <<= 1;
+ 	update_rq_clock(rq);
  
- 	usb_host1: usb@ff540000 {
- 		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
--- 
-2.25.1
-
+ 	switch_count = &prev->nivcsw;
+-	/*
+-	 * We must re-load prev->state in case ttwu_remote() changed it
+-	 * before we acquired rq->lock.
+-	 */
+-	if (!preempt && prev_state && prev_state == prev->state) {
++	if (!preempt && prev_state) {
+ 		if (signal_pending_state(prev_state, prev)) {
+ 			prev->state = TASK_RUNNING;
+ 		} else {
