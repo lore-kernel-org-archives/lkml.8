@@ -2,143 +2,113 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D663CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77868C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A929520709
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5448F20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 04:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fZX1q3PQ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hyhbuh3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725878AbgGTEMp (ORCPT
+        id S1726192AbgGTEVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 00:12:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30214 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725287AbgGTEMp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 00:12:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595218363;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jNmYyatHBjazXta2G+8f7FUFOpNtqCLp5w3UofyHTXI=;
-        b=fZX1q3PQ70EQT9bQdOCgmg3nvfoe2cHXLt7AK5QmKq7ZXm7LB4alrfh2Q9YZI1twS+erUM
-        lOTpyNsc+sB9ROMAWEglzGbYgZF4Pm0DdlVnc6oz+hmH0d5IRwxfrrLCCsX+9DU9QED3Em
-        WfV9auKOocoVGgoMw8JY1KH4myuSq64=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-vz456LNhO_qCuug1rjUAMQ-1; Mon, 20 Jul 2020 00:12:39 -0400
-X-MC-Unique: vz456LNhO_qCuug1rjUAMQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 20 Jul 2020 00:21:12 -0400
+Received: from ozlabs.org ([203.11.71.1]:46901 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbgGTEVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 00:21:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D803318A1DE1;
-        Mon, 20 Jul 2020 04:12:37 +0000 (UTC)
-Received: from [10.72.13.139] (ovpn-13-139.pek2.redhat.com [10.72.13.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 69EAA72E52;
-        Mon, 20 Jul 2020 04:12:32 +0000 (UTC)
-Subject: Re: [PATCH vhost next 10/10] vdpa/mlx5: Add VDPA driver for supported
- mlx5 devices
-To:     Eli Cohen <eli@mellanox.com>
-Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, shahafs@mellanox.com,
-        saeedm@mellanox.com, Parav Pandit <parav@mellanox.com>,
-        Eugenio Perez Martin <eperezma@redhat.com>
-References: <20200716072327.5359-1-eli@mellanox.com>
- <20200716072327.5359-11-eli@mellanox.com>
- <454850cc-269b-72aa-4511-2bf793a215cc@redhat.com>
- <20200716115428.GC186790@mtl-vdi-166.wap.labs.mlnx>
- <b85ecb97-2120-f63f-f5f4-01d90f88d666@redhat.com>
- <20200718194902.GA52765@mtl-vdi-166.wap.labs.mlnx>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <ed10cb66-174f-ec5c-8043-4e18de65fb99@redhat.com>
-Date:   Mon, 20 Jul 2020 12:12:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B97nv0n89z9sRN;
+        Mon, 20 Jul 2020 14:21:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595218869;
+        bh=BmUytb5hrWXf0QaZ6oP8WcobROwkL4zX4ig1IdgR4IU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hyhbuh3kwM6l2xXy8OOVC3s9NafDGl3UG3gAUrLsoLCksVZNm2tW9IPwcQZinM30f
+         WV4NuIRtlVVjSgE1v0Srv8VkfmQjXNL6I0XyccYllFFJ9lJu3TimY7xDiJ2wup3Lwj
+         4kXLYH0RCxoNAzYWKWZWAC1MF2SxGa8x7c2P5L7YgOwvaXjcKwKal+8YlWVNbRp74b
+         54cBLJ6/VUO7Fbnjxzwfohcd0CZWM6CWT9OefmGz3Y69hr83XUCyIdRSdh7H0+IXud
+         FO0FS/v1jIhTm382I3mhEXjthNSOaxAGgVA9tcn6Habi/oFsyKEQvhZy2fbTNgm+zw
+         U9I3zm5E/Uw+Q==
+Date:   Mon, 20 Jul 2020 14:21:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Johnson CH Chen (=?UTF-8?B?6Zmz5pit5Yuz?=)" 
+        <JohnsonCH.Chen@moxa.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Scott Wood <scottwood@freescale.com>
+Subject: Re: linux-next: Tree for Jul 17 (drivers/rtc/rtc-ds1374.o)
+Message-ID: <20200720142106.77467bc6@canb.auug.org.au>
+In-Reply-To: <HK2PR01MB32812019FB4521DC22313B10FA7B0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+References: <20200717214036.67fa5379@canb.auug.org.au>
+        <d36fac01-2a7b-c3f1-84ef-3a1560d18790@infradead.org>
+        <20200718113853.6bd63897@canb.auug.org.au>
+        <HK2PR01MB32812019FB4521DC22313B10FA7B0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 MIME-Version: 1.0
-In-Reply-To: <20200718194902.GA52765@mtl-vdi-166.wap.labs.mlnx>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: multipart/signed; boundary="Sig_/+I7b2vLsrvd0Sn8b=GcKGyM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/+I7b2vLsrvd0Sn8b=GcKGyM
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2020/7/19 上午3:49, Eli Cohen wrote:
-> On Fri, Jul 17, 2020 at 04:57:29PM +0800, Jason Wang wrote:
->>> Looks like checking intialized is enough. Will fix this.
->>>>> +
->>>>> +static void mlx5_vdpa_set_vq_ready(struct vdpa_device *vdev, u16 idx, bool ready)
->>>>> +{
->>>>> +	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
->>>>> +	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
->>>>> +	struct mlx5_vdpa_virtqueue *mvq = &ndev->vqs[idx];
->>>>> +	int err;
->>>>> +
->>>>> +	if (!mvq->ready && ready && mvq->fw_state != MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY) {
->>>>> +		err = modify_virtqueue(ndev, mvq, MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY);
->>>>> +		if (err) {
->>>>> +			mlx5_vdpa_warn(mvdev, "failed to modify virtqueue(%d)\n", err);
->>>>> +			return;
->>>>> +		}
->>>>> +	}
->>>> I wonder what's the reason of changing vq state on the hardware
->>>> here. I think we can defer it to set_status().
->>>>
->>> I can defer this to set status.
->>>
->>> I just wonder if it is possible that the core vdpa driver may call this
->>> function with ready equals false and after some time call it with ready
->>> equals true.
->>
->> Good point, so I think we can keep the logic. But looks like the
->> code can not work if ready equals false since it only tries to
->> modify vq state to RDY.
->>
-> The point is that you cannot modify the virtqueue to "not ready".
+Hi Johnson,
 
-
-Is this a hardware limitation of software one?
-
-I'm asking since we need support live migration. But a questions is how 
-to stop the device but not reset, since we need get e.g last_avail_idx 
-from the device.
-
-It could be either:
-
-1) set_status(0)
-2) get_vq_state()
-
-or
-
-1) set_queue_ready(0)
-2) get_vq_state()
-
-Set_status(0) means reset the virtio device but last_avail_idx is 
-something out of virtio spec. I guess using set_queue_ready() is better.
-
-What's you opinion?
-
-Thanks
-
-
->   The
-> only option is to destroy it and create a new one. This means that if I
-> get ready equals false after the virtqueue has been created I need to
-> teardown the driver and set it up again.
+On Mon, 20 Jul 2020 03:46:15 +0000 Johnson CH Chen (=E9=99=B3=E6=98=AD=E5=
+=8B=B3) <JohnsonCH.Chen@moxa.com> wrote:
 >
-> Given that, I think your original suggestion to defer this logic is
-> reasonable.
->
+> > On Fri, 17 Jul 2020 09:49:05 -0700 Randy Dunlap <rdunlap@infradead.org>
+> > wrote: =20
+> > > on x86_64:
+> > > # CONFIG_WATCHDOG is not set
+> > > =20
+>=20
+> Thanks for your information.
+>=20
+> It seems RTC_DRV_DS1374_WDT should be depended on RTC_DRV_DS1374 && WATCH=
+DOG_CORE. Otherwise error will happen if RTC_DRV_DS1374_WDT is enabled but =
+WATCHDOG_CORE not. I'll put this into v5 if there are no other suggestions.
+>=20
+> Should I add " Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>" into=
+ v5? So many thanks!
 
+Probably "Reported-by: Randy Dunlap <rdunlap@infradead.org>" is more approp=
+riate.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+I7b2vLsrvd0Sn8b=GcKGyM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8VG7IACgkQAVBC80lX
+0Gwlowf8D7f0UTM40chSal9cLaKa5otE1B22GRMDOpr5NFpcEeWN1rIg/54z6ioT
+tOv9YOjdiysh3S2qJFQAhj+lQ425JKlRWoJD5u4fRrqMCS6C+LTQlia278qF9YuL
+SHzfJAGYoYl+DKNvcPQ3wxTb0OqyN7bxkW8hSpg9Dy1jzJixx5c4ndk+B2mbuO9e
+ZHEgvFdSLQlhEGh20svZSIZFnXOCUD2rKmnSsByfsQ8NBiUQltCr/fkDTYovo37l
+7URmhjqb2v5r/ROkTiK/2VUJL/14VM8bvpw+oivpGn8vntbdsLoLUNVXlekF+A7z
+QiNJQ5zDKQY2W43cnXRMhVn4vp8Row==
+=z1xY
+-----END PGP SIGNATURE-----
+
+--Sig_/+I7b2vLsrvd0Sn8b=GcKGyM--
