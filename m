@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1334CC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645BBC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB1DE2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437ED20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261827;
-	bh=otZ1k39Vu2rM5BXn4wse+aedOsLu5Xtizzy+QgKoLqk=;
+	s=default; t=1595261829;
+	bh=1P/lOpBfA6OD5FzelCYjXb9v1tWEcxHKO/CA64aHoI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bRLKbO+MtQ8N/wg79Q1rf/pf7Yjd90piv+rL2jFEV3OJ3oBa5uMu8ptS5nhXjVUbu
-	 ZPj6bpA40Vp+1KDTJVR9Ok9NOiZZwdYRvmU078fnabCYsDyraR/iGcjx8ovC8j0L9K
-	 TLWX1AJZioDT0e4AMZTbkrVNzejMemZ+lnqSCfOs=
+	b=VbmarZNEX/Yj4HM7FqPT+9qSsQnKqVC3J5V999izm28tTgVQMa91h9NomlxNPPfpS
+	 wj/Exm41bMR6sP+oRqLLfrcNL3Xy62NYQeDWOna5EBbpugQz3qWMazphIPJyVb4ImY
+	 GKQaWXX7+TnUrkJ7kQgT2mxptN/zCorjn2SHzdSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388601AbgGTQQv (ORCPT
+        id S2388568AbgGTQQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58064 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:16:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388586AbgGTQQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:16:45 -0400
+        id S2388535AbgGTQQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:16:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ABD52064B;
-        Mon, 20 Jul 2020 16:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F98E2064B;
+        Mon, 20 Jul 2020 16:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261805;
-        bh=otZ1k39Vu2rM5BXn4wse+aedOsLu5Xtizzy+QgKoLqk=;
+        s=default; t=1595261791;
+        bh=1P/lOpBfA6OD5FzelCYjXb9v1tWEcxHKO/CA64aHoI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H6hYjSPmAVviHS5IGjJCYe6q8CRgomoikZv1diyaTf06mty6Rp2Ty4Sf4hmCxWSna
-         qB2hr2ywwn71pBD/BzWD9Sf6gUrH64mhnYtasG3HMOKOiQLKfxf6rwV12loo3AMFou
-         qEL0gfoIBW2p4mjA+xTcvNgxVTPF6wn8Doifr+sM=
+        b=Ktk3HLjHi5WciXVLuQAS0MTC+LrPCvey2E0EB0wdQBKBSgvvjNeaWH51zMOXOpbOm
+         hZZ5Ag0zsmCNG7TuLK7ZzLyG38B5AxMmt9Uj6uSepmKaG/ndq18KLYp4JfEZEBrUF0
+         aLmUiRLMW0tU/VzLtVA1Uq+oBgZe8va7tNbpHeDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 5.7 241/244] gpio: pca953x: disable regmap locking for automatic address incrementing
-Date:   Mon, 20 Jul 2020 17:38:32 +0200
-Message-Id: <20200720152837.301779500@linuxfoundation.org>
+        stable@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH 5.7 213/244] arm64: dts: agilex: add status to qspi dts node
+Date:   Mon, 20 Jul 2020 17:38:04 +0200
+Message-Id: <20200720152835.981202493@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -62,38 +58,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
 
-commit ec3decd21380081e3b5de4ba8d85d90a95f201a0 upstream.
+commit 60176e6be0bb6f629b15aea7dcab5a95ecb158e9 upstream.
 
-It's a repetition of the commit aa58a21ae378
-  ("gpio: pca953x: disable regmap locking")
-which states the following:
+Add status = "okay" to QSPI node.
 
-  This driver uses its own locking but regmap silently uses
-  a mutex for all operations too. Add the option to disable
-  locking to the regmap config struct.
-
-Fixes: bcf41dc480b1 ("gpio: pca953x: fix handling of automatic address incrementing")
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fixes: c4c8757b2d895 ("arm64: dts: agilex: add QSPI support for Intel Agilex")
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.5
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-pca953x.c |    1 +
+ arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -399,6 +399,7 @@ static const struct regmap_config pca953
- 	.writeable_reg = pca953x_writeable_register,
- 	.volatile_reg = pca953x_volatile_register,
- 
-+	.disable_locking = true,
- 	.cache_type = REGCACHE_RBTREE,
- 	.max_register = 0x7f,
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+@@ -98,6 +98,7 @@
  };
+ 
+ &qspi {
++	status = "okay";
+ 	flash@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 
 
