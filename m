@@ -2,152 +2,111 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B038CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D82C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9225B2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A45922B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q+RRQpku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730355AbgGTSpb (ORCPT
+        id S1730152AbgGTStG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:45:31 -0400
-Received: from mga04.intel.com ([192.55.52.120]:44580 "EHLO mga04.intel.com"
+        Mon, 20 Jul 2020 14:49:06 -0400
+Received: from ozlabs.org ([203.11.71.1]:48509 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbgGTSpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 14:45:30 -0400
-IronPort-SDR: vXvXqmC98jNakaw+hx0yhYB0dX0vVRUJiNDwhdIKJrnF2pq+p00Hb571nzmewCJqFYUA3zcheC
- 6ieiGweipztA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="147488360"
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="147488360"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 11:45:29 -0700
-IronPort-SDR: 6y0+z5FCdr67qB+S3GoCrAC1V6JRCXFlZ69T8s7zVBxahrLjAvBdH0Sh/700l+jV+n2rx6p3K+
- H4b6cRG4Y+JQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="283607960"
-Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
-  by orsmga003.jf.intel.com with ESMTP; 20 Jul 2020 11:45:28 -0700
-Subject: Re: [PATCH] fpga: stratix10-soc: make FPGA task un-interruptible
-To:     mdf@kernel.org
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dinguyen@kernel.org, richard.gong@intel.com
-References: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
-From:   Richard Gong <richard.gong@linux.intel.com>
-Message-ID: <d678df9e-7f1d-8f50-e2c9-a734b60e6c9a@linux.intel.com>
-Date:   Mon, 20 Jul 2020 14:00:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726506AbgGTStG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 14:49:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9W3M0pHVz9sRN;
+        Tue, 21 Jul 2020 04:49:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595270943;
+        bh=zq27nOBYvcnduPT0qa/MnnpZ+wkF+HYh9Y4xkg2KTGg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Q+RRQpkumPavfz8CkH17wXbg65W4nTRiiXA52DSTRMXdsmgBtSWocDsVimYIuwjbc
+         DOPcCKFKcCc1WTaMfNKUGRtZJJ1E1fH9p9tukxg3i05H8NH3pqBVjgBluoLEQ2eldI
+         hteo6gi1egVxa3wgGoDgr+88TvTruWEqBReT6BpArXdXSMLKM1JqXXbdpLl1bjcEIw
+         HByplhMDx+f0/KiP/5Gm0siPXHFa447bVvFxf/Znc33PZlnKZl4fgFXmxA1YVKRsP/
+         jLpeKuLkvbyhDTowByjoxuveFPbUEI/oBT7Y2W5Fk5e0de8pWVa8qGUY4QZ0h3ilN+
+         W0zO1OshhPQBA==
+Date:   Tue, 21 Jul 2020 04:49:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: linux-next: Tree for Jul 20 (kernel/bpf/net_namespace)
+Message-ID: <20200721044902.24ebe681@canb.auug.org.au>
+In-Reply-To: <a97220b2-9864-eb49-6e27-0ec5b7e5b977@infradead.org>
+References: <20200720194225.17de9962@canb.auug.org.au>
+        <a97220b2-9864-eb49-6e27-0ec5b7e5b977@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/xmO6y7t9HQPsaBUCZn1yWr5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/xmO6y7t9HQPsaBUCZn1yWr5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Moritz,
+Hi all,
 
-Sorry for asking.
+On Mon, 20 Jul 2020 08:51:54 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
+te:
+>
+> on i386 or x86_64:
+>=20
+> # CONFIG_INET is not set
+> # CONFIG_NET_NS is not set
+>=20
+> ld: kernel/bpf/net_namespace.o: in function `bpf_netns_link_release':
+> net_namespace.c:(.text+0x32c): undefined reference to `bpf_sk_lookup_enab=
+led'
+> ld: kernel/bpf/net_namespace.o: in function `netns_bpf_link_create':
+> net_namespace.c:(.text+0x8b7): undefined reference to `bpf_sk_lookup_enab=
+led'
+> ld: kernel/bpf/net_namespace.o: in function `netns_bpf_pernet_pre_exit':
+> net_namespace.c:(.ref.text+0xa3): undefined reference to `bpf_sk_lookup_e=
+nabled'
 
-When you get chance, can you review this FPGA patch?
+Caused by commit
 
-Regards,
-Richard
+  1559b4aa1db4 ("inet: Run SK_LOOKUP BPF program on socket lookup")
 
+from the bpf-next tree.
 
-On 7/7/20 11:14 AM, richard.gong@linux.intel.com wrote:
-> From: Richard Gong <richard.gong@intel.com>
-> 
-> When CTRL+C occurs during the process of FPGA reconfiguration, the FPGA
-> reconfiguration process stops and the user can't perform a new FPGA
-> reconfiguration properly.
-> 
-> Set FPGA complete task to be not interruptible so that the user can
-> properly perform FPGA reconfiguration after CTRL+C event.
-> 
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
-> ---
->   drivers/fpga/stratix10-soc.c | 23 +++--------------------
->   1 file changed, 3 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
-> index 44b7c56..657a70c 100644
-> --- a/drivers/fpga/stratix10-soc.c
-> +++ b/drivers/fpga/stratix10-soc.c
-> @@ -196,17 +196,13 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
->   	if (ret < 0)
->   		goto init_done;
->   
-> -	ret = wait_for_completion_interruptible_timeout(
-> +	ret = wait_for_completion_timeout(
->   		&priv->status_return_completion, S10_RECONFIG_TIMEOUT);
->   	if (!ret) {
->   		dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
->   		ret = -ETIMEDOUT;
->   		goto init_done;
->   	}
-> -	if (ret < 0) {
-> -		dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
-> -		goto init_done;
-> -	}
->   
->   	ret = 0;
->   	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
-> @@ -318,7 +314,7 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
->   		 */
->   		wait_status = 1; /* not timed out */
->   		if (!priv->status)
-> -			wait_status = wait_for_completion_interruptible_timeout(
-> +			wait_status = wait_for_completion_timeout(
->   				&priv->status_return_completion,
->   				S10_BUFFER_TIMEOUT);
->   
-> @@ -340,13 +336,6 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
->   			ret = -ETIMEDOUT;
->   			break;
->   		}
-> -		if (wait_status < 0) {
-> -			ret = wait_status;
-> -			dev_err(dev,
-> -				"error (%d) waiting for svc layer buffers\n",
-> -				ret);
-> -			break;
-> -		}
->   	}
->   
->   	if (!s10_free_buffers(mgr))
-> @@ -372,7 +361,7 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
->   		if (ret < 0)
->   			break;
->   
-> -		ret = wait_for_completion_interruptible_timeout(
-> +		ret = wait_for_completion_timeout(
->   			&priv->status_return_completion, timeout);
->   		if (!ret) {
->   			dev_err(dev,
-> @@ -380,12 +369,6 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
->   			ret = -ETIMEDOUT;
->   			break;
->   		}
-> -		if (ret < 0) {
-> -			dev_err(dev,
-> -				"error (%d) waiting for RECONFIG_COMPLETED\n",
-> -				ret);
-> -			break;
-> -		}
->   		/* Not error or timeout, so ret is # of jiffies until timeout */
->   		timeout = ret;
->   		ret = 0;
-> 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/xmO6y7t9HQPsaBUCZn1yWr5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8V5x4ACgkQAVBC80lX
+0Gw+bggAiG4QOWZgOHvyQPMwPYQT4XXnuO9bHIMt3T4rB7ldivNqz0Q0xIa1cbqE
+T29KxH1MZJMoNIvqwysHBV4yDD92GcZrgwrtsXUdGFvchzECx1MUXmSOynmA2wOr
+IS2HcUwh908AQ1oKhyxbAUKqUjgWlfmBKz8OMSV2NvTaCf0dl91QonqNzN6oYk8n
+YMG3sOH9xmFKFJvuUzoa0OmD/jnCShiL6COIA+BzoHjOE5voZPHSufNaOkzALiA4
+Fe4kLkOSQchdk4pddWIoyzoLQSDtfenYVruI4DRGNhKTZ3epUAsndiP2H5bvL2NR
+G1OK60saE5fCoMYoNBjw8ePh6RlBag==
+=Dcix
+-----END PGP SIGNATURE-----
+
+--Sig_/xmO6y7t9HQPsaBUCZn1yWr5--
