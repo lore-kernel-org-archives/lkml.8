@@ -2,100 +2,83 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A084C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 901C020734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3050720734
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595267748;
-	bh=gKIze89vWBzrFx6zTW6q8+6OGOi2eEHSp9M1U5xgK5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gRjglYXrbLv/JhOR7ez2YDDh3k/9EBJr79T0QVdUKfwqCW+vUFXzgOCpIzvvWhE3R
-	 lFswuk2+tzliGrhuU9onlleizTDf28Rt62oKMlzOE7Z309npWa2+uJcCGumqol5GtZ
-	 nDRJgTNhaiaYQfUSndHhAgeqrxXC5RxrqNTV3+lI=
+	s=default; t=1595267794;
+	bh=3vzlXSdpUDpQCr/J2aKATys7J/5IWPSAhG03kFZ7Z7A=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CQrOyG+lksvIRsKX1v6a/KLJ7tr3k6Tja5fwalsYCdTZKSD3g+JAKIeA9EZlqM0hI
+	 K4P4CXS+e1cxKaQmbfF/HZnHlYPIQJxhN5jZSUFymNDxVJysLQvG2l3w0rJSZdlBI8
+	 eLZQOACEL5NfXvdXo7tso5cfA/qbfvL4aLb/B+44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388057AbgGTRzr (ORCPT
+        id S2389195AbgGTR4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:55:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56244 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 13:56:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbgGTRzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:55:46 -0400
-Received: from gmail.com (unknown [104.132.1.76])
+        id S1726699AbgGTR4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 13:56:32 -0400
+Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D81D920709;
-        Mon, 20 Jul 2020 17:55:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 888EF20709;
+        Mon, 20 Jul 2020 17:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595267745;
-        bh=gKIze89vWBzrFx6zTW6q8+6OGOi2eEHSp9M1U5xgK5Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IVyIlrMN24MPKjy4d8SMWaW7uCiUcpLg3yjCC0C2S6ZfKpknKzmS2DwkqaZUR6kcj
-         eH3tVcf8T0FWz3MgsFZPKw/95GZuUU1R6RXP6YgHYNC1Xrh1jm83A8jQXDelAkEKiB
-         ufMchI7Ce61Y9ZnRUJK/bZ/+BU6OKViPemeOOMWQ=
-Date:   Mon, 20 Jul 2020 10:55:43 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: Re: [PATCH 03/24] net: add a new sockptr_t type
-Message-ID: <20200720175543.GF1292162@gmail.com>
-References: <20200720124737.118617-1-hch@lst.de>
- <20200720124737.118617-4-hch@lst.de>
- <20200720163748.GA1292162@gmail.com>
- <20200720174322.GA21785@lst.de>
+        s=default; t=1595267792;
+        bh=3vzlXSdpUDpQCr/J2aKATys7J/5IWPSAhG03kFZ7Z7A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cb2G80aN02Q22RZJ7HZyxA7cthcXVY0qoOO32qttK0WptMWMsKYvsFuZ96o9zTPEl
+         paxveYoYmbhzuv4B+eQI+WgihcwhBMUHUMHPXNd3t/YOPCN3DZZa+OOtVjOkynAO5z
+         60tiDayi0P9HLTAvAeZRXWld6Lihh/X8mTSDBAk8=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        kernel test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: [PATCH rdma-next v1 0/2] Fix warnings reported by kbuild
+Date:   Mon, 20 Jul 2020 20:56:25 +0300
+Message-Id: <20200720175627.1273096-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720174322.GA21785@lst.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 07:43:22PM +0200, Christoph Hellwig wrote:
-> On Mon, Jul 20, 2020 at 09:37:48AM -0700, Eric Biggers wrote:
-> > How does this not introduce a massive security hole when
-> > CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE?
-> > 
-> > AFAICS, userspace can pass in a pointer >= TASK_SIZE,
-> > and this code makes it be treated as a kernel pointer.
-> 
-> Yeah, we'll need to validate that before initializing the pointer.
-> 
-> But thinking this a little further:  doesn't this mean any
-> set_fs(KERNEL_DS) that has other user pointers than the one it is
-> intended for has the same issue?  Pretty much all of these are gone
-> in mainline now, but in older stable kernels there might be some
-> interesting cases, especially in the compat ioctl handlers.
+From: Leon Romanovsky <leonro@mellanox.com>
 
-Yes.  I thought that eliminating that class of bug is one of the main
-motivations for your "remove set_fs" work.  See commit 128394eff343
-("sg_write()/bsg_write() is not fit to be called under KERNEL_DS") for a case
-where this type of bug was fixed.
+Changelog
+v1:
+ * Delete "pd" cleanup line
+ * Moved all cleaned feilds to be last in declaration list to improve
+  readability.
+v0:
+https://lore.kernel.org/lkml/20200719060319.77603-1-leon@kernel.org
+------------------------------------------------------------------
+Hi,
 
-Are you aware of any specific cases that weren't already fixed?  If there are
-any, they need to be urgently fixed.
+There are two change as were reported by kbuild. They are not important
+enough to have Fixes line.
 
-- Eric
+Thanks
+
+Leon Romanovsky (2):
+  RDMA/uverbs: Remove redundant assignments
+  RDMA/uverbs: Silence shiftTooManyBitsSigned warning
+
+ drivers/infiniband/core/uverbs_cmd.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+--
+2.26.2
+
