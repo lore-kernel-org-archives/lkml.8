@@ -2,121 +2,85 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA9BC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AB8C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A482622C9D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ztJXSb87"
+	by mail.kernel.org (Postfix) with ESMTP id F1FFA22C9D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 14:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595255183;
+	bh=gVlnDGkUWvMCdg/rT+jwsxn+V/IwfZoJkQOFM6t2wbg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RbCFcexlnR0xgcU0p60r8e2vbB8t08nfAg8CsdqTbGtLW5YPnMkkToPHhzHBAvfZM
+	 jFGC256dgzHynUHXzHKIX/bG801LKrHhONYOk2R3Dl93w2dpfshtuv1SVG36N2/2WE
+	 HVFoUx7LFvyrJf+kWe1qT5wLqhaUovW7k4a+6zOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgGTO0e (ORCPT
+        id S1728729AbgGTO0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 10:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728650AbgGTO0e (ORCPT
+        Mon, 20 Jul 2020 10:26:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34891 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgGTO0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 10:26:34 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E4CC0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:26:33 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id ga4so18238291ejb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 07:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KAyErvrsmsg2yl8HJaeI8qkyJy7u6qTS/Aw3lCZAIlQ=;
-        b=ztJXSb87r/qQfxKi+7vOos/B89RV26brZQVQ6s1aAVVoG2JdLyuYRol/QYC3/moMz5
-         /F3w7LaaCk4u2rDR1b0RmRFQCnTJsX7Dy2CGHqqZQQne3XLDa9D4O80hbGBDDog9/0C8
-         zpjzS6Z5/bH5iL92Q9bPLoWXNAGl6jQWzteTcz8+JVmyD9AKyoFw6nC0XR0P3EIySCnQ
-         bE+0sJD+i6+OBvRl5os3uQSnSc/jE7Nd/gEftLTbiH6SLrhYS2DVaIIPiLIfDxUg0NnD
-         BVdgRjGXMhvr6p+wqdHhQcz8WDjd//QpVzqk74JLrfTLhUhr4oLLJYfUkDTJMtsaxVRN
-         sl1w==
+        Mon, 20 Jul 2020 10:26:20 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z2so18106664wrp.2;
+        Mon, 20 Jul 2020 07:26:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KAyErvrsmsg2yl8HJaeI8qkyJy7u6qTS/Aw3lCZAIlQ=;
-        b=YjdzFSjiR9b1ZktyIKX43vVvV+nt0+WCNt4UxitjPP+mF7u0h3p60bGR1YA0Q6HjYi
-         9MRL3eCGeJUT5kaT+Pg7oCCyUjkINN5lso76682YoW+yWP5Dp9DIjYDL1Kw+GyPD9JUZ
-         esoAVeWClIRd6XNoAH8eNQ1CQv5Nr/+XgWy2AgeapnkKgHyNOG2Jrbl2vnaxWjWv2FlE
-         cGQxUK22KNnCK+kBD/hZVJOuiJr+k0sOYXrWOnvUFhLwshlnQRw+QxX+U+NOzGxYECYB
-         S0HZKjsFrzqdOzvNV0zK5CewB4grkHBgyahJ+DzYjPoyBfWWKqsxGV1VxgaDh+CkQFA1
-         zGnA==
-X-Gm-Message-State: AOAM530WABEOeuQ9zuSvDI6RthzMbR0dRWUTuYrX2wosjdPTVOmyaIFH
-        y+oejf/VUvibjyxsDtDJjlJ5iVgylO3+jE2QbL9WFA==
-X-Google-Smtp-Source: ABdhPJw0is1LrzDGO+RSe9ZgSBD3yon69XrfPOGSyQdsM4gQolQ+anP1PVWoq7gNuJoTStTzoel7kjPpeB+rZDstYzI=
-X-Received: by 2002:a17:906:a44:: with SMTP id x4mr21956032ejf.193.1595255192387;
- Mon, 20 Jul 2020 07:26:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BNgYPqhxRYjSVXbbLgxK/P3mGTeHM4UuVOZDXwpk69E=;
+        b=h8XeQ5h2pR2NlhQGgB8rdlGtiPG93XKUs0pmFoRmn+S855ilNrMwQzNAN+Ez2LwQId
+         5miTZUr/XESwU4/r3/sqSEd0RWOCR14fThGrWXJBSTHpPK04/8USTdsK9Gj0vvtQcAC5
+         up80bN1yOnrN/GKsTFGnyfaNHdZRTkThY/ZMjbBiACiB0cusnTsIxvUK3WTI95DskTrJ
+         xkB02FiMwITNnDZOTd1SpwN4Wdd+ww/sQtLj6j6Ql7r7cdSVj0Phpoi1vTfHa/shjPzi
+         rRIjztgoFuu8OUvhW3JxIq4UN3VdtT2RakBkyZTTCWoaYgqP4+VDxktquxOf3I7Ub3Ko
+         TumA==
+X-Gm-Message-State: AOAM530+BoW2Po/02cbZ2kcLkEpcEiJsU32Th6E0Vzv1JI5y1lQ2PGd1
+        rScKO+vwG0R0g1A49iGI9adHuYfQ
+X-Google-Smtp-Source: ABdhPJw6mW1qUYBRfjMsIXYJ4SbujclQOLMqVmDd8akFz2pItNEPdQYgsTHNVkaIm8YpNCKM6dEqdQ==
+X-Received: by 2002:a5d:44d1:: with SMTP id z17mr22240315wrr.259.1595255178174;
+        Mon, 20 Jul 2020 07:26:18 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id 31sm15239867wrj.94.2020.07.20.07.26.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 07:26:17 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 14:26:16 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH] hyperv: hyperv.h: drop a duplicated word
+Message-ID: <20200720142616.usjwfqdvtquou2y6@liuwe-devbox-debian-v2>
+References: <20200719002841.20369-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-References: <20200718154908.1816031-1-drew@beagleboard.org>
-In-Reply-To: <20200718154908.1816031-1-drew@beagleboard.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 20 Jul 2020 16:26:21 +0200
-Message-ID: <CACRpkdapJj5Q3MBKrJkd3CBeJJDuuS-Cj6D=Gk67uyt4O_Oj-A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: core: print gpio in pins debugfs file
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200719002841.20369-1-rdunlap@infradead.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Drew,
+On Sat, Jul 18, 2020 at 05:28:41PM -0700, Randy Dunlap wrote:
+> Drop the repeated word "the" in a comment.
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: linux-hyperv@vger.kernel.org
 
-thanks for this patch, we're going the right direction here
-and creating things that are generically useful.
+Applied to hyperv-next. Thanks.
 
-On Sat, Jul 18, 2020 at 5:53 PM Drew Fustini <drew@beagleboard.org> wrote:
-
-> pin 103 (PIN103) GPIO-113 44e1099c 00000027 pinctrl-single
-> pin 104 (PIN104) GPIO-114 44e109a0 0000002c pinctrl-single
-(...)
-
-Uh oh, that is the global GPIO number that we want to get
-rid of.
-
-> +               gpio_num = 0;
-> +               list_for_each_entry(range, &pctldev->gpio_ranges, node) {
-> +                       if ((pin >= range->pin_base) &&
-> +                           (pin < (range->pin_base + range->npins)))
-> +                               gpio_num = range->base + (pin - range->pin_base);
-
-There should be a break; here should it not?
-
-> +               }
-> +
-> +               if (gpio_num > 0)
-> +                       seq_printf(s, "GPIO-%u ", gpio_num);
-
-Can we print the gpio_chip name and offset instead?
-I want to discourage the world from thinking about these
-global GPIO numbers.
-
-You can fetch the gpio_chip for the range pretty easily
-with
-
-struct gpio_chip *chip = gpio_to_chip(gpio_num);
-
-Also notice that this code needs to be
-#ifdef CONFIG_GPIOLIB somehow
-(maybe IS_ENABLED() works) because there
-are pin controllers in use without gpiolib believe it
-or not.
-
-Yours,
-Linus Walleij
+Wei.
