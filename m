@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B8FC43458
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C7EC4345D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A41F208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC3920717
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281231;
-	bh=9JKDfUhdeddyJ9Fqh2SV91QEs3A3JERW2Zy48paEr1M=;
+	s=default; t=1595281235;
+	bh=aIjyW+M058DpBCya0tZYEgwbUAAQDiFMmtFiuRbC7Xc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcULCfZB/F2Io66x3gxKbuDuZPFUMw1QAcXJC6KQDQTWjg0h+aXqZfbUpLMWlPXt/
-	 v3sh8U66wBvg7i2tujLF74d1AgcUNVSsdRLxq59/IgxJvOAeKtSaOjpDNs9GxOB2ot
-	 hvhgLQHkc557rDLYKJsOMpUsCXbt9H4JFCdVn20U=
+	b=jlTcRtNeyHXDkwfCLlIY9HhQSvfiYJWmzO1Pue9plovhpxyLF31iAKtwnm4vAVCx0
+	 mXOB0D/8si8XJn0sUA5tP/MYmND9n7PJjcrDFDxbeg2xnp5mnhCsvRiNN+zqsx2U3n
+	 0hKX3XvhhAKfYm/wF2T+aqYD1kWZ4DW7gvHevBfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgGTVkN (ORCPT
+        id S1728638AbgGTVkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:40:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59448 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728515AbgGTVjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:36 -0400
+        id S1728304AbgGTVj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1D5322BF5;
-        Mon, 20 Jul 2020 21:39:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EAEA22D00;
+        Mon, 20 Jul 2020 21:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281176;
-        bh=9JKDfUhdeddyJ9Fqh2SV91QEs3A3JERW2Zy48paEr1M=;
+        s=default; t=1595281169;
+        bh=aIjyW+M058DpBCya0tZYEgwbUAAQDiFMmtFiuRbC7Xc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NhU1n7ifpEfNuKClFm4Eypgk4YgwtHJN6UTCuwoo3KDQvjiiMhQCw6qMV9DT6sHVY
-         Zea9hyTO/VC9b4X8yW+oglLOVzJALHozaulfGPeasWsTy/r8wwc2K3wIO9PKDGN6yP
-         KR/IkF87KusVLEsDnAF7XSRsoDQful7WLkSSKPdU=
+        b=x0QrhFZcdvbocvhhr4K1eO4qtvRdFkaq5fBxvSSv1it2rDchN+8L48M3h+VwVLzXL
+         ZyW1bgQHNJDMsLBHXvyzXRIb777jElwYzc170PuDRKWtRV9Akr2bOAPvBTqLy9m6Wv
+         tu4okmoAAuWiIB30+9P+HCvXHmrAfJ3BArwNjYjY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 3/9] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-Date:   Mon, 20 Jul 2020 17:39:26 -0400
-Message-Id: <20200720213932.408089-3-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 11/13] arm64: Use test_tsk_thread_flag() for checking TIF_SINGLESTEP
+Date:   Mon, 20 Jul 2020 17:39:12 -0400
+Message-Id: <20200720213914.407919-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720213932.408089-1-sashal@kernel.org>
-References: <20200720213932.408089-1-sashal@kernel.org>
+In-Reply-To: <20200720213914.407919-1-sashal@kernel.org>
+References: <20200720213914.407919-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,47 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 5b78fac4b1ba731cf4177fdbc1e3a4661521bcd0 ]
+[ Upstream commit 5afc78551bf5d53279036e0bf63314e35631d79f ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+Rather than open-code test_tsk_thread_flag() at each callsite, simply
+replace the couple of offenders with calls to test_tsk_thread_flag()
+directly.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200624064626.19855-1-dinghao.liu@zju.edu.cn
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/debug-monitors.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index c16c06b3dd2f4..54296e262deab 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -583,6 +583,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+index edb63bf2ac1ca..9cc11280b68c9 100644
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -386,14 +386,14 @@ void user_rewind_single_step(struct task_struct *task)
+ 	 * If single step is active for this thread, then set SPSR.SS
+ 	 * to 1 to avoid returning to the active-pending state.
+ 	 */
+-	if (test_ti_thread_flag(task_thread_info(task), TIF_SINGLESTEP))
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
+ 		set_regs_spsr_ss(task_pt_regs(task));
+ }
+ NOKPROBE_SYMBOL(user_rewind_single_step);
  
- 	ret = pm_runtime_get_sync(tdc2dev(tdc));
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(tdc2dev(tdc));
- 		free_irq(tdc->irq, tdc);
- 		return ret;
- 	}
-@@ -764,8 +765,10 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
+ void user_fastforward_single_step(struct task_struct *task)
+ {
+-	if (test_ti_thread_flag(task_thread_info(task), TIF_SINGLESTEP))
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
+ 		clear_regs_spsr_ss(task_pt_regs(task));
+ }
  
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		goto rpm_disable;
-+	}
- 
- 	ret = tegra_adma_init(tdma);
- 	if (ret)
 -- 
 2.25.1
 
