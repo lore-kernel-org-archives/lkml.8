@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4E8C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A130920734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839432064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261316;
-	bh=wyhtxrRVjoNaSMSi3svCzuj5nQN4rviZjNep9R9HDHg=;
+	s=default; t=1595261319;
+	bh=KAUBHfNwxbKnzJLcVMk/cSri8349h1Tn/g/QFc3VZ3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJGEVRdkWn1uG1YFXW6+YjqNZCtFO1uZtPY10tSElPS18l01ns5eo+rRNNHsfgLpG
-	 xksBMvPnoKV2KfYbOSs0w3fA2fq0K9r8NPul/cU860O1at25ChfOJ2fglJZ+MzKAlp
-	 17/UccXV+BZ7tcDAPO3dFT8h4VmfACoGjKGAU844=
+	b=ZFQShrmV0NKzY7+qOUGAnWHwzzjMotuLBmNEuvhNDfnc/SEsbWDji0Cq/QeLtOXFh
+	 nPGwYfAEYUr0f4L1PSSb9wXdZTLwfeVb5nbt2u0b076bGNeiNmV5h2nCN13HGrGLlh
+	 ow93ON7e0qWLQHpLqpTFQOeeqFcBRQ1IVGzB+9sI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387412AbgGTQIf (ORCPT
+        id S2387414AbgGTQIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45956 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:08:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733303AbgGTQIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:08:30 -0400
+        id S2387409AbgGTQIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:08:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E98A322CBE;
-        Mon, 20 Jul 2020 16:08:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EB9D2065E;
+        Mon, 20 Jul 2020 16:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261309;
-        bh=wyhtxrRVjoNaSMSi3svCzuj5nQN4rviZjNep9R9HDHg=;
+        s=default; t=1595261314;
+        bh=KAUBHfNwxbKnzJLcVMk/cSri8349h1Tn/g/QFc3VZ3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VN7Ur6RJMyEC2cFXP59NinnkvxXofWoH9R10V+ZbWGGOlVOAZF7aLtF3dS75XXWcZ
-         f3oIbpyG9rmJO/xmDo0zfe6DrXv6qB5zTFIXqbODPp6llgIYogYYAqrQkU4AowKWHs
-         Iq4VwtljbcFC0rYfg9qej9LkSRCYY4ELD9MZrtpk=
+        b=tLR/03Fl4UHyuYL3Yv6uXG/IVujzZjXDMrVablD2T2lmfmiQ0x3hh2hNj5gnvtP8f
+         hiXcNJsX9mDgdpDQwz/V5+IvtVa/1krciz1RWH6/LGGZ4ilRWOfP0QFlBATQPHquYK
+         4jYsDsTJvuD/lLuFgIkfL/NwkAYRvmPfX/BpmVh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 042/244] dt-bindings: bus: uniphier-system-bus: fix warning in example
-Date:   Mon, 20 Jul 2020 17:35:13 +0200
-Message-Id: <20200720152827.855042349@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 070/244] xen/xenbus: Fix a double free in xenbus_map_ring_pv()
+Date:   Mon, 20 Jul 2020 17:35:41 +0200
+Message-Id: <20200720152829.176928741@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -60,51 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0fb24d1e5a6cf3b7ca0df325fbfb10895df41bec ]
+[ Upstream commit ba8c423488974f02b538e9dc1730f0334f9b85aa ]
 
-Since commit e69f5dc623f9 ("dt-bindings: serial: Convert 8250 to
-json-schema"), the schema for "ns16550a" is checked.
+When there is an error the caller frees "info->node" so the free here
+will result in a double free.  We should just delete first kfree().
 
-'make dt_binding_check' emits the following warning:
-
-  uart@5,00200000: $nodename:0: 'uart@5,00200000' does not match '^serial(@[0-9a-f,]+)*$'
-
-Rename the node to follow the pattern defined in
-Documentation/devicetree/bindings/serial/serial.yaml
-
-While I was here, I removed leading zeros from unit names.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Link: https://lore.kernel.org/r/20200623113242.779241-1-yamada.masahiro@socionext.com
-Signed-off-by: Rob Herring <robh@kernel.org>
+Fixes: 3848e4e0a32a ("xen/xenbus: avoid large structs and arrays on the stack")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200710113610.GA92345@mwanda
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../bindings/bus/socionext,uniphier-system-bus.yaml           | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/xen/xenbus/xenbus_client.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
-index c4c9119e4a206..a0c6c5d2b70fb 100644
---- a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
-+++ b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
-@@ -80,14 +80,14 @@ examples:
-         ranges = <1 0x00000000 0x42000000 0x02000000>,
-                  <5 0x00000000 0x46000000 0x01000000>;
+diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
+index 4f168b46fbca5..786fbb7d8be06 100644
+--- a/drivers/xen/xenbus/xenbus_client.c
++++ b/drivers/xen/xenbus/xenbus_client.c
+@@ -693,10 +693,8 @@ static int xenbus_map_ring_pv(struct xenbus_device *dev,
+ 	bool leaked;
  
--        ethernet@1,01f00000 {
-+        ethernet@1,1f00000 {
-             compatible = "smsc,lan9115";
-             reg = <1 0x01f00000 0x1000>;
-             interrupts = <0 48 4>;
-             phy-mode = "mii";
-         };
+ 	area = alloc_vm_area(XEN_PAGE_SIZE * nr_grefs, info->ptes);
+-	if (!area) {
+-		kfree(node);
++	if (!area)
+ 		return -ENOMEM;
+-	}
  
--        uart@5,00200000 {
-+        serial@5,200000 {
-             compatible = "ns16550a";
-             reg = <5 0x00200000 0x20>;
-             interrupts = <0 49 4>;
+ 	for (i = 0; i < nr_grefs; i++)
+ 		info->phys_addrs[i] =
 -- 
 2.25.1
 
