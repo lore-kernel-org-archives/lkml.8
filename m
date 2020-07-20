@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21781C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43407C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E644822BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D930206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260703;
-	bh=1khGz93IMQ86joGb6FmyeHHm/52XYj69rr/3AJ53SXs=;
+	s=default; t=1595260705;
+	bh=U96DsrVJZj0nKlPKw5oqQP2nOz9oZwby6gkSTE66v/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SY/VX52wQE/czr3+SoL2CTqh1n+ha0vd9NRxlmIrBpfEBArFdSmhaGBStQ9YjCAsW
-	 V0NvDmBCB8X9Ova+OKRv7a+uahS2pZnHkxPmG0fE0jikK9DTtLh4+6LvCnYeTYmIZX
-	 wNhzUOXQ0cFjq5BhMBiquCGsUSSmwsf0uflN/LlY=
+	b=vBY3fn70NSyui1aZRTLEs6UnLV4pcsqH8O1NKZYRGqv7fD36gxVN+20w2YTEnaJgK
+	 eP5hOxkwdRgiXCGpWzguwa3xZ5iiKd9Q18sZ9j8rS5t+pMOqVlYcvJfyHNJUHNogfu
+	 zbnGhCEq5rO2pKjxyCRx3L4KD/a9kh0++fw7vUF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732029AbgGTP6W (ORCPT
+        id S1732021AbgGTP6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58480 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:58:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732000AbgGTP6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:58:18 -0400
+        id S1731599AbgGTP6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:58:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C921206E9;
-        Mon, 20 Jul 2020 15:58:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 601E72065E;
+        Mon, 20 Jul 2020 15:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260697;
-        bh=1khGz93IMQ86joGb6FmyeHHm/52XYj69rr/3AJ53SXs=;
+        s=default; t=1595260694;
+        bh=U96DsrVJZj0nKlPKw5oqQP2nOz9oZwby6gkSTE66v/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ntDRaRVJS8bgjaZziDaMr0xxPv+4F7dqvoKjrDSIQMX7HSviGP0SAUGBVqJlnbN3N
-         bQnCq145st6ztqok9TlW+ScdET9DnUiBu5/tS9BoLVTa9hpMXkKhhi4fhAlwfapcaH
-         aPHQxNX2qmKOayAG27gN8YnZC0UhrCyZHmoBh+9E=
+        b=PDlHroCfFuNEvnvXjRJzhp07y7E/lLmNPWneQBRiJ/6H4SvugjBj7bCquV4pGofh4
+         PGx8IVzTxwDTXy/ibuHo6+ZMnxhrX0uvrrfGW0DK4KSvyFgLVWrpn+IRNbpmiL/grA
+         /KluO/OVbddCUjK1C8qKLM7p4mekCk47ButaMc9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/215] Revert "usb/ohci-platform: Fix a warning when hibernating"
-Date:   Mon, 20 Jul 2020 17:35:43 +0200
-Message-Id: <20200720152823.109063432@linuxfoundation.org>
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 060/215] net: ethernet: mvneta: Add back interface mode validation
+Date:   Mon, 20 Jul 2020 17:35:42 +0200
+Message-Id: <20200720152823.064205838@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -58,54 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit fbf719e5da126c6b391ea7b1f38d4493582d8aaf.
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-Eugeniu Rosca writes:
+[ Upstream commit 41c2b6b4f0f807803bb49f65835d136941a70f85 ]
 
-On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
->After integrating v4.14.186 commit 5410d158ca2a50 ("usb/ehci-platform:
->Set PM runtime as active on resume") into downstream v4.14.x, we started
->to consistently experience below panic [1] on every second s2ram of
->R-Car H3 Salvator-X Renesas reference board.
->
->After some investigations, we concluded the following:
-> - the issue does not exist in vanilla v5.8-rc4+
-> - [bisecting shows that] the panic on v4.14.186 is caused by the lack
->   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
->   link support"). Getting evidence for that is easy. Reverting
->   987351e1ea7772 in vanilla leads to a similar backtrace [2].
->
->Questions:
-> - Backporting 987351e1ea7772 ("phy: core: Add consumer device
->   link support") to v4.14.187 looks challenging enough, so probably not
->   worth it. Anybody to contradict this?
-> - Assuming no plans to backport the missing mainline commit to v4.14.x,
->   should the following three v4.14.186 commits be reverted on v4.14.x?
->   * baef809ea497a4 ("usb/ohci-platform: Fix a warning when hibernating")
->   * 9f33eff4958885 ("usb/xhci-plat: Set PM runtime as active on resume")
->   * 5410d158ca2a50 ("usb/ehci-platform: Set PM runtime as active on resume")
+When writing the serdes configuration register was moved to
+mvneta_config_interface() the whole code block was removed from
+mvneta_port_power_up() in the assumption that its only purpose was to
+write the serdes configuration register. As mentioned by Russell King
+its purpose was also to check for valid interface modes early so that
+later in the driver we do not have to care for unexpected interface
+modes.
+Add back the test to let the driver bail out early on unhandled
+interface modes.
 
+Fixes: b4748553f53f ("net: ethernet: mvneta: Fix Serdes configuration for SoCs without comphy")
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ohci-platform.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/net/ethernet/marvell/mvneta.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-index 4a8456f12a73d..7addfc2cbadce 100644
---- a/drivers/usb/host/ohci-platform.c
-+++ b/drivers/usb/host/ohci-platform.c
-@@ -299,11 +299,6 @@ static int ohci_platform_resume(struct device *dev)
- 	}
- 
- 	ohci_resume(hcd, false);
--
--	pm_runtime_disable(dev);
--	pm_runtime_set_active(dev);
--	pm_runtime_enable(dev);
--
- 	return 0;
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index d443cd19e8951..ccb2abd18d6c7 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -4496,10 +4496,18 @@ static void mvneta_conf_mbus_windows(struct mvneta_port *pp,
  }
- #endif /* CONFIG_PM_SLEEP */
+ 
+ /* Power up the port */
+-static void mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
++static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+ {
+ 	/* MAC Cause register should be cleared */
+ 	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
++
++	if (phy_mode != PHY_INTERFACE_MODE_QSGMII &&
++	    phy_mode != PHY_INTERFACE_MODE_SGMII &&
++	    !phy_interface_mode_is_8023z(phy_mode) &&
++	    !phy_interface_mode_is_rgmii(phy_mode))
++		return -EINVAL;
++
++	return 0;
+ }
+ 
+ /* Device initialization routine */
+@@ -4683,7 +4691,11 @@ static int mvneta_probe(struct platform_device *pdev)
+ 	if (err < 0)
+ 		goto err_netdev;
+ 
+-	mvneta_port_power_up(pp, phy_mode);
++	err = mvneta_port_power_up(pp, pp->phy_interface);
++	if (err < 0) {
++		dev_err(&pdev->dev, "can't power up port\n");
++		return err;
++	}
+ 
+ 	/* Armada3700 network controller does not support per-cpu
+ 	 * operation, so only single NAPI should be initialized.
+@@ -4836,7 +4848,11 @@ static int mvneta_resume(struct device *device)
+ 		}
+ 	}
+ 	mvneta_defaults_set(pp);
+-	mvneta_port_power_up(pp, pp->phy_interface);
++	err = mvneta_port_power_up(pp, pp->phy_interface);
++	if (err < 0) {
++		dev_err(device, "can't power up port\n");
++		return err;
++	}
+ 
+ 	netif_device_attach(dev);
+ 
 -- 
 2.25.1
 
