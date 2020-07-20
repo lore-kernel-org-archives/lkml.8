@@ -2,203 +2,85 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EA1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFC42065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:16:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NvGAOEXL"
+	by mail.kernel.org (Postfix) with ESMTP id 021F322BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 23:17:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595287026;
+	bh=Q9szxRrPwCdNe0hZlylV+fReFObbkgbW4HzTvN549GY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JOLTxbG1+PBcNXeaCiNwG0fRN9A3UG1r1CfrzUeZgM01pFlBvkRMp2O0D2uzSmD3v
+	 eR/gLoSOI0rd5QwY+x0fyk1W1LZxgJoaP+R2ArNeJlaT+FSrfzss1BPNV4G9jj+7/t
+	 nM8w27j0tnB+Q4C6yXY9t/ew3VU4/cjtQprjdfSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgGTXQn (ORCPT
+        id S1728016AbgGTXRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:16:43 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:29291 "EHLO nat-hk.nvidia.com"
+        Mon, 20 Jul 2020 19:17:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbgGTXQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:16:42 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f1625d60000>; Tue, 21 Jul 2020 07:16:38 +0800
-Received: from HKMAIL102.nvidia.com ([10.18.16.11])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 20 Jul 2020 16:16:38 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Mon, 20 Jul 2020 16:16:38 -0700
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL102.nvidia.com
- (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jul
- 2020 23:16:38 +0000
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 20 Jul 2020 23:16:38 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DCoUoqegydEjQPyoEXbE2vGgNAd+b89o005xLH6jT+BeEYfXfLQ+fZ6sJ0tcSHxOCT/4WbP/jYRfaWDsRMDetDAK/w9JW8AzhVJuwtC3jSuH79dc1drxplHxephvhwmM8cjIpTys2EpQvO92ZZSp9IXVq17Pu3S4QCLyawJPV3oTeiQmWoH0VofHR2TF7eNkxVF7UlH52IICDZKJtcz5fG9aKEM5HYrmkuqeOcKXjlG3ev6QGgx9f2LhNu7j/RTbuFBMmEuJIcuZClxPxGvW8ZmnKjl0EismFUVMxByP1Ag4HbRtGJsvgkal+C88ms7lRPPrmp7p8Ha+ZVf4eLOitQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l9YsPERfWdF/nbq0WcQoLchDX/Y65JmOVza5hA+QpB0=;
- b=iAHcDGb0ZxLR6BMwJXvF02fuWLXg+By7QU1LcdcSFMLYVdON4ZBu8sUMU+LPbAXxkyvfKoqzTg3+E0UyOdVeIgvPWxIYznn67MsYKX+x628XKMy2vPKsN4W8WD21TQFhZGvylgnK17y8hHlwIPJz8gDcfk7PuIj9NS4Coo1zd5LoGPElheyI+W2cYlr39YB9vWPXUKLDce3cqQI+b6BmVcI0k2OYpLaw8N1Tqxdoi39MKfg7c+QtbZcrAjKkBNLA35HaXAFHZ3i3brCeOpvsqBOG2OI2nEfsqbgUz+Jep5947rEDWs5DiOcoCyqjpKa7yQpm/nRKTUgZgIUlBRw8PQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3116.namprd12.prod.outlook.com (2603:10b6:5:38::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Mon, 20 Jul
- 2020 23:16:35 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
- 23:16:35 +0000
-Date:   Mon, 20 Jul 2020 20:16:33 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
-        Bharata B Rao <bharata@linux.ibm.com>
-Subject: Re: [PATCH v2 2/5] mm/migrate: add a direction parameter to
- migrate_vma
-Message-ID: <20200720231633.GI2021234@nvidia.com>
-References: <20200713172149.2310-1-rcampbell@nvidia.com>
- <20200713172149.2310-3-rcampbell@nvidia.com>
- <20200720183643.GA3028737@nvidia.com>
- <2e775a5d-9d62-de52-6799-3bbb09c88c5a@nvidia.com>
- <20200720195943.GH2021234@nvidia.com>
- <fdfde6a0-f2bf-c0b2-0283-c882aa755292@nvidia.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <fdfde6a0-f2bf-c0b2-0283-c882aa755292@nvidia.com>
-X-ClientProxiedBy: MN2PR03CA0012.namprd03.prod.outlook.com
- (2603:10b6:208:23a::17) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S1726546AbgGTXRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 19:17:04 -0400
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 763672065E;
+        Mon, 20 Jul 2020 23:17:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595287024;
+        bh=Q9szxRrPwCdNe0hZlylV+fReFObbkgbW4HzTvN549GY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oeiDJ4dqGgKNXkswJJXqxLf3XMqabNSt9swlgnWgDf+4gzGRHA46FKsSzzjGk7BYG
+         MZQUiyzTZYVZDb6s4bzI0YHwRny9nxYI9la+SacZJaws/lJTaHdXjE5Q6u/Vimg4Wu
+         3pNXo3teER48NQDE988vkw/RW1ldz4LLJwKWZTOo=
+Date:   Mon, 20 Jul 2020 16:17:01 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH v15 7/9] nvmet-passthru: Add passthru code to process
+ commands
+Message-ID: <20200720231701.GA682160@dhcp-10-100-145-180.wdl.wdc.com>
+References: <20200716203319.16022-1-logang@deltatee.com>
+ <20200716203319.16022-8-logang@deltatee.com>
+ <20200720141606.GF4627@lst.de>
+ <e939dd43-9e7f-8ef0-162b-2a27f53e6e1a@grimberg.me>
+ <5cc390cf-9b0b-b48b-7447-37934be51ee0@deltatee.com>
+ <2dc39232-4042-1f93-3dcc-3266e70cf6f0@grimberg.me>
+ <b8fc47a2-0b53-3316-775f-0e9a8eddfdc2@deltatee.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR03CA0012.namprd03.prod.outlook.com (2603:10b6:208:23a::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Mon, 20 Jul 2020 23:16:34 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1jxf1N-00Cvqs-N4; Mon, 20 Jul 2020 20:16:33 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4834a13b-0763-4ea0-e80e-08d82d02f235
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3116:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB311690C831D918EB185B363EC27B0@DM6PR12MB3116.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: x1vdsr0Q8fmfyeG6Qr5xFJ847lTRIr1DpfMfQnCj+LmeniURZYRjJHNbLhc6dsuE5v8Ls7xMG/pAFrFAD52IZdIFH27Joivn5utBeXbiTWMfY0iNdrFxwEoSdlgMdVQoJGr0xzyf8e7/HpdCU9jq3B9+Zj/nf13jdtQK69s/IlIyib3pdeFm9oT+bFLqAN1fWkO8kIHyhF19mVo626dzr4WEl7YDampQPFnIMDZ5Youiy5KjXyP3rv4EPAwhVmPf/L4MlzeLh2hhlwNOqR9EaXoIAt7QrNRLQEJq8oLiOO3cH6Uev7HZ8ZriJv0rutVR
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(6862004)(5660300002)(53546011)(66946007)(8936002)(66556008)(66476007)(426003)(8676002)(4326008)(36756003)(2906002)(83380400001)(2616005)(316002)(37006003)(6636002)(7416002)(54906003)(478600001)(186003)(1076003)(86362001)(9746002)(9786002)(26005)(33656002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: tVqQxieM0fDVK4DPnAxAHf1QcCA4z9m9W0Sppr0hGem5arVxrqiyUHp5jIyZesdKD8Vx5ZSHfehtpdATVZq0vLfFwBx2hplbdeYcoDiY1RBYvJiqcOjkvEabTlRmvZHECQKGix9SIisrFs+TmUOIV983pxs96tuoEBpAp7i1nmuPRnJtwgaWhw6NWLrXodnmu9jNq9YEypGmakzkCB3KB+/fFQzREYCeujN619xUMKfjZ3Xw3sKm+W4zzlxwA2wVOwTH2eDVu+fx5TADYoG2tTKLz4f1RZ1DW3UWyIG+kZetzzRehdXS5/MZKHYrPf7sZitqzHx8DD/x/lTmA2OQ0vHKWJ71tr5Fm5PKXUOoMVQMrsYsq5BCMAubzkmVwrKRTAhgExKIvxq7I+mqXZBM2nO3QlG3Np162ycAScNjHxPJgjS5ozQP57CMkmh+upgLTCgfTZ3prABi6wm/8IDo2elau7LzHbNvW0UnA8WhD0I=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4834a13b-0763-4ea0-e80e-08d82d02f235
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 23:16:35.3146
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RQzMkKTH5jCxNqKMbV4jagMqTkm27z0xpJ9dQDXEAoi3kI9J29ZNfiGthw1jDU3J
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3116
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595286998; bh=l9YsPERfWdF/nbq0WcQoLchDX/Y65JmOVza5hA+QpB0=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-MS-Exchange-Transport-Forked:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=NvGAOEXLF5Fo8nGP1vF5ypMJLmSXtXJxBtweEcANVnbCsNK91CDC3Ummnk6v/tzH9
-         aBoXuMl1T0ygtIH+NA8x+xsLJWtQqSwP04+m3g8I5YMClFnyzW1ch+lU7yd4YC8+jf
-         nP5S12gV7IQigjHMymTyuQ6kJoQMcMkBdE9MssRYEOCsgk5aXpgOGYAj+7SFWTtEmu
-         UJmm0UvqBx/4f6EgszAedF3GUdEKbOz8Pmxom8UQN4wlVRJocTYB7Q9+t/M8BU50E2
-         01S58TXDId7ZE0H3a2U7NfduR9KQl6n2bO6WPi6ImoYXBMA8EqfM9wLEoM6KM+86bj
-         tOoToq6jhTfrA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8fc47a2-0b53-3316-775f-0e9a8eddfdc2@deltatee.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 01:49:09PM -0700, Ralph Campbell wrote:
-> 
-> On 7/20/20 12:59 PM, Jason Gunthorpe wrote:
-> > On Mon, Jul 20, 2020 at 12:54:53PM -0700, Ralph Campbell wrote:
-> > > > > diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-> > > > > index 3e546cbf03dd..620f2235d7d4 100644
-> > > > > +++ b/include/linux/migrate.h
-> > > > > @@ -180,6 +180,11 @@ static inline unsigned long migrate_pfn(unsigned long pfn)
-> > > > >    	return (pfn << MIGRATE_PFN_SHIFT) | MIGRATE_PFN_VALID;
-> > > > >    }
-> > > > > +enum migrate_vma_direction {
-> > > > > +	MIGRATE_VMA_FROM_SYSTEM,
-> > > > > +	MIGRATE_VMA_FROM_DEVICE_PRIVATE,
-> > > > > +};
-> > > > 
-> > > > I would have guessed this is more natural as _FROM_DEVICE_ and
-> > > > TO_DEVICE_ ?
-> > > 
-> > > The caller controls where the destination memory is allocated so it isn't
-> > > necessarily device private memory, it could be from system to system.
-> > > The use case for system to system memory migration is for hardware
-> > > like ARM SMMU or PCIe ATS where a single set of page tables is shared by
-> > > the device and a CPU process over a coherent system memory bus.
-> > > Also many integrated GPUs in SOCs fall into this category too.
-> > 
-> > Maybe just TO/FROM_DEIVCE then? Even though the memory is not
-> > DEVICE_PRIVATE it is still device owned pages right?
-> > 
-> > > So to me, it makes more sense to specify the direction based on the
-> > > source location.
-> > 
-> > It feels strange because the driver doesn't always know or control the
-> > source?
-> 
-> The driver can't really know where the source is currently located because the
-> API is designed to not initially hold the page locks, migrate_vma_setup() only knows
-> the source once it holds the page table locks and isolates/locks the pages being
-> migrated. The direction and pgmap_owner are supposed to filter which pages
-> the caller is interested in migrating.
-> Perhaps the direction should instead be a flags field with separate bits for
-> system memory and device private memory selecting source candidates for
-> migration. I can imagine use cases for all 4 combinations of
-> d->d, d->s, s->d, and s->s being valid.
-> 
-> I didn't really think a direction was needed, this was something that
-> Christoph Hellwig seemed to think made the API safer.
+On Mon, Jul 20, 2020 at 05:01:19PM -0600, Logan Gunthorpe wrote:
+> On 2020-07-20 4:35 p.m., Sagi Grimberg wrote:
+>
+> > passthru commands are in essence REQ_OP_DRV_IN/REQ_OP_DRV_OUT, which
+> > means that the driver shouldn't need the ns at all. So if you have a
+> > dedicated request queue (mapped to the I/O tagset), you don't need the
+> > ns->queue and we can lose the ns lookup altogether.
 
-If it is a filter then just using those names would make sense
+We still need a request_queue to dispatch the command. I guess you could
+make a generic one for the controller that isn't tied to a namespace,
+but we lose the fair shared tag allocation.
+ 
+> Thanks, that helps clarify things a bit, but which xarray were you
+> talking about
 
-MIGRATE_VMA_SELECT_SYSTEM
-MIGRATE_VMA_SELECT_DEVICE_PRIVATE
+That was something that was replacing the list lookup:
 
-SYSTEM feels like the wrong name too, doesn't linux have a formal name
-for RAM struct pages?
-
-In your future coherent design how would the migrate select 'device'
-pages that are fully coherent? Are they still zone something pages
-that are OK for CPU usage?
-
-Jason
+  http://lists.infradead.org/pipermail/linux-nvme/2020-July/018242.html
