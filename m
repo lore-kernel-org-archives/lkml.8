@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6876CC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05F5C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 461B2206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C301E206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260446;
-	bh=b+wSsIXRFGf4sDqpzbwtJ2Pk72eyeRstZqP8McUFeRc=;
+	s=default; t=1595260452;
+	bh=1vh0gccBO5E8zyO6PG9oR09WipYYJAhhq0ytHAR8VZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDorOxUCGwV2K8OF2MExNEFHXXlN4wmeOvLI8A30VtxHKSCEe6ahffzBSoDq0v+2W
-	 DVtp0NxeFEZSB1S95aJGIt0sFbyzQwgGJURLyQZclyMZkFh3dlD7lWn3uDOwSJvkSR
-	 coinxoun+AowNqhOnlwcWKsyD8APxKmEB2ebfyjM=
+	b=Xc24vALiAQwMd1bjYUpkSu6xIxxajvy6Lbaxm8SUnALGEGebYAMJ9UyMHykAlkZrJ
+	 wyZa7WQFsqmdB4IaAuot6ly5xMZojht2U//Bn8MsQss24Rn/2tS9lmwxbvNOepyuBD
+	 eMpdF76t2mmrUUl7A534wU3Rc6sH3E5X8CKmLGEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731290AbgGTPyE (ORCPT
+        id S1731537AbgGTPyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:54:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52628 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:54:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731532AbgGTPyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:54:02 -0400
+        id S1731329AbgGTPyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:54:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 928952064B;
-        Mon, 20 Jul 2020 15:54:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F4042065E;
+        Mon, 20 Jul 2020 15:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260441;
-        bh=b+wSsIXRFGf4sDqpzbwtJ2Pk72eyeRstZqP8McUFeRc=;
+        s=default; t=1595260446;
+        bh=1vh0gccBO5E8zyO6PG9oR09WipYYJAhhq0ytHAR8VZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rrOewFcg4CNEtueKs9yq8zZJyI7HHtk3kvGCZS1qMJ6CA8HlTgzpdrGHRo/hxQpdp
-         VFrnA/3QB16a8+Lm9Pw6dw8+YQQOuNzkKnz0dgW141N1rweRTrtgEjuP/cBilVLSRe
-         n9APhnvT1MfIGSik/iPB/A/3SuUTf/iEyf84RYJA=
+        b=c34MVwwAOvE/SmwXNZ/Q/PUY1N8GeU7hqrhEMdBwzbZ6P6s/bTt3Ma6jW8HcxzTab
+         CPqMhU33PvGGaDN7x9qvRd2SBZ3VgDeNsIXqhxjNQEWyjqq2izLS98S2kkNUwdQJVX
+         0gKYEXfrhN+dsVeDxTOXEI0n7pyh7FtB5mYusRWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 4.19 072/133] soc: qcom: rpmh-rsc: Clear active mode configuration for wake TCS
-Date:   Mon, 20 Jul 2020 17:36:59 +0200
-Message-Id: <20200720152807.193177874@linuxfoundation.org>
+        stable@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 098/133] USB: serial: option: add Quectel EG95 LTE modem
+Date:   Mon, 20 Jul 2020 17:37:25 +0200
+Message-Id: <20200720152808.462536292@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
 References: <20200720152803.732195882@linuxfoundation.org>
@@ -63,148 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+From: AceLan Kao <acelan.kao@canonical.com>
 
-commit 15b3bf61b8d48f8e0ccd9d7f1bcb468b543da396 upstream.
+commit da6902e5b6dbca9081e3d377f9802d4fd0c5ea59 upstream.
 
-For RSCs that have sleep & wake TCS but no dedicated active TCS, wake
-TCS can be re-purposed to send active requests. Once the active requests
-are sent and response is received, the active mode configuration needs
-to be cleared so that controller can use wake TCS for sending wake
-requests.
+Add support for Quectel Wireless Solutions Co., Ltd. EG95 LTE modem
 
-Introduce enable_tcs_irq() to enable completion IRQ for repurposed TCSes.
+T:  Bus=01 Lev=01 Prnt=01 Port=02 Cnt=02 Dev#=  5 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=2c7c ProdID=0195 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
 
-Fixes: 2de4b8d33eab (drivers: qcom: rpmh-rsc: allow active requests from wake TCS)
-Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
-[mkshah: call enable_tcs_irq() within drv->lock, update commit message]
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/1586703004-13674-6-git-send-email-mkshah@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/qcom/rpmh-rsc.c |   77 ++++++++++++++++++++++++++++++--------------
- 1 file changed, 54 insertions(+), 23 deletions(-)
+ drivers/usb/serial/option.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -201,6 +201,42 @@ static const struct tcs_request *get_req
- 	return NULL;
- }
- 
-+static void __tcs_set_trigger(struct rsc_drv *drv, int tcs_id, bool trigger)
-+{
-+	u32 enable;
-+
-+	/*
-+	 * HW req: Clear the DRV_CONTROL and enable TCS again
-+	 * While clearing ensure that the AMC mode trigger is cleared
-+	 * and then the mode enable is cleared.
-+	 */
-+	enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, 0);
-+	enable &= ~TCS_AMC_MODE_TRIGGER;
-+	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-+	enable &= ~TCS_AMC_MODE_ENABLE;
-+	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-+
-+	if (trigger) {
-+		/* Enable the AMC mode on the TCS and then trigger the TCS */
-+		enable = TCS_AMC_MODE_ENABLE;
-+		write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-+		enable |= TCS_AMC_MODE_TRIGGER;
-+		write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-+	}
-+}
-+
-+static void enable_tcs_irq(struct rsc_drv *drv, int tcs_id, bool enable)
-+{
-+	u32 data;
-+
-+	data = read_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, 0);
-+	if (enable)
-+		data |= BIT(tcs_id);
-+	else
-+		data &= ~BIT(tcs_id);
-+	write_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, data);
-+}
-+
- /**
-  * tcs_tx_done: TX Done interrupt handler
-  */
-@@ -237,6 +273,14 @@ static irqreturn_t tcs_tx_done(int irq,
- 		}
- 
- 		trace_rpmh_tx_done(drv, i, req, err);
-+
-+		/*
-+		 * If wake tcs was re-purposed for sending active
-+		 * votes, clear AMC trigger & enable modes and
-+		 * disable interrupt for this TCS
-+		 */
-+		if (!drv->tcs[ACTIVE_TCS].num_tcs)
-+			__tcs_set_trigger(drv, i, false);
- skip:
- 		/* Reclaim the TCS */
- 		write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, i, 0);
-@@ -244,6 +288,13 @@ skip:
- 		write_tcs_reg(drv, RSC_DRV_IRQ_CLEAR, 0, BIT(i));
- 		spin_lock(&drv->lock);
- 		clear_bit(i, drv->tcs_in_use);
-+		/*
-+		 * Disable interrupt for WAKE TCS to avoid being
-+		 * spammed with interrupts coming when the solver
-+		 * sends its wake votes.
-+		 */
-+		if (!drv->tcs[ACTIVE_TCS].num_tcs)
-+			enable_tcs_irq(drv, i, false);
- 		spin_unlock(&drv->lock);
- 		if (req)
- 			rpmh_tx_done(req, err);
-@@ -285,28 +336,6 @@ static void __tcs_buffer_write(struct rs
- 	write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, cmd_enable);
- }
- 
--static void __tcs_trigger(struct rsc_drv *drv, int tcs_id)
--{
--	u32 enable;
--
--	/*
--	 * HW req: Clear the DRV_CONTROL and enable TCS again
--	 * While clearing ensure that the AMC mode trigger is cleared
--	 * and then the mode enable is cleared.
--	 */
--	enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, 0);
--	enable &= ~TCS_AMC_MODE_TRIGGER;
--	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
--	enable &= ~TCS_AMC_MODE_ENABLE;
--	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
--
--	/* Enable the AMC mode on the TCS and then trigger the TCS */
--	enable = TCS_AMC_MODE_ENABLE;
--	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
--	enable |= TCS_AMC_MODE_TRIGGER;
--	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
--}
--
- static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_group *tcs,
- 				  const struct tcs_request *msg)
- {
-@@ -377,10 +406,12 @@ static int tcs_write(struct rsc_drv *drv
- 
- 	tcs->req[tcs_id - tcs->offset] = msg;
- 	set_bit(tcs_id, drv->tcs_in_use);
-+	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS)
-+		enable_tcs_irq(drv, tcs_id, true);
- 	spin_unlock(&drv->lock);
- 
- 	__tcs_buffer_write(drv, tcs_id, 0, msg);
--	__tcs_trigger(drv, tcs_id);
-+	__tcs_set_trigger(drv, tcs_id, true);
- 
- done_write:
- 	spin_unlock_irqrestore(&tcs->lock, flags);
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -245,6 +245,7 @@ static void option_instat_callback(struc
+ /* These Quectel products use Quectel's vendor ID */
+ #define QUECTEL_PRODUCT_EC21			0x0121
+ #define QUECTEL_PRODUCT_EC25			0x0125
++#define QUECTEL_PRODUCT_EG95			0x0195
+ #define QUECTEL_PRODUCT_BG96			0x0296
+ #define QUECTEL_PRODUCT_EP06			0x0306
+ #define QUECTEL_PRODUCT_EM12			0x0512
+@@ -1097,6 +1098,8 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EC25),
+ 	  .driver_info = RSVD(4) },
++	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EG95),
++	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_BG96),
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EP06, 0xff, 0xff, 0xff),
 
 
