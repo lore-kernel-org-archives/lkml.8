@@ -2,50 +2,53 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1835DC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CA1C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E371B206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73076206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262306;
-	bh=G6grlKMU6pQDo+gnmy7e/hFyDcZuhNSA3mSJdCviRq8=;
+	s=default; t=1595262307;
+	bh=MjQVEo8ePfmHAxMzEUEPB8j9rECsoTukm0HF3RCe50g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X8PsuT524+kReyGhCDOqDeYnDem6Jpmrz/v+SBIX/qpIGpWAUiFW22rc5TasL5b5f
-	 7GR/OHMh3/Jq7n0NuacIG8r9HbHM0L3edRQyloXUZ3qcIaY9Gr3e9tF2BMlTdft8wm
-	 jxWYaI+Wh28z3FLjovr6m33mZVLBCSkHu+lehFgo=
+	b=x32ACcjIay15Yz4Ao2RwZxLdhnDQk8NxpoNbdNVzuG3Dlmb4/BV+I/akwrJAZfshK
+	 ZyFr4gjKVnb/1To6mzZIIFu0628uo24zTn7GiyKNIsHPhl/AX/EZbF/D1n4e7VZMIw
+	 aw+/dwZmnGiBWvJlOBPYaUT/mkQV0tLFdQzhLDAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732584AbgGTQBz (ORCPT
+        id S1732578AbgGTQBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:01:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35342 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:01:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732557AbgGTQBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:01:45 -0400
+        id S1731433AbgGTQBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:01:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C60D20672;
-        Mon, 20 Jul 2020 16:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFE2620672;
+        Mon, 20 Jul 2020 16:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260905;
-        bh=G6grlKMU6pQDo+gnmy7e/hFyDcZuhNSA3mSJdCviRq8=;
+        s=default; t=1595260894;
+        bh=MjQVEo8ePfmHAxMzEUEPB8j9rECsoTukm0HF3RCe50g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QzzmEnGGPpFXnEKZMan2ztGm+qs8EnfvBJcjFUXWur0u1SQYHP1gam3qwjRMPrCGD
-         3UqYkNj7i8uDWHZEy+uvMJs6zWQLUSaoToniRnLV8thcvneXOCDBosKnGS9zmNwGVr
-         RL+aCBacsEz4nkn9KRdp89trWRG9SAg7vgFrQCq0=
+        b=wz5W7fq2gs/jK2vV41lfgPCmSdruu+SIBu5Xx+Ydgo9ZrgewfWtQvzLvW5oIq9jyE
+         7d7f4qMbcearp+CIAZSs7L/PRD6t9gOoCmB4VuxpSuEiCtGiQYyqAdnf7yD8+5iS4v
+         w6AEN5BLOvzcQqSSINCXHhTvr8R9zzhs0dAAHrSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 139/215] mtd: rawnand: oxnas: Release all devices in the _remove() path
-Date:   Mon, 20 Jul 2020 17:37:01 +0200
-Message-Id: <20200720152826.803304139@linuxfoundation.org>
+        stable@vger.kernel.org, Tsuchiya Yuto <kitakar@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 103/215] dmaengine: dw: Initialize channel before each transfer
+Date:   Mon, 20 Jul 2020 17:36:25 +0200
+Message-Id: <20200720152825.107548982@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -58,39 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 0a5f45e57e35d0840bedb816974ce2e63406cd8b upstream.
+[ Upstream commit 99ba8b9b0d9780e9937eb1d488d120e9e5c2533d ]
 
-oxnans_nand_remove() should release all MTD devices and clean all NAND
-devices, not only the first one registered.
+In some cases DMA can be used only with a consumer which does runtime power
+management and on the platforms, that have DMA auto power gating logic
+(see comments in the drivers/acpi/acpi_lpss.c), may result in DMA losing
+its context. Simple mitigation of this issue is to initialize channel
+each time the consumer initiates a transfer.
 
-Fixes: 668592492409 ("mtd: nand: Add OX820 NAND Support")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-39-miquel.raynal@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: cfdf5b6cc598 ("dw_dmac: add support for Lynxpoint DMA controllers")
+Reported-by: Tsuchiya Yuto <kitakar@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206403
+Link: https://lore.kernel.org/r/20200705115620.51929-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/oxnas_nand.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/dma/dw/core.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
---- a/drivers/mtd/nand/raw/oxnas_nand.c
-+++ b/drivers/mtd/nand/raw/oxnas_nand.c
-@@ -177,9 +177,13 @@ err_clk_unprepare:
- static int oxnas_nand_remove(struct platform_device *pdev)
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index 21cb2a58dbd29..a1b56f52db2f2 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -118,16 +118,11 @@ static void dwc_initialize(struct dw_dma_chan *dwc)
  {
- 	struct oxnas_nand_ctrl *oxnas = platform_get_drvdata(pdev);
-+	struct nand_chip *chip;
-+	int i;
+ 	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
  
--	if (oxnas->chips[0])
--		nand_release(oxnas->chips[0]);
-+	for (i = 0; i < oxnas->nchips; i++) {
-+		chip = oxnas->chips[i];
-+		nand_release(chip);
-+	}
+-	if (test_bit(DW_DMA_IS_INITIALIZED, &dwc->flags))
+-		return;
+-
+ 	dw->initialize_chan(dwc);
  
- 	clk_disable_unprepare(oxnas->clk);
+ 	/* Enable interrupts */
+ 	channel_set_bit(dw, MASK.XFER, dwc->mask);
+ 	channel_set_bit(dw, MASK.ERROR, dwc->mask);
+-
+-	set_bit(DW_DMA_IS_INITIALIZED, &dwc->flags);
+ }
  
+ /*----------------------------------------------------------------------*/
+@@ -954,8 +949,6 @@ static void dwc_issue_pending(struct dma_chan *chan)
+ 
+ void do_dw_dma_off(struct dw_dma *dw)
+ {
+-	unsigned int i;
+-
+ 	dma_writel(dw, CFG, 0);
+ 
+ 	channel_clear_bit(dw, MASK.XFER, dw->all_chan_mask);
+@@ -966,9 +959,6 @@ void do_dw_dma_off(struct dw_dma *dw)
+ 
+ 	while (dma_readl(dw, CFG) & DW_CFG_DMA_EN)
+ 		cpu_relax();
+-
+-	for (i = 0; i < dw->dma.chancnt; i++)
+-		clear_bit(DW_DMA_IS_INITIALIZED, &dw->chan[i].flags);
+ }
+ 
+ void do_dw_dma_on(struct dw_dma *dw)
+@@ -1032,8 +1022,6 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
+ 	/* Clear custom channel configuration */
+ 	memset(&dwc->dws, 0, sizeof(struct dw_dma_slave));
+ 
+-	clear_bit(DW_DMA_IS_INITIALIZED, &dwc->flags);
+-
+ 	/* Disable interrupts */
+ 	channel_clear_bit(dw, MASK.XFER, dwc->mask);
+ 	channel_clear_bit(dw, MASK.BLOCK, dwc->mask);
+-- 
+2.25.1
+
 
 
