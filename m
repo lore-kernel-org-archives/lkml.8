@@ -2,241 +2,141 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EC0C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79646C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B42912065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3792250E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 00:38:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKUpi/C/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgGTAZV (ORCPT
+        id S1726716AbgGTAiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jul 2020 20:25:21 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:34675 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgGTAZV (ORCPT
+        Sun, 19 Jul 2020 20:38:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgGTAiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jul 2020 20:25:21 -0400
-Received: by mail-io1-f72.google.com with SMTP id b133so10227764iof.1
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jul 2020 17:25:20 -0700 (PDT)
+        Sun, 19 Jul 2020 20:38:21 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45BFEC0619D2;
+        Sun, 19 Jul 2020 17:38:21 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so8204317pfm.4;
+        Sun, 19 Jul 2020 17:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:mime-version:message-id
+         :content-transfer-encoding;
+        bh=XFq1tbFsgX2AZdMgYvw8N+gQKnN3+VgEwdSA0SX4/tw=;
+        b=mKUpi/C/VrbkHgaAlfwHD+1TzhYa5ul9sEEkCLJouYkaK5jdWeGoRgaXfbw07dzvX2
+         NzyjGf4e8K0QeJ2EDCqXqSQJIOSUgchdsOZcx6pUC26pIDCvP5XCwEsy4wIRtUaVmzrr
+         kPZGnmnUm1qxmh2p4NkAaXSIxKcrHlAWA1EfQ2ayfOL3U1OuCne6OD72Yug7GE646uuP
+         Mk9QZhIb+UM3SQFn5yCYG0ubBU7qfQjsAnANXBJdGyHYKz4U9e3x9t0aJFNQLYwVTGzN
+         MY3+Hn7teHGvhHaBOLkQmK16Rj4yVCZEc1OdpXfMwapUOQoZyox8ZEh2W2gj5N/T//Hn
+         Vh6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=M6bxXO3+4E6BmggilTQQvfwUuaZfGJ3KU4BesjSYsAE=;
-        b=r57h36KWmVUG7FS/mlNtLGUn+awMZxmQ/PkcZhKjWeJiyRSOcZ01jh8TxMRcdIfY18
-         JJqNzvm45cU1Mlkh7NiZyHvfwzPa8ya2KIOcEAUWAbgJ7QLiJAzrKXkPQtQrRs9jBzIK
-         te0lDjQwSfZCYnCdAzzAnjv+N03C4Qxx3Gc+YLUlU4eOl/s9KyZwhk5I7Mh2tpWXTZVu
-         4COs3dqcMonNHtaS7OFrjGV1YgZmxC2vSrk+uIttFt/3Ubpw6a+eldUe3SsCIrnIfvoc
-         JBGlf+VSvzhzvh/3V2dJ1z7SJxj/T8EIn96OrWDzm2LdLOkuE2JZm0RfLsPUemhzzmRW
-         wDVA==
-X-Gm-Message-State: AOAM531mT09YMVLwrNlOEvUaXdJ4g+ITBLDxuicvn+GHm4RVroLVhDRJ
-        QskGfH64qCA+zkXhboMk8MWBoWFxrJRaZobYgPLIRhgqvUcD
-X-Google-Smtp-Source: ABdhPJwfX+SSTJLDpAt/PmIPzGikUKwsrrLb2iZ6rsZqy0l/UvE4SFC9yg518qb6VwFEpC19Cyi0/hxVM3U13QK3WJ1uRC3v8+g2
+        h=x-gm-message-state:date:from:subject:to:cc:mime-version:message-id
+         :content-transfer-encoding;
+        bh=XFq1tbFsgX2AZdMgYvw8N+gQKnN3+VgEwdSA0SX4/tw=;
+        b=syZ0nG86x5KI5/qw0BrtFd32IJlISdmmX19e6QQbQgf90R+95Q+Uf71hPDtqnAJk52
+         312gAMAtObuqftm7Nj1Gq5gb5ihAhcN2F5bowgRHNeXxxi2Q3jX4KAG30l//W5olrkE2
+         SvY42v5h/tF0P+f7y4Ewhr5svRo9xKTNoDfImWgP/MIuyUzjVVs/1ofnpvr83zRKVFgw
+         p+QR5hlkdMd9ZTtx/uZ3uZSObDHLJfUhrC7lc37ByDWSgPhQAm+VTPkT1MFMG8TDheh2
+         8A9/uSbEUCzwBTtn8VnyyJJLiPLhQp5lXBP0uLuux8OKx/Xm1orItktaK7HgY/cSOEor
+         hWaQ==
+X-Gm-Message-State: AOAM5307JgEFnPjMICYHXajAuqcoLTn/9GckWeaMsk640UH6z0GAsLn1
+        YMNFR+LB3wVf6/4jzYAc2tw=
+X-Google-Smtp-Source: ABdhPJwKnuIipkmIajupZTNxeEfnOBQT2VjNliL94btuuxQncHtcH3EQkViU0lPNZOjdJTZ6aogM6g==
+X-Received: by 2002:a05:6a00:1596:: with SMTP id u22mr17321339pfk.102.1595205500660;
+        Sun, 19 Jul 2020 17:38:20 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id z11sm14633320pfk.46.2020.07.19.17.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jul 2020 17:38:20 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 10:38:15 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: io_uring kthread_use_mm / mmget_not_zero possible abuse
+To:     Jens Axboe <axboe@kernel.dk>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:449:: with SMTP id e9mr20273877iov.71.1595204719851;
- Sun, 19 Jul 2020 17:25:19 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 17:25:19 -0700
-In-Reply-To: <0000000000000924780598075f4b@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000abc0e505aad48a7d@google.com>
-Subject: Re: KMSAN: uninit-value in __skb_checksum_complete (4)
-From:   syzbot <syzbot+721b564cd88ebb710182@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        glider@google.com, kadlec@netfilter.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <1595203632.x8vplwce1a.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+When I last looked at this (predating io_uring), as far as I remember it wa=
+s=20
+not permitted to actually switch to (use_mm) an mm user context that was=20
+pinned with mmget_not_zero. Those pins were only allowed to look at page=20
+tables, vmas, etc., but not actually run the CPU in that mm context.
 
-HEAD commit:    14525656 compiler.h: reinstate missing KMSAN_INIT
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=16a7c827100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c534a9fad6323722
-dashboard link: https://syzkaller.appspot.com/bug?extid=721b564cd88ebb710182
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=115be9d7100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b9425f100000
+sparc/kernel/smp_64.c depends heavily on this, e.g.,
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+721b564cd88ebb710182@syzkaller.appspotmail.com
+void smp_flush_tlb_mm(struct mm_struct *mm)
+{
+        u32 ctx =3D CTX_HWBITS(mm->context);
+        int cpu =3D get_cpu();
 
-=====================================================
-BUG: KMSAN: uninit-value in __skb_checksum_complete+0x37f/0x540 net/core/skbuff.c:2850
-CPU: 1 PID: 8457 Comm: syz-executor769 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1df/0x240 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- __skb_checksum_complete+0x37f/0x540 net/core/skbuff.c:2850
- nf_ip_checksum+0x53b/0x740 net/netfilter/utils.c:36
- nf_nat_icmp_reply_translation+0x2ba/0x980 net/netfilter/nf_nat_proto.c:578
- nf_nat_ipv4_fn net/netfilter/nf_nat_proto.c:637 [inline]
- nf_nat_ipv4_local_fn+0x215/0x830 net/netfilter/nf_nat_proto.c:708
- nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
- nf_hook_slow+0x16e/0x400 net/netfilter/core.c:512
- nf_hook include/linux/netfilter.h:262 [inline]
- __ip_local_out+0x69b/0x800 net/ipv4/ip_output.c:114
- ip_local_out net/ipv4/ip_output.c:123 [inline]
- ip_send_skb net/ipv4/ip_output.c:1560 [inline]
- ip_push_pending_frames+0x16f/0x460 net/ipv4/ip_output.c:1580
- icmp_push_reply+0x660/0x710 net/ipv4/icmp.c:390
- __icmp_send+0x23ca/0x3150 net/ipv4/icmp.c:740
- icmp_send include/net/icmp.h:43 [inline]
- ip_fragment+0x39f/0x400 net/ipv4/ip_output.c:579
- __ip_finish_output+0xd34/0xd80 net/ipv4/ip_output.c:304
- ip_finish_output+0x166/0x410 net/ipv4/ip_output.c:316
- NF_HOOK_COND include/linux/netfilter.h:296 [inline]
- ip_output+0x593/0x680 net/ipv4/ip_output.c:430
- dst_output include/net/dst.h:443 [inline]
- ip_local_out net/ipv4/ip_output.c:125 [inline]
- __ip_queue_xmit+0x1b5c/0x21a0 net/ipv4/ip_output.c:530
- ip_queue_xmit include/net/ip.h:237 [inline]
- l2tp_ip_sendmsg+0x1477/0x1870 net/l2tp/l2tp_ip.c:508
- inet_sendmsg+0x2d8/0x2e0 net/ipv4/af_inet.c:814
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- kernel_sendmsg+0x384/0x440 net/socket.c:692
- sock_no_sendpage+0x235/0x300 net/core/sock.c:2853
- kernel_sendpage net/socket.c:3642 [inline]
- sock_sendpage+0x1e1/0x2c0 net/socket.c:945
- pipe_to_sendpage+0x38c/0x4c0 fs/splice.c:448
- splice_from_pipe_feed fs/splice.c:502 [inline]
- __splice_from_pipe+0x565/0xf00 fs/splice.c:626
- splice_from_pipe fs/splice.c:661 [inline]
- generic_splice_sendpage+0x1d5/0x2d0 fs/splice.c:834
- do_splice_from fs/splice.c:846 [inline]
- direct_splice_actor+0x1fd/0x580 fs/splice.c:1016
- splice_direct_to_actor+0x6b2/0xf50 fs/splice.c:971
- do_splice_direct+0x342/0x580 fs/splice.c:1059
- do_sendfile+0x101b/0x1d40 fs/read_write.c:1540
- __do_sys_sendfile64 fs/read_write.c:1601 [inline]
- __se_sys_sendfile64+0x2bb/0x360 fs/read_write.c:1587
- __x64_sys_sendfile64+0x56/0x70 fs/read_write.c:1587
- do_syscall_64+0xb0/0x150 arch/x86/entry/common.c:386
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x440409
-Code: Bad RIP value.
-RSP: 002b:00007ffe9c5d76d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440409
-RDX: 0000000000000000 RSI: 0000000000000005 RDI: 0000000000000003
-RBP: 00000000006cb018 R08: 0000000000000014 R09: 65732f636f72702f
-R10: 0800000080004103 R11: 0000000000000246 R12: 0000000000401c70
-R13: 0000000000401d00 R14: 0000000000000000 R15: 0000000000000000
+        if (atomic_read(&mm->mm_users) =3D=3D 1) {
+                cpumask_copy(mm_cpumask(mm), cpumask_of(cpu));
+                goto local_flush_and_out;
+        }
 
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- csum_partial_copy+0xae/0x100 lib/checksum.c:154
- skb_copy_and_csum_bits+0x227/0x1130 net/core/skbuff.c:2737
- icmp_glue_bits+0x166/0x380 net/ipv4/icmp.c:353
- __ip_append_data+0x47c4/0x5630 net/ipv4/ip_output.c:1131
- ip_append_data+0x328/0x480 net/ipv4/ip_output.c:1315
- icmp_push_reply+0x206/0x710 net/ipv4/icmp.c:371
- __icmp_send+0x23ca/0x3150 net/ipv4/icmp.c:740
- icmp_send include/net/icmp.h:43 [inline]
- ip_fragment+0x39f/0x400 net/ipv4/ip_output.c:579
- __ip_finish_output+0xd34/0xd80 net/ipv4/ip_output.c:304
- ip_finish_output+0x166/0x410 net/ipv4/ip_output.c:316
- NF_HOOK_COND include/linux/netfilter.h:296 [inline]
- ip_output+0x593/0x680 net/ipv4/ip_output.c:430
- dst_output include/net/dst.h:443 [inline]
- ip_local_out net/ipv4/ip_output.c:125 [inline]
- __ip_queue_xmit+0x1b5c/0x21a0 net/ipv4/ip_output.c:530
- ip_queue_xmit include/net/ip.h:237 [inline]
- l2tp_ip_sendmsg+0x1477/0x1870 net/l2tp/l2tp_ip.c:508
- inet_sendmsg+0x2d8/0x2e0 net/ipv4/af_inet.c:814
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- kernel_sendmsg+0x384/0x440 net/socket.c:692
- sock_no_sendpage+0x235/0x300 net/core/sock.c:2853
- kernel_sendpage net/socket.c:3642 [inline]
- sock_sendpage+0x1e1/0x2c0 net/socket.c:945
- pipe_to_sendpage+0x38c/0x4c0 fs/splice.c:448
- splice_from_pipe_feed fs/splice.c:502 [inline]
- __splice_from_pipe+0x565/0xf00 fs/splice.c:626
- splice_from_pipe fs/splice.c:661 [inline]
- generic_splice_sendpage+0x1d5/0x2d0 fs/splice.c:834
- do_splice_from fs/splice.c:846 [inline]
- direct_splice_actor+0x1fd/0x580 fs/splice.c:1016
- splice_direct_to_actor+0x6b2/0xf50 fs/splice.c:971
- do_splice_direct+0x342/0x580 fs/splice.c:1059
- do_sendfile+0x101b/0x1d40 fs/read_write.c:1540
- __do_sys_sendfile64 fs/read_write.c:1601 [inline]
- __se_sys_sendfile64+0x2bb/0x360 fs/read_write.c:1587
- __x64_sys_sendfile64+0x56/0x70 fs/read_write.c:1587
- do_syscall_64+0xb0/0x150 arch/x86/entry/common.c:386
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+        smp_cross_call_masked(&xcall_flush_tlb_mm,
+                              ctx, 0, 0,
+                              mm_cpumask(mm));
 
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- _copy_from_iter_full+0xbfe/0x13b0 lib/iov_iter.c:793
- copy_from_iter_full include/linux/uio.h:156 [inline]
- memcpy_from_msg include/linux/skbuff.h:3566 [inline]
- l2tp_ip_sendmsg+0x6a5/0x1870 net/l2tp/l2tp_ip.c:462
- inet_sendmsg+0x2d8/0x2e0 net/ipv4/af_inet.c:814
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- kernel_sendmsg+0x384/0x440 net/socket.c:692
- sock_no_sendpage+0x235/0x300 net/core/sock.c:2853
- kernel_sendpage net/socket.c:3642 [inline]
- sock_sendpage+0x1e1/0x2c0 net/socket.c:945
- pipe_to_sendpage+0x38c/0x4c0 fs/splice.c:448
- splice_from_pipe_feed fs/splice.c:502 [inline]
- __splice_from_pipe+0x565/0xf00 fs/splice.c:626
- splice_from_pipe fs/splice.c:661 [inline]
- generic_splice_sendpage+0x1d5/0x2d0 fs/splice.c:834
- do_splice_from fs/splice.c:846 [inline]
- direct_splice_actor+0x1fd/0x580 fs/splice.c:1016
- splice_direct_to_actor+0x6b2/0xf50 fs/splice.c:971
- do_splice_direct+0x342/0x580 fs/splice.c:1059
- do_sendfile+0x101b/0x1d40 fs/read_write.c:1540
- __do_sys_sendfile64 fs/read_write.c:1601 [inline]
- __se_sys_sendfile64+0x2bb/0x360 fs/read_write.c:1587
- __x64_sys_sendfile64+0x56/0x70 fs/read_write.c:1587
- do_syscall_64+0xb0/0x150 arch/x86/entry/common.c:386
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+local_flush_and_out:
+        __flush_tlb_mm(ctx, SECONDARY_CONTEXT);
 
-Uninit was created at:
- kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
- kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:269 [inline]
- kmsan_alloc_page+0xb9/0x180 mm/kmsan/kmsan_shadow.c:293
- __alloc_pages_nodemask+0x56a2/0x5dc0 mm/page_alloc.c:4889
- alloc_pages_current+0x672/0x990 mm/mempolicy.c:2292
- alloc_pages include/linux/gfp.h:545 [inline]
- push_pipe+0x605/0xb70 lib/iov_iter.c:537
- __pipe_get_pages lib/iov_iter.c:1278 [inline]
- pipe_get_pages_alloc lib/iov_iter.c:1385 [inline]
- iov_iter_get_pages_alloc+0x18a9/0x21c0 lib/iov_iter.c:1403
- default_file_splice_read fs/splice.c:385 [inline]
- do_splice_to+0x4fc/0x14f0 fs/splice.c:871
- splice_direct_to_actor+0x45c/0xf50 fs/splice.c:950
- do_splice_direct+0x342/0x580 fs/splice.c:1059
- do_sendfile+0x101b/0x1d40 fs/read_write.c:1540
- __do_sys_sendfile64 fs/read_write.c:1601 [inline]
- __se_sys_sendfile64+0x2bb/0x360 fs/read_write.c:1587
- __x64_sys_sendfile64+0x56/0x70 fs/read_write.c:1587
- do_syscall_64+0xb0/0x150 arch/x86/entry/common.c:386
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-=====================================================
+        put_cpu();
+}
 
+If a kthread comes in concurrently between the mm_users test and the=20
+mm_cpumask reset, and does mmget_not_zero(); kthread_use_mm() then we have=20
+another CPU switched to mm context but not in the mm_cpumask. It's then=20
+possible for our thread to schedule on that CPU and not go through a=20
+switch_mm (because kthread_unuse_mm will make it lazy, then we can switch=20
+back to our user thread and un-lazy it).
+
+powerpc has something similar.
+
+I don't think this is documented anywhere and certainly isn't checked for=20
+unfortunately, so I don't really blame io_uring.
+
+The simplest fix is for io_uring to carry mm_users references. If that can'=
+t=20
+be done or we decide to lift the limitation on mmget_not_zero references, w=
+e=20
+can come up with a way to synchronize things.
+
+On powerpc for example, we IPI all targets in mm_cpumask before clearing=20
+them, so we could disable interrupts while kthread_use_mm does the mm switc=
+h=20
+sequence, and have the IPI handler check that current->mm hasn't been set t=
+o=20
+mm, for example.
+
+sparc is a bit harder because it doesn't IPI targets if it thinks it can=20
+avoid it. But powerpc found that just doing one IPI isn't a big burden here=
+=20
+so maybe we change sparc to do that too. I would be inclined to fix this=20
+mmget_not_zero quirk if we can, unless someone has a very good way to test=20
+and enforce it, it'll just happen again.
+
+Comments?
+
+Thanks,
+Nick
