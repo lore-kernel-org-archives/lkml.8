@@ -2,94 +2,105 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE27C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00620C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C9820729
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:31:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="POK5hLCN"
+	by mail.kernel.org (Postfix) with ESMTP id ACD86207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 12:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595248466;
+	bh=hzeVc/gxIpFnmrFKoc8d5uPMWXQwJhcaHk2T74oAuKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F7Tci9rAgu3M2w11gIPVbfL0LFgjNHv4a7H3swrcmh7I4loK27W7xUR92VKvZ7RYU
+	 HTM1rzeXm+mlcG5ZfcfIWPwO3daU0p8FswvwRyJxoGvVzgz33jYVurcCZ1Ro3mWP+K
+	 iNNTH0S0j6b0AdK1QwPs4hPhU4/0PRvdcb17yWWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgGTMbc (ORCPT
+        id S1728553AbgGTMe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:31:32 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:61634 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgGTMbb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:31:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595248291; x=1626784291;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=B7TTGtY4SziIvCD/DMZj35NfyE0QefT2lQmcnjqpo5w=;
-  b=POK5hLCNbttnbjT1wls2qhw7omleDEKG2imqdJ7OS81wtZvUYiGxdcTy
-   r58is1c0aE5XzoXSv9E2fasFi9VXMLl1e7aRh21jz53fQRd45H25BxSwt
-   rvh/5SuUtTnmll8BClsqq0ffeqNJiiHXMicZWodD2gPozcPVbj/kiqY1Y
-   o=;
-IronPort-SDR: nu3nUjjlvEcBjuOaPn39TwfnSWSHlbTWknnyvAtHrbDeIJ2nM43GLqnEByLqXqOvA6QDpjY1Vu
- 30oCyLl0FqdA==
-X-IronPort-AV: E=Sophos;i="5.75,375,1589241600"; 
-   d="scan'208";a="42783398"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 20 Jul 2020 12:31:30 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 15A6CA18C6;
-        Mon, 20 Jul 2020 12:31:27 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 20 Jul 2020 12:31:27 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.73) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 20 Jul 2020 12:31:24 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     SeongJae Park <sjpark@amazon.com>, <sashal@kernel.org>,
-        <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Re: Upstream fixes not merged in 5.4.y
-Date:   Mon, 20 Jul 2020 14:31:07 +0200
-Message-ID: <20200720123107.22001-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200720121543.GA2984743@kroah.com>
+        Mon, 20 Jul 2020 08:34:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728200AbgGTMeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 08:34:25 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EDEB20729;
+        Mon, 20 Jul 2020 12:34:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595248465;
+        bh=hzeVc/gxIpFnmrFKoc8d5uPMWXQwJhcaHk2T74oAuKw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SNIQRNLUeaOm242lCQ//ekAiVmUhx4VAmkq9bfkDhwmtF0S5WvuZ7aj/k/7l0pIYm
+         Kl3c32NGAgK1v7AzJwyojQKwjnmuiMusPRlZ6xsKLLu9Z/6QRuS+AgmtiYfue2k4GK
+         Uy/0r56WaWZ3EszQWp+HLQodDw9hsf97KxBsOaG0=
+Date:   Mon, 20 Jul 2020 13:34:12 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     perex@perex.cz, tiwai@suse.com, kuninori.morimoto.gx@renesas.com,
+        robh+dt@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, digetx@gmail.com,
+        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com, nwartikar@nvidia.com,
+        swarren@nvidia.com, nicoleotsuka@gmail.com
+Subject: Re: [PATCH v5 01/11] ASoC: dt-bindings: tegra: Add DT bindings for
+ Tegra210
+Message-ID: <20200720123412.GD4601@sirena.org.uk>
+References: <1595134890-16470-1-git-send-email-spujar@nvidia.com>
+ <1595134890-16470-2-git-send-email-spujar@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.73]
-X-ClientProxiedBy: EX13D17UWB004.ant.amazon.com (10.43.161.132) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tEFtbjk+mNEviIIX"
+Content-Disposition: inline
+In-Reply-To: <1595134890-16470-2-git-send-email-spujar@nvidia.com>
+X-Cookie: Be different: conform.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 14:15:43 +0200 Greg KH <gregkh@linuxfoundation.org> wrote:
 
-> On Mon, Jun 29, 2020 at 04:28:05PM +0200, SeongJae Park wrote:
-> > Hello,
-> > 
-> > 
-> > With my little script, I found below commits in the mainline tree are more than
-> > 1 week old and fixing commits that back-ported in v5.4..v5.4.49, but not merged
-> > in the stable/linux-5.4.y tree.  Are those need to be merged in but missed or
-> > dealyed?
-> > 
-> > 9210c075cef2 ("nvme-pci: avoid race between nvme_reap_pending_cqes() and nvme_poll()")
-> 
-> I tried this first patch, and it doesn't apply to the 5.4.y tree, so are
-> you sure you tried these yourself?
-> 
-> If so, please send a series of backported patches that you have
-> successfully tested, or if a patch applies cleanly, just the git id.
+--tEFtbjk+mNEviIIX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes, I backported it on the latest 5.4.y before.  I will rebase it on the
-latest 5.4.y, test, and send the patch.  Nonetheless, please note that it might
-take some time (say, a couple of weeks?).
+On Sun, Jul 19, 2020 at 10:31:20AM +0530, Sameer Pujar wrote:
 
+>  * DSPK
+> DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+> 	t=1595134894; bh=DX96zRQRNplPikN828HbAfbjGumAn9IgtktrsenKjgk=;
+> 	h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+> 	 In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+> 	 Content-Type;
+> 	b=IhfGFjMxsnRHso1Ku2GEGC+mtLCy3AbRKPfgTS56XGqEWquUr/1s8n9tFpriqF7a+
+> 	 tJGrTN9mKhRQGrwdey/AHsMY4Tbm4fKEWxIASgAV/lFPCfgP3BnVjEdHclc7FdBaB0
+> 	 Qvd3zs8HFsgoIzksLrtHNMrUepkeZajn0/XnC7nghGDRim4+6Hauupr5kj/KVlihsS
+> 	 KS1YQ2Zz9TZzLaC5QXALiHj3ATLvBFrmIf6Vj19q7hePt0menTZVzQNy+y3h4xZfLH
+> 	 +OvBCsLgHGGhq+iM9rm64D+S5Op2vCslwq3Q/42TnYZ0vDbD7aA9nTAQzfYeI6HK6b
+> 	 vi7eYbryzCTSg==
 
-Thanks,
-SeongJae Park
+You appear to have a bit of mail header in here.
+
+--tEFtbjk+mNEviIIX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8Vj0QACgkQJNaLcl1U
+h9Cb+Af+OINXrdCpdw+ER9s3wYRO8uormKGyLZ3qGxOVdkNfbg3pIVwmGiNxWjbo
+vjrchHQ4sQKrmvZOHal6nz2Wy3rqifGaSiahI+K4RzmwFWphmnn44nDRVEr2DUfh
+fuZkL5bBbAOkg28gsOsxgkQ5PIXvuegd+KCCgf7HyU1G6qLABL0N4fCIf1ozPQuZ
+XgLXm9YwnEtl/mi7wTjywScrnkiq60Q9aij06zBPfhzKKnmNmxZPpPwi/ENZEmoZ
+rkplukCeIK4k+uXl4mttEzUjt9YcWKRa5t1fS/8SYkG8Z2Fu8ixFTQhC36V9JLQG
+VcFXVBJqQJ7bisywwAvne+poBEpP2g==
+=2HYu
+-----END PGP SIGNATURE-----
+
+--tEFtbjk+mNEviIIX--
