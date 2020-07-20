@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF40C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1852C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB89206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65AF2176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261772;
-	bh=2WIqrrjZ5dFloCIxE6c280prt6aRS9BfBvTLbxVQrkM=;
+	s=default; t=1595261775;
+	bh=yJdQ9x0NnxcJSbyMWotm4xSTdoYpqFfOHOchrswNJ7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGSjvBQ69SD6pybPfOUsAfPo3qXMkZrYQTsxPh1p3+8Qm9vJnvzAQC4zc4G6qdyAn
-	 Y757v7izc4+xycRJMVJU+XgS9+Mj4HWH2L6meKs6Nlwlbd1FIDpmi+/59X3fF/PzW0
-	 YafIDylnUtBQynI/HKkdlzFIs+WOz0NZVZeyzP8o=
+	b=YuymfuMC4G1CLInXcQlBfNk6rnLjgqzc4r+/1t0OkiCK1ym+JC1nYQblaSuoohbiK
+	 F6Fqxbms58MguCw9h99epqUHYEqLtTsA48edtUmy25Bs0Xotm21iVYaJ2ZNVD/cILO
+	 ZusinXpfTEgux4U2NHndquPtc/uxa2qYrOegTRVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388490AbgGTQQI (ORCPT
+        id S2388513AbgGTQQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:16:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57140 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:16:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388496AbgGTQQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:16:04 -0400
+        id S2388508AbgGTQQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:16:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 319A42064B;
-        Mon, 20 Jul 2020 16:16:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D671E2176B;
+        Mon, 20 Jul 2020 16:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261763;
-        bh=2WIqrrjZ5dFloCIxE6c280prt6aRS9BfBvTLbxVQrkM=;
+        s=default; t=1595261769;
+        bh=yJdQ9x0NnxcJSbyMWotm4xSTdoYpqFfOHOchrswNJ7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BDWpv3nM9k2sllut/5i50l32BX5qMKMbV9fMrO+M+TpihzGuZZJEsJSVOKEsYQkv1
-         TpCgi+6zfYF34TRX20sszJh/oQznRwTp7aZ2AKrZGpcLX1vXnxW91XaCHR/Dbo7+G1
-         ZyIb6dRCcy2rLpmCk4Aw69bruy7hTxPOftQg4rJ8=
+        b=rdt+9FEhxqo9L6o73JIVjMKXd4/MB9fedHuOF8xzKqd5hlJLcGARcuA8ofkZgHIBU
+         BJRZpWcSXCRgJuQPTL7IBseC/3OiXtu+AMAbIkzCDfuvqv83xe2WSmHUVMA0Hql0qm
+         s25mpTfxe94WsUozxZhRPwc3Nkol3tbedSujEyIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
-        Michel Lespinasse <walken@google.com>,
-        Zong Li <zong.li@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH 5.7 233/244] RISC-V: Acquire mmap lock before invoking walk_page_range
-Date:   Mon, 20 Jul 2020 17:38:24 +0200
-Message-Id: <20200720152836.926007002@linuxfoundation.org>
+        stable@vger.kernel.org, Robin Gong <yibin.gong@nxp.com>,
+        Angelo Dureghello <angelo@sysam.it>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.7 208/244] dmaengine: fsl-edma-common: correct DSIZE_32BYTE
+Date:   Mon, 20 Jul 2020 17:37:59 +0200
+Message-Id: <20200720152835.743666337@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -61,67 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atish Patra <atish.patra@wdc.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-commit 0e2c09011d4de4161f615ff860a605a9186cf62a upstream.
+commit e142087b15960a4e1e5932942e5abae1f49d2318 upstream.
 
-As per walk_page_range documentation, mmap lock should be acquired by the
-caller before invoking walk_page_range. mmap_assert_locked gets triggered
-without that. The details can be found here.
+Correct EDMA_TCD_ATTR_DSIZE_32BYTE define since it's broken by the below:
+'0x0005 --> BIT(3) | BIT(0))'
 
-http://lists.infradead.org/pipermail/linux-riscv/2020-June/010335.html
-
-Fixes: 395a21ff859c(riscv: add ARCH_HAS_SET_DIRECT_MAP support)
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Michel Lespinasse <walken@google.com>
-Reviewed-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Fixes: 4d6d3a90e4ac ("dmaengine: fsl-edma: fix macros")
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Tested-by: Angelo Dureghello <angelo@sysam.it>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/1593449998-32091-1-git-send-email-yibin.gong@nxp.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/riscv/mm/pageattr.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/dma/fsl-edma-common.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/riscv/mm/pageattr.c
-+++ b/arch/riscv/mm/pageattr.c
-@@ -151,6 +151,7 @@ int set_memory_nx(unsigned long addr, in
- 
- int set_direct_map_invalid_noflush(struct page *page)
- {
-+	int ret;
- 	unsigned long start = (unsigned long)page_address(page);
- 	unsigned long end = start + PAGE_SIZE;
- 	struct pageattr_masks masks = {
-@@ -158,11 +159,16 @@ int set_direct_map_invalid_noflush(struc
- 		.clear_mask = __pgprot(_PAGE_PRESENT)
- 	};
- 
--	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+	mmap_read_lock(&init_mm);
-+	ret = walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+	mmap_read_unlock(&init_mm);
-+
-+	return ret;
- }
- 
- int set_direct_map_default_noflush(struct page *page)
- {
-+	int ret;
- 	unsigned long start = (unsigned long)page_address(page);
- 	unsigned long end = start + PAGE_SIZE;
- 	struct pageattr_masks masks = {
-@@ -170,7 +176,11 @@ int set_direct_map_default_noflush(struc
- 		.clear_mask = __pgprot(0)
- 	};
- 
--	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+	mmap_read_lock(&init_mm);
-+	ret = walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+	mmap_read_unlock(&init_mm);
-+
-+	return ret;
- }
- 
- void __kernel_map_pages(struct page *page, int numpages, int enable)
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -33,7 +33,7 @@
+ #define EDMA_TCD_ATTR_DSIZE_16BIT	BIT(0)
+ #define EDMA_TCD_ATTR_DSIZE_32BIT	BIT(1)
+ #define EDMA_TCD_ATTR_DSIZE_64BIT	(BIT(0) | BIT(1))
+-#define EDMA_TCD_ATTR_DSIZE_32BYTE	(BIT(3) | BIT(0))
++#define EDMA_TCD_ATTR_DSIZE_32BYTE	(BIT(2) | BIT(0))
+ #define EDMA_TCD_ATTR_SSIZE_8BIT	0
+ #define EDMA_TCD_ATTR_SSIZE_16BIT	(EDMA_TCD_ATTR_DSIZE_16BIT << 8)
+ #define EDMA_TCD_ATTR_SSIZE_32BIT	(EDMA_TCD_ATTR_DSIZE_32BIT << 8)
 
 
