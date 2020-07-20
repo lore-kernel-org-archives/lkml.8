@@ -2,149 +2,113 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA18C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDD0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA6AE206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CAFE206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 17:02:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEX4SpzL"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="VcHZcngk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732418AbgGTRCM (ORCPT
+        id S1733262AbgGTRCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:02:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51716 "EHLO
+        Mon, 20 Jul 2020 13:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729853AbgGTRCL (ORCPT
+        with ESMTP id S1732595AbgGTRCW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 13:02:11 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B038C061794;
-        Mon, 20 Jul 2020 10:02:11 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o2so232661wmh.2;
-        Mon, 20 Jul 2020 10:02:11 -0700 (PDT)
+        Mon, 20 Jul 2020 13:02:22 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AC9EC0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:02:22 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id i18so13920767ilk.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 10:02:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c6xD3yNZ/m3e/xSnfz8uemJolvn3EL62R+mf9VNUyeQ=;
-        b=WEX4SpzLwdJ/A/esOUXIVK3movppP7r3Ko/0dr88QH2WFSnX/a9u9i6Aah+Kh1lAZs
-         wZGnqmIaZxOoOqeiQsdgdysnKLz8s+U/lxEsws+OBhYp7+W8GVApI2lUQwYKJYcjVkHW
-         KvNPERlrCHS7XKmwJ/7fd3uB2d6HJBNPZkYvW8CtyfcqcEs/4ZQaypq9pmcZzUPr8gZ5
-         Nq/WvFVPil5ikhdL4/LZrbU8+8EHDv0DEDWnm7U7V9WjghDO+fj0rryjXmunYtVq22Pk
-         JHrJ+mKTMV0Fsx1XODT2/z76Hldw/S0bwPgIBWFLXVRaZB+Lu1FjODNi5sIM7vvtnq2Z
-         gN+g==
+        bh=lLa51XHV19pSn8dCau2GuTKu0LZrcXv1DrhKxMQG6SQ=;
+        b=VcHZcngkwm/n7gdBFYMeUsSdh5uZvMVcDjIBV3ECeQR8GAZCLzW/ix7cDJDD4mkw8j
+         XvXBGxCga3mtMWCHZyakDM16MKnA20qLojDjxmaMOM2hAQFo3xkfcuygPVr3do95FJzw
+         /iXRZJCdZkPfSkB027sq0tDcY4+Y38vvKTW4YXISYUWJRLtYsTQuEP1+Oc87ev80laL2
+         G+ZPldX2GCPKQ3LR3oUw2d1qiycFNcp19R40LW3VYX2NPOi3FQI7ZWFNsRui/BDnepP8
+         mnc7/F2Cq94AzCvhFEBa3icJeg/Eox3xAjWyP1BRBrgbuMzqTYQIPa05G9ZF9RHUN9aI
+         BGqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=c6xD3yNZ/m3e/xSnfz8uemJolvn3EL62R+mf9VNUyeQ=;
-        b=PlPa0QsZdWq6NYrEKPwuTrUua3J4T368qDj2IGGHyZ80nonBJ2vss+tybqMiRbMgjj
-         s6weDIrHPjN9mXVEJl7k2mvBoHweF0ahxK4zRxFjH+CyuJciaH6HW8FGQ+VrqDUvIoMm
-         o1ZSSskKu2wQirkcGWI6UtizKi+/YMQvGbfQs0AqHRnbk4p3TCAWKSUc8ctx0KTLXEdu
-         lZ79lw1S8HIaHMBQP6r+YMA2JqdMRYMAy4bl2PC7cp/vwL75MO/Zu/4LwNFUPMEJ44Gh
-         HkGu/XktclQIqip8PuDG7uSpPeOsM+mbFNk71MH832BDqAcINcn+TkRc2WNLnibTaCIw
-         lfYg==
-X-Gm-Message-State: AOAM533maykgX9gvy+MOjmvx6O8Ng6eI/w3ecK2817DNvPJX9uvMWN23
-        nqD6MwnG5uxgydMvuDiSd41726MQ
-X-Google-Smtp-Source: ABdhPJwIYWdwFRz3e9Loae+teUwR9OrMlarxdjYy+y/gJdQx4kU3Vi19e5BPukoBqSF90KIWxNb1rQ==
-X-Received: by 2002:a1c:2392:: with SMTP id j140mr295204wmj.6.1595264529039;
-        Mon, 20 Jul 2020 10:02:09 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x7sm34032246wrr.72.2020.07.20.10.02.06
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lLa51XHV19pSn8dCau2GuTKu0LZrcXv1DrhKxMQG6SQ=;
+        b=hINOcmMe7NHgfaBaQ0UyL2WiDAHjh+8vaEzYfppiwWQjF0Jcw7o0krfzRzxkLACzlf
+         FUfH0kW4IWmL5he87lh169MWAB0vkOs+lYwao4X84hWlnCgUfi41On0EiA2LM3EVx/6C
+         AeYx7HfzAesO8RgvYlAy3wtoBLTA3lKqUTs4/98LrA7VF+3YxkpsBUjVapZNpi4A6xSU
+         mlLNbzPG1XaFoD+VRaNrXE2tFuN5qD704XLfFg7gGlcTzK3f0HP8tQ7N3N1cCUCyvWDP
+         yiJid19PyiD0KgRrxr+acEKXqbyXskiVGzUAdE1upZ1qEkLkqch/VxTCCLfVsXgh+kCH
+         COvg==
+X-Gm-Message-State: AOAM531k3qraZmVqJTpNTGy0bBKUk+CLV96SRbm+KUFtukzukqNKsF8K
+        lnh4DCnFN1ufVT8RikukbRSG2g==
+X-Google-Smtp-Source: ABdhPJz5zLxNXcsTdxphGCNjFI0YjQ5J7FtVKPPcrF4sltl8mBBoIBkKciDhL+q4GYsjdYBiefx/jQ==
+X-Received: by 2002:a92:c689:: with SMTP id o9mr24384488ilg.302.1595264541233;
+        Mon, 20 Jul 2020 10:02:21 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id m2sm9126349iln.1.2020.07.20.10.02.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 10:02:08 -0700 (PDT)
-Subject: Re: [PATCH net] net: bcmgenet: fix error returns in bcmgenet_probe()
-To:     Zhang Changzhong <zhangchangzhong@huawei.com>, opendmb@gmail.com,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1595229523-9725-1-git-send-email-zhangchangzhong@huawei.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <e6f542bf-06f1-ccc5-c6c1-25973ac1e23a@gmail.com>
-Date:   Mon, 20 Jul 2020 10:02:03 -0700
+        Mon, 20 Jul 2020 10:02:20 -0700 (PDT)
+Subject: Re: io_uring vs in_compat_syscall()
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        io-uring@vger.kernel.org
+References: <ceb21006-26d0-b216-84a9-5da0b89b5fbf@kernel.dk>
+ <BACE670C-6A65-4D86-BC5F-A7EA267C3140@amacapital.net>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b754dad5-ee85-8a2f-f41a-8bdc56de42e8@kernel.dk>
+Date:   Mon, 20 Jul 2020 11:02:19 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1595229523-9725-1-git-send-email-zhangchangzhong@huawei.com>
+In-Reply-To: <BACE670C-6A65-4D86-BC5F-A7EA267C3140@amacapital.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/20 12:18 AM, Zhang Changzhong wrote:
-> The driver forgets to call clk_disable_unprepare() in error path after
-> a success calling for clk_prepare_enable().
+On 7/20/20 10:58 AM, Andy Lutomirski wrote:
 > 
-> Fix to goto err_clk_disable if clk_prepare_enable() is successful.
+>> On Jul 20, 2020, at 9:37 AM, Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> ﻿On 7/20/20 12:10 AM, Christoph Hellwig wrote:
+>>> Hi Jens,
+>>>
+>>> I just found a (so far theoretical) issue with the io_uring submission
+>>> offloading to workqueues or threads.  We have lots of places using
+>>> in_compat_syscall() to check if a syscall needs compat treatmenet.
+>>> While the biggest users is iocttl(), we also have a fair amount of
+>>> places using in_compat_task() in read and write methods, and these
+>>> will not do the wrong thing when used with io_uring under certain
+>>> conditions.  I'm not sure how to best fix this, except for making sure
+>>> in_compat_syscall() returns true one way or another for these cases.
+>>
+>> We can probably propagate this information in the io_kiocb via a flag,
+>> and have the io-wq worker set TS_COMPAT if that's the case.
+>>
 > 
-> Fixes: 99d55638d4b0 ("net: bcmgenet: enable NETIF_F_HIGHDMA flag")
-> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+> Is TS_COMPAT actually a cross-arch concept for which this is safe?
+> Having a real arch helper for “set the current syscall arch for the
+> current kernel thread” seems more sensible to me. 
 
-Acked-by: Florian fainelli <f.fainelli@gmail.com>
+Sure, I'd consider that implementation detail for the actual patch(es)
+for this issue.
+
 -- 
-Florian
+Jens Axboe
+
