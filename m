@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A73C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1F5C4345F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C28A206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07102206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263650;
-	bh=THtNxAlLwzv2bLSqh8ByXwnmCnXX0RY7CmfXeJA86Xc=;
+	s=default; t=1595263653;
+	bh=3nBhr8KvHL41nT9MeEU1tSZse/nQrdOPicJryuGPjBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Se8tSQ4VBFaFbHwGPRSmjswjSQMOz42QPdKKqED5eyH7Z2/Qx5gn5gqWijXnxpQRf
-	 UOdpO6KDkbXi3wKb1ll+p1AvSa2Rr5YbDyYgCuXA94yvsNBnb89nRaP3sBJoEk+4hQ
-	 S3boSMd/ZsYMB2+pnf+Kmn0a0Vgwf+TapKwXVIMw=
+	b=pvt7/UmLz6vivXljjj8ccqkZ0iTpaEIenm9vNQ8XA8MTKmndD4YbbarXIa/tF/3P+
+	 VOtzWEWkcNS3CFIG4OwOx+KaME2lNcbpyL7K7UZwoVzOS6IA/6sgRzbvEiwEN1eN74
+	 NwQXiMoI18z5i652WBk9fDYNZh6d+QvqzIFbAfQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgGTPjV (ORCPT
+        id S1730390AbgGTQrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:39:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58154 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:47:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726782AbgGTPjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:39:11 -0400
+        id S1729461AbgGTPjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:39:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9288122CB2;
-        Mon, 20 Jul 2020 15:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D960B22CB2;
+        Mon, 20 Jul 2020 15:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259551;
-        bh=THtNxAlLwzv2bLSqh8ByXwnmCnXX0RY7CmfXeJA86Xc=;
+        s=default; t=1595259561;
+        bh=3nBhr8KvHL41nT9MeEU1tSZse/nQrdOPicJryuGPjBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RXZlsYJYjGJcJA7T/IZd4VPGcW8DPjL0imb1k7gV9j6R3xogl6d5LkrlubAawJcEP
-         oyb1FzVRjKyxL7bIAcjDVc5b43+cBRuY2o07knQezXDd17pqDAiImrkepkO8fY1FPC
-         AwFTBhrbtOUqyX21eicT2GCUgJBXYwLJ/SRNsd9k=
+        b=kH2KUwpjL8WoEV5LEsuFWPY1VauNtZil6hWac9bIaqOt4lZ6Ltb1ky8WUq7/T8lgi
+         rdpBwEja+SCq+GNTAQUzvdNIRj5NESt0/QphG+fEz1c5e1/zlNZgawGOdwqAWj3ZLm
+         6hgb42Nd6prEa6KlLFhaSYw7MG5lh3e5NyE9HWfQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chirantan Ekbote <chirantan@chromium.org>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.4 50/58] fuse: Fix parameter for FS_IOC_{GET,SET}FLAGS
-Date:   Mon, 20 Jul 2020 17:37:06 +0200
-Message-Id: <20200720152749.751019507@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Huacai Chen <chenhc@lemote.com>
+Subject: [PATCH 4.4 54/58] MIPS: Fix build for LTS kernel caused by backporting lpj adjustment
+Date:   Mon, 20 Jul 2020 17:37:10 +0200
+Message-Id: <20200720152749.964925568@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
 References: <20200720152747.127988571@linuxfoundation.org>
@@ -59,65 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chirantan Ekbote <chirantan@chromium.org>
+From: Huacai Chen <chenhc@lemote.com>
 
-commit 31070f6ccec09f3bd4f1e28cd1e592fa4f3ba0b6 upstream.
+Commit ed26aacfb5f71eecb20a ("mips: Add udelay lpj numbers adjustment")
+has backported to 4.4~5.4, but the "struct cpufreq_freqs" (and also the
+cpufreq notifier machanism) of 4.4~4.19 are different from the upstream
+kernel. These differences cause build errors, and this patch can fix the
+build.
 
-The ioctl encoding for this parameter is a long but the documentation says
-it should be an int and the kernel drivers expect it to be an int.  If the
-fuse driver treats this as a long it might end up scribbling over the stack
-of a userspace process that only allocated enough space for an int.
-
-This was previously discussed in [1] and a patch for fuse was proposed in
-[2].  From what I can tell the patch in [2] was nacked in favor of adding
-new, "fixed" ioctls and using those from userspace.  However there is still
-no "fixed" version of these ioctls and the fact is that it's sometimes
-infeasible to change all userspace to use the new one.
-
-Handling the ioctls specially in the fuse driver seems like the most
-pragmatic way for fuse servers to support them without causing crashes in
-userspace applications that call them.
-
-[1]: https://lore.kernel.org/linux-fsdevel/20131126200559.GH20559@hall.aurel32.net/T/
-[2]: https://sourceforge.net/p/fuse/mailman/message/31771759/
-
-Signed-off-by: Chirantan Ekbote <chirantan@chromium.org>
-Fixes: 59efec7b9039 ("fuse: implement ioctl support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Stable <stable@vger.kernel.org> # 4.4/4.9/4.14/4.19
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/mips/kernel/time.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -17,6 +17,7 @@
- #include <linux/swap.h>
- #include <linux/falloc.h>
- #include <linux/uio.h>
-+#include <linux/fs.h>
+--- a/arch/mips/kernel/time.c
++++ b/arch/mips/kernel/time.c
+@@ -40,10 +40,8 @@ static unsigned long glb_lpj_ref_freq;
+ static int cpufreq_callback(struct notifier_block *nb,
+ 			    unsigned long val, void *data)
+ {
+-	struct cpufreq_freqs *freq = data;
+-	struct cpumask *cpus = freq->policy->cpus;
+-	unsigned long lpj;
+ 	int cpu;
++	struct cpufreq_freqs *freq = data;
  
- static const struct file_operations fuse_direct_io_file_operations;
+ 	/*
+ 	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
+@@ -64,6 +62,7 @@ static int cpufreq_callback(struct notif
+ 		}
+ 	}
  
-@@ -2517,7 +2518,16 @@ long fuse_do_ioctl(struct file *file, un
- 		struct iovec *iov = iov_page;
++	cpu = freq->cpu;
+ 	/*
+ 	 * Adjust global lpj variable and per-CPU udelay_val number in
+ 	 * accordance with the new CPU frequency.
+@@ -74,12 +73,8 @@ static int cpufreq_callback(struct notif
+ 						glb_lpj_ref_freq,
+ 						freq->new);
  
- 		iov->iov_base = (void __user *)arg;
--		iov->iov_len = _IOC_SIZE(cmd);
-+
-+		switch (cmd) {
-+		case FS_IOC_GETFLAGS:
-+		case FS_IOC_SETFLAGS:
-+			iov->iov_len = sizeof(int);
-+			break;
-+		default:
-+			iov->iov_len = _IOC_SIZE(cmd);
-+			break;
-+		}
+-		for_each_cpu(cpu, cpus) {
+-			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
+-					    per_cpu(pcp_lpj_ref_freq, cpu),
+-					    freq->new);
+-			cpu_data[cpu].udelay_val = (unsigned int)lpj;
+-		}
++		cpu_data[cpu].udelay_val = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
++					   per_cpu(pcp_lpj_ref_freq, cpu), freq->new);
+ 	}
  
- 		if (_IOC_DIR(cmd) & _IOC_WRITE) {
- 			in_iov = iov;
+ 	return NOTIFY_OK;
 
 
