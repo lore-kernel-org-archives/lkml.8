@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91EEC43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AC7C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAC720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A5120656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262031;
-	bh=lye9nEJslbJYSdaSkBheYwWegDQY9ewGWMpaayLWwxY=;
+	s=default; t=1595262035;
+	bh=UmVLrulrz7y0vsYi+sucxUOxaw1JJyO9h46ojzPoEiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JJVS0kHlkJU9kIFc6+Z44LjO46gwg1OiaiozuiJuwOBNV3s7YwXa5qVFahDH1VKSt
-	 J0nQLrvAOrJc/jEIJr3sALES96LKw0uLlUtgjmB3SJg3m0w6P71Ksc8ZfsOl+x6kad
-	 +XYIOZORaiUvHempKJ6DP5YjqsGfra+xrmVnHHrs=
+	b=qp2LACPl5llbCB1j5e/80W5WLo+J2i6Q3y8CPzU4wVh5j0wQJvmaTk/9bBZbXjmhP
+	 bG+KRa/kmfXAwt6B8iCQvG0yu9nu80ATqDZB6E+DMP+VhQv8en2EXprXEknkmYLcsA
+	 RH6nxrrxMoZg6RdwhXLDJ+uv8gCS5UXVodVvO3lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbgGTQJ7 (ORCPT
+        id S2388572AbgGTQUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:09:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48022 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387588AbgGTQJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:09:53 -0400
+        id S2387601AbgGTQJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:09:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 327182064B;
-        Mon, 20 Jul 2020 16:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A57D62064B;
+        Mon, 20 Jul 2020 16:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261392;
-        bh=lye9nEJslbJYSdaSkBheYwWegDQY9ewGWMpaayLWwxY=;
+        s=default; t=1595261398;
+        bh=UmVLrulrz7y0vsYi+sucxUOxaw1JJyO9h46ojzPoEiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uLNhHeD4OWEOLe9JL7J3uFCXveUprDo2UuKimQ3xfxag2nbdjg0yAzjMUqdoi9bhK
-         9thuEXJzLBylJi3+NgBzFbVHFg8SbQBFMVfhv4GdBYgR567qVlMturyWhfA5/Wdb1C
-         bD0e4KDplOEYMuXbmCwdsuojSd6iceFK0kbkjsQ0=
+        b=F+672YuBVz09QDbPEDw2BeqS8EvzL8Km3zzs+5rvj5SN2VaNASXcKRuMl3CDibxB9
+         7TmlNZJV6ReIRFsrrim2nQRFUrCgXtHFt6hltLcyOeAz02sLtv9647vPFHTBswj1YO
+         eqIAN4gY/YHwnru3nnJFne7ZhToABLuoBzxiewHM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ian Abbott <abbotti@mev.co.uk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 099/244] staging: comedi: verify array index is correct before using it
-Date:   Mon, 20 Jul 2020 17:36:10 +0200
-Message-Id: <20200720152830.541231823@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 101/244] clk: mvebu: ARMADA_AP_CPU_CLK needs to select ARMADA_AP_CP_HELPER
+Date:   Mon, 20 Jul 2020 17:36:12 +0200
+Message-Id: <20200720152830.636548955@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,52 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit ef75e14a6c935eec82abac07ab68e388514e39bc ]
+[ Upstream commit 8e3709d7e3a67e2d3f42bd1fc2052353a5678944 ]
 
-This code reads from the array before verifying that "trig" is a valid
-index.  If the index is wildly out of bounds then reading from an
-invalid address could lead to an Oops.
+When building arm32 allmodconfig:
 
-Fixes: a8c66b684efa ("staging: comedi: addi_apci_1500: rewrite the subdevice support functions")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200709102936.GA20875@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ld.lld: error: undefined symbol: ap_cp_unique_name
+>>> referenced by ap-cpu-clk.c
+>>>               clk/mvebu/ap-cpu-clk.o:(ap_cpu_clock_probe) in archive drivers/built-in.a
+
+ap_cp_unique_name is only compiled into the kernel image when
+CONFIG_ARMADA_AP_CP_HELPER is selected (as it is not user selectable).
+However, CONFIG_ARMADA_AP_CPU_CLK does not select it.
+
+This has been a problem since the driver was added to the kernel but it
+was not built before commit c318ea261749 ("cpufreq: ap806: fix cpufreq
+driver needs ap cpu clk") so it was never noticed.
+
+Fixes: f756e362d938 ("clk: mvebu: add CPU clock driver for Armada 7K/8K")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lore.kernel.org/r/20200701201128.2448427-1-natechancellor@gmail.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/comedi/drivers/addi_apci_1500.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/clk/mvebu/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/comedi/drivers/addi_apci_1500.c b/drivers/staging/comedi/drivers/addi_apci_1500.c
-index 45ad4ba92f94f..689acd69a1b9c 100644
---- a/drivers/staging/comedi/drivers/addi_apci_1500.c
-+++ b/drivers/staging/comedi/drivers/addi_apci_1500.c
-@@ -456,9 +456,9 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
- 	unsigned int lo_mask = data[5] << shift;
- 	unsigned int chan_mask = hi_mask | lo_mask;
- 	unsigned int old_mask = (1 << shift) - 1;
--	unsigned int pm = devpriv->pm[trig] & old_mask;
--	unsigned int pt = devpriv->pt[trig] & old_mask;
--	unsigned int pp = devpriv->pp[trig] & old_mask;
-+	unsigned int pm;
-+	unsigned int pt;
-+	unsigned int pp;
+diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
+index ded07b0bd0d5e..557d6213783c7 100644
+--- a/drivers/clk/mvebu/Kconfig
++++ b/drivers/clk/mvebu/Kconfig
+@@ -42,6 +42,7 @@ config ARMADA_AP806_SYSCON
  
- 	if (trig > 1) {
- 		dev_dbg(dev->class_dev,
-@@ -471,6 +471,10 @@ static int apci1500_di_cfg_trig(struct comedi_device *dev,
- 		return -EINVAL;
- 	}
+ config ARMADA_AP_CPU_CLK
+ 	bool
++	select ARMADA_AP_CP_HELPER
  
-+	pm = devpriv->pm[trig] & old_mask;
-+	pt = devpriv->pt[trig] & old_mask;
-+	pp = devpriv->pp[trig] & old_mask;
-+
- 	switch (data[2]) {
- 	case COMEDI_DIGITAL_TRIG_DISABLE:
- 		/* clear trigger configuration */
+ config ARMADA_CP110_SYSCON
+ 	bool
 -- 
 2.25.1
 
