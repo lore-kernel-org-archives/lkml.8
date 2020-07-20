@@ -2,217 +2,227 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D6EC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371EAC43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C26B5206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262474;
-	bh=0FZeMFH7gDbfkGfeeYppuC4EMRgBINcNU5H0gQHaCSk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dSiFLEMlSLmGSRZ2hSF+Y10KvUBTUkGDX7rxKIPVnIHaT2ey1QVEQ47RdDMEqEfUV
-	 gzydYUQOHK5N6kxgnV6HIYqryugVJrmN0y0Myw30fyiJXg4EHHtEgS6NLMaR4gzOcW
-	 N0QZ29yJ0BeYMWgEpz9nlyK4JY65vlM+oyXPmthQ=
+	by mail.kernel.org (Postfix) with ESMTP id 139D6206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:27:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pwBZBTeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388760AbgGTQ1x (ORCPT
+        id S2388505AbgGTQ1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732251AbgGTP7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5925622CBB;
-        Mon, 20 Jul 2020 15:59:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260774;
-        bh=0FZeMFH7gDbfkGfeeYppuC4EMRgBINcNU5H0gQHaCSk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U93apk+D2MD5JUi+lzcsq897lzTHjDvEvX9QXmtvIXivJ3m73R6JhjJCUbj82dSew
-         HirljRE5wO2PmbmA7/dkg5YIvKCVwMtI9bPxlQdzzAnX7eQd4HXESV4g/Go7+rlsri
-         yAFLvoYN0xiaM57MGlCtyOHQlPPRqQ/FdSfzip+w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+        Mon, 20 Jul 2020 12:27:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732257AbgGTP7g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:36 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CAFCC061794;
+        Mon, 20 Jul 2020 08:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=nAsH9T7X6ZSD60FzUE1BgNEp8/8aowZX5wNUHqsAE74=; b=pwBZBTeu9/U/FLHwWp5Pw3z4+H
+        pjonpatQSpbmN1/1ip4ARtplkErkRto1D/zkxaxUXlzwtGOxqa5eBYCuoUhExQ87qadoRoDF/fqx2
+        H+yEVdJ0ths3Q30EM7TfLk6/K6h5dmO32XS1aRBtC2ZPDUxov+JjTTXiqJHk0WYEmzcwqG+Nh7kNs
+        mwzHoT/XMoQqP6Wy5y1mb7zxBFIK0kmLKiR2+j2hkroNCuxYpuvTYYK097xFwPgpiNiQnCetG77qC
+        czmUVTQxgIEcsbreDEJGRF9h1JwwRc5mpdnTqxyrQqCQNBr97wMJzhAadSlai96O6IWy1491AX4H3
+        KW6eVRxA==;
+Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxYCQ-0007qS-Ah; Mon, 20 Jul 2020 15:59:31 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 091/215] bus: ti-sysc: Use optional clocks on for enable and wait for softreset bit
-Date:   Mon, 20 Jul 2020 17:36:13 +0200
-Message-Id: <20200720152824.536061809@linuxfoundation.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 15/24] fs: add a kern_link helper
+Date:   Mon, 20 Jul 2020 17:58:53 +0200
+Message-Id: <20200720155902.181712-16-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-References: <20200720152820.122442056@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200720155902.181712-1-hch@lst.de>
+References: <20200720155902.181712-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+Add a simple helper perform a link with a kernel space file name and use
+it in the early init code instead of relying on the implicit
+set_fs(KERNEL_DS) there.  To do so push the getname from do_linkat into the
+callers.  Remove the now unused ksys_link.
 
-[ Upstream commit d46f9fbec71997420e4fb83c04d9affdf423f879 ]
-
-Some modules reset automatically when idled, and when re-enabled, we must
-wait for the automatic OCP softreset to complete. And if optional clocks
-are configured, we need to keep the clocks on while waiting for the reset
-to complete.
-
-Let's fix the issue by moving the OCP softreset code to a separate
-function sysc_wait_softreset(), and call it also from sysc_enable_module()
-with the optional clocks enabled.
-
-This is based on what we're already doing for legacy platform data booting
-in _enable_sysc().
-
-Fixes: 7324a7a0d5e2 ("bus: ti-sysc: Implement display subsystem reset quirk")
-Reported-by: Faiz Abbas <faiz_abbas@ti.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/bus/ti-sysc.c | 80 ++++++++++++++++++++++++++++++++-----------
- 1 file changed, 60 insertions(+), 20 deletions(-)
+ fs/internal.h            |  2 --
+ fs/namei.c               | 39 +++++++++++++++++++++++++++++----------
+ include/linux/fs.h       |  1 +
+ include/linux/syscalls.h |  9 ---------
+ init/initramfs.c         |  2 +-
+ 5 files changed, 31 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index d0b75e7d5e50f..bb3e3310865bd 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -186,6 +186,35 @@ static u32 sysc_read_sysstatus(struct sysc *ddata)
- 	return sysc_read(ddata, offset);
+diff --git a/fs/internal.h b/fs/internal.h
+index 1e7a72bd183e63..f0869d5dc4dbfa 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -66,8 +66,6 @@ long do_rmdir(int dfd, const char __user *pathname);
+ long do_unlinkat(int dfd, struct filename *name);
+ long do_symlinkat(const char __user *oldname, int newdfd,
+ 		  const char __user *newname);
+-int do_linkat(int olddfd, const char __user *oldname, int newdfd,
+-	      const char __user *newname, int flags);
+ 
+ /*
+  * namespace.c
+diff --git a/fs/namei.c b/fs/namei.c
+index de97edac21849d..9d80a5bce1051a 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -4122,8 +4122,8 @@ EXPORT_SYMBOL(vfs_link);
+  * with linux 2.0, and to avoid hard-linking to directories
+  * and other special files.  --ADM
+  */
+-int do_linkat(int olddfd, const char __user *oldname, int newdfd,
+-	      const char __user *newname, int flags)
++static int do_linkat(int olddfd, struct filename *oldname, int newdfd,
++	      struct filename *newname, int flags)
+ {
+ 	struct dentry *new_dentry;
+ 	struct path old_path, new_path;
+@@ -4131,27 +4131,29 @@ int do_linkat(int olddfd, const char __user *oldname, int newdfd,
+ 	int how = 0;
+ 	int error;
+ 
++	error = -EINVAL;
+ 	if ((flags & ~(AT_SYMLINK_FOLLOW | AT_EMPTY_PATH)) != 0)
+-		return -EINVAL;
++		goto out_put_both_names;
+ 	/*
+ 	 * To use null names we require CAP_DAC_READ_SEARCH
+ 	 * This ensures that not everyone will be able to create
+ 	 * handlink using the passed filedescriptor.
+ 	 */
+ 	if (flags & AT_EMPTY_PATH) {
++		error = -ENOENT;
+ 		if (!capable(CAP_DAC_READ_SEARCH))
+-			return -ENOENT;
++			goto out_put_both_names;
+ 		how = LOOKUP_EMPTY;
+ 	}
+ 
+ 	if (flags & AT_SYMLINK_FOLLOW)
+ 		how |= LOOKUP_FOLLOW;
+ retry:
+-	error = user_path_at(olddfd, oldname, how, &old_path);
++	error = filename_lookup(olddfd, oldname, how, &old_path, NULL);
+ 	if (error)
+-		return error;
++		goto out_put_newname;
+ 
+-	new_dentry = user_path_create(newdfd, newname, &new_path,
++	new_dentry = filename_create(newdfd, newname, &new_path,
+ 					(how & LOOKUP_REVAL));
+ 	error = PTR_ERR(new_dentry);
+ 	if (IS_ERR(new_dentry))
+@@ -4181,21 +4183,38 @@ int do_linkat(int olddfd, const char __user *oldname, int newdfd,
+ 		how |= LOOKUP_REVAL;
+ 		goto retry;
+ 	}
++	putname(newname);
+ out:
+ 	path_put(&old_path);
+-
++	putname(oldname);
++	return error;
++out_put_both_names:
++	if (!IS_ERR(oldname))
++		putname(oldname);
++out_put_newname:
++	if (!IS_ERR(newname))
++		putname(newname);
+ 	return error;
  }
  
-+/* Poll on reset status */
-+static int sysc_wait_softreset(struct sysc *ddata)
++int __init kern_link(const char *oldname, const char *newname)
 +{
-+	u32 sysc_mask, syss_done, rstval;
-+	int syss_offset, error = 0;
-+
-+	syss_offset = ddata->offsets[SYSC_SYSSTATUS];
-+	sysc_mask = BIT(ddata->cap->regbits->srst_shift);
-+
-+	if (ddata->cfg.quirks & SYSS_QUIRK_RESETDONE_INVERTED)
-+		syss_done = 0;
-+	else
-+		syss_done = ddata->cfg.syss_mask;
-+
-+	if (syss_offset >= 0) {
-+		error = readx_poll_timeout(sysc_read_sysstatus, ddata, rstval,
-+					   (rstval & ddata->cfg.syss_mask) ==
-+					   syss_done,
-+					   100, MAX_MODULE_SOFTRESET_WAIT);
-+
-+	} else if (ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS) {
-+		error = readx_poll_timeout(sysc_read_sysconfig, ddata, rstval,
-+					   !(rstval & sysc_mask),
-+					   100, MAX_MODULE_SOFTRESET_WAIT);
-+	}
-+
-+	return error;
++	return do_linkat(AT_FDCWD, getname_kernel(oldname), AT_FDCWD,
++			 getname_kernel(newname), 0);
 +}
 +
- static int sysc_add_named_clock_from_child(struct sysc *ddata,
- 					   const char *name,
- 					   const char *optfck_name)
-@@ -892,8 +921,34 @@ static int sysc_enable_module(struct device *dev)
- 	struct sysc *ddata;
- 	const struct sysc_regbits *regbits;
- 	u32 reg, idlemodes, best_mode;
-+	int error;
- 
- 	ddata = dev_get_drvdata(dev);
-+
-+	/*
-+	 * Some modules like DSS reset automatically on idle. Enable optional
-+	 * reset clocks and wait for OCP softreset to complete.
-+	 */
-+	if (ddata->cfg.quirks & SYSC_QUIRK_OPT_CLKS_IN_RESET) {
-+		error = sysc_enable_opt_clocks(ddata);
-+		if (error) {
-+			dev_err(ddata->dev,
-+				"Optional clocks failed for enable: %i\n",
-+				error);
-+			return error;
-+		}
-+	}
-+	error = sysc_wait_softreset(ddata);
-+	if (error)
-+		dev_warn(ddata->dev, "OCP softreset timed out\n");
-+	if (ddata->cfg.quirks & SYSC_QUIRK_OPT_CLKS_IN_RESET)
-+		sysc_disable_opt_clocks(ddata);
-+
-+	/*
-+	 * Some subsystem private interconnects, like DSS top level module,
-+	 * need only the automatic OCP softreset handling with no sysconfig
-+	 * register bits to configure.
-+	 */
- 	if (ddata->offsets[SYSC_SYSCONFIG] == -ENODEV)
- 		return 0;
- 
-@@ -1691,11 +1746,10 @@ static int sysc_rstctrl_reset_deassert(struct sysc *ddata, bool reset)
-  */
- static int sysc_reset(struct sysc *ddata)
+ SYSCALL_DEFINE5(linkat, int, olddfd, const char __user *, oldname,
+ 		int, newdfd, const char __user *, newname, int, flags)
  {
--	int sysc_offset, syss_offset, sysc_val, rstval, error = 0;
--	u32 sysc_mask, syss_done;
-+	int sysc_offset, sysc_val, error;
-+	u32 sysc_mask;
+-	return do_linkat(olddfd, oldname, newdfd, newname, flags);
++	int how = (flags & AT_EMPTY_PATH) ? LOOKUP_EMPTY : 0;
++
++	return do_linkat(olddfd, getname_flags(oldname, how, NULL), newdfd,
++			 getname(newname), flags);
+ }
  
- 	sysc_offset = ddata->offsets[SYSC_SYSCONFIG];
--	syss_offset = ddata->offsets[SYSC_SYSSTATUS];
+ SYSCALL_DEFINE2(link, const char __user *, oldname, const char __user *, newname)
+ {
+-	return do_linkat(AT_FDCWD, oldname, AT_FDCWD, newname, 0);
++	return do_linkat(AT_FDCWD, getname(oldname), AT_FDCWD, getname(newname), 0);
+ }
  
- 	if (ddata->legacy_mode || sysc_offset < 0 ||
- 	    ddata->cap->regbits->srst_shift < 0 ||
-@@ -1704,11 +1758,6 @@ static int sysc_reset(struct sysc *ddata)
+ /**
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 846a21a9b3e14c..fc3b09d473945f 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3679,5 +3679,6 @@ int __init kern_chmod(const char *filename, umode_t mode);
+ int __init kern_utimes(const char *filename, struct timespec64 *tv, int flags);
+ int kern_mkdir(const char *pathname, umode_t mode);
+ int kern_mknod(const char *filename, umode_t mode, unsigned int dev);
++int __init kern_link(const char *oldname, const char *newname);
  
- 	sysc_mask = BIT(ddata->cap->regbits->srst_shift);
+ #endif /* _LINUX_FS_H */
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 3dfcae351a077d..467cc4413874ed 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1293,15 +1293,6 @@ static inline long ksys_symlink(const char __user *oldname,
+ 	return do_symlinkat(oldname, AT_FDCWD, newname);
+ }
  
--	if (ddata->cfg.quirks & SYSS_QUIRK_RESETDONE_INVERTED)
--		syss_done = 0;
--	else
--		syss_done = ddata->cfg.syss_mask;
+-extern int do_linkat(int olddfd, const char __user *oldname, int newdfd,
+-		     const char __user *newname, int flags);
 -
- 	if (ddata->pre_reset_quirk)
- 		ddata->pre_reset_quirk(ddata);
- 
-@@ -1723,18 +1772,9 @@ static int sysc_reset(struct sysc *ddata)
- 	if (ddata->post_reset_quirk)
- 		ddata->post_reset_quirk(ddata);
- 
--	/* Poll on reset status */
--	if (syss_offset >= 0) {
--		error = readx_poll_timeout(sysc_read_sysstatus, ddata, rstval,
--					   (rstval & ddata->cfg.syss_mask) ==
--					   syss_done,
--					   100, MAX_MODULE_SOFTRESET_WAIT);
+-static inline long ksys_link(const char __user *oldname,
+-			     const char __user *newname)
+-{
+-	return do_linkat(AT_FDCWD, oldname, AT_FDCWD, newname, 0);
+-}
 -
--	} else if (ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS) {
--		error = readx_poll_timeout(sysc_read_sysconfig, ddata, rstval,
--					   !(rstval & sysc_mask),
--					   100, MAX_MODULE_SOFTRESET_WAIT);
--	}
-+	error = sysc_wait_softreset(ddata);
-+	if (error)
-+		dev_warn(ddata->dev, "OCP softreset timed out\n");
+ extern long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
  
- 	if (ddata->reset_done_quirk)
- 		ddata->reset_done_quirk(ddata);
+ static inline long ksys_ftruncate(unsigned int fd, loff_t length)
+diff --git a/init/initramfs.c b/init/initramfs.c
+index f32226d0388100..e484381c6c131b 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -310,7 +310,7 @@ static int __init maybe_link(void)
+ 		char *old = find_link(major, minor, ino, mode, collected);
+ 		if (old) {
+ 			clean_path(collected, 0);
+-			return (ksys_link(old, collected) < 0) ? -1 : 1;
++			return (kern_link(old, collected) < 0) ? -1 : 1;
+ 		}
+ 	}
+ 	return 0;
 -- 
-2.25.1
-
-
+2.27.0
 
