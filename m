@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BB4C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1BFC433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39CD92176B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364AD2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259884;
-	bh=bQdhkyleKNrB/eAmk3MoXZ4uuEJHYABQVPYga/A9WNQ=;
+	s=default; t=1595259892;
+	bh=1juGMQQm5Ka5WMyJpEl87U3CHACYAqPJ+oTZO7rdE30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBr4rJ9lGmEvtTl6lEz2HDMe9o7QpU+H2aRlx+EX4TvybQUWLCG4S3uT9SB1h81b6
-	 aGr5ebVh/It3CwhlDjPkSYQOcXikkrSdTYHTiNCDTMyhSegV3OX9NYQLn4YpkC63NS
-	 6ZMAVNuvzyeNvMvbsAv3jIfg56L/XVbMIfY4G1u4=
+	b=PLRopGO8Klh1BUdZe47Yujs5kVULhE1+W+U02caJ1VVWGjj7amVYrgZAsx90+0IvE
+	 ZfZrhVcFsVvMheLxMDfy5dGuIH+nN0226xNaNZapAfuIvIBko/zCB8uRKIQwmEYqVk
+	 u7ab7E/JcVXXH1GkhaeyDNIio4LrDR5s9neHFv0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbgGTPon (ORCPT
+        id S1730454AbgGTPov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38674 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:44:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729830AbgGTPoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:44:38 -0400
+        id S1730441AbgGTPos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:44:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62F3E22CBB;
-        Mon, 20 Jul 2020 15:44:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DBB52176B;
+        Mon, 20 Jul 2020 15:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259878;
-        bh=bQdhkyleKNrB/eAmk3MoXZ4uuEJHYABQVPYga/A9WNQ=;
+        s=default; t=1595259886;
+        bh=1juGMQQm5Ka5WMyJpEl87U3CHACYAqPJ+oTZO7rdE30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yfdtphn2CZqFXJpYZ0AWg1XYM3SCppCge3pxM0LQN0Mdd2pvMb3UZQIwxgGF2D+NE
-         Kn9rU9IJlVteCYFPpEz7EIhHdolix3O88eiLqXJldJ+GxDDF9CppM8fRKKvghANOSz
-         jr1UE+ToMC28bbrvq8FwdSD0BRqzKobtiGKxLdMc=
+        b=khDFd8TDhp5Qit5OCMMfb0DCYuf04DwTWxVSNcbH6X2uDdIZtpRTpgrL7EGzUlL/5
+         Fa4ihGEr75jYkH+YI+rBrOVIeg6D9VFR2MdKX/eYjUNr9U15RponuRYQE/kny3nwuX
+         s7IYYOgWvkx3e0BLyJ+8uNp0ngrcwf8PtD7FKono=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 008/125] spi: spidev: fix a race between spidev_release and spidev_remove
-Date:   Mon, 20 Jul 2020 17:35:47 +0200
-Message-Id: <20200720152803.352905177@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 021/125] arm64: kgdb: Fix single-step exception handling oops
+Date:   Mon, 20 Jul 2020 17:36:00 +0200
+Message-Id: <20200720152804.012614041@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -60,60 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Wei Li <liwei391@huawei.com>
 
-[ Upstream commit abd42781c3d2155868821f1b947ae45bbc33330d ]
+[ Upstream commit 8523c006264df65aac7d77284cc69aac46a6f842 ]
 
-Imagine below scene, spidev is referenced after it's freed.
+After entering kdb due to breakpoint, when we execute 'ss' or 'go' (will
+delay installing breakpoints, do single-step first), it won't work
+correctly, and it will enter kdb due to oops.
 
-spidev_release()                spidev_remove()
-...
-                                spin_lock_irq(&spidev->spi_lock);
-                                    spidev->spi = NULL;
-                                spin_unlock_irq(&spidev->spi_lock);
-mutex_lock(&device_list_lock);
-dofree = (spidev->spi == NULL);
-if (dofree)
-    kfree(spidev);
-mutex_unlock(&device_list_lock);
-                                mutex_lock(&device_list_lock);
-                                list_del(&spidev->device_entry);
-                                device_destroy(spidev_class, spidev->devt);
-                                clear_bit(MINOR(spidev->devt), minors);
-                                if (spidev->users == 0)
-                                    kfree(spidev);
-                                mutex_unlock(&device_list_lock);
+It's because the reason gotten in kdb_stub() is not as expected, and it
+seems that the ex_vector for single-step should be 0, like what arch
+powerpc/sh/parisc has implemented.
 
-Fix it by resetting spidev->spi in device_list_lock's protection.
+Before the patch:
+Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
+[0]kdb> bp printk
+Instruction(i) BP #0 at 0xffff8000101486cc (printk)
+    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Link: https://lore.kernel.org/r/20200618032125.4650-1-zhenzhong.duan@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+[0]kdb> g
+
+/ # echo h > /proc/sysrq-trigger
+
+Entering kdb (current=0xffff0000fa878040, pid 266) on processor 3 due to Breakpoint @ 0xffff8000101486cc
+[3]kdb> ss
+
+Entering kdb (current=0xffff0000fa878040, pid 266) on processor 3 Oops: (null)
+due to oops @ 0xffff800010082ab8
+CPU: 3 PID: 266 Comm: sh Not tainted 5.7.0-rc4-13839-gf0e5ad491718 #6
+Hardware name: linux,dummy-virt (DT)
+pstate: 00000085 (nzcv daIf -PAN -UAO)
+pc : el1_irq+0x78/0x180
+lr : __handle_sysrq+0x80/0x190
+sp : ffff800015003bf0
+x29: ffff800015003d20 x28: ffff0000fa878040
+x27: 0000000000000000 x26: ffff80001126b1f0
+x25: ffff800011b6a0d8 x24: 0000000000000000
+x23: 0000000080200005 x22: ffff8000101486cc
+x21: ffff800015003d30 x20: 0000ffffffffffff
+x19: ffff8000119f2000 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000000 x14: 0000000000000000
+x13: 0000000000000000 x12: 0000000000000000
+x11: 0000000000000000 x10: 0000000000000000
+x9 : 0000000000000000 x8 : ffff800015003e50
+x7 : 0000000000000002 x6 : 00000000380b9990
+x5 : ffff8000106e99e8 x4 : ffff0000fadd83c0
+x3 : 0000ffffffffffff x2 : ffff800011b6a0d8
+x1 : ffff800011b6a000 x0 : ffff80001130c9d8
+Call trace:
+ el1_irq+0x78/0x180
+ printk+0x0/0x84
+ write_sysrq_trigger+0xb0/0x118
+ proc_reg_write+0xb4/0xe0
+ __vfs_write+0x18/0x40
+ vfs_write+0xb0/0x1b8
+ ksys_write+0x64/0xf0
+ __arm64_sys_write+0x14/0x20
+ el0_svc_common.constprop.2+0xb0/0x168
+ do_el0_svc+0x20/0x98
+ el0_sync_handler+0xec/0x1a8
+ el0_sync+0x140/0x180
+
+[3]kdb>
+
+After the patch:
+Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
+[0]kdb> bp printk
+Instruction(i) BP #0 at 0xffff8000101486cc (printk)
+    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
+
+[0]kdb> g
+
+/ # echo h > /proc/sysrq-trigger
+
+Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to Breakpoint @ 0xffff8000101486cc
+[0]kdb> g
+
+Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to Breakpoint @ 0xffff8000101486cc
+[0]kdb> ss
+
+Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to SS trap @ 0xffff800010082ab8
+[0]kdb>
+
+Fixes: 44679a4f142b ("arm64: KGDB: Add step debugging support")
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200509214159.19680-2-liwei391@huawei.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/kgdb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 028725573e632..5edf4029a3486 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -782,13 +782,13 @@ static int spidev_remove(struct spi_device *spi)
- {
- 	struct spidev_data	*spidev = spi_get_drvdata(spi);
+diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
+index 470afb3a04ca9..7fd7a9cd86161 100644
+--- a/arch/arm64/kernel/kgdb.c
++++ b/arch/arm64/kernel/kgdb.c
+@@ -258,7 +258,7 @@ static int kgdb_step_brk_fn(struct pt_regs *regs, unsigned int esr)
+ 	if (user_mode(regs) || !kgdb_single_step)
+ 		return DBG_HOOK_ERROR;
  
-+	/* prevent new opens */
-+	mutex_lock(&device_list_lock);
- 	/* make sure ops on existing fds can abort cleanly */
- 	spin_lock_irq(&spidev->spi_lock);
- 	spidev->spi = NULL;
- 	spin_unlock_irq(&spidev->spi_lock);
- 
--	/* prevent new opens */
--	mutex_lock(&device_list_lock);
- 	list_del(&spidev->device_entry);
- 	device_destroy(spidev_class, spidev->devt);
- 	clear_bit(MINOR(spidev->devt), minors);
+-	kgdb_handle_exception(1, SIGTRAP, 0, regs);
++	kgdb_handle_exception(0, SIGTRAP, 0, regs);
+ 	return DBG_HOOK_HANDLED;
+ }
+ NOKPROBE_SYMBOL(kgdb_step_brk_fn);
 -- 
 2.25.1
 
