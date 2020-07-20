@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A047C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0F6C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B40822BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42A5D22BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 19:08:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JR+5VCou"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DQcxVpFD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbgGTTH7 (ORCPT
+        id S1730086AbgGTTHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:07:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55174 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729237AbgGTTH5 (ORCPT
+        Mon, 20 Jul 2020 15:07:55 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54984 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728766AbgGTTHx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:07:57 -0400
+        Mon, 20 Jul 2020 15:07:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595272076;
+        s=mimecast20190719; t=1595272072;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wDSn77KHLgCft4skfPmD/XyPr1U9WWAni3dIC85rwNI=;
-        b=JR+5VCouAd3ZMKevhcXaqdTqqiixEiB/TSdQGEvY4GpWZDgxE3gvms4XIjoUdXFevwh3j7
-        EKOIRp7OlBmWffFVPZih2x+TCFOwHgMwJIRSr9jIg1v8nxPXGlbjXnuqaxmmFiZpn0+qXO
-        MK+i08n77nx9MmuqfmjdDBDiAhxLbeE=
+        bh=zurpX8t5Oe22ZRXjmmq6bc4/JlbLHckZjRUTW5w4qAk=;
+        b=DQcxVpFDr/WLjSYWMoxmVxyYVeDFcGfy6/Dt8cagfQUBDeXKhae8N16hFT6mw0Fa7aj4Nu
+        zQEWsCHf4NvZOLrOJRoUt1/1CgR2rX2Dguc20Xu9xJxb5/pTQEk80c4K86PA5aGnwiFKx6
+        ImRurjPimzeIqJy5pARyAo7H/BFcvGA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-110--RtHis-JPYOB2lF7FzpPVg-1; Mon, 20 Jul 2020 15:07:52 -0400
-X-MC-Unique: -RtHis-JPYOB2lF7FzpPVg-1
+ us-mta-281-x33gDq3ePcmvY2Y9hhPL9Q-1; Mon, 20 Jul 2020 15:07:48 -0400
+X-MC-Unique: x33gDq3ePcmvY2Y9hhPL9Q-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F19DC800688;
-        Mon, 20 Jul 2020 19:07:50 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39B038005B0;
+        Mon, 20 Jul 2020 19:07:47 +0000 (UTC)
 Received: from Ruby.redhat.com (ovpn-120-196.rdu2.redhat.com [10.10.120.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 036995C1D4;
-        Mon, 20 Jul 2020 19:07:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C0A6B5C22A;
+        Mon, 20 Jul 2020 19:07:45 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Daniel Vetter <daniel@ffwll.ch>,
@@ -53,9 +53,9 @@ Cc:     Daniel Vetter <daniel@ffwll.ch>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@linux.ie>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 5/5] drm/vblank: Use spin_(un)lock_irq() in drm_crtc_queue_sequence_ioctl()
-Date:   Mon, 20 Jul 2020 15:07:36 -0400
-Message-Id: <20200720190736.180297-6-lyude@redhat.com>
+Subject: [PATCH 2/5] drm/vblank: Use spin_(un)lock_irq() in drm_crtc_vblank_on()
+Date:   Mon, 20 Jul 2020 15:07:33 -0400
+Message-Id: <20200720190736.180297-3-lyude@redhat.com>
 In-Reply-To: <20200720190736.180297-1-lyude@redhat.com>
 References: <20200720190736.180297-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -66,51 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an ioctl callback, so we're guaranteed to have IRQs enabled when
-calling this function. Use the plain _irq() variants of spin_(un)lock()
-to make this more obvious.
+This is only called from:
+* Atomic modesetting hooks
+* Module probing routines
+* Legacy modesetting hooks
+
+All of which have IRQs enabled, so we can also get rid of
+irqsave/restore here to make the IRQ context of this function more
+obvious.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 Cc: Daniel Vetter <daniel@ffwll.ch>
 ---
- drivers/gpu/drm/drm_vblank.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/drm_vblank.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 64610070ba473..b18e1efbbae1a 100644
+index 6af78aecea9d4..9891e82939e35 100644
 --- a/drivers/gpu/drm/drm_vblank.c
 +++ b/drivers/gpu/drm/drm_vblank.c
-@@ -2066,7 +2066,6 @@ int drm_crtc_queue_sequence_ioctl(struct drm_device *dev, void *data,
- 	u64 seq;
- 	u64 req_seq;
- 	int ret;
--	unsigned long spin_flags;
+@@ -1428,12 +1428,11 @@ void drm_crtc_vblank_on(struct drm_crtc *crtc)
+ 	struct drm_device *dev = crtc->dev;
+ 	unsigned int pipe = drm_crtc_index(crtc);
+ 	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
+-	unsigned long irqflags;
  
- 	if (!drm_core_check_feature(dev, DRIVER_MODESET))
- 		return -EOPNOTSUPP;
-@@ -2114,7 +2113,7 @@ int drm_crtc_queue_sequence_ioctl(struct drm_device *dev, void *data,
- 	e->event.base.length = sizeof(e->event.seq);
- 	e->event.seq.user_data = queue_seq->user_data;
+ 	if (drm_WARN_ON(dev, pipe >= dev->num_crtcs))
+ 		return;
  
--	spin_lock_irqsave(&dev->event_lock, spin_flags);
-+	spin_lock_irq(&dev->event_lock);
+-	spin_lock_irqsave(&dev->vbl_lock, irqflags);
++	spin_lock_irq(&dev->vbl_lock);
+ 	drm_dbg_vbl(dev, "crtc %d, vblank enabled %d, inmodeset %d\n",
+ 		    pipe, vblank->enabled, vblank->inmodeset);
  
- 	/*
- 	 * drm_crtc_vblank_off() might have been called after we called
-@@ -2145,11 +2144,11 @@ int drm_crtc_queue_sequence_ioctl(struct drm_device *dev, void *data,
- 		queue_seq->sequence = req_seq;
- 	}
+@@ -1451,7 +1450,7 @@ void drm_crtc_vblank_on(struct drm_crtc *crtc)
+ 	 */
+ 	if (atomic_read(&vblank->refcount) != 0 || drm_vblank_offdelay == 0)
+ 		drm_WARN_ON(dev, drm_vblank_enable(dev, pipe));
+-	spin_unlock_irqrestore(&dev->vbl_lock, irqflags);
++	spin_unlock_irq(&dev->vbl_lock);
+ }
+ EXPORT_SYMBOL(drm_crtc_vblank_on);
  
--	spin_unlock_irqrestore(&dev->event_lock, spin_flags);
-+	spin_unlock_irq(&dev->event_lock);
- 	return 0;
- 
- err_unlock:
--	spin_unlock_irqrestore(&dev->event_lock, spin_flags);
-+	spin_unlock_irq(&dev->event_lock);
- 	drm_crtc_vblank_put(crtc);
- err_free:
- 	kfree(e);
 -- 
 2.26.2
 
