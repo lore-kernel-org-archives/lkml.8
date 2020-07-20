@@ -5,47 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5336C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21176C4345B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF4520773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F395422D2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263209;
-	bh=Zr7p3Ul/aFedOfHDFZhKZYtxges4GwoHHWtfyuMiZkQ=;
+	s=default; t=1595263213;
+	bh=CxX0AJT363wpSILQqMtjxZO6oSEWTDFfl6+P8HsqE2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nX+AKDhhJ4NVhKAE7O24wOYOmrevyZL1sv5car5EzWU6Phg0C8nSOAda3QCAvNSTA
-	 3+69EGWvviZm0DxjExhtjKH2qL1o8g+LUIl5yLMa95RtsVYE2eqJ6I5BQhX+os2E/K
-	 rXcqsk0iwS1HoyKok8/4QZlZXdJI9zYT/8HpSynQ=
+	b=uKLcBgST+NvIm3r26/gtd1vob4LsL51uyTcOg5FzJJV3PzMUx95HI9WdEK4Z5EPpl
+	 e7HriRuR919ccNUtbEg6rXxIqk8CW/43tHa9HJW6PcOHhq1Q2qdHlNal9ygkDyMlBP
+	 psvQmyJI4/ndJJMfgyQb58uFQOkZmdElH+p5wCuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732265AbgGTQkI (ORCPT
+        id S1730805AbgGTPrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43252 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730800AbgGTPrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:47:52 -0400
+        id S1730780AbgGTPrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:47:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA44C2064B;
-        Mon, 20 Jul 2020 15:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3E342065E;
+        Mon, 20 Jul 2020 15:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260072;
-        bh=Zr7p3Ul/aFedOfHDFZhKZYtxges4GwoHHWtfyuMiZkQ=;
+        s=default; t=1595260061;
+        bh=CxX0AJT363wpSILQqMtjxZO6oSEWTDFfl6+P8HsqE2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s8EqHSKDv59dVNdQPbMhxYxv/CL2VefehgOVC+0IZGGFxphGqksEvuY5XBBrWPobw
-         EgPGBvBVPlfcGCv4lDpGMOS+Ql4YO7F8t9IY8dSxxzziry/od+5htYwtIS6t9SnkjM
-         8HKdvncdEttUIrNfInDgG8bpVAGdTls/4IkSKy+4=
+        b=fyBPHYfB/NYnPrnRBeusP3l9AV4uPs2A+9iAa9xoUZ+rLsEe7VyIkNnyuP60RoScX
+         XekkOhWWxnk1kHO3IeUBo6cRZV2xtdFWmMlQFeYOHvYcpSR/E3KIiW8/u95q8DLzl6
+         XkPcn9qtEgVMm3byGM/C/JgdU1RfP+wJbkvZ4Cg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>
-Subject: [PATCH 4.14 097/125] USB: c67x00: fix use after free in c67x00_giveback_urb
-Date:   Mon, 20 Jul 2020 17:37:16 +0200
-Message-Id: <20200720152807.711346961@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Stable@vger.kernel.org
+Subject: [PATCH 4.14 062/125] iio:magnetometer:ak8974: Fix alignment and data leak issues
+Date:   Mon, 20 Jul 2020 17:36:41 +0200
+Message-Id: <20200720152806.033894436@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152802.929969555@linuxfoundation.org>
 References: <20200720152802.929969555@linuxfoundation.org>
@@ -58,55 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-commit 211f08347355cba1f769bbf3355816a12b3ddd55 upstream.
+commit 838e00b13bfd4cac8b24df25bfc58e2eb99bcc70 upstream.
 
-clang static analysis flags this error
+One of a class of bugs pointed out by Lars in a recent review.
+iio_push_to_buffers_with_timestamp assumes the buffer used is aligned
+to the size of the timestamp (8 bytes).  This is not guaranteed in
+this driver which uses an array of smaller elements on the stack.
+As Lars also noted this anti pattern can involve a leak of data to
+userspace and that indeed can happen here.  We close both issues by
+moving to a suitable structure in the iio_priv() data.
 
-c67x00-sched.c:489:55: warning: Use of memory after it is freed [unix.Malloc]
-        usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, urbp->status);
-                                                             ^~~~~~~~~~~~
-Problem happens in this block of code
+This data is allocated with kzalloc so no data can leak appart from
+previous readings.
 
-	c67x00_release_urb(c67x00, urb);
-	usb_hcd_unlink_urb_from_ep(c67x00_hcd_to_hcd(c67x00), urb);
-	spin_unlock(&c67x00->lock);
-	usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, urbp->status);
-
-In the call to c67x00_release_urb has this freeing of urbp
-
-	urbp = urb->hcpriv;
-	urb->hcpriv = NULL;
-	list_del(&urbp->hep_node);
-	kfree(urbp);
-
-And so urbp is freed before usb_hcd_giveback_urb uses it as its 3rd
-parameter.
-
-Since all is required is the status, pass the status directly as is
-done in c64x00_urb_dequeue
-
-Fixes: e9b29ffc519b ("USB: add Cypress c67x00 OTG controller HCD driver")
-Signed-off-by: Tom Rix <trix@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200708131243.24336-1-trix@redhat.com
+Fixes: 7c94a8b2ee8cf ("iio: magn: add a driver for AK8974")
+Reported-by: Lars-Peter Clausen <lars@metafoo.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: <Stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/c67x00/c67x00-sched.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/magnetometer/ak8974.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/c67x00/c67x00-sched.c
-+++ b/drivers/usb/c67x00/c67x00-sched.c
-@@ -500,7 +500,7 @@ c67x00_giveback_urb(struct c67x00_hcd *c
- 	c67x00_release_urb(c67x00, urb);
- 	usb_hcd_unlink_urb_from_ep(c67x00_hcd_to_hcd(c67x00), urb);
- 	spin_unlock(&c67x00->lock);
--	usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, urbp->status);
-+	usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, status);
- 	spin_lock(&c67x00->lock);
- }
+--- a/drivers/iio/magnetometer/ak8974.c
++++ b/drivers/iio/magnetometer/ak8974.c
+@@ -184,6 +184,11 @@ struct ak8974 {
+ 	bool drdy_irq;
+ 	struct completion drdy_complete;
+ 	bool drdy_active_low;
++	/* Ensure timestamp is naturally aligned */
++	struct {
++		__le16 channels[3];
++		s64 ts __aligned(8);
++	} scan;
+ };
  
+ static const char ak8974_reg_avdd[] = "avdd";
+@@ -580,7 +585,6 @@ static void ak8974_fill_buffer(struct ii
+ {
+ 	struct ak8974 *ak8974 = iio_priv(indio_dev);
+ 	int ret;
+-	__le16 hw_values[8]; /* Three axes + 64bit padding */
+ 
+ 	pm_runtime_get_sync(&ak8974->i2c->dev);
+ 	mutex_lock(&ak8974->lock);
+@@ -590,13 +594,13 @@ static void ak8974_fill_buffer(struct ii
+ 		dev_err(&ak8974->i2c->dev, "error triggering measure\n");
+ 		goto out_unlock;
+ 	}
+-	ret = ak8974_getresult(ak8974, hw_values);
++	ret = ak8974_getresult(ak8974, ak8974->scan.channels);
+ 	if (ret) {
+ 		dev_err(&ak8974->i2c->dev, "error getting measures\n");
+ 		goto out_unlock;
+ 	}
+ 
+-	iio_push_to_buffers_with_timestamp(indio_dev, hw_values,
++	iio_push_to_buffers_with_timestamp(indio_dev, &ak8974->scan,
+ 					   iio_get_time_ns(indio_dev));
+ 
+  out_unlock:
 
 
