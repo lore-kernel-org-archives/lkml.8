@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA0BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A6CC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D816206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB4A20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262010;
-	bh=Y5bg9Y4GnzcKG6Ap7wWceKNr1KDlKIQK5OveZjreIZo=;
+	s=default; t=1595262015;
+	bh=81C3VjzhW5ZmEN+yM0OFhoBByB8E8wfop5z0GRFfSX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HFHSFfjogacPcq7ujrARyx3sY90zzu6hKNlQjbKIWDw7oxd3bXwS4Ux63o8kPsFSC
-	 74WZZ5hCQ2QjoNY6vfy876SDNJANe8QZJA10qrq2fMQv0LaMenuwvP0HpufN4KzYev
-	 C2jM7brrTn3NwnJeOl3TAjd0oQHBR1TmF2KuKwHY=
+	b=ydEx1tiRpXUc7Lh87kX+egIw3MRuEge4i5XasFsZsAPK53CwPD1JinuX8QFncQU0D
+	 6lm8TrZZSEmDLXTBrngCFfCyFJRak1191qEc7JhBmk1Triz0bFBhtrEepma4L1NLJo
+	 6ocpGaoIPiJDSi2kRiJcYp5kjVRIwmfUo0aWw968=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388395AbgGTQUJ (ORCPT
+        id S2388605AbgGTQUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:20:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49392 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:20:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387695AbgGTQKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:42 -0400
+        id S2387690AbgGTQKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBA6220672;
-        Mon, 20 Jul 2020 16:10:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00E652064B;
+        Mon, 20 Jul 2020 16:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261442;
-        bh=Y5bg9Y4GnzcKG6Ap7wWceKNr1KDlKIQK5OveZjreIZo=;
+        s=default; t=1595261439;
+        bh=81C3VjzhW5ZmEN+yM0OFhoBByB8E8wfop5z0GRFfSX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yHJv6qeC/l1y53q7hxs+RlvDLYffyUqoxY0vqTSGRyYC46z5y0eGHUMqoHuXxk1Sc
-         TW/l2Gudpt4rMuurOD1vqDox6D/Ha/uPnxClaBghmRNejOg0aTtQAlxOfpSnUi6WfZ
-         e5BFWfoMPn53FK6bSOSWJwaewPf/6GZ+Io+5t/5A=
+        b=nS8mHhfMpZXhu2TUp7vSrsHhue3+lFwiMfh6jFtBgojWRxy9oy5zG2SkRXIwtEPGF
+         f8ge98wkS5pSmPWVMb2oMElgLJEuy4F4LB5jLPM2Dq0jQP0NKF87IwGQo6DopRxrfL
+         Tb5NJTiIJyn7Wglc7lzL/oan18TEASWzcBZCbIKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH 5.7 118/244] arm: dts: mt7623: add phy-mode property for gmac2
-Date:   Mon, 20 Jul 2020 17:36:29 +0200
-Message-Id: <20200720152831.452338153@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Buettner <kevinb@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dave Airlie <airlied@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 117/244] copy_xstate_to_kernel: Fix typo which caused GDB regression
+Date:   Mon, 20 Jul 2020 17:36:28 +0200
+Message-Id: <20200720152831.404472124@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
 References: <20200720152825.863040590@linuxfoundation.org>
@@ -59,31 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Kevin Buettner <kevinb@redhat.com>
 
-commit ff5b89c2858f28006f9f9c0a88c55a679488192c upstream.
+commit 5714ee50bb4375bd586858ad800b1d9772847452 upstream.
 
-Add phy-mode property required by phylink on gmac2
+This fixes a regression encountered while running the
+gdb.base/corefile.exp test in GDB's test suite.
 
-Fixes: b8fc9f30821e ("net: ethernet: mediatek: Add basic PHYLINK support")
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Link: https://lore.kernel.org/r/70e3eff31ecd500ed4862d9de28325a4dbd15105.1583648927.git.sean.wang@mediatek.com
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+In my testing, the typo prevented the sw_reserved field of struct
+fxregs_state from being output to the kernel XSAVES area.  Thus the
+correct mask corresponding to XCR0 was not present in the core file for
+GDB to interrogate, resulting in the following behavior:
+
+   [kev@f32-1 gdb]$ ./gdb -q testsuite/outputs/gdb.base/corefile/corefile testsuite/outputs/gdb.base/corefile/corefile.core
+   Reading symbols from testsuite/outputs/gdb.base/corefile/corefile...
+   [New LWP 232880]
+
+   warning: Unexpected size of section `.reg-xstate/232880' in core file.
+
+With the typo fixed, the test works again as expected.
+
+Signed-off-by: Kevin Buettner <kevinb@redhat.com>
+Fixes: 9e4636545933 ("copy_xstate_to_kernel(): don't leave parts of destination uninitialized")
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Dave Airlie <airlied@gmail.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/mt7623n-rfb-emmc.dts |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/fpu/xstate.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-+++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-@@ -138,6 +138,7 @@
- 	mac@1 {
- 		compatible = "mediatek,eth-mac";
- 		reg = <1>;
-+		phy-mode = "rgmii";
- 		phy-handle = <&phy5>;
- 	};
- 
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -1022,7 +1022,7 @@ int copy_xstate_to_kernel(void *kbuf, st
+ 		copy_part(offsetof(struct fxregs_state, st_space), 128,
+ 			  &xsave->i387.st_space, &kbuf, &offset_start, &count);
+ 	if (header.xfeatures & XFEATURE_MASK_SSE)
+-		copy_part(xstate_offsets[XFEATURE_MASK_SSE], 256,
++		copy_part(xstate_offsets[XFEATURE_SSE], 256,
+ 			  &xsave->i387.xmm_space, &kbuf, &offset_start, &count);
+ 	/*
+ 	 * Fill xsave->i387.sw_reserved value for ptrace frame:
 
 
