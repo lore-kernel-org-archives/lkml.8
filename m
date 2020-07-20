@@ -2,239 +2,270 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C1FC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C66C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1131206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cVVTSp/y";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KkPA6Rbw"
+	by mail.kernel.org (Postfix) with ESMTP id 6CE422073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262828;
+	bh=AsUrBXkIVT5XIYaVslnPRsWOY8kNyE24QKz/+E0bSwY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D3pHaKJnG+PTxGFIyksKowUR4dR51KMleBzWCSnPAu5kKSjw+lFocfSlneoCsfwuC
+	 knFX5FsoUklBTmqyU39iSHZJilu+YGelRzBsiHE32qb1w3uTImVU02pHlw0J0lMyo3
+	 9MA5lpgd/yKKgy0OUuL/cOGn89CzYvJZi2igIMDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731723AbgGTPzt (ORCPT
+        id S1731807AbgGTQdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:55:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58700 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731225AbgGTPzn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:55:43 -0400
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595260541;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=osTtrNUr4OHk/B4zAgkYVq1r5kpsvFsCr0rPGrUYJ3o=;
-        b=cVVTSp/yxcUkuUT49JWGd0r+9986GyT5GOZQD6zLLS7JkcAKnHGz9oYf1FP67YJ6amNKfx
-        wj/IxFAlJW4QYey51hJ5jShODthCuI4yn7Ofmpak9lFjDU8+T/nFn9//xthonl2FzFRNJf
-        Z+8q17yC3OcApu1DrgwhcLWm5006nD7evxF49tPLb9jRZFKmRya/29bFsVBRWyiwVwbfvb
-        6XnSj358njN6AJgxEqxozYLM/J4z/fS9zIuXpBlWwBXJB2NFRDt07mueqs1sR441EGYrIy
-        tA8QYdZP4XinaOsRkb2BYdlt1OTM+6AudDclRB5OVSllsXRmChIyWLehTXh4hg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595260541;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=osTtrNUr4OHk/B4zAgkYVq1r5kpsvFsCr0rPGrUYJ3o=;
-        b=KkPA6RbwZMRD0z7JCvjKoZ5vai1cuanX0ola+cD+7oYDkJwTyjNpjUeA+gHtGdEIHNyfdu
-        u6bZViCZw/6soPAA==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: [PATCH v4 02/24] seqlock: Properly format kernel-doc code samples
-Date:   Mon, 20 Jul 2020 17:55:08 +0200
-Message-Id: <20200720155530.1173732-3-a.darwish@linutronix.de>
-In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200720155530.1173732-1-a.darwish@linutronix.de>
+        Mon, 20 Jul 2020 12:33:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731722AbgGTPzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:55:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F9E22065E;
+        Mon, 20 Jul 2020 15:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595260546;
+        bh=AsUrBXkIVT5XIYaVslnPRsWOY8kNyE24QKz/+E0bSwY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aG3+YmXypFegF5KgMHgLIsago2y/hSSTWIbk0qsgRmcrVMwVTrnzlVLIyJ3czZ4r/
+         hS9v0OsEKgxrMeqkkP8vGdHKJ8egyzn3gZkGLQ32ySRjibLYcidZEU7Jx6JNVUfKzZ
+         iFduLJlobx2V0FNI2d9gk/cYcQ+PzCKdz3IzHPyY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Lech Perczak <l.perczak@camlintechnologies.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Jann Horn <jannh@google.com>, Petr Mladek <pmladek@suse.com>,
+        Theodore Tso <tytso@mit.edu>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 130/133] printk: queue wake_up_klogd irq_work only if per-CPU areas are ready
+Date:   Mon, 20 Jul 2020 17:37:57 +0200
+Message-Id: <20200720152810.011879475@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
+References: <20200720152803.732195882@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Align the code samples and note sections inside kernel-doc comments with
-tabs. This way they can be properly parsed and rendered by Sphinx. It
-also makes the code samples easier to read from text editors.
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+commit ab6f762f0f53162d41497708b33c9a3236d3609e upstream.
+
+printk_deferred(), similarly to printk_safe/printk_nmi, does not
+immediately attempt to print a new message on the consoles, avoiding
+calls into non-reentrant kernel paths, e.g. scheduler or timekeeping,
+which potentially can deadlock the system.
+
+Those printk() flavors, instead, rely on per-CPU flush irq_work to print
+messages from safer contexts.  For same reasons (recursive scheduler or
+timekeeping calls) printk() uses per-CPU irq_work in order to wake up
+user space syslog/kmsg readers.
+
+However, only printk_safe/printk_nmi do make sure that per-CPU areas
+have been initialised and that it's safe to modify per-CPU irq_work.
+This means that, for instance, should printk_deferred() be invoked "too
+early", that is before per-CPU areas are initialised, printk_deferred()
+will perform illegal per-CPU access.
+
+Lech Perczak [0] reports that after commit 1b710b1b10ef ("char/random:
+silence a lockdep splat with printk()") user-space syslog/kmsg readers
+are not able to read new kernel messages.
+
+The reason is printk_deferred() being called too early (as was pointed
+out by Petr and John).
+
+Fix printk_deferred() and do not queue per-CPU irq_work before per-CPU
+areas are initialized.
+
+Link: https://lore.kernel.org/lkml/aa0732c6-5c4e-8a8b-a1c1-75ebe3dca05b@camlintechnologies.com/
+Reported-by: Lech Perczak <l.perczak@camlintechnologies.com>
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Tested-by: Jann Horn <jannh@google.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/seqlock.h | 108 +++++++++++++++++++++-------------------
- 1 file changed, 56 insertions(+), 52 deletions(-)
+ include/linux/printk.h      |    5 -----
+ init/main.c                 |    1 -
+ kernel/printk/internal.h    |    5 +++++
+ kernel/printk/printk.c      |   34 ++++++++++++++++++++++++++++++++++
+ kernel/printk/printk_safe.c |   11 +----------
+ 5 files changed, 40 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index 299d68f10325..6c4f68ef1393 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -263,32 +263,32 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
-  * atomically, avoiding compiler optimizations; b) to document which writes are
-  * meant to propagate to the reader critical section. This is necessary because
-  * neither writes before and after the barrier are enclosed in a seq-writer
-- * critical section that would ensure readers are aware of ongoing writes.
-+ * critical section that would ensure readers are aware of ongoing writes::
-  *
-- *      seqcount_t seq;
-- *      bool X = true, Y = false;
-+ *	seqcount_t seq;
-+ *	bool X = true, Y = false;
-  *
-- *      void read(void)
-- *      {
-- *              bool x, y;
-+ *	void read(void)
-+ *	{
-+ *		bool x, y;
-  *
-- *              do {
-- *                      int s = read_seqcount_begin(&seq);
-+ *		do {
-+ *			int s = read_seqcount_begin(&seq);
-  *
-- *                      x = X; y = Y;
-+ *			x = X; y = Y;
-  *
-- *              } while (read_seqcount_retry(&seq, s));
-+ *		} while (read_seqcount_retry(&seq, s));
-  *
-- *              BUG_ON(!x && !y);
-+ *		BUG_ON(!x && !y);
-  *      }
-  *
-  *      void write(void)
-  *      {
-- *              WRITE_ONCE(Y, true);
-+ *		WRITE_ONCE(Y, true);
-  *
-- *              raw_write_seqcount_barrier(seq);
-+ *		raw_write_seqcount_barrier(seq);
-  *
-- *              WRITE_ONCE(X, false);
-+ *		WRITE_ONCE(X, false);
-  *      }
-  */
- static inline void raw_write_seqcount_barrier(seqcount_t *s)
-@@ -325,64 +325,68 @@ static inline int raw_read_seqcount_latch(seqcount_t *s)
-  * Very simply put: we first modify one copy and then the other. This ensures
-  * there is always one copy in a stable state, ready to give us an answer.
-  *
-- * The basic form is a data structure like:
-+ * The basic form is a data structure like::
-  *
-- * struct latch_struct {
-- *	seqcount_t		seq;
-- *	struct data_struct	data[2];
-- * };
-+ *	struct latch_struct {
-+ *		seqcount_t		seq;
-+ *		struct data_struct	data[2];
-+ *	};
-  *
-  * Where a modification, which is assumed to be externally serialized, does the
-- * following:
-+ * following::
-  *
-- * void latch_modify(struct latch_struct *latch, ...)
-- * {
-- *	smp_wmb();	<- Ensure that the last data[1] update is visible
-- *	latch->seq++;
-- *	smp_wmb();	<- Ensure that the seqcount update is visible
-+ *	void latch_modify(struct latch_struct *latch, ...)
-+ *	{
-+ *		smp_wmb();	// Ensure that the last data[1] update is visible
-+ *		latch->seq++;
-+ *		smp_wmb();	// Ensure that the seqcount update is visible
-  *
-- *	modify(latch->data[0], ...);
-+ *		modify(latch->data[0], ...);
-  *
-- *	smp_wmb();	<- Ensure that the data[0] update is visible
-- *	latch->seq++;
-- *	smp_wmb();	<- Ensure that the seqcount update is visible
-+ *		smp_wmb();	// Ensure that the data[0] update is visible
-+ *		latch->seq++;
-+ *		smp_wmb();	// Ensure that the seqcount update is visible
-  *
-- *	modify(latch->data[1], ...);
-- * }
-+ *		modify(latch->data[1], ...);
-+ *	}
-  *
-- * The query will have a form like:
-+ * The query will have a form like::
-  *
-- * struct entry *latch_query(struct latch_struct *latch, ...)
-- * {
-- *	struct entry *entry;
-- *	unsigned seq, idx;
-+ *	struct entry *latch_query(struct latch_struct *latch, ...)
-+ *	{
-+ *		struct entry *entry;
-+ *		unsigned seq, idx;
-  *
-- *	do {
-- *		seq = raw_read_seqcount_latch(&latch->seq);
-+ *		do {
-+ *			seq = raw_read_seqcount_latch(&latch->seq);
-  *
-- *		idx = seq & 0x01;
-- *		entry = data_query(latch->data[idx], ...);
-+ *			idx = seq & 0x01;
-+ *			entry = data_query(latch->data[idx], ...);
-  *
-- *		smp_rmb();
-- *	} while (seq != latch->seq);
-+ *			smp_rmb();
-+ *		} while (seq != latch->seq);
-  *
-- *	return entry;
-- * }
-+ *		return entry;
-+ *	}
-  *
-  * So during the modification, queries are first redirected to data[1]. Then we
-  * modify data[0]. When that is complete, we redirect queries back to data[0]
-  * and we can modify data[1].
-  *
-- * NOTE: The non-requirement for atomic modifications does _NOT_ include
-- *       the publishing of new entries in the case where data is a dynamic
-- *       data structure.
-+ * NOTE:
-  *
-- *       An iteration might start in data[0] and get suspended long enough
-- *       to miss an entire modification sequence, once it resumes it might
-- *       observe the new entry.
-+ *	The non-requirement for atomic modifications does _NOT_ include
-+ *	the publishing of new entries in the case where data is a dynamic
-+ *	data structure.
-  *
-- * NOTE: When data is a dynamic data structure; one should use regular RCU
-- *       patterns to manage the lifetimes of the objects within.
-+ *	An iteration might start in data[0] and get suspended long enough
-+ *	to miss an entire modification sequence, once it resumes it might
-+ *	observe the new entry.
-+ *
-+ * NOTE:
-+ *
-+ *	When data is a dynamic data structure; one should use regular RCU
-+ *	patterns to manage the lifetimes of the objects within.
-  */
- static inline void raw_write_seqcount_latch(seqcount_t *s)
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -206,7 +206,6 @@ __printf(1, 2) void dump_stack_set_arch_
+ void dump_stack_print_info(const char *log_lvl);
+ void show_regs_print_info(const char *log_lvl);
+ extern asmlinkage void dump_stack(void) __cold;
+-extern void printk_safe_init(void);
+ extern void printk_safe_flush(void);
+ extern void printk_safe_flush_on_panic(void);
+ #else
+@@ -273,10 +272,6 @@ static inline asmlinkage void dump_stack
  {
--- 
-2.20.1
+ }
+ 
+-static inline void printk_safe_init(void)
+-{
+-}
+-
+ static inline void printk_safe_flush(void)
+ {
+ }
+--- a/init/main.c
++++ b/init/main.c
+@@ -641,7 +641,6 @@ asmlinkage __visible void __init start_k
+ 	softirq_init();
+ 	timekeeping_init();
+ 	time_init();
+-	printk_safe_init();
+ 	perf_event_init();
+ 	profile_init();
+ 	call_function_init();
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -35,6 +35,9 @@ __printf(1, 0) int vprintk_func(const ch
+ void __printk_safe_enter(void);
+ void __printk_safe_exit(void);
+ 
++void printk_safe_init(void);
++bool printk_percpu_data_ready(void);
++
+ #define printk_safe_enter_irqsave(flags)	\
+ 	do {					\
+ 		local_irq_save(flags);		\
+@@ -76,4 +79,6 @@ __printf(1, 0) int vprintk_func(const ch
+ #define printk_safe_enter_irq() local_irq_disable()
+ #define printk_safe_exit_irq() local_irq_enable()
+ 
++static inline void printk_safe_init(void) { }
++static inline bool printk_percpu_data_ready(void) { return false; }
+ #endif /* CONFIG_PRINTK */
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -443,6 +443,18 @@ static char __log_buf[__LOG_BUF_LEN] __a
+ static char *log_buf = __log_buf;
+ static u32 log_buf_len = __LOG_BUF_LEN;
+ 
++/*
++ * We cannot access per-CPU data (e.g. per-CPU flush irq_work) before
++ * per_cpu_areas are initialised. This variable is set to true when
++ * it's safe to access per-CPU data.
++ */
++static bool __printk_percpu_data_ready __read_mostly;
++
++bool printk_percpu_data_ready(void)
++{
++	return __printk_percpu_data_ready;
++}
++
+ /* Return log buffer address */
+ char *log_buf_addr_get(void)
+ {
+@@ -1101,12 +1113,28 @@ static void __init log_buf_add_cpu(void)
+ static inline void log_buf_add_cpu(void) {}
+ #endif /* CONFIG_SMP */
+ 
++static void __init set_percpu_data_ready(void)
++{
++	printk_safe_init();
++	/* Make sure we set this flag only after printk_safe() init is done */
++	barrier();
++	__printk_percpu_data_ready = true;
++}
++
+ void __init setup_log_buf(int early)
+ {
+ 	unsigned long flags;
+ 	char *new_log_buf;
+ 	unsigned int free;
+ 
++	/*
++	 * Some archs call setup_log_buf() multiple times - first is very
++	 * early, e.g. from setup_arch(), and second - when percpu_areas
++	 * are initialised.
++	 */
++	if (!early)
++		set_percpu_data_ready();
++
+ 	if (log_buf != __log_buf)
+ 		return;
+ 
+@@ -2913,6 +2941,9 @@ static DEFINE_PER_CPU(struct irq_work, w
+ 
+ void wake_up_klogd(void)
+ {
++	if (!printk_percpu_data_ready())
++		return;
++
+ 	preempt_disable();
+ 	if (waitqueue_active(&log_wait)) {
+ 		this_cpu_or(printk_pending, PRINTK_PENDING_WAKEUP);
+@@ -2923,6 +2954,9 @@ void wake_up_klogd(void)
+ 
+ void defer_console_output(void)
+ {
++	if (!printk_percpu_data_ready())
++		return;
++
+ 	preempt_disable();
+ 	__this_cpu_or(printk_pending, PRINTK_PENDING_OUTPUT);
+ 	irq_work_queue(this_cpu_ptr(&wake_up_klogd_work));
+--- a/kernel/printk/printk_safe.c
++++ b/kernel/printk/printk_safe.c
+@@ -39,7 +39,6 @@
+  * There are situations when we want to make sure that all buffers
+  * were handled or when IRQs are blocked.
+  */
+-static int printk_safe_irq_ready __read_mostly;
+ 
+ #define SAFE_LOG_BUF_LEN ((1 << CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT) -	\
+ 				sizeof(atomic_t) -			\
+@@ -63,7 +62,7 @@ static DEFINE_PER_CPU(struct printk_safe
+ /* Get flushed in a more safe context. */
+ static void queue_flush_work(struct printk_safe_seq_buf *s)
+ {
+-	if (printk_safe_irq_ready)
++	if (printk_percpu_data_ready())
+ 		irq_work_queue(&s->work);
+ }
+ 
+@@ -414,14 +413,6 @@ void __init printk_safe_init(void)
+ #endif
+ 	}
+ 
+-	/*
+-	 * In the highly unlikely event that a NMI were to trigger at
+-	 * this moment. Make sure IRQ work is set up before this
+-	 * variable is set.
+-	 */
+-	barrier();
+-	printk_safe_irq_ready = 1;
+-
+ 	/* Flush pending messages that did not have scheduled IRQ works. */
+ 	printk_safe_flush();
+ }
+
 
