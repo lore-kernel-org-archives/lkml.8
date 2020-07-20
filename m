@@ -2,97 +2,178 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F09C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24813C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB3A206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260383;
-	bh=n442EvsTbqBEqgyjT3wxtejbdW4jiSK7yLdja7AltvE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uIync87RP8Bs6lfX86QThXQlf2ox2UGMJXkVwseMZkg4OmjPl3V078aSvZYdNaeF3
-	 eT1UpWS4/MrMiD3iqTdsvIktwusEk1KfkLxibM6EzeJ8j2yI6MOuu3s81sOfW9zyja
-	 EPgjMgijqDw2iQngLHDPPebjM+SqijzfLaGy0q18=
+	by mail.kernel.org (Postfix) with ESMTP id 0A11D2065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:53:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbgGTPxC (ORCPT
+        id S1729694AbgGTPw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:53:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730407AbgGTPxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:53:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4283D22D2C;
-        Mon, 20 Jul 2020 15:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260379;
-        bh=n442EvsTbqBEqgyjT3wxtejbdW4jiSK7yLdja7AltvE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fBVC8ApB7jEPZFM/1tDNFOFdF2kK32R5+ok/vLoJUfAw3faRW7mm/fy70hr1zfaX7
-         K5wCZxd5iPKPug16Rejt21ppmwOhj+bTtVn5GLqOzdfHmOL97NKNjfj5ahcx28BPle
-         VU3X8MOjdGb0yG13DWT5f9pUpFW7oPFqciPmHQfE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yariv <oigevald+kernel@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.19 082/133] HID: magicmouse: do not set up autorepeat
-Date:   Mon, 20 Jul 2020 17:37:09 +0200
-Message-Id: <20200720152807.672392967@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152803.732195882@linuxfoundation.org>
-References: <20200720152803.732195882@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 20 Jul 2020 11:52:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25962 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731115AbgGTPwt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:52:49 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KFZClQ100188;
+        Mon, 20 Jul 2020 11:51:58 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5h7sk2a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 11:51:57 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KFaXMR110773;
+        Mon, 20 Jul 2020 11:51:57 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5h7sk1c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 11:51:57 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KFYvFQ012130;
+        Mon, 20 Jul 2020 15:51:55 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma02wdc.us.ibm.com with ESMTP id 32brq8tb75-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 15:51:55 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KFps6657934112
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 15:51:54 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A87178060;
+        Mon, 20 Jul 2020 15:51:54 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED0747805E;
+        Mon, 20 Jul 2020 15:51:46 +0000 (GMT)
+Received: from [153.66.254.194] (unknown [9.85.132.116])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 15:51:46 +0000 (GMT)
+Message-ID: <1595260305.4554.9.camel@linux.ibm.com>
+Subject: Re: [PATCH 3/6] mm: introduce secretmemfd system call to create
+ "secret" memory areas
+From:   James Bottomley <jejb@linux.ibm.com>
+Reply-To: jejb@linux.ibm.com
+To:     Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linaro-mm-sig@lists.linaro.org,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Mon, 20 Jul 2020 08:51:45 -0700
+In-Reply-To: <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com>
+References: <20200720092435.17469-1-rppt@kernel.org>
+         <20200720092435.17469-4-rppt@kernel.org>
+         <CAK8P3a0NyvRMqH7X0YNO5E6DGtvZXD5ZcD6Y6n7AkocufkMnHA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 adultscore=0 clxscore=1011 mlxscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+On Mon, 2020-07-20 at 13:30 +0200, Arnd Bergmann wrote:
+> On Mon, Jul 20, 2020 at 11:25 AM Mike Rapoport <rppt@kernel.org>
+> wrote:
+> > 
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> > 
+> > Introduce "secretmemfd" system call with the ability to create
+> > memory areas visible only in the context of the owning process and
+> > not mapped not only to other processes but in the kernel page
+> > tables as well.
+> > 
+> > The user will create a file descriptor using the secretmemfd system
+> > call where flags supplied as a parameter to this system call will
+> > define the desired protection mode for the memory associated with
+> > that file descriptor. Currently there are two protection modes:
+> > 
+> > * exclusive - the memory area is unmapped from the kernel direct
+> > map and it
+> >               is present only in the page tables of the owning mm.
+> > * uncached  - the memory area is present only in the page tables of
+> > the
+> >               owning mm and it is mapped there as uncached.
+> > 
+> > For instance, the following example will create an uncached mapping
+> > (error handling is omitted):
+> > 
+> >         fd = secretmemfd(SECRETMEM_UNCACHED);
+> >         ftruncate(fd, MAP_SIZE);
+> >         ptr = mmap(NULL, MAP_SIZE, PROT_READ | PROT_WRITE,
+> > MAP_SHARED,
+> >                    fd, 0);
+> > 
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> I wonder if this should be more closely related to dmabuf file
+> descriptors, which are already used for a similar purpose: sharing
+> access to secret memory areas that are not visible to the OS but can
+> be shared with hardware through device drivers that can import a
+> dmabuf file descriptor.
 
-commit 6363d2065cd399cf9d6dc9d08c437f8658831100 upstream.
+I'll assume you mean the dmabuf userspace API?  Because the kernel API
+is completely device exchange specific and wholly inappropriate for
+this use case.
 
-Neither the trackpad, nor the mouse want input core to generate autorepeat
-events for their buttons, so let's reset the bit (as hid-input sets it for
-these devices based on the usage vendor code).
+The user space API of dmabuf uses a pseudo-filesystem.  So you mount
+the dmabuf file type (and by "you" I mean root because an ordinary user
+doesn't have sufficient privilege).  This is basically because every
+dmabuf is usable by any user who has permissions.  This really isn't
+the initial interface we want for secret memory because secret regions
+are supposed to be per process and not shared (at least we don't want
+other tenants to see who's using what).
 
-Cc: stable@vger.kernel.org
-Reported-by: Yariv <oigevald+kernel@gmail.com>
-Tested-by: Yariv <oigevald+kernel@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Once you have the fd, you can seek to find the size, mmap, poll and
+ioctl it.  The ioctls are all to do with memory synchronization (as
+you'd expect from a device backed region) and the mmap is handled by
+the dma_buf_ops, which is device specific.  Sizing is missing because
+that's reported by the device not settable by the user.
 
----
- drivers/hid/hid-magicmouse.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+What we want is the ability to get an fd, set the properties and the
+size and mmap it.  This is pretty much a 100% overlap with the memfd
+API and not much overlap with the dmabuf one, which is why I don't
+think the interface is very well suited.
 
---- a/drivers/hid/hid-magicmouse.c
-+++ b/drivers/hid/hid-magicmouse.c
-@@ -452,6 +452,12 @@ static int magicmouse_setup_input(struct
- 		__set_bit(MSC_RAW, input->mscbit);
- 	}
- 
-+	/*
-+	 * hid-input may mark device as using autorepeat, but neither
-+	 * the trackpad, nor the mouse actually want it.
-+	 */
-+	__clear_bit(EV_REP, input->evbit);
-+
- 	return 0;
- }
- 
-
+James
 
