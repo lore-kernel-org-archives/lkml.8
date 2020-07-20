@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35F0C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AE4C2D0A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5BFF22BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1840922CB2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281169;
-	bh=YtDnHAVbA9/a5sdIs/kcn/Sqz1wweEJKvU0Wv/lqQr8=;
+	s=default; t=1595281176;
+	bh=404mlOwBRprthN1mkVirySgS0S2bS+wvcYx3rW8zKHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=we3MtHtb5iCTdSJBSeJ0e1gXZGF1HKljyPeks8b7QuhMFGl5Y1bGgqPI9Bx7HCU8x
-	 3nXQ2RvCLxJYHNidqRhNYXJLjYUMRtkpQ+m+kcUARPwz5PmRrQo3PGSMx4x/+wnhb2
-	 xY32v/h5syBSxoOZrk2T0cHj0nHMjdqT43lP5QYU=
+	b=C3stv0YHSx4W7qiZKidlOFvg2dv6wc+onXqfU9WFV0Ao2tKHA4p2jnTS3oDjwnsH6
+	 cj+DYwOUz9zlggvTVPOpvJNIYR357JU4dT3ixHA4THPdQE0Rus7Cm5A0LwOZj6+ql+
+	 T1SDq93Wxf9l5eLyAtl44OpU9L3qvxz4MXNdwfis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgGTVj2 (ORCPT
+        id S1728500AbgGTVjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:39:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57980 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:39:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728304AbgGTVi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:59 -0400
+        id S1728319AbgGTVjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ACD922C7B;
-        Mon, 20 Jul 2020 21:38:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA7FA22BEF;
+        Mon, 20 Jul 2020 21:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281139;
-        bh=YtDnHAVbA9/a5sdIs/kcn/Sqz1wweEJKvU0Wv/lqQr8=;
+        s=default; t=1595281142;
+        bh=404mlOwBRprthN1mkVirySgS0S2bS+wvcYx3rW8zKHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lqJk2vzlYQKNXaMYcMbD0z8GZciNOLjY4JEuD7w+FsXS/lpeDqx8rWGWDDRRemR9f
-         +IKsoXuCsMPx+CATVOXjKKAkY7WUPTgdB2nxECtGYiax6F0ajTMji9GETyyfqIzhwl
-         OqzDdUoBQAOYO42akAe6YY4b3Ta0VXcDdD5AxH7w=
+        b=nQ0Dtml6WfhLeFuXNAnGm5zeV5hV1m+9I/Z/Ma+8STeaIBrYeunqQ5gx7IHZh5z/G
+         j/CxXKFPK70KPrsJI6cZ9A6h+STNKrXx9x2SxjIta+YYUzTtNilNDQ0/6hpe97qOa+
+         /81e5+BdHzRKtQhgT7m59BVYIzD7Es/iVzJ2u7MM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Merlijn Wajer <merlijn@wizzup.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/19] Input: add `SW_MACHINE_COVER`
-Date:   Mon, 20 Jul 2020 17:38:37 -0400
-Message-Id: <20200720213851.407715-6-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 09/19] hwmon: (aspeed-pwm-tacho) Avoid possible buffer overflow
+Date:   Mon, 20 Jul 2020 17:38:40 -0400
+Message-Id: <20200720213851.407715-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213851.407715-1-sashal@kernel.org>
 References: <20200720213851.407715-1-sashal@kernel.org>
@@ -61,52 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Merlijn Wajer <merlijn@wizzup.org>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit c463bb2a8f8d7d97aa414bf7714fc77e9d3b10df ]
+[ Upstream commit bc4071aafcf4d0535ee423b69167696d6c03207d ]
 
-This event code represents the state of a removable cover of a device.
-Value 0 means that the cover is open or removed, value 1 means that the
-cover is closed.
+aspeed_create_fan() reads a pwm_port value using of_property_read_u32().
+If pwm_port will be more than ARRAY_SIZE(pwm_port_params), there will be
+a buffer overflow in
+aspeed_create_pwm_port()->aspeed_set_pwm_port_enable(). The patch fixes
+the potential buffer overflow.
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
-Link: https://lore.kernel.org/r/20200612125402.18393-2-merlijn@wizzup.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Link: https://lore.kernel.org/r/20200703111518.9644-1-novikov@ispras.ru
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mod_devicetable.h        | 2 +-
- include/uapi/linux/input-event-codes.h | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/hwmon/aspeed-pwm-tacho.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 84e4e20352d9f..610cdf8082f2e 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -299,7 +299,7 @@ struct pcmcia_device_id {
- #define INPUT_DEVICE_ID_LED_MAX		0x0f
- #define INPUT_DEVICE_ID_SND_MAX		0x07
- #define INPUT_DEVICE_ID_FF_MAX		0x7f
--#define INPUT_DEVICE_ID_SW_MAX		0x0f
-+#define INPUT_DEVICE_ID_SW_MAX		0x10
- #define INPUT_DEVICE_ID_PROP_MAX	0x1f
+diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
+index 5e449eac788a1..a43fa730a513b 100644
+--- a/drivers/hwmon/aspeed-pwm-tacho.c
++++ b/drivers/hwmon/aspeed-pwm-tacho.c
+@@ -880,6 +880,8 @@ static int aspeed_create_fan(struct device *dev,
+ 	ret = of_property_read_u32(child, "reg", &pwm_port);
+ 	if (ret)
+ 		return ret;
++	if (pwm_port >= ARRAY_SIZE(pwm_port_params))
++		return -EINVAL;
+ 	aspeed_create_pwm_port(priv, (u8)pwm_port);
  
- #define INPUT_DEVICE_ID_MATCH_BUS	1
-diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-index 61a5799b440b9..c3e84f7c8261a 100644
---- a/include/uapi/linux/input-event-codes.h
-+++ b/include/uapi/linux/input-event-codes.h
-@@ -795,7 +795,8 @@
- #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
- #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
- #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
--#define SW_MAX			0x0f
-+#define SW_MACHINE_COVER	0x10  /* set = cover closed */
-+#define SW_MAX			0x10
- #define SW_CNT			(SW_MAX+1)
- 
- /*
+ 	ret = of_property_count_u8_elems(child, "cooling-levels");
 -- 
 2.25.1
 
