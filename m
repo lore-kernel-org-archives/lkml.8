@@ -2,115 +2,208 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E36C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37A6522B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1FB22B51
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 18:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ks6dk1mR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w5rlct7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbgGTSMs (ORCPT
+        id S1731082AbgGTSNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 14:12:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgGTSMq (ORCPT
+        Mon, 20 Jul 2020 14:13:05 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49268 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgGTSNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 14:12:46 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB56C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 11:12:46 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 124so22894839ybb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 11:12:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=foQP01o+jLLxWyYMddt7wMxz9LiizEHjChmq39E8dvQ=;
-        b=ks6dk1mRoPvv5K/RguqHzZXRvpQzZ8Sma0KZPaH2f9dcYupIWG8cBMxwDl+AR4xhaV
-         CH1dhBt+6QvtqFvJImE7/TQy6QanJ3RuMki6d2XjchxX6NLmodxKd/KU4im88YsqeISB
-         0PdFNGrai/DE1DxfYYhfhT+51rxO3HwD7yttKR78i/mA3LXJAncVIiTIkjq0TKeK7F2b
-         sHfctGLF7Zvzut+ZSeq6cb4vKRBUUEW2YtnYgEgH5jCsx4+dhdKZHZk4cn03GDcAWKAt
-         Wmc6voUlwuxFz/qni4DIekfBhxrgjZWS+g8WjfJWc6pKMq891yKv8oGa2AbFZd79eTpv
-         o/EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=foQP01o+jLLxWyYMddt7wMxz9LiizEHjChmq39E8dvQ=;
-        b=lvyDltCuvsrtQgMHeNsTR6p72z2ZxLNI9Jatr6bWejo19D6nAdDegQQRpM7BUwqEM+
-         gcnsSUWCEXaDpouPEcCvOL7LPRSCOOFqeepOaCaFc2UYLlWO0VYGCIc5VuAracW81QII
-         XM12q7MiQHv3oYanxQD1U3H1Jk2jFAh4DzWLoSayQCTG3sWm8xwVC6p2qfuWtlzKAk7T
-         U9P3XWh3/0p9tSTkqAaUhDHVIhjZsYgy2FlWWAzYZg71am1mOHHtlCLxbgEXcbIcPacB
-         kVfG/Zm1lkLhPG44RRvG/UWdjFt2kxLuPS6kx8xlWfvyXACD4EGIySBjNoP+z+uf3PNY
-         3nmw==
-X-Gm-Message-State: AOAM531ufQbnMV+zonYA1m8BYrGcakzv/AtKTbbA6zMOpaH7XbyDCuqz
-        YTJn9Rk/byS9BJUD6pngv3ZV/T+7TjaO
-X-Google-Smtp-Source: ABdhPJzqOaS4ZMz+61ASiwWqZJTx0yklQsWOZm640ChrHnJkwqqqGPaVilq3n2xbqX2bO72REcKFb38xI/gV
-X-Received: by 2002:a25:fc04:: with SMTP id v4mr37291336ybd.164.1595268765617;
- Mon, 20 Jul 2020 11:12:45 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 11:12:22 -0700
-Message-Id: <20200720181237.3015826-1-maskray@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [PATCH] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
-From:   Fangrui Song <maskray@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Cc:     Fangrui Song <maskray@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 20 Jul 2020 14:13:05 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KIC9AX046558;
+        Mon, 20 Jul 2020 13:12:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595268729;
+        bh=4KiZbT+DgSaObYOpScRgrA6GAU+kccEbndY0uV9caOs=;
+        h=From:To:CC:Subject:Date;
+        b=w5rlct7zKGxmme+hGSBvRAztq7+B/mpHXTY6TmK5lhME8Ipr+bCa+pKXwQFMnu1tI
+         8eKUhbTZKJBUctn0GRgrUw9g0X9FdhfnnfjWKQqsqQ/GJb5S43y6c2SgnkvBGsmGgr
+         iONtnqPoZ99nKO5XZ1Csh2IB7ITX5H+KEQ8Cr6t0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KIC9Xh090919;
+        Mon, 20 Jul 2020 13:12:09 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 13:12:08 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 13:12:08 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KIC8tD050355;
+        Mon, 20 Jul 2020 13:12:08 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/2] dt-bindings: tas2770: Convert tas2770 binding to yaml
+Date:   Mon, 20 Jul 2020 13:12:01 -0500
+Message-ID: <20200720181202.31000-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
-$(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-,
-GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
-/usr/bin/ and Clang as of 11 will search for both
-$(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
+Convert the tas2770 binding to yaml format.
+Add in the reset-gpio to the binding as it is in the code but not
+documented in the binding.
 
-GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
-$(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
-$(prefix)aarch64-linux-gnu/$needle rarely contains executables.
-
-To better model how GCC's -B/--prefix takes in effect in practice, newer
-Clang only searches for $(prefix)$needle and for example it will find
-/usr/bin/as instead of /usr/bin/aarch64-linux-gnu-as.
-
-Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
-(/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
-appropriate cross compiling GNU as (when -no-integrated-as is in
-effect).
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/1099
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/sound/tas2770.txt     | 37 ---------
+ .../devicetree/bindings/sound/tas2770.yaml    | 76 +++++++++++++++++++
+ 2 files changed, 76 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/tas2770.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/tas2770.yaml
 
-diff --git a/Makefile b/Makefile
-index 0b5f8538bde5..3ac83e375b61 100644
---- a/Makefile
-+++ b/Makefile
-@@ -567,7 +567,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
- ifneq ($(CROSS_COMPILE),)
- CLANG_FLAGS	+= --target=$(notdir $(CROSS_COMPILE:%-=%))
- GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
--CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)
-+CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
- GCC_TOOLCHAIN	:= $(realpath $(GCC_TOOLCHAIN_DIR)/..)
- endif
- ifneq ($(GCC_TOOLCHAIN),)
+diff --git a/Documentation/devicetree/bindings/sound/tas2770.txt b/Documentation/devicetree/bindings/sound/tas2770.txt
+deleted file mode 100644
+index ede6bb3d9637..000000000000
+--- a/Documentation/devicetree/bindings/sound/tas2770.txt
++++ /dev/null
+@@ -1,37 +0,0 @@
+-Texas Instruments TAS2770 Smart PA
+-
+-The TAS2770 is a mono, digital input Class-D audio amplifier optimized for
+-efficiently driving high peak power into small loudspeakers.
+-Integrated speaker voltage and current sense provides for
+-real time monitoring of loudspeaker behavior.
+-
+-Required properties:
+-
+- - compatible:	   - Should contain "ti,tas2770".
+- - reg:		       - The i2c address. Should contain <0x4c>, <0x4d>,<0x4e>, or <0x4f>.
+- - #address-cells  - Should be <1>.
+- - #size-cells     - Should be <0>.
+- - ti,asi-format:  - Sets TDM RX capture edge. 0->Rising; 1->Falling.
+- - ti,imon-slot-no:- TDM TX current sense time slot.
+- - ti,vmon-slot-no:- TDM TX voltage sense time slot.
+-
+-Optional properties:
+-
+-- interrupt-parent: the phandle to the interrupt controller which provides
+-                     the interrupt.
+-- interrupts: interrupt specification for data-ready.
+-
+-Examples:
+-
+-    tas2770@4c {
+-                compatible = "ti,tas2770";
+-                reg = <0x4c>;
+-                #address-cells = <1>;
+-                #size-cells = <0>;
+-                interrupt-parent = <&msm_gpio>;
+-                interrupts = <97 0>;
+-                ti,asi-format = <0>;
+-                ti,imon-slot-no = <0>;
+-                ti,vmon-slot-no = <2>;
+-        };
+-
+diff --git a/Documentation/devicetree/bindings/sound/tas2770.yaml b/Documentation/devicetree/bindings/sound/tas2770.yaml
+new file mode 100644
+index 000000000000..8192450d72dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas2770.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2019-20 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/sound/tas2770.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Texas Instruments TAS2770 Smart PA
++
++maintainers:
++  - Shi Fu <shifu0704@thundersoft.com>
++
++description: |
++  The TAS2770 is a mono, digital input Class-D audio amplifier optimized for
++  efficiently driving high peak power into small loudspeakers.
++  Integrated speaker voltage and current sense provides for
++  real time monitoring of loudspeaker behavior.
++
++properties:
++  compatible:
++    enum:
++      - ti,tas2770
++
++  reg:
++    maxItems: 1
++    description: |
++       I2C address of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
++
++  reset-gpio:
++    description: GPIO used to reset the device.
++
++  interrupts:
++    maxItems: 1
++
++  ti,imon-slot-no:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: TDM TX current sense time slot.
++
++  ti,vmon-slot-no:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: TDM TX voltage sense time slot.
++
++  ti,asi-format:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Sets TDM RX capture edge.
++    enum:
++          - 0 # Rising edge
++          - 1 # Falling edge
++
++  '#sound-dai-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++   #include <dt-bindings/gpio/gpio.h>
++   i2c0 {
++     #address-cells = <1>;
++     #size-cells = <0>;
++     codec: codec@4c {
++       compatible = "ti,tas2770";
++       reg = <0x4c>;
++       #sound-dai-cells = <1>;
++       interrupt-parent = <&gpio1>;
++       interrupts = <14>;
++       reset-gpio = <&gpio1 15 0>;
++       ti,imon-slot-no = <0>;
++       ti,vmon-slot-no = <2>;
++     };
++   };
++
 -- 
-2.28.0.rc0.105.gf9edc3c819-goog
+2.27.0
 
