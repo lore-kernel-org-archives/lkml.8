@@ -2,160 +2,145 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931BAC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF7E22CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E62122CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261414;
-	bh=BP5p3xvMdM2LHrjqsnq4+2Ifc19baMI8Cqa1u5Fe9vI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XaJ0EwiKCPkYggNetftvlqf48h4vtrXYVaZHVyo9YWqYnTJT4nxBg/OElgM3upplj
-	 6DqTX8lFqV8PxzmkERob8MN7jclsBL+Yii9JBolHIiU4azehvd7rabB1F7jPV+rT0u
-	 mkJv6nHcn1fyk6xHQTcPICXtmHFc5cAZ/Qbr/wyQ=
+	s=default; t=1595261416;
+	bh=U7uXjX8IfjoIHHcZ94LBnWRXLP1OX+olQJgVuZvrYz8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UdNkRWT5HQxfqOwQELhXR8iJOigCaH61rRiFhCdPcxHEKwVMnGtjdWXFzucz7L5t2
+	 4N5G96AVGvaN+i/z3WvkjGYXmpF20EjtLNRKvzbCUfoZ9C9hXH6ZQekaCR26q8Hn+4
+	 9xOjeip75PLLq8kfV/08ZZjNg85GVMgD8KMYtz88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387640AbgGTQKN (ORCPT
+        id S2387648AbgGTQKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48438 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:10:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387628AbgGTQKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:10:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387633AbgGTQKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:10:11 -0400
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FA1320672;
-        Mon, 20 Jul 2020 16:10:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3404E2064B;
+        Mon, 20 Jul 2020 16:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261409;
-        bh=BP5p3xvMdM2LHrjqsnq4+2Ifc19baMI8Cqa1u5Fe9vI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nd20TkyZau7HN2ZogBj8gCRXC6PB5EeKm2h/oS/P+4OPXow4IbBjIOug/UHtcQgvI
-         gJUPYqx9Jg1iP+CsVO7KKt/2HsJmTp0LrmWbeLwPvASut7SLA5tfughV61EpR8w6Y+
-         bNKKOcmILxEETTomW50HW2xVP85vZK5uDBHEKdxk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Aloni <dan@kernelim.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 104/244] xprtrdma: Fix recursion into rpcrdma_xprt_disconnect()
-Date:   Mon, 20 Jul 2020 17:36:15 +0200
-Message-Id: <20200720152830.777325100@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152825.863040590@linuxfoundation.org>
-References: <20200720152825.863040590@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1595261410;
+        bh=U7uXjX8IfjoIHHcZ94LBnWRXLP1OX+olQJgVuZvrYz8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mywFm7Q0v6qrIqaQ80nhFbUpcFOGRvUhHtCEA/fayqjg0rtYs/pYaWNKJfRqyw3i7
+         XLoxMzbKuZ6U1GcIcAVpCuXX8oodHcdxaDHqTU0uV8Uk8ODLH1CZk2FLTVg8JWrWk5
+         azVsSx9XhFktMuRsA0P0lAJSD1h4gOcHR2w6hAVE=
+Received: by mail-ej1-f42.google.com with SMTP id w9so4531276ejc.8;
+        Mon, 20 Jul 2020 09:10:10 -0700 (PDT)
+X-Gm-Message-State: AOAM532UX6QmOkkBaR02RKknpIS2MC84vWZupOPQ9JrLRy6icZs/0LNG
+        BQfwcdpj72qj4FEDNwQgY8s9dOLej04/Eu4NUQ==
+X-Google-Smtp-Source: ABdhPJzjWZka7dLZIstGqrBjwKgkCw0Jts0It8B2AGaHIdJ5T0KmMrd6sjOYVhE+rD/LgFxqtR3lEzkplYm7brWs4pA=
+X-Received: by 2002:a17:906:404e:: with SMTP id y14mr21106907ejj.260.1595261408723;
+ Mon, 20 Jul 2020 09:10:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200506084039.249977-1-eizan@chromium.org> <20200506184018.v2.1.I27dac0775ba64deff6a91837f39bfba83dccdf84@changeid>
+In-Reply-To: <20200506184018.v2.1.I27dac0775ba64deff6a91837f39bfba83dccdf84@changeid>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 21 Jul 2020 00:09:57 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9qSpH51kkopofoQTfSqYqGWcQVN8KrJJKQDWozoMK+NQ@mail.gmail.com>
+Message-ID: <CAAOTY_9qSpH51kkopofoQTfSqYqGWcQVN8KrJJKQDWozoMK+NQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] [media] mtk-mdp: add driver to probe mdp components
+To:     Eizan Miyamoto <eizan@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi, Eizan:
 
-[ Upstream commit 4cf44be6f1e86da302085bf3e1dc2c86f3cdaaaa ]
+Eizan Miyamoto <eizan@chromium.org> =E6=96=BC 2020=E5=B9=B45=E6=9C=886=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:41=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Broadly, this patch (1) adds a driver for various MTK MDP components to
+> go alongside the main MTK MDP driver, and (2) hooks them all together
+> using the component framework.
+>
+> (1) Up until now, the MTK MDP driver controls 8 devices in the device
+> tree on its own. When running tests for the hardware video decoder, we
+> found that the iommus and LARBs were not being properly configured. To
+> configure them, a driver for each be added to mtk_mdp_comp so that
+> mtk_iommu_add_device() can (eventually) be called from dma_configure()
+> inside really_probe().
+>
+> (2) The integration into the component framework allows us to defer the
+> registration with the v4l2 subsystem until all the MDP-related devices
+> have been probed, so that the relevant device node does not become
+> available until initialization of all the components is complete.
+>
+> Some notes about how the component framework has been integrated:
+>
+> - The driver for the rdma0 component serves double duty as the "master"
+>   (aggregate) driver as well as a component driver. This is a non-ideal
+>   compromise until a better solution is developed. This device is
+>   differentiated from the rest by checking for a "mediatek,vpu" property
+>   in the device node.
+>
+> - The list of mdp components remains hard-coded as mtk_mdp_comp_dt_ids[]
+>   in mtk_mdp_core.c, and as mtk_mdp_comp_driver_dt_match[] in
+>   mtk_mdp_comp.c. This unfortunate duplication of information is
+>   addressed in a following patch in this series.
+>
+> - The component driver calls component_add() for each device that is
+>   probed.
+>
+> - In mtk_mdp_probe (the "master" device), we scan the device tree for
+>   any matching nodes against mtk_mdp_comp_dt_ids, and add component
+>   matches for them. The match criteria is a matching device node
+>   pointer.
+>
+> - When the set of components devices that have been probed corresponds
+>   with the list that is generated by the "master", the callback to
+>   mtk_mdp_master_bind() is made, which then calls the component bind
+>   functions.
+>
+> - Inside mtk_mdp_master_bind(), once all the component bind functions
+>   have been called, we can then register our device to the v4l2
+>   subsystem.
+>
+> - The call to pm_runtime_enable() in the master device is called after
+>   all the components have been registered by their bind() functions
+>   called by mtk_mtp_master_bind(). As a result, the list of components
+>   will not change while power management callbacks mtk_mdp_suspend()/
+>   resume() are accessing the list of components.
 
-Both Dan and I have observed two processes invoking
-rpcrdma_xprt_disconnect() concurrently. In my case:
+For the component binding problem, MDP is similar to DRM driver [1],
+and DRM is probed by mmsys driver [2] (mmsys is a device which control
+display clock, display routing, mdp clock, mdp routing). Maybe you
+could refer to what DRM does.
 
-1. The connect worker invokes rpcrdma_xprt_disconnect(), which
-   drains the QP and waits for the final completion
-2. This causes the newly posted Receive to flush and invoke
-   xprt_force_disconnect()
-3. xprt_force_disconnect() sets CLOSE_WAIT and wakes up the RPC task
-   that is holding the transport lock
-4. The RPC task invokes xprt_connect(), which calls ->ops->close
-5. xprt_rdma_close() invokes rpcrdma_xprt_disconnect(), which tries
-   to destroy the QP.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/gpu/drm/mediatek/mtk_drm_drv.c?h=3Dv5.8-rc6
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/?h=3Dv5.8-rc6&id=3D667c769246b01c53ad0925d603d2a2531abd3ef2
 
-Deadlock.
+Regards,
+Chun-Kuang.
 
-To prevent xprt_force_disconnect() from waking anything, handle the
-clean up after a failed connection attempt in the xprt's sndtask.
-
-The retry loop is removed from rpcrdma_xprt_connect() to ensure
-that the newly allocated ep and id are properly released before
-a REJECTED connection attempt can be retried.
-
-Reported-by: Dan Aloni <dan@kernelim.com>
-Fixes: e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/xprtrdma/transport.c |  5 +++++
- net/sunrpc/xprtrdma/verbs.c     | 10 ++--------
- 2 files changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 659da37020a46..3b5fb1f57aeb7 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -249,6 +249,11 @@ xprt_rdma_connect_worker(struct work_struct *work)
- 					   xprt->stat.connect_start;
- 		xprt_set_connected(xprt);
- 		rc = -EAGAIN;
-+	} else {
-+		/* Force a call to xprt_rdma_close to clean up */
-+		spin_lock(&xprt->transport_lock);
-+		set_bit(XPRT_CLOSE_WAIT, &xprt->state);
-+		spin_unlock(&xprt->transport_lock);
- 	}
- 	xprt_wake_pending_tasks(xprt, rc);
- }
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 4cb91dde849b9..00ee62579137b 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -288,7 +288,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- 			sap, rdma_reject_msg(id, event->status));
- 		ep->re_connect_status = -ECONNREFUSED;
- 		if (event->status == IB_CM_REJ_STALE_CONN)
--			ep->re_connect_status = -EAGAIN;
-+			ep->re_connect_status = -ENOTCONN;
- 		goto disconnected;
- 	case RDMA_CM_EVENT_DISCONNECTED:
- 		ep->re_connect_status = -ECONNABORTED;
-@@ -519,8 +519,6 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
- 	struct rpcrdma_ep *ep;
- 	int rc;
- 
--retry:
--	rpcrdma_xprt_disconnect(r_xprt);
- 	rc = rpcrdma_ep_create(r_xprt);
- 	if (rc)
- 		return rc;
-@@ -549,17 +547,13 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
- 	wait_event_interruptible(ep->re_connect_wait,
- 				 ep->re_connect_status != 0);
- 	if (ep->re_connect_status <= 0) {
--		if (ep->re_connect_status == -EAGAIN)
--			goto retry;
- 		rc = ep->re_connect_status;
- 		goto out;
- 	}
- 
- 	rc = rpcrdma_reqs_setup(r_xprt);
--	if (rc) {
--		rpcrdma_xprt_disconnect(r_xprt);
-+	if (rc)
- 		goto out;
--	}
- 	rpcrdma_mrs_create(r_xprt);
- 
- out:
--- 
-2.25.1
-
-
-
+>
+> Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
