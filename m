@@ -7,50 +7,54 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16BFC43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F86DC43457
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D24C22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F11B422BEF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595281071;
-	bh=6IiCZJSCazxGZ+S4y95kWx0DvTpmrq6GMeSZMEbfpyM=;
+	s=default; t=1595281074;
+	bh=0EJWnODGD4TNz5brZBkLw/E00QZ4S2pmfWX1+6zrt28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vgSsGMBHDYsX79b4AxijWHac7O3Y5ZoaLkwVZHG1GTsoz9J9ENQOtMTlNJWdIMM+9
-	 raZpttYP7Bv09tCGnCEVTI6fCiuQ0/xN9psaRHwuZol0GNtC0faK6esUQxb/2cZvra
-	 YZaFcCFRyAkRNia3GMsF1AqvcTy4m6orFFLj6Mws=
+	b=qWEXswTu8KYQf5dsRN5NTo7Dfr+loDgui3rDjVt1ZOn8xV/Ujw1sd2ta0qoy140WY
+	 F/6o+y0ykT7wL1r5wQpppVVMfgESp6Qa+in44jCRsjmCZMBdQJMIXAm+fOmOd3F5LR
+	 yRdbakAhryWshyaz/D96szn4+SdqQBW0R+JshlRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGTVhu (ORCPT
+        id S1727873AbgGTVhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:37:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55746 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 17:37:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727819AbgGTVhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:37:45 -0400
+        id S1727844AbgGTVhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF49922CF7;
-        Mon, 20 Jul 2020 21:37:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C9C422CBB;
+        Mon, 20 Jul 2020 21:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281065;
-        bh=6IiCZJSCazxGZ+S4y95kWx0DvTpmrq6GMeSZMEbfpyM=;
+        s=default; t=1595281068;
+        bh=0EJWnODGD4TNz5brZBkLw/E00QZ4S2pmfWX1+6zrt28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JSNYyOtQazvpOaNAYgWZ+q+QPJC+0BqwT9eNQiFGhBSaMiYIZp1omU5tOXQ5tNO38
-         mWfx+TfK2/MaqgahibaJN6c6vw5VUogJWZjAo2CWFV2XFxsiNIbxGAvPfDy/Xt31B+
-         slNi6Tu6RqH5BWYlmDOjAZiEw8hLY025l7dR2pKE=
+        b=2wjhfywzi36Au7Tjv1CxGKEkkDKr6WZg9mY4vReym24f06FEiFrOMj4NbHjgJzncw
+         TG3y4P3YY+8svrDgPdzJnl5PO8bYsCzRys7Y21rqTkOMTxjg4fkFz4GE/UxhINpFSm
+         fo6WlfkR79bHfFlRJyse4eIQc2Ai9HXJTSURqxRo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Chen <peter.chen@nxp.com>, kbuild test robot <lkp@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 24/40] usb: cdns3: trace: fix some endian issues
-Date:   Mon, 20 Jul 2020 17:36:59 -0400
-Message-Id: <20200720213715.406997-24-sashal@kernel.org>
+Cc:     Jack Xiao <Jack.Xiao@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 26/40] drm/amdgpu/gfx10: fix race condition for kiq
+Date:   Mon, 20 Jul 2020 17:37:01 -0400
+Message-Id: <20200720213715.406997-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
 References: <20200720213715.406997-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,37 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Jack Xiao <Jack.Xiao@amd.com>
 
-[ Upstream commit 65b7cf48c211ece5e2560a334eb9608e48775a8f ]
+[ Upstream commit 7d65a577bb58d4f27a3398a4c0cb0b00ab7d0511 ]
 
-It is found by sparse.
+During preemption test for gfx10, it uses kiq to trigger
+gfx preemption, which would result in race condition
+with flushing TLB for kiq.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Jack Xiao <Jack.Xiao@amd.com>
+Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/cdns3/trace.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/cdns3/trace.h b/drivers/usb/cdns3/trace.h
-index 755c565822575..0a2a3269bfac6 100644
---- a/drivers/usb/cdns3/trace.h
-+++ b/drivers/usb/cdns3/trace.h
-@@ -404,9 +404,9 @@ DECLARE_EVENT_CLASS(cdns3_log_trb,
- 	TP_fast_assign(
- 		__assign_str(name, priv_ep->name);
- 		__entry->trb = trb;
--		__entry->buffer = trb->buffer;
--		__entry->length = trb->length;
--		__entry->control = trb->control;
-+		__entry->buffer = le32_to_cpu(trb->buffer);
-+		__entry->length = le32_to_cpu(trb->length);
-+		__entry->control = le32_to_cpu(trb->control);
- 		__entry->type = usb_endpoint_type(priv_ep->endpoint.desc);
- 		__entry->last_stream_id = priv_ep->last_stream_id;
- 	),
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+index 0e0daf0021b60..ff94f756978d5 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+@@ -4746,12 +4746,17 @@ static int gfx_v10_0_ring_preempt_ib(struct amdgpu_ring *ring)
+ 	struct amdgpu_device *adev = ring->adev;
+ 	struct amdgpu_kiq *kiq = &adev->gfx.kiq;
+ 	struct amdgpu_ring *kiq_ring = &kiq->ring;
++	unsigned long flags;
+ 
+ 	if (!kiq->pmf || !kiq->pmf->kiq_unmap_queues)
+ 		return -EINVAL;
+ 
+-	if (amdgpu_ring_alloc(kiq_ring, kiq->pmf->unmap_queues_size))
++	spin_lock_irqsave(&kiq->ring_lock, flags);
++
++	if (amdgpu_ring_alloc(kiq_ring, kiq->pmf->unmap_queues_size)) {
++		spin_unlock_irqrestore(&kiq->ring_lock, flags);
+ 		return -ENOMEM;
++	}
+ 
+ 	/* assert preemption condition */
+ 	amdgpu_ring_set_preempt_cond_exec(ring, false);
+@@ -4762,6 +4767,8 @@ static int gfx_v10_0_ring_preempt_ib(struct amdgpu_ring *ring)
+ 				   ++ring->trail_seq);
+ 	amdgpu_ring_commit(kiq_ring);
+ 
++	spin_unlock_irqrestore(&kiq->ring_lock, flags);
++
+ 	/* poll the trailing fence */
+ 	for (i = 0; i < adev->usec_timeout; i++) {
+ 		if (ring->trail_seq ==
 -- 
 2.25.1
 
