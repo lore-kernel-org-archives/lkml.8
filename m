@@ -2,81 +2,120 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00D6C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAB3C433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B61422D01
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595226993;
-	bh=G8QKIIPp5D4K8kA/4r2aQzDTcpoqiOLy2Z0bz9pLapc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NOqpSu9iusCIbDsnM626DUtKLtW7LpXk6m2wlot/nDdzLWqj0TZove1C8qcBd4Sr2
-	 G0mCk1I8U6rWKUYBVo5qdEUDD7O0T0jjKqaSYK3Xs66ux5tkqVoE4dj15K+OyH6ztv
-	 tRAiV04VUd/5LrDr9/xutr4MnId9Kd+Xhyrx/OHw=
+	by mail.kernel.org (Postfix) with ESMTP id BB46822B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgGTGgc (ORCPT
+        id S1727976AbgGTGgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:36:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbgGTGg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:36:29 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C195920709;
-        Mon, 20 Jul 2020 06:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595226988;
-        bh=G8QKIIPp5D4K8kA/4r2aQzDTcpoqiOLy2Z0bz9pLapc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nBFRWN4wCbNdNNdFP/mf6w4VUKv5HBcMFBn5nomZjwH+fumLcehyvFrJ6jH9JQvHR
-         JxFsvy4D00XgAwF0QS/XApUT+dv74ujDXrAukRJo3IeT3yyY2TpWTHco5oBmJ9MuDz
-         1+QKf3jQpAbOuSmZbWpaisjBmBLnXMbycc7bj4oQ=
-Date:   Mon, 20 Jul 2020 12:06:25 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 12/20] dt-bindings: dma: renesas,usb-dmac: Add binding
- for r8a774e1
-Message-ID: <20200720063625.GG12965@vkoul-mobl>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594919915-5225-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Mon, 20 Jul 2020 02:36:35 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:7802 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbgGTGge (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 02:36:34 -0400
+IronPort-SDR: w9b4HOP1wGMxuQmQ0jEn/cBYRUbt9ArG/95B2CyxNLpctjsZ77RD/JYyHg3m4cuQXWGLJ6E+Qe
+ Tj5QzWFBT+6M2JQ4Ss1wNL33B2DKPaPL/8YIZCer5/VCsDKtuYQj7oIUiy+ctYiADIHfkLRNOt
+ w8pTiicp5sT/6/FZBqj8eNsALl3rYI7qXQo4O+CaV895Zn6T70RV2tWaOehhnnvJ79WAdr50xc
+ ibjMvEjzrWIeMPaFeMpSojVXekZIdoSSFHO9aNQII8G+6eknm48sn7IRZMUDVsUIjgZUla7FJk
+ +JU=
+X-IronPort-AV: E=Sophos;i="5.75,374,1589266800"; 
+   d="scan'208";a="47226984"
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by labrats.qualcomm.com with ESMTP; 19 Jul 2020 23:36:34 -0700
+Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 19 Jul 2020 23:36:33 -0700
+Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
+        id B00CD22DA5; Sun, 19 Jul 2020 23:36:33 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 7/8] scsi: ufs: Move dumps in IRQ handler to error handler
+Date:   Sun, 19 Jul 2020 23:35:54 -0700
+Message-Id: <1595226956-7779-8-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595226956-7779-1-git-send-email-cang@codeaurora.org>
+References: <1595226956-7779-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-07-20, 18:18, Lad Prabhakar wrote:
-> Add binding for R8A774E1 SoC (RZ/G2H).
+Sometime dumps in IRQ handler are heavy enough to cause system stability
+issues, move them to error handler.
 
-Applied, thanks
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 68705a1..ae78d5d 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5681,6 +5681,21 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 				    UFSHCD_UIC_DL_TCx_REPLAY_ERROR))))
+ 		needs_reset = true;
+ 
++	if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR |
++			      UFSHCD_UIC_HIBERN8_MASK)) {
++		bool pr_prdt = !!(hba->saved_err & SYSTEM_BUS_FATAL_ERROR);
++
++		dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 0x%x\n",
++				__func__, hba->saved_err, hba->saved_uic_err);
++		spin_unlock_irqrestore(hba->host->host_lock, flags);
++		ufshcd_print_host_state(hba);
++		ufshcd_print_pwr_info(hba);
++		ufshcd_print_host_regs(hba);
++		ufshcd_print_tmrs(hba, hba->outstanding_tasks);
++		ufshcd_print_trs(hba, hba->outstanding_reqs, pr_prdt);
++		spin_lock_irqsave(hba->host->host_lock, flags);
++	}
++
+ 	/*
+ 	 * if host reset is required then skip clearing the pending
+ 	 * transfers forcefully because they will get cleared during
+@@ -5899,22 +5914,6 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
+ 
+ 		/* block commands from scsi mid-layer */
+ 		ufshcd_scsi_block_requests(hba);
+-
+-		/* dump controller state before resetting */
+-		if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR)) {
+-			bool pr_prdt = !!(hba->saved_err &
+-					SYSTEM_BUS_FATAL_ERROR);
+-
+-			dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 0x%x\n",
+-					__func__, hba->saved_err,
+-					hba->saved_uic_err);
+-
+-			ufshcd_print_host_regs(hba);
+-			ufshcd_print_pwr_info(hba);
+-			ufshcd_print_tmrs(hba, hba->outstanding_tasks);
+-			ufshcd_print_trs(hba, hba->outstanding_reqs,
+-					pr_prdt);
+-		}
+ 		ufshcd_schedule_eh_work(hba);
+ 		retval |= IRQ_HANDLED;
+ 	}
 -- 
-~Vinod
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
