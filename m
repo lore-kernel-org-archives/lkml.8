@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E35C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82F6C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAA45206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2761206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595263374;
-	bh=v5pzLyl2SJd1PntkNmxFPTeULXZvmlFGi3ShJso8gxc=;
+	s=default; t=1595263383;
+	bh=jDnIlYH0uSogkRrPRf6JMxXDSYXeT5AkPJW6Ms+M9ak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sV8wFvruiTc+W6+5ekNpo38ZvKXPsfe0vtrKUi9l0asCcBmEnyKeL5IkEAg/8DyKj
-	 X5FL/NYQwv0LdIUZs+xSIvlhIjAPiB9SFn+WRXYhZoUOgi7YuSUIbrP4nzCIa4rQ8W
-	 oW4KM6ybS7RwwlQ7RQXZVk98UrVoL+8YFQX5oqPU=
+	b=gE7CqaEeHG23+lEeAZztdO+4mTNQYS9EoXO93dUS0tzDZTWFpYzo6i89jeFBbWV2t
+	 j6owo11MQ7qADWdycQXh7LY8XmydLSKyBKxRJj1M/GAKY5k1q6QUrugOn/tx4FS7t1
+	 FYUv41Uph+5bqdel2ulyh82JbPG1cwXkmz3sWgR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbgGTPm6 (ORCPT
+        id S1730945AbgGTQnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:42:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36034 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:43:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730143AbgGTPmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:42:54 -0400
+        id S1730116AbgGTPmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:42:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 573EB2064B;
-        Mon, 20 Jul 2020 15:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 795602176B;
+        Mon, 20 Jul 2020 15:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259773;
-        bh=v5pzLyl2SJd1PntkNmxFPTeULXZvmlFGi3ShJso8gxc=;
+        s=default; t=1595259767;
+        bh=jDnIlYH0uSogkRrPRf6JMxXDSYXeT5AkPJW6Ms+M9ak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LQSvCNyB13Zq4fLSiZ0KQgdHTnq/iiqEJ1wFnPLCAyLm38cGyAh3QlpkwVA81BuKV
-         yOiLmDB2StDU1uWOXu1UIuyx4PASgaO5vnas2+jewNcsFe3FnpX6rU/qnd2E9937XU
-         Hz0OGUbgwnUgTSu4QB+2U6UYumaM576zN0lFl6cA=
+        b=vfq3MbPoIyAhzRVh7xOfs7sIVY7pfTMkwvezoKsq3eJ8l96Vs1Wh1/5pXkEmQiubh
+         t1muz39nUK/ifd+6Duem+8WodP/kA5dTwPpad7mJbeMEGtTFTkdCnWAB7xDN+s06Hl
+         m4S933gNilL8pmy/qGVBUfpvFAUMp2lfpSPt8ECs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Whitcroft <apw@canonical.com>,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 4.9 75/86] mei: bus: dont clean driver pointer
-Date:   Mon, 20 Jul 2020 17:37:11 +0200
-Message-Id: <20200720152756.978576850@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@pm.me>,
+        Amit Shah <amit@kernel.org>
+Subject: [PATCH 4.9 73/86] virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial
+Date:   Mon, 20 Jul 2020 17:37:09 +0200
+Message-Id: <20200720152756.861659882@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -60,50 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Alexander Lobakin <alobakin@pm.me>
 
-commit e852c2c251ed9c23ae6e3efebc5ec49adb504207 upstream.
+commit 897c44f0bae574c5fb318c759b060bebf9dd6013 upstream.
 
-It's not needed to set driver to NULL in mei_cl_device_remove()
-which is bus_type remove() handler as this is done anyway
-in __device_release_driver().
+rproc_serial_id_table lacks an exposure to module devicetable, so
+when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
+is generated and no module autoloading occurs.
+Add missing MODULE_DEVICE_TABLE() annotation and move the existing
+one for VIRTIO_ID_CONSOLE right to the table itself.
 
-Actually this is causing an endless loop in driver_detach()
-on ubuntu patched kernel, while removing (rmmod) the mei_hdcp module.
-The reason list_empty(&drv->p->klist_devices.k_list) is always not-empty.
-as the check is always true in  __device_release_driver()
-	if (dev->driver != drv)
-		return;
-
-The non upstream patch is causing this behavior, titled:
-'vfio -- release device lock before userspace requests'
-
-Nevertheless the fix is correct also for the upstream.
-
-Link: https://patchwork.ozlabs.org/project/ubuntu-kernel/patch/20180912085046.3401-2-apw@canonical.com/
-Cc: <stable@vger.kernel.org>
-Cc: Andy Whitcroft <apw@canonical.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20200628225359.2185929-1-tomas.winkler@intel.com
+Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc serial")
+Cc: <stable@vger.kernel.org> # v3.8+
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+Reviewed-by: Amit Shah <amit@kernel.org>
+Link: https://lore.kernel.org/r/x7C_CbeJtoGMy258nwAXASYz3xgFMFpyzmUvOyZzRnQrgWCREBjaqBOpAUS7ol4NnZYvSVwmTsCG0Ohyfvta-ygw6HMHcoeKK0C3QFiAO_Q=@pm.me
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/bus.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/char/virtio_console.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -639,9 +639,8 @@ static int mei_cl_device_remove(struct d
- 		ret = cldrv->remove(cldev);
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -2161,6 +2161,7 @@ static struct virtio_device_id id_table[
+ 	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
+ 	{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, id_table);
  
- 	module_put(THIS_MODULE);
--	dev->driver = NULL;
--	return ret;
+ static unsigned int features[] = {
+ 	VIRTIO_CONSOLE_F_SIZE,
+@@ -2173,6 +2174,7 @@ static struct virtio_device_id rproc_ser
+ #endif
+ 	{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
  
-+	return ret;
- }
+ static unsigned int rproc_serial_features[] = {
+ };
+@@ -2325,6 +2327,5 @@ static void __exit fini(void)
+ module_init(init);
+ module_exit(fini);
  
- static ssize_t name_show(struct device *dev, struct device_attribute *a,
+-MODULE_DEVICE_TABLE(virtio, id_table);
+ MODULE_DESCRIPTION("Virtio console driver");
+ MODULE_LICENSE("GPL");
 
 
