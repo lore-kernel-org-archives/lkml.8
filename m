@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 639A1C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F8AC43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 389952064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5B720773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259783;
-	bh=eIg5zlpARQ0ncoOVYVLpaBxwWN3Nt8ngvgaUr4OFHAc=;
+	s=default; t=1595259786;
+	bh=DXLAr5j7ALohIYXYzgIQ2RAIOINQVU4y/G/xFu1etEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SaSzaIErZvpBlSvIcbqSQi2NeX0+cb+lb2UZJFV4Ivk0P5iuHNWFs9VHWQEvn2du3
-	 s2X5dchosrPzFVBe84nKoIb4ZqP24yY5jtF0rEfAXVJPVJjTvM5qt6DEHFg9MSn3sy
-	 /wiVWKplZsOOGgH5IEVIu4mWOrE9onmr21tBeBOc=
+	b=O0Mf06L5wSyL5yz1cpzjXyAGhL/GBtxOR4gH4rBiKe2gATt9m7ZCLltvL+AtJ7H2Z
+	 IEVCMrHjjSQqh64nJWDcDwmUBsvnS0f6MS9Znn2kvfHlfkcW6wEVXClaQ1iJOdeMva
+	 l2pW14DkFivrP48pujzTEZuvSfQ23V/VjYupjalc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgGTPnB (ORCPT
+        id S1730198AbgGTPnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:43:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36162 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:43:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730181AbgGTPm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:42:59 -0400
+        id S1730190AbgGTPnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:43:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFD972064B;
-        Mon, 20 Jul 2020 15:42:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D16320773;
+        Mon, 20 Jul 2020 15:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259779;
-        bh=eIg5zlpARQ0ncoOVYVLpaBxwWN3Nt8ngvgaUr4OFHAc=;
+        s=default; t=1595259782;
+        bh=DXLAr5j7ALohIYXYzgIQ2RAIOINQVU4y/G/xFu1etEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iI4eJpKLPy6kXgUfv3qQCKlVEgkvKVBrPfv5q9VOiPxjdn/mVDTIGoXJq/NkSRVlv
-         50zQMUFG5bwEdpnrCzzQZeqWcHEJCgNnkOTnj+VfALX34myboQT2Xdyg39bgKMOz/j
-         uYkVD/6Q40N1ZIMFlIn1jo950k3aHzSKVIONpggI=
+        b=GeqrYmV8aOxAnzL5p9RHbXSj8oHyW0cTWO3fHA2kVsQywJpyaSY4oCayjGRM8qMPr
+         Eae7+WCnPZ6Q2vEPnb8rb6C5WJPG1/mPuxPGbc5old74sp1FKpfW+KJnbO9MVckXfU
+         KcHcyVFDuY7HwgaviCkEHH62YNitC/BFVMsFtO9c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Esben Haabendal <esben@geanix.com>
-Subject: [PATCH 4.9 77/86] uio_pdrv_genirq: fix use without device tree and no interrupt
-Date:   Mon, 20 Jul 2020 17:37:13 +0200
-Message-Id: <20200720152757.078531088@linuxfoundation.org>
+        stable@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.9 78/86] timer: Fix wheel index calculation on last level
+Date:   Mon, 20 Jul 2020 17:37:14 +0200
+Message-Id: <20200720152757.164109862@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152753.138974850@linuxfoundation.org>
 References: <20200720152753.138974850@linuxfoundation.org>
@@ -58,42 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Esben Haabendal <esben@geanix.com>
+From: Frederic Weisbecker <frederic@kernel.org>
 
-commit bf12fdf0ab728ca8e5933aac46dd972c0dd0421e upstream.
+commit e2a71bdea81690b6ef11f4368261ec6f5b6891aa upstream.
 
-While e3a3c3a20555 ("UIO: fix uio_pdrv_genirq with device tree but no
-interrupt") added support for using uio_pdrv_genirq for devices without
-interrupt for device tree platforms, the removal of uio_pdrv in
-26dac3c49d56 ("uio: Remove uio_pdrv and use uio_pdrv_genirq instead")
-broke the support for non device tree platforms.
+When an expiration delta falls into the last level of the wheel, that delta
+has be compared against the maximum possible delay and reduced to fit in if
+necessary.
 
-This change fixes this, so that uio_pdrv_genirq can be used without
-interrupt on all platforms.
+However instead of comparing the delta against the maximum, the code
+compares the actual expiry against the maximum. Then instead of fixing the
+delta to fit in, it sets the maximum delta as the expiry value.
 
-This still leaves the support that uio_pdrv had for custom interrupt
-handler lacking, as uio_pdrv_genirq does not handle it (yet).
+This can result in various undesired outcomes, the worst possible one
+being a timer expiring 15 days ahead to fire immediately.
 
-Fixes: 26dac3c49d56 ("uio: Remove uio_pdrv and use uio_pdrv_genirq instead")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
+Fixes: 500462a9de65 ("timers: Switch to a non-cascading wheel")
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200701145659.3978-3-esben@geanix.com
+Link: https://lkml.kernel.org/r/20200717140551.29076-2-frederic@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/uio/uio_pdrv_genirq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/timer.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/uio/uio_pdrv_genirq.c
-+++ b/drivers/uio/uio_pdrv_genirq.c
-@@ -148,7 +148,7 @@ static int uio_pdrv_genirq_probe(struct
- 	if (!uioinfo->irq) {
- 		ret = platform_get_irq(pdev, 0);
- 		uioinfo->irq = ret;
--		if (ret == -ENXIO && pdev->dev.of_node)
-+		if (ret == -ENXIO)
- 			uioinfo->irq = UIO_IRQ_NONE;
- 		else if (ret < 0) {
- 			dev_err(&pdev->dev, "failed to get IRQ\n");
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -500,8 +500,8 @@ static int calc_wheel_index(unsigned lon
+ 		 * Force expire obscene large timeouts to expire at the
+ 		 * capacity limit of the wheel.
+ 		 */
+-		if (expires >= WHEEL_TIMEOUT_CUTOFF)
+-			expires = WHEEL_TIMEOUT_MAX;
++		if (delta >= WHEEL_TIMEOUT_CUTOFF)
++			expires = clk + WHEEL_TIMEOUT_MAX;
+ 
+ 		idx = calc_index(expires, LVL_DEPTH - 1);
+ 	}
 
 
