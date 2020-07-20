@@ -2,163 +2,165 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C098BC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFD2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98F4520758
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:49:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pqZV2eUu"
+	by mail.kernel.org (Postfix) with ESMTP id 4375E208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 05:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgGTFta (ORCPT
+        id S1726698AbgGTF4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 01:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgGTFt1 (ORCPT
+        Mon, 20 Jul 2020 01:56:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54034 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725845AbgGTF4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 01:49:27 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE465C0619D2;
-        Sun, 19 Jul 2020 22:49:27 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id k4so8156897pld.12;
-        Sun, 19 Jul 2020 22:49:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oEglXBwLQOY/wf76maJo9jVEEGUkpTJTd012yFX+eg0=;
-        b=pqZV2eUuh5vcC1RkeQvfQiB1VqeVHvu5gSMbA7uZ09/wX+7k0aFSkHzFC1cEReoBJz
-         icni4Y5Xp2g8TXkbaPvzqFBv7EB1YiIZzrdodMs7XFs3n4L7oUeUyLbGEDggDkUwdf7l
-         bUoxgQm3HCGF3eNM64dOk8jAZEOOYFa6tTKSb4aLnxfOVpLNc4iR/ClctBhRMNiU+9A3
-         35mAXIkjQ6l0AsCI7YjXZP9PH3z/DUwSRk14PoxY9z0FVUlCYlf2uqmzjEM7QR2MDgd0
-         38D1R3bqGc3miYTXmNThBf5owbcUNxozk1B6aRFPe8322ElYoctyAN3bj5LEWzQe3SkR
-         BMkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oEglXBwLQOY/wf76maJo9jVEEGUkpTJTd012yFX+eg0=;
-        b=iEQP1Bq9qDnWXHdkLyc/Z6JfbDAILe7COXgw2c0LAXw95BErglALSRSlWbm1ZU6Xwt
-         AviGjh7JT97O/5P5UsBHPmxSlWn5IoOVZOmEJ44DNMu+XghHUtCL7rueh/zWskEoWt0o
-         Z9uSUFmE1BHmE/rYD3BJfQ+ovLXfZW8TdOXSNmdBWPEA6K/AzaBoovWemZ38gm7FtabK
-         8+CebEuCpetinHn/tZ9cu4gNgVEr4DRcIFlFPCDhcoARKDt6A1fxiJ9R9WQtnjnpga/2
-         mO0xanZUqKAZgXmkyGmH/WfWDyoQTlFJq/3XjreQoPlN5IICNHs8oFqJjWrYi5/mZyvJ
-         /h6g==
-X-Gm-Message-State: AOAM532wvB+uDuTcebhA1iF65YFWmmK5teCCT2RbOQrmOoRt8CSTJNfO
-        Oj/3lmQeVF65qZ9Qh3fuyTc=
-X-Google-Smtp-Source: ABdhPJyx5niyeIa+kfN9szZmYrvL/wJxKdqjb08QCgQhXIKqH1CPfd/9HLPuU5bkP8u7HjghBNRQfg==
-X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr20241211pjx.169.1595224167265;
-        Sun, 19 Jul 2020 22:49:27 -0700 (PDT)
-Received: from xiaomi.mioffice.cn ([209.9.72.214])
-        by smtp.gmail.com with ESMTPSA id i7sm13627833pgh.58.2020.07.19.22.49.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 22:49:26 -0700 (PDT)
-From:   Qiwu Huang <yanziily@gmail.com>
-To:     sre@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: [PATCH v4 1/4] power: supply: core: add quick charge type property
-Date:   Mon, 20 Jul 2020 13:47:14 +0800
-Message-Id: <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1595214246.git.huangqiwu@xiaomi.com>
-References: <cover.1595214246.git.huangqiwu@xiaomi.com>
+        Mon, 20 Jul 2020 01:56:41 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06K5Wdo2061721;
+        Mon, 20 Jul 2020 01:56:37 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32bw7yr4by-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 01:56:37 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06K5txpT132749;
+        Mon, 20 Jul 2020 01:56:37 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32bw7yr4at-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 01:56:37 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06K5sQFY023365;
+        Mon, 20 Jul 2020 05:55:25 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04fra.de.ibm.com with ESMTP id 32brq814kw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 05:55:25 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06K5tNaK30081306
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 05:55:23 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E437A405C;
+        Mon, 20 Jul 2020 05:55:23 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F2667A405B;
+        Mon, 20 Jul 2020 05:55:21 +0000 (GMT)
+Received: from drishya.in.ibm.com (unknown [9.85.113.150])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 20 Jul 2020 05:55:21 +0000 (GMT)
+Date:   Mon, 20 Jul 2020 11:25:19 +0530
+From:   Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>, linuxppc-dev@ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/5] cpuidle-pseries: Set the latency-hint before
+ entering CEDE
+Message-ID: <20200720055519.GB4000@drishya.in.ibm.com>
+Reply-To: svaidy@linux.ibm.com
+References: <1594120299-31389-1-git-send-email-ego@linux.vnet.ibm.com>
+ <1594120299-31389-2-git-send-email-ego@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <1594120299-31389-2-git-send-email-ego@linux.vnet.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_01:2020-07-17,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ spamscore=0 bulkscore=0 impostorscore=0 clxscore=1015 suspectscore=1
+ lowpriorityscore=0 priorityscore=1501 mlxlogscore=948 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiwu Huang <huangqiwu@xiaomi.com>
+* Gautham R Shenoy <ego@linux.vnet.ibm.com> [2020-07-07 16:41:35]:
 
-Reports the kind of quick charge type based on
-different adapter power.
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> 
+> As per the PAPR, each H_CEDE call is associated with a latency-hint to
+> be passed in the VPA field "cede_latency_hint". The CEDE states that
+> we were implicitly entering so far is CEDE with latency-hint = 0.
+> 
+> This patch explicitly sets the latency hint corresponding to the CEDE
+> state that we are currently entering. While at it, we save the
+> previous hint, to be restored once we wakeup from CEDE. This will be
+> required in the future when we expose extended-cede states through the
+> cpuidle framework, where each of them will have a different
+> cede-latency hint.
+> 
+> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 
-Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
----
- Documentation/ABI/testing/sysfs-class-power | 21 +++++++++++++++++++++
- drivers/power/supply/power_supply_sysfs.c   |  1 +
- include/linux/power_supply.h                | 10 ++++++++++
- 3 files changed, 32 insertions(+)
+Reviewed-by: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index 216d61a22f1e..dd3773dcf16a 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -708,3 +708,24 @@ Description:
- 
- 		Access: Read
- 		Valid values: 1-31
-+
-+What:		/sys/class/power_supply/<supply_name>/quick_charge_type
-+Date:		Jul 2020
-+Contact:	Fei Jiang <jiangfei1@xiaomi.com>
-+		Description:
-+		Reports the kind of quick charge type based on different adapter power.
-+		Different quick charge type represent different charging power.
-+		QUICK_CHARGE_NORMAL : Charging Power <= 10W
-+		QUICK_CHARGE_FAST : 10W < Charging Power <= 20W
-+		QUICK_CHARGE_FLASH : 20W < Charging Power <= 30W
-+		QUICK_CHARGE_TURBE : 30W < Charging Power <= 50W
-+		QUICK_CHARGE_SUPER : Charging Power > 50W
-+
-+		Access: Read-Only
-+		Valid values:
-+			0: QUICK_CHARGE_NORMAL,
-+			1: QUICK_CHARGE_FAST,
-+			2: QUICK_CHARGE_FLASH,
-+			3: QUICK_CHARGE_TURBE,
-+			4: QUICK_CHARGE_SUPER.
-+
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index bc79560229b5..9554d7907373 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -206,6 +206,7 @@ static struct power_supply_attr power_supply_attrs[] = {
- 	POWER_SUPPLY_ATTR(MODEL_NAME),
- 	POWER_SUPPLY_ATTR(MANUFACTURER),
- 	POWER_SUPPLY_ATTR(SERIAL_NUMBER),
-+	POWER_SUPPLY_ATTR(QUICK_CHARGE_TYPE),
- };
- 
- static struct attribute *
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index ac1345a48ad0..f35c661a2544 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -167,6 +167,7 @@ enum power_supply_property {
- 	POWER_SUPPLY_PROP_MODEL_NAME,
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
-+	POWER_SUPPLY_PROP_QUICK_CHARGE_TYPE,
- };
- 
- enum power_supply_type {
-@@ -197,6 +198,15 @@ enum power_supply_usb_type {
- 	POWER_SUPPLY_USB_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
- };
- 
-+enum power_supply_quick_charge_type {
-+	QUICK_CHARGE_NORMAL = 0,		/* Charging Power <= 10W */
-+	QUICK_CHARGE_FAST,			/* 10W < Charging Power <= 20W */
-+	QUICK_CHARGE_FLASH,			/* 20W < Charging Power <= 30W */
-+	QUICK_CHARGE_TURBE,			/* 30W < Charging Power <= 50W */
-+	QUICK_CHARGE_SUPER,			/* Charging Power > 50W */
-+	QUICK_CHARGE_MAX,
-+};
-+
- enum power_supply_notifier_events {
- 	PSY_EVENT_PROP_CHANGED,
- };
--- 
-2.27.0
+
+> ---
+>  drivers/cpuidle/cpuidle-pseries.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
+> index 4a37252..39d4bb6 100644
+> --- a/drivers/cpuidle/cpuidle-pseries.c
+> +++ b/drivers/cpuidle/cpuidle-pseries.c
+> @@ -105,19 +105,27 @@ static void check_and_cede_processor(void)
+>  	}
+>  }
+> 
+> +#define NR_CEDE_STATES		1  /* CEDE with latency-hint 0 */
+> +#define NR_DEDICATED_STATES	(NR_CEDE_STATES + 1) /* Includes snooze */
+> +
+> +u8 cede_latency_hint[NR_DEDICATED_STATES];
+>  static int dedicated_cede_loop(struct cpuidle_device *dev,
+>  				struct cpuidle_driver *drv,
+>  				int index)
+>  {
+> +	u8 old_latency_hint;
+> 
+>  	pseries_idle_prolog();
+>  	get_lppaca()->donate_dedicated_cpu = 1;
+> +	old_latency_hint = get_lppaca()->cede_latency_hint;
+> +	get_lppaca()->cede_latency_hint = cede_latency_hint[index];
+> 
+>  	HMT_medium();
+>  	check_and_cede_processor();
+> 
+>  	local_irq_disable();
+>  	get_lppaca()->donate_dedicated_cpu = 0;
+> +	get_lppaca()->cede_latency_hint = old_latency_hint;
+> 
+>  	pseries_idle_epilog();
+> 
+> @@ -149,7 +157,7 @@ static int shared_cede_loop(struct cpuidle_device *dev,
+>  /*
+>   * States for dedicated partition case.
+>   */
+> -static struct cpuidle_state dedicated_states[] = {
+> +static struct cpuidle_state dedicated_states[NR_DEDICATED_STATES] = {
+>  	{ /* Snooze */
+>  		.name = "snooze",
+>  		.desc = "snooze",
+
+
+Saving and restoring the current cede hint value helps in maintaining
+compatibility with other parts of the kernel.  Over long term we can
+make cpuidle driver deterministically set the CEDE hint at each
+invocation of H_CEDE call so that we do not have to do multiple
+redundant save-restore.
+
+This is a reasonable start to cleanup this cupidle subsystem on PAPR
+guests. 
+
+--Vaidy
 
