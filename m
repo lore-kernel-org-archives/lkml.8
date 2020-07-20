@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E17C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31E3320734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E2222D01
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 15:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595260709;
-	bh=GEJJCDdVm8pUbVjvqKgHBBMZkXtSqzUnyt6nkVra9C4=;
+	s=default; t=1595260715;
+	bh=uLQjx18zBcbsE1m4AHgvem+iPr07ZHZcC+u/mG10a80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FWsNNK6UXAM611ig6OPBJ9mWDKsG073CymA6H3d+7phOYlzxNFUjutyiFTryj81b2
-	 BLD/hXQOuJSov2iUSrpSARVCc9FVOqC7mxHBd51/Dwn2j1yhSZAIecnRlT2kJSUZp+
-	 MaHIa3sMe12ygLLcsq2TIKTheNoBcH+k5zRl+bco=
+	b=M/TLZBjz00U7RCOJrDUHUUAm97ofiUkRLEUmSULCrqo0EwZEobDgOIixT0flItgSW
+	 WblS9nHfn4gjAUihNWHP6un5T+wIYctZg7sYhF9uQkh3XBWU72r4En0tqYPhHaXpJ8
+	 uV6HipBGEX1SAm41xfl5hhpYC+3rzLhPu90Y8orE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbgGTP61 (ORCPT
+        id S1732044AbgGTP6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:58:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58544 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:58:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732020AbgGTP6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:58:20 -0400
+        id S1731774AbgGTP62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:58:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4CD02065E;
-        Mon, 20 Jul 2020 15:58:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7700D206E9;
+        Mon, 20 Jul 2020 15:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260700;
-        bh=GEJJCDdVm8pUbVjvqKgHBBMZkXtSqzUnyt6nkVra9C4=;
+        s=default; t=1595260708;
+        bh=uLQjx18zBcbsE1m4AHgvem+iPr07ZHZcC+u/mG10a80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pYCJGBokZIMj/Kn4NZLqtzYDkh+tuTZA1CPSish/ykYT2CZBkUm87EzzQWF5EoXx4
-         QbzZHCn8R7nT4qMor8Cv/d9QVNo08Y4/tew/1rqotaMeKzWEgAkzddpwbBQ0bAxtU0
-         gv7N1pjvzGa2E/G3S3LNak8T6m5BV6pyjd82nT2E=
+        b=uOK/PnZ1lgG+3IaFI7Wvad+7WYkfmKDwkvlhQtC0lhPEby1wU/GRNtYlAVlzfM3yt
+         plxU/EUIc2RlSe7U2TEyleMQeNGkW1nts4oUXxaqANpp7NDLOTSA8QXUdYhqrMVvmQ
+         eIxCnI/RPicedhDCdFWd+ecvsa3t14TYqifbLv2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petteri Aimonen <jpa@git.mail.kapsi.fi>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/215] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
-Date:   Mon, 20 Jul 2020 17:35:16 +0200
-Message-Id: <20200720152821.811063427@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 037/215] m68k: nommu: register start of the memory with memblock
+Date:   Mon, 20 Jul 2020 17:35:19 +0200
+Message-Id: <20200720152821.952222297@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,64 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petteri Aimonen <jpa@git.mail.kapsi.fi>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 7ad816762f9bf89e940e618ea40c43138b479e10 ]
+[ Upstream commit d63bd8c81d8ab64db506ffde569cc8ff197516e2 ]
 
-Previously, kernel floating point code would run with the MXCSR control
-register value last set by userland code by the thread that was active
-on the CPU core just before kernel call. This could affect calculation
-results if rounding mode was changed, or a crash if a FPU/SIMD exception
-was unmasked.
+The m68k nommu setup code didn't register the beginning of the physical
+memory with memblock because it was anyway occupied by the kernel. However,
+commit fa3354e4ea39 ("mm: free_area_init: use maximal zone PFNs rather than
+zone sizes") changed zones initialization to use memblock.memory to detect
+the zone extents and this caused inconsistency between zone PFNs and the
+actual PFNs:
 
-Restore MXCSR to the kernel's default value.
+BUG: Bad page state in process swapper  pfn:20165
+page:41fe0ca0 refcount:0 mapcount:1 mapping:00000000 index:0x0 flags: 0x0()
+raw: 00000000 00000100 00000122 00000000 00000000 00000000 00000000 00000000
+page dumped because: nonzero mapcount
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.8.0-rc1-00001-g3a38f8a60c65-dirty #1
+Stack from 404c9ebc:
+        404c9ebc 4029ab28 4029ab28 40088470 41fe0ca0 40299e21 40299df1 404ba2a4
+        00020165 00000000 41fd2c10 402c7ba0 41fd2c04 40088504 41fe0ca0 40299e21
+        00000000 40088a12 41fe0ca0 41fe0ca4 0000020a 00000000 00000001 402ca000
+        00000000 41fe0ca0 41fd2c10 41fd2c10 00000000 00000000 402b2388 00000001
+        400a0934 40091056 404c9f44 404c9f44 40088db4 402c7ba0 00000001 41fd2c04
+        41fe0ca0 41fd2000 41fe0ca0 40089e02 4026ecf4 40089e4e 41fe0ca0 ffffffff
+Call Trace:
+        [<40088470>] 0x40088470
+ [<40088504>] 0x40088504
+ [<40088a12>] 0x40088a12
+ [<402ca000>] 0x402ca000
+ [<400a0934>] 0x400a0934
 
- [ bp: Carve out from a bigger patch by Petteri, add feature check, add
-   FNINIT call too (amluto). ]
+Adjust the memory registration with memblock to include the beginning of
+the physical memory and make sure that the area occupied by the kernel is
+marked as reserved.
 
-Signed-off-by: Petteri Aimonen <jpa@git.mail.kapsi.fi>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207979
-Link: https://lkml.kernel.org/r/20200624114646.28953-2-bp@alien8.de
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/fpu/internal.h | 5 +++++
- arch/x86/kernel/fpu/core.c          | 6 ++++++
- 2 files changed, 11 insertions(+)
+ arch/m68k/kernel/setup_no.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 44c48e34d7994..00eac7f1529b0 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -619,6 +619,11 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
-  * MXCSR and XCR definitions:
-  */
+diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
+index 3c5def10d486e..caa260f877f24 100644
+--- a/arch/m68k/kernel/setup_no.c
++++ b/arch/m68k/kernel/setup_no.c
+@@ -139,7 +139,8 @@ void __init setup_arch(char **cmdline_p)
+ 	pr_debug("MEMORY -> ROMFS=0x%p-0x%06lx MEM=0x%06lx-0x%06lx\n ",
+ 		 __bss_stop, memory_start, memory_start, memory_end);
  
-+static inline void ldmxcsr(u32 mxcsr)
-+{
-+	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
-+}
-+
- extern unsigned int mxcsr_feature_mask;
+-	memblock_add(memory_start, memory_end - memory_start);
++	memblock_add(_rambase, memory_end - _rambase);
++	memblock_reserve(_rambase, memory_start - _rambase);
  
- #define XCR_XFEATURE_ENABLED_MASK	0x00000000
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 12c70840980e4..cd8839027f66d 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -101,6 +101,12 @@ void kernel_fpu_begin(void)
- 		copy_fpregs_to_fpstate(&current->thread.fpu);
- 	}
- 	__cpu_invalidate_fpregs_state();
-+
-+	if (boot_cpu_has(X86_FEATURE_XMM))
-+		ldmxcsr(MXCSR_DEFAULT);
-+
-+	if (boot_cpu_has(X86_FEATURE_FPU))
-+		asm volatile ("fninit");
- }
- EXPORT_SYMBOL_GPL(kernel_fpu_begin);
- 
+ 	/* Keep a copy of command line */
+ 	*cmdline_p = &command_line[0];
 -- 
 2.25.1
 
