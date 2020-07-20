@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9035FC433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC09EC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE752064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891AA22CF6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595261066;
-	bh=8n6WyCnf4uOT8u/UC9lAYwFf3DIBEdlqg7odhu7VMNA=;
+	s=default; t=1595261074;
+	bh=LinykegGTx4SBUpY0BV2ODu2MgLAznZspWm1iZtzBfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZcwW6MdLuY9yjH2ihEEFI1ZJEmN0HvW4cCeUmdkTTqktVEWXoBU8DnT5722lHlJAZ
-	 WNXG9X/aRXRx2JYlUbkCMKM0nQri+n3rb+ZmcW2ttR0jLS+O11+7Cq/blaz4ljcS4f
-	 DEVwM56t16D+8CTssRdF1fu7aS5hltXv+uthNwm0=
+	b=plf95HUPff0lHBa5Jh5ebOPwboN72Zf1ZF36tQmzA1/2DdNBy+LPfNEdowI3PewdF
+	 RbTmw2vclra5SjBnPYB22Vh7F5dJafKnQYgBB9EPv/3eyIePBWERHVV/d1lR8wAvkN
+	 B9PD0Po98kS0rCg3LInw0gBQyc6NIwivzABYrZaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732630AbgGTQEY (ORCPT
+        id S1732853AbgGTQEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:04:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39120 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 12:04:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732301AbgGTQEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:04:20 -0400
+        id S1732549AbgGTQEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:04:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86AF120773;
-        Mon, 20 Jul 2020 16:04:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E43CF20672;
+        Mon, 20 Jul 2020 16:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595261060;
-        bh=8n6WyCnf4uOT8u/UC9lAYwFf3DIBEdlqg7odhu7VMNA=;
+        s=default; t=1595261065;
+        bh=LinykegGTx4SBUpY0BV2ODu2MgLAznZspWm1iZtzBfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aBNINDO7yuEJaKzfckz/+qmf/4HOvI0QPUlPggB7b9iL2bp41hepfQH+EgbGrrX0a
-         37IwmKPEBNwdkXRJ9ni7Y+7KzDhjUq48spktQLiktOmBOZ+m/k5ezblJHCviycpFeq
-         mnpYYxGzNVPbUZdnDIRnCaJC4RJnKBhnoifezTeU=
+        b=l1twotgkt2/mO2oJPAoyIY97h3Eiu7IaPYyAdW06RgktEOXSpHdkVLSlX9tzlOmGA
+         q28HlhBUEmhFyDsyNbao3zRX4muYAC1W1kFyx4pyLlLbYClVqTgYv7Q9I+L4wprxmA
+         wkaqGVWeyZ1ynSRjaIAQGmWZOincfXMI9pNoWMa4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.4 193/215] dmaengine: fsl-edma: Fix NULL pointer exception in fsl_edma_tx_handler
-Date:   Mon, 20 Jul 2020 17:37:55 +0200
-Message-Id: <20200720152829.362855569@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 5.4 166/215] Revert "tty: xilinx_uartps: Fix missing id assignment to the console"
+Date:   Mon, 20 Jul 2020 17:37:28 +0200
+Message-Id: <20200720152828.073421311@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
 References: <20200720152820.122442056@linuxfoundation.org>
@@ -59,77 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-commit f5e5677c420346b4e9788051c2e4d750996c428c upstream.
+commit 76ed2e105796710cf5b8a4ba43c81eceed948b70 upstream.
 
-NULL pointer exception happens occasionally on serial output initiated
-by login timeout.  This was reproduced only if kernel was built with
-significant debugging options and EDMA driver is used with serial
-console.
+This reverts commit 2ae11c46d5fdc46cb396e35911c713d271056d35.
 
-    col-vf50 login: root
-    Password:
-    Login timed out after 60 seconds.
-    Unable to handle kernel NULL pointer dereference at virtual address 00000044
-    Internal error: Oops: 5 [#1] ARM
-    CPU: 0 PID: 157 Comm: login Not tainted 5.7.0-next-20200610-dirty #4
-    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
-      (fsl_edma_tx_handler) from [<8016eb10>] (__handle_irq_event_percpu+0x64/0x304)
-      (__handle_irq_event_percpu) from [<8016eddc>] (handle_irq_event_percpu+0x2c/0x7c)
-      (handle_irq_event_percpu) from [<8016ee64>] (handle_irq_event+0x38/0x5c)
-      (handle_irq_event) from [<801729e4>] (handle_fasteoi_irq+0xa4/0x160)
-      (handle_fasteoi_irq) from [<8016ddcc>] (generic_handle_irq+0x34/0x44)
-      (generic_handle_irq) from [<8016e40c>] (__handle_domain_irq+0x54/0xa8)
-      (__handle_domain_irq) from [<80508bc8>] (gic_handle_irq+0x4c/0x80)
-      (gic_handle_irq) from [<80100af0>] (__irq_svc+0x70/0x98)
-    Exception stack(0x8459fe80 to 0x8459fec8)
-    fe80: 72286b00 e3359f64 00000001 0000412d a0070013 85c98840 85c98840 a0070013
-    fea0: 8054e0d4 00000000 00000002 00000000 00000002 8459fed0 8081fbe8 8081fbec
-    fec0: 60070013 ffffffff
-      (__irq_svc) from [<8081fbec>] (_raw_spin_unlock_irqrestore+0x30/0x58)
-      (_raw_spin_unlock_irqrestore) from [<8056cb48>] (uart_flush_buffer+0x88/0xf8)
-      (uart_flush_buffer) from [<80554e60>] (tty_ldisc_hangup+0x38/0x1ac)
-      (tty_ldisc_hangup) from [<8054c7f4>] (__tty_hangup+0x158/0x2bc)
-      (__tty_hangup) from [<80557b90>] (disassociate_ctty.part.1+0x30/0x23c)
-      (disassociate_ctty.part.1) from [<8011fc18>] (do_exit+0x580/0xba0)
-      (do_exit) from [<801214f8>] (do_group_exit+0x3c/0xb4)
-      (do_group_exit) from [<80121580>] (__wake_up_parent+0x0/0x14)
+It turned out to break the ultra96-rev1, e.g., which uses uart1 as
+serial0 (and stdout-path = "serial0:115200n8").
 
-Issue looks like race condition between interrupt handler fsl_edma_tx_handler()
-(called as result of fsl_edma_xfer_desc()) and terminating the transfer with
-fsl_edma_terminate_all().
-
-The fsl_edma_tx_handler() handles interrupt for a transfer with already freed
-edesc and idle==true.
-
-Fixes: d6be34fbd39b ("dma: Add Freescale eDMA engine driver support")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Robin Gong <yibin.gong@nxp.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1591877861-28156-2-git-send-email-krzk@kernel.org
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 2ae11c46d5fd ("tty: xilinx_uartps: Fix missing id assignment to the console")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Reviewed-by: Michal Simek <michal.simek@xilinx.com>
+Tested-by: Michal Simek <michal.simek@xilinx.com>
+Link: https://lore.kernel.org/r/f4092727-d8f5-5f91-2c9f-76643aace993@siemens.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/fsl-edma.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/tty/serial/xilinx_uartps.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/dma/fsl-edma.c
-+++ b/drivers/dma/fsl-edma.c
-@@ -45,6 +45,13 @@ static irqreturn_t fsl_edma_tx_handler(i
- 			fsl_chan = &fsl_edma->chans[ch];
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1445,7 +1445,6 @@ static int cdns_uart_probe(struct platfo
+ 		cdns_uart_uart_driver.nr = CDNS_UART_NR_PORTS;
+ #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
+ 		cdns_uart_uart_driver.cons = &cdns_uart_console;
+-		cdns_uart_console.index = id;
+ #endif
  
- 			spin_lock(&fsl_chan->vchan.lock);
-+
-+			if (!fsl_chan->edesc) {
-+				/* terminate_all called before */
-+				spin_unlock(&fsl_chan->vchan.lock);
-+				continue;
-+			}
-+
- 			if (!fsl_chan->edesc->iscyclic) {
- 				list_del(&fsl_chan->edesc->vdesc.node);
- 				vchan_cookie_complete(&fsl_chan->edesc->vdesc);
+ 		rc = uart_register_driver(&cdns_uart_uart_driver);
 
 
