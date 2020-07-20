@@ -2,153 +2,199 @@ Return-Path: <SRS0=bl3x=A7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB18AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E48C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C03322BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595262406;
-	bh=Bm/lQlmxc451a2USTrKvsSDu6xFrgYucqoQNjCRXdXg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FHJ1CloKgafTky5M34lHC6HHsiWkO3sMLkE8cNdOLe+ncvOIIYMtJRi2L+8dW3E5o
-	 sZvaom38FJl5/u2a7riL2cP51Yz+yB/XiE2toir7hG4iwPcHOO7VdDdVitQ2VB6gGW
-	 aCcBihjLXQs3S32a2u+AREQ2FtUzEbPQc6sFOz40=
+	by mail.kernel.org (Postfix) with ESMTP id 106CF206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jul 2020 16:26:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BpaEfKjb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbgGTQ0p (ORCPT
+        id S1732312AbgGTP7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:26:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732321AbgGTP7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:59:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 989C120773;
-        Mon, 20 Jul 2020 15:59:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595260794;
-        bh=Bm/lQlmxc451a2USTrKvsSDu6xFrgYucqoQNjCRXdXg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmEgQZmZUySLWbGeanishgo8QV6zljHN8EE2QXB6vyhL4FNuZfgfOE2SsC8XiFOk0
-         5PAGLHPYVdRAYUPY7uO06BOK1vaJy3sfdAHUXsS6gX2xhBVZ9e8OLWi7gFNITzUT2V
-         L9Uf4OsL7q/ixR18I8+S6Zjp7wlpGXsvjjZOUSTM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+        Mon, 20 Jul 2020 11:59:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732260AbgGTP7h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:59:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB04C0619D2;
+        Mon, 20 Jul 2020 08:59:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=UV4C0pnsKtW/E1uVrhnTBH7NG5CSb4x7/hRgSksNDcE=; b=BpaEfKjbynTc+h09t9IRtqHqOO
+        X5oprzE301YxpiTvFrG6rxZ9/S7us41uFDB9MycC+P6dys/9EPja1DysXC2CgVwHXw6yNW5tWYBO7
+        2VkSeprDi5sSQMbH46cA0hz9X4z0g2vrjTVId5a9JM818MCKkNrldRVLYV7f4yu3TXgiioxD7Kl83
+        jc7NpYt6wnEEP1pDwvsuRCj1zehonKjP8kdUl1JQAiRButRrVzZtvUpV3i99mtBrF5yQ5/WE7grYg
+        aO/CivXjIojfs5edt0WGwBCb0i1/zNg13U3i/FMx9b89EI04S1xha0omlWY5xBzno7iM5R75gcjcw
+        OHfCTU/A==;
+Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxYCS-0007r0-Fk; Mon, 20 Jul 2020 15:59:32 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 068/215] ARM: OMAP2+: use separate IOMMU pdata to fix DRA7 IPU1 boot
-Date:   Mon, 20 Jul 2020 17:35:50 +0200
-Message-Id: <20200720152823.447175373@linuxfoundation.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 16/24] fs: add a kern_symlink helper
+Date:   Mon, 20 Jul 2020 17:58:54 +0200
+Message-Id: <20200720155902.181712-17-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720152820.122442056@linuxfoundation.org>
-References: <20200720152820.122442056@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200720155902.181712-1-hch@lst.de>
+References: <20200720155902.181712-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+Add a simple helper perform a symlink with a kernel space file name and
+use it in the early init code instead of relying on the implicit
+set_fs(KERNEL_DS) there.  To do so push the getname from do_symlinkat
+into the callers.  Remove the now unused ksys_symlink.
 
-[ Upstream commit 4601832f40501efc3c2fd264a5a69bd1ac17d520 ]
-
-The IPU1 MMU has been using common IOMMU pdata quirks defined and
-used by all IPU IOMMU devices on OMAP4 and beyond. Separate out the
-pdata for IPU1 MMU with the additional .set_pwrdm_constraint ops
-plugged in, so that the IPU1 power domain can be restricted to ON
-state during the boot and active period of the IPU1 remote processor.
-This eliminates the pre-conditions for the IPU1 boot issue as
-described in commit afe518400bdb ("iommu/omap: fix boot issue on
-remoteprocs with AMMU/Unicache").
-
-NOTE:
-1. RET is not a valid target power domain state on DRA7 platforms,
-   and IPU power domain is normally programmed for OFF. The IPU1
-   still fails to boot though, and an unclearable l3_noc error is
-   thrown currently on 4.14 kernel without this fix. This behavior
-   is slightly different from previous 4.9 LTS kernel.
-2. The fix is currently applied only to IPU1 on DRA7xx SoC, as the
-   other affected processors on OMAP4/OMAP5/DRA7 are in domains
-   that are not entering RET. IPU2 on DRA7 is in CORE power domain
-   which is only programmed for ON power state. The fix can be easily
-   scaled if these domains do hit RET in the future.
-3. The issue was not seen on current DRA7 platforms if any of the
-   DSP remote processors were booted and using one of the GPTimers
-   5, 6, 7 or 8 on previous 4.9 LTS kernel. This was due to the
-   errata fix for i874 implemented in commit 1cbabcb9807e ("ARM:
-   DRA7: clockdomain: Implement timer workaround for errata i874")
-   which keeps the IPU1 power domain from entering RET when the
-   timers are active. But the timer workaround did not make any
-   difference on 4.14 kernel, and an l3_noc error was seen still
-   without this fix.
-
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/arm/mach-omap2/pdata-quirks.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ fs/internal.h            |  2 --
+ fs/namei.c               | 27 ++++++++++++++++++---------
+ include/linux/fs.h       |  1 +
+ include/linux/syscalls.h |  9 ---------
+ init/initramfs.c         |  2 +-
+ 5 files changed, 20 insertions(+), 21 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 5acd29cb8d749..ca07e310d9ed5 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -44,6 +44,17 @@ struct pdata_init {
- static struct of_dev_auxdata omap_auxdata_lookup[];
- static struct twl4030_gpio_platform_data twl_gpio_auxdata;
+diff --git a/fs/internal.h b/fs/internal.h
+index f0869d5dc4dbfa..46f727c0bd84e2 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -64,8 +64,6 @@ extern int vfs_path_lookup(struct dentry *, struct vfsmount *,
+ 			   const char *, unsigned int, struct path *);
+ long do_rmdir(int dfd, const char __user *pathname);
+ long do_unlinkat(int dfd, struct filename *name);
+-long do_symlinkat(const char __user *oldname, int newdfd,
+-		  const char __user *newname);
  
-+#if IS_ENABLED(CONFIG_OMAP_IOMMU)
-+int omap_iommu_set_pwrdm_constraint(struct platform_device *pdev, bool request,
-+				    u8 *pwrst);
-+#else
-+static inline int omap_iommu_set_pwrdm_constraint(struct platform_device *pdev,
-+						  bool request, u8 *pwrst)
-+{
-+	return 0;
-+}
-+#endif
-+
- #ifdef CONFIG_MACH_NOKIA_N8X0
- static void __init omap2420_n8x0_legacy_init(void)
+ /*
+  * namespace.c
+diff --git a/fs/namei.c b/fs/namei.c
+index 9d80a5bce1051a..01e43676008644 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3991,20 +3991,21 @@ int vfs_symlink(struct inode *dir, struct dentry *dentry, const char *oldname)
+ }
+ EXPORT_SYMBOL(vfs_symlink);
+ 
+-long do_symlinkat(const char __user *oldname, int newdfd,
+-		  const char __user *newname)
++static int do_symlinkat(struct filename *from, int newdfd,
++			struct filename *newname)
  {
-@@ -326,6 +337,10 @@ static void __init omap5_uevm_legacy_init(void)
- #endif
+ 	int error;
+-	struct filename *from;
+ 	struct dentry *dentry;
+ 	struct path path;
+ 	unsigned int lookup_flags = 0;
  
- #ifdef CONFIG_SOC_DRA7XX
-+static struct iommu_platform_data dra7_ipu1_dsp_iommu_pdata = {
-+	.set_pwrdm_constraint = omap_iommu_set_pwrdm_constraint,
-+};
+-	from = getname(oldname);
+-	if (IS_ERR(from))
++	if (IS_ERR(from)) {
++		if (!IS_ERR(newname))
++			putname(newname);
+ 		return PTR_ERR(from);
++	}
+ retry:
+-	dentry = user_path_create(newdfd, newname, &path, lookup_flags);
++	dentry = filename_create(newdfd, newname, &path, lookup_flags);
+ 	error = PTR_ERR(dentry);
+ 	if (IS_ERR(dentry))
+ 		goto out_putname;
+@@ -4017,20 +4018,28 @@ long do_symlinkat(const char __user *oldname, int newdfd,
+ 		lookup_flags |= LOOKUP_REVAL;
+ 		goto retry;
+ 	}
++	putname(newname);
+ out_putname:
+-	putname(from);
++	if (!IS_ERR(from))
++		putname(from);
+ 	return error;
+ }
+ 
++int __init kern_symlink(const char *oldname, const char *newname)
++{
++	return do_symlinkat(getname_kernel(oldname), AT_FDCWD,
++			    getname_kernel(newname));
++}
 +
- static struct omap_hsmmc_platform_data dra7_hsmmc_data_mmc1;
- static struct omap_hsmmc_platform_data dra7_hsmmc_data_mmc2;
- static struct omap_hsmmc_platform_data dra7_hsmmc_data_mmc3;
-@@ -547,6 +562,12 @@ static struct of_dev_auxdata omap_auxdata_lookup[] = {
- 		       &dra7_hsmmc_data_mmc2),
- 	OF_DEV_AUXDATA("ti,dra7-hsmmc", 0x480ad000, "480ad000.mmc",
- 		       &dra7_hsmmc_data_mmc3),
-+	OF_DEV_AUXDATA("ti,dra7-dsp-iommu", 0x40d01000, "40d01000.mmu",
-+		       &dra7_ipu1_dsp_iommu_pdata),
-+	OF_DEV_AUXDATA("ti,dra7-dsp-iommu", 0x41501000, "41501000.mmu",
-+		       &dra7_ipu1_dsp_iommu_pdata),
-+	OF_DEV_AUXDATA("ti,dra7-iommu", 0x58882000, "58882000.mmu",
-+		       &dra7_ipu1_dsp_iommu_pdata),
- #endif
- 	/* Common auxdata */
- 	OF_DEV_AUXDATA("ti,sysc", 0, NULL, &ti_sysc_pdata),
+ SYSCALL_DEFINE3(symlinkat, const char __user *, oldname,
+ 		int, newdfd, const char __user *, newname)
+ {
+-	return do_symlinkat(oldname, newdfd, newname);
++	return do_symlinkat(getname(oldname), newdfd, getname(newname));
+ }
+ 
+ SYSCALL_DEFINE2(symlink, const char __user *, oldname, const char __user *, newname)
+ {
+-	return do_symlinkat(oldname, AT_FDCWD, newname);
++	return do_symlinkat(getname(oldname), AT_FDCWD, getname(newname));
+ }
+ 
+ /**
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index fc3b09d473945f..7a7b3bf1b8aa53 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3680,5 +3680,6 @@ int __init kern_utimes(const char *filename, struct timespec64 *tv, int flags);
+ int kern_mkdir(const char *pathname, umode_t mode);
+ int kern_mknod(const char *filename, umode_t mode, unsigned int dev);
+ int __init kern_link(const char *oldname, const char *newname);
++int __init kern_symlink(const char *oldname, const char *newname);
+ 
+ #endif /* _LINUX_FS_H */
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 467cc4413874ed..474d5d165048c8 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1284,15 +1284,6 @@ static inline long ksys_rmdir(const char __user *pathname)
+ 	return do_rmdir(AT_FDCWD, pathname);
+ }
+ 
+-extern long do_symlinkat(const char __user *oldname, int newdfd,
+-			 const char __user *newname);
+-
+-static inline long ksys_symlink(const char __user *oldname,
+-				const char __user *newname)
+-{
+-	return do_symlinkat(oldname, AT_FDCWD, newname);
+-}
+-
+ extern long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
+ 
+ static inline long ksys_ftruncate(unsigned int fd, loff_t length)
+diff --git a/init/initramfs.c b/init/initramfs.c
+index e484381c6c131b..4efd78427996da 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -389,7 +389,7 @@ static int __init do_symlink(void)
+ {
+ 	collected[N_ALIGN(name_len) + body_len] = '\0';
+ 	clean_path(collected, 0);
+-	ksys_symlink(collected + N_ALIGN(name_len), collected);
++	kern_symlink(collected + N_ALIGN(name_len), collected);
+ 	kern_chown(collected, uid, gid, AT_SYMLINK_NOFOLLOW);
+ 	do_utime(collected, mtime);
+ 	state = SkipIt;
 -- 
-2.25.1
-
-
+2.27.0
 
